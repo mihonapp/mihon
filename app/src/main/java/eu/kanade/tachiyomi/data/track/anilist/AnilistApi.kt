@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -18,9 +19,8 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.long
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
@@ -30,7 +30,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
 
     private val json: Json by injectLazy()
 
-    private val jsonMime = "application/json; charset=utf-8".toMediaTypeOrNull()
+    private val jsonMime = "application/json; charset=utf-8".toMediaType()
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     fun addLibManga(track: Track): Observable<Track> {
@@ -51,22 +51,18 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 put("status", track.toAnilistStatus())
             }
         }
-        val body = payload.toString().toRequestBody(jsonMime)
-        val request = Request.Builder()
-            .url(apiUrl)
-            .post(body)
-            .build()
-        return authClient.newCall(request)
+        return authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime)))
             .asObservableSuccess()
             .map { netResponse ->
-                val responseBody = netResponse.body?.string().orEmpty()
-                netResponse.close()
-                if (responseBody.isEmpty()) {
-                    throw Exception("Null Response")
+                netResponse.use {
+                    val responseBody = it.body?.string().orEmpty()
+                    if (responseBody.isEmpty()) {
+                        throw Exception("Null Response")
+                    }
+                    val response = json.decodeFromString<JsonObject>(responseBody)
+                    track.library_id = response["data"]!!.jsonObject["SaveMediaListEntry"]!!.jsonObject["id"]!!.jsonPrimitive.long
+                    track
                 }
-                val response = json.decodeFromString<JsonObject>(responseBody)
-                track.library_id = response["data"]!!.jsonObject["SaveMediaListEntry"]!!.jsonObject["id"]!!.jsonPrimitive.long
-                track
             }
     }
 
@@ -90,12 +86,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 put("score", track.score.toInt())
             }
         }
-        val body = payload.toString().toRequestBody(jsonMime)
-        val request = Request.Builder()
-            .url(apiUrl)
-            .post(body)
-            .build()
-        return authClient.newCall(request)
+        return authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime)))
             .asObservableSuccess()
             .map {
                 track
@@ -134,24 +125,21 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 put("query", search)
             }
         }
-        val body = payload.toString().toRequestBody(jsonMime)
-        val request = Request.Builder()
-            .url(apiUrl)
-            .post(body)
-            .build()
-        return authClient.newCall(request)
+        return authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime)))
             .asObservableSuccess()
             .map { netResponse ->
-                val responseBody = netResponse.body?.string().orEmpty()
-                if (responseBody.isEmpty()) {
-                    throw Exception("Null Response")
+                netResponse.use {
+                    val responseBody = it.body?.string().orEmpty()
+                    if (responseBody.isEmpty()) {
+                        throw Exception("Null Response")
+                    }
+                    val response = json.decodeFromString<JsonObject>(responseBody)
+                    val data = response["data"]!!.jsonObject
+                    val page = data["Page"]!!.jsonObject
+                    val media = page["media"]!!.jsonArray
+                    val entries = media.map { jsonToALManga(it.jsonObject) }
+                    entries.map { it.toTrack() }
                 }
-                val response = json.decodeFromString<JsonObject>(responseBody)
-                val data = response["data"]!!.jsonObject
-                val page = data["Page"]!!.jsonObject
-                val media = page["media"]!!.jsonArray
-                val entries = media.map { jsonToALManga(it.jsonObject) }
-                entries.map { it.toTrack() }
             }
     }
 
@@ -194,24 +182,21 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 put("manga_id", track.media_id)
             }
         }
-        val body = payload.toString().toRequestBody(jsonMime)
-        val request = Request.Builder()
-            .url(apiUrl)
-            .post(body)
-            .build()
-        return authClient.newCall(request)
+        return authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime)))
             .asObservableSuccess()
             .map { netResponse ->
-                val responseBody = netResponse.body?.string().orEmpty()
-                if (responseBody.isEmpty()) {
-                    throw Exception("Null Response")
+                netResponse.use {
+                    val responseBody = it.body?.string().orEmpty()
+                    if (responseBody.isEmpty()) {
+                        throw Exception("Null Response")
+                    }
+                    val response = json.decodeFromString<JsonObject>(responseBody)
+                    val data = response["data"]!!.jsonObject
+                    val page = data["Page"]!!.jsonObject
+                    val media = page["mediaList"]!!.jsonArray
+                    val entries = media.map { jsonToALUserManga(it.jsonObject) }
+                    entries.firstOrNull()?.toTrack()
                 }
-                val response = json.decodeFromString<JsonObject>(responseBody)
-                val data = response["data"]!!.jsonObject
-                val page = data["Page"]!!.jsonObject
-                val media = page["mediaList"]!!.jsonArray
-                val entries = media.map { jsonToALUserManga(it.jsonObject) }
-                entries.firstOrNull()?.toTrack()
             }
     }
 
@@ -239,22 +224,22 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
         val payload = buildJsonObject {
             put("query", query)
         }
-        val body = payload.toString().toRequestBody(jsonMime)
-        val request = Request.Builder()
-            .url(apiUrl)
-            .post(body)
-            .build()
-        return authClient.newCall(request)
+        return authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime)))
             .asObservableSuccess()
             .map { netResponse ->
-                val responseBody = netResponse.body?.string().orEmpty()
-                if (responseBody.isEmpty()) {
-                    throw Exception("Null Response")
+                netResponse.use {
+                    val responseBody = it.body?.string().orEmpty()
+                    if (responseBody.isEmpty()) {
+                        throw Exception("Null Response")
+                    }
+                    val response = json.decodeFromString<JsonObject>(responseBody)
+                    val data = response["data"]!!.jsonObject
+                    val viewer = data["Viewer"]!!.jsonObject
+                    Pair(
+                        viewer["id"]!!.jsonPrimitive.int,
+                        viewer["mediaListOptions"]!!.jsonObject["scoreFormat"]!!.jsonPrimitive.content
+                    )
                 }
-                val response = json.decodeFromString<JsonObject>(responseBody)
-                val data = response["data"]!!.jsonObject
-                val viewer = data["Viewer"]!!.jsonObject
-                Pair(viewer["id"]!!.jsonPrimitive.int, viewer["mediaListOptions"]!!.jsonObject["scoreFormat"]!!.jsonPrimitive.content)
             }
     }
 
@@ -298,7 +283,6 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
 
     companion object {
         private const val clientId = "385"
-        private const val clientUrl = "tachiyomi://anilist-auth"
         private const val apiUrl = "https://graphql.anilist.co/"
         private const val baseUrl = "https://anilist.co/api/v2/"
         private const val baseMangaUrl = "https://anilist.co/manga/"

@@ -5,6 +5,7 @@ import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import kotlinx.serialization.decodeFromString
@@ -34,11 +35,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
             .add("rating", track.score.toInt().toString())
             .add("status", track.toBangumiStatus())
             .build()
-        val request = Request.Builder()
-            .url("$apiUrl/collection/${track.media_id}/update")
-            .post(body)
-            .build()
-        return authClient.newCall(request)
+        return authClient.newCall(POST("$apiUrl/collection/${track.media_id}/update", body = body))
             .asObservableSuccess()
             .map {
                 track
@@ -46,29 +43,20 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     fun updateLibManga(track: Track): Observable<Track> {
-        // chapter update
-        val body = FormBody.Builder()
-            .add("watched_eps", track.last_chapter_read.toString())
-            .build()
-        val request = Request.Builder()
-            .url("$apiUrl/subject/${track.media_id}/update/watched_eps")
-            .post(body)
-            .build()
-
         // read status update
         val sbody = FormBody.Builder()
             .add("status", track.toBangumiStatus())
             .build()
-        val srequest = Request.Builder()
-            .url("$apiUrl/collection/${track.media_id}/update")
-            .post(sbody)
-            .build()
-        return authClient.newCall(srequest)
+        return authClient.newCall(POST("$apiUrl/collection/${track.media_id}/update", body = sbody))
             .asObservableSuccess()
             .map {
                 track
             }.flatMap {
-                authClient.newCall(request)
+                // chapter update
+                val body = FormBody.Builder()
+                    .add("watched_eps", track.last_chapter_read.toString())
+                    .build()
+                authClient.newCall(POST("$apiUrl/subject/${track.media_id}/update/watched_eps", body = body))
                     .asObservableSuccess()
                     .map {
                         track
@@ -82,11 +70,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
             .buildUpon()
             .appendQueryParameter("max_results", "20")
             .build()
-        val request = Request.Builder()
-            .url(url.toString())
-            .get()
-            .build()
-        return authClient.newCall(request)
+        return authClient.newCall(GET(url.toString()))
             .asObservableSuccess()
             .map { netResponse ->
                 var responseBody = netResponse.body?.string().orEmpty()
@@ -126,13 +110,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     fun findLibManga(track: Track): Observable<Track?> {
-        val urlMangas = "$apiUrl/subject/${track.media_id}"
-        val requestMangas = Request.Builder()
-            .url(urlMangas)
-            .get()
-            .build()
-
-        return authClient.newCall(requestMangas)
+        return authClient.newCall(GET("$apiUrl/subject/${track.media_id}"))
             .asObservableSuccess()
             .map { netResponse ->
                 // get comic info
@@ -162,13 +140,17 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     fun accessToken(code: String): Observable<OAuth> {
-        return client.newCall(accessTokenRequest(code)).asObservableSuccess().map { netResponse ->
-            val responseBody = netResponse.body?.string().orEmpty()
-            if (responseBody.isEmpty()) {
-                throw Exception("Null Response")
+        return client.newCall(accessTokenRequest(code))
+            .asObservableSuccess()
+            .map { netResponse ->
+                netResponse.use {
+                    val responseBody = it.body?.string().orEmpty()
+                    if (responseBody.isEmpty()) {
+                        throw Exception("Null Response")
+                    }
+                    json.decodeFromString<OAuth>(responseBody)
+                }
             }
-            json.decodeFromString<OAuth>(responseBody)
-        }
     }
 
     private fun accessTokenRequest(code: String) = POST(

@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.util.lang.toCalendar
 import eu.kanade.tachiyomi.util.selectInt
 import eu.kanade.tachiyomi.util.selectText
 import okhttp3.FormBody
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -282,7 +282,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .put("score", track.score)
                 .put("num_read_chapters", track.last_chapter_read)
 
-            return body.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+            return body.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
         }
 
         private fun mangaEditPostBody(track: MyAnimeListEditData): RequestBody {
