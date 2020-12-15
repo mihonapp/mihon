@@ -72,9 +72,9 @@ class AboutController : SettingsController() {
 
             onClick {
                 val url = if (BuildConfig.DEBUG) {
-                    "https://github.com/inorichi/tachiyomi/commits/dev"
+                    "https://github.com/tachiyomiorg/tachiyomi/commits/dev"
                 } else {
-                    "https://github.com/inorichi/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
+                    "https://github.com/tachiyomiorg/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
                 }
 
                 val intent = Intent(Intent.ACTION_VIEW, url.toUri())
@@ -87,7 +87,7 @@ class AboutController : SettingsController() {
                 titleRes = R.string.notices
 
                 onClick {
-                    val intent = Intent(Intent.ACTION_VIEW, "https://github.com/inorichi/tachiyomi/blob/dev/PREVIEW_RELEASE_NOTES.md".toUri())
+                    val intent = Intent(Intent.ACTION_VIEW, "https://github.com/tachiyomiorg/tachiyomi/blob/dev/PREVIEW_RELEASE_NOTES.md".toUri())
                     startActivity(intent)
                 }
             }
@@ -117,7 +117,7 @@ class AboutController : SettingsController() {
             preference {
                 key = "pref_about_github"
                 title = "GitHub"
-                val url = "https://github.com/inorichi/tachiyomi"
+                val url = "https://github.com/tachiyomiorg/tachiyomi"
                 summary = url
                 onClick {
                     val intent = Intent(Intent.ACTION_VIEW, url.toUri())
