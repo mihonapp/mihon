@@ -11,7 +11,7 @@
 
 # Catalogue requests
 
-* Catalogue requests should be created at https://github.com/inorichi/tachiyomi-extensions#readme, not here
+* Catalogue requests should be created at https://github.com/tachiyomiorg/tachiyomi-extensions#readme, not here
 
 # Bugs
 * Include version (More > About > Version)

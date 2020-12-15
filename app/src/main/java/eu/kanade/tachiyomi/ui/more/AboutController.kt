@@ -127,7 +127,7 @@ class AboutController : SettingsController() {
             preference {
                 key = "pref_about_label_extensions"
                 titleRes = R.string.label_extensions
-                val url = "https://github.com/inorichi/tachiyomi-extensions"
+                val url = "https://github.com/tachiyomiorg/tachiyomi-extensions"
                 summary = url
                 onClick {
                     val intent = Intent(Intent.ACTION_VIEW, url.toUri())
