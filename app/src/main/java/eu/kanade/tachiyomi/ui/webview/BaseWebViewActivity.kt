@@ -10,7 +10,7 @@ import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.WebviewActivityBinding
-import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import eu.kanade.tachiyomi.ui.base.activity.BaseViewBindingActivity
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.appcompat.navigationClicks
 import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 
-open class BaseWebViewActivity : BaseActivity<WebviewActivityBinding>() {
+open class BaseWebViewActivity : BaseViewBindingActivity<WebviewActivityBinding>() {
 
     internal var bundle: Bundle? = null
 

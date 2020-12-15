@@ -7,19 +7,19 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
 import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import uy.kohesive.injekt.injectLazy
 
-abstract class BaseOAuthLoginActivity : AppCompatActivity() {
+abstract class BaseOAuthLoginActivity : BaseThemedActivity() {
 
     internal val trackManager: TrackManager by injectLazy()
 
     abstract fun handleResult(data: Uri?)
 
-    override fun onCreate(savedState: Bundle?) {
-        super.onCreate(savedState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         val view = ProgressBar(this)
         setContentView(
