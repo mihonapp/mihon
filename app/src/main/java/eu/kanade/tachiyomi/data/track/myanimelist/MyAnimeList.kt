@@ -76,6 +76,7 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun bind(track: Track): Observable<Track> {
+        // TODO: change this to call add and update like the other trackers?
         return runAsObservable { api.getListItem(track) }
     }
 
