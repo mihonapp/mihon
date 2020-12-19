@@ -116,8 +116,11 @@ object Migrations {
                     putInt(PreferenceKeys.filterCompleted, convertBooleanPrefToTriState("pref_filter_completed_key"))
                     remove("pref_filter_completed_key")
                 }
-
+            }
+            if (oldVersion < 53) {
                 // Force MAL log out due to login flow change
+                // v52: switched from scraping to WebView
+                // v53: switched from WebView to OAuth
                 val trackManager = Injekt.get<TrackManager>()
                 if (trackManager.myAnimeList.isLogged) {
                     trackManager.myAnimeList.logout()
