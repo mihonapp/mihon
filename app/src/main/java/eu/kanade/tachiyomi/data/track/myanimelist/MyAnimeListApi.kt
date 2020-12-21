@@ -99,8 +99,8 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                     total_chapters = obj["num_chapters"]!!.jsonPrimitive.int
                     cover_url = obj["main_picture"]?.jsonObject?.get("large")?.jsonPrimitive?.content ?: ""
                     tracking_url = "https://myanimelist.net/manga/$media_id"
-                    publishing_status = obj["status"]!!.jsonPrimitive.content
-                    publishing_type = obj["media_type"]!!.jsonPrimitive.content
+                    publishing_status = obj["status"]!!.jsonPrimitive.content.replace("_", " ")
+                    publishing_type = obj["media_type"]!!.jsonPrimitive.content.replace("_", " ")
                     start_date = try {
                         val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                         outputDf.format(obj["start_date"]!!)
