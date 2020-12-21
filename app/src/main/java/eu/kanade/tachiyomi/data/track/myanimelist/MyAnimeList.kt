@@ -126,5 +126,6 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         return Observable.fromCallable { runBlocking(Dispatchers.IO) { block() } }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .map { it }
     }
 }
