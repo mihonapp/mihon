@@ -117,7 +117,7 @@ object Migrations {
                     remove("pref_filter_completed_key")
                 }
             }
-            if (oldVersion < 53) {
+            if (oldVersion < 54) {
                 // Force MAL log out due to login flow change
                 // v52: switched from scraping to WebView
                 // v53: switched from WebView to OAuth
