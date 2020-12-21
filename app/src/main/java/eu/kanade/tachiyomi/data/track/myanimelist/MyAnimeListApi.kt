@@ -73,11 +73,14 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
             authClient.newCall(GET(url.toString())).await().use {
                 val responseBody = it.body?.string().orEmpty()
                 val response = json.decodeFromString<JsonObject>(responseBody)
-                response["data"]!!.jsonArray.map {
-                    val node = it.jsonObject["node"]!!.jsonObject
-                    val id = node["id"]!!.jsonPrimitive.int
-                    async { getMangaDetails(id) }
-                }.awaitAll()
+                response["data"]!!.jsonArray
+                    .map { data -> data.jsonObject["node"]!!.jsonObject }
+                    .map { node ->
+                        val id = node["id"]!!.jsonPrimitive.int
+                        async { getMangaDetails(id) }
+                    }
+                    .awaitAll()
+                    .filter { trackSearch -> trackSearch.publishing_type != "novel" }
             }
         }
     }
