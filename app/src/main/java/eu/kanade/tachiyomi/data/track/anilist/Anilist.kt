@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -132,26 +133,26 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun add(track: Track): Observable<Track> {
-        return api.addLibManga(track)
+        return runAsObservable({ api.addLibManga(track) })
     }
 
     override fun update(track: Track): Observable<Track> {
         // If user was using API v1 fetch library_id
         if (track.library_id == null || track.library_id!! == 0L) {
-            return api.findLibManga(track, getUsername().toInt()).flatMap {
+            return runAsObservable({ api.findLibManga(track, getUsername().toInt()) }).flatMap {
                 if (it == null) {
                     throw Exception("$track not found on user library")
                 }
                 track.library_id = it.library_id
-                api.updateLibManga(track)
+                runAsObservable({ api.updateLibManga(track) })
             }
         }
 
-        return api.updateLibManga(track)
+        return runAsObservable({ api.updateLibManga(track) })
     }
 
     override fun bind(track: Track): Observable<Track> {
-        return api.findLibManga(track, getUsername().toInt())
+        return runAsObservable({ api.findLibManga(track, getUsername().toInt()) })
             .flatMap { remoteTrack ->
                 if (remoteTrack != null) {
                     track.copyPersonalFrom(remoteTrack)
@@ -167,11 +168,11 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
-        return api.search(query)
+        return runAsObservable({ api.search(query) })
     }
 
     override fun refresh(track: Track): Observable<Track> {
-        return api.getLibManga(track, getUsername().toInt())
+        return runAsObservable({ api.getLibManga(track, getUsername().toInt()) })
             .map { remoteTrack ->
                 track.copyPersonalFrom(remoteTrack)
                 track.total_chapters = remoteTrack.total_chapters
@@ -184,7 +185,7 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
     fun login(token: String): Completable {
         val oauth = api.createOAuth(token)
         interceptor.setAuth(oauth)
-        return api.getCurrentUser().map { (username, scoreType) ->
+        return runAsObservable({ api.getCurrentUser() }).map { (username, scoreType) ->
             scorePreference.set(scoreType)
             saveCredentials(username.toString(), oauth.access_token)
         }.doOnError {
