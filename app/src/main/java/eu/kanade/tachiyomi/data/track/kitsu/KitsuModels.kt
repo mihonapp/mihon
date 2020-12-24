@@ -50,7 +50,7 @@ class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
     private val canonicalTitle = manga["attributes"]!!.jsonObject["canonicalTitle"]!!.jsonPrimitive.content
     private val chapterCount = manga["attributes"]!!.jsonObject["chapterCount"]?.jsonPrimitive?.intOrNull
     val type = manga["attributes"]!!.jsonObject["mangaType"]?.jsonPrimitive?.contentOrNull.orEmpty()
-    val original = manga["attributes"]!!.jsonObject["original"]!!.jsonObject["posterImage"]!!.jsonPrimitive.content
+    val original = manga["attributes"]!!.jsonObject["posterImage"]!!.jsonObject["original"]!!.jsonPrimitive.content
     private val synopsis = manga["attributes"]!!.jsonObject["synopsis"]!!.jsonPrimitive.content
     private val startDate = manga["attributes"]!!.jsonObject["startDate"]?.jsonPrimitive?.contentOrNull.orEmpty()
     private val libraryId = obj["id"]!!.jsonPrimitive.int
