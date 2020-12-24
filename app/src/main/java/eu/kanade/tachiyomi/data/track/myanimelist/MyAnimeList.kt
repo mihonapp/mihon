@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import kotlinx.coroutines.Dispatchers
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -68,24 +68,24 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun add(track: Track): Observable<Track> {
-        return runAsObservable { api.addItemToList(track) }
+        return runAsObservable({ api.addItemToList(track) })
     }
 
     override fun update(track: Track): Observable<Track> {
-        return runAsObservable { api.updateItem(track) }
+        return runAsObservable({ api.updateItem(track) })
     }
 
     override fun bind(track: Track): Observable<Track> {
         // TODO: change this to call add and update like the other trackers?
-        return runAsObservable { api.getListItem(track) }
+        return runAsObservable({ api.getListItem(track) })
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
-        return runAsObservable { api.search(query) }
+        return runAsObservable({ api.search(query) })
     }
 
     override fun refresh(track: Track): Observable<Track> {
-        return runAsObservable { api.getListItem(track) }
+        return runAsObservable({ api.getListItem(track) })
     }
 
     override fun login(username: String, password: String) = login(password)
@@ -121,12 +121,5 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         } catch (e: Exception) {
             null
         }
-    }
-
-    private fun <T> runAsObservable(block: suspend () -> T): Observable<T> {
-        return Observable.fromCallable { runBlocking(Dispatchers.IO) { block() } }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { it }
     }
 }

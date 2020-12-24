@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import rx.Completable
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
@@ -69,15 +70,15 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun add(track: Track): Observable<Track> {
-        return api.addLibManga(track, getUserId())
+        return runAsObservable({ api.addLibManga(track, getUserId()) })
     }
 
     override fun update(track: Track): Observable<Track> {
-        return api.updateLibManga(track)
+        return runAsObservable({ api.updateLibManga(track) })
     }
 
     override fun bind(track: Track): Observable<Track> {
-        return api.findLibManga(track, getUserId())
+        return runAsObservable({ api.findLibManga(track, getUserId()) })
             .flatMap { remoteTrack ->
                 if (remoteTrack != null) {
                     track.copyPersonalFrom(remoteTrack)
@@ -92,11 +93,11 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
-        return api.search(query)
+        return runAsObservable({ api.search(query) })
     }
 
     override fun refresh(track: Track): Observable<Track> {
-        return api.getLibManga(track)
+        return runAsObservable({ api.getLibManga(track) })
             .map { remoteTrack ->
                 track.copyPersonalFrom(remoteTrack)
                 track.total_chapters = remoteTrack.total_chapters
@@ -105,9 +106,9 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun login(username: String, password: String): Completable {
-        return api.login(username, password)
+        return runAsObservable({ api.login(username, password) })
             .doOnNext { interceptor.newAuth(it) }
-            .flatMap { api.getCurrentUser() }
+            .flatMap { runAsObservable({ api.getCurrentUser() }) }
             .doOnNext { userId -> saveCredentials(username, userId) }
             .doOnError { logout() }
             .toCompletable()
