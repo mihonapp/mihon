@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.util.lang.runAsObservable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import rx.Completable
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 
@@ -32,12 +31,12 @@ class Bangumi(private val context: Context, id: Int) : TrackService(id) {
         return track.score.toInt().toString()
     }
 
-    override fun add(track: Track): Observable<Track> {
-        return runAsObservable({ api.addLibManga(track) })
+    override suspend fun add(track: Track): Track {
+        return api.addLibManga(track)
     }
 
-    override fun update(track: Track): Observable<Track> {
-        return runAsObservable({ api.updateLibManga(track) })
+    override suspend fun update(track: Track): Track {
+        return api.updateLibManga(track)
     }
 
     override fun bind(track: Track): Observable<Track> {
@@ -54,8 +53,8 @@ class Bangumi(private val context: Context, id: Int) : TrackService(id) {
                         // Set default fields if it's not found in the list
                         track.score = DEFAULT_SCORE.toFloat()
                         track.status = DEFAULT_STATUS
-                        add(track)
-                        update(track)
+                        runAsObservable({ add(track) })
+                        runAsObservable({ update(track) })
                     }
                 }
             }
@@ -101,17 +100,16 @@ class Bangumi(private val context: Context, id: Int) : TrackService(id) {
 
     override fun getCompletionStatus(): Int = COMPLETED
 
-    override fun login(username: String, password: String) = login(password)
+    override suspend fun login(username: String, password: String) = login(password)
 
-    fun login(code: String): Completable {
-        return runAsObservable({ api.accessToken(code) }).map { oauth: OAuth? ->
+    suspend fun login(code: String) {
+        try {
+            val oauth = api.accessToken(code)
             interceptor.newAuth(oauth)
-            if (oauth != null) {
-                saveCredentials(oauth.user_id.toString(), oauth.access_token)
-            }
-        }.doOnError {
+            saveCredentials(oauth.user_id.toString(), oauth.access_token)
+        } catch (e: Throwable) {
             logout()
-        }.toCompletable()
+        }
     }
 
     fun saveToken(oauth: OAuth?) {

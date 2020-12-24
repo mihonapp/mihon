@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.NetworkHelper
 import okhttp3.OkHttpClient
-import rx.Completable
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 
@@ -43,9 +42,9 @@ abstract class TrackService(val id: Int) {
 
     abstract fun displayScore(track: Track): String
 
-    abstract fun add(track: Track): Observable<Track>
+    abstract suspend fun add(track: Track): Track
 
-    abstract fun update(track: Track): Observable<Track>
+    abstract suspend fun update(track: Track): Track
 
     abstract fun bind(track: Track): Observable<Track>
 
@@ -53,7 +52,7 @@ abstract class TrackService(val id: Int) {
 
     abstract fun refresh(track: Track): Observable<Track>
 
-    abstract fun login(username: String, password: String): Completable
+    abstract suspend fun login(username: String, password: String)
 
     @CallSuper
     open fun logout() {

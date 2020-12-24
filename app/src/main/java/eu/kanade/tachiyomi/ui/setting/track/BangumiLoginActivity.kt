@@ -1,25 +1,20 @@
 package eu.kanade.tachiyomi.ui.setting.track
 
 import android.net.Uri
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
 
 class BangumiLoginActivity : BaseOAuthLoginActivity() {
 
     override fun handleResult(data: Uri?) {
         val code = data?.getQueryParameter("code")
         if (code != null) {
-            trackManager.bangumi.login(code)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        returnToSettings()
-                    },
-                    {
-                        returnToSettings()
-                    }
-                )
+            launchIO {
+                trackManager.bangumi.login(code)
+                launchUI {
+                    returnToSettings()
+                }
+            }
         } else {
             trackManager.bangumi.logout()
             returnToSettings()

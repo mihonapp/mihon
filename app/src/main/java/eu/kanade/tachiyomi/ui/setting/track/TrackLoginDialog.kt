@@ -7,10 +7,10 @@ import androidx.core.os.bundleOf
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.preference.LoginDialogPreference
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -34,8 +34,6 @@ class TrackLoginDialog(
     }
 
     override fun checkLogin() {
-        requestSubscription?.unsubscribe()
-
         if (binding!!.username.text.isNullOrEmpty() || binding!!.password.text.isNullOrEmpty()) {
             return
         }
@@ -44,20 +42,21 @@ class TrackLoginDialog(
         val user = binding!!.username.text.toString()
         val pass = binding!!.password.text.toString()
 
-        requestSubscription = service.login(user, pass)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
+        launchIO {
+            try {
+                service.login(user, pass)
+                launchUI {
                     dialog?.dismiss()
                     view?.context?.toast(R.string.login_success)
-                },
-                { error ->
+                }
+            } catch (e: Throwable) {
+                launchUI {
                     binding!!.login.progress = -1
                     binding!!.login.setText(R.string.unknown_error)
-                    error.message?.let { view?.context?.toast(it) }
+                    e.message?.let { view?.context?.toast(it) }
                 }
-            )
+            }
+        }
     }
 
     override fun onDialogClosed() {

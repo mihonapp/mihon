@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.ui.setting.track
 
 import android.net.Uri
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
 
 class AnilistLoginActivity : BaseOAuthLoginActivity() {
 
@@ -10,17 +10,12 @@ class AnilistLoginActivity : BaseOAuthLoginActivity() {
         val regex = "(?:access_token=)(.*?)(?:&)".toRegex()
         val matchResult = regex.find(data?.fragment.toString())
         if (matchResult?.groups?.get(1) != null) {
-            trackManager.aniList.login(matchResult.groups[1]!!.value)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        returnToSettings()
-                    },
-                    {
-                        returnToSettings()
-                    }
-                )
+            launchIO {
+                trackManager.aniList.login(matchResult.groups[1]!!.value)
+                launchUI {
+                    returnToSettings()
+                }
+            }
         } else {
             trackManager.aniList.logout()
             returnToSettings()

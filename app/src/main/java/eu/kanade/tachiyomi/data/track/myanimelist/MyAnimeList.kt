@@ -7,15 +7,10 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.util.lang.runAsObservable
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import rx.Completable
 import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
 class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
@@ -67,12 +62,12 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         return track.score.toInt().toString()
     }
 
-    override fun add(track: Track): Observable<Track> {
-        return runAsObservable({ api.addItemToList(track) })
+    override suspend fun add(track: Track): Track {
+        return api.addItemToList(track)
     }
 
-    override fun update(track: Track): Observable<Track> {
-        return runAsObservable({ api.updateItem(track) })
+    override suspend fun update(track: Track): Track {
+        return api.updateItem(track)
     }
 
     override fun bind(track: Track): Observable<Track> {
@@ -88,21 +83,17 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         return runAsObservable({ api.getListItem(track) })
     }
 
-    override fun login(username: String, password: String) = login(password)
+    override suspend fun login(username: String, password: String) = login(password)
 
-    fun login(authCode: String): Completable {
-        return Completable.fromCallable {
-            val oauth = runBlocking { api.getAccessToken(authCode) }
+    suspend fun login(authCode: String) {
+        try {
+            val oauth = api.getAccessToken(authCode)
             interceptor.setAuth(oauth)
-            val username = runBlocking { api.getCurrentUser() }
+            val username = api.getCurrentUser()
             saveCredentials(username, oauth.access_token)
+        } catch (e: Throwable) {
+            logout()
         }
-            .doOnError {
-                Timber.e(it)
-                logout()
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun logout() {

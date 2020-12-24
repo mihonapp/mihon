@@ -1,25 +1,20 @@
 package eu.kanade.tachiyomi.ui.setting.track
 
 import android.net.Uri
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
 
 class ShikimoriLoginActivity : BaseOAuthLoginActivity() {
 
     override fun handleResult(data: Uri?) {
         val code = data?.getQueryParameter("code")
         if (code != null) {
-            trackManager.shikimori.login(code)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        returnToSettings()
-                    },
-                    {
-                        returnToSettings()
-                    }
-                )
+            launchIO {
+                trackManager.shikimori.login(code)
+                launchUI {
+                    returnToSettings()
+                }
+            }
         } else {
             trackManager.shikimori.logout()
             returnToSettings()

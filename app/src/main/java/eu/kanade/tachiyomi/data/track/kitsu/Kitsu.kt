@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.util.lang.runAsObservable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import rx.Completable
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 import java.text.DecimalFormat
@@ -71,12 +70,12 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
         return df.format(track.score)
     }
 
-    override fun add(track: Track): Observable<Track> {
-        return runAsObservable({ api.addLibManga(track, getUserId()) })
+    override suspend fun add(track: Track): Track {
+        return api.addLibManga(track, getUserId())
     }
 
-    override fun update(track: Track): Observable<Track> {
-        return runAsObservable({ api.updateLibManga(track) })
+    override suspend fun update(track: Track): Track {
+        return api.updateLibManga(track)
     }
 
     override fun bind(track: Track): Observable<Track> {
@@ -85,11 +84,11 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
                 if (remoteTrack != null) {
                     track.copyPersonalFrom(remoteTrack)
                     track.media_id = remoteTrack.media_id
-                    update(track)
+                    runAsObservable({ update(track) })
                 } else {
                     track.score = DEFAULT_SCORE
                     track.status = DEFAULT_STATUS
-                    add(track)
+                    runAsObservable({ add(track) })
                 }
             }
     }
@@ -107,13 +106,15 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
             }
     }
 
-    override fun login(username: String, password: String): Completable {
-        return runAsObservable({ api.login(username, password) })
-            .doOnNext { interceptor.newAuth(it) }
-            .flatMap { runAsObservable({ api.getCurrentUser() }) }
-            .doOnNext { userId -> saveCredentials(username, userId) }
-            .doOnError { logout() }
-            .toCompletable()
+    override suspend fun login(username: String, password: String) {
+        try {
+            val token = api.login(username, password)
+            interceptor.newAuth(token)
+            val userId = api.getCurrentUser()
+            saveCredentials(username, userId)
+        } catch (e: Throwable) {
+            logout()
+        }
     }
 
     override fun logout() {

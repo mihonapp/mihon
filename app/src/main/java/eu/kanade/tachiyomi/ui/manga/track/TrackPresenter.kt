@@ -8,6 +8,9 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.lang.await
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.toast
 import rx.Observable
 import rx.Subscription
@@ -107,19 +110,22 @@ class TrackPresenter(
     }
 
     private fun updateRemote(track: Track, service: TrackService) {
-        service.update(track)
-            .flatMap { db.insertTrack(track).asRxObservable() }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeFirst(
-                { view, _ -> view.onRefreshDone() },
-                { view, error ->
-                    view.onRefreshError(error)
+        launchIO {
+            try {
+                service.update(track)
+                db.insertTrack(track).await()
+                launchUI {
+                    view!!.onRefreshDone()
+                }
+            } catch (e: Throwable) {
+                launchUI {
+                    view!!.onRefreshError(e)
 
                     // Restart on error to set old values
                     fetchTrackings()
                 }
-            )
+            }
+        }
     }
 
     fun setStatus(item: TrackItem, index: Int) {

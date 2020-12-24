@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.util.lang.runAsObservable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import rx.Completable
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 
@@ -132,23 +131,19 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
         }
     }
 
-    override fun add(track: Track): Observable<Track> {
-        return runAsObservable({ api.addLibManga(track) })
+    override suspend fun add(track: Track): Track {
+        return api.addLibManga(track)
     }
 
-    override fun update(track: Track): Observable<Track> {
+    override suspend fun update(track: Track): Track {
         // If user was using API v1 fetch library_id
         if (track.library_id == null || track.library_id!! == 0L) {
-            return runAsObservable({ api.findLibManga(track, getUsername().toInt()) }).flatMap {
-                if (it == null) {
-                    throw Exception("$track not found on user library")
-                }
-                track.library_id = it.library_id
-                runAsObservable({ api.updateLibManga(track) })
-            }
+            val libManga = api.findLibManga(track, getUsername().toInt())
+                ?: throw Exception("$track not found on user library")
+            track.library_id = libManga.library_id
         }
 
-        return runAsObservable({ api.updateLibManga(track) })
+        return api.updateLibManga(track)
     }
 
     override fun bind(track: Track): Observable<Track> {
@@ -157,12 +152,12 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
                 if (remoteTrack != null) {
                     track.copyPersonalFrom(remoteTrack)
                     track.library_id = remoteTrack.library_id
-                    update(track)
+                    runAsObservable({ update(track) })
                 } else {
                     // Set default fields if it's not found in the list
                     track.score = DEFAULT_SCORE.toFloat()
                     track.status = DEFAULT_STATUS
-                    add(track)
+                    runAsObservable({ add(track) })
                 }
             }
     }
@@ -180,17 +175,18 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
             }
     }
 
-    override fun login(username: String, password: String) = login(password)
+    override suspend fun login(username: String, password: String) = login(password)
 
-    fun login(token: String): Completable {
-        val oauth = api.createOAuth(token)
-        interceptor.setAuth(oauth)
-        return runAsObservable({ api.getCurrentUser() }).map { (username, scoreType) ->
+    suspend fun login(token: String) {
+        try {
+            val oauth = api.createOAuth(token)
+            interceptor.setAuth(oauth)
+            val (username, scoreType) = api.getCurrentUser()
             scorePreference.set(scoreType)
             saveCredentials(username.toString(), oauth.access_token)
-        }.doOnError {
+        } catch (e: Throwable) {
             logout()
-        }.toCompletable()
+        }
     }
 
     override fun logout() {

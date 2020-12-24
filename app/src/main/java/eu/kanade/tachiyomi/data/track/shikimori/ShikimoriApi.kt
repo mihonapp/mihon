@@ -131,7 +131,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
             if (responseBody.isEmpty()) {
                 throw Exception("Null Response")
             }
-            json.decodeFromString<OAuth>(responseBody)
+            json.decodeFromString(responseBody)
         }
     }
 
