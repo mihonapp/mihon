@@ -91,17 +91,18 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
     override fun login(username: String, password: String) = login(password)
 
     fun login(authCode: String): Completable {
-        return try {
+        return Completable.fromCallable {
             val oauth = runBlocking { api.getAccessToken(authCode) }
             interceptor.setAuth(oauth)
             val username = runBlocking { api.getCurrentUser() }
             saveCredentials(username, oauth.access_token)
-            return Completable.complete()
-        } catch (e: Exception) {
-            Timber.e(e)
-            logout()
-            Completable.error(e)
         }
+            .doOnError {
+                Timber.e(it)
+                logout()
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun logout() {

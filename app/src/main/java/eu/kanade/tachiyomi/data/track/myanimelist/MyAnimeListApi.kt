@@ -44,7 +44,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .add("code_verifier", codeVerifier)
                 .add("grant_type", "authorization_code")
                 .build()
-            client.newCall(POST("$baseOAuthUrl/token", body = formBody)).await().use {
+            client.newCall(POST("$baseOAuthUrl/token", body = formBody)).await(assertSuccess = true).use {
                 val responseBody = it.body?.string().orEmpty()
                 json.decodeFromString(responseBody)
             }
@@ -57,7 +57,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .url("$baseApiUrl/users/@me")
                 .get()
                 .build()
-            authClient.newCall(request).await().use {
+            authClient.newCall(request).await(assertSuccess = true).use {
                 val responseBody = it.body?.string().orEmpty()
                 val response = json.decodeFromString<JsonObject>(responseBody)
                 response["name"]!!.jsonPrimitive.content
@@ -70,7 +70,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
             val url = "$baseApiUrl/manga".toUri().buildUpon()
                 .appendQueryParameter("q", query)
                 .build()
-            authClient.newCall(GET(url.toString())).await().use {
+            authClient.newCall(GET(url.toString())).await(assertSuccess = true).use {
                 val responseBody = it.body?.string().orEmpty()
                 val response = json.decodeFromString<JsonObject>(responseBody)
                 response["data"]!!.jsonArray
@@ -91,7 +91,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .appendPath(id.toString())
                 .appendQueryParameter("fields", "id,title,synopsis,num_chapters,main_picture,status,media_type,start_date")
                 .build()
-            authClient.newCall(GET(url.toString())).await().use {
+            authClient.newCall(GET(url.toString())).await(assertSuccess = true).use {
                 val responseBody = it.body?.string().orEmpty()
                 val response = json.decodeFromString<JsonObject>(responseBody)
                 val obj = response.jsonObject
@@ -124,7 +124,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .url(mangaUrl(track.media_id).toString())
                 .put(formBody)
                 .build()
-            authClient.newCall(request).await().use {
+            authClient.newCall(request).await(assertSuccess = true).use {
                 parseMangaItem(it, track)
             }
         }
@@ -140,7 +140,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .url(mangaUrl(track.media_id).toString())
                 .put(formBody)
                 .build()
-            authClient.newCall(request).await().use {
+            authClient.newCall(request).await(assertSuccess = true).use {
                 parseMangaItem(it, track)
             }
         }
@@ -158,7 +158,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .url(mangaUrl(track.media_id).toString())
                 .put(formBody)
                 .build()
-            authClient.newCall(request).await().use {
+            authClient.newCall(request).await(assertSuccess = true).use {
                 parseMangaItem(it, track)
             }
         }
