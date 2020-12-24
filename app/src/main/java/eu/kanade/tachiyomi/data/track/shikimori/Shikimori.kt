@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -44,15 +45,15 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun add(track: Track): Observable<Track> {
-        return api.addLibManga(track, getUsername())
+        return runAsObservable({ api.addLibManga(track, getUsername()) })
     }
 
     override fun update(track: Track): Observable<Track> {
-        return api.updateLibManga(track, getUsername())
+        return runAsObservable({ api.updateLibManga(track, getUsername()) })
     }
 
     override fun bind(track: Track): Observable<Track> {
-        return api.findLibManga(track, getUsername())
+        return runAsObservable({ api.findLibManga(track, getUsername()) })
             .flatMap { remoteTrack ->
                 if (remoteTrack != null) {
                     track.copyPersonalFrom(remoteTrack)
@@ -68,11 +69,11 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
-        return api.search(query)
+        return runAsObservable({ api.search(query) })
     }
 
     override fun refresh(track: Track): Observable<Track> {
-        return api.findLibManga(track, getUsername())
+        return runAsObservable({ api.findLibManga(track, getUsername()) })
             .map { remoteTrack ->
                 if (remoteTrack != null) {
                     track.copyPersonalFrom(remoteTrack)
@@ -107,7 +108,7 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
     override fun login(username: String, password: String) = login(password)
 
     fun login(code: String): Completable {
-        return api.accessToken(code).map { oauth: OAuth? ->
+        return runAsObservable({ api.accessToken(code) }).map { oauth: OAuth? ->
             interceptor.newAuth(oauth)
             if (oauth != null) {
                 val user = api.getCurrentUser()
