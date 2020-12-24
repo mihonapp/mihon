@@ -16,6 +16,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -159,6 +160,46 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .await()
                 .parseAs<JsonObject>()
                 .let { parseMangaItem(it, track) }
+        }
+    }
+
+    suspend fun findListItem(track: Track, offset: Int = 0): Track? {
+        return withContext(Dispatchers.IO) {
+            val urlBuilder = "$baseApiUrl/users/@me/mangalist".toUri().buildUpon()
+                .appendQueryParameter("fields", "list_status")
+                .appendQueryParameter("limit", "25")
+            if (offset > 0) {
+                urlBuilder.appendQueryParameter("offset", offset.toString())
+            }
+
+            val request = Request.Builder()
+                .url(urlBuilder.build().toString())
+                .get()
+                .build()
+            authClient.newCall(request)
+                .await()
+                .parseAs<JsonObject>()
+                .let {
+                    val obj = it.jsonObject
+                    val trackedManga = obj["data"]!!.jsonArray.find { data ->
+                        data.jsonObject["node"]!!.jsonObject["id"]!!.jsonPrimitive.int == track.media_id
+                    }
+
+                    when {
+                        // Found the item in the list
+                        trackedManga != null -> {
+                            parseMangaItem(trackedManga.jsonObject["list_status"]!!.jsonObject, track)
+                        }
+                        // Check next page if there's more
+                        !obj["paging"]!!.jsonObject["next"]?.jsonPrimitive?.contentOrNull.isNullOrBlank() -> {
+                            findListItem(track, offset + 25)
+                        }
+                        // No more pages to check, item wasn't found
+                        else -> {
+                            null
+                        }
+                    }
+                }
         }
     }
 
