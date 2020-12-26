@@ -67,6 +67,7 @@
         <item name="textInputStyle">@style/Theme.Widget.TextInputLayout.OutlinedBox</item>
         <item name="android:itemTextAppearance">@style/TextAppearance.Widget.Menu</item>
         <item name="swipeRefreshLayoutProgressSpinnerBackgroundColor">?attr/colorAccent</item>
+        <item name="linearProgressIndicatorStyle">@style/Theme.Widget.LinearProgressIndicator</item>
 
         <!-- Material Dialogs -->
         <item name="md_background_color">?attr/colorSurface</item>
@@ -159,6 +160,7 @@
         <item name="textInputStyle">@style/Theme.Widget.TextInputLayout.OutlinedBox</item>
         <item name="android:itemTextAppearance">@style/TextAppearance.Widget.Menu</item>
         <item name="swipeRefreshLayoutProgressSpinnerBackgroundColor">?attr/colorAccent</item>
+        <item name="linearProgressIndicatorStyle">@style/Theme.Widget.LinearProgressIndicator</item>
 
         <!-- Material Dialogs -->
         <item name="md_background_color">?attr/colorSurface</item>

@@ -13,9 +13,8 @@
         android:paddingBottom="4dp"
         tools:listitem="@layout/global_search_controller_card" />
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:max="100"

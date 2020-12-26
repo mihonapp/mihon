@@ -225,6 +225,11 @@
     </style>
 
 
+    <style name="Theme.Widget.LinearProgressIndicator" parent="Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="indicatorColor">?attr/colorAccent</item>
+    </style>
+
+
     <!--=======================-->
     <!--Widgets.TextInputLayout-->
     <!--=======================-->
