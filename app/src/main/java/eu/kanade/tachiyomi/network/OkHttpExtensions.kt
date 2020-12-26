@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.network
 
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -9,6 +11,8 @@ import okhttp3.Response
 import rx.Observable
 import rx.Producer
 import rx.Subscription
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resume
@@ -104,4 +108,12 @@ fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListene
         .build()
 
     return progressClient.newCall(request)
+}
+
+inline fun <reified T, R> Response.withResponse(block: (T) -> R): R {
+    this.use {
+        val responseBody = it.body?.string().orEmpty()
+        val response = Injekt.get<Json>().decodeFromString<T>(responseBody)
+        return block(response)
+    }
 }

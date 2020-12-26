@@ -2,10 +2,17 @@ package eu.kanade.tachiyomi.data.updater.github
 
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.updater.UpdateResult
+import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.withResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import uy.kohesive.injekt.injectLazy
 
 class GithubUpdateChecker {
 
-    private val service: GithubService = GithubService.create()
+    private val networkService: NetworkHelper by injectLazy()
 
     private val repo: String by lazy {
         if (BuildConfig.DEBUG) {
@@ -16,13 +23,18 @@ class GithubUpdateChecker {
     }
 
     suspend fun checkForUpdate(): UpdateResult {
-        val release = service.getLatestVersion(repo)
-
-        // Check if latest version is different from current version
-        return if (isNewVersion(release.version)) {
-            GithubUpdateResult.NewUpdate(release)
-        } else {
-            GithubUpdateResult.NoNewUpdate()
+        return withContext(Dispatchers.IO) {
+            networkService.client
+                .newCall(GET("https://api.github.com/repos/$repo/releases/latest"))
+                .await()
+                .withResponse<GithubRelease, UpdateResult> {
+                    // Check if latest version is different from current version
+                    if (isNewVersion(it.version)) {
+                        GithubUpdateResult.NewUpdate(it)
+                    } else {
+                        GithubUpdateResult.NoNewUpdate()
+                    }
+                }
         }
     }
 

@@ -5,6 +5,10 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
+import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.withResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonArray
@@ -16,14 +20,17 @@ import java.util.Date
 
 internal class ExtensionGithubApi {
 
+    private val networkService: NetworkHelper by injectLazy()
     private val preferences: PreferencesHelper by injectLazy()
 
     suspend fun findExtensions(): List<Extension.Available> {
-        val service: ExtensionGithubService = ExtensionGithubService.create()
-
         return withContext(Dispatchers.IO) {
-            val response = service.getRepo()
-            parseResponse(response)
+            networkService.client
+                .newCall(GET("${REPO_URL_PREFIX}index.min.json"))
+                .await()
+                .withResponse<JsonArray, List<Extension.Available>> {
+                    parseResponse(it)
+                }
         }
     }
 
