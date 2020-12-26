@@ -203,7 +203,7 @@ class SettingsBackupController : SettingsController() {
                 }
                 CODE_BACKUP_RESTORE -> {
                     uri?.path?.let {
-                        val fileName = DocumentFile.fromSingleUri(activity, uri)!!.name!!
+                        val fileName = DocumentFile.fromSingleUri(activity, uri)?.name ?: uri.toString()
                         when {
                             fileName.endsWith(".proto.gz") -> {
                                 val options = arrayOf(
