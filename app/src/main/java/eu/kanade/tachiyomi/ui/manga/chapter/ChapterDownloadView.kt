@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -13,6 +14,9 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
 
     private val binding: ChapterDownloadViewBinding
 
+    private var downloadIconAnimator: ObjectAnimator? = null
+    private var isAnimating = false
+
     init {
         binding = ChapterDownloadViewBinding.inflate(LayoutInflater.from(context), this, false)
         addView(binding.root)
@@ -20,7 +24,24 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
 
     fun setState(state: Download.State) {
         binding.downloadIconBorder.isVisible = state == Download.State.NOT_DOWNLOADED
+
         binding.downloadIcon.isVisible = state == Download.State.NOT_DOWNLOADED || state == Download.State.DOWNLOADING
+        if (state == Download.State.DOWNLOADING) {
+            if (!isAnimating) {
+                downloadIconAnimator =
+                    ObjectAnimator.ofFloat(binding.downloadIcon, "alpha", 1f, 0f).apply {
+                        duration = 1000
+                        repeatCount = ObjectAnimator.INFINITE
+                        repeatMode = ObjectAnimator.REVERSE
+                    }
+                downloadIconAnimator?.start()
+                isAnimating = true
+            }
+        } else {
+            downloadIconAnimator?.cancel()
+            binding.downloadIcon.alpha = 1f
+            isAnimating = false
+        }
 
         binding.downloadProgress.isVisible = state == Download.State.DOWNLOADING || state == Download.State.QUEUE
         // TODO: show actual download progress
