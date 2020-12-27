@@ -705,7 +705,7 @@ class MangaController :
         }
     }
 
-    fun onChapterStatusChange(download: Download) {
+    fun onChapterDownloadUpdate(download: Download) {
         chaptersAdapter?.currentItems?.find { it.id == download.chapter.id }?.let {
             chaptersAdapter?.updateItem(it)
             chaptersAdapter?.notifyDataSetChanged()

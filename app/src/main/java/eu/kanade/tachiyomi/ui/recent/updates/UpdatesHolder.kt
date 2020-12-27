@@ -8,7 +8,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.databinding.UpdatesItemBinding
@@ -52,7 +51,7 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
 
         // Set chapter status
         binding.download.isVisible = item.manga.source != LocalSource.ID
-        notifyStatus(item.status)
+        binding.download.setState(item.status, item.progress)
 
         // Set cover
         GlideApp.with(itemView.context).clear(binding.mangaCover)
@@ -65,9 +64,5 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
             .apply(requestOptions)
             .dontAnimate()
             .into(binding.mangaCover)
-    }
-
-    fun notifyStatus(state: Download.State) {
-        binding.download.setState(state)
     }
 }

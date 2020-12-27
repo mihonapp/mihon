@@ -79,7 +79,8 @@ class MangaPresenter(
     /**
      * Subscription to observe download status changes.
      */
-    private var observeDownloadsSubscription: Subscription? = null
+    private var observeDownloadsStatusSubscription: Subscription? = null
+    private var observeDownloadsPageSubscription: Subscription? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -293,12 +294,20 @@ class MangaPresenter(
     // Chapters list - start
 
     private fun observeDownloads() {
-        observeDownloadsSubscription?.let { remove(it) }
-        observeDownloadsSubscription = downloadManager.queue.getStatusObservable()
+        observeDownloadsStatusSubscription?.let { remove(it) }
+        observeDownloadsStatusSubscription = downloadManager.queue.getStatusObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .filter { download -> download.manga.id == manga.id }
             .doOnNext { onDownloadStatusChange(it) }
-            .subscribeLatestCache(MangaController::onChapterStatusChange) { _, error ->
+            .subscribeLatestCache(MangaController::onChapterDownloadUpdate) { _, error ->
+                Timber.e(error)
+            }
+
+        observeDownloadsPageSubscription?.let { remove(it) }
+        observeDownloadsPageSubscription = downloadManager.queue.getProgressObservable()
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter { download -> download.manga.id == manga.id }
+            .subscribeLatestCache(MangaController::onChapterDownloadUpdate) { _, error ->
                 Timber.e(error)
             }
     }

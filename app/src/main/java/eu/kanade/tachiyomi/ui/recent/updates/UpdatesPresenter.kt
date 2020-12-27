@@ -39,8 +39,16 @@ class UpdatesPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeLatestCache(UpdatesController::onNextRecentChapters)
 
-        getChapterStatusObservable()
-            .subscribeLatestCache(UpdatesController::onChapterStatusChange) { _, error ->
+        downloadManager.queue.getStatusObservable()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext { onDownloadStatusChange(it) }
+            .subscribeLatestCache(UpdatesController::onChapterDownloadUpdate) { _, error ->
+                Timber.e(error)
+            }
+
+        downloadManager.queue.getProgressObservable()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeLatestCache(UpdatesController::onChapterDownloadUpdate) { _, error ->
                 Timber.e(error)
             }
     }
@@ -84,17 +92,6 @@ class UpdatesPresenter(
                 setDownloadedChapters(list)
                 chapters = list
             }
-    }
-
-    /**
-     * Returns observable containing chapter status.
-     *
-     * @return download object containing download progress.
-     */
-    private fun getChapterStatusObservable(): Observable<Download> {
-        return downloadManager.queue.getStatusObservable()
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { download -> onDownloadStatusChange(download) }
     }
 
     /**

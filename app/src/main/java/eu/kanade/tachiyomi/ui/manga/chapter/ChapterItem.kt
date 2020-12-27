@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.source.model.Page
 
 class ChapterItem(val chapter: Chapter, val manga: Manga) :
     AbstractFlexibleItem<ChapterHolder>(),
@@ -20,6 +21,12 @@ class ChapterItem(val chapter: Chapter, val manga: Manga) :
         get() = download?.status ?: _status
         set(value) {
             _status = value
+        }
+
+    val progress: Int
+        get() {
+            val pages = download?.pages ?: return 0
+            return pages.map(Page::progress).average().toInt()
         }
 
     @Transient

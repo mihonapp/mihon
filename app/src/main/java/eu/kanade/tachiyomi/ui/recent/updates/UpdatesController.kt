@@ -229,16 +229,13 @@ class UpdatesController :
      * Update download status of chapter
      * @param download [Download] object containing download progress.
      */
-    fun onChapterStatusChange(download: Download) {
-        getHolder(download)?.notifyStatus(download.status)
-    }
-
-    /**
-     * Returns holder belonging to chapter
-     * @param download [Download] object containing download progress.
-     */
-    private fun getHolder(download: Download): UpdatesHolder? {
-        return binding.recycler.findViewHolderForItemId(download.chapter.id!!) as? UpdatesHolder
+    fun onChapterDownloadUpdate(download: Download) {
+        adapter?.currentItems
+            ?.filterIsInstance<UpdatesItem>()
+            ?.find { it.chapter.id == download.chapter.id }?.let {
+                adapter?.updateItem(it)
+                adapter?.notifyDataSetChanged()
+            }
     }
 
     /**

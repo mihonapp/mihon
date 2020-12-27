@@ -22,7 +22,7 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
         addView(binding.root)
     }
 
-    fun setState(state: Download.State) {
+    fun setState(state: Download.State, progress: Int = 0) {
         binding.downloadIconBorder.isVisible = state == Download.State.NOT_DOWNLOADED
 
         binding.downloadIcon.isVisible = state == Download.State.NOT_DOWNLOADED || state == Download.State.DOWNLOADING
@@ -44,7 +44,13 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
         }
 
         binding.downloadProgress.isVisible = state == Download.State.DOWNLOADING || state == Download.State.QUEUE
-        // TODO: show actual download progress
+        // Spinner when queued
+        val isDownloading = state == Download.State.DOWNLOADING || (state == Download.State.QUEUE && progress > 0)
+        binding.downloadProgress.isIndeterminate = !isDownloading
+        // Actual progress when downloading or partially downloaded
+        if (isDownloading) {
+            binding.downloadProgress.progress = progress
+        }
 
         binding.downloadedIcon.isVisible = state == Download.State.DOWNLOADED
 
