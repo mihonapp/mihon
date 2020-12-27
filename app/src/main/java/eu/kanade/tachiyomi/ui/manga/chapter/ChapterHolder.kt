@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.ChaptersItemBinding
 import java.util.Date
 
@@ -68,16 +67,6 @@ class ChapterHolder(
             binding.chapterDescription.text = ""
         }
 
-        notifyStatus(item.status)
-    }
-
-    private fun notifyStatus(status: Int) = with(binding.download) {
-        when (status) {
-            Download.QUEUE -> setState(ChapterDownloadView.State.QUEUED)
-            Download.DOWNLOADING -> setState(ChapterDownloadView.State.DOWNLOADING)
-            Download.DOWNLOADED -> setState(ChapterDownloadView.State.DOWNLOADED)
-            Download.ERROR -> setState(ChapterDownloadView.State.ERROR)
-            else -> setState(ChapterDownloadView.State.DOWNLOAD)
-        }
+        binding.download.setState(item.status)
     }
 }

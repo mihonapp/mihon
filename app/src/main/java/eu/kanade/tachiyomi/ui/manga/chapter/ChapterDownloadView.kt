@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
+import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.ChapterDownloadViewBinding
 
 class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
@@ -17,20 +18,12 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
         addView(binding.root)
     }
 
-    fun setState(state: State) {
-        binding.downloadIconBorder.isVisible = state == State.DOWNLOAD || state == State.ERROR
-        binding.downloadIcon.isVisible = state == State.DOWNLOAD || state == State.DOWNLOADING
+    fun setState(state: Download.State) {
+        binding.downloadIconBorder.isVisible = state == Download.State.NOT_DOWNLOADED || state == Download.State.ERROR
+        binding.downloadIcon.isVisible = state == Download.State.NOT_DOWNLOADED || state == Download.State.DOWNLOADING
 
-        binding.downloadProgress.isVisible = state == State.DOWNLOADING || state == State.QUEUED
+        binding.downloadProgress.isVisible = state == Download.State.DOWNLOADING || state == Download.State.QUEUE
 
-        binding.downloadedIcon.isVisible = state == State.DOWNLOADED
-    }
-
-    enum class State {
-        DOWNLOAD,
-        QUEUED,
-        DOWNLOADING,
-        ERROR,
-        DOWNLOADED,
+        binding.downloadedIcon.isVisible = state == Download.State.DOWNLOADED
     }
 }

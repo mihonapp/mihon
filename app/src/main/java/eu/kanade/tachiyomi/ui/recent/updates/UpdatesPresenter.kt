@@ -108,7 +108,7 @@ class UpdatesPresenter(
             val chapter = item.chapter
 
             if (downloadManager.isChapterDownloaded(chapter, manga)) {
-                item.status = Download.DOWNLOADED
+                item.status = Download.State.DOWNLOADED
             }
         }
     }
@@ -120,7 +120,7 @@ class UpdatesPresenter(
      */
     private fun onDownloadStatusChange(download: Download) {
         // Assign the download to the model object.
-        if (download.status == Download.QUEUE) {
+        if (download.status == Download.State.QUEUE) {
             val chapter = chapters.find { it.chapter.id == download.chapter.id }
             if (chapter != null && chapter.download == null) {
                 chapter.download = download
@@ -188,7 +188,7 @@ class UpdatesPresenter(
 
             downloadManager.deleteChapters(chapters, manga, source)
             items.forEach {
-                it.status = Download.NOT_DOWNLOADED
+                it.status = Download.State.NOT_DOWNLOADED
                 it.download = null
             }
         }

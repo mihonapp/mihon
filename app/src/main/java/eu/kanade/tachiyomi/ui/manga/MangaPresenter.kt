@@ -328,7 +328,7 @@ class MangaPresenter(
     private fun setDownloadedChapters(chapters: List<ChapterItem>) {
         chapters
             .filter { downloadManager.isChapterDownloaded(it, manga) }
-            .forEach { it.status = Download.DOWNLOADED }
+            .forEach { it.status = Download.State.DOWNLOADED }
     }
 
     /**
@@ -416,7 +416,7 @@ class MangaPresenter(
      */
     private fun onDownloadStatusChange(download: Download) {
         // Assign the download to the model object.
-        if (download.status == Download.QUEUE) {
+        if (download.status == Download.State.QUEUE) {
             chapters.find { it.id == download.chapter.id }?.let {
                 if (it.download == null) {
                     it.download = download
@@ -425,7 +425,7 @@ class MangaPresenter(
         }
 
         // Force UI update if downloaded filter active and download finished.
-        if (onlyDownloaded() != State.IGNORE && download.status == Download.DOWNLOADED) {
+        if (onlyDownloaded() != State.IGNORE && download.status == Download.State.DOWNLOADED) {
             refreshChapters()
         }
     }
@@ -514,7 +514,7 @@ class MangaPresenter(
     private fun deleteChaptersInternal(chapters: List<ChapterItem>) {
         downloadManager.deleteChapters(chapters, manga, source).forEach {
             if (it is ChapterItem) {
-                it.status = Download.NOT_DOWNLOADED
+                it.status = Download.State.NOT_DOWNLOADED
                 it.download = null
             }
         }

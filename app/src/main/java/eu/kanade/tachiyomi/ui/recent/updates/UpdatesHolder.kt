@@ -81,18 +81,7 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
             .into(binding.mangaCover)
     }
 
-    /**
-     * Updates chapter status in view.
-     *
-     * @param status download status
-     */
-    fun notifyStatus(status: Int) = with(binding.downloadText) {
-        when (status) {
-            Download.QUEUE -> setText(R.string.chapter_queued)
-            Download.DOWNLOADING -> setText(R.string.chapter_downloading)
-            Download.DOWNLOADED -> setText(R.string.chapter_downloaded)
-            Download.ERROR -> setText(R.string.chapter_error)
-            else -> text = ""
-        }
+    fun notifyStatus(state: Download.State) {
+        binding.download.setState(state)
     }
 }

@@ -14,9 +14,9 @@ class ChapterItem(val chapter: Chapter, val manga: Manga) :
     AbstractFlexibleItem<ChapterHolder>(),
     Chapter by chapter {
 
-    private var _status: Int = 0
+    private var _status: Download.State = Download.State.NOT_DOWNLOADED
 
-    var status: Int
+    var status: Download.State
         get() = download?.status ?: _status
         set(value) {
             _status = value
@@ -26,7 +26,7 @@ class ChapterItem(val chapter: Chapter, val manga: Manga) :
     var download: Download? = null
 
     val isDownloaded: Boolean
-        get() = status == Download.DOWNLOADED
+        get() = status == Download.State.DOWNLOADED
 
     override fun getLayoutRes(): Int {
         return R.layout.chapters_item

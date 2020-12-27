@@ -14,9 +14,9 @@ import eu.kanade.tachiyomi.ui.recent.DateSectionItem
 class UpdatesItem(val chapter: Chapter, val manga: Manga, header: DateSectionItem) :
     AbstractSectionableItem<UpdatesHolder, DateSectionItem>(header) {
 
-    private var _status: Int = 0
+    private var _status: Download.State = Download.State.NOT_DOWNLOADED
 
-    var status: Int
+    var status: Download.State
         get() = download?.status ?: _status
         set(value) {
             _status = value
@@ -26,7 +26,7 @@ class UpdatesItem(val chapter: Chapter, val manga: Manga, header: DateSectionIte
     var download: Download? = null
 
     val isDownloaded: Boolean
-        get() = status == Download.DOWNLOADED
+        get() = status == Download.State.DOWNLOADED
 
     override fun getLayoutRes(): Int {
         return R.layout.updates_item
