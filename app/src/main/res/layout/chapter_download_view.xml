@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:background="?selectableItemBackgroundBorderless">
+
+    <ImageView
+        android:id="@+id/download_icon_border"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/border_circle"
+        app:tint="@color/material_on_surface_emphasis_medium"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/download_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        app:srcCompat="@drawable/ic_arrow_downward_24dp"
+        app:tint="@color/material_on_surface_emphasis_medium"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/download_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminate="true"
+        android:padding="0dp"
+        android:visibility="gone"
+        app:indicatorColor="@color/material_on_surface_emphasis_medium"
+        app:indicatorInset="0dp"
+        app:indicatorSize="24dp"
+        app:trackThickness="2dp" />
+
+    <ImageView
+        android:id="@+id/downloaded_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/ic_check_circle_24dp"
+        app:tint="@color/material_on_surface_emphasis_medium"
+        tools:ignore="ContentDescription" />
+
+    <!--    chapter_error -->
+
+    <!--    chapter_queued-->
+
+</FrameLayout>

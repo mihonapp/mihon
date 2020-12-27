@@ -71,13 +71,13 @@ class ChapterHolder(
         notifyStatus(item.status)
     }
 
-    fun notifyStatus(status: Int) = with(binding.downloadText) {
+    private fun notifyStatus(status: Int) = with(binding.download) {
         when (status) {
-            Download.QUEUE -> setText(R.string.chapter_queued)
-            Download.DOWNLOADING -> setText(R.string.chapter_downloading)
-            Download.DOWNLOADED -> setText(R.string.chapter_downloaded)
-            Download.ERROR -> setText(R.string.chapter_error)
-            else -> text = ""
+            Download.QUEUE -> setState(ChapterDownloadView.State.QUEUED)
+            Download.DOWNLOADING -> setState(ChapterDownloadView.State.DOWNLOADING)
+            Download.DOWNLOADED -> setState(ChapterDownloadView.State.DOWNLOADED)
+            Download.ERROR -> setState(ChapterDownloadView.State.ERROR)
+            else -> setState(ChapterDownloadView.State.DOWNLOAD)
         }
     }
 }
