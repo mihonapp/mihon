@@ -110,10 +110,9 @@ fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListene
     return progressClient.newCall(request)
 }
 
-inline fun <reified T, R> Response.withResponse(block: (T) -> R): R {
+inline fun <reified T> Response.parseAs(): T {
     this.use {
         val responseBody = it.body?.string().orEmpty()
-        val response = Injekt.get<Json>().decodeFromString<T>(responseBody)
-        return block(response)
+        return Injekt.get<Json>().decodeFromString<T>(responseBody)
     }
 }
