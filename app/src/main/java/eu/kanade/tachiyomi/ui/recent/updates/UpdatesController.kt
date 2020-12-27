@@ -84,7 +84,7 @@ class UpdatesController :
         val layoutManager = LinearLayoutManager(view.context)
         binding.recycler.layoutManager = layoutManager
         binding.recycler.setHasFixedSize(true)
-        adapter = UpdatesAdapter(this@UpdatesController)
+        adapter = UpdatesAdapter(this@UpdatesController, view.context)
         binding.recycler.adapter = adapter
         adapter?.fastScroller = binding.fastScroller
 

@@ -13,11 +13,9 @@ import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.databinding.UpdatesItemBinding
 import eu.kanade.tachiyomi.source.LocalSource
-import eu.kanade.tachiyomi.util.system.getResourceColor
 
 /**
  * Holder that contains chapter item
- * Uses R.layout.item_recent_chapters.
  * UI related actions should be called from here.
  *
  * @param view the inflated view for this holder.
@@ -30,28 +28,13 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
 
     private val binding = UpdatesItemBinding.bind(view)
 
-    private var readColor = view.context.getResourceColor(R.attr.colorOnSurface, 0.38f)
-    private var unreadColor = view.context.getResourceColor(R.attr.colorOnSurface)
-
-    /**
-     * Currently bound item.
-     */
-    private var item: UpdatesItem? = null
-
     init {
         binding.mangaCover.setOnClickListener {
             adapter.coverClickListener.onCoverClick(bindingAdapterPosition)
         }
     }
 
-    /**
-     * Set values of view
-     *
-     * @param item item containing chapter information
-     */
     fun bind(item: UpdatesItem) {
-        this.item = item
-
         // Set chapter title
         binding.chapterTitle.text = item.chapter.name
 
@@ -60,11 +43,11 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
 
         // Check if chapter is read and set correct color
         if (item.chapter.read) {
-            binding.chapterTitle.setTextColor(readColor)
-            binding.mangaTitle.setTextColor(readColor)
+            binding.chapterTitle.setTextColor(adapter.readColor)
+            binding.mangaTitle.setTextColor(adapter.readColor)
         } else {
-            binding.chapterTitle.setTextColor(unreadColor)
-            binding.mangaTitle.setTextColor(unreadColor)
+            binding.chapterTitle.setTextColor(adapter.unreadColor)
+            binding.mangaTitle.setTextColor(adapter.unreadColor)
         }
 
         // Set chapter status
