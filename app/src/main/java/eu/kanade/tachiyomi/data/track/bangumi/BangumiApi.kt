@@ -8,6 +8,9 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -30,46 +33,62 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     suspend fun addLibManga(track: Track): Track {
-        val body = FormBody.Builder()
-            .add("rating", track.score.toInt().toString())
-            .add("status", track.toBangumiStatus())
-            .build()
-        authClient.newCall(POST("$apiUrl/collection/${track.media_id}/update", body = body)).await()
-        return track
+        return withContext(Dispatchers.IO) {
+            val body = FormBody.Builder()
+                .add("rating", track.score.toInt().toString())
+                .add("status", track.toBangumiStatus())
+                .build()
+            authClient.newCall(POST("$apiUrl/collection/${track.media_id}/update", body = body))
+                .await()
+            track
+        }
     }
 
     suspend fun updateLibManga(track: Track): Track {
-        // read status update
-        val sbody = FormBody.Builder()
-            .add("status", track.toBangumiStatus())
-            .build()
-        authClient.newCall(POST("$apiUrl/collection/${track.media_id}/update", body = sbody)).await()
+        return withContext(Dispatchers.IO) {
+            // read status update
+            val sbody = FormBody.Builder()
+                .add("status", track.toBangumiStatus())
+                .build()
+            authClient.newCall(POST("$apiUrl/collection/${track.media_id}/update", body = sbody))
+                .await()
 
-        // chapter update
-        val body = FormBody.Builder()
-            .add("watched_eps", track.last_chapter_read.toString())
-            .build()
-        authClient.newCall(POST("$apiUrl/subject/${track.media_id}/update/watched_eps", body = body)).await()
+            // chapter update
+            val body = FormBody.Builder()
+                .add("watched_eps", track.last_chapter_read.toString())
+                .build()
+            authClient.newCall(
+                POST(
+                    "$apiUrl/subject/${track.media_id}/update/watched_eps",
+                    body = body
+                )
+            ).await()
 
-        return track
+            track
+        }
     }
 
     suspend fun search(search: String): List<TrackSearch> {
-        val url = "$apiUrl/search/subject/${URLEncoder.encode(search, Charsets.UTF_8.name())}"
-            .toUri()
-            .buildUpon()
-            .appendQueryParameter("max_results", "20")
-            .build()
-        return authClient.newCall(GET(url.toString())).await().use {
-            var responseBody = it.body?.string().orEmpty()
-            if (responseBody.isEmpty()) {
-                throw Exception("Null Response")
-            }
-            if (responseBody.contains("\"code\":404")) {
-                responseBody = "{\"results\":0,\"list\":[]}"
-            }
-            val response = json.decodeFromString<JsonObject>(responseBody)["list"]?.jsonArray
-            response?.filter { it.jsonObject["type"]?.jsonPrimitive?.int == 1 }?.map { jsonToSearch(it.jsonObject) }.orEmpty()
+        return withContext(Dispatchers.IO) {
+            val url = "$apiUrl/search/subject/${URLEncoder.encode(search, Charsets.UTF_8.name())}"
+                .toUri()
+                .buildUpon()
+                .appendQueryParameter("max_results", "20")
+                .build()
+            authClient.newCall(GET(url.toString()))
+                .await()
+                .use {
+                    var responseBody = it.body?.string().orEmpty()
+                    if (responseBody.isEmpty()) {
+                        throw Exception("Null Response")
+                    }
+                    if (responseBody.contains("\"code\":404")) {
+                        responseBody = "{\"results\":0,\"list\":[]}"
+                    }
+                    val response = json.decodeFromString<JsonObject>(responseBody)["list"]?.jsonArray
+                    response?.filter { it.jsonObject["type"]?.jsonPrimitive?.int == 1 }
+                        ?.map { jsonToSearch(it.jsonObject) }.orEmpty()
+                }
         }
     }
 
@@ -98,38 +117,40 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     suspend fun findLibManga(track: Track): Track? {
-        return authClient.newCall(GET("$apiUrl/subject/${track.media_id}")).await().use {
-            // get comic info
-            val responseBody = it.body?.string().orEmpty()
-            jsonToTrack(json.decodeFromString(responseBody))
+        return withContext(Dispatchers.IO) {
+            authClient.newCall(GET("$apiUrl/subject/${track.media_id}"))
+                .await()
+                .parseAs<JsonObject>()
+                .let { jsonToSearch(it) }
         }
     }
 
     suspend fun statusLibManga(track: Track): Track? {
-        val urlUserRead = "$apiUrl/collection/${track.media_id}"
-        val requestUserRead = Request.Builder()
-            .url(urlUserRead)
-            .cacheControl(CacheControl.FORCE_NETWORK)
-            .get()
-            .build()
+        return withContext(Dispatchers.IO) {
+            val urlUserRead = "$apiUrl/collection/${track.media_id}"
+            val requestUserRead = Request.Builder()
+                .url(urlUserRead)
+                .cacheControl(CacheControl.FORCE_NETWORK)
+                .get()
+                .build()
 
-        // TODO: get user readed chapter here
-        return authClient.newCall(requestUserRead).await().use {
-            val resp = it.body?.string()
-            val coll = json.decodeFromString<Collection>(resp!!)
-            track.status = coll.status?.id!!
-            track.last_chapter_read = coll.ep_status!!
-            track
+            // TODO: get user readed chapter here
+            authClient.newCall(requestUserRead)
+                .await()
+                .parseAs<Collection>()
+                .let {
+                    track.status = it.status?.id!!
+                    track.last_chapter_read = it.ep_status!!
+                    track
+                }
         }
     }
 
     suspend fun accessToken(code: String): OAuth {
-        return client.newCall(accessTokenRequest(code)).await().use {
-            val responseBody = it.body?.string().orEmpty()
-            if (responseBody.isEmpty()) {
-                throw Exception("Null Response")
-            }
-            json.decodeFromString<OAuth>(responseBody)
+        return withContext(Dispatchers.IO) {
+            client.newCall(accessTokenRequest(code))
+                .await()
+                .parseAs()
         }
     }
 

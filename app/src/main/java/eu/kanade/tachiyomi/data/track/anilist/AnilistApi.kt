@@ -6,7 +6,9 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.await
-import kotlinx.serialization.decodeFromString
+import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -33,8 +35,9 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     suspend fun addLibManga(track: Track): Track {
-        val query =
-            """
+        return withContext(Dispatchers.IO) {
+            val query =
+                """
             |mutation AddManga(${'$'}mangaId: Int, ${'$'}progress: Int, ${'$'}status: MediaListStatus) {
                 |SaveMediaListEntry (mediaId: ${'$'}mangaId, progress: ${'$'}progress, status: ${'$'}status) { 
                 |   id 
@@ -42,28 +45,34 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 |} 
             |}
             |""".trimMargin()
-        val payload = buildJsonObject {
-            put("query", query)
-            putJsonObject("variables") {
-                put("mangaId", track.media_id)
-                put("progress", track.last_chapter_read)
-                put("status", track.toAnilistStatus())
+            val payload = buildJsonObject {
+                put("query", query)
+                putJsonObject("variables") {
+                    put("mangaId", track.media_id)
+                    put("progress", track.last_chapter_read)
+                    put("status", track.toAnilistStatus())
+                }
             }
-        }
-        return authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime))).await().use {
-            val responseBody = it.body?.string().orEmpty()
-            if (responseBody.isEmpty()) {
-                throw Exception("Null Response")
-            }
-            val response = json.decodeFromString<JsonObject>(responseBody)
-            track.library_id = response["data"]!!.jsonObject["SaveMediaListEntry"]!!.jsonObject["id"]!!.jsonPrimitive.long
-            track
+            authClient.newCall(
+                POST(
+                    apiUrl,
+                    body = payload.toString().toRequestBody(jsonMime)
+                )
+            )
+                .await()
+                .parseAs<JsonObject>()
+                .let {
+                    track.library_id =
+                        it["data"]!!.jsonObject["SaveMediaListEntry"]!!.jsonObject["id"]!!.jsonPrimitive.long
+                    track
+                }
         }
     }
 
     suspend fun updateLibManga(track: Track): Track {
-        val query =
-            """
+        return withContext(Dispatchers.IO) {
+            val query =
+                """
             |mutation UpdateManga(${'$'}listId: Int, ${'$'}progress: Int, ${'$'}status: MediaListStatus, ${'$'}score: Int) {
                 |SaveMediaListEntry (id: ${'$'}listId, progress: ${'$'}progress, status: ${'$'}status, scoreRaw: ${'$'}score) {
                     |id
@@ -72,22 +81,25 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 |}
             |}
             |""".trimMargin()
-        val payload = buildJsonObject {
-            put("query", query)
-            putJsonObject("variables") {
-                put("listId", track.library_id)
-                put("progress", track.last_chapter_read)
-                put("status", track.toAnilistStatus())
-                put("score", track.score.toInt())
+            val payload = buildJsonObject {
+                put("query", query)
+                putJsonObject("variables") {
+                    put("listId", track.library_id)
+                    put("progress", track.last_chapter_read)
+                    put("status", track.toAnilistStatus())
+                    put("score", track.score.toInt())
+                }
             }
+            authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime)))
+                .await()
+            track
         }
-        authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime))).await()
-        return track
     }
 
     suspend fun search(search: String): List<TrackSearch> {
-        val query =
-            """
+        return withContext(Dispatchers.IO) {
+            val query =
+                """
             |query Search(${'$'}query: String) {
                 |Page (perPage: 50) {
                     |media(search: ${'$'}query, type: MANGA, format_not_in: [NOVEL]) {
@@ -111,29 +123,34 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 |}
             |}
             |""".trimMargin()
-        val payload = buildJsonObject {
-            put("query", query)
-            putJsonObject("variables") {
-                put("query", search)
+            val payload = buildJsonObject {
+                put("query", query)
+                putJsonObject("variables") {
+                    put("query", search)
+                }
             }
-        }
-        return authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime))).await().use {
-            val responseBody = it.body?.string().orEmpty()
-            if (responseBody.isEmpty()) {
-                throw Exception("Null Response")
-            }
-            val response = json.decodeFromString<JsonObject>(responseBody)
-            val data = response["data"]!!.jsonObject
-            val page = data["Page"]!!.jsonObject
-            val media = page["media"]!!.jsonArray
-            val entries = media.map { jsonToALManga(it.jsonObject) }
-            entries.map { it.toTrack() }
+            authClient.newCall(
+                POST(
+                    apiUrl,
+                    body = payload.toString().toRequestBody(jsonMime)
+                )
+            )
+                .await()
+                .parseAs<JsonObject>()
+                .let { response ->
+                    val data = response["data"]!!.jsonObject
+                    val page = data["Page"]!!.jsonObject
+                    val media = page["media"]!!.jsonArray
+                    val entries = media.map { jsonToALManga(it.jsonObject) }
+                    entries.map { it.toTrack() }
+                }
         }
     }
 
     suspend fun findLibManga(track: Track, userid: Int): Track? {
-        val query =
-            """
+        return withContext(Dispatchers.IO) {
+            val query =
+                """
             |query (${'$'}id: Int!, ${'$'}manga_id: Int!) {
                 |Page {
                     |mediaList(userId: ${'$'}id, type: MANGA, mediaId: ${'$'}manga_id) {
@@ -163,24 +180,28 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 |}
             |}
             |""".trimMargin()
-        val payload = buildJsonObject {
-            put("query", query)
-            putJsonObject("variables") {
-                put("id", userid)
-                put("manga_id", track.media_id)
+            val payload = buildJsonObject {
+                put("query", query)
+                putJsonObject("variables") {
+                    put("id", userid)
+                    put("manga_id", track.media_id)
+                }
             }
-        }
-        return authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime))).await().use {
-            val responseBody = it.body?.string().orEmpty()
-            if (responseBody.isEmpty()) {
-                throw Exception("Null Response")
-            }
-            val response = json.decodeFromString<JsonObject>(responseBody)
-            val data = response["data"]!!.jsonObject
-            val page = data["Page"]!!.jsonObject
-            val media = page["mediaList"]!!.jsonArray
-            val entries = media.map { jsonToALUserManga(it.jsonObject) }
-            entries.firstOrNull()?.toTrack()
+            authClient.newCall(
+                POST(
+                    apiUrl,
+                    body = payload.toString().toRequestBody(jsonMime)
+                )
+            )
+                .await()
+                .parseAs<JsonObject>()
+                .let { response ->
+                    val data = response["data"]!!.jsonObject
+                    val page = data["Page"]!!.jsonObject
+                    val media = page["mediaList"]!!.jsonArray
+                    val entries = media.map { jsonToALUserManga(it.jsonObject) }
+                    entries.firstOrNull()?.toTrack()
+                }
         }
     }
 
@@ -193,8 +214,9 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     }
 
     suspend fun getCurrentUser(): Pair<Int, String> {
-        val query =
-            """
+        return withContext(Dispatchers.IO) {
+            val query =
+                """
             |query User {
                 |Viewer {
                     |id
@@ -204,21 +226,25 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 |}
             |}
             |""".trimMargin()
-        val payload = buildJsonObject {
-            put("query", query)
-        }
-        return authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime))).await().use {
-            val responseBody = it.body?.string().orEmpty()
-            if (responseBody.isEmpty()) {
-                throw Exception("Null Response")
+            val payload = buildJsonObject {
+                put("query", query)
             }
-            val response = json.decodeFromString<JsonObject>(responseBody)
-            val data = response["data"]!!.jsonObject
-            val viewer = data["Viewer"]!!.jsonObject
-            Pair(
-                viewer["id"]!!.jsonPrimitive.int,
-                viewer["mediaListOptions"]!!.jsonObject["scoreFormat"]!!.jsonPrimitive.content
+            authClient.newCall(
+                POST(
+                    apiUrl,
+                    body = payload.toString().toRequestBody(jsonMime)
+                )
             )
+                .await()
+                .parseAs<JsonObject>()
+                .let {
+                    val data = it["data"]!!.jsonObject
+                    val viewer = data["Viewer"]!!.jsonObject
+                    Pair(
+                        viewer["id"]!!.jsonPrimitive.int,
+                        viewer["mediaListOptions"]!!.jsonObject["scoreFormat"]!!.jsonPrimitive.content
+                    )
+                }
         }
     }
 
