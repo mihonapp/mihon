@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.view.View
+import androidx.core.view.isVisible
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -11,6 +12,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.databinding.UpdatesItemBinding
+import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.util.system.getResourceColor
 
 /**
@@ -66,6 +68,7 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
         }
 
         // Set chapter status
+        binding.download.isVisible = item.manga.source != LocalSource.ID
         notifyStatus(item.status)
 
         // Set cover

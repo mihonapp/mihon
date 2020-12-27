@@ -18,7 +18,7 @@
         android:id="@+id/download_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp"
+        android:padding="3dp"
         app:srcCompat="@drawable/ic_arrow_downward_24dp"
         app:tint="@color/material_on_surface_emphasis_medium"
         tools:ignore="ContentDescription" />

@@ -9,6 +9,7 @@ import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.databinding.ChaptersItemBinding
+import eu.kanade.tachiyomi.source.LocalSource
 import java.util.Date
 
 class ChapterHolder(
@@ -67,6 +68,7 @@ class ChapterHolder(
             binding.chapterDescription.text = ""
         }
 
+        binding.download.isVisible = item.manga.source != LocalSource.ID
         binding.download.setState(item.status)
     }
 }
