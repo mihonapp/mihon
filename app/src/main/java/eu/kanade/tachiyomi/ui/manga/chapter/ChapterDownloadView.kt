@@ -19,11 +19,16 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     fun setState(state: Download.State) {
-        binding.downloadIconBorder.isVisible = state == Download.State.NOT_DOWNLOADED || state == Download.State.ERROR
+        binding.downloadIconBorder.isVisible = state == Download.State.NOT_DOWNLOADED
         binding.downloadIcon.isVisible = state == Download.State.NOT_DOWNLOADED || state == Download.State.DOWNLOADING
 
         binding.downloadProgress.isVisible = state == Download.State.DOWNLOADING || state == Download.State.QUEUE
+        // TODO: show actual download progress
 
         binding.downloadedIcon.isVisible = state == Download.State.DOWNLOADED
+
+        binding.errorIcon.isVisible = state == Download.State.ERROR
     }
+
+    // TODO: onClick actions
 }

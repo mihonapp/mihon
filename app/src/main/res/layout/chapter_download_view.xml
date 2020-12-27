@@ -43,8 +43,12 @@
         app:tint="@color/material_on_surface_emphasis_medium"
         tools:ignore="ContentDescription" />
 
-    <!--    chapter_error -->
-
-    <!--    chapter_queued-->
+    <ImageView
+        android:id="@+id/error_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/ic_error_outline_24dp"
+        app:tint="?attr/colorError"
+        tools:ignore="ContentDescription" />
 
 </FrameLayout>
