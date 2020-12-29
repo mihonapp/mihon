@@ -673,14 +673,18 @@ class ReaderPresenter(
                         // We want these to execute even if the presenter is destroyed and leaks
                         // for a while. The view can still be garbage collected.
                         async {
-                            service.update(track)
-                            db.insertTrack(track).await()
+                            runCatching {
+                                service.update(track)
+                                db.insertTrack(track).await()
+                            }
                         }
                     } else {
                         null
                     }
                 }
                 .awaitAll()
+                .filter { it.isFailure }
+                .forEach { it.exceptionOrNull()?.let { e -> Timber.w(e) } }
         }
     }
 
