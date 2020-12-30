@@ -79,7 +79,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
         }
     }
 
-    private suspend fun getMangaDetails(id: Int): TrackSearch {
+    suspend fun getMangaDetails(id: Int): TrackSearch {
         return withContext(Dispatchers.IO) {
             val url = "$baseApiUrl/manga".toUri().buildUpon()
                 .appendPath(id.toString())

@@ -76,6 +76,12 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
+        if (query.startsWith("my:")) {
+            query.substringAfter("my:").toIntOrNull()?.let { id ->
+                return runAsObservable({ listOf(api.getMangaDetails(id)) })
+            }
+        }
+
         return runAsObservable({ api.search(query) })
     }
 
