@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.setting.track
 
 import android.net.Uri
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 
 class MyAnimeListLoginActivity : BaseOAuthLoginActivity() {
 
@@ -11,9 +10,7 @@ class MyAnimeListLoginActivity : BaseOAuthLoginActivity() {
         if (code != null) {
             launchIO {
                 trackManager.myAnimeList.login(code)
-                launchUI {
-                    returnToSettings()
-                }
+                returnToSettings()
             }
         } else {
             trackManager.myAnimeList.logout()

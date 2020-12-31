@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.setting.track
 
 import android.net.Uri
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 
 class AnilistLoginActivity : BaseOAuthLoginActivity() {
 
@@ -12,9 +11,7 @@ class AnilistLoginActivity : BaseOAuthLoginActivity() {
         if (matchResult?.groups?.get(1) != null) {
             launchIO {
                 trackManager.aniList.login(matchResult.groups[1]!!.value)
-                launchUI {
-                    returnToSettings()
-                }
+                returnToSettings()
             }
         } else {
             trackManager.aniList.logout()

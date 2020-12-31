@@ -114,12 +114,10 @@ class TrackPresenter(
             try {
                 service.update(track)
                 db.insertTrack(track).await()
-                launchUI {
-                    view!!.onRefreshDone()
-                }
+                view?.onRefreshDone()
             } catch (e: Throwable) {
                 launchUI {
-                    view!!.onRefreshError(e)
+                    view?.onRefreshError(e)
 
                     // Restart on error to set old values
                     fetchTrackings()

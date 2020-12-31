@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.setting.track
 
 import android.net.Uri
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 
 class BangumiLoginActivity : BaseOAuthLoginActivity() {
 
@@ -11,9 +10,7 @@ class BangumiLoginActivity : BaseOAuthLoginActivity() {
         if (code != null) {
             launchIO {
                 trackManager.bangumi.login(code)
-                launchUI {
-                    returnToSettings()
-                }
+                returnToSettings()
             }
         } else {
             trackManager.bangumi.logout()

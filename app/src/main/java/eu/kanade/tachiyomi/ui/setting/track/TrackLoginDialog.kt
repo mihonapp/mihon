@@ -45,16 +45,12 @@ class TrackLoginDialog(
         launchIO {
             try {
                 service.login(user, pass)
-                launchUI {
-                    dialog?.dismiss()
-                    view?.context?.toast(R.string.login_success)
-                }
+                dialog?.dismiss()
+                launchUI { view?.context?.toast(R.string.login_success) }
             } catch (e: Throwable) {
-                launchUI {
-                    binding!!.login.progress = -1
-                    binding!!.login.setText(R.string.unknown_error)
-                    e.message?.let { view?.context?.toast(it) }
-                }
+                binding?.login?.progress = -1
+                binding?.login?.setText(R.string.unknown_error)
+                launchUI { e.message?.let { view?.context?.toast(it) } }
             }
         }
     }
