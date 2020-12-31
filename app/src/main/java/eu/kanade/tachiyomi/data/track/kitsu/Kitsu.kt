@@ -79,18 +79,18 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun bind(track: Track): Observable<Track> {
-        return runAsObservable({ api.findLibManga(track, getUserId()) })
-            .flatMap { remoteTrack ->
-                if (remoteTrack != null) {
-                    track.copyPersonalFrom(remoteTrack)
-                    track.media_id = remoteTrack.media_id
-                    runAsObservable({ update(track) })
-                } else {
-                    track.score = DEFAULT_SCORE
-                    track.status = DEFAULT_STATUS
-                    runAsObservable({ add(track) })
-                }
+        return runAsObservable({
+            val remoteTrack = api.findLibManga(track, getUserId())
+            if (remoteTrack != null) {
+                track.copyPersonalFrom(remoteTrack)
+                track.media_id = remoteTrack.media_id
+                update(track)
+            } else {
+                track.score = DEFAULT_SCORE
+                track.status = DEFAULT_STATUS
+                add(track)
             }
+        })
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
@@ -98,12 +98,12 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun refresh(track: Track): Observable<Track> {
-        return runAsObservable({ api.getLibManga(track) })
-            .map { remoteTrack ->
-                track.copyPersonalFrom(remoteTrack)
-                track.total_chapters = remoteTrack.total_chapters
-                track
-            }
+        return runAsObservable({
+            val remoteTrack = api.getLibManga(track)
+            track.copyPersonalFrom(remoteTrack)
+            track.total_chapters = remoteTrack.total_chapters
+            track
+        })
     }
 
     override suspend fun login(username: String, password: String) {

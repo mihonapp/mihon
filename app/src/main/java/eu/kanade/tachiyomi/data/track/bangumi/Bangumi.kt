@@ -65,18 +65,15 @@ class Bangumi(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun refresh(track: Track): Observable<Track> {
-        return runAsObservable({ api.statusLibManga(track) })
-            .flatMap {
-                track.copyPersonalFrom(it!!)
-                runAsObservable({ api.findLibManga(track) })
-                    .map { remoteTrack ->
-                        if (remoteTrack != null) {
-                            track.total_chapters = remoteTrack.total_chapters
-                            track.status = remoteTrack.status
-                        }
-                        track
-                    }
+        return runAsObservable({
+            val remoteStatusTrack = api.statusLibManga(track)
+            track.copyPersonalFrom(remoteStatusTrack!!)
+            api.findLibManga(track)?.let { remoteTrack ->
+                track.total_chapters = remoteTrack.total_chapters
+                track.status = remoteTrack.status
             }
+            track
+        })
     }
 
     override fun getLogo() = R.drawable.ic_tracker_bangumi
