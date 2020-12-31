@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
 import timber.log.Timber
+import kotlin.math.min
 
 /**
  * Implementation of a [BaseViewer] to display pages with a [ViewPager].
@@ -239,7 +240,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
         if (pager.isGone) {
             Timber.d("Pager first layout")
             val pages = chapters.currChapter.pages ?: return
-            moveToPage(pages[chapters.currChapter.requestedPage])
+            moveToPage(pages[min(chapters.currChapter.requestedPage, pages.lastIndex)])
             pager.isVisible = true
         }
     }
