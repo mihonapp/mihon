@@ -72,7 +72,7 @@ class AboutController : SettingsController() {
 
             onClick {
                 val url = if (BuildConfig.DEBUG) {
-                    "https://github.com/tachiyomiorg/tachiyomi/commits/dev"
+                    "https://github.com/tachiyomiorg/tachiyomi/commits/master"
                 } else {
                     "https://github.com/tachiyomiorg/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
                 }
@@ -87,7 +87,7 @@ class AboutController : SettingsController() {
                 titleRes = R.string.notices
 
                 onClick {
-                    val intent = Intent(Intent.ACTION_VIEW, "https://github.com/tachiyomiorg/tachiyomi/blob/dev/PREVIEW_RELEASE_NOTES.md".toUri())
+                    val intent = Intent(Intent.ACTION_VIEW, "https://github.com/tachiyomiorg/tachiyomi/blob/master/PREVIEW_RELEASE_NOTES.md".toUri())
                     startActivity(intent)
                 }
             }
