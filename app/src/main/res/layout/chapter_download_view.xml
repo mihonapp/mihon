@@ -33,11 +33,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:indeterminate="true"
-        android:padding="0dp"
+        android:padding="1dp"
         android:visibility="gone"
         app:indicatorColor="@color/material_on_surface_emphasis_medium"
         app:indicatorInset="0dp"
-        app:indicatorSize="24dp"
+        app:indicatorSize="26dp"
         app:trackThickness="2dp" />
 
     <ImageView
