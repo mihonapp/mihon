@@ -6,12 +6,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.databinding.UpdatesItemBinding
 import eu.kanade.tachiyomi.source.LocalSource
+import eu.kanade.tachiyomi.ui.manga.chapter.base.BaseChapterHolder
 
 /**
  * Holder that contains chapter item
@@ -23,7 +23,7 @@ import eu.kanade.tachiyomi.source.LocalSource
  * @constructor creates a new recent chapter holder.
  */
 class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter) :
-    FlexibleViewHolder(view, adapter) {
+    BaseChapterHolder(view, adapter) {
 
     private val binding = UpdatesItemBinding.bind(view)
 
@@ -31,6 +31,8 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
         binding.mangaCover.setOnClickListener {
             adapter.coverClickListener.onCoverClick(bindingAdapterPosition)
         }
+
+        binding.download.setOnClickListener { onDownloadClick(it) }
     }
 
     fun bind(item: UpdatesItem) {

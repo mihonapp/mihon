@@ -56,6 +56,4 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
 
         binding.errorIcon.isVisible = state == Download.State.ERROR
     }
-
-    // TODO: onClick actions
 }

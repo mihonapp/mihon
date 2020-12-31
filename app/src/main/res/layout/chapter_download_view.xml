@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="28dp"
     android:layout_height="28dp"
-    android:background="?selectableItemBackgroundBorderless"
-    android:clickable="true"
-    android:focusable="true">
+    android:background="?selectableItemBackgroundBorderless">
 
     <ImageView
         android:id="@+id/download_icon_border"

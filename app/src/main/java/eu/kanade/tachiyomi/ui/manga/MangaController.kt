@@ -34,6 +34,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.MangaControllerBinding
@@ -59,6 +60,7 @@ import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersSettingsSheet
 import eu.kanade.tachiyomi.ui.manga.chapter.DeleteChaptersDialog
 import eu.kanade.tachiyomi.ui.manga.chapter.DownloadCustomChaptersDialog
 import eu.kanade.tachiyomi.ui.manga.chapter.MangaChaptersHeaderAdapter
+import eu.kanade.tachiyomi.ui.manga.chapter.base.BaseChaptersAdapter
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoHeaderAdapter
 import eu.kanade.tachiyomi.ui.manga.track.TrackController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -90,6 +92,7 @@ class MangaController :
     ActionMode.Callback,
     FlexibleAdapter.OnItemClickListener,
     FlexibleAdapter.OnItemLongClickListener,
+    BaseChaptersAdapter.OnChapterClickListener,
     ChangeMangaCoverDialog.Listener,
     ChangeMangaCategoriesDialog.Listener,
     DownloadCustomChaptersDialog.Listener,
@@ -864,6 +867,22 @@ class MangaController :
     override fun onDetach(view: View) {
         destroyActionModeIfNeeded()
         super.onDetach(view)
+    }
+
+    override fun downloadChapter(position: Int) {
+        val item = chaptersAdapter?.getItem(position) ?: return
+        if (item.status == Download.State.ERROR) {
+            DownloadService.start(activity!!)
+        } else {
+            downloadChapters(listOf(item))
+        }
+        chaptersAdapter?.updateItem(item)
+    }
+
+    override fun deleteChapter(position: Int) {
+        val item = chaptersAdapter?.getItem(position) ?: return
+        deleteChapters(listOf(item))
+        chaptersAdapter?.updateItem(item)
     }
 
     // SELECTION MODE ACTIONS
