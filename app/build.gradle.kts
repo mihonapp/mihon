@@ -14,6 +14,10 @@ plugins {
     id("com.github.zellius.shortcut-helper")
 }
 
+if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 shortcutHelper.setFilePath("./shortcuts.xml")
 
 
@@ -24,24 +28,6 @@ fun runCommand(command: String): String {
         standardOutput = byteOut
     }
     return String(byteOut.toByteArray()).trim()
-}
-
-// Git is needed in your system PATH for these commands to work.
-// If it's not installed, you can return a random value as a workaround
-fun getCommitCount(): String {
-    return runCommand("git rev-list --count HEAD")
-    // return "1"
-}
-
-fun getGitSha(): String {
-    return runCommand("git rev-parse --short HEAD")
-    // return "1"
-}
-
-fun getBuildTime(): String {
-    val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-    df.timeZone = TimeZone.getTimeZone("UTC")
-    return df.format(Date())
 }
 
 
@@ -294,20 +280,6 @@ dependencies {
 //    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.4")
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath(kotlin("gradle-plugin", version = BuildPluginsVersion.KOTLIN))
-    }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-}
-
 tasks {
     // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api(-markers)
     withType<KotlinCompile> {
@@ -333,6 +305,36 @@ tasks {
     }
 }
 
-if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
-    apply(plugin = "com.google.gms.google-services")
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath(kotlin("gradle-plugin", version = BuildPluginsVersion.KOTLIN))
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+
+// Git is needed in your system PATH for these commands to work.
+// If it's not installed, you can return a random value as a workaround
+fun getCommitCount(): String {
+    return runCommand("git rev-list --count HEAD")
+    // return "1"
+}
+
+fun getGitSha(): String {
+    return runCommand("git rev-parse --short HEAD")
+    // return "1"
+}
+
+fun getBuildTime(): String {
+    val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    df.timeZone = TimeZone.getTimeZone("UTC")
+    return df.format(Date())
 }
