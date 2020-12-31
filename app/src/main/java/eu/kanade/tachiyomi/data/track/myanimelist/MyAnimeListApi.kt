@@ -167,7 +167,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
         return withContext(Dispatchers.IO) {
             val urlBuilder = "$baseApiUrl/users/@me/mangalist".toUri().buildUpon()
                 .appendQueryParameter("fields", "list_status")
-                .appendQueryParameter("limit", "25")
+                .appendQueryParameter("limit", listPaginationAmount.toString())
             if (offset > 0) {
                 urlBuilder.appendQueryParameter("offset", offset.toString())
             }
@@ -192,7 +192,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                         }
                         // Check next page if there's more
                         !obj["paging"]!!.jsonObject["next"]?.jsonPrimitive?.contentOrNull.isNullOrBlank() -> {
-                            findListItem(track, offset + 25)
+                            findListItem(track, offset + listPaginationAmount)
                         }
                         // No more pages to check, item wasn't found
                         else -> {
@@ -219,6 +219,8 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
 
         private const val baseOAuthUrl = "https://myanimelist.net/v1/oauth2"
         private const val baseApiUrl = "https://api.myanimelist.net/v2"
+
+        private const val listPaginationAmount = 250
 
         private var codeVerifier: String = ""
 
