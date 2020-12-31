@@ -166,7 +166,7 @@ dependencies {
     // UI library
     implementation("com.google.android.material:material:1.3.0-beta01")
 
-    implementation("com.google.firebase:firebase-core:18.0.0")
+    "standardImplementation"("com.google.firebase:firebase-core:18.0.0")
 
     // ReactiveX
     implementation("io.reactivex:rxandroid:1.2.1")
