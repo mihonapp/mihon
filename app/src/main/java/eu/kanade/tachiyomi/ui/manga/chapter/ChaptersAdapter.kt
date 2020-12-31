@@ -16,7 +16,7 @@ class ChaptersAdapter(
     context: Context
 ) : FlexibleAdapter<ChapterItem>(null, controller, true) {
 
-    val preferences: PreferencesHelper by injectLazy()
+    private val preferences: PreferencesHelper by injectLazy()
 
     var items: List<ChapterItem> = emptyList()
 
