@@ -5,11 +5,14 @@ import android.net.Uri
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.model.toSChapter
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 
@@ -39,7 +42,10 @@ abstract class AbstractBackupManager(protected val context: Context) {
      * @return [Observable] that contains manga
      */
     internal fun restoreChapterFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>): Observable<Pair<List<Chapter>, List<Chapter>>> {
-        return source.fetchChapterList(manga)
+        return runAsObservable({
+            source.getChapterList(manga.toMangaInfo())
+                .map { it.toSChapter() }
+        })
             .map { syncChaptersWithSource(databaseHelper, it, manga, source) }
             .doOnNext { (first) ->
                 if (first.isNotEmpty()) {

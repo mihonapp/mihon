@@ -4,15 +4,18 @@ import android.os.Bundle
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
+import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.model.toSChapter
 import eu.kanade.tachiyomi.ui.browse.migration.MigrationFlags
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchCardItem
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchItem
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchPresenter
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -54,7 +57,12 @@ class SearchPresenter(
 
         replacingMangaRelay.call(true)
 
-        Observable.defer { source.fetchChapterList(manga) }
+        Observable.defer {
+            runAsObservable({
+                source.getChapterList(manga.toMangaInfo())
+                    .map { it.toSChapter() }
+            })
+        }
             .onErrorReturn { emptyList() }
             .doOnNext { migrateMangaInternal(source, it, prevManga, manga, replace) }
             .onErrorReturn { emptyList() }

@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.model.toSChapter
 import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.util.chapter.NoChaptersException
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
@@ -361,7 +362,10 @@ class LibraryUpdateService(
                 .subscribe()
         }
 
-        return source.fetchChapterList(manga)
+        return runAsObservable({
+            source.getChapterList(manga.toMangaInfo())
+                .map { it.toSChapter() }
+        })
             .map { syncChaptersWithSource(db, it, manga, source) }
     }
 
