@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.browse.source.globalsearch
 import android.os.Bundle
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.CatalogueSource
@@ -11,8 +12,10 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourcePresenter
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -247,13 +250,13 @@ open class GlobalSearchPresenter(
      * @return an observable of the manga to initialize
      */
     private fun getMangaDetailsObservable(manga: Manga, source: Source): Observable<Manga> {
-        return source.fetchMangaDetails(manga)
-            .flatMap { networkManga ->
-                manga.copyFrom(networkManga)
-                manga.initialized = true
-                db.insertManga(manga).executeAsBlocking()
-                Observable.just(manga)
-            }
+        return runAsObservable({
+            val networkManga = source.getMangaDetails(manga.toMangaInfo())
+            manga.copyFrom(networkManga.toSManga())
+            manga.initialized = true
+            db.insertManga(manga).executeAsBlocking()
+            manga
+        })
             .onErrorResumeNext { Observable.just(manga) }
     }
 

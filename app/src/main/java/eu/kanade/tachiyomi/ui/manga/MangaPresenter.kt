@@ -10,12 +10,14 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
+import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
@@ -24,6 +26,7 @@ import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.await
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
@@ -157,14 +160,15 @@ class MangaPresenter(
      */
     fun fetchMangaFromSource(manualFetch: Boolean = false) {
         if (!fetchMangaSubscription.isNullOrUnsubscribed()) return
-        fetchMangaSubscription = Observable.defer { source.fetchMangaDetails(manga) }
-            .map { networkManga ->
-                manga.prepUpdateCover(coverCache, networkManga, manualFetch)
-                manga.copyFrom(networkManga)
-                manga.initialized = true
-                db.insertManga(manga).executeAsBlocking()
-                manga
-            }
+        fetchMangaSubscription = runAsObservable({
+            val networkManga = source.getMangaDetails(manga.toMangaInfo())
+            val sManga = networkManga.toSManga()
+            manga.prepUpdateCover(coverCache, sManga, manualFetch)
+            manga.copyFrom(sManga)
+            manga.initialized = true
+            db.insertManga(manga).executeAsBlocking()
+            manga
+        })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeFirst(

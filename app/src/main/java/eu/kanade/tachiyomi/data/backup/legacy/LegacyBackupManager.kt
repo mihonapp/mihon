@@ -44,8 +44,11 @@ import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.database.models.MangaImpl
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.database.models.TrackImpl
+import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.model.toSManga
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import rx.Observable
 import timber.log.Timber
 import kotlin.math.max
@@ -256,14 +259,14 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
      * @return [Observable] that contains manga
      */
     fun restoreMangaFetchObservable(source: Source, manga: Manga): Observable<Manga> {
-        return source.fetchMangaDetails(manga)
-            .map { networkManga ->
-                manga.copyFrom(networkManga)
-                manga.favorite = true
-                manga.initialized = true
-                manga.id = insertManga(manga)
-                manga
-            }
+        return runAsObservable({
+            val networkManga = source.getMangaDetails(manga.toMangaInfo())
+            manga.copyFrom(networkManga.toSManga())
+            manga.favorite = true
+            manga.initialized = true
+            manga.id = insertManga(manga)
+            manga
+        })
     }
 
     /**

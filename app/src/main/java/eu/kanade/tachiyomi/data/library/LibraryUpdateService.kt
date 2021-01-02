@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateRanker.rankingScheme
@@ -22,8 +23,10 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.util.chapter.NoChaptersException
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
 import eu.kanade.tachiyomi.util.storage.getUriCompat
@@ -339,19 +342,20 @@ class LibraryUpdateService(
 
         // Update manga details metadata in the background
         if (preferences.autoUpdateMetadata()) {
-            source.fetchMangaDetails(manga)
-                .map { updatedManga ->
-                    // Avoid "losing" existing cover
-                    if (!updatedManga.thumbnail_url.isNullOrEmpty()) {
-                        manga.prepUpdateCover(coverCache, updatedManga, false)
-                    } else {
-                        updatedManga.thumbnail_url = manga.thumbnail_url
-                    }
-
-                    manga.copyFrom(updatedManga)
-                    db.insertManga(manga).executeAsBlocking()
-                    manga
+            runAsObservable({
+                val updatedManga = source.getMangaDetails(manga.toMangaInfo())
+                val sManga = updatedManga.toSManga()
+                // Avoid "losing" existing cover
+                if (!sManga.thumbnail_url.isNullOrEmpty()) {
+                    manga.prepUpdateCover(coverCache, sManga, false)
+                } else {
+                    sManga.thumbnail_url = manga.thumbnail_url
                 }
+
+                manga.copyFrom(sManga)
+                db.insertManga(manga).executeAsBlocking()
+                manga
+            })
                 .onErrorResumeNext { Observable.just(manga) }
                 .subscribeOn(Schedulers.io())
                 .subscribe()
@@ -372,15 +376,16 @@ class LibraryUpdateService(
                 val source = sourceManager.get(manga.source)
                     ?: return@flatMap Observable.empty<LibraryManga>()
 
-                source.fetchMangaDetails(manga)
-                    .map { networkManga ->
-                        manga.prepUpdateCover(coverCache, networkManga, true)
-                        networkManga.thumbnail_url?.let {
-                            manga.thumbnail_url = it
-                            db.insertManga(manga).executeAsBlocking()
-                        }
-                        manga
+                runAsObservable({
+                    val networkManga = source.getMangaDetails(manga.toMangaInfo())
+                    val sManga = networkManga.toSManga()
+                    manga.prepUpdateCover(coverCache, sManga, true)
+                    sManga.thumbnail_url?.let {
+                        manga.thumbnail_url = it
+                        db.insertManga(manga).executeAsBlocking()
                     }
+                    manga
+                })
                     .onErrorReturn { manga }
             }
             .doOnCompleted {
