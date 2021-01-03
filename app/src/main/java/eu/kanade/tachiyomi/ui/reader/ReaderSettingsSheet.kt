@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.widget.CompoundButton
 import android.widget.Spinner
 import androidx.annotation.ArrayRes
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -82,7 +81,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
      * Init the preferences for the pager reader.
      */
     private fun initPagerPreferences() {
-        binding.webtoonPrefsGroup.root.isGone = true
+        binding.webtoonPrefsGroup.root.isVisible = false
         binding.pagerPrefsGroup.root.isVisible = true
 
         binding.pagerPrefsGroup.tappingPrefsGroup.isVisible = preferences.readWithTapping().get()
@@ -99,7 +98,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
      * Init the preferences for the webtoon reader.
      */
     private fun initWebtoonPreferences() {
-        binding.pagerPrefsGroup.root.isGone = true
+        binding.pagerPrefsGroup.root.isVisible = false
         binding.webtoonPrefsGroup.root.isVisible = true
 
         binding.webtoonPrefsGroup.tappingPrefsGroup.isVisible = preferences.readWithTapping().get()
