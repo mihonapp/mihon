@@ -6,11 +6,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import eu.kanade.tachiyomi.util.lang.runAsObservable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import rx.Observable
 import uy.kohesive.injekt.injectLazy
 
 class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
@@ -83,14 +81,14 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         }
     }
 
-    override fun search(query: String): Observable<List<TrackSearch>> {
+    override suspend fun search(query: String): List<TrackSearch> {
         if (query.startsWith(SEARCH_ID_PREFIX)) {
             query.substringAfter(SEARCH_ID_PREFIX).toIntOrNull()?.let { id ->
-                return runAsObservable({ listOf(api.getMangaDetails(id)) })
+                return listOf(api.getMangaDetails(id))
             }
         }
 
-        return runAsObservable({ api.search(query) })
+        return api.search(query)
     }
 
     override suspend fun refresh(track: Track): Track {

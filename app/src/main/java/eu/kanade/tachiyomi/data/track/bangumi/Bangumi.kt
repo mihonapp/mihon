@@ -6,11 +6,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import eu.kanade.tachiyomi.util.lang.runAsObservable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import rx.Observable
 import uy.kohesive.injekt.injectLazy
 
 class Bangumi(private val context: Context, id: Int) : TrackService(id) {
@@ -57,8 +55,8 @@ class Bangumi(private val context: Context, id: Int) : TrackService(id) {
         }
     }
 
-    override fun search(query: String): Observable<List<TrackSearch>> {
-        return runAsObservable({ api.search(query) })
+    override suspend fun search(query: String): List<TrackSearch> {
+        return api.search(query)
     }
 
     override suspend fun refresh(track: Track): Track {
