@@ -15,6 +15,8 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -31,7 +33,7 @@ class TrackPresenter(
 
     private val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
 
-    private var trackJob: Job? = null
+    private var trackSubscription: Subscription? = null
     private var searchJob: Job? = null
     private var refreshJob: Job? = null
 
@@ -41,14 +43,17 @@ class TrackPresenter(
     }
 
     private fun fetchTrackings() {
-        trackJob?.cancel()
-        trackJob = launchIO {
-            val tracks = db.getTracks(manga).await()
-            trackList = loggedServices.map { service ->
-                TrackItem(tracks.find { it.sync_id == service.id }, service)
+        trackSubscription?.let { remove(it) }
+        trackSubscription = db.getTracks(manga)
+            .asRxObservable()
+            .map { tracks ->
+                loggedServices.map { service ->
+                    TrackItem(tracks.find { it.sync_id == service.id }, service)
+                }
             }
-            view?.onNextTrackings(trackList)
-        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext { trackList = it }
+            .subscribeLatestCache(TrackController::onNextTrackings)
     }
 
     fun refresh() {
