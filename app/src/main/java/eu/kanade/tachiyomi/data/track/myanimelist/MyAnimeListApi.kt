@@ -63,6 +63,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
         return withContext(Dispatchers.IO) {
             val url = "$baseApiUrl/manga".toUri().buildUpon()
                 .appendQueryParameter("q", query)
+                .appendQueryParameter("nsfw", "true")
                 .build()
             authClient.newCall(GET(url.toString()))
                 .await()
