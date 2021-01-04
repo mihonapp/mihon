@@ -22,6 +22,7 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         const val REREADING = 7
 
         private const val SEARCH_ID_PREFIX = "id:"
+        private const val SEARCH_LIST_PREFIX = "my:"
     }
 
     private val json: Json by injectLazy()
@@ -85,6 +86,12 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         if (query.startsWith(SEARCH_ID_PREFIX)) {
             query.substringAfter(SEARCH_ID_PREFIX).toIntOrNull()?.let { id ->
                 return listOf(api.getMangaDetails(id))
+            }
+        }
+
+        if (query.startsWith(SEARCH_LIST_PREFIX)) {
+            query.substringAfter(SEARCH_LIST_PREFIX).let { title ->
+                return api.findListItems(title)
             }
         }
 
