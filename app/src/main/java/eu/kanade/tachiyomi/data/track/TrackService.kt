@@ -46,11 +46,11 @@ abstract class TrackService(val id: Int) {
 
     abstract suspend fun update(track: Track): Track
 
-    abstract fun bind(track: Track): Observable<Track>
+    abstract suspend fun bind(track: Track): Track
 
     abstract fun search(query: String): Observable<List<TrackSearch>>
 
-    abstract fun refresh(track: Track): Observable<Track>
+    abstract suspend fun refresh(track: Track): Track
 
     abstract suspend fun login(username: String, password: String)
 

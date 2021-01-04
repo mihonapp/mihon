@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.await
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import eu.kanade.tachiyomi.util.system.toast
 import rx.Observable
 import rx.Subscription
@@ -62,7 +63,7 @@ class TrackPresenter(
         refreshSubscription = Observable.from(trackList)
             .filter { it.track != null }
             .flatMap { item ->
-                item.service.refresh(item.track!!)
+                runAsObservable({ item.service.refresh(item.track!!) })
                     .flatMap { db.insertTrack(it).asRxObservable() }
                     .map { item }
                     .onErrorReturn { item }
@@ -90,16 +91,14 @@ class TrackPresenter(
     fun registerTracking(item: Track?, service: TrackService) {
         if (item != null) {
             item.manga_id = manga.id!!
-            add(
-                service.bind(item)
-                    .flatMap { db.insertTrack(item).asRxObservable() }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                        { },
-                        { error -> context.toast(error.message) }
-                    )
-            )
+            launchIO {
+                try {
+                    service.bind(item)
+                    db.insertTrack(item).await()
+                } catch (e: Throwable) {
+                    launchUI { context.toast(e.message) }
+                }
+            }
         } else {
             unregisterTracking(service)
         }

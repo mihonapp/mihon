@@ -39,41 +39,36 @@ class Bangumi(private val context: Context, id: Int) : TrackService(id) {
         return api.updateLibManga(track)
     }
 
-    override fun bind(track: Track): Observable<Track> {
-        return runAsObservable({ api.statusLibManga(track) })
-            .flatMap {
-                runAsObservable({ api.findLibManga(track) }).flatMap { remoteTrack ->
-                    if (remoteTrack != null && it != null) {
-                        track.copyPersonalFrom(remoteTrack)
-                        track.library_id = remoteTrack.library_id
-                        track.status = remoteTrack.status
-                        track.last_chapter_read = remoteTrack.last_chapter_read
-                        refresh(track)
-                    } else {
-                        // Set default fields if it's not found in the list
-                        track.score = DEFAULT_SCORE.toFloat()
-                        track.status = DEFAULT_STATUS
-                        runAsObservable({ add(track) })
-                        runAsObservable({ update(track) })
-                    }
-                }
-            }
+    override suspend fun bind(track: Track): Track {
+        val statusTrack = api.statusLibManga(track)
+        val remoteTrack = api.findLibManga(track)
+        return if (remoteTrack != null && statusTrack != null) {
+            track.copyPersonalFrom(remoteTrack)
+            track.library_id = remoteTrack.library_id
+            track.status = remoteTrack.status
+            track.last_chapter_read = remoteTrack.last_chapter_read
+            refresh(track)
+        } else {
+            // Set default fields if it's not found in the list
+            track.score = DEFAULT_SCORE.toFloat()
+            track.status = DEFAULT_STATUS
+            add(track)
+            update(track)
+        }
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
         return runAsObservable({ api.search(query) })
     }
 
-    override fun refresh(track: Track): Observable<Track> {
-        return runAsObservable({
-            val remoteStatusTrack = api.statusLibManga(track)
-            track.copyPersonalFrom(remoteStatusTrack!!)
-            api.findLibManga(track)?.let { remoteTrack ->
-                track.total_chapters = remoteTrack.total_chapters
-                track.status = remoteTrack.status
-            }
-            track
-        })
+    override suspend fun refresh(track: Track): Track {
+        val remoteStatusTrack = api.statusLibManga(track)
+        track.copyPersonalFrom(remoteStatusTrack!!)
+        api.findLibManga(track)?.let { remoteTrack ->
+            track.total_chapters = remoteTrack.total_chapters
+            track.status = remoteTrack.status
+        }
+        return track
     }
 
     override fun getLogo() = R.drawable.ic_tracker_bangumi

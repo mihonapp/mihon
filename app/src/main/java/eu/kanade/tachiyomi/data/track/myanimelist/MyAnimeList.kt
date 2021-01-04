@@ -72,17 +72,15 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         return api.updateItem(track)
     }
 
-    override fun bind(track: Track): Observable<Track> {
-        return runAsObservable({
-            val remoteTrack = api.findListItem(track)
-            if (remoteTrack != null) {
-                track.copyPersonalFrom(remoteTrack)
-                track.media_id = remoteTrack.media_id
-                update(track)
-            } else {
-                add(track)
-            }
-        })
+    override suspend fun bind(track: Track): Track {
+        val remoteTrack = api.findListItem(track)
+        return if (remoteTrack != null) {
+            track.copyPersonalFrom(remoteTrack)
+            track.media_id = remoteTrack.media_id
+            update(track)
+        } else {
+            add(track)
+        }
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
@@ -95,8 +93,8 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         return runAsObservable({ api.search(query) })
     }
 
-    override fun refresh(track: Track): Observable<Track> {
-        return runAsObservable({ api.getListItem(track) })
+    override suspend fun refresh(track: Track): Track {
+        return api.getListItem(track)
     }
 
     override suspend fun login(username: String, password: String) = login(password)

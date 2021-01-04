@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.chapter.NoChaptersException
+import eu.kanade.tachiyomi.util.lang.runAsObservable
 import kotlinx.coroutines.Job
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
@@ -89,7 +90,7 @@ abstract class AbstractBackupRestore<T : AbstractBackupManager>(protected val co
             .flatMap { track ->
                 val service = trackManager.getService(track.sync_id)
                 if (service != null && service.isLogged) {
-                    service.refresh(track)
+                    runAsObservable({ service.refresh(track) })
                         .doOnNext { db.insertTrack(it).executeAsBlocking() }
                         .onErrorReturn {
                             errors.add(Date() to "${manga.title} - ${it.message}")
