@@ -170,11 +170,6 @@ dependencies {
     // TLS 1.3 support for Android < 10
     implementation("org.conscrypt:conscrypt-android:2.5.1")
 
-    // REST
-    val retrofitVersion = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-
     // JSON
     val kotlinSerializationVersion = "1.0.1"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
