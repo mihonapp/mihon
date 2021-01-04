@@ -176,7 +176,7 @@
     <string name="pref_show_nsfw_source">Show in sources list</string>
     <string name="pref_show_nsfw_extension">Show in extensions list</string>
     <string name="pref_label_nsfw_extension">Label in extensions list</string>
-    <string name="parental_controls_info">This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing 18+ content within the app.</string>
+    <string name="parental_controls_info">This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing NSFW (18+) content within the app.</string>
 
       <!-- Library section -->
     <string name="pref_category_display">Display</string>
@@ -240,7 +240,7 @@
     <string name="ext_version_info">Version: %1$s</string>
     <string name="ext_language_info">Language: %1$s</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="ext_nsfw_warning">May contain 18+ content</string>
+    <string name="ext_nsfw_warning">May contain NSFW (18+) content</string>
 
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>
