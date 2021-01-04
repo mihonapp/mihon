@@ -144,7 +144,7 @@ class SettingsLibraryController : SettingsController() {
             multiSelectListPreference {
                 key = Keys.libraryUpdateRestriction
                 titleRes = R.string.pref_library_update_restriction
-                entriesRes = arrayOf(R.string.wifi, R.string.charging)
+                entriesRes = arrayOf(R.string.network_unmetered, R.string.charging)
                 entryValues = arrayOf("wifi", "ac")
                 summaryRes = R.string.pref_library_update_restriction_summary
                 defaultValue = setOf("wifi")
