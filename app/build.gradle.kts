@@ -289,6 +289,7 @@ tasks {
             "-Xuse-experimental=kotlin.ExperimentalStdlibApi",
             "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
             "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xuse-experimental=kotlinx.coroutines.InternalCoroutinesApi",
             "-Xuse-experimental=kotlinx.serialization.ExperimentalSerializationApi"
         )
     }
