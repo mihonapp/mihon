@@ -234,7 +234,7 @@ dependencies {
     implementation("eu.davidea:flexible-adapter-ui:1.0.0")
     implementation("com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.1.0")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
-    implementation("com.github.carlosesco:DirectionalViewPager:a844dbca0a")
+    implementation("com.github.tachiyomiorg:DirectionalViewPager:7d0617d")
 
     // 3.2.0+ introduces weird UI blinking or cut off issues on some devices
     val materialDialogsVersion = "3.1.1"
