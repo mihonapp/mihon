@@ -22,6 +22,8 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
         const val DROPPED = 4
         const val PLAN_TO_READ = 6
         const val REREADING = 7
+
+        private const val SEARCH_ID_PREFIX = "id:"
     }
 
     private val json: Json by injectLazy()
@@ -84,8 +86,8 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
-        if (query.startsWith("my:")) {
-            query.substringAfter("my:").toIntOrNull()?.let { id ->
+        if (query.startsWith(SEARCH_ID_PREFIX)) {
+            query.substringAfter(SEARCH_ID_PREFIX).toIntOrNull()?.let { id ->
                 return runAsObservable({ listOf(api.getMangaDetails(id)) })
             }
         }
