@@ -8,17 +8,13 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import rx.Observable
+import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.concurrent.TimeUnit
 
 private typealias ExtensionTuple =
     Triple<List<Extension.Installed>, List<Extension.Untrusted>, List<Extension.Available>>
@@ -39,23 +35,20 @@ open class ExtensionPresenter(
         super.onCreate(savedState)
 
         extensionManager.findAvailableExtensions()
+        bindToExtensionsObservable()
+    }
 
-        launchIO {
-            val installedFlow = extensionManager.installedExtensionsFlow
-            val untrustedFlow = extensionManager.untrustedExtensionsFlow
-            val availableFlow = extensionManager.availableExtensionsFlow
+    private fun bindToExtensionsObservable(): Subscription {
+        val installedObservable = extensionManager.getInstalledExtensionsObservable()
+        val untrustedObservable = extensionManager.getUntrustedExtensionsObservable()
+        val availableObservable = extensionManager.getAvailableExtensionsObservable()
+            .startWith(emptyList<Extension.Available>())
 
-            combine(
-                installedFlow,
-                untrustedFlow,
-                availableFlow
-            ) { installed, untrusted, available ->
-                Triple(installed, untrusted, available)
-            }
-                .debounce(100)
-                .map(::toItems)
-                .collectLatest { withContext(Dispatchers.Main) { view?.setExtensions(extensions) } }
-        }
+        return Observable.combineLatest(installedObservable, untrustedObservable, availableObservable) { installed, untrusted, available -> Triple(installed, untrusted, available) }
+            .debounce(100, TimeUnit.MILLISECONDS)
+            .map(::toItems)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeLatestCache({ view, _ -> view.setExtensions(extensions) })
     }
 
     @Synchronized
