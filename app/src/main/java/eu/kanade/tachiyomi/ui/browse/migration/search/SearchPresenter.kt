@@ -55,13 +55,13 @@ class SearchPresenter(
 
         replacingMangaRelay.call(true)
 
-        launchIO {
+        presenterScope.launchIO {
             val chapters = source.getChapterList(manga.toMangaInfo())
                 .map { it.toSChapter() }
 
             migrateMangaInternal(source, chapters, prevManga, manga, replace)
         }.invokeOnCompletion {
-            launchUI { replacingMangaRelay.call(false) }
+            presenterScope.launchUI { replacingMangaRelay.call(false) }
         }
     }
 

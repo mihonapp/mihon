@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.preference.LoginDialogPreference
 import uy.kohesive.injekt.Injekt
@@ -46,11 +46,11 @@ class TrackLoginDialog(
             try {
                 service.login(user, pass)
                 dialog?.dismiss()
-                launchUI { view?.context?.toast(R.string.login_success) }
+                withUIContext { view?.context?.toast(R.string.login_success) }
             } catch (e: Throwable) {
                 binding?.login?.progress = -1
                 binding?.login?.setText(R.string.unknown_error)
-                launchUI { e.message?.let { view?.context?.toast(it) } }
+                withUIContext { e.message?.let { view?.context?.toast(it) } }
             }
         }
     }

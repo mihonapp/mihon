@@ -9,8 +9,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.parseAs
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -33,7 +32,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     suspend fun addLibManga(track: Track): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val body = FormBody.Builder()
                 .add("rating", track.score.toInt().toString())
                 .add("status", track.toBangumiStatus())
@@ -45,7 +44,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     suspend fun updateLibManga(track: Track): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             // read status update
             val sbody = FormBody.Builder()
                 .add("status", track.toBangumiStatus())
@@ -69,7 +68,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     suspend fun search(search: String): List<TrackSearch> {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val url = "$apiUrl/search/subject/${URLEncoder.encode(search, Charsets.UTF_8.name())}"
                 .toUri()
                 .buildUpon()
@@ -117,7 +116,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     suspend fun findLibManga(track: Track): Track? {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             authClient.newCall(GET("$apiUrl/subject/${track.media_id}"))
                 .await()
                 .parseAs<JsonObject>()
@@ -126,7 +125,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     suspend fun statusLibManga(track: Track): Track? {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val urlUserRead = "$apiUrl/collection/${track.media_id}"
             val requestUserRead = Request.Builder()
                 .url(urlUserRead)
@@ -147,7 +146,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     suspend fun accessToken(code: String): OAuth {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             client.newCall(accessTokenRequest(code))
                 .await()
                 .parseAs()

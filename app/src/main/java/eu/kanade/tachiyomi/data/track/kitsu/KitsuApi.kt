@@ -8,8 +8,7 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.int
@@ -31,7 +30,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     suspend fun addLibManga(track: Track, userId: String): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val data = buildJsonObject {
                 putJsonObject("data") {
                     put("type", "libraryEntries")
@@ -76,7 +75,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     }
 
     suspend fun updateLibManga(track: Track): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val data = buildJsonObject {
                 putJsonObject("data") {
                     put("type", "libraryEntries")
@@ -110,7 +109,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     }
 
     suspend fun search(query: String): List<TrackSearch> {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             authClient.newCall(GET(algoliaKeyUrl))
                 .await()
                 .parseAs<JsonObject>()
@@ -122,7 +121,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     }
 
     private suspend fun algoliaSearch(key: String, query: String): List<TrackSearch> {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val jsonObject = buildJsonObject {
                 put("params", "query=$query$algoliaFilter")
             }
@@ -151,7 +150,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     }
 
     suspend fun findLibManga(track: Track, userId: String): Track? {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val url = "${baseUrl}library-entries".toUri().buildUpon()
                 .encodedQuery("filter[manga_id]=${track.media_id}&filter[user_id]=$userId")
                 .appendQueryParameter("include", "manga")
@@ -172,7 +171,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     }
 
     suspend fun getLibManga(track: Track): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val url = "${baseUrl}library-entries".toUri().buildUpon()
                 .encodedQuery("filter[id]=${track.media_id}")
                 .appendQueryParameter("include", "manga")
@@ -193,7 +192,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     }
 
     suspend fun login(username: String, password: String): OAuth {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val formBody: RequestBody = FormBody.Builder()
                 .add("username", username)
                 .add("password", password)
@@ -208,7 +207,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     }
 
     suspend fun getCurrentUser(): String {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val url = "${baseUrl}users".toUri().buildUpon()
                 .encodedQuery("filter[self]=true")
                 .build()

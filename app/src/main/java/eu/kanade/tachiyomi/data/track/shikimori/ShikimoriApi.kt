@@ -9,9 +9,8 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
-import kotlinx.coroutines.Dispatchers
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -30,7 +29,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     suspend fun addLibManga(track: Track, user_id: String): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val payload = buildJsonObject {
                 putJsonObject("user_rate") {
                     put("user_id", user_id)
@@ -54,7 +53,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
     suspend fun updateLibManga(track: Track, user_id: String): Track = addLibManga(track, user_id)
 
     suspend fun search(search: String): List<TrackSearch> {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val url = "$apiUrl/mangas".toUri().buildUpon()
                 .appendQueryParameter("order", "popularity")
                 .appendQueryParameter("search", search)
@@ -98,7 +97,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
     }
 
     suspend fun findLibManga(track: Track, user_id: String): Track? {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val urlMangas = "$apiUrl/mangas".toUri().buildUpon()
                 .appendPath(track.media_id.toString())
                 .build()
@@ -138,7 +137,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
     }
 
     suspend fun accessToken(code: String): OAuth {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             client.newCall(accessTokenRequest(code))
                 .await()
                 .parseAs()

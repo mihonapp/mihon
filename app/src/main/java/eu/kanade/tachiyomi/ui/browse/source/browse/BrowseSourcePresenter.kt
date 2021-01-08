@@ -31,7 +31,7 @@ import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateItem
 import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateSectionItem
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
@@ -213,12 +213,12 @@ open class BrowseSourcePresenter(
      * @param mangas the list of manga to initialize.
      */
     fun initializeMangas(mangas: List<Manga>) {
-        launchIO {
+        presenterScope.launchIO {
             mangas.asFlow()
                 .filter { it.thumbnail_url == null && !it.initialized }
                 .map { getMangaDetails(it) }
                 .onEach {
-                    launchUI {
+                    withUIContext {
                         @Suppress("DEPRECATION")
                         view?.onMangaInitialized(it)
                     }

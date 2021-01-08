@@ -6,8 +6,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.parseAs
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
 
 class GithubUpdateChecker {
@@ -23,7 +22,7 @@ class GithubUpdateChecker {
     }
 
     suspend fun checkForUpdate(): UpdateResult {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             networkService.client
                 .newCall(GET("https://api.github.com/repos/$repo/releases/latest"))
                 .await()

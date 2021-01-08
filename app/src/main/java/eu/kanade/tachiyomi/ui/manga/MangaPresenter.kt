@@ -26,7 +26,7 @@ import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.await
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
@@ -161,7 +161,7 @@ class MangaPresenter(
      */
     fun fetchMangaFromSource(manualFetch: Boolean = false) {
         if (fetchMangaJob?.isActive == true) return
-        fetchMangaJob = launchIO {
+        fetchMangaJob = presenterScope.launchIO {
             try {
                 val networkManga = source.getMangaDetails(manga.toMangaInfo())
                 val sManga = networkManga.toSManga()
@@ -170,9 +170,9 @@ class MangaPresenter(
                 manga.initialized = true
                 db.insertManga(manga).await()
 
-                launchUI { view?.onFetchMangaInfoDone() }
+                withUIContext { view?.onFetchMangaInfoDone() }
             } catch (e: Throwable) {
-                launchUI { view?.onFetchMangaInfoError(e) }
+                withUIContext { view?.onFetchMangaInfoError(e) }
             }
         }
     }
@@ -360,9 +360,9 @@ class MangaPresenter(
                     downloadNewChapters(newChapters)
                 }
 
-                launchUI { view?.onFetchChaptersDone() }
+                withUIContext { view?.onFetchChaptersDone() }
             } catch (e: Throwable) {
-                launchUI { view?.onFetchChaptersError(e) }
+                withUIContext { view?.onFetchChaptersError(e) }
             }
         }
     }

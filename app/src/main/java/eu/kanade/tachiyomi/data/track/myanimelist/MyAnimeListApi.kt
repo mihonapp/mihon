@@ -10,10 +10,9 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.PkceUtil
-import kotlinx.coroutines.Dispatchers
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.contentOrNull
@@ -33,7 +32,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     suspend fun getAccessToken(authCode: String): OAuth {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val formBody: RequestBody = FormBody.Builder()
                 .add("client_id", clientId)
                 .add("code", authCode)
@@ -47,7 +46,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     }
 
     suspend fun getCurrentUser(): String {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val request = Request.Builder()
                 .url("$baseApiUrl/users/@me")
                 .get()
@@ -60,7 +59,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     }
 
     suspend fun search(query: String): List<TrackSearch> {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val url = "$baseApiUrl/manga".toUri().buildUpon()
                 .appendQueryParameter("q", query)
                 .appendQueryParameter("nsfw", "true")
@@ -82,7 +81,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     }
 
     suspend fun getMangaDetails(id: Int): TrackSearch {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val url = "$baseApiUrl/manga".toUri().buildUpon()
                 .appendPath(id.toString())
                 .appendQueryParameter("fields", "id,title,synopsis,num_chapters,main_picture,status,media_type,start_date")
@@ -113,7 +112,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     }
 
     suspend fun getListItem(track: Track): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val formBody: RequestBody = FormBody.Builder()
                 .add("status", track.toMyAnimeListStatus() ?: "reading")
                 .build()
@@ -129,7 +128,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     }
 
     suspend fun addItemToList(track: Track): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val formBody: RequestBody = FormBody.Builder()
                 .add("status", "reading")
                 .add("score", "0")
@@ -146,7 +145,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     }
 
     suspend fun updateItem(track: Track): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val formBody: RequestBody = FormBody.Builder()
                 .add("status", track.toMyAnimeListStatus() ?: "reading")
                 .add("is_rereading", (track.status == MyAnimeList.REREADING).toString())
@@ -188,7 +187,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     }
 
     suspend fun findListItems(query: String, offset: Int = 0): List<TrackSearch> {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val json = getListPage(offset)
             val obj = json.jsonObject
 
@@ -215,7 +214,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     }
 
     private suspend fun getListPage(offset: Int): JsonObject {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val urlBuilder = "$baseApiUrl/users/@me/mangalist".toUri().buildUpon()
                 .appendQueryParameter("fields", "list_status")
                 .appendQueryParameter("limit", listPaginationAmount.toString())

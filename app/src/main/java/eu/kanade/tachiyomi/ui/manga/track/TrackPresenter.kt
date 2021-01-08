@@ -10,11 +10,12 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.await
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.supervisorScope
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.Injekt
@@ -59,20 +60,22 @@ class TrackPresenter(
     fun refresh() {
         refreshJob?.cancel()
         refreshJob = launchIO {
-            try {
-                trackList
-                    .filter { it.track != null }
-                    .map {
-                        async {
-                            val track = it.service.refresh(it.track!!)
-                            db.insertTrack(track).await()
+            supervisorScope {
+                try {
+                    trackList
+                        .filter { it.track != null }
+                        .map {
+                            async {
+                                val track = it.service.refresh(it.track!!)
+                                db.insertTrack(track).await()
+                            }
                         }
-                    }
-                    .awaitAll()
+                        .awaitAll()
 
-                view?.onRefreshDone()
-            } catch (e: Throwable) {
-                view?.onRefreshError(e)
+                    withUIContext { view?.onRefreshDone() }
+                } catch (e: Throwable) {
+                    withUIContext { view?.onRefreshError(e) }
+                }
             }
         }
     }
@@ -82,9 +85,9 @@ class TrackPresenter(
         searchJob = launchIO {
             try {
                 val results = service.search(query)
-                launchUI { view?.onSearchResults(results) }
+                withUIContext { view?.onSearchResults(results) }
             } catch (e: Throwable) {
-                launchUI { view?.onSearchResultsError(e) }
+                withUIContext { view?.onSearchResultsError(e) }
             }
         }
     }
@@ -97,7 +100,7 @@ class TrackPresenter(
                     service.bind(item)
                     db.insertTrack(item).await()
                 } catch (e: Throwable) {
-                    launchUI { context.toast(e.message) }
+                    withUIContext { context.toast(e.message) }
                 }
             }
         } else {
@@ -114,9 +117,9 @@ class TrackPresenter(
             try {
                 service.update(track)
                 db.insertTrack(track).await()
-                view?.onRefreshDone()
+                withUIContext { view?.onRefreshDone() }
             } catch (e: Throwable) {
-                launchUI { view?.onRefreshError(e) }
+                withUIContext { view?.onRefreshError(e) }
 
                 // Restart on error to set old values
                 fetchTrackings()

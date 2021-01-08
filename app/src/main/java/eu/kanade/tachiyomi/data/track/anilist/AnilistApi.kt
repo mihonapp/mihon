@@ -8,8 +8,7 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
@@ -30,7 +29,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     suspend fun addLibManga(track: Track): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val query =
                 """
             |mutation AddManga(${'$'}mangaId: Int, ${'$'}progress: Int, ${'$'}status: MediaListStatus) {
@@ -65,7 +64,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     }
 
     suspend fun updateLibManga(track: Track): Track {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val query =
                 """
             |mutation UpdateManga(${'$'}listId: Int, ${'$'}progress: Int, ${'$'}status: MediaListStatus, ${'$'}score: Int) {
@@ -92,7 +91,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     }
 
     suspend fun search(search: String): List<TrackSearch> {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val query =
                 """
             |query Search(${'$'}query: String) {
@@ -143,7 +142,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     }
 
     suspend fun findLibManga(track: Track, userid: Int): Track? {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val query =
                 """
             |query (${'$'}id: Int!, ${'$'}manga_id: Int!) {
@@ -209,7 +208,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     }
 
     suspend fun getCurrentUser(): Pair<Int, String> {
-        return withContext(Dispatchers.IO) {
+        return withIOContext {
             val query =
                 """
             |query User {

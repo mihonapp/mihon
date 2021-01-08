@@ -292,7 +292,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             setSelectedNavItem(startScreenId)
         } else if (shouldHandleExitConfirmation()) {
             // Exit confirmation (resets after 2 seconds)
-            launchUI { resetExitConfirmation() }
+            lifecycleScope.launchUI { resetExitConfirmation() }
         } else if (backstackSize == 1 || !router.handleBack()) {
             // Regular back
             super.onBackPressed()
