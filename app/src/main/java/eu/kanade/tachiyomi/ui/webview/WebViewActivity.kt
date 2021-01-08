@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.WebviewActivityBinding
@@ -64,12 +65,12 @@ class WebViewActivity : BaseViewBindingActivity<WebviewActivityBinding>() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.navigationClicks()
             .onEach { super.onBackPressed() }
-            .launchIn(scope)
+            .launchIn(lifecycleScope)
 
         binding.swipeRefresh.isEnabled = false
         binding.swipeRefresh.refreshes()
             .onEach { refreshPage() }
-            .launchIn(scope)
+            .launchIn(lifecycleScope)
 
         if (bundle == null) {
             binding.webview.setDefaultSettings()

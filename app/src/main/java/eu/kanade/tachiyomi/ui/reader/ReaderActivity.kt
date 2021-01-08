@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
+import androidx.lifecycle.lifecycleScope
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.snackbar.Snackbar
 import eu.kanade.tachiyomi.R
@@ -664,42 +665,42 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                     delay(250)
                     setOrientation(it)
                 }
-                .launchIn(scope)
+                .launchIn(lifecycleScope)
 
             preferences.readerTheme().asFlow()
                 .drop(1) // We only care about updates
                 .onEach { recreate() }
-                .launchIn(scope)
+                .launchIn(lifecycleScope)
 
             preferences.showPageNumber().asFlow()
                 .onEach { setPageNumberVisibility(it) }
-                .launchIn(scope)
+                .launchIn(lifecycleScope)
 
             preferences.trueColor().asFlow()
                 .onEach { setTrueColor(it) }
-                .launchIn(scope)
+                .launchIn(lifecycleScope)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 preferences.cutoutShort().asFlow()
                     .onEach { setCutoutShort(it) }
-                    .launchIn(scope)
+                    .launchIn(lifecycleScope)
             }
 
             preferences.keepScreenOn().asFlow()
                 .onEach { setKeepScreenOn(it) }
-                .launchIn(scope)
+                .launchIn(lifecycleScope)
 
             preferences.customBrightness().asFlow()
                 .onEach { setCustomBrightness(it) }
-                .launchIn(scope)
+                .launchIn(lifecycleScope)
 
             preferences.colorFilter().asFlow()
                 .onEach { setColorFilter(it) }
-                .launchIn(scope)
+                .launchIn(lifecycleScope)
 
             preferences.colorFilterMode().asFlow()
                 .onEach { setColorFilter(preferences.colorFilter().get()) }
-                .launchIn(scope)
+                .launchIn(lifecycleScope)
         }
 
         /**
@@ -777,7 +778,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 preferences.customBrightnessValue().asFlow()
                     .sample(100)
                     .onEach { setCustomBrightnessValue(it) }
-                    .launchIn(scope)
+                    .launchIn(lifecycleScope)
             } else {
                 setCustomBrightnessValue(0)
             }
@@ -791,7 +792,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 preferences.colorFilterValue().asFlow()
                     .sample(100)
                     .onEach { setColorFilterValue(it) }
-                    .launchIn(scope)
+                    .launchIn(lifecycleScope)
             } else {
                 binding.colorOverlay.isVisible = false
             }

@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.reader
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.annotation.ColorInt
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -32,15 +33,15 @@ class ReaderColorFilterSheet(private val activity: ReaderActivity) : BottomSheet
 
         preferences.colorFilter().asFlow()
             .onEach { setColorFilter(it) }
-            .launchIn(activity.scope)
+            .launchIn(activity.lifecycleScope)
 
         preferences.colorFilterMode().asFlow()
             .onEach { setColorFilter(preferences.colorFilter().get()) }
-            .launchIn(activity.scope)
+            .launchIn(activity.lifecycleScope)
 
         preferences.customBrightness().asFlow()
             .onEach { setCustomBrightness(it) }
-            .launchIn(activity.scope)
+            .launchIn(activity.lifecycleScope)
 
         // Get color and update values
         val color = preferences.colorFilterValue().get()
@@ -178,7 +179,7 @@ class ReaderColorFilterSheet(private val activity: ReaderActivity) : BottomSheet
             preferences.customBrightnessValue().asFlow()
                 .sample(100)
                 .onEach { setCustomBrightnessValue(it) }
-                .launchIn(activity.scope)
+                .launchIn(activity.lifecycleScope)
         } else {
             setCustomBrightnessValue(0, true)
         }
@@ -206,7 +207,7 @@ class ReaderColorFilterSheet(private val activity: ReaderActivity) : BottomSheet
             preferences.colorFilterValue().asFlow()
                 .sample(100)
                 .onEach { setColorFilterValue(it) }
-                .launchIn(activity.scope)
+                .launchIn(activity.lifecycleScope)
         }
         setColorFilterSeekBar(enabled)
     }
