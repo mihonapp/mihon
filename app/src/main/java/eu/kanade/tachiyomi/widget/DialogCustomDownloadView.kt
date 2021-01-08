@@ -7,10 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import eu.kanade.tachiyomi.databinding.DownloadCustomAmountBinding
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import reactivecircus.flowbinding.android.widget.textChanges
 import timber.log.Timber
 
 /**
@@ -34,8 +30,6 @@ class DialogCustomDownloadView @JvmOverloads constructor(context: Context, attrs
      * Maximal value of custom download chooser.
      */
     private var max = 0
-
-    private val scope = MainScope()
 
     private val binding: DownloadCustomAmountBinding
 
@@ -71,16 +65,16 @@ class DialogCustomDownloadView @JvmOverloads constructor(context: Context, attrs
         }
 
         // When user inputs custom number set amount equal to input.
-        binding.myNumber.textChanges()
-            .onEach {
+        binding.myNumber.addTextChangedListener(object : SimpleTextWatcher() {
+            override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
                 try {
-                    amount = getAmount(Integer.parseInt(it.toString()))
+                    amount = getAmount(text.toString().toInt())
                 } catch (error: NumberFormatException) {
                     // Catch NumberFormatException to prevent parse exception when input is empty.
                     Timber.e(error)
                 }
             }
-            .launchIn(scope)
+        })
     }
 
     /**

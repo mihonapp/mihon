@@ -97,7 +97,7 @@ class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPa
     fun onDestroy() {
         for (view in boundViews) {
             if (view is LibraryCategoryView) {
-                view.unsubscribe()
+                view.onDestroy()
             }
         }
     }

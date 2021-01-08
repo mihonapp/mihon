@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.recyclerview.scrollStateChanges
@@ -155,7 +156,12 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         unsubscribe()
     }
 
-    fun unsubscribe() {
+    fun onDestroy() {
+        unsubscribe()
+        scope.cancel()
+    }
+
+    private fun unsubscribe() {
         subscriptions.clear()
     }
 

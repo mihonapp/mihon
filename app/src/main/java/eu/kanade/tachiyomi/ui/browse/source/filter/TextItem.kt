@@ -10,14 +10,9 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Filter
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import reactivecircus.flowbinding.android.widget.textChanges
+import eu.kanade.tachiyomi.widget.SimpleTextWatcher
 
 open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Holder>() {
-
-    private val scope = MainScope()
 
     override fun getLayoutRes(): Int {
         return R.layout.navigation_view_text
@@ -30,9 +25,11 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
     override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: Holder, position: Int, payloads: List<Any?>?) {
         holder.wrapper.hint = filter.name
         holder.edit.setText(filter.state)
-        holder.edit.textChanges()
-            .onEach { filter.state = it.toString() }
-            .launchIn(scope)
+        holder.edit.addTextChangedListener(object : SimpleTextWatcher() {
+            override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
+                filter.state = text.toString()
+            }
+        })
     }
 
     override fun equals(other: Any?): Boolean {
