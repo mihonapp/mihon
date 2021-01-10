@@ -49,7 +49,7 @@ open class SourceManager(private val context: Context) {
         LocalSource(context)
     )
 
-    private inner class StubSource(override val id: Long) : Source {
+    inner class StubSource(override val id: Long) : Source {
 
         override val name: String
             get() = id.toString()

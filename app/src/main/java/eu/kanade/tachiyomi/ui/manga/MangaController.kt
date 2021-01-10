@@ -917,6 +917,11 @@ class MangaController :
     }
 
     private fun downloadChapters(chapters: List<ChapterItem>) {
+        if (source is SourceManager.StubSource) {
+            activity?.toast(R.string.loader_not_implemented_error)
+            return
+        }
+
         val view = view
         val manga = presenter.manga
         presenter.downloadChapters(chapters)
