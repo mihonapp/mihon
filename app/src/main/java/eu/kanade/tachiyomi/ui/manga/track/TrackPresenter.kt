@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.util.lang.await
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.toast
@@ -67,7 +66,7 @@ class TrackPresenter(
                         .map {
                             async {
                                 val track = it.service.refresh(it.track!!)
-                                db.insertTrack(track).await()
+                                db.insertTrack(track).executeAsBlocking()
                             }
                         }
                         .awaitAll()
@@ -98,7 +97,7 @@ class TrackPresenter(
             launchIO {
                 try {
                     service.bind(item)
-                    db.insertTrack(item).await()
+                    db.insertTrack(item).executeAsBlocking()
                 } catch (e: Throwable) {
                     withUIContext { context.toast(e.message) }
                 }
@@ -116,7 +115,7 @@ class TrackPresenter(
         launchIO {
             try {
                 service.update(track)
-                db.insertTrack(track).await()
+                db.insertTrack(track).executeAsBlocking()
                 withUIContext { view?.onRefreshDone() }
             } catch (e: Throwable) {
                 withUIContext { view?.onRefreshError(e) }

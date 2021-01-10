@@ -199,7 +199,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             return
         }
 
-        launchIO {
+        lifecycleScope.launchIO {
             try {
                 val pendingUpdates = ExtensionGithubApi().checkForUpdates(this@MainActivity)
                 preferences.extensionUpdatesCount().set(pendingUpdates.size)

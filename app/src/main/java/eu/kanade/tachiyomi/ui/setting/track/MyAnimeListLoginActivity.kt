@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting.track
 
 import android.net.Uri
+import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.util.lang.launchIO
 
 class MyAnimeListLoginActivity : BaseOAuthLoginActivity() {
@@ -8,7 +9,7 @@ class MyAnimeListLoginActivity : BaseOAuthLoginActivity() {
     override fun handleResult(data: Uri?) {
         val code = data?.getQueryParameter("code")
         if (code != null) {
-            launchIO {
+            lifecycleScope.launchIO {
                 trackManager.myAnimeList.login(code)
                 returnToSettings()
             }

@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting.track
 
 import android.net.Uri
+import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.util.lang.launchIO
 
 class AnilistLoginActivity : BaseOAuthLoginActivity() {
@@ -9,7 +10,7 @@ class AnilistLoginActivity : BaseOAuthLoginActivity() {
         val regex = "(?:access_token=)(.*?)(?:&)".toRegex()
         val matchResult = regex.find(data?.fragment.toString())
         if (matchResult?.groups?.get(1) != null) {
-            launchIO {
+            lifecycleScope.launchIO {
                 trackManager.aniList.login(matchResult.groups[1]!!.value)
                 returnToSettings()
             }

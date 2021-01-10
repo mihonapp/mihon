@@ -24,7 +24,6 @@ import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.isLocal
-import eu.kanade.tachiyomi.util.lang.await
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.prepUpdateCover
@@ -168,7 +167,7 @@ class MangaPresenter(
                 manga.prepUpdateCover(coverCache, sManga, manualFetch)
                 manga.copyFrom(sManga)
                 manga.initialized = true
-                db.insertManga(manga).await()
+                db.insertManga(manga).executeAsBlocking()
 
                 withUIContext { view?.onFetchMangaInfoDone() }
             } catch (e: Throwable) {
@@ -350,7 +349,7 @@ class MangaPresenter(
         hasRequested = true
 
         if (fetchChaptersJob?.isActive == true) return
-        fetchChaptersJob = launchIO {
+        fetchChaptersJob = presenterScope.launchIO {
             try {
                 val chapters = source.getChapterList(manga.toMangaInfo())
                     .map { it.toSChapter() }
@@ -464,7 +463,7 @@ class MangaPresenter(
         }
 
         launchIO {
-            db.updateChaptersProgress(chapters).await()
+            db.updateChaptersProgress(chapters).executeAsBlocking()
 
             if (preferences.removeAfterMarkedAsRead()) {
                 deleteChapters(chapters)
@@ -489,7 +488,7 @@ class MangaPresenter(
             selectedChapters
                 .forEach {
                     it.bookmark = bookmarked
-                    db.updateChapterProgress(it).await()
+                    db.updateChapterProgress(it).executeAsBlocking()
                 }
         }
     }

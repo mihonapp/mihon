@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.chapter.NoChaptersException
-import eu.kanade.tachiyomi.util.lang.await
 import kotlinx.coroutines.Job
 import uy.kohesive.injekt.injectLazy
 import java.io.File
@@ -91,7 +90,7 @@ abstract class AbstractBackupRestore<T : AbstractBackupManager>(protected val co
             if (service != null && service.isLogged) {
                 try {
                     val updatedTrack = service.refresh(track)
-                    db.insertTrack(updatedTrack).await()
+                    db.insertTrack(updatedTrack).executeAsBlocking()
                 } catch (e: Exception) {
                     errors.add(Date() to "${manga.title} - ${e.message}")
                 }

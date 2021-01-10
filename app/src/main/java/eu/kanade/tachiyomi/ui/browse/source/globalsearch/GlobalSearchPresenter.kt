@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourcePresenter
-import eu.kanade.tachiyomi.util.lang.await
 import eu.kanade.tachiyomi.util.lang.runAsObservable
 import rx.Observable
 import rx.Subscription
@@ -255,7 +254,7 @@ open class GlobalSearchPresenter(
         val networkManga = source.getMangaDetails(manga.toMangaInfo())
         manga.copyFrom(networkManga.toSManga())
         manga.initialized = true
-        db.insertManga(manga).await()
+        db.insertManga(manga).executeAsBlocking()
         return manga
     }
 
