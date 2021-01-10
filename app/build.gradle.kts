@@ -211,7 +211,7 @@ dependencies {
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:60b3a2b")
+    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:cd257f3")
 
     // Logging
     implementation("com.jakewharton.timber:timber:4.7.1")
