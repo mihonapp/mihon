@@ -163,26 +163,20 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
         }
     }
 
-    suspend fun findListItem(track: Track, offset: Int = 0): Track? {
-        val json = getListPage(offset)
-        val obj = json.jsonObject
-        val trackedManga = obj["data"]!!.jsonArray.find { data ->
-            data.jsonObject["node"]!!.jsonObject["id"]!!.jsonPrimitive.int == track.media_id
-        }
-
-        return when {
-            // Found the item in the list
-            trackedManga != null -> {
-                parseMangaItem(trackedManga.jsonObject["list_status"]!!.jsonObject, track)
-            }
-            // Check next page if there's more
-            !obj["paging"]!!.jsonObject["next"]?.jsonPrimitive?.contentOrNull.isNullOrBlank() -> {
-                findListItem(track, offset + listPaginationAmount)
-            }
-            // No more pages to check, item wasn't found
-            else -> {
-                null
-            }
+    suspend fun findListItem(track: Track): Track? {
+        return withIOContext {
+            val uri = "$baseApiUrl/manga".toUri().buildUpon()
+                .appendPath(track.media_id.toString())
+                .appendQueryParameter("fields", "my_list_status{start_date,finish_date}")
+                .build()
+            authClient.newCall(GET(uri.toString()))
+                .await()
+                .parseAs<JsonObject>()
+                .let { obj ->
+                    obj.jsonObject["list_status"]?.jsonObject?.let {
+                        parseMangaItem(it, track)
+                    }
+                }
         }
     }
 
@@ -216,7 +210,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     private suspend fun getListPage(offset: Int): JsonObject {
         return withIOContext {
             val urlBuilder = "$baseApiUrl/users/@me/mangalist".toUri().buildUpon()
-                .appendQueryParameter("fields", "list_status")
+                .appendQueryParameter("fields", "list_status{start_date,finish_date}")
                 .appendQueryParameter("limit", listPaginationAmount.toString())
             if (offset > 0) {
                 urlBuilder.appendQueryParameter("offset", offset.toString())
