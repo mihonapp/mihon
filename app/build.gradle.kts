@@ -128,14 +128,14 @@ dependencies {
     implementation("tachiyomi.sourceapi:source-api:1.1")
 
     // AndroidX libraries
-    implementation("androidx.annotation:annotation:1.2.0-alpha01")
-    implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
+    implementation("androidx.annotation:annotation:1.2.0-beta01")
+    implementation("androidx.appcompat:appcompat:1.3.0-beta01")
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha01")
     implementation("androidx.browser:browser:1.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.0-alpha2")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
-    implementation("androidx.core:core-ktx:1.5.0-alpha05")
+    implementation("androidx.core:core-ktx:1.5.0-beta01")
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("androidx.recyclerview:recyclerview:1.2.0-beta01")
@@ -147,7 +147,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
 
     // Job scheduling
-    implementation("androidx.work:work-runtime-ktx:2.5.0-beta02")
+    implementation("androidx.work:work-runtime-ktx:2.5.0-rc01")
 
     // UI library
     implementation("com.google.android.material:material:1.3.0-beta01")
