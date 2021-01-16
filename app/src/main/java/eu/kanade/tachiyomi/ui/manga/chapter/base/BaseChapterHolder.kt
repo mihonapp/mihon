@@ -11,11 +11,11 @@ open class BaseChapterHolder(
     private val adapter: BaseChaptersAdapter<*>
 ) : FlexibleViewHolder(view, adapter) {
 
-    fun onDownloadClick(view: View) {
-        val item = adapter.getItem(bindingAdapterPosition) as? BaseChapterItem<*, *> ?: return
+    fun onDownloadClick(view: View, position: Int) {
+        val item = adapter.getItem(position) as? BaseChapterItem<*, *> ?: return
         when (item.status) {
             Download.State.NOT_DOWNLOADED, Download.State.ERROR -> {
-                adapter.clickListener.downloadChapter(bindingAdapterPosition)
+                adapter.clickListener.downloadChapter(position)
             }
             else -> {
                 view.popupMenu(
@@ -28,7 +28,7 @@ open class BaseChapterHolder(
                         findItem(R.id.cancel_download).isVisible = item.status != Download.State.DOWNLOADED
                     },
                     onMenuItemClick = {
-                        adapter.clickListener.deleteChapter(bindingAdapterPosition)
+                        adapter.clickListener.deleteChapter(position)
                         true
                     }
                 )

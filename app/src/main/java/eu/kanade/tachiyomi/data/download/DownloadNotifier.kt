@@ -165,6 +165,8 @@ internal class DownloadNotifier(private val context: Context) {
      *  This function shows a notification to inform download tasks are done.
      */
     fun onComplete() {
+        dismissProgress()
+
         if (!errorThrown) {
             // Create notification
             with(completeNotificationBuilder) {

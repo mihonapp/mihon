@@ -212,7 +212,18 @@ class DownloadManager(private val context: Context) {
     fun deleteChapters(chapters: List<Chapter>, manga: Manga, source: Source): List<Chapter> {
         val filteredChapters = getChaptersToDelete(chapters)
 
+        val wasRunning = downloader.isRunning
+        downloader.pause()
+
+        downloader.queue.remove(filteredChapters)
         queue.remove(filteredChapters)
+
+        if (downloader.queue.isEmpty()) {
+            DownloadService.stop(context)
+            downloader.stop()
+        } else if (wasRunning && downloader.queue.isNotEmpty()) {
+            downloader.start()
+        }
 
         val chapterDirs = provider.findChapterDirs(filteredChapters, manga, source)
         chapterDirs.forEach { it.delete() }

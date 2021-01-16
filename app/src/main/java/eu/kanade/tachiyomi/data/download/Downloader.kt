@@ -134,15 +134,16 @@ class Downloader(
 
         if (reason != null) {
             notifier.onWarning(reason)
-        } else {
-            if (notifier.paused) {
-                notifier.paused = false
-                notifier.onPaused()
-            } else {
-                notifier.dismissProgress()
-                notifier.onComplete()
-            }
+            return
         }
+
+        if (notifier.paused && !queue.isEmpty()) {
+            notifier.onPaused()
+        } else {
+            notifier.onComplete()
+        }
+
+        notifier.paused = false
     }
 
     /**

@@ -20,7 +20,9 @@ class ChapterHolder(
     private val binding = ChaptersItemBinding.bind(view)
 
     init {
-        binding.download.setOnClickListener { onDownloadClick(it) }
+        binding.download.setOnClickListener {
+            onDownloadClick(it, bindingAdapterPosition)
+        }
     }
 
     fun bind(item: ChapterItem, manga: Manga) {

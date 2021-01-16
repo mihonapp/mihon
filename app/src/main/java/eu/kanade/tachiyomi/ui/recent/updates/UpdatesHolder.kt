@@ -32,7 +32,9 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
             adapter.coverClickListener.onCoverClick(bindingAdapterPosition)
         }
 
-        binding.download.setOnClickListener { onDownloadClick(it) }
+        binding.download.setOnClickListener {
+            onDownloadClick(it, bindingAdapterPosition)
+        }
     }
 
     fun bind(item: UpdatesItem) {
