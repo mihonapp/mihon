@@ -2,6 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_history"
+        android:icon="@drawable/ic_history_24dp"
+        android:title="@string/whats_new"
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_enable_all"
         android:title="@string/action_enable_all"
         app:showAsAction="never" />

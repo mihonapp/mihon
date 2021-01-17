@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroupAdapter
@@ -175,10 +176,13 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.extension_details, menu)
+
+        menu.findItem(R.id.action_history).isVisible = presenter.extension?.isUnofficial == false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_history -> openCommitHistory()
             R.id.action_enable_all -> toggleAllSources(true)
             R.id.action_disable_all -> toggleAllSources(false)
             R.id.action_open_in_settings -> openInSettings()
@@ -200,6 +204,13 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
         } else {
             preferences.disabledSources() += source.id.toString()
         }
+    }
+
+    private fun openCommitHistory() {
+        val pkgName = presenter.extension!!.pkgName.substringAfter("eu.kanade.tachiyomi.extension.")
+        val url = "https://github.com/tachiyomiorg/tachiyomi-extensions/commits/master/src/${pkgName.replace(".", "/")}"
+        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+        startActivity(intent)
     }
 
     private fun openInSettings() {
