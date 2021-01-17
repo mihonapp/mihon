@@ -23,7 +23,12 @@ Forks are allowed so long as they abide by [the project's LICENSE](https://githu
 
 When creating a fork, remember to:
 
-- Change the app name to avoid confusion with the main app
-- Change the package name to avoid conflicting with installations of the main app
-- If you want to use Firebase, replace [`google-services.json`](https://github.com/tachiyomiorg/tachiyomi/blob/master/app/src/standard/google-services.json) with your own
-- If you want to use ACRA, replace the `ACRA_URI` endpoint in [`build.gradle.kts`](https://github.com/tachiyomiorg/tachiyomi/blob/master/app/build.gradle.kts) with your own
+- To avoid confusion with the main app:
+    - Change the app name
+    - Change the app icon
+    - Change or disable the [app update checker](https://github.com/tachiyomiorg/tachiyomi/blob/master/app/src/main/java/eu/kanade/tachiyomi/data/updater/github/GithubUpdateChecker.kt)
+- To avoid installation conflicts:
+    - Change the `applicationId` in [`build.gradle.kts`](https://github.com/tachiyomiorg/tachiyomi/blob/master/app/build.gradle.kts)
+- To avoid having your data polluting the main app's analytics and crash report services:
+    - If you want to use Firebase analytics, replace [`google-services.json`](https://github.com/tachiyomiorg/tachiyomi/blob/master/app/src/standard/google-services.json) with your own
+    - If you want to use ACRA crash reporting, replace the `ACRA_URI` endpoint in [`build.gradle.kts`](https://github.com/tachiyomiorg/tachiyomi/blob/master/app/build.gradle.kts) with your own
