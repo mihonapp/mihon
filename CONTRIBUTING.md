@@ -7,11 +7,11 @@
     * [Translations](https://tachiyomi.org/help/contribution/#translation)
 4. After following 1. and 3. you can [open your issue](https://github.com/tachiyomiorg/tachiyomi/issues/new)
 
-***
+---
 
-# Catalogue requests
+# Source requests
 
-* Catalogue requests should be created at https://github.com/tachiyomiorg/tachiyomi-extensions#readme, not here
+* Source requests should be created at https://github.com/tachiyomiorg/tachiyomi-extensions#readme, not here
 
 # Bugs
 * Include version (More > About > Version)
@@ -27,7 +27,20 @@ DO: https://github.com/tachiyomiorg/tachiyomi/issues/24 https://github.com/tachi
 
 DON'T: https://github.com/tachiyomiorg/tachiyomi/issues/75
 
+
 # Feature requests
 
 * Write a detailed issue, explaining what it should do or how. Avoid writing just "like X app does"
 * Include screenshot (if needed)
+
+
+# Forks
+
+Forks are allowed so long as they abide by [the project's LICENSE](https://github.com/tachiyomiorg/tachiyomi/blob/master/LICENSE).
+
+When creating a fork, remember to:
+
+- Change the app name to avoid confusion with the main app
+- Change the package name to avoid conflicting with installations of the main app
+- If you want to use Firebase, replace [`google-services.json`](https://github.com/tachiyomiorg/tachiyomi/blob/master/app/src/standard/google-services.json) with your own
+- If you want to use ACRA, replace the `ACRA_URI` endpoint in [`build.gradle.kts`](https://github.com/tachiyomiorg/tachiyomi/blob/master/app/build.gradle.kts) with your own
