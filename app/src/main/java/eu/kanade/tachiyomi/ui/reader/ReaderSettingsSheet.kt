@@ -21,7 +21,7 @@ import uy.kohesive.injekt.injectLazy
  */
 class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDialog(activity) {
 
-    private val preferences by injectLazy<PreferencesHelper>()
+    private val preferences: PreferencesHelper by injectLazy()
 
     private val binding = ReaderSettingsSheetBinding.inflate(activity.layoutInflater, null, false)
 

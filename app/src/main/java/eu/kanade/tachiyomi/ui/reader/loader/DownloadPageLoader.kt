@@ -21,10 +21,8 @@ class DownloadPageLoader(
     private val downloadManager: DownloadManager
 ) : PageLoader() {
 
-    /**
-     * The application context. Needed to open input streams.
-     */
-    private val context by injectLazy<Application>()
+    // Needed to open input streams
+    private val context: Application by injectLazy()
 
     /**
      * Returns an observable containing the pages found on this downloaded chapter.

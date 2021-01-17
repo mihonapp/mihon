@@ -68,7 +68,7 @@ open class GlobalSearchPresenter(
      */
     private var fetchImageSubscription: Subscription? = null
 
-    private val extensionManager by injectLazy<ExtensionManager>()
+    private val extensionManager: ExtensionManager by injectLazy()
 
     private var extensionFilter: String? = null
 

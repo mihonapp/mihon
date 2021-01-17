@@ -34,7 +34,7 @@ import uy.kohesive.injekt.injectLazy
 
 class WebViewActivity : BaseViewBindingActivity<WebviewActivityBinding>() {
 
-    private val sourceManager by injectLazy<SourceManager>()
+    private val sourceManager: SourceManager by injectLazy()
 
     private var bundle: Bundle? = null
 

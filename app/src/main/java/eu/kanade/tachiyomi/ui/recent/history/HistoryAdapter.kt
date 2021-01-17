@@ -18,7 +18,7 @@ import java.text.DecimalFormatSymbols
 class HistoryAdapter(controller: HistoryController) :
     FlexibleAdapter<IFlexible<*>>(null, controller, true) {
 
-    val sourceManager by injectLazy<SourceManager>()
+    val sourceManager: SourceManager by injectLazy()
 
     val resumeClickListener: OnResumeClickListener = controller
     val removeClickListener: OnRemoveClickListener = controller
