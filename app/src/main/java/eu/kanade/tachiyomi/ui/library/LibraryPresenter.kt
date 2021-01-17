@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -47,7 +48,8 @@ class LibraryPresenter(
     private val preferences: PreferencesHelper = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
-    private val downloadManager: DownloadManager = Injekt.get()
+    private val downloadManager: DownloadManager = Injekt.get(),
+    private val trackManager: TrackManager = Injekt.get()
 ) : BasePresenter<LibraryController>() {
 
     private val context = preferences.context
@@ -92,8 +94,8 @@ class LibraryPresenter(
                 .combineLatest(badgeTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
                     lib.apply { setBadges(mangaMap) }
                 }
-                .combineLatest(filterTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
-                    lib.copy(mangaMap = applyFilters(lib.mangaMap))
+                .combineLatest(getFilterObservable()) { lib, tracks ->
+                    lib.copy(mangaMap = applyFilters(lib.mangaMap, tracks))
                 }
                 .combineLatest(sortTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
                     lib.copy(mangaMap = applySort(lib.mangaMap))
@@ -110,11 +112,12 @@ class LibraryPresenter(
      *
      * @param map the map to filter.
      */
-    private fun applyFilters(map: LibraryMap): LibraryMap {
+    private fun applyFilters(map: LibraryMap, trackMap: Map<Long, Boolean>): LibraryMap {
         val downloadedOnly = preferences.downloadedOnly().get()
         val filterDownloaded = preferences.filterDownloaded().get()
         val filterUnread = preferences.filterUnread().get()
         val filterCompleted = preferences.filterCompleted().get()
+        val tracking = preferences.filterTracking().get()
 
         val filterFnUnread: (LibraryItem) -> Boolean = unread@{ item ->
             if (filterUnread == State.IGNORE.value) return@unread true
@@ -144,11 +147,20 @@ class LibraryPresenter(
             else !isDownloaded
         }
 
+        val filterFnTracking: (LibraryItem) -> Boolean = tracking@{ item ->
+            if (tracking == State.IGNORE.value) return@tracking true
+
+            val isTracking = trackMap[item.manga.id ?: -1] ?: false
+
+            return@tracking if (tracking == State.INCLUDE.value) isTracking else !isTracking
+        }
+
         val filterFn: (LibraryItem) -> Boolean = filter@{ item ->
             return@filter !(
                 !filterFnUnread(item) ||
                     !filterFnCompleted(item) ||
-                    !filterFnDownloaded(item)
+                    !filterFnDownloaded(item) ||
+                    !filterFnTracking(item)
                 )
         }
 
@@ -280,6 +292,29 @@ class LibraryPresenter(
             .map { list ->
                 list.map { LibraryItem(it, libraryDisplayMode) }.groupBy { it.manga.category }
             }
+    }
+
+    /**
+     * Get the tracked manga from the database and checks if the filter gets changed
+     *
+     * @return an observable of tracked manga.
+     */
+    private fun getFilterObservable(): Observable<Map<Long, Boolean>> {
+        return getTracksObservable().combineLatest(filterTriggerRelay.observeOn(Schedulers.io())) { tracks, _ -> tracks }
+    }
+
+    /**
+     * Get the tracked manga from the database
+     *
+     * @return an observable of tracked manga.
+     */
+    private fun getTracksObservable(): Observable<Map<Long, Boolean>> {
+        return db.getTracks().asRxObservable().map { tracks ->
+            tracks.associate { track ->
+                val isLogged = tracks.any { trackManager.getService(it.sync_id)?.isLogged ?: false }
+                Pair(track.manga_id, isLogged)
+            }
+        }.observeOn(Schedulers.io())
     }
 
     /**
