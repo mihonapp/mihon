@@ -62,6 +62,12 @@ object Notifications {
     const val ID_BACKUP_COMPLETE = -502
     const val ID_RESTORE_COMPLETE = -504
 
+    /**
+     * Notification channel used for crash log file sharing.
+     */
+    const val CHANNEL_CRASH_LOGS = "crash_logs_channel"
+    const val ID_CRASH_LOGS = -601
+
     private val deprecatedChannels = listOf(
         "downloader_channel",
         "backup_restore_complete_channel"
@@ -143,7 +149,12 @@ object Notifications {
                 group = GROUP_BACKUP_RESTORE
                 setShowBadge(false)
                 setSound(null, null)
-            }
+            },
+            NotificationChannel(
+                CHANNEL_CRASH_LOGS,
+                context.getString(R.string.channel_crash_logs),
+                NotificationManager.IMPORTANCE_HIGH
+            )
         ).forEach(context.notificationManager::createNotificationChannel)
 
         // Delete old notification channels

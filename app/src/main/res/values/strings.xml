@@ -271,6 +271,11 @@
     <string name="pref_read_with_volume_keys">Volume keys</string>
     <string name="pref_read_with_volume_keys_inverted">Invert volume keys</string>
     <string name="pref_read_with_tapping">Tapping</string>
+    <string name="pref_read_with_tapping_inverted">Invert tapping</string>
+    <string name="tapping_inverted_none">None</string>
+    <string name="tapping_inverted_horizontal">Horizontal</string>
+    <string name="tapping_inverted_vertical">Vertical</string>
+    <string name="tapping_inverted_both">Both</string>
     <string name="pref_read_with_long_tap">Long tap dialog</string>
     <string name="pref_reader_theme">Background color</string>
     <string name="white_background">White</string>
@@ -410,6 +415,9 @@
     <string name="pref_refresh_library_covers">Refresh library manga covers</string>
     <string name="pref_refresh_library_tracking">Refresh tracking</string>
     <string name="pref_refresh_library_tracking_summary">Updates status, score and last chapter read from the tracking services</string>
+    <string name="pref_dump_crash_logs">Dump crash logs</string>
+    <string name="pref_dump_crash_logs_summary">Saves error logs to a file for sharing with the developers</string>
+    <string name="crash_log_saved">Crash logs saved</string>
     <string name="pref_disable_battery_optimization">Disable battery optimization</string>
     <string name="pref_disable_battery_optimization_summary">Helps with background library updates and backups</string>
     <string name="battery_optimization_disabled">Battery optimization is already disabled</string>
@@ -729,11 +737,7 @@
     <string name="group_backup_restore">Backup and restore</string>
     <string name="channel_new_chapters">Chapter updates</string>
     <string name="channel_ext_updates">Extension updates</string>
-    <string name="pref_read_with_tapping_inverted">Invert tapping</string>
-    <string name="tapping_inverted_none">None</string>
-    <string name="tapping_inverted_horizontal">Horizontal</string>
-    <string name="tapping_inverted_vertical">Vertical</string>
-    <string name="tapping_inverted_both">Both</string>
+    <string name="channel_crash_logs">Crash logs</string>
 
     <!-- S Pen actions -->
     <string name="spen_previous_page">Previous page</string>

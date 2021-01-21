@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Target
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
@@ -47,6 +48,16 @@ class SettingsAdvancedController : SettingsController() {
             titleRes = R.string.pref_enable_acra
             summaryRes = R.string.pref_acra_summary
             defaultValue = true
+        }
+
+        preference {
+            key = "dump_crash_logs"
+            titleRes = R.string.pref_dump_crash_logs
+            summaryRes = R.string.pref_dump_crash_logs_summary
+
+            onClick {
+                CrashLogUtil(context).dumpLogs()
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
