@@ -68,9 +68,7 @@ class BackupNotifier(private val context: Context) {
             setContentText(unifile.filePath ?: unifile.name)
 
             // Clear old actions if they exist
-            if (mActions.isNotEmpty()) {
-                mActions.clear()
-            }
+            clearActions()
 
             addAction(
                 R.drawable.ic_share_24dp,
@@ -94,9 +92,7 @@ class BackupNotifier(private val context: Context) {
             setOnlyAlertOnce(true)
 
             // Clear old actions if they exist
-            if (mActions.isNotEmpty()) {
-                mActions.clear()
-            }
+            clearActions()
 
             addAction(
                 R.drawable.ic_close_24dp,
@@ -137,9 +133,7 @@ class BackupNotifier(private val context: Context) {
             setContentText(context.resources.getQuantityString(R.plurals.restore_completed_message, errorCount, timeString, errorCount))
 
             // Clear old actions if they exist
-            if (mActions.isNotEmpty()) {
-                mActions.clear()
-            }
+            clearActions()
 
             if (errorCount > 0 && !path.isNullOrEmpty() && !file.isNullOrEmpty()) {
                 val destFile = File(path, file)

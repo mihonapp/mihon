@@ -60,9 +60,7 @@ class SaveImageNotifier(private val context: Context) {
             setAutoCancel(true)
 
             // Clear old actions if they exist
-            if (mActions.isNotEmpty()) {
-                mActions.clear()
-            }
+            clearActions()
 
             setContentIntent(NotificationHandler.openImagePendingActivity(context, file))
             // Share action
