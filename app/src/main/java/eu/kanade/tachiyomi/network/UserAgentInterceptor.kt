@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.network
 
-import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.util.system.WebViewUtil
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -12,7 +12,7 @@ class UserAgentInterceptor : Interceptor {
             val newRequest = originalRequest
                 .newBuilder()
                 .removeHeader("User-Agent")
-                .addHeader("User-Agent", HttpSource.DEFAULT_USERAGENT)
+                .addHeader("User-Agent", WebViewUtil.DEFAULT_USER_AGENT)
                 .build()
             chain.proceed(newRequest)
         } else {
