@@ -144,7 +144,7 @@ dependencies {
     // UI library
     implementation("com.google.android.material:material:1.3.0-rc01")
 
-    "standardImplementation"("com.google.firebase:firebase-core:18.0.0")
+    "standardImplementation"("com.google.firebase:firebase-core:18.0.1")
 
     // ReactiveX
     implementation("io.reactivex:rxandroid:1.2.1")
@@ -248,7 +248,7 @@ dependencies {
     implementation("com.mikepenz:aboutlibraries:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
 
     // Tests
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.1")
     testImplementation("org.assertj:assertj-core:3.16.1")
     testImplementation("org.mockito:mockito-core:1.10.19")
 
