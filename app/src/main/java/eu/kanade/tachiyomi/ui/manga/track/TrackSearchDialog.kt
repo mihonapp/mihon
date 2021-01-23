@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
@@ -105,22 +104,22 @@ class TrackSearchDialog : DialogController {
     private fun search(query: String) {
         val binding = binding ?: return
         binding.progress.isVisible = true
-        binding.trackSearchList.isInvisible = true
+        binding.trackSearchList.isVisible = false
         trackController.presenter.search(query, service)
     }
 
     fun onSearchResults(results: List<TrackSearch>) {
         selectedItem = null
         val binding = binding ?: return
-        binding.progress.isInvisible = true
+        binding.progress.isVisible = false
         binding.trackSearchList.isVisible = true
         adapter?.setItems(results)
     }
 
     fun onSearchResultsError() {
         val binding = binding ?: return
-        binding.progress.isVisible = true
-        binding.trackSearchList.isInvisible = true
+        binding.progress.isVisible = false
+        binding.trackSearchList.isVisible = false
         adapter?.setItems(emptyList())
     }
 
