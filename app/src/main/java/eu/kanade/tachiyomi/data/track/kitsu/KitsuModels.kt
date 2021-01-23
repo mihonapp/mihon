@@ -19,7 +19,12 @@ class KitsuSearchManga(obj: JsonObject) {
     private val canonicalTitle = obj["canonicalTitle"]!!.jsonPrimitive.content
     private val chapterCount = obj["chapterCount"]?.jsonPrimitive?.intOrNull
     val subType = obj["subtype"]?.jsonPrimitive?.contentOrNull
-    val original = obj["posterImage"]?.jsonObject?.get("original")?.jsonPrimitive?.content
+    val original = try {
+        obj["posterImage"]?.jsonObject?.get("original")?.jsonPrimitive?.content
+    } catch (e: IllegalArgumentException) {
+        // posterImage is sometimes a jsonNull object instead
+        null
+    }
     private val synopsis = obj["synopsis"]!!.jsonPrimitive.content
     private var startDate = obj["startDate"]?.jsonPrimitive?.contentOrNull?.let {
         val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
