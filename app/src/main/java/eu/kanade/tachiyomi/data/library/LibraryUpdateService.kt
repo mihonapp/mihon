@@ -36,7 +36,10 @@ import eu.kanade.tachiyomi.util.system.isServiceRunning
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.supervisorScope
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -245,7 +248,7 @@ class LibraryUpdateService(
      */
     suspend fun updateChapterList(mangaToUpdate: List<LibraryManga>) {
         // Initialize the variables holding the progress of the updates.
-        val count = AtomicInteger(0)
+        val progressCount = AtomicInteger(0)
         // List containing new updates
         val newUpdates = mutableListOf<Pair<LibraryManga, Array<Chapter>>>()
         // List containing failed updates
@@ -256,7 +259,7 @@ class LibraryUpdateService(
         mangaToUpdate
             .map { manga ->
                 // Notify manga that will update.
-                notifier.showProgressNotification(manga, count.andIncrement, mangaToUpdate.size)
+                notifier.showProgressNotification(manga, progressCount.andIncrement, mangaToUpdate.size)
 
                 // Update the chapters of the manga
                 try {
@@ -326,17 +329,19 @@ class LibraryUpdateService(
 
         // Update manga details metadata in the background
         if (preferences.autoUpdateMetadata()) {
-            val updatedManga = source.getMangaDetails(manga.toMangaInfo())
-            val sManga = updatedManga.toSManga()
-            // Avoid "losing" existing cover
-            if (!sManga.thumbnail_url.isNullOrEmpty()) {
-                manga.prepUpdateCover(coverCache, sManga, false)
-            } else {
-                sManga.thumbnail_url = manga.thumbnail_url
-            }
+            scope.async {
+                val updatedManga = source.getMangaDetails(manga.toMangaInfo())
+                val sManga = updatedManga.toSManga()
+                // Avoid "losing" existing cover
+                if (!sManga.thumbnail_url.isNullOrEmpty()) {
+                    manga.prepUpdateCover(coverCache, sManga, false)
+                } else {
+                    sManga.thumbnail_url = manga.thumbnail_url
+                }
 
-            manga.copyFrom(sManga)
-            db.insertManga(manga).executeAsBlocking()
+                manga.copyFrom(sManga)
+                db.insertManga(manga).executeAsBlocking()
+            }
         }
 
         val chapters = source.getChapterList(manga.toMangaInfo())
@@ -346,10 +351,10 @@ class LibraryUpdateService(
     }
 
     private suspend fun updateCovers(mangaToUpdate: List<LibraryManga>) {
-        var count = 0
+        var progressCount = 0
 
         mangaToUpdate.forEach { manga ->
-            notifier.showProgressNotification(manga, count++, mangaToUpdate.size)
+            notifier.showProgressNotification(manga, progressCount++, mangaToUpdate.size)
 
             sourceManager.get(manga.source)?.let { source ->
                 try {
@@ -375,28 +380,32 @@ class LibraryUpdateService(
      * background thread, so it's safe to do heavy operations or network calls here.
      */
     private suspend fun updateTrackings(mangaToUpdate: List<LibraryManga>) {
-        // Initialize the variables holding the progress of the updates.
-        var count = 0
-
+        var progressCount = 0
         val loggedServices = trackManager.services.filter { it.isLogged }
 
         mangaToUpdate.forEach { manga ->
             // Notify manga that will update.
-            notifier.showProgressNotification(manga, count++, mangaToUpdate.size)
+            notifier.showProgressNotification(manga, progressCount++, mangaToUpdate.size)
 
             // Update the tracking details.
-            db.getTracks(manga).executeAsBlocking().forEach { track ->
-                val service = trackManager.getService(track.sync_id)
-                if (service != null && service in loggedServices) {
-                    try {
-                        val updatedTrack = service.refresh(track)
-                        db.insertTrack(updatedTrack).executeAsBlocking()
-                    } catch (e: Throwable) {
-                        // Ignore errors and continue
-                        Timber.e(e)
+            db.getTracks(manga).executeAsBlocking()
+                .map { track ->
+                    supervisorScope {
+                        async {
+                            val service = trackManager.getService(track.sync_id)
+                            if (service != null && service in loggedServices) {
+                                try {
+                                    val updatedTrack = service.refresh(track)
+                                    db.insertTrack(updatedTrack).executeAsBlocking()
+                                } catch (e: Throwable) {
+                                    // Ignore errors and continue
+                                    Timber.e(e)
+                                }
+                            }
+                        }
                     }
                 }
-            }
+                .awaitAll()
         }
 
         notifier.cancelProgressNotification()
