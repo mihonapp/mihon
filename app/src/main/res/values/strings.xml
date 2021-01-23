@@ -107,8 +107,8 @@
     <string name="action_order_by_chapter_number">By chapter number</string>
     <string name="action_newest">Newest</string>
     <string name="action_oldest">Oldest</string>
-    <string name="action_bigest">Bigest</string>
-    <string name="action_smallest">Smallest</string>
+    <string name="action_asc">Ascending</string>
+    <string name="action_desc">Descending</string>
     <string name="action_move_to_top">Move to top</string>
     <string name="action_move_to_bottom">Move to bottom</string>
     <string name="action_install">Install</string>

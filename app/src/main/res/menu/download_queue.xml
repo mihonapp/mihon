@@ -26,11 +26,11 @@
                 app:showAsAction="never">
                 <menu>
                     <item
-                        android:id="@+id/bigest"
-                        android:title="@string/action_bigest" />
+                        android:id="@+id/asc"
+                        android:title="@string/action_asc" />
                     <item
-                        android:id="@+id/smallest"
-                        android:title="@string/action_smallest" />
+                        android:id="@+id/desc"
+                        android:title="@string/action_desc" />
                 </menu>
             </item>
         </menu>
