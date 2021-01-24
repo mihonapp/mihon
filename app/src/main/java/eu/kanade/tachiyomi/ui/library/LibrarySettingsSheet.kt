@@ -9,11 +9,6 @@ import eu.kanade.tachiyomi.data.preference.PreferenceValues.DisplayMode
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
-import eu.kanade.tachiyomi.data.track.anilist.Anilist
-import eu.kanade.tachiyomi.data.track.bangumi.Bangumi
-import eu.kanade.tachiyomi.data.track.kitsu.Kitsu
-import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeList
-import eu.kanade.tachiyomi.data.track.shikimori.Shikimori
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
 import eu.kanade.tachiyomi.widget.TabbedBottomSheetDialog
@@ -78,7 +73,7 @@ class LibrarySettingsSheet(
             private val downloaded = Item.TriStateGroup(R.string.action_filter_downloaded, this)
             private val unread = Item.TriStateGroup(R.string.action_filter_unread, this)
             private val completed = Item.TriStateGroup(R.string.completed, this)
-            private val trackFilters: Map<String, Item.TriStateGroup>
+            private val trackFilters: Map<Int, Item.TriStateGroup>
 
             override val header = null
             override val items: List<Item>
@@ -89,7 +84,7 @@ class LibrarySettingsSheet(
                     .also { services ->
                         val size = services.size
                         trackFilters = services.associate { service ->
-                            Pair(service.name, Item.TriStateGroup(getServiceResId(service, size), this))
+                            Pair(service.id, Item.TriStateGroup(getServiceResId(service, size), this))
                         }
                         val list: MutableList<Item> = mutableListOf(downloaded, unread, completed)
                         if (size > 1) list.add(Item.Header(R.string.action_filter_tracked))
@@ -99,18 +94,7 @@ class LibrarySettingsSheet(
             }
 
             private fun getServiceResId(service: TrackService, size: Int): Int {
-                return if (size > 1) getServiceResId(service) else R.string.action_filter_tracked
-            }
-
-            private fun getServiceResId(service: TrackService): Int {
-                return when (service) {
-                    is Anilist -> R.string.anilist
-                    is MyAnimeList -> R.string.my_anime_list
-                    is Kitsu -> R.string.kitsu
-                    is Bangumi -> R.string.bangumi
-                    is Shikimori -> R.string.shikimori
-                    else -> R.string.unknown
-                }
+                return if (size > 1) service.nameRes() else R.string.action_filter_tracked
             }
 
             override fun initModels() {

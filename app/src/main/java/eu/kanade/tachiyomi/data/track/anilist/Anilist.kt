@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.anilist
 
 import android.content.Context
 import android.graphics.Color
+import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -31,8 +32,6 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
         const val POINT_3 = "POINT_3"
     }
 
-    override val name = "AniList"
-
     private val json: Json by injectLazy()
 
     private val interceptor by lazy { AnilistInterceptor(this, getPassword()) }
@@ -50,6 +49,9 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
             scorePreference.delete()
         }
     }
+
+    @StringRes
+    override fun nameRes() = R.string.tracker_anilist
 
     override fun getLogo() = R.drawable.ic_tracker_anilist
 

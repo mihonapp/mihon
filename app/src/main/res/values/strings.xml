@@ -562,6 +562,11 @@
     <string name="no_chapters_error">No chapters found</string>
 
     <!-- Tracking Screen -->
+    <string name="tracker_anilist" translatable="false">AniList</string>
+    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
+    <string name="tracker_kitsu" translatable="false">Kitsu</string>
+    <string name="tracker_bangumi" translatable="false">Bangumi</string>
+    <string name="tracker_shikimori" translatable="false">Shikimori</string>
     <string name="manga_tracking_tab">Tracking</string>
     <plurals name="num_trackers">
         <item quantity="one">1 tracker</item>
@@ -746,12 +751,5 @@
     <!-- S Pen actions -->
     <string name="spen_previous_page">Previous page</string>
     <string name="spen_next_page">Next page</string>
-
-    <!-- Tracker names -->
-    <string name="anilist" translatable="false">AniList</string>
-    <string name="my_anime_list" translatable="false">MyAnimeList</string>
-    <string name="kitsu" translatable="false">Kitsu</string>
-    <string name="bangumi" translatable="false">Bangumi</string>
-    <string name="shikimori" translatable="false">Shikimori</string>
 
 </resources>

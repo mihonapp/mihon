@@ -96,7 +96,8 @@ abstract class AbstractBackupRestore<T : AbstractBackupManager>(protected val co
                     errors.add(Date() to "${manga.title} - ${e.message}")
                 }
             } else {
-                errors.add(Date() to "${manga.title} - ${context.getString(R.string.tracker_not_logged_in, service?.name)}")
+                val serviceName = service?.nameRes()?.let { context.getString(it) }
+                errors.add(Date() to "${manga.title} - ${context.getString(R.string.tracker_not_logged_in, serviceName)}")
             }
         }
     }

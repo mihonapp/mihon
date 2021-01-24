@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.shikimori
 
 import android.content.Context
 import android.graphics.Color
+import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -25,13 +26,14 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
         const val DEFAULT_SCORE = 0
     }
 
-    override val name = "Shikimori"
-
     private val json: Json by injectLazy()
 
     private val interceptor by lazy { ShikimoriInterceptor(this) }
 
     private val api by lazy { ShikimoriApi(client, interceptor) }
+
+    @StringRes
+    override fun nameRes() = R.string.tracker_shikimori
 
     override fun getScoreList(): List<String> {
         return IntRange(0, 10).map(Int::toString)

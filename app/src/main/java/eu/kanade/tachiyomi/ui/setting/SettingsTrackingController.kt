@@ -71,7 +71,7 @@ class SettingsTrackingController :
         return initThenAdd(
             LoginPreference(context).apply {
                 key = Keys.trackUsername(service.id)
-                title = service.name
+                titleRes = service.nameRes()
             },
             {
                 onClick {

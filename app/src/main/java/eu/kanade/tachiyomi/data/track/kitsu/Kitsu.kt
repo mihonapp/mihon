@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.kitsu
 
 import android.content.Context
 import android.graphics.Color
+import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -25,7 +26,8 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
         const val DEFAULT_SCORE = 0f
     }
 
-    override val name = "Kitsu"
+    @StringRes
+    override fun nameRes() = R.string.tracker_kitsu
 
     private val json: Json by injectLazy()
 

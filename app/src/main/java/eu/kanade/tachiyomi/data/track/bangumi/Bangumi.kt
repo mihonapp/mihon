@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.bangumi
 
 import android.content.Context
 import android.graphics.Color
+import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -13,13 +14,14 @@ import uy.kohesive.injekt.injectLazy
 
 class Bangumi(private val context: Context, id: Int) : TrackService(id) {
 
-    override val name = "Bangumi"
-
     private val json: Json by injectLazy()
 
     private val interceptor by lazy { BangumiInterceptor(this) }
 
     private val api by lazy { BangumiApi(client, interceptor) }
+
+    @StringRes
+    override fun nameRes() = R.string.tracker_bangumi
 
     override fun getScoreList(): List<String> {
         return IntRange(0, 10).map(Int::toString)

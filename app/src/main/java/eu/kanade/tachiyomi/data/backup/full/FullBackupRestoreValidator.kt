@@ -41,7 +41,7 @@ class FullBackupRestoreValidator : AbstractBackupRestoreValidator() {
         val missingTrackers = trackers
             .mapNotNull { trackManager.getService(it) }
             .filter { !it.isLogged }
-            .map { it.name }
+            .map { context.getString(it.nameRes()) }
             .sorted()
 
         return Results(missingSources, missingTrackers)
