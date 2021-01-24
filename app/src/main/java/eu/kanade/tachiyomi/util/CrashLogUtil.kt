@@ -6,10 +6,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.storage.getUriCompat
+import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
-import java.io.File
 import java.io.IOException
 
 class CrashLogUtil(private val context: Context) {
@@ -20,11 +20,7 @@ class CrashLogUtil(private val context: Context) {
 
     fun dumpLogs() {
         try {
-            val file = File(context.externalCacheDir, "tachiyomi_crash_logs.txt")
-            if (file.exists()) {
-                file.delete()
-            }
-            file.createNewFile()
+            val file = context.createFileInCacheDir("tachiyomi_crash_logs.txt")
             Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}")
 
             showNotification(file.getUriCompat(context))
