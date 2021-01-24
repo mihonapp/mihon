@@ -180,7 +180,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .await()
                 .parseAs<JsonObject>()
                 .let { obj ->
-                    obj.jsonObject["list_status"]?.jsonObject?.let {
+                    obj.jsonObject["my_list_status"]?.jsonObject?.let {
                         parseMangaItem(it, track)
                     }
                 }
