@@ -329,19 +329,17 @@ class LibraryUpdateService(
 
         // Update manga details metadata in the background
         if (preferences.autoUpdateMetadata()) {
-            scope.async {
-                val updatedManga = source.getMangaDetails(manga.toMangaInfo())
-                val sManga = updatedManga.toSManga()
-                // Avoid "losing" existing cover
-                if (!sManga.thumbnail_url.isNullOrEmpty()) {
-                    manga.prepUpdateCover(coverCache, sManga, false)
-                } else {
-                    sManga.thumbnail_url = manga.thumbnail_url
-                }
-
-                manga.copyFrom(sManga)
-                db.insertManga(manga).executeAsBlocking()
+            val updatedManga = source.getMangaDetails(manga.toMangaInfo())
+            val sManga = updatedManga.toSManga()
+            // Avoid "losing" existing cover
+            if (!sManga.thumbnail_url.isNullOrEmpty()) {
+                manga.prepUpdateCover(coverCache, sManga, false)
+            } else {
+                sManga.thumbnail_url = manga.thumbnail_url
             }
+
+            manga.copyFrom(sManga)
+            db.insertManga(manga).executeAsBlocking()
         }
 
         val chapters = source.getChapterList(manga.toMangaInfo())
