@@ -34,11 +34,14 @@ import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
@@ -65,7 +68,7 @@ class LibraryUpdateService(
 
     private lateinit var wakeLock: PowerManager.WakeLock
     private lateinit var notifier: LibraryUpdateNotifier
-    private lateinit var scope: CoroutineScope
+    private lateinit var ioScope: CoroutineScope
 
     private var updateJob: Job? = null
 
@@ -142,7 +145,7 @@ class LibraryUpdateService(
     override fun onCreate() {
         super.onCreate()
 
-        scope = MainScope()
+        ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         notifier = LibraryUpdateNotifier(this)
         wakeLock = acquireWakeLock(javaClass.name)
 
@@ -154,7 +157,7 @@ class LibraryUpdateService(
      * lock.
      */
     override fun onDestroy() {
-        scope?.cancel()
+        ioScope?.cancel()
         updateJob?.cancel()
         if (wakeLock.isHeld) {
             wakeLock.release()
@@ -190,7 +193,7 @@ class LibraryUpdateService(
         val mangaList = getMangaToUpdate(intent, target)
             .sortedWith(rankingScheme[selectedScheme])
 
-        updateJob = scope.launchIO {
+        updateJob = ioScope.launch {
             try {
                 when (target) {
                     Target.CHAPTERS -> updateChapterList(mangaList)
@@ -329,17 +332,19 @@ class LibraryUpdateService(
 
         // Update manga details metadata in the background
         if (preferences.autoUpdateMetadata()) {
-            val updatedManga = source.getMangaDetails(manga.toMangaInfo())
-            val sManga = updatedManga.toSManga()
-            // Avoid "losing" existing cover
-            if (!sManga.thumbnail_url.isNullOrEmpty()) {
-                manga.prepUpdateCover(coverCache, sManga, false)
-            } else {
-                sManga.thumbnail_url = manga.thumbnail_url
-            }
+            GlobalScope.launchIO {
+                val updatedManga = source.getMangaDetails(manga.toMangaInfo())
+                val sManga = updatedManga.toSManga()
+                // Avoid "losing" existing cover
+                if (!sManga.thumbnail_url.isNullOrEmpty()) {
+                    manga.prepUpdateCover(coverCache, sManga, false)
+                } else {
+                    sManga.thumbnail_url = manga.thumbnail_url
+                }
 
-            manga.copyFrom(sManga)
-            db.insertManga(manga).executeAsBlocking()
+                manga.copyFrom(sManga)
+                db.insertManga(manga).executeAsBlocking()
+            }
         }
 
         val chapters = source.getChapterList(manga.toMangaInfo())
