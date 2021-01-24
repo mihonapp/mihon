@@ -102,7 +102,7 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override suspend fun refresh(track: Track): Track {
-        return api.getListItem(track)
+        return api.findListItem(track) ?: api.addItemToList(track)
     }
 
     override suspend fun login(username: String, password: String) = login(password)

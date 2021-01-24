@@ -111,22 +111,6 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
         }
     }
 
-    suspend fun getListItem(track: Track): Track {
-        return withIOContext {
-            val formBody: RequestBody = FormBody.Builder()
-                .add("status", track.toMyAnimeListStatus() ?: "reading")
-                .build()
-            val request = Request.Builder()
-                .url(mangaUrl(track.media_id).toString())
-                .put(formBody)
-                .build()
-            authClient.newCall(request)
-                .await()
-                .parseAs<JsonObject>()
-                .let { parseMangaItem(it, track) }
-        }
-    }
-
     suspend fun addItemToList(track: Track): Track {
         return withIOContext {
             val formBody: RequestBody = FormBody.Builder()
@@ -174,12 +158,13 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
         return withIOContext {
             val uri = "$baseApiUrl/manga".toUri().buildUpon()
                 .appendPath(track.media_id.toString())
-                .appendQueryParameter("fields", "my_list_status{start_date,finish_date}")
+                .appendQueryParameter("fields", "num_chapters,my_list_status{start_date,finish_date}")
                 .build()
             authClient.newCall(GET(uri.toString()))
                 .await()
                 .parseAs<JsonObject>()
                 .let { obj ->
+                    track.total_chapters = obj["num_chapters"]!!.jsonPrimitive.int
                     obj.jsonObject["my_list_status"]?.jsonObject?.let {
                         parseMangaItem(it, track)
                     }
