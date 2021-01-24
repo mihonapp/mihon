@@ -34,6 +34,7 @@ import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.isServiceRunning
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -258,6 +259,10 @@ class LibraryUpdateService(
 
         mangaToUpdate
             .map { manga ->
+                if (updateJob?.isActive != true) {
+                    throw CancellationException()
+                }
+
                 // Notify manga that will update.
                 notifier.showProgressNotification(manga, progressCount.andIncrement, mangaToUpdate.size)
 
@@ -354,6 +359,10 @@ class LibraryUpdateService(
         var progressCount = 0
 
         mangaToUpdate.forEach { manga ->
+            if (updateJob?.isActive != true) {
+                throw CancellationException()
+            }
+
             notifier.showProgressNotification(manga, progressCount++, mangaToUpdate.size)
 
             sourceManager.get(manga.source)?.let { source ->
@@ -384,6 +393,10 @@ class LibraryUpdateService(
         val loggedServices = trackManager.services.filter { it.isLogged }
 
         mangaToUpdate.forEach { manga ->
+            if (updateJob?.isActive != true) {
+                throw CancellationException()
+            }
+
             // Notify manga that will update.
             notifier.showProgressNotification(manga, progressCount++, mangaToUpdate.size)
 
