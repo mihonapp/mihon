@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.data.database.models.MangaImpl
 import eu.kanade.tachiyomi.data.database.models.TrackImpl
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -31,7 +32,6 @@ import org.mockito.Mockito.mock
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import rx.Observable
-import rx.observers.TestSubscriber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektModule
 import uy.kohesive.injekt.api.InjektRegistrar
@@ -211,17 +211,15 @@ class BackupTest {
         networkManga.description = "This is a description"
         `when`(source.fetchMangaDetails(jsonManga)).thenReturn(Observable.just(networkManga))
 
-        val obs = legacyBackupManager.fetchManga(source, jsonManga)
-        val testSubscriber = TestSubscriber<Manga>()
-        obs.subscribe(testSubscriber)
+        runBlocking {
+            legacyBackupManager.fetchManga(source, jsonManga)
 
-        testSubscriber.assertNoErrors()
-
-        // Check if restore successful
-        val dbCats = legacyBackupManager.databaseHelper.getFavoriteMangas().executeAsBlocking()
-        assertThat(dbCats).hasSize(1)
-        assertThat(dbCats[0].viewer).isEqualTo(3)
-        assertThat(dbCats[0].description).isEqualTo("This is a description")
+            // Check if restore successful
+            val dbCats = legacyBackupManager.databaseHelper.getFavoriteMangas().executeAsBlocking()
+            assertThat(dbCats).hasSize(1)
+            assertThat(dbCats[0].viewer).isEqualTo(3)
+            assertThat(dbCats[0].description).isEqualTo("This is a description")
+        }
     }
 
     /**
@@ -254,16 +252,13 @@ class BackupTest {
         (1..10).mapTo(chaptersRemote) { getSingleChapter("Chapter $it") }
         `when`(source.fetchChapterList(manga)).thenReturn(Observable.just(chaptersRemote))
 
-        // Call restoreChapterFetchObservable
-        val obs = legacyBackupManager.restoreChapters(source, manga, restoredChapters)
-        val testSubscriber = TestSubscriber<Pair<List<Chapter>, List<Chapter>>>()
-        obs.subscribe(testSubscriber)
+        runBlocking {
+            legacyBackupManager.restoreChapters(source, manga, restoredChapters)
 
-        testSubscriber.assertNoErrors()
-
-        val dbCats = legacyBackupManager.databaseHelper.getChapters(manga).executeAsBlocking()
-        assertThat(dbCats).hasSize(10)
-        assertThat(dbCats[0].read).isEqualTo(true)
+            val dbCats = legacyBackupManager.databaseHelper.getChapters(manga).executeAsBlocking()
+            assertThat(dbCats).hasSize(10)
+            assertThat(dbCats[0].read).isEqualTo(true)
+        }
     }
 
     /**

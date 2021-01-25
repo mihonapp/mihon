@@ -9,8 +9,8 @@ import eu.kanade.tachiyomi.CustomRobolectricGradleTestRunner
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -76,9 +76,11 @@ class LibraryUpdateServiceTest {
 
         `when`(source.fetchChapterList(manga)).thenReturn(Observable.just(sourceChapters))
 
-        service.updateManga(manga).subscribe()
+        runBlocking {
+            service.updateManga(manga)
 
-        assertThat(service.db.getChapters(manga).executeAsBlocking()).hasSize(2)
+            assertThat(service.db.getChapters(manga).executeAsBlocking()).hasSize(2)
+        }
     }
 
     @Test
@@ -92,17 +94,19 @@ class LibraryUpdateServiceTest {
 
         // One of the updates will fail
         `when`(source.fetchChapterList(favManga[0])).thenReturn(Observable.just(chapters))
-        `when`(source.fetchChapterList(favManga[1])).thenReturn(Observable.error<List<SChapter>>(Exception()))
+        `when`(source.fetchChapterList(favManga[1])).thenReturn(Observable.error(Exception()))
         `when`(source.fetchChapterList(favManga[2])).thenReturn(Observable.just(chapters3))
 
         val intent = Intent()
         val target = LibraryUpdateService.Target.CHAPTERS
-        service.updateChapterList(service.getMangaToUpdate(intent, target)).subscribe()
+        runBlocking {
+            service.updateChapterList(service.getMangaToUpdate(intent, target))
 
-        // There are 3 network attempts and 2 insertions (1 request failed)
-        assertThat(service.db.getChapters(favManga[0]).executeAsBlocking()).hasSize(2)
-        assertThat(service.db.getChapters(favManga[1]).executeAsBlocking()).hasSize(0)
-        assertThat(service.db.getChapters(favManga[2]).executeAsBlocking()).hasSize(2)
+            // There are 3 network attempts and 2 insertions (1 request failed)
+            assertThat(service.db.getChapters(favManga[0]).executeAsBlocking()).hasSize(2)
+            assertThat(service.db.getChapters(favManga[1]).executeAsBlocking()).hasSize(0)
+            assertThat(service.db.getChapters(favManga[2]).executeAsBlocking()).hasSize(2)
+        }
     }
 
     private fun createChapters(vararg urls: String): List<Chapter> {

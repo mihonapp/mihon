@@ -3,7 +3,10 @@ package eu.kanade.tachiyomi.ui.reader
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.annotation.ColorInt
-import androidx.core.graphics.*
+import androidx.core.graphics.alpha
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
