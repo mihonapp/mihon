@@ -73,7 +73,9 @@ open class App : Application(), LifecycleObserver {
     }
 
     protected open fun setupAcra() {
-        ACRA.init(this)
+        if (BuildConfig.FLAVOR != "dev") {
+            ACRA.init(this)
+        }
     }
 
     protected open fun setupNotificationChannels() {

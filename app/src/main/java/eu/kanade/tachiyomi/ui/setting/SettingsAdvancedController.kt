@@ -10,6 +10,7 @@ import android.provider.Settings
 import androidx.core.net.toUri
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -43,11 +44,14 @@ class SettingsAdvancedController : SettingsController() {
     @SuppressLint("BatteryLife")
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_advanced
-        switchPreference {
-            key = "acra.enable"
-            titleRes = R.string.pref_enable_acra
-            summaryRes = R.string.pref_acra_summary
-            defaultValue = true
+
+        if (BuildConfig.FLAVOR != "dev") {
+            switchPreference {
+                key = "acra.enable"
+                titleRes = R.string.pref_enable_acra
+                summaryRes = R.string.pref_acra_summary
+                defaultValue = true
+            }
         }
 
         preference {
