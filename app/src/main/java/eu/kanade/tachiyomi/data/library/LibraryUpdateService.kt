@@ -35,6 +35,7 @@ import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -195,20 +196,18 @@ class LibraryUpdateService(
         val mangaList = getMangaToUpdate(intent, target)
             .sortedWith(rankingScheme[selectedScheme])
 
-        updateJob = ioScope.launch {
-            try {
-                when (target) {
-                    Target.CHAPTERS -> updateChapterList(mangaList)
-                    Target.COVERS -> updateCovers(mangaList)
-                    Target.TRACKING -> updateTrackings(mangaList)
-                }
-            } catch (e: Throwable) {
-                Timber.e(e)
-                stopSelf(startId)
-            } finally {
-                stopSelf(startId)
+        val handler = CoroutineExceptionHandler { _, exception ->
+            Timber.e(exception)
+            stopSelf(startId)
+        }
+        updateJob = ioScope.launch(handler) {
+            when (target) {
+                Target.CHAPTERS -> updateChapterList(mangaList)
+                Target.COVERS -> updateCovers(mangaList)
+                Target.TRACKING -> updateTrackings(mangaList)
             }
         }
+        updateJob?.invokeOnCompletion { stopSelf(startId) }
 
         return START_REDELIVER_INTENT
     }
@@ -335,17 +334,22 @@ class LibraryUpdateService(
         // Update manga details metadata in the background
         if (preferences.autoUpdateMetadata()) {
             GlobalScope.launchIO {
-                val updatedManga = source.getMangaDetails(manga.toMangaInfo())
-                val sManga = updatedManga.toSManga()
-                // Avoid "losing" existing cover
-                if (!sManga.thumbnail_url.isNullOrEmpty()) {
-                    manga.prepUpdateCover(coverCache, sManga, false)
-                } else {
-                    sManga.thumbnail_url = manga.thumbnail_url
-                }
+                try {
+                    val updatedManga = source.getMangaDetails(manga.toMangaInfo())
+                    val sManga = updatedManga.toSManga()
+                    // Avoid "losing" existing cover
+                    if (!sManga.thumbnail_url.isNullOrEmpty()) {
+                        manga.prepUpdateCover(coverCache, sManga, false)
+                    } else {
+                        sManga.thumbnail_url = manga.thumbnail_url
+                    }
 
-                manga.copyFrom(sManga)
-                db.insertManga(manga).executeAsBlocking()
+                    manga.copyFrom(sManga)
+                    db.insertManga(manga).executeAsBlocking()
+                } catch (e: Throwable) {
+                    // Ignore errors and continue
+                    Timber.e(e)
+                }
             }
         }
 
