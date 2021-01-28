@@ -142,7 +142,7 @@
         <item name="fabCustomSize">@dimen/fab_size</item>
         <item name="android:minWidth">@dimen/fab_size</item>
         <item name="android:layout_gravity">bottom|end</item>
-        <item name="android:layout_margin">@dimen/fab_margin</item>
+        <item name="android:layout_margin">16dp</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="layout_anchorGravity">bottom|right|end</item>
         <item name="android:fontFamily">sans-serif-medium</item>
