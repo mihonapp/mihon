@@ -122,7 +122,7 @@ dependencies {
     // AndroidX libraries
     implementation("androidx.annotation:annotation:1.2.0-beta01")
     implementation("androidx.appcompat:appcompat:1.3.0-beta01")
-    implementation("androidx.biometric:biometric-ktx:1.2.0-alpha01")
+    implementation("androidx.biometric:biometric-ktx:1.2.0-alpha02")
     implementation("androidx.browser:browser:1.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.0-alpha2")
@@ -139,7 +139,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
 
     // Job scheduling
-    implementation("androidx.work:work-runtime-ktx:2.5.0-rc01")
+    implementation("androidx.work:work-runtime-ktx:2.5.0")
 
     // UI library
     implementation("com.google.android.material:material:1.3.0-rc01")
