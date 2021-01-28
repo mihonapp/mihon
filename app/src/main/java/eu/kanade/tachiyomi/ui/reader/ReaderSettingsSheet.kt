@@ -6,7 +6,6 @@ import android.widget.Spinner
 import androidx.annotation.ArrayRes
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.tfcporciuncula.flow.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -14,12 +13,13 @@ import eu.kanade.tachiyomi.databinding.ReaderSettingsSheetBinding
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
+import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
 import uy.kohesive.injekt.injectLazy
 
 /**
  * Sheet to show reader and viewer preferences.
  */
-class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDialog(activity) {
+class ReaderSettingsSheet(private val activity: ReaderActivity) : BaseBottomSheetDialog(activity) {
 
     private val preferences: PreferencesHelper by injectLazy()
 

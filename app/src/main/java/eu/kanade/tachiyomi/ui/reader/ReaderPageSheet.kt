@@ -1,13 +1,11 @@
 package eu.kanade.tachiyomi.ui.reader
 
-import android.os.Bundle
-import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.ReaderPageSheetBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
 
 /**
  * Sheet to show when a page is long clicked.
@@ -15,7 +13,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 class ReaderPageSheet(
     private val activity: ReaderActivity,
     private val page: ReaderPage
-) : BottomSheetDialog(activity) {
+) : BaseBottomSheetDialog(activity) {
 
     private val binding = ReaderPageSheetBinding.inflate(activity.layoutInflater, null, false)
 
@@ -25,14 +23,6 @@ class ReaderPageSheet(
         binding.setAsCoverLayout.setOnClickListener { setAsCover() }
         binding.shareLayout.setOnClickListener { share() }
         binding.saveLayout.setOnClickListener { save() }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val width = context.resources.getDimensionPixelSize(R.dimen.bottom_sheet_width)
-        if (width > 0) {
-            window?.setLayout(width, ViewGroup.LayoutParams.MATCH_PARENT)
-        }
     }
 
     /**

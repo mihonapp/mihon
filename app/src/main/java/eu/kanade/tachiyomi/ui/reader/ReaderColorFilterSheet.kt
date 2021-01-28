@@ -9,11 +9,11 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.ReaderColorFilterSheetBinding
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
+import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
@@ -22,7 +22,7 @@ import uy.kohesive.injekt.injectLazy
 /**
  * Color filter sheet to toggle custom filter and brightness overlay.
  */
-class ReaderColorFilterSheet(private val activity: ReaderActivity) : BottomSheetDialog(activity) {
+class ReaderColorFilterSheet(private val activity: ReaderActivity) : BaseBottomSheetDialog(activity) {
 
     private val preferences: PreferencesHelper by injectLazy()
 

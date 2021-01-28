@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaPresenter
 import eu.kanade.tachiyomi.util.view.popupMenu
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
-import eu.kanade.tachiyomi.widget.TabbedBottomSheetDialog
+import eu.kanade.tachiyomi.widget.sheet.TabbedBottomSheetDialog
 
 class ChaptersSettingsSheet(
     private val router: Router,

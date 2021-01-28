@@ -1,12 +1,12 @@
-package eu.kanade.tachiyomi.widget
+package eu.kanade.tachiyomi.widget.sheet
 
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Router
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.kanade.tachiyomi.databinding.CommonTabbedSheetBinding
+import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 
-abstract class TabbedBottomSheetDialog(private val router: Router) : BottomSheetDialog(router.activity!!) {
+abstract class TabbedBottomSheetDialog(private val router: Router) : BaseBottomSheetDialog(router.activity!!) {
 
     val binding: CommonTabbedSheetBinding = CommonTabbedSheetBinding.inflate(router.activity!!.layoutInflater)
 

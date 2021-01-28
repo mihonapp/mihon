@@ -5,17 +5,17 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.databinding.SourceFilterSheetBinding
 import eu.kanade.tachiyomi.widget.SimpleNavigationView
+import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
 
 class SourceFilterSheet(
     activity: Activity,
     onFilterClicked: () -> Unit,
     onResetClicked: () -> Unit
-) : BottomSheetDialog(activity) {
+) : BaseBottomSheetDialog(activity) {
 
     private var filterNavView: FilterNavigationView
 
