@@ -27,7 +27,6 @@ import eu.kanade.tachiyomi.source.model.toSChapter
 import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.util.chapter.NoChaptersException
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
-import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
 import eu.kanade.tachiyomi.util.storage.getUriCompat
@@ -38,7 +37,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
@@ -333,23 +331,21 @@ class LibraryUpdateService(
 
         // Update manga details metadata in the background
         if (preferences.autoUpdateMetadata()) {
-            GlobalScope.launchIO {
-                try {
-                    val updatedManga = source.getMangaDetails(manga.toMangaInfo())
-                    val sManga = updatedManga.toSManga()
-                    // Avoid "losing" existing cover
-                    if (!sManga.thumbnail_url.isNullOrEmpty()) {
-                        manga.prepUpdateCover(coverCache, sManga, false)
-                    } else {
-                        sManga.thumbnail_url = manga.thumbnail_url
-                    }
-
-                    manga.copyFrom(sManga)
-                    db.insertManga(manga).executeAsBlocking()
-                } catch (e: Throwable) {
-                    // Ignore errors and continue
-                    Timber.e(e)
+            val handler = CoroutineExceptionHandler { _, exception ->
+                Timber.e(exception)
+            }
+            ioScope.launch(handler) {
+                val updatedManga = source.getMangaDetails(manga.toMangaInfo())
+                val sManga = updatedManga.toSManga()
+                // Avoid "losing" existing cover
+                if (!sManga.thumbnail_url.isNullOrEmpty()) {
+                    manga.prepUpdateCover(coverCache, sManga, false)
+                } else {
+                    sManga.thumbnail_url = manga.thumbnail_url
                 }
+
+                manga.copyFrom(sManga)
+                db.insertManga(manga).executeAsBlocking()
             }
         }
 
