@@ -144,27 +144,27 @@ class LibraryController(
     }
 
     private fun updateTitle() {
-        val categoryTabs = preferences.categoryTabs().get()
+        val showCategoryTabs = preferences.categoryTabs().get()
         val currentCategory = adapter?.categories?.getOrNull(binding.libraryPager.currentItem)
 
-        if (categoryTabs) {
-            currentTitle = resources?.getString(R.string.label_library)
+        var title = if (showCategoryTabs) {
+            resources?.getString(R.string.label_library)
         } else {
-            currentCategory?.let {
-                currentTitle = it.name
-            }
+            currentCategory?.name
         }
 
         if (preferences.categoryNumberOfItems().get() && libraryMangaRelay.hasValue()) {
             libraryMangaRelay.value.mangas.let { mangaMap ->
-                if (!categoryTabs) {
-                    currentTitle += " (${mangaMap[currentCategory?.id]?.size ?: 0})"
+                if (!showCategoryTabs) {
+                    title += " (${mangaMap[currentCategory?.id]?.size ?: 0})"
                 } else if (adapter?.categories?.size == 1) {
-                    // special case for if there are no categories
-                    currentTitle += " (${mangaMap[0]?.size ?: 0})"
+                    // Only "Default" category
+                    title += " (${mangaMap[0]?.size ?: 0})"
                 }
             }
         }
+
+        currentTitle = title
     }
 
     override fun createPresenter(): LibraryPresenter {
@@ -289,9 +289,9 @@ class LibraryController(
 
         // Set the categories
         adapter.categories = categories
-        adapter.mangaCountPerCategory = adapter.categories.map {
-            Pair(it.id ?: -1, mangaMap[it.id]?.size ?: 0)
-        }.toMap()
+        adapter.itemsPerCategory = adapter.categories
+            .map { (it.id ?: -1) to (mangaMap[it.id]?.size ?: 0) }
+            .toMap()
 
         // Restore active category.
         binding.libraryPager.setCurrentItem(activeCat, false)

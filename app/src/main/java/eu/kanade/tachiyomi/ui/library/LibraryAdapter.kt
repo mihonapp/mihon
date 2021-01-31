@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.LibraryCategoryBinding
-import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.widget.RecyclerViewPagerAdapter
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -36,7 +35,7 @@ class LibraryAdapter(
     /**
      * The number of manga in each category.
      */
-    var mangaCountPerCategory: Map<Int, Int> = emptyMap()
+    var itemsPerCategory: Map<Int, Int> = emptyMap()
         set(value) {
             if (field !== value) {
                 field = value
@@ -97,7 +96,7 @@ class LibraryAdapter(
      */
     override fun getPageTitle(position: Int): CharSequence {
         if (preferences.categoryNumberOfItems().get()) {
-            return categories[position].let { "${it.name} (${mangaCountPerCategory[it.id]})" }
+            return categories[position].let { "${it.name} (${itemsPerCategory[it.id]})" }
         }
         return categories[position].name
     }
