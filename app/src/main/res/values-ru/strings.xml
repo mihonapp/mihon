@@ -330,9 +330,9 @@
     <string name="ext_uninstall">Удалить</string>
     <string name="ext_available">Доступно</string>
     <string name="untrusted_extension">Ненадежное расширение</string>
-    <string name="untrusted_extension_message">Это расширение было подписано ненадежным сертификатом и не было активировано. 
+    <string name="untrusted_extension_message">Это расширение было подписано ненадежным сертификатом и не было активировано.
 \n
-\nВредоносное расширение может считывать любые учетные данные для входа, хранящиеся в Tachiyomi, или выполнять произвольный код. 
+\nВредоносное расширение может считывать любые учетные данные для входа, хранящиеся в Tachiyomi, или выполнять произвольный код.
 \n
 \nДоверяя этому сертификату, вы принимаете эти риски.</string>
     <string name="ext_version_info">Версия: %1$s</string>
@@ -344,7 +344,7 @@
     <string name="manga_info_full_title_label">Заголовок</string>
     <string name="manga_added_library">Добавлено в библиотеку</string>
     <string name="manga_removed_library">Удалено из библиотеки</string>
-    <string name="copied_to_clipboard">Скопированно в буфер обмена: 
+    <string name="copied_to_clipboard">Скопированно в буфер обмена:
 \n\"%1$s\"</string>
     <string name="custom_download">Загрузить определенное количество</string>
     <string name="download_custom">Другое кол-во</string>
@@ -584,7 +584,6 @@
     </plurals>
     <string name="action_sort_descending">По убыванию</string>
     <string name="requires_app_restart">Для вступления в силу требуется перезапуск приложения</string>
-    <string name="pref_dns_over_https" translatable="false">DNS по HTTPS (Cloudflare)</string>
     <string name="label_network">Сеть</string>
     <string name="pref_jump_to_chapters">Переходить к главам при запуске</string>
     <string name="tapping_inverted_both">Оба</string>
@@ -634,7 +633,6 @@
     <string name="also_set_chapter_settings_for_library">Также применить для всей манги в моей библиотеке</string>
     <string name="confirm_set_chapter_settings">Вы уверены, что хотите сохранить эти настройки по умолчанию\?</string>
     <string name="chapter_settings">Настройки главы</string>
-    <string name="action_web_view">WebView</string>
     <string name="share_page_info">%1$s: %2$s, страница %3$d</string>
     <string name="action_search_settings">Настройки поиска</string>
     <string name="downloaded_chapters">Загруженные главы</string>
@@ -681,9 +679,4 @@
     <string name="action_order_by_chapter_number">По номеру главы</string>
     <string name="action_order_by_upload_date">По дате загрузки</string>
     <string name="action_filter_tracked">Отслеживаемый</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
 </resources>

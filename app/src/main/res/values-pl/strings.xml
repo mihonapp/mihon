@@ -256,7 +256,7 @@
     <string name="pref_acra_summary">Pomaga naprawiać błędy. Żadne wrażliwe dane nie będą wysyłane</string>
     <string name="backup_created">Kopia zapasowa utworzona</string>
     <string name="restore_completed">Przywracanie ukończone</string>
-    <string name="backup_restore_content">Przywracanie używa źródeł do pobierania danych, operator może naliczać dodatkowe opłaty. 
+    <string name="backup_restore_content">Przywracanie używa źródeł do pobierania danych, operator może naliczać dodatkowe opłaty.
 \n
 \nPrzed przywróceniem upewnij się, że zainstalowane są odpowiednie rozszerzenia i że zalogowano się do źródeł i usług śledzenia.</string>
     <string name="choices_reset">Resetuj wybory okien dialogowych</string>
@@ -579,7 +579,6 @@
     <string name="action_open_in_settings">Otwórz w ustawieniach</string>
     <string name="action_start">Start</string>
     <string name="requires_app_restart">Wymaga ponownego uruchomienia aplikacji</string>
-    <string name="pref_dns_over_https" translatable="false">DNS przez HTTPS (Cloudflare)</string>
     <string name="label_network">Sieć</string>
     <string name="pref_jump_to_chapters">Przeskocz do rozdziałów przy otwarciu</string>
     <string name="pref_category_locale">Język</string>
@@ -655,7 +654,6 @@
     <string name="ext_nsfw_warning">Może zawierać zawartość NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Nie zapobiega to nieoficjalnym lub potencjalnie niepoprawnie oflagowanym rozszerzeniom przed pokazywaniem zwartości NSFW(18+) w aplikacji.</string>
-    <string name="action_web_view">WebView</string>
     <string name="invalid_backup_file_type">Nieprawidłowe rozszczerzenie pliku kopii zapasowej: %1$s
 \nPowinno być .proto.gz albo .json.</string>
     <string name="pref_category_nsfw_content">NFSW Materiały 18+</string>

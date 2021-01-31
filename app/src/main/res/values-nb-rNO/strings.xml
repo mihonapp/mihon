@@ -332,7 +332,7 @@
     <string name="label_help">Hjelp</string>
     <string name="action_display_download_badge">Last ned merker</string>
     <string name="pref_library_columns">Elementer per rad</string>
-    <string name="untrusted_extension_message">Denne utvidelsen ble signert med et usikkert sertifikat, og ble dermed ikke aktivert 
+    <string name="untrusted_extension_message">Denne utvidelsen ble signert med et usikkert sertifikat, og ble dermed ikke aktivert
 \n
 \nEn skadelig utvidelse kan lese innloggingsdetaljer lagret i Tachiyomi, eller kjøre ukjent kode.
 \n
@@ -612,5 +612,4 @@
     <string name="tracking_info">Enveissynkronisering for å oppdatere kapittelfremdrift til sporingstjenester. Sett opp sporing for individuelle mangaoppføringer fra deres sporingsknapp.</string>
     <string name="pref_true_color_summary">Reduserer sjattering, men koster ytelse</string>
     <string name="pref_webtoon_side_padding">Sidefyll</string>
-    <string name="action_web_view">WebView</string>
 </resources>

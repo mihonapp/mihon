@@ -251,7 +251,7 @@
     <string name="channel_library">書櫃</string>
     <string name="all_lang">全球</string>
     <string name="pref_create_backup_summ">可用來保存目前書櫃內容</string>
-    <string name="backup_restore_content">還原時需連線至來源以取得資料，可能要支付數據傳輸費用。 
+    <string name="backup_restore_content">還原時需連線至來源以取得資料，可能要支付數據傳輸費用。
 \n
 \n在進行還原前，請確認你已安裝所需的擴充套件，並已登入至歷程平台及要求身分認證的來源。</string>
     <string name="pref_clear_database_summary">將未收藏於書櫃中的漫畫的記錄刪除</string>
@@ -523,7 +523,6 @@
         <item quantity="other">%d 個分類</item>
     </plurals>
     <string name="requires_app_restart">需要重新啟動應用程式以套用</string>
-    <string name="pref_dns_over_https" translatable="false">DNS over HTTPS (Cloudflare)</string>
     <string name="label_network">網路</string>
     <string name="tapping_inverted_both">全部</string>
     <string name="tapping_inverted_vertical">垂直</string>
@@ -607,7 +606,6 @@
     <string name="full_restore_online">線上還原：耗時較久，但提供較新的章節與資訊</string>
     <string name="full_restore_offline">離線還原：即刻完成，但僅包含備份檔裡的內容</string>
     <string name="myanimelist_creds_missing">找不到 MAL 登入憑證</string>
-    <string name="action_web_view">WebView</string>
     <string name="http_error_hint">在 WebView 中檢查網站</string>
     <string name="file_picker_error">找不到檔案選擇器</string>
     <string name="share_page_info">《%1$s》：%2$s，第 %3$d 頁</string>
@@ -629,11 +627,6 @@
     <string name="pref_show_nsfw_extension">在擴充套件清單中顯示</string>
     <string name="pref_show_nsfw_source">在來源清單中顯示</string>
     <string name="default_nav">預設</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="track_finished_reading_date">閱讀完畢日期</string>
     <string name="track_started_reading_date">開始閱讀日期</string>
     <string name="edge_nav">邊緣式</string>

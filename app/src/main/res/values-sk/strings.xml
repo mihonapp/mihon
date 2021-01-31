@@ -398,5 +398,4 @@
     <string name="action_newest">Najnovšie</string>
     <string name="action_oldest">Najstaršie</string>
     <string name="action_move_to_top">Presunúť navrch</string>
-    <string name="action_web_view">WebView</string>
 </resources>

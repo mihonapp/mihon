@@ -349,7 +349,7 @@
     <string name="manga_info_full_title_label">Tajuk</string>
     <string name="manga_added_library">Ditambah ke pustaka</string>
     <string name="manga_removed_library">Dibuang dari pustaka</string>
-    <string name="copied_to_clipboard">Disalin ke papan keratan: 
+    <string name="copied_to_clipboard">Disalin ke papan keratan:
 \n%1$s</string>
     <string name="source_not_installed">Sumber tidak dipasang: %1$s</string>
     <string name="custom_download">Muat turun jumlah tersuai</string>
@@ -556,7 +556,6 @@
     <string name="action_sort_descending">Menurun</string>
     <string name="action_disable">Matikan</string>
     <string name="requires_app_restart">Mula semula diperlukan untuk berkesan</string>
-    <string name="pref_dns_over_https" translatable="false">DNS melalui HTTPS (Cloudflare)</string>
     <string name="label_network">Rangkaian</string>
     <string name="pref_jump_to_chapters">Terus ke bab bila buka</string>
     <string name="tapping_inverted_both">Kedua-dua</string>
@@ -595,7 +594,6 @@
         <item quantity="other">Ada %d bab yang hilang</item>
     </plurals>
     <string name="no_chapters_error">Tiada bab dijumpai</string>
-    <string name="action_web_view">WebView</string>
     <string name="chapter_settings_updated">Tetapan bab lalai dikemaskini</string>
     <string name="set_chapter_settings_as_default">Tetapkan sebagai lalai</string>
     <string name="also_set_chapter_settings_for_library">Gunakan juga untuk semua manga dalam pustaka</string>
@@ -640,15 +638,10 @@
     <string name="action_order_by_chapter_number">Mengikut nombor bab</string>
     <string name="action_order_by_upload_date">Mengikut tarikh muat naik</string>
     <string name="channel_crash_logs">Log kerosakan</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="crash_log_saved">Log kerosakan disimpan</string>
     <string name="pref_dump_crash_logs_summary">Simpan log ralat untuk dikongsi dengan pembangunan aplikasi</string>
     <string name="pref_dump_crash_logs">Kumpulan log kerosakan</string>
     <string name="network_unmetered">Rangkaian tidak bermeter</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
     <string name="track_started_reading_date">Tarikh mula membaca</string>
     <string name="track_finished_reading_date">Tarikh selesai membaca</string>
     <string name="action_filter_tracked">Dijejaki</string>

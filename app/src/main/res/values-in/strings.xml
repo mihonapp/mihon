@@ -333,7 +333,7 @@
     <string name="untrusted_extension">Ekstensi tidak terpercaya</string>
     <string name="untrusted_extension_message">Ektensi ini telah ditanda tangani dengan sertifikat yang tidak terpercaya dan belum aktif.
 \n
-\nSebuah ekstensi berbahaya dapat membaca kredensial login Anda yang tersimpan pada Tachiyomi atau mengeksekusi kode berbahaya. 
+\nSebuah ekstensi berbahaya dapat membaca kredensial login Anda yang tersimpan pada Tachiyomi atau mengeksekusi kode berbahaya.
 \n
 \nDengan mempercayai sertifikat ini anda menyetujui resiko tersebut.</string>
     <string name="ext_version_info">Versi: %1$s</string>
@@ -553,7 +553,6 @@
         <item quantity="other">%1$s bab</item>
     </plurals>
     <string name="requires_app_restart">Mulai ulang aplikasi untuk menerapkan pengaturan</string>
-    <string name="pref_dns_over_https" translatable="false">DNS melalui HTTPS (Cloudflare)</string>
     <string name="label_network">Jaringan</string>
     <string name="pref_jump_to_chapters">Lompat ke bab saat dibuka</string>
     <string name="action_sort_descending">Menurun</string>
@@ -600,7 +599,6 @@
     <string name="also_set_chapter_settings_for_library">Juga terapkan untuk semua manga di perpustakaan saya</string>
     <string name="confirm_set_chapter_settings">Apakah anda yakin ingin menyimpan pengaturan ini sebagai default\?</string>
     <string name="chapter_settings">Pengaturan bab</string>
-    <string name="action_web_view">WebView</string>
     <string name="share_page_info">%1$s: %2$s, halaman %3$d</string>
     <string name="action_search_settings">Cari pengaturan</string>
     <string name="downloaded_chapters">Bab terunduh</string>

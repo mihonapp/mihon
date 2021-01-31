@@ -51,7 +51,6 @@
     <string name="chapters">Bõlimlar</string>
     <string name="manga">Manga</string>
     <string name="categories">Kategoriyalar</string>
-    <string name="app_name" translatable="false">Tachiyomi</string>
     <string name="information_empty_library">Sizning bibliotekangiz bõsh, bibliotekangizga qidirish orqali seriya qõshing</string>
     <string name="information_no_recent_manga">Yaqin vaqtda hech narsa õqilmagan</string>
     <string name="information_no_recent">Yangiliklar yõq</string>

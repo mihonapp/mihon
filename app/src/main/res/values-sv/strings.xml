@@ -203,7 +203,7 @@
     <string name="pref_backup_slots">Maximala säkerhetskopior</string>
     <string name="backup_created">Säkerhetskopia skapad</string>
     <string name="restore_completed">Återställning slutförd</string>
-    <string name="backup_restore_content">Återställning använder källor för att hämta data, data kostnader kan tillkomma. 
+    <string name="backup_restore_content">Återställning använder källor för att hämta data, data kostnader kan tillkomma.
 \n
 \nSe till att du har installerat de nödvändiga tilläggen och är inloggad på de källor och spårningstjänsterna som kräver detta innan du återställer.</string>
     <string name="backup_choice">Vad vill du säkerhetskopiera\?</string>
@@ -570,7 +570,6 @@
     <string name="unknown_status">Okänd status</string>
     <string name="unknown_author">Okänd författare</string>
     <string name="requires_app_restart">Kräver omstart av appen för att börja gälla</string>
-    <string name="pref_dns_over_https" translatable="false">DNS över HTTPS (Cloudflare)</string>
     <string name="label_network">Nätverk</string>
     <string name="pref_jump_to_chapters">Hoppa till kapitel vid öppning</string>
     <string name="action_sort_descending">Fallande</string>
@@ -613,7 +612,6 @@
     <string name="set_chapter_settings_as_default">Ange som standard</string>
     <string name="also_set_chapter_settings_for_library">Gäller även all manga i biblioteket</string>
     <string name="chapter_settings">Kapitelinställningar</string>
-    <string name="action_web_view">WebView</string>
     <string name="downloaded_chapters">Nedladdade kapitel</string>
     <string name="manga_from_library">Manga från biblioteket</string>
     <string name="pref_incognito_mode_summary">Pausar läshistoriken</string>
@@ -651,11 +649,6 @@
     <string name="action_order_by_chapter_number">Efter kapitelnummer</string>
     <string name="action_order_by_upload_date">Efter uppladdningsdatum</string>
     <string name="action_asc">Stigande</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="track_finished_reading_date">Avslutat läsdatum</string>
     <string name="track_started_reading_date">Påbörjat läsdatum</string>
     <string name="pref_viewer_nav">Navigationslayout</string>

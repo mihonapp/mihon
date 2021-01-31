@@ -123,10 +123,10 @@
     <string name="ext_uninstall">Desinstal·la</string>
     <string name="ext_available">Disponible</string>
     <string name="untrusted_extension">Extensió no fiable</string>
-    <string name="untrusted_extension_message">Aquesta extensió s\'ha signat amb un certificat que no és de confiança i no s\'ha activat. 
-\n 
-\nUna extensió maliciosa podria llegir qualsevol credencial desada al Tachiyomi o executar codi arbitrari. 
-\n 
+    <string name="untrusted_extension_message">Aquesta extensió s\'ha signat amb un certificat que no és de confiança i no s\'ha activat.
+\n
+\nUna extensió maliciosa podria llegir qualsevol credencial desada al Tachiyomi o executar codi arbitrari.
+\n
 \nSi confieu en aquest certificat, accepteu aquests riscos.</string>
     <string name="ext_version_info">Versió: %1$s</string>
     <string name="ext_language_info">Llengua: %1$s</string>
@@ -203,7 +203,7 @@
     <string name="pref_backup_slots">Màxim de còpies de seguretat</string>
     <string name="backup_created">S\'ha creat la còpia de seguretat</string>
     <string name="restore_completed">S\'ha completat la restauració</string>
-    <string name="backup_restore_content">La restauració obté dades de les fonts, poden haver-hi despeses de l\'operador. 
+    <string name="backup_restore_content">La restauració obté dades de les fonts, poden haver-hi despeses de l\'operador.
 \n
 \nAssegureu-vos que heu instal·lat totes les extensions necessàries i que heu iniciat la sessió a les fonts i serveis de seguiment abans de restaurar.</string>
     <string name="backup_choice">De què voleu fer una còpia de seguretat\?</string>
@@ -611,7 +611,6 @@
     <string name="also_set_chapter_settings_for_library">Aplica-ho també a tot el manga de la biblioteca</string>
     <string name="confirm_set_chapter_settings">Esteu segur que voleu desar aquesta configuració com a configuració per defecte\?</string>
     <string name="chapter_settings">Configuració dels capítols</string>
-    <string name="action_web_view">WebView</string>
     <string name="share_page_info">%1$s: %2$s, pàgina %3$d</string>
     <string name="action_search_settings">Configuració de la cerca</string>
     <string name="downloaded_chapters">Capítols baixats</string>
@@ -658,10 +657,5 @@
     <string name="action_order_by_chapter_number">Per número de capítol</string>
     <string name="action_order_by_upload_date">Per data de pujada</string>
     <string name="action_filter_tracked">En seguiment</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="action_display_show_number_of_items">Mostra el nombre d\'elements</string>
 </resources>

@@ -600,7 +600,6 @@
     <string name="action_disable">Désactiver</string>
     <string name="action_open_in_settings">Ouvrir dans les paramètres</string>
     <string name="requires_app_restart">Nécessite un redémarrage de l\'application pour prendre effet</string>
-    <string name="pref_dns_over_https" translatable="false">DNS sur HTTPS (Cloudflare)</string>
     <string name="label_network">Réseau</string>
     <string name="tapping_inverted_both">Les deux</string>
     <string name="tapping_inverted_vertical">Vertical</string>
@@ -644,7 +643,6 @@
     <string name="confirm_set_chapter_settings">Appliquer ce paramétrage par défaut \?</string>
     <string name="chapter_settings">Paramètres du chapitre</string>
     <string name="pref_hide_bottom_bar_on_scroll">Cacher la barre inférieure lors du défilement</string>
-    <string name="action_web_view">WebView</string>
     <string name="also_set_chapter_settings_for_library">Appliquer à ma librairie</string>
     <string name="set_chapter_settings_as_default">Appliquer par défaut</string>
     <string name="share_page_info">%1$s: %2$s, page %3$d</string>
@@ -679,12 +677,7 @@
     <string name="channel_crash_logs">Journaux d\'erreur</string>
     <string name="track_finished_reading_date">Date de fin de lecture</string>
     <string name="track_started_reading_date">Date de début de lecture</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
     <string name="kindlish_nav">Plutôt provoquant</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="crash_log_saved">Sauvegarde des journaux endommagés</string>
     <string name="pref_dump_crash_logs">Copie des journaux endommagés</string>
     <string name="pref_dump_crash_logs_summary">Enregistre les journaux d\'erreur dans un fichier pour le partager avec les développeurs</string>

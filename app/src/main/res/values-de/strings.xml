@@ -566,7 +566,6 @@
     </plurals>
     <string name="action_open_in_settings">In den Einstellungen öffnen</string>
     <string name="requires_app_restart">App muss neu gestartet werden, um die Einstellung zu übernehmen</string>
-    <string name="pref_dns_over_https" translatable="false">DNS über HTTPS (Cloudflare)</string>
     <string name="label_network">Netzwerk</string>
     <string name="pref_jump_to_chapters">Beim Öffnen zu den Kapiteln springen</string>
     <string name="pref_read_with_tapping_inverted">Tippen invertieren</string>
@@ -607,7 +606,6 @@
         <item quantity="other">Es gibt %d fehlende Kapitel</item>
     </plurals>
     <string name="no_chapters_error">Keine Kapitel gefunden</string>
-    <string name="action_web_view">WebView</string>
     <string name="chapter_settings_updated">Standard-Kapiteleinstellungen aktualisiert</string>
     <string name="set_chapter_settings_as_default">Als Standard setzen</string>
     <string name="also_set_chapter_settings_for_library">Auch für alle Manga in meiner Bibliothek anwenden</string>
@@ -650,11 +648,6 @@
     <string name="channel_crash_logs">Absturzprotokolle</string>
     <string name="track_finished_reading_date">Datum des Leseabschlusses</string>
     <string name="track_started_reading_date">Datum des Lesebeginns</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="crash_log_saved">Absturzprotokolle gespeichert</string>
     <string name="pref_dump_crash_logs_summary">Speichert Fehlerprotokolle in einer Datei, die dann mit den Entwicklern geteilt wird</string>
     <string name="pref_dump_crash_logs">Absturzprotokolle ausgeben</string>

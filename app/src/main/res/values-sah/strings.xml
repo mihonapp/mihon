@@ -57,7 +57,6 @@
     <string name="label_settings">Түстэл</string>
     <string name="label_more">Эбии</string>
     <string name="name">Аат</string>
-    <string name="app_name" translatable="false">Tachiyomi</string>
     <plurals name="num_categories">
         <item quantity="other">%d бөлөхтөр</item>
     </plurals>
@@ -541,7 +540,6 @@
     <string name="clear_history_confirmation">Эрэллээххин дуо\? Остуоруйа барыта сотторуллуоҕа.</string>
     <string name="clear_history_completed">Остуоруйа сотторулунна</string>
     <string name="pref_hide_bottom_bar_on_scroll">Эргитэн түһэргэ алларааҥы хонууну сабыы</string>
-    <string name="action_web_view">WebView</string>
     <string name="action_search_settings">Көрдөөһүн түстэлэ</string>
     <string name="migration_dialog_what_to_include">Киллэрэр дааннайдары талыы</string>
     <string name="spen_next_page">Аныгыскы сирэй</string>

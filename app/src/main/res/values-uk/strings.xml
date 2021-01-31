@@ -123,10 +123,10 @@
     <string name="ext_uninstall">Видалити</string>
     <string name="ext_available">Доступно</string>
     <string name="untrusted_extension">Ненадійне розширення</string>
-    <string name="untrusted_extension_message">Це розширення було підписане ненадійним сертифікатом і не було активовано. 
-\n 
-\nЗловмисне розширення може прочитати будь-які дані для входу, що зберігаються в Tachiyomi, або виконати довільний код. 
-\n 
+    <string name="untrusted_extension_message">Це розширення було підписане ненадійним сертифікатом і не було активовано.
+\n
+\nЗловмисне розширення може прочитати будь-які дані для входу, що зберігаються в Tachiyomi, або виконати довільний код.
+\n
 \nДовіряючи цьому сертифікату, ви приймаєте ці ризики.</string>
     <string name="ext_version_info">Версія:%1$s</string>
     <string name="ext_language_info">Мова: %1$s</string>
@@ -589,7 +589,6 @@
     <string name="unknown_status">Невідомий статус</string>
     <string name="unknown_author">Невідомий автор</string>
     <string name="requires_app_restart">Потрібен перезапуск додатку, щоб зміни вступили в дію</string>
-    <string name="pref_dns_over_https" translatable="false">DNS понад HTTPS (Cloudflare)</string>
     <string name="label_network">Мережа</string>
     <string name="pref_jump_to_chapters">Перейти до глав при відкритті</string>
     <string name="updated_version">Оновлено до v%1$s</string>
@@ -633,7 +632,6 @@
     <string name="also_set_chapter_settings_for_library">Також застосувати для усієї манги в моїй бібліотеці</string>
     <string name="confirm_set_chapter_settings">Ви впевнені, що бажаєте зберегти ці налаштування за замовчуванням\?</string>
     <string name="chapter_settings">Налаштування глави</string>
-    <string name="action_web_view">WebView</string>
     <string name="downloaded_chapters">Завантажені глави</string>
     <string name="manga_from_library">Манга з бібліотеки</string>
     <string name="pref_hide_bottom_bar_on_scroll">Приховати нижню панель при прокручуванні</string>

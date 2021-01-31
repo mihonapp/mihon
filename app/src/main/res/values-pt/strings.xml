@@ -294,10 +294,10 @@
     <string name="ext_uninstall">Desinstalar</string>
     <string name="ext_available">Disponível</string>
     <string name="untrusted_extension">Extensão não confiável</string>
-    <string name="untrusted_extension_message">Esta extensão possui um certificado não confiável e não foi ativada. 
-\n 
-\nUma extensão maliciosa podia ler qualquer credencial de entrada armazenada no Tachiyomi ou executar código arbitrário. 
-\n 
+    <string name="untrusted_extension_message">Esta extensão possui um certificado não confiável e não foi ativada.
+\n
+\nUma extensão maliciosa podia ler qualquer credencial de entrada armazenada no Tachiyomi ou executar código arbitrário.
+\n
 \nAo confiar neste certificado serão aceites estes riscos.</string>
     <string name="ext_version_info">Versão: %1$s</string>
     <string name="ext_language_info">Língua: %1$s</string>
@@ -605,7 +605,6 @@
     <string name="unknown_author">Autor desconhecido</string>
     <string name="requires_app_restart">Requer reinício da app para ter efeito</string>
     <string name="label_network">Rede</string>
-    <string name="pref_dns_over_https" translatable="false">DNS por HTTPS (Cloudflare)</string>
     <string name="updated_version">Atualizado para v%1$s</string>
     <string name="whats_new">Novidades</string>
     <string name="action_download_unread">Transferir capítulos não lidos</string>
@@ -640,7 +639,6 @@
     <string name="chapter_settings_updated">Definições padrão de capítulo atualizadas</string>
     <string name="confirm_set_chapter_settings">Tem certeza de que quer guardar estas definições como padrão\?</string>
     <string name="chapter_settings">Definições dos capítulos</string>
-    <string name="action_web_view">WebView</string>
     <string name="share_page_info">%1$s: %2$s, página %3$d</string>
     <string name="set_chapter_settings_as_default">Definir como padrão</string>
     <string name="also_set_chapter_settings_for_library">Também aplicar a todos os mangás na minha biblioteca</string>

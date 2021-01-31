@@ -592,7 +592,6 @@
     <string name="action_sort_date_added">تاریخ اضافه شدن</string>
     <string name="updated_version">به نسخه v%1$s آپدیت شد</string>
     <string name="pref_hide_bottom_bar_on_scroll">نوار پایین هنگام اسکرول کردن پنهان شود</string>
-    <string name="action_web_view">WebView</string>
     <string name="action_search_settings">جست و جوی تنضیمات</string>
     <string name="pref_backup_auto_create_legacy">همچنین یک نسخه پشتیبان با تکنولوژی قدیمی بساز</string>
     <string name="pref_create_legacy_backup">ساخت نسخه پشتیبان با تکنولوژی قدیمی</string>

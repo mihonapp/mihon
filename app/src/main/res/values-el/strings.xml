@@ -566,7 +566,6 @@
     </plurals>
     <string name="action_open_in_settings">Άνοιγμα στις Ρυθμίσεις</string>
     <string name="requires_app_restart">Απαιτείται επανεκκίνηση της εφαρμογής για να τεθεί σε ισχύ</string>
-    <string name="pref_dns_over_https" translatable="false">DNS μέσω HTTPS (Cloudflare)</string>
     <string name="label_network">Δίκτυο</string>
     <string name="pref_jump_to_chapters">Μετάβαση στα κεφάλαια κατά το άνοιγμα</string>
     <string name="tapping_inverted_both">Και τα δυο</string>
@@ -612,7 +611,6 @@
     <string name="also_set_chapter_settings_for_library">Εφαρμογή επίσης σε όλα τα manga στη βιβλιοθήκη μου</string>
     <string name="confirm_set_chapter_settings">Είστε βέβαιοι ότι θέλετε να αποθηκεύσετε αυτές τις ρυθμίσεις ως προεπιλεγμένες;</string>
     <string name="chapter_settings">Ρυθμίσεις κεφαλαίου</string>
-    <string name="action_web_view">WebView</string>
     <string name="share_page_info">%1$s: %2$s, σελίδα %3$d</string>
     <string name="action_search_settings">Αναζήτηση ρυθμίσεων</string>
     <string name="downloaded_chapters">Κεφάλαια που έχουν ληφθεί</string>
@@ -650,11 +648,6 @@
     <string name="channel_crash_logs">Αρχεία καταγραφής σφαλμάτων</string>
     <string name="track_finished_reading_date">Ημερομηνία ολοκλήρωσης ανάγνωσης</string>
     <string name="track_started_reading_date">Ημερομηνία έναρξης ανάγνωσης</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="crash_log_saved">Τα αρχεία καταγραφής σφαλμάτων αποθηκεύτηκαν</string>
     <string name="pref_dump_crash_logs_summary">Αποθηκεύει αρχεία καταγραφής σφαλμάτων σε ένα αρχείο για κοινή χρήση με τους προγραμματιστές</string>
     <string name="pref_dump_crash_logs">Άδειασμα αρχείων καταγραφής σφαλμάτων</string>

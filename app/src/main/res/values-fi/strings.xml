@@ -265,7 +265,7 @@
     <string name="pref_backup_slots">Varmuuskopioiden enimmäismäärä</string>
     <string name="backup_created">Varmuuskopio luotu</string>
     <string name="restore_completed">Palautus valmis</string>
-    <string name="backup_restore_content">Palautus käyttää lähdettä noutaakseen tietoja, tämä voi aiheuttaa kustannuksia. 
+    <string name="backup_restore_content">Palautus käyttää lähdettä noutaakseen tietoja, tämä voi aiheuttaa kustannuksia.
 \n
 \nVarmista myös että sinulla on kaikki tarvittavat laajennukset ja olet kirjautunut lähteisiin ja seuranta palveluihin ennen palauttamista.</string>
     <string name="backup_choice">Mitä haluat varmuuskopioida\?</string>
@@ -566,7 +566,6 @@
     </plurals>
     <string name="action_open_in_settings">Avaa Asetuksissa</string>
     <string name="requires_app_restart">Edellyttää sovelluksen käynnisstämisen uudelleen</string>
-    <string name="pref_dns_over_https" translatable="false">DNS HTTPS:n kautta (Cloudflare)</string>
     <string name="label_network">Verkko</string>
     <string name="pref_jump_to_chapters">Siirry lukuihin avatessa</string>
     <string name="tapping_inverted_both">Molemmat</string>
@@ -612,7 +611,6 @@
     <string name="also_set_chapter_settings_for_library">Koskee myös kaikkia kirjastoni mangoja</string>
     <string name="confirm_set_chapter_settings">Haluatko varmasti tallentaa nämä asetukset oletuksena\?</string>
     <string name="chapter_settings">Luvun asetukset</string>
-    <string name="action_web_view">WebView</string>
     <string name="share_page_info">%1$s: %2$s, sivu %3$d</string>
     <string name="action_search_settings">Hakuasetukset</string>
     <string name="downloaded_chapters">Ladatut luvut</string>
@@ -651,11 +649,6 @@
     <string name="channel_crash_logs">Kaatumislokit</string>
     <string name="track_finished_reading_date">Lopetuspäivämäärä</string>
     <string name="track_started_reading_date">Aloituspäivämäärä</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="crash_log_saved">Kaatumislokit tallennettu</string>
     <string name="pref_dump_crash_logs_summary">Tallentaa virhelokit tiedostoon jaettavaksi kehittäjien kanssa</string>
     <string name="network_unmetered">Mittaamaton verkko</string>

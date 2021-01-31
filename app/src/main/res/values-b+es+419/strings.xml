@@ -85,7 +85,6 @@
     <string name="action_display">Mostrar</string>
     <string name="action_display_mode">Modo de visualización</string>
     <string name="action_open_in_settings">Abrir en configuración</string>
-    <string name="pref_dns_over_https" translatable="false">DNS sobre HTTPS (Cloudflare)</string>
     <string name="information_webview_outdated">Actualice la aplicación WebView para mejor compatibilidad</string>
     <string name="update_check_notification_update_available">¡Nueva versión disponible!</string>
     <string name="action_sort_up">Ordenar</string>
@@ -195,10 +194,10 @@
     <string name="ext_version_info">Versión: %1$s</string>
     <string name="unofficial_extension_message">Esta extensión no es de la lista oficial de extensiones de Tachiyomi.</string>
     <string name="obsolete_extension_message">Esta extensión ya no está disponible.</string>
-    <string name="untrusted_extension_message">Esta extensión fue firmada por una fuente no certificada y no fue activada. 
-\n 
-\nUna extensión maliciosa puede leer cualquier credencial de inicio guardada en Tachiyomi o ejecutar código arbitrario. 
-\n 
+    <string name="untrusted_extension_message">Esta extensión fue firmada por una fuente no certificada y no fue activada.
+\n
+\nUna extensión maliciosa puede leer cualquier credencial de inicio guardada en Tachiyomi o ejecutar código arbitrario.
+\n
 \nAl confiar en este certificado aceptas estos riesgos.</string>
     <string name="untrusted_extension">Extensión no confiable</string>
     <string name="ext_available">Disponible</string>
@@ -355,7 +354,7 @@
     <string name="restore_duration">%02d min, %02d seg</string>
     <string name="restore_completed">Restauración completada</string>
     <string name="backup_restore_content">Restaurar utiliza las fuentes para obtener los datos, es posible que se apliquen cargos por el uso de datos.
-\n 
+\n
 \nAsegúrese de haber instalado todas las extensiones necesarias y de haber iniciado sesión en las fuentes y los servicios de seguimiento antes de restaurar.</string>
     <string name="backup_restore_missing_sources">Fuentes que faltan:</string>
     <string name="invalid_backup_file_missing_manga">La copia de seguridad no contiene ningún manga.</string>
@@ -476,7 +475,7 @@
     <string name="manga_chapters_tab">Capítulos</string>
     <string name="snack_add_to_library">¿Añadir manga a la biblioteca\?</string>
     <string name="source_not_installed">Fuente no instalada: %1$s</string>
-    <string name="copied_to_clipboard">Copiado en el portapapeles: 
+    <string name="copied_to_clipboard">Copiado en el portapapeles:
 \n\"%1$s\"</string>
     <string name="delete_downloads_for_manga">¿Eliminar capítulos descargados\?</string>
     <plurals name="manga_num_chapters">
@@ -613,7 +612,6 @@
     <string name="also_set_chapter_settings_for_library">Aplicar también a todos los mangas en mi biblioteca</string>
     <string name="confirm_set_chapter_settings">¿Estás seguro de que quieres guardar como predeterminadas estas configuraciones\?</string>
     <string name="chapter_settings">Ajustes del capítulo</string>
-    <string name="action_web_view">WebView</string>
     <string name="downloaded_chapters">Capítulos descargardos</string>
     <string name="manga_from_library">Manga de la biblioteca</string>
     <string name="pref_hide_bottom_bar_on_scroll">Ocultar la barra inferior al desplazar</string>

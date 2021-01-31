@@ -93,7 +93,6 @@
     <string name="chapters">Mga Kabanata</string>
     <string name="manga">Mga Manga</string>
     <string name="categories">Mga Kategorya</string>
-    <string name="app_name" translatable="false">Tachiyomi</string>
     <string name="information_empty_category">Wala ka pang kategorya. Pindutin ang plus button para makagawa ka ng isa nang maayos mo na ang iyong Aklatan.</string>
     <string name="information_empty_library">Walang laman ang iyong Aklatan. Magdagdag ng serye rito mula sa Maghanap.</string>
     <string name="information_no_recent_manga">Walang kamakailang binása</string>
@@ -613,7 +612,6 @@
     <string name="share_page_info">%1$s: %2$s, pahina %3$d</string>
     <string name="also_set_chapter_settings_for_library">Gawin din sa lahat ng mga manga sa Aklatan ko</string>
     <string name="chapter_settings">Pagsasaayos ng Kabanata</string>
-    <string name="action_web_view">Webview</string>
     <string name="downloaded_chapters">Mga naka-download na kabanata</string>
     <string name="manga_from_library">Manga mula sa Aklatan</string>
     <string name="pref_hide_bottom_bar_on_scroll">Itago ang bottom bar pagka-scroll</string>

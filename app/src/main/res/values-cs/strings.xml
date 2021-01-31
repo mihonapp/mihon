@@ -402,5 +402,4 @@
     <string name="label_sources">Zdroje</string>
     <string name="spen_previous_page">Předchozí stránka</string>
     <string name="spen_next_page">Následující stránka</string>
-    <string name="action_web_view">WebView</string>
 </resources>

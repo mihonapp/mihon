@@ -306,7 +306,7 @@
     <string name="pref_backup_slots">Máximas copias de seguridad</string>
     <string name="backup_created">Copia de seguridad creada</string>
     <string name="restore_completed">Restauración completada</string>
-    <string name="backup_restore_content">Restaurar utiliza la fuente para obtener datos, es posible que se apliquen los costos de la operadora. 
+    <string name="backup_restore_content">Restaurar utiliza la fuente para obtener datos, es posible que se apliquen los costos de la operadora.
 \n
 \nAsegúrese de haber instalado todas las extensiones necesarias y de haber iniciado sesión en las fuentes y los servicios de seguimiento antes de la restauración.</string>
     <string name="backup_choice">¿De qué quieres hacer copia de seguridad\?</string>
@@ -373,16 +373,16 @@
     <string name="transition_no_previous">No hay capítulo anterior</string>
     <string name="migrate">Migrar</string>
     <string name="copy">Copiar</string>
-    <string name="untrusted_extension_message">Esta extensión fue firmada por una fuente no certificada y no fue activada. 
-\n 
-\nUna extensión maliciosa puede leer cualquier credencial de inicio guardada en Tachiyomi o ejecutar código arbitrario. 
-\n 
+    <string name="untrusted_extension_message">Esta extensión fue firmada por una fuente no certificada y no fue activada.
+\n
+\nUna extensión maliciosa puede leer cualquier credencial de inicio guardada en Tachiyomi o ejecutar código arbitrario.
+\n
 \nConfiando en este certificado aceptas estos riesgos.</string>
     <string name="double_tap_anim_speed_0">Sin animación</string>
     <string name="manga_info_full_title_label">Título</string>
     <string name="manga_added_library">Añadido a biblioteca</string>
     <string name="manga_removed_library">Quitado de biblioteca</string>
-    <string name="copied_to_clipboard">Copiado en portapapeles: 
+    <string name="copied_to_clipboard">Copiado en portapapeles:
 \n\"%1$s\"</string>
     <string name="source_not_installed">Fuente no instalada: %1$s</string>
     <string name="custom_download">Descargar cantidad personalizada</string>
@@ -597,7 +597,6 @@
     <string name="action_disable">Desactivar</string>
     <string name="action_open_in_settings">Abrir en Configuración</string>
     <string name="requires_app_restart">Requiere el reinicio de la aplicación para que surta efecto</string>
-    <string name="pref_dns_over_https" translatable="false">DNS sobre HTTPS (Cloudflare)</string>
     <string name="label_network">Red</string>
     <string name="pref_jump_to_chapters">Saltar a los capítulos abiertos</string>
     <string name="unknown_status">Estado desconocido</string>
@@ -638,7 +637,6 @@
         <item quantity="other">Faltan %d capítulos</item>
     </plurals>
     <string name="no_chapters_error">No hay capítulos</string>
-    <string name="action_web_view">WebView</string>
     <string name="chapter_settings_updated">Actualizado los ajustes del capítulo por defecto</string>
     <string name="set_chapter_settings_as_default">Establecer como predeterminado</string>
     <string name="also_set_chapter_settings_for_library">Aplicar también a toda la manga de mi biblioteca</string>

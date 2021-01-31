@@ -451,7 +451,6 @@
     <string name="pref_library_update_refresh_metadata">মেটাডাটা সয়ংক্রিয়ভাবে হালনাগাদ করুন</string>
     <string name="pref_category_library_update">হালনাগাদ সমূহ</string>
     <string name="secure_screen_summary">অ্যাপ পাল্টানোর সময় অ্যাপের কন্টেন্ট লুকান ও স্ক্রিনসট ব্লক করুন</string>
-    <string name="action_web_view">ওয়েবভিউ</string>
     <string name="action_search_settings">সেটিংসে খুঁজুন</string>
     <string name="lock_when_idle">কর্মহীন হলে লক করুন</string>
     <string name="pref_hide_bottom_bar_on_scroll">স্ক্রোলের সময় নিচের বার লুকান</string>

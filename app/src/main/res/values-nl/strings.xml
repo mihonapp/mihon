@@ -297,8 +297,8 @@
     <string name="update_check_notification_download_in_progress">Downloaden…</string>
     <string name="update_check_notification_download_error">Fout bij het downloaden</string>
     <string name="action_filter_bookmarked">Met bladwijzer</string>
-    <string name="backup_restore_content">Herstellen gebruikt bronnen om data op te halen, mogelijk zijn extra mobiele-abonnementskosten van toepassing. 
-\n 
+    <string name="backup_restore_content">Herstellen gebruikt bronnen om data op te halen, mogelijk zijn extra mobiele-abonnementskosten van toepassing.
+\n
 \nZorg ervoor dat je de nodige extensies hebt geinstalleerd en bent ingelogd voor bronnen en trackingdiensten voordat je het herstellen start.</string>
     <string name="choices_reset">Dialoogkeuzes opnieuw ingesteld</string>
     <string name="login_success">Ingelogd</string>
@@ -331,10 +331,10 @@
     <string name="ext_uninstall">Verwijderen</string>
     <string name="ext_available">Beschikbaar</string>
     <string name="untrusted_extension">Niet vertrouwde extensie</string>
-    <string name="untrusted_extension_message">Deze extensie is door een niet vertrouwd certificaat ondertekend en is niet geactiveerd. 
-\n 
-\nEen kwaadaardige extensie zou alle log-in gegevens kunnen uitlezen in Tachiyomi of arbitraire code uit kunnen voeren. 
-\n 
+    <string name="untrusted_extension_message">Deze extensie is door een niet vertrouwd certificaat ondertekend en is niet geactiveerd.
+\n
+\nEen kwaadaardige extensie zou alle log-in gegevens kunnen uitlezen in Tachiyomi of arbitraire code uit kunnen voeren.
+\n
 \nDoor dit certificaat te vertrouwen accepteer je deze risico\'s.</string>
     <string name="ext_version_info">Versie: %1$s</string>
     <string name="ext_language_info">Taal: %1$s</string>
@@ -566,7 +566,6 @@
     <string name="action_sort_descending">Aflopend</string>
     <string name="action_open_in_settings">In Instellingen openen</string>
     <string name="requires_app_restart">Herstart van de app nodig om van kracht te worden</string>
-    <string name="pref_dns_over_https" translatable="false">DNS over HTTPS (Cloudflare)</string>
     <string name="label_network">Netwerk</string>
     <string name="pref_jump_to_chapters">Ga naar de hoofdstukken bij openen</string>
     <string name="tapping_inverted_both">Beiden</string>
@@ -612,7 +611,6 @@
     <string name="also_set_chapter_settings_for_library">Ook toepassen op alle manga in mijn bibliotheek</string>
     <string name="confirm_set_chapter_settings">Weet je zeker dat je deze instellingen als standaardinstellingen wilt opslaan\?</string>
     <string name="chapter_settings">Hoofdstukinstellingen</string>
-    <string name="action_web_view">WebView</string>
     <string name="share_page_info">%1$s: %2$s, pagina %3$d</string>
     <string name="action_search_settings">Zoekinstellingen</string>
     <string name="downloaded_chapters">Gedownloade hoofdstukken</string>

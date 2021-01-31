@@ -567,7 +567,6 @@
     <string name="pref_read_with_tapping_inverted">タップでのページめくりを反転</string>
     <string name="updated_version">v%1$sに更新しました</string>
     <string name="whats_new">更新情報</string>
-    <string name="pref_dns_over_https" translatable="false">DNS over HTTPS（Cloudflare）</string>
     <string name="action_download_unread">未読の章をダウンロード</string>
     <string name="pref_category_reading_mode">読み方</string>
     <string name="group_backup_restore">バックアップと復元</string>
@@ -601,7 +600,6 @@
     <string name="also_set_chapter_settings_for_library">ライブラリにあるすべてのマンガにも適用</string>
     <string name="confirm_set_chapter_settings">デフォルト設定として保存しますか？</string>
     <string name="chapter_settings">章の設定</string>
-    <string name="action_web_view">WebView</string>
     <string name="action_search_settings">検索設定</string>
     <string name="downloaded_chapters">ダウンロードした章</string>
     <string name="manga_from_library">ライブラリからのマンガ</string>

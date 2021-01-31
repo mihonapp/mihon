@@ -353,10 +353,10 @@
     <string name="ext_uninstall">Disinstalla</string>
     <string name="ext_available">Disponibile</string>
     <string name="untrusted_extension">Estensione non affidabile</string>
-    <string name="untrusted_extension_message">Questa estensione è stata firmata con un certificato non affidabile e non è stata attivata. 
-\n 
-\nUn\'estensione pericolosa potrebbe leggere credenziali di accesso all\'interno di Tachiyomi o eseguire codice dannoso. 
-\n 
+    <string name="untrusted_extension_message">Questa estensione è stata firmata con un certificato non affidabile e non è stata attivata.
+\n
+\nUn\'estensione pericolosa potrebbe leggere credenziali di accesso all\'interno di Tachiyomi o eseguire codice dannoso.
+\n
 \nContinuando con questo certificato accetti questi rischi.</string>
     <string name="ext_version_info">Versione: %1$s</string>
     <string name="ext_language_info">Lingua: %1$s</string>
@@ -602,7 +602,6 @@
     <string name="updated_version">Aggiornato verso v%1$s</string>
     <string name="whats_new">Le novità</string>
     <string name="requires_app_restart">Richiesto riavvio dell\'app per applicare le modifiche</string>
-    <string name="pref_dns_over_https" translatable="false">DNS via HTTPS (Cloudflare)</string>
     <string name="label_network">Rete</string>
     <string name="pref_show_reading_mode_summary">Mostra brevemente la modalità corrente all\'apertura del lettore</string>
     <string name="pref_show_reading_mode">Mostra in modalità lettura</string>
@@ -646,7 +645,6 @@
     <string name="also_set_chapter_settings_for_library">Si applica anche a tutti i manga nella mia libreria</string>
     <string name="confirm_set_chapter_settings">Sei sicuro di voler salvare queste impostazioni come predefinite\?</string>
     <string name="chapter_settings">Impostazioni del capitolo</string>
-    <string name="action_web_view">Visualizzazione web</string>
     <string name="action_search_settings">Ricerca impostazioni</string>
     <string name="downloaded_chapters">Capitoli scaricati</string>
     <string name="manga_from_library">Manga dalla libreria</string>

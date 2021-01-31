@@ -556,7 +556,6 @@
     </plurals>
     <string name="action_open_in_settings">在设置中打开</string>
     <string name="requires_app_restart">需要重启应用才能生效</string>
-    <string name="pref_dns_over_https" translatable="false">DNS over HTTPS (Cloudflare)</string>
     <string name="label_network">网络</string>
     <string name="pref_jump_to_chapters">打开时跳转到阅读章节</string>
     <string name="tapping_inverted_both">水平 + 垂直</string>
@@ -600,7 +599,6 @@
     <string name="also_set_chapter_settings_for_library">同时应用于书架里的所有漫画</string>
     <string name="confirm_set_chapter_settings">确定要将当前设置保存为默认吗？</string>
     <string name="chapter_settings">章节设置</string>
-    <string name="action_web_view">WebView</string>
     <string name="share_page_info">%1$s：%2$s，第 %3$d 页</string>
     <string name="action_search_settings">搜索设置</string>
     <string name="downloaded_chapters">已下载的章节</string>
@@ -635,14 +633,9 @@
     <string name="kindlish_nav">Kindle 样式</string>
     <string name="l_nav">L 形</string>
     <string name="default_nav">默认</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="channel_crash_logs">崩溃记录</string>
     <string name="track_finished_reading_date">完成阅读日期</string>
     <string name="track_started_reading_date">开始阅读日期</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
     <string name="crash_log_saved">崩溃记录已保存</string>
     <string name="pref_dump_crash_logs_summary">将错误记录保存到文件中，以便与开发人员共享</string>
     <string name="pref_dump_crash_logs">转储崩溃记录</string>

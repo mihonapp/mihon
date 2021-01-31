@@ -134,7 +134,6 @@
     <string name="action_display_mode">የማሳያ ሁነታ</string>
     <string name="action_migrate">ፍልሰት</string>
     <string name="action_open_in_settings">በቅንብሮች ውስጥ ይክፈቱ</string>
-    <string name="action_web_view">የድር እይታ</string>
     <string name="action_open_in_web_view">በድር እይታ ውስጥ ክፈት</string>
     <string name="action_open_in_browser">በአሳሽ ውስጥ ክፈት</string>
     <string name="action_move">አንቀሳቅስ</string>
@@ -196,7 +195,6 @@
     <string name="chapters">ምዕራፎች</string>
     <string name="manga">ማንጋ</string>
     <string name="categories">ምድቦች</string>
-    <string name="app_name" translatable="false">ታቺዮሚ</string>
     <string name="information_empty_category">ምንም ምድቦች የሉዎትም። ቤተ-መጽሐፍትዎን ለማደራጀት አንድ ለመፍጠር የመደመር አዝራሩን መታ ያድርጉ።</string>
     <string name="information_empty_library">ቤተ-መጽሐፍትዎ ባዶ ነው ተከታታዮችን ከአሰሳ ወደ ቤተ-መጽሐፍትዎ ያክሉ።</string>
     <string name="information_no_recent_manga">በቅርቡ የተነበበ ነገር የለም</string>

@@ -124,9 +124,9 @@
     <string name="ext_available">Dostupno</string>
     <string name="untrusted_extension">Nepouzdan dodatak</string>
     <string name="untrusted_extension_message">Ova ekstenzija je potpisana nepovjerljivim sertifikatima i nije aktivirana,.
-\n 
-\nŠtetne ekstenzije mogu čitati podatke o prijavi sačuvane u Tachiyomi-u ili pokrenuti proizvoljan kod. 
-\n 
+\n
+\nŠtetne ekstenzije mogu čitati podatke o prijavi sačuvane u Tachiyomi-u ili pokrenuti proizvoljan kod.
+\n
 \nVerujući ovom sertifikatu vi prihvatate ove rizike.</string>
     <string name="ext_version_info">Verzija: %1$s</string>
     <string name="ext_language_info">Jezik: %1$s</string>
@@ -500,7 +500,6 @@
     <string name="action_display_comfortable_grid">Šira mreža</string>
     <string name="action_migrate">Migriraj</string>
     <string name="action_open_in_settings">Otvori u Podešavanjima</string>
-    <string name="action_web_view">WebView</string>
     <string name="action_start">Počni</string>
     <string name="action_disable_all">Onemogući sve</string>
     <string name="action_enable_all">Omogući sve</string>

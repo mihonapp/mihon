@@ -204,7 +204,7 @@
     <string name="pref_backup_slots">Màssimu de còpias de seguresa</string>
     <string name="backup_created">Còpia de seguresa creada</string>
     <string name="restore_completed">Riprìstinu acabadu</string>
-    <string name="backup_restore_content">Su riprìstinu impreat sas mitzas pro otènnere sos datos, bi diant pòdere èssere costos de s\'operadore. 
+    <string name="backup_restore_content">Su riprìstinu impreat sas mitzas pro otènnere sos datos, bi diant pòdere èssere costos de s\'operadore.
 \n
 \nAssegura·ti de àere installadu totu sas estensiones netzessàrias e de àere fatu s\'atzessu a sas mitzas e a sos servìtzios de arrastamentu in antis de ripristinare.</string>
     <string name="backup_choice">De ite cheres fàghere una còpia de seguresa\?</string>
@@ -566,7 +566,6 @@
         <item quantity="other">%1$s capìtulos</item>
     </plurals>
     <string name="requires_app_restart">Tenet bisòngiu chi torres a allùghere s\'aplicatzione pro tènnere efetu</string>
-    <string name="pref_dns_over_https" translatable="false">DNS pro mèdiu de HTTPS (Cloudflare)</string>
     <string name="label_network">Retza</string>
     <string name="pref_jump_to_chapters">Brinca a sos capìtulos a s\'abertura</string>
     <string name="tapping_inverted_both">Ambos</string>
@@ -612,7 +611,6 @@
     <string name="also_set_chapter_settings_for_library">Àplica fintzas a totu sos manga in sa biblioteca mea</string>
     <string name="confirm_set_chapter_settings">Ses seguru de chèrrere sarvare custas informatziones comente predefinidas\?</string>
     <string name="chapter_settings">Impostatziones de sos capìtulos</string>
-    <string name="action_web_view">Vista web</string>
     <string name="share_page_info">%1$s: %2$s, pàgina %3$d</string>
     <string name="action_search_settings">Impostatziones de chirca</string>
     <string name="downloaded_chapters">Capìtulos iscarrigados</string>
@@ -650,11 +648,6 @@
     <string name="channel_crash_logs">Registros de sos arrestos anòmalos</string>
     <string name="track_finished_reading_date">Data de fine de sa leghidura</string>
     <string name="track_started_reading_date">Data de incumintzu de sa leghidura</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="crash_log_saved">Registros de sos arrestos anòmalos sarvados</string>
     <string name="pref_dump_crash_logs_summary">Sarva sos registros de sos errores in unu documentu pro lu cumpartzire cun sos isvilupadores</string>
     <string name="pref_dump_crash_logs">Iscàrriga sos registros de sos arrestos anòmalos</string>

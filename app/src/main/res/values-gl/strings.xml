@@ -238,7 +238,6 @@
     <string name="action_display_mode">Modo de visualización</string>
     <string name="action_migrate">Migrar</string>
     <string name="action_open_in_settings">Abrir nos Axustes</string>
-    <string name="action_web_view">WebView</string>
     <string name="action_open_in_web_view">Abrir en WebView</string>
     <string name="action_open_in_browser">Abrir no navegador</string>
     <string name="action_move">Mover</string>

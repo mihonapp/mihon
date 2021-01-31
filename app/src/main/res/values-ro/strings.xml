@@ -573,7 +573,6 @@
         <item quantity="other">%1$s de capitole</item>
     </plurals>
     <string name="requires_app_restart">Necesită repornirea aplicației pentru a avea efect</string>
-    <string name="pref_dns_over_https" translatable="false">DNS prin HTTPS (Cloudflare)</string>
     <string name="action_sort_descending">Descrescător</string>
     <string name="action_disable">Dezactivați</string>
     <string name="action_open_in_settings">Deschideți în Setări</string>
@@ -628,7 +627,6 @@
     <string name="downloaded_chapters">Capitole descărcate</string>
     <string name="manga_from_library">Manga din bibliotecă</string>
     <string name="pref_hide_bottom_bar_on_scroll">Ascundeți bara de jos când faceți scroll</string>
-    <string name="action_web_view">WebView</string>
     <string name="action_search_settings">Setări de căutare</string>
     <string name="pref_incognito_mode_summary">Întrerupe citirea istoricului</string>
     <string name="pref_incognito_mode">Modul incognito</string>

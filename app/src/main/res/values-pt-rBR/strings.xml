@@ -172,8 +172,8 @@
     <string name="pref_backup_slots">Máximo de backups</string>
     <string name="backup_created">Backup criado</string>
     <string name="restore_completed">Restauração concluída</string>
-    <string name="backup_restore_content">A restauração usa as fontes para obter dados, cobranças podem ser efetuadas pela sua operadora. 
-\n 
+    <string name="backup_restore_content">A restauração usa as fontes para obter dados, cobranças podem ser efetuadas pela sua operadora.
+\n
 \nVerifique se instalou todas as extensões necessárias e se realizou o login nas fontes e serviços de monitoramento antes de restaurar.</string>
     <string name="backup_choice">Do que você deseja fazer backup\?</string>
     <string name="restoring_backup">Restaurando backup</string>
@@ -331,10 +331,10 @@
     <string name="ext_uninstall">Desinstalar</string>
     <string name="ext_available">Disponível</string>
     <string name="untrusted_extension">Extensão não confiável</string>
-    <string name="untrusted_extension_message">Esta extensão foi assinada com um certificado não confiável e não foi ativada. 
-\n 
-\nUma extensão maliciosa poderia ler quaisquer credenciais de login armazenadas no Tachiyomi ou executar códigos arbitrários. 
-\n 
+    <string name="untrusted_extension_message">Esta extensão foi assinada com um certificado não confiável e não foi ativada.
+\n
+\nUma extensão maliciosa poderia ler quaisquer credenciais de login armazenadas no Tachiyomi ou executar códigos arbitrários.
+\n
 \nAo confiar neste certificado, você estará aceitando estes riscos.</string>
     <string name="ext_version_info">Versão: %1$s</string>
     <string name="ext_language_info">Idioma: %1$s</string>
@@ -566,7 +566,6 @@
     </plurals>
     <string name="action_open_in_settings">Abrir nas Configurações</string>
     <string name="requires_app_restart">Requer o reinício do aplicativo para ter efeito</string>
-    <string name="pref_dns_over_https" translatable="false">DNS sob HTTPS (Cloudflare)</string>
     <string name="label_network">Rede</string>
     <string name="pref_jump_to_chapters">Pular para os capítulos ao abrir</string>
     <string name="tapping_inverted_none">Nenhum</string>
@@ -607,7 +606,6 @@
         <item quantity="other">Há %d capítulos faltando</item>
     </plurals>
     <string name="no_chapters_error">Nenhum capítulo encontrado</string>
-    <string name="action_web_view">WebView</string>
     <string name="chapter_settings_updated">Configurações padrões de capítulo atualizadas</string>
     <string name="set_chapter_settings_as_default">Definir como padrão</string>
     <string name="also_set_chapter_settings_for_library">Também aplicar a todos os mangás na minha biblioteca</string>
@@ -659,10 +657,5 @@
     <string name="action_order_by_chapter_number">Pelo número do capítulo</string>
     <string name="action_order_by_upload_date">Pela data de envio</string>
     <string name="action_filter_tracked">Monitorado</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_anilist" translatable="false">AniList</string>
     <string name="action_display_show_number_of_items">Mostrar o número de itens</string>
 </resources>

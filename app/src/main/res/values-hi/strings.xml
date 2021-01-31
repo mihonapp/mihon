@@ -331,9 +331,9 @@
     <string name="ext_uninstall">स्थापना रद्द करें</string>
     <string name="ext_available">उपलब्ध</string>
     <string name="untrusted_extension">अविश्वस्त एक्सटेंशन</string>
-    <string name="untrusted_extension_message">यह एक्सटेंशन एक अविश्वस्त प्रमाणपत्र के साथ हस्ताक्षरित हुआ था और सक्रिय नहीं हुआ था। 
+    <string name="untrusted_extension_message">यह एक्सटेंशन एक अविश्वस्त प्रमाणपत्र के साथ हस्ताक्षरित हुआ था और सक्रिय नहीं हुआ था।
 \n
-\nदुर्भावनापूर्ण विस्तार, किसी भी लॉगिन क्रेडेंशियल्स को तचीयोमी में संग्रहीत या मनमाना कोड निष्पादित कर सकता है 
+\nदुर्भावनापूर्ण विस्तार, किसी भी लॉगिन क्रेडेंशियल्स को तचीयोमी में संग्रहीत या मनमाना कोड निष्पादित कर सकता है
 \n
 \nइस प्रमाणपत्र पर विश्वास करके आप इन जोखिमों को स्वीकार करते हैं।</string>
     <string name="ext_version_info">संस्करण: %1$s</string>
@@ -565,7 +565,6 @@
     </plurals>
     <string name="action_sort_descending">अवरोही</string>
     <string name="action_open_in_settings">सेटिंग्स में खोलें</string>
-    <string name="pref_dns_over_https" translatable="false">HTTPS (Cloudflare) पर DNS</string>
     <string name="label_network">नेटवर्क</string>
     <string name="pref_jump_to_chapters">खुलने पर अध्यायों पर जाएं</string>
     <string name="tapping_inverted_both">दोनों</string>
@@ -612,7 +611,6 @@
     <string name="also_set_chapter_settings_for_library">मेरी लाइब्रेरी में सभी मंगा पर भी लागू करें</string>
     <string name="confirm_set_chapter_settings">क्या आप वाकई इन सेटिंग्स को डिफ़ॉल्ट के रूप में सहेजना चाहते हैं\?</string>
     <string name="chapter_settings">अध्याय सेटिंग्स</string>
-    <string name="action_web_view">वेबव्यू</string>
     <string name="share_page_info">%1$s: %2$s, पृष्ठ %3$d</string>
     <string name="downloaded_chapters">डाउनलोड किए गए अध्याय</string>
     <string name="manga_from_library">पुस्तकालय से मंगा</string>

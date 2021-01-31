@@ -57,7 +57,6 @@
     <string name="chapters">అధ్యాయాలు</string>
     <string name="manga">మాంగా</string>
     <string name="categories">కేటగిరీలు</string>
-    <string name="app_name" translatable="false">టచియోమి</string>
     <string name="information_empty_category">మీ దెగ్గర ఏ కేటగిరీలు లెవ్వు. ప్లస్ బటన్ ని నొక్కి గ్రంథాలయాన్ని సదురుకోవడానికి ఒక కొత్త కేటగిరీని సృష్టించండి.</string>
     <string name="information_empty_library">మీ గ్రంధాలయం ఖాళీగా ఉంది. బ్రౌజ్ ద్వారా సిరీస్లను యాడ్ చేసుకోండి.</string>
     <string name="information_no_recent_manga">ఈమధ్య మీరు ఏమి చదవలేదు</string>
