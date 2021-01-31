@@ -4,6 +4,7 @@
     android:id="@+id/track_recycler"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="4dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
     android:clipToPadding="false"
     tools:listitem="@layout/track_item" />
