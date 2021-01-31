@@ -120,7 +120,11 @@ class LibraryController(
 
     private var tabsVisibilityRelay: BehaviorRelay<Boolean> = BehaviorRelay.create(false)
 
+    private var mangaCountVisibilityRelay: BehaviorRelay<Boolean> = BehaviorRelay.create(false)
+
     private var tabsVisibilitySubscription: Subscription? = null
+
+    private var mangaCountVisibilitySubscription: Subscription? = null
 
     init {
         setHasOptionsMenu(true)
@@ -140,11 +144,25 @@ class LibraryController(
     }
 
     private fun updateTitle() {
-        if (preferences.categoryTabs().get()) {
+        val categoryTabs = preferences.categoryTabs().get()
+        val currentCategory = adapter?.categories?.getOrNull(binding.libraryPager.currentItem)
+
+        if (categoryTabs) {
             currentTitle = resources?.getString(R.string.label_library)
         } else {
-            adapter?.categories?.getOrNull(binding.libraryPager.currentItem)?.let {
+            currentCategory?.let {
                 currentTitle = it.name
+            }
+        }
+
+        if (preferences.categoryNumberOfItems().get() && libraryMangaRelay.hasValue()) {
+            libraryMangaRelay.value.mangas.let { mangaMap ->
+                if (!categoryTabs) {
+                    currentTitle += " (${mangaMap[currentCategory?.id]?.size ?: 0})"
+                } else if (adapter?.categories?.size == 1) {
+                    // special case for if there are no categories
+                    currentTitle += " (${mangaMap[0]?.size ?: 0})"
+                }
             }
         }
     }
@@ -236,6 +254,10 @@ class LibraryController(
                 tabAnimator?.collapse()
             }
         }
+        mangaCountVisibilitySubscription?.unsubscribe()
+        mangaCountVisibilitySubscription = mangaCountVisibilityRelay.subscribe {
+            adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun cleanupTabs(tabs: TabLayout) {
@@ -267,6 +289,9 @@ class LibraryController(
 
         // Set the categories
         adapter.categories = categories
+        adapter.mangaCountPerCategory = adapter.categories.map {
+            Pair(it.id ?: -1, mangaMap[it.id]?.size ?: 0)
+        }.toMap()
 
         // Restore active category.
         binding.libraryPager.setCurrentItem(activeCat, false)
@@ -283,6 +308,9 @@ class LibraryController(
 
         // Send the manga map to child fragments after the adapter is updated.
         libraryMangaRelay.call(LibraryMangaEvent(mangaMap))
+
+        // Finally update the title
+        updateTitle()
     }
 
     /**
@@ -309,6 +337,7 @@ class LibraryController(
 
     private fun onTabsSettingsChanged() {
         tabsVisibilityRelay.call(preferences.categoryTabs().get() && adapter?.categories?.size ?: 0 > 1)
+        mangaCountVisibilityRelay.call(preferences.categoryNumberOfItems().get())
         updateTitle()
     }
 

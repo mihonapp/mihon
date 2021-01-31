@@ -4,22 +4,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import eu.kanade.tachiyomi.data.database.models.Category
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.LibraryCategoryBinding
 import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.widget.RecyclerViewPagerAdapter
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
  * This adapter stores the categories from the library, used with a ViewPager.
  *
  * @constructor creates an instance of the adapter.
  */
-class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPagerAdapter() {
+class LibraryAdapter(
+    private val controller: LibraryController,
+    private val preferences: PreferencesHelper = Injekt.get()
+) : RecyclerViewPagerAdapter() {
 
     /**
      * The categories to bind in the adapter.
      */
     var categories: List<Category> = emptyList()
         // This setter helps to not refresh the adapter if the reference to the list doesn't change.
+        set(value) {
+            if (field !== value) {
+                field = value
+                notifyDataSetChanged()
+            }
+        }
+
+    /**
+     * The number of manga in each category.
+     */
+    var mangaCountPerCategory: Map<Int, Int> = emptyMap()
         set(value) {
             if (field !== value) {
                 field = value
@@ -79,6 +96,9 @@ class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPa
      * @return the title to display.
      */
     override fun getPageTitle(position: Int): CharSequence {
+        if (preferences.categoryNumberOfItems().get()) {
+            return categories[position].let { "${it.name} (${mangaCountPerCategory[it.id]})" }
+        }
         return categories[position].name
     }
 
