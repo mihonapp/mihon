@@ -218,6 +218,7 @@
         <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
         <item name="switchStyle">@style/Theme.Widget.BasicSwitch</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.BottomSheet</item>
     </style>
 
     <style name="Theme.Base.Reader.Light" parent="Theme.Base">
@@ -233,6 +234,7 @@
         <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
         <item name="switchStyle">@style/Theme.Widget.BasicSwitch</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.BottomSheet</item>
     </style>
 
     <style name="Theme.Reader.Dark" parent="Theme.Base.Reader.Dark" />
