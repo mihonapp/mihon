@@ -22,9 +22,6 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
         const val PLANNING = 5
         const val REPEATING = 6
 
-        const val DEFAULT_STATUS = READING
-        const val DEFAULT_SCORE = 0
-
         const val POINT_100 = "POINT_100"
         const val POINT_10 = "POINT_10"
         const val POINT_10_DECIMAL = "POINT_10_DECIMAL"
@@ -154,8 +151,8 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
             update(track)
         } else {
             // Set default fields if it's not found in the list
-            track.score = DEFAULT_SCORE.toFloat()
-            track.status = DEFAULT_STATUS
+            track.status = READING
+            track.score = 0F
             add(track)
         }
     }

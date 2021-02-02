@@ -50,8 +50,8 @@ class Bangumi(private val context: Context, id: Int) : TrackService(id) {
             refresh(track)
         } else {
             // Set default fields if it's not found in the list
-            track.score = DEFAULT_SCORE.toFloat()
-            track.status = DEFAULT_STATUS
+            track.status = READING
+            track.score = 0F
             add(track)
             update(track)
         }
@@ -128,8 +128,5 @@ class Bangumi(private val context: Context, id: Int) : TrackService(id) {
         const val ON_HOLD = 4
         const val DROPPED = 5
         const val PLANNING = 1
-
-        const val DEFAULT_STATUS = READING
-        const val DEFAULT_SCORE = 0
     }
 }
