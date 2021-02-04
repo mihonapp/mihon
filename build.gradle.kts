@@ -9,9 +9,9 @@ plugins {
 allprojects {
     repositories {
         mavenCentral()
-        jcenter()
         google()
         maven { setUrl("https://www.jitpack.io") }
+        jcenter()
     }
 }
 
