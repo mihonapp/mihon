@@ -394,13 +394,13 @@ open class BrowseSourceController(bundle: Bundle) :
             val actions = emptyList<EmptyView.Action>().toMutableList()
 
             if (presenter.source is LocalSource) {
-                actions += EmptyView.Action(R.string.local_source_help_guide, View.OnClickListener { openLocalSourceHelpGuide() })
+                actions += EmptyView.Action(R.string.local_source_help_guide) { openLocalSourceHelpGuide() }
             } else {
                 actions += EmptyView.Action(R.string.action_retry, retryAction)
             }
 
             if (presenter.source is HttpSource) {
-                actions += EmptyView.Action(R.string.action_open_in_web_view, View.OnClickListener { openInWebView() })
+                actions += EmptyView.Action(R.string.action_open_in_web_view) { openInWebView() }
             }
 
             binding.emptyView.show(message, actions)
