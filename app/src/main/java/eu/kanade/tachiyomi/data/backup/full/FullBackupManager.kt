@@ -247,7 +247,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
      */
     internal fun restoreCategoriesForManga(manga: Manga, categories: List<Int>, backupCategories: List<BackupCategory>) {
         val dbCategories = databaseHelper.getCategories().executeAsBlocking()
-        val mangaCategoriesToUpdate = mutableListOf<MangaCategory>()
+        val mangaCategoriesToUpdate = ArrayList<MangaCategory>(categories.size)
         categories.forEach { backupCategoryOrder ->
             backupCategories.firstOrNull {
                 it.order == backupCategoryOrder
@@ -274,7 +274,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
      */
     internal fun restoreHistoryForManga(history: List<BackupHistory>) {
         // List containing history to be updated
-        val historyToBeUpdated = mutableListOf<History>()
+        val historyToBeUpdated = ArrayList<History>(history.size)
         for ((url, lastRead) in history) {
             val dbHistory = databaseHelper.getHistoryByChapterUrl(url).executeAsBlocking()
             // Check if history already in database and update
@@ -358,9 +358,8 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
         }
 
         chapters.forEach { chapter ->
-            val pos = dbChapters.indexOfFirst { it.url == chapter.url }
-            if (pos != -1) {
-                val dbChapter = dbChapters[pos]
+            val dbChapter = dbChapters.find { it.url == chapter.url }
+            if (dbChapter != null) {
                 chapter.id = dbChapter.id
                 chapter.copyFrom(dbChapter)
                 if (dbChapter.read && !chapter.read) {
@@ -373,12 +372,13 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
                     chapter.bookmark = dbChapter.bookmark
                 }
             }
-        }
-        // Filter the chapters that couldn't be found.
-        chapters.filter { it.id != null }
-        chapters.map { it.manga_id = manga.id }
 
-        updateChapters(chapters)
+            chapter.manga_id = manga.id
+        }
+
+        // Filter the chapters that couldn't be found.
+        updateChapters(chapters.filter { it.id != null })
+
         return true
     }
 
@@ -386,9 +386,8 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
         val dbChapters = databaseHelper.getChapters(manga).executeAsBlocking()
 
         chapters.forEach { chapter ->
-            val pos = dbChapters.indexOfFirst { it.url == chapter.url }
-            if (pos != -1) {
-                val dbChapter = dbChapters[pos]
+            val dbChapter = dbChapters.find { it.url == chapter.url }
+            if (dbChapter != null) {
                 chapter.id = dbChapter.id
                 chapter.copyFrom(dbChapter)
                 if (dbChapter.read && !chapter.read) {
@@ -401,10 +400,12 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
                     chapter.bookmark = dbChapter.bookmark
                 }
             }
-        }
-        chapters.map { it.manga_id = manga.id }
 
-        updateChapters(chapters.filter { it.id != null })
-        insertChapters(chapters.filter { it.id == null })
+            chapter.manga_id = manga.id
+        }
+
+        val newChapters = chapters.groupBy { it.id != null }
+        newChapters[true]?.let { updateChapters(it) }
+        newChapters[false]?.let { insertChapters(it) }
     }
 }
