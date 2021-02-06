@@ -53,30 +53,14 @@ import kotlin.math.max
 
 class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : AbstractBackupManager(context) {
 
-    var parserVersion: Int = version
-        private set
-
-    var parser: Gson = initParser()
-
-    /**
-     * Set version of parser
-     *
-     * @param version version of parser
-     */
-    internal fun setVersion(version: Int) {
-        this.parserVersion = version
-        parser = initParser()
-    }
-
-    private fun initParser(): Gson = when (parserVersion) {
-        2 ->
-            GsonBuilder()
-                .registerTypeAdapter<MangaImpl>(MangaTypeAdapter.build())
-                .registerTypeHierarchyAdapter<ChapterImpl>(ChapterTypeAdapter.build())
-                .registerTypeAdapter<CategoryImpl>(CategoryTypeAdapter.build())
-                .registerTypeAdapter<DHistory>(HistoryTypeAdapter.build())
-                .registerTypeHierarchyAdapter<TrackImpl>(TrackTypeAdapter.build())
-                .create()
+    val parser: Gson = when (version) {
+        2 -> GsonBuilder()
+            .registerTypeAdapter<MangaImpl>(MangaTypeAdapter.build())
+            .registerTypeHierarchyAdapter<ChapterImpl>(ChapterTypeAdapter.build())
+            .registerTypeAdapter<CategoryImpl>(CategoryTypeAdapter.build())
+            .registerTypeAdapter<DHistory>(HistoryTypeAdapter.build())
+            .registerTypeHierarchyAdapter<TrackImpl>(TrackTypeAdapter.build())
+            .create()
         else -> throw Exception("Unknown backup version")
     }
 
@@ -308,7 +292,7 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
      */
     internal fun restoreCategoriesForManga(manga: Manga, categories: List<String>) {
         val dbCategories = databaseHelper.getCategories().executeAsBlocking()
-        val mangaCategoriesToUpdate = mutableListOf<MangaCategory>()
+        val mangaCategoriesToUpdate = ArrayList<MangaCategory>(categories.size)
         for (backupCategoryStr in categories) {
             for (dbCategory in dbCategories) {
                 if (backupCategoryStr == dbCategory.name) {
@@ -332,7 +316,7 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
      */
     internal fun restoreHistoryForManga(history: List<DHistory>) {
         // List containing history to be updated
-        val historyToBeUpdated = mutableListOf<History>()
+        val historyToBeUpdated = ArrayList<History>(history.size)
         for ((url, lastRead) in history) {
             val dbHistory = databaseHelper.getHistoryByChapterUrl(url).executeAsBlocking()
             // Check if history already in database and update
@@ -361,14 +345,14 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
      * @param tracks the track list to restore.
      */
     internal fun restoreTrackForManga(manga: Manga, tracks: List<Track>) {
-        // Fix foreign keys with the current manga id
-        tracks.map { it.manga_id = manga.id!! }
-
         // Get tracks from database
         val dbTracks = databaseHelper.getTracks(manga).executeAsBlocking()
-        val trackToUpdate = mutableListOf<Track>()
+        val trackToUpdate = ArrayList<Track>(tracks.size)
 
         tracks.forEach { track ->
+            // Fix foreign keys with the current manga id
+            track.manga_id = manga.id!!
+
             val service = trackManager.getService(track.sync_id)
             if (service != null && service.isLogged) {
                 var isInDatabase = false
@@ -423,12 +407,13 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
                 chapter.copyFrom(dbChapter)
                 break
             }
-        }
-        // Filter the chapters that couldn't be found.
-        chapters.filter { it.id != null }
-        chapters.map { it.manga_id = manga.id }
 
-        updateChapters(chapters)
+            chapter.manga_id = manga.id
+        }
+
+        // Filter the chapters that couldn't be found.
+        updateChapters(chapters.filter { it.id != null })
+
         return true
     }
 }

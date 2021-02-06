@@ -68,7 +68,7 @@ class BackupTest {
     fun setup() {
         app = RuntimeEnvironment.application
         context = app.applicationContext
-        legacyBackupManager = LegacyBackupManager(context)
+        legacyBackupManager = LegacyBackupManager(context, 2)
         db = legacyBackupManager.databaseHelper
 
         // Mock the source manager
@@ -84,6 +84,8 @@ class BackupTest {
 
         root.add(Backup.MANGAS, mangaEntries)
         root.add(Backup.CATEGORIES, categoryEntries)
+
+        clearJson()
     }
 
     /**
@@ -91,9 +93,6 @@ class BackupTest {
      */
     @Test
     fun testRestoreEmptyCategory() {
-        // Initialize json with version 2
-        initializeJsonTest(2)
-
         // Create backup of empty database
         legacyBackupManager.backupCategories(categoryEntries)
 
@@ -110,9 +109,6 @@ class BackupTest {
      */
     @Test
     fun testRestoreSingleCategory() {
-        // Initialize json with version 2
-        initializeJsonTest(2)
-
         // Create category and add to json
         val category = addSingleCategory("category")
 
@@ -130,9 +126,6 @@ class BackupTest {
      */
     @Test
     fun testRestoreMultipleCategories() {
-        // Initialize json with version 2
-        initializeJsonTest(2)
-
         // Create category and add to json
         val category = addSingleCategory("category")
         val category2 = addSingleCategory("category2")
@@ -161,9 +154,6 @@ class BackupTest {
      */
     @Test
     fun testRestoreManga() {
-        // Initialize json with version 2
-        initializeJsonTest(2)
-
         // Add manga to database
         val manga = getSingleManga("One Piece")
         manga.viewer = 3
@@ -227,9 +217,6 @@ class BackupTest {
      */
     @Test
     fun testRestoreChapters() {
-        // Initialize json with version 2
-        initializeJsonTest(2)
-
         // Insert manga
         val manga = getSingleManga("One Piece")
         manga.id = legacyBackupManager.databaseHelper.insertManga(manga).executeAsBlocking().insertedId()
@@ -266,9 +253,6 @@ class BackupTest {
      */
     @Test
     fun restoreHistoryForManga() {
-        // Initialize json with version 2
-        initializeJsonTest(2)
-
         val manga = getSingleManga("One Piece")
         manga.id = legacyBackupManager.databaseHelper.insertManga(manga).executeAsBlocking().insertedId()
 
@@ -300,9 +284,6 @@ class BackupTest {
      */
     @Test
     fun restoreTrackForManga() {
-        // Initialize json with version 2
-        initializeJsonTest(2)
-
         // Create mangas
         val manga = getSingleManga("One Piece")
         val manga2 = getSingleManga("Bleach")
@@ -359,31 +340,26 @@ class BackupTest {
         assertThat(trackDB[0].last_chapter_read).isEqualTo(10)
     }
 
-    fun clearJson() {
+    private fun clearJson() {
         root = JsonObject()
         information = JsonObject()
         mangaEntries = JsonArray()
         categoryEntries = JsonArray()
     }
 
-    fun initializeJsonTest(version: Int) {
-        clearJson()
-        legacyBackupManager.setVersion(version)
-    }
-
-    fun addSingleCategory(name: String): Category {
+    private fun addSingleCategory(name: String): Category {
         val category = Category.create(name)
         val catJson = legacyBackupManager.parser.toJsonTree(category)
         categoryEntries.add(catJson)
         return category
     }
 
-    fun clearDatabase() {
+    private fun clearDatabase() {
         db.deleteMangas().executeAsBlocking()
         db.deleteHistory().executeAsBlocking()
     }
 
-    fun getSingleHistory(chapter: Chapter): DHistory {
+    private fun getSingleHistory(chapter: Chapter): DHistory {
         return DHistory(chapter.url, 1000)
     }
 
