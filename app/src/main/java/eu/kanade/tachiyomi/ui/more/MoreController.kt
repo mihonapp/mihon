@@ -151,6 +151,6 @@ class MoreController :
     }
 
     companion object {
-        private const val URL_HELP = "https://tachiyomi.org/help/"
+        const val URL_HELP = "https://tachiyomi.org/help/"
     }
 }

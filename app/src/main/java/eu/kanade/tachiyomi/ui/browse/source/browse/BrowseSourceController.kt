@@ -39,6 +39,7 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.connectivityManager
 import eu.kanade.tachiyomi.util.system.openInBrowser
@@ -391,16 +392,16 @@ open class BrowseSourceController(bundle: Bundle) :
         }
 
         if (adapter.isEmpty) {
-            val actions = emptyList<EmptyView.Action>().toMutableList()
-
-            if (presenter.source is LocalSource) {
-                actions += EmptyView.Action(R.string.local_source_help_guide) { openLocalSourceHelpGuide() }
+            val actions = if (presenter.source is LocalSource) {
+                listOf(
+                    EmptyView.Action(R.string.local_source_help_guide, R.drawable.ic_help_24dp) { openLocalSourceHelpGuide() }
+                )
             } else {
-                actions += EmptyView.Action(R.string.action_retry, retryAction)
-            }
-
-            if (presenter.source is HttpSource) {
-                actions += EmptyView.Action(R.string.action_open_in_web_view) { openInWebView() }
+                listOf(
+                    EmptyView.Action(R.string.action_retry, R.drawable.ic_refresh_24dp, retryAction),
+                    EmptyView.Action(R.string.action_open_in_web_view, R.drawable.ic_public_24dp) { openInWebView() },
+                    EmptyView.Action(R.string.label_help, R.drawable.ic_help_24dp) { activity?.openInBrowser(MoreController.URL_HELP) }
+                )
             }
 
             binding.emptyView.show(message, actions)
