@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.notification
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -120,14 +121,13 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param notificationId id of notification
      */
     private fun shareImage(context: Context, path: String, notificationId: Int) {
-        // Create intent
         val intent = Intent(Intent.ACTION_SEND).apply {
             val uri = File(path).getUriCompat(context)
             putExtra(Intent.EXTRA_STREAM, uri)
+            clipData = ClipData.newRawUri(null, uri)
             type = "image/*"
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
         }
-        // Dismiss notification
         dismissNotification(context, notificationId)
         // Launch share activity
         context.startActivity(intent)
@@ -143,6 +143,7 @@ class NotificationReceiver : BroadcastReceiver() {
     private fun shareBackup(context: Context, uri: Uri, notificationId: Int) {
         val sendIntent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_STREAM, uri)
+            clipData = ClipData.newRawUri(null, uri)
             type = "application/json"
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
         }

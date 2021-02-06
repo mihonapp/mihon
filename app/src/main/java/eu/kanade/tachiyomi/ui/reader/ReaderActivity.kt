@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.reader
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.ProgressDialog
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -595,10 +596,11 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         val manga = presenter.manga ?: return
         val chapter = page.chapter.chapter
 
-        val stream = file.getUriCompat(this)
+        val uri = file.getUriCompat(this)
         val intent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_TEXT, getString(R.string.share_page_info, manga.title, chapter.name, page.number))
-            putExtra(Intent.EXTRA_STREAM, stream)
+            putExtra(Intent.EXTRA_STREAM, uri)
+            clipData = ClipData.newRawUri(null, uri)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
             type = "image/*"
         }
