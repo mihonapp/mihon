@@ -6,11 +6,11 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.view.updatePadding
 import androidx.preference.PreferenceController
 import androidx.preference.PreferenceGroup
