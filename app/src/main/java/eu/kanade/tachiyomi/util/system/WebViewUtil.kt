@@ -6,13 +6,9 @@ import android.content.pm.PackageManager
 import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
-import eu.kanade.tachiyomi.util.lang.launchUI
 import timber.log.Timber
 
 object WebViewUtil {
-    var DEFAULT_USER_AGENT: String = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-        private set
-
     const val REQUESTED_WITH = "com.android.browser"
 
     const val MINIMUM_WEBVIEW_VERSION = 87
@@ -22,14 +18,6 @@ object WebViewUtil {
             // May throw android.webkit.WebViewFactory$MissingWebViewPackageException if WebView
             // is not installed
             CookieManager.getInstance()
-
-            launchUI {
-                DEFAULT_USER_AGENT = WebView(context)
-                    .getDefaultUserAgentString()
-                    .replace("; wv", "")
-                    .replace(" Build\\/.+?\\)".toRegex(), ")")
-                    .replace("Version/.*? ".toRegex(), "")
-            }
         } catch (e: Exception) {
             Timber.e(e)
             return false
