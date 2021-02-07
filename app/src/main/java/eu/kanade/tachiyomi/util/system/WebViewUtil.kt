@@ -10,10 +10,6 @@ import eu.kanade.tachiyomi.util.lang.launchUI
 import timber.log.Timber
 
 object WebViewUtil {
-    val WEBVIEW_UA_VERSION_REGEX by lazy {
-        Regex(""".*Chrome/(\d+)\..*""")
-    }
-
     var DEFAULT_USER_AGENT: String = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
         private set
 
@@ -31,6 +27,8 @@ object WebViewUtil {
                 DEFAULT_USER_AGENT = WebView(context)
                     .getDefaultUserAgentString()
                     .replace("; wv", "")
+                    .replace(" Build\\/.+?\\)".toRegex(), ")")
+                    .replace("Version/.*? ".toRegex(), "")
             }
         } catch (e: Exception) {
             Timber.e(e)
@@ -59,7 +57,7 @@ fun WebView.setDefaultSettings() {
 }
 
 private fun WebView.getWebViewMajorVersion(): Int {
-    val uaRegexMatch = WebViewUtil.WEBVIEW_UA_VERSION_REGEX.matchEntire(getDefaultUserAgentString())
+    val uaRegexMatch = """.*Chrome/(\d+)\..*""".toRegex().matchEntire(getDefaultUserAgentString())
     return if (uaRegexMatch != null && uaRegexMatch.groupValues.size > 1) {
         uaRegexMatch.groupValues[1].toInt()
     } else {
