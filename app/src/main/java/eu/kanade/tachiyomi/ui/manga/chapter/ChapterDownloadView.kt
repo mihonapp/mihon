@@ -14,6 +14,9 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
 
     private val binding: ChapterDownloadViewBinding
 
+    private var state = Download.State.NOT_DOWNLOADED
+    private var progress = 0
+
     private var downloadIconAnimator: ObjectAnimator? = null
     private var isAnimating = false
 
@@ -23,6 +26,17 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     fun setState(state: Download.State, progress: Int = 0) {
+        val isDirty = this.state.value != state.value || this.progress != progress
+
+        this.state = state
+        this.progress = progress
+
+        if (isDirty) {
+            updateLayout()
+        }
+    }
+
+    private fun updateLayout() {
         binding.downloadIconBorder.isVisible = state == Download.State.NOT_DOWNLOADED
 
         binding.downloadIcon.isVisible = state == Download.State.NOT_DOWNLOADED || state == Download.State.DOWNLOADING
