@@ -5,29 +5,27 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.databinding.SourceListItemBinding
 
-class MangaHolder(
+class MigrationMangaHolder(
     view: View,
-    adapter: FlexibleAdapter<*>
+    private val adapter: MigrationMangaAdapter
 ) : FlexibleViewHolder(view, adapter) {
 
     private val binding = SourceListItemBinding.bind(view)
 
-    fun bind(item: MangaItem) {
-        // Update the title of the manga.
-        binding.title.text = item.manga.title
-
-        // Create thumbnail onclick to simulate long click
+    init {
         binding.thumbnail.setOnClickListener {
-            // Simulate long click on this view to enter selection mode
-            onLongClick(itemView)
+            adapter.coverClickListener.onCoverClick(bindingAdapterPosition)
         }
+    }
+
+    fun bind(item: MigrationMangaItem) {
+        binding.title.text = item.manga.title
 
         // Update the cover.
         GlideApp.with(itemView.context).clear(binding.thumbnail)

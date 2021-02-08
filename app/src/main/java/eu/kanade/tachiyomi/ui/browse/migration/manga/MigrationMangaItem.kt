@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.browse.migration.manga
 
-import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -8,25 +7,20 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-class MangaItem(val manga: Manga) : AbstractFlexibleItem<MangaHolder>(), Parcelable {
+class MigrationMangaItem(val manga: Manga) : AbstractFlexibleItem<MigrationMangaHolder>() {
 
     override fun getLayoutRes(): Int {
         return R.layout.source_list_item
     }
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): MangaHolder {
-        return MangaHolder(
-            view,
-            adapter
-        )
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): MigrationMangaHolder {
+        return MigrationMangaHolder(view, adapter as MigrationMangaAdapter)
     }
 
     override fun bindViewHolder(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
-        holder: MangaHolder,
+        holder: MigrationMangaHolder,
         position: Int,
         payloads: List<Any?>?
     ) {
@@ -34,7 +28,7 @@ class MangaItem(val manga: Manga) : AbstractFlexibleItem<MangaHolder>(), Parcela
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other is MangaItem) {
+        if (other is MigrationMangaItem) {
             return manga.id == other.manga.id
         }
         return false

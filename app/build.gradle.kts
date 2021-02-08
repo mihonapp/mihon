@@ -9,7 +9,6 @@ plugins {
     id("com.mikepenz.aboutlibraries.plugin")
     kotlin("android")
     kotlin("kapt")
-    kotlin("plugin.parcelize")
     kotlin("plugin.serialization")
     id("com.github.zellius.shortcut-helper")
 }
