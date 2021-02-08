@@ -2,13 +2,13 @@ package eu.kanade.tachiyomi.ui.manga.track
 
 import android.annotation.SuppressLint
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.TrackItemBinding
-import eu.kanade.tachiyomi.ui.base.holder.BaseViewHolder
 import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
 
-class TrackHolder(private val binding: TrackItemBinding, adapter: TrackAdapter) : BaseViewHolder(binding.root) {
+class TrackHolder(private val binding: TrackItemBinding, adapter: TrackAdapter) : RecyclerView.ViewHolder(binding.root) {
 
     private val preferences: PreferencesHelper by injectLazy()
 

@@ -11,15 +11,13 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.RestoreViewOnCreateController
-import kotlinx.android.extensions.LayoutContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import timber.log.Timber
 
 abstract class BaseController<VB : ViewBinding>(bundle: Bundle? = null) :
-    RestoreViewOnCreateController(bundle),
-    LayoutContainer {
+    RestoreViewOnCreateController(bundle) {
 
     lateinit var binding: VB
 
@@ -52,9 +50,6 @@ abstract class BaseController<VB : ViewBinding>(bundle: Bundle? = null) :
             }
         )
     }
-
-    override val containerView: View?
-        get() = view
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedViewState: Bundle?): View {
         return inflateView(inflater, container)
