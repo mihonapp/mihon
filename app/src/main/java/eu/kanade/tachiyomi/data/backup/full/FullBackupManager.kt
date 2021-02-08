@@ -405,7 +405,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
         }
 
         val newChapters = chapters.groupBy { it.id != null }
-        newChapters[true]?.let { updateChapters(it) }
+        newChapters[true]?.let { updateKnownChapters(it) }
         newChapters[false]?.let { insertChapters(it) }
     }
 }

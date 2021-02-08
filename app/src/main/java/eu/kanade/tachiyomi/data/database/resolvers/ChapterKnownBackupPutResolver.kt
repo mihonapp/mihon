@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.data.database.inTransactionReturn
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable
 
-class ChapterBackupPutResolver : PutResolver<Chapter>() {
+class ChapterKnownBackupPutResolver : PutResolver<Chapter>() {
 
     override fun performPut(db: StorIOSQLite, chapter: Chapter) = db.inTransactionReturn {
         val updateQuery = mapToUpdateQuery(chapter)
@@ -21,8 +21,8 @@ class ChapterBackupPutResolver : PutResolver<Chapter>() {
 
     fun mapToUpdateQuery(chapter: Chapter) = UpdateQuery.builder()
         .table(ChapterTable.TABLE)
-        .where("${ChapterTable.COL_URL} = ?")
-        .whereArgs(chapter.url)
+        .where("${ChapterTable.COL_ID} = ?")
+        .whereArgs(chapter.id)
         .build()
 
     fun mapToContentValues(chapter: Chapter) =
