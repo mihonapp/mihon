@@ -70,9 +70,10 @@ class NotificationReceiver : BroadcastReceiver() {
                 )
             // Share backup file
             ACTION_SHARE_BACKUP ->
-                shareBackup(
+                shareFile(
                     context,
                     intent.getParcelableExtra(EXTRA_URI),
+                    if (intent.getBooleanExtra(EXTRA_IS_LEGACY_BACKUP, false)) "application/json" else "application/octet-stream+gzip",
                     intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
                 )
             ACTION_CANCEL_RESTORE -> cancelRestore(
@@ -101,6 +102,14 @@ class NotificationReceiver : BroadcastReceiver() {
                     markAsRead(urls, mangaId)
                 }
             }
+            // Share crash dump file
+            ACTION_SHARE_CRASH_LOG ->
+                shareFile(
+                    context,
+                    intent.getParcelableExtra(EXTRA_URI),
+                    "text/plain",
+                    intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
+                )
         }
     }
 
@@ -140,11 +149,11 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param path path of file
      * @param notificationId id of notification
      */
-    private fun shareBackup(context: Context, uri: Uri, notificationId: Int) {
+    private fun shareFile(context: Context, uri: Uri, fileMimeType: String, notificationId: Int) {
         val sendIntent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_STREAM, uri)
             clipData = ClipData.newRawUri(null, uri)
-            type = "application/json"
+            type = fileMimeType
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
         }
         // Dismiss notification
@@ -245,59 +254,34 @@ class NotificationReceiver : BroadcastReceiver() {
     companion object {
         private const val NAME = "NotificationReceiver"
 
-        // Called to launch share intent.
         private const val ACTION_SHARE_IMAGE = "$ID.$NAME.SHARE_IMAGE"
-
-        // Called to delete image.
         private const val ACTION_DELETE_IMAGE = "$ID.$NAME.DELETE_IMAGE"
 
-        // Called to launch send intent.
         private const val ACTION_SHARE_BACKUP = "$ID.$NAME.SEND_BACKUP"
 
-        // Called to cancel backup restore job.
+        private const val ACTION_SHARE_CRASH_LOG = "$ID.$NAME.SEND_CRASH_LOG"
+
         private const val ACTION_CANCEL_RESTORE = "$ID.$NAME.CANCEL_RESTORE"
 
-        // Called to cancel library update.
         private const val ACTION_CANCEL_LIBRARY_UPDATE = "$ID.$NAME.CANCEL_LIBRARY_UPDATE"
 
-        // Called to mark manga chapters as read.
         private const val ACTION_MARK_AS_READ = "$ID.$NAME.MARK_AS_READ"
-
-        // Called to open chapter.
         private const val ACTION_OPEN_CHAPTER = "$ID.$NAME.ACTION_OPEN_CHAPTER"
 
-        // Value containing file location.
-        private const val EXTRA_FILE_LOCATION = "$ID.$NAME.FILE_LOCATION"
-
-        // Called to resume downloads.
         private const val ACTION_RESUME_DOWNLOADS = "$ID.$NAME.ACTION_RESUME_DOWNLOADS"
-
-        // Called to pause downloads.
         private const val ACTION_PAUSE_DOWNLOADS = "$ID.$NAME.ACTION_PAUSE_DOWNLOADS"
-
-        // Called to clear downloads.
         private const val ACTION_CLEAR_DOWNLOADS = "$ID.$NAME.ACTION_CLEAR_DOWNLOADS"
 
-        // Called to dismiss notification.
         private const val ACTION_DISMISS_NOTIFICATION = "$ID.$NAME.ACTION_DISMISS_NOTIFICATION"
 
-        // Value containing uri.
+        private const val EXTRA_FILE_LOCATION = "$ID.$NAME.FILE_LOCATION"
         private const val EXTRA_URI = "$ID.$NAME.URI"
-
-        // Value containing notification id.
         private const val EXTRA_NOTIFICATION_ID = "$ID.$NAME.NOTIFICATION_ID"
-
-        // Value containing group id.
         private const val EXTRA_GROUP_ID = "$ID.$NAME.EXTRA_GROUP_ID"
-
-        // Value containing manga id.
         private const val EXTRA_MANGA_ID = "$ID.$NAME.EXTRA_MANGA_ID"
-
-        // Value containing chapter id.
         private const val EXTRA_CHAPTER_ID = "$ID.$NAME.EXTRA_CHAPTER_ID"
-
-        // Value containing chapter url.
         private const val EXTRA_CHAPTER_URL = "$ID.$NAME.EXTRA_CHAPTER_URL"
+        private const val EXTRA_IS_LEGACY_BACKUP = "$ID.$NAME.EXTRA_IS_LEGACY_BACKUP"
 
         /**
          * Returns a [PendingIntent] that resumes the download of a chapter
@@ -510,10 +494,11 @@ class NotificationReceiver : BroadcastReceiver() {
          * @param notificationId id of notification
          * @return [PendingIntent]
          */
-        internal fun shareBackupPendingBroadcast(context: Context, uri: Uri, notificationId: Int): PendingIntent {
+        internal fun shareBackupPendingBroadcast(context: Context, uri: Uri, isLegacyFormat: Boolean, notificationId: Int): PendingIntent {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_SHARE_BACKUP
                 putExtra(EXTRA_URI, uri)
+                putExtra(EXTRA_IS_LEGACY_BACKUP, isLegacyFormat)
                 putExtra(EXTRA_NOTIFICATION_ID, notificationId)
             }
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -533,6 +518,23 @@ class NotificationReceiver : BroadcastReceiver() {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
             }
             return PendingIntent.getActivity(context, 0, intent, 0)
+        }
+
+        /**
+         * Returns [PendingIntent] that starts a share activity for a crash log dump file.
+         *
+         * @param context context of application
+         * @param uri uri of file
+         * @param notificationId id of notification
+         * @return [PendingIntent]
+         */
+        internal fun shareCrashLogPendingBroadcast(context: Context, uri: Uri, notificationId: Int): PendingIntent {
+            val intent = Intent(context, NotificationReceiver::class.java).apply {
+                action = ACTION_SHARE_CRASH_LOG
+                putExtra(EXTRA_URI, uri)
+                putExtra(EXTRA_NOTIFICATION_ID, notificationId)
+            }
+            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         /**
