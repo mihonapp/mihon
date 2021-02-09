@@ -287,6 +287,14 @@ class WebtoonPageHolder(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { isAnimated ->
+                if (viewer.config.dualPageSplit) {
+                    val (isDoublePage, stream) = ImageUtil.isDoublePage(openStream!!)
+                    openStream = if (!isDoublePage) {
+                        stream
+                    } else {
+                        ImageUtil.splitAndMerge(stream)
+                    }
+                }
                 if (!isAnimated) {
                     val subsamplingView = initSubsamplingImageView()
                     subsamplingView.isVisible = true
