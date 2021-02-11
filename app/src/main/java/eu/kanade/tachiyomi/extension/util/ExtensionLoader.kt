@@ -31,6 +31,7 @@ internal object ExtensionLoader {
 
     private const val EXTENSION_FEATURE = "tachiyomi.extension"
     private const val METADATA_SOURCE_CLASS = "tachiyomi.extension.class"
+    private const val METADATA_SOURCE_FACTORY = "tachiyomi.extension.factory"
     private const val METADATA_NSFW = "tachiyomi.extension.nsfw"
     const val LIB_VERSION_MIN = 1.2
     const val LIB_VERSION_MAX = 1.2
@@ -184,7 +185,8 @@ internal object ExtensionLoader {
             versionCode,
             lang,
             isNsfw,
-            sources,
+            sources = sources,
+            pkgFactory = appInfo.metaData.getString(METADATA_SOURCE_FACTORY),
             isUnofficial = signatureHash != officialSignature
         )
         return LoadResult.Success(extension)
