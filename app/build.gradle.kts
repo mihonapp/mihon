@@ -29,8 +29,8 @@ android {
         minSdkVersion(AndroidConfig.minSdk)
         targetSdkVersion(AndroidConfig.targetSdk)
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        versionCode = 55
-        versionName = "0.10.8"
+        versionCode = 56
+        versionName = "0.10.9"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
@@ -202,9 +202,9 @@ dependencies {
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    // implementation("com.github.tachiyomiorg:subsampling-scale-image-view:6caf219")
+    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:6caf219")
     // TODO: switch to new decoder for stable releases
-    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:ca26317")
+    // implementation("com.github.tachiyomiorg:subsampling-scale-image-view:ca26317")
 
     // Logging
     implementation("com.jakewharton.timber:timber:4.7.1")
