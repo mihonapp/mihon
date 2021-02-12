@@ -14,7 +14,10 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -68,12 +71,14 @@ class BackupRestoreService : Service() {
      */
     private lateinit var wakeLock: PowerManager.WakeLock
 
+    private lateinit var ioScope: CoroutineScope
     private var backupRestore: AbstractBackupRestore<*>? = null
     private lateinit var notifier: BackupNotifier
 
     override fun onCreate() {
         super.onCreate()
 
+        ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         notifier = BackupNotifier(this)
         wakeLock = acquireWakeLock(javaClass.name)
 
@@ -92,6 +97,7 @@ class BackupRestoreService : Service() {
 
     private fun destroyJob() {
         backupRestore?.job?.cancel()
+        ioScope?.cancel()
         if (wakeLock.isHeld) {
             wakeLock.release()
         }
@@ -122,6 +128,7 @@ class BackupRestoreService : Service() {
             BackupConst.BACKUP_TYPE_FULL -> FullBackupRestore(this, notifier, online)
             else -> LegacyBackupRestore(this, notifier)
         }
+
         val handler = CoroutineExceptionHandler { _, exception ->
             Timber.e(exception)
             backupRestore?.writeErrorLog()
@@ -129,14 +136,15 @@ class BackupRestoreService : Service() {
             notifier.showRestoreError(exception.message)
             stopSelf(startId)
         }
-        backupRestore?.job = GlobalScope.launch(handler) {
+        val job = ioScope.launch(handler) {
             if (backupRestore?.restoreBackup(uri) == false) {
                 notifier.showRestoreError(getString(R.string.restoring_backup_canceled))
             }
         }
-        backupRestore?.job?.invokeOnCompletion {
+        job.invokeOnCompletion {
             stopSelf(startId)
         }
+        backupRestore?.job = job
 
         return START_NOT_STICKY
     }
