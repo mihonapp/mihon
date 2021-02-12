@@ -316,19 +316,26 @@ class MangaPresenter(
     private fun observeDownloads() {
         observeDownloadsStatusSubscription?.let { remove(it) }
         observeDownloadsStatusSubscription = downloadManager.queue.getStatusObservable()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .onBackpressureLatest()
             .filter { download -> download.manga.id == manga.id }
-            .doOnNext { onDownloadStatusChange(it) }
-            .subscribeLatestCache(MangaController::onChapterDownloadUpdate) { _, error ->
-                Timber.e(error)
-            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeLatestCache(
+                { view, it ->
+                    onDownloadStatusChange(it)
+                    view.onChapterDownloadUpdate(it)
+                },
+                { _, error ->
+                    Timber.e(error)
+                }
+            )
 
         observeDownloadsPageSubscription?.let { remove(it) }
         observeDownloadsPageSubscription = downloadManager.queue.getProgressObservable()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .onBackpressureLatest()
             .filter { download -> download.manga.id == manga.id }
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeLatestCache(MangaController::onChapterDownloadUpdate) { _, error ->
                 Timber.e(error)
             }

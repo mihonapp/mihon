@@ -40,13 +40,22 @@ class UpdatesPresenter(
             .subscribeLatestCache(UpdatesController::onNextRecentChapters)
 
         downloadManager.queue.getStatusObservable()
+            .observeOn(Schedulers.io())
+            .onBackpressureLatest()
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { onDownloadStatusChange(it) }
-            .subscribeLatestCache(UpdatesController::onChapterDownloadUpdate) { _, error ->
-                Timber.e(error)
-            }
+            .subscribeLatestCache(
+                { view, it ->
+                    onDownloadStatusChange(it)
+                    view.onChapterDownloadUpdate(it)
+                },
+                { _, error ->
+                    Timber.e(error)
+                }
+            )
 
         downloadManager.queue.getProgressObservable()
+            .observeOn(Schedulers.io())
+            .onBackpressureLatest()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeLatestCache(UpdatesController::onChapterDownloadUpdate) { _, error ->
                 Timber.e(error)
