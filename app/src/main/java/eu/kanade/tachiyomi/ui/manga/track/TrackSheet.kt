@@ -1,13 +1,12 @@
 package eu.kanade.tachiyomi.ui.manga.track
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.databinding.TrackControllerBinding
+import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
@@ -65,7 +64,7 @@ class TrackSheet(
         val track = adapter.getItem(position)?.track ?: return
 
         if (track.tracking_url.isNotBlank()) {
-            controller.activity?.startActivity(Intent(Intent.ACTION_VIEW, track.tracking_url.toUri()))
+            controller.openInBrowser(track.tracking_url)
         }
     }
 

@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroupAdapter
@@ -36,6 +35,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.getPreferenceKey
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.ToolbarLiftOnScrollController
+import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.util.preference.DSL
 import eu.kanade.tachiyomi.util.preference.onChange
@@ -213,8 +213,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
             !pkgFactory.isNullOrEmpty() -> "$URL_EXTENSION_COMMITS/multisrc/src/main/java/eu/kanade/tachiyomi/multisrc/$pkgFactory"
             else -> "$URL_EXTENSION_COMMITS/src/${pkgName.replace(".", "/")}"
         }
-        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-        startActivity(intent)
+        openInBrowser(url)
     }
 
     private fun openInSettings() {
