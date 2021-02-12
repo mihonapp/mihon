@@ -14,13 +14,11 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.lang.launchIO
-import kotlinx.serialization.ExperimentalSerializationApi
 import okio.buffer
 import okio.gzip
 import okio.source
 import java.util.Date
 
-@OptIn(ExperimentalSerializationApi::class)
 class FullBackupRestore(context: Context, notifier: BackupNotifier, private val online: Boolean) : AbstractBackupRestore<FullBackupManager>(context, notifier) {
 
     override fun performRestore(uri: Uri): Boolean {
