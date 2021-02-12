@@ -11,14 +11,14 @@ import timber.log.Timber
 object WebViewUtil {
     const val REQUESTED_WITH = "com.android.browser"
 
-    const val MINIMUM_WEBVIEW_VERSION = 87
+    const val MINIMUM_WEBVIEW_VERSION = 88
 
     fun supportsWebView(context: Context): Boolean {
         try {
             // May throw android.webkit.WebViewFactory$MissingWebViewPackageException if WebView
             // is not installed
             CookieManager.getInstance()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Timber.e(e)
             return false
         }
