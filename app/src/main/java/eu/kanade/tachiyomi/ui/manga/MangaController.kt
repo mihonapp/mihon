@@ -242,7 +242,7 @@ class MangaController :
             }
             .launchIn(viewScope)
 
-        (activity!! as MainActivity).fixViewToBottom(binding.actionToolbar)
+        (activity as? MainActivity)?.fixViewToBottom(binding.actionToolbar)
 
         settingsSheet = ChaptersSettingsSheet(router, presenter) { group ->
             if (group is ChaptersSettingsSheet.Filter.FilterGroup) {
@@ -321,7 +321,7 @@ class MangaController :
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
-        (activity!! as MainActivity).clearFixViewToBottom(binding.actionToolbar)
+        (activity as? MainActivity)?.clearFixViewToBottom(binding.actionToolbar)
         binding.actionToolbar.destroy()
         mangaInfoAdapter = null
         chaptersHeaderAdapter = null

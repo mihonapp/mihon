@@ -109,12 +109,12 @@ class UpdatesController :
             }
             .launchIn(viewScope)
 
-        (activity!! as MainActivity).fixViewToBottom(binding.actionToolbar)
+        (activity as? MainActivity)?.fixViewToBottom(binding.actionToolbar)
     }
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
-        (activity!! as MainActivity).clearFixViewToBottom(binding.actionToolbar)
+        (activity as? MainActivity)?.clearFixViewToBottom(binding.actionToolbar)
         binding.actionToolbar.destroy()
         adapter = null
         super.onDestroyView(view)
