@@ -209,7 +209,7 @@
 
 
     <style name="Theme.Widget.Snackbar" parent="Widget.MaterialComponents.Snackbar">
-        <item name="android:background">@drawable/snackbar_bg</item>
+        <item name="android:background">@drawable/snackbar_background</item>
         <item name="actionTextColorAlpha">1</item>
     </style>
     <style name="Theme.Widget.Snackbar.TextView" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
