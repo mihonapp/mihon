@@ -42,8 +42,8 @@ import kotlin.math.roundToInt
  * @param resource the text resource.
  * @param duration the duration of the toast. Defaults to short.
  */
-fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(this, resource, duration).show()
+fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT): Toast {
+    return Toast.makeText(this, resource, duration).also { it.show() }
 }
 
 /**
@@ -52,8 +52,8 @@ fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) 
  * @param text the text to display.
  * @param duration the duration of the toast. Defaults to short.
  */
-fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(this, text.orEmpty(), duration).show()
+fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT): Toast {
+    return Toast.makeText(this, text.orEmpty(), duration).also { it.show() }
 }
 
 /**
