@@ -24,3 +24,5 @@ I acknowledge that:
 
 ## Other details
 Additional details and attachments.
+
+If you're experiencing crashes, share the crash logs from More → Settings → Advanced → Dump crash logs.
