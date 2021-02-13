@@ -68,33 +68,31 @@
                 android:id="@+id/reader_nav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
-                android:gravity="center"
+                android:layoutDirection="ltr"
                 android:orientation="horizontal">
 
                 <ImageButton
                     android:id="@+id/left_chapter"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="50dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/reader_seekbar_background"
                     android:contentDescription="@string/action_previous_chapter"
                     android:padding="@dimen/material_layout_keylines_screen_edge_margin"
-                    app:srcCompat="@drawable/ic_arrow_back_24dp"
+                    app:srcCompat="@drawable/ic_skip_previous_24dp"
                     app:tint="?attr/colorOnPrimary" />
 
                 <LinearLayout
                     android:id="@+id/reader_seekbar"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/reader_seekbar_background"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
+                    android:layout_weight="1"
+                    android:background="@drawable/reader_seekbar_button"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp">
 
                     <TextView
                         android:id="@+id/left_page_text"
@@ -128,18 +126,15 @@
 
                 </LinearLayout>
 
-                <!-- android:background="?selectableItemBackgroundBorderless"-->
                 <ImageButton
                     android:id="@+id/right_chapter"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="50dp"
-                    android:background="@drawable/reader_seekbar_background"
+                    android:background="@drawable/reader_seekbar_button"
                     android:contentDescription="@string/action_next_chapter"
                     android:padding="@dimen/material_layout_keylines_screen_edge_margin"
-                    app:srcCompat="@drawable/ic_arrow_forward_24dp"
+                    app:srcCompat="@drawable/ic_skip_next_24dp"
                     app:tint="?attr/colorOnPrimary" />
 
             </LinearLayout>
