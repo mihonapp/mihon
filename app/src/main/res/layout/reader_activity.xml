@@ -79,7 +79,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/reader_seekbar_background"
+                    android:background="@drawable/reader_seekbar_button"
                     android:contentDescription="@string/action_previous_chapter"
                     android:padding="@dimen/material_layout_keylines_screen_edge_margin"
                     app:srcCompat="@drawable/ic_skip_previous_24dp"
@@ -90,7 +90,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/reader_seekbar_button"
+                    android:background="@drawable/reader_seekbar_background"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp">
 
