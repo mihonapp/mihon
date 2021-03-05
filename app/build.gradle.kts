@@ -204,7 +204,7 @@ dependencies {
 
     // implementation("com.github.tachiyomiorg:subsampling-scale-image-view:6caf219")
     // TODO: switch to new decoder for stable releases
-    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:93d74f0")
+    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:547d9c0")
 
     // Logging
     implementation("com.jakewharton.timber:timber:4.7.1")
