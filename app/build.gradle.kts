@@ -124,7 +124,7 @@ dependencies {
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha03")
     implementation("androidx.browser:browser:1.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.0-alpha2")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.0-beta01")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("androidx.core:core-ktx:1.5.0-beta01")
     implementation("androidx.multidex:multidex:2.0.1")
@@ -152,7 +152,7 @@ dependencies {
     implementation("com.github.pwittchen:reactivenetwork:0.13.0")
 
     // Network client
-    val okhttpVersion = "4.10.0-RC1"
+    val okhttpVersion = "5.0.0-alpha.2"
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
     implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:$okhttpVersion")
@@ -186,7 +186,7 @@ dependencies {
     implementation("io.requery:sqlite-android:3.33.0")
 
     // Preferences
-    implementation("com.github.tfcporciuncula.flow-preferences:flow-preferences:1.3.3")
+    implementation("com.github.tfcporciuncula.flow-preferences:flow-preferences:1.3.4")
 
     // Model View Presenter
     val nucleusVersion = "3.0.0"
@@ -197,13 +197,11 @@ dependencies {
     implementation("com.github.inorichi.injekt:injekt-core:65b0440")
 
     // Image library
-    val glideVersion = "4.11.0"
+    val glideVersion = "4.12.0"
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    // implementation("com.github.tachiyomiorg:subsampling-scale-image-view:6caf219")
-    // TODO: switch to new decoder for stable releases
     implementation("com.github.tachiyomiorg:subsampling-scale-image-view:547d9c0")
 
     // Logging
@@ -249,7 +247,7 @@ dependencies {
     implementation("com.mikepenz:aboutlibraries:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
 
     // Tests
-    testImplementation("junit:junit:4.13.1")
+    testImplementation("junit:junit:4.13.2")
     testImplementation("org.assertj:assertj-core:3.16.1")
     testImplementation("org.mockito:mockito-core:1.10.19")
 
