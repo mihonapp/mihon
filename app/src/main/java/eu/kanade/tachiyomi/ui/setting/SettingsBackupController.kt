@@ -15,7 +15,6 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
-import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst
@@ -206,31 +205,15 @@ class SettingsBackupController : SettingsController() {
                         val fileName = DocumentFile.fromSingleUri(activity, uri)?.name ?: uri.toString()
                         when {
                             fileName.endsWith(".proto.gz") -> {
-                                val options = arrayOf(
-                                    R.string.full_restore_offline,
-                                    R.string.full_restore_online
-                                )
-                                    .map { activity.getString(it) }
-                                MaterialDialog(activity)
-                                    .title(R.string.full_restore_mode)
-                                    .listItemsSingleChoice(
-                                        items = options,
-                                        initialSelection = 0
-                                    ) { _, index, _ ->
-                                        RestoreBackupDialog(
-                                            uri,
-                                            BackupConst.BACKUP_TYPE_FULL,
-                                            isOnline = index != 0
-                                        ).showDialog(router)
-                                    }
-                                    .positiveButton(R.string.action_restore)
-                                    .show()
+                                RestoreBackupDialog(
+                                    uri,
+                                    BackupConst.BACKUP_TYPE_FULL
+                                ).showDialog(router)
                             }
                             fileName.endsWith(".json") -> {
                                 RestoreBackupDialog(
                                     uri,
-                                    BackupConst.BACKUP_TYPE_LEGACY,
-                                    isOnline = true
+                                    BackupConst.BACKUP_TYPE_LEGACY
                                 ).showDialog(router)
                             }
                             else -> {
@@ -326,11 +309,10 @@ class SettingsBackupController : SettingsController() {
     }
 
     class RestoreBackupDialog(bundle: Bundle? = null) : DialogController(bundle) {
-        constructor(uri: Uri, type: Int, isOnline: Boolean) : this(
+        constructor(uri: Uri, type: Int) : this(
             bundleOf(
                 KEY_URI to uri,
-                KEY_TYPE to type,
-                KEY_MODE to isOnline
+                KEY_TYPE to type
             )
         )
 
@@ -338,12 +320,19 @@ class SettingsBackupController : SettingsController() {
             val activity = activity!!
             val uri: Uri = args.getParcelable(KEY_URI)!!
             val type: Int = args.getInt(KEY_TYPE)
-            val isOnline: Boolean = args.getBoolean(KEY_MODE, true)
 
             return try {
-                var message = activity.getString(R.string.backup_restore_content)
+                var message = if (type == BackupConst.BACKUP_TYPE_FULL) {
+                    activity.getString(R.string.backup_restore_content_full)
+                } else {
+                    activity.getString(R.string.backup_restore_content)
+                }
 
-                val validator = if (type == BackupConst.BACKUP_TYPE_FULL) FullBackupRestoreValidator() else LegacyBackupRestoreValidator()
+                val validator = if (type == BackupConst.BACKUP_TYPE_FULL) {
+                    FullBackupRestoreValidator()
+                } else {
+                    LegacyBackupRestoreValidator()
+                }
 
                 val results = validator.validate(activity, uri)
                 if (results.missingSources.isNotEmpty()) {
@@ -357,7 +346,7 @@ class SettingsBackupController : SettingsController() {
                     .title(R.string.pref_restore_backup)
                     .message(text = message)
                     .positiveButton(R.string.action_restore) {
-                        BackupRestoreService.start(activity, uri, type, isOnline)
+                        BackupRestoreService.start(activity, uri, type)
                     }
             } catch (e: Exception) {
                 MaterialDialog(activity)
@@ -370,7 +359,6 @@ class SettingsBackupController : SettingsController() {
         private companion object {
             const val KEY_URI = "RestoreBackupDialog.uri"
             const val KEY_TYPE = "RestoreBackupDialog.type"
-            const val KEY_MODE = "RestoreBackupDialog.mode"
         }
     }
 
