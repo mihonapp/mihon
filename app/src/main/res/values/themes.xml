@@ -76,7 +76,7 @@
         <item name="md_color_content">?attr/colorOnSurface</item>
         <item name="md_color_button_text">?attr/colorAccent</item>
         <item name="md_button_casing">literal</item>
-        <item name="md_corner_radius">@dimen/card_radius</item>
+        <item name="md_corner_radius">@dimen/dialog_radius</item>
 
         <!-- Custom Attributes-->
         <item name="colorLibrarySelection">?attr/colorAccent</item>
@@ -170,7 +170,7 @@
         <item name="md_color_content">?attr/colorOnSurface</item>
         <item name="md_color_button_text">?attr/colorAccent</item>
         <item name="md_button_casing">literal</item>
-        <item name="md_corner_radius">@dimen/card_radius</item>
+        <item name="md_corner_radius">@dimen/dialog_radius</item>
 
         <!-- Custom Attributes-->
         <item name="colorLibrarySelection">?attr/colorAccent</item>
