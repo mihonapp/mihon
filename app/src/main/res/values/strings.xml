@@ -431,10 +431,6 @@
     <string name="pref_disable_battery_optimization_summary">Helps with background library updates and backups</string>
     <string name="battery_optimization_disabled">Battery optimization is already disabled</string>
     <string name="battery_optimization_setting_activity_not_found">Couldn\'t open device settings</string>
-    <string name="clear_history_completed">History deleted</string>
-    <string name="clear_history_confirmation">Are you sure? All history will be lost.</string>
-    <string name="pref_clear_history">Clear history</string>
-    <string name="pref_clear_history_summary">Delete reading history for all manga</string>
 
       <!-- About section -->
     <string name="website">Website</string>
@@ -650,6 +646,9 @@
 
     <!-- History fragment -->
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
+    <string name="pref_clear_history">Clear history</string>
+    <string name="clear_history_completed">History deleted</string>
+    <string name="clear_history_confirmation">Are you sure? All history will be lost.</string>
 
     <!-- Source migration screen -->
     <string name="migration_help_guide">Source migration guide</string>
