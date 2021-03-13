@@ -47,6 +47,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderColorFilterSheet
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsSheet
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
@@ -81,6 +82,16 @@ import kotlin.math.abs
 @RequiresPresenter(ReaderPresenter::class)
 class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() {
 
+    companion object {
+        fun newIntent(context: Context, manga: Manga, chapter: Chapter): Intent {
+            return Intent(context, ReaderActivity::class.java).apply {
+                putExtra("manga", manga.id)
+                putExtra("chapter", chapter.id)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+        }
+    }
+
     private val preferences: PreferencesHelper by injectLazy()
 
     /**
@@ -113,24 +124,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
     @Suppress("DEPRECATION")
     private var progressDialog: ProgressDialog? = null
 
-    private var rotationToast: Toast? = null
-
-    companion object {
-        @Suppress("unused")
-        const val LEFT_TO_RIGHT = 1
-        const val RIGHT_TO_LEFT = 2
-        const val VERTICAL = 3
-        const val WEBTOON = 4
-        const val VERTICAL_PLUS = 5
-
-        fun newIntent(context: Context, manga: Manga, chapter: Chapter): Intent {
-            return Intent(context, ReaderActivity::class.java).apply {
-                putExtra("manga", manga.id)
-                putExtra("chapter", chapter.id)
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            }
-        }
-    }
+    private var menuToggleToast: Toast? = null
 
     /**
      * Called when the activity is created. Initializes the presenter and configuration.
@@ -348,14 +342,22 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             }
         }
 
+        binding.actionReaderMode.setOnClickListener {
+            val newReadingMode = ReadingModeType.getNextReadingMode(presenter.manga?.viewer ?: 0)
+            presenter.setMangaViewer(newReadingMode.prefValue)
+
+            menuToggleToast?.cancel()
+            menuToggleToast = toast(newReadingMode.stringRes)
+        }
+
         binding.actionRotation.setOnClickListener {
             val newOrientation = OrientationType.getNextOrientation(preferences.rotation().get(), resources)
 
             preferences.rotation().set(newOrientation.prefValue)
             setOrientation(newOrientation.flag)
 
-            rotationToast?.cancel()
-            rotationToast = toast(newOrientation.stringRes)
+            menuToggleToast?.cancel()
+            menuToggleToast = toast(newOrientation.stringRes)
         }
         preferences.rotation().asImmediateFlow { updateRotationShortcut(it) }
             .onEach {
@@ -463,10 +465,10 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
     fun setManga(manga: Manga) {
         val prevViewer = viewer
         val newViewer = when (presenter.getMangaViewer()) {
-            RIGHT_TO_LEFT -> R2LPagerViewer(this)
-            VERTICAL -> VerticalPagerViewer(this)
-            WEBTOON -> WebtoonViewer(this)
-            VERTICAL_PLUS -> WebtoonViewer(this, isContinuous = false)
+            ReadingModeType.RIGHT_TO_LEFT.prefValue -> R2LPagerViewer(this)
+            ReadingModeType.VERTICAL.prefValue -> VerticalPagerViewer(this)
+            ReadingModeType.WEBTOON.prefValue -> WebtoonViewer(this)
+            ReadingModeType.CONTINUOUS_VERTICAL.prefValue -> WebtoonViewer(this, isContinuous = false)
             else -> L2RPagerViewer(this)
         }
 
