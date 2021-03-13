@@ -12,8 +12,8 @@ enum class OrientationType(val prefValue: Int, val flag: Int, @StringRes val str
     FREE(1, ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED, R.string.rotation_free, R.drawable.ic_screen_rotation_24dp),
     LOCKED_PORTRAIT(2, ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT, R.string.rotation_lock, R.drawable.ic_screen_lock_rotation_24dp),
     LOCKED_LANDSCAPE(2, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE, R.string.rotation_lock, R.drawable.ic_screen_lock_rotation_24dp),
-    PORTRAIT(3, ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT, R.string.rotation_force_portrait, R.drawable.ic_screen_lock_portrait_24dp),
-    LANDSCAPE(4, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE, R.string.rotation_force_landscape, R.drawable.ic_screen_lock_landscape_24dp);
+    PORTRAIT(3, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, R.string.rotation_force_portrait, R.drawable.ic_screen_lock_portrait_24dp),
+    LANDSCAPE(4, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, R.string.rotation_force_landscape, R.drawable.ic_screen_lock_landscape_24dp);
 
     companion object {
         fun fromPreference(preference: Int, resources: Resources): OrientationType = when (preference) {
