@@ -233,7 +233,7 @@ dependencies {
     implementation("com.bluelinelabs:conductor-support:2.1.5") {
         exclude(group = "com.android.support")
     }
-    implementation("com.github.tachiyomiorg:conductor-support-preference:1.1.1")
+    implementation("com.github.tachiyomiorg:conductor-support-preference:2.0.0")
 
     // FlowBinding
     val flowbindingVersion = "0.12.0"
