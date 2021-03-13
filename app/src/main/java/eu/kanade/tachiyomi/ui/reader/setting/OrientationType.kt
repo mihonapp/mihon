@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.reader
+package eu.kanade.tachiyomi.ui.reader.setting
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration

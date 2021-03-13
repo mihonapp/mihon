@@ -37,7 +37,7 @@
 
     </FrameLayout>
 
-    <eu.kanade.tachiyomi.ui.reader.ReaderColorFilterView
+    <eu.kanade.tachiyomi.ui.reader.setting.ReaderColorFilterView
         android:id="@+id/color_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
