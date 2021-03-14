@@ -155,7 +155,7 @@
                     app:layout_constraintEnd_toStartOf="@id/action_rotation"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_book_24dp"
+                    app:srcCompat="@drawable/ic_reader_default_24dp"
                     app:tint="?attr/colorOnPrimary" />
 
                 <ImageButton

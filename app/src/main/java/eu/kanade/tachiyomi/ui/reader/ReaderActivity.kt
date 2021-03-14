@@ -343,7 +343,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         }
 
         binding.actionReaderMode.setOnClickListener {
-            val newReadingMode = ReadingModeType.getNextReadingMode(presenter.manga?.viewer ?: 0)
+            val newReadingMode = ReadingModeType.getNextReadingMode(presenter.getMangaViewer(resolveDefault = false))
             presenter.setMangaViewer(newReadingMode.prefValue)
 
             menuToggleToast?.cancel()
@@ -464,12 +464,16 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
      */
     fun setManga(manga: Manga) {
         val prevViewer = viewer
+
+        val viewerMode = ReadingModeType.fromPreference(presenter.getMangaViewer(resolveDefault = false))
+        binding.actionReaderMode.setImageResource(viewerMode.iconRes)
+
         val newViewer = when (presenter.getMangaViewer()) {
-            ReadingModeType.RIGHT_TO_LEFT.prefValue -> R2LPagerViewer(this)
+            ReadingModeType.LEFT_TO_RIGHT.prefValue -> L2RPagerViewer(this)
             ReadingModeType.VERTICAL.prefValue -> VerticalPagerViewer(this)
             ReadingModeType.WEBTOON.prefValue -> WebtoonViewer(this)
             ReadingModeType.CONTINUOUS_VERTICAL.prefValue -> WebtoonViewer(this, isContinuous = false)
-            else -> L2RPagerViewer(this)
+            else -> R2LPagerViewer(this)
         }
 
         // Destroy previous viewer if there was one
