@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.setting
 
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
-import kotlin.math.max
+import eu.kanade.tachiyomi.util.lang.next
 
 enum class ReadingModeType(val prefValue: Int, @StringRes val stringRes: Int) {
     DEFAULT(0, R.string.default_viewer),
@@ -17,9 +17,8 @@ enum class ReadingModeType(val prefValue: Int, @StringRes val stringRes: Int) {
         fun fromPreference(preference: Int): ReadingModeType = values().find { it.prefValue == preference } ?: DEFAULT
 
         fun getNextReadingMode(preference: Int): ReadingModeType {
-            // There's only 6 options (0 to 5)
-            val newReadingMode = max(0, (preference + 1) % 6)
-            return fromPreference(newReadingMode)
+            val current = fromPreference(preference)
+            return current.next()
         }
     }
 }

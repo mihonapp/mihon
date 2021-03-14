@@ -6,7 +6,7 @@ import android.content.res.Resources
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
-import kotlin.math.max
+import eu.kanade.tachiyomi.util.lang.next
 
 enum class OrientationType(val prefValue: Int, val flag: Int, @StringRes val stringRes: Int, @DrawableRes val iconRes: Int) {
     FREE(1, ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED, R.string.rotation_free, R.drawable.ic_screen_rotation_24dp),
@@ -31,9 +31,13 @@ enum class OrientationType(val prefValue: Int, val flag: Int, @StringRes val str
         }
 
         fun getNextOrientation(preference: Int, resources: Resources): OrientationType {
-            // There's only 4 options (1 to 4)
-            val newOrientation = max(1, (preference + 1) % 5)
-            return fromPreference(newOrientation, resources)
+            val current = if (preference == 2) {
+                // Avoid issue due to 2 types having the same prefValue
+                LOCKED_LANDSCAPE
+            } else {
+                fromPreference(preference, resources)
+            }
+            return current.next()
         }
     }
 }
