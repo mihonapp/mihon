@@ -246,12 +246,9 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
         val date = try {
             val date = Calendar.getInstance()
             date.set(
-                struct["startDate"]!!.jsonObject["year"]!!.jsonPrimitive.intOrNull ?: 0,
-                (
-                    struct["startDate"]!!.jsonObject["month"]!!.jsonPrimitive.intOrNull
-                        ?: 0
-                    ) - 1,
-                struct["startDate"]!!.jsonObject["day"]!!.jsonPrimitive.intOrNull ?: 0
+                struct["startDate"]!!.jsonObject["year"]!!.jsonPrimitive.int,
+                struct["startDate"]!!.jsonObject["month"]!!.jsonPrimitive.int - 1,
+                struct["startDate"]!!.jsonObject["day"]!!.jsonPrimitive.int
             )
             date.timeInMillis
         } catch (_: Exception) {
