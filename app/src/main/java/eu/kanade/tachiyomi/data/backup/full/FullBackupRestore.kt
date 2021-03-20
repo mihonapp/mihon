@@ -44,6 +44,8 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBa
             restoreManga(it, backup.backupCategories)
         }
 
+        // TODO: optionally trigger online library + tracker update
+
         return true
     }
 
@@ -63,16 +65,10 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBa
         val history = backupManga.history
         val tracks = backupManga.getTrackingImpl()
 
-        val source = backupManager.sourceManager.get(manga.source)
-        val sourceName = sourceMapping[manga.source] ?: manga.source.toString()
-
         try {
-            if (source != null) {
-                restoreMangaData(manga, chapters, categories, history, tracks, backupCategories)
-            } else {
-                errors.add(Date() to "${manga.title} [$sourceName]: ${context.getString(R.string.source_not_found_name, sourceName)}")
-            }
+            restoreMangaData(manga, chapters, categories, history, tracks, backupCategories)
         } catch (e: Exception) {
+            val sourceName = sourceMapping[manga.source] ?: manga.source.toString()
             errors.add(Date() to "${manga.title} [$sourceName]: ${e.message}")
         }
 
