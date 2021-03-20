@@ -91,7 +91,7 @@ class SearchController(
                 )
 
             return MaterialDialog(activity!!)
-                .message(R.string.migration_dialog_what_to_include)
+                .title(R.string.migration_dialog_what_to_include)
                 .listItemsMultiChoice(
                     items = MigrationFlags.titles.map { resources?.getString(it) as CharSequence },
                     initialSelection = preselected.toIntArray()

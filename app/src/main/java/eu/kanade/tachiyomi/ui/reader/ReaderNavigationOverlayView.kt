@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewPropertyAnimator
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import kotlin.math.abs
 
@@ -34,7 +33,7 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
 
         viewPropertyAnimator = animate()
             .alpha(1f)
-            .setDuration(1000L)
+            .setDuration(FADE_DURATION)
             .withStartAction {
                 isVisible = true
             }
@@ -43,6 +42,8 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
             }
         viewPropertyAnimator?.start()
     }
+
+    private val regionPaint = Paint()
 
     private val textPaint = Paint().apply {
         textAlign = Paint.Align.CENTER
@@ -62,16 +63,14 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
         if (navigation == null) return
 
         navigation?.regions?.forEach { region ->
-
-            val paint = paintForRegion(region.type)
-
             val rect = region.rectF
 
             canvas?.save()
 
             // Scale rect from 1f,1f to screen width and height
             canvas?.scale(width.toFloat(), height.toFloat())
-            canvas?.drawRect(rect, paint)
+            regionPaint.color = ContextCompat.getColor(context, region.type.colorRes)
+            canvas?.drawRect(rect, regionPaint)
 
             canvas?.restore()
             // Don't want scale anymore because it messes with drawText
@@ -86,32 +85,10 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
             // Calculate center of rect height on screen
             val y = height * (abs(rect.top - rect.bottom) / 2)
 
-            canvas?.drawText(region.type.name, x, y, textBorderPaint)
-            canvas?.drawText(region.type.name, x, y, textPaint)
+            canvas?.drawText(context.getString(region.type.nameRes), x, y, textBorderPaint)
+            canvas?.drawText(context.getString(region.type.nameRes), x, y, textPaint)
 
             canvas?.restore()
-        }
-    }
-
-    private fun paintForRegion(type: ViewerNavigation.NavigationRegion): Paint {
-        return Paint().apply {
-            when (type) {
-                ViewerNavigation.NavigationRegion.NEXT -> {
-                    color = ContextCompat.getColor(context, R.color.navigation_next)
-                }
-                ViewerNavigation.NavigationRegion.PREV -> {
-                    color = ContextCompat.getColor(context, R.color.navigation_prev)
-                }
-                ViewerNavigation.NavigationRegion.MENU -> {
-                    color = ContextCompat.getColor(context, R.color.navigation_menu)
-                }
-                ViewerNavigation.NavigationRegion.RIGHT -> {
-                    color = ContextCompat.getColor(context, R.color.navigation_right)
-                }
-                ViewerNavigation.NavigationRegion.LEFT -> {
-                    color = ContextCompat.getColor(context, R.color.navigation_left)
-                }
-            }
         }
     }
 
@@ -121,7 +98,7 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
         if (viewPropertyAnimator == null && isVisible) {
             viewPropertyAnimator = animate()
                 .alpha(0f)
-                .setDuration(1000L)
+                .setDuration(FADE_DURATION)
                 .withEndAction {
                     isVisible = false
                     viewPropertyAnimator = null
@@ -138,3 +115,5 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
         return super.onTouchEvent(event)
     }
 }
+
+private const val FADE_DURATION = 1000L
