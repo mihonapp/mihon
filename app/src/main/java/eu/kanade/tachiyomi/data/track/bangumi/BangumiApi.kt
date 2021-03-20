@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.util.lang.withIOContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -91,10 +92,17 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     }
 
     private fun jsonToSearch(obj: JsonObject): TrackSearch {
+        val coverUrl = if (obj["images"] is JsonObject) {
+            obj["images"]?.jsonObject?.get("common")?.jsonPrimitive?.contentOrNull ?: ""
+        } else {
+            // Sometimes JsonNull
+            ""
+        }
+
         return TrackSearch.create(TrackManager.BANGUMI).apply {
             media_id = obj["id"]!!.jsonPrimitive.int
             title = obj["name_cn"]!!.jsonPrimitive.content
-            cover_url = obj["images"]!!.jsonObject["common"]!!.jsonPrimitive.content
+            cover_url = coverUrl
             summary = obj["name"]!!.jsonPrimitive.content
             tracking_url = obj["url"]!!.jsonPrimitive.content
         }
