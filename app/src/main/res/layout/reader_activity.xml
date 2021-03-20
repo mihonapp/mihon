@@ -43,6 +43,12 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+    <eu.kanade.tachiyomi.ui.reader.ReaderNavigationOverlayView
+        android:id="@+id/navigation_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <FrameLayout
         android:id="@+id/reader_menu"
         android:layout_width="match_parent"
