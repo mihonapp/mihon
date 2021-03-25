@@ -82,9 +82,10 @@ class SettingsBackupController : SettingsController() {
 
                 onClick {
                     if (!BackupRestoreService.isRunning(context)) {
-                        val intent = Intent(Intent.ACTION_GET_CONTENT)
-                        intent.addCategory(Intent.CATEGORY_OPENABLE)
-                        intent.type = "application/*"
+                        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type = "*/*"
+                        }
                         val title = resources?.getString(R.string.file_select_backup)
                         val chooser = Intent.createChooser(intent, title)
                         startActivityForResult(chooser, CODE_BACKUP_RESTORE)

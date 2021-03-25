@@ -609,8 +609,9 @@ class MangaController :
 
     override fun openMangaCoverPicker(manga: Manga) {
         if (manga.favorite) {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "image/*"
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+            }
             startActivityForResult(
                 Intent.createChooser(
                     intent,
