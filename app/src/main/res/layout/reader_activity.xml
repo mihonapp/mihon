@@ -37,7 +37,7 @@
 
     </FrameLayout>
 
-    <eu.kanade.tachiyomi.ui.reader.setting.ReaderColorFilterView
+    <eu.kanade.tachiyomi.ui.reader.ReaderColorFilterView
         android:id="@+id/color_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -171,23 +171,10 @@
                     android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/pref_rotation_type"
                     android:padding="@dimen/material_layout_keylines_screen_edge_margin"
-                    app:layout_constraintEnd_toStartOf="@id/action_custom_filter"
+                    app:layout_constraintEnd_toStartOf="@id/action_settings"
                     app:layout_constraintStart_toEndOf="@+id/action_reader_mode"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_screen_rotation_24dp"
-                    app:tint="?attr/colorOnPrimary" />
-
-                <ImageButton
-                    android:id="@+id/action_custom_filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/custom_filter"
-                    android:padding="@dimen/material_layout_keylines_screen_edge_margin"
-                    app:layout_constraintEnd_toStartOf="@id/action_settings"
-                    app:layout_constraintStart_toEndOf="@+id/action_rotation"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_brightness_4_24dp"
                     app:tint="?attr/colorOnPrimary" />
 
                 <ImageButton
@@ -198,7 +185,7 @@
                     android:contentDescription="@string/action_settings"
                     android:padding="@dimen/material_layout_keylines_screen_edge_margin"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/action_custom_filter"
+                    app:layout_constraintStart_toEndOf="@id/action_rotation"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_settings_24dp"
                     app:tint="?attr/colorOnPrimary" />
