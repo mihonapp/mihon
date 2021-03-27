@@ -397,6 +397,10 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
      * [animate] the views.
      */
     fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
+        if (visible == menuVisible) {
+            return
+        }
+
         menuVisible = visible
         if (visible) {
             if (preferences.fullscreen().get()) {
