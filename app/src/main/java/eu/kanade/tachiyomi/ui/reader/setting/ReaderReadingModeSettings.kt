@@ -13,7 +13,6 @@ import eu.kanade.tachiyomi.databinding.ReaderReadingModeSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
-import eu.kanade.tachiyomi.util.preference.bindToIntPreference
 import eu.kanade.tachiyomi.util.preference.bindToPreference
 import kotlinx.coroutines.flow.launchIn
 import uy.kohesive.injekt.injectLazy

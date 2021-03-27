@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +14,7 @@
             android:id="@+id/viewer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
             android:entries="@array/viewers_selector"
             app:title="@string/pref_category_for_this_series" />
 
@@ -26,9 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewer"
             tools:visibility="visible" />
 
         <!-- Webtoon preferences -->
@@ -37,10 +33,7 @@
             layout="@layout/reader_webtoon_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/viewer" />
+            android:visibility="gone" />
 
     </LinearLayout>
 

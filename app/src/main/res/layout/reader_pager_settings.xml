@@ -10,12 +10,10 @@
         android:id="@+id/pager_prefs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="@string/pager_viewer"
-        android:textColor="?attr/colorAccent"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textAppearance="@style/TextAppearance.Medium.SubHeading" />
 
     <eu.kanade.tachiyomi.ui.reader.setting.SpinnerPreference
         android:id="@+id/pager_nav"
@@ -49,23 +47,26 @@
         android:id="@+id/crop_borders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/pref_crop_borders"
-        app:layout_constraintTop_toBottomOf="@id/zoom_start" />
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/pref_crop_borders" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/dual_page_split"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/pref_dual_page_split"
-        app:layout_constraintTop_toBottomOf="@id/crop_borders" />
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/dual_page_invert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:text="@string/pref_dual_page_invert"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/dual_page_split"
         tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Group

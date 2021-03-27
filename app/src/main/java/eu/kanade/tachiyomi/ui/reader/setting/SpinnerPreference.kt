@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.widget.FrameLayout
 import androidx.annotation.ArrayRes
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.get
 import com.tfcporciuncula.flow.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.SpinnerPreferenceBinding
@@ -53,12 +52,8 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     fun setSelection(selection: Int) {
-        popup?.menu?.get(selectedPosition)?.isCheckable = false
-        popup?.menu?.get(selectedPosition)?.isChecked = false
         selectedPosition = selection
         binding.details.text = entries.getOrNull(selection).orEmpty()
-        popup?.menu?.get(selectedPosition)?.isCheckable = true
-        popup?.menu?.get(selectedPosition)?.isChecked = true
     }
 
     fun bindToPreference(pref: Preference<Int>, offset: Int = 0, block: ((Int) -> Unit)? = null) {
@@ -99,14 +94,14 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
 
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener { menuItem ->
-            val pos = popup.menuClicked(menuItem)
+            val pos = menuClicked(menuItem)
             onItemSelectedListener?.invoke(pos)
             true
         }
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener { menuItem ->
             val enumConstants = T::class.java.enumConstants
-            val pos = popup.menuClicked(menuItem)
+            val pos = menuClicked(menuItem)
             enumConstants?.get(pos)?.let { preference.set(it) }
             true
         }
@@ -117,7 +112,7 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
         val popup = popup()
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener { menuItem ->
-            val pos = popup.menuClicked(menuItem)
+            val pos = menuClicked(menuItem)
             preference.set(intValues[pos] ?: 0)
             block?.invoke(pos)
             true
@@ -129,7 +124,7 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
         val popup = popup()
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener { menuItem ->
-            val pos = popup.menuClicked(menuItem)
+            val pos = menuClicked(menuItem)
             preference.set(pos + offset)
             block?.invoke(pos)
             true
@@ -142,20 +137,16 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
 
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener { menuItem ->
-            val pos = popup.menuClicked(menuItem)
+            val pos = menuClicked(menuItem)
             onItemSelectedListener?.invoke(pos)
             true
         }
         return popup
     }
 
-    fun PopupMenu.menuClicked(menuItem: MenuItem): Int {
+    fun menuClicked(menuItem: MenuItem): Int {
         val pos = menuItem.itemId
-        menu[selectedPosition].isCheckable = false
-        menu[selectedPosition].isChecked = false
         setSelection(pos)
-        menu[pos].isCheckable = true
-        menu[pos].isChecked = true
         return pos
     }
 
@@ -164,8 +155,6 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
         entries.forEachIndexed { index, entry ->
             popup.menu.add(0, index, 0, entry)
         }
-        popup.menu[selectedPosition].isCheckable = true
-        popup.menu[selectedPosition].isChecked = true
         return popup
     }
 }

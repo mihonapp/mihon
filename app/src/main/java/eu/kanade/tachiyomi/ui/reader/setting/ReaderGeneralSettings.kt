@@ -9,7 +9,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.ReaderGeneralSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.preference.bindToIntPreference
 import eu.kanade.tachiyomi.util.preference.bindToPreference
 import uy.kohesive.injekt.injectLazy
 
