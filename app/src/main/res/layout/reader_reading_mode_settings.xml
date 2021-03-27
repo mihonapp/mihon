@@ -11,30 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.widget.Space
-            android:id="@+id/spinner_end"
-            android:layout_width="16dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toEndOf="parent"
-            tools:ignore="MissingConstraints" />
-
         <!-- Series-specific preferences -->
-
-        <TextView
-            android:id="@+id/series_prefs"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/pref_category_for_this_series"
-            android:textColor="?attr/colorAccent"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/viewer_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/viewer"
+            android:text="@string/pref_category_for_this_series"
             app:layout_constraintBaseline_toBaselineOf="@id/viewer"
             app:layout_constraintEnd_toStartOf="@id/verticalcenter"
             app:layout_constraintStart_toStartOf="parent" />
@@ -43,11 +26,10 @@
             android:id="@+id/viewer"
             android:layout_width="0dp"
             android:layout_height="24dp"
-            android:layout_marginTop="20dp"
             android:entries="@array/viewers_selector"
             app:layout_constraintEnd_toEndOf="@id/spinner_end"
             app:layout_constraintStart_toEndOf="@id/verticalcenter"
-            app:layout_constraintTop_toBottomOf="@id/series_prefs" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Pager preferences -->
 
@@ -80,6 +62,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
+
+        <android.widget.Space
+            android:id="@+id/spinner_end"
+            android:layout_width="16dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="parent"
+            tools:ignore="MissingConstraints" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
