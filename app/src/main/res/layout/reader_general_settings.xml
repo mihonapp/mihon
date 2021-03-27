@@ -7,120 +7,69 @@
     android:clipToPadding="false"
     android:padding="16dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/rotation_mode_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/pref_rotation_type"
-            app:layout_constraintBaseline_toBaselineOf="@id/rotation_mode"
-            app:layout_constraintEnd_toStartOf="@id/verticalcenter"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
+        <eu.kanade.tachiyomi.ui.reader.setting.SpinnerPreference
             android:id="@+id/rotation_mode"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/rotation_type"
-            app:layout_constraintEnd_toEndOf="@id/spinner_end"
-            app:layout_constraintStart_toEndOf="@id/verticalcenter"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:title="@string/pref_rotation_type" />
 
-        <TextView
-            android:id="@+id/background_color_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/pref_reader_theme"
-            app:layout_constraintBaseline_toBaselineOf="@id/background_color"
-            app:layout_constraintEnd_toStartOf="@id/background_color"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
+        <eu.kanade.tachiyomi.ui.reader.setting.SpinnerPreference
             android:id="@+id/background_color"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:entries="@array/reader_themes"
-            app:layout_constraintEnd_toEndOf="@id/spinner_end"
-            app:layout_constraintStart_toEndOf="@id/verticalcenter"
-            app:layout_constraintTop_toBottomOf="@id/rotation_mode" />
+            app:title="@string/pref_reader_theme" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/show_page_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/pref_show_page_number"
-            android:textColor="?android:attr/textColorSecondary"
-            app:layout_constraintTop_toBottomOf="@id/background_color" />
+            android:text="@string/pref_show_page_number" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/fullscreen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/pref_fullscreen"
-            android:textColor="?android:attr/textColorSecondary"
-            app:layout_constraintTop_toBottomOf="@id/show_page_number" />
+            android:text="@string/pref_fullscreen" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/cutout_short"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/pref_cutout_short"
-            android:textColor="?android:attr/textColorSecondary"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/fullscreen"
             tools:visibility="visible" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/keepscreen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/pref_keep_screen_on"
-            android:textColor="?android:attr/textColorSecondary"
-            app:layout_constraintTop_toBottomOf="@id/cutout_short" />
+            android:text="@string/pref_keep_screen_on" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/long_tap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/pref_read_with_long_tap"
-            android:textColor="?android:attr/textColorSecondary"
-            app:layout_constraintTop_toBottomOf="@id/keepscreen" />
+            android:text="@string/pref_read_with_long_tap" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/always_show_chapter_transition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/pref_always_show_chapter_transition"
-            android:textColor="?android:attr/textColorSecondary"
-            app:layout_constraintTop_toBottomOf="@id/long_tap" />
+            android:text="@string/pref_always_show_chapter_transition" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/page_transitions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/pref_page_transitions"
-            android:textColor="?android:attr/textColorSecondary"
-            app:layout_constraintTop_toBottomOf="@id/always_show_chapter_transition" />
+            android:text="@string/pref_page_transitions" />
 
-        <android.widget.Space
-            android:id="@+id/spinner_end"
-            android:layout_width="16dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toEndOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/verticalcenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

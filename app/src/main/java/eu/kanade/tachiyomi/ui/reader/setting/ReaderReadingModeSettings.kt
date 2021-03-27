@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.util.preference.bindToIntPreference
 import eu.kanade.tachiyomi.util.preference.bindToPreference
-import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import kotlinx.coroutines.flow.launchIn
 import uy.kohesive.injekt.injectLazy
 
@@ -44,7 +43,7 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
      * Init general reader preferences.
      */
     private fun initGeneralPreferences() {
-        binding.viewer.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
+        binding.viewer.onItemSelectedListener = { position ->
             (context as ReaderActivity).presenter.setMangaViewer(position)
 
             val mangaViewer = (context as ReaderActivity).presenter.getMangaViewer()
@@ -54,7 +53,7 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
                 initPagerPreferences()
             }
         }
-        binding.viewer.setSelection((context as ReaderActivity).presenter.manga?.viewer ?: 0, false)
+        binding.viewer.setSelection((context as ReaderActivity).presenter.manga?.viewer ?: 0)
     }
 
     /**
