@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:padding="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.widget.Space
+            android:id="@+id/spinner_end"
+            android:layout_width="16dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <!-- Series-specific preferences -->
+
+        <TextView
+            android:id="@+id/series_prefs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/pref_category_for_this_series"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/viewer_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/viewer"
+            app:layout_constraintBaseline_toBaselineOf="@id/viewer"
+            app:layout_constraintEnd_toStartOf="@id/verticalcenter"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/viewer"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="20dp"
+            android:entries="@array/viewers_selector"
+            app:layout_constraintEnd_toEndOf="@id/spinner_end"
+            app:layout_constraintStart_toEndOf="@id/verticalcenter"
+            app:layout_constraintTop_toBottomOf="@id/series_prefs" />
+
+        <!-- Pager preferences -->
+
+        <include
+            android:id="@+id/pager_prefs_group"
+            layout="@layout/reader_pager_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewer"
+            tools:visibility="visible" />
+
+        <!-- Webtoon preferences -->
+
+        <include
+            android:id="@+id/webtoon_prefs_group"
+            layout="@layout/reader_webtoon_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewer" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/verticalcenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

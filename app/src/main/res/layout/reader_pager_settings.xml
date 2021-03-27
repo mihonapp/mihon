@@ -36,6 +36,26 @@
         app:layout_constraintTop_toBottomOf="@id/pager_prefs" />
 
     <TextView
+        android:id="@+id/tapping_inverted_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/pref_read_with_tapping_inverted"
+        app:layout_constraintBaseline_toBaselineOf="@id/tapping_inverted"
+        app:layout_constraintEnd_toStartOf="@id/verticalcenter"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/tapping_inverted"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:entries="@array/invert_tapping_mode"
+        app:layout_constraintEnd_toEndOf="@id/spinner_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/verticalcenter"
+        app:layout_constraintTop_toBottomOf="@+id/pager_nav" />
+
+    <TextView
         android:id="@+id/scale_type_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -82,6 +102,30 @@
         android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintTop_toBottomOf="@id/zoom_start" />
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/dual_page_split"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pref_dual_page_split"
+        android:textColor="?android:attr/textColorSecondary"
+        app:layout_constraintTop_toBottomOf="@id/crop_borders" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/dual_page_invert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pref_dual_page_invert"
+        android:textColor="?android:attr/textColorSecondary"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/dual_page_split"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/tapping_prefs_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="pager_nav_text,pager_nav,tapping_inverted_text,tapping_inverted,dual_page_split,dual_page_invert" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/verticalcenter"
         android:layout_width="wrap_content"
@@ -89,37 +133,11 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
-    <TextView
-        android:id="@+id/tapping_inverted_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/pref_read_with_tapping_inverted"
-        app:layout_constraintBaseline_toBaselineOf="@id/tapping_inverted"
-        app:layout_constraintEnd_toStartOf="@id/verticalcenter"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/tapping_inverted"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:entries="@array/invert_tapping_mode"
-        app:layout_constraintEnd_toEndOf="@id/spinner_end"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@id/verticalcenter"
-        app:layout_constraintTop_toBottomOf="@+id/pager_nav" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/tapping_prefs_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="pager_nav_text,pager_nav,tapping_inverted_text,tapping_inverted"
-        tools:layout_editor_absoluteX="24dp" />
-
     <android.widget.Space
         android:id="@+id/spinner_end"
         android:layout_width="16dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

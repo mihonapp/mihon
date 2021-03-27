@@ -10,13 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.widget.Space
-            android:id="@+id/spinner_end"
-            android:layout_width="16dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toEndOf="parent"
-            tools:ignore="MissingConstraints" />
-
         <!-- Color filter -->
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -243,6 +236,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
+
+        <android.widget.Space
+            android:id="@+id/spinner_end"
+            android:layout_width="16dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="parent"
+            tools:ignore="MissingConstraints" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
