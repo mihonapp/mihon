@@ -36,6 +36,10 @@ operator fun <T> Preference<Set<T>>.minusAssign(item: T) {
     set(get() - item)
 }
 
+fun Preference<Boolean>.toggle() {
+    set(!get())
+}
+
 class PreferencesHelper(val context: Context) {
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)

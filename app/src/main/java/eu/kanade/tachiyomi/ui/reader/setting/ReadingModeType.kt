@@ -21,5 +21,10 @@ enum class ReadingModeType(val prefValue: Int, @StringRes val stringRes: Int, @D
             val current = fromPreference(preference)
             return current.next()
         }
+
+        fun isPagerType(preference: Int): Boolean {
+            val mode = fromPreference(preference)
+            return mode == LEFT_TO_RIGHT || mode == RIGHT_TO_LEFT || mode == VERTICAL
+        }
     }
 }

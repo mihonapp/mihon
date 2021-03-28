@@ -34,6 +34,7 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.asImmediateFlow
+import eu.kanade.tachiyomi.data.preference.toggle
 import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -374,6 +375,19 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 updateRotationShortcut(it)
             }
             .launchIn(lifecycleScope)
+
+        with(binding.actionCropBorders) {
+            setTooltip(R.string.pref_crop_borders)
+
+            setOnClickListener {
+                val isPagerType = ReadingModeType.isPagerType(presenter.getMangaViewer())
+                if (isPagerType) {
+                    preferences.cropBorders().toggle()
+                } else {
+                    preferences.cropBordersWebtoon().toggle()
+                }
+            }
+        }
 
         with(binding.actionSettings) {
             setTooltip(R.string.action_settings)
