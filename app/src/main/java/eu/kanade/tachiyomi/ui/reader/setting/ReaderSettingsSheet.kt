@@ -23,13 +23,20 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : TabbedBottomSh
 
         val filterTabIndex = getTabViews().indexOf(colorFilterSettings)
         binding.tabs.addOnTabSelectedListener(object : SimpleTabSelectedListener() {
-            // Remove dimmed backdrop so color filter changes can be previewed
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val isFilterTab = tab?.position == filterTabIndex
+
+                // Remove dimmed backdrop so color filter changes can be previewed
                 window?.setDimAmount(if (isFilterTab) 0f else sheetBackgroundDim)
-                activity.setMenuVisibility(!isFilterTab)
+
+                // Hide toolbars
+                if (activity.menuVisible != !isFilterTab) {
+                    activity.setMenuVisibility(!isFilterTab)
+                }
+
+                // Partially collapse the sheet for better preview
                 if (isFilterTab) {
-                    sheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                    sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
                 }
             }
         })
