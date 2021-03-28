@@ -187,7 +187,7 @@
                     app:layout_constraintEnd_toStartOf="@id/action_settings"
                     app:layout_constraintStart_toEndOf="@+id/action_rotation"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_crop_free_24dp"
+                    app:srcCompat="@drawable/ic_crop_24dp"
                     app:tint="?attr/colorOnPrimary" />
 
                 <ImageButton
