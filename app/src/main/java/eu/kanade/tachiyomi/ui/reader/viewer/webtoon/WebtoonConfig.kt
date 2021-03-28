@@ -36,7 +36,13 @@ class WebtoonConfig(
             .register({ navigationMode = it }, { updateNavigation(it) })
 
         preferences.webtoonNavInverted()
-            .register({ tappingInverted = it }, { navigator.invertMode = it })
+            .register(
+                { tappingInverted = it },
+                {
+                    navigator.invertMode = it
+                    navigationModeChangedListener?.invoke()
+                }
+            )
 
         preferences.dualPageSplitWebtoon()
             .register({ dualPageSplit = it }, { imagePropertyChangedListener?.invoke() })
