@@ -16,8 +16,6 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
     FrameLayout(context, attrs) {
 
     private var entries = emptyList<String>()
-    private var selectedPosition = 0
-    private var pref: Preference<Int>? = null
     private var prefOffset = 0
     private var popup: PopupMenu? = null
 
@@ -38,28 +36,26 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
     init {
         addView(binding.root)
 
-        val a = context.obtainStyledAttributes(attrs, R.styleable.SpinnerPreference, 0, 0)
+        val attr = context.obtainStyledAttributes(attrs, R.styleable.SpinnerPreference)
 
-        val str = a.getString(R.styleable.SpinnerPreference_title) ?: ""
-        binding.title.text = str
+        val title = attr.getString(R.styleable.SpinnerPreference_title).orEmpty()
+        binding.title.text = title
 
-        val entries = (a.getTextArray(R.styleable.SpinnerPreference_android_entries) ?: emptyArray()).map { it.toString() }
+        val entries = (attr.getTextArray(R.styleable.SpinnerPreference_android_entries) ?: emptyArray()).map { it.toString() }
         this.entries = entries
-
         binding.details.text = entries.firstOrNull().orEmpty()
 
-        a.recycle()
+        attr.recycle()
     }
 
     fun setSelection(selection: Int) {
-        selectedPosition = selection
         binding.details.text = entries.getOrNull(selection).orEmpty()
     }
 
     fun bindToPreference(pref: Preference<Int>, offset: Int = 0, block: ((Int) -> Unit)? = null) {
         setSelection(pref.get() - offset)
-        this.pref = pref
         prefOffset = offset
+
         popup = makeSettingsPopup(pref, prefOffset, block)
         setOnTouchListener(popup?.dragToOpenListener)
         setOnClickListener {
@@ -70,6 +66,7 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
     inline fun <reified T : Enum<T>> bindToPreference(pref: Preference<T>) {
         val enumConstants = T::class.java.enumConstants
         enumConstants?.indexOf(pref.get())?.let { setSelection(it) }
+
         val popup = makeSettingsPopup(pref)
         setOnTouchListener(popup.dragToOpenListener)
         setOnClickListener {
@@ -79,9 +76,9 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
 
     fun bindToIntPreference(pref: Preference<Int>, @ArrayRes intValuesResource: Int, block: ((Int) -> Unit)? = null) {
         setSelection(pref.get())
-        this.pref = pref
         prefOffset = 0
         val intValues = resources.getStringArray(intValuesResource).map { it.toIntOrNull() }
+
         popup = makeSettingsPopup(pref, intValues, block)
         setOnTouchListener(popup?.dragToOpenListener)
         setOnClickListener {
@@ -90,70 +87,49 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     inline fun <reified T : Enum<T>> makeSettingsPopup(preference: Preference<T>): PopupMenu {
-        val popup = popup()
-
-        // Set a listener so we are notified if a menu item is clicked
-        popup.setOnMenuItemClickListener { menuItem ->
-            val pos = menuClicked(menuItem)
+        return createPopupMenu { pos ->
             onItemSelectedListener?.invoke(pos)
-            true
-        }
-        // Set a listener so we are notified if a menu item is clicked
-        popup.setOnMenuItemClickListener { menuItem ->
+
             val enumConstants = T::class.java.enumConstants
-            val pos = menuClicked(menuItem)
-            enumConstants?.get(pos)?.let { preference.set(it) }
-            true
+            enumConstants?.get(pos)?.let { enumValue -> preference.set(enumValue) }
         }
-        return popup
     }
 
     private fun makeSettingsPopup(preference: Preference<Int>, intValues: List<Int?>, block: ((Int) -> Unit)? = null): PopupMenu {
-        val popup = popup()
-        // Set a listener so we are notified if a menu item is clicked
-        popup.setOnMenuItemClickListener { menuItem ->
-            val pos = menuClicked(menuItem)
+        return createPopupMenu { pos ->
             preference.set(intValues[pos] ?: 0)
             block?.invoke(pos)
-            true
         }
-        return popup
     }
 
     private fun makeSettingsPopup(preference: Preference<Int>, offset: Int = 0, block: ((Int) -> Unit)? = null): PopupMenu {
-        val popup = popup()
-        // Set a listener so we are notified if a menu item is clicked
-        popup.setOnMenuItemClickListener { menuItem ->
-            val pos = menuClicked(menuItem)
+        return createPopupMenu { pos ->
             preference.set(pos + offset)
             block?.invoke(pos)
-            true
         }
-        return popup
     }
 
     private fun makeSettingsPopup(): PopupMenu {
-        val popup = popup()
-
-        // Set a listener so we are notified if a menu item is clicked
-        popup.setOnMenuItemClickListener { menuItem ->
-            val pos = menuClicked(menuItem)
+        return createPopupMenu { pos ->
             onItemSelectedListener?.invoke(pos)
-            true
         }
-        return popup
     }
 
-    fun menuClicked(menuItem: MenuItem): Int {
+    private fun menuClicked(menuItem: MenuItem): Int {
         val pos = menuItem.itemId
         setSelection(pos)
         return pos
     }
 
-    fun popup(): PopupMenu {
+    fun createPopupMenu(onItemClick: (Int) -> Unit): PopupMenu {
         val popup = PopupMenu(context, this, Gravity.END, R.attr.actionOverflowMenuStyle, 0)
         entries.forEachIndexed { index, entry ->
             popup.menu.add(0, index, 0, entry)
+        }
+        popup.setOnMenuItemClickListener { menuItem ->
+            val pos = menuClicked(menuItem)
+            onItemClick(pos)
+            true
         }
         return popup
     }
