@@ -16,7 +16,6 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
     FrameLayout(context, attrs) {
 
     private var entries = emptyList<String>()
-    private var prefOffset = 0
     private var popup: PopupMenu? = null
 
     var onItemSelectedListener: ((Int) -> Unit)? = null
@@ -54,9 +53,8 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
 
     fun bindToPreference(pref: Preference<Int>, offset: Int = 0, block: ((Int) -> Unit)? = null) {
         setSelection(pref.get() - offset)
-        prefOffset = offset
 
-        popup = makeSettingsPopup(pref, prefOffset, block)
+        popup = makeSettingsPopup(pref, offset, block)
         setOnTouchListener(popup?.dragToOpenListener)
         setOnClickListener {
             popup?.show()
@@ -75,9 +73,8 @@ class SpinnerPreference @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     fun bindToIntPreference(pref: Preference<Int>, @ArrayRes intValuesResource: Int, block: ((Int) -> Unit)? = null) {
-        setSelection(pref.get())
-        prefOffset = 0
         val intValues = resources.getStringArray(intValuesResource).map { it.toIntOrNull() }
+        setSelection(intValues.indexOf(pref.get()))
 
         popup = makeSettingsPopup(pref, intValues, block)
         setOnTouchListener(popup?.dragToOpenListener)
