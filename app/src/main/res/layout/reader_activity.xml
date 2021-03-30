@@ -152,7 +152,7 @@
                 android:background="?attr/colorPrimary">
 
                 <ImageButton
-                    android:id="@+id/action_reader_mode"
+                    android:id="@+id/action_reading_mode"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="?selectableItemBackgroundBorderless"
@@ -172,7 +172,7 @@
                     android:contentDescription="@string/pref_rotation_type"
                     android:padding="@dimen/material_layout_keylines_screen_edge_margin"
                     app:layout_constraintEnd_toStartOf="@id/action_crop_borders"
-                    app:layout_constraintStart_toEndOf="@+id/action_reader_mode"
+                    app:layout_constraintStart_toEndOf="@+id/action_reading_mode"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_screen_rotation_24dp"
                     app:tint="?attr/colorOnPrimary" />
