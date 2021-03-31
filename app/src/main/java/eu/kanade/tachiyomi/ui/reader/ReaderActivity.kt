@@ -539,6 +539,13 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         binding.toolbar.title = manga.title
 
         binding.pageSeekbar.isRTL = newViewer is R2LPagerViewer
+        if (newViewer is R2LPagerViewer) {
+            binding.leftChapter.setTooltip(R.string.action_next_chapter)
+            binding.rightChapter.setTooltip(R.string.action_previous_chapter)
+        } else {
+            binding.leftChapter.setTooltip(R.string.action_previous_chapter)
+            binding.rightChapter.setTooltip(R.string.action_next_chapter)
+        }
 
         binding.pleaseWait.isVisible = true
         binding.pleaseWait.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_long))
