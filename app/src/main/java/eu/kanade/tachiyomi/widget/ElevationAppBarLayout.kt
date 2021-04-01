@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.widget
 import android.animation.ObjectAnimator
 import android.animation.StateListAnimator
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import com.google.android.material.R
 import com.google.android.material.appbar.AppBarLayout
@@ -19,7 +20,12 @@ class ElevationAppBarLayout @JvmOverloads constructor(
     }
 
     fun enableElevation(liftOnScroll: Boolean) {
-        setElevation(liftOnScroll)
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+            // Delay to avoid crash
+            post { setElevation(liftOnScroll) }
+        } else {
+            setElevation(liftOnScroll)
+        }
     }
 
     private fun setElevation(liftOnScroll: Boolean) {

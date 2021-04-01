@@ -32,6 +32,10 @@ abstract class BaseThemedActivity : AppCompatActivity() {
                         R.style.Theme_Tachiyomi_Light_Api27
                     }
                     // Light status bar + fallback gray navigation bar
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
+                        R.style.Theme_Tachiyomi_Light_Api23
+                    }
+                    // Fallback gray status + navigation bar
                     else -> {
                         R.style.Theme_Tachiyomi_Light
                     }

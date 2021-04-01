@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.base.controller
 
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.bluelinelabs.conductor.Controller
@@ -20,9 +21,11 @@ fun Router.popControllerWithTag(tag: String): Boolean {
 
 fun Controller.requestPermissionsSafe(permissions: Array<String>, requestCode: Int) {
     val activity = activity ?: return
-    permissions.forEach { permission ->
-        if (ContextCompat.checkSelfPermission(activity, permission) != PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(permission), requestCode)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        permissions.forEach { permission ->
+            if (ContextCompat.checkSelfPermission(activity, permission) != PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(permission), requestCode)
+            }
         }
     }
 }

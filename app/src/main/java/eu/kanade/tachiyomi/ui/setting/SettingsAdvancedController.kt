@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.core.net.toUri
@@ -63,25 +64,27 @@ class SettingsAdvancedController : SettingsController() {
             }
         }
 
-        preference {
-            key = "pref_disable_battery_optimization"
-            titleRes = R.string.pref_disable_battery_optimization
-            summaryRes = R.string.pref_disable_battery_optimization_summary
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            preference {
+                key = "pref_disable_battery_optimization"
+                titleRes = R.string.pref_disable_battery_optimization
+                summaryRes = R.string.pref_disable_battery_optimization_summary
 
-            onClick {
-                val packageName: String = context.packageName
-                if (!context.powerManager.isIgnoringBatteryOptimizations(packageName)) {
-                    try {
-                        val intent = Intent().apply {
-                            action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                            data = "package:$packageName".toUri()
+                onClick {
+                    val packageName: String = context.packageName
+                    if (!context.powerManager.isIgnoringBatteryOptimizations(packageName)) {
+                        try {
+                            val intent = Intent().apply {
+                                action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                                data = "package:$packageName".toUri()
+                            }
+                            startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            context.toast(R.string.battery_optimization_setting_activity_not_found)
                         }
-                        startActivity(intent)
-                    } catch (e: ActivityNotFoundException) {
-                        context.toast(R.string.battery_optimization_setting_activity_not_found)
+                    } else {
+                        context.toast(R.string.battery_optimization_disabled)
                     }
-                } else {
-                    context.toast(R.string.battery_optimization_disabled)
                 }
             }
         }
