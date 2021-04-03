@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.widget
+package eu.kanade.tachiyomi.util.system
 
 import android.content.Context
 import androidx.biometric.BiometricManager

@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.widget.BiometricUtil
+import eu.kanade.tachiyomi.util.system.BiometricUtil
 import uy.kohesive.injekt.injectLazy
 import java.util.Date
 import java.util.concurrent.Executors
