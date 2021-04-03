@@ -43,6 +43,7 @@ import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import timber.log.Timber
@@ -301,11 +302,8 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
     private suspend fun resetExitConfirmation() {
         isConfirmingExit = true
-        val toast = Toast.makeText(this, R.string.confirm_exit, Toast.LENGTH_LONG)
-        toast.show()
-
+        val toast = toast(R.string.confirm_exit, Toast.LENGTH_LONG)
         delay(2000)
-
         toast.cancel()
         isConfirmingExit = false
     }

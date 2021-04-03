@@ -22,7 +22,7 @@ import java.util.Locale
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
-fun <T> Preference<T>.asImmediateFlow(block: (value: T) -> Unit): Flow<T> {
+fun <T> Preference<T>.asImmediateFlow(block: (T) -> Unit): Flow<T> {
     block(get())
     return asFlow()
         .onEach { block(it) }

@@ -551,9 +551,8 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
     private fun showReadingModeToast(mode: Int) {
         val strings = resources.getStringArray(R.array.viewers_selector)
         readingModeToast?.cancel()
-        readingModeToast = Toast.makeText(this, strings[mode], Toast.LENGTH_SHORT).also {
+        readingModeToast = toast(strings[mode]) {
             it.setGravity(Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL, 0, 0)
-            it.show()
         }
     }
 
