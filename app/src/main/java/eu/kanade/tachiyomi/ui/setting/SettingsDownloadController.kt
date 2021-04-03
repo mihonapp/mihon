@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
@@ -21,7 +22,6 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.intListPreference
-import eu.kanade.tachiyomi.util.preference.multiSelectListPreference
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
@@ -105,11 +105,12 @@ class SettingsDownloadController : SettingsController() {
                 titleRes = R.string.pref_download_new
                 defaultValue = false
             }
-            multiSelectListPreference {
+            preference {
                 key = Keys.downloadNewCategories
                 titleRes = R.string.pref_download_new_categories
-                entries = categories.map { it.name }.toTypedArray()
-                entryValues = categories.map { it.id.toString() }.toTypedArray()
+                onClick {
+                    DownloadCategoriesDialog().showDialog(router)
+                }
 
                 preferences.downloadNew().asImmediateFlow { isVisible = it }
                     .launchIn(viewScope)
@@ -195,6 +196,36 @@ class SettingsDownloadController : SettingsController() {
 
             return mutableListOf(File(defaultDir)) +
                 ContextCompat.getExternalFilesDirs(activity!!, "").filterNotNull()
+        }
+    }
+
+    class DownloadCategoriesDialog : DialogController() {
+
+        private val preferences: PreferencesHelper = Injekt.get()
+        private val db: DatabaseHelper = Injekt.get()
+
+        override fun onCreateDialog(savedViewState: Bundle?): Dialog {
+            val dbCategories = db.getCategories().executeAsBlocking()
+            val categories = listOf(Category.createDefault()) + dbCategories
+
+            val items = categories.map { it.name }
+            val preselected = categories
+                .filter { it.id.toString() in preferences.downloadNewCategories().get() }
+                .map { categories.indexOf(it) }
+                .toIntArray()
+
+            return MaterialDialog(activity!!)
+                .title(R.string.pref_download_new_categories)
+                .listItemsMultiChoice(
+                    items = items,
+                    initialSelection = preselected,
+                    allowEmptySelection = true
+                ) { _, selections, _ ->
+                    val newCategories = selections.map { categories[it] }
+                    preferences.downloadNewCategories().set(newCategories.map { it.id.toString() }.toSet())
+                }
+                .positiveButton(android.R.string.ok)
+                .negativeButton(android.R.string.cancel)
         }
     }
 
