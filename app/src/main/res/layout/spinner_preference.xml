@@ -11,26 +11,30 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
         style="@style/TextAppearance.MaterialComponents.Body2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:maxLines="1"
         android:textColor="?android:attr/textColorPrimary"
+        android:paddingEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/center_guideline"
+        app:layout_constraintHorizontal_bias="0.0"
         tools:text="Title" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/details"
         style="@style/TextAppearance.MaterialComponents.Body2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/dropdown_caret"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/start_barrier"
+        app:layout_constraintStart_toEndOf="@+id/center_guideline"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Details" />
 
@@ -46,15 +50,8 @@
         app:tint="?android:attr/textColorSecondary"
         tools:ignore="ContentDescription" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/start_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="right"
-        app:constraint_referenced_ids="bottom_line,title" />
-
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/bottom_line"
+        android:id="@+id/center_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
