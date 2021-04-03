@@ -7,6 +7,7 @@ import android.view.View
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -166,11 +167,13 @@ class SettingsLibraryController : SettingsController() {
                 titleRes = R.string.pref_update_only_non_completed
                 defaultValue = false
             }
-            multiSelectListPreference {
+            preference {
                 key = Keys.libraryUpdateCategories
                 titleRes = R.string.pref_library_update_categories
-                entries = categories.map { it.name }.toTypedArray()
-                entryValues = categories.map { it.id.toString() }.toTypedArray()
+                onClick {
+                    LibraryGlobalUpdateCategoriesDialog().showDialog(router)
+                }
+
                 preferences.libraryUpdateCategories().asFlow()
                     .onEach { mutableSet ->
                         val selectedCategories = mutableSet
@@ -264,6 +267,36 @@ class SettingsLibraryController : SettingsController() {
                     landscape = newValue
                 }
             }
+        }
+    }
+
+    class LibraryGlobalUpdateCategoriesDialog : DialogController() {
+
+        private val preferences: PreferencesHelper = Injekt.get()
+        private val db: DatabaseHelper = Injekt.get()
+
+        override fun onCreateDialog(savedViewState: Bundle?): Dialog {
+            val dbCategories = db.getCategories().executeAsBlocking()
+            val categories = listOf(Category.createDefault()) + dbCategories
+
+            val items = categories.map { it.name }
+            val preselected = categories
+                .filter { it.id.toString() in preferences.libraryUpdateCategories().get() }
+                .map { categories.indexOf(it) }
+                .toIntArray()
+
+            return MaterialDialog(activity!!)
+                .title(R.string.pref_library_update_categories)
+                .listItemsMultiChoice(
+                    items = items,
+                    initialSelection = preselected,
+                    allowEmptySelection = true
+                ) { _, selections, _ ->
+                    val newCategories = selections.map { categories[it] }
+                    preferences.libraryUpdateCategories().set(newCategories.map { it.id.toString() }.toSet())
+                }
+                .positiveButton(android.R.string.ok)
+                .negativeButton(android.R.string.cancel)
         }
     }
 }
