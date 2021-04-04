@@ -240,7 +240,7 @@ class LibraryUpdateService(
 
             val categoriesToExclude = preferences.libraryUpdateCategoriesExclude().get().map(String::toInt)
             val listToExclude = if (categoriesToExclude.isNotEmpty()) {
-                listToInclude.filter { it.category in categoriesToExclude }
+                libraryManga.filter { it.category in categoriesToExclude }
             } else {
                 emptyList()
             }
