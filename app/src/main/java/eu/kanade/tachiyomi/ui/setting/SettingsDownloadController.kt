@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.os.Environment
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.text.buildSpannedString
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
@@ -28,6 +28,8 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateCheckBox
+import eu.kanade.tachiyomi.widget.materialdialogs.listItemsQuadStateMultiChoice
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.Injekt
@@ -115,18 +117,37 @@ class SettingsDownloadController : SettingsController() {
                 preferences.downloadNew().asImmediateFlow { isVisible = it }
                     .launchIn(viewScope)
 
-                preferences.downloadNewCategories().asFlow()
-                    .onEach { mutableSet ->
-                        val selectedCategories = mutableSet
-                            .mapNotNull { id -> categories.find { it.id == id.toInt() } }
-                            .sortedBy { it.order }
-
-                        summary = if (selectedCategories.isEmpty()) {
-                            resources?.getString(R.string.all)
-                        } else {
-                            selectedCategories.joinToString { it.name }
-                        }
+                fun updateSummary() {
+                    val selectedCategories = preferences.downloadNewCategories().get()
+                        .mapNotNull { id -> categories.find { it.id == id.toInt() } }
+                        .sortedBy { it.order }
+                    val includedItemsText = if (selectedCategories.isEmpty()) {
+                        context.getString(R.string.all)
+                    } else {
+                        selectedCategories.joinToString { it.name }
                     }
+
+                    val excludedCategories = preferences.downloadNewCategoriesExclude().get()
+                        .mapNotNull { id -> categories.find { it.id == id.toInt() } }
+                        .sortedBy { it.order }
+                    val excludedItemsText = if (excludedCategories.isEmpty()) {
+                        context.getString(R.string.none)
+                    } else {
+                        excludedCategories.joinToString { it.name }
+                    }
+
+                    summary = buildSpannedString {
+                        append(context.getString(R.string.include, includedItemsText))
+                        appendLine()
+                        append(context.getString(R.string.exclude, excludedItemsText))
+                    }
+                }
+
+                preferences.downloadNewCategories().asFlow()
+                    .onEach { updateSummary() }
+                    .launchIn(viewScope)
+                preferences.downloadNewCategoriesExclude().asFlow()
+                    .onEach { updateSummary() }
                     .launchIn(viewScope)
             }
         }
@@ -210,19 +231,34 @@ class SettingsDownloadController : SettingsController() {
 
             val items = categories.map { it.name }
             val preselected = categories
-                .filter { it.id.toString() in preferences.downloadNewCategories().get() }
-                .map { categories.indexOf(it) }
+                .map {
+                    when (it.id.toString()) {
+                        in preferences.downloadNewCategories().get() -> QuadStateCheckBox.State.CHECKED.ordinal
+                        in preferences.downloadNewCategoriesExclude().get() -> QuadStateCheckBox.State.INVERSED.ordinal
+                        else -> QuadStateCheckBox.State.UNCHECKED.ordinal
+                    }
+                }
                 .toIntArray()
 
             return MaterialDialog(activity!!)
                 .title(R.string.pref_download_new_categories)
-                .listItemsMultiChoice(
+                .listItemsQuadStateMultiChoice(
                     items = items,
-                    initialSelection = preselected,
-                    allowEmptySelection = true
-                ) { _, selections, _ ->
-                    val newCategories = selections.map { categories[it] }
-                    preferences.downloadNewCategories().set(newCategories.map { it.id.toString() }.toSet())
+                    initialSelected = preselected
+                ) { selections ->
+                    val included = selections
+                        .mapIndexed { index, value -> if (value == QuadStateCheckBox.State.CHECKED.ordinal) index else null }
+                        .filterNotNull()
+                        .map { categories[it].id.toString() }
+                        .toSet()
+                    val excluded = selections
+                        .mapIndexed { index, value -> if (value == QuadStateCheckBox.State.INVERSED.ordinal) index else null }
+                        .filterNotNull()
+                        .map { categories[it].id.toString() }
+                        .toSet()
+
+                    preferences.downloadNewCategories().set(included)
+                    preferences.downloadNewCategoriesExclude().set(excluded)
                 }
                 .positiveButton(android.R.string.ok)
                 .negativeButton(android.R.string.cancel)
