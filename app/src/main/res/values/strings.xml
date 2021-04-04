@@ -225,6 +225,9 @@
     </plurals>
     <string name="pref_library_update_categories">Categories to include in global update</string>
     <string name="all">All</string>
+    <string name="none">None</string>
+    <string name="include">Include: %s</string>
+    <string name="exclude">Exclude: %s</string>
 
       <!-- Extension section -->
     <string name="all_lang">All</string>

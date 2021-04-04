@@ -232,11 +232,20 @@ class LibraryUpdateService(
             libraryManga.filter { it.category == categoryId }
         } else {
             val categoriesToUpdate = preferences.libraryUpdateCategories().get().map(String::toInt)
-            if (categoriesToUpdate.isNotEmpty()) {
+            val listToInclude = if (categoriesToUpdate.isNotEmpty()) {
                 libraryManga.filter { it.category in categoriesToUpdate }
             } else {
                 libraryManga
             }
+
+            val categoriesToExclude = preferences.libraryUpdateCategoriesExclude().get().map(String::toInt)
+            val listToExclude = if (categoriesToExclude.isNotEmpty()) {
+                listToInclude.filter { it.category in categoriesToExclude }
+            } else {
+                emptyList()
+            }
+
+            listToInclude.minus(listToExclude)
         }
         if (target == Target.CHAPTERS && preferences.updateOnlyNonCompleted()) {
             listToUpdate = listToUpdate.filterNot { it.status == SManga.COMPLETED }

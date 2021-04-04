@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.widget
+package eu.kanade.tachiyomi.widget.materialdialogs
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -35,10 +35,11 @@ class QuadStateCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    sealed class State {
-        object UNCHECKED : State()
-        object INDETERMINATE : State()
-        object CHECKED : State()
-        object INVERSED : State()
+    enum class State {
+        UNCHECKED,
+        INDETERMINATE,
+        CHECKED,
+        INVERSED,
+        ;
     }
 }
