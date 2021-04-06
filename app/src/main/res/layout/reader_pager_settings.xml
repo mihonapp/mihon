@@ -49,15 +49,17 @@
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        android:textColor="?android:attr/textColorSecondary"
         android:text="@string/pref_crop_borders" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/dual_page_split"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/pref_dual_page_split"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp" />
+        android:paddingEnd="16dp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:text="@string/pref_dual_page_split" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/dual_page_invert"
@@ -65,6 +67,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        android:textColor="?android:attr/textColorSecondary"
         android:text="@string/pref_dual_page_invert"
         android:visibility="gone"
         tools:visibility="visible" />

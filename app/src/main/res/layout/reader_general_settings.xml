@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/pref_show_page_number" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -38,15 +39,17 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/pref_fullscreen" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/cutout_short"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/pref_cutout_short"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="@string/pref_cutout_short"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -56,6 +59,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/pref_keep_screen_on" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -64,6 +68,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/pref_read_with_long_tap" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -72,6 +77,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/pref_always_show_chapter_transition" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -80,6 +86,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/pref_page_transitions" />
 
     </LinearLayout>
