@@ -100,7 +100,7 @@ class SettingsDownloadController : SettingsController() {
         val categories = listOf(Category.createDefault()) + dbCategories
 
         preferenceCategory {
-            titleRes = R.string.pref_download_new
+            titleRes = R.string.pref_category_auto_download
 
             switchPreference {
                 key = Keys.downloadNew
@@ -109,7 +109,7 @@ class SettingsDownloadController : SettingsController() {
             }
             preference {
                 key = Keys.downloadNewCategories
-                titleRes = R.string.pref_download_new_categories
+                titleRes = R.string.categories
                 onClick {
                     DownloadCategoriesDialog().showDialog(router)
                 }
@@ -241,7 +241,8 @@ class SettingsDownloadController : SettingsController() {
                 .toIntArray()
 
             return MaterialDialog(activity!!)
-                .title(R.string.pref_download_new_categories)
+                .title(R.string.categories)
+                .message(R.string.pref_download_new_categories_details)
                 .listItemsQuadStateMultiChoice(
                     items = items,
                     initialSelected = preselected

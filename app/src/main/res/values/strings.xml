@@ -18,7 +18,6 @@
     <string name="label_recent_updates">Updates</string>
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
-    <string name="label_categories">Categories</string>
     <string name="label_backup">Backup</string>
     <string name="label_migration">Migrate</string>
     <string name="label_extensions">Extensions</string>
@@ -194,8 +193,8 @@
     <string name="default_columns">Default</string>
     <string name="pref_jump_to_chapters">Jump to chapters on open</string>
 
-    <string name="pref_category_library_update">Updates</string>
-    <string name="pref_library_update_interval">Library update frequency</string>
+    <string name="pref_category_library_update">Global update</string>
+    <string name="pref_library_update_interval">Update frequency</string>
     <string name="update_never">Manual</string>
     <string name="update_1hour">Hourly</string>
     <string name="update_2hour">Every 2 hours</string>
@@ -207,8 +206,8 @@
     <string name="update_24hour">Daily</string>
     <string name="update_48hour">Every 2 days</string>
     <string name="update_weekly">Weekly</string>
-    <string name="pref_library_update_prioritization">Library update order</string>
-    <string name="pref_library_update_restriction">Library update restrictions</string>
+    <string name="pref_library_update_prioritization">Update order</string>
+    <string name="pref_library_update_restriction">Update restrictions</string>
     <string name="pref_library_update_restriction_summary">Update only when the conditions are met</string>
     <string name="network_unmetered">Unmetered network</string>
     <string name="charging">Charging</string>
@@ -217,14 +216,13 @@
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
     <string name="pref_library_update_error_notification">Show update errors notifications</string>
 
-    <string name="pref_category_library_categories">Categories</string>
     <string name="default_category">Default category</string>
     <string name="default_category_summary">Always ask</string>
     <plurals name="num_categories">
         <item quantity="one">%d category</item>
         <item quantity="other">%d categories</item>
     </plurals>
-    <string name="pref_library_update_categories">Categories to include in global update</string>
+    <string name="pref_library_update_categories_details">Manga in excluded categories will not be updated even if they are also in included categories.</string>
     <string name="all">All</string>
     <string name="none">None</string>
     <string name="include">Include: %s</string>
@@ -364,8 +362,9 @@
     <string name="third_to_last">Third to last chapter</string>
     <string name="fourth_to_last">Fourth to last chapter</string>
     <string name="fifth_to_last">Fifth to last chapter</string>
+    <string name="pref_category_auto_download">Auto-download</string>
     <string name="pref_download_new">Download new chapters</string>
-    <string name="pref_download_new_categories">Categories to include in download</string>
+    <string name="pref_download_new_categories_details">Manga in excluded categories will not be downloaded even if they are also in included categories.</string>
 
       <!-- Tracking section -->
     <string name="pref_auto_update_manga_sync">Update chapter progress after reading</string>

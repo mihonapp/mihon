@@ -83,7 +83,7 @@ class SettingsLibraryController : SettingsController() {
         }
 
         preferenceCategory {
-            titleRes = R.string.pref_category_library_categories
+            titleRes = R.string.categories
 
             preference {
                 key = "pref_action_edit_categories"
@@ -171,7 +171,7 @@ class SettingsLibraryController : SettingsController() {
             }
             preference {
                 key = Keys.libraryUpdateCategories
-                titleRes = R.string.pref_library_update_categories
+                titleRes = R.string.categories
                 onClick {
                     LibraryGlobalUpdateCategoriesDialog().showDialog(router)
                 }
@@ -312,7 +312,8 @@ class SettingsLibraryController : SettingsController() {
                 .toIntArray()
 
             return MaterialDialog(activity!!)
-                .title(R.string.pref_library_update_categories)
+                .title(R.string.categories)
+                .message(R.string.pref_library_update_categories_details)
                 .listItemsQuadStateMultiChoice(
                     items = items,
                     initialSelected = preselected
