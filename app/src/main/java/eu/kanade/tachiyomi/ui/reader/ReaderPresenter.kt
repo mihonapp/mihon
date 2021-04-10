@@ -559,8 +559,7 @@ class ReaderPresenter(
         val destDir = File(
             Environment.getExternalStorageDirectory().absolutePath +
                 File.separator + Environment.DIRECTORY_PICTURES +
-                File.separator + context.getString(R.string.app_name) +
-                File.separator + manga.title
+                File.separator + context.getString(R.string.app_name)
         )
 
         // Copy file in background.
