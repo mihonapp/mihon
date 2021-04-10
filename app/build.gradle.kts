@@ -220,7 +220,7 @@ dependencies {
     implementation("eu.davidea:flexible-adapter-ui:1.0.0")
     implementation("com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.1.0")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
-    implementation("com.github.tachiyomiorg:DirectionalViewPager:7d0617d")
+    implementation("com.github.tachiyomiorg:DirectionalViewPager:1.0.0")
 
     // 3.2.0+ introduces weird UI blinking or cut off issues on some devices
     val materialDialogsVersion = "3.1.1"
@@ -233,7 +233,7 @@ dependencies {
     implementation("com.bluelinelabs:conductor-support:2.1.5") {
         exclude(group = "com.android.support")
     }
-    implementation("com.github.tachiyomiorg:conductor-support-preference:2.0.0")
+    implementation("com.github.tachiyomiorg:conductor-support-preference:2.0.1")
 
     // FlowBinding
     val flowbindingVersion = "0.12.0"
