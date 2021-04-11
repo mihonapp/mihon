@@ -658,7 +658,7 @@
 \nKailangan mong i-install muli ang mga nawawalang dugtong at mag-login muli sa mga serbisyo pagkatapos para magamit ang mga ito.</string>
     <string name="update_8hour">Kada 8 oras</string>
     <string name="update_4hour">Kada 4 na oras</string>
-    <string name="pref_dns_over_https">DNS kesa HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS kesa HTTPS</string>
     <string name="pref_download_new_categories_details">Hindi ida-download ang mga manga na nasa di-kasamang kategorya kahit na nasa kasamang kategorya ang mga ito.</string>
     <string name="pref_category_auto_download">Download agad</string>
     <string name="nav_zone_right">Kanan</string>

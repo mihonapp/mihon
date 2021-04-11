@@ -657,7 +657,7 @@
 \nDu vil måtte installere manglende utvidelser og logge inn på sporings-tjenester etterpå for å bruke dem.</string>
     <string name="pref_show_navigation_mode_summary">Vis tap-bare områder når leseren åpnes</string>
     <string name="none">Ingen</string>
-    <string name="pref_dns_over_https">DNS over HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS over HTTPS</string>
     <string name="nav_zone_right">Høyre</string>
     <string name="nav_zone_left">Venstre</string>
     <string name="nav_zone_next">Neste</string>

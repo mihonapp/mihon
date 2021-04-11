@@ -676,7 +676,7 @@
     <string name="pref_dual_page_invert_summary">Jeśli układ w podziale podwójnych stron nie pasuje do kierunku czytania</string>
     <string name="pref_dual_page_invert">Odwróć układ w podziale podwójnych stron</string>
     <string name="pref_dual_page_split">Podział podwójnych stron</string>
-    <string name="pref_dns_over_https">DNS przez HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS przez HTTPS</string>
     <string name="backup_restore_content_full">Dane z pliku kopii zapasowej zostaną przywrócone.
 \n
 \nBędziesz musiał zainstalować brakujące rozszerzenia i zalogować się do usług śledzących, aby móc z nich korzystać.</string>

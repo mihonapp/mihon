@@ -652,7 +652,7 @@
     <string name="nav_zone_left">Kiri</string>
     <string name="pref_show_navigation_mode">Tunjuk tindanan susun atur navigasi</string>
     <string name="nav_zone_next">Seterusnya</string>
-    <string name="pref_dns_over_https">DNS melalui HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS melalui HTTPS</string>
     <string name="action_sort_chapter_fetch_date">Tarikh diambil</string>
     <string name="exclude">Kecuali: %s</string>
     <string name="include">Hanya: %s</string>

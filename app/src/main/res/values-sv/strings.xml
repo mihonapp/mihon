@@ -664,7 +664,7 @@
     <string name="pref_show_navigation_mode">Visa överlägg för navigeringslayout</string>
     <string name="update_8hour">Var 8:e timme</string>
     <string name="update_4hour">Var 4:e timme</string>
-    <string name="pref_dns_over_https">DNS över HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS över HTTPS</string>
     <string name="exclude">Exkludera: %s</string>
     <string name="include">Inkludera: %s</string>
     <string name="none">Ingen</string>

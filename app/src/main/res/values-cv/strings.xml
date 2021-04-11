@@ -659,7 +659,7 @@
     <string name="nav_zone_prev">Унченхи</string>
     <string name="update_8hour">Кашни 8 сехет</string>
     <string name="update_4hour">Кашни 4 сехет</string>
-    <string name="pref_dns_over_https">HTTPS урлӑ DNS (Cloudflare)</string>
+    <string name="pref_dns_over_https">HTTPS урлӑ DNS</string>
     <string name="pref_category_auto_download">Хӑй хальлӗн тиени</string>
     <string name="exclude">Кӑлар: %s</string>
     <string name="include">Ҫут: %s</string>

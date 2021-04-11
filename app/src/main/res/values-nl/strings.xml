@@ -664,7 +664,7 @@
     <string name="pref_show_navigation_mode">Navigatielayout als overlay laten zien</string>
     <string name="update_8hour">Elke 8 uur</string>
     <string name="update_4hour">Elke 4 uur</string>
-    <string name="pref_dns_over_https">DNS over HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS over HTTPS</string>
     <string name="pref_download_new_categories_details">Manga in uitgezonderde categorieën worden niet gedownload, zelfs niet als ze onder opgenomen categorieën vallen.</string>
     <string name="pref_category_auto_download">Automatisch downloaden</string>
     <string name="exclude">Uitgezonderd: %s</string>

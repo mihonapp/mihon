@@ -652,7 +652,7 @@
     <string name="nav_zone_prev">前一个</string>
     <string name="pref_show_navigation_mode_summary">打开阅读器时显示点按区域</string>
     <string name="pref_show_navigation_mode">显示导航布局叠加</string>
-    <string name="pref_dns_over_https">DNS over HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS over HTTPS</string>
     <string name="none">无</string>
     <string name="exclude">排除：%s</string>
     <string name="include">包含：%s</string>

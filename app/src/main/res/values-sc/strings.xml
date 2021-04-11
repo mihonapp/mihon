@@ -664,7 +664,7 @@
     <string name="nav_zone_prev">Antepostu</string>
     <string name="pref_show_navigation_mode_summary">Ammustra sas zonas de tocu cando aberis su leghidore</string>
     <string name="pref_show_navigation_mode">Ammustra sa subrapositzione de sa dispositzione pro sa navigatzione</string>
-    <string name="pref_dns_over_https">DNS pro mèdiu de HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS pro mèdiu de HTTPS</string>
     <string name="exclude">Esclude: %s</string>
     <string name="include">Include: %s</string>
     <string name="none">Perunu</string>

@@ -676,7 +676,7 @@
     <string name="pref_show_navigation_mode">Prikaži raspored navigacije</string>
     <string name="update_8hour">Svakih 8 sati</string>
     <string name="update_4hour">Svaka 4 sata</string>
-    <string name="pref_dns_over_https">DNS preko HTTPS-a (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS preko HTTPS-a</string>
     <string name="none">Ništa</string>
     <string name="pref_download_new_categories_details">Manga u isključenim kategorijama neće se preuzeti čak niti ako se također nalaze u uključenim kategorijama.</string>
     <string name="pref_category_auto_download">Automatsko preuzimanje</string>

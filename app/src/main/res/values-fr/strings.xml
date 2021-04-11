@@ -693,7 +693,7 @@
     <string name="update_8hour">Toutes les 8 heures</string>
     <string name="update_4hour">Toutes les 4 heures</string>
     <string name="nav_zone_prev">Précédent</string>
-    <string name="pref_dns_over_https">DNS via HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS via HTTPS</string>
     <string name="nav_zone_right">Droite</string>
     <string name="nav_zone_left">Gauche</string>
     <string name="nav_zone_next">Suivant</string>

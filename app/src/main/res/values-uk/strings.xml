@@ -684,7 +684,7 @@
     <string name="pref_show_navigation_mode">Показувати оверлей схеми навігації</string>
     <string name="update_8hour">Кожні 8 годин</string>
     <string name="update_4hour">Кожні 4 години</string>
-    <string name="pref_dns_over_https">DNS поверх HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS поверх HTTPS</string>
     <string name="pref_download_new_categories_details">Мангу в виключених категоріях не буде завантажено, навіть якщо вона також знаходиться у включених категоріях.</string>
     <string name="pref_category_auto_download">Автозавантаження</string>
     <string name="exclude">Виключати: %s</string>

@@ -470,7 +470,7 @@
     <string name="pref_refresh_library_covers">Obnovit přebaly mang v knihovně</string>
     <string name="label_data">Data</string>
     <string name="requires_app_restart">Pro projevení je nutný restart aplikace</string>
-    <string name="pref_dns_over_https">DNS přes HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS přes HTTPS</string>
     <string name="label_network">Síť</string>
     <string name="restoring_backup_canceled">Obnova zrušena</string>
     <string name="restoring_backup_error">Obnova ze zálohy selhala</string>

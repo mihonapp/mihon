@@ -20,7 +20,7 @@
     <string name="password">Sandhi</string>
     <string name="username">Jeneng pangguna</string>
     <string name="version">Versi</string>
-    <string name="pref_dns_over_https">DNS liwat HTTPS (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS liwat HTTPS</string>
     <string name="backup">Serep</string>
     <string name="disabled">Dipateni</string>
     <string name="pref_download_directory">Lokasi donlot</string>

@@ -701,7 +701,7 @@
     <string name="action_asc">تصاعدياً</string>
     <string name="action_order_by_upload_date">حسب تاريخ الرفع</string>
     <string name="action_order_by_chapter_number">حسب رقم الفصل</string>
-    <string name="pref_dns_over_https">DNS باستعمال التشفير (Cloudflare)</string>
+    <string name="pref_dns_over_https">DNS باستعمال التشفير</string>
     <string name="backup_restore_content_full">تم استيراد البيانات من ملف نسخ الاحتياطي.
 \n
 \nيتوجب تثبيت الإضافات المفقودة و تسجيل الدخول إلى منصات التعقب تالياً لاستعمالهم.</string>
