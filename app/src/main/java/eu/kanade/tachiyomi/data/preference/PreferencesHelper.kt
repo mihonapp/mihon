@@ -279,7 +279,7 @@ class PreferencesHelper(val context: Context) {
 
     fun trustedSignatures() = flowPrefs.getStringSet("trusted_signatures", emptySet())
 
-    fun enableDoh() = prefs.getBoolean(Keys.enableDoh, false)
+    fun dohProvider() = prefs.getInt(Keys.dohProvider, -1)
 
     fun lastSearchQuerySearchSettings() = flowPrefs.getString("last_search_query", "")
 

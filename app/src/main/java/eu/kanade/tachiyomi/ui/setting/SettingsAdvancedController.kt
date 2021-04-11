@@ -17,9 +17,13 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Target
 import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
+import eu.kanade.tachiyomi.network.PREF_DOH_GOOGLE
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.preference.defaultValue
+import eu.kanade.tachiyomi.util.preference.intListPreference
+import eu.kanade.tachiyomi.util.preference.onChange
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
@@ -124,11 +128,26 @@ class SettingsAdvancedController : SettingsController() {
                     activity?.toast(R.string.cookies_cleared)
                 }
             }
-            switchPreference {
-                key = Keys.enableDoh
+            intListPreference {
+                key = Keys.dohProvider
                 titleRes = R.string.pref_dns_over_https
-                summaryRes = R.string.requires_app_restart
-                defaultValue = false
+                entries = arrayOf(
+                    context.getString(R.string.disabled),
+                    "Cloudflare",
+                    "Google",
+                )
+                entryValues = arrayOf(
+                    "-1",
+                    PREF_DOH_CLOUDFLARE.toString(),
+                    PREF_DOH_GOOGLE.toString(),
+                )
+                defaultValue = "-1"
+                summary = "%s"
+
+                onChange {
+                    activity?.toast(R.string.requires_app_restart)
+                    true
+                }
             }
         }
 

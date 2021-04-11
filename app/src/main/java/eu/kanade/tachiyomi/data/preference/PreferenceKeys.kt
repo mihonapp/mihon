@@ -191,7 +191,7 @@ object PreferenceKeys {
 
     const val searchPinnedSourcesOnly = "search_pinned_sources_only"
 
-    const val enableDoh = "enable_doh"
+    const val dohProvider = "doh_provider"
 
     const val defaultChapterFilterByRead = "default_chapter_filter_by_read"
 
