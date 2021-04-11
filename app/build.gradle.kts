@@ -174,7 +174,7 @@ dependencies {
 
     // Disk
     implementation("com.jakewharton:disklrucache:2.0.2")
-    implementation("com.github.inorichi:unifile:e9ee588")
+    implementation("com.github.tachiyomiorg:unifile:72cbbb5")
     implementation("com.github.junrar:junrar:7.4.0")
 
     // HTML parser
