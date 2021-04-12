@@ -20,7 +20,6 @@ import eu.kanade.tachiyomi.data.database.models.History
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.databinding.HistoryControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
-import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
@@ -36,13 +35,10 @@ import uy.kohesive.injekt.injectLazy
 
 /**
  * Fragment that shows recently read manga.
- * Uses [R.layout.history_controller].
- * UI related actions should be called from here.
  */
 class HistoryController :
     NucleusController<HistoryControllerBinding, HistoryPresenter>(),
     RootController,
-    NoToolbarElevationController,
     FlexibleAdapter.OnUpdateListener,
     FlexibleAdapter.EndlessScrollListener,
     HistoryAdapter.OnRemoveClickListener,
