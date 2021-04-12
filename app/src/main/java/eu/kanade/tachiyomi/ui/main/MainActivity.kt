@@ -95,7 +95,10 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         binding.appbar.applyInsetter {
             type(navigationBars = true, statusBars = true) {
-                padding(left = true, top = true, right = true)
+                padding(left = true, right = true)
+            }
+            type(statusBars = true) {
+                margin(top = true)
             }
         }
         binding.bottomNav.applyInsetter {
