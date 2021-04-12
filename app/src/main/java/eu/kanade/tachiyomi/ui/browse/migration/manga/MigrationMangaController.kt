@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
+import dev.chrisbanes.insetter.applyInsetter
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.databinding.MigrationMangaControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
@@ -46,6 +47,11 @@ class MigrationMangaController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = MigrationMangaControllerBinding.inflate(inflater)
+        binding.recycler.applyInsetter {
+            type(navigationBars = true) {
+                padding()
+            }
+        }
         return binding.root
     }
 
