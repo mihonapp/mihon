@@ -24,6 +24,7 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import dev.chrisbanes.insetter.Insetter
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
@@ -102,16 +103,26 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
                 margin(top = true)
             }
         }
-        binding.bottomNav.applyInsetter {
-            type(navigationBars = true) {
-                padding()
-            }
-        }
         binding.rootFab.applyInsetter {
             type(navigationBars = true) {
                 margin()
             }
         }
+        binding.bottomNav.applyInsetter {
+            type(navigationBars = true) {
+                padding()
+            }
+        }
+        Insetter.builder()
+            .consume(Insetter.CONSUME_ALL)
+            .setOnApplyInsetsListener { view, insets, _ ->
+                val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                view.isVisible = systemInsets.bottom > 0
+                view.updateLayoutParams<ViewGroup.LayoutParams> {
+                    height = systemInsets.bottom
+                }
+            }
+            .applyToView(binding.navigationScrim)
 
         // Make sure navigation bar is on bottom when making it transparent
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
