@@ -2,15 +2,18 @@ package eu.kanade.tachiyomi.util
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
-import java.io.IOException
 
 class CrashLogUtil(private val context: Context) {
 
@@ -19,14 +22,30 @@ class CrashLogUtil(private val context: Context) {
     }
 
     fun dumpLogs() {
-        try {
-            val file = context.createFileInCacheDir("tachiyomi_crash_logs.txt")
-            Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}")
+        launchIO {
+            try {
+                val file = context.createFileInCacheDir("tachiyomi_crash_logs.txt")
+                Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}").waitFor()
+                file.appendText(getDebugInfo())
 
-            showNotification(file.getUriCompat(context))
-        } catch (e: IOException) {
-            context.toast("Failed to get logs")
+                showNotification(file.getUriCompat(context))
+            } catch (e: Throwable) {
+                withUIContext { context.toast("Failed to get logs") }
+            }
         }
+    }
+
+    fun getDebugInfo(): String {
+        return """
+            App version: ${BuildConfig.VERSION_NAME} (${BuildConfig.FLAVOR}, ${BuildConfig.COMMIT_SHA}, ${BuildConfig.VERSION_CODE})
+            Android version: ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT})
+            Android build ID: ${Build.DISPLAY}
+            Device brand: ${Build.BRAND}
+            Device manufacturer: ${Build.MANUFACTURER}
+            Device name: ${Build.DEVICE}
+            Device model: ${Build.MODEL}
+            Device product name: ${Build.PRODUCT}
+        """.trimIndent()
     }
 
     private fun showNotification(uri: Uri) {
