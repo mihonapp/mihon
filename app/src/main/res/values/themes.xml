@@ -14,6 +14,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+        <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
+
         <!-- Theme colors -->
         <item name="colorPrimary">@color/md_white_1000</item>
         <item name="colorOnPrimary">@color/md_black_1000</item>
@@ -46,7 +48,7 @@
         <!-- Themes -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
-        <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="Q">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="elevationOverlayEnabled">false</item>
         <item name="actionModeStyle">@style/Theme.ActionMode</item>
@@ -141,7 +143,7 @@
         <!-- Themes -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
-        <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="Q">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="elevationOverlayEnabled">false</item>
         <item name="actionModeStyle">@style/Theme.ActionMode</item>
