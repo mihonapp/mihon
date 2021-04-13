@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.util.system
 
 import android.app.ActivityManager
+import android.app.KeyguardManager
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -153,22 +154,16 @@ val Float.dpToPxEnd: Float
 val Resources.isLTR
     get() = configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR
 
-/**
- * Property to get the notification manager from the context.
- */
 val Context.notificationManager: NotificationManager
     get() = getSystemService()!!
 
-/**
- * Property to get the connectivity manager from the context.
- */
 val Context.connectivityManager: ConnectivityManager
     get() = getSystemService()!!
 
-/**
- * Property to get the power manager from the context.
- */
 val Context.powerManager: PowerManager
+    get() = getSystemService()!!
+
+val Context.keyguardManager: KeyguardManager
     get() = getSystemService()!!
 
 /**

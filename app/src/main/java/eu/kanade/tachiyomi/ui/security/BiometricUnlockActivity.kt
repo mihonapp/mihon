@@ -6,6 +6,7 @@ import androidx.biometric.BiometricPrompt
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.system.BiometricUtil
+import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.util.Date
 import java.util.concurrent.Executors
@@ -27,6 +28,7 @@ class BiometricUnlockActivity : AppCompatActivity() {
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
+                    Timber.e(errString.toString())
                     finishAffinity()
                 }
 
