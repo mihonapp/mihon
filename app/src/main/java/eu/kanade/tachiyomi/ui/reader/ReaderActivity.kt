@@ -554,10 +554,14 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
     }
 
     private fun showReadingModeToast(mode: Int) {
-        val strings = resources.getStringArray(R.array.viewers_selector)
-        readingModeToast?.cancel()
-        readingModeToast = toast(strings[mode]) {
-            it.setGravity(Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL, 0, 0)
+        try {
+            val strings = resources.getStringArray(R.array.viewers_selector)
+            readingModeToast?.cancel()
+            readingModeToast = toast(strings[mode]) {
+                it.setGravity(Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL, 0, 0)
+            }
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            Timber.e("Unknown reading mode: $mode")
         }
     }
 
