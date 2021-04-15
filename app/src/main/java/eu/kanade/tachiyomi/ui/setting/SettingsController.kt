@@ -24,9 +24,6 @@ import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import kotlinx.coroutines.MainScope
-import rx.Observable
-import rx.Subscription
-import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -36,14 +33,7 @@ abstract class SettingsController : PreferenceController() {
     val preferences: PreferencesHelper = Injekt.get()
     val viewScope = MainScope()
 
-    var untilDestroySubscriptions = CompositeSubscription()
-        private set
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
-        if (untilDestroySubscriptions.isUnsubscribed) {
-            untilDestroySubscriptions = CompositeSubscription()
-        }
-
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
         if (this is RootController) {
@@ -77,9 +67,12 @@ abstract class SettingsController : PreferenceController() {
         }
     }
 
-    override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
-        untilDestroySubscriptions.unsubscribe()
+    override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
+        if (type.isEnter) {
+            setTitle()
+        }
+        setHasOptionsMenu(type.isEnter)
+        super.onChangeStarted(handler, type)
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -111,7 +104,7 @@ abstract class SettingsController : PreferenceController() {
         return preferenceScreen?.title?.toString()
     }
 
-    fun setTitle() {
+    private fun setTitle() {
         var parentController = parentController
         while (parentController != null) {
             if (parentController is BaseController<*> && parentController.getTitle() != null) {
@@ -121,17 +114,5 @@ abstract class SettingsController : PreferenceController() {
         }
 
         (activity as? AppCompatActivity)?.supportActionBar?.title = getTitle()
-    }
-
-    override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
-        if (type.isEnter) {
-            setTitle()
-        }
-        setHasOptionsMenu(type.isEnter)
-        super.onChangeStarted(handler, type)
-    }
-
-    fun <T> Observable<T>.subscribeUntilDestroy(onNext: (T) -> Unit): Subscription {
-        return subscribe(onNext).also { untilDestroySubscriptions.add(it) }
     }
 }

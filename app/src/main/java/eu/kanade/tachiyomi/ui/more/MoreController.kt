@@ -1,7 +1,11 @@
 package eu.kanade.tachiyomi.ui.more
 
 import android.content.Context
+import android.os.Bundle
 import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
@@ -26,7 +30,10 @@ import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import rx.Observable
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
+import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
@@ -38,6 +45,9 @@ class MoreController :
     private val downloadManager: DownloadManager by injectLazy()
     private var isDownloading: Boolean = false
     private var downloadQueueSize: Int = 0
+
+    private var untilDestroySubscriptions = CompositeSubscription()
+        private set
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.label_more
@@ -115,6 +125,19 @@ class MoreController :
         }
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
+        if (untilDestroySubscriptions.isUnsubscribed) {
+            untilDestroySubscriptions = CompositeSubscription()
+        }
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onDestroyView(view: View) {
+        super.onDestroyView(view)
+        untilDestroySubscriptions.unsubscribe()
+    }
+
     private fun initDownloadQueueSummary(preference: Preference) {
         // Handle running/paused status change
         DownloadService.runningRelay
@@ -139,6 +162,10 @@ class MoreController :
             !isDownloading -> resources?.getString(R.string.paused)
             else -> resources?.getQuantityString(R.plurals.download_queue_summary, downloadQueueSize, downloadQueueSize)
         }
+    }
+
+    private fun <T> Observable<T>.subscribeUntilDestroy(onNext: (T) -> Unit): Subscription {
+        return subscribe(onNext).also { untilDestroySubscriptions.add(it) }
     }
 
     private class MoreHeaderPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :

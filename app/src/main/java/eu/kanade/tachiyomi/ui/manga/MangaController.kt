@@ -855,7 +855,6 @@ class MangaController :
             binding.actionToolbar.findItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
 
             // Hide FAB to avoid interfering with the bottom action toolbar
-            // actionFab?.hide()
             actionFab?.isVisible = false
         }
         return false
@@ -887,10 +886,6 @@ class MangaController :
         chaptersAdapter?.clearSelection()
         selectedChapters.clear()
         actionMode = null
-
-        // TODO: there seems to be a bug in MaterialComponents where the [ExtendedFloatingActionButton]
-        // fails to show up properly
-        // actionFab?.show()
         actionFab?.isVisible = true
     }
 
