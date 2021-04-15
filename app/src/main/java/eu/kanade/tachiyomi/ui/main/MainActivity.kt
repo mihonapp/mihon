@@ -98,20 +98,17 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         binding.appbar.applyInsetter {
             type(navigationBars = true, statusBars = true) {
-                padding(left = true, right = true)
-            }
-            type(statusBars = true) {
-                margin(top = true)
-            }
-        }
-        binding.bottomNav.applyInsetter {
-            type(navigationBars = true) {
-                padding()
+                padding(left = true, top = true, right = true)
             }
         }
         binding.rootFab.applyInsetter {
             type(navigationBars = true) {
                 margin()
+            }
+        }
+        binding.bottomNav.applyInsetter {
+            type(navigationBars = true) {
+                padding()
             }
         }
 
@@ -124,7 +121,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
                     Color.TRANSPARENT
                 } else {
                     // Set navbar scrim 70% of navigationBarColor
-                    getResourceColor(android.R.attr.navigationBarColor, .7F)
+                    getResourceColor(android.R.attr.navigationBarColor, 0.7F)
                 }
             }
             insets
