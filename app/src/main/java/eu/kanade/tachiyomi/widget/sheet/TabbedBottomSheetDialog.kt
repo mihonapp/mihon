@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 
 abstract class TabbedBottomSheetDialog(private val activity: Activity) : BaseBottomSheetDialog(activity) {
 
-    val binding: CommonTabbedSheetBinding = CommonTabbedSheetBinding.inflate(activity.layoutInflater)
+    val binding = CommonTabbedSheetBinding.inflate(activity.layoutInflater)
 
     init {
         val adapter = LibrarySettingsSheetAdapter()

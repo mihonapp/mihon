@@ -414,6 +414,11 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             setOnClickListener {
                 ReaderSettingsSheet(this@ReaderActivity).show()
             }
+
+            setOnLongClickListener {
+                ReaderSettingsSheet(this@ReaderActivity, showColorFilterSettings = true).show()
+                true
+            }
         }
     }
 

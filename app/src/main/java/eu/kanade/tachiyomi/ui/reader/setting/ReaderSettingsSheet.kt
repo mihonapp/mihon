@@ -8,7 +8,10 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.widget.SimpleTabSelectedListener
 import eu.kanade.tachiyomi.widget.sheet.TabbedBottomSheetDialog
 
-class ReaderSettingsSheet(private val activity: ReaderActivity) : TabbedBottomSheetDialog(activity) {
+class ReaderSettingsSheet(
+    private val activity: ReaderActivity,
+    showColorFilterSettings: Boolean = false,
+) : TabbedBottomSheetDialog(activity) {
 
     private val readingModeSettings = ReaderReadingModeSettings(activity)
     private val generalSettings = ReaderGeneralSettings(activity)
@@ -40,6 +43,10 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : TabbedBottomSh
                 }
             }
         })
+
+        if (showColorFilterSettings) {
+            binding.tabs.getTabAt(filterTabIndex)?.select()
+        }
     }
 
     override fun getTabViews() = listOf(
