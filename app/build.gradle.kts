@@ -163,7 +163,7 @@ dependencies {
     implementation("org.conscrypt:conscrypt-android:2.5.1")
 
     // JSON
-    val kotlinSerializationVersion = "1.0.1"
+    val kotlinSerializationVersion = "1.1.0"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinSerializationVersion")
     implementation("com.google.code.gson:gson:2.8.6")
@@ -260,7 +260,7 @@ dependencies {
 
     implementation(kotlin("reflect", version = BuildPluginsVersion.KOTLIN))
 
-    val coroutinesVersion = "1.4.2"
+    val coroutinesVersion = "1.4.3"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
