@@ -54,15 +54,12 @@ class CrashLogUtil(private val context: Context) {
         with(notificationBuilder) {
             setContentTitle(context.getString(R.string.crash_log_saved))
 
-            // Clear old actions if they exist
             clearActions()
-
             addAction(
                 R.drawable.ic_folder_24dp,
                 context.getString(R.string.action_open_log),
                 NotificationReceiver.openErrorLogPendingActivity(context, uri)
             )
-
             addAction(
                 R.drawable.ic_share_24dp,
                 context.getString(R.string.action_share),
