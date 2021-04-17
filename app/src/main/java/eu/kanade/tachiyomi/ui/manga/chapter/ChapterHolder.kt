@@ -1,9 +1,9 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
 import android.view.View
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
 import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -59,8 +59,10 @@ class ChapterHolder(
             descriptions.add(adapter.dateFormat.format(Date(chapter.date_upload)))
         }
         if (!chapter.read && chapter.last_page_read > 0) {
-            val lastPageRead = SpannableString(itemView.context.getString(R.string.chapter_progress, chapter.last_page_read + 1)).apply {
-                setSpan(ForegroundColorSpan(adapter.readColor), 0, length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            val lastPageRead = buildSpannedString {
+                color(adapter.readColor) {
+                    append(itemView.context.getString(R.string.chapter_progress, chapter.last_page_read + 1))
+                }
             }
             descriptions.add(lastPageRead)
         }
