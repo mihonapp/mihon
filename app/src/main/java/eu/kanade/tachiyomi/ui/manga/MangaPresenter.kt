@@ -474,7 +474,7 @@ class MangaPresenter(
      * Returns the next unread chapter or null if everything is read.
      */
     fun getNextUnreadChapter(): ChapterItem? {
-        return chapters.sortedByDescending { it.source_order }.find { !it.read }
+        return chapters.sortedWith(getChapterSort()).findLast { !it.read }
     }
 
     /**
