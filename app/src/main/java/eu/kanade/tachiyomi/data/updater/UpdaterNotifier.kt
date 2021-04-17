@@ -40,7 +40,8 @@ internal class UpdaterNotifier(private val context: Context) {
             setContentText(context.getString(R.string.update_check_notification_update_available))
             setSmallIcon(android.R.drawable.stat_sys_download_done)
             setContentIntent(pendingIntent)
-            // Download action
+
+            clearActions()
             addAction(
                 android.R.drawable.stat_sys_download_done,
                 context.getString(R.string.action_download),
@@ -85,19 +86,20 @@ internal class UpdaterNotifier(private val context: Context) {
      * @param uri path location of apk.
      */
     fun onDownloadFinished(uri: Uri) {
+        val installIntent = NotificationHandler.installApkPendingActivity(context, uri)
         with(notificationBuilder) {
             setContentText(context.getString(R.string.update_check_notification_download_complete))
             setSmallIcon(android.R.drawable.stat_sys_download_done)
             setOnlyAlertOnce(false)
             setProgress(0, 0, false)
-            // Install action
-            setContentIntent(NotificationHandler.installApkPendingActivity(context, uri))
+            setContentIntent(installIntent)
+
+            clearActions()
             addAction(
                 R.drawable.ic_system_update_alt_white_24dp,
                 context.getString(R.string.action_install),
-                NotificationHandler.installApkPendingActivity(context, uri)
+                installIntent
             )
-            // Cancel action
             addAction(
                 R.drawable.ic_close_24dp,
                 context.getString(R.string.action_cancel),
@@ -118,13 +120,13 @@ internal class UpdaterNotifier(private val context: Context) {
             setSmallIcon(android.R.drawable.stat_sys_warning)
             setOnlyAlertOnce(false)
             setProgress(0, 0, false)
-            // Retry action
+
+            clearActions()
             addAction(
                 R.drawable.ic_refresh_24dp,
                 context.getString(R.string.action_retry),
                 UpdaterService.downloadApkPendingService(context, url)
             )
-            // Cancel action
             addAction(
                 R.drawable.ic_close_24dp,
                 context.getString(R.string.action_cancel),
