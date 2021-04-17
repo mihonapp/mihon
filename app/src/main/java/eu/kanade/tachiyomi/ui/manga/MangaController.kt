@@ -206,11 +206,6 @@ class MangaController :
                 padding()
             }
         }
-        binding.actionToolbar.applyInsetter {
-            type(navigationBars = true) {
-                margin(bottom = true)
-            }
-        }
         return binding.root
     }
 
