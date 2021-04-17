@@ -37,7 +37,8 @@ abstract class SettingsController : PreferenceController() {
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
         if (this is RootController) {
-            view.updatePadding(bottom = view.context.resources.getDimensionPixelSize(R.dimen.action_toolbar_list_padding))
+            listView.clipToPadding = false
+            listView.updatePadding(bottom = view.context.resources.getDimensionPixelSize(R.dimen.action_toolbar_list_padding))
         }
 
         listView.applyInsetter {
