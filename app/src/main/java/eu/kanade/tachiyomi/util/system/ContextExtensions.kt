@@ -34,6 +34,7 @@ import androidx.core.net.toUri
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.lang.truncateCenter
+import timber.log.Timber
 import java.io.File
 import kotlin.math.roundToInt
 
@@ -69,10 +70,15 @@ fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT, block: (Toa
 fun Context.copyToClipboard(label: String, content: String) {
     if (content.isBlank()) return
 
-    val clipboard = getSystemService<ClipboardManager>()!!
-    clipboard.setPrimaryClip(ClipData.newPlainText(label, content))
+    try {
+        val clipboard = getSystemService<ClipboardManager>()!!
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, content))
 
-    toast(getString(R.string.copied_to_clipboard, content.truncateCenter(50)))
+        toast(getString(R.string.copied_to_clipboard, content.truncateCenter(50)))
+    } catch (e: Throwable) {
+        Timber.e(e)
+        toast(R.string.clipboard_copy_error)
+    }
 }
 
 /**
