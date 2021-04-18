@@ -265,7 +265,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
-    // debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")
+    // debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
 }
 
 tasks {
