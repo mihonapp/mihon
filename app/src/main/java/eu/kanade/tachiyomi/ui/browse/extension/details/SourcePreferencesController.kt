@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.os.bundleOf
 import androidx.preference.DialogPreference
@@ -45,10 +44,9 @@ class SourcePreferencesController(bundle: Bundle? = null) :
         bundleOf(SOURCE_ID to sourceId)
     )
 
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
+    override fun createBinding(inflater: LayoutInflater): SourcePreferencesControllerBinding {
         val themedInflater = inflater.cloneInContext(getPreferenceThemeContext())
-        binding = SourcePreferencesControllerBinding.inflate(themedInflater)
-        return binding.root
+        return SourcePreferencesControllerBinding.inflate(themedInflater)
     }
 
     override fun createPresenter(): SourcePreferencesPresenter {

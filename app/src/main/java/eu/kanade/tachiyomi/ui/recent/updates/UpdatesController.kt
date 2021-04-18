@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -71,8 +70,10 @@ class UpdatesController :
         return UpdatesPresenter()
     }
 
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        binding = UpdatesControllerBinding.inflate(inflater)
+    override fun createBinding(inflater: LayoutInflater) = UpdatesControllerBinding.inflate(inflater)
+
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
         binding.recycler.applyInsetter {
             type(navigationBars = true) {
                 padding()
@@ -83,11 +84,7 @@ class UpdatesController :
                 margin(bottom = true)
             }
         }
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View) {
-        super.onViewCreated(view)
         view.context.notificationManager.cancel(Notifications.ID_NEW_CHAPTERS)
 
         // Init RecyclerView and adapter
