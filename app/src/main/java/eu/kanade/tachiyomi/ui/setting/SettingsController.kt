@@ -32,6 +32,7 @@ abstract class SettingsController : PreferenceController() {
     var preferenceKey: String? = null
     val preferences: PreferencesHelper = Injekt.get()
     val viewScope = MainScope()
+    private var themedContext: Context? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
@@ -76,19 +77,22 @@ abstract class SettingsController : PreferenceController() {
         super.onChangeStarted(handler, type)
     }
 
+    override fun onDestroyView(view: View) {
+        super.onDestroyView(view)
+        themedContext = null
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        val screen = preferenceManager.createPreferenceScreen(getThemedContext())
+        val tv = TypedValue()
+        activity!!.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
+        themedContext = ContextThemeWrapper(activity, tv.resourceId)
+
+        val screen = preferenceManager.createPreferenceScreen(themedContext)
         preferenceScreen = screen
         setupPreferenceScreen(screen)
     }
 
     abstract fun setupPreferenceScreen(screen: PreferenceScreen): PreferenceScreen
-
-    private fun getThemedContext(): Context {
-        val tv = TypedValue()
-        activity!!.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
-        return ContextThemeWrapper(activity, tv.resourceId)
-    }
 
     private fun animatePreferenceHighlight(view: View) {
         ValueAnimator
