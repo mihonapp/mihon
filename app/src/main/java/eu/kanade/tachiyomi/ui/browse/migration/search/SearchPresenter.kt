@@ -104,23 +104,22 @@ class SearchPresenter(
                 val prevMangaChapters = db.getChapters(prevManga).executeAsBlocking()
                 val maxChapterRead = prevMangaChapters
                     .filter { it.read }
-                    .maxOfOrNull { it.chapter_number }
-                if (maxChapterRead != null) {
-                    val dbChapters = db.getChapters(manga).executeAsBlocking()
-                    for (chapter in dbChapters) {
-                        if (chapter.isRecognizedNumber) {
-                            val prevChapter = prevMangaChapters
-                                .find { it.isRecognizedNumber && it.chapter_number == chapter.chapter_number }
-                            if (prevChapter != null) {
-                                chapter.date_fetch = prevChapter.date_fetch
-                                chapter.bookmark = prevChapter.bookmark
-                            } else if (chapter.chapter_number <= maxChapterRead) {
-                                chapter.read = true
-                            }
+                    .maxOfOrNull { it.chapter_number } ?: 0f
+                val dbChapters = db.getChapters(manga).executeAsBlocking()
+                for (chapter in dbChapters) {
+                    if (chapter.isRecognizedNumber) {
+                        val prevChapter = prevMangaChapters
+                            .find { it.isRecognizedNumber && it.chapter_number == chapter.chapter_number }
+                        if (prevChapter != null) {
+                            chapter.date_fetch = prevChapter.date_fetch
+                            chapter.bookmark = prevChapter.bookmark
+                        }
+                        if (chapter.chapter_number <= maxChapterRead) {
+                            chapter.read = true
                         }
                     }
-                    db.insertChapters(dbChapters).executeAsBlocking()
                 }
+                db.insertChapters(dbChapters).executeAsBlocking()
             }
 
             // Update categories
