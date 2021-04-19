@@ -447,7 +447,6 @@
     <string name="version">Version</string>
     <string name="build_time">Build time</string>
     <string name="whats_new">What\'s new</string>
-    <string name="notices">Preview build notices</string>
     <string name="licenses">Open source licenses</string>
     <string name="check_for_updates">Check for updates</string>
     <string name="updated_version">Updated to v%1$s</string>

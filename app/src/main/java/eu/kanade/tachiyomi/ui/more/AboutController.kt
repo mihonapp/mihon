@@ -78,15 +78,6 @@ class AboutController : SettingsController() {
                 openInBrowser(url)
             }
         }
-        if (BuildConfig.DEBUG) {
-            preference {
-                key = "pref_about_notices"
-                titleRes = R.string.notices
-                onClick {
-                    openInBrowser("https://github.com/tachiyomiorg/tachiyomi/blob/master/PREVIEW_RELEASE_NOTES.md")
-                }
-            }
-        }
 
         preferenceCategory {
             preference {
