@@ -1,22 +1,19 @@
 package eu.kanade.tachiyomi.ui.security
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity
 import eu.kanade.tachiyomi.util.system.BiometricUtil
 import timber.log.Timber
-import uy.kohesive.injekt.injectLazy
 import java.util.Date
 import java.util.concurrent.Executors
 
 /**
  * Blank activity with a BiometricPrompt.
  */
-class BiometricUnlockActivity : AppCompatActivity() {
+class BiometricUnlockActivity : BaseThemedActivity() {
 
-    private val preferences: PreferencesHelper by injectLazy()
     private val executor = Executors.newSingleThreadExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
