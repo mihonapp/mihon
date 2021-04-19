@@ -98,6 +98,14 @@ class AboutController : SettingsController() {
                 }
             }
             preference {
+                key = "pref_about_facebook"
+                title = "Facebook"
+                "https://facebook.com/tachiyomiorg".also {
+                    summary = it
+                    onClick { openInBrowser(it) }
+                }
+            }
+            preference {
                 key = "pref_about_twitter"
                 title = "Twitter"
                 "https://twitter.com/tachiyomiorg".also {
@@ -116,15 +124,7 @@ class AboutController : SettingsController() {
             preference {
                 key = "pref_about_github"
                 title = "GitHub"
-                "https://github.com/tachiyomiorg/tachiyomi".also {
-                    summary = it
-                    onClick { openInBrowser(it) }
-                }
-            }
-            preference {
-                key = "pref_about_label_extensions"
-                titleRes = R.string.label_extensions
-                "https://github.com/tachiyomiorg/tachiyomi-extensions".also {
+                "https://github.com/tachiyomiorg".also {
                     summary = it
                     onClick { openInBrowser(it) }
                 }
