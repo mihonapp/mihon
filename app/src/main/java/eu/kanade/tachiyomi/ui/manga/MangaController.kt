@@ -1004,11 +1004,17 @@ class MangaController :
 
     // OVERFLOW MENU DIALOGS
 
-    private fun getUnreadChaptersSorted() = presenter.chapters
-        .sortedWith(presenter.getChapterSort())
-        .filter { !it.read && it.status == Download.State.NOT_DOWNLOADED }
-        .distinctBy { it.name }
-        .reversed()
+    private fun getUnreadChaptersSorted(): List<ChapterItem> {
+        val chapters = presenter.chapters
+            .sortedWith(presenter.getChapterSort())
+            .filter { !it.read && it.status == Download.State.NOT_DOWNLOADED }
+            .distinctBy { it.name }
+        return if (presenter.sortDescending()) {
+            chapters.reversed()
+        } else {
+            chapters
+        }
+    }
 
     private fun downloadChapters(choice: Int) {
         val chaptersToDownload = when (choice) {
