@@ -332,9 +332,10 @@
     <string name="double_tap_anim_speed_fast">Fast</string>
     <string name="pref_rotation_type">Rotation</string>
     <string name="rotation_free">Free</string>
-    <string name="rotation_lock">Lock</string>
-    <string name="rotation_force_portrait">Force portrait</string>
-    <string name="rotation_force_landscape">Force landscape</string>
+    <string name="rotation_portrait">Portrait</string>
+    <string name="rotation_landscape">Landscape</string>
+    <string name="rotation_force_portrait">Locked portrait</string>
+    <string name="rotation_force_landscape">Locked landscape</string>
     <string name="color_filter_r_value">R</string>
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>

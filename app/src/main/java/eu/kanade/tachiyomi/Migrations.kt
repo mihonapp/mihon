@@ -139,6 +139,10 @@ object Migrations {
                     }
                 }
             }
+            if (oldVersion < 59) {
+                // Reset rotation to Free after replacing Lock
+                preferences.rotation().set(1)
+            }
             return true
         }
 

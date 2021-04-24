@@ -78,11 +78,12 @@ class SettingsReaderController : SettingsController() {
                 titleRes = R.string.pref_rotation_type
                 entriesRes = arrayOf(
                     R.string.rotation_free,
-                    R.string.rotation_lock,
+                    R.string.rotation_portrait,
+                    R.string.rotation_landscape,
                     R.string.rotation_force_portrait,
-                    R.string.rotation_force_landscape
+                    R.string.rotation_force_landscape,
                 )
-                entryValues = arrayOf("1", "2", "3", "4")
+                entryValues = arrayOf("1", "2", "3", "4", "5")
                 defaultValue = "1"
                 summary = "%s"
             }
