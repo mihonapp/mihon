@@ -58,6 +58,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.defaultBar
 import eu.kanade.tachiyomi.util.view.hideBar
 import eu.kanade.tachiyomi.util.view.isDefaultBar
+import eu.kanade.tachiyomi.util.view.popupMenu
 import eu.kanade.tachiyomi.util.view.setTooltip
 import eu.kanade.tachiyomi.util.view.showBar
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
@@ -356,13 +357,18 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             setTooltip(R.string.viewer)
 
             setOnClickListener {
-                val newReadingMode =
-                    ReadingModeType.getNextReadingMode(presenter.getMangaViewer(resolveDefault = false))
-                presenter.setMangaViewer(newReadingMode.prefValue)
+                popupMenu(
+                    items = ReadingModeType.values().map { it.prefValue to it.stringRes },
+                    selectedItemId = presenter.getMangaViewer(resolveDefault = false),
+                ) {
+                    val newReadingMode = ReadingModeType.fromPreference(itemId)
 
-                menuToggleToast?.cancel()
-                if (!preferences.showReadingMode()) {
-                    menuToggleToast = toast(newReadingMode.stringRes)
+                    presenter.setMangaViewer(newReadingMode.prefValue)
+
+                    menuToggleToast?.cancel()
+                    if (!preferences.showReadingMode()) {
+                        menuToggleToast = toast(newReadingMode.stringRes)
+                    }
                 }
             }
         }
@@ -372,13 +378,18 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             setTooltip(R.string.pref_rotation_type)
 
             setOnClickListener {
-                val newOrientation = OrientationType.getNextOrientation(preferences.rotation().get())
+                popupMenu(
+                    items = OrientationType.values().map { it.prefValue to it.stringRes },
+                    selectedItemId = preferences.rotation().get(),
+                ) {
+                    val newOrientation = OrientationType.fromPreference(itemId)
 
-                preferences.rotation().set(newOrientation.prefValue)
-                setOrientation(newOrientation.flag)
+                    preferences.rotation().set(newOrientation.prefValue)
+                    setOrientation(newOrientation.flag)
 
-                menuToggleToast?.cancel()
-                menuToggleToast = toast(newOrientation.stringRes)
+                    menuToggleToast?.cancel()
+                    menuToggleToast = toast(newOrientation.stringRes)
+                }
             }
         }
         preferences.rotation().asImmediateFlow { updateRotationShortcut(it) }

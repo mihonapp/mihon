@@ -51,16 +51,12 @@ class ChaptersSettingsSheet(
 
     private fun showPopupMenu(view: View) {
         view.popupMenu(
-            R.menu.default_chapter_filter,
-            {
-            },
-            {
-                when (this.itemId) {
+            menuRes = R.menu.default_chapter_filter,
+            onMenuItemClick = {
+                when (itemId) {
                     R.id.set_as_default -> {
                         SetChapterSettingsDialog(presenter.manga).showDialog(router)
-                        true
                     }
-                    else -> true
                 }
             }
         )

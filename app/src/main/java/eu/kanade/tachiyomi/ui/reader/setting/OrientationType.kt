@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.lang.next
 
 enum class OrientationType(val prefValue: Int, val flag: Int, @StringRes val stringRes: Int, @DrawableRes val iconRes: Int) {
     FREE(1, ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED, R.string.rotation_free, R.drawable.ic_screen_rotation_24dp),
@@ -17,10 +16,5 @@ enum class OrientationType(val prefValue: Int, val flag: Int, @StringRes val str
     companion object {
         fun fromPreference(preference: Int): OrientationType =
             values().find { it.prefValue == preference } ?: FREE
-
-        fun getNextOrientation(preference: Int): OrientationType {
-            val current = fromPreference(preference)
-            return current.next()
-        }
     }
 }

@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.reader.setting
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.lang.next
 
 enum class ReadingModeType(val prefValue: Int, @StringRes val stringRes: Int, @DrawableRes val iconRes: Int) {
     DEFAULT(0, R.string.default_viewer, R.drawable.ic_reader_default_24dp),
@@ -16,11 +15,6 @@ enum class ReadingModeType(val prefValue: Int, @StringRes val stringRes: Int, @D
 
     companion object {
         fun fromPreference(preference: Int): ReadingModeType = values().find { it.prefValue == preference } ?: DEFAULT
-
-        fun getNextReadingMode(preference: Int): ReadingModeType {
-            val current = fromPreference(preference)
-            return current.next()
-        }
 
         fun isPagerType(preference: Int): Boolean {
             val mode = fromPreference(preference)
