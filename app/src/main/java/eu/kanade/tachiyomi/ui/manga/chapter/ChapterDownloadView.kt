@@ -5,11 +5,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.ChapterDownloadViewBinding
+import eu.kanade.tachiyomi.util.view.setVectorCompat
 
 class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     FrameLayout(context, attrs) {
@@ -28,18 +28,12 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
 
     fun setState(state: Download.State, progress: Int = 0) {
         val isDirty = this.state.value != state.value || this.progress != progress
-
-        this.state = state
-        this.progress = progress
-
         if (isDirty) {
-            updateLayout()
+            updateLayout(state, progress)
         }
     }
 
-    private fun updateLayout() {
-        binding.downloadIconBorder.isVisible = state == Download.State.NOT_DOWNLOADED || state == Download.State.QUEUE
-
+    private fun updateLayout(state: Download.State, progress: Int) {
         binding.downloadIcon.isVisible = state == Download.State.NOT_DOWNLOADED ||
             state == Download.State.DOWNLOADING || state == Download.State.QUEUE
         if (state == Download.State.DOWNLOADING || state == Download.State.QUEUE) {
@@ -59,21 +53,28 @@ class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: Att
             binding.downloadIcon.alpha = 1f
         }
 
-        binding.downloadProgress.isVisible = state == Download.State.DOWNLOADING
-        binding.downloadProgress.setProgressCompat(progress, true)
+        binding.downloadProgress.isVisible = state == Download.State.DOWNLOADING ||
+            state == Download.State.NOT_DOWNLOADED || state == Download.State.QUEUE
+        if (state == Download.State.DOWNLOADING) {
+            binding.downloadProgress.setProgressCompat(progress, true)
+        } else {
+            binding.downloadProgress.setProgressCompat(100, true)
+        }
 
         binding.downloadStatusIcon.apply {
             if (state == Download.State.DOWNLOADED || state == Download.State.ERROR) {
                 isVisible = true
-                val drawable = if (state == Download.State.DOWNLOADED) {
-                    ContextCompat.getDrawable(context, R.drawable.ic_check_circle_24dp)
+                if (state == Download.State.DOWNLOADED) {
+                    setVectorCompat(R.drawable.ic_check_circle_24dp, android.R.attr.textColorPrimary)
                 } else {
-                    ContextCompat.getDrawable(context, R.drawable.ic_error_outline_24dp)
+                    setVectorCompat(R.drawable.ic_error_outline_24dp, R.attr.colorError)
                 }
-                setImageDrawable(drawable)
             } else {
                 isVisible = false
             }
         }
+
+        this.state = state
+        this.progress = progress
     }
 }
