@@ -242,8 +242,7 @@ class UpdatesController :
         adapter?.currentItems
             ?.filterIsInstance<UpdatesItem>()
             ?.find { it.chapter.id == download.chapter.id }?.let {
-                adapter?.updateItem(it)
-                adapter?.notifyDataSetChanged()
+                adapter?.updateItem(it, it.status)
             }
     }
 
