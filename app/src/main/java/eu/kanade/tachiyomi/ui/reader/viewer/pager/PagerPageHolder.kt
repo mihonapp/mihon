@@ -235,16 +235,13 @@ class PagerPageHolder(
         readImageHeaderSubscription = Observable
             .fromCallable {
                 val stream = streamFn().buffered(16)
-                openStream = stream
+                openStream = process(stream)
 
                 ImageUtil.findImageType(stream) == ImageUtil.ImageType.GIF
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { isAnimated ->
-                if (viewer.config.dualPageSplit) {
-                    openStream = processDualPageSplit(openStream!!)
-                }
                 if (!isAnimated) {
                     initSubsamplingImageView().setImage(ImageSource.inputStream(openStream!!))
                 } else {
@@ -257,21 +254,31 @@ class PagerPageHolder(
             .subscribe({}, {})
     }
 
-    private fun processDualPageSplit(openStream: InputStream): InputStream {
-        var inputStream = openStream
-        val (isDoublePage, stream) = when (page) {
-            is InsertPage -> Pair(true, inputStream)
-            else -> ImageUtil.isDoublePage(inputStream)
+    private fun process(imageStream: InputStream): InputStream {
+        if (!viewer.config.dualPageSplit) {
+            return imageStream
         }
-        inputStream = stream
 
-        if (!isDoublePage) return inputStream
+        if (page is InsertPage) {
+            return splitInHalf(imageStream)
+        }
 
+        val isDoublePage = ImageUtil.isDoublePage(imageStream)
+        if (!isDoublePage) {
+            return imageStream
+        }
+
+        onPageSplit()
+
+        return splitInHalf(imageStream)
+    }
+
+    private fun splitInHalf(imageStream: InputStream): InputStream {
         var side = when {
             viewer is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.RIGHT
-            (viewer is R2LPagerViewer || viewer is VerticalPagerViewer) && page is InsertPage -> ImageUtil.Side.LEFT
+            viewer !is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.LEFT
             viewer is L2RPagerViewer && page !is InsertPage -> ImageUtil.Side.LEFT
-            (viewer is R2LPagerViewer || viewer is VerticalPagerViewer) && page !is InsertPage -> ImageUtil.Side.RIGHT
+            viewer !is L2RPagerViewer && page !is InsertPage -> ImageUtil.Side.RIGHT
             else -> error("We should choose a side!")
         }
 
@@ -282,11 +289,7 @@ class PagerPageHolder(
             }
         }
 
-        if (page !is InsertPage) {
-            onPageSplit()
-        }
-
-        return ImageUtil.splitInHalf(inputStream, side)
+        return ImageUtil.splitInHalf(imageStream, side)
     }
 
     private fun onPageSplit() {

@@ -281,22 +281,13 @@ class WebtoonPageHolder(
         readImageHeaderSubscription = Observable
             .fromCallable {
                 val stream = streamFn().buffered(16)
-                openStream = stream
+                openStream = process(stream)
 
                 ImageUtil.findImageType(stream) == ImageUtil.ImageType.GIF
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { isAnimated ->
-                if (viewer.config.dualPageSplit) {
-                    val (isDoublePage, stream) = ImageUtil.isDoublePage(openStream!!)
-                    openStream = if (!isDoublePage) {
-                        stream
-                    } else {
-                        val upperSide = if (viewer.config.dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
-                        ImageUtil.splitAndMerge(stream, upperSide)
-                    }
-                }
                 if (!isAnimated) {
                     val subsamplingView = initSubsamplingImageView()
                     subsamplingView.isVisible = true
@@ -313,6 +304,20 @@ class WebtoonPageHolder(
             .subscribe({}, {})
 
         addSubscription(readImageHeaderSubscription)
+    }
+
+    private fun process(imageStream: InputStream): InputStream {
+        if (!viewer.config.dualPageSplit) {
+            return imageStream
+        }
+
+        val isDoublePage = ImageUtil.isDoublePage(imageStream)
+        if (!isDoublePage) {
+            return imageStream
+        }
+
+        val upperSide = if (viewer.config.dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
+        return ImageUtil.splitAndMerge(imageStream, upperSide)
     }
 
     /**
