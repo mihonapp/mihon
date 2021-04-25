@@ -52,6 +52,9 @@ open class App : Application(), LifecycleObserver {
         LocaleHelper.updateConfiguration(this, resources.configuration)
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+
+        // Reset Incognito Mode on relaunch
+        preferences.incognitoMode().set(false)
     }
 
     override fun attachBaseContext(base: Context) {
