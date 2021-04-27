@@ -298,11 +298,6 @@ class SettingsReaderController : SettingsController() {
                 defaultValue = true
             }
             switchPreference {
-                key = Keys.readWithLongTap
-                titleRes = R.string.pref_read_with_long_tap
-                defaultValue = true
-            }
-            switchPreference {
                 key = Keys.readWithVolumeKeys
                 titleRes = R.string.pref_read_with_volume_keys
                 defaultValue = false
@@ -313,6 +308,22 @@ class SettingsReaderController : SettingsController() {
                 defaultValue = false
 
                 preferences.readWithVolumeKeys().asImmediateFlow { isVisible = it }.launchIn(viewScope)
+            }
+        }
+
+        preferenceCategory {
+            titleRes = R.string.pref_reader_actions
+
+            switchPreference {
+                key = Keys.readWithLongTap
+                titleRes = R.string.pref_read_with_long_tap
+                defaultValue = true
+            }
+            switchPreference {
+                key = Keys.folderPerManga
+                titleRes = R.string.pref_create_folder_per_manga
+                summaryRes = R.string.pref_create_folder_per_manga_summary
+                defaultValue = false
             }
         }
     }
