@@ -557,8 +557,8 @@ class ReaderPresenter(
 
         // Pictures directory.
         val baseDir = Environment.getExternalStorageDirectory().absolutePath +
-                File.separator + Environment.DIRECTORY_PICTURES +
-                File.separator + context.getString(R.string.app_name)
+            File.separator + Environment.DIRECTORY_PICTURES +
+            File.separator + context.getString(R.string.app_name)
         val destDir = if (preferences.folderPerManga()) {
             File(baseDir + File.separator + manga.title)
         } else {
