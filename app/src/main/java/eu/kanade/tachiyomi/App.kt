@@ -1,16 +1,25 @@
 package eu.kanade.tachiyomi
 
+import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
+import androidx.core.content.getSystemService
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import eu.kanade.tachiyomi.data.coil.ByteBufferFetcher
+import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import org.acra.ACRA
@@ -20,6 +29,7 @@ import org.acra.sender.HttpSender
 import org.conscrypt.Conscrypt
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.security.Security
 
@@ -31,7 +41,7 @@ import java.security.Security
     uri = BuildConfig.ACRA_URI,
     httpMethod = HttpSender.Method.PUT
 )
-open class App : Application(), LifecycleObserver {
+open class App : Application(), LifecycleObserver, ImageLoaderFactory {
 
     private val preferences: PreferencesHelper by injectLazy()
 
@@ -65,6 +75,23 @@ open class App : Application(), LifecycleObserver {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         LocaleHelper.updateConfiguration(this, newConfig, true)
+    }
+
+    override fun newImageLoader(): ImageLoader {
+        return ImageLoader.Builder(this).apply {
+            componentRegistry {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    add(ImageDecoderDecoder(this@App))
+                } else {
+                    add(GifDecoder())
+                }
+                add(ByteBufferFetcher())
+                add(MangaCoverFetcher())
+            }
+            okHttpClient(Injekt.get<NetworkHelper>().coilClient)
+            crossfade(300)
+            allowRgb565(getSystemService<ActivityManager>()!!.isLowRamDevice)
+        }.build()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
