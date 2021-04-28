@@ -23,7 +23,9 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.util.system.getResourceColor
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -31,10 +33,11 @@ abstract class SettingsController : PreferenceController() {
 
     var preferenceKey: String? = null
     val preferences: PreferencesHelper = Injekt.get()
-    val viewScope = MainScope()
+    lateinit var viewScope: CoroutineScope
     private var themedContext: Context? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
+        viewScope = MainScope()
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
         if (this is RootController) {
@@ -79,6 +82,7 @@ abstract class SettingsController : PreferenceController() {
 
     override fun onDestroyView(view: View) {
         super.onDestroyView(view)
+        viewScope.cancel()
         themedContext = null
     }
 
