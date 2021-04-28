@@ -156,6 +156,11 @@ object Migrations {
                 }
             }
             if (oldVersion < 60) {
+                // Re-enable update check that was prevously accidentally disabled for M
+                if (BuildConfig.INCLUDE_UPDATER && Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+                    UpdaterJob.setupTask(context)
+                }
+
                 // Migrate Rotation and Viewer values to default values for viewer_flags
                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
                 val newOrientation = when (prefs.getInt("pref_rotation_type_key", 1)) {
