@@ -129,9 +129,6 @@ open class BrowseSourceController(bundle: Bundle) :
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
-        // Prepare filter sheet
-        initFilterSheet()
-
         // Initialize adapter, scroll listener and recycler views
         adapter = FlexibleAdapter(null, this)
         setupRecycler(view)
@@ -173,11 +170,12 @@ open class BrowseSourceController(bundle: Bundle) :
     override fun configureFab(fab: ExtendedFloatingActionButton) {
         actionFab = fab
 
-        // Controlled by initFilterSheet()
-        fab.isVisible = false
-
         fab.setText(R.string.action_filter)
         fab.setIconResource(R.drawable.ic_filter_list_24dp)
+
+        // Controlled by initFilterSheet()
+        fab.isVisible = false
+        initFilterSheet()
     }
 
     override fun cleanupFab(fab: ExtendedFloatingActionButton) {
