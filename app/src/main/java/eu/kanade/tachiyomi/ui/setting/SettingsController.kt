@@ -33,11 +33,10 @@ abstract class SettingsController : PreferenceController() {
 
     var preferenceKey: String? = null
     val preferences: PreferencesHelper = Injekt.get()
-    lateinit var viewScope: CoroutineScope
+    val viewScope: CoroutineScope = MainScope()
     private var themedContext: Context? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
-        viewScope = MainScope()
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
         if (this is RootController) {
