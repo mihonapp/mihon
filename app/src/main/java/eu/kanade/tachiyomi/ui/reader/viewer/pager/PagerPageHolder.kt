@@ -238,7 +238,12 @@ class PagerPageHolder(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { isAnimated ->
                 if (!isAnimated) {
-                    initSubsamplingImageView().setImage(ImageSource.inputStream(openStream!!))
+                    initSubsamplingImageView().apply {
+                        if (viewer.config.automaticBackground) {
+                            background = ImageUtil.chooseBackground(context, openStream!!)
+                        }
+                        setImage(ImageSource.inputStream(openStream!!))
+                    }
                 } else {
                     initImageView().setImage(openStream!!)
                 }
