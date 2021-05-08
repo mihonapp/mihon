@@ -40,7 +40,7 @@ class EmptyPreferenceDataStore : PreferenceDataStore() {
     }
 
     override fun getStringSet(key: String?, defValues: Set<String>?): Set<String>? {
-        return null
+        return emptySet()
     }
 
     override fun putStringSet(key: String?, values: Set<String>?) {
