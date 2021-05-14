@@ -140,7 +140,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             binding.toolbarLayout.appbar.addOnOffsetChangedListener(
                 AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                     if (verticalOffset == 0) {
-                        showNav(true)
+                        showNav(visible = true)
                     }
                 }
             )
@@ -451,7 +451,13 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         }
     }
 
-    fun showNav(visible: Boolean, collapse: Boolean = false) {
+    private fun showNav(visible: Boolean, collapse: Boolean = false) {
+        showBottomNav(visible, collapse)
+        showSideNav(visible)
+    }
+
+    // Also used from some controllers to swap bottom nav with action toolbar
+    fun showBottomNav(visible: Boolean, collapse: Boolean = false) {
         binding.bottomNav?.let {
             val layoutParams = it.layoutParams as CoordinatorLayout.LayoutParams
             val bottomViewNavigationBehavior =
@@ -470,7 +476,9 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
                 bottomViewNavigationBehavior?.slideDown(it)
             }
         }
+    }
 
+    private fun showSideNav(visible: Boolean) {
         binding.sideNav?.let {
             it.isVisible = visible
         }
