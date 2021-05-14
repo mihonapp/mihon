@@ -96,16 +96,16 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         }
 
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.toolbarLayout.toolbar)
 
         // Draw edge-to-edge
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        binding.appbar.applyInsetter {
+        binding.toolbarLayout.appbar.applyInsetter {
             type(navigationBars = true, statusBars = true) {
                 padding(left = true, top = true, right = true)
             }
         }
-        binding.rootFab.applyInsetter {
+        binding.fabLayout.rootFab.applyInsetter {
             type(navigationBars = true) {
                 margin()
             }
@@ -131,13 +131,13 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             insets
         }
 
-        tabAnimator = ViewHeightAnimator(binding.tabs, 0L)
+        tabAnimator = ViewHeightAnimator(binding.toolbarLayout.tabs, 0L)
 
         if (binding.bottomNav != null) {
             bottomNavAnimator = ViewHeightAnimator(binding.bottomNav!!)
 
             // If bottom nav is hidden, make it visible again when the app bar is expanded
-            binding.appbar.addOnOffsetChangedListener(
+            binding.toolbarLayout.appbar.addOnOffsetChangedListener(
                 AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                     if (verticalOffset == 0) {
                         showNav(true)
@@ -186,7 +186,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             }
         }
 
-        binding.toolbar.setNavigationOnClickListener {
+        binding.toolbarLayout.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
 
@@ -227,13 +227,13 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             .launchIn(lifecycleScope)
 
         preferences.downloadedOnly()
-            .asImmediateFlow { binding.downloadedOnly.isVisible = it }
+            .asImmediateFlow { binding.toolbarLayout.downloadedOnly.isVisible = it }
             .launchIn(lifecycleScope)
 
         preferences.incognitoMode().asFlow()
             .drop(1)
             .onEach {
-                binding.incognitoMode.isVisible = it
+                binding.toolbarLayout.incognitoMode.isVisible = it
 
                 // Close BrowseSourceController and its MangaController child when incognito mode is disabled
                 if (!it) {
@@ -355,7 +355,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
         // Binding sometimes isn't actually instantiated yet somehow
         nav.setOnItemSelectedListener(null)
-        binding?.toolbar.setNavigationOnClickListener(null)
+        binding?.toolbarLayout?.toolbar.setNavigationOnClickListener(null)
     }
 
     override fun onBackPressed() {
@@ -408,7 +408,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         supportActionBar?.setDisplayHomeAsUpEnabled(router.backstackSize != 1)
 
         // Always show appbar again when changing controllers
-        binding.appbar.setExpanded(true)
+        binding.toolbarLayout.appbar.setExpanded(true)
 
         if ((from == null || from is RootController) && to !is RootController) {
             showNav(visible = false, collapse = true)
@@ -419,34 +419,34 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         }
 
         if (from is TabbedController) {
-            from.cleanupTabs(binding.tabs)
+            from.cleanupTabs(binding.toolbarLayout.tabs)
         }
         if (to is TabbedController) {
             tabAnimator.expand()
-            to.configureTabs(binding.tabs)
+            to.configureTabs(binding.toolbarLayout.tabs)
         } else {
             tabAnimator.collapse()
-            binding.tabs.setupWithViewPager(null)
+            binding.toolbarLayout.tabs.setupWithViewPager(null)
         }
 
         if (from is FabController) {
-            binding.rootFab.isVisible = false
-            from.cleanupFab(binding.rootFab)
+            binding.fabLayout.rootFab.isVisible = false
+            from.cleanupFab(binding.fabLayout.rootFab)
         }
         if (to is FabController) {
-            binding.rootFab.isVisible = true
-            to.configureFab(binding.rootFab)
+            binding.fabLayout.rootFab.isVisible = true
+            to.configureFab(binding.fabLayout.rootFab)
         }
 
         when (to) {
             is NoToolbarElevationController -> {
-                binding.appbar.disableElevation()
+                binding.toolbarLayout.appbar.disableElevation()
             }
             is ToolbarLiftOnScrollController -> {
-                binding.appbar.enableElevation(true)
+                binding.toolbarLayout.appbar.enableElevation(true)
             }
             else -> {
-                binding.appbar.enableElevation(false)
+                binding.toolbarLayout.appbar.enableElevation(false)
             }
         }
     }
@@ -482,16 +482,16 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
      */
     fun fixViewToBottom(view: View) {
         val listener = AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val maxAbsOffset = appBarLayout.measuredHeight - binding.tabs.measuredHeight
+            val maxAbsOffset = appBarLayout.measuredHeight - binding.toolbarLayout.tabs.measuredHeight
             view.translationY = -maxAbsOffset - verticalOffset.toFloat() + appBarLayout.marginTop
         }
-        binding.appbar.addOnOffsetChangedListener(listener)
+        binding.toolbarLayout.appbar.addOnOffsetChangedListener(listener)
         fixedViewsToBottom[view] = listener
     }
 
     fun clearFixViewToBottom(view: View) {
         val listener = fixedViewsToBottom.remove(view)
-        binding.appbar.removeOnOffsetChangedListener(listener)
+        binding.toolbarLayout.appbar.removeOnOffsetChangedListener(listener)
     }
 
     private fun setBottomNavBehaviorOnScroll() {
