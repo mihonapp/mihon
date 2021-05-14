@@ -367,7 +367,7 @@ class LibraryController(
                 actionMode!!,
                 R.menu.library_selection
             ) { onActionItemClicked(it!!) }
-            (activity as? MainActivity)?.showBottomNav(visible = false, collapse = true)
+            (activity as? MainActivity)?.showNav(visible = false, collapse = true)
         }
     }
 
@@ -476,7 +476,7 @@ class LibraryController(
         selectionRelay.call(LibrarySelectionEvent.Cleared())
 
         binding.actionToolbar.hide()
-        (activity as? MainActivity)?.showBottomNav(visible = true, collapse = true)
+        (activity as? MainActivity)?.showNav(visible = true, collapse = true)
 
         actionMode = null
     }
