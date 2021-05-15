@@ -15,9 +15,8 @@ object PreferenceKeys {
 
     const val hideBottomBar = "pref_hide_bottom_bar_on_scroll"
 
-    const val hideUpdatesButton = "pref_hide_updates_button"
-
-    const val hideHistoryButton = "pref_hide_history_button"
+    const val showNavUpdates = "pref_nav_show_updates"
+    const val showNavHistory = "pref_nav_show_history"
 
     const val enableTransitions = "pref_enable_transitions_key"
 

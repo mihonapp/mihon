@@ -271,14 +271,14 @@ class SettingsGeneralController : SettingsController() {
                 defaultValue = true
             }
             switchPreference {
-                key = Keys.hideUpdatesButton
-                titleRes = R.string.pref_hide_updates_button
-                defaultValue = false
+                key = Keys.showNavUpdates
+                titleRes = R.string.label_recent_updates
+                defaultValue = true
             }
             switchPreference {
-                key = Keys.hideHistoryButton
-                titleRes = R.string.pref_hide_history_button
-                defaultValue = false
+                key = Keys.showNavHistory
+                titleRes = R.string.label_recent_manga
+                defaultValue = true
             }
         }
     }

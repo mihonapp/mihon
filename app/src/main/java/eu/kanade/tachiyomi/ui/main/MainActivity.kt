@@ -487,10 +487,8 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
     }
 
     private fun updateNavMenu(menu: Menu) {
-        val navUpdates = menu.findItem(R.id.nav_updates)
-        navUpdates.isVisible = !preferences.hideUpdatesButton().get()
-        val navHistory = menu.findItem(R.id.nav_history)
-        navHistory.isVisible = !preferences.hideHistoryButton().get()
+        menu.findItem(R.id.nav_updates).isVisible = preferences.showNavUpdates()
+        menu.findItem(R.id.nav_history).isVisible = preferences.showNavHistory()
     }
 
     /**
