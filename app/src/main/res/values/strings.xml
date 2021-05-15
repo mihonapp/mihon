@@ -149,6 +149,7 @@
       <!-- General section -->
     <string name="pref_category_theme">Theme</string>
     <string name="pref_category_locale">Locale</string>
+    <string name="pref_category_navigation">Navigation</string>
     <string name="pref_theme_mode">Dark mode</string>
     <string name="theme_system">Follow system</string>
     <string name="theme_light">Off</string>
@@ -166,6 +167,8 @@
     <string name="pref_date_format">Date format</string>
     <string name="pref_confirm_exit">Confirm exit</string>
     <string name="pref_hide_bottom_bar_on_scroll">Hide bottom bar on scroll</string>
+    <string name="pref_hide_updates_button">Hide Updates button</string>
+    <string name="pref_hide_history_button">Hide History button</string>
     <string name="pref_manage_notifications">Manage notifications</string>
 
     <string name="pref_category_security">Security</string>
