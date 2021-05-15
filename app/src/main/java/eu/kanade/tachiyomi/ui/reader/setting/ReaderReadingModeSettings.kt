@@ -53,13 +53,13 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
                 initPagerPreferences()
             }
         }
-        binding.viewer.setSelection((context as ReaderActivity).presenter.manga?.readingModeType.let { ReadingModeType.fromPreference(it).prefValue })
+        binding.viewer.setSelection((context as ReaderActivity).presenter.manga?.readingModeType?.let { ReadingModeType.fromPreference(it).prefValue } ?: ReadingModeType.DEFAULT.prefValue)
 
         binding.rotationMode.onItemSelectedListener = { position ->
             val rotationType = OrientationType.fromSpinner(position)
             (context as ReaderActivity).presenter.setMangaOrientationType(rotationType.flagValue)
         }
-        binding.rotationMode.setSelection((context as ReaderActivity).presenter.manga?.orientationType.let { OrientationType.fromPreference(it).prefValue })
+        binding.rotationMode.setSelection((context as ReaderActivity).presenter.manga?.orientationType?.let { OrientationType.fromPreference(it).prefValue } ?: OrientationType.DEFAULT.prefValue)
     }
 
     /**
