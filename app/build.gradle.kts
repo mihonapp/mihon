@@ -202,7 +202,7 @@ dependencies {
     implementation("io.coil-kt:coil:$coilVersion")
     implementation("io.coil-kt:coil-gif:$coilVersion")
 
-    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:547d9c0")
+    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:846abe0")
 
     // Logging
     implementation("com.jakewharton.timber:timber:4.7.1")
