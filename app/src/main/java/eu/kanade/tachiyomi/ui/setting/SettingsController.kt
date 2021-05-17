@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.animation.doOnEnd
 import androidx.core.view.updatePadding
 import androidx.preference.PreferenceController
 import androidx.preference.PreferenceGroup
@@ -98,6 +99,7 @@ abstract class SettingsController : PreferenceController() {
     abstract fun setupPreferenceScreen(screen: PreferenceScreen): PreferenceScreen
 
     private fun animatePreferenceHighlight(view: View) {
+        val origBackground = view.background
         ValueAnimator
             .ofObject(ArgbEvaluator(), Color.TRANSPARENT, view.context.getResourceColor(R.attr.rippleColor))
             .apply {
@@ -105,6 +107,10 @@ abstract class SettingsController : PreferenceController() {
                 repeatCount = 2
                 addUpdateListener { animator -> view.setBackgroundColor(animator.animatedValue as Int) }
                 reverse()
+            }
+            .doOnEnd {
+                // Restore original ripple
+                view.background = origBackground
             }
     }
 
