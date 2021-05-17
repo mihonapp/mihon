@@ -392,9 +392,6 @@
     <string name="pref_create_backup_summ">Can be used to restore current library</string>
     <string name="pref_restore_backup">Restore backup</string>
     <string name="pref_restore_backup_summ">Restore library from backup file</string>
-    <string name="pref_create_legacy_backup">Create legacy backup</string>
-    <string name="pref_create_legacy_backup_summary">Can be used in older versions of Tachiyomi</string>
-    <string name="pref_backup_auto_create_legacy">Also create legacy backup</string>
     <string name="pref_backup_directory">Backup location</string>
     <string name="pref_backup_service_category">Automatic backups</string>
     <string name="pref_backup_interval">Backup frequency</string>
