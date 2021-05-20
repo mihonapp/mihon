@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.ui.more
 
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -166,15 +164,6 @@ class MoreController :
 
     private fun <T> Observable<T>.subscribeUntilDestroy(onNext: (T) -> Unit): Subscription {
         return subscribe(onNext).also { untilDestroySubscriptions.add(it) }
-    }
-
-    private class MoreHeaderPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-        Preference(context, attrs) {
-
-        init {
-            layoutResource = R.layout.pref_more_header
-            isSelectable = false
-        }
     }
 
     companion object {

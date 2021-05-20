@@ -1,13 +1,9 @@
 package eu.kanade.tachiyomi.ui.more
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import androidx.core.os.bundleOf
-import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
-import androidx.preference.PreferenceViewHolder
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mikepenz.aboutlibraries.LibsBuilder
 import eu.kanade.tachiyomi.BuildConfig
@@ -16,6 +12,7 @@ import eu.kanade.tachiyomi.data.updater.UpdateResult
 import eu.kanade.tachiyomi.data.updater.UpdaterService
 import eu.kanade.tachiyomi.data.updater.github.GithubUpdateChecker
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.util.CrashLogUtil
@@ -27,6 +24,7 @@ import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import timber.log.Timber
 import java.text.DateFormat
@@ -35,7 +33,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
-class AboutController : SettingsController() {
+class AboutController : SettingsController(), NoToolbarElevationController {
 
     private val updateChecker by lazy { GithubUpdateChecker() }
 
@@ -45,6 +43,8 @@ class AboutController : SettingsController() {
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_about
+
+        add(MoreHeaderPreference(context))
 
         add(AboutLinksPreference(context))
 
@@ -58,7 +58,12 @@ class AboutController : SettingsController() {
                     "Stable ${BuildConfig.VERSION_NAME} (${getFormattedBuildTime()})"
                 }
 
-                onClick { copyDebugInfo() }
+                onClick {
+                    activity?.let {
+                        val deviceInfo = CrashLogUtil(it).getDebugInfo()
+                        it.copyToClipboard("Debug information", deviceInfo)
+                    }
+                }
             }
             if (isUpdaterEnabled) {
                 preference {
@@ -153,13 +158,6 @@ class AboutController : SettingsController() {
         }
     }
 
-    private fun copyDebugInfo() {
-        activity?.let {
-            val deviceInfo = CrashLogUtil(it).getDebugInfo()
-            activity?.copyToClipboard("Debug information", deviceInfo)
-        }
-    }
-
     private fun getFormattedBuildTime(): String {
         return try {
             val inputDf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.US)
@@ -177,24 +175,5 @@ class AboutController : SettingsController() {
         } catch (e: ParseException) {
             BuildConfig.BUILD_TIME
         }
-    }
-}
-
-private class AboutLinksPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-    Preference(context, attrs) {
-
-    init {
-        layoutResource = R.layout.pref_about_links
-        isSelectable = false
-    }
-
-    override fun onBindViewHolder(holder: PreferenceViewHolder) {
-        super.onBindViewHolder(holder)
-
-        // holder.findViewById(R.id.btn_website).setOnClickListener { openInBrowser("https://tachiyomi.org") }
-        // holder.findViewById(R.id.btn_discord).setOnClickListener { openInBrowser("https://discord.gg/tachiyomi") }
-        // holder.findViewById(R.id.btn_twitter).setOnClickListener { openInBrowser("https://twitter.com/tachiyomiorg") }
-        // holder.findViewById(R.id.btn_facebook).setOnClickListener { openInBrowser("https://facebook.com/tachiyomiorg") }
-        // holder.findViewById(R.id.btn_github).setOnClickListener { openInBrowser("https://github.com/tachiyomiorg") }
     }
 }
