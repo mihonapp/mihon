@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -14,23 +15,20 @@ import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
 
 class SourceFilterSheet(
     activity: Activity,
-    onFilterClicked: () -> Unit,
-    onResetClicked: () -> Unit
+    private val onFilterClicked: () -> Unit,
+    private val onResetClicked: () -> Unit
 ) : BaseBottomSheetDialog(activity) {
 
     private var filterNavView: FilterNavigationView = FilterNavigationView(activity)
-    private val sheetBehavior: BottomSheetBehavior<*>
 
-    init {
+    override fun createView(inflater: LayoutInflater): View {
         filterNavView.onFilterClicked = {
             onFilterClicked()
             this.dismiss()
         }
         filterNavView.onResetClicked = onResetClicked
 
-        setContentView(filterNavView)
-
-        sheetBehavior = BottomSheetBehavior.from(filterNavView.parent as ViewGroup)
+        return filterNavView
     }
 
     override fun show() {
