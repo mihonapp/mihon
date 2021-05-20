@@ -1,9 +1,13 @@
 package eu.kanade.tachiyomi.ui.more
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
 import androidx.core.os.bundleOf
+import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
+import androidx.preference.PreferenceViewHolder
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mikepenz.aboutlibraries.LibsBuilder
 import eu.kanade.tachiyomi.BuildConfig
@@ -17,14 +21,12 @@ import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.lang.toDateTimestampString
-import eu.kanade.tachiyomi.util.preference.iconRes
-import eu.kanade.tachiyomi.util.preference.iconTint
+import eu.kanade.tachiyomi.util.preference.add
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.copyToClipboard
-import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import timber.log.Timber
 import java.text.DateFormat
@@ -44,95 +46,39 @@ class AboutController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_about
 
-        val tintColor = context.getResourceColor(R.attr.colorAccent)
-
-        preference {
-            key = "pref_about_version"
-            titleRes = R.string.version
-            summary = if (BuildConfig.DEBUG) {
-                "Preview r${BuildConfig.COMMIT_COUNT} (${BuildConfig.COMMIT_SHA})"
-            } else {
-                "Stable ${BuildConfig.VERSION_NAME}"
-            }
-
-            onClick { copyDebugInfo() }
-        }
-        preference {
-            key = "pref_about_build_time"
-            titleRes = R.string.build_time
-            summary = getFormattedBuildTime()
-        }
-        if (isUpdaterEnabled) {
-            preference {
-                key = "pref_about_check_for_updates"
-                titleRes = R.string.check_for_updates
-
-                onClick { checkVersion() }
-            }
-        }
-        preference {
-            key = "pref_about_whats_new"
-            titleRes = R.string.whats_new
-
-            onClick {
-                val url = if (BuildConfig.DEBUG) {
-                    "https://github.com/tachiyomiorg/tachiyomi-preview/releases/tag/r${BuildConfig.COMMIT_COUNT}"
-                } else {
-                    "https://github.com/tachiyomiorg/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
-                }
-                openInBrowser(url)
-            }
-        }
+        add(AboutLinksPreference(context))
 
         preferenceCategory {
             preference {
-                key = "pref_about_website"
-                titleRes = R.string.website
-                iconRes = R.drawable.ic_earth_24dp
-                iconTint = tintColor
-                "https://tachiyomi.org".also {
-                    summary = it
-                    onClick { openInBrowser(it) }
+                key = "pref_about_version"
+                titleRes = R.string.version
+                summary = if (BuildConfig.DEBUG) {
+                    "Preview r${BuildConfig.COMMIT_COUNT} (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
+                } else {
+                    "Stable ${BuildConfig.VERSION_NAME} (${getFormattedBuildTime()})"
+                }
+
+                onClick { copyDebugInfo() }
+            }
+            if (isUpdaterEnabled) {
+                preference {
+                    key = "pref_about_check_for_updates"
+                    titleRes = R.string.check_for_updates
+
+                    onClick { checkVersion() }
                 }
             }
             preference {
-                key = "pref_about_discord"
-                title = "Discord"
-                iconRes = R.drawable.ic_discord_24dp
-                iconTint = tintColor
-                "https://discord.gg/tachiyomi".also {
-                    summary = it
-                    onClick { openInBrowser(it) }
-                }
-            }
-            preference {
-                key = "pref_about_twitter"
-                title = "Twitter"
-                iconRes = R.drawable.ic_twitter_24dp
-                iconTint = tintColor
-                "https://twitter.com/tachiyomiorg".also {
-                    summary = it
-                    onClick { openInBrowser(it) }
-                }
-            }
-            preference {
-                key = "pref_about_facebook"
-                title = "Facebook"
-                iconRes = R.drawable.ic_facebook_24dp
-                iconTint = tintColor
-                "https://facebook.com/tachiyomiorg".also {
-                    summary = it
-                    onClick { openInBrowser(it) }
-                }
-            }
-            preference {
-                key = "pref_about_github"
-                title = "GitHub"
-                iconRes = R.drawable.ic_github_24dp
-                iconTint = tintColor
-                "https://github.com/tachiyomiorg".also {
-                    summary = it
-                    onClick { openInBrowser(it) }
+                key = "pref_about_whats_new"
+                titleRes = R.string.whats_new
+
+                onClick {
+                    val url = if (BuildConfig.DEBUG) {
+                        "https://github.com/tachiyomiorg/tachiyomi-preview/releases/tag/r${BuildConfig.COMMIT_COUNT}"
+                    } else {
+                        "https://github.com/tachiyomiorg/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
+                    }
+                    openInBrowser(url)
                 }
             }
             preference {
@@ -231,5 +177,24 @@ class AboutController : SettingsController() {
         } catch (e: ParseException) {
             BuildConfig.BUILD_TIME
         }
+    }
+}
+
+private class AboutLinksPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    Preference(context, attrs) {
+
+    init {
+        layoutResource = R.layout.pref_about_links
+        isSelectable = false
+    }
+
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
+        super.onBindViewHolder(holder)
+
+        // holder.findViewById(R.id.btn_website).setOnClickListener { openInBrowser("https://tachiyomi.org") }
+        // holder.findViewById(R.id.btn_discord).setOnClickListener { openInBrowser("https://discord.gg/tachiyomi") }
+        // holder.findViewById(R.id.btn_twitter).setOnClickListener { openInBrowser("https://twitter.com/tachiyomiorg") }
+        // holder.findViewById(R.id.btn_facebook).setOnClickListener { openInBrowser("https://facebook.com/tachiyomiorg") }
+        // holder.findViewById(R.id.btn_github).setOnClickListener { openInBrowser("https://github.com/tachiyomiorg") }
     }
 }
