@@ -308,6 +308,7 @@
         <item name="android:textAllCaps">false</item>
 
         <item name="backgroundTint">@android:color/transparent</item>
+        <item name="rippleColor">?attr/rippleColor</item>
 
         <item name="iconGravity">top</item>
         <item name="iconTint">@color/button_action_selector</item>
@@ -347,6 +348,7 @@
         <item name="tabMinWidth">75dp</item>
         <item name="tabMode">scrollable</item>
         <item name="tabTextAppearance">@style/TextAppearance.Widget.Tab</item>
+        <item name="tabRippleColor">?attr/rippleNavColor</item>
     </style>
 
 
@@ -370,12 +372,8 @@
     <!--===============-->
     <!--Custom Selector-->
     <!--===============-->
-    <style name="PreferenceThemeLight" parent="@style/PreferenceThemeOverlay">
-        <item name="android:selectableItemBackground">@drawable/ripple_light</item>
-    </style>
-
-    <style name="PreferenceThemeDark" parent="@style/PreferenceThemeOverlay">
-        <item name="android:selectableItemBackground">@drawable/ripple_dark</item>
+    <style name="PreferenceThemeCustom" parent="@style/PreferenceThemeOverlay">
+        <item name="android:selectableItemBackground">@drawable/ripple_background</item>
     </style>
 
 </resources>

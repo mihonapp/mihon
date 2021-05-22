@@ -59,7 +59,7 @@
         <item name="actionModeCloseDrawable">@drawable/ic_close_24dp</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
         <item name="toolbarNavigationButtonStyle">@style/Theme.Toolbar.Navigation</item>
-        <item name="preferenceTheme">@style/PreferenceThemeLight</item>
+        <item name="preferenceTheme">@style/PreferenceThemeCustom</item>
         <item name="dialogTheme">@style/Theme.AlertDialog.Light</item>
         <item name="materialAlertDialogTheme">@style/Theme.AlertDialog.Light</item>
         <item name="bottomSheetDialogTheme">@style/Theme.BottomSheet</item>
@@ -104,6 +104,7 @@
         <item name="colorAccentOnPrimary">@color/textColorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
         <item name="colorFilterActive">@color/filterColorDark</item>
+        <item name="rippleNavColor">@color/md_white_1000_6</item>
         <item name="actionBarTheme">@style/Theme.Toolbar.Light</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
@@ -157,7 +158,7 @@
         <item name="actionBarTheme">@style/Theme.Toolbar.Custom</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
         <item name="toolbarNavigationButtonStyle">@style/Theme.Toolbar.Navigation</item>
-        <item name="preferenceTheme">@style/PreferenceThemeDark</item>
+        <item name="preferenceTheme">@style/PreferenceThemeCustom</item>
         <item name="dialogTheme">@style/Theme.AlertDialog.Dark</item>
         <item name="materialAlertDialogTheme">@style/Theme.AlertDialog.Dark</item>
         <item name="bottomSheetDialogTheme">@style/Theme.BottomSheet</item>
@@ -193,6 +194,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccentOnPrimary">@color/textColorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimary</item>
+
+        <item name="rippleNavColor">@color/md_white_1000_6</item>
     </style>
 
     <style name="Theme.Tachiyomi.Dark.Amoled">
