@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.UnattendedTrackService
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.toSChapter
@@ -26,6 +27,7 @@ import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.chapter.syncChaptersWithTrackServiceTwoWay
 import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.withUIContext
@@ -709,6 +711,10 @@ class MangaPresenter(
                             async {
                                 val track = it.service.refresh(it.track!!)
                                 db.insertTrack(track).executeAsBlocking()
+
+                                if (it.service is UnattendedTrackService) {
+                                    syncChaptersWithTrackServiceTwoWay(db, chapters, track, it.service)
+                                }
                             }
                         }
                         .awaitAll()
@@ -740,6 +746,10 @@ class MangaPresenter(
                 try {
                     service.bind(item)
                     db.insertTrack(item).executeAsBlocking()
+
+                    if (service is UnattendedTrackService) {
+                        syncChaptersWithTrackServiceTwoWay(db, chapters, item, service)
+                    }
                 } catch (e: Throwable) {
                     withUIContext { view?.applicationContext?.toast(e.message) }
                 }
