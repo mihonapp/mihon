@@ -53,7 +53,7 @@
 }
 ##---------------End: proguard configuration for Gson  ----------
 
-##---------------Begin: proguard configuration for Kotlin Serializer  ----------
+##---------------Begin: proguard configuration for kotlinx.serialization  ----------
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt # core serialization annotations
 
@@ -72,4 +72,9 @@
 -keepclasseswithmembers class eu.kanade.tachiyomi.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
-##---------------End: proguard configuration for Kotlin Serializer  ----------
+
+-keep class kotlinx.serialization.**
+-keepclassmembers class kotlinx.serialization.** {
+    <methods>;
+}
+##---------------End: proguard configuration for kotlinx.serialization  ----------
