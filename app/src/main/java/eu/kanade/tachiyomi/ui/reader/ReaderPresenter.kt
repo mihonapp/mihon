@@ -501,8 +501,9 @@ class ReaderPresenter(
      */
     fun getMangaReadingMode(resolveDefault: Boolean = true): Int {
         val default = preferences.defaultReadingMode()
+        val readingMode = ReadingModeType.fromPreference(manga?.readingModeType)
         return when {
-            resolveDefault && manga?.readingModeType == ReadingModeType.DEFAULT.flagValue -> default
+            resolveDefault && readingMode == ReadingModeType.DEFAULT -> default
             else -> manga?.readingModeType ?: default
         }
     }
