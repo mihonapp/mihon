@@ -89,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/download_progress_text"
-        android:background="?selectableItemBackgroundBorderless"
+        android:background="@drawable/ripple_regular"
         android:contentDescription="@string/action_menu"
         android:paddingVertical="16dp"
         android:paddingHorizontal="10dp"
