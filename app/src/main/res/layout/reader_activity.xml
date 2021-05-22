@@ -61,8 +61,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize" />
 
         <LinearLayout
             android:id="@+id/reader_menu_bottom"

@@ -48,7 +48,7 @@
         app:layout_constraintStart_toEndOf="@id/image"
         app:layout_constraintTop_toBottomOf="@+id/title"
         tools:text="English"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/source_latest"

@@ -142,10 +142,10 @@
             android:layout_marginStart="16dp"
             android:text="@string/add_to_library"
             app:icon="@drawable/ic_favorite_border_24dp"
-            app:rippleColor="?attr/rippleColor"
             app:layout_constraintEnd_toStartOf="@+id/btn_tracking"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/manga_info" />
+            app:layout_constraintTop_toBottomOf="@+id/manga_info"
+            app:rippleColor="?attr/rippleColor" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_tracking"
@@ -155,10 +155,10 @@
             android:text="@string/manga_tracking_tab"
             android:visibility="gone"
             app:icon="@drawable/ic_sync_24dp"
-            app:rippleColor="?attr/rippleColor"
             app:layout_constraintEnd_toStartOf="@+id/btn_webview"
             app:layout_constraintStart_toEndOf="@+id/btn_favorite"
             app:layout_constraintTop_toBottomOf="@+id/manga_info"
+            app:rippleColor="?attr/rippleColor"
             tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
@@ -170,10 +170,10 @@
             android:text="@string/action_web_view"
             android:visibility="gone"
             app:icon="@drawable/ic_public_24dp"
-            app:rippleColor="?attr/rippleColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_tracking"
             app:layout_constraintTop_toBottomOf="@+id/manga_info"
+            app:rippleColor="?attr/rippleColor"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
