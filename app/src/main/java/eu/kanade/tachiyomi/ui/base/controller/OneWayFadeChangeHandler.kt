@@ -31,12 +31,11 @@ class OneWayFadeChangeHandler : FadeChangeHandler {
         if (to != null) {
             val start: Float = if (toAddedToContainer) 0F else to.alpha
             animator.play(ObjectAnimator.ofFloat(to, View.ALPHA, start, 1f))
-        } else {
-            if (from != null && (!isPush || removesFromViewOnPush())) {
-                container.removeView(from)
-            }
         }
 
+        if (from != null && (!isPush || removesFromViewOnPush())) {
+            container.removeView(from)
+        }
         return animator
     }
 
