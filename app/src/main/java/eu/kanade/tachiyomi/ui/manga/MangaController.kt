@@ -1020,23 +1020,11 @@ class MangaController :
 
     // OVERFLOW MENU DIALOGS
 
-    private fun getUnreadChaptersSorted(): List<ChapterItem> {
-        val chapters = presenter.chapters
-            .sortedWith(presenter.getChapterSort())
-            .filter { !it.read && it.status == Download.State.NOT_DOWNLOADED }
-            .distinctBy { it.name }
-        return if (presenter.sortDescending()) {
-            chapters.reversed()
-        } else {
-            chapters
-        }
-    }
-
     private fun downloadChapters(choice: Int) {
         val chaptersToDownload = when (choice) {
-            R.id.download_next -> getUnreadChaptersSorted().take(1)
-            R.id.download_next_5 -> getUnreadChaptersSorted().take(5)
-            R.id.download_next_10 -> getUnreadChaptersSorted().take(10)
+            R.id.download_next -> presenter.getUnreadChaptersSorted().take(1)
+            R.id.download_next_5 -> presenter.getUnreadChaptersSorted().take(5)
+            R.id.download_next_10 -> presenter.getUnreadChaptersSorted().take(10)
             R.id.download_custom -> {
                 showCustomDownloadDialog()
                 return
@@ -1059,7 +1047,7 @@ class MangaController :
     }
 
     override fun downloadCustomChapters(amount: Int) {
-        val chaptersToDownload = getUnreadChaptersSorted().take(amount)
+        val chaptersToDownload = presenter.getUnreadChaptersSorted().take(amount)
         if (chaptersToDownload.isNotEmpty()) {
             downloadChapters(chaptersToDownload)
         }

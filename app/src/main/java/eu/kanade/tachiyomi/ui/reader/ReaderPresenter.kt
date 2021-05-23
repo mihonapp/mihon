@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.byteSize
 import eu.kanade.tachiyomi.util.lang.launchIO
@@ -123,12 +124,9 @@ class ReaderPresenter(
             else -> dbChapters
         }
 
-        when (manga.sorting) {
-            Manga.CHAPTER_SORTING_SOURCE -> ChapterLoadBySource().get(chaptersForReader)
-            Manga.CHAPTER_SORTING_NUMBER -> ChapterLoadByNumber().get(chaptersForReader, selectedChapter)
-            Manga.CHAPTER_SORTING_UPLOAD_DATE -> ChapterLoadByUploadDate().get(chaptersForReader)
-            else -> error("Unknown sorting method")
-        }.map(::ReaderChapter)
+        chaptersForReader
+            .sortedWith(getChapterSort(manga))
+            .map(::ReaderChapter)
     }
 
     private var hasTrackers: Boolean = false
