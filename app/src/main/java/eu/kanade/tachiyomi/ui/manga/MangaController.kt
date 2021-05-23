@@ -206,11 +206,17 @@ class MangaController :
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
-        binding.recycler.applyInsetter {
-            type(navigationBars = true) {
-                padding()
+        listOfNotNull(binding.fullRecycler, binding.infoRecycler, binding.chaptersRecycler)
+            .forEach {
+                it.applyInsetter {
+                    type(navigationBars = true) {
+                        padding()
+                    }
+                }
+
+                it.layoutManager = LinearLayoutManager(view.context)
+                it.setHasFixedSize(true)
             }
-        }
         binding.actionToolbar.applyInsetter {
             type(navigationBars = true) {
                 margin(bottom = true)
@@ -220,32 +226,41 @@ class MangaController :
         if (manga == null || source == null) return
 
         // Init RecyclerView and adapter
-        mangaInfoAdapter = MangaInfoHeaderAdapter(this, fromSource)
+        mangaInfoAdapter = MangaInfoHeaderAdapter(this, fromSource, binding.infoRecycler != null)
         chaptersHeaderAdapter = MangaChaptersHeaderAdapter(this)
         chaptersAdapter = ChaptersAdapter(this, view.context)
 
-        binding.recycler.adapter = ConcatAdapter(mangaInfoAdapter, chaptersHeaderAdapter, chaptersAdapter)
-        binding.recycler.layoutManager = LinearLayoutManager(view.context)
-        binding.recycler.setHasFixedSize(true)
+        // Phone layout
+        binding.fullRecycler?.let {
+            it.adapter = ConcatAdapter(mangaInfoAdapter, chaptersHeaderAdapter, chaptersAdapter)
+
+            it.scrollEvents()
+                .onEach { updateToolbarTitleAlpha() }
+                .launchIn(viewScope)
+        }
+        // Tablet layout
+        binding.infoRecycler?.let {
+            it.adapter = mangaInfoAdapter
+        }
+        binding.chaptersRecycler?.let {
+            it.adapter = ConcatAdapter(chaptersHeaderAdapter, chaptersAdapter)
+        }
+
         chaptersAdapter?.fastScroller = binding.fastScroller
 
-        actionFabScrollListener = actionFab?.shrinkOnScroll(binding.recycler)
+        actionFabScrollListener = actionFab?.shrinkOnScroll(chaptersRecycler)
 
         // Skips directly to chapters list if navigated to from the library
-        binding.recycler.post {
+        chaptersRecycler.post {
             if (!fromSource && preferences.jumpToChapters()) {
-                (binding.recycler.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(1, 0)
+                (chaptersRecycler.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(1, 0)
             }
 
             // Delayed in case we need to jump to chapters
-            binding.recycler.post {
+            binding.fullRecycler?.post {
                 updateToolbarTitleAlpha()
             }
         }
-
-        binding.recycler.scrollEvents()
-            .onEach { updateToolbarTitleAlpha() }
-            .launchIn(viewScope)
 
         binding.swipeRefresh.refreshes()
             .onEach {
@@ -269,15 +284,19 @@ class MangaController :
     }
 
     private fun updateToolbarTitleAlpha(alpha: Int? = null) {
+        if (binding.fullRecycler == null) {
+            return
+        }
+
         val calculatedAlpha = when {
             // Specific alpha provided
             alpha != null -> alpha
 
             // First item isn't in view, full opacity
-            ((binding.recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() > 0) -> 255
+            ((binding.fullRecycler!!.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() > 0) -> 255
 
             // Based on scroll amount when first item is in view
-            else -> min(binding.recycler.computeVerticalScrollOffset(), 255)
+            else -> min(binding.fullRecycler!!.computeVerticalScrollOffset(), 255)
         }
 
         (activity as? MainActivity)?.binding?.toolbar?.setTitleTextColor(
@@ -321,7 +340,7 @@ class MangaController :
 
     override fun cleanupFab(fab: ExtendedFloatingActionButton) {
         fab.setOnClickListener(null)
-        actionFabScrollListener?.let { binding.recycler.removeOnScrollListener(it) }
+        actionFabScrollListener?.let { binding.fullRecycler?.removeOnScrollListener(it) }
         actionFab = null
     }
 
@@ -1083,6 +1102,9 @@ class MangaController :
     }
 
     // Tracker sheet - end
+
+    private val chaptersRecycler: RecyclerView
+        get() = binding.fullRecycler ?: binding.chaptersRecycler!!
 
     companion object {
         const val FROM_SOURCE_EXTRA = "from_source"
