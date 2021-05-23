@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -145,8 +146,16 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             )
 
             // Set behavior of bottom nav
-            preferences.hideBottomBar()
+            preferences.hideBottomBarOnScroll()
                 .asImmediateFlow { setBottomNavBehaviorOnScroll() }
+                .launchIn(lifecycleScope)
+        }
+
+        if (binding.sideNav != null) {
+            preferences.showSideNavOnBottom()
+                .asImmediateFlow {
+                    binding.sideNav?.menuGravity = if (!it) Gravity.TOP else Gravity.BOTTOM
+                }
                 .launchIn(lifecycleScope)
         }
 
@@ -505,7 +514,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
         binding.bottomNav?.updateLayoutParams<CoordinatorLayout.LayoutParams> {
             behavior = when {
-                preferences.hideBottomBar().get() -> HideBottomViewOnScrollBehavior<View>()
+                preferences.hideBottomBarOnScroll().get() -> HideBottomViewOnScrollBehavior<View>()
                 else -> null
             }
         }

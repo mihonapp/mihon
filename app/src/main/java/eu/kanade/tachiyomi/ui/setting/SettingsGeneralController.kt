@@ -46,9 +46,15 @@ class SettingsGeneralController : SettingsController() {
             titleRes = R.string.pref_confirm_exit
             defaultValue = false
         }
-        if (!context.isTablet()) {
+        if (context.isTablet()) {
             switchPreference {
-                key = Keys.hideBottomBar
+                key = Keys.showSideNavOnBottom
+                titleRes = R.string.pref_move_side_nav_to_bottom
+                defaultValue = false
+            }
+        } else {
+            switchPreference {
+                key = Keys.hideBottomBarOnScroll
                 titleRes = R.string.pref_hide_bottom_bar_on_scroll
                 defaultValue = true
             }

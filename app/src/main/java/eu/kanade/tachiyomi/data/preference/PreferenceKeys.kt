@@ -13,7 +13,9 @@ object PreferenceKeys {
 
     const val confirmExit = "pref_confirm_exit"
 
-    const val hideBottomBar = "pref_hide_bottom_bar_on_scroll"
+    const val hideBottomBarOnScroll = "pref_hide_bottom_bar_on_scroll"
+
+    const val showSideNavOnBottom = "pref_show_side_nav_on_bottom"
 
     const val enableTransitions = "pref_enable_transitions_key"
 
