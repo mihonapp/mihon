@@ -6,12 +6,16 @@
     <!--========-->
     <style name="Theme.Toolbar" parent="@style/ThemeOverlay.MaterialComponents.ActionBar" />
 
-    <style name="Theme.Toolbar.Light" parent="Theme.Toolbar.Custom">
+    <style name="Theme.Toolbar.Light" parent="Theme.Toolbar.Custom.Dark">
         <item name="popupTheme">@style/ThemeOverlay.MaterialComponents.Light</item>
     </style>
 
-    <style name="Theme.Toolbar.Custom" parent="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
-        <item name="android:colorControlHighlight">?attr/rippleColor</item>
+    <style name="Theme.Toolbar.Custom" parent="@style/ThemeOverlay.MaterialComponents.ActionBar">
+        <item name="android:colorControlHighlight">?attr/rippleToolbarColor</item>
+    </style>
+
+    <style name="Theme.Toolbar.Custom.Dark" parent="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <item name="android:colorControlHighlight">?attr/rippleToolbarColor</item>
     </style>
 
     <style name="Theme.Toolbar.Navigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
@@ -292,7 +296,7 @@
     <!--==============-->
     <style name="Theme.Widget.Button" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">?attr/colorAccent</item>
-        <item name="rippleColor">?attr/rippleColor</item>
+        <item name="rippleColor">?attr/rippleSecondaryColor</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
@@ -348,7 +352,7 @@
         <item name="tabMinWidth">75dp</item>
         <item name="tabMode">scrollable</item>
         <item name="tabTextAppearance">@style/TextAppearance.Widget.Tab</item>
-        <item name="tabRippleColor">?attr/rippleNavColor</item>
+        <item name="tabRippleColor">?attr/rippleSecondaryColor</item>
     </style>
 
 
