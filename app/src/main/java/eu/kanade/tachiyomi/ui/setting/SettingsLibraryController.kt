@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
+import eu.kanade.tachiyomi.util.system.isTablet
 import eu.kanade.tachiyomi.widget.MinMaxNumberPicker
 import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateCheckBox
 import eu.kanade.tachiyomi.widget.materialdialogs.listItemsQuadStateMultiChoice
@@ -75,10 +76,12 @@ class SettingsLibraryController : SettingsController() {
                     }
                     .launchIn(viewScope)
             }
-            switchPreference {
-                key = Keys.jumpToChapters
-                titleRes = R.string.pref_jump_to_chapters
-                defaultValue = false
+            if (!context.isTablet()) {
+                switchPreference {
+                    key = Keys.jumpToChapters
+                    titleRes = R.string.pref_jump_to_chapters
+                    defaultValue = false
+                }
             }
         }
 

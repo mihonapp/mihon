@@ -237,6 +237,18 @@ class MangaController :
             it.scrollEvents()
                 .onEach { updateToolbarTitleAlpha() }
                 .launchIn(viewScope)
+
+            // Skips directly to chapters list if navigated to from the library
+            it.post {
+                if (!fromSource && preferences.jumpToChapters()) {
+                    (it.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(1, 0)
+                }
+
+                // Delayed in case we need to jump to chapters
+                it.post {
+                    updateToolbarTitleAlpha()
+                }
+            }
         }
         // Tablet layout
         binding.infoRecycler?.let {
@@ -248,19 +260,7 @@ class MangaController :
 
         chaptersAdapter?.fastScroller = binding.fastScroller
 
-        actionFabScrollListener = actionFab?.shrinkOnScroll(chaptersRecycler)
-
-        // Skips directly to chapters list if navigated to from the library
-        chaptersRecycler.post {
-            if (!fromSource && preferences.jumpToChapters()) {
-                (chaptersRecycler.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(1, 0)
-            }
-
-            // Delayed in case we need to jump to chapters
-            binding.fullRecycler?.post {
-                updateToolbarTitleAlpha()
-            }
-        }
+        actionFabScrollListener = actionFab?.shrinkOnScroll(chapterRecycler)
 
         binding.swipeRefresh.refreshes()
             .onEach {
@@ -340,7 +340,7 @@ class MangaController :
 
     override fun cleanupFab(fab: ExtendedFloatingActionButton) {
         fab.setOnClickListener(null)
-        actionFabScrollListener?.let { binding.fullRecycler?.removeOnScrollListener(it) }
+        actionFabScrollListener?.let { chapterRecycler.removeOnScrollListener(it) }
         actionFab = null
     }
 
@@ -1103,7 +1103,7 @@ class MangaController :
 
     // Tracker sheet - end
 
-    private val chaptersRecycler: RecyclerView
+    private val chapterRecycler: RecyclerView
         get() = binding.fullRecycler ?: binding.chaptersRecycler!!
 
     companion object {
