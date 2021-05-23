@@ -125,7 +125,7 @@ class ReaderPresenter(
         }
 
         chaptersForReader
-            .sortedWith(getChapterSort(manga))
+            .sortedWith(getChapterSort(manga, sortDescending = false))
             .map(::ReaderChapter)
     }
 
