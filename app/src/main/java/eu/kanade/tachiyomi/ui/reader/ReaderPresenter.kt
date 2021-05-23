@@ -96,28 +96,22 @@ class ReaderPresenter(
         val selectedChapter = dbChapters.find { it.id == chapterId }
             ?: error("Requested chapter of id $chapterId not found in chapter list")
 
-        val chaptersForReader =
-            if (preferences.skipRead() || preferences.skipFiltered()) {
-                val list = dbChapters
-                    .filter {
-                        if (preferences.skipRead() && it.read) {
-                            return@filter false
-                        } else if (preferences.skipFiltered()) {
-                            if (
-                                (manga.readFilter == Manga.CHAPTER_SHOW_READ && !it.read) ||
+        val chaptersForReader = when {
+            (preferences.skipRead() || preferences.skipFiltered()) -> {
+                val list = dbChapters.filterNot {
+                    when {
+                        preferences.skipRead() && it.read -> true
+                        preferences.skipFiltered() -> {
+                            (manga.readFilter == Manga.CHAPTER_SHOW_READ && !it.read) ||
                                 (manga.readFilter == Manga.CHAPTER_SHOW_UNREAD && it.read) ||
-                                (
-                                    manga.downloadedFilter == Manga.CHAPTER_SHOW_DOWNLOADED &&
-                                        !downloadManager.isChapterDownloaded(it, manga)
-                                    ) ||
-                                (manga.bookmarkedFilter == Manga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark)
-                            ) {
-                                return@filter false
-                            }
+                                (manga.downloadedFilter == Manga.CHAPTER_SHOW_DOWNLOADED && !downloadManager.isChapterDownloaded(it, manga)) ||
+                                (manga.downloadedFilter == Manga.CHAPTER_SHOW_NOT_DOWNLOADED && downloadManager.isChapterDownloaded(it, manga)) ||
+                                (manga.bookmarkedFilter == Manga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark) ||
+                                (manga.bookmarkedFilter == Manga.CHAPTER_SHOW_NOT_BOOKMARKED && it.bookmark)
                         }
-
-                        true
+                        else -> false
                     }
+                }
                     .toMutableList()
 
                 val find = list.find { it.id == chapterId }
@@ -125,9 +119,9 @@ class ReaderPresenter(
                     list.add(selectedChapter)
                 }
                 list
-            } else {
-                dbChapters
             }
+            else -> dbChapters
+        }
 
         when (manga.sorting) {
             Manga.CHAPTER_SORTING_SOURCE -> ChapterLoadBySource().get(chaptersForReader)
