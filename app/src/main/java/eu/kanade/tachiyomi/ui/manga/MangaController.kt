@@ -690,7 +690,7 @@ class MangaController :
     fun onNextChapters(chapters: List<ChapterItem>) {
         // If the list is empty and it hasn't requested previously, fetch chapters from source
         // We use presenter chapters instead because they are always unfiltered
-        if (!presenter.hasRequested && presenter.chapters.isEmpty()) {
+        if (!presenter.hasRequested && presenter.allChapters.isEmpty()) {
             fetchChaptersFromSource()
         }
 
@@ -1029,8 +1029,8 @@ class MangaController :
                 showCustomDownloadDialog()
                 return
             }
-            R.id.download_unread -> presenter.chapters.filter { !it.read }
-            R.id.download_all -> presenter.chapters
+            R.id.download_unread -> presenter.allChapters.filter { !it.read }
+            R.id.download_all -> presenter.allChapters
             else -> emptyList()
         }
         if (chaptersToDownload.isNotEmpty()) {
@@ -1042,7 +1042,7 @@ class MangaController :
     private fun showCustomDownloadDialog() {
         DownloadCustomChaptersDialog(
             this,
-            presenter.chapters.size
+            presenter.allChapters.size
         ).showDialog(router)
     }
 

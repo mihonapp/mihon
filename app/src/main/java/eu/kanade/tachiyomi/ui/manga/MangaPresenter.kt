@@ -66,10 +66,9 @@ class MangaPresenter(
      */
     private var fetchMangaJob: Job? = null
 
-    /**
-     * List of chapters of the manga. It's always unfiltered and unsorted.
-     */
-    var chapters: List<ChapterItem> = emptyList()
+    var allChapters: List<ChapterItem> = emptyList()
+        private set
+    var filteredAndSortedChapters: List<ChapterItem> = emptyList()
         private set
 
     /**
@@ -125,7 +124,13 @@ class MangaPresenter(
         // Prepare the relay.
         chaptersRelay.flatMap { applyChapterFilters(it) }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(MangaController::onNextChapters) { _, error -> Timber.e(error) }
+            .subscribeLatestCache(
+                { _, chapters ->
+                    filteredAndSortedChapters = chapters
+                    view?.onNextChapters(chapters)
+                },
+                { _, error -> Timber.e(error) }
+            )
 
         // Manga info - end
 
@@ -144,7 +149,7 @@ class MangaPresenter(
                     setDownloadedChapters(chapters)
 
                     // Store the last emission
-                    this.chapters = chapters
+                    this.allChapters = chapters
 
                     // Listen for download status changes
                     observeDownloads()
@@ -402,7 +407,7 @@ class MangaPresenter(
      * Updates the UI after applying the filters.
      */
     private fun refreshChapters() {
-        chaptersRelay.call(chapters)
+        chaptersRelay.call(allChapters)
     }
 
     /**
@@ -444,7 +449,7 @@ class MangaPresenter(
     private fun onDownloadStatusChange(download: Download) {
         // Assign the download to the model object.
         if (download.status == Download.State.QUEUE) {
-            chapters.find { it.id == download.chapter.id }?.let {
+            allChapters.find { it.id == download.chapter.id }?.let {
                 if (it.download == null) {
                     it.download = download
                 }
@@ -461,16 +466,15 @@ class MangaPresenter(
      * Returns the next unread chapter or null if everything is read.
      */
     fun getNextUnreadChapter(): ChapterItem? {
-        val chapters = chapters.sortedWith(getChapterSort(manga))
         return if (sortDescending()) {
-            return chapters.findLast { !it.read }
+            return filteredAndSortedChapters.findLast { !it.read }
         } else {
-            chapters.find { !it.read }
+            filteredAndSortedChapters.find { !it.read }
         }
     }
 
     fun getUnreadChaptersSorted(): List<ChapterItem> {
-        val chapters = chapters
+        val chapters = allChapters
             .sortedWith(getChapterSort(manga))
             .filter { !it.read && it.status == Download.State.NOT_DOWNLOADED }
             .distinctBy { it.name }
@@ -708,7 +712,7 @@ class MangaPresenter(
                                 db.insertTrack(track).executeAsBlocking()
 
                                 if (it.service is UnattendedTrackService) {
-                                    syncChaptersWithTrackServiceTwoWay(db, chapters, track, it.service)
+                                    syncChaptersWithTrackServiceTwoWay(db, allChapters, track, it.service)
                                 }
                             }
                         }
@@ -743,7 +747,7 @@ class MangaPresenter(
                     db.insertTrack(item).executeAsBlocking()
 
                     if (service is UnattendedTrackService) {
-                        syncChaptersWithTrackServiceTwoWay(db, chapters, item, service)
+                        syncChaptersWithTrackServiceTwoWay(db, allChapters, item, service)
                     }
                 } catch (e: Throwable) {
                     withUIContext { view?.applicationContext?.toast(e.message) }
