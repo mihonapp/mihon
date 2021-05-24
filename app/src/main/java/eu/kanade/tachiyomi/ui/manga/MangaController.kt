@@ -253,6 +253,15 @@ class MangaController :
         // Tablet layout
         binding.infoRecycler?.let {
             it.adapter = mangaInfoAdapter
+
+            it.scrollEvents()
+                .onEach { updateToolbarTitleAlpha() }
+                .launchIn(viewScope)
+
+            // Delayed in case we need to jump to chapters
+            it.post {
+                updateToolbarTitleAlpha()
+            }
         }
         binding.chaptersRecycler?.let {
             it.adapter = ConcatAdapter(chaptersHeaderAdapter, chaptersAdapter)
@@ -284,19 +293,17 @@ class MangaController :
     }
 
     private fun updateToolbarTitleAlpha(alpha: Int? = null) {
-        if (binding.fullRecycler == null) {
-            return
-        }
+        val scrolledList = binding.fullRecycler ?: binding.infoRecycler!!
 
         val calculatedAlpha = when {
             // Specific alpha provided
             alpha != null -> alpha
 
             // First item isn't in view, full opacity
-            ((binding.fullRecycler!!.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() > 0) -> 255
+            ((scrolledList.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() > 0) -> 255
 
             // Based on scroll amount when first item is in view
-            else -> min(binding.fullRecycler!!.computeVerticalScrollOffset(), 255)
+            else -> min(scrolledList.computeVerticalScrollOffset(), 255)
         }
 
         (activity as? MainActivity)?.binding?.toolbar?.setTitleTextColor(

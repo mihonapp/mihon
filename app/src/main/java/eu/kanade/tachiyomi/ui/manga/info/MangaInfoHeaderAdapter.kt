@@ -195,16 +195,10 @@ class MangaInfoHeaderAdapter(
          */
         private fun setMangaInfo(manga: Manga, source: Source?) {
             // Update full title TextView.
-            with(binding.mangaFullTitle) {
-                if (isTablet) {
-                    isVisible = false
-                } else {
-                    text = if (manga.title.isBlank()) {
-                        view.context.getString(R.string.unknown)
-                    } else {
-                        manga.title
-                    }
-                }
+            binding.mangaFullTitle.text = if (manga.title.isBlank()) {
+                view.context.getString(R.string.unknown)
+            } else {
+                manga.title
             }
 
             // Update author TextView.
