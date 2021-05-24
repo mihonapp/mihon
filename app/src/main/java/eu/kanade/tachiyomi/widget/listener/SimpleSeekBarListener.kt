@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.widget
+package eu.kanade.tachiyomi.widget.listener
 
 import android.widget.SeekBar
 

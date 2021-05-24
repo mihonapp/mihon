@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.network
+package eu.kanade.tachiyomi.network.interceptor
 
 import eu.kanade.tachiyomi.source.online.HttpSource
 import okhttp3.Interceptor

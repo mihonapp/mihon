@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.google.android.material.tabs.TabLayout
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.widget.SimpleTabSelectedListener
+import eu.kanade.tachiyomi.widget.listener.SimpleTabSelectedListener
 import eu.kanade.tachiyomi.widget.sheet.TabbedBottomSheetDialog
 
 class ReaderSettingsSheet(

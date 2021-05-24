@@ -1,9 +1,8 @@
-package eu.kanade.tachiyomi.network
+package eu.kanade.tachiyomi.network.interceptor
 
 import android.os.SystemClock
 import okhttp3.Interceptor
 import okhttp3.Response
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 /**

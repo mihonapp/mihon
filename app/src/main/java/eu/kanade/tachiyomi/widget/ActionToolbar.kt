@@ -13,6 +13,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.ActionToolbarBinding
+import eu.kanade.tachiyomi.widget.listener.SimpleAnimationListener
 
 /**
  * A toolbar holding only menu items.

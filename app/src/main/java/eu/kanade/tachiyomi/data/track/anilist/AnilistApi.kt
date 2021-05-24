@@ -8,8 +8,8 @@ import com.afollestad.date.year
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.POST
-import eu.kanade.tachiyomi.network.RateLimitInterceptor
 import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.interceptor.RateLimitInterceptor
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
