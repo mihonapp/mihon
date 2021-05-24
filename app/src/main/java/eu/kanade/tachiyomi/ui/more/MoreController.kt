@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.download.DownloadController
+import eu.kanade.tachiyomi.ui.setting.SettingsBackupController
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
 import eu.kanade.tachiyomi.util.preference.add
@@ -91,6 +92,14 @@ class MoreController :
                 iconTint = tintColor
                 onClick {
                     router.pushController(CategoryController().withFadeTransaction())
+                }
+            }
+            preference {
+                titleRes = R.string.label_backup
+                iconRes = R.drawable.ic_backup_24dp
+                iconTint = tintColor
+                onClick {
+                    router.pushController(SettingsBackupController().withFadeTransaction())
                 }
             }
         }

@@ -18,7 +18,7 @@
     <string name="label_recent_updates">Updates</string>
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
-    <string name="label_backup">Backup</string>
+    <string name="label_backup">Backup and restore</string>
     <string name="label_migration">Migrate</string>
     <string name="label_extensions">Extensions</string>
     <string name="label_extension_info">Extension info</string>
@@ -389,7 +389,6 @@
     <string name="pref_search_pinned_sources_only">Only include pinned sources</string>
 
       <!-- Backup section -->
-    <string name="backup">Backup</string>
     <string name="pref_create_backup">Create backup</string>
     <string name="pref_create_backup_summ">Can be used to restore current library</string>
     <string name="pref_restore_backup">Restore backup</string>

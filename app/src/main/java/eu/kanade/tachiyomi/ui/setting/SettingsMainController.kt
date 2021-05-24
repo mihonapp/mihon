@@ -61,7 +61,7 @@ class SettingsMainController : SettingsController() {
         preference {
             iconRes = R.drawable.ic_backup_24dp
             iconTint = tintColor
-            titleRes = R.string.backup
+            titleRes = R.string.label_backup
             onClick { navigateTo(SettingsBackupController()) }
         }
         preference {

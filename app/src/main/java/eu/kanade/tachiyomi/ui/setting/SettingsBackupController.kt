@@ -53,46 +53,43 @@ class SettingsBackupController : SettingsController() {
     }
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
-        titleRes = R.string.backup
+        titleRes = R.string.label_backup
 
-        preferenceCategory {
-            titleRes = R.string.backup
+        preference {
+            key = "pref_create_backup"
+            titleRes = R.string.pref_create_backup
+            summaryRes = R.string.pref_create_backup_summ
 
-            preference {
-                key = "pref_create_backup"
-                titleRes = R.string.pref_create_backup
-                summaryRes = R.string.pref_create_backup_summ
-
-                onClick {
-                    if (!BackupCreateService.isRunning(context)) {
-                        val ctrl = CreateBackupDialog()
-                        ctrl.targetController = this@SettingsBackupController
-                        ctrl.showDialog(router)
-                    } else {
-                        context.toast(R.string.backup_in_progress)
-                    }
-                }
-            }
-            preference {
-                key = "pref_restore_backup"
-                titleRes = R.string.pref_restore_backup
-                summaryRes = R.string.pref_restore_backup_summ
-
-                onClick {
-                    if (!BackupRestoreService.isRunning(context)) {
-                        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                            addCategory(Intent.CATEGORY_OPENABLE)
-                            type = "*/*"
-                        }
-                        val title = resources?.getString(R.string.file_select_backup)
-                        val chooser = Intent.createChooser(intent, title)
-                        startActivityForResult(chooser, CODE_BACKUP_RESTORE)
-                    } else {
-                        context.toast(R.string.restore_in_progress)
-                    }
+            onClick {
+                if (!BackupCreateService.isRunning(context)) {
+                    val ctrl = CreateBackupDialog()
+                    ctrl.targetController = this@SettingsBackupController
+                    ctrl.showDialog(router)
+                } else {
+                    context.toast(R.string.backup_in_progress)
                 }
             }
         }
+        preference {
+            key = "pref_restore_backup"
+            titleRes = R.string.pref_restore_backup
+            summaryRes = R.string.pref_restore_backup_summ
+
+            onClick {
+                if (!BackupRestoreService.isRunning(context)) {
+                    val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                        type = "*/*"
+                    }
+                    val title = resources?.getString(R.string.file_select_backup)
+                    val chooser = Intent.createChooser(intent, title)
+                    startActivityForResult(chooser, CODE_BACKUP_RESTORE)
+                } else {
+                    context.toast(R.string.restore_in_progress)
+                }
+            }
+        }
+
         preferenceCategory {
             titleRes = R.string.pref_backup_service_category
 
