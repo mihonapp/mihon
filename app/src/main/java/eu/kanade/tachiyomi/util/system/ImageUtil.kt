@@ -10,11 +10,14 @@ import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import tachiyomi.decoder.Format
+import tachiyomi.decoder.ImageDecoder
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -66,6 +69,34 @@ object ImageUtil {
         } catch (e: Exception) {
         }
         return null
+    }
+
+    fun isAnimatedAndSupported(stream: InputStream): Boolean {
+        try {
+            val bytes = ByteArray(32)
+
+            val length = if (stream.markSupported()) {
+                stream.mark(bytes.size)
+                stream.read(bytes, 0, bytes.size).also { stream.reset() }
+            } else {
+                stream.read(bytes, 0, bytes.size)
+            }
+
+            if (length == -1) {
+                return false
+            }
+
+            val type = ImageDecoder.findType(bytes) ?: return false
+            return when (type.format) {
+                Format.Gif -> true
+                // Coil supports animated WebP on Android 9.0+
+                // https://coil-kt.github.io/coil/getting_started/#supported-image-formats
+                Format.Webp -> type.isAnimated && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                else -> false
+            }
+        } catch (e: Exception) {
+        }
+        return false
     }
 
     private fun ByteArray.compareWith(magic: ByteArray): Boolean {

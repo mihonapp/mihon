@@ -205,7 +205,10 @@ dependencies {
     implementation("io.coil-kt:coil:$coilVersion")
     implementation("io.coil-kt:coil-gif:$coilVersion")
 
-    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:846abe0")
+    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:846abe0") {
+        exclude(module = "image-decoder")
+    }
+    implementation("com.github.tachiyomiorg:image-decoder:e6d680f")
 
     // Logging
     implementation("com.jakewharton.timber:timber:4.7.1")
