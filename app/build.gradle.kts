@@ -8,7 +8,6 @@ plugins {
     id("com.android.application")
     id("com.mikepenz.aboutlibraries.plugin")
     kotlin("android")
-    kotlin("kapt")
     kotlin("plugin.serialization")
     id("com.github.zellius.shortcut-helper")
 }
