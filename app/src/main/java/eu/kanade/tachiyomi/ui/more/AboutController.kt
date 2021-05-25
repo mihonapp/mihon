@@ -21,7 +21,6 @@ import eu.kanade.tachiyomi.util.lang.toDateTimestampString
 import eu.kanade.tachiyomi.util.preference.add
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
-import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
@@ -46,60 +45,58 @@ class AboutController : SettingsController(), NoToolbarElevationController {
 
         add(MoreHeaderPreference(context))
 
-        add(AboutLinksPreference(context))
-
-        preferenceCategory {
-            preference {
-                key = "pref_about_version"
-                titleRes = R.string.version
-                summary = if (BuildConfig.DEBUG) {
-                    "Preview r${BuildConfig.COMMIT_COUNT} (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
-                } else {
-                    "Stable ${BuildConfig.VERSION_NAME} (${getFormattedBuildTime()})"
-                }
-
-                onClick {
-                    activity?.let {
-                        val deviceInfo = CrashLogUtil(it).getDebugInfo()
-                        it.copyToClipboard("Debug information", deviceInfo)
-                    }
-                }
+        preference {
+            key = "pref_about_version"
+            titleRes = R.string.version
+            summary = if (BuildConfig.DEBUG) {
+                "Preview r${BuildConfig.COMMIT_COUNT} (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
+            } else {
+                "Stable ${BuildConfig.VERSION_NAME} (${getFormattedBuildTime()})"
             }
-            if (isUpdaterEnabled) {
-                preference {
-                    key = "pref_about_check_for_updates"
-                    titleRes = R.string.check_for_updates
 
-                    onClick { checkVersion() }
-                }
-            }
-            preference {
-                key = "pref_about_whats_new"
-                titleRes = R.string.whats_new
-
-                onClick {
-                    val url = if (BuildConfig.DEBUG) {
-                        "https://github.com/tachiyomiorg/tachiyomi-preview/releases/tag/r${BuildConfig.COMMIT_COUNT}"
-                    } else {
-                        "https://github.com/tachiyomiorg/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
-                    }
-                    openInBrowser(url)
-                }
-            }
-            preference {
-                key = "pref_about_licenses"
-                titleRes = R.string.licenses
-                onClick {
-                    LibsBuilder()
-                        .withActivityTitle(activity!!.getString(R.string.licenses))
-                        .withAboutIconShown(false)
-                        .withAboutVersionShown(false)
-                        .withLicenseShown(true)
-                        .withEdgeToEdge(true)
-                        .start(activity!!)
+            onClick {
+                activity?.let {
+                    val deviceInfo = CrashLogUtil(it).getDebugInfo()
+                    it.copyToClipboard("Debug information", deviceInfo)
                 }
             }
         }
+        if (isUpdaterEnabled) {
+            preference {
+                key = "pref_about_check_for_updates"
+                titleRes = R.string.check_for_updates
+
+                onClick { checkVersion() }
+            }
+        }
+        preference {
+            key = "pref_about_whats_new"
+            titleRes = R.string.whats_new
+
+            onClick {
+                val url = if (BuildConfig.DEBUG) {
+                    "https://github.com/tachiyomiorg/tachiyomi-preview/releases/tag/r${BuildConfig.COMMIT_COUNT}"
+                } else {
+                    "https://github.com/tachiyomiorg/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
+                }
+                openInBrowser(url)
+            }
+        }
+        preference {
+            key = "pref_about_licenses"
+            titleRes = R.string.licenses
+            onClick {
+                LibsBuilder()
+                    .withActivityTitle(activity!!.getString(R.string.licenses))
+                    .withAboutIconShown(false)
+                    .withAboutVersionShown(false)
+                    .withLicenseShown(true)
+                    .withEdgeToEdge(true)
+                    .start(activity!!)
+            }
+        }
+
+        add(AboutLinksPreference(context))
     }
 
     /**

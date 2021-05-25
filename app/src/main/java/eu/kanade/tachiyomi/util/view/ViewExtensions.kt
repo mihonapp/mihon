@@ -55,7 +55,16 @@ inline fun View.snack(
  * @param stringRes String resource for tooltip.
  */
 inline fun View.setTooltip(@StringRes stringRes: Int) {
-    TooltipCompat.setTooltipText(this, context.getString(stringRes))
+    setTooltip(context.getString(stringRes))
+}
+
+/**
+ * Adds a tooltip shown on long press.
+ *
+ * @param text Text for tooltip.
+ */
+inline fun View.setTooltip(text: String) {
+    TooltipCompat.setTooltipText(this, text)
 }
 
 /**
