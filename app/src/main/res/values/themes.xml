@@ -23,6 +23,8 @@
         <item name="colorPrimaryVariant">@color/md_white_1000</item>
         <item name="colorSecondary">@color/colorAccentLight</item>
         <item name="colorOnSecondary">@color/md_white_1000</item>
+        <item name="colorTertiary">@color/green</item>
+        <item name="colorOnTertiary">@color/md_white_1000</item>
         <item name="colorSurface">@color/dialogLight</item>
         <item name="colorOnSurface">@color/textColorPrimaryLight</item>
         <item name="colorOnBackground">@color/textColorPrimaryLight</item>
@@ -45,6 +47,7 @@
         <item name="rippleColor">@color/rippleColorLight</item>
         <item name="rippleSecondaryColor">@color/rippleSecondaryColorLight</item>
         <item name="rippleToolbarColor">@color/rippleToolbarColorLight</item>
+        <item name="android:colorControlHighlight">@color/rippleColorLight</item>
 
         <!-- Handles RTL text -->
         <item name="android:textAlignment">gravity</item>
@@ -84,6 +87,7 @@
         <item name="md_color_title">?attr/colorOnSurface</item>
         <item name="md_color_content">?attr/colorOnSurface</item>
         <item name="md_color_button_text">?attr/colorAccent</item>
+        <item name="md_ripple_color">?attr/rippleColor</item>
         <item name="md_button_casing">literal</item>
         <item name="md_corner_radius">@dimen/dialog_radius</item>
 
@@ -137,10 +141,15 @@
         <!-- Theme colors -->
         <item name="colorAccentOnPrimary">@color/colorAccentStrawberry</item>
         <item name="colorSecondary">@color/colorAccentStrawberry</item>
+        <item name="colorTertiary">@color/md_blue_A400</item>
+        <item name="colorOnTertiary">@color/md_white_1000</item>
         <item name="colorAccent">@color/colorAccentStrawberry</item>
 
         <!-- Ripples -->
         <item name="rippleSecondaryColor">@color/rippleSecondaryColorStrawberry</item>
+
+        <!-- Themes -->
+        <item name="materialAlertDialogTheme">@style/Theme.AlertDialog.Light.StrawberryDaiquiri</item>
 
         <!-- Custom Attributes-->
         <item name="colorLibrarySelectionActive">@color/selectorColorStrawberry</item>
@@ -159,6 +168,8 @@
         <item name="colorPrimaryVariant">@color/colorDarkPrimary</item>
         <item name="colorSecondary">@color/colorAccentDark</item>
         <item name="colorOnSecondary">@color/textColorPrimaryDark</item>
+        <item name="colorTertiary">@color/green</item>
+        <item name="colorOnTertiary">@color/md_white_1000</item>
         <item name="colorSurface">@color/dialogDark</item>
         <item name="colorOnSurface">@color/textColorPrimaryDark</item>
         <item name="colorOnBackground">@color/textColorPrimaryDark</item>
@@ -186,6 +197,7 @@
         <item name="rippleColor">@color/rippleColorDark</item>
         <item name="rippleSecondaryColor">@color/rippleSecondaryColorDark</item>
         <item name="rippleToolbarColor">@color/rippleToolbarColorDark</item>
+        <item name="android:colorControlHighlight">@color/rippleColorDark</item>
 
         <!-- Themes -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
@@ -221,6 +233,7 @@
         <item name="md_color_title">?attr/colorOnSurface</item>
         <item name="md_color_content">?attr/colorOnSurface</item>
         <item name="md_color_button_text">?attr/colorAccent</item>
+        <item name="md_ripple_color">?attr/rippleColor</item>
         <item name="md_button_casing">literal</item>
         <item name="md_corner_radius">@dimen/dialog_radius</item>
 
@@ -254,10 +267,15 @@
         <item name="colorAccentOnPrimary">@color/colorAccentApple</item>
         <item name="colorSecondary">@color/colorAccentApple</item>
         <item name="colorOnSecondary">@color/colorOnSecondaryApple</item>
+        <item name="colorTertiary">@color/md_blue_A400</item>
+        <item name="colorOnTertiary">@color/md_white_1000</item>
         <item name="colorAccent">@color/colorAccentApple</item>
 
         <!-- Ripples -->
         <item name="rippleSecondaryColor">@color/rippleSecondaryColorApple</item>
+
+        <!-- Themes -->
+        <item name="materialAlertDialogTheme">@style/Theme.AlertDialog.Dark.GreenApple</item>
 
         <!-- Custom Attributes-->
         <item name="colorLibrarySelectionActive">@color/selectorColorApple</item>
@@ -272,6 +290,8 @@
         <item name="colorPrimaryVariant">@color/dialogDusk</item>
         <item name="colorSecondary">@color/colorAccentDusk</item>
         <item name="colorOnSecondary">@color/textColorPrimaryDusk</item>
+        <item name="colorTertiary">@color/md_blue_A400</item>
+        <item name="colorOnTertiary">@color/md_white_1000</item>
         <item name="colorSurface">@color/dialogDusk</item>
         <item name="colorOnSurface">@color/textColorPrimaryDusk</item>
         <item name="colorOnBackground">@color/textColorPrimaryDusk</item>
@@ -283,6 +303,9 @@
 
         <!-- Ripples -->
         <item name="rippleSecondaryColor">@color/rippleSecondaryColorDusk</item>
+
+        <!-- Themes -->
+        <item name="materialAlertDialogTheme">@style/Theme.AlertDialog.Dark.MidnightDusk</item>
 
         <!-- Custom Attributes -->
         <item name="colorLibrarySelection">@color/selectorColorDark</item>
@@ -329,6 +352,7 @@
         <item name="rippleColor">@color/rippleColorAmoled</item>
         <item name="rippleSecondaryColor">@color/rippleSecondaryColorAmoled</item>
         <item name="rippleToolbarColor">@color/rippleToolbarColorAmoled</item>
+        <item name="android:colorControlHighlight">@color/rippleColorAmoled</item>
 
         <!-- Themes -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
@@ -363,6 +387,7 @@
         <item name="md_color_title">?attr/colorOnSurface</item>
         <item name="md_color_content">?attr/colorOnSurface</item>
         <item name="md_color_button_text">?attr/colorAccent</item>
+        <item name="md_ripple_color">?attr/rippleColor</item>
         <item name="md_button_casing">literal</item>
         <item name="md_corner_radius">@dimen/dialog_radius</item>
 
@@ -385,12 +410,17 @@
         <item name="colorAccentOnPrimary">@color/colorAccentPink</item>
         <item name="colorSecondary">@color/colorAccentPink</item>
         <item name="colorOnSecondary">@color/textColorPrimaryPink</item>
+        <item name="colorTertiary">@color/md_blue_A400</item>
+        <item name="colorOnTertiary">@color/md_white_1000</item>
         <item name="colorOnSurface">@color/textColorPrimaryPink</item>
         <item name="colorOnBackground">@color/textColorPrimaryPink</item>
         <item name="colorAccent">@color/colorAccentPink</item>
 
         <!-- Ripples -->
         <item name="rippleSecondaryColor">@color/rippleSecondaryColorPink</item>
+
+        <!-- Themes -->
+        <item name="materialAlertDialogTheme">@style/Theme.AlertDialog.Amoled.HotPink</item>
     </style>
 
     <!--===============-->
