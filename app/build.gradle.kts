@@ -214,7 +214,7 @@ dependencies {
     implementation("com.jakewharton.timber:timber:4.7.1")
 
     // Crash reports
-    implementation("ch.acra:acra-http:5.7.0")
+    implementation("ch.acra:acra-http:5.8.1")
 
     // Sort
     implementation("com.github.gpanther:java-nat-sort:natural-comparator-1.1")

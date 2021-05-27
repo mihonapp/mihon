@@ -31,9 +31,8 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.notification
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.acra.ACRA
-import org.acra.annotation.AcraCore
-import org.acra.annotation.AcraHttpSender
+import org.acra.config.httpSender
+import org.acra.ktx.initAcra
 import org.acra.sender.HttpSender
 import org.conscrypt.Conscrypt
 import timber.log.Timber
@@ -42,14 +41,6 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.security.Security
 
-@AcraCore(
-    buildConfigClass = BuildConfig::class,
-    excludeMatchingSharedPreferencesKeys = [".*username.*", ".*password.*", ".*token.*"]
-)
-@AcraHttpSender(
-    uri = BuildConfig.ACRA_URI,
-    httpMethod = HttpSender.Method.PUT
-)
 open class App : Application(), LifecycleObserver, ImageLoaderFactory {
 
     private val preferences: PreferencesHelper by injectLazy()
@@ -140,7 +131,15 @@ open class App : Application(), LifecycleObserver, ImageLoaderFactory {
 
     protected open fun setupAcra() {
         if (BuildConfig.FLAVOR != "dev") {
-            ACRA.init(this)
+            initAcra {
+                buildConfigClass = BuildConfig::class.java
+                excludeMatchingSharedPreferencesKeys = arrayOf(".*username.*", ".*password.*", ".*token.*")
+
+                httpSender {
+                    uri = BuildConfig.ACRA_URI
+                    httpMethod = HttpSender.Method.PUT
+                }
+            }
         }
     }
 
