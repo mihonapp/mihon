@@ -29,12 +29,12 @@
                 android:id="@+id/info_recycler"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/chapters_recycler"
-                app:layout_constraintWidth_percent="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_max="450dp"
+                app:layout_constraintWidth_percent="0.5"
                 tools:itemCount="1"
                 tools:listitem="@layout/manga_info_header" />
 
@@ -44,10 +44,10 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingBottom="@dimen/fab_list_padding"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/info_recycler"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/chapters_item" />
 
             <eu.kanade.tachiyomi.widget.MaterialFastScroll
@@ -57,9 +57,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="end"
                 app:fastScrollerBubbleEnabled="false"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 
             <eu.kanade.tachiyomi.widget.ActionToolbar
@@ -68,8 +68,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/chapters_recycler"
                 app:layout_constraintEnd_toEndOf="@+id/chapters_recycler"
+                app:layout_constraintStart_toStartOf="@+id/chapters_recycler"
                 app:layout_dodgeInsetEdges="bottom" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
