@@ -100,8 +100,9 @@
     <style name="Theme.BottomSheet" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="bottomSheetStyle">@style/Theme.BottomSheet.Style</item>
+        <item name="android:windowAnimationStyle">@style/Animation.BottomSheetDialog</item>
     </style>
 
     <style name="Theme.BottomSheet.Style" parent="Widget.MaterialComponents.BottomSheet">
@@ -114,6 +115,11 @@
         <item name="cornerSizeTopLeft">@dimen/dialog_radius</item>
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+    <style name="Animation.BottomSheetDialog" parent="Animation.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/bottom_sheet_slide_in</item>
+        <item name="android:windowExitAnimation">@anim/bottom_sheet_slide_out</item>
     </style>
 
 
