@@ -153,6 +153,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
 
             webView?.stopLoading()
             webView?.destroy()
+            webView = null
         }
 
         // Throw exception if we failed to bypass Cloudflare
