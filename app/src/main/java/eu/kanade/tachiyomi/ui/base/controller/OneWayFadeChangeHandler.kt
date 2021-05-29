@@ -34,8 +34,9 @@ class OneWayFadeChangeHandler : FadeChangeHandler {
         }
 
         if (from != null && (!isPush || removesFromViewOnPush())) {
-            container.removeView(from)
+            from.alpha = 0f
         }
+
         return animator
     }
 
