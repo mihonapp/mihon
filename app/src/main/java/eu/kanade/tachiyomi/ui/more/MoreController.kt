@@ -96,7 +96,7 @@ class MoreController :
             }
             preference {
                 titleRes = R.string.label_backup
-                iconRes = R.drawable.ic_backup_24dp
+                iconRes = R.drawable.ic_settings_backup_restore_24dp
                 iconTint = tintColor
                 onClick {
                     router.pushController(SettingsBackupController().withFadeTransaction())

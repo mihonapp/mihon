@@ -120,7 +120,7 @@ open class ExtensionController :
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.extension_main, menu)
+        inflater.inflate(R.menu.browse_extensions, menu)
 
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
