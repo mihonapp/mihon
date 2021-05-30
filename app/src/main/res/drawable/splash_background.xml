@@ -3,10 +3,10 @@
 
     <item android:drawable="?attr/colorBackgroundSplash" />
 
-    <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@drawable/splash_icon" />
-    </item>
+    <item
+        android:width="72dp"
+        android:height="72dp"
+        android:drawable="@drawable/ic_tachi"
+        android:gravity="center" />
 
 </layer-list>
