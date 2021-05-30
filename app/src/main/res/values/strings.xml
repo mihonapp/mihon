@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name" translatable="false">Tachiyomi</string>
 
-    <!--Models-->
+    <!-- Models -->
     <string name="name">Name</string>
     <string name="categories">Categories</string>
     <string name="manga">Manga</string>
@@ -67,21 +67,15 @@
     <string name="action_rename_category">Rename category</string>
     <string name="action_move_category">Set categories</string>
     <string name="action_edit_cover">Edit cover</string>
-    <string name="action_sort_up">Sort up</string>
-    <string name="action_sort_down">Sort down</string>
-    <string name="action_show_downloaded">Downloaded</string>
-    <string name="action_next_unread">Next unread</string>
     <string name="action_view_chapters">View chapters</string>
     <string name="action_stop">Stop</string>
     <string name="action_pause">Pause</string>
-    <string name="action_close">Close</string>
     <string name="action_previous_chapter">Previous chapter</string>
     <string name="action_next_chapter">Next chapter</string>
     <string name="action_retry">Retry</string>
     <string name="action_remove">Remove</string>
     <string name="action_start">Start</string>
     <string name="action_resume">Resume</string>
-    <string name="action_move">Move</string>
     <string name="action_open_in_browser">Open in browser</string>
     <!-- Do not translate "WebView" -->
     <string name="action_open_in_web_view">Open in WebView</string>
@@ -91,8 +85,8 @@
     <string name="action_display_mode">Display mode</string>
     <string name="action_display">Display</string>
     <string name="action_display_grid">Compact grid</string>
-    <string name="action_display_list">List</string>
     <string name="action_display_comfortable_grid">Comfortable grid</string>
+    <string name="action_display_list">List</string>
     <string name="action_display_download_badge">Download badges</string>
     <string name="action_display_unread_badge">Unread badges</string>
     <string name="action_display_local_badge">Local badges</string>
@@ -105,7 +99,6 @@
     <string name="action_cancel_all">Cancel all</string>
     <string name="cancel_all_for_series">Cancel all for this series</string>
     <string name="action_sort">Sort</string>
-    <string name="action_sort_descending">Descending</string>
     <string name="action_reorganize_by">Reorder</string>
     <string name="action_order_by_upload_date">By upload date</string>
     <string name="action_order_by_chapter_number">By chapter number</string>
@@ -124,8 +117,6 @@
     <string name="action_show_errors">Show errors</string>
     <string name="action_create">Create</string>
     <string name="action_restore">Restore</string>
-    <string name="action_open">Open</string>
-    <string name="action_login">Log in</string>
     <string name="action_webview_back">Back</string>
     <string name="action_webview_forward">Forward</string>
     <string name="action_webview_refresh">Refresh</string>
@@ -135,7 +126,6 @@
 
     <!-- Shortcuts-->
     <string name="app_not_available">App not available</string>
-    <string name="short_recent_updates">Updates</string>
 
     <!-- Preferences -->
       <!-- Subsections -->
@@ -328,7 +318,6 @@
     <string name="vertical_plus_viewer">Continuous vertical</string>
     <string name="pager_viewer">Paged</string>
     <string name="pref_viewer_nav">Navigation layout</string>
-    <string name="pref_image_decoder">Image decoder</string>
     <string name="pref_image_scale_type">Scale type</string>
     <string name="scale_type_fit_screen">Fit screen</string>
     <string name="scale_type_stretch">Stretch</string>
@@ -440,7 +429,6 @@
     <string name="used_cache">Used: %1$s</string>
     <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
     <string name="cache_delete_error">An error occurred while clearing cache</string>
-    <string name="choices_reset">Dialog choices reset</string>
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for manga that are not saved in your library</string>
     <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library manga will be lost</string>
