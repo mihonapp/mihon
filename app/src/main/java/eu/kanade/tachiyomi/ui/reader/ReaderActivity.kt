@@ -378,6 +378,36 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             }
         }
 
+        // Crop borders
+        with(binding.actionCropBorders) {
+            setTooltip(R.string.pref_crop_borders)
+
+            setOnClickListener {
+                val isPagerType = ReadingModeType.isPagerType(presenter.getMangaReadingMode())
+                val enabled = if (isPagerType) {
+                    preferences.cropBorders().toggle()
+                } else {
+                    preferences.cropBordersWebtoon().toggle()
+                }
+
+                menuToggleToast?.cancel()
+                menuToggleToast = toast(
+                    if (enabled) {
+                        R.string.on
+                    } else {
+                        R.string.off
+                    }
+                )
+            }
+        }
+        updateCropBordersShortcut()
+        listOf(preferences.cropBorders(), preferences.cropBordersWebtoon())
+            .forEach { pref ->
+                pref.asFlow()
+                    .onEach { updateCropBordersShortcut() }
+                    .launchIn(lifecycleScope)
+            }
+
         // Rotation
         with(binding.actionRotation) {
             setTooltip(R.string.rotation_type)
@@ -399,27 +429,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 }
             }
         }
-
-        // Crop borders
-        with(binding.actionCropBorders) {
-            setTooltip(R.string.pref_crop_borders)
-
-            setOnClickListener {
-                val isPagerType = ReadingModeType.isPagerType(presenter.getMangaReadingMode())
-                if (isPagerType) {
-                    preferences.cropBorders().toggle()
-                } else {
-                    preferences.cropBordersWebtoon().toggle()
-                }
-            }
-        }
-        updateCropBordersShortcut()
-        listOf(preferences.cropBorders(), preferences.cropBordersWebtoon())
-            .forEach { pref ->
-                pref.asFlow()
-                    .onEach { updateCropBordersShortcut() }
-                    .launchIn(lifecycleScope)
-            }
 
         // Settings sheet
         with(binding.actionSettings) {
