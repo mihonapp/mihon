@@ -61,6 +61,8 @@ jobs:
           set -x
           echo "VERSION_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
+      # TODO: need to support multiple APKs
+
       - name: Sign APK
         if: startsWith(github.ref, 'refs/tags/') && github.repository == 'tachiyomiorg/tachiyomi'
         uses: r0adkll/sign-android-release@v1
