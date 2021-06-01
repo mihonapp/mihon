@@ -125,9 +125,8 @@
                 tools:text="Source" />
 
         </LinearLayout>
+
     </LinearLayout>
-
-
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_favorite"
