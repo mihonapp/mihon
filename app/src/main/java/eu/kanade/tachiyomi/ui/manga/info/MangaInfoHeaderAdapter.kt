@@ -275,7 +275,6 @@ class MangaInfoHeaderAdapter(
 
                 // Handle showing more or less info
                 merge(
-                    binding.mangaSummarySection.clicks(),
                     binding.mangaSummaryText.clicks(),
                     binding.mangaInfoToggleMore.clicks(),
                     binding.mangaInfoToggleLess.clicks()
