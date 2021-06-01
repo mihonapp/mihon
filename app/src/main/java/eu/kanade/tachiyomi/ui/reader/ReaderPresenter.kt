@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.app.Application
 import android.os.Bundle
-import android.os.Environment
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -29,6 +28,8 @@ import eu.kanade.tachiyomi.util.lang.byteSize
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.takeBytes
 import eu.kanade.tachiyomi.util.storage.DiskUtil
+import eu.kanade.tachiyomi.util.storage.getPicturesDir
+import eu.kanade.tachiyomi.util.storage.getTempShareDir
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.updateCoverLastModified
 import kotlinx.coroutines.async
@@ -592,9 +593,7 @@ class ReaderPresenter(
         notifier.onClear()
 
         // Pictures directory.
-        val baseDir = Environment.getExternalStorageDirectory().absolutePath +
-            File.separator + Environment.DIRECTORY_PICTURES +
-            File.separator + context.getString(R.string.app_name)
+        val baseDir = getPicturesDir(context).absolutePath
         val destDir = if (preferences.folderPerManga()) {
             File(baseDir + File.separator + manga.title)
         } else {
@@ -628,7 +627,7 @@ class ReaderPresenter(
         val manga = manga ?: return
         val context = Injekt.get<Application>()
 
-        val destDir = File(context.cacheDir, "shared_image")
+        val destDir = getTempShareDir(context)
 
         Observable.fromCallable { destDir.deleteRecursively() } // Keep only the last shared file
             .map { saveImage(page, destDir, manga) }
