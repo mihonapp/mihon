@@ -1,6 +1,5 @@
-package eu.kanade.tachiyomi.data.updater.github
+package eu.kanade.tachiyomi.data.updater
 
-import eu.kanade.tachiyomi.data.updater.Release
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -15,15 +14,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 class GithubRelease(
     @SerialName("tag_name") val version: String,
-    @SerialName("body") override val info: String,
+    @SerialName("body") val info: String,
     @SerialName("assets") private val assets: List<Assets>
-) : Release {
+) {
 
     /**
      * Get download link of latest release from the assets.
      * @return download link of latest release.
      */
-    override val downloadLink: String
+    val downloadLink: String
         get() = assets[0].downloadLink
 
     /**
