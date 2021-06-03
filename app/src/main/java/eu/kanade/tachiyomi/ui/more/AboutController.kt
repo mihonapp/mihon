@@ -167,8 +167,8 @@ class AboutController : SettingsController(), NoToolbarElevationController {
             )
             outputDf.timeZone = TimeZone.getDefault()
 
-            buildTime.toDateTimestampString(dateFormat)
-        } catch (e: ParseException) {
+            buildTime!!.toDateTimestampString(dateFormat)
+        } catch (e: Exception) {
             BuildConfig.BUILD_TIME
         }
     }
