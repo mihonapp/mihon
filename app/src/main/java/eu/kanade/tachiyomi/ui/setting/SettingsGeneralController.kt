@@ -47,10 +47,17 @@ class SettingsGeneralController : SettingsController() {
             defaultValue = false
         }
         if (context.isTablet()) {
-            switchPreference {
-                key = Keys.showSideNavOnBottom
-                titleRes = R.string.pref_move_side_nav_to_bottom
-                defaultValue = false
+            intListPreference {
+                key = Keys.sideNavIconAlignment
+                titleRes = R.string.pref_side_nav_icon_alignment
+                entriesRes = arrayOf(
+                    R.string.alignment_top,
+                    R.string.alignment_center,
+                    R.string.alignment_bottom,
+                )
+                entryValues = arrayOf("0", "1", "2")
+                defaultValue = "0"
+                summary = "%s"
             }
         } else {
             switchPreference {

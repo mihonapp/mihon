@@ -66,7 +66,7 @@ class PreferencesHelper(val context: Context) {
 
     fun hideBottomBarOnScroll() = flowPrefs.getBoolean(Keys.hideBottomBarOnScroll, true)
 
-    fun showSideNavOnBottom() = flowPrefs.getBoolean(Keys.showSideNavOnBottom, false)
+    fun sideNavIconAlignment() = flowPrefs.getInt(Keys.sideNavIconAlignment, 0)
 
     fun useAuthenticator() = flowPrefs.getBoolean(Keys.useAuthenticator, false)
 

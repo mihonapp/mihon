@@ -142,9 +142,13 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         }
 
         if (binding.sideNav != null) {
-            preferences.showSideNavOnBottom()
+            preferences.sideNavIconAlignment()
                 .asImmediateFlow {
-                    binding.sideNav?.menuGravity = if (!it) Gravity.TOP else Gravity.BOTTOM
+                    binding.sideNav?.menuGravity = when (it) {
+                        1 -> Gravity.CENTER
+                        2 -> Gravity.BOTTOM
+                        else -> Gravity.TOP
+                    }
                 }
                 .launchIn(lifecycleScope)
         }

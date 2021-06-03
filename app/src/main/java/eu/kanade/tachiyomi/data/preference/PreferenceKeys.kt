@@ -15,7 +15,7 @@ object PreferenceKeys {
 
     const val hideBottomBarOnScroll = "pref_hide_bottom_bar_on_scroll"
 
-    const val showSideNavOnBottom = "pref_show_side_nav_on_bottom"
+    const val sideNavIconAlignment = "pref_side_nav_icon_alignment"
 
     const val enableTransitions = "pref_enable_transitions_key"
 

@@ -161,7 +161,10 @@
     <string name="pref_date_format">Date format</string>
     <string name="pref_confirm_exit">Confirm exit</string>
     <string name="pref_hide_bottom_bar_on_scroll">Hide bottom bar on scroll</string>
-    <string name="pref_move_side_nav_to_bottom">Move side navigation buttons to bottom</string>
+    <string name="pref_side_nav_icon_alignment">Side navigation icon alignment</string>
+    <string name="alignment_top">Top</string>
+    <string name="alignment_center">Center</string>
+    <string name="alignment_bottom">Bottom</string>
     <string name="pref_manage_notifications">Manage notifications</string>
 
     <string name="pref_category_security">Security</string>
