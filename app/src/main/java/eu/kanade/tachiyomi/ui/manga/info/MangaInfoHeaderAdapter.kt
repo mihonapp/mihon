@@ -243,7 +243,7 @@ class MangaInfoHeaderAdapter(
             setFavoriteButtonState(manga.favorite)
 
             // Set cover if changed.
-            listOf(binding.mangaCover, binding.backdrop).forEach {
+            listOfNotNull(binding.mangaCover, binding.backdrop).forEach {
                 it.loadAny(manga)
             }
 
@@ -277,7 +277,8 @@ class MangaInfoHeaderAdapter(
                 merge(
                     binding.mangaSummaryText.clicks(),
                     binding.mangaInfoToggleMore.clicks(),
-                    binding.mangaInfoToggleLess.clicks()
+                    binding.mangaInfoToggleLess.clicks(),
+                    binding.mangaSummarySection.clicks()
                 )
                     .onEach { toggleMangaInfo() }
                     .launchIn(controller.viewScope)
@@ -287,6 +288,13 @@ class MangaInfoHeaderAdapter(
                 if (initialLoad && (fromSource || isTablet)) {
                     toggleMangaInfo()
                     initialLoad = false
+                }
+
+                // Refreshes will change the state and it needs to be set to correct state to display correctly
+                if (binding.mangaSummaryText.maxLines == 2) {
+                    binding.mangaSummarySection.transitionToState(R.id.start)
+                } else {
+                    binding.mangaSummarySection.transitionToState(R.id.end)
                 }
             }
         }
@@ -298,18 +306,17 @@ class MangaInfoHeaderAdapter(
         private fun toggleMangaInfo() {
             val isCurrentlyExpanded = binding.mangaSummaryText.maxLines != 2
 
-            binding.mangaInfoToggleMoreScrim.isVisible = isCurrentlyExpanded
-            binding.mangaInfoToggleMore.isVisible = isCurrentlyExpanded
-            binding.mangaInfoToggleLess.isVisible = !isCurrentlyExpanded
+            if (isCurrentlyExpanded) {
+                binding.mangaSummarySection.transitionToStart()
+            } else {
+                binding.mangaSummarySection.transitionToEnd()
+            }
 
             binding.mangaSummaryText.maxLines = if (isCurrentlyExpanded) {
                 2
             } else {
                 Int.MAX_VALUE
             }
-
-            binding.mangaGenresTagsCompact.isVisible = isCurrentlyExpanded
-            binding.mangaGenresTagsFullChips.isVisible = !isCurrentlyExpanded
         }
 
         /**
