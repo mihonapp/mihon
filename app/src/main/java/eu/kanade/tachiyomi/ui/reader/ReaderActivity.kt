@@ -422,8 +422,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
                     presenter.setMangaOrientationType(newOrientation.flagValue)
 
-                    updateOrientationShortcut(newOrientation.flagValue)
-
                     menuToggleToast?.cancel()
                     menuToggleToast = toast(newOrientation.stringRes)
                 }
@@ -792,6 +790,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         if (newOrientation.flag != requestedOrientation) {
             requestedOrientation = newOrientation.flag
         }
+        updateOrientationShortcut(presenter.getMangaOrientationType(resolveDefault = false))
     }
 
     /**

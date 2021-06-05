@@ -527,10 +527,11 @@ class ReaderPresenter(
     /**
      * Returns the orientation type used by this manga or the default one.
      */
-    fun getMangaOrientationType(): Int {
+    fun getMangaOrientationType(resolveDefault: Boolean = true): Int {
         val default = preferences.defaultOrientationType()
-        return when (manga?.orientationType) {
-            OrientationType.DEFAULT.flagValue -> default
+        val orientation = OrientationType.fromPreference(manga?.orientationType)
+        return when {
+            resolveDefault && orientation == OrientationType.DEFAULT -> default
             else -> manga?.orientationType ?: default
         }
     }
