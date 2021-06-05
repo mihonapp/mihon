@@ -110,7 +110,7 @@ class AboutController : SettingsController(), NoToolbarElevationController {
                 when (val result = updateChecker.checkForUpdate()) {
                     is GithubUpdateResult.NewUpdate -> {
                         val body = result.release.info
-                        val url = result.release.downloadLink
+                        val url = result.release.getDownloadLink()
 
                         // Create confirmation window
                         NewUpdateDialogController(body, url).showDialog(router)

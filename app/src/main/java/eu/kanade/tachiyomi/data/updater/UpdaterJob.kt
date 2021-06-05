@@ -21,7 +21,7 @@ class UpdaterJob(private val context: Context, workerParams: WorkerParameters) :
             val result = GithubUpdateChecker().checkForUpdate()
 
             if (result is GithubUpdateResult.NewUpdate) {
-                UpdaterNotifier(context).promptUpdate(result.release.downloadLink)
+                UpdaterNotifier(context).promptUpdate(result.release.getDownloadLink())
             }
             Result.success()
         } catch (e: Exception) {
