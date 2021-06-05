@@ -43,13 +43,14 @@ object ImageUtil {
     fun findImageType(stream: InputStream): ImageType? {
         try {
             return when (getImageType(stream)?.format) {
-                // TODO: image-decoder library currently doesn't detect this
-                // Format.Avif -> ImageType.AVIF
+                // TODO: image-decoder library currently doesn't actually detect AVIF yet
+                Format.Avif -> ImageType.AVIF
                 Format.Gif -> ImageType.GIF
                 Format.Heif -> ImageType.HEIF
                 Format.Jpeg -> ImageType.JPEG
                 Format.Png -> ImageType.PNG
                 Format.Webp -> ImageType.WEBP
+                else -> null
             }
         } catch (e: Exception) {
         }
@@ -89,7 +90,7 @@ object ImageUtil {
     }
 
     enum class ImageType(val mime: String, val extension: String) {
-        // AVIF("image/avif", "avif"),
+        AVIF("image/avif", "avif"),
         GIF("image/gif", "gif"),
         HEIF("image/heif", "heif"),
         JPEG("image/jpeg", "jpg"),
