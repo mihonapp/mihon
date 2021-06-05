@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
+import androidx.core.content.ContextCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupRestoreService
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -143,7 +143,7 @@ class NotificationReceiver : BroadcastReceiver() {
      */
     private fun shareFile(context: Context, uri: Uri, fileMimeType: String, notificationId: Int) {
         dismissNotification(context, notificationId)
-        context.startActivity(uri.toShareIntent())
+        context.startActivity(uri.toShareIntent(fileMimeType))
     }
 
     /**
@@ -192,7 +192,7 @@ class NotificationReceiver : BroadcastReceiver() {
      */
     private fun cancelRestore(context: Context, notificationId: Int) {
         BackupRestoreService.stop(context)
-        Handler().post { dismissNotification(context, notificationId) }
+        ContextCompat.getMainExecutor(context).execute { dismissNotification(context, notificationId) }
     }
 
     /**
@@ -203,7 +203,7 @@ class NotificationReceiver : BroadcastReceiver() {
      */
     private fun cancelLibraryUpdate(context: Context, notificationId: Int) {
         LibraryUpdateService.stop(context)
-        Handler().post { dismissNotification(context, notificationId) }
+        ContextCompat.getMainExecutor(context).execute { dismissNotification(context, notificationId) }
     }
 
     /**

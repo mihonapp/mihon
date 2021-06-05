@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.app.Dialog
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
@@ -171,7 +171,7 @@ class SettingsLibraryController : SettingsController() {
 
                 onChange {
                     // Post to event looper to allow the preference to be updated.
-                    Handler().post { LibraryUpdateJob.setupTask(context) }
+                    ContextCompat.getMainExecutor(context).execute { LibraryUpdateJob.setupTask(context) }
                     true
                 }
 

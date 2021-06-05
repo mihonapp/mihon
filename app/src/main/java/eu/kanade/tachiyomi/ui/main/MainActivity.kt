@@ -357,11 +357,12 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         return true
     }
 
+    @Suppress("UNNECESSARY_SAFE_CALL")
     override fun onDestroy() {
         super.onDestroy()
 
         // Binding sometimes isn't actually instantiated yet somehow
-        nav.setOnItemSelectedListener(null)
+        nav?.setOnItemSelectedListener(null)
         binding?.toolbar.setNavigationOnClickListener(null)
     }
 
