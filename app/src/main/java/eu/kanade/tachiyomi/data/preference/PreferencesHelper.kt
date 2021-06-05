@@ -284,6 +284,8 @@ class PreferencesHelper(val context: Context) {
 
     fun defaultCategory() = prefs.getInt(Keys.defaultCategory, -1)
 
+    fun categorisedDisplaySettings() = flowPrefs.getBoolean(Keys.categorizedDisplay, false)
+
     fun skipRead() = prefs.getBoolean(Keys.skipRead, false)
 
     fun skipFiltered() = prefs.getBoolean(Keys.skipFiltered, true)

@@ -124,6 +124,12 @@ class SettingsLibraryController : SettingsController() {
                     true
                 }
             }
+
+            switchPreference {
+                key = Keys.categorizedDisplay
+                titleRes = R.string.categorized_display_settings
+                defaultValue = false
+            }
         }
 
         preferenceCategory {
