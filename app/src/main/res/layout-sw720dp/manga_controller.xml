@@ -29,6 +29,7 @@
                 android:id="@+id/info_recycler"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:clipToPadding="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/chapters_recycler"
                 app:layout_constraintStart_toStartOf="parent"
