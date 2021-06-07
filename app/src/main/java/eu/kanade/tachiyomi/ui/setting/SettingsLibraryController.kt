@@ -285,7 +285,7 @@ class SettingsLibraryController : SettingsController() {
             switchPreference {
                 key = Keys.showLibraryUpdateErrors
                 titleRes = R.string.pref_library_update_error_notification
-                defaultValue = false
+                defaultValue = true
             }
         }
     }
