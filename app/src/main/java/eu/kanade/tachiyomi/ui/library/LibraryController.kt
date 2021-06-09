@@ -262,8 +262,12 @@ class LibraryController(
     }
 
     fun showSettingsSheet() {
-        adapter?.categories?.get(binding.libraryPager.currentItem)?.let { category ->
-            settingsSheet?.show(category)
+        if (adapter?.categories?.isNotEmpty() == true) {
+            adapter?.categories?.get(binding.libraryPager.currentItem)?.let { category ->
+                settingsSheet?.show(category)
+            }
+        } else {
+            settingsSheet?.show()
         }
     }
 
