@@ -527,6 +527,16 @@ class LibraryController(
     }
 
     /**
+     * Clear all of the manga currently selected, and
+     * invalidate the action mode to revert the top toolbar
+     */
+    fun clearSelection() {
+        selectedMangas.clear()
+        selectionRelay.call(LibrarySelectionEvent.Cleared())
+        invalidateActionMode()
+    }
+
+    /**
      * Move the selected manga to a list of categories.
      */
     private fun showChangeMangaCategoriesDialog() {
