@@ -1057,6 +1057,11 @@ class MangaController :
         Timber.e(error)
     }
 
+    override fun startDownloadNow(position: Int) {
+        val chapter = chaptersAdapter?.getItem(position) ?: return
+        presenter.startDownloadingNow(chapter)
+    }
+
     // OVERFLOW MENU DIALOGS
 
     private fun downloadChapters(choice: Int) {
