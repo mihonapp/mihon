@@ -101,16 +101,35 @@ class LibraryItem(
      * @return true if the manga should be included, false otherwise.
      */
     override fun filter(constraint: String): Boolean {
+        val sourceName by lazy { sourceManager.getOrStub(manga.source).name }
+        val genres by lazy { manga.getGenres() }
         return manga.title.contains(constraint, true) ||
             (manga.author?.contains(constraint, true) ?: false) ||
             (manga.artist?.contains(constraint, true) ?: false) ||
             (manga.description?.contains(constraint, true) ?: false) ||
-            sourceManager.getOrStub(manga.source).name.contains(constraint, true) ||
             if (constraint.contains(",")) {
-                constraint.split(",").all { containsGenre(it.trim(), manga.getGenres()) }
+                constraint.split(",").all { containsSourceOrGenre(it.trim(), sourceName, genres) }
             } else {
-                containsGenre(constraint, manga.getGenres())
+                containsSourceOrGenre(constraint, sourceName, genres)
             }
+    }
+
+    /**
+     * Filters a manga by checking whether the query is the manga's source OR part of
+     * the genres of the manga
+     * Checking for genre is done only if the query isn't part of the source name.
+     *
+     * @param query the query to check
+     * @param sourceName name of the manga's source
+     * @param genres list containing manga's genres
+     */
+    private fun containsSourceOrGenre(query: String, sourceName: String, genres: List<String>?): Boolean {
+        val minus = query.startsWith("-")
+        val tag = if (minus) { query.substringAfter("-") } else query
+        return when (sourceName.contains(tag, true)) {
+            false -> containsGenre(query, genres)
+            else  -> !minus
+        }
     }
 
     private fun containsGenre(tag: String, genres: List<String>?): Boolean {
