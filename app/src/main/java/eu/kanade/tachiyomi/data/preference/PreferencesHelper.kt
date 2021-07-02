@@ -282,7 +282,7 @@ class PreferencesHelper(val context: Context) {
     fun downloadNewCategories() = flowPrefs.getStringSet(Keys.downloadNewCategories, emptySet())
     fun downloadNewCategoriesExclude() = flowPrefs.getStringSet(Keys.downloadNewCategoriesExclude, emptySet())
 
-    fun lang() = prefs.getString(Keys.lang, "")
+    fun lang() = flowPrefs.getString(Keys.lang, "")
 
     fun defaultCategory() = prefs.getInt(Keys.defaultCategory, -1)
 

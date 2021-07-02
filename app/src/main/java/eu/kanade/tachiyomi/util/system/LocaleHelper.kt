@@ -25,7 +25,7 @@ object LocaleHelper {
     /**
      * The application's locale. When it's null, the system locale is used.
      */
-    private var appLocale = getLocaleFromString(preferences.lang())
+    private var appLocale = getLocaleFromString(preferences.lang().get())
 
     /**
      * The currently applied locale. Used to avoid losing the selected language after a non locale
