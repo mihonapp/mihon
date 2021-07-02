@@ -44,7 +44,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.toggle
 import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
-import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity
+import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity.Companion.applyThemePreferences
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter.SetAsCoverResult.AddToLibraryFirst
@@ -61,6 +61,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
+import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.popupMenu
 import eu.kanade.tachiyomi.util.view.setTooltip
@@ -138,7 +139,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
      * Called when the activity is created. Initializes the presenter and configuration.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(BaseThemedActivity.getThemeResourceId(preferences))
+        applyThemePreferences(preferences)
         super.onCreate(savedInstanceState)
 
         binding = ReaderActivityBinding.inflate(layoutInflater)
@@ -353,7 +354,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
         initBottomShortcuts()
 
-        val alpha = if (preferences.isDarkMode()) 230 else 242 // 90% dark 95% light
+        val alpha = if (isNightMode()) 230 else 242 // 90% dark 95% light
         val toolbarColor = ColorUtils.setAlphaComponent(getThemeColor(R.attr.colorToolbar), alpha)
         listOf(
             binding.toolbarBottom,
@@ -852,7 +853,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                     binding.readerContainer.setBackgroundResource(
                         when (preferences.readerTheme().get()) {
                             0 -> android.R.color.white
-                            2 -> R.color.background_dark
+                            2 -> R.color.reader_background_dark
                             else -> android.R.color.black
                         }
                     )
