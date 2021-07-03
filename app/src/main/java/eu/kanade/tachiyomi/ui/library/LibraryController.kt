@@ -600,7 +600,7 @@ class LibraryController(
 
     override fun onSearchViewQueryTextChange(newText: String?) {
         // Ignore events if this controller isn't at the top to avoid query being reset
-        if (router.backstack.lastOrNull()?.controller() == this) {
+        if (router.backstack.lastOrNull()?.controller == this) {
             presenter.query = newText ?: ""
             performSearch()
         }

@@ -8,6 +8,7 @@ import com.bluelinelabs.conductor.Controller
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import eu.kanade.tachiyomi.util.isLocal
 
 class DeleteLibraryMangasDialog<T>(bundle: Bundle? = null) :
     DialogController(bundle) where T : Controller, T : DeleteLibraryMangasDialog.Listener {
@@ -20,11 +21,14 @@ class DeleteLibraryMangasDialog<T>(bundle: Bundle? = null) :
     }
 
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {
+        val canDeleteChapters = mangas.any { !it.isLocal() }
+
         return MaterialDialog(activity!!)
             .title(R.string.action_remove)
             .listItemsMultiChoice(
-                R.array.delete_selected_mangas,
-                initialSelection = intArrayOf(0)
+                res = R.array.delete_selected_mangas,
+                disabledIndices = intArrayOf(1).takeUnless { canDeleteChapters },
+                initialSelection = intArrayOf(0),
             ) { _, selections, _ ->
                 val deleteFromLibrary = 0 in selections
                 val deleteChapters = 1 in selections

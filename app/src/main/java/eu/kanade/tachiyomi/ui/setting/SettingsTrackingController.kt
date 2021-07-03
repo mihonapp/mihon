@@ -71,8 +71,7 @@ class SettingsTrackingController :
                 trackManager.komga.loginNoop()
                 updatePreference(trackManager.komga.id)
             }
-        }
-        preferenceCategory {
+
             infoPreference(R.string.tracking_info)
         }
     }

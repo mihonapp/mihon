@@ -246,11 +246,10 @@ dependencies {
     implementation("com.afollestad.material-dialogs:datetime:$materialDialogsVersion")
 
     // Conductor
-    implementation("com.bluelinelabs:conductor:2.1.5")
-    implementation("com.bluelinelabs:conductor-support:2.1.5") {
-        exclude(group = "com.android.support")
-    }
-    implementation("com.github.tachiyomiorg:conductor-support-preference:2.0.1")
+    val conductorVersion = "3.0.0"
+    implementation("com.bluelinelabs:conductor:$conductorVersion")
+    implementation("com.bluelinelabs:conductor-viewpager:$conductorVersion")
+    implementation("com.github.tachiyomiorg:conductor-support-preference:$conductorVersion")
 
     // FlowBinding
     val flowbindingVersion = "1.0.0"
