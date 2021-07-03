@@ -78,7 +78,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:clickable="true"
         app:layout_insetEdge="bottom"
-        app:menu="@menu/main_nav" />
+        app:menu="@menu/main_nav"
+        tools:ignore="KeyboardInaccessibleWidget" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
