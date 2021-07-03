@@ -125,7 +125,7 @@ object LocaleHelper {
         val resources = app.resources
         resources.updateConfiguration(newConfig, resources.displayMetrics)
 
-        Locale.setDefault(currentLocale)
+        Locale.setDefault(currentLocale!!)
     }
 
     /**
