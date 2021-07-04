@@ -6,7 +6,7 @@
         <item name="colorSurface">@color/surface_amoled</item>
         <item name="android:colorBackground">@color/background_amoled</item>
         <item name="android:divider">@color/divider_amoled</item>
-        <item name="colorFilterActive">@color/filterColorAmoled</item>
+        <item name="colorFilterActive">@color/filter_dark</item>
     </style>
 
     <!--== Midnight Dusk theme ==-->

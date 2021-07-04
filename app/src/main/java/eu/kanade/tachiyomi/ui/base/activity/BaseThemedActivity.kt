@@ -35,7 +35,7 @@ abstract class BaseThemedActivity : AppCompatActivity() {
             val resIds = mutableListOf<Int>()
             when (preferences.appTheme().get()) {
                 PreferenceValues.AppTheme.BLUE -> {
-                    resIds += R.style.Theme_Tachiyomi_DarkBlue
+                    resIds += R.style.Theme_Tachiyomi_Blue
                     resIds += R.style.ThemeOverlay_Tachiyomi_ColoredBars
                 }
                 PreferenceValues.AppTheme.GREEN_APPLE -> {

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="splash">@color/accent_lightblue</color>
+    <color name="splash">@color/accent_blue</color>
 
-    <!-- Light Theme -->
+    <!-- Default Theme -->
     <color name="accent_default">@color/md_blue_A400</color>
     <color name="divider_default">@color/md_black_1000_12</color>
     <color name="surface_default">@color/md_white_1000</color>
     <color name="background_default">@color/md_grey_50</color>
     <color name="ripple_colored_default">@color/md_blue_A400_12</color>
 
-    <!-- Light Blue Theme -->
-    <color name="accent_lightblue">#54759E</color>
-    <color name="ripple_colored_lightblue">#1F54759E</color>
+    <!-- Blue Theme -->
+    <color name="accent_blue">#54759E</color>
+    <color name="ripple_colored_blue">#1F54759E</color>
 
     <!-- Strawberry Daiquiri Theme -->
     <color name="accent_strawberry">#ED4A65</color>
@@ -20,10 +20,6 @@
     <!-- Yotsuba Theme -->
     <color name="accent_yotsuba">#FC8C5C</color>
     <color name="ripple_colored_yotsuba">#1FFC8C5C</color>
-
-    <!-- Dark Blue Theme -->
-    <color name="accent_darkblue">#54759E</color>
-    <color name="ripple_colored_darkblue">#1F54759E</color>
 
     <!-- Green Apple Theme -->
     <color name="accent_greenapple">#48E484</color>
@@ -40,13 +36,8 @@
     <color name="surface_amoled">#000001</color>
     <color name="background_amoled">#000000</color>
 
-    <!-- Hot Pink Theme -->
-    <color name="accent_hotpink">#FF3399</color>
-    <color name="ripple_colored_hotpink">#1FFF3399</color>
-
-    <color name="filterColorLight">#FFC107</color>
-    <color name="filterColorDark">#FFEB3B</color>
-    <color name="filterColorAmoled">#FFEB3B</color>
+    <color name="filter_light">#FFC107</color>
+    <color name="filter_dark">#FFEB3B</color>
 
     <color name="reader_background_dark">#202125</color>
 

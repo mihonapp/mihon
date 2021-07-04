@@ -7,7 +7,7 @@
 
     <!--== Theme base ==-->
     <style name="Base.Theme.Tachiyomi" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Disallow 'Force dark theme' -->
+        <!-- Disallow "Force dark theme" -->
         <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
 
         <!-- Theme colors -->
@@ -42,6 +42,7 @@
         <item name="android:enforceNavigationBarContrast" tools:targetApi="Q">false</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="Q">false</item>
         <item name="android:itemTextAppearance">@style/TextAppearance.Widget.Menu</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Widget.Button</item>
         <item name="android:backgroundDimAmount">0.32</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.Tachiyomi.ActionMode</item>
@@ -64,9 +65,6 @@
         <item name="elevationOverlayEnabled">false</item>
         <item name="lightSystemBarsOnPrimary">false</item>
 
-        <!-- Text Appearances -->
-        <item name="textAppearanceButton">@style/TextAppearance.Widget.Button</item>
-
         <!-- Material Dialogs -->
         <item name="md_background_color">?attr/colorSurface</item>
         <item name="md_color_title">?attr/colorOnSurface</item>
@@ -76,15 +74,15 @@
         <item name="md_corner_radius">@dimen/dialog_radius</item>
 
         <!-- Custom Attributes-->
-        <item name="colorFilterActive">@color/filterColorLight</item>
+        <item name="colorFilterActive">@color/filter_light</item>
     </style>
 
     <style name="Theme.Tachiyomi" parent="Base.Theme.Tachiyomi" />
 
-    <style name="Theme.Tachiyomi.DarkBlue">
+    <style name="Theme.Tachiyomi.Blue">
         <!-- Theme colors -->
-        <item name="colorPrimary">@color/accent_lightblue</item>
-        <item name="colorControlHighlight">@color/ripple_colored_lightblue</item>
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorControlHighlight">@color/ripple_colored_blue</item>
     </style>
 
     <!--== Strawberry Daiquiri theme ==-->
@@ -119,14 +117,6 @@
         <item name="colorPrimary">@color/accent_midnightdusk</item>
         <item name="colorTertiary">@color/md_blue_A400</item>
         <item name="colorControlHighlight">@color/ripple_colored_midnightdusk</item>
-    </style>
-
-    <!--== Hot Pink theme ==-->
-    <style name="Theme.Tachiyomi.HotPink">
-        <!-- Theme colors -->
-        <item name="colorPrimary">@color/accent_hotpink</item>
-        <item name="colorTertiary">@color/md_blue_A400</item>
-        <item name="colorControlHighlight">@color/ripple_colored_hotpink</item>
     </style>
 
     <!--== AMOLED theme overlay ==-->
