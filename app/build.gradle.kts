@@ -130,6 +130,12 @@ android {
 
 dependencies {
 
+    implementation(kotlin("reflect", version = BuildPluginsVersion.KOTLIN))
+
+    val coroutinesVersion = "1.4.3"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+
     // Source models and interfaces from Tachiyomi 1.x
     implementation("org.tachiyomi:source-api:1.1")
 
@@ -198,7 +204,7 @@ dependencies {
     implementation("androidx.sqlite:sqlite-ktx:2.1.0")
     implementation("com.github.inorichi.storio:storio-common:8be19de@aar")
     implementation("com.github.inorichi.storio:storio-sqlite:8be19de@aar")
-    implementation("com.github.requery:sqlite-android:3.35.5")
+    implementation("com.github.requery:sqlite-android:3.36.0")
 
     // Preferences
     implementation("com.github.tfcporciuncula.flow-preferences:flow-preferences:1.4.0")
@@ -231,7 +237,6 @@ dependencies {
     implementation("com.github.gpanther:java-nat-sort:natural-comparator-1.1")
 
     // UI
-    implementation("com.github.dmytrodanylyk.android-process-button:library:1.0.4")
     implementation("eu.davidea:flexible-adapter:5.1.0")
     implementation("eu.davidea:flexible-adapter-ui:1.0.0")
     implementation("com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.1.0")
@@ -252,7 +257,7 @@ dependencies {
     implementation("com.github.tachiyomiorg:conductor-support-preference:$conductorVersion")
 
     // FlowBinding
-    val flowbindingVersion = "1.0.0"
+    val flowbindingVersion = "1.2.0"
     implementation("io.github.reactivecircus.flowbinding:flowbinding-android:$flowbindingVersion")
     implementation("io.github.reactivecircus.flowbinding:flowbinding-appcompat:$flowbindingVersion")
     implementation("io.github.reactivecircus.flowbinding:flowbinding-recyclerview:$flowbindingVersion")
@@ -271,12 +276,6 @@ dependencies {
     testImplementation("org.robolectric:robolectric:$robolectricVersion")
     testImplementation("org.robolectric:shadows-multidex:$robolectricVersion")
     testImplementation("org.robolectric:shadows-play-services:$robolectricVersion")
-
-    implementation(kotlin("reflect", version = BuildPluginsVersion.KOTLIN))
-
-    val coroutinesVersion = "1.4.3"
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
     // debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
