@@ -34,18 +34,12 @@ abstract class BaseThemedActivity : AppCompatActivity() {
         fun AppCompatActivity.applyThemePreferences(preferences: PreferencesHelper) {
             val resIds = mutableListOf<Int>()
             when (preferences.appTheme().get()) {
-                PreferenceValues.AppTheme.DEFAULT -> {
-                    resIds += R.style.Theme_Tachiyomi
-                }
                 PreferenceValues.AppTheme.BLUE -> {
                     resIds += R.style.Theme_Tachiyomi_DarkBlue
                     resIds += R.style.ThemeOverlay_Tachiyomi_ColoredBars
                 }
                 PreferenceValues.AppTheme.GREEN_APPLE -> {
                     resIds += R.style.Theme_Tachiyomi_GreenApple
-                }
-                PreferenceValues.AppTheme.HOT_PINK -> {
-                    resIds += R.style.Theme_Tachiyomi_HotPink
                 }
                 PreferenceValues.AppTheme.MIDNIGHT_DUSK -> {
                     resIds += R.style.Theme_Tachiyomi_MidnightDusk
@@ -55,6 +49,9 @@ abstract class BaseThemedActivity : AppCompatActivity() {
                 }
                 PreferenceValues.AppTheme.YOTSUBA -> {
                     resIds += R.style.Theme_Tachiyomi_Yotsuba
+                }
+                else -> {
+                    resIds += R.style.Theme_Tachiyomi
                 }
             }
 

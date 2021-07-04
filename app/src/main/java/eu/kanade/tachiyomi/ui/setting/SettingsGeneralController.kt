@@ -122,8 +122,8 @@ class SettingsGeneralController : SettingsController() {
                 key = Keys.appTheme
                 titleRes = R.string.pref_app_theme
 
-                val appThemes = Values.AppTheme.values()
-                entriesRes = appThemes.map { it.titleResId }.toTypedArray()
+                val appThemes = Values.AppTheme.values().filter { it.titleResId != null }
+                entriesRes = appThemes.map { it.titleResId!! }.toTypedArray()
                 entryValues = appThemes.map { it.name }.toTypedArray()
                 defaultValue = appThemes[0].name
                 summary = "%s"

@@ -21,20 +21,22 @@ object PreferenceValues {
 
     /* ktlint-enable experimental:enum-entry-name-case */
 
-    enum class AppTheme(val titleResId: Int) {
+    enum class AppTheme(val titleResId: Int?) {
         DEFAULT(R.string.theme_default),
         BLUE(R.string.theme_blue),
         GREEN_APPLE(R.string.theme_greenapple),
-        HOT_PINK(R.string.theme_hotpink),
         MIDNIGHT_DUSK(R.string.theme_midnightdusk),
         STRAWBERRY_DAIQUIRI(R.string.theme_strawberrydaiquiri),
-        YOTSUBA(R.string.theme_yotsuba)
+        YOTSUBA(R.string.theme_yotsuba),
+
+        // Deprecated
+        HOT_PINK(null),
     }
 
     enum class TappingInvertMode(val shouldInvertHorizontal: Boolean = false, val shouldInvertVertical: Boolean = false) {
         NONE,
         HORIZONTAL(shouldInvertHorizontal = true),
         VERTICAL(shouldInvertVertical = true),
-        BOTH(shouldInvertHorizontal = true, shouldInvertVertical = true)
+        BOTH(shouldInvertHorizontal = true, shouldInvertVertical = true),
     }
 }
