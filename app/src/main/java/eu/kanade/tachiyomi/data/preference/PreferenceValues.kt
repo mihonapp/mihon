@@ -23,7 +23,7 @@ object PreferenceValues {
 
     enum class AppTheme(val titleResId: Int) {
         DEFAULT(R.string.theme_default),
-        DARK_BLUE(R.string.theme_darkblue),
+        BLUE(R.string.theme_blue),
         GREEN_APPLE(R.string.theme_greenapple),
         HOT_PINK(R.string.theme_hotpink),
         MIDNIGHT_DUSK(R.string.theme_midnightdusk),

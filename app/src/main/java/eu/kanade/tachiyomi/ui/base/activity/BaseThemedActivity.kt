@@ -37,7 +37,7 @@ abstract class BaseThemedActivity : AppCompatActivity() {
                 PreferenceValues.AppTheme.DEFAULT -> {
                     resIds += R.style.Theme_Tachiyomi
                 }
-                PreferenceValues.AppTheme.DARK_BLUE -> {
+                PreferenceValues.AppTheme.BLUE -> {
                     resIds += R.style.Theme_Tachiyomi_DarkBlue
                     resIds += R.style.ThemeOverlay_Tachiyomi_ColoredBars
                 }
