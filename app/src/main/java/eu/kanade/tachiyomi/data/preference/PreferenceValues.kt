@@ -30,6 +30,7 @@ object PreferenceValues {
         YOTSUBA(R.string.theme_yotsuba),
 
         // Deprecated
+        DARK_BLUE(null),
         HOT_PINK(null),
     }
 
