@@ -44,17 +44,19 @@ object ChapterSettingsHelper {
      */
     fun updateAllMangasWithGlobalDefaults() {
         launchIO {
-            val updatedMangas = db.getMangas().executeAsBlocking().map { manga ->
-                with(manga) {
-                    readFilter = prefs.filterChapterByRead()
-                    downloadedFilter = prefs.filterChapterByDownloaded()
-                    bookmarkedFilter = prefs.filterChapterByBookmarked()
-                    sorting = prefs.sortChapterBySourceOrNumber()
-                    displayMode = prefs.displayChapterByNameOrNumber()
-                    setChapterOrder(prefs.sortChapterByAscendingOrDescending())
+            val updatedMangas = db.getFavoriteMangas(sortByTitle = false)
+                .executeAsBlocking()
+                .map { manga ->
+                    with(manga) {
+                        readFilter = prefs.filterChapterByRead()
+                        downloadedFilter = prefs.filterChapterByDownloaded()
+                        bookmarkedFilter = prefs.filterChapterByBookmarked()
+                        sorting = prefs.sortChapterBySourceOrNumber()
+                        displayMode = prefs.displayChapterByNameOrNumber()
+                        setChapterOrder(prefs.sortChapterByAscendingOrDescending())
+                    }
+                    manga
                 }
-                manga
-            }
 
             db.updateChapterFlags(updatedMangas).executeAsBlocking()
             db.updateViewerFlags(updatedMangas).executeAsBlocking()
