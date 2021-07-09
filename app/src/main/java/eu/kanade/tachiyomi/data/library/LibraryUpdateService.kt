@@ -54,6 +54,9 @@ import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
+import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * This class will take care of updating the chapters of the manga from the library. It can be
@@ -273,11 +276,11 @@ class LibraryUpdateService(
      */
     suspend fun updateChapterList() {
         val semaphore = Semaphore(5)
-        var progressCount = 0
-        val currentlyUpdatingManga = mutableListOf<LibraryManga>()
-        val newUpdates = mutableListOf<Pair<LibraryManga, Array<Chapter>>>()
-        val failedUpdates = mutableListOf<Pair<Manga, String?>>()
-        var hasDownloads = false
+        val progressCount = AtomicInteger(0)
+        val currentlyUpdatingManga = CopyOnWriteArrayList<LibraryManga>()
+        val newUpdates = CopyOnWriteArrayList<Pair<LibraryManga, Array<Chapter>>>()
+        val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
+        val hasDownloads = AtomicBoolean(false)
         val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
 
         withIOContext {
@@ -292,10 +295,10 @@ class LibraryUpdateService(
                                 }
 
                                 currentlyUpdatingManga.add(manga)
-                                progressCount++
+                                progressCount.andIncrement
                                 notifier.showProgressNotification(
                                     currentlyUpdatingManga,
-                                    progressCount,
+                                    progressCount.get(),
                                     mangaToUpdate.size
                                 )
 
@@ -305,7 +308,7 @@ class LibraryUpdateService(
                                     if (newChapters.isNotEmpty()) {
                                         if (manga.shouldDownloadNewChapters(db, preferences)) {
                                             downloadChapters(manga, newChapters)
-                                            hasDownloads = true
+                                            hasDownloads.set(true)
                                         }
 
                                         // Convert to the manga that contains new chapters
@@ -327,7 +330,7 @@ class LibraryUpdateService(
                                 currentlyUpdatingManga.remove(manga)
                                 notifier.showProgressNotification(
                                     currentlyUpdatingManga,
-                                    progressCount,
+                                    progressCount.get(),
                                     mangaToUpdate.size
                                 )
                             }
@@ -341,7 +344,7 @@ class LibraryUpdateService(
 
         if (newUpdates.isNotEmpty()) {
             notifier.showUpdateNotifications(newUpdates)
-            if (hasDownloads) {
+            if (hasDownloads.get()) {
                 DownloadService.start(this)
             }
         }
@@ -397,29 +400,56 @@ class LibraryUpdateService(
     }
 
     private suspend fun updateCovers() {
-        var progressCount = 0
+        val semaphore = Semaphore(5)
+        val progressCount = AtomicInteger(0)
+        val currentlyUpdatingManga = CopyOnWriteArrayList<LibraryManga>()
 
-        mangaToUpdate.forEach { manga ->
-            if (updateJob?.isActive != true) {
-                return
-            }
+        withIOContext {
+            mangaToUpdate.groupBy { it.source }
+                .values
+                .map { mangaInSource ->
+                    async {
+                        semaphore.withPermit {
+                            mangaInSource.forEach { manga ->
+                                if (updateJob?.isActive != true) {
+                                    return@async
+                                }
 
-            notifier.showProgressNotification(listOf(manga), progressCount++, mangaToUpdate.size)
+                                currentlyUpdatingManga.add(manga)
+                                progressCount.andIncrement
+                                notifier.showProgressNotification(
+                                    currentlyUpdatingManga,
+                                    progressCount.get(),
+                                    mangaToUpdate.size
+                                )
 
-            sourceManager.get(manga.source)?.let { source ->
-                try {
-                    val networkManga = source.getMangaDetails(manga.toMangaInfo())
-                    val sManga = networkManga.toSManga()
-                    manga.prepUpdateCover(coverCache, sManga, true)
-                    sManga.thumbnail_url?.let {
-                        manga.thumbnail_url = it
-                        db.insertManga(manga).executeAsBlocking()
+                                sourceManager.get(manga.source)?.let { source ->
+                                    try {
+                                        val networkManga =
+                                            source.getMangaDetails(manga.toMangaInfo())
+                                        val sManga = networkManga.toSManga()
+                                        manga.prepUpdateCover(coverCache, sManga, true)
+                                        sManga.thumbnail_url?.let {
+                                            manga.thumbnail_url = it
+                                            db.insertManga(manga).executeAsBlocking()
+                                        }
+                                    } catch (e: Throwable) {
+                                        // Ignore errors and continue
+                                        Timber.e(e)
+                                    }
+                                }
+
+                                currentlyUpdatingManga.remove(manga)
+                                notifier.showProgressNotification(
+                                    currentlyUpdatingManga,
+                                    progressCount.get(),
+                                    mangaToUpdate.size
+                                )
+                            }
+                        }
                     }
-                } catch (e: Throwable) {
-                    // Ignore errors and continue
-                    Timber.e(e)
                 }
-            }
+                .awaitAll()
         }
 
         coverCache.clearMemoryCache()
