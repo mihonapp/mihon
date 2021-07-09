@@ -54,7 +54,6 @@ import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * This class will take care of updating the chapters of the manga from the library. It can be
@@ -274,7 +273,8 @@ class LibraryUpdateService(
      */
     suspend fun updateChapterList() {
         val semaphore = Semaphore(5)
-        val progressCount = AtomicInteger(0)
+        var progressCount = 0
+        val currentlyUpdatingManga = mutableListOf<LibraryManga>()
         val newUpdates = mutableListOf<Pair<LibraryManga, Array<Chapter>>>()
         val failedUpdates = mutableListOf<Pair<Manga, String?>>()
         var hasDownloads = false
@@ -291,7 +291,13 @@ class LibraryUpdateService(
                                     return@async
                                 }
 
-                                notifier.showProgressNotification(manga, progressCount.andIncrement, mangaToUpdate.size)
+                                currentlyUpdatingManga.add(manga)
+                                progressCount++
+                                notifier.showProgressNotification(
+                                    currentlyUpdatingManga,
+                                    progressCount,
+                                    mangaToUpdate.size
+                                )
 
                                 try {
                                     val (newChapters, _) = updateManga(manga)
@@ -317,6 +323,13 @@ class LibraryUpdateService(
                                 if (preferences.autoUpdateTrackers()) {
                                     updateTrackings(manga, loggedServices)
                                 }
+
+                                currentlyUpdatingManga.remove(manga)
+                                notifier.showProgressNotification(
+                                    currentlyUpdatingManga,
+                                    progressCount,
+                                    mangaToUpdate.size
+                                )
                             }
                         }
                     }
@@ -391,7 +404,7 @@ class LibraryUpdateService(
                 return
             }
 
-            notifier.showProgressNotification(manga, progressCount++, mangaToUpdate.size)
+            notifier.showProgressNotification(listOf(manga), progressCount++, mangaToUpdate.size)
 
             sourceManager.get(manga.source)?.let { source ->
                 try {
@@ -426,8 +439,7 @@ class LibraryUpdateService(
                 return
             }
 
-            // Notify manga that will update.
-            notifier.showProgressNotification(manga, progressCount++, mangaToUpdate.size)
+            notifier.showProgressNotification(listOf(manga), progressCount++, mangaToUpdate.size)
 
             // Update the tracking details.
             updateTrackings(manga, loggedServices)
