@@ -132,7 +132,7 @@ dependencies {
 
     implementation(kotlin("reflect", version = BuildPluginsVersion.KOTLIN))
 
-    val coroutinesVersion = "1.4.3"
+    val coroutinesVersion = "1.5.1"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
