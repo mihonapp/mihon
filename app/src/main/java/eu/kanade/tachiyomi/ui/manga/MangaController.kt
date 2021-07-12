@@ -270,6 +270,8 @@ class MangaController :
         chaptersAdapter?.fastScroller = binding.fastScroller
 
         actionFabScrollListener = actionFab?.shrinkOnScroll(chapterRecycler)
+        // Initially set FAB invisible; will become visible if unread chapters are present
+        actionFab?.isVisible = false
 
         binding.swipeRefresh.refreshes()
             .onEach {
@@ -333,8 +335,6 @@ class MangaController :
                         }
                     )
                 }
-            } else {
-                view?.context?.toast(R.string.no_next_chapter)
             }
         }
     }
@@ -775,8 +775,11 @@ class MangaController :
         }
 
         val context = view?.context
-        if (context != null && chapters.any { it.read }) {
-            actionFab?.text = context.getString(R.string.action_resume)
+        if (context != null) {
+            actionFab?.isVisible = chapters.any { !it.read }
+            if (chapters.any { it.read }) {
+                actionFab?.text = context.getString(R.string.action_resume)
+            }
         }
     }
 
