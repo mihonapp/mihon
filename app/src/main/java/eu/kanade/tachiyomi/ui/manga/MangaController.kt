@@ -661,7 +661,7 @@ class MangaController :
         }
     }
 
-    private fun shareCover() {
+    fun shareCover() {
         try {
             val activity = activity!!
             val cover = presenter.shareCover(activity)
@@ -673,7 +673,7 @@ class MangaController :
         }
     }
 
-    private fun saveCover() {
+    fun saveCover() {
         try {
             presenter.saveCover(activity!!)
             activity?.toast(R.string.cover_saved)
@@ -683,7 +683,7 @@ class MangaController :
         }
     }
 
-    private fun changeCover() {
+    fun changeCover() {
         val manga = manga ?: return
         if (manga.hasCustomCover(coverCache)) {
             ChangeMangaCoverDialog(this, manga).showDialog(router)
