@@ -146,7 +146,6 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
             track.library_id = libManga.library_id
         }
 
-
         if (track.status != COMPLETED) {
             if (track.status != REPEATING && didReadChapter) {
                 track.status = READING
