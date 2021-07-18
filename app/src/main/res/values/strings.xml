@@ -586,6 +586,7 @@
     <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
     <string name="tracker_kitsu" translatable="false">Kitsu</string>
     <string name="tracker_komga" translatable="false">Komga</string>
+    <string name="tracker_komga_warning">This tracker is only compatible with the Komga source.</string>
     <string name="tracker_bangumi" translatable="false">Bangumi</string>
     <string name="tracker_shikimori" translatable="false">Shikimori</string>
     <string name="manga_tracking_tab">Tracking</string>

@@ -4,10 +4,10 @@ import android.app.Activity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.NoLoginTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -27,6 +27,7 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.preference.LoginPreference
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
@@ -82,8 +83,16 @@ class SettingsTrackingController :
             }
 
             trackPreference(trackManager.komga) {
-                trackManager.komga.loginNoop()
-                updatePreference(trackManager.komga.id)
+                val acceptedSources = trackManager.komga.getAcceptedSources()
+                val hasValidSourceInstalled = sourceManager.getCatalogueSources()
+                    .any { it::class.qualifiedName in acceptedSources }
+
+                if (hasValidSourceInstalled) {
+                    trackManager.komga.loginNoop()
+                    updatePreference(trackManager.komga.id)
+                } else {
+                    context.toast(R.string.tracker_komga_warning, Toast.LENGTH_LONG)
+                }
             }
 
             infoPreference(R.string.enhanced_tracking_info)
