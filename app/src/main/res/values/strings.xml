@@ -422,7 +422,7 @@
     <string name="backup_choice">What do you want to backup?</string>
     <string name="creating_backup">Creating backup</string>
     <string name="creating_backup_error">Backup failed</string>
-    <string name="restore_miui_warning">MIUI Optimization must be enabled for restore to work correctly.</string>
+    <string name="restore_miui_warning">MIUI Optimization must be enabled for backup/restore to work correctly.</string>
     <string name="restore_in_progress">Restore is already in progress</string>
     <string name="restoring_backup">Restoring backup</string>
     <string name="restoring_backup_error">Restoring backup failed</string>
