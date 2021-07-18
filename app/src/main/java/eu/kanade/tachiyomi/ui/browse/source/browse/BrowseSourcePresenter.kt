@@ -267,9 +267,7 @@ open class BrowseSourcePresenter(
         } else {
             ChapterSettingsHelper.applySettingDefaults(manga)
 
-            if (prefs.autoAddTrack()) {
-                autoAddTrack(manga)
-            }
+            autoAddTrack(manga)
         }
 
         db.insertManga(manga).executeAsBlocking()

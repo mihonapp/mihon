@@ -76,12 +76,6 @@ class SettingsTrackingController :
         preferenceCategory {
             titleRes = R.string.enhanced_services
 
-            switchPreference {
-                key = Keys.autoAddTrack
-                titleRes = R.string.pref_auto_add_track
-                defaultValue = true
-            }
-
             trackPreference(trackManager.komga) {
                 val acceptedSources = trackManager.komga.getAcceptedSources()
                 val hasValidSourceInstalled = sourceManager.getCatalogueSources()
