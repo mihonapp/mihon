@@ -9,9 +9,9 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
-import eu.kanade.tachiyomi.data.track.UnattendedTrackService
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Filter
@@ -277,7 +277,7 @@ open class BrowseSourcePresenter(
 
     private fun autoAddTrack(manga: Manga) {
         loggedServices
-            .filterIsInstance<UnattendedTrackService>()
+            .filterIsInstance<EnhancedTrackService>()
             .filter { it.accept(source) }
             .forEach { service ->
                 launchIO {

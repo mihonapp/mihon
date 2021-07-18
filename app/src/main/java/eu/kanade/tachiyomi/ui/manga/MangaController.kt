@@ -36,8 +36,8 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
-import eu.kanade.tachiyomi.data.track.UnattendedTrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.databinding.MangaControllerBinding
 import eu.kanade.tachiyomi.source.LocalSource
@@ -538,7 +538,7 @@ class MangaController :
         if (source != null && preferences.autoAddTrack()) {
             presenter.trackList
                 .map { it.service }
-                .filterIsInstance<UnattendedTrackService>()
+                .filterIsInstance<EnhancedTrackService>()
                 .filter { it.accept(source!!) }
                 .forEach { service ->
                     launchIO {
