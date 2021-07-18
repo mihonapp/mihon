@@ -11,7 +11,8 @@ object MiuiUtil {
 
     @SuppressLint("PrivateApi")
     fun isMiuiOptimizationDisabled(): Boolean {
-        if ("0" == getSystemProperty("persist.sys.miui_optimization")) {
+        val sysProp = getSystemProperty("persist.sys.miui_optimization")
+        if (sysProp == "0" || sysProp == "false") {
             return true
         }
 
