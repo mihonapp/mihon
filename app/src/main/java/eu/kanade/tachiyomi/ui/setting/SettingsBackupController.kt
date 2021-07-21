@@ -65,7 +65,6 @@ class SettingsBackupController : SettingsController() {
             onClick {
                 if (MiuiUtil.isMiui() && MiuiUtil.isMiuiOptimizationDisabled()) {
                     context.toast(R.string.restore_miui_warning, Toast.LENGTH_LONG)
-                    return@onClick
                 }
 
                 if (!BackupCreateService.isRunning(context)) {
@@ -85,7 +84,6 @@ class SettingsBackupController : SettingsController() {
             onClick {
                 if (MiuiUtil.isMiui() && MiuiUtil.isMiuiOptimizationDisabled()) {
                     context.toast(R.string.restore_miui_warning, Toast.LENGTH_LONG)
-                    return@onClick
                 }
 
                 if (!BackupRestoreService.isRunning(context)) {
