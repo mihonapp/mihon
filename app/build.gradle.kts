@@ -40,8 +40,6 @@ android {
         // Please disable ACRA or use your own instance in forked versions of the project
         buildConfigField("String", "ACRA_URI", "\"https://tachiyomi.kanade.eu/crash_report\"")
 
-        multiDexEnabled = true
-
         ndk {
             abiFilters += SUPPORTED_ABIS
         }
@@ -148,7 +146,6 @@ dependencies {
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("androidx.core:core-ktx:1.7.0-alpha01")
     implementation("androidx.core:core-splashscreen:1.0.0-alpha01")
-    implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
@@ -269,7 +266,6 @@ dependencies {
 
     val robolectricVersion = "3.1.4"
     testImplementation("org.robolectric:robolectric:$robolectricVersion")
-    testImplementation("org.robolectric:shadows-multidex:$robolectricVersion")
     testImplementation("org.robolectric:shadows-play-services:$robolectricVersion")
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/

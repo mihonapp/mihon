@@ -17,7 +17,6 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.multidex.MultiDex
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -110,11 +109,6 @@ open class App : Application(), LifecycleObserver, ImageLoaderFactory {
                     }
                 )
             }.launchIn(ProcessLifecycleOwner.get().lifecycleScope)
-    }
-
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
     }
 
     override fun newImageLoader(): ImageLoader {
