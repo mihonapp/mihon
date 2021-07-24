@@ -3,7 +3,9 @@ package eu.kanade.tachiyomi.widget.materialdialogs
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.core.content.getSystemService
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -36,6 +38,7 @@ fun MaterialAlertDialogBuilder.setTextInput(
  * @see eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
  */
 fun MaterialAlertDialogBuilder.setQuadStateMultiChoiceItems(
+    @StringRes message: Int? = null,
     items: List<CharSequence>,
     initialSelected: IntArray,
     disabledIndices: IntArray? = null,
@@ -49,6 +52,20 @@ fun MaterialAlertDialogBuilder.setQuadStateMultiChoiceItems(
         initialSelected = initialSelected,
         listener = selection
     )
-    setView(binding.root)
-    return this
+    val updateScrollIndicators = {
+        binding.scrollIndicatorUp.isVisible = binding.list.canScrollVertically(-1)
+        binding.scrollIndicatorDown.isVisible = binding.list.canScrollVertically(1)
+    }
+    binding.list.setOnScrollChangeListener { _, _, _, _, _ ->
+        updateScrollIndicators()
+    }
+    binding.list.post {
+        updateScrollIndicators()
+    }
+
+    if (message != null) {
+        binding.message.setText(message)
+        binding.message.isVisible = true
+    }
+    return setView(binding.root)
 }

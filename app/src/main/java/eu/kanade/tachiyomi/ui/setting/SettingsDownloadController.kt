@@ -243,8 +243,8 @@ class SettingsDownloadController : SettingsController() {
 
             return MaterialAlertDialogBuilder(activity!!)
                 .setTitle(R.string.categories)
-                .setMessage(R.string.pref_download_new_categories_details)
                 .setQuadStateMultiChoiceItems(
+                    message = R.string.pref_download_new_categories_details,
                     items = items,
                     initialSelected = selected
                 ) { selections ->

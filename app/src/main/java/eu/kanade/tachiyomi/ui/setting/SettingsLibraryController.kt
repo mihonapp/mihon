@@ -355,8 +355,11 @@ class SettingsLibraryController : SettingsController() {
 
             return MaterialAlertDialogBuilder(activity!!)
                 .setTitle(R.string.categories)
-                .setMessage(R.string.pref_library_update_categories_details)
-                .setQuadStateMultiChoiceItems(items = items, initialSelected = selected) { selections ->
+                .setQuadStateMultiChoiceItems(
+                    message = R.string.pref_library_update_categories_details,
+                    items = items,
+                    initialSelected = selected
+                ) { selections ->
                     selected = selections
                 }
                 .setPositiveButton(android.R.string.ok) { _, _ ->
