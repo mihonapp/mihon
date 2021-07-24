@@ -688,12 +688,7 @@ class MangaController :
             useCoverAsBitmap(activity) { coverBitmap ->
                 val cover = presenter.shareCover(activity, coverBitmap)
                 val uri = cover.getUriCompat(activity)
-                startActivity(
-                    Intent.createChooser(
-                        uri.toShareIntent(),
-                        activity.getString(R.string.action_share)
-                    )
-                )
+                startActivity(uri.toShareIntent(activity))
             }
         } catch (e: Exception) {
             Timber.e(e)

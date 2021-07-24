@@ -131,7 +131,7 @@ class NotificationReceiver : BroadcastReceiver() {
      */
     private fun shareImage(context: Context, path: String, notificationId: Int) {
         dismissNotification(context, notificationId)
-        context.startActivity(File(path).getUriCompat(context).toShareIntent())
+        context.startActivity(File(path).getUriCompat(context).toShareIntent(context))
     }
 
     /**
@@ -143,7 +143,7 @@ class NotificationReceiver : BroadcastReceiver() {
      */
     private fun shareFile(context: Context, uri: Uri, fileMimeType: String, notificationId: Int) {
         dismissNotification(context, notificationId)
-        context.startActivity(uri.toShareIntent(fileMimeType))
+        context.startActivity(uri.toShareIntent(context, fileMimeType))
     }
 
     /**
