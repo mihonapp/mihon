@@ -265,9 +265,7 @@ class WebtoonPageHolder(
      * Called when the page is ready.
      */
     private fun setImage() {
-        progressContainer.isVisible = true
-        progressIndicator.setProgress(100)
-        progressIndicator.hide()
+        progressIndicator.setCompleteProgressAndHide()
         retryContainer?.isVisible = false
         removeDecodeErrorLayout()
 
@@ -326,13 +324,6 @@ class WebtoonPageHolder(
     }
 
     /**
-     * Called when the image is decoded and going to be displayed.
-     */
-    private fun onImageDecoded() {
-        progressContainer.isVisible = false
-    }
-
-    /**
      * Called when the image fails to decode.
      */
     private fun onImageDecodeError() {
@@ -382,10 +373,6 @@ class WebtoonPageHolder(
             setCropBorders(cropBorders)
             setOnImageEventListener(
                 object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
-                    override fun onReady() {
-                        onImageDecoded()
-                    }
-
                     override fun onImageLoadError(e: Exception) {
                         onImageDecodeError()
                     }
@@ -517,7 +504,6 @@ class WebtoonPageHolder(
                         result.start()
                     }
                     setImageDrawable(result)
-                    onImageDecoded()
                 },
                 onError = {
                     onImageDecodeError()

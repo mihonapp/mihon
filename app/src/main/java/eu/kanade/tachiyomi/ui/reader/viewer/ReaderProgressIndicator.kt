@@ -8,7 +8,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
 import androidx.annotation.IntRange
-import androidx.core.view.isVisible
+import androidx.dynamicanimation.animation.DynamicAnimation
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 /**
@@ -44,34 +44,71 @@ class ReaderProgressIndicator @JvmOverloads constructor(
         layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
         indicator = CircularProgressIndicator(context)
         indicator.max = 100
+        indicator.isIndeterminate = true
         addView(indicator)
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (indicator.isVisible && animation == null) {
-            startAnimation(rotateAnimation)
-        }
+        updateRotateAnimation()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        clearAnimation()
+        updateRotateAnimation()
     }
 
     fun show() {
         indicator.show()
-        if (animation == null) {
-            startAnimation(rotateAnimation)
-        }
+        updateRotateAnimation()
     }
 
     fun hide() {
         indicator.hide()
-        clearAnimation()
+        updateRotateAnimation()
     }
 
+    /**
+     * Sets the current indicator progress to the specified value.
+     *
+     * @param progress Indicator will be set indeterminate if this value is 0
+     */
     fun setProgress(@IntRange(from = 0, to = 100) progress: Int, animated: Boolean = true) {
-        indicator.setProgressCompat(progress, animated)
+        if (progress > 0) {
+            indicator.setProgressCompat(progress, animated)
+        } else if (!indicator.isIndeterminate) {
+            indicator.hide()
+            indicator.isIndeterminate = true
+            indicator.show()
+        }
+        updateRotateAnimation()
+    }
+
+    fun setCompleteProgressAndHide() {
+        val listener = object : DynamicAnimation.OnAnimationEndListener {
+            override fun onAnimationEnd(
+                animation: DynamicAnimation<*>?,
+                canceled: Boolean,
+                value: Float,
+                velocity: Float
+            ) {
+                hide()
+                indicator.progressDrawable?.removeSpringAnimationEndListener(this)
+            }
+        }
+
+        indicator.progressDrawable?.addSpringAnimationEndListener(listener)
+        indicator.setProgressCompat(100, true)
+        updateRotateAnimation(forceRotate = true)
+    }
+
+    private fun updateRotateAnimation(forceRotate: Boolean = false) {
+        if (forceRotate || (indicator.isShown && !indicator.isIndeterminate)) {
+            if (animation == null && isAttachedToWindow) {
+                startAnimation(rotateAnimation)
+            }
+        } else {
+            clearAnimation()
+        }
     }
 }
