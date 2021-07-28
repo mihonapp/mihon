@@ -21,13 +21,13 @@ shortcutHelper.setFilePath("./shortcuts.xml")
 val SUPPORTED_ABIS = setOf("armeabi-v7a", "arm64-v8a", "x86")
 
 android {
-    compileSdkVersion(AndroidConfig.compileSdk)
+    compileSdk = AndroidConfig.compileSdk
     ndkVersion = AndroidConfig.ndk
 
     defaultConfig {
         applicationId = "eu.kanade.tachiyomi"
-        minSdkVersion(AndroidConfig.minSdk)
-        targetSdkVersion(AndroidConfig.targetSdk)
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 65
         versionName = "0.11.1"
@@ -109,7 +109,7 @@ android {
         viewBinding = true
     }
 
-    lintOptions {
+    lint {
         disable("MissingTranslation", "ExtraTranslation")
         isAbortOnError = false
         isCheckReleaseBuilds = false
@@ -142,7 +142,7 @@ dependencies {
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha03")
     implementation("androidx.browser:browser:1.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.0-beta02")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.0-rc01")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("androidx.core:core-ktx:1.7.0-alpha01")
     implementation("androidx.core:core-splashscreen:1.0.0-alpha01")
