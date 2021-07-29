@@ -266,6 +266,7 @@ class WebtoonPageHolder(
      */
     private fun setImage() {
         progressIndicator.setCompleteProgressAndHide()
+        progressContainer.isVisible = false
         retryContainer?.isVisible = false
         removeDecodeErrorLayout()
 
