@@ -55,6 +55,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
+import eu.kanade.tachiyomi.ui.setting.SettingsMainController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.dpToPx
@@ -189,6 +190,11 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
                     R.id.nav_updates -> {
                         if (router.backstackSize == 1) {
                             router.pushController(DownloadController().withFadeTransaction())
+                        }
+                    }
+                    R.id.nav_more -> {
+                        if (router.backstackSize == 1) {
+                            router.pushController(SettingsMainController().withFadeTransaction())
                         }
                     }
                 }
