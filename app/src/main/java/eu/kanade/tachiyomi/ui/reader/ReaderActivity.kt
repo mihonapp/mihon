@@ -137,6 +137,9 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
     private val windowInsetsController by lazy { WindowInsetsControllerCompat(window, binding.root) }
 
+    var isScrollingThroughPages = false
+        private set
+
     /**
      * Called when the activity is created. Initializes the presenter and configuration.
      */
@@ -329,6 +332,16 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         // Init listeners on bottom menu
         binding.pageSeekbar.setOnSeekBarChangeListener(
             object : SimpleSeekBarListener() {
+                override fun onStartTrackingTouch(seekBar: SeekBar) {
+                    super.onStartTrackingTouch(seekBar)
+                    isScrollingThroughPages = true
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    super.onStopTrackingTouch(seekBar)
+                    isScrollingThroughPages = false
+                }
+
                 override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
                     if (viewer != null && fromUser) {
                         moveToPageIndex(value)

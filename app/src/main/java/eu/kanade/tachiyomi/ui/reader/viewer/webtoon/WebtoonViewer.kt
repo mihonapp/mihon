@@ -81,6 +81,10 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     onScrolled()
 
+                    if ((dy > 37 || dy < -37) && activity.menuVisible) {
+                        activity.hideMenu()
+                    }
+
                     if (dy < 0) {
                         val firstIndex = layoutManager.findFirstVisibleItemPosition()
                         val firstItem = adapter.items.getOrNull(firstIndex)
@@ -98,14 +102,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             }
 
             val pos = PointF(event.rawX / recycler.width, event.rawY / recycler.height)
-            if (!config.tappingEnabled) activity.toggleMenu()
-            else {
-                val navigator = config.navigator
-                when (navigator.getAction(pos)) {
-                    NavigationRegion.MENU -> activity.toggleMenu()
-                    NavigationRegion.NEXT, NavigationRegion.RIGHT -> scrollDown()
-                    NavigationRegion.PREV, NavigationRegion.LEFT -> scrollUp()
-                }
+            val navigator = config.navigator
+
+            when (navigator.getAction(pos)) {
+                NavigationRegion.MENU -> activity.toggleMenu()
+                NavigationRegion.NEXT, NavigationRegion.RIGHT -> scrollDown()
+                NavigationRegion.PREV, NavigationRegion.LEFT -> scrollUp()
             }
         }
         recycler.longTapListener = f@{ event ->
@@ -235,7 +237,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         if (position != -1) {
             recycler.scrollToPosition(position)
             if (layoutManager.findLastEndVisibleItemPosition() == -1) {
-                onScrolled(position)
+                onScrolled(pos = position)
             }
         } else {
             Timber.d("Page $page not found in adapter")
@@ -243,7 +245,6 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     }
 
     fun onScrolled(pos: Int? = null) {
-        activity.hideMenu()
         val position = pos ?: layoutManager.findLastEndVisibleItemPosition()
         val item = adapter.items.getOrNull(position)
         val allowPreload = checkAllowPreload(item as? ReaderPage)
