@@ -23,8 +23,7 @@
 
     <application
         android:name=".App"
-        android:allowBackup="true"
-        android:fullBackupContent="@xml/backup_rules"
+        android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:hasFragileUserData="true"
         android:icon="@mipmap/ic_launcher"
