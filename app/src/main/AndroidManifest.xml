@@ -33,10 +33,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.Tachiyomi"
         android:networkSecurityConfig="@xml/network_security_config">
+
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Tachiyomi.SplashScreen">
+            android:theme="@style/Theme.Tachiyomi.SplashScreen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -50,7 +52,8 @@
             android:name=".ui.main.DeepLinkActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.NoDisplay"
-            android:label="@string/action_global_search">
+            android:label="@string/action_global_search"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <action android:name="com.google.android.gms.actions.SEARCH_ACTION" />
@@ -71,9 +74,11 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".ui.reader.ReaderActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.samsung.android.support.REMOTE_ACTION" />
             </intent-filter>
@@ -81,15 +86,26 @@
             <meta-data android:name="com.samsung.android.support.REMOTE_ACTION"
                 android:resource="@xml/s_pen_actions"/>
         </activity>
+
         <activity
             android:name=".ui.security.UnlockActivity"
-            android:theme="@style/Theme.Tachiyomi" />
+            android:theme="@style/Theme.Tachiyomi"
+            android:exported="false" />
+
         <activity
             android:name=".ui.webview.WebViewActivity"
-            android:configChanges="uiMode|orientation|screenSize" />
+            android:configChanges="uiMode|orientation|screenSize"
+            android:exported="false" />
+
+        <activity
+            android:name=".extension.util.ExtensionInstallActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false" />
+
         <activity
             android:name=".ui.setting.track.AnilistLoginActivity"
-            android:label="Anilist">
+            android:label="Anilist"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -103,7 +119,8 @@
         </activity>
         <activity
             android:name=".ui.setting.track.MyAnimeListLoginActivity"
-            android:label="MyAnimeList">
+            android:label="MyAnimeList"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -117,7 +134,8 @@
         </activity>
         <activity
             android:name=".ui.setting.track.ShikimoriLoginActivity"
-            android:label="Shikimori">
+            android:label="Shikimori"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -131,7 +149,8 @@
         </activity>
         <activity
             android:name=".ui.setting.track.BangumiLoginActivity"
-            android:label="Bangumi">
+            android:label="Bangumi"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -143,20 +162,6 @@
                     android:scheme="tachiyomi" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".extension.util.ExtensionInstallActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
 
         <receiver
             android:name=".data.notification.NotificationReceiver"
@@ -181,6 +186,16 @@
         <service
             android:name=".data.backup.BackupRestoreService"
             android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
     </application>
 
