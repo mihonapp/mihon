@@ -28,7 +28,6 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.Router
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.navigation.NavigationBarView
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.tachiyomi.BuildConfig
@@ -61,6 +60,7 @@ import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
+import eu.kanade.tachiyomi.widget.HideBottomNavigationOnScrollBehavior
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -141,15 +141,6 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
         if (binding.bottomNav != null) {
             bottomNavAnimator = ViewHeightAnimator(binding.bottomNav!!)
-
-            // If bottom nav is hidden, make it visible again when the app bar is expanded
-            binding.appbar.addOnOffsetChangedListener(
-                AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-                    if (verticalOffset == 0) {
-                        showNav(visible = true)
-                    }
-                }
-            )
 
             // Set behavior of bottom nav
             preferences.hideBottomBarOnScroll()
@@ -502,11 +493,11 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         binding.appbar.setExpanded(true)
 
         if ((from == null || from is RootController) && to !is RootController) {
-            showNav(visible = false, collapse = true)
+            showNav(visible = false, expand = true)
         }
         if (to is RootController) {
             // Always show bottom nav again when returning to a RootController
-            showNav(visible = true, collapse = from !is RootController)
+            showNav(visible = true, expand = from !is RootController)
         }
 
         if (from is TabbedController) {
@@ -542,29 +533,20 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         }
     }
 
-    private fun showNav(visible: Boolean, collapse: Boolean = false) {
-        showBottomNav(visible, collapse)
+    private fun showNav(visible: Boolean, expand: Boolean = false) {
+        showBottomNav(visible, expand)
         showSideNav(visible)
     }
 
     // Also used from some controllers to swap bottom nav with action toolbar
-    fun showBottomNav(visible: Boolean, collapse: Boolean = false) {
-        binding.bottomNav?.let {
-            val layoutParams = it.layoutParams as CoordinatorLayout.LayoutParams
-            val bottomViewNavigationBehavior =
-                layoutParams.behavior as? HideBottomViewOnScrollBehavior
-            if (visible) {
-                if (collapse) {
-                    bottomNavAnimator?.expand()
-                }
-                bottomViewNavigationBehavior?.slideUp(it)
-            } else {
-                if (collapse) {
-                    bottomNavAnimator?.collapse()
-                }
-
-                bottomViewNavigationBehavior?.slideDown(it)
+    fun showBottomNav(visible: Boolean, expand: Boolean = false) {
+        if (visible) {
+            binding.bottomNav?.translationY = 0F
+            if (expand) {
+                bottomNavAnimator?.expand()
             }
+        } else {
+            bottomNavAnimator?.collapse()
         }
     }
 
@@ -597,10 +579,11 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
         binding.bottomNav?.updateLayoutParams<CoordinatorLayout.LayoutParams> {
             behavior = when {
-                preferences.hideBottomBarOnScroll().get() -> HideBottomViewOnScrollBehavior<View>()
+                preferences.hideBottomBarOnScroll().get() -> HideBottomNavigationOnScrollBehavior()
                 else -> null
             }
         }
+        binding.bottomNav?.translationY = 0F
     }
 
     private val nav: NavigationBarView
