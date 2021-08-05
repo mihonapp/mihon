@@ -67,36 +67,40 @@ class SettingsAdvancedController : SettingsController() {
             }
         }
 
-        preference {
-            key = "pref_disable_battery_optimization"
-            titleRes = R.string.pref_disable_battery_optimization
-            summaryRes = R.string.pref_disable_battery_optimization_summary
+        preferenceCategory {
+            titleRes = R.string.label_background_activity
 
-            onClick {
-                val packageName: String = context.packageName
-                if (!context.powerManager.isIgnoringBatteryOptimizations(packageName)) {
-                    try {
-                        val intent = Intent().apply {
-                            action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                            data = "package:$packageName".toUri()
+            preference {
+                key = "pref_disable_battery_optimization"
+                titleRes = R.string.pref_disable_battery_optimization
+                summaryRes = R.string.pref_disable_battery_optimization_summary
+
+                onClick {
+                    val packageName: String = context.packageName
+                    if (!context.powerManager.isIgnoringBatteryOptimizations(packageName)) {
+                        try {
+                            val intent = Intent().apply {
+                                action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                                data = "package:$packageName".toUri()
+                            }
+                            startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            context.toast(R.string.battery_optimization_setting_activity_not_found)
                         }
-                        startActivity(intent)
-                    } catch (e: ActivityNotFoundException) {
-                        context.toast(R.string.battery_optimization_setting_activity_not_found)
+                    } else {
+                        context.toast(R.string.battery_optimization_disabled)
                     }
-                } else {
-                    context.toast(R.string.battery_optimization_disabled)
                 }
             }
-        }
 
-        preference {
-            key = "pref_dont_kill_my_app"
-            title = "Don't kill my app!"
-            summaryRes = R.string.about_dont_kill_my_app
+            preference {
+                key = "pref_dont_kill_my_app"
+                title = "Don't kill my app!"
+                summaryRes = R.string.about_dont_kill_my_app
 
-            onClick {
-                openInBrowser("https://dontkillmyapp.com/")
+                onClick {
+                    openInBrowser("https://dontkillmyapp.com/")
+                }
             }
         }
 
