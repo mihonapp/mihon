@@ -168,12 +168,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         config = ReaderConfig()
         initializeMenu()
 
-        binding.pageNumber.applyInsetter {
-            type(navigationBars = true) {
-                margin()
-            }
-        }
-
         // Finish when incognito mode is disabled
         preferences.incognitoMode().asFlow()
             .drop(1)
