@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
 import eu.kanade.tachiyomi.util.view.setSecureScreen
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.injectLazy
@@ -16,8 +17,12 @@ class SecureActivityDelegate(private val activity: FragmentActivity) {
     private val preferences: PreferencesHelper by injectLazy()
 
     fun onCreate() {
-        preferences.secureScreen().asFlow()
-            .onEach { activity.window.setSecureScreen(it || preferences.incognitoMode().get()) }
+        val secureScreenFlow = preferences.secureScreen().asFlow()
+        val incognitoModeFlow = preferences.incognitoMode().asFlow()
+        secureScreenFlow.combine(incognitoModeFlow) { secureScreen, incognitoMode ->
+            secureScreen || incognitoMode
+        }
+            .onEach { activity.window.setSecureScreen(it) }
             .launchIn(activity.lifecycleScope)
     }
 

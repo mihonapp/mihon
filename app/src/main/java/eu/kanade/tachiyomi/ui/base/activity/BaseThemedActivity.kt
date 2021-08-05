@@ -3,16 +3,10 @@ package eu.kanade.tachiyomi.ui.base.activity
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import eu.kanade.tachiyomi.util.view.setSecureScreen
-import kotlinx.coroutines.flow.launchIn
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 abstract class BaseThemedActivity : AppCompatActivity() {
@@ -25,13 +19,6 @@ abstract class BaseThemedActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         applyAppTheme(preferences)
-
-        Injekt.get<PreferencesHelper>().incognitoMode()
-            .asImmediateFlow {
-                window.setSecureScreen(it)
-            }
-            .launchIn(lifecycleScope)
-
         super.onCreate(savedInstanceState)
     }
 
