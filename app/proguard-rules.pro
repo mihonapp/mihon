@@ -4,6 +4,7 @@
 -keep,allowoptimization class eu.kanade.tachiyomi.** { public protected *; }
 -keep,allowoptimization class androidx.preference.** { *; }
 -keep,allowoptimization class kotlin.** { public protected *; }
+-keep,allowoptimization class kotlinx.coroutines.** { public protected *; }
 -keep,allowoptimization class okhttp3.** { public protected *; }
 -keep,allowoptimization class okio.** { public protected *; }
 -keep,allowoptimization class rx.** { public protected *; }
