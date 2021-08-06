@@ -284,3 +284,24 @@ fun Context.isTablet(): Boolean {
 fun Context.isNightMode(): Boolean {
     return resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 }
+
+/**
+ * Creates night mode Context depending on reader theme/background
+ */
+fun Context.createReaderThemeContext(readerThemeSelected: Int): Context {
+    val isDarkBackground = when (readerThemeSelected) {
+        1, 2 -> true // Black, Gray
+        3 -> isNightMode() // Automatic bg uses activity background by default
+        else -> false // White
+    }
+    val expected = if (isDarkBackground) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
+    if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK != expected) {
+        val overrideConfig = Configuration(resources.configuration).apply {
+            uiMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or expected
+        }
+        return createConfigurationContext(overrideConfig).also {
+            it.theme.setTo(theme)
+        }
+    }
+    return this
+}
