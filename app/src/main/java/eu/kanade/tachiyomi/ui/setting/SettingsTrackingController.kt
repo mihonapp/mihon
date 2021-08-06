@@ -20,7 +20,6 @@ import eu.kanade.tachiyomi.ui.setting.track.TrackLoginDialog
 import eu.kanade.tachiyomi.ui.setting.track.TrackLogoutDialog
 import eu.kanade.tachiyomi.util.preference.add
 import eu.kanade.tachiyomi.util.preference.defaultValue
-import eu.kanade.tachiyomi.util.preference.iconRes
 import eu.kanade.tachiyomi.util.preference.infoPreference
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
@@ -101,7 +100,6 @@ class SettingsTrackingController :
             LoginPreference(context).apply {
                 key = Keys.trackUsername(service.id)
                 titleRes = service.nameRes()
-                iconRes = service.getLogo()
                 onClick {
                     if (service.isLogged) {
                         if (service is NoLoginTrackService) {
