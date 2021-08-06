@@ -29,8 +29,8 @@ android {
         minSdk = AndroidConfig.minSdk
         targetSdk = AndroidConfig.targetSdk
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        versionCode = 65
-        versionName = "0.11.1"
+        versionCode = 66
+        versionName = "0.12.0"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
@@ -47,7 +47,7 @@ android {
 
     splits {
         abi {
-            isEnable = true
+            isEnable = false
             reset()
             include(*SUPPORTED_ABIS.toTypedArray())
             isUniversalApk = true
