@@ -19,7 +19,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:background="@mipmap/ic_launcher" />
+        tools:background="@mipmap/ic_launcher"
+        tools:ignore="ContentDescription" />
 
     <View
         android:id="@+id/backdrop_overlay"
