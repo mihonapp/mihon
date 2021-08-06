@@ -109,7 +109,7 @@
     <string name="label_extension_info">Info Ekstensi</string>
     <string name="label_extensions">Ekstensi</string>
     <string name="label_migration">Pindah</string>
-    <string name="label_backup">Serep</string>
+    <string name="label_backup">Serep lan mulihake</string>
     <string name="label_sources">Sumber</string>
     <string name="label_recent_manga">Sejarah</string>
     <string name="label_recent_updates">Nganyari</string>
@@ -125,4 +125,27 @@
     <string name="download_notifier_downloader_title">Donloder</string>
     <string name="channel_complete">Komplit</string>
     <string name="information_no_recent_manga">durung maca apa apa</string>
+    <string name="action_pause">Jeda</string>
+    <string name="action_edit_cover">Nyunting sampul</string>
+    <string name="action_move_category">Ngatur kategori</string>
+    <string name="action_update_library">Nganyari perpustakaan</string>
+    <string name="action_remove_bookmark">Ngilangi penunjuk bab</string>
+    <string name="action_bookmark">Penujuk bab</string>
+    <string name="action_mark_previous_as_read">Tandai sadurunge dadi diwaca</string>
+    <string name="action_mark_as_unread">Tandai dadi durung diwaca</string>
+    <string name="action_mark_as_read">Tandai dadi diwaca</string>
+    <string name="action_global_search">Penggolekan global</string>
+    <string name="action_sort_chapter_fetch_date">Tanggal dijupuk</string>
+    <string name="action_sort_next_updated">Sabanjure nganyari sing diarepake</string>
+    <string name="action_sort_last_checked">Terakhir dipriksa</string>
+    <string name="action_sort_last_read">Terakhir di waca</string>
+    <string name="action_filter_empty">Ngilangno saringan</string>
+    <string name="action_filter_tracked">Kelacak</string>
+    <string name="action_filter_bookmarked">Diwenehi tandha</string>
+    <string name="action_menu">Menu</string>
+    <string name="confirm_exit">Pencet bali maneh kanggo metu</string>
+    <string name="track">Ngelacak</string>
+    <string name="chapters">Bab</string>
+    <string name="information_empty_category">Sampeyan ora duwe kategori. Dhemok tombol tambah kanggo nggawe siji kategori kanggo ngatur perpustakaane sampeyan.</string>
+    <string name="information_empty_library">Perpustakaane sampeyan kosong. Tambahake seri menyang perpustakaane sampeyan saka Browse.</string>
 </resources>
