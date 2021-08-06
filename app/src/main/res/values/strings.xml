@@ -141,7 +141,6 @@
 
       <!-- General section -->
     <string name="pref_category_theme">Theme</string>
-    <string name="pref_category_locale">Locale</string>
     <string name="pref_theme_mode">Dark mode</string>
     <string name="theme_system">Follow system</string>
     <string name="theme_light">Off</string>
@@ -158,7 +157,6 @@
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Pure black dark mode</string>
     <string name="pref_start_screen">Start screen</string>
-    <string name="pref_language">Language</string>
     <string name="system_default">Default</string>
     <string name="pref_date_format">Date format</string>
     <string name="pref_confirm_exit">Confirm exit</string>

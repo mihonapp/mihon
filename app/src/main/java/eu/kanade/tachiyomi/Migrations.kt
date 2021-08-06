@@ -232,11 +232,6 @@ object Migrations {
                     putString(PreferenceKeys.librarySortingDirection, newSortingDirection.name)
                 }
             }
-            if (oldVersion < 65) {
-                if (preferences.lang().get() in listOf("en-US", "en-GB")) {
-                    preferences.lang().set("en")
-                }
-            }
             return true
         }
 

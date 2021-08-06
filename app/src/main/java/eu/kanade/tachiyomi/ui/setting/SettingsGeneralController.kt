@@ -16,7 +16,6 @@ import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
-import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.isTablet
 import kotlinx.coroutines.flow.launchIn
 import java.util.Date
@@ -78,6 +77,24 @@ class SettingsGeneralController : SettingsController() {
                     startActivity(intent)
                 }
             }
+        }
+        listPreference {
+            key = Keys.dateFormat
+            titleRes = R.string.pref_date_format
+            entryValues = arrayOf("", "MM/dd/yy", "dd/MM/yy", "yyyy-MM-dd", "dd MMM yyyy", "MMM dd, yyyy")
+
+            val now = Date().time
+            entries = entryValues.map { value ->
+                val formattedDate = preferences.dateFormat(value.toString()).format(now)
+                if (value == "") {
+                    "${context.getString(R.string.system_default)} ($formattedDate)"
+                } else {
+                    "$value ($formattedDate)"
+                }
+            }.toTypedArray()
+
+            defaultValue = ""
+            summary = "%s"
         }
 
         preferenceCategory {
@@ -147,114 +164,6 @@ class SettingsGeneralController : SettingsController() {
                     activity?.recreate()
                     true
                 }
-            }
-        }
-
-        preferenceCategory {
-            titleRes = R.string.pref_category_locale
-
-            listPreference {
-                key = Keys.lang
-                titleRes = R.string.pref_language
-
-                val langs = mutableListOf<Pair<String, String>>()
-                langs += Pair(
-                    "",
-                    "${context.getString(R.string.system_default)} (${LocaleHelper.getDisplayName("")})"
-                )
-                // Due to compatibility issues:
-                // - Hebrew: `he` is copied into `iw` at build time
-                langs += arrayOf(
-                    "am",
-                    "ar",
-                    "be",
-                    "bg",
-                    "bn",
-                    "ca",
-                    "cs",
-                    "cv",
-                    "de",
-                    "el",
-                    "eo",
-                    "es",
-                    "es-419",
-                    "en",
-                    "fa",
-                    "fi",
-                    "fil",
-                    "fr",
-                    "gl",
-                    "he",
-                    "hi",
-                    "hr",
-                    "hu",
-                    "in",
-                    "it",
-                    "ja",
-                    "jv",
-                    "ka-rGE",
-                    "kn",
-                    "ko",
-                    "lt",
-                    "lv",
-                    "mr",
-                    "ms",
-                    "my",
-                    "nb-rNO",
-                    "ne",
-                    "nl",
-                    "pl",
-                    "pt",
-                    "pt-BR",
-                    "ro",
-                    "ru",
-                    "sah",
-                    "sc",
-                    "sk",
-                    "sr",
-                    "sv",
-                    "te",
-                    "th",
-                    "tr",
-                    "uk",
-                    "ur-rPK",
-                    "vi",
-                    "uz",
-                    "zh-rCN",
-                    "zh-rTW"
-                )
-                    .map {
-                        Pair(it, LocaleHelper.getDisplayName(it))
-                    }
-                    .sortedBy { it.second }
-
-                entryValues = langs.map { it.first }.toTypedArray()
-                entries = langs.map { it.second }.toTypedArray()
-                defaultValue = ""
-                summary = "%s"
-
-                onChange { newValue ->
-                    activity?.recreate()
-                    true
-                }
-            }
-            listPreference {
-                key = Keys.dateFormat
-                titleRes = R.string.pref_date_format
-                entryValues = arrayOf("", "MM/dd/yy", "dd/MM/yy", "yyyy-MM-dd", "dd MMM yyyy", "MMM dd, yyyy")
-
-                val now = Date().time
-                entries = entryValues.map { value ->
-                    val formattedDate = preferences.dateFormat(value.toString()).format(now)
-                    if (value == "") {
-                        "${context.getString(R.string.system_default)} ($formattedDate)"
-                    } else {
-                        "$value ($formattedDate)"
-                    }
-                }.toTypedArray()
-
-                defaultValue = ""
-                summary = "%s"
             }
         }
     }
