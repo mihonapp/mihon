@@ -30,7 +30,6 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerConfig.ZoomType
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.ImageUtil
-import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 import rx.Observable
@@ -59,7 +58,11 @@ class PagerPageHolder(
     /**
      * Loading progress bar to indicate the current progress.
      */
-    private val progressIndicator: ReaderProgressIndicator
+    private val progressIndicator = ReaderProgressIndicator(context).apply {
+        updateLayoutParams<LayoutParams> {
+            gravity = Gravity.CENTER
+        }
+    }
 
     /**
      * Image view that supports subsampling on zoom.
@@ -115,12 +118,6 @@ class PagerPageHolder(
     }
 
     init {
-        val indicatorContext = context.createReaderThemeContext(viewer.config.theme)
-        progressIndicator = ReaderProgressIndicator(indicatorContext).apply {
-            updateLayoutParams<LayoutParams> {
-                gravity = Gravity.CENTER
-            }
-        }
         addView(progressIndicator)
         observeStatus()
         viewer.activity.addOnMenuVisibilityListener(visibilityListener)
