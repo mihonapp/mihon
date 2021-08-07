@@ -6,8 +6,8 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.system.getThemeColor
 
 /**
  * Seekbar to show current chapter progress.

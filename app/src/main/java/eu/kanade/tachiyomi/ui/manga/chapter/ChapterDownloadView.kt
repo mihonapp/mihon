@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import com.google.android.material.progressindicator.BaseProgressIndicator
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.ChapterDownloadViewBinding
 import eu.kanade.tachiyomi.util.system.dpToPx
+import eu.kanade.tachiyomi.util.system.getThemeColor
 import eu.kanade.tachiyomi.util.view.setVectorCompat
 
 class ChapterDownloadView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :

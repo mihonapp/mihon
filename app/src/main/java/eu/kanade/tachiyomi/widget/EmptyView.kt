@@ -11,9 +11,9 @@ import androidx.annotation.StringRes
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.view.isVisible
 import com.google.android.material.button.MaterialButton
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.CommonViewEmptyBinding
+import eu.kanade.tachiyomi.util.system.getThemeColor
 import kotlin.random.Random
 
 class EmptyView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :

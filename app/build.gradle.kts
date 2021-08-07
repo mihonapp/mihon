@@ -253,7 +253,7 @@ dependencies {
     "standardImplementation"("com.google.firebase:firebase-analytics:19.0.0")
 
     // Licenses
-    implementation("com.mikepenz:aboutlibraries:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
+    implementation("com.mikepenz:aboutlibraries-core:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
 
     // Tests
     testImplementation("junit:junit:4.13.2")

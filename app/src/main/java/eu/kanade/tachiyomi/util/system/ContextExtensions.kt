@@ -18,6 +18,7 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
+import android.util.TypedValue
 import android.view.Display
 import android.view.View
 import android.view.WindowManager
@@ -138,6 +139,19 @@ fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermissio
     }
 
     return color
+}
+
+@ColorInt fun Context.getThemeColor(attr: Int): Int {
+    val tv = TypedValue()
+    return if (this.theme.resolveAttribute(attr, tv, true)) {
+        if (tv.resourceId != 0) {
+            ContextCompat.getColor(this, tv.resourceId)
+        } else {
+            tv.data
+        }
+    } else {
+        0
+    }
 }
 
 /**

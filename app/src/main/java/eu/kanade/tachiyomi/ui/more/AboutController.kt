@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mikepenz.aboutlibraries.LibsBuilder
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.GithubUpdateChecker
@@ -14,6 +13,8 @@ import eu.kanade.tachiyomi.data.updater.UpdaterService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.more.licenses.LicensesController
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.lang.launchNow
@@ -84,13 +85,7 @@ class AboutController : SettingsController(), NoToolbarElevationController {
             key = "pref_about_licenses"
             titleRes = R.string.licenses
             onClick {
-                LibsBuilder()
-                    .withActivityTitle(activity!!.getString(R.string.licenses))
-                    .withAboutIconShown(false)
-                    .withAboutVersionShown(false)
-                    .withLicenseShown(true)
-                    .withEdgeToEdge(true)
-                    .start(activity!!)
+                router.pushController(LicensesController().withFadeTransaction())
             }
         }
 

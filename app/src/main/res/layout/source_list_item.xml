@@ -6,8 +6,7 @@
     android:layout_height="56dp"
     android:layout_gravity="center_vertical"
     android:background="@drawable/list_item_selector_background"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp">
+    android:paddingHorizontal="8dp">
 
     <ImageView
         android:id="@+id/thumbnail"

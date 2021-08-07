@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.system.getThemeColor
 
 class QuadStateTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     AppCompatTextView(context, attrs) {
