@@ -87,6 +87,8 @@ object PreferenceKeys {
 
     const val showNavigationOverlayOnStart = "reader_navigation_overlay_on_start"
 
+    const val readerHideThreshold = "reader_hide_threshold"
+
     const val webtoonSidePadding = "webtoon_side_padding"
 
     const val portraitColumns = "pref_library_columns_portrait_key"

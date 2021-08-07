@@ -43,4 +43,11 @@ object PreferenceValues {
         VERTICAL(shouldInvertVertical = true),
         BOTH(shouldInvertHorizontal = true, shouldInvertVertical = true),
     }
+
+    enum class ReaderHideThreshold(val threshold: Int) {
+        HIGHEST(5),
+        HIGH(13),
+        LOW(31),
+        LOWEST(47)
+    }
 }
