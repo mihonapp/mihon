@@ -187,7 +187,7 @@ dependencies {
     implementation("com.github.salomonbrys.kotson:kotson:2.5.0")
 
     // JavaScript engine
-    implementation("com.squareup.duktape:duktape-android:1.3.0")
+    implementation("com.squareup.duktape:duktape-android:1.4.0")
 
     // Disk
     implementation("com.jakewharton:disklrucache:2.0.2")
