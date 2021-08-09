@@ -2,4 +2,5 @@
 <resources>
     <bool name="lightStatusBar">true</bool>
     <bool name="lightNavigationBar">false</bool>
+    <bool name="elevationOverlayEnabled">false</bool>
 </resources>

@@ -64,6 +64,7 @@
         <item name="tabStyle">@style/Widget.Tachiyomi.TabLayout</item>
         <item name="bottomNavigationStyle">@style/Widget.Tachiyomi.BottomNavigationView</item>
         <item name="navigationRailStyle">@style/Widget.Tachiyomi.NavigationRailView</item>
+        <item name="switchStyle">@style/Widget.Tachiyomi.Switch</item>
         <item name="elevationOverlayEnabled">false</item>
         <item name="lightSystemBarsOnPrimary">false</item>
 

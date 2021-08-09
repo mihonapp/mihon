@@ -261,6 +261,17 @@
         <item name="tabRippleColor">?attr/colorOnPrimary</item>
     </style>
 
+    <!--==============-->
+    <!--Widgets.Switch-->
+    <!--==============-->
+    <style name="Widget.Tachiyomi.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Tachiyomi.Switch</item>
+    </style>
+
+    <style name="ThemeOverlay.Tachiyomi.Switch" parent="">
+        <item name="elevationOverlayEnabled">@bool/elevationOverlayEnabled</item>
+    </style>
+
 
     <!--================-->
     <!--Navigation Views-->
