@@ -23,6 +23,9 @@ class PagerConfig(
     preferences: PreferencesHelper = Injekt.get()
 ) : ViewerConfig(preferences, scope) {
 
+    var theme = preferences.readerTheme().get()
+        private set
+
     var automaticBackground = false
         private set
 
@@ -39,7 +42,13 @@ class PagerConfig(
 
     init {
         preferences.readerTheme()
-            .register({ automaticBackground = it == 3 }, { imagePropertyChangedListener?.invoke() })
+            .register(
+                {
+                    theme = it
+                    automaticBackground = it == 3
+                },
+                { imagePropertyChangedListener?.invoke() }
+            )
 
         preferences.imageScaleType()
             .register({ imageScaleType = it }, { imagePropertyChangedListener?.invoke() })

@@ -26,11 +26,13 @@ import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
@@ -297,4 +299,32 @@ fun Context.isTablet(): Boolean {
  */
 fun Context.isNightMode(): Boolean {
     return resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+}
+
+/**
+ * Creates night mode Context depending on reader theme/background
+ *
+ * Context wrapping method obtained from AppCompatDelegateImpl
+ * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:appcompat/appcompat/src/main/java/androidx/appcompat/app/AppCompatDelegateImpl.java;l=348;drc=e28752c96fc3fb4d3354781469a1af3dbded4898
+ */
+fun Context.createReaderThemeContext(readerThemeSelected: Int): Context {
+    val isDarkBackground = when (readerThemeSelected) {
+        1, 2 -> true // Black, Gray
+        3 -> isNightMode() // Automatic bg uses activity background by default
+        else -> false // White
+    }
+    val expected = if (isDarkBackground) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
+    if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK != expected) {
+        val overrideConf = Configuration()
+        overrideConf.setTo(resources.configuration)
+        overrideConf.uiMode = (overrideConf.uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or expected
+
+        val wrappedContext = ContextThemeWrapper(this, R.style.Theme_AppCompat_Empty)
+        wrappedContext.applyOverrideConfiguration(overrideConf)
+        if (theme != null) {
+            ResourcesCompat.ThemeCompat.rebase(wrappedContext.theme)
+        }
+        return wrappedContext
+    }
+    return this
 }
