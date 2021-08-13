@@ -222,7 +222,7 @@ dependencies {
     implementation("com.github.gpanther:java-nat-sort:natural-comparator-1.1")
 
     // UI libraries
-    implementation("com.google.android.material:material:1.5.0-alpha01")
+    implementation("com.google.android.material:material:1.5.0-alpha02")
     implementation("com.github.dmytrodanylyk.android-process-button:library:1.0.4")
     implementation("eu.davidea:flexible-adapter:5.1.0")
     implementation("eu.davidea:flexible-adapter-ui:1.0.0")
@@ -246,7 +246,7 @@ dependencies {
     implementation("io.github.reactivecircus.flowbinding:flowbinding-viewpager:$flowbindingVersion")
 
     // Logging
-    implementation("com.jakewharton.timber:timber:4.7.1")
+    implementation("com.jakewharton.timber:timber:5.0.1")
 
     // Crash reports/analytics
     implementation("ch.acra:acra-http:5.8.1")
