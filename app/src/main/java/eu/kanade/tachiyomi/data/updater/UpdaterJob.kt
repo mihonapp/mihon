@@ -8,6 +8,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import eu.kanade.tachiyomi.BuildConfig
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
@@ -31,12 +32,18 @@ class UpdaterJob(private val context: Context, workerParams: WorkerParameters) :
         private const val TAG = "UpdateChecker"
 
         fun setupTask(context: Context) {
+            // Never check for updates in debug builds that don't include the updater
+            if (BuildConfig.DEBUG && !BuildConfig.INCLUDE_UPDATER) {
+                cancelTask(context)
+                return
+            }
+
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
             val request = PeriodicWorkRequestBuilder<UpdaterJob>(
-                3,
+                7,
                 TimeUnit.DAYS,
                 3,
                 TimeUnit.HOURS

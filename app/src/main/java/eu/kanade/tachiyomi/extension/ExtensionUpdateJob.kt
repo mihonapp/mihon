@@ -73,9 +73,9 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
                     .build()
 
                 val request = PeriodicWorkRequestBuilder<ExtensionUpdateJob>(
-                    12,
-                    TimeUnit.HOURS,
-                    1,
+                    2,
+                    TimeUnit.DAYS,
+                    3,
                     TimeUnit.HOURS
                 )
                     .addTag(TAG)
