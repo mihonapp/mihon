@@ -35,6 +35,8 @@ import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.preference.asImmediateFlow
+import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
+import eu.kanade.tachiyomi.data.updater.AppUpdateResult
 import eu.kanade.tachiyomi.databinding.MainActivityBinding
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseViewBindingActivity
@@ -52,6 +54,7 @@ import eu.kanade.tachiyomi.ui.download.DownloadController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.more.MoreController
+import eu.kanade.tachiyomi.ui.more.NewUpdateDialogController
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
@@ -334,19 +337,32 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
     override fun onResume() {
         super.onResume()
-        getExtensionUpdates()
-    }
 
-    private fun setExtensionsBadge() {
-        val updates = preferences.extensionUpdatesCount().get()
-        if (updates > 0) {
-            nav.getOrCreateBadge(R.id.nav_browse).number = updates
-        } else {
-            nav.removeBadge(R.id.nav_browse)
+        checkForExtensionUpdates()
+        if (BuildConfig.INCLUDE_UPDATER) {
+            checkForAppUpdates()
         }
     }
 
-    private fun getExtensionUpdates() {
+    private fun checkForAppUpdates() {
+        // Limit checks to once a day at most
+        if (Date().time < preferences.lastAppCheck().get() + TimeUnit.DAYS.toMillis(1)) {
+            return
+        }
+
+        lifecycleScope.launchIO {
+            try {
+                val result = AppUpdateChecker().checkForUpdate()
+                if (result is AppUpdateResult.NewUpdate) {
+                    NewUpdateDialogController(result).showDialog(router)
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    private fun checkForExtensionUpdates() {
         // Limit checks to once a day at most
         if (Date().time < preferences.lastExtCheck().get() + TimeUnit.DAYS.toMillis(1)) {
             return
@@ -359,6 +375,15 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             } catch (e: Exception) {
                 Timber.e(e)
             }
+        }
+    }
+
+    private fun setExtensionsBadge() {
+        val updates = preferences.extensionUpdatesCount().get()
+        if (updates > 0) {
+            nav.getOrCreateBadge(R.id.nav_browse).number = updates
+        } else {
+            nav.removeBadge(R.id.nav_browse)
         }
     }
 

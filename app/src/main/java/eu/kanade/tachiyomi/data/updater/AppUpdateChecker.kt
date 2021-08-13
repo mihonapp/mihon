@@ -1,16 +1,19 @@
 package eu.kanade.tachiyomi.data.updater
 
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
+import java.util.Date
 
-class GithubUpdateChecker {
+class AppUpdateChecker {
 
     private val networkService: NetworkHelper by injectLazy()
+    private val preferences: PreferencesHelper by injectLazy()
 
     private val repo: String by lazy {
         if (BuildConfig.DEBUG) {
@@ -20,18 +23,20 @@ class GithubUpdateChecker {
         }
     }
 
-    suspend fun checkForUpdate(): GithubUpdateResult {
+    suspend fun checkForUpdate(): AppUpdateResult {
         return withIOContext {
             networkService.client
                 .newCall(GET("https://api.github.com/repos/$repo/releases/latest"))
                 .await()
                 .parseAs<GithubRelease>()
                 .let {
+                    preferences.lastAppCheck().set(Date().time)
+
                     // Check if latest version is different from current version
                     if (isNewVersion(it.version)) {
-                        GithubUpdateResult.NewUpdate(it)
+                        AppUpdateResult.NewUpdate(it)
                     } else {
-                        GithubUpdateResult.NoNewUpdate
+                        AppUpdateResult.NoNewUpdate
                     }
                 }
         }

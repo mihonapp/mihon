@@ -269,6 +269,7 @@ class PreferencesHelper(val context: Context) {
 
     fun extensionUpdatesCount() = flowPrefs.getInt("ext_updates_count", 0)
 
+    fun lastAppCheck() = flowPrefs.getLong("last_app_check", 0)
     fun lastExtCheck() = flowPrefs.getLong("last_ext_check", 0)
 
     fun searchPinnedSourcesOnly() = prefs.getBoolean(Keys.searchPinnedSourcesOnly, false)
