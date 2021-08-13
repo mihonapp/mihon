@@ -32,23 +32,20 @@ object Migrations {
     fun upgrade(preferences: PreferencesHelper): Boolean {
         val context = preferences.context
 
-        // Cancel app updater job for debug builds that don't include it
-        if (BuildConfig.DEBUG && !BuildConfig.INCLUDE_UPDATER) {
-            UpdaterJob.cancelTask(context)
-        }
-
         val oldVersion = preferences.lastVersionCode().get()
         if (oldVersion < BuildConfig.VERSION_CODE) {
             preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
 
+            // Always set up background tasks to ensure they're running
+            if (BuildConfig.INCLUDE_UPDATER) {
+                UpdaterJob.setupTask(context)
+            }
+            ExtensionUpdateJob.setupTask(context)
+            LibraryUpdateJob.setupTask(context)
+            BackupCreatorJob.setupTask(context)
+
             // Fresh install
             if (oldVersion == 0) {
-                // Set up default background tasks
-                if (BuildConfig.INCLUDE_UPDATER) {
-                    UpdaterJob.setupTask(context)
-                }
-                ExtensionUpdateJob.setupTask(context)
-                LibraryUpdateJob.setupTask(context)
                 return false
             }
 
@@ -232,6 +229,7 @@ object Migrations {
                     putString(PreferenceKeys.librarySortingDirection, newSortingDirection.name)
                 }
             }
+
             return true
         }
 
