@@ -41,6 +41,7 @@ class NetworkHelper(context: Context) {
             when (preferences.dohProvider()) {
                 PREF_DOH_CLOUDFLARE -> builder.dohCloudflare()
                 PREF_DOH_GOOGLE -> builder.dohGoogle()
+                PREF_DOH_ADGUARD -> builder.dohAdGuard()
             }
 
             return builder

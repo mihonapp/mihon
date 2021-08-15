@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Target
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
 import eu.kanade.tachiyomi.network.PREF_DOH_GOOGLE
+import eu.kanade.tachiyomi.network.PREF_DOH_ADGUARD
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.util.CrashLogUtil
@@ -146,11 +147,13 @@ class SettingsAdvancedController : SettingsController() {
                     context.getString(R.string.disabled),
                     "Cloudflare",
                     "Google",
+                    "AdGuard",
                 )
                 entryValues = arrayOf(
                     "-1",
                     PREF_DOH_CLOUDFLARE.toString(),
                     PREF_DOH_GOOGLE.toString(),
+                    PREF_DOH_ADGUARD.toString(),
                 )
                 defaultValue = "-1"
                 summary = "%s"
