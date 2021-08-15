@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.loadAny
+import coil.target.ImageViewTarget
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -262,8 +263,17 @@ class MangaInfoHeaderAdapter(
             setFavoriteButtonState(manga.favorite)
 
             // Set cover if changed.
-            listOfNotNull(binding.mangaCover, binding.backdrop).forEach {
-                it.loadAny(manga)
+            binding.backdrop.loadAny(manga)
+            binding.mangaCover.loadAny(manga) {
+                listener(
+                    onSuccess = { request, _ ->
+                        (request.target as? ImageViewTarget)?.drawable?.let { drawable ->
+                            val ratio = drawable.minimumWidth / drawable.minimumHeight.toFloat()
+                            binding.root.getConstraintSet(R.id.end)
+                                ?.setDimensionRatio(R.id.manga_cover, ratio.toString())
+                        }
+                    }
+                )
             }
 
             // Manga info section
