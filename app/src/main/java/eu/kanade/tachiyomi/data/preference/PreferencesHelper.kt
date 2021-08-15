@@ -208,6 +208,8 @@ class PreferencesHelper(val context: Context) {
 
     fun backupsDirectory() = flowPrefs.getString(Keys.backupDirectory, defaultBackupDir.toString())
 
+    fun relativeTime() = flowPrefs.getInt(Keys.relativeTime, 7)
+
     fun dateFormat(format: String = flowPrefs.getString(Keys.dateFormat, "").get()): DateFormat = when (format) {
         "" -> DateFormat.getDateInstance(DateFormat.SHORT)
         else -> SimpleDateFormat(format, Locale.getDefault())

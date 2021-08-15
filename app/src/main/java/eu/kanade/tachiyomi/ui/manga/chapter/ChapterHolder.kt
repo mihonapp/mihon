@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.databinding.ChaptersItemBinding
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.manga.chapter.base.BaseChapterHolder
+import eu.kanade.tachiyomi.util.lang.toRelativeString
 import java.util.Date
 
 class ChapterHolder(
@@ -56,7 +57,7 @@ class ChapterHolder(
         val descriptions = mutableListOf<CharSequence>()
 
         if (chapter.date_upload > 0) {
-            descriptions.add(adapter.dateFormat.format(Date(chapter.date_upload)))
+            descriptions.add(Date(chapter.date_upload).toRelativeString(itemView.context, adapter.relativeTime, adapter.dateFormat))
         }
         if (!chapter.read && chapter.last_page_read > 0) {
             val lastPageRead = buildSpannedString {

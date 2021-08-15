@@ -32,6 +32,7 @@ class ChaptersAdapter(
             .apply { decimalSeparator = '.' }
     )
 
+    val relativeTime: Int = preferences.relativeTime().get()
     val dateFormat: DateFormat = preferences.dateFormat()
 
     override fun updateDataSet(items: List<ChapterItem>?) {

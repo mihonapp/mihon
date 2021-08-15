@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.util.lang
 
+import android.content.Context
+import eu.kanade.tachiyomi.R
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
@@ -92,5 +94,26 @@ fun Long.toLocalCalendar(): Calendar? {
             rawCalendar.get(Calendar.MINUTE),
             rawCalendar.get(Calendar.SECOND)
         )
+    }
+}
+
+private const val MILLISECONDS_IN_DAY = 86_400_000.0
+
+fun Date.toRelativeString(
+    context: Context,
+    range: Int = 7,
+    dateFormat: DateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
+): String {
+    val now = Date()
+    val difference = now.time - this.time
+    val days = difference / MILLISECONDS_IN_DAY
+    return when {
+        difference < 0 -> context.getString(R.string.recently)
+        difference < MILLISECONDS_IN_DAY.times(range) -> context.resources.getQuantityString(
+            R.plurals.relative_time,
+            days.toInt(),
+            days
+        )
+        else -> dateFormat.format(this)
     }
 }

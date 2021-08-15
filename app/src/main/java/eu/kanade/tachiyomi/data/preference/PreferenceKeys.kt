@@ -182,6 +182,7 @@ object PreferenceKeys {
 
     const val libraryDisplayMode = "pref_display_mode_library"
 
+    const val relativeTime: String = "relative_time"
     const val dateFormat = "app_date_format"
 
     const val defaultCategory = "default_category"

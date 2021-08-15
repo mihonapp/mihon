@@ -186,6 +186,16 @@
     <string name="pref_label_nsfw_extension">Label in extensions list</string>
     <string name="parental_controls_info">This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing NSFW (18+) content within the app.</string>
 
+    <string name="recently">Recently</string>
+    <plurals name="relative_time">
+        <item quantity="zero">Today</item>
+        <item quantity="one">Yesterday</item>
+        <item quantity="other">%1$.0f days ago</item>
+    </plurals>
+    <string name="pref_relative_format">Relative timestamps</string>
+    <string name="pref_relative_time_short">Short (Today, Yesterday)</string>
+    <string name="pref_relative_time_long">Long (Short+, n days ago)</string>
+
       <!-- Library section -->
     <string name="pref_category_display">Display</string>
     <string name="pref_library_columns">Items per row</string>
