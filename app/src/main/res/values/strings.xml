@@ -187,10 +187,10 @@
     <string name="parental_controls_info">This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing NSFW (18+) content within the app.</string>
 
     <string name="recently">Recently</string>
+    <string name="relative_time_today">Today</string>
     <plurals name="relative_time">
-        <item quantity="zero">Today</item>
         <item quantity="one">Yesterday</item>
-        <item quantity="other">%1$.0f days ago</item>
+        <item quantity="other">%1$d days ago</item>
     </plurals>
     <string name="pref_relative_format">Relative timestamps</string>
     <string name="pref_relative_time_short">Short (Today, Yesterday)</string>

@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.launchIn
 import java.util.Date
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
-import androidx.preference.Preference
 
 class SettingsGeneralController : SettingsController() {
 
