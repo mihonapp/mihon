@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.History
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.recent.DateSectionItem
 import eu.kanade.tachiyomi.util.lang.toDateKey
@@ -13,6 +14,7 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.injectLazy
+import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.TreeMap
@@ -24,10 +26,11 @@ import java.util.TreeMap
  */
 class HistoryPresenter : BasePresenter<HistoryController>() {
 
-    /**
-     * Used to connect to database
-     */
-    val db: DatabaseHelper by injectLazy()
+    private val db: DatabaseHelper by injectLazy()
+    private val preferences: PreferencesHelper by injectLazy()
+
+    private val relativeTime: Int = preferences.relativeTime().get()
+    private val dateFormat: DateFormat = preferences.dateFormat()
 
     private var recentMangaSubscription: Subscription? = null
 
@@ -65,7 +68,7 @@ class HistoryPresenter : BasePresenter<HistoryController>() {
                 val byDay = recents
                     .groupByTo(map, { it.history.last_read.toDateKey() })
                 byDay.flatMap { entry ->
-                    val dateItem = DateSectionItem(entry.key)
+                    val dateItem = DateSectionItem(entry.key, relativeTime, dateFormat)
                     entry.value.map { HistoryItem(it, dateItem) }
                 }
             }

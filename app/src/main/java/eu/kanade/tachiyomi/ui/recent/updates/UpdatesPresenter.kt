@@ -15,18 +15,22 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import timber.log.Timber
-import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
+import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.TreeMap
 
-class UpdatesPresenter(
-    val preferences: PreferencesHelper = Injekt.get(),
-    private val db: DatabaseHelper = Injekt.get(),
-    private val downloadManager: DownloadManager = Injekt.get(),
-    private val sourceManager: SourceManager = Injekt.get()
-) : BasePresenter<UpdatesController>() {
+class UpdatesPresenter : BasePresenter<UpdatesController>() {
+
+    val preferences: PreferencesHelper by injectLazy()
+    private val db: DatabaseHelper by injectLazy()
+    private val downloadManager: DownloadManager by injectLazy()
+    private val sourceManager: SourceManager by injectLazy()
+
+    private val relativeTime: Int = preferences.relativeTime().get()
+    private val dateFormat: DateFormat = preferences.dateFormat()
 
     /**
      * List containing chapter and manga information
@@ -82,7 +86,7 @@ class UpdatesPresenter(
                 val byDay = mangaChapters
                     .groupByTo(map, { it.chapter.date_fetch.toDateKey() })
                 byDay.flatMap { entry ->
-                    val dateItem = DateSectionItem(entry.key)
+                    val dateItem = DateSectionItem(entry.key, relativeTime, dateFormat)
                     entry.value
                         .sortedWith(compareBy({ it.chapter.date_fetch }, { it.chapter.chapter_number })).asReversed()
                         .map { UpdatesItem(it.chapter, it.manga, dateItem) }

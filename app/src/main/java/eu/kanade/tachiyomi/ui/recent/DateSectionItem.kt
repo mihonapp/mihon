@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.recent
 
-import android.text.format.DateUtils
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -9,9 +8,15 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.SectionHeaderItemBinding
+import eu.kanade.tachiyomi.util.lang.toRelativeString
+import java.text.DateFormat
 import java.util.Date
 
-class DateSectionItem(val date: Date) : AbstractHeaderItem<DateSectionItem.DateSectionItemHolder>() {
+class DateSectionItem(
+    private val date: Date,
+    private val range: Int,
+    private val dateFormat: DateFormat,
+) : AbstractHeaderItem<DateSectionItem.DateSectionItemHolder>() {
 
     override fun getLayoutRes(): Int {
         return R.layout.section_header_item
@@ -37,14 +42,12 @@ class DateSectionItem(val date: Date) : AbstractHeaderItem<DateSectionItem.DateS
         return date.hashCode()
     }
 
-    inner class DateSectionItemHolder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter, true) {
+    inner class DateSectionItemHolder(private val view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter, true) {
 
         private val binding = SectionHeaderItemBinding.bind(view)
 
-        private val now = Date().time
-
         fun bind(item: DateSectionItem) {
-            binding.title.text = DateUtils.getRelativeTimeSpanString(item.date.time, now, DateUtils.DAY_IN_MILLIS)
+            binding.title.text = item.date.toRelativeString(view.context, range, dateFormat)
         }
     }
 }
