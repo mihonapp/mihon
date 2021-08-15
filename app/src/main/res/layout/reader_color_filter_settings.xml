@@ -193,6 +193,16 @@
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintTop_toBottomOf="@id/color_filter_mode" />
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/inverted_colors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/pref_inverted_colors"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@id/grayscale" />
+
         <!-- Brightness -->
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -203,7 +213,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="@string/pref_custom_brightness"
-            app:layout_constraintTop_toBottomOf="@id/grayscale" />
+            app:layout_constraintTop_toBottomOf="@id/inverted_colors" />
 
         <!-- Brightness value -->
 

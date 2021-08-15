@@ -67,6 +67,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
         binding.customBrightness.bindToPreference(preferences.customBrightness())
         binding.colorFilterMode.bindToPreference(preferences.colorFilterMode())
         binding.grayscale.bindToPreference(preferences.grayscale())
+        binding.invertedColors.bindToPreference(preferences.invertedColors())
 
         binding.seekbarColorFilterAlpha.setOnSeekBarChangeListener(
             object : SimpleSeekBarListener() {

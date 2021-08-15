@@ -129,6 +129,8 @@ class PreferencesHelper(val context: Context) {
 
     fun grayscale() = flowPrefs.getBoolean(Keys.grayscale, false)
 
+    fun invertedColors() = flowPrefs.getBoolean(Keys.invertedColors, false)
+
     fun defaultReadingMode() = prefs.getInt(Keys.defaultReadingMode, ReadingModeType.RIGHT_TO_LEFT.flagValue)
 
     fun defaultOrientationType() = prefs.getInt(Keys.defaultOrientationType, OrientationType.FREE.flagValue)
