@@ -50,6 +50,10 @@ class TrackHolder(private val binding: TrackItemBinding, adapter: TrackAdapter) 
 
         if (track != null) {
             val ctx = binding.trackTitle.context
+
+            binding.trackLogo.setOnClickListener {
+                listener.onOpenInBrowserClick(bindingAdapterPosition)
+            }
             binding.trackTitle.text = track.title
             binding.trackChapters.text = track.last_chapter_read.toString()
             if (track.total_chapters > 0) {
