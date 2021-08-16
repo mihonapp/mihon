@@ -49,6 +49,13 @@
     <color name="background_tako">#F2EDF7</color>
     <color name="filter_tako">#F29940</color>
 
+    <!-- Teal & Turquoise Theme -->
+    <color name="accent_tealturquoise">#008080</color>
+    <color name="color_on_primary_tealturquoise">#FFFFFF</color>
+    <color name="tertiary_tealturquoise">#FF7F7F</color>
+    <color name="color_on_tertiary_tealturquoise">#000000</color>
+    <color name="ripple_colored_tealturquoise">#1F008080</color>
+
     <!-- Yin & Yang Theme -->
     <color name="accent_yinyang">#000000</color>
     <color name="color_on_secondary_yinyang">#FFFFFF</color>

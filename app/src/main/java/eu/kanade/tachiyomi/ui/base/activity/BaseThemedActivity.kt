@@ -39,6 +39,9 @@ abstract class BaseThemedActivity : AppCompatActivity() {
                 PreferenceValues.AppTheme.TAKO -> {
                     resIds += R.style.Theme_Tachiyomi_Tako
                 }
+                PreferenceValues.AppTheme.TEALTURQUOISE -> {
+                    resIds += R.style.Theme_Tachiyomi_TealTurquoise
+                }
                 PreferenceValues.AppTheme.YINYANG -> {
                     resIds += R.style.Theme_Tachiyomi_YinYang
                 }

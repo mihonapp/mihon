@@ -128,6 +128,17 @@
         <item name="colorFilterActive">@color/filter_tako</item>
     </style>
 
+    <!--== Teal & Turquoise Theme ==-->
+    <style name="Theme.Tachiyomi.TealTurquoise">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/accent_tealturquoise</item>
+        <item name="colorOnPrimary">@color/color_on_primary_tealturquoise</item>
+        <item name="colorOnSecondary">@color/color_on_primary_tealturquoise</item>
+        <item name="colorTertiary">@color/tertiary_tealturquoise</item>
+        <item name="colorOnTertiary">@color/color_on_tertiary_tealturquoise</item>
+        <item name="colorControlHighlight">@color/ripple_colored_tealturquoise</item>
+    </style>
+
     <!--== Yin & Yang Theme ==-->
     <style name="Theme.Tachiyomi.YinYang">
         <!-- Theme Colors -->
