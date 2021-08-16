@@ -105,6 +105,9 @@ fun Date.toRelativeString(
     range: Int = 7,
     dateFormat: DateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
 ): String {
+    if (range == 0) {
+        return dateFormat.format(this)
+    }
     val now = Date()
     val difference = now.time - this.time
     val days = floor(difference / MILLISECONDS_IN_DAY).toInt()
@@ -119,3 +122,5 @@ fun Date.toRelativeString(
         else -> dateFormat.format(this)
     }
 }
+
+
