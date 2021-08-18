@@ -350,6 +350,16 @@ class MangaController :
         actionFab = null
     }
 
+    private fun updateFabVisibility() {
+        val context = view?.context ?: return
+        val adapter = chaptersAdapter ?: return
+        val fab = actionFab ?: return
+        fab.isVisible = adapter.items.any { !it.read }
+        if (adapter.items.any { it.read }) {
+            fab.text = context.getString(R.string.action_resume)
+        }
+    }
+
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
         (activity as? MainActivity)?.clearFixViewToBottom(binding.actionToolbar)
@@ -800,13 +810,7 @@ class MangaController :
             actionMode?.invalidate()
         }
 
-        val context = view?.context
-        if (context != null) {
-            actionFab?.isVisible = chapters.any { !it.read }
-            if (chapters.any { it.read }) {
-                actionFab?.text = context.getString(R.string.action_resume)
-            }
-        }
+        updateFabVisibility()
     }
 
     private fun fetchChaptersFromSource(manualFetch: Boolean = false) {
@@ -988,7 +992,7 @@ class MangaController :
         chaptersAdapter?.clearSelection()
         selectedChapters.clear()
         actionMode = null
-        actionFab?.isVisible = true
+        updateFabVisibility()
     }
 
     override fun onDetach(view: View) {
