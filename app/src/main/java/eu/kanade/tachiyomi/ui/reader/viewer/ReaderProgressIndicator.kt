@@ -8,7 +8,6 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
 import androidx.annotation.IntRange
-import androidx.dynamicanimation.animation.DynamicAnimation
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 /**
@@ -84,27 +83,9 @@ class ReaderProgressIndicator @JvmOverloads constructor(
         updateRotateAnimation()
     }
 
-    fun setCompleteProgressAndHide() {
-        val listener = object : DynamicAnimation.OnAnimationEndListener {
-            override fun onAnimationEnd(
-                animation: DynamicAnimation<*>?,
-                canceled: Boolean,
-                value: Float,
-                velocity: Float
-            ) {
-                hide()
-                indicator.progressDrawable?.removeSpringAnimationEndListener(this)
-            }
-        }
-
-        indicator.progressDrawable?.addSpringAnimationEndListener(listener)
-        indicator.setProgressCompat(100, true)
-        updateRotateAnimation(forceRotate = true)
-    }
-
-    private fun updateRotateAnimation(forceRotate: Boolean = false) {
-        if (forceRotate || (indicator.isShown && !indicator.isIndeterminate)) {
-            if (animation == null && isAttachedToWindow) {
+    private fun updateRotateAnimation() {
+        if (isAttachedToWindow && indicator.isShown && !indicator.isIndeterminate) {
+            if (animation == null) {
                 startAnimation(rotateAnimation)
             }
         } else {

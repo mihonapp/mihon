@@ -252,7 +252,7 @@ class PagerPageHolder(
      * Called when the page is ready.
      */
     private fun setImage() {
-        progressIndicator.setCompleteProgressAndHide()
+        progressIndicator.hide()
         retryButton?.isVisible = false
         decodeErrorLayout?.isVisible = false
 
