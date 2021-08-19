@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:textSize="17.5sp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         tools:text="Top" />
 
     <LinearLayout
@@ -35,6 +35,7 @@
             android:id="@+id/warning_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
             tools:text="Warning" />
 
     </LinearLayout>
@@ -43,7 +44,7 @@
         android:id="@+id/lower_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="17.5sp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         tools:text="Bottom" />
 
 </LinearLayout>

@@ -49,6 +49,11 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     private val layoutManager = WebtoonLayoutManager(activity)
 
     /**
+     * Configuration used by this viewer, like allow taps, or crop image borders.
+     */
+    val config = WebtoonConfig(scope)
+
+    /**
      * Adapter of the recycler view.
      */
     private val adapter = WebtoonAdapter(this)
@@ -62,11 +67,6 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Currently active item. It can be a chapter page or a chapter transition.
      */
     private var currentPage: Any? = null
-
-    /**
-     * Configuration used by this viewer, like allow taps, or crop image borders.
-     */
-    val config = WebtoonConfig(scope)
 
     /**
      * Subscriptions to keep while this viewer is used.
@@ -136,6 +136,10 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
 
         config.imagePropertyChangedListener = {
             refreshAdapter()
+        }
+
+        config.themeChangedListener = {
+            activity.recreate()
         }
 
         config.navigationModeChangedListener = {
@@ -338,6 +342,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     private fun refreshAdapter() {
         val position = layoutManager.findLastEndVisibleItemPosition()
+        adapter.refresh()
         adapter.notifyItemRangeChanged(
             max(0, position - 3),
             min(position + 3, adapter.itemCount - 1)

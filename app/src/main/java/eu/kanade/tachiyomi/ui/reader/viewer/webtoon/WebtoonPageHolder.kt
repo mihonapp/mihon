@@ -27,7 +27,6 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.ImageUtil
-import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.dpToPx
 import rx.Observable
 import rx.Subscription
@@ -346,8 +345,7 @@ class WebtoonPageHolder(
         progressContainer = FrameLayout(context)
         frame.addView(progressContainer, MATCH_PARENT, parentHeight)
 
-        val indicatorContext = context.createReaderThemeContext(viewer.config.theme)
-        val progress = ReaderProgressIndicator(indicatorContext).apply {
+        val progress = ReaderProgressIndicator(context).apply {
             updateLayoutParams<FrameLayout.LayoutParams> {
                 gravity = Gravity.CENTER_HORIZONTAL
                 updateMargins(top = parentHeight / 4)

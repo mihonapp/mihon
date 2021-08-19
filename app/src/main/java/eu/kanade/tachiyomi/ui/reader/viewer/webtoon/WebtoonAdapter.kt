@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.hasMissingChapters
+import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 
 /**
  * RecyclerView Adapter used by this [viewer] to where [ViewerChapters] updates are posted.
@@ -23,6 +24,12 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
         private set
 
     var currentChapter: ReaderChapter? = null
+
+    /**
+     * Context that has been wrapped to use the correct theme values based on the
+     * current app theme and reader background color
+     */
+    private var readerThemedContext = viewer.activity.createReaderThemeContext(viewer.config.theme)
 
     /**
      * Updates this adapter with the given [chapters]. It handles setting a few pages of the
@@ -77,6 +84,10 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
         result.dispatchUpdatesTo(this)
     }
 
+    fun refresh() {
+        readerThemedContext = viewer.activity.createReaderThemeContext(viewer.config.theme)
+    }
+
     /**
      * Returns the amount of items of the adapter.
      */
@@ -101,11 +112,11 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             PAGE_VIEW -> {
-                val view = FrameLayout(parent.context)
+                val view = FrameLayout(readerThemedContext)
                 WebtoonPageHolder(view, viewer)
             }
             TRANSITION_VIEW -> {
-                val view = LinearLayout(parent.context)
+                val view = LinearLayout(readerThemedContext)
                 WebtoonTransitionHolder(view, viewer)
             }
             else -> error("Unknown view type")

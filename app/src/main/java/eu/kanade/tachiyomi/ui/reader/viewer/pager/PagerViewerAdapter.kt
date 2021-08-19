@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.hasMissingChapters
+import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 import timber.log.Timber
 
@@ -31,6 +32,12 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         private set
 
     var currentChapter: ReaderChapter? = null
+
+    /**
+     * Context that has been wrapped to use the correct theme values based on the
+     * current app theme and reader background color
+     */
+    private var readerThemedContext = viewer.activity.createReaderThemeContext(viewer.config.theme)
 
     /**
      * Updates this adapter with the given [chapters]. It handles setting a few pages of the
@@ -130,8 +137,8 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      */
     override fun createView(container: ViewGroup, position: Int): View {
         return when (val item = items[position]) {
-            is ReaderPage -> PagerPageHolder(viewer, item)
-            is ChapterTransition -> PagerTransitionHolder(viewer, item)
+            is ReaderPage -> PagerPageHolder(readerThemedContext, viewer, item)
+            is ChapterTransition -> PagerTransitionHolder(readerThemedContext, viewer, item)
             else -> throw NotImplementedError("Holder for ${item.javaClass} not implemented")
         }
     }
@@ -187,5 +194,9 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         val insertPages = items.filterIsInstance(InsertPage::class.java)
         items.removeAll(insertPages)
         notifyDataSetChanged()
+    }
+
+    fun refresh() {
+        readerThemedContext = viewer.activity.createReaderThemeContext(viewer.config.theme)
     }
 }

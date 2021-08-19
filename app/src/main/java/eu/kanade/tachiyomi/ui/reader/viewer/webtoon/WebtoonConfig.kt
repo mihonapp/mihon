@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.navigation.KindlishNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.LNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.RightAndLeftNavigation
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -22,14 +23,15 @@ class WebtoonConfig(
     preferences: PreferencesHelper = Injekt.get()
 ) : ViewerConfig(preferences, scope) {
 
+    var themeChangedListener: (() -> Unit)? = null
+
     var imageCropBorders = false
         private set
 
     var sidePadding = 0
         private set
 
-    var theme = preferences.readerTheme().get()
-        private set
+    val theme = preferences.readerTheme().get()
 
     init {
         preferences.cropBordersWebtoon()
@@ -54,8 +56,11 @@ class WebtoonConfig(
         preferences.dualPageInvertWebtoon()
             .register({ dualPageInvert = it }, { imagePropertyChangedListener?.invoke() })
 
-        preferences.readerTheme()
-            .register({ theme = it }, { imagePropertyChangedListener?.invoke() })
+        preferences.readerTheme().asFlow()
+            .drop(1)
+            .distinctUntilChanged()
+            .onEach { themeChangedListener?.invoke() }
+            .launchIn(scope)
     }
 
     override var navigator: ViewerNavigation = defaultNavigation()

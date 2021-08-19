@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -23,9 +24,10 @@ import rx.android.schedulers.AndroidSchedulers
  */
 @SuppressLint("ViewConstructor")
 class PagerTransitionHolder(
+    readerThemedContext: Context,
     val viewer: PagerViewer,
     val transition: ChapterTransition
-) : LinearLayout(viewer.activity), ViewPagerAdapter.PositionableView {
+) : LinearLayout(readerThemedContext), ViewPagerAdapter.PositionableView {
 
     /**
      * Item that identifies this view. Needed by the adapter to not recreate views.

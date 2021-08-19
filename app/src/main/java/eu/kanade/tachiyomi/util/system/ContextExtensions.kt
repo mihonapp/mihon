@@ -310,7 +310,7 @@ fun Context.isNightMode(): Boolean {
 fun Context.createReaderThemeContext(readerThemeSelected: Int): Context {
     val isDarkBackground = when (readerThemeSelected) {
         1, 2 -> true // Black, Gray
-        3 -> isNightMode() // Automatic bg uses activity background by default
+        3 -> applicationContext.isNightMode() // Automatic bg uses activity background by default
         else -> false // White
     }
     val expected = if (isDarkBackground) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
