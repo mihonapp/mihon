@@ -36,7 +36,7 @@
 
         <!-- Themes -->
         <item name="android:windowLightStatusBar">@bool/lightStatusBar</item>
-        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/surface_amoled</item>
         <item name="android:navigationBarDividerColor" tools:targetApi="o_mr1">@null</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="Q">false</item>
@@ -186,7 +186,6 @@
         <!-- Status/Navigation bar -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/lightSystemBarsOnPrimary</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">?attr/lightSystemBarsOnPrimary</item>
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
     </style>
 

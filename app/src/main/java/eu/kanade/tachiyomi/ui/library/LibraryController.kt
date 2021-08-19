@@ -245,12 +245,7 @@ class LibraryController(
         }
         tabsVisibilitySubscription?.unsubscribe()
         tabsVisibilitySubscription = tabsVisibilityRelay.subscribe { visible ->
-            val tabAnimator = (activity as? MainActivity)?.tabAnimator
-            if (visible) {
-                tabAnimator?.expand()
-            } else {
-                tabAnimator?.collapse()
-            }
+            tabs.isVisible = visible
         }
         mangaCountVisibilitySubscription?.unsubscribe()
         mangaCountVisibilitySubscription = mangaCountVisibilityRelay.subscribe {

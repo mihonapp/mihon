@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<eu.kanade.tachiyomi.widget.TachiyomiCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_coordinator"
@@ -7,11 +7,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <eu.kanade.tachiyomi.widget.TachiyomiChangeHandlerFrameLayout
+        android:id="@+id/controller_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <eu.kanade.tachiyomi.widget.ElevationAppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:elevation="0dp"
+        app:statusBarForeground="?attr/colorToolbar">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -23,7 +30,8 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <FrameLayout
             android:id="@+id/downloaded_only"
@@ -63,12 +71,6 @@
 
     </eu.kanade.tachiyomi.widget.ElevationAppBarLayout>
 
-    <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-        android:id="@+id/controller_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
     <include
         android:id="@+id/fab_layout"
         layout="@layout/main_activity_fab" />
@@ -83,4 +85,4 @@
         app:menu="@menu/main_nav"
         tools:ignore="KeyboardInaccessibleWidget" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</eu.kanade.tachiyomi.widget.TachiyomiCoordinatorLayout>

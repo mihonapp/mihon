@@ -7,6 +7,7 @@ import androidx.core.net.toUri
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.system.toast
 
 fun Router.popControllerWithTag(tag: String): Boolean {
@@ -40,4 +41,11 @@ fun Controller.openInBrowser(url: String) {
     } catch (e: Throwable) {
         activity?.toast(e.message)
     }
+}
+
+/**
+ * Returns [MainActivity]'s app bar height
+ */
+fun Controller.getMainAppBarHeight(): Int {
+    return (activity as? MainActivity)?.binding?.appbar?.measuredHeight ?: 0
 }

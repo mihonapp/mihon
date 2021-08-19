@@ -25,17 +25,18 @@
     <View
         android:id="@+id/backdrop_overlay"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="0dp"
         android:background="@drawable/manga_info_gradient"
         android:backgroundTint="?android:attr/colorBackground"
-        app:layout_constraintBottom_toBottomOf="@+id/backdrop" />
+        app:layout_constraintBottom_toBottomOf="@+id/backdrop"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/manga_cover"
         android:layout_width="100dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_rectangle"
         android:contentDescription="@string/description_cover"
         android:maxWidth="100dp"
