@@ -1,43 +1,108 @@
 package eu.kanade.tachiyomi.util.system
 
 import android.content.Context
-import android.os.Build
+import androidx.annotation.CallSuper
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators
+import androidx.biometric.BiometricPrompt
+import androidx.biometric.BiometricPrompt.AuthenticationError
+import androidx.biometric.auth.AuthPromptCallback
+import androidx.biometric.auth.startClass2BiometricOrCredentialAuthentication
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 
 object AuthenticatorUtil {
 
-    fun getSupportedAuthenticators(context: Context): Int {
-        if (isLegacySecured(context)) {
-            return Authenticators.BIOMETRIC_WEAK or Authenticators.DEVICE_CREDENTIAL
-        }
+    /**
+     * A check to avoid double authentication on older APIs when confirming settings changes since
+     * the biometric prompt is launched in a separate activity outside of the app.
+     */
+    var isAuthenticating = false
 
-        return listOf(
-            Authenticators.BIOMETRIC_STRONG,
-            Authenticators.BIOMETRIC_WEAK,
-            Authenticators.DEVICE_CREDENTIAL,
+    /**
+     * Launches biometric prompt.
+     *
+     * @param title String title that will be shown on the prompt
+     * @param subtitle Optional string subtitle that will be shown on the prompt
+     * @param confirmationRequired Whether require explicit user confirmation after passive biometric is recognized
+     * @param callback Callback object to handle the authentication events
+     */
+    fun FragmentActivity.startAuthentication(
+        title: String,
+        subtitle: String? = null,
+        confirmationRequired: Boolean = true,
+        callback: AuthenticationCallback
+    ) {
+        isAuthenticating = true
+        startClass2BiometricOrCredentialAuthentication(
+            title = title,
+            subtitle = subtitle,
+            confirmationRequired = confirmationRequired,
+            executor = ContextCompat.getMainExecutor(this),
+            callback = callback
         )
-            .filter { BiometricManager.from(context).canAuthenticate(it) == BiometricManager.BIOMETRIC_SUCCESS }
-            .fold(0) { acc, auth -> acc or auth }
-    }
-
-    fun isSupported(context: Context): Boolean {
-        return isLegacySecured(context) || getSupportedAuthenticators(context) != 0
-    }
-
-    fun isDeviceCredentialAllowed(context: Context): Boolean {
-        return isLegacySecured(context) || (getSupportedAuthenticators(context) and Authenticators.DEVICE_CREDENTIAL != 0)
     }
 
     /**
-     * Returns whether the device is secured with a PIN, pattern or password.
+     * Returns true if Class 2 biometric or credential lock is set and available to use
      */
-    private fun isLegacySecured(context: Context): Boolean {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            if (context.keyguardManager.isDeviceSecure) {
-                return true
-            }
+    fun Context.isAuthenticationSupported(): Boolean {
+        val authenticators = Authenticators.BIOMETRIC_WEAK or Authenticators.DEVICE_CREDENTIAL
+        return BiometricManager.from(this).canAuthenticate(authenticators) == BiometricManager.BIOMETRIC_SUCCESS
+    }
+
+    /**
+     * [AuthPromptCallback] with extra check
+     *
+     * @see isAuthenticating
+     */
+    abstract class AuthenticationCallback : AuthPromptCallback() {
+        /**
+         * Called when an unrecoverable error has been encountered and authentication has stopped.
+         *
+         *
+         * After this method is called, no further events will be sent for the current
+         * authentication session.
+         *
+         * @param activity  The activity that is currently hosting the prompt.
+         * @param errorCode An integer ID associated with the error.
+         * @param errString A human-readable string that describes the error.
+         */
+        @CallSuper
+        override fun onAuthenticationError(
+            activity: FragmentActivity?,
+            @AuthenticationError errorCode: Int,
+            errString: CharSequence
+        ) {
+            isAuthenticating = false
         }
-        return false
+
+        /**
+         * Called when the user has successfully authenticated.
+         *
+         *
+         * After this method is called, no further events will be sent for the current
+         * authentication session.
+         *
+         * @param activity The activity that is currently hosting the prompt.
+         * @param result   An object containing authentication-related data.
+         */
+        @CallSuper
+        override fun onAuthenticationSucceeded(
+            activity: FragmentActivity?,
+            result: BiometricPrompt.AuthenticationResult
+        ) {
+            isAuthenticating = false
+        }
+
+        /**
+         * Called when an authentication attempt by the user has been rejected.
+         *
+         * @param activity The activity that is currently hosting the prompt.
+         */
+        @CallSuper
+        override fun onAuthenticationFailed(activity: FragmentActivity?) {
+            isAuthenticating = false
+        }
     }
 }

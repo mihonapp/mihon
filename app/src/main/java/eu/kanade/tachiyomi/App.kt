@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
 import eu.kanade.tachiyomi.util.system.notification
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -132,7 +133,7 @@ open class App : Application(), LifecycleObserver, ImageLoaderFactory {
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     @Suppress("unused")
     fun onAppBackgrounded() {
-        if (preferences.lockAppAfter().get() >= 0) {
+        if (!AuthenticatorUtil.isAuthenticating && preferences.lockAppAfter().get() >= 0) {
             SecureActivityDelegate.locked = true
         }
     }

@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
 import eu.kanade.tachiyomi.util.view.setSecureScreen
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -28,7 +28,7 @@ class SecureActivityDelegate(private val activity: FragmentActivity) {
 
     fun onResume() {
         if (preferences.useAuthenticator().get()) {
-            if (AuthenticatorUtil.isSupported(activity)) {
+            if (activity.isAuthenticationSupported()) {
                 if (isAppLocked()) {
                     activity.startActivity(Intent(activity, UnlockActivity::class.java))
                     activity.overridePendingTransition(0, 0)

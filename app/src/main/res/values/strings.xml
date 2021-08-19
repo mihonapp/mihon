@@ -25,6 +25,7 @@
     <string name="label_help">Help</string>
 
     <string name="unlock_app">Unlock Tachiyomi</string>
+    <string name="confirm_lock_change">Authenticate to confirm change</string>
     <string name="confirm_exit">Press back again to exit</string>
 
     <!-- Actions -->
