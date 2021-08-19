@@ -115,7 +115,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                         |coverImage {
                             |large
                         |}
-                        |type
+                        |format
                         |status
                         |chapters
                         |description
@@ -267,7 +267,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             struct["title"]!!.jsonObject["romaji"]!!.jsonPrimitive.content,
             struct["coverImage"]!!.jsonObject["large"]!!.jsonPrimitive.content,
             struct["description"]!!.jsonPrimitive.contentOrNull,
-            struct["type"]!!.jsonPrimitive.content,
+            struct["format"]!!.jsonPrimitive.content.replace("_", "-"),
             struct["status"]!!.jsonPrimitive.contentOrNull ?: "",
             parseDate(struct, "startDate"),
             struct["chapters"]!!.jsonPrimitive.intOrNull ?: 0

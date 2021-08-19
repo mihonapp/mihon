@@ -13,7 +13,7 @@ data class ALManga(
     val title_romaji: String,
     val image_url_lge: String,
     val description: String?,
-    val type: String,
+    val format: String,
     val publishing_status: String,
     val start_date_fuzzy: Long,
     val total_chapters: Int
@@ -27,7 +27,7 @@ data class ALManga(
         summary = description ?: ""
         tracking_url = AnilistApi.mangaUrl(media_id)
         publishing_status = this@ALManga.publishing_status
-        publishing_type = type
+        publishing_type = format
         if (start_date_fuzzy != 0L) {
             start_date = try {
                 val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
