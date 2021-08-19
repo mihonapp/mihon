@@ -122,5 +122,3 @@ fun Date.toRelativeString(
         else -> dateFormat.format(this)
     }
 }
-
-

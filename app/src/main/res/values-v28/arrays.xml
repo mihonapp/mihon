@@ -2,7 +2,7 @@
 <resources>
 
     <string-array name="color_filter_modes">
-        <item>@string/filter_mode_default</item>
+        <item>@string/label_default</item>
         <item>@string/filter_mode_multiply</item>
         <item>@string/filter_mode_screen</item>
 

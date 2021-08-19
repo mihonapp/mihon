@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 
 enum class ReadingModeType(val prefValue: Int, @StringRes val stringRes: Int, @DrawableRes val iconRes: Int, val flagValue: Int) {
-    DEFAULT(0, R.string.default_viewer, R.drawable.ic_reader_default_24dp, 0x00000000),
+    DEFAULT(0, R.string.label_default, R.drawable.ic_reader_default_24dp, 0x00000000),
     LEFT_TO_RIGHT(1, R.string.left_to_right_viewer, R.drawable.ic_reader_ltr_24dp, 0x00000001),
     RIGHT_TO_LEFT(2, R.string.right_to_left_viewer, R.drawable.ic_reader_rtl_24dp, 0x00000002),
     VERTICAL(3, R.string.vertical_viewer, R.drawable.ic_reader_vertical_24dp, 0x00000003),

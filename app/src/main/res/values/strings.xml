@@ -23,6 +23,7 @@
     <string name="label_extensions">Extensions</string>
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
+    <string name="label_default">Default</string>
 
     <string name="unlock_app">Unlock Tachiyomi</string>
     <string name="confirm_lock_change">Authenticate to confirm change</string>
@@ -147,7 +148,6 @@
     <string name="theme_light">Off</string>
     <string name="theme_dark">On</string>
     <string name="pref_app_theme">App theme</string>
-    <string name="theme_default">Default</string>
     <string name="theme_monet">Dynamic</string>
     <string name="theme_blue">Blue</string>
     <string name="theme_greenapple">Green Apple</string>
@@ -159,7 +159,6 @@
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Pure black dark mode</string>
     <string name="pref_start_screen">Start screen</string>
-    <string name="system_default">Default</string>
     <string name="pref_date_format">Date format</string>
     <string name="pref_confirm_exit">Confirm exit</string>
     <string name="pref_hide_bottom_bar_on_scroll">Hide bottom bar on scroll</string>
@@ -203,7 +202,6 @@
     <string name="pref_library_columns">Items per row</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
-    <string name="default_columns">Default</string>
     <string name="pref_jump_to_chapters">Jump to chapters on open</string>
 
     <string name="pref_category_library_update">Global update</string>
@@ -290,7 +288,6 @@
     <string name="pref_inverted_colors">Inverted</string>
     <string name="pref_custom_color_filter">Custom color filter</string>
     <string name="pref_color_filter_mode">Color filter blend mode</string>
-    <string name="filter_mode_default">Default</string>
     <string name="filter_mode_overlay">Overlay</string>
     <string name="filter_mode_multiply">Multiply</string>
     <string name="filter_mode_screen">Screen</string>
@@ -318,8 +315,6 @@
     <string name="black_background">Black</string>
     <string name="automatic_background">Automatic</string>
     <string name="pref_viewer_type">Default reading mode</string>
-    <string name="default_viewer">Default</string>
-    <string name="default_nav">Default</string>
     <string name="l_nav">L shaped</string>
     <string name="kindlish_nav">Kindle-ish</string>
     <string name="edge_nav">Edge</string>
@@ -351,7 +346,6 @@
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Fast</string>
     <string name="pref_rotation_type">Default rotation type</string>
-    <string name="default_rotation_type">Default</string>
     <string name="rotation_type">Rotation type</string>
     <string name="rotation_free">Free</string>
     <string name="rotation_portrait">Portrait</string>

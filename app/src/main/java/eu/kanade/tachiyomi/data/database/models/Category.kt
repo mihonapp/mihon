@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.data.database.models
 
+import android.content.Context
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
@@ -37,6 +39,6 @@ interface Category : Serializable {
             this.name = name
         }
 
-        fun createDefault(): Category = create("Default").apply { id = 0 }
+        fun createDefault(context: Context): Category = create(context.getString(R.string.label_default)).apply { id = 0 }
     }
 }

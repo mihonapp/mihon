@@ -103,7 +103,7 @@ class SettingsGeneralController : SettingsController() {
             entries = entryValues.map { value ->
                 val formattedDate = preferences.dateFormat(value.toString()).format(now)
                 if (value == "") {
-                    "${context.getString(R.string.system_default)} ($formattedDate)"
+                    "${context.getString(R.string.label_default)} ($formattedDate)"
                 } else {
                     "$value ($formattedDate)"
                 }
