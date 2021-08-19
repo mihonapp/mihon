@@ -18,7 +18,6 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import tachiyomi.decoder.Format
 import tachiyomi.decoder.ImageDecoder
-import tachiyomi.decoder.ImageType
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -181,11 +180,9 @@ object ImageUtil {
      * Algorithm for determining what background to accompany a comic/manga page
      */
     fun chooseBackground(context: Context, imageStream: InputStream): Drawable {
-        imageStream.mark(imageStream.available() + 1)
-
-        val image = BitmapFactory.decodeStream(imageStream)
-
-        imageStream.reset()
+        val decoder = ImageDecoder.newInstance(imageStream)
+        val image = decoder?.decode()
+        decoder?.recycle()
 
         val whiteColor = Color.WHITE
         if (image == null) return ColorDrawable(whiteColor)

@@ -37,6 +37,7 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
@@ -258,31 +259,40 @@ class PagerPageHolder(
         unsubscribeReadImageHeader()
         val streamFn = page.stream ?: return
 
-        var openStream: InputStream? = null
         readImageHeaderSubscription = Observable
             .fromCallable {
                 val stream = streamFn().buffered(16)
-                openStream = process(item, stream)
-
-                ImageUtil.isAnimatedAndSupported(stream)
+                val itemStream = process(item, stream)
+                try {
+                    val streamBytes = itemStream.readBytes()
+                    val isAnimated = ImageUtil.isAnimatedAndSupported(stream)
+                    val background = if (!isAnimated && viewer.config.automaticBackground) {
+                        ByteArrayInputStream(streamBytes).use { bais ->
+                            ImageUtil.chooseBackground(context, bais)
+                        }
+                    } else {
+                        null
+                    }
+                    Triple(streamBytes, isAnimated, background)
+                } finally {
+                    stream.close()
+                    itemStream.close()
+                }
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { isAnimated ->
-                if (!isAnimated) {
-                    initSubsamplingImageView().apply {
-                        if (viewer.config.automaticBackground) {
-                            background = ImageUtil.chooseBackground(context, openStream!!)
+            .doOnNext { (streamBytes, isAnimated, background) ->
+                ByteArrayInputStream(streamBytes).use { bais ->
+                    if (!isAnimated) {
+                        this.background = background
+                        initSubsamplingImageView().apply {
+                            setImage(ImageSource.inputStream(bais))
                         }
-                        setImage(ImageSource.inputStream(openStream!!))
+                    } else {
+                        initImageView().setImage(bais)
                     }
-                } else {
-                    initImageView().setImage(openStream!!)
                 }
             }
-            // Keep the Rx stream alive to close the input stream only when unsubscribed
-            .flatMap { Observable.never<Unit>() }
-            .doOnUnsubscribe { openStream?.close() }
             .subscribe({}, {})
     }
 
