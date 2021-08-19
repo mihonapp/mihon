@@ -77,6 +77,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
         pager.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         pager.offscreenPageLimit = 1
         pager.id = R.id.reader_pager
+        pager.adapter = adapter
         pager.addOnPageChangeListener(
             object : ViewPager.SimpleOnPageChangeListener() {
                 override fun onPageSelected(position: Int) {
