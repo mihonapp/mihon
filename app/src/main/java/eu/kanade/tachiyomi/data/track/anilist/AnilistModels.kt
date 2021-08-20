@@ -10,7 +10,7 @@ import java.util.Locale
 
 data class ALManga(
     val media_id: Int,
-    val title_romaji: String,
+    val title_user_pref: String,
     val image_url_lge: String,
     val description: String?,
     val format: String,
@@ -21,7 +21,7 @@ data class ALManga(
 
     fun toTrack() = TrackSearch.create(TrackManager.ANILIST).apply {
         media_id = this@ALManga.media_id
-        title = title_romaji
+        title = title_user_pref
         total_chapters = this@ALManga.total_chapters
         cover_url = image_url_lge
         summary = description ?: ""
