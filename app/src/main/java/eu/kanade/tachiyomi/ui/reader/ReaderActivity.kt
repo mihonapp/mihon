@@ -17,6 +17,7 @@ import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
+import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -347,6 +348,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
                     if (viewer != null && fromUser) {
                         moveToPageIndex(value)
+                        binding.pageSeekbar.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                     }
                 }
             }
