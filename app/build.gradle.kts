@@ -183,7 +183,7 @@ dependencies {
     implementation("com.squareup.duktape:duktape-android:1.4.0")
 
     // HTML parser
-    implementation("org.jsoup:jsoup:1.14.1")
+    implementation("org.jsoup:jsoup:1.14.2")
 
     // Disk
     implementation("com.jakewharton:disklrucache:2.0.2")
