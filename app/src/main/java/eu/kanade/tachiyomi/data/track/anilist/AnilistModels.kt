@@ -51,6 +51,7 @@ data class ALUserManga(
 
     fun toTrack() = Track.create(TrackManager.ANILIST).apply {
         media_id = manga.media_id
+        title = manga.title_user_pref
         status = toTrackStatus()
         score = score_raw.toFloat()
         started_reading_date = start_date_fuzzy
