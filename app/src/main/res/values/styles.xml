@@ -10,7 +10,8 @@
     </style>
 
     <style name="ThemeOverlay.Tachiyomi.ActionBar.Colored" parent="ThemeOverlay.MaterialComponents.ActionBar">
-        <item name="android:colorControlHighlight">?attr/colorOnPrimary</item>
+        <item name="android:background">?attr/colorToolbar</item>
+        <item name="android:colorControlHighlight">?attr/colorOnToolbar</item>
     </style>
 
     <style name="Widget.Tachiyomi.Toolbar.Button.Navigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
@@ -30,7 +31,8 @@
         <item name="android:tint">?attr/colorOnToolbar</item>
     </style>
 
-    <style name="Widget.Tachiyomi.Toolbar.Primary" parent="Widget.MaterialComponents.Toolbar.Primary">
+    <style name="Widget.Tachiyomi.Toolbar.Colored" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">?attr/colorToolbar</item>
         <item name="android:elevation">0dp</item>
     </style>
 
@@ -251,6 +253,7 @@
     </style>
 
     <style name="Widget.Tachiyomi.TabLayout.Colored" parent="Widget.MaterialComponents.TabLayout.Colored">
+        <item name="android:background">?attr/colorToolbar</item>
         <item name="tabGravity">center</item>
         <item name="tabIndicator">@drawable/tab_indicator</item>
         <item name="tabIndicatorFullWidth">false</item>
@@ -282,6 +285,7 @@
     </style>
 
     <style name="Widget.Tachiyomi.BottomNavigationView.Colored" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="android:background">?attr/colorToolbar</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
 
@@ -291,6 +295,7 @@
     </style>
 
     <style name="Widget.Tachiyomi.NavigationRailView.Colored" parent="Widget.MaterialComponents.NavigationRailView.Colored">
+        <item name="android:background">?attr/colorToolbar</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
 
