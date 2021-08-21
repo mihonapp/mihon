@@ -15,20 +15,10 @@
             android:id="@+id/manga_summary_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toBottomOf="@id/manga_actions"
             motion:visibilityMode="ignore" />
-        <Constraint
-            motion:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            motion:layout_constraintTop_toBottomOf="@id/backdrop"
-            motion:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/manga_actions"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
