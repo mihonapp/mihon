@@ -57,7 +57,7 @@
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Tachiyomi.BottomSheetDialog</item>
         <item name="chipStyle">@style/Widget.Tachiyomi.Chip.Action</item>
         <item name="chipTextColor">?android:attr/textColorPrimary</item>
-        <item name="chipBackgroundColor">?attr/colorControlHighlight</item>
+        <item name="chipBackgroundColor">?android:attr/divider</item>
         <item name="snackbarStyle">@style/Widget.Tachiyomi.Snackbar</item>
         <item name="snackbarTextViewStyle">@style/Widget.Tachiyomi.Snackbar.TextView</item>
         <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
