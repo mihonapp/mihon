@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.base.controller
 
-import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -8,7 +7,7 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.system.openInBrowser
 
 fun Router.popControllerWithTag(tag: String): Boolean {
     val controller = getControllerWithTag(tag)
@@ -35,12 +34,7 @@ fun Controller.withFadeTransaction(): RouterTransaction {
 }
 
 fun Controller.openInBrowser(url: String) {
-    try {
-        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-        startActivity(intent)
-    } catch (e: Throwable) {
-        activity?.toast(e.message)
-    }
+    activity?.openInBrowser(url.toUri())
 }
 
 /**
