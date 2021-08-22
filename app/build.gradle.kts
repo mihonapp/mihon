@@ -79,7 +79,7 @@ android {
         getByName("debugFull").res.srcDirs("src/debug/res")
     }
 
-    flavorDimensions("default")
+    flavorDimensions.add("default")
 
     productFlavors {
         create("standard") {
@@ -87,18 +87,20 @@ android {
             dimension = "default"
         }
         create("dev") {
-            resConfigs("en", "xxhdpi")
+            resourceConfigurations.addAll(listOf("en", "xxhdpi"))
             dimension = "default"
         }
     }
 
     packagingOptions {
-        exclude("META-INF/DEPENDENCIES")
-        exclude("LICENSE.txt")
-        exclude("META-INF/LICENSE")
-        exclude("META-INF/LICENSE.txt")
-        exclude("META-INF/NOTICE")
-        exclude("META-INF/*.kotlin_module")
+        resources.excludes.addAll(listOf(
+            "META-INF/DEPENDENCIES",
+            "LICENSE.txt",
+            "META-INF/LICENSE",
+            "META-INF/LICENSE.txt",
+            "META-INF/NOTICE",
+            "META-INF/*.kotlin_module",
+        ))
     }
 
     dependenciesInfo {
@@ -126,7 +128,6 @@ android {
 }
 
 dependencies {
-
     implementation(kotlin("reflect", version = BuildPluginsVersion.KOTLIN))
 
     val coroutinesVersion = "1.5.1"
