@@ -45,12 +45,9 @@ jobs:
 
       - name: Get tag name
         if: startsWith(github.ref, 'refs/tags/') && github.repository == 'tachiyomiorg/tachiyomi'
-        id: get_tag_name
         run: |
           set -x
           echo "VERSION_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-
-      # TODO: need to support multiple APKs
 
       - name: Sign APK
         if: startsWith(github.ref, 'refs/tags/') && github.repository == 'tachiyomiorg/tachiyomi'
@@ -65,9 +62,23 @@ jobs:
       - name: Clean up build artifacts
         if: startsWith(github.ref, 'refs/tags/') && github.repository == 'tachiyomiorg/tachiyomi'
         run: |
-          cp ${{ env.SIGNED_RELEASE_FILE }} tachiyomi-${{ env.VERSION_TAG }}.apk
-          md5=`md5sum tachiyomi-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
-          echo "APK_MD5=$md5" >> $GITHUB_ENV
+          set -e
+
+          mv app/build/outputs/apk/standard/release/app-standard-universal-release-unsigned-signed.apk tachiyomi-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum tachiyomi-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_UNIVERSAL_SHA=$sha" >> $GITHUB_ENV
+
+          cp app/build/outputs/apk/standard/release/app-standard-arm64-v8a-release-unsigned-signed.apk tachiyomi-arm64-v8a-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum tachiyomi-arm64-v8a-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_ARM64_V8A_SHA=$sha" >> $GITHUB_ENV
+
+          cp app/build/outputs/apk/standard/release/app-standard-armeabi-v7a-release-unsigned-signed.apk tachiyomi-armeabi-v7a-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum tachiyomi-armeabi-v7a-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_ARMEABI_V7A_SHA=$sha" >> $GITHUB_ENV
+
+          cp app/build/outputs/apk/standard/release/app-standard-x86-release-unsigned-signed.apk tachiyomi-x86-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum tachiyomi-x86-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_X86_SHA=$sha" >> $GITHUB_ENV
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/') && github.repository == 'tachiyomiorg/tachiyomi'
@@ -76,9 +87,21 @@ jobs:
           tag_name: ${{ env.VERSION_TAG }}
           name: Tachiyomi ${{ env.VERSION_TAG }}
           body: |
-            MD5: ${{ env.APK_MD5 }}
+            ---
+
+            ### Hashes
+
+            | Variant | SHA256 |
+            | ------- | ------ |
+            | Universal | ${{ env.APK_UNIVERSAL_SHA }}
+            | arm64-v8a | ${{ env.APK_ARM64_V8A_SHA }}
+            | armeabi-v7a | ${{ env.APK_ARMEABI_V7A_SHA }}
+            | x86 | ${{ env.APK_X86_SHA }} |
           files: |
             tachiyomi-${{ env.VERSION_TAG }}.apk
+            tachiyomi-arm64-v8a-${{ env.VERSION_TAG }}.apk
+            tachiyomi-armeabi-v7a-${{ env.VERSION_TAG }}.apk
+            tachiyomi-x86-${{ env.VERSION_TAG }}.apk
           draft: true
           prerelease: false
         env:
