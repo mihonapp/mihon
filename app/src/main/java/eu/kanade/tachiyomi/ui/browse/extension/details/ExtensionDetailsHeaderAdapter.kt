@@ -34,25 +34,25 @@ class ExtensionDetailsHeaderAdapter(private val presenter: ExtensionDetailsPrese
             val extension = presenter.extension ?: return
             val context = view.context
 
-            extension.getApplicationIcon(context)?.let { binding.extensionIcon.setImageDrawable(it) }
-            binding.extensionTitle.text = extension.name
-            binding.extensionVersion.text = context.getString(R.string.ext_version_info, extension.versionName)
-            binding.extensionLang.text = context.getString(R.string.ext_language_info, LocaleHelper.getSourceDisplayName(extension.lang, context))
-            binding.extensionNsfw.isVisible = extension.isNsfw
-            binding.extensionPkg.text = extension.pkgName
+            extension.getApplicationIcon(context)?.let { binding.icon.setImageDrawable(it) }
+            binding.title.text = extension.name
+            binding.version.text = context.getString(R.string.ext_version_info, extension.versionName)
+            binding.lang.text = context.getString(R.string.ext_language_info, LocaleHelper.getSourceDisplayName(extension.lang, context))
+            binding.nsfw.isVisible = extension.isNsfw
+            binding.pkgname.text = extension.pkgName
 
-            binding.extensionUninstallButton.clicks()
+            binding.btnUninstall.clicks()
                 .onEach { presenter.uninstallExtension() }
                 .launchIn(presenter.presenterScope)
 
             if (extension.isObsolete) {
-                binding.extensionWarningBanner.isVisible = true
-                binding.extensionWarningBanner.setText(R.string.obsolete_extension_message)
+                binding.warningBanner.isVisible = true
+                binding.warningBanner.setText(R.string.obsolete_extension_message)
             }
 
             if (extension.isUnofficial) {
-                binding.extensionWarningBanner.isVisible = true
-                binding.extensionWarningBanner.setText(R.string.unofficial_extension_message)
+                binding.warningBanner.isVisible = true
+                binding.warningBanner.setText(R.string.unofficial_extension_message)
             }
         }
     }

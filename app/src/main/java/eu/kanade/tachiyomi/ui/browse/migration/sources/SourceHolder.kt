@@ -3,14 +3,14 @@ package eu.kanade.tachiyomi.ui.browse.migration.sources
 import android.view.View
 import androidx.core.view.isVisible
 import eu.davidea.viewholders.FlexibleViewHolder
-import eu.kanade.tachiyomi.databinding.SourceMainControllerCardItemBinding
+import eu.kanade.tachiyomi.databinding.SourceMainControllerItemBinding
 import eu.kanade.tachiyomi.source.icon
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 class SourceHolder(view: View, val adapter: SourceAdapter) :
     FlexibleViewHolder(view, adapter) {
 
-    private val binding = SourceMainControllerCardItemBinding.bind(view)
+    private val binding = SourceMainControllerItemBinding.bind(view)
 
     fun bind(item: SourceItem) {
         val source = item.source

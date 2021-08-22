@@ -21,7 +21,7 @@ data class SourceItem(val source: Source, val mangaCount: Int, val header: Selec
      * Returns the layout resource of this item.
      */
     override fun getLayoutRes(): Int {
-        return R.layout.source_main_controller_card_item
+        return R.layout.source_main_controller_item
     }
 
     /**
