@@ -250,7 +250,7 @@ dependencies {
 
     // Crash reports/analytics
     implementation("ch.acra:acra-http:5.8.1")
-    "standardImplementation"("com.google.firebase:firebase-analytics:19.0.0")
+    "standardImplementation"("com.google.firebase:firebase-analytics:19.0.1")
 
     // Licenses
     implementation("com.mikepenz:aboutlibraries-core:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
