@@ -10,7 +10,6 @@
     </style>
 
     <style name="ThemeOverlay.Tachiyomi.ActionBar.Colored" parent="ThemeOverlay.MaterialComponents.ActionBar">
-        <item name="android:background">?attr/colorToolbar</item>
         <item name="android:colorControlHighlight">?attr/colorOnToolbar</item>
     </style>
 
