@@ -15,10 +15,10 @@ class TrackSearchHolder(
     private val adapter: TrackSearchAdapter
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(track: TrackSearch, position: Int) {
-        binding.container.isChecked = position == adapter.selectedItemPosition
-        binding.container.setOnClickListener {
+        binding.root.isChecked = position == adapter.selectedItemPosition
+        binding.root.setOnClickListener {
             adapter.selectedItemPosition = position
-            binding.container.isChecked = true
+            binding.root.isChecked = true
         }
 
         binding.trackSearchTitle.text = track.title
@@ -62,6 +62,6 @@ class TrackSearchHolder(
     }
 
     fun setUnchecked() {
-        binding.container.isChecked = false
+        binding.root.isChecked = false
     }
 }

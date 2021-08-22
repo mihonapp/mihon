@@ -35,7 +35,7 @@ class TrackSearchAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackSearchHolder {
         val binding = TrackSearchItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        binding.container.applyElevationOverlay()
+        binding.root.applyElevationOverlay()
         return TrackSearchHolder(binding, this)
     }
 
