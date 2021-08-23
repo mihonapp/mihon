@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="110dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/theme_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:importantForAccessibility="no"
+        app:cardCornerRadius="@dimen/card_radius"
+        app:cardElevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="176dp"
+            android:background="?android:attr/colorBackground">
+
+            <View
+                android:id="@+id/top_nav"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:background="?attr/colorToolbar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/top_nav_text"
+                android:layout_width="50dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/oval"
+                app:layout_constraintBottom_toBottomOf="@+id/top_nav"
+                app:layout_constraintStart_toStartOf="@+id/top_nav"
+                app:layout_constraintTop_toTopOf="@+id/top_nav"
+                app:tint="?attr/colorOnToolbar" />
+
+            <ImageView
+                android:id="@+id/heading"
+                android:layout_width="80dp"
+                android:layout_height="8dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/oval"
+                app:layout_constraintStart_toStartOf="@+id/top_nav"
+                app:layout_constraintTop_toBottomOf="@+id/top_nav"
+                app:tint="?attr/colorAccent" />
+
+            <FrameLayout
+                android:id="@+id/cover_container1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/rounded_rectangle"
+                app:layout_constraintDimensionRatio="2:3"
+                app:layout_constraintEnd_toStartOf="@+id/cover_container2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/heading">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.5"
+                    android:background="?attr/colorOnSurface" />
+
+            </FrameLayout>
+
+            <View
+                android:id="@+id/cover_badge"
+                android:layout_width="8dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:background="?attr/colorAccent"
+                app:layout_constraintStart_toStartOf="@+id/cover_container1"
+                app:layout_constraintTop_toTopOf="@+id/cover_container1" />
+
+            <FrameLayout
+                android:id="@+id/cover_container2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/rounded_rectangle"
+                app:layout_constraintDimensionRatio="2:3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cover_container1"
+                app:layout_constraintTop_toBottomOf="@+id/heading">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.5"
+                    android:background="?attr/colorOnSurface" />
+
+            </FrameLayout>
+
+            <View
+                android:id="@+id/bottom_nav"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:background="?attr/colorToolbar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/bottom_nav_selected_item"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/oval"
+                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
+                app:layout_constraintEnd_toStartOf="@+id/bottom_nav_unselected_item1"
+                app:layout_constraintStart_toStartOf="@+id/bottom_nav"
+                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
+                app:tint="?attr/colorPrimary" />
+
+            <ImageView
+                android:id="@+id/bottom_nav_unselected_item1"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/oval"
+                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
+                app:layout_constraintEnd_toStartOf="@+id/bottom_nav_unselected_item2"
+                app:layout_constraintStart_toEndOf="@+id/bottom_nav_selected_item"
+                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
+                app:tint="?attr/colorOnToolbar" />
+
+            <ImageView
+                android:id="@+id/bottom_nav_unselected_item2"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/oval"
+                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
+                app:layout_constraintEnd_toStartOf="@+id/bottom_nav_unselected_item3"
+                app:layout_constraintStart_toEndOf="@+id/bottom_nav_unselected_item1"
+                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
+                app:tint="?attr/colorOnToolbar" />
+
+            <ImageView
+                android:id="@+id/bottom_nav_unselected_item3"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/oval"
+                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
+                app:layout_constraintEnd_toStartOf="@+id/bottom_nav_unselected_item4"
+                app:layout_constraintStart_toEndOf="@+id/bottom_nav_unselected_item2"
+                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
+                app:tint="?attr/colorOnToolbar" />
+
+            <ImageView
+                android:id="@+id/bottom_nav_unselected_item4"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/oval"
+                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/bottom_nav_unselected_item3"
+                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
+                app:tint="?attr/colorOnToolbar" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="32sp"
+        android:maxLines="2"
+        android:layout_marginTop="4dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        tools:text="Theme Name" />
+
+</LinearLayout>

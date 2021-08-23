@@ -18,8 +18,13 @@ abstract class BaseThemedActivity : AppCompatActivity() {
 
     companion object {
         fun AppCompatActivity.applyAppTheme(preferences: PreferencesHelper) {
+            getThemeResIds(preferences.appTheme().get(), preferences.themeDarkAmoled().get())
+                .forEach { setTheme(it) }
+        }
+
+        fun getThemeResIds(appTheme: PreferenceValues.AppTheme, isAmoled: Boolean): List<Int> {
             val resIds = mutableListOf<Int>()
-            when (preferences.appTheme().get()) {
+            when (appTheme) {
                 PreferenceValues.AppTheme.MONET -> {
                     resIds += R.style.Theme_Tachiyomi_Monet
                 }
@@ -53,13 +58,11 @@ abstract class BaseThemedActivity : AppCompatActivity() {
                 }
             }
 
-            if (preferences.themeDarkAmoled().get()) {
+            if (isAmoled) {
                 resIds += R.style.ThemeOverlay_Tachiyomi_Amoled
             }
 
-            resIds.forEach {
-                setTheme(it)
-            }
+            return resIds
         }
     }
 }
