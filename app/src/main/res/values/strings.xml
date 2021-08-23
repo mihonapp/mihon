@@ -134,6 +134,7 @@
     <!-- Preferences -->
       <!-- Subsections -->
     <string name="pref_category_general">General</string>
+    <string name="pref_category_appearance">Appearance</string>
     <string name="pref_category_library">Library</string>
     <string name="pref_category_reader">Reader</string>
     <string name="pref_category_downloads">Downloads</string>
@@ -158,14 +159,20 @@
     <string name="theme_yinyang">Yin &amp; Yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Pure black dark mode</string>
-    <string name="pref_start_screen">Start screen</string>
-    <string name="pref_date_format">Date format</string>
-    <string name="pref_confirm_exit">Confirm exit</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Hide bottom bar on scroll</string>
+    <string name="pref_category_layout">Layout</string>
     <string name="pref_side_nav_icon_alignment">Side navigation icon alignment</string>
     <string name="alignment_top">Top</string>
     <string name="alignment_center">Center</string>
     <string name="alignment_bottom">Bottom</string>
+    <string name="pref_hide_bottom_bar_on_scroll">Hide bottom bar on scroll</string>
+    <string name="pref_category_timestamps">Timestamps</string>
+    <string name="pref_relative_format">Relative timestamps</string>
+    <string name="pref_relative_time_short">Short (Today, Yesterday)</string>
+    <string name="pref_relative_time_long">Long (Short+, n days ago)</string>
+    <string name="pref_date_format">Date format</string>
+
+    <string name="pref_start_screen">Start screen</string>
+    <string name="pref_confirm_exit">Confirm exit</string>
     <string name="pref_manage_notifications">Manage notifications</string>
 
     <string name="pref_category_security">Security</string>
@@ -193,9 +200,6 @@
         <item quantity="one">Yesterday</item>
         <item quantity="other">%1$d days ago</item>
     </plurals>
-    <string name="pref_relative_format">Relative timestamps</string>
-    <string name="pref_relative_time_short">Short (Today, Yesterday)</string>
-    <string name="pref_relative_time_long">Long (Short+, n days ago)</string>
 
       <!-- Library section -->
     <string name="pref_category_display">Display</string>

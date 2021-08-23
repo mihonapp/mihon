@@ -29,6 +29,12 @@ class SettingsMainController : SettingsController() {
             onClick { navigateTo(SettingsGeneralController()) }
         }
         preference {
+            iconRes = R.drawable.ic_palette_24dp
+            iconTint = tintColor
+            titleRes = R.string.pref_category_appearance
+            onClick { navigateTo(SettingsAppearanceController()) }
+        }
+        preference {
             iconRes = R.drawable.ic_library_outline_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_library
