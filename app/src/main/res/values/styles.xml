@@ -32,6 +32,8 @@
 
     <style name="Widget.Tachiyomi.Toolbar.Colored" parent="Widget.MaterialComponents.Toolbar">
         <item name="android:background">?attr/colorToolbar</item>
+        <item name="titleTextColor">?attr/colorOnToolbar</item>
+        <item name="subtitleTextColor">?attr/colorOnToolbar</item>
         <item name="android:elevation">0dp</item>
     </style>
 

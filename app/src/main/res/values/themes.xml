@@ -84,7 +84,7 @@
     <style name="Theme.Tachiyomi.Blue">
         <!-- Theme Colors -->
         <item name="colorToolbar">@color/accent_blue</item>
-        <item name="colorOnToolbar">?attr/colorOnPrimary</item>
+        <item name="colorOnToolbar">@color/md_white_1000</item>
         <item name="colorPrimary">@color/primary_blue</item>
         <item name="colorControlHighlight">@color/ripple_colored_blue</item>
     </style>
@@ -169,6 +169,9 @@
 
     <!--== Colored Bars (toolbar-navbar-navrail) Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.ColoredBars" parent="">
+        <!-- Base background/text colors -->
+        <item name="background">?attr/colorPrimary</item>
+
         <!-- Themes -->
         <item name="actionBarTheme">@style/ThemeOverlay.Tachiyomi.ActionBar.Colored</item>
         <item name="toolbarNavigationButtonStyle">@style/Widget.Tachiyomi.Toolbar.Button.Navigation</item>
