@@ -32,7 +32,6 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
@@ -40,8 +39,12 @@ import androidx.core.graphics.red
 import androidx.core.net.toUri
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity
 import eu.kanade.tachiyomi.util.lang.truncateCenter
 import timber.log.Timber
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.File
 import kotlin.math.roundToInt
 
@@ -307,8 +310,9 @@ fun Context.isNightMode(): Boolean {
  * Context wrapping method obtained from AppCompatDelegateImpl
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:appcompat/appcompat/src/main/java/androidx/appcompat/app/AppCompatDelegateImpl.java;l=348;drc=e28752c96fc3fb4d3354781469a1af3dbded4898
  */
-fun Context.createReaderThemeContext(readerThemeSelected: Int): Context {
-    val isDarkBackground = when (readerThemeSelected) {
+fun Context.createReaderThemeContext(): Context {
+    val prefs = Injekt.get<PreferencesHelper>()
+    val isDarkBackground = when (prefs.readerTheme().get()) {
         1, 2 -> true // Black, Gray
         3 -> applicationContext.isNightMode() // Automatic bg uses activity background by default
         else -> false // White
@@ -319,11 +323,10 @@ fun Context.createReaderThemeContext(readerThemeSelected: Int): Context {
         overrideConf.setTo(resources.configuration)
         overrideConf.uiMode = (overrideConf.uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or expected
 
-        val wrappedContext = ContextThemeWrapper(this, R.style.Theme_AppCompat_Empty)
+        val wrappedContext = ContextThemeWrapper(this, R.style.Theme_Tachiyomi)
         wrappedContext.applyOverrideConfiguration(overrideConf)
-        if (theme != null) {
-            ResourcesCompat.ThemeCompat.rebase(wrappedContext.theme)
-        }
+        BaseThemedActivity.getThemeResIds(prefs.appTheme().get(), prefs.themeDarkAmoled().get())
+            .forEach { wrappedContext.theme.applyStyle(it, true) }
         return wrappedContext
     }
     return this
