@@ -48,6 +48,8 @@ class MangaInfoHeaderAdapter(
 
     private var initialLoad: Boolean = true
 
+    private val maxLines = 3
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
         binding = MangaInfoHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         updateCoverPosition()
@@ -297,7 +299,10 @@ class MangaInfoHeaderAdapter(
                 binding.mangaSummaryText.text = if (manga.description.isNullOrBlank()) {
                     view.context.getString(R.string.unknown)
                 } else {
-                    manga.description
+                    // Max lines of 3 with a blank line looks whack so we remove
+                    // any line breaks that is 2 or more and replace it with 1
+                    manga.description!!
+                        .replace(Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE)), "\n")
                 }
 
                 // Update genres list
@@ -335,7 +340,7 @@ class MangaInfoHeaderAdapter(
                 }
 
                 // Refreshes will change the state and it needs to be set to correct state to display correctly
-                if (binding.mangaSummaryText.maxLines == 2) {
+                if (binding.mangaSummaryText.maxLines == maxLines) {
                     binding.mangaSummarySection.transitionToState(R.id.start)
                 } else {
                     binding.mangaSummarySection.transitionToState(R.id.end)
@@ -348,7 +353,7 @@ class MangaInfoHeaderAdapter(
         }
 
         private fun toggleMangaInfo() {
-            val isCurrentlyExpanded = binding.mangaSummaryText.maxLines != 2
+            val isCurrentlyExpanded = binding.mangaSummaryText.maxLines != maxLines
 
             if (isCurrentlyExpanded) {
                 binding.mangaSummarySection.transitionToStart()
@@ -357,7 +362,7 @@ class MangaInfoHeaderAdapter(
             }
 
             binding.mangaSummaryText.maxLines = if (isCurrentlyExpanded) {
-                2
+                maxLines
             } else {
                 Int.MAX_VALUE
             }
