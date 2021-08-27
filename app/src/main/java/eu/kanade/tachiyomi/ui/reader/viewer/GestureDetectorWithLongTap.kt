@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ViewConfiguration
+import androidx.core.os.postDelayed
 import kotlin.math.abs
 
 /**
@@ -43,7 +44,7 @@ open class GestureDetectorWithLongTap(
                 if (ev.downTime - lastUp > doubleTapTime) {
                     downX = ev.rawX
                     downY = ev.rawY
-                    handler.postDelayed(longTapFn, longTapTime)
+                    handler.postDelayed(longTapTime) { longTapFn }
                 }
             }
             MotionEvent.ACTION_MOVE -> {

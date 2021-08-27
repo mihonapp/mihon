@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.util.preference
 
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.preference.CheckBoxPreference
 import androidx.preference.DialogPreference
 import androidx.preference.EditTextPreference
@@ -150,7 +149,7 @@ var Preference.summaryRes: Int
 var Preference.iconTint: Int
     get() = 0 // set only
     set(value) {
-        DrawableCompat.setTint(icon, value)
+        icon.setTint(value)
     }
 
 var ListPreference.entriesRes: Array<Int>

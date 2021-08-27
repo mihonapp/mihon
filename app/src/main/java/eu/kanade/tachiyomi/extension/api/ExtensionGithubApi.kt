@@ -14,6 +14,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.long
 import uy.kohesive.injekt.injectLazy
 import java.util.Date
 
@@ -67,7 +68,7 @@ internal class ExtensionGithubApi {
                 val pkgName = element.jsonObject["pkg"]!!.jsonPrimitive.content
                 val apkName = element.jsonObject["apk"]!!.jsonPrimitive.content
                 val versionName = element.jsonObject["version"]!!.jsonPrimitive.content
-                val versionCode = element.jsonObject["code"]!!.jsonPrimitive.int
+                val versionCode = element.jsonObject["code"]!!.jsonPrimitive.long
                 val lang = element.jsonObject["lang"]!!.jsonPrimitive.content
                 val nsfw = element.jsonObject["nsfw"]!!.jsonPrimitive.int == 1
                 val icon = "${REPO_URL_PREFIX}icon/${apkName.replace(".apk", ".png")}"

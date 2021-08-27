@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.asImmediateFlow
@@ -74,7 +75,7 @@ class SettingsAppearanceController : SettingsController() {
                 defaultValue = appThemes[0].name
 
                 onChange {
-                    activity?.recreate()
+                    activity?.let { ActivityCompat.recreate(it) }
                     true
                 }
             }
@@ -87,7 +88,7 @@ class SettingsAppearanceController : SettingsController() {
                     .launchIn(viewScope)
 
                 onChange {
-                    activity?.recreate()
+                    activity?.let { ActivityCompat.recreate(it) }
                     true
                 }
             }

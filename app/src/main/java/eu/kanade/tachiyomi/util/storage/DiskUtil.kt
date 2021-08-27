@@ -7,7 +7,6 @@ import android.os.Environment
 import android.os.StatFs
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.core.os.EnvironmentCompat
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.util.lang.Hash
 import java.io.File
@@ -51,7 +50,7 @@ object DiskUtil {
             .filterNotNull()
             .mapNotNull {
                 val file = File(it.absolutePath.substringBefore("/Android/"))
-                val state = EnvironmentCompat.getStorageState(file)
+                val state = Environment.getExternalStorageState(file)
                 if (state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY) {
                     file
                 } else {

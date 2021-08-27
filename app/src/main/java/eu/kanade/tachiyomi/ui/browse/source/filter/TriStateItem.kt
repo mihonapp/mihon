@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.browse.source.filter
 import android.view.View
 import android.widget.CheckedTextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -72,7 +73,7 @@ open class TriStateItem(val filter: Filter.TriState) : AbstractFlexibleItem<TriS
 
         init {
             // Align with native checkbox
-            text.setPadding(4.dpToPx, 0, 0, 0)
+            text.updatePadding(left = 4.dpToPx)
             text.compoundDrawablePadding = 20.dpToPx
         }
     }

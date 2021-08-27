@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
 import coil.imageLoader
 import coil.request.CachePolicy
@@ -457,7 +458,7 @@ class PagerPageHolder(
 
         TextView(context).apply {
             layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                setMargins(margins, margins, margins, margins)
+                setMargins(margins)
             }
             gravity = Gravity.CENTER
             setText(R.string.decode_image_error)
@@ -467,7 +468,7 @@ class PagerPageHolder(
 
         PagerButton(context, viewer).apply {
             layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                setMargins(margins, margins, margins, margins)
+                setMargins(margins)
             }
             setText(R.string.action_retry)
             setOnClickListener {
@@ -481,7 +482,7 @@ class PagerPageHolder(
         if (imageUrl.orEmpty().startsWith("http", true)) {
             PagerButton(context, viewer).apply {
                 layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                    setMargins(margins, margins, margins, margins)
+                    setMargins(margins)
                 }
                 setText(R.string.action_open_in_web_view)
                 setOnClickListener {

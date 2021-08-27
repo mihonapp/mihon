@@ -13,10 +13,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.descendants
 import androidx.core.view.forEach
@@ -123,10 +123,10 @@ inline fun View.popupMenu(
 
     if (selectedItemId != null) {
         (popup.menu as? MenuBuilder)?.setOptionalIconsVisible(true)
-        val emptyIcon = ContextCompat.getDrawable(context, R.drawable.ic_blank_24dp)
+        val emptyIcon = AppCompatResources.getDrawable(context, R.drawable.ic_blank_24dp)
         popup.menu.forEach { item ->
             item.icon = when (item.itemId) {
-                selectedItemId -> ContextCompat.getDrawable(context, R.drawable.ic_check_24dp)?.mutate()?.apply {
+                selectedItemId -> AppCompatResources.getDrawable(context, R.drawable.ic_check_24dp)?.mutate()?.apply {
                     setTint(context.getResourceColor(android.R.attr.textColorPrimary))
                 }
                 else -> emptyIcon

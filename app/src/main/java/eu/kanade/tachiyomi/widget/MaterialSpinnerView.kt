@@ -8,9 +8,9 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.FrameLayout
 import androidx.annotation.ArrayRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import androidx.core.view.get
 import com.tfcporciuncula.flow.Preference
@@ -38,10 +38,10 @@ class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: Att
         }
 
     private val emptyIcon by lazy {
-        ContextCompat.getDrawable(context, R.drawable.ic_blank_24dp)
+        AppCompatResources.getDrawable(context, R.drawable.ic_blank_24dp)
     }
     private val checkmarkIcon by lazy {
-        ContextCompat.getDrawable(context, R.drawable.ic_check_24dp)?.mutate()?.apply {
+        AppCompatResources.getDrawable(context, R.drawable.ic_check_24dp)?.mutate()?.apply {
             setTint(context.getResourceColor(android.R.attr.textColorPrimary))
         }
     }

@@ -13,7 +13,6 @@ import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.widget.TintTypedArray
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R
@@ -44,14 +43,10 @@ open class SimpleNavigationView @JvmOverloads constructor(
             R.style.Widget_Design_NavigationView
         )
 
-        ViewCompat.setBackground(
-            this,
-            a.getDrawable(R.styleable.NavigationView_android_background)
-        )
+        setBackground(a.getDrawable(R.styleable.NavigationView_android_background))
 
         if (a.hasValue(R.styleable.NavigationView_elevation)) {
-            ViewCompat.setElevation(
-                this,
+            setElevation(
                 a.getDimensionPixelSize(
                     R.styleable.NavigationView_elevation,
                     0

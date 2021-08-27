@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.manga.chapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.MangaChaptersHeaderBinding
@@ -60,7 +59,7 @@ class MangaChaptersHeaderAdapter(
             } else {
                 view.context.getResourceColor(R.attr.colorOnBackground)
             }
-            DrawableCompat.setTint(binding.btnChaptersFilter.drawable, filterColor)
+            binding.btnChaptersFilter.drawable.setTint(filterColor)
 
             merge(view.clicks(), binding.btnChaptersFilter.clicks())
                 .onEach { controller.showSettingsSheet() }
