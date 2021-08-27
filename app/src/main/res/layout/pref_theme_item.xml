@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="110dp"
+    android:layout_width="118dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="4dp">
@@ -15,7 +15,10 @@
         android:clickable="true"
         android:focusable="true"
         android:importantForAccessibility="no"
-        app:cardCornerRadius="@dimen/card_radius"
+        app:cardCornerRadius="@dimen/card_selector_radius"
+        app:contentPadding="4dp"
+        app:strokeColor="?attr/colorAccent"
+        app:strokeWidth="4dp"
         app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +29,7 @@
             <View
                 android:id="@+id/top_nav"
                 android:layout_width="0dp"
-                android:layout_height="20dp"
+                android:layout_height="32dp"
                 android:background="?attr/colorToolbar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,38 +37,26 @@
 
             <ImageView
                 android:id="@+id/top_nav_text"
-                android:layout_width="50dp"
-                android:layout_height="10dp"
-                android:layout_marginStart="4dp"
+                android:layout_width="65dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="6dp"
                 android:src="@drawable/oval"
                 app:layout_constraintBottom_toBottomOf="@+id/top_nav"
                 app:layout_constraintStart_toStartOf="@+id/top_nav"
                 app:layout_constraintTop_toTopOf="@+id/top_nav"
                 app:tint="?attr/colorOnToolbar" />
 
-            <ImageView
-                android:id="@+id/heading"
-                android:layout_width="80dp"
-                android:layout_height="8dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:src="@drawable/oval"
-                app:layout_constraintStart_toStartOf="@+id/top_nav"
-                app:layout_constraintTop_toBottomOf="@+id/top_nav"
-                app:tint="?attr/colorAccent" />
-
             <FrameLayout
-                android:id="@+id/cover_container1"
+                android:id="@+id/cover_container"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="6dp"
                 android:background="@drawable/rounded_rectangle"
                 app:layout_constraintDimensionRatio="2:3"
-                app:layout_constraintEnd_toStartOf="@+id/cover_container2"
+                app:layout_constraintEnd_toEndOf="@+id/center_guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/heading">
+                app:layout_constraintTop_toBottomOf="@+id/top_nav">
 
                 <View
                     android:layout_width="match_parent"
@@ -77,39 +68,18 @@
 
             <View
                 android:id="@+id/cover_badge"
-                android:layout_width="8dp"
-                android:layout_height="12dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="2dp"
-                android:background="?attr/colorAccent"
-                app:layout_constraintStart_toStartOf="@+id/cover_container1"
-                app:layout_constraintTop_toTopOf="@+id/cover_container1" />
-
-            <FrameLayout
-                android:id="@+id/cover_container2"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="2dp"
+                android:layout_width="12dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/rounded_rectangle"
-                app:layout_constraintDimensionRatio="2:3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/cover_container1"
-                app:layout_constraintTop_toBottomOf="@+id/heading">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="0.5"
-                    android:background="?attr/colorOnSurface" />
-
-            </FrameLayout>
+                android:background="?attr/colorAccent"
+                app:layout_constraintStart_toStartOf="@+id/cover_container"
+                app:layout_constraintTop_toTopOf="@+id/cover_container" />
 
             <View
                 android:id="@+id/bottom_nav"
                 android:layout_width="0dp"
-                android:layout_height="20dp"
+                android:layout_height="32dp"
                 android:background="?attr/colorToolbar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -117,58 +87,34 @@
 
             <ImageView
                 android:id="@+id/bottom_nav_selected_item"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:src="@drawable/oval"
+                android:layout_marginStart="6dp"
                 app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
-                app:layout_constraintEnd_toStartOf="@+id/bottom_nav_unselected_item1"
                 app:layout_constraintStart_toStartOf="@+id/bottom_nav"
                 app:layout_constraintTop_toTopOf="@+id/bottom_nav"
                 app:tint="?attr/colorPrimary" />
 
             <ImageView
-                android:id="@+id/bottom_nav_unselected_item1"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:id="@+id/bottom_nav_unselected_item"
+                android:layout_width="0dp"
+                android:layout_height="16dp"
                 android:src="@drawable/oval"
-                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
-                app:layout_constraintEnd_toStartOf="@+id/bottom_nav_unselected_item2"
-                app:layout_constraintStart_toEndOf="@+id/bottom_nav_selected_item"
-                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
-                app:tint="?attr/colorOnToolbar" />
-
-            <ImageView
-                android:id="@+id/bottom_nav_unselected_item2"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:src="@drawable/oval"
-                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
-                app:layout_constraintEnd_toStartOf="@+id/bottom_nav_unselected_item3"
-                app:layout_constraintStart_toEndOf="@+id/bottom_nav_unselected_item1"
-                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
-                app:tint="?attr/colorOnToolbar" />
-
-            <ImageView
-                android:id="@+id/bottom_nav_unselected_item3"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:src="@drawable/oval"
-                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
-                app:layout_constraintEnd_toStartOf="@+id/bottom_nav_unselected_item4"
-                app:layout_constraintStart_toEndOf="@+id/bottom_nav_unselected_item2"
-                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
-                app:tint="?attr/colorOnToolbar" />
-
-            <ImageView
-                android:id="@+id/bottom_nav_unselected_item4"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:src="@drawable/oval"
+                android:layout_marginHorizontal="6dp"
+                android:alpha="0.6"
                 app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/bottom_nav_unselected_item3"
+                app:layout_constraintStart_toEndOf="@+id/bottom_nav_selected_item"
                 app:layout_constraintTop_toTopOf="@+id/bottom_nav"
-                app:tint="?attr/colorOnToolbar" />
+                app:tint="?attr/colorOnSurface" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/center_guideline"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

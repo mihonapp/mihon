@@ -5,10 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.recyclerview.widget.RecyclerView
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.PrefThemeItemBinding
 import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity
+import eu.kanade.tachiyomi.util.system.getResourceColor
 import uy.kohesive.injekt.injectLazy
 
 class ThemesPreferenceAdapter(private val clickListener: OnItemClickListener) :
@@ -45,14 +47,19 @@ class ThemesPreferenceAdapter(private val clickListener: OnItemClickListener) :
     }
 
     inner class ThemeViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+
+        private val selectedColor = view.context.getResourceColor(R.attr.colorAccent)
+        private val unselectedColor = view.context.getResourceColor(android.R.attr.textColorHint)
+
         fun bind(appTheme: PreferenceValues.AppTheme) {
             binding.name.text = view.context.getString(appTheme.titleResId!!)
 
             // Rounded corners
-            binding.coverContainer1.clipToOutline = true
-            binding.coverContainer2.clipToOutline = true
+            binding.coverContainer.clipToOutline = true
 
-            binding.themeCard.isChecked = preferences.appTheme().get() == appTheme
+            val isSelected = preferences.appTheme().get() == appTheme
+            binding.themeCard.isChecked = isSelected
+            binding.themeCard.strokeColor = if (isSelected) selectedColor else unselectedColor
 
             listOf(binding.root, binding.themeCard).forEach {
                 it.setOnClickListener {
