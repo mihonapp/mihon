@@ -3,10 +3,10 @@ package eu.kanade.tachiyomi.ui.library
 import android.view.View
 import androidx.core.view.isVisible
 import coil.clear
-import coil.loadAny
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.databinding.SourceCompactGridItemBinding
 import eu.kanade.tachiyomi.util.isLocal
+import eu.kanade.tachiyomi.util.view.loadAnyAutoPause
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
@@ -55,6 +55,6 @@ open class LibraryCompactGridHolder(
 
         // Update the cover.
         binding.thumbnail.clear()
-        binding.thumbnail.loadAny(item.manga)
+        binding.thumbnail.loadAnyAutoPause(item.manga)
     }
 }

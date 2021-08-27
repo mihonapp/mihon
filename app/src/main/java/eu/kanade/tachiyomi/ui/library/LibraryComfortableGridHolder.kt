@@ -4,11 +4,11 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.clear
-import coil.loadAny
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.databinding.SourceComfortableGridItemBinding
 import eu.kanade.tachiyomi.util.isLocal
+import eu.kanade.tachiyomi.util.view.loadAnyAutoPause
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
@@ -57,6 +57,6 @@ class LibraryComfortableGridHolder(
 
         // Update the cover.
         binding.thumbnail.clear()
-        binding.thumbnail.loadAny(item.manga)
+        binding.thumbnail.loadAnyAutoPause(item.manga)
     }
 }

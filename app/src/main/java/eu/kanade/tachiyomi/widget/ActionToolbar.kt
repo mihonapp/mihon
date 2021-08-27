@@ -13,6 +13,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.ActionToolbarBinding
+import eu.kanade.tachiyomi.util.system.applySystemAnimatorScale
 import eu.kanade.tachiyomi.widget.listener.SimpleAnimationListener
 
 /**
@@ -50,6 +51,7 @@ class ActionToolbar @JvmOverloads constructor(context: Context, attrs: Attribute
 
         binding.actionToolbar.isVisible = true
         val bottomAnimation = AnimationUtils.loadAnimation(context, R.anim.enter_from_bottom)
+        bottomAnimation.applySystemAnimatorScale(context)
         binding.actionToolbar.startAnimation(bottomAnimation)
     }
 
@@ -58,6 +60,7 @@ class ActionToolbar @JvmOverloads constructor(context: Context, attrs: Attribute
      */
     fun hide() {
         val bottomAnimation = AnimationUtils.loadAnimation(context, R.anim.exit_to_bottom)
+        bottomAnimation.applySystemAnimatorScale(context)
         bottomAnimation.setAnimationListener(
             object : SimpleAnimationListener() {
                 override fun onAnimationEnd(animation: Animation) {

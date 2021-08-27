@@ -18,6 +18,7 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
+import android.provider.Settings
 import android.util.TypedValue
 import android.view.Display
 import android.view.View
@@ -202,6 +203,12 @@ val Context.displayCompat: Display?
         @Suppress("DEPRECATION")
         getSystemService<WindowManager>()?.defaultDisplay
     }
+
+/** Gets the duration multiplier for general animations on the device
+ * @see Settings.Global.ANIMATOR_DURATION_SCALE
+ */
+val Context.animatorDurationScale: Float
+    get() = Settings.Global.getFloat(this.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
 
 /**
  * Convenience method to acquire a partial wake lock.

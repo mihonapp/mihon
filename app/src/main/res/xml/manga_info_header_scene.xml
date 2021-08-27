@@ -5,6 +5,7 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
+        android:id="@+id/manga_info_header_transition"
         motion:duration="@android:integer/config_mediumAnimTime">
         <KeyFrameSet></KeyFrameSet>
         <OnClick motion:targetId="@+id/manga_cover" />

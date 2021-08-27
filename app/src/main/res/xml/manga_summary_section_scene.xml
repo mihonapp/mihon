@@ -5,6 +5,7 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
+        android:id="@+id/manga_summary_section_transition"
         motion:duration="1">
         <KeyFrameSet></KeyFrameSet>
         <OnClick motion:clickAction="toggle" />
