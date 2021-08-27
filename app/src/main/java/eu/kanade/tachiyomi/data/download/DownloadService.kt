@@ -4,13 +4,12 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkInfo.State.CONNECTED
-import android.net.NetworkInfo.State.DISCONNECTED
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.IBinder
 import android.os.PowerManager
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.github.pwittchen.reactivenetwork.library.Connectivity
 import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.R
@@ -133,8 +132,8 @@ class DownloadService : Service() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { state ->
-                    onNetworkStateChanged(state)
+                {
+                    onNetworkStateChanged()
                 },
                 {
                     toast(R.string.download_queue_error)
@@ -145,26 +144,34 @@ class DownloadService : Service() {
 
     /**
      * Called when the network state changes.
-     *
-     * @param connectivity the new network state.
      */
-    private fun onNetworkStateChanged(connectivity: Connectivity) {
-        when (connectivity.state) {
-            CONNECTED -> {
-                if (preferences.downloadOnlyOverWifi() && connectivityManager.activeNetworkInfo?.type != ConnectivityManager.TYPE_WIFI) {
-                    downloadManager.stopDownloads(getString(R.string.download_notifier_text_only_wifi))
-                } else {
-                    val started = downloadManager.startDownloads()
-                    if (!started) stopSelf()
-                }
-            }
-            DISCONNECTED -> {
-                downloadManager.stopDownloads(getString(R.string.download_notifier_no_network))
-            }
-            else -> {
-                /* Do nothing */
-            }
+    private fun onNetworkStateChanged() {
+        val manager = connectivityManager
+        val activeNetwork: Network = manager.activeNetwork ?: return
+        val networkCapabilities = manager.getNetworkCapabilities(activeNetwork) ?: return
+        if (!networkCapabilities.connectedToInternet()) {
+            return stopDownloads(R.string.download_notifier_no_network)
         }
+
+        if (preferences.downloadOnlyOverWifi() && !networkCapabilities.connectedToWifi()) {
+            stopDownloads(R.string.download_notifier_text_only_wifi)
+        } else {
+            val started = downloadManager.startDownloads()
+            if (!started) stopSelf()
+        }
+    }
+
+    private fun stopDownloads(@StringRes string: Int) {
+        downloadManager.stopDownloads(getString(string))
+    }
+
+    private fun NetworkCapabilities.connectedToInternet(): Boolean {
+        return this.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                this.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    }
+
+    private fun NetworkCapabilities.connectedToWifi(): Boolean {
+        return this.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
     }
 
     /**
