@@ -7,7 +7,6 @@ import coil.clear
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.databinding.SourceComfortableGridItemBinding
-import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.view.loadAnyAutoPause
 
 /**

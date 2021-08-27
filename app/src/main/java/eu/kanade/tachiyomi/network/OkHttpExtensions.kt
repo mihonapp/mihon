@@ -15,10 +15,8 @@ import rx.Producer
 import rx.Subscription
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.fullType
-import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 val jsonMime = "application/json; charset=utf-8".toMediaType()

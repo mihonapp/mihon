@@ -9,7 +9,7 @@ import com.tfcporciuncula.flow.FlowSharedPreferences
 import com.tfcporciuncula.flow.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.preference.PreferenceValues.ThemeMode.*
+import eu.kanade.tachiyomi.data.preference.PreferenceValues.ThemeMode.system
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting

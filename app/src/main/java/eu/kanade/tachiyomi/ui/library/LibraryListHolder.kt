@@ -8,7 +8,6 @@ import coil.transform.RoundedCornersTransformation
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.SourceListItemBinding
-import eu.kanade.tachiyomi.util.isLocal
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.

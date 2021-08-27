@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.widget
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.annotation.AttrRes
 import androidx.annotation.CallSuper

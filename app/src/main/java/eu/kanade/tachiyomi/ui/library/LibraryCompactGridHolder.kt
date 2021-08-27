@@ -5,7 +5,6 @@ import androidx.core.view.isVisible
 import coil.clear
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.databinding.SourceCompactGridItemBinding
-import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.view.loadAnyAutoPause
 
 /**

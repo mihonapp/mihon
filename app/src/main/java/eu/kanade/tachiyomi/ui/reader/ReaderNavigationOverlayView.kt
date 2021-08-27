@@ -70,7 +70,6 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
             }
             // Don't want scale anymore because it messes with drawText
             canvas?.withSave {
-
                 // Translate origin to rect start (left, top)
                 translate((width * rect.left), (height * rect.top))
 
