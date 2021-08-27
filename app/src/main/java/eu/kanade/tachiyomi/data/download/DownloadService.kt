@@ -167,7 +167,7 @@ class DownloadService : Service() {
 
     private fun NetworkCapabilities.connectedToInternet(): Boolean {
         return this.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-                this.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            this.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 
     private fun NetworkCapabilities.connectedToWifi(): Boolean {

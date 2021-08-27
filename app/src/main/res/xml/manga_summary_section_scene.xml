@@ -13,6 +13,14 @@
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
+            android:id="@+id/manga_info_toggle_more_scrim"
+            android:layout_width="36sp"
+            android:layout_height="18sp"
+            motion:layout_constraintEnd_toEndOf="@+id/manga_summary_text"
+            motion:layout_constraintStart_toStartOf="@+id/manga_summary_text"
+            motion:layout_constraintBottom_toBottomOf="@+id/manga_summary_text"
+            android:visibility="visible" />
+        <Constraint
             android:id="@+id/manga_info_toggle_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,6 +87,14 @@
             motion:layout_constraintBottom_toBottomOf="@+id/manga_summary_text"
             motion:layout_constraintStart_toStartOf="@+id/manga_summary_text"
             android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/manga_info_toggle_more_scrim"
+            android:layout_width="36sp"
+            android:layout_height="18sp"
+            motion:layout_constraintEnd_toEndOf="@+id/manga_summary_text"
+            motion:layout_constraintStart_toStartOf="@+id/manga_summary_text"
+            motion:layout_constraintBottom_toBottomOf="@+id/manga_summary_text"
+            android:visibility="gone" />
         <Constraint
             android:id="@+id/manga_info_toggle_more"
             android:layout_width="wrap_content"
