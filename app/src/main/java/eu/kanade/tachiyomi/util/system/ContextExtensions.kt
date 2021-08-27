@@ -16,6 +16,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
@@ -188,6 +189,9 @@ val Context.notificationManager: NotificationManager
     get() = getSystemService()!!
 
 val Context.connectivityManager: ConnectivityManager
+    get() = getSystemService()!!
+
+val Context.wifiManager: WifiManager
     get() = getSystemService()!!
 
 val Context.powerManager: PowerManager

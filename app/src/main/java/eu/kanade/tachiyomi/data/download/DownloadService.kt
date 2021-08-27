@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.util.system.connectivityManager
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import eu.kanade.tachiyomi.util.system.notification
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.system.wifiManager
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
@@ -153,7 +154,7 @@ class DownloadService : Service() {
             return stopDownloads(R.string.download_notifier_no_network)
         }
 
-        if (preferences.downloadOnlyOverWifi() && !networkCapabilities.connectedToWifi()) {
+        if (preferences.downloadOnlyOverWifi() && !wifiManager.isWifiEnabled) {
             stopDownloads(R.string.download_notifier_text_only_wifi)
         } else {
             val started = downloadManager.startDownloads()
@@ -168,10 +169,6 @@ class DownloadService : Service() {
     private fun NetworkCapabilities.connectedToInternet(): Boolean {
         return this.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
             this.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-    }
-
-    private fun NetworkCapabilities.connectedToWifi(): Boolean {
-        return this.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
     }
 
     /**
