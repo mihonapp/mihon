@@ -116,12 +116,12 @@ open class App : Application(), LifecycleObserver, ImageLoaderFactory {
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this).apply {
             componentRegistry {
-                add(TachiyomiImageDecoder(this@App.resources))
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     add(ImageDecoderDecoder(this@App))
                 } else {
                     add(GifDecoder())
                 }
+                add(TachiyomiImageDecoder(this@App.resources))
                 add(ByteBufferFetcher())
                 add(MangaCoverFetcher())
             }
