@@ -66,9 +66,8 @@ class TrackSearchDialog : DialogController {
         binding!!.toolbar.setNavigationOnClickListener { dialog?.dismiss() }
         binding!!.trackBtn.setOnClickListener {
             val adapter = adapter ?: return@setOnClickListener
-            val item = adapter.items.getOrNull(adapter.selectedItemPosition)
-            if (item != null) {
-                trackController.presenter.registerTracking(item, service)
+            adapter.items.getOrNull(adapter.selectedItemPosition)?.let {
+                trackController.presenter.registerTracking(it, service)
                 dialog?.dismiss()
             }
         }
