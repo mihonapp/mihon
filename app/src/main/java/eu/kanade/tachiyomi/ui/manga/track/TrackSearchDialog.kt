@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatDialog
 import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
@@ -21,6 +20,7 @@ import eu.kanade.tachiyomi.databinding.TrackSearchDialogBinding
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
+import eu.kanade.tachiyomi.widget.TachiyomiFullscreenDialog
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -142,9 +142,7 @@ class TrackSearchDialog : DialogController {
             }
         }
 
-        return AppCompatDialog(activity!!, R.style.ThemeOverlay_Tachiyomi_Dialog_Fullscreen).apply {
-            setContentView(binding!!.root)
-        }
+        return TachiyomiFullscreenDialog(activity!!, binding!!.root)
     }
 
     override fun onAttach(view: View) {
