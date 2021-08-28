@@ -17,7 +17,6 @@
             android:layout_height="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:contentInsetStartWithNavigation="0dp"
-            app:menu="@menu/track_search"
             app:navigationIcon="@drawable/ic_close_24dp"
             app:title="@string/add_tracking" />
 
@@ -85,6 +84,15 @@
                 tools:visibility="visible" />
 
         </FrameLayout>
+
+        <Button
+            android:id="@+id/track_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="4dp"
+            android:text="@string/action_track"
+            android:enabled="false" />
 
     </LinearLayout>
 

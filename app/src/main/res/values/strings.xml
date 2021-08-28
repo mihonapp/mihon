@@ -400,6 +400,7 @@
     <string name="tracking_info">One-way sync to update the chapter progress in tracking services. Set up tracking for individual manga entries from their tracking button.</string>
     <string name="enhanced_services">Enhanced services</string>
     <string name="enhanced_tracking_info">Services that provide enhanced features for specific sources. Manga are automatically tracked when added to your library.</string>
+    <string name="action_track">Track</string>
 
       <!-- Browse section -->
     <string name="pref_enable_automatic_extension_updates">Check for extension updates</string>

@@ -64,23 +64,18 @@ class TrackSearchDialog : DialogController {
 
         // Toolbar stuff
         binding!!.toolbar.setNavigationOnClickListener { dialog?.dismiss() }
-        binding!!.toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.done -> {
-                    val adapter = adapter ?: return@setOnMenuItemClickListener true
-                    val item = adapter.items.getOrNull(adapter.selectedItemPosition)
-                    if (item != null) {
-                        trackController.presenter.registerTracking(item, service)
-                        dialog?.dismiss()
-                    }
-                }
+        binding!!.trackBtn.setOnClickListener {
+            val adapter = adapter ?: return@setOnClickListener
+            val item = adapter.items.getOrNull(adapter.selectedItemPosition)
+            if (item != null) {
+                trackController.presenter.registerTracking(item, service)
+                dialog?.dismiss()
             }
-            true
         }
 
         // Create adapter
         adapter = TrackSearchAdapter(currentTrackUrl) { which ->
-            binding!!.toolbar.menu.findItem(R.id.done).isEnabled = which != null
+            binding!!.trackBtn.isEnabled = which != null
         }
         binding!!.trackSearchRecyclerview.adapter = adapter
 
@@ -140,6 +135,11 @@ class TrackSearchDialog : DialogController {
             type(navigationBars = true) {
                 padding(vertical = true)
                 margin(horizontal = true)
+            }
+        }
+        binding!!.trackBtn.applyInsetter {
+            type(navigationBars = true) {
+                margin()
             }
         }
 
