@@ -37,7 +37,7 @@
 
             <ImageView
                 android:id="@+id/top_nav_text"
-                android:layout_width="65dp"
+                android:layout_width="64dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="6dp"
                 android:src="@drawable/oval"
@@ -46,33 +46,27 @@
                 app:layout_constraintTop_toTopOf="@+id/top_nav"
                 app:tint="?attr/colorOnToolbar" />
 
-            <FrameLayout
+            <ImageView
                 android:id="@+id/cover_container"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/rounded_rectangle"
+                android:src="@drawable/rounded_rectangle"
+                app:layout_constraintTop_toBottomOf="@+id/top_nav"
                 app:layout_constraintDimensionRatio="2:3"
                 app:layout_constraintEnd_toEndOf="@+id/center_guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/top_nav">
+                app:tint="?android:attr/divider" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="0.5"
-                    android:background="?attr/colorOnSurface" />
-
-            </FrameLayout>
-
-            <View
+            <ImageView
                 android:id="@+id/cover_badge"
                 android:layout_width="12dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
-                android:background="?attr/colorAccent"
+                android:src="@drawable/rounded_rectangle"
+                app:tint="?attr/colorAccent"
                 app:layout_constraintStart_toStartOf="@+id/cover_container"
                 app:layout_constraintTop_toTopOf="@+id/cover_container" />
 
