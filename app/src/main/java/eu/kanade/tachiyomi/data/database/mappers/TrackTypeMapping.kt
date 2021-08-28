@@ -71,7 +71,7 @@ class TrackGetResolver : DefaultGetResolver<Track>() {
         media_id = cursor.getInt(cursor.getColumnIndex(COL_MEDIA_ID))
         library_id = cursor.getLong(cursor.getColumnIndex(COL_LIBRARY_ID))
         title = cursor.getString(cursor.getColumnIndex(COL_TITLE))
-        last_chapter_read = cursor.getInt(cursor.getColumnIndex(COL_LAST_CHAPTER_READ))
+        last_chapter_read = cursor.getFloat(cursor.getColumnIndex(COL_LAST_CHAPTER_READ))
         total_chapters = cursor.getInt(cursor.getColumnIndex(COL_TOTAL_CHAPTERS))
         status = cursor.getInt(cursor.getColumnIndex(COL_STATUS))
         score = cursor.getFloat(cursor.getColumnIndex(COL_SCORE))

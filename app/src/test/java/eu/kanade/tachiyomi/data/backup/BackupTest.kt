@@ -284,16 +284,16 @@ class BackupTest {
         // Create track and add it to database
         // This tests duplicate errors.
         val track = getSingleTrack(manga)
-        track.last_chapter_read = 5
+        track.last_chapter_read = 5F
         legacyBackupManager.databaseHelper.insertTrack(track).executeAsBlocking()
         var trackDB = legacyBackupManager.databaseHelper.getTracks(manga).executeAsBlocking()
         assertThat(trackDB).hasSize(1)
         assertThat(trackDB[0].last_chapter_read).isEqualTo(5)
-        track.last_chapter_read = 7
+        track.last_chapter_read = 7F
 
         // Create track for different manga to test track not in database
         val track2 = getSingleTrack(manga2)
-        track2.last_chapter_read = 10
+        track2.last_chapter_read = 10F
 
         // Check parser and restore already in database
         var trackList = listOf(track)
@@ -308,7 +308,7 @@ class BackupTest {
         assertThat(trackDB[0].last_chapter_read).isEqualTo(7)
 
         // Check parser and restore already in database with lower chapter_read
-        track.last_chapter_read = 5
+        track.last_chapter_read = 5F
         trackList = listOf(track)
         legacyBackupManager.restoreTrackForManga(manga, trackList)
 

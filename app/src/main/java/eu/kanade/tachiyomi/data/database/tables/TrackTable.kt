@@ -39,7 +39,7 @@ object TrackTable {
             $COL_MEDIA_ID INTEGER NOT NULL,
             $COL_LIBRARY_ID INTEGER,
             $COL_TITLE TEXT NOT NULL,
-            $COL_LAST_CHAPTER_READ INTEGER NOT NULL,
+            $COL_LAST_CHAPTER_READ REAL NOT NULL,
             $COL_TOTAL_CHAPTERS INTEGER NOT NULL,
             $COL_STATUS INTEGER NOT NULL,
             $COL_SCORE FLOAT NOT NULL,
@@ -62,4 +62,19 @@ object TrackTable {
 
     val addFinishDate: String
         get() = "ALTER TABLE $TABLE ADD COLUMN $COL_FINISH_DATE LONG NOT NULL DEFAULT 0"
+
+    val renameTableToTemp: String
+        get() =
+            "ALTER TABLE $TABLE RENAME TO ${TABLE}_tmp"
+
+    val insertFromTempTable: String
+        get() =
+            """
+            |INSERT INTO $TABLE($COL_ID,$COL_MANGA_ID,$COL_SYNC_ID,$COL_MEDIA_ID,$COL_LIBRARY_ID,$COL_TITLE,$COL_LAST_CHAPTER_READ,$COL_TOTAL_CHAPTERS,$COL_STATUS,$COL_SCORE,$COL_TRACKING_URL,$COL_START_DATE,$COL_FINISH_DATE)
+            |SELECT $COL_ID,$COL_MANGA_ID,$COL_SYNC_ID,$COL_MEDIA_ID,$COL_LIBRARY_ID,$COL_TITLE,$COL_LAST_CHAPTER_READ,$COL_TOTAL_CHAPTERS,$COL_STATUS,$COL_SCORE,$COL_TRACKING_URL,$COL_START_DATE,$COL_FINISH_DATE
+            |FROM ${TABLE}_tmp
+        """.trimMargin()
+
+    val dropTempTable: String
+        get() = "DROP TABLE ${TABLE}_tmp"
 }

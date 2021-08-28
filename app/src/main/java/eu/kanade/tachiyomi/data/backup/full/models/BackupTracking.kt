@@ -32,8 +32,7 @@ data class BackupTracking(
             media_id = this@BackupTracking.mediaId
             library_id = this@BackupTracking.libraryId
             title = this@BackupTracking.title
-            // convert from float to int because of 1.x types
-            last_chapter_read = this@BackupTracking.lastChapterRead.toInt()
+            last_chapter_read = this@BackupTracking.lastChapterRead
             total_chapters = this@BackupTracking.totalChapters
             score = this@BackupTracking.score
             status = this@BackupTracking.status
@@ -51,8 +50,7 @@ data class BackupTracking(
                 // forced not null so its compatible with 1.x backup system
                 libraryId = track.library_id!!,
                 title = track.title,
-                // convert to float for 1.x
-                lastChapterRead = track.last_chapter_read.toFloat(),
+                lastChapterRead = track.last_chapter_read,
                 totalChapters = track.total_chapters,
                 score = track.score,
                 status = track.status,

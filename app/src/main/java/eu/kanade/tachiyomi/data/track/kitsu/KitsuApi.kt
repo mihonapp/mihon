@@ -36,7 +36,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                     put("type", "libraryEntries")
                     putJsonObject("attributes") {
                         put("status", track.toKitsuStatus())
-                        put("progress", track.last_chapter_read)
+                        put("progress", track.last_chapter_read.toInt())
                     }
                     putJsonObject("relationships") {
                         putJsonObject("user") {
@@ -82,7 +82,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                     put("id", track.media_id)
                     putJsonObject("attributes") {
                         put("status", track.toKitsuStatus())
-                        put("progress", track.last_chapter_read)
+                        put("progress", track.last_chapter_read.toInt())
                         put("ratingTwenty", track.toKitsuScore())
                         put("startedAt", KitsuDateHelper.convert(track.started_reading_date))
                         put("finishedAt", KitsuDateHelper.convert(track.finished_reading_date))

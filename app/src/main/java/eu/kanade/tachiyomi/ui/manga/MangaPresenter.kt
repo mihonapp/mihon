@@ -878,7 +878,7 @@ class MangaPresenter(
         val track = item.track!!
         track.status = item.service.getStatusList()[index]
         if (track.status == item.service.getCompletionStatus() && track.total_chapters != 0) {
-            track.last_chapter_read = track.total_chapters
+            track.last_chapter_read = track.total_chapters.toFloat()
         }
         updateRemote(track, item.service)
     }
@@ -891,11 +891,11 @@ class MangaPresenter(
 
     fun setTrackerLastChapterRead(item: TrackItem, chapterNumber: Int) {
         val track = item.track!!
-        if (track.last_chapter_read == 0 && track.last_chapter_read < chapterNumber && track.status != item.service.getRereadingStatus()) {
+        if (track.last_chapter_read == 0F && track.last_chapter_read < chapterNumber && track.status != item.service.getRereadingStatus()) {
             track.status = item.service.getReadingStatus()
         }
-        track.last_chapter_read = chapterNumber
-        if (track.total_chapters != 0 && track.last_chapter_read == track.total_chapters) {
+        track.last_chapter_read = chapterNumber.toFloat()
+        if (track.total_chapters != 0 && track.last_chapter_read.toInt() == track.total_chapters) {
             track.status = item.service.getCompletionStatus()
         }
         updateRemote(track, item.service)

@@ -51,7 +51,7 @@ class KomgaApi(private val client: OkHttpClient) {
                         progress.booksReadCount -> Komga.COMPLETED
                         else -> Komga.READING
                     }
-                    last_chapter_read = progress.lastReadContinuousIndex
+                    last_chapter_read = progress.lastReadContinuousIndex.toFloat()
                 }
             } catch (e: Exception) {
                 Timber.w(e, "Could not get item: $url")
@@ -60,7 +60,7 @@ class KomgaApi(private val client: OkHttpClient) {
         }
 
     suspend fun updateProgress(track: Track): Track {
-        val progress = ReadProgressUpdateDto(track.last_chapter_read)
+        val progress = ReadProgressUpdateDto(track.last_chapter_read.toInt())
         val payload = json.encodeToString(progress)
         client.newCall(
             Request.Builder()

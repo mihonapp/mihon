@@ -55,7 +55,7 @@ class TrackHolder(private val binding: TrackItemBinding, adapter: TrackAdapter) 
                 listener.onOpenInBrowserClick(bindingAdapterPosition)
             }
             binding.trackTitle.text = track.title
-            binding.trackChapters.text = track.last_chapter_read.toString()
+            binding.trackChapters.text = track.last_chapter_read.toInt().toString()
             if (track.total_chapters > 0) {
                 binding.trackChapters.text = "${binding.trackChapters.text} / ${track.total_chapters}"
             }

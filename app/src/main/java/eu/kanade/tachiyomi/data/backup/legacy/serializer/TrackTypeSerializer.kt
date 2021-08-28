@@ -10,6 +10,7 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonEncoder
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.float
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -46,7 +47,7 @@ open class TrackBaseSerializer<T : Track> : KSerializer<T> {
             sync_id = jsonObject[SYNC]!!.jsonPrimitive.int
             media_id = jsonObject[MEDIA]!!.jsonPrimitive.int
             library_id = jsonObject[LIBRARY]!!.jsonPrimitive.long
-            last_chapter_read = jsonObject[LAST_READ]!!.jsonPrimitive.int
+            last_chapter_read = jsonObject[LAST_READ]!!.jsonPrimitive.float
             tracking_url = jsonObject[TRACKING_URL]!!.jsonPrimitive.content
         } as T
     }

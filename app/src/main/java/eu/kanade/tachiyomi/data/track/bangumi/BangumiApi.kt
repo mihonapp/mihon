@@ -55,7 +55,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
 
             // chapter update
             val body = FormBody.Builder()
-                .add("watched_eps", track.last_chapter_read.toString())
+                .add("watched_eps", track.last_chapter_read.toInt().toString())
                 .build()
             authClient.newCall(
                 POST(
@@ -143,7 +143,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
             } else {
                 json.decodeFromString<Collection>(responseBody).let {
                     track.status = it.status?.id!!
-                    track.last_chapter_read = it.ep_status!!
+                    track.last_chapter_read = it.ep_status!!.toFloat()
                     track.score = it.rating!!
                     track
                 }

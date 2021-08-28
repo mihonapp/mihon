@@ -698,7 +698,7 @@ class ReaderPresenter(
         if (!preferences.autoUpdateTrack()) return
         val manga = manga ?: return
 
-        val chapterRead = readerChapter.chapter.chapter_number.toInt()
+        val chapterRead = readerChapter.chapter.chapter_number
 
         val trackManager = Injekt.get<TrackManager>()
 

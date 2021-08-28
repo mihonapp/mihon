@@ -79,7 +79,7 @@ class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
         finished_reading_date = KitsuDateHelper.parse(finishedAt)
         status = toTrackStatus()
         score = ratingTwenty?.let { it.toInt() / 2f } ?: 0f
-        last_chapter_read = progress
+        last_chapter_read = progress.toFloat()
     }
 
     private fun toTrackStatus() = when (status) {

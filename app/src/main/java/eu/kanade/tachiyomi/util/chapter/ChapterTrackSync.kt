@@ -22,6 +22,10 @@ fun syncChaptersWithTrackServiceTwoWay(db: DatabaseHelper, chapters: List<Chapte
         .forEach { it.read = true }
     db.updateChaptersProgress(sortedChapters).executeAsBlocking()
 
+    // this uses the ordinal index of chapters instead of the chapter_number
+    // it was done that way because Track.last_chapter_read was an Int at the time, and Komga
+    // could have Float for the chapter number
+    // this will be addressed later on
     val localLastRead = when {
         sortedChapters.all { it.read } -> sortedChapters.size
         sortedChapters.any { !it.read } -> sortedChapters.indexOfFirst { !it.read }
@@ -29,7 +33,7 @@ fun syncChaptersWithTrackServiceTwoWay(db: DatabaseHelper, chapters: List<Chapte
     }
 
     // update remote
-    remoteTrack.last_chapter_read = localLastRead
+    remoteTrack.last_chapter_read = localLastRead.toFloat()
 
     launchIO {
         try {
