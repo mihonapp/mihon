@@ -68,7 +68,6 @@
     <color name="ripple_colored_yotsuba">#1FFC8C5C</color>
 
     <!-- AMOLED Mode -->
-    <color name="divider_amoled">@android:color/transparent</color>
     <color name="surface_amoled">#000001</color>
     <color name="background_amoled">#000000</color>
 
