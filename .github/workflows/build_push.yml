@@ -89,10 +89,10 @@ jobs:
           body: |
             ---
 
-            ### Hashes
+            ### Checksums
 
-            | Variant | SHA256 |
-            | ------- | ------ |
+            | Variant | SHA-256 |
+            | ------- | ------- |
             | Universal | ${{ env.APK_UNIVERSAL_SHA }}
             | arm64-v8a | ${{ env.APK_ARM64_V8A_SHA }}
             | armeabi-v7a | ${{ env.APK_ARMEABI_V7A_SHA }}
