@@ -22,9 +22,9 @@ class ReaderPageSheet(
     override fun createView(inflater: LayoutInflater): View {
         binding = ReaderPageSheetBinding.inflate(activity.layoutInflater, null, false)
 
-        binding.setAsCoverLayout.setOnClickListener { setAsCover() }
-        binding.shareLayout.setOnClickListener { share() }
-        binding.saveLayout.setOnClickListener { save() }
+        binding.setAsCover.setOnClickListener { setAsCover() }
+        binding.share.setOnClickListener { share() }
+        binding.save.setOnClickListener { save() }
 
         return binding.root
     }

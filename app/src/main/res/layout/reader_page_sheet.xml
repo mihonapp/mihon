@@ -5,82 +5,49 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/set_as_cover_layout"
+    <TextView
+        android:id="@+id/set_as_cover"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:drawablePadding="32dp"
+        android:gravity="center_vertical"
         android:clickable="true"
         android:focusable="true"
+        android:paddingHorizontal="16dp"
         android:foreground="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:text="@string/set_as_cover"
+        android:textColor="?attr/colorOnBackground"
+        app:drawableStartCompat="@drawable/ic_photo_24dp"
+        app:drawableTint="?attr/colorOnBackground" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            app:srcCompat="@drawable/ic_photo_24dp"
-            app:tint="?attr/colorOnBackground" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:text="@string/set_as_cover"
-            android:textColor="?attr/colorOnBackground" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/share_layout"
+    <TextView
+        android:id="@+id/share"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:drawablePadding="32dp"
+        android:gravity="center_vertical"
         android:clickable="true"
         android:focusable="true"
+        android:paddingHorizontal="16dp"
         android:foreground="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:text="@string/action_share"
+        android:textColor="?attr/colorOnBackground"
+        app:drawableStartCompat="@drawable/ic_share_24dp"
+        app:drawableTint="?attr/colorOnBackground" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            app:srcCompat="@drawable/ic_share_24dp"
-            app:tint="?attr/colorOnBackground" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:text="@string/action_share"
-            android:textColor="?attr/colorOnBackground" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/save_layout"
+    <TextView
+        android:id="@+id/save"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:drawablePadding="32dp"
+        android:gravity="center_vertical"
         android:clickable="true"
         android:focusable="true"
+        android:paddingHorizontal="16dp"
         android:foreground="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            app:srcCompat="@drawable/ic_save_24dp"
-            app:tint="?attr/colorOnBackground" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:text="@string/action_save"
-            android:textColor="?attr/colorOnBackground" />
-
-    </LinearLayout>
+        android:text="@string/action_save"
+        android:textColor="?attr/colorOnBackground"
+        app:drawableStartCompat="@drawable/ic_save_24dp"
+        app:drawableTint="?attr/colorOnBackground" />
 
 </LinearLayout>
