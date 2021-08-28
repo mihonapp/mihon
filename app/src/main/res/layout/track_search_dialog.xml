@@ -38,7 +38,7 @@
             android:hint="@string/title"
             app:endIconMode="clear_text">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <eu.kanade.tachiyomi.widget.TachiyomiTextInputEditText
                 android:id="@+id/title_input_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

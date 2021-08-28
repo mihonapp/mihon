@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <eu.kanade.tachiyomi.widget.TachiyomiTextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

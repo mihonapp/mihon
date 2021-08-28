@@ -16,7 +16,7 @@
         android:layout_weight="1"
         android:gravity="center_vertical|start">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <eu.kanade.tachiyomi.widget.TachiyomiTextInputEditText
             android:id="@+id/nav_view_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -27,6 +27,7 @@ import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.getPreferenceKey
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.widget.TachiyomiTextInputEditText.Companion.setIncognito
 import timber.log.Timber
 
 @SuppressLint("RestrictedApi")
@@ -112,6 +113,13 @@ class SourcePreferencesController(bundle: Bundle? = null) :
                 val pref = newScreen.getPreference(0)
                 pref.isIconSpaceReserved = false
                 pref.order = Int.MAX_VALUE // reset to default order
+
+                // Apply incognito IME for EditTextPreference
+                if (pref is EditTextPreference) {
+                    pref.setOnBindEditTextListener {
+                        it.setIncognito(viewScope)
+                    }
+                }
 
                 newScreen.removePreference(pref)
                 screen.addPreference(pref)

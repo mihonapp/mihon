@@ -25,7 +25,7 @@
         android:tint="?attr/colorAccent"
         app:srcCompat="@drawable/ic_chevron_left_black_24dp" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <eu.kanade.tachiyomi.widget.TachiyomiTextInputEditText
         android:id="@+id/myNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
