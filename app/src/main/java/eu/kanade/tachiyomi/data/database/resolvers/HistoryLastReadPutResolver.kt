@@ -27,9 +27,7 @@ class HistoryLastReadPutResolver : HistoryPutResolver() {
                 .build()
         )
 
-        val putResult: PutResult
-
-        putResult = cursor.use { putCursor ->
+        cursor.use { putCursor ->
             if (putCursor.count == 0) {
                 val insertQuery = mapToInsertQuery(history)
                 val insertedId = db.lowLevel().insert(insertQuery, mapToContentValues(history))
@@ -39,25 +37,15 @@ class HistoryLastReadPutResolver : HistoryPutResolver() {
                 PutResult.newUpdateResult(numberOfRowsUpdated, updateQuery.table())
             }
         }
-
-        putResult
     }
 
-    /**
-     * Creates update query
-     * @param obj history object
-     */
     override fun mapToUpdateQuery(obj: History) = UpdateQuery.builder()
         .table(HistoryTable.TABLE)
         .where("${HistoryTable.COL_CHAPTER_ID} = ?")
         .whereArgs(obj.chapter_id)
         .build()
 
-    /**
-     * Create content query
-     * @param history object
-     */
-    fun mapToUpdateContentValues(history: History) =
+    private fun mapToUpdateContentValues(history: History) =
         contentValuesOf(
             HistoryTable.COL_LAST_READ to history.last_read
         )
