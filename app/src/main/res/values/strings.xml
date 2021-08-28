@@ -159,7 +159,7 @@
     <string name="theme_yinyang">Yin &amp; Yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Pure black dark mode</string>
-    <string name="pref_category_layout">Layout</string>
+    <string name="pref_category_navigation">Navigation</string>
     <string name="pref_side_nav_icon_alignment">Side navigation icon alignment</string>
     <string name="alignment_top">Top</string>
     <string name="alignment_center">Center</string>

@@ -95,7 +95,7 @@ class SettingsAppearanceController : SettingsController() {
         }
 
         preferenceCategory {
-            titleRes = R.string.pref_category_layout
+            titleRes = R.string.pref_category_navigation
 
             if (context.isTablet()) {
                 intListPreference {
