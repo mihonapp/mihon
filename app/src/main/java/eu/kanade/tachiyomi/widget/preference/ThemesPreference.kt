@@ -32,6 +32,10 @@ class ThemesPreference @JvmOverloads constructor(context: Context, attrs: Attrib
         callChangeListener(value)
     }
 
+    override fun onClick() {
+        // no-op; not actually a DialogPreference
+    }
+
     var entries: List<PreferenceValues.AppTheme> = emptyList()
         set(value) {
             field = value
