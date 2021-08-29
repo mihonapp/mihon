@@ -63,8 +63,11 @@ class MangaFullCoverDialog : DialogController {
             menu?.findItem(R.id.action_edit_cover)?.isVisible = manga?.favorite ?: false
         }
 
-        binding?.fullCover?.setOnClickListener {
-            dialog?.dismiss()
+        binding?.fullCover?.apply {
+            setOnClickListener {
+                dialog?.dismiss()
+            }
+            setMinimumDpi(45)
         }
         setImage(manga)
 
