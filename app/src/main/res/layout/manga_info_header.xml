@@ -30,6 +30,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/backdrop"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/manga_cover_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:barrierMargin="16dp"
+        app:constraint_referenced_ids="manga_cover"
+        app:layout_constraintTop_toTopOf="@id/manga_cover" />
+
     <ImageView
         android:id="@+id/manga_cover"
         android:layout_width="100dp"
@@ -52,9 +61,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/manga_cover"
+        app:layout_constraintTop_toTopOf="@id/manga_cover_barrier"
+        app:layout_constraintBottom_toBottomOf="@id/manga_info_barrier"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/manga_cover">
 
@@ -62,11 +72,9 @@
             android:id="@+id/manga_full_title"
             style="@style/TextAppearance.Medium.Title"
             android:layout_width="match_parent"
-            android:layout_height="60sp"
-            android:layout_marginBottom="4dp"
-            android:gravity="bottom"
-            android:text="@string/manga_info_full_title_label"
+            android:layout_height="wrap_content"
             android:textIsSelectable="false"
+            android:text="@string/manga_info_full_title_label"
             app:autoSizeMaxTextSize="20sp"
             app:autoSizeMinTextSize="12sp"
             app:autoSizeStepGranularity="2sp"
@@ -77,6 +85,7 @@
             style="@style/TextAppearance.Regular.Body1.Secondary.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:textIsSelectable="false"
             tools:text="Author" />
 
@@ -85,6 +94,7 @@
             style="@style/TextAppearance.Regular.Body1.Secondary.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:textIsSelectable="false"
             tools:text="Artist" />
 
@@ -128,17 +138,24 @@
 
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/manga_info_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="manga_cover,manga_detail" />
+
     <LinearLayout
         android:id="@+id/manga_actions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="-24dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/backdrop">
+        app:layout_constraintTop_toBottomOf="@id/manga_info_barrier">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_favorite"
