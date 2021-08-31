@@ -264,17 +264,17 @@ class PagerPageHolder(
             .fromCallable {
                 val stream = streamFn().buffered(16)
                 val itemStream = process(item, stream)
+                val bais = ByteArrayInputStream(itemStream.readBytes())
                 try {
-                    val streamBytes = itemStream.readBytes()
-                    val isAnimated = ImageUtil.isAnimatedAndSupported(stream)
+                    val isAnimated = ImageUtil.isAnimatedAndSupported(bais)
+                    bais.reset()
                     val background = if (!isAnimated && viewer.config.automaticBackground) {
-                        ByteArrayInputStream(streamBytes).use { bais ->
-                            ImageUtil.chooseBackground(context, bais)
-                        }
+                        ImageUtil.chooseBackground(context, bais)
                     } else {
                         null
                     }
-                    Triple(streamBytes, isAnimated, background)
+                    bais.reset()
+                    Triple(bais, isAnimated, background)
                 } finally {
                     stream.close()
                     itemStream.close()
@@ -282,15 +282,15 @@ class PagerPageHolder(
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { (streamBytes, isAnimated, background) ->
-                ByteArrayInputStream(streamBytes).use { bais ->
+            .doOnNext { (bais, isAnimated, background) ->
+                bais.use {
                     if (!isAnimated) {
                         this.background = background
                         initSubsamplingImageView().apply {
-                            setImage(ImageSource.inputStream(bais))
+                            setImage(ImageSource.inputStream(it))
                         }
                     } else {
-                        initImageView().setImage(bais)
+                        initImageView().setImage(it)
                     }
                 }
             }
