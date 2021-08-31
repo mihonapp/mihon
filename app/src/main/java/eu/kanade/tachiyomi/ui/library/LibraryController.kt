@@ -33,7 +33,9 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.widget.EmptyView
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -275,7 +277,14 @@ class LibraryController(
         if (mangaMap.isNotEmpty()) {
             binding.emptyView.hide()
         } else {
-            binding.emptyView.show(R.string.information_empty_library)
+            binding.emptyView.show(
+                R.string.information_empty_library,
+                listOf(
+                    EmptyView.Action(R.string.getting_started_guide, R.drawable.ic_help_24dp) {
+                        activity?.openInBrowser("https://tachiyomi.org/help/guides/getting-started")
+                    }
+                ),
+            )
             (activity as? MainActivity)?.ready = true
         }
 
