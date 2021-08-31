@@ -292,14 +292,7 @@ class MangaInfoHeaderAdapter(
             showMangaInfo(hasInfoContent)
             if (hasInfoContent) {
                 // Update description TextView.
-                binding.mangaSummaryText.text = if (manga.description.isNullOrBlank()) {
-                    view.context.getString(R.string.unknown)
-                } else {
-                    // Max lines of 3 with a blank line looks whack so we remove
-                    // any line breaks that is 2 or more and replace it with 1
-                    manga.description!!
-                        .replace(Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE)), "\n")
-                }
+                binding.mangaSummaryText.text = updateDescription(manga.description, (fromSource || isTablet).not())
 
                 // Update genres list
                 if (!manga.genre.isNullOrBlank()) {
@@ -357,10 +350,28 @@ class MangaInfoHeaderAdapter(
                 binding.mangaSummarySection.transitionToEnd()
             }
 
+            binding.mangaSummaryText.text = updateDescription(manga.description, isCurrentlyExpanded)
+
             binding.mangaSummaryText.maxLines = if (isCurrentlyExpanded) {
                 maxLines
             } else {
                 Int.MAX_VALUE
+            }
+        }
+
+        private fun updateDescription(description: String?, isCurrentlyExpanded: Boolean): CharSequence? {
+            return if (description.isNullOrBlank()) {
+                view.context.getString(R.string.unknown)
+            } else {
+                // Max lines of 3 with a blank line looks whack so we remove
+                // any line breaks that is 2 or more and replace it with 1
+                // however, don't do this if already expanded because we need those blank lines
+                if (!isCurrentlyExpanded) {
+                    description
+                } else {
+                    description
+                        .replace(Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE)), "\n")
+                }
             }
         }
 
