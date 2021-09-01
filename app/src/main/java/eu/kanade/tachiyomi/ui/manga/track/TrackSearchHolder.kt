@@ -4,10 +4,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.clear
 import coil.loadAny
-import coil.transform.RoundedCornersTransformation
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.databinding.TrackSearchItemBinding
-import eu.kanade.tachiyomi.util.system.dpToPx
 import java.util.Locale
 
 class TrackSearchHolder(
@@ -24,9 +22,7 @@ class TrackSearchHolder(
         binding.trackSearchTitle.text = track.title
         binding.trackSearchCover.clear()
         if (track.cover_url.isNotEmpty()) {
-            binding.trackSearchCover.loadAny(track.cover_url) {
-                transformations(RoundedCornersTransformation(6.dpToPx.toFloat()))
-            }
+            binding.trackSearchCover.loadAny(track.cover_url)
         }
 
         val hasStatus = track.publishing_status.isNotBlank()

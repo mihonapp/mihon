@@ -12,7 +12,7 @@
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/cover"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -22,6 +22,7 @@
         app:layout_constraintDimensionRatio="h,3:2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/ShapeAppearanceOverlay.Cover"
         tools:src="@mipmap/ic_launcher" />
 
     <LinearLayout

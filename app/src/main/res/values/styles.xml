@@ -327,6 +327,11 @@
         <item name="cornerSize">8dp</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay.Cover" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/card_radius</item>
+    </style>
+
     <style name="ThemeOverlay.Tachiyomi.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents">
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">?android:attr/colorBackground</item>
