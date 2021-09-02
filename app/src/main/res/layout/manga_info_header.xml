@@ -104,6 +104,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp">
 
+            <ImageView
+                android:id="@+id/manga_status_icon"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
+                app:srcCompat="@drawable/ic_status_unknown_24dp"
+                app:tint="?android:attr/textColorSecondary"
+                tools:ignore="ContentDescription" />
+
             <TextView
                 android:id="@+id/manga_status"
                 style="@style/TextAppearance.Regular.Body1.Secondary"
