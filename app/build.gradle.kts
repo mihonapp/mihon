@@ -130,7 +130,7 @@ android {
 dependencies {
     implementation(kotlin("reflect", version = BuildPluginsVersion.KOTLIN))
 
-    val coroutinesVersion = "1.5.1"
+    val coroutinesVersion = "1.5.2"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
@@ -144,7 +144,7 @@ dependencies {
     implementation("androidx.browser:browser:1.3.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.0")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
-    implementation("androidx.core:core-ktx:1.7.0-alpha01")
+    implementation("androidx.core:core-ktx:1.7.0-alpha02")
     implementation("androidx.core:core-splashscreen:1.0.0-alpha01")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
@@ -155,7 +155,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
 
     // Job scheduling
-    implementation("androidx.work:work-runtime-ktx:2.6.0-beta01")
+    implementation("androidx.work:work-runtime-ktx:2.6.0")
 
     // RX
     implementation("io.reactivex:rxandroid:1.2.1")
