@@ -1,15 +1,21 @@
 package eu.kanade.tachiyomi.ui.base.activity
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.util.system.prepareTabletUiContext
 import uy.kohesive.injekt.injectLazy
 
 abstract class BaseThemedActivity : AppCompatActivity() {
 
     val preferences: PreferencesHelper by injectLazy()
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(newBase.prepareTabletUiContext())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         applyAppTheme(preferences)

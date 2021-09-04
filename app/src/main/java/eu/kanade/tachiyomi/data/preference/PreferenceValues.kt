@@ -51,4 +51,10 @@ object PreferenceValues {
         LOW(31),
         LOWEST(47)
     }
+
+    enum class TabletUiMode {
+        ALWAYS,
+        LANDSCAPE,
+        NEVER
+    }
 }

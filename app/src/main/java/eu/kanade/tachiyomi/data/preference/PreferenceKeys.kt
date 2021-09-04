@@ -223,6 +223,8 @@ object PreferenceKeys {
 
     const val incognitoMode = "incognito_mode"
 
+    const val tabletUiMode = "tablet_ui_mode"
+
     fun trackUsername(syncId: Int) = "pref_mangasync_username_$syncId"
 
     fun trackPassword(syncId: Int) = "pref_mangasync_password_$syncId"
