@@ -74,11 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="false"
-            android:text="@string/manga_info_full_title_label"
-            app:autoSizeMaxTextSize="20sp"
-            app:autoSizeMinTextSize="12sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform" />
+            android:text="@string/manga_info_full_title_label" />
 
         <TextView
             android:id="@+id/manga_author"
