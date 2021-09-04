@@ -36,6 +36,7 @@ import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.EmptyView
+import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -558,11 +559,17 @@ class LibraryController(
         val categories = presenter.categories.filter { it.id != 0 }
 
         // Get indexes of the common categories to preselect.
-        val commonCategoriesIndexes = presenter.getCommonCategories(mangas)
-            .map { categories.indexOf(it) }
-            .toTypedArray()
-
-        ChangeMangaCategoriesDialog(this, mangas, categories, commonCategoriesIndexes)
+        val common = presenter.getCommonCategories(mangas)
+        // Get indexes of the mix categories to preselect.
+        val mix = presenter.getMixCategories(mangas)
+        var preselected = categories.map {
+            when (it) {
+                in common -> QuadStateTextView.State.CHECKED.ordinal
+                in mix -> QuadStateTextView.State.INDETERMINATE.ordinal
+                else -> QuadStateTextView.State.UNCHECKED.ordinal
+            }
+        }.toTypedArray()
+        ChangeMangaCategoriesDialog(this, mangas, categories, preselected)
             .showDialog(router)
     }
 
@@ -582,8 +589,8 @@ class LibraryController(
         DeleteLibraryMangasDialog(this, selectedMangas.toList()).showDialog(router)
     }
 
-    override fun updateCategoriesForMangas(mangas: List<Manga>, categories: List<Category>) {
-        presenter.moveMangasToCategories(categories, mangas)
+    override fun updateCategoriesForMangas(mangas: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {
+        presenter.updateMangasToCategories(mangas, addCategories, removeCategories)
         destroyActionModeIfNeeded()
     }
 

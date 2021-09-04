@@ -21,5 +21,8 @@ internal class QuadStateMultiChoiceViewHolder(
             controlView.isEnabled = value
         }
 
-    override fun onClick(view: View) = adapter.itemClicked(bindingAdapterPosition)
+    override fun onClick(view: View) = when (adapter.isActionList) {
+        true -> adapter.itemActionClicked(bindingAdapterPosition)
+        false -> adapter.itemDisplayClicked(bindingAdapterPosition)
+    }
 }

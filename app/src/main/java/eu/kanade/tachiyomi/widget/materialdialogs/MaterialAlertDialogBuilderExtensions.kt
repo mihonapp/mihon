@@ -39,6 +39,7 @@ fun MaterialAlertDialogBuilder.setTextInput(
  */
 fun MaterialAlertDialogBuilder.setQuadStateMultiChoiceItems(
     @StringRes message: Int? = null,
+    isActionList: Boolean = true,
     items: List<CharSequence>,
     initialSelected: IntArray,
     disabledIndices: IntArray? = null,
@@ -50,6 +51,7 @@ fun MaterialAlertDialogBuilder.setQuadStateMultiChoiceItems(
         items = items,
         disabledItems = disabledIndices,
         initialSelected = initialSelected,
+        isActionList = isActionList,
         listener = selection
     )
     val updateScrollIndicators = {

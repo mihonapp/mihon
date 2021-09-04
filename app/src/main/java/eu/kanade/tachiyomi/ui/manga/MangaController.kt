@@ -93,6 +93,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.getCoordinates
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.snack
+import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.recyclerview.scrollEvents
@@ -578,8 +579,12 @@ class MangaController :
             // Choose a category
             else -> {
                 val ids = presenter.getMangaCategoryIds(manga)
-                val preselected = ids.mapNotNull { id ->
-                    categories.indexOfFirst { it.id == id }.takeIf { it != -1 }
+                val preselected = categories.map {
+                    if (it.id in ids) {
+                        QuadStateTextView.State.CHECKED.ordinal
+                    } else {
+                        QuadStateTextView.State.UNCHECKED.ordinal
+                    }
                 }.toTypedArray()
 
                 ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
@@ -627,15 +632,18 @@ class MangaController :
         val categories = presenter.getCategories()
 
         val ids = presenter.getMangaCategoryIds(manga)
-        val preselected = ids.mapNotNull { id ->
-            categories.indexOfFirst { it.id == id }.takeIf { it != -1 }
+        val preselected = categories.map {
+            if (it.id in ids) {
+                QuadStateTextView.State.CHECKED.ordinal
+            } else {
+                QuadStateTextView.State.UNCHECKED.ordinal
+            }
         }.toTypedArray()
-
         ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
             .showDialog(router)
     }
 
-    override fun updateCategoriesForMangas(mangas: List<Manga>, categories: List<Category>) {
+    override fun updateCategoriesForMangas(mangas: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {
         val manga = mangas.firstOrNull() ?: return
 
         if (!manga.favorite) {
@@ -644,7 +652,7 @@ class MangaController :
             activity?.invalidateOptionsMenu()
         }
 
-        presenter.moveMangaToCategories(manga, categories)
+        presenter.moveMangaToCategories(manga, addCategories)
     }
 
     /**

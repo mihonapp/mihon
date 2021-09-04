@@ -10,6 +10,8 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.category.CategoryController
+import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
+import eu.kanade.tachiyomi.widget.materialdialogs.setQuadStateMultiChoiceItems
 
 class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
     DialogController(bundle) where T : Controller, T : ChangeMangaCategoriesDialog.Listener {
@@ -17,6 +19,7 @@ class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
     private var mangas = emptyList<Manga>()
     private var categories = emptyList<Category>()
     private var preselected = emptyArray<Int>()
+    private var selected = emptyArray<Int>().toIntArray()
 
     constructor(
         target: T,
@@ -27,6 +30,7 @@ class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
         this.mangas = mangas
         this.categories = categories
         this.preselected = preselected
+        this.selected = preselected.toIntArray()
         targetController = target
     }
 
@@ -36,15 +40,21 @@ class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
             .setNegativeButton(android.R.string.cancel, null)
             .apply {
                 if (categories.isNotEmpty()) {
-                    val selected = categories
-                        .mapIndexed { i, _ -> preselected.contains(i) }
-                        .toBooleanArray()
-                    setMultiChoiceItems(categories.map { it.name }.toTypedArray(), selected) { _, which, checked ->
-                        selected[which] = checked
+                    setQuadStateMultiChoiceItems(
+                        items = categories.map { it.name },
+                        isActionList = false,
+                        initialSelected = preselected.toIntArray()
+                    ) { selections ->
+                        selected = selections
                     }
                     setPositiveButton(android.R.string.ok) { _, _ ->
-                        val newCategories = categories.filterIndexed { i, _ -> selected[i] }
-                        (targetController as? Listener)?.updateCategoriesForMangas(mangas, newCategories)
+                        val add = selected
+                            .mapIndexed { index, value -> if (value == QuadStateTextView.State.CHECKED.ordinal) categories[index] else null }
+                            .filterNotNull()
+                        val remove = selected
+                            .mapIndexed { index, value -> if (value == QuadStateTextView.State.UNCHECKED.ordinal) categories[index] else null }
+                            .filterNotNull()
+                        (targetController as? Listener)?.updateCategoriesForMangas(mangas, add, remove)
                     }
                 } else {
                     setMessage(R.string.information_empty_category_dialog)
@@ -62,6 +72,6 @@ class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
     }
 
     interface Listener {
-        fun updateCategoriesForMangas(mangas: List<Manga>, categories: List<Category>)
+        fun updateCategoriesForMangas(mangas: List<Manga>, addCategories: List<Category>, removeCategories: List<Category> = emptyList<Category>())
     }
 }

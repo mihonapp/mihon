@@ -8,14 +8,18 @@ import eu.kanade.tachiyomi.databinding.DialogQuadstatemultichoiceItemBinding
 private object CheckPayload
 private object InverseCheckPayload
 private object UncheckPayload
+private object IndeterminatePayload
 
 typealias QuadStateMultiChoiceListener = (indices: IntArray) -> Unit
 
+// isAction state: Uncheck-> Check-> Invert else Uncheck-> Indeterminate (only if initial so)-> Check
+// isAction for list of action to operate on like filter include, exclude
 internal class QuadStateMultiChoiceDialogAdapter(
     internal var items: List<CharSequence>,
     disabledItems: IntArray?,
-    initialSelected: IntArray,
-    internal var listener: QuadStateMultiChoiceListener
+    private var initialSelected: IntArray,
+    internal var listener: QuadStateMultiChoiceListener,
+    val isActionList: Boolean = true
 ) : RecyclerView.Adapter<QuadStateMultiChoiceViewHolder>() {
 
     private val states = QuadStateTextView.State.values()
@@ -39,18 +43,36 @@ internal class QuadStateMultiChoiceDialogAdapter(
                         // This value was unselected
                         notifyItemChanged(index, UncheckPayload)
                     }
+                    current == QuadStateTextView.State.INDETERMINATE.ordinal && previous != QuadStateTextView.State.INDETERMINATE.ordinal -> {
+                        // This value was set back to Indeterminate
+                        notifyItemChanged(index, IndeterminatePayload)
+                    }
                 }
             }
         }
     private var disabledIndices: IntArray = disabledItems ?: IntArray(0)
-
-    internal fun itemClicked(index: Int) {
+    internal fun itemActionClicked(index: Int) {
         val newSelection = this.currentSelection.toMutableList()
         newSelection[index] = when (currentSelection[index]) {
             QuadStateTextView.State.CHECKED.ordinal -> QuadStateTextView.State.INVERSED.ordinal
             QuadStateTextView.State.INVERSED.ordinal -> QuadStateTextView.State.UNCHECKED.ordinal
             // INDETERMINATE or UNCHECKED
             else -> QuadStateTextView.State.CHECKED.ordinal
+        }
+        this.currentSelection = newSelection.toIntArray()
+        listener(currentSelection)
+    }
+
+    internal fun itemDisplayClicked(index: Int) {
+        val newSelection = this.currentSelection.toMutableList()
+        newSelection[index] = when (currentSelection[index]) {
+            QuadStateTextView.State.UNCHECKED.ordinal -> QuadStateTextView.State.CHECKED.ordinal
+            QuadStateTextView.State.CHECKED.ordinal -> when (initialSelected[index]) {
+                QuadStateTextView.State.INDETERMINATE.ordinal -> QuadStateTextView.State.INDETERMINATE.ordinal
+                else -> QuadStateTextView.State.UNCHECKED.ordinal
+            }
+            // INDETERMINATE or UNCHECKED
+            else -> QuadStateTextView.State.UNCHECKED.ordinal
         }
         this.currentSelection = newSelection.toIntArray()
         listener(currentSelection)
@@ -94,6 +116,10 @@ internal class QuadStateMultiChoiceDialogAdapter(
             }
             UncheckPayload -> {
                 holder.controlView.state = QuadStateTextView.State.UNCHECKED
+                return
+            }
+            IndeterminatePayload -> {
+                holder.controlView.state = QuadStateTextView.State.INDETERMINATE
                 return
             }
         }
