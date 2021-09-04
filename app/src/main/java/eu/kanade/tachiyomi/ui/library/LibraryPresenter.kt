@@ -487,7 +487,7 @@ class LibraryPresenter(
                 }
                 db.updateChaptersProgress(chapters).executeAsBlocking()
 
-                if (preferences.removeAfterMarkedAsRead()) {
+                if (read && preferences.removeAfterMarkedAsRead()) {
                     deleteChapters(manga, chapters)
                 }
             }
