@@ -149,13 +149,10 @@ class SearchPresenter(
                 db.updateMangaFavorite(prevManga).executeAsBlocking()
             }
             manga.favorite = true
-            db.updateMangaFavorite(manga).executeAsBlocking()
 
             // Update reading preferences
             manga.chapter_flags = prevManga.chapter_flags
-            db.updateChapterFlags(manga).executeAsBlocking()
             manga.viewer_flags = prevManga.viewer_flags
-            db.updateViewerFlags(manga).executeAsBlocking()
 
             // Update date added
             if (replace) {
@@ -165,8 +162,9 @@ class SearchPresenter(
                 manga.date_added = Date().time
             }
 
-            // SearchPresenter#networkToLocalManga may have updated the manga title, so ensure db gets updated title
-            db.updateMangaTitle(manga).executeAsBlocking()
+            // SearchPresenter#networkToLocalManga may have updated the manga title,
+            // so ensure db gets updated title too
+            db.insertManga(manga).executeAsBlocking()
         }
     }
 }
