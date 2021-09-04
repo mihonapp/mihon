@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Build
+import android.os.Bundle
+import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
@@ -22,6 +24,8 @@ import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
 class SettingsAppearanceController : SettingsController() {
+
+    private var themesPreference: ThemesPreference? = null
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_appearance
@@ -59,7 +63,7 @@ class SettingsAppearanceController : SettingsController() {
 
                 summary = "%s"
             }
-            initThenAdd(ThemesPreference(context)) {
+            themesPreference = initThenAdd(ThemesPreference(context)) {
                 key = Keys.appTheme
                 titleRes = R.string.pref_app_theme
 
@@ -158,4 +162,23 @@ class SettingsAppearanceController : SettingsController() {
             }
         }
     }
+
+    override fun onSaveViewState(view: View, outState: Bundle) {
+        themesPreference?.let {
+            outState.putInt(THEMES_SCROLL_POSITION, it.lastScrollPosition ?: 0)
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreViewState(view: View, savedViewState: Bundle) {
+        super.onRestoreViewState(view, savedViewState)
+        themesPreference?.lastScrollPosition = savedViewState.getInt(THEMES_SCROLL_POSITION, 0)
+    }
+
+    override fun onDestroyView(view: View) {
+        super.onDestroyView(view)
+        themesPreference = null
+    }
 }
+
+private const val THEMES_SCROLL_POSITION = "themesScrollPosition"
