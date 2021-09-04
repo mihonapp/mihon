@@ -24,14 +24,14 @@ object PreferenceValues {
     enum class AppTheme(val titleResId: Int?) {
         DEFAULT(R.string.label_default),
         MONET(R.string.theme_monet),
-        BLUE(R.string.theme_blue),
-        GREEN_APPLE(R.string.theme_greenapple),
         MIDNIGHT_DUSK(R.string.theme_midnightdusk),
         STRAWBERRY_DAIQUIRI(R.string.theme_strawberrydaiquiri),
+        YOTSUBA(R.string.theme_yotsuba),
         TAKO(R.string.theme_tako),
+        GREEN_APPLE(R.string.theme_greenapple),
         TEALTURQUOISE(R.string.theme_tealturquoise),
         YINYANG(R.string.theme_yinyang),
-        YOTSUBA(R.string.theme_yotsuba),
+        BLUE(R.string.theme_blue),
 
         // Deprecated
         DARK_BLUE(null),
@@ -49,12 +49,12 @@ object PreferenceValues {
         HIGHEST(5),
         HIGH(13),
         LOW(31),
-        LOWEST(47)
+        LOWEST(47),
     }
 
     enum class TabletUiMode {
         ALWAYS,
         LANDSCAPE,
-        NEVER
+        NEVER,
     }
 }
