@@ -83,6 +83,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     init {
         recycler.isVisible = false // Don't let the recycler layout yet
         recycler.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+        recycler.isFocusable = false
         recycler.itemAnimator = null
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
