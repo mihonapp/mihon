@@ -253,7 +253,6 @@
     <string name="vertical_viewer">عمودی</string>
     <string name="right_to_left_viewer">راست به چپ</string>
     <string name="left_to_right_viewer">چپ به راست</string>
-    <string name="default_viewer">پیش‌فرض</string>
     <string name="pref_viewer_type">حالت پیش فرض خواندن</string>
     <string name="black_background">سیاه</string>
     <string name="gray_background">خاکستری</string>
@@ -268,7 +267,6 @@
     <string name="pref_skip_read_chapters">پرش از قسمت‌هایی که خوانده شده اند</string>
     <string name="pref_keep_screen_on">روشن نگه داشتن صفحه نمایش</string>
     <string name="filter_mode_screen">صفحه نمایش</string>
-    <string name="filter_mode_default">پیش‌فرض</string>
     <string name="pref_color_filter_mode">حالت blend فیلتر رنگ</string>
     <string name="pref_custom_color_filter">استفاده از فیلتر رنگ سفارشی</string>
     <string name="pref_custom_brightness">استفاده از سیستم روشنایی سفارشی</string>
@@ -321,7 +319,6 @@
     <string name="update_never">فقط دستی</string>
     <string name="pref_library_update_interval">زمان بروزرسانی کتابخانه</string>
     <string name="pref_category_library_update">آپدیت‌ها</string>
-    <string name="default_columns">پیش‌فرض</string>
     <string name="landscape">افقی</string>
     <string name="portrait">عمودی</string>
     <string name="pref_library_columns">موارد در هر ردیف</string>
@@ -341,10 +338,7 @@
     <string name="pref_manage_notifications">مدیریت اعلان‌ها</string>
     <string name="pref_confirm_exit">هنگام خروج از برنامه تایید گرفته شود</string>
     <string name="pref_date_format">فرمت تاریخ</string>
-    <string name="system_default">پیش‌فرض سیستم</string>
-    <string name="pref_language">انتخاب زبان</string>
     <string name="pref_start_screen">صفحه اغازین</string>
-    <string name="theme_default">پیش‌فرض</string>
     <string name="theme_dark">روشن</string>
     <string name="theme_light">خاموش</string>
     <string name="theme_system">تم پیش‌فرض سیستم</string>
@@ -526,7 +520,6 @@
     <string name="backup_restore_missing_trackers">ردیابی هایی که به سیستم وارد نشده اند:</string>
     <string name="pref_category_reading_mode">حالت خواندن</string>
     <string name="pref_jump_to_chapters">برنامه در تب \"قسمت ها\" باز شود</string>
-    <string name="pref_category_locale">محلی</string>
     <string name="pref_category_theme">تم</string>
     <string name="action_disable">غیرفعال کردن</string>
     <string name="action_open_in_settings">در تنظیمات باز شود</string>

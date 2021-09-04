@@ -46,7 +46,6 @@
     <string name="pref_library_update_interval">የቤተ-መጽሐፍት ማዘመኛ ድግግሞሽ</string>
     <string name="pref_category_library_update">ዝመናዎች</string>
     <string name="pref_jump_to_chapters">ክፍት ወደ ምዕራፎች ይዝለሉ</string>
-    <string name="default_columns">ነባሪ</string>
     <string name="landscape">የመሬት ገጽታ</string>
     <string name="portrait">የቁም ስዕል</string>
     <string name="pref_library_columns">ዕቃዎች በአንድ ረድፍ</string>
@@ -67,15 +66,11 @@
     <string name="pref_manage_notifications">ማሳወቂያዎችን ያቀናብሩ</string>
     <string name="pref_confirm_exit">መውጫውን ያረጋግጡ</string>
     <string name="pref_date_format">የቀን ቅርጸት</string>
-    <string name="system_default">ነባሪ</string>
-    <string name="pref_language">ቋንቋ</string>
     <string name="pref_start_screen">ማያ ገጹን ይጀምሩ</string>
-    <string name="theme_default">ነባሪ</string>
     <string name="theme_dark">በርቷል</string>
     <string name="theme_light">ጠፍቷል</string>
     <string name="theme_system">ስርዓት ይከተሉ</string>
     <string name="pref_theme_mode">ጨለማ ሁነታ</string>
-    <string name="pref_category_locale">አካባቢያዊ</string>
     <string name="pref_category_theme">ገጽታ</string>
     <string name="pref_category_about">ስለ</string>
     <string name="pref_category_advanced">የላቀ</string>
@@ -231,7 +226,6 @@
     <string name="vertical_viewer">አቀባዊ</string>
     <string name="right_to_left_viewer">ከቀኝ ወደ ግራ</string>
     <string name="left_to_right_viewer">ከግራ ወደ ቀኝ</string>
-    <string name="default_viewer">ነባሪ</string>
     <string name="pref_viewer_type">ነባሪ የንባብ ሁነታ</string>
     <string name="black_background">ጥቁር</string>
     <string name="gray_background">ግራጫ</string>
@@ -250,7 +244,6 @@
     <string name="filter_mode_screen">ማያ ገጽ</string>
     <string name="filter_mode_multiply">ተባዙ</string>
     <string name="filter_mode_overlay">ተደራቢ</string>
-    <string name="filter_mode_default">ነባሪ</string>
     <string name="pref_color_filter_mode">የቀለም ማጣሪያ ድብልቅ ሁነታ</string>
     <string name="pref_custom_color_filter">ብጁ ቀለም ማጣሪያ</string>
     <string name="pref_custom_brightness">ብጁ ብሩህነት</string>

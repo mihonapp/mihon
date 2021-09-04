@@ -181,7 +181,6 @@
     <string name="update_never">ידני</string>
     <string name="pref_library_update_interval">תדירות עדכון ספרייה</string>
     <string name="pref_category_library_update">עדכונים</string>
-    <string name="default_columns">ברירת מחדל</string>
     <string name="landscape">מאוזן</string>
     <string name="portrait">מאונך</string>
     <string name="hide_notification_content">הסתר תוכן התראות</string>
@@ -199,9 +198,7 @@
     <string name="pref_category_security">אבטחה</string>
     <string name="pref_manage_notifications">ניהול התראות</string>
     <string name="pref_date_format">תבנית תאריך</string>
-    <string name="pref_language">שפה</string>
     <string name="pref_start_screen">מסך פתיחה</string>
-    <string name="theme_default">ברירת מחדל</string>
     <string name="theme_dark">כהה</string>
     <string name="theme_light">בהיר</string>
     <string name="pref_theme_mode">ערכת נושא של האפליקציה</string>
@@ -326,7 +323,6 @@
     <string name="vertical_viewer">אנכי</string>
     <string name="right_to_left_viewer">ימין לשמאל</string>
     <string name="left_to_right_viewer">שמאל לימין</string>
-    <string name="default_viewer">ברירת מחדל</string>
     <string name="pref_viewer_type">מציג ברירת מחדל</string>
     <string name="black_background">שחור</string>
     <string name="white_background">לבן</string>
@@ -340,7 +336,6 @@
     <string name="pref_keep_screen_on">השאר מסך דלוק</string>
     <string name="filter_mode_darken">שרוף / מוחשך</string>
     <string name="filter_mode_screen">מסך</string>
-    <string name="filter_mode_default">ברירת מחדל</string>
     <string name="pref_custom_color_filter">השתמש במסנן צבע מותאם אישית</string>
     <string name="pref_custom_brightness">השתמש בבהירות מותאמת אישית</string>
     <string name="pref_crop_borders">חתוך גבולות</string>

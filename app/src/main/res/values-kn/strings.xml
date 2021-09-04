@@ -19,10 +19,7 @@
     <string name="pref_manage_notifications">ಸೂಚನೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ</string>
     <string name="pref_confirm_exit">ನಿರ್ಗಮನವನ್ನು ಖಚಿತಪಡಿಸಿ</string>
     <string name="pref_date_format">ದಿನಾಂಕ ಸ್ವರೂಪ</string>
-    <string name="system_default">ಡೀಫಾಲ್ಟ್</string>
-    <string name="pref_language">ಭಾಷೆ</string>
     <string name="pref_start_screen">ಮೊದಲ ಪುಟ</string>
-    <string name="theme_default">ಡೀಫಾಲ್ಟ್</string>
     <string name="theme_system">ಸಿಸ್ಟಮ್ ಅನುಕರಿಸಿ</string>
     <string name="theme_dark">ಆನ್</string>
     <string name="theme_light">ಆಫ</string>
@@ -199,7 +196,6 @@
     <string name="vertical_viewer">ಲಂಬ</string>
     <string name="right_to_left_viewer">ಬಲದಿಂದ ಎಡಕ್ಕೆ</string>
     <string name="left_to_right_viewer">ಎಡದಿಂದ ಬಲಕ್ಕೆ</string>
-    <string name="default_viewer">ಡೀಫಾಲ್ಟ್</string>
     <string name="pref_viewer_type">ಡೀಫಾಲ್ಟ್ ಓದುವ ರೀತಿ</string>
     <string name="black_background">ಕಪ್ಪು</string>
     <string name="gray_background">ಬೂದು</string>
@@ -218,7 +214,6 @@
     <string name="filter_mode_screen">ಪರದೆ</string>
     <string name="filter_mode_multiply">ಗುಣಿಸಿ</string>
     <string name="filter_mode_overlay">ಒವರ್ಲೆ</string>
-    <string name="filter_mode_default">ಡೀಫಾಲ್ಟ್</string>
     <string name="pref_color_filter_mode">ಬಣ್ಣಗಳು ಫಿಲ್ಟರ್ ಮಿಶ್ರಣ ರೀತಿ</string>
     <string name="pref_custom_color_filter">ಕಸ್ಟಮ್ ಬಣ್ಣಗಳ ಫಿಲ್ಟರ್</string>
     <string name="pref_custom_brightness">ಕಸ್ಟಮ್ ಬೆಳಕು</string>
@@ -273,7 +268,6 @@
     <string name="update_never">ಸ್ವಂತ ಮಾಡು</string>
     <string name="pref_library_update_interval">ನವೀಕರಣ ಆವರ್ತನ</string>
     <string name="pref_category_library_update">ನವೀಕರಣಗಳು</string>
-    <string name="default_columns">ಡೀಫಾಲ್ಟ್</string>
     <string name="channel_ext_updates">ವಿಸ್ತರಣೆ ನವೀಕರಣಗಳು</string>
     <string name="channel_new_chapters">ಅಧ್ಯಾಯ ನವೀಕರಣಗಳು</string>
     <string name="channel_library">ಗ್ರಂಥಾಲಯ</string>
@@ -521,7 +515,6 @@
     <string name="label_network">ಅಡ್ವಾನ್ಸ್ಡ್ ಸೆಕ್ಷನ್</string>
     <string name="pref_category_reading_mode">ಓದುವ ಮೊಡ್</string>
     <string name="pref_jump_to_chapters">ಓಪನ್ ಮಾಡಿದ ಮೇಲೆ ಅಧ್ಯಯಕ್ಕೆ ಹೋಗಿ</string>
-    <string name="pref_category_locale">ಭಾಷೆ</string>
     <string name="pref_category_theme">ಜನರಲ್ ಸೆಲೆಕ್ಷನ್</string>
     <string name="action_open_in_settings">ಸೆಟ್ಟಿಂಗ್ಸ್ ನಲ್ಲಿ ಓಪನ್ ಮಾಡಿ</string>
     <string name="action_download_unread">ಓದದಿರುವ ಅಧ್ಯಾಯಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
@@ -604,7 +597,6 @@
     <string name="edge_nav">ಅಂಚು</string>
     <string name="kindlish_nav">ಕಿಂಡಲ್-ಇಶ್</string>
     <string name="l_nav">L ಆಕಾರದ</string>
-    <string name="default_nav">ಪೂರ್ವನಿಯೋಜಿತ</string>
     <string name="pref_dual_page_invert_summary">ಡ್ಯುಯಲ್ ಪೇಜ್ ಸ್ಪ್ಲಿಟ್ ನ ಪ್ಲೇಸ್ ಮೆಂಟ್ ಓದುವ ದಿಕ್ಕಿಗೆ ಹೊಂದಿಕೆಯಾಗದಿದ್ದರೆ</string>
     <string name="pref_dual_page_invert">ಡ್ಯುಯಲ್ ಪೇಜ್ ಸ್ಪ್ಲಿಟ್ ಪ್ಲೇಸ್‌ಮೆಂಟ್ ಅನ್ನು ತಿರುಗಿಸಿ</string>
     <string name="pref_dual_page_split">ಡ್ಯುಯಲ್ ಪುಟ ವಿಭಜನೆ</string>
@@ -638,7 +630,6 @@
     <string name="rotation_landscape">ಅಡ್ಡವಾದ ಪುಟ</string>
     <string name="rotation_portrait">ಉದ್ದವಾದ ಪುಟ</string>
     <string name="rotation_type">ತಿರುಗುವಿಕೆಯ ಪ್ರಕಾರ</string>
-    <string name="default_rotation_type">ಪೂರ್ವನಿಯೋಜಿತ</string>
     <string name="automatic_background">ಸ್ವಯಂಚಾಲಿತ</string>
     <string name="pref_create_folder_per_manga_summary">ಮಾಂಗಾ ಶೀರ್ಷಿಕೆಗೆ ಅನುಗುಣವಾಗಿ ಫೋಲ್ಡರ್ ಗಳನ್ನು ರಚಿಸುತ್ತದೆ</string>
     <string name="pref_create_folder_per_manga">ಪ್ರತ್ಯೇಕ ಫೋಲ್ಡರ್ ಗಳಲ್ಲಿ ಪುಟಗಳನ್ನು ಉಳಿಸಿ</string>

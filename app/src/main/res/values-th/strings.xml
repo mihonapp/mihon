@@ -51,7 +51,6 @@
     <string name="pref_category_reader">ตัวอ่าน</string>
     <string name="pref_category_advanced">ขั้นสูง</string>
     <string name="pref_category_about">เกี่ยวกับ</string>
-    <string name="default_columns">ค่าเริ่มต้น</string>
     <string name="update_3hour">ทุก 3 ชั่วโมง</string>
     <string name="update_6hour">ทุก 6 ชั่วโมง</string>
     <string name="update_12hour">ทุก 12 ชั่วโมง</string>
@@ -60,8 +59,6 @@
     <string name="update_weekly">ทุกสัปดาห์</string>
     <string name="all">ทั้งหมด</string>
     <string name="charging">กำลังชาร์จ</string>
-    <string name="pref_language">ภาษา</string>
-    <string name="system_default">ค่าปกติ</string>
     <string name="default_category_summary">ถามทุกครั้ง</string>
     <string name="ext_update">อัพเดท</string>
     <string name="ext_install">ติดตั้ง</string>
@@ -70,7 +67,6 @@
     <string name="ext_installing">กำลังติดตั้ง</string>
     <string name="ext_installed">ติดตั้งแล้ว</string>
     <string name="ext_language_info">ภาษา: %1$s</string>
-    <string name="filter_mode_default">ค่าเริ่มต้น</string>
     <string name="pref_reader_navigation">การควบคุม</string>
     <string name="pref_reader_theme">สีพื้นหลัง</string>
     <string name="white_background">ขาว</string>
@@ -134,7 +130,6 @@
     <string name="pref_read_with_volume_keys_inverted">สลับด้าน ปุ่มปรับระดับเสียง</string>
     <string name="pref_read_with_tapping">แตะ</string>
     <string name="pref_viewer_type">โหมดการอ่านเริ่มต้น</string>
-    <string name="default_viewer">ค่าเริ่มต้น</string>
     <string name="left_to_right_viewer">จากซ้ายไปขวา</string>
     <string name="right_to_left_viewer">จากขวาไปซ้าย</string>
     <string name="vertical_viewer">แนวตั้ง</string>
@@ -344,7 +339,6 @@
     <string name="right_and_left_nav">ขวาและซ้าย</string>
     <string name="kindlish_nav">เหมือน Kindle</string>
     <string name="l_nav">รูปตัว L</string>
-    <string name="default_nav">ค่าเริ่มต้น</string>
     <string name="automatic_background">อัตโนมัติ</string>
     <string name="gray_background">เทา</string>
     <string name="pref_create_folder_per_manga_summary">สร้างโฟลเดอร์ตามชื่อเรื่องมังงะ</string>
@@ -409,12 +403,10 @@
     <string name="pref_hide_bottom_bar_on_scroll">ซ่อนแถบด้านล่างเมื่อเลื่อน</string>
     <string name="pref_confirm_exit">ยืนยันการออก</string>
     <string name="pref_date_format">รูปแบบวันที่</string>
-    <string name="theme_default">ค่าปกติ</string>
     <string name="theme_dark">เปิด</string>
     <string name="theme_light">ปิด</string>
     <string name="theme_system">ตามระบบ</string>
     <string name="pref_theme_mode">โหมดมืด</string>
-    <string name="pref_category_locale">ภูมิภาค</string>
     <string name="pref_category_theme">ธีม</string>
     <string name="pref_category_library">คลัง</string>
     <string name="action_webview_refresh">รีเฟรช</string>
@@ -467,7 +459,6 @@
     <string name="pref_category_reading">การอ่าน</string>
     <string name="pref_category_reading_mode">โหมดการอ่าน</string>
     <string name="rotation_type">ประเภทการหมุน</string>
-    <string name="default_rotation_type">ค่าเริ่มต้น</string>
     <string name="pref_viewer_nav">เค้าโครงการนําทาง</string>
     <string name="vertical_plus_viewer">แนวตั้งต่อเนื่อง</string>
     <string name="nav_zone_right">ขวา</string>

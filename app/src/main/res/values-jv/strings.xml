@@ -53,11 +53,9 @@
     <string name="portrait">Potret</string>
     <string name="pref_category_display">Tampilan</string>
     <string name="pref_date_format">Format tanggal</string>
-    <string name="pref_language">Basa</string>
     <string name="theme_dark">Murup</string>
     <string name="theme_light">Mati</string>
     <string name="pref_theme_mode">Mode Peteng</string>
-    <string name="pref_category_locale">Lokal</string>
     <string name="pref_category_theme">Tema</string>
     <string name="pref_category_downloads">Donlot</string>
     <string name="action_webview_back">Bali</string>

@@ -79,7 +79,7 @@
     <string name="completed">Ukończone</string>
     <string name="dropped">Porzucone</string>
     <string name="on_hold">Wstrzymane</string>
-    <string name="plan_to_read">Planowane do przeczytania</string>
+    <string name="plan_to_read">Planowane</string>
     <string name="score">Ocena</string>
     <string name="title">Tytuł</string>
     <string name="error_category_exists">Kategoria o takiej nazwie już istnieje!</string>
@@ -124,7 +124,6 @@
     <string name="show_chapter_number">Numer rozdziału</string>
     <string name="portrait">Orientacja pionowa</string>
     <string name="landscape">Orientacja pozioma</string>
-    <string name="default_columns">Domyślnie</string>
     <string name="pref_library_update_interval">Częstotliwość aktualizacji</string>
     <string name="update_never">Ręcznie</string>
     <string name="update_3hour">Co 3 godziny</string>
@@ -139,8 +138,6 @@
     <string name="pref_update_only_non_completed">Aktualizuj tylko nieukończone mangi</string>
     <string name="pref_auto_update_manga_sync">Aktualizuj postęp po przeczytaniu rozdziału</string>
     <string name="pref_start_screen">Ekran startowy</string>
-    <string name="pref_language">Język</string>
-    <string name="system_default">Systemowy</string>
     <string name="default_category">Domyślna kategoria</string>
     <string name="default_category_summary">Zawsze pytaj</string>
     <string name="pref_fullscreen">Pełny ekran</string>
@@ -157,7 +154,6 @@
     <string name="pref_reader_theme">Kolor tła</string>
     <string name="white_background">Biały</string>
     <string name="black_background">Czarny</string>
-    <string name="default_viewer">Domyślnie</string>
     <string name="left_to_right_viewer">Od lewej do prawej</string>
     <string name="right_to_left_viewer">Od prawej do lewej</string>
     <string name="vertical_viewer">Pionowo</string>
@@ -305,7 +301,7 @@
     <string name="migration_dialog_what_to_include">Zaznacz dane do zawarcia</string>
     <string name="migrate">Migruj</string>
     <string name="pager_viewer">Widok stron</string>
-    <string name="source_not_installed">Nie zainstalowano źródła %1$s</string>
+    <string name="source_not_installed">Nie zainstalowano źródła: %1$s</string>
     <string name="repeating">Czytane ponownie</string>
     <string name="track_status">Status</string>
     <string name="track_start_date">Rozpoczęto</string>
@@ -324,7 +320,6 @@
     <string name="pref_skip_read_chapters">Pomiń rozdziały ozn. jako przeczytane</string>
     <string name="pref_read_with_long_tap">Pokaż po przytrzymaniu</string>
     <string name="pref_color_filter_mode">Tryb mieszania kolorów</string>
-    <string name="filter_mode_default">Domyślny</string>
     <string name="filter_mode_overlay">Nakładka</string>
     <string name="filter_mode_multiply">Pomnożenie</string>
     <string name="filter_mode_lighten">Rozjaśnienie</string>
@@ -522,7 +517,6 @@
     <string name="requires_app_restart">Wymaga ponownego uruchomienia aplikacji</string>
     <string name="label_network">Sieć</string>
     <string name="pref_jump_to_chapters">Przeskocz do rozdziałów przy otwarciu</string>
-    <string name="pref_category_locale">Język</string>
     <string name="tapping_inverted_both">Obydwa</string>
     <string name="tapping_inverted_vertical">Wertykalnie</string>
     <string name="tapping_inverted_horizontal">Horyzontalnie</string>
@@ -606,7 +600,6 @@
     <string name="edge_nav">Przy krawędzi</string>
     <string name="kindlish_nav">Podobnie jak w czytniku Kindle</string>
     <string name="l_nav">W kształcie litery \"L\"</string>
-    <string name="default_nav">Domyślnie</string>
     <string name="network_unmetered">Sieć bez limitu danych</string>
     <string name="action_desc">Malejąco</string>
     <string name="action_asc">Rosnąco</string>
@@ -647,7 +640,6 @@
     <string name="source_unsupported">Źródło nie jest wspierane</string>
     <string name="unread">Nieprzeczytane</string>
     <string name="rotation_type">Orientacja ekranu</string>
-    <string name="default_rotation_type">Domyślnie</string>
     <string name="automatic_background">Automatyczne</string>
     <string name="pref_create_folder_per_manga_summary">Utwórz foldery względem tytułów</string>
     <string name="pref_create_folder_per_manga">Zapisz strony do osobnych folderów</string>
@@ -681,12 +673,28 @@
     <string name="theme_greenapple">Zielone jabłko</string>
     <string name="theme_blue">Niebieski</string>
     <string name="theme_monet">Dynamiczny</string>
-    <string name="theme_default">Domyślny</string>
     <string name="pref_app_theme">Motyw aplikacji</string>
     <string name="action_sort_next_updated">Następna spodziewana aktualizacja</string>
-    <string name="restore_miui_warning">Funkcje kopii zapasowej mogą nie działać, jeśli Optymalizacja MIUI jest wyłączona.</string>
+    <string name="restore_miui_warning">Funkcje kopii zapasowej mogą nie działać, jeśli optymalizacja nakładki MIUI jest wyłączona.</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin i Yang</string>
     <string name="pref_dark_theme_pure_black">Czysty czarny motyw</string>
     <string name="theme_strawberrydaiquiri">Truskawkowe daiquiri</string>
+    <string name="pref_hide_threshold">Czułość ukrywania dolnego paska podczas przewijania</string>
+    <string name="theme_tako">Tako</string>
+    <plurals name="relative_time">
+        <item quantity="one">Wczoraj</item>
+        <item quantity="few">%1$d dni temu</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="pref_relative_time_long">Długi (Krótki+, n dni temu)</string>
+    <string name="pref_relative_time_short">Krótki (Dzisiaj, Jutro)</string>
+    <string name="label_background_activity">Aktywność w tle</string>
+    <string name="action_track">Śledź</string>
+    <string name="pref_category_timestamps">Znaczniki czasowe</string>
+    <string name="pref_category_navigation">Nawigacja</string>
+    <string name="pref_category_appearance">Wygląd</string>
+    <string name="confirm_lock_change">Autoryzuj, aby potwierdzić zmianę</string>
+    <string name="label_default">Domyślny</string>
 </resources>

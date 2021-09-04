@@ -69,7 +69,6 @@
     <string name="pref_manage_notifications">Систерӳсене ӗнерле</string>
     <string name="pref_confirm_exit">Тухнине ҫирӗплет</string>
     <string name="pref_date_format">Вӑхӑт формачӗ</string>
-    <string name="pref_language">Чӗлхе</string>
     <string name="pref_start_screen">Пуҫламӑш экран</string>
     <string name="theme_dark">Ҫутнӑ</string>
     <string name="theme_light">Сӳнтернӗ</string>
@@ -175,7 +174,6 @@
     <string name="action_select_inverse">Тепӗр майлӑ суйла</string>
     <string name="unlock_app">Tachiyomi уҫ</string>
     <string name="update_never">Алӑ вӗҫҫӗн</string>
-    <string name="default_columns">Яланхилле</string>
     <string name="pref_library_columns">Ретри япаласем</string>
     <string name="portrait">Урлӑ</string>
     <string name="landscape">Тӑрӑх</string>
@@ -188,8 +186,6 @@
     <string name="action_reset">Тасат</string>
     <string name="action_sort">Уйӑр</string>
     <string name="pref_theme_mode">Тӗксӗм тема</string>
-    <string name="system_default">Яланхилле</string>
-    <string name="theme_default">Яланхилле</string>
     <string name="theme_system">Сӳстемри пекех</string>
     <string name="pref_category_reader">Вулӑш</string>
     <string name="pref_category_tracking">Сӑнану</string>
@@ -263,7 +259,6 @@
     <string name="vertical_viewer">Урлӑ</string>
     <string name="right_to_left_viewer">Сылтӑмран сулахаялла</string>
     <string name="left_to_right_viewer">Сулахайран сылтӑмалла</string>
-    <string name="default_viewer">Яланхилле</string>
     <string name="gray_background">Сӑрӑ</string>
     <string name="pref_read_with_long_tap">Пусса тӑннӑ чух кӑтарт</string>
     <string name="pref_read_with_volume_keys_inverted">Янравлӑх пускӑчӗсене вырӑнсемпе улӑштар</string>
@@ -275,7 +270,6 @@
     <string name="filter_mode_darken">Тӗттӗмлетӳ</string>
     <string name="filter_mode_lighten">Ҫутату</string>
     <string name="filter_mode_overlay">Витӗм</string>
-    <string name="filter_mode_default">Яланхилле</string>
     <string name="pref_custom_color_filter">Усӑҫ тӗс али</string>
     <string name="pref_custom_brightness">Усӑҫ йӑлтӑрлӑхӗ</string>
     <string name="pref_crop_borders">Касӑк чиккисем</string>
@@ -520,7 +514,6 @@
     <string name="action_download_unread">Вуламан сыпӑксене тиесе ил</string>
     <string name="updated_version">v%1$s верссиччен ҫӗнетнӗ</string>
     <string name="whats_new">Мӗн ҫӗнни</string>
-    <string name="pref_category_locale">Вырӑн</string>
     <string name="pref_category_theme">Тема</string>
     <string name="action_sort_date_added">Хушнӑ вӑхӑтпа</string>
     <string name="download_insufficient_space">Тиск ҫинче вырӑн ҫитмен пирки сыпӑксене тиесе илес ҫук</string>
@@ -579,7 +572,6 @@
     <string name="edge_nav">Хӗрри</string>
     <string name="kindlish_nav">Kindle пек</string>
     <string name="l_nav">L пек</string>
-    <string name="default_nav">Яланхилле</string>
     <string name="network_unmetered">Чараксӑр тетел</string>
     <string name="action_desc">Пӗчӗкленнипе</string>
     <string name="action_asc">Пысӑкланнипе</string>
@@ -613,7 +605,6 @@
     <string name="rotation_landscape">Тӑрӑх</string>
     <string name="rotation_portrait">Урлӑ</string>
     <string name="rotation_type">Урлӑ-тӑрӑх тӗсӗ</string>
-    <string name="default_rotation_type">Яланхилле</string>
     <string name="pref_create_folder_per_manga_summary">Папкӑсене манкӑ ячӗпе тумалла</string>
     <string name="pref_create_folder_per_manga">Уйрӑм папкӑсенче элсене упрамалла</string>
     <string name="pref_reader_actions">Тӑвӑмсем</string>

@@ -47,8 +47,8 @@
     <string name="history">기록</string>
     <string name="label_download_queue">다운로드 대기열</string>
     <string name="label_library">서재</string>
-    <string name="label_recent_manga">최근 읽음</string>
-    <string name="label_recent_updates">서재 업데이트</string>
+    <string name="label_recent_manga">기록</string>
+    <string name="label_recent_updates">업데이트</string>
     <string name="action_sort_total">모든 챕터</string>
     <string name="action_previous_chapter">이전 챕터</string>
     <string name="action_next_chapter">다음 챕터</string>
@@ -61,7 +61,7 @@
     <string name="action_create">만들기</string>
     <string name="action_restore">복구하기</string>
     <string name="loading">로딩 중.…</string>
-    <string name="app_not_available">어플리케이션 이용 불가</string>
+    <string name="app_not_available">앱 이용 불가</string>
     <string name="pref_category_general">일반</string>
     <string name="pref_category_reader">리더</string>
     <string name="pref_category_downloads">다운로드</string>
@@ -76,7 +76,6 @@
     <string name="action_pause">일시중지</string>
     <string name="portrait">세로</string>
     <string name="landscape">가로</string>
-    <string name="default_columns">기본값</string>
     <string name="pref_library_update_interval">서재 업데이트 주기</string>
     <string name="update_never">수동</string>
     <string name="update_3hour">3시간</string>
@@ -89,8 +88,6 @@
     <string name="pref_library_update_restriction">서재 업데이트 제한</string>
     <string name="charging">충전중</string>
     <string name="pref_start_screen">시작 화면</string>
-    <string name="pref_language">언어</string>
-    <string name="system_default">시스템 기본값</string>
     <string name="default_category">기본 카테고리</string>
     <string name="all_lang">전부</string>
     <string name="ext_update">업데이트</string>
@@ -104,11 +101,11 @@
     <string name="ext_uninstall">삭제</string>
     <string name="ext_available">이용 가능</string>
     <string name="untrusted_extension">신뢰할 수 없는 확장기능</string>
-    <string name="untrusted_extension_message">이 확장기능은 신뢰할 수 없는 인증서로 서명되있으며 활성화 되지 않았습니다.
+    <string name="untrusted_extension_message">이 확장기능은 신뢰할 수 없는 인증서로 서명되었으며 활성화되지도 않았습니다.
 \n
-\n악의적인 확장기능은 Tachiyomi 내부에 저장된 로그인 정보들을 읽거나 임의를 코드를 실행할 수 있습니다.
+\n일부 악의적인 확장기능은 Tachiyomi에 저장된 로그인 정보를 읽거나 임의의 코드를 실행할 수도 있습니다.
 \n
-\n이 인증서를 신뢰함으로써 이런 위험들을 감수합니다.</string>
+\n이 인증서를 신뢰하면 이러한 위험을 수락하게 됩니다. 이 인증서를 신뢰 하시겠습니까\?</string>
     <string name="ext_version_info">버전: %1$s</string>
     <string name="ext_language_info">언어: %1$s</string>
     <string name="pref_fullscreen">전체화면</string>
@@ -122,7 +119,6 @@
     <string name="pref_read_with_volume_keys">볼륨 키</string>
     <string name="pref_read_with_volume_keys_inverted">볼륨 키 뒤바꾸기</string>
     <string name="pref_viewer_type">기본 뷰어</string>
-    <string name="default_viewer">기본값</string>
     <string name="left_to_right_viewer">왼쪽에서 오른쪽으로</string>
     <string name="right_to_left_viewer">오른쪽에서 왼쪽으로</string>
     <string name="vertical_viewer">수직으로</string>
@@ -133,7 +129,7 @@
     <string name="scale_type_original_size">원본 크기</string>
     <string name="pref_zoom_start">줌 시작 위치</string>
     <string name="zoom_start_automatic">자동</string>
-    <string name="zoom_start_left">왼쪽t</string>
+    <string name="zoom_start_left">왼쪽</string>
     <string name="zoom_start_right">오른쪽</string>
     <string name="zoom_start_center">중앙</string>
     <string name="double_tap_anim_speed_0">애니메이션 없음</string>
@@ -205,11 +201,11 @@
     <string name="sort_by_source">소스 기준</string>
     <string name="sort_by_number">챕터 번호 기준</string>
     <string name="manga_download">다운로드</string>
-    <string name="download_1">다음 챕터 다운로드</string>
-    <string name="download_5">다음 5 챕터 다운로드</string>
-    <string name="download_10">다음 10 챕터 다운로드</string>
-    <string name="download_all">전부 다운로드</string>
-    <string name="download_unread">읽지 않은 챕터 다운로드</string>
+    <string name="download_1">다음 챕터</string>
+    <string name="download_5">다음 5 챕터</string>
+    <string name="download_10">다음 10 챕터</string>
+    <string name="download_all">전부</string>
+    <string name="download_unread">읽지 않은 챕터</string>
     <string name="confirm_delete_chapters">선택된 챕터를 정말로 삭제하겠습니까\?</string>
     <string name="manga_tracking_tab">동기화</string>
     <string name="score">평점</string>
@@ -234,7 +230,7 @@
     <string name="transition_current">현재:</string>
     <string name="transition_next">다음:</string>
     <string name="transition_previous">이전:</string>
-    <string name="transition_no_next">다움 챕터가 없습니다</string>
+    <string name="transition_no_next">다음 챕터가 없습니다</string>
     <string name="transition_no_previous">이전 챕터가 없습니다</string>
     <string name="transition_pages_loading">페이지 로딩중…</string>
     <string name="transition_pages_error">페이지 로딩 실패: %1$s</string>
@@ -252,8 +248,8 @@
     <string name="update_check_notification_update_available">업데이트 이용 가능!</string>
     <string name="description_cover">만화 표지</string>
     <string name="information_no_downloads">다운로드 없음</string>
-    <string name="information_no_recent">최신 챕터 없음</string>
-    <string name="information_no_recent_manga">최근 읽은 만화 없음</string>
+    <string name="information_no_recent">최신 업데이트 없음</string>
+    <string name="information_no_recent_manga">최근 읽은 기록 없음</string>
     <string name="download_notifier_downloader_title">다운로더</string>
     <string name="download_notifier_title_error">오류</string>
     <string name="download_notifier_unknown_error">챕터 다운로드중에 예기치 않은 오류가 발생하였습니다</string>
@@ -265,7 +261,7 @@
     <string name="default_category_summary">항상 물어보기</string>
     <string name="pref_create_backup_summ">현재 서재를 나중에 복구하는 데 사용 가능</string>
     <string name="pref_reader_navigation">네비게이션</string>
-    <string name="pref_page_transitions">페이지 전환</string>
+    <string name="pref_page_transitions">페이지 전환 효과 표시</string>
     <string name="pref_read_with_tapping">탭핑</string>
     <string name="pref_reader_theme">배경 색상</string>
     <string name="white_background">흰색</string>
@@ -279,12 +275,13 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">다운로드 폴더</string>
-    <string name="custom_dir">사용자 정의 폴더</string>
+    <string name="custom_dir">사용자 정의 위치</string>
     <string name="second_to_last">두번째 챕터에서 끝까지</string>
     <string name="third_to_last">세번째 챕터에서 끝까지</string>
     <string name="fourth_to_last">네번째 챕터에서 끝까지</string>
     <string name="fifth_to_last">다섯번째 챕터에서 끝까지</string>
     <string name="backup_restore_content">복원시 소스에서 데이터를 가져오며, 통신 비용이 청구 될 수 있습니다.
+\n
 \n또한 복원 전에 필요한 소스에 제대로 로그인이 되어있는지 확인하십시오.</string>
     <string name="backup_choice">어떤 항목들을 백업하겠습니까\?</string>
     <string name="clear_database_completed">항목 삭제됨</string>
@@ -294,10 +291,11 @@
     <string name="browse">찾아보기</string>
     <string name="manga_not_in_db">이 만화는 데이터베이스에서 제거되었습니다</string>
     <string name="licensed">판권작</string>
-    <string name="copied_to_clipboard">클립보드에 %1$s 복사됨</string>
+    <string name="copied_to_clipboard">클립보드에 복사됨:
+\n%1$s</string>
     <string name="show_title">제목 표시</string>
     <string name="custom_download">사용자 정의 지정 다운로드</string>
-    <string name="download_custom">사용자 정의 다운로드</string>
+    <string name="download_custom">사용자 정의</string>
     <string name="reading">읽는중</string>
     <string name="completed">완료함</string>
     <string name="dropped">포기함</string>
@@ -322,7 +320,6 @@
     <string name="pref_true_color">32비트 컬러</string>
     <string name="pref_skip_read_chapters">읽음 표시된 챕터 건너뛰기</string>
     <string name="pref_color_filter_mode">컬러 필터 블렌딩 모드</string>
-    <string name="filter_mode_default">기본값</string>
     <string name="filter_mode_overlay">오버레이</string>
     <string name="filter_mode_multiply">곱하기</string>
     <string name="filter_mode_screen">스크린</string>
@@ -336,4 +333,76 @@
     <string name="action_menu">메뉴</string>
     <string name="label_more">더보기</string>
     <string name="label_sources">소스</string>
+    <string name="channel_complete">완료</string>
+    <string name="confirm_set_chapter_settings">이 설정을 기본설정으로 저장 하시겠습니까\?</string>
+    <string name="chapter_settings">챕터 설정</string>
+    <string name="invalid_download_dir">유효하지 않은 다운로드 위치</string>
+    <string name="error_sharing_cover">표지 이미지 공유 오류</string>
+    <string name="error_saving_cover">표지 이미지 저장 오류</string>
+    <string name="cover_saved">표지 이미지 저장</string>
+    <string name="manga_cover">표지 이미지</string>
+    <string name="sort_by_upload_date">업로드 날짜 기준</string>
+    <string name="logout_success">로그아웃 되었습니다</string>
+    <string name="logout">로그아웃</string>
+    <string name="logout_title">%1$s 에서 로그아웃 하시겠습니까\?</string>
+    <plurals name="download_queue_summary">
+        <item quantity="other">%1$s 개 남았습니다</item>
+    </plurals>
+    <string name="notification_incognito_text">시크릿 모드 끄기</string>
+    <string name="label_downloaded_only">다운로드된 항목만 표기</string>
+    <string name="pref_incognito_mode">시크릿 모드</string>
+    <string name="updated_version">v%1$s 으로 업데이트 됨</string>
+    <string name="check_for_updates">업데이트 확인</string>
+    <string name="licenses">오픈 소스 라이센스</string>
+    <string name="battery_optimization_setting_activity_not_found">디바이스 설정을 열 수 없습니다</string>
+    <string name="pref_disable_battery_optimization">배터리 최적화 끄기</string>
+    <string name="restore_miui_warning">MIUI 최적화가 꺼져 있을 경우 백업/복원 기능은 정상 작동하지 않을 수 있습니다.</string>
+    <string name="restore_in_progress">복원이 이미 진행중 입니다</string>
+    <string name="requires_app_restart">설정을 적용하기 위해 앱을 재시작해야 합니다</string>
+    <string name="pref_dns_over_https">DNS over HTTPS</string>
+    <string name="label_data">데이터</string>
+    <string name="backup_in_progress">백업이 이미 진행중 입니다</string>
+    <string name="restoring_backup_error">백업 복원 실패</string>
+    <string name="label_network">네트워크</string>
+    <string name="restoring_backup_canceled">복원 취소</string>
+    <string name="creating_backup_error">백업 실패</string>
+    <string name="restore_duration">%02d 분,%02d초</string>
+    <string name="invalid_backup_file_type">부적합한 백업 파일 타입: %1$s
+\n백업파일은 .photo .gz 또는 .json으로 끝나야 합니다.</string>
+    <string name="invalid_backup_file">부적합한 백업 파일</string>
+    <string name="pref_enable_automatic_extension_updates">확장 프로그램 업데이트 확인</string>
+    <string name="pref_category_auto_download">자동 다운로드</string>
+    <string name="pref_remove_bookmarked_chapters">북마크된 챕터도 지우기</string>
+    <string name="pref_category_delete_chapters">챕터 지우기</string>
+    <string name="rotation_landscape">가로</string>
+    <string name="rotation_portrait">세로</string>
+    <string name="nav_zone_right">오른쪽</string>
+    <string name="nav_zone_left">왼쪽</string>
+    <string name="nav_zone_next">다음</string>
+    <string name="nav_zone_prev">이전</string>
+    <string name="right_and_left_nav">오른쪽, 왼쪽</string>
+    <string name="gray_background">회색</string>
+    <string name="tapping_inverted_both">양쪽</string>
+    <string name="tapping_inverted_vertical">세로</string>
+    <string name="tapping_inverted_horizontal">가로</string>
+    <string name="pref_grayscale">그레이스케일</string>
+    <string name="pref_dual_page_split">이중 페이지 분할</string>
+    <string name="ext_unofficial">비공식</string>
+    <string name="update_8hour">8시간</string>
+    <string name="update_4hour">4시간</string>
+    <string name="action_display_comfortable_grid">보기편한 그리드</string>
+    <string name="pref_dark_theme_pure_black">검은색 다크모드</string>
+    <string name="pref_app_theme">앱 테마</string>
+    <string name="theme_dark">켜기</string>
+    <string name="theme_light">끄기</string>
+    <string name="theme_system">기기 설정 반영</string>
+    <string name="pref_theme_mode">다크 모드</string>
+    <string name="action_disable_all">모두 해제 하기</string>
+    <string name="spen_next_page">다음 페이지</string>
+    <string name="confirm_lock_change">변경 확인을 위해 인증이 필요합니다</string>
+    <string name="label_default">기본값</string>
+    <string name="action_select_inverse">선택 반전</string>
+    <string name="action_search_settings">검색 설정</string>
+    <string name="action_sort_date_added">추가된 날짜</string>
+    <string name="action_sort_latest_chapter">최신 챕터</string>
 </resources>

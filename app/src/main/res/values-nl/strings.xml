@@ -65,7 +65,6 @@
     <string name="pref_category_tracking">Tracking</string>
     <string name="pref_category_advanced">Geavanceerd</string>
     <string name="pref_library_columns">Elementen per rij</string>
-    <string name="default_columns">Standaard</string>
     <string name="pref_library_update_interval">Updatefrequentie</string>
     <string name="update_never">Handmatig</string>
     <string name="update_3hour">Iedere 3 uur</string>
@@ -76,8 +75,6 @@
     <string name="update_weekly">Wekelijks</string>
     <string name="all">Alles</string>
     <string name="pref_start_screen">Beginscherm</string>
-    <string name="pref_language">Taal</string>
-    <string name="system_default">Standaard</string>
     <string name="default_category">Standaard categorie</string>
     <string name="default_category_summary">Altijd vragen</string>
     <string name="pref_fullscreen">Volledig scherm</string>
@@ -92,7 +89,6 @@
     <string name="white_background">Wit</string>
     <string name="black_background">Zwart</string>
     <string name="pref_viewer_type">Standaard leesmodus</string>
-    <string name="default_viewer">Standaard</string>
     <string name="left_to_right_viewer">Links naar rechts</string>
     <string name="right_to_left_viewer">Rechts naar links</string>
     <string name="vertical_viewer">Verticaal</string>
@@ -320,7 +316,6 @@
     <string name="migration_dialog_what_to_include">Selecteer data om mee te nemen</string>
     <string name="migrate">Migreren</string>
     <string name="copy">Kopiëren</string>
-    <string name="filter_mode_default">Standaard</string>
     <string name="action_open_in_web_view">Openen in WebView</string>
     <string name="pref_true_color">32-bits kleuren</string>
     <string name="pref_skip_read_chapters">Gelezen hoofdstukken overslaan</string>
@@ -451,7 +446,6 @@
     <string name="pref_enable_automatic_extension_updates">Zoeken naar updates voor extensies</string>
     <string name="hide_notification_content">Meldingsinhoud verbergen</string>
     <string name="pref_confirm_exit">Bevestig sluiten</string>
-    <string name="theme_default">Standaard</string>
     <string name="action_move_to_top">Verplaats naar top</string>
     <string name="action_unpin">Lospinnen</string>
     <string name="viewer">Leesmodus</string>
@@ -522,7 +516,6 @@
     <string name="updated_version">Bijgewerkt naar v%1$s</string>
     <string name="whats_new">Wat is er nieuw</string>
     <string name="pref_category_reading_mode">Leesmodus</string>
-    <string name="pref_category_locale">Landinstelling</string>
     <string name="pref_category_theme">Thema</string>
     <string name="action_download_unread">Ongelezen hoofdstukken downloaden</string>
     <string name="action_sort_date_added">Datum toegevoegd</string>
@@ -578,7 +571,6 @@
     <string name="edge_nav">Rand</string>
     <string name="kindlish_nav">Kindle-achtig</string>
     <string name="l_nav">L-vormig</string>
-    <string name="default_nav">Standaard</string>
     <string name="channel_crash_logs">Crashlogboeken</string>
     <string name="track_finished_reading_date">Einddatum</string>
     <string name="track_started_reading_date">Begindatum</string>
@@ -622,7 +614,6 @@
     <string name="rotation_landscape">Liggend</string>
     <string name="rotation_portrait">Staand</string>
     <string name="rotation_type">Draaitype</string>
-    <string name="default_rotation_type">Standaard</string>
     <string name="automatic_background">Automatisch</string>
     <string name="pref_create_folder_per_manga_summary">Mappen aanmaken op basis van mangatitel</string>
     <string name="pref_create_folder_per_manga">Pagina\'s opslaan in aparte mappen</string>

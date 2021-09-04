@@ -67,9 +67,8 @@
     <string name="pref_library_columns">Affichage par liste</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Paysage</string>
-    <string name="default_columns">Par défaut</string>
     <string name="pref_library_update_interval">Fréquence de mise à jour de la bibliothèque</string>
-    <string name="update_never">Manuel</string>
+    <string name="update_never">Manuelle</string>
     <string name="update_3hour">Toutes les 3 heures</string>
     <string name="update_6hour">Toutes les 6 heures</string>
     <string name="update_12hour">Toutes les 12 heures</string>
@@ -96,7 +95,6 @@
     <string name="white_background">Blanc</string>
     <string name="black_background">Noir</string>
     <string name="pref_viewer_type">Mode de lecture par défaut</string>
-    <string name="default_viewer">Par défaut</string>
     <string name="left_to_right_viewer">De gauche à droite</string>
     <string name="right_to_left_viewer">De droite à gauche</string>
     <string name="vertical_viewer">Vertical</string>
@@ -128,8 +126,8 @@
     <string name="disabled">Désactivé</string>
     <string name="last_read_chapter">Dernier chapitre lu</string>
     <string name="second_to_last">Avant-dernier chapitre lu</string>
-    <string name="third_to_last">Du troisième au dernier chapitre</string>
-    <string name="fourth_to_last">Du quatrième au dernier chapitre</string>
+    <string name="third_to_last">Troisième chapitre avant la fin</string>
+    <string name="fourth_to_last">Quatrième chapitre avant la fin</string>
     <string name="pref_download_new">Télécharger les nouveaux chapitres</string>
     <!-- Sync section -->
     <string name="services">Services</string>
@@ -240,18 +238,16 @@
     <string name="download_notifier_title_error">Erreur</string>
     <string name="download_notifier_text_only_wifi">Aucune connexion disponible</string>
     <string name="download_notifier_no_network">Aucune connexion disponible</string>
-    <string name="pref_language">Langue</string>
     <string name="clear_database_confirmation">Êtes-vous sûr(e) \? Les chapitres lus et la progression des mangas non présents dans la bibliothèque seront perdus</string>
     <string name="confirm_delete_chapters">Supprimer les chapitres sélectionnés \?</string>
     <string name="custom_dir">Répertoire personnalisé</string>
     <string name="download_10">10 prochains chapitres</string>
     <string name="download_notifier_unknown_error">Impossible de télécharger le chapitre en raison d\'une erreur inattendue</string>
-    <string name="fifth_to_last">Du cinquième au dernier chapitre</string>
+    <string name="fifth_to_last">Cinquième chapitre avant la fin</string>
     <string name="login_success">Connecté</string>
     <string name="pref_clear_chapter_cache">Effacer le cache des chapitres</string>
     <string name="pref_remove_after_marked_as_read">Après avoir été marqué comme lu</string>
     <string name="sort_by_source">Par source</string>
-    <string name="system_default">Par défaut</string>
     <string name="updating_category">Mise à jour de la catégorie</string>
     <string name="no_more_results">Pas d\'autres résultats</string>
     <string name="snack_categories_deleted">Catégories supprimées</string>
@@ -331,7 +327,7 @@
     <string name="source_not_installed">Sources non installées : %1$s</string>
     <string name="custom_download">Télécharger une quantité personnalisée</string>
     <string name="download_custom">Personnalisé</string>
-    <string name="track_status">Status</string>
+    <string name="track_status">Statut</string>
     <string name="track_start_date">Démarré</string>
     <string name="track_type">Type</string>
     <string name="track_author">Auteur</string>
@@ -357,7 +353,6 @@
     <string name="action_open_in_web_view">Ouvrir dans WebView</string>
     <string name="pref_true_color">Couleurs à 32 bits</string>
     <string name="pref_skip_read_chapters">Passer les chapitres marqués comme lus</string>
-    <string name="filter_mode_default">Par défaut</string>
     <string name="filter_mode_multiply">Produit</string>
     <string name="filter_mode_screen">Écran</string>
     <string name="pref_color_filter_mode">Mode de filtrage via couleurs mélangées</string>
@@ -393,8 +388,8 @@
     <string name="theme_system">Par défaut du système</string>
     <string name="pref_manage_notifications">Notifications</string>
     <string name="pref_category_security">Sécurité</string>
-    <string name="lock_with_biometrics">Obliger le déverrouillage</string>
-    <string name="lock_when_idle">Verrouiller quand inactif</string>
+    <string name="lock_with_biometrics">Imposer un déverrouillage</string>
+    <string name="lock_when_idle">Verrouiller en cas d\'inactivité</string>
     <string name="lock_always">Toujours</string>
     <string name="lock_never">Jamais</string>
     <plurals name="lock_after_mins">
@@ -488,7 +483,7 @@
         <item quantity="other">%1$s restants</item>
     </plurals>
     <string name="downloaded_only_summary">Filtrer tous les mangas dans la bibliothèque</string>
-    <string name="pref_search_pinned_sources_only">N\'inclure que les sources épinglés</string>
+    <string name="pref_search_pinned_sources_only">N\'inclure que les sources épinglées</string>
     <string name="gray_background">Gris</string>
     <string name="pref_category_for_this_series">Pour cette série</string>
     <string name="pref_true_color_summary">Réduit les bandes de couleur mais affecte les performances</string>
@@ -517,7 +512,7 @@
     <string name="label_data">Donnée</string>
     <string name="backup_restore_missing_sources">Sources manquantes :</string>
     <string name="invalid_backup_file_missing_manga">La sauvegarde ne contient aucune série.</string>
-    <string name="invalid_backup_file_missing_data">Données manquante dans le fichier.</string>
+    <string name="invalid_backup_file_missing_data">Il manque des données au fichier.</string>
     <string name="invalid_backup_file">Fichier de sauvegarde invalide</string>
     <string name="source_not_found_name">Source introuvable : %1$s</string>
     <string name="pref_library_update_error_notification">Afficher les notifications d\'erreurs de mise à jour</string>
@@ -557,7 +552,6 @@
     <string name="action_global_search_query">Rechercher « %1$s » partout</string>
     <string name="action_sort_date_added">Date ajoutée</string>
     <string name="pref_category_reading_mode">Mode de lecture</string>
-    <string name="pref_category_locale">Local</string>
     <string name="pref_category_theme">Thème</string>
     <plurals name="num_trackers">
         <item quantity="one">1 traqueur</item>
@@ -590,7 +584,7 @@
     <string name="downloaded_chapters">Chapitres téléchargés</string>
     <string name="manga_from_library">Manga de la bibliothèque</string>
     <string name="action_search_settings">Paramètres de la recherche</string>
-    <string name="pref_incognito_mode_summary">Pause dans l\'enregistrement de l\'historique</string>
+    <string name="pref_incognito_mode_summary">Met en pause l\'historique de lecture</string>
     <string name="clear_history_confirmation">Êtes-vous sûr(e) \? Tout l\'Historique sera perdue.</string>
     <string name="pref_incognito_mode">Mode navigation privée</string>
     <string name="pref_clear_history">Effacer l\'historique</string>
@@ -617,7 +611,6 @@
     <string name="pref_viewer_nav">Plan de navigation</string>
     <string name="edge_nav">Bord</string>
     <string name="l_nav">En forme de L</string>
-    <string name="default_nav">Par défaut</string>
     <string name="network_unmetered">Réseau illimité</string>
     <string name="action_desc">Décroissant</string>
     <string name="action_asc">Croissante</string>
@@ -646,7 +639,7 @@
     <string name="none">Aucun</string>
     <string name="action_sort_chapter_fetch_date">Date récupérée</string>
     <string name="pref_library_update_categories_details">Les mangas dans les catégories exclues ne seront pas mis à jour même s\'ils sont aussi dans les catégories inclues.</string>
-    <string name="pref_download_new_categories_details">Les mangas dans les catégories exclus ne seront pas mise a jour meme s\'ils sont aussi dans les catégories inclus.</string>
+    <string name="pref_download_new_categories_details">Les mangas des catégories exclues ne seront pas mis à jour même s\'ils appartiennent aussi à des catégories incluses.</string>
     <string name="pref_category_auto_download">Téléchargement automatique</string>
     <string name="action_show_errors">Afficher les erreurs</string>
     <string name="update_check_eol">Cette version d\'Android n\'est plus supportée</string>
@@ -666,7 +659,6 @@
     <string name="local_invalid_format">Format de chapitre invalide</string>
     <string name="chapter_not_found">Chapitre non trouvé</string>
     <string name="rotation_type">Mode de rotation</string>
-    <string name="default_rotation_type">Par défaut</string>
     <string name="automatic_background">Automatique</string>
     <string name="pref_library_update_refresh_trackers_summary">Mise à jour des traqueurs lors de la mise à jour de la bibliothèque</string>
     <string name="pref_library_update_refresh_trackers">Actualisation automatique des traqueurs</string>
@@ -689,7 +681,7 @@
     <string name="action_start_downloading_now">Commencer à télécharger</string>
     <string name="notification_updating">Mise à jour de la bibliothèque… (%1$d/%2$d)</string>
     <string name="tracker_komga_warning">Ce traqueur est uniquement compatible avec la source Komga.</string>
-    <string name="restore_miui_warning">La fonction sauvegarde/restauration peut ne pas fonctionner correctement si l\'optimisation MIUI est désactivée.</string>
+    <string name="restore_miui_warning">La sauvegarde/restauration peut ne pas fonctionner correctement si l\'optimisation MIUI est désactivée.</string>
     <string name="enhanced_tracking_info">Services qui fournissent des fonctionnalités améliorées pour des sources spécifiques. Les mangas sont automatiquement suivis quand ils sont ajoutés à votre bibliothèque.</string>
     <string name="enhanced_services">Services avancés</string>
     <string name="pref_dark_theme_pure_black">Mode noir pur</string>
@@ -701,8 +693,30 @@
     <string name="theme_greenapple">Pomme verte</string>
     <string name="theme_blue">Bleu</string>
     <string name="theme_monet">Dynamique</string>
-    <string name="theme_default">Par défaut</string>
     <string name="pref_app_theme">Thème de l\'appli</string>
     <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
     <string name="about_dont_kill_my_app">Certains fabricants ont mis en place des restrictions supplémentaires sur les applications qui tuent les services d\'arrière-plan. Ce site Web contient plus d\'informations sur la manière de résoudre ce problème.</string>
+    <string name="label_background_activity">Activité en arrière-plan</string>
+    <string name="pref_lowest">La plus basse</string>
+    <string name="pref_low">Basse</string>
+    <string name="pref_high">Élevée</string>
+    <string name="pref_highest">La plus élevée</string>
+    <string name="pref_hide_threshold">Masquage automatique du menu par sensibilité au défilement</string>
+    <string name="pref_inverted_colors">Inversé</string>
+    <string name="pref_relative_time_long">Long (Court+, il y a n jours)</string>
+    <string name="pref_relative_time_short">Court (Aujourd\'hui, Hier)</string>
+    <string name="pref_relative_format">Horodatages relatifs</string>
+    <plurals name="relative_time">
+        <item quantity="one">Hier</item>
+        <item quantity="other">Il y a %1$d jours</item>
+    </plurals>
+    <string name="relative_time_today">Aujourd\'hui</string>
+    <string name="recently">Récemment</string>
+    <string name="theme_tealturquoise">Bleu canard et turquoise</string>
+    <string name="confirm_lock_change">Authentifiez-vous pour confirmer les changements</string>
+    <string name="pref_category_timestamps">Horodatage</string>
+    <string name="pref_category_appearance">Apparence</string>
+    <string name="label_default">Par défaut</string>
+    <string name="action_track">Traquer</string>
+    <string name="pref_category_navigation">Navigation</string>
 </resources>

@@ -79,7 +79,6 @@
     <string name="pref_library_columns">Knižnica: Manga na riadok</string>
     <string name="portrait">Na výšku</string>
     <string name="landscape">Na šírku</string>
-    <string name="default_columns">Predvolené</string>
     <string name="pref_library_update_interval">Frekvencia aktualizácie knižnice</string>
     <string name="update_never">Manuálne</string>
     <string name="update_3hour">Každé 3 hodiny</string>
@@ -95,8 +94,6 @@
     <string name="pref_update_only_non_completed">Aktualizovať iba nedokončenú Mangu</string>
     <string name="pref_auto_update_manga_sync">Synchronizovať kapitoly po prečítaní</string>
     <string name="pref_start_screen">Úvodná obrazovka</string>
-    <string name="pref_language">Jazyk</string>
-    <string name="system_default">Predvolené nastavenie systému</string>
     <string name="default_category">Predvolená kategória</string>
     <string name="default_category_summary">Vždy sa opýtať</string>
     <string name="all_lang">Všetky</string>
@@ -128,7 +125,6 @@
     <string name="pref_custom_brightness">Použiť vlastný jas</string>
     <string name="pref_custom_color_filter">Použiť vlastný farebný filter</string>
     <string name="pref_color_filter_mode">Farebný filter: režim splynutia</string>
-    <string name="filter_mode_default">Predvolený</string>
     <string name="filter_mode_overlay">Prekrytie</string>
     <string name="filter_mode_multiply">Znásobiť</string>
     <string name="filter_mode_screen">Obrazovka</string>
@@ -145,7 +141,6 @@
     <string name="white_background">Biela</string>
     <string name="black_background">Čierna</string>
     <string name="pref_viewer_type">Predvolený prehliadač</string>
-    <string name="default_viewer">Predvolené</string>
     <string name="left_to_right_viewer">Zľava doprava</string>
     <string name="right_to_left_viewer">Sprava doľava</string>
     <string name="vertical_viewer">Vertikálne</string>

@@ -70,7 +70,6 @@
     <string name="pref_category_downloads">Nedlastinger</string>
     <string name="pref_category_advanced">Avansert</string>
     <string name="pref_category_about">Om</string>
-    <string name="default_columns">Forvalg</string>
     <string name="update_never">Manuell</string>
     <string name="update_3hour">Hver tredje time</string>
     <string name="update_6hour">Hver sjette time</string>
@@ -81,8 +80,6 @@
     <string name="all">Alle</string>
     <string name="charging">Lading</string>
     <string name="pref_start_screen">Startskjerm</string>
-    <string name="pref_language">Språk</string>
-    <string name="system_default">Standardinnstilling</string>
     <string name="default_category">Forvalgt kategori</string>
     <string name="default_category_summary">Alltid spør</string>
     <string name="all_lang">Alle</string>
@@ -128,7 +125,6 @@
     <string name="white_background">Hvit</string>
     <string name="black_background">Svart</string>
     <string name="pref_viewer_type">Forvalgt lesemodus</string>
-    <string name="default_viewer">Forvalg</string>
     <string name="left_to_right_viewer">Venstre til høyre</string>
     <string name="right_to_left_viewer">Høyre til venstre</string>
     <string name="vertical_viewer">Loddrett</string>
@@ -288,7 +284,6 @@
     <string name="update_check_confirm">Last ned</string>
     <string name="update_check_ignore">Ignorer</string>
     <string name="channel_common">Vanlig</string>
-    <string name="filter_mode_default">Forvalg</string>
     <string name="filter_mode_screen">Skjerm</string>
     <string name="label_help">Hjelp</string>
     <string name="action_display_download_badge">Last ned merker</string>
@@ -377,7 +372,6 @@
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_15">15%</string>
     <string name="webtoon_side_padding_10">10%</string>
-    <string name="theme_default">Forvalg</string>
     <string name="action_move_to_bottom">Flytt til bunnen</string>
     <string name="action_move_to_top">Flytt til toppen</string>
     <string name="action_oldest">Eldste</string>
@@ -499,7 +493,6 @@
     <string name="pref_category_theme">Drakt</string>
     <string name="action_download_unread">Last ned uleste kapittel</string>
     <string name="action_sort_date_added">Dato lagt til</string>
-    <string name="pref_category_locale">Språk</string>
     <string name="ext_updates_pending">Oppdateringer som venter</string>
     <string name="pref_category_reading_mode">Lesemodus</string>
     <string name="pref_show_reading_mode_summary">Sniktitt av nåværende modus når leseren åpnes</string>
@@ -579,7 +572,6 @@
     <string name="edge_nav">Edge</string>
     <string name="kindlish_nav">Kindle-basert</string>
     <string name="l_nav">L-formet</string>
-    <string name="default_nav">Standard</string>
     <string name="network_unmetered">Umålt nettverk</string>
     <string name="pref_label_nsfw_extension">Merk i utvidelseslisten</string>
     <string name="pref_show_nsfw_extension">Vis i utvidelseslisten</string>
@@ -621,7 +613,6 @@
     <string name="rotation_landscape">Liggende</string>
     <string name="rotation_portrait">Stående</string>
     <string name="rotation_type">Rotasjon</string>
-    <string name="default_rotation_type">Forvalg</string>
     <string name="pref_create_folder_per_manga_summary">Oppretter mapper i henhold til manga-tittel</string>
     <string name="pref_create_folder_per_manga">Lagrer sider i egne mapper</string>
     <string name="pref_reader_actions">Handlinger</string>

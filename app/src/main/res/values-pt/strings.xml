@@ -54,7 +54,6 @@
     <string name="pref_library_columns">Itens por fila</string>
     <string name="portrait">Vertical</string>
     <string name="landscape">Horizontal</string>
-    <string name="default_columns">Padrão</string>
     <string name="pref_library_update_interval">Frequência de atualização</string>
     <string name="update_never">Manual</string>
     <string name="update_3hour">A cada 3 horas</string>
@@ -81,7 +80,6 @@
     <string name="white_background">Branco</string>
     <string name="black_background">Preto</string>
     <string name="pref_viewer_type">Modo de leitura padrão</string>
-    <string name="default_viewer">Padrão</string>
     <string name="left_to_right_viewer">Esquerda para a direita</string>
     <string name="right_to_left_viewer">Direita para a esquerda</string>
     <string name="vertical_viewer">Vertical</string>
@@ -238,8 +236,6 @@
     <string name="action_create">Criar</string>
     <string name="update_weekly">Semanalmente</string>
     <string name="pref_start_screen">Ecrã inicial</string>
-    <string name="pref_language">Idioma</string>
-    <string name="system_default">Padrão</string>
     <string name="action_restore">Restaurar</string>
     <string name="app_not_available">App não disponível</string>
     <string name="default_category">Categoria padrão</string>
@@ -353,7 +349,6 @@
     <string name="download_notifier_download_paused">Transferência pausada</string>
     <string name="channel_common">Comum</string>
     <string name="channel_library">Biblioteca</string>
-    <string name="filter_mode_default">Padrão</string>
     <string name="filter_mode_overlay">Sobrepor</string>
     <string name="filter_mode_multiply">Multiplicação</string>
     <string name="filter_mode_screen">Divisão</string>
@@ -423,7 +418,6 @@
         <item quantity="one">Para 1 título</item>
         <item quantity="other">Para %d títulos</item>
     </plurals>
-    <string name="theme_default">Padrão</string>
     <string name="action_menu">Menu</string>
     <string name="action_reorganize_by">Reordenar</string>
     <string name="action_newest">Mais novos</string>
@@ -553,7 +547,6 @@
     <string name="download_insufficient_space">Não foi possível transferir capítulos devido a falta de espaço de armazenamento</string>
     <string name="action_global_search_query">Procurar por \"%1$s\" globalmente</string>
     <string name="pref_category_reading_mode">Modo de leitura</string>
-    <string name="pref_category_locale">Localidade</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Data de adição</string>
     <plurals name="num_trackers">
@@ -607,7 +600,6 @@
     <string name="pref_viewer_nav">Esquema de navegação</string>
     <string name="kindlish_nav">Estilo Kindle</string>
     <string name="l_nav">Em forma de L</string>
-    <string name="default_nav">Padrão</string>
     <string name="network_unmetered">Rede ilimitada</string>
     <string name="action_desc">Descendente</string>
     <string name="action_asc">Ascendente</string>
@@ -651,7 +643,6 @@
     <string name="rotation_landscape">Horizontal</string>
     <string name="rotation_portrait">Vertical</string>
     <string name="rotation_type">Tipo de rotação</string>
-    <string name="default_rotation_type">Padrão</string>
     <string name="pref_create_folder_per_manga_summary">Cria pastas de acordo com o título do mangá</string>
     <string name="pref_create_folder_per_manga">Guarda páginas em pastas separadas</string>
     <string name="pref_reader_actions">Ações</string>

@@ -68,7 +68,6 @@
     <string name="pref_library_columns">Số truyện hiển thị mỗi dòng</string>
     <string name="portrait">Dọc</string>
     <string name="landscape">Ngang</string>
-    <string name="default_columns">Mặc định</string>
     <string name="pref_library_update_interval">Lịch cập nhật thư viện</string>
     <string name="update_never">Thủ công</string>
     <string name="update_3hour">Mỗi 3 tiếng</string>
@@ -82,8 +81,6 @@
     <string name="pref_update_only_non_completed">Chỉ cập nhật truyện đang tiến hành</string>
     <string name="pref_auto_update_manga_sync">Đồng bộ các chương sau khi đọc</string>
     <string name="pref_start_screen">Màn hình khởi động</string>
-    <string name="pref_language">Ngôn ngữ</string>
-    <string name="system_default">Mặc định</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Toàn màn hình</string>
     <string name="pref_lock_orientation">Khóa xoay</string>
@@ -99,7 +96,6 @@
     <string name="white_background">Trắng</string>
     <string name="black_background">Đen</string>
     <string name="pref_viewer_type">Kiểu đọc mặc định</string>
-    <string name="default_viewer">Mặc định</string>
     <string name="left_to_right_viewer">Trái sang phải</string>
     <string name="right_to_left_viewer">Phải sang trái</string>
     <string name="vertical_viewer">Theo chiều dọc</string>
@@ -358,7 +354,6 @@
     <string name="pref_true_color">Màu 32-bit</string>
     <string name="pref_skip_read_chapters">Bỏ qua chap đã đọc</string>
     <string name="pref_color_filter_mode">Chế độ hòa trộn bộ lọc màu</string>
-    <string name="filter_mode_default">Mặc định</string>
     <string name="filter_mode_overlay">Phủ lên</string>
     <string name="filter_mode_multiply">Nhân</string>
     <string name="label_help">Trợ giúp</string>
@@ -458,7 +453,6 @@
     <string name="pref_library_update_error_notification">Hiển thị thông báo lỗi cập nhật</string>
     <string name="pref_library_update_refresh_metadata_summary">Kiểm tra ảnh bìa và chi tiết khi cập nhật thư viện</string>
     <string name="pref_confirm_exit">Xác nhận thoát</string>
-    <string name="pref_category_locale">Khu vực</string>
     <string name="pref_category_theme">Chủ đề</string>
     <string name="action_unpin">Bỏ ghim</string>
     <string name="action_pin">Ghim</string>
@@ -500,7 +494,6 @@
     <string name="edge_nav">Dạng góc cạnh</string>
     <string name="kindlish_nav">Dạng Kindle</string>
     <string name="l_nav">Dạng chữ L</string>
-    <string name="default_nav">Mặc định</string>
     <string name="pref_viewer_nav">Bố cục điều hướng</string>
     <string name="clear_history_completed">Lịch sử đã được xoá</string>
     <string name="pref_clear_history">Xoá lịch sử</string>
@@ -608,7 +601,6 @@
     <string name="rotation_landscape">Chế độ nằm ngang</string>
     <string name="rotation_portrait">Chế độ dọc</string>
     <string name="rotation_type">Kiểu xoay</string>
-    <string name="default_rotation_type">Mặc định</string>
     <string name="nav_zone_right">Phải</string>
     <string name="nav_zone_left">Trái</string>
     <string name="nav_zone_next">Tiếp theo</string>
@@ -678,7 +670,6 @@
     <string name="theme_greenapple">Chủ đề Green Apple</string>
     <string name="theme_blue">Chủ đề xanh dương</string>
     <string name="theme_monet">Động</string>
-    <string name="theme_default">Chủ đề mặc định</string>
     <string name="pref_app_theme">Chủ đề ứng dụng</string>
     <string name="action_start_downloading_now">Bắt đầu tải xuống ngay</string>
     <string name="action_sort_next_updated">Cập nhật dự kiến tiếp theo</string>

@@ -70,7 +70,6 @@
     <string name="pref_library_columns">Elemente pro Zeile</string>
     <string name="portrait">Hochformat</string>
     <string name="landscape">Querformat</string>
-    <string name="default_columns">Standard</string>
     <string name="pref_library_update_interval">Häufigkeit der Aktualisierung</string>
     <string name="update_never">Manuell</string>
     <string name="update_3hour">Alle 3 Stunden</string>
@@ -85,8 +84,6 @@
     <string name="pref_update_only_non_completed">Nur fortlaufende Manga aktualisieren</string>
     <string name="pref_auto_update_manga_sync">Fortschritt nach dem Lesen aktualisieren</string>
     <string name="pref_start_screen">Startbildschirm</string>
-    <string name="pref_language">Sprache</string>
-    <string name="system_default">Standard</string>
     <string name="default_category">Standardkategorie</string>
     <string name="default_category_summary">Immer fragen</string>
     <string name="pref_fullscreen">Vollbild</string>
@@ -105,7 +102,6 @@
     <string name="white_background">Weiß</string>
     <string name="black_background">Schwarz</string>
     <string name="pref_viewer_type">Standard-Lesemodus</string>
-    <string name="default_viewer">Standard</string>
     <string name="left_to_right_viewer">Links nach rechts</string>
     <string name="right_to_left_viewer">Rechts nach links</string>
     <string name="vertical_viewer">Vertikal</string>
@@ -249,7 +245,7 @@
     <string name="information_no_downloads">Keine Downloads</string>
     <string name="information_no_recent">Keine neuen Aktualisierungen</string>
     <string name="information_no_recent_manga">Nichts kürzlich gelesen</string>
-    <string name="information_empty_library">Deine Bibliothek ist leer. Füge neue Serien über „Stöbern“ hinzu.</string>
+    <string name="information_empty_library">Deine Bibliothek ist leer</string>
     <string name="download_notifier_downloader_title">Downloader</string>
     <string name="download_notifier_title_error">Fehler</string>
     <string name="download_notifier_unknown_error">Kapitel konnte aufgrund eines unerwarteten Fehlers nicht heruntergeladen werden</string>
@@ -323,7 +319,6 @@
     <string name="pref_true_color">32-Bit Farben</string>
     <string name="pref_skip_read_chapters">Überspringe gelesene Kapitel</string>
     <string name="pref_read_with_long_tap">Bei langem Antippen anzeigen</string>
-    <string name="filter_mode_default">Standard</string>
     <string name="filter_mode_overlay">Überlagerung</string>
     <string name="filter_mode_multiply">Multiplizieren</string>
     <string name="filter_mode_screen">Bildschirm</string>
@@ -524,7 +519,6 @@
     <string name="action_sort_date_added">Datum hinzugefügt</string>
     <string name="pref_category_reading_mode">Lesemodus</string>
     <string name="pref_category_theme">Thema</string>
-    <string name="pref_category_locale">Lokal</string>
     <plurals name="num_trackers">
         <item quantity="one">1 Tracker</item>
         <item quantity="other">%d Tracker</item>
@@ -577,7 +571,6 @@
     <string name="pref_viewer_nav">Navigationslayout</string>
     <string name="kindlish_nav">Kindle-Stil</string>
     <string name="l_nav">L-förmig</string>
-    <string name="default_nav">Standard</string>
     <string name="channel_crash_logs">Absturzprotokolle</string>
     <string name="track_finished_reading_date">Enddatum</string>
     <string name="track_started_reading_date">Startdatum</string>
@@ -622,7 +615,6 @@
     <string name="pref_create_folder_per_manga_summary">Erstellt Ordner nach Manga-Titel</string>
     <string name="pref_create_folder_per_manga">Speichere Seiten in separate Ordner</string>
     <string name="rotation_type">Ausrichtungstyp</string>
-    <string name="default_rotation_type">Standard</string>
     <string name="pref_reader_actions">Aktionen</string>
     <string name="pref_grayscale">Graustufen</string>
     <string name="notification_incognito_text">Inkognito-Modus deaktivieren</string>
@@ -656,8 +648,8 @@
     <string name="action_sort_next_updated">Nächste erwartete Aktualisierung</string>
     <string name="notification_updating">Aktualisiere Bibliothek… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Einige Hersteller haben zusätzliche Anwendungsbeschränkungen, die Hintergrunddienste stoppen. Diese Website hat mehr Informationen darüber, wie man dies beheben kann.</string>
-    <string name="restore_miui_warning">Sicherung/Wiederherstellung funktioniert möglicherweise nicht richtig, falls MIUI Optimierung deaktiviert ist.</string>
-    <string name="pref_dark_theme_pure_black">Rein schwarzer Dunkelmodus</string>
+    <string name="restore_miui_warning">Die Sicherung/Wiederherstellung funktioniert möglicherweise nicht richtig, wenn die MIUI-Optimierung deaktiviert ist.</string>
+    <string name="pref_dark_theme_pure_black">Tiefschwarzer Dunkelmodus</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin &amp; Yang</string>
     <string name="theme_tako">Tako</string>
@@ -665,11 +657,34 @@
     <string name="theme_midnightdusk">Mitternachtsdämmerung</string>
     <string name="theme_greenapple">Grüner Apfel</string>
     <string name="theme_blue">Blau</string>
-    <string name="theme_default">Standard</string>
     <string name="pref_app_theme">App-Design</string>
     <string name="enhanced_services">Erweiterte Anbieter</string>
     <string name="enhanced_tracking_info">Anbieter, die für bestimmte Quellen erweiterte Features anbieten. Manga werden automatisch getrackt, wenn sie deiner Bibliothek hinzugefügt werden.</string>
     <string name="tracker_komga_warning">Dieser Tracker ist nur mit der Komga-Quelle kompatibel.</string>
     <string name="theme_monet">Dynamisch</string>
     <string name="label_background_activity">Hintergrundaktivität</string>
+    <string name="pref_lowest">Niedrigste</string>
+    <string name="pref_low">Niedrig</string>
+    <string name="pref_high">Hoch</string>
+    <string name="pref_highest">Höchste</string>
+    <string name="pref_hide_threshold">Empfindlichkeit des automatischen Versteckens des Menüs beim Scrollen</string>
+    <string name="pref_inverted_colors">Invertiert</string>
+    <string name="pref_relative_time_short">Kurz (Heute, Gestern)</string>
+    <string name="pref_relative_format">Relative Zeitstempel</string>
+    <string name="recently">Kürzlich</string>
+    <string name="pref_relative_time_long">Lang (Kurz+, vor n Tagen)</string>
+    <plurals name="relative_time">
+        <item quantity="one">Gestern</item>
+        <item quantity="other">vor %1$d Tagen</item>
+    </plurals>
+    <string name="relative_time_today">Heute</string>
+    <string name="pref_category_timestamps">Zeitstempel</string>
+    <string name="theme_tealturquoise">Blaugrün &amp; Türkis</string>
+    <string name="pref_category_appearance">Erscheinungsbild</string>
+    <string name="confirm_lock_change">Authentifiziere dich, um die Änderungen zu bestätigen</string>
+    <string name="label_default">Standard</string>
+    <string name="pref_category_navigation">Navigation</string>
+    <string name="action_track">Tracken</string>
+    <string name="getting_started_guide">Leitfaden für den Einstieg</string>
+    <string name="pref_tablet_ui_mode">Tablet UI erzwingen</string>
 </resources>

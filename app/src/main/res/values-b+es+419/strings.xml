@@ -145,7 +145,6 @@
     <string name="vertical_viewer">Vertical</string>
     <string name="right_to_left_viewer">Derecha a izquierda</string>
     <string name="left_to_right_viewer">Izquierda a derecha</string>
-    <string name="default_viewer">Por defecto</string>
     <string name="pref_viewer_type">Modo de lectura por defecto</string>
     <string name="black_background">Negro</string>
     <string name="gray_background">Gris</string>
@@ -164,7 +163,6 @@
     <string name="filter_mode_screen">Pantalla</string>
     <string name="filter_mode_multiply">Multiplicar</string>
     <string name="filter_mode_overlay">Superponer</string>
-    <string name="filter_mode_default">Por defecto</string>
     <string name="pref_color_filter_mode">Modo de mezcla del filtro de color</string>
     <string name="pref_custom_color_filter">Filtro de color personalizado</string>
     <string name="pref_custom_brightness">Brillo personalizado</string>
@@ -227,7 +225,6 @@
     <string name="pref_library_update_interval">Frecuencia de actualización</string>
     <string name="pref_category_library_update">Actualizaciones</string>
     <string name="pref_jump_to_chapters">Saltar a los capítulos abiertos</string>
-    <string name="default_columns">Por defecto</string>
     <string name="landscape">Horizontal</string>
     <string name="tapping_inverted_both">Ambos</string>
     <string name="tapping_inverted_vertical">Vertical</string>
@@ -273,8 +270,6 @@
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_confirm_exit">Confirmar salir</string>
     <string name="pref_date_format">Formato de fecha</string>
-    <string name="system_default">Predeterminado</string>
-    <string name="pref_language">Idioma</string>
     <string name="pref_start_screen">Pantalla inicial</string>
     <string name="theme_dark">Encendido</string>
     <string name="theme_light">Apagado</string>
@@ -519,7 +514,6 @@
     <string name="score">Puntuación</string>
     <string name="repeating">Releyendo</string>
     <string name="want_to_read">Lo quiero leer</string>
-    <string name="pref_category_locale">Local</string>
     <string name="action_global_search_query">Buscar \"%1$s\" Globalmente</string>
     <string name="action_sort_date_added">Fecha de agregado</string>
     <string name="download_insufficient_space">No se pudieron descargar los capítulos debido al poco espacio de almacenamiento</string>
@@ -583,7 +577,6 @@
     <string name="edge_nav">Borde</string>
     <string name="kindlish_nav">Kindle-ish</string>
     <string name="l_nav">En forma de L</string>
-    <string name="default_nav">Por Defecto</string>
     <string name="network_unmetered">Red no medida</string>
     <string name="action_desc">Descendiente</string>
     <string name="action_asc">Ascendiente</string>
@@ -600,7 +593,6 @@
     <string name="rotation_landscape">Horizontal</string>
     <string name="rotation_portrait">Vertical</string>
     <string name="rotation_type">Tipo de rotación</string>
-    <string name="default_rotation_type">Por defecto</string>
     <string name="nav_zone_right">Derecha</string>
     <string name="nav_zone_left">Izquierda</string>
     <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título del manga</string>
@@ -627,4 +619,7 @@
     <string name="source_unsupported">Fuente incompatible</string>
     <string name="action_start_downloading_now">Descargar ahora</string>
     <string name="action_display_local_badge">Íconos locales</string>
+    <string name="action_sort_next_updated">Próxima actualización esperada</string>
+    <string name="label_default">Por defecto</string>
+    <string name="confirm_lock_change">Autentificar para confirmar cambios</string>
 </resources>

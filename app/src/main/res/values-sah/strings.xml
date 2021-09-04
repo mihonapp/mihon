@@ -78,7 +78,6 @@
     <string name="pref_library_update_interval">Саҥардыы түргэнэ</string>
     <string name="pref_category_library_update">Улахан саҥардыы</string>
     <string name="pref_jump_to_chapters">Аһаҕас түһүмэххэ көһүү</string>
-    <string name="default_columns">Куолутунан</string>
     <string name="landscape">Сытыары</string>
     <string name="portrait">Туруору</string>
     <string name="pref_library_columns">Маллары кэккэ туруор</string>
@@ -97,15 +96,11 @@
     <string name="pref_manage_notifications">Биллэриилэри салай</string>
     <string name="pref_confirm_exit">Тахсыыны бигэргэт</string>
     <string name="pref_date_format">Даататын формаата</string>
-    <string name="system_default">Куолутунан</string>
-    <string name="pref_language">Тыл</string>
     <string name="pref_start_screen">Сүрүн экран</string>
-    <string name="theme_default">Куолутунан</string>
     <string name="theme_dark">Холбоммут</string>
     <string name="theme_light">Араарыллыбыт</string>
     <string name="theme_system">Системнайы тутуһуҥ</string>
     <string name="pref_theme_mode">Хараҥа тиэмэ</string>
-    <string name="pref_category_locale">Миэстэтэ</string>
     <string name="pref_category_theme">Тиэмэ</string>
     <string name="pref_category_about">Эбии туһунан</string>
     <string name="pref_category_advanced">Эбии</string>
@@ -204,7 +199,6 @@
     <string name="vertical_viewer">Туруору</string>
     <string name="right_to_left_viewer">Хаҥас диэки</string>
     <string name="left_to_right_viewer">Уҥа диэки</string>
-    <string name="default_viewer">Куолутунан</string>
     <string name="pref_viewer_type">Куолутунан ааҕар эрэһиим</string>
     <string name="black_background">Хара</string>
     <string name="gray_background">Бороҥ</string>
@@ -225,7 +219,6 @@
     <string name="filter_mode_overlay">Сабыы</string>
     <string name="pref_show_reading_mode_summary">Ааҕаччы холбонон турдаҕына, билиҥҥи эрэһиими кылгастык көрдөр</string>
     <string name="pref_show_reading_mode">Ааҕыы эрэһиимин көрдөр</string>
-    <string name="filter_mode_default">Куолутунан</string>
     <string name="pref_color_filter_mode">Өҥ биилтирэни олордор эрэһиим</string>
     <string name="pref_custom_color_filter">Туттааччы өҥ биилтирэ</string>
     <string name="pref_custom_brightness">Туттааччы сырдыга</string>
@@ -502,7 +495,6 @@
     <string name="edge_nav">Кытыы</string>
     <string name="kindlish_nav">Kindle курдук</string>
     <string name="l_nav">L курдук</string>
-    <string name="default_nav">Куолутунан</string>
     <string name="pref_label_nsfw_extension">Кэҥэтиилэр испииһиктэригэр бэлиэ</string>
     <string name="pref_show_nsfw_extension">Кэҥэтиилэр испииһэктэригэр көрдөрүү</string>
     <string name="pref_show_nsfw_source">Төрүттэр испииһэктэригэр көрдөрүү</string>

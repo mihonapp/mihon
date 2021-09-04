@@ -55,7 +55,6 @@
     <string name="pref_library_columns">Elementos por fila</string>
     <string name="portrait">Retrato</string>
     <string name="landscape">Panorama</string>
-    <string name="default_columns">Predeterminado</string>
     <string name="pref_library_update_interval">Frecuencia de actualización</string>
     <string name="update_never">Manual</string>
     <string name="update_3hour">Cada 3 horas</string>
@@ -81,7 +80,6 @@
     <string name="white_background">Blanco</string>
     <string name="black_background">Negro</string>
     <string name="pref_viewer_type">Modo de lectura por defecto</string>
-    <string name="default_viewer">Predefinido</string>
     <string name="left_to_right_viewer">Izquierda a derecha</string>
     <string name="right_to_left_viewer">Derecha a izquierda</string>
     <string name="vertical_viewer">Vertical</string>
@@ -143,7 +141,7 @@
     <string name="description">Descripción</string>
     <string name="ongoing">En publicación</string>
     <string name="unknown">Desconocido</string>
-    <string name="licensed">En hiatus</string>
+    <string name="licensed">Con licencia</string>
     <string name="remove_from_library">Eliminar de biblioteca</string>
     <!-- Manga chapters fragment -->
     <string name="display_mode_chapter">Capítulo %1$s</string>
@@ -206,7 +204,7 @@
     <string name="information_no_downloads">No hay descargas</string>
     <string name="information_no_recent">No hay actualizaciones recientes</string>
     <string name="information_no_recent_manga">Nada leído recientemente</string>
-    <string name="information_empty_library">La biblioteca está vacía. Añádale series a partir de la Busqueda.</string>
+    <string name="information_empty_library">La biblioteca está vacía</string>
     <!-- Download Notification -->
     <string name="download_notifier_title_error">Error</string>
     <string name="download_notifier_unknown_error">No se pudo descargar el capítulo debido a un error inesperado</string>
@@ -239,8 +237,6 @@
     <string name="update_weekly">Semanalmente</string>
     <string name="all">Todos</string>
     <string name="pref_start_screen">Pantalla inicial</string>
-    <string name="pref_language">Idioma</string>
-    <string name="system_default">Predeterminado</string>
     <string name="default_category">Categoría predeterminada</string>
     <string name="default_category_summary">Siempre preguntar</string>
     <string name="pref_crop_borders">Recortar bordes</string>
@@ -356,7 +352,6 @@
     <string name="pref_skip_read_chapters">Saltar capítulos marcados como leídos</string>
     <string name="pref_true_color">Color en 32 bits</string>
     <string name="pref_color_filter_mode">Modo de mezcla del filtro de color</string>
-    <string name="filter_mode_default">Predeterminado</string>
     <string name="filter_mode_overlay">Superponer</string>
     <string name="filter_mode_multiply">Multiplicar</string>
     <string name="filter_mode_screen">Pantalla</string>
@@ -430,7 +425,6 @@
         <item quantity="one">Para 1 título</item>
         <item quantity="other">Para %d títulos</item>
     </plurals>
-    <string name="theme_default">Predeterminado</string>
     <string name="action_menu">Menú</string>
     <string name="action_reorganize_by">Reordenar</string>
     <string name="action_newest">Lo más nuevo</string>
@@ -554,7 +548,6 @@
     <string name="download_insufficient_space">No se pudieron descargar capítulos debido a poco espacio de almacenamiento</string>
     <string name="action_global_search_query">Buscar \"%1$s\" a nivel mundial</string>
     <string name="pref_category_reading_mode">Modo de lectura</string>
-    <string name="pref_category_locale">Localización</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Fecha de añadido</string>
     <plurals name="num_trackers">
@@ -615,7 +608,6 @@
     <string name="pref_viewer_nav">Estructura de navegación</string>
     <string name="edge_nav">Borde</string>
     <string name="l_nav">En forma de L</string>
-    <string name="default_nav">Defecto</string>
     <string name="network_unmetered">Red no medida</string>
     <string name="action_desc">Descendiente</string>
     <string name="action_asc">Ascendente</string>
@@ -652,7 +644,6 @@
     <string name="action_display_show_number_of_items">Mostrar número de artículos</string>
     <string name="action_sort_chapter_fetch_date">Fecha obtenida</string>
     <string name="rotation_type">Tipo de rotación</string>
-    <string name="default_rotation_type">Por defecto</string>
     <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título del manga</string>
     <string name="pref_create_folder_per_manga">Guarda las páginas en carpetas separadas</string>
     <string name="pref_reader_actions">Acciones</string>
@@ -702,4 +693,5 @@
     <string name="pref_library_update_refresh_trackers_summary">Actualizar los rastreadores al actualizar la biblioteca</string>
     <string name="pref_library_update_refresh_trackers">Actualizar automáticamente los rastreadores</string>
     <string name="pref_side_nav_icon_alignment">Alineamientos de icono de navegación lateral</string>
+    <string name="label_background_activity">Actividad en segundo plano</string>
 </resources>

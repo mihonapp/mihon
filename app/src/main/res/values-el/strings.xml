@@ -77,7 +77,6 @@
     <string name="pref_library_columns">Στοιχεία ανά σειρά</string>
     <string name="portrait">Κατακόρυφα</string>
     <string name="landscape">Οριζόντια</string>
-    <string name="default_columns">Προεπιλογή</string>
     <string name="pref_library_update_interval">Συχνότητα ενημέρωσης</string>
     <string name="update_never">Χειροκίνητα</string>
     <string name="update_3hour">Κάθε 3 ώρες</string>
@@ -92,8 +91,6 @@
     <string name="pref_update_only_non_completed">Ενημέρωση μόνο manga σε εξέλιξη</string>
     <string name="pref_auto_update_manga_sync">Ενημέρωση προόδου μετά την ανάγνωση</string>
     <string name="pref_start_screen">Οθόνη εκκίνησης</string>
-    <string name="pref_language">Γλώσσα</string>
-    <string name="system_default">Προεπιλογή</string>
     <string name="default_category">Προεπιλεγμένη κατηγορία</string>
     <string name="default_category_summary">Ερώτηση πάντα</string>
     <string name="all_lang">Όλα</string>
@@ -132,7 +129,6 @@
     <string name="white_background">Άσπρο</string>
     <string name="black_background">Μαύρο</string>
     <string name="pref_viewer_type">Προεπιλεγμένη λειτουργία ανάγνωσης</string>
-    <string name="default_viewer">Προεπιλογή</string>
     <string name="left_to_right_viewer">Αριστερά προς τα δεξιά</string>
     <string name="right_to_left_viewer">Δεξιά προς τα αριστερά</string>
     <string name="vertical_viewer">Κάθετα</string>
@@ -309,7 +305,7 @@
     <string name="information_no_downloads">Δεν υπάρχουν λήψεις</string>
     <string name="information_no_recent">Δεν υπάρχουν πρόσφατες ενημερώσεις</string>
     <string name="information_no_recent_manga">Τίποτα δεν διαβάστηκε πρόσφατα</string>
-    <string name="information_empty_library">Η βιβλιοθήκη σας είναι κενή. Προσθέστε σειρές στη βιβλιοθήκη σας από την Αναζήτηση.</string>
+    <string name="information_empty_library">Η βιβλιοθήκη σας είναι κενή</string>
     <string name="information_empty_category">Δεν έχετε κατηγορίες. Πατήστε το κουμπί συν για να δημιουργήσετε μία για την οργάνωση της βιβλιοθήκης σας.</string>
     <string name="download_notifier_downloader_title">Πρόγραμμα λήψης</string>
     <string name="download_notifier_title_error">Σφάλμα</string>
@@ -323,7 +319,6 @@
     <string name="action_open_in_web_view">Άνοιγμα στο WebView</string>
     <string name="pref_true_color">Χρώμα 32-bit</string>
     <string name="pref_skip_read_chapters">Προσπέραση διαβασμένων κεφαλαίων</string>
-    <string name="filter_mode_default">Προεπιλογή</string>
     <string name="filter_mode_overlay">Επικάλυψη</string>
     <string name="filter_mode_multiply">Πολλαπλασιασμός</string>
     <string name="filter_mode_screen">Οθόνη</string>
@@ -523,7 +518,6 @@
     <string name="action_global_search_query">Αναζήτηση του \"%1$s\" καθολικά</string>
     <string name="pref_category_reading_mode">Λειτουργία ανάγνωσης</string>
     <string name="pref_category_theme">Θέμα</string>
-    <string name="pref_category_locale">Περιοχή</string>
     <string name="action_sort_date_added">Ημερομηνία προσθήκης</string>
     <plurals name="num_trackers">
         <item quantity="one">1 tracker</item>
@@ -577,7 +571,6 @@
     <string name="edge_nav">Άκρη</string>
     <string name="kindlish_nav">Σαν Kindle</string>
     <string name="l_nav">Σχήματος L</string>
-    <string name="default_nav">Προεπιλογή</string>
     <string name="channel_crash_logs">Αρχεία καταγραφής σφαλμάτων</string>
     <string name="track_finished_reading_date">Ημερομηνία λήξης</string>
     <string name="track_started_reading_date">Ημερομηνία έναρξης</string>
@@ -623,7 +616,6 @@
     <string name="pref_create_folder_per_manga">Αποθήκευση σελίδων σε ξεχωριστούς φακέλους</string>
     <string name="pref_reader_actions">Ενέργειες</string>
     <string name="rotation_type">Τύπος περιστροφής</string>
-    <string name="default_rotation_type">Προεπιλογή</string>
     <string name="pref_grayscale">Κλίμακα του γκρι</string>
     <string name="notification_incognito_text">Απενεργοποίηση λειτουργίας ανώνυμης περιήγησης</string>
     <string name="automatic_background">Αυτόματα</string>
@@ -657,7 +649,6 @@
     <string name="theme_midnightdusk">Midnight Dusk</string>
     <string name="theme_greenapple">Πράσινο Μήλο</string>
     <string name="theme_blue">Μπλε</string>
-    <string name="theme_default">Προεπιλογή</string>
     <string name="pref_app_theme">Θέμα εφαρμογής</string>
     <string name="notification_updating">Ενημέρωση βιβλιοθήκης… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Ορισμένοι κατασκευαστές έχουν πρόσθετους περιορισμούς εφαρμογών που εξουδετερώνουν τις υπηρεσίες παρασκηνίου. Αυτός ο ιστότοπος έχει περισσότερες πληροφορίες για το πώς να το διορθώσετε.</string>
@@ -672,4 +663,27 @@
     <string name="enhanced_services">Βελτιωμένες υπηρεσίες</string>
     <string name="theme_monet">Δυναμικό</string>
     <string name="label_background_activity">Δραστηριότητα παρασκηνίου</string>
+    <string name="pref_lowest">Χαμηλότερη</string>
+    <string name="pref_low">Χαμηλή</string>
+    <string name="pref_highest">Ύψιστη</string>
+    <string name="pref_high">Υψηλή</string>
+    <string name="pref_hide_threshold">Ευαισθησία αυτόματης απόκρυψης μενού κατά την κύλιση</string>
+    <plurals name="relative_time">
+        <item quantity="one">Εχθές</item>
+        <item quantity="other">%1$d μέρες πριν</item>
+    </plurals>
+    <string name="pref_inverted_colors">Αντεστραμμένο</string>
+    <string name="pref_relative_time_long">Μακρύ (Σύντομη+, n ημέρες πριν)</string>
+    <string name="pref_relative_time_short">Σύντομη (Σήμερα, Χθες)</string>
+    <string name="pref_relative_format">Σχετικές χρονικές σημάνσεις</string>
+    <string name="recently">Πρόσφατα</string>
+    <string name="relative_time_today">Σήμερα</string>
+    <string name="theme_tealturquoise">Teal &amp; Τιρκουάζ</string>
+    <string name="confirm_lock_change">Έλεγχος ταυτότητας για επιβεβαίωση αλλαγής</string>
+    <string name="label_default">Προεπιλογή</string>
+    <string name="pref_category_timestamps">Χρονικές ενδείξεις</string>
+    <string name="pref_category_appearance">Εμφάνιση</string>
+    <string name="action_track">Παρακολούθηση</string>
+    <string name="pref_category_navigation">Πλοήγηση</string>
+    <string name="getting_started_guide">Οδηγός για τα πρώτα βήματα</string>
 </resources>

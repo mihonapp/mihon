@@ -51,7 +51,6 @@
     <string name="update_never">Ručno</string>
     <string name="pref_library_update_interval">Učestalost ažuriranja</string>
     <string name="pref_category_library_update">Globalno ažuriranje</string>
-    <string name="default_columns">Standardno</string>
     <string name="landscape">Ležeći format</string>
     <string name="portrait">Uspravni format</string>
     <string name="pref_library_columns">Broj elemenata po retku</string>
@@ -65,8 +64,6 @@
     <string name="pref_manage_notifications">Upravljaj obavijestima</string>
     <string name="pref_confirm_exit">Potvrdi zatvaranje programa</string>
     <string name="pref_date_format">Format datuma</string>
-    <string name="system_default">Standardno</string>
-    <string name="pref_language">Jezik</string>
     <string name="pref_start_screen">Početni ekran</string>
     <string name="theme_system">Slijedi sustav</string>
     <string name="theme_dark">Uključeno</string>
@@ -238,7 +235,6 @@
     <string name="vertical_viewer">Okomito</string>
     <string name="right_to_left_viewer">S desna na lijevo</string>
     <string name="left_to_right_viewer">S lijeva na desno</string>
-    <string name="default_viewer">Standardno</string>
     <string name="pref_viewer_type">Standardni modus čitanja</string>
     <string name="black_background">Crna</string>
     <string name="gray_background">Siva</string>
@@ -249,7 +245,6 @@
     <string name="filter_mode_screen">Ekran</string>
     <string name="filter_mode_multiply">Pomnoži</string>
     <string name="filter_mode_overlay">Prekrij</string>
-    <string name="filter_mode_default">Standardno</string>
     <string name="pref_color_filter_mode">Modus stapanja filtra boja</string>
     <string name="pref_custom_color_filter">Prilagođeni filtar boja</string>
     <string name="pref_custom_brightness">Prilagođena svjetlina</string>
@@ -532,7 +527,6 @@
     <string name="download_insufficient_space">Neuspjelo preuzimanje poglavlja zbog nedovoljne memorije</string>
     <string name="action_global_search_query">Traži „%1$s” globalno</string>
     <string name="pref_category_reading_mode">Modus čitanja</string>
-    <string name="pref_category_locale">Jezik</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Datum dodavanja</string>
     <plurals name="num_trackers">
@@ -595,7 +589,6 @@
     <string name="edge_nav">Rub</string>
     <string name="kindlish_nav">Kao Kindle</string>
     <string name="l_nav">U obliku slova L</string>
-    <string name="default_nav">Standardno</string>
     <string name="network_unmetered">Neograničena mreža</string>
     <string name="action_desc">Silazno</string>
     <string name="action_asc">Uzlazno</string>
@@ -634,7 +627,6 @@
     <string name="pref_grayscale">Sive nijanse</string>
     <string name="notification_incognito_text">Deaktiviraj anonimni modus</string>
     <string name="rotation_type">Okretanje</string>
-    <string name="default_rotation_type">Standardno</string>
     <string name="automatic_background">Automatski</string>
     <string name="pref_create_folder_per_manga_summary">Stvara mape na osnovi naslova mange</string>
     <string name="pref_create_folder_per_manga">Spremi stranice u zasebne mape</string>
@@ -656,7 +648,7 @@
     <string name="tracking_guide">Vodič za praćenje</string>
     <string name="off">Isključeno</string>
     <string name="on">Uključeno</string>
-    <string name="categorized_display_settings">Postavke prikaza po kategorijama</string>
+    <string name="categorized_display_settings">Postavke prikaza i sortiranja po kategorijama</string>
     <string name="pref_library_update_refresh_trackers_summary">Aktualiziraj pratioce prilikom aktualiziranja biblioteke</string>
     <string name="pref_library_update_refresh_trackers">Automatski osvježi pratioce</string>
     <string name="restrictions">Ograničenja: %s</string>
@@ -671,9 +663,27 @@
     <string name="theme_greenapple">Zelena jabuka</string>
     <string name="theme_blue">Plava</string>
     <string name="theme_monet">Dinamički</string>
-    <string name="theme_default">Standardno</string>
     <string name="pref_app_theme">Tema programa</string>
     <string name="action_sort_next_updated">Sljedeće očekivano aktualiziranje</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin/Yang</string>
+    <string name="pref_inverted_colors">Invertirano</string>
+    <plurals name="relative_time">
+        <item quantity="one">Jučer</item>
+        <item quantity="few">Neki dan</item>
+        <item quantity="other">Proteklih dana</item>
+    </plurals>
+    <string name="relative_time_today">Danas</string>
+    <string name="recently">Nedavno</string>
+    <string name="pref_relative_time_long">Dugo (Kratko+, n proteklih dana)</string>
+    <string name="pref_relative_time_short">Kratko(danas, jučer)</string>
+    <string name="pref_relative_format">Relativna vremenska oznaka</string>
+    <string name="pref_category_timestamps">Vremenska oznaka</string>
+    <string name="pref_category_navigation">Navigation</string>
+    <string name="pref_dark_theme_pure_black">Teal &amp; Turquoise</string>
+    <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
+    <string name="pref_category_appearance">Izgled</string>
+    <string name="getting_started_guide">Početni vodič</string>
+    <string name="confirm_lock_change">Ovjeri za potvrditi promjenu</string>
+    <string name="label_default">Zadano</string>
 </resources>

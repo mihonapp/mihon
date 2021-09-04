@@ -20,7 +20,7 @@
     <string name="action_filter_empty">Remover filtros</string>
     <string name="action_sort_alpha">Alfabeticamente</string>
     <string name="action_sort_total">Total de capítulos</string>
-    <string name="action_sort_last_read">Lido por último</string>
+    <string name="action_sort_last_read">Último lido</string>
     <string name="action_search">Pesquisar</string>
     <string name="action_select_all">Selecionar tudo</string>
     <string name="action_mark_as_read">Marcar como lido</string>
@@ -72,7 +72,6 @@
     <string name="pref_library_columns">Itens por linha</string>
     <string name="portrait">Retrato</string>
     <string name="landscape">Paisagem</string>
-    <string name="default_columns">Padrão</string>
     <string name="pref_library_update_interval">Frequência de atualização</string>
     <string name="update_never">Manualmente</string>
     <string name="update_3hour">A cada 3 horas</string>
@@ -87,8 +86,6 @@
     <string name="pref_update_only_non_completed">Atualizar apenas os mangás em andamento</string>
     <string name="pref_auto_update_manga_sync">Atualizar o progresso após a leitura</string>
     <string name="pref_start_screen">Tela inicial</string>
-    <string name="pref_language">Idioma</string>
-    <string name="system_default">Padrão</string>
     <string name="default_category">Categoria padrão</string>
     <string name="default_category_summary">Sempre perguntar</string>
     <string name="pref_fullscreen">Tela cheia</string>
@@ -107,7 +104,6 @@
     <string name="white_background">Branco</string>
     <string name="black_background">Preto</string>
     <string name="pref_viewer_type">Modo de leitura padrão</string>
-    <string name="default_viewer">Padrão</string>
     <string name="left_to_right_viewer">Esquerda para direita</string>
     <string name="right_to_left_viewer">Direita para esquerda</string>
     <string name="vertical_viewer">Vertical</string>
@@ -251,7 +247,7 @@
     <string name="information_no_downloads">Nenhum download</string>
     <string name="information_no_recent">Sem atualizações recentes</string>
     <string name="information_no_recent_manga">Nada lido recentemente</string>
-    <string name="information_empty_library">A sua biblioteca está vazia. Adicione séries à sua biblioteca em Navegar.</string>
+    <string name="information_empty_library">A sua biblioteca está vazia</string>
     <string name="download_notifier_downloader_title">Gerenciador de downloads</string>
     <string name="download_notifier_title_error">Erro</string>
     <string name="download_notifier_unknown_error">Não foi possível realizar o download do capítulo devido a um erro inesperado</string>
@@ -323,7 +319,6 @@
     <string name="action_open_in_web_view">Abrir na WebView</string>
     <string name="pref_true_color">Cor de 32 bits</string>
     <string name="pref_skip_read_chapters">Pular os capítulos marcados como lidos</string>
-    <string name="filter_mode_default">Padrão</string>
     <string name="filter_mode_screen">Divisão</string>
     <string name="label_help">Ajuda</string>
     <string name="pref_color_filter_mode">Modo de aplicação do filtro de cor</string>
@@ -404,7 +399,7 @@
     <string name="action_oldest">Mais antigos</string>
     <string name="action_move_to_top">Mover para o topo</string>
     <string name="action_move_to_bottom">Mover para o final</string>
-    <string name="action_sort_last_checked">Verificado por último</string>
+    <string name="action_sort_last_checked">Última verificação</string>
     <string name="pref_enable_automatic_extension_updates">Procurar por atualizações de extensão</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Atualização de extensão disponível</item>
@@ -523,7 +518,6 @@
     <string name="action_sort_date_added">Data de inclusão</string>
     <string name="action_global_search_query">Pesquisar por \"%1$s\" globalmente</string>
     <string name="pref_category_reading_mode">Modo de leitura</string>
-    <string name="pref_category_locale">Localidade</string>
     <string name="pref_category_theme">Tema</string>
     <plurals name="num_trackers">
         <item quantity="one">1 monitorador</item>
@@ -577,7 +571,6 @@
     <string name="kindlish_nav">Kindle</string>
     <string name="l_nav">Em forma de L</string>
     <string name="pref_viewer_nav">Layout de navegação</string>
-    <string name="default_nav">Padrão</string>
     <string name="channel_crash_logs">Registros de travamentos</string>
     <string name="track_finished_reading_date">Data de término</string>
     <string name="track_started_reading_date">Data de início</string>
@@ -623,7 +616,6 @@
     <string name="pref_create_folder_per_manga">Salva as páginas em pastas separadas</string>
     <string name="pref_reader_actions">Ações</string>
     <string name="rotation_type">Tipo de orientação</string>
-    <string name="default_rotation_type">Padrão</string>
     <string name="pref_grayscale">Nível de cinza</string>
     <string name="notification_incognito_text">Desabilitar o modo anônimo</string>
     <string name="automatic_background">Automático</string>
@@ -653,7 +645,7 @@
     <string name="tracking_guide">Guia sobre o monitoramento</string>
     <string name="information_empty_category_dialog">Você não tem nenhuma categoria ainda.</string>
     <string name="action_start_downloading_now">Começar o download agora</string>
-    <string name="action_sort_next_updated">Próxima atualização esperada</string>
+    <string name="action_sort_next_updated">Próxima atualização prevista</string>
     <string name="notification_updating">Atualizando a biblioteca... (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Algumas fabricantes possuem restrições adicionais de aplicativos que matam os serviços em segundo plano. Este site possui mais informações sobre como corrigir.</string>
     <string name="restore_miui_warning">O backup e restauração podem não funcionar corretamente se a Otimização da MIUI estiver desabilitada.</string>
@@ -665,11 +657,34 @@
     <string name="theme_midnightdusk">Aurora-da-noite</string>
     <string name="theme_greenapple">Maçã-verde</string>
     <string name="theme_blue">Azul</string>
-    <string name="theme_default">Padrão</string>
     <string name="pref_app_theme">Tema do aplicativo</string>
     <string name="enhanced_tracking_info">Serviços que oferecem recursos aprimorados para fontes específicas. Os mangás são automaticamente monitorados quando adicionados em sua biblioteca.</string>
     <string name="enhanced_services">Serviços aprimorados</string>
     <string name="tracker_komga_warning">Este serviço de monitoramento só é compatível com a fonte Komga.</string>
     <string name="theme_monet">Dinâmico</string>
     <string name="label_background_activity">Atividade em segundo plano</string>
+    <string name="pref_lowest">Mais baixa</string>
+    <string name="pref_low">Baixa</string>
+    <string name="pref_high">Alta</string>
+    <string name="pref_highest">Mais alta</string>
+    <string name="pref_hide_threshold">Ocultar o menu automaticamente na sensibilidade de rolagem</string>
+    <string name="pref_inverted_colors">Invertido</string>
+    <string name="pref_relative_time_long">Longo (Curto+, n dias atrás)</string>
+    <string name="pref_relative_time_short">Curto (Hoje, Ontem)</string>
+    <string name="pref_relative_format">Datas relativas</string>
+    <plurals name="relative_time">
+        <item quantity="one">Ontem</item>
+        <item quantity="other">%1$d dias atrás</item>
+    </plurals>
+    <string name="relative_time_today">Hoje</string>
+    <string name="recently">Recentemente</string>
+    <string name="theme_tealturquoise">Azul-petróleo &amp; Turquesa</string>
+    <string name="confirm_lock_change">Autentique-se para confirmar a mudança</string>
+    <string name="label_default">Padrão</string>
+    <string name="pref_category_timestamps">Data e hora</string>
+    <string name="pref_category_appearance">Aparência</string>
+    <string name="action_track">Monitorar</string>
+    <string name="pref_category_navigation">Navegação</string>
+    <string name="getting_started_guide">Guia de introdução</string>
+    <string name="pref_tablet_ui_mode">Forçar a interface de tablet</string>
 </resources>

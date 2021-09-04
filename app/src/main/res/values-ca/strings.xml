@@ -77,7 +77,6 @@
     <string name="pref_library_columns">Elements per fila</string>
     <string name="portrait">Vertical</string>
     <string name="landscape">Horitzontal</string>
-    <string name="default_columns">Per defecte</string>
     <string name="pref_library_update_interval">Freqüència d\'actualització</string>
     <string name="update_never">Manual</string>
     <string name="update_3hour">Cada 3 hores</string>
@@ -92,8 +91,6 @@
     <string name="pref_update_only_non_completed">Actualitza només el manga en curs</string>
     <string name="pref_auto_update_manga_sync">Actualitza el progrés dels capítols en llegir-los</string>
     <string name="pref_start_screen">Pantalla d\'inici</string>
-    <string name="pref_language">Llengua</string>
-    <string name="system_default">Per defecte</string>
     <string name="default_category">Categoria per defecte</string>
     <string name="default_category_summary">Demana-ho sempre</string>
     <string name="all_lang">Tot</string>
@@ -131,7 +128,6 @@
     <string name="white_background">Blanc</string>
     <string name="black_background">Negre</string>
     <string name="pref_viewer_type">Mode de lectura per defecte</string>
-    <string name="default_viewer">Per defecte</string>
     <string name="left_to_right_viewer">D\'esquerra a dreta</string>
     <string name="right_to_left_viewer">De dreta a esquerra</string>
     <string name="vertical_viewer">Vertical</string>
@@ -324,7 +320,6 @@
     <string name="pref_true_color">Color de 32 bits</string>
     <string name="pref_skip_read_chapters">Omet capítols marcats com a llegits</string>
     <string name="pref_color_filter_mode">Mode de mescla del filtre de color</string>
-    <string name="filter_mode_default">Per defecte</string>
     <string name="filter_mode_overlay">Sobreposa</string>
     <string name="filter_mode_multiply">Multiplica</string>
     <string name="filter_mode_screen">Protegeix</string>
@@ -518,7 +513,6 @@
     <string name="pref_show_reading_mode_summary">Mostra breument el mode actual en obrir el lector</string>
     <string name="pref_show_reading_mode">Mostra el mode de lectura</string>
     <string name="pref_jump_to_chapters">Salta als capítols en obrir</string>
-    <string name="pref_category_locale">Llengua</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_disable">Desactiva</string>
     <string name="action_open_in_settings">Obre a Configuració</string>
@@ -583,7 +577,6 @@
     <string name="edge_nav">Vora</string>
     <string name="kindlish_nav">Semblant al Kindle</string>
     <string name="l_nav">En forma d\'L</string>
-    <string name="default_nav">Per defecte</string>
     <string name="network_unmetered">Xarxa sense límit de dades</string>
     <string name="action_desc">Descendent</string>
     <string name="action_asc">Ascendent</string>
@@ -613,7 +606,6 @@
     <string name="rotation_landscape">Horitzontal</string>
     <string name="rotation_portrait">Vertical</string>
     <string name="rotation_type">Tipus de rotació</string>
-    <string name="default_rotation_type">Per defecte</string>
     <string name="nav_zone_right">Dreta</string>
     <string name="nav_zone_left">Esquerra</string>
     <string name="nav_zone_next">Següent</string>

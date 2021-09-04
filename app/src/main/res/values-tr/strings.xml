@@ -77,7 +77,6 @@
     <string name="pref_library_columns">Satır başına öge</string>
     <string name="portrait">Dikey</string>
     <string name="landscape">Yatay</string>
-    <string name="default_columns">Öntanımlı</string>
     <string name="pref_library_update_interval">Güncelleme sıklığı</string>
     <string name="update_never">Elle</string>
     <string name="update_3hour">3 saatte bir</string>
@@ -92,8 +91,6 @@
     <string name="pref_update_only_non_completed">Yalnızca devam eden mangaları güncelleme</string>
     <string name="pref_auto_update_manga_sync">Okuyunca ilerlemeyi güncelle</string>
     <string name="pref_start_screen">Başlangıç ekranı</string>
-    <string name="pref_language">Dil</string>
-    <string name="system_default">Sistem öntanımlı</string>
     <string name="default_category">Varsayılan kategori</string>
     <string name="default_category_summary">Her zaman sor</string>
     <string name="all_lang">Tümü</string>
@@ -132,7 +129,6 @@
     <string name="white_background">Beyaz</string>
     <string name="black_background">Siyah</string>
     <string name="pref_viewer_type">Öntanımlı okuma kipi</string>
-    <string name="default_viewer">Öntanımlı</string>
     <string name="left_to_right_viewer">Soldan sağa</string>
     <string name="right_to_left_viewer">Sağdan sola</string>
     <string name="vertical_viewer">Dikey</string>
@@ -301,7 +297,7 @@
     <string name="information_no_downloads">İndirme yok</string>
     <string name="information_no_recent">Yeni güncelleme yok</string>
     <string name="information_no_recent_manga">Yakında okunan yok</string>
-    <string name="information_empty_library">Kitaplığınız boş. Serileri Göz At\'dan kitaplığınıza ekleyin.</string>
+    <string name="information_empty_library">Kitaplığınız boş</string>
     <string name="information_empty_category">Kategoriniz yok. Kitaplığınızı düzenlemek için bir tane oluşturmak için artı düğmesine dokunun.</string>
     <string name="download_notifier_downloader_title">İndirici</string>
     <string name="download_notifier_title_error">Hata</string>
@@ -324,7 +320,6 @@
     <string name="pref_true_color">32-bit renk</string>
     <string name="pref_skip_read_chapters">Okundu olarak işaretli bölümleri atla</string>
     <string name="pref_color_filter_mode">Renk filtresi karışım kipi</string>
-    <string name="filter_mode_default">Öntanımlı</string>
     <string name="filter_mode_overlay">Kaplama</string>
     <string name="filter_mode_multiply">Çarpma</string>
     <string name="filter_mode_screen">Ekran</string>
@@ -523,7 +518,6 @@
     <string name="action_sort_date_added">Eklendiği tarih</string>
     <string name="action_global_search_query">\"%1$s\" için genel arama</string>
     <string name="pref_category_reading_mode">Okuma kipi</string>
-    <string name="pref_category_locale">Yerel</string>
     <string name="pref_category_theme">Tema</string>
     <plurals name="num_trackers">
         <item quantity="one">1 izleyici</item>
@@ -577,7 +571,6 @@
     <string name="edge_nav">Kenar</string>
     <string name="kindlish_nav">Kindle gibi</string>
     <string name="l_nav">L şeklinde</string>
-    <string name="default_nav">Öntanımlı</string>
     <string name="channel_crash_logs">Çökme günlükleri</string>
     <string name="track_finished_reading_date">Bitirme tarihi</string>
     <string name="track_started_reading_date">Başlama tarihi</string>
@@ -620,7 +613,6 @@
     <string name="rotation_landscape">Yatay</string>
     <string name="rotation_portrait">Dikey</string>
     <string name="rotation_type">Döndürme türü</string>
-    <string name="default_rotation_type">Ön tanımlı</string>
     <string name="pref_create_folder_per_manga_summary">Klasörleri manga başlığına göre oluşturur</string>
     <string name="pref_create_folder_per_manga">Sayfaları ayrı klasörlere kaydet</string>
     <string name="pref_reader_actions">Eylemler</string>
@@ -668,8 +660,30 @@
     <string name="theme_greenapple">Yeşil Elma</string>
     <string name="theme_blue">Mavi</string>
     <string name="theme_monet">Dinamik</string>
-    <string name="theme_default">Öntanımlı</string>
     <string name="pref_app_theme">Uygulama teması</string>
     <string name="action_sort_next_updated">Sonraki beklenen güncelleme</string>
     <string name="label_background_activity">Arka plan etkinliği</string>
+    <string name="pref_lowest">En düşük</string>
+    <string name="pref_low">Düşük</string>
+    <string name="pref_high">Yüksek</string>
+    <string name="pref_highest">En yüksek</string>
+    <string name="pref_hide_threshold">Kaydırma algılandığında menüyü gizle</string>
+    <string name="pref_inverted_colors">Ters Çevrilmiş</string>
+    <string name="pref_relative_time_long">Uzun (Kısa+, n gün önce)</string>
+    <string name="pref_relative_time_short">Kısa (Bugün, Dün)</string>
+    <string name="pref_relative_format">Göreceli zaman damgaları</string>
+    <plurals name="relative_time">
+        <item quantity="one">Dün</item>
+        <item quantity="other">%1$d gün önce</item>
+    </plurals>
+    <string name="relative_time_today">Bugün</string>
+    <string name="recently">Yakınlarda</string>
+    <string name="theme_tealturquoise">Deniz Mavisi ve Turkuaz</string>
+    <string name="confirm_lock_change">Değişikliği onaylamak için kimlik doğrula</string>
+    <string name="label_default">Öntanımlı</string>
+    <string name="pref_category_timestamps">Zaman damgaları</string>
+    <string name="pref_category_appearance">Görünüm</string>
+    <string name="action_track">İzle</string>
+    <string name="pref_category_navigation">Gezinme</string>
+    <string name="getting_started_guide">Başlangıç kılavuzu</string>
 </resources>

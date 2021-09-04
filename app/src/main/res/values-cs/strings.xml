@@ -55,8 +55,6 @@
     <string name="pref_update_only_non_completed">Aktualizovat pouze vycházející mangy</string>
     <string name="pref_auto_update_manga_sync">Aktualizovat počet kapitol po přečtení</string>
     <string name="pref_start_screen">Úvodní obrazovka</string>
-    <string name="pref_language">Jazyk</string>
-    <string name="system_default">Výchozí</string>
     <string name="all_lang">Vše</string>
     <string name="ext_update">Aktualizovat</string>
     <string name="ext_install">Instalovat</string>
@@ -204,7 +202,6 @@
     <string name="pref_library_columns">Počet položek na řádek</string>
     <string name="portrait">Na výšku</string>
     <string name="landscape">Na šířku</string>
-    <string name="default_columns">Výchozí</string>
     <string name="pref_library_update_interval">Frekvence aktualizace</string>
     <string name="update_never">Ručně</string>
     <string name="all">Vše</string>
@@ -218,7 +215,6 @@
     <string name="pref_custom_color_filter">Vlastní barevný filtr</string>
     <string name="pref_read_with_tapping">Klepnutím</string>
     <string name="pref_viewer_type">Výchozí režim čtení</string>
-    <string name="default_viewer">Výchozí</string>
     <string name="vertical_viewer">Vertikální</string>
     <string name="webtoon_viewer">Webtoon</string>
     <string name="pref_image_scale_type">Typ úpravy velikosti</string>
@@ -325,7 +321,6 @@
     <string name="pref_true_color">32-bitová barva</string>
     <string name="pref_skip_read_chapters">Přeskakovat přečtené kapitoly</string>
     <string name="pref_color_filter_mode">Režim mísení filtru barev</string>
-    <string name="filter_mode_default">Výchozí</string>
     <string name="filter_mode_overlay">Překrytí</string>
     <string name="filter_mode_multiply">Násobení</string>
     <string name="filter_mode_screen">Obrazovka</string>
@@ -458,7 +453,6 @@
     <string name="nav_zone_next">Další</string>
     <string name="right_and_left_nav">Vpravo a Vlevo</string>
     <string name="l_nav">Ve tvaru písmene L</string>
-    <string name="default_nav">Výchozí</string>
     <string name="gray_background">Šedé</string>
     <string name="tapping_inverted_both">Obě</string>
     <string name="tapping_inverted_vertical">Vertikální</string>
@@ -489,7 +483,6 @@
     <string name="theme_dark">Zapnuto</string>
     <string name="theme_light">Vypnuto</string>
     <string name="pref_theme_mode">Temný vzhled</string>
-    <string name="pref_category_locale">Jazyk</string>
     <string name="pref_category_theme">Vzhled</string>
     <string name="action_move_to_top">Přesunout nahoru</string>
     <string name="action_desc">Sestupně</string>
@@ -627,7 +620,6 @@
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
     <string name="rotation_type">Typ otočení</string>
-    <string name="default_rotation_type">Výchozí</string>
     <string name="pref_create_folder_per_manga_summary">Vytvoří složky podle názvu mangy</string>
     <string name="pref_create_folder_per_manga">Uložit stránky do samostatných složek</string>
     <string name="pref_reader_actions">Akce</string>
@@ -678,8 +670,12 @@
     <string name="theme_greenapple">Zelené Jablko</string>
     <string name="theme_blue">Modrý</string>
     <string name="theme_monet">Dynamické</string>
-    <string name="theme_default">Výchozí</string>
     <string name="pref_app_theme">Motiv aplikace</string>
     <string name="action_sort_next_updated">Další očekávaný aktualizace</string>
     <string name="label_background_activity">Činnost na pozadí</string>
+    <string name="pref_hide_threshold">Automaticky skrýt nabídku při citlivosti posouvání</string>
+    <string name="pref_lowest">Nejnižší</string>
+    <string name="pref_low">Nízké</string>
+    <string name="pref_high">Vysoké</string>
+    <string name="pref_highest">Nejvyšší</string>
 </resources>

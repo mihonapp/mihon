@@ -2,7 +2,7 @@
 <resources>
     <string name="name">الاسم</string>
     <string name="categories">الفئات</string>
-    <string name="manga">المانجا</string>
+    <string name="manga">مانجا</string>
     <string name="chapters">الفصول</string>
     <string name="track">التعقب</string>
     <string name="history">السجل</string>
@@ -72,7 +72,6 @@
     <string name="pref_library_columns">العناصر لكل صف</string>
     <string name="portrait">رأسي</string>
     <string name="landscape">افقي</string>
-    <string name="default_columns">الافتراضي</string>
     <string name="pref_library_update_interval">معدل تحديث المكتبة</string>
     <string name="update_never">يدوياً</string>
     <string name="update_3hour">كل ٣ ساعات</string>
@@ -87,8 +86,6 @@
     <string name="pref_update_only_non_completed">تحديث المانجا المستمرة فقط</string>
     <string name="pref_auto_update_manga_sync">تحديث تقدّم الفصول بعد القراءة</string>
     <string name="pref_start_screen">شاشة البداية</string>
-    <string name="pref_language">اللغة</string>
-    <string name="system_default">الإفتراضي</string>
     <string name="default_category">الفئة الافتراضية</string>
     <string name="default_category_summary">السؤال دائماً</string>
     <string name="pref_fullscreen">وضع الشاشة الكاملة</string>
@@ -107,7 +104,6 @@
     <string name="white_background">أبيض</string>
     <string name="black_background">أسود</string>
     <string name="pref_viewer_type">وضع القراءة الافتراضي</string>
-    <string name="default_viewer">الافتراضي</string>
     <string name="left_to_right_viewer">من اليسار لليمين</string>
     <string name="right_to_left_viewer">من اليمين لليسار</string>
     <string name="vertical_viewer">عموديا</string>
@@ -131,7 +127,7 @@
     <string name="pref_download_directory">موقع التنزيل</string>
     <string name="pref_download_only_over_wifi">التنزيل عبر الواي فاي فقط</string>
     <string name="pref_remove_after_marked_as_read">وضع علامة \"مقروءة\" يدويًا</string>
-    <string name="pref_remove_after_read">بعد القراءة</string>
+    <string name="pref_remove_after_read">تلقائيا بعد القراءة</string>
     <string name="custom_dir">مجلد مخصص</string>
     <string name="disabled">معطل</string>
     <string name="last_read_chapter">آخر فصل مقروء</string>
@@ -323,7 +319,6 @@
     <string name="action_open_in_web_view">فتح في عرض الويب</string>
     <string name="pref_true_color">ألوان 32bit</string>
     <string name="pref_skip_read_chapters">تخطي الفصول المقروءة</string>
-    <string name="filter_mode_default">الافتراضي</string>
     <string name="filter_mode_overlay">التراكب</string>
     <string name="filter_mode_multiply">مضاعفة</string>
     <string name="filter_mode_screen">الشاشة</string>
@@ -354,7 +349,7 @@
     <string name="action_move_to_bottom">نقل إلى الأسفل</string>
     <string name="lock_never">أبدًا</string>
     <string name="lock_always">دائماً</string>
-    <string name="lock_when_idle">قفل عند الخمول</string>
+    <string name="lock_when_idle">قفل في حالة السكون</string>
     <string name="lock_with_biometrics">يتطلب الفتح</string>
     <string name="pref_category_security">إعدادات الأمان</string>
     <string name="pref_manage_notifications">إدارة الإشعارات</string>
@@ -439,7 +434,7 @@
         <item quantity="many">ل%d مانجا</item>
         <item quantity="other">ل%d مانجا</item>
     </plurals>
-    <string name="notification_check_updates">التحقق من الفصول الجديدة</string>
+    <string name="notification_check_updates">جارٍ التحقق من وجود فصول جديدة</string>
     <string name="recent_manga_time">الفصل %1$s - %2$s</string>
     <string name="updating_library">تحديث المكتبة</string>
     <string name="viewer">وضع القراءة</string>
@@ -549,7 +544,6 @@
     <string name="ext_nsfw_short">محتوى غير لائق</string>
     <string name="pref_jump_to_chapters">الذهاب إلى الفصول المفتوحة</string>
     <string name="parental_controls_info">هذا لا يمنع الإضافات غير الرسمية أو التي تم وضع علامة عليها بشكل غير صحيح من إظهار محتوى غير لائق داخل التطبيق.</string>
-    <string name="pref_category_locale">محلي</string>
     <string name="action_open_in_settings">افتح في الإعدادات</string>
     <string name="action_download_unread">تنزيل الفصول غير المقروءة</string>
     <string name="tapping_inverted_both">كليهما</string>
@@ -594,7 +588,7 @@
         <item quantity="many">هناك %d فصول مفقودة</item>
         <item quantity="other">هناك %d فصول مفقودة</item>
     </plurals>
-    <string name="no_chapters_error">لم يتم العثور على فصول</string>
+    <string name="no_chapters_error">لم يتم العثور على الفصول</string>
     <string name="share_page_info">%1$s: %2$s, صفحة %3$d</string>
     <string name="chapter_settings_updated">إعدادات الفصل الإفتراضية المُحدثة</string>
     <string name="set_chapter_settings_as_default">تعيين كافتراضي</string>
@@ -625,7 +619,6 @@
     <string name="l_nav">على شكل حرف L</string>
     <string name="edge_nav">حافة</string>
     <string name="kindlish_nav">كيندل العش</string>
-    <string name="default_nav">الافتراضي</string>
     <string name="action_filter_tracked">مُتتبَعة</string>
     <string name="action_display_show_number_of_items">إظهار عدد العناصر</string>
     <string name="channel_crash_logs">سجلات الاخطاء</string>
@@ -654,12 +647,11 @@
     <string name="pref_show_navigation_mode_summary">عرض مناطق اللمس للتنقل عند فتح القارئ</string>
     <string name="pref_show_navigation_mode">إظهار حدود التنقل</string>
     <string name="update_8hour">كل ثمان ساعات</string>
-    <string name="update_4hour">كل أربع ساعات</string>
+    <string name="update_4hour">كل ٤ ساعات</string>
     <string name="action_sort_chapter_fetch_date">تاريخ الجلب</string>
     <string name="rotation_landscape">افقي</string>
     <string name="rotation_portrait">رأسي</string>
     <string name="rotation_type">نوع التدوير</string>
-    <string name="default_rotation_type">الإفتراضي</string>
     <string name="automatic_background">تلقائيا</string>
     <string name="pref_create_folder_per_manga_summary">إنشاء مجلدات وفقا لعنوان المانجا</string>
     <string name="pref_create_folder_per_manga">حفظ الصفحات في مجلدات منفصلة</string>
@@ -690,7 +682,7 @@
     <string name="manga_cover">غطاء</string>
     <string name="local_invalid_format">صيغة الفصل غير صالح</string>
     <string name="tracking_guide">تعليمات التعقب</string>
-    <string name="categorized_display_settings">اعدادات عرض لكل صنف</string>
+    <string name="categorized_display_settings">اعدادات فرز والعرض لكل صنف</string>
     <string name="pref_library_update_refresh_trackers_summary">تحديث المتعقبات عند تحديث المكتبة</string>
     <string name="pref_library_update_refresh_trackers">تحديث المتعقبات تلقائياً</string>
     <string name="alignment_bottom">أسفل</string>
@@ -699,13 +691,50 @@
     <string name="pref_side_nav_icon_alignment">محاذاة رموز التنقل الجانبية</string>
     <string name="cancel_all_for_series">إلغاء الكل لهذه السلسلة</string>
     <string name="action_display_local_badge">الشارات المحلية</string>
-    <string name="information_empty_category_dialog">ليس لديك اي قوائم بعد</string>
+    <string name="information_empty_category_dialog">ليس لديك اي قوائم بعد.</string>
     <string name="action_start_downloading_now">ابدأ التحميل الآن</string>
-    <string name="theme_default">الإفتراضي</string>
     <string name="theme_strawberrydaiquiri">أحمر</string>
     <string name="theme_midnightdusk">منتصف الليل</string>
     <string name="theme_greenapple">أخضر</string>
     <string name="theme_blue">أزرق</string>
     <string name="pref_app_theme">مظهر التطبيق</string>
     <string name="action_sort_next_updated">التحديث القادم المتوقع</string>
+    <string name="pref_lowest">أَدان</string>
+    <string name="pref_low">أدنى</string>
+    <string name="pref_high">أعلى</string>
+    <string name="pref_highest">أعلَى</string>
+    <string name="pref_hide_threshold">إخفاء تلقائي للقائمة عند تصفح حساسية</string>
+    <string name="pref_dark_theme_pure_black">وضع داكن الأسود النقي</string>
+    <string name="theme_yotsuba">يوتسوبا</string>
+    <string name="theme_yinyang">ين &amp; يانغ</string>
+    <string name="theme_tako">تاكو</string>
+    <string name="theme_monet">ديناميك</string>
+    <string name="notification_updating">جار تحديث المكتبة…( (%2$d) / (%1$d) )</string>
+    <string name="tracker_komga_warning">هذا المتتبّع متوافق فقط مع المصدر (‌Komga)</string>
+    <string name="about_dont_kill_my_app">تقوم بعض الشركات المصنعة بوضع قيود إضافية على التطبيقات التي قد تقضي على الخدمات التي تعمل في الخلفية. يحتوي هذا الموقع على مزيد من المعلومات حول كيفية إصلاحه.</string>
+    <string name="restore_miui_warning">النسخ الاحتياطي/الإستعادة ربما لا يعمل بطريقه صحيحة عندما يكون خيار MIUI Optimization غير مفعل.</string>
+    <string name="enhanced_tracking_info">الخدمات التي تقدم ميزات محسنة لأجل مصادر معينه. المانجات سوف يتم تتبعها عندما يتم إضافتها الي المكتبة.</string>
+    <string name="enhanced_services">خدمات محسنة</string>
+    <string name="relative_time_today">اليوم</string>
+    <string name="recently">مؤخراً</string>
+    <string name="confirm_lock_change">المصادقة على التغيير</string>
+    <string name="label_default">الافتراضي</string>
+    <string name="label_background_activity">الأنشطة التي تعمل في الخلفية</string>
+    <plurals name="relative_time">
+        <item quantity="zero"></item>
+        <item quantity="one"></item>
+        <item quantity="two"></item>
+        <item quantity="few"></item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="pref_relative_time_short">قصير (اليوم، الأمس)</string>
+    <string name="action_track">تتبع</string>
+    <string name="pref_inverted_colors">معكوس</string>
+    <string name="pref_relative_time_long">طويل (القصير، +منذ كم يوم)</string>
+    <string name="pref_relative_format">الوقت النسبي</string>
+    <string name="pref_category_timestamps">الوقت</string>
+    <string name="pref_category_navigation">التنقل</string>
+    <string name="theme_tealturquoise">ازرق مخضر و فيروز</string>
+    <string name="pref_category_appearance">المظهر</string>
 </resources>

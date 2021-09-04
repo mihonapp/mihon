@@ -66,7 +66,6 @@
     <string name="pref_category_about">アプリについて</string>
     <string name="portrait">縦向き</string>
     <string name="landscape">横向き</string>
-    <string name="default_columns">デフォルト</string>
     <string name="pref_library_update_interval">更新頻度</string>
     <string name="update_never">マニュアル</string>
     <string name="update_3hour">3時間ごと</string>
@@ -79,10 +78,8 @@
     <string name="pref_library_update_restriction">更新制限</string>
     <string name="charging">充電中</string>
     <string name="pref_update_only_non_completed">連載中のマンガのみ更新</string>
-    <string name="pref_auto_update_manga_sync">読んだ後に章の読書進捗を更新</string>
+    <string name="pref_auto_update_manga_sync">読んだ後に読書進捗を更新</string>
     <string name="pref_start_screen">スタート画面</string>
-    <string name="pref_language">言語</string>
-    <string name="system_default">システム既定</string>
     <string name="default_category">デフォルトカテゴリー</string>
     <string name="default_category_summary">毎回尋ねる</string>
     <string name="all_lang">すべて</string>
@@ -113,7 +110,6 @@
     <string name="white_background">白</string>
     <string name="black_background">ブラック</string>
     <string name="pref_viewer_type">既定のビューアモード</string>
-    <string name="default_viewer">デフォルト</string>
     <string name="left_to_right_viewer">左から右</string>
     <string name="right_to_left_viewer">右から左</string>
     <string name="vertical_viewer">縦反転</string>
@@ -142,7 +138,7 @@
     <string name="pref_download_directory">ダウンロードフォルダ</string>
     <string name="pref_download_only_over_wifi">Wi-Fi経由でのみダウンロード</string>
     <string name="pref_remove_after_marked_as_read">既読にした後</string>
-    <string name="pref_remove_after_read">読んだ後</string>
+    <string name="pref_remove_after_read">読んだ後自動で</string>
     <string name="custom_dir">カスタムディレクトリ</string>
     <string name="disabled">無効</string>
     <string name="second_to_last">最後に読んだ章の2番目</string>
@@ -322,7 +318,6 @@
     <string name="pref_true_color">32ビットカラー</string>
     <string name="pref_skip_read_chapters">読み終わった章をスキップ</string>
     <string name="pref_color_filter_mode">ｶﾗｰﾌｨﾙﾀｰﾌﾞﾚﾝﾄﾞﾓｰﾄﾞ</string>
-    <string name="filter_mode_default">既定</string>
     <string name="filter_mode_overlay">オーバーレイ</string>
     <string name="filter_mode_screen">スクリーン</string>
     <string name="pref_library_update_prioritization">更新の順</string>
@@ -436,7 +431,6 @@
     <string name="hide_notification_content">通知コンテンツを非表示</string>
     <string name="secure_screen_summary">スクリーンショットを無効化し、「最近使ったアプリ」画面にアプリの内容を非表示します</string>
     <string name="pref_confirm_exit">終了時に確認</string>
-    <string name="theme_default">標準</string>
     <string name="action_move_to_bottom">底に移動</string>
     <string name="action_move_to_top">トップに移動</string>
     <string name="action_oldest">最古</string>
@@ -522,12 +516,11 @@
     </plurals>
     <string name="no_pinned_sources">ピンソースがありません</string>
     <string name="action_global_search_query">グローバルで「%1$s」を探す</string>
-    <string name="pref_category_locale">ロカール</string>
     <string name="pref_category_theme">テーマ</string>
     <string name="action_sort_date_added">ライブラリへの追加日付順</string>
     <string name="channel_errors">エラー</string>
     <string name="backup_restore_missing_trackers">ログインしていないトラッカー：</string>
-    <string name="pref_remove_bookmarked_chapters">ブックマークした章を削除</string>
+    <string name="pref_remove_bookmarked_chapters">ブックマークした章の削除を許可</string>
     <string name="pref_category_delete_chapters">章を削除</string>
     <string name="ext_nsfw_warning">成人向けのコンテンツが含まれる可能性があります</string>
     <string name="ext_nsfw_short">成人向け</string>
@@ -568,7 +561,6 @@
     <string name="track_started_reading_date">読み始めた日付</string>
     <string name="crash_log_saved">クラッシュログが保存されました</string>
     <string name="edge_nav">角</string>
-    <string name="default_nav">デフォルト</string>
     <string name="action_order_by_chapter_number">章の番号順</string>
     <string name="action_order_by_upload_date">アップロードされた日付順</string>
     <string name="action_filter_tracked">登録済み</string>
@@ -621,7 +613,6 @@
     <string name="notification_incognito_text">シークレットモードを無効にする</string>
     <string name="tracking_guide">追跡ガイド</string>
     <string name="rotation_type">回転モード</string>
-    <string name="default_rotation_type">既定</string>
     <string name="automatic_background">自動</string>
     <string name="pref_create_folder_per_manga_summary">マンガタイトルに基づいてフォルダを作成</string>
     <string name="pref_create_folder_per_manga">別々のフォルダにページを保存</string>
@@ -629,7 +620,7 @@
     <string name="pref_grayscale">グレースケール</string>
     <string name="off">OFF</string>
     <string name="on">ON</string>
-    <string name="categorized_display_settings">カテゴリ別の表示設定</string>
+    <string name="categorized_display_settings">カテゴリ別のソート及び表示設定</string>
     <string name="pref_library_update_refresh_trackers_summary">ライブラリを更新時、トラッカーも更新する</string>
     <string name="pref_library_update_refresh_trackers">トラッカーを自動でリロード</string>
     <string name="restrictions">制限：%s</string>
@@ -654,4 +645,21 @@
     <string name="notification_updating">ライブラリを更新中... (%1$d/%2$d)</string>
     <string name="theme_monet">ダイナミック</string>
     <string name="action_sort_next_updated">次回の更新予定</string>
+    <string name="tracker_komga_warning">このトラッカーはKomgaにのみ対応します。</string>
+    <string name="about_dont_kill_my_app">一部のスマホメーカーはバックアップグラウンドサービスを終了する追加のアプリ制限を施しています。修正する方法についてはこのWebサイトをご覧ください。</string>
+    <string name="label_background_activity">バックアップアクティビティ</string>
+    <string name="restore_miui_warning">MIUI最適化が無効な時、バックアップ及び復元は正常に機能しない場合があります。</string>
+    <string name="pref_lowest">最低</string>
+    <string name="pref_low">低い</string>
+    <string name="pref_high">高い</string>
+    <string name="pref_highest">最高</string>
+    <string name="pref_inverted_colors">反転</string>
+    <string name="pref_relative_time_long">長め（短め、n日前）</string>
+    <string name="pref_relative_time_short">短め（今日、昨日）</string>
+    <string name="pref_relative_format">相対的なタイムスタンプ</string>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d日前</item>
+    </plurals>
+    <string name="relative_time_today">今日</string>
+    <string name="recently">最近</string>
 </resources>

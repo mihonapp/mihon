@@ -145,7 +145,6 @@
     <string name="update_check_ignore">Ignorēt</string>
     <string name="update_check_confirm">Lejuplādēt</string>
     <string name="pref_jump_to_chapters">Pārlēkt uz nodaļām, atverot</string>
-    <string name="default_columns">Noklusējums</string>
     <string name="landscape">Ainava</string>
     <string name="portrait">Portrets</string>
     <string name="pref_library_columns">Vienumi rindā</string>
@@ -166,15 +165,11 @@
     <string name="pref_manage_notifications">Pārvaldiet paziņojumus</string>
     <string name="pref_confirm_exit">Apstipriniet izeju</string>
     <string name="pref_date_format">Datuma formāts</string>
-    <string name="system_default">Noklusējums</string>
-    <string name="pref_language">Valoda</string>
     <string name="pref_start_screen">Sākuma ekrāns</string>
-    <string name="theme_default">Noklusējums</string>
     <string name="theme_dark">Ieslēgts</string>
     <string name="theme_light">Izslēgts</string>
     <string name="theme_system">Sekot sistēmu</string>
     <string name="pref_theme_mode">Tumšais režīms</string>
-    <string name="pref_category_locale">Locale</string>
     <string name="pref_category_theme">Motīvs</string>
     <string name="pref_category_library">Bibliotēka</string>
     <string name="action_webview_refresh">Atjaunot</string>

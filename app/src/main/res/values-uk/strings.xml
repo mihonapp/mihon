@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="name">Назва</string>
+    <string name="name">Ім\'я</string>
     <string name="categories">Категорії</string>
     <string name="manga">Манґа</string>
     <string name="chapters">Глави</string>
@@ -75,9 +75,8 @@
     <string name="pref_category_advanced">Додатково</string>
     <string name="pref_category_about">Інформація</string>
     <string name="pref_library_columns">Елементів у ряд</string>
-    <string name="portrait">Вертикальна</string>
-    <string name="landscape">Горизонтальна</string>
-    <string name="default_columns">За замовчанням</string>
+    <string name="portrait">Портретна</string>
+    <string name="landscape">Альбомна</string>
     <string name="pref_library_update_interval">Частота оновлень</string>
     <string name="update_never">Ручне</string>
     <string name="update_3hour">Кожні 3 години</string>
@@ -90,10 +89,8 @@
     <string name="pref_library_update_restriction">Обмеження оновлень</string>
     <string name="charging">Заряджається</string>
     <string name="pref_update_only_non_completed">Оновлювати тільки ongoing мангу</string>
-    <string name="pref_auto_update_manga_sync">Оновлювати прогрес глав після прочитання</string>
+    <string name="pref_auto_update_manga_sync">Оновлювати прогрес після прочитання</string>
     <string name="pref_start_screen">Стартовий екран</string>
-    <string name="pref_language">Мова</string>
-    <string name="system_default">За замовчуванням</string>
     <string name="default_category">Категорія за замовчуванням</string>
     <string name="default_category_summary">Завжди запитувати</string>
     <string name="all_lang">Всі</string>
@@ -132,7 +129,6 @@
     <string name="white_background">Білий</string>
     <string name="black_background">Чорний</string>
     <string name="pref_viewer_type">Напрямок читання за замовчуванням</string>
-    <string name="default_viewer">За замовчанням</string>
     <string name="left_to_right_viewer">Зліва направо</string>
     <string name="right_to_left_viewer">Справа наліво</string>
     <string name="vertical_viewer">Вертикальний</string>
@@ -163,10 +159,10 @@
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Директорія завантаження</string>
     <string name="pref_download_only_over_wifi">Завантажувати лише через Wi-Fi</string>
-    <string name="pref_remove_after_marked_as_read">Після того, як було відміченим як прочитане</string>
-    <string name="pref_remove_after_read">Після прочитання</string>
+    <string name="pref_remove_after_marked_as_read">Після того, як було відмічено прочитаним</string>
+    <string name="pref_remove_after_read">Автоматично після прочитування</string>
     <string name="custom_dir">Користувацька директорія</string>
-    <string name="disabled">Відключено</string>
+    <string name="disabled">Вимкнено</string>
     <string name="last_read_chapter">Остання прочитана глава</string>
     <string name="second_to_last">Передостання</string>
     <string name="third_to_last">Третя від прочитаної глави</string>
@@ -250,7 +246,7 @@
     <string name="download_10">Завантажити 10 наступних глав</string>
     <string name="download_custom">Завантажити іншу кількість</string>
     <string name="download_all">Завантажити все</string>
-    <string name="download_unread">Завантажити непрочитані</string>
+    <string name="download_unread">Непрочитані</string>
     <string name="confirm_delete_chapters">Ви впевнені, що бажаєте видалити вибрані глави\?</string>
     <string name="manga_tracking_tab">Відслідковувати</string>
     <string name="reading">В процесі читання</string>
@@ -309,7 +305,7 @@
     <string name="information_no_downloads">Немає завантажень</string>
     <string name="information_no_recent">Без оновлень</string>
     <string name="information_no_recent_manga">Останнім часом нічого не прочитано</string>
-    <string name="information_empty_library">Ваша бібліотека порожня. Додайте твори з пошуку.</string>
+    <string name="information_empty_library">Ваша бібліотека порожня</string>
     <string name="information_empty_category">У вас немає категорій. Тицьніть кнопку плюс, для початку облаштування вашої бібліотеки.</string>
     <string name="download_notifier_downloader_title">Завантажувач</string>
     <string name="download_notifier_title_error">Помилка</string>
@@ -324,7 +320,6 @@
     <string name="pref_true_color">32-бітний колір</string>
     <string name="pref_skip_read_chapters">Пропускати глави, відмічені як прочитані</string>
     <string name="pref_color_filter_mode">Режим накладання кольорового фільтру</string>
-    <string name="filter_mode_default">За замовчуванням</string>
     <string name="filter_mode_overlay">Оверлей</string>
     <string name="filter_mode_multiply">множення</string>
     <string name="filter_mode_screen">Екран</string>
@@ -344,15 +339,15 @@
     <string name="pref_date_format">Формат дати</string>
     <string name="pref_category_library_update">Глобальне оновлення</string>
     <string name="logout_title">Вихід із %1$s\?</string>
-    <string name="logout">Вийти</string>
+    <string name="logout">Вихід</string>
     <string name="logout_success">Ви вийшли з системи</string>
-    <string name="currently_reading">Нині чітається</string>
+    <string name="currently_reading">Зараз читається</string>
     <string name="paused">Призупинено</string>
     <string name="want_to_read">Читатиму</string>
     <string name="label_more">Ще</string>
     <string name="action_sort_latest_chapter">Остання глава</string>
     <string name="action_view_chapters">Подивитись глави</string>
-    <string name="action_cancel_all">Відмінити все</string>
+    <string name="action_cancel_all">Скасувати все</string>
     <string name="pref_theme_mode">Темний режим</string>
     <string name="theme_light">Вимкнено</string>
     <string name="theme_dark">Увімкнено</string>
@@ -403,7 +398,6 @@
         <item quantity="few">Для %d тайтлів</item>
         <item quantity="many">Для %d тайтлів</item>
     </plurals>
-    <string name="theme_default">За замовчуванням</string>
     <string name="action_menu">Меню</string>
     <string name="action_reorganize_by">Переупорядкувати</string>
     <string name="action_newest">Найновіші</string>
@@ -436,7 +430,7 @@
     <string name="action_unpin">Відкріпити</string>
     <string name="action_pin">Закріпити</string>
     <string name="in_library">В бібліотеці</string>
-    <string name="add_to_library">Додати в бібліотеку</string>
+    <string name="add_to_library">Додати до бібліотеки</string>
     <string name="manga_info_collapse">Менше</string>
     <string name="manga_info_expand">Більше</string>
     <string name="information_webview_required">WebView необхідний для Tachiyomi</string>
@@ -482,10 +476,10 @@
     <string name="creating_backup_error">Помилка резервування</string>
     <string name="backup_in_progress">Бекап уже виконується</string>
     <plurals name="restore_completed_message">
-        <item quantity="one">Зроблено %1$s з %2$s помилкою</item>
-        <item quantity="few">Зроблено %1$s з %2$s помилками</item>
-        <item quantity="many">Зроблено %1$s з %2$s помилками</item>
-        <item quantity="other">Зроблено %1$s з %2$s помилками</item>
+        <item quantity="one">Зроблено %1$s з %2$s помилкоюЗроблено %1$s з %2$s помилкамиЗроблено %1$s з %2$s помилками</item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="restore_duration">%02d хв, %02d сек</string>
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
@@ -528,7 +522,7 @@
     <string name="tapping_inverted_horizontal">Горизонтально</string>
     <string name="tapping_inverted_none">Нічого</string>
     <string name="pref_read_with_tapping_inverted">Інвертувати тицяння</string>
-    <string name="unknown_status">Невідомий статус</string>
+    <string name="unknown_status">Невідомий стан</string>
     <string name="unknown_author">Невідомий автор</string>
     <string name="requires_app_restart">Потрібен перезапуск додатку, щоб зміни вступили в дію</string>
     <string name="label_network">Мережа</string>
@@ -539,7 +533,6 @@
     <string name="download_insufficient_space">Не вдалось завантажити глави через нестачу місця в сховищі</string>
     <string name="action_global_search_query">Шукати для \"%1$s\" глобально</string>
     <string name="pref_category_reading_mode">Режим читання</string>
-    <string name="pref_category_locale">Локаль</string>
     <string name="pref_category_theme">Тема</string>
     <string name="action_sort_date_added">Дата додавання</string>
     <plurals name="num_trackers">
@@ -556,7 +549,7 @@
     <string name="channel_progress">Поступ</string>
     <string name="download_notifier_download_finish">Завантаження завершено</string>
     <string name="backup_restore_missing_trackers">Трекери не авторизовано:</string>
-    <string name="pref_remove_bookmarked_chapters">Видалити глави з закладок</string>
+    <string name="pref_remove_bookmarked_chapters">Дозволити видалення глав з закладок</string>
     <string name="pref_category_delete_chapters">Видалити глави</string>
     <string name="ext_nsfw_warning">Може містити контент NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
@@ -595,8 +588,8 @@
     <string name="pref_show_nsfw_source">Показувати в списку джерел</string>
     <string name="pref_category_nsfw_content">NSFW (18+) джерела</string>
     <string name="channel_crash_logs">Логи падінь</string>
-    <string name="track_finished_reading_date">Дата закінчення читання</string>
-    <string name="track_started_reading_date">Дата початку читання</string>
+    <string name="track_finished_reading_date">Дата закінчення</string>
+    <string name="track_started_reading_date">Дата початку</string>
     <string name="crash_log_saved">Логи падінь збережено</string>
     <string name="pref_dump_crash_logs_summary">Зберігає логи помилок до файлу для надсилання розробникам</string>
     <string name="pref_dump_crash_logs">Дамп логів про падіння</string>
@@ -604,7 +597,6 @@
     <string name="edge_nav">Межа</string>
     <string name="kindlish_nav">Kindle-подібна</string>
     <string name="l_nav">L-подібна</string>
-    <string name="default_nav">За замовчуванням</string>
     <string name="network_unmetered">Безлімітна мережа</string>
     <string name="action_desc">За спаданням</string>
     <string name="action_asc">За зростанням</string>
@@ -641,14 +633,13 @@
     <string name="rotation_landscape">Альбомна</string>
     <string name="rotation_portrait">Портретна</string>
     <string name="rotation_type">Тип орієнтації</string>
-    <string name="default_rotation_type">За замовчуванням</string>
     <string name="pref_create_folder_per_manga_summary">Створювати теки в відповідності до назви манги</string>
     <string name="pref_create_folder_per_manga">Зберігати сторінки до окремих тек</string>
     <string name="pref_reader_actions">Дії</string>
     <string name="pref_grayscale">Відтінки сірого</string>
     <string name="notification_incognito_text">Вимкнути режим інкогніто</string>
     <string name="automatic_background">Автоматично</string>
-    <string name="cancel_all_for_series">Відмінити для усієї серії</string>
+    <string name="cancel_all_for_series">Скасувати для усієї серії</string>
     <string name="error_no_match">Збігів не знайдено</string>
     <string name="source_unsupported">Джерело не підтримується</string>
     <string name="unread">Не прочитано</string>
@@ -663,7 +654,7 @@
     <string name="tracking_guide">Гайд відслідковування</string>
     <string name="off">Вимкнено</string>
     <string name="on">Увімкнено</string>
-    <string name="categorized_display_settings">Налаштування відображення для кожної категорії</string>
+    <string name="categorized_display_settings">Налаштування сортування та відображення для кожної категорії</string>
     <string name="pref_library_update_refresh_trackers_summary">Оновлювати відстежуване при оновлені бібліотеки</string>
     <string name="pref_library_update_refresh_trackers">Автоматично оновлювати відстежуване</string>
     <string name="restrictions">Обмеження %s</string>
@@ -672,4 +663,49 @@
     <string name="alignment_top">Згори</string>
     <string name="pref_side_nav_icon_alignment">Вирівнювання значків бокової навігації</string>
     <string name="action_display_local_badge">Локальні значки</string>
+    <string name="information_empty_category_dialog">У вашій бібліотеці ще немає категорій.</string>
+    <string name="notification_updating">Оновлення бібліотеки... (%1$d/%2$d)</string>
+    <string name="tracker_komga_warning">Цей трекер сумісний тільки з джерелом Komga.</string>
+    <string name="about_dont_kill_my_app">У деяких виробників є додаткові обмеження, котрі вбивають фонові сервіси. На цьому сайті більше інформації з приводу того, як це виправити.</string>
+    <string name="label_background_activity">Фонова активність</string>
+    <string name="restore_miui_warning">Резервування/Відновлення можуть не працювати належним чином, у випадку, якщо вимкнено Оптимізацію MIUI.</string>
+    <string name="enhanced_tracking_info">Сервіси, які надають розширені можливості для певних джерел. Манга буде автоматично відслідковуватись при додаванні до бібліотеки.</string>
+    <string name="enhanced_services">Розширені сервіси</string>
+    <string name="pref_lowest">Найнижча</string>
+    <string name="pref_low">Низька</string>
+    <string name="pref_high">Висока</string>
+    <string name="pref_highest">Найвища</string>
+    <string name="pref_hide_threshold">Чутливість автоматичного приховування меню при прокручуванні</string>
+    <string name="pref_dark_theme_pure_black">Чистий чорний темний режим</string>
+    <string name="theme_yotsuba">Йоцуба</string>
+    <string name="theme_yinyang">Інь та Янь</string>
+    <string name="theme_tako">Тако</string>
+    <string name="theme_strawberrydaiquiri">Полуничний Дайкірі</string>
+    <string name="theme_midnightdusk">Опівнічні Сутінки</string>
+    <string name="theme_greenapple">Зелене яблуко</string>
+    <string name="theme_blue">Синя</string>
+    <string name="theme_monet">Динамічна</string>
+    <string name="pref_app_theme">Тема додатку</string>
+    <string name="action_start_downloading_now">Розпочати завантаження зараз</string>
+    <string name="action_sort_next_updated">Наступне очікуване оновлення</string>
+    <string name="pref_inverted_colors">Інвертовано</string>
+    <string name="pref_relative_time_long">Давніше (Нещодавно+, n днів тому)</string>
+    <string name="pref_relative_time_short">Нещодавно (Сьогодні, Вчора)</string>
+    <string name="pref_relative_format">Відносні позначки часу</string>
+    <plurals name="relative_time">
+        <item quantity="one">Учора</item>
+        <item quantity="few">%1$d днів тому</item>
+        <item quantity="many">%1$d днів тому</item>
+        <item quantity="other">%1$d днів тому</item>
+    </plurals>
+    <string name="relative_time_today">Сьогодні</string>
+    <string name="recently">Нещодавно</string>
+    <string name="theme_tealturquoise">Бірюзова</string>
+    <string name="confirm_lock_change">Виконайте автентифікацію, щоб підтвердити зміну</string>
+    <string name="label_default">Типово</string>
+    <string name="pref_category_timestamps">Часові мітки</string>
+    <string name="pref_category_appearance">Вигляд</string>
+    <string name="action_track">Доріжка</string>
+    <string name="pref_category_navigation">Навігація</string>
+    <string name="getting_started_guide">Посібник з початку роботи</string>
 </resources>

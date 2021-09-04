@@ -113,9 +113,6 @@
     <string name="pref_manage_notifications">सुचनेचे व्यवस्थापन</string>
     <string name="pref_confirm_exit">बाहेर पडायसाठी पुन्हा पुष्टी करा</string>
     <string name="pref_date_format">तारिकेचा स्वरूप</string>
-    <string name="system_default">डिफॉल्ट</string>
-    <string name="pref_language">भाषा</string>
-    <string name="theme_default">डिफॉल्ट</string>
     <string name="theme_system">तंत्राचे अनुसरण करा</string>
     <string name="theme_dark">डार्क</string>
     <string name="theme_light">लाइट</string>
@@ -185,7 +182,6 @@
     <string name="vertical_viewer">सरळ</string>
     <string name="right_to_left_viewer">उजवीकडून डावीकडे</string>
     <string name="left_to_right_viewer">डावीकडून उजवीकडे</string>
-    <string name="default_viewer">डिफॉल्ट</string>
     <string name="pref_viewer_type">डीफॉल्ट वाचन मोड</string>
     <string name="gray_background">फिक्का काडा</string>
     <string name="white_background">पांढरा</string>
@@ -203,7 +199,6 @@
     <string name="filter_mode_screen">स्क्रीन</string>
     <string name="filter_mode_multiply">गुणाकार</string>
     <string name="filter_mode_overlay">थर</string>
-    <string name="filter_mode_default">डिफॉल्ट</string>
     <string name="pref_color_filter_mode">रंग फिल्टर मिश्रण मोड</string>
     <string name="pref_custom_color_filter">कस्टम रंग फिल्टर वापरा</string>
     <string name="pref_custom_brightness">कस्टम ब्राइटनेस वापरा</string>
@@ -219,7 +214,6 @@
     <string name="update_never">स्वतः करा</string>
     <string name="pref_library_update_interval">लायब्ररी अद्यतन वारंवारता</string>
     <string name="pref_category_library_update">अद्यतने</string>
-    <string name="default_columns">डीफॉल्ट</string>
     <string name="landscape">लँडस्केप</string>
     <string name="portrait">पोर्ट्रेट</string>
     <string name="pref_library_columns">आयटम प्रती पंक्ती</string>

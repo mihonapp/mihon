@@ -126,7 +126,6 @@
     <string name="pref_library_columns">Kohteita per rivi</string>
     <string name="portrait">Pystysuunta</string>
     <string name="landscape">Vaakataso</string>
-    <string name="default_columns">Oletus</string>
     <string name="pref_library_update_interval">Päivitystiheys</string>
     <string name="update_never">Manuaalinen</string>
     <string name="update_3hour">Kolmen tunnin välein</string>
@@ -141,8 +140,6 @@
     <string name="pref_update_only_non_completed">Päivitä vain jatkuvat sarjat</string>
     <string name="pref_auto_update_manga_sync">Päivitä luvun edistyminen lukemisen jälkeen</string>
     <string name="pref_start_screen">Aloitusnäyttö</string>
-    <string name="pref_language">Kieli</string>
-    <string name="system_default">Oletus</string>
     <string name="default_category">Oletus kategoria</string>
     <string name="default_category_summary">Kysy aina</string>
     <string name="all_lang">Kaikki</string>
@@ -184,7 +181,6 @@
     <string name="white_background">Valkoinen</string>
     <string name="black_background">Musta</string>
     <string name="pref_viewer_type">Oletuslukutila</string>
-    <string name="default_viewer">Oletus</string>
     <string name="left_to_right_viewer">Vasemmalta oikealle</string>
     <string name="right_to_left_viewer">Oikealta vasemmalle</string>
     <string name="vertical_viewer">Pystysuora</string>
@@ -324,7 +320,6 @@
     <string name="snack_add_to_library">Lisää sarja kirjastoon\?</string>
     <string name="picture_saved">Kuva tallennetu</string>
     <string name="pref_color_filter_mode">Värisuodattimen sekoitus tyyppi</string>
-    <string name="filter_mode_default">Tavallinen</string>
     <string name="filter_mode_overlay">Päällys</string>
     <string name="filter_mode_multiply">Monistettu</string>
     <string name="filter_mode_screen">Näyttö</string>
@@ -522,7 +517,6 @@
     <string name="download_insufficient_space">Lukuja ei voitu ladata vähäisen tallennustilan vuoksi</string>
     <string name="action_global_search_query">Etsi \"%1$s\" globaalisesti</string>
     <string name="pref_category_reading_mode">Lukutila</string>
-    <string name="pref_category_locale">Paikallinen</string>
     <string name="pref_category_theme">Teema</string>
     <string name="action_sort_date_added">Lisäyspäivämäärä</string>
     <plurals name="num_trackers">
@@ -577,7 +571,6 @@
     <string name="edge_nav">Reuna</string>
     <string name="kindlish_nav">Kindle tyylinen</string>
     <string name="l_nav">L-muotoinen</string>
-    <string name="default_nav">Oletus</string>
     <string name="pref_dump_crash_logs">Poista kaatumislokit</string>
     <string name="channel_crash_logs">Kaatumislokit</string>
     <string name="track_finished_reading_date">Lopetuspäivämäärä</string>
@@ -623,7 +616,6 @@
     <string name="pref_create_folder_per_manga">Tallenna sivut erillisiin kansioihin</string>
     <string name="pref_reader_actions">Toiminnot</string>
     <string name="rotation_type">Kierron tyyppi</string>
-    <string name="default_rotation_type">Oletus</string>
     <string name="pref_grayscale">Harmaasävy</string>
     <string name="notification_incognito_text">Poista incognito-tila käytöstä</string>
     <string name="automatic_background">Automaattinen</string>

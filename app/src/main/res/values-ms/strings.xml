@@ -73,7 +73,6 @@
     <string name="pref_library_columns">Kandungan setiap baris</string>
     <string name="portrait">Potret</string>
     <string name="landscape">Landskap</string>
-    <string name="default_columns">Lalai</string>
     <string name="pref_library_update_interval">Kekerapan kemas kini</string>
     <string name="update_never">Manual</string>
     <string name="update_3hour">Setiap 3 jam</string>
@@ -88,8 +87,6 @@
     <string name="pref_update_only_non_completed">Hanya kemas kini manga yang masih berterusan</string>
     <string name="pref_auto_update_manga_sync">Kemas kini selepas dibaca</string>
     <string name="pref_start_screen">Skrin permulaan</string>
-    <string name="pref_language">Bahasa</string>
-    <string name="system_default">Lalai</string>
     <string name="default_category">Kategori lalai</string>
     <string name="default_category_summary">Sentiasa tanya</string>
     <string name="pref_fullscreen">Skrin penuh</string>
@@ -108,7 +105,6 @@
     <string name="white_background">Putih</string>
     <string name="black_background">Hitam</string>
     <string name="pref_viewer_type">Mod membaca lalai</string>
-    <string name="default_viewer">Lalai</string>
     <string name="left_to_right_viewer">Kiri ke kanan</string>
     <string name="right_to_left_viewer">Kanan ke kiri</string>
     <string name="vertical_viewer">Menegak</string>
@@ -258,7 +254,7 @@
     <string name="information_no_downloads">Tiada muat turun</string>
     <string name="information_no_recent">Tiada kemas kini terkini</string>
     <string name="information_no_recent_manga">Tiada bacaan setakat ini</string>
-    <string name="information_empty_library">Pustaka kosong. Tambah siri ke pustaka menggunakan Semak imbas.</string>
+    <string name="information_empty_library">Pustaka kosong</string>
     <string name="download_notifier_downloader_title">Pemuat turun</string>
     <string name="download_notifier_title_error">Ralat</string>
     <string name="download_notifier_unknown_error">Ralat tidak diketahui ketika memuat turun bab</string>
@@ -326,7 +322,6 @@
     <string name="pref_color_filter_mode">Mod turas warna campuran</string>
     <string name="label_help">Bantuan</string>
     <string name="pref_library_update_prioritization">Susunan kemas kini</string>
-    <string name="filter_mode_default">Biasa</string>
     <string name="filter_mode_overlay">Lapisan atas</string>
     <string name="filter_mode_multiply">Berganda</string>
     <string name="filter_mode_screen">Skrin</string>
@@ -513,7 +508,6 @@
     <string name="download_insufficient_space">Memuat turun tidak berjaya kerana kekurangan ruang storan</string>
     <string name="action_global_search_query">Cari untuk \"%1$s\" menggunakan carian keseluruhan</string>
     <string name="pref_category_reading_mode">Mod membaca</string>
-    <string name="pref_category_locale">Tempat</string>
     <string name="pref_category_theme">Tema</string>
     <plurals name="num_trackers">
         <item quantity="other">%d penjejak</item>
@@ -561,7 +555,6 @@
     <string name="pref_show_nsfw_source">Tunjuk dalam senarai sumber</string>
     <string name="file_picker_error">Tiada aplikasi memilih fail</string>
     <string name="myanimelist_relogin">Sila log masuk ke MAL sekali lagi</string>
-    <string name="default_nav">Lalai</string>
     <string name="pref_viewer_nav">Tataletak navigasi</string>
     <string name="edge_nav">Sisi</string>
     <string name="kindlish_nav">Serupa Kindle</string>
@@ -611,7 +604,6 @@
     <string name="pref_create_folder_per_manga_summary">Mencipta folder mengikut tajuk manga</string>
     <string name="pref_create_folder_per_manga">Simpan halaman ke folder berasingan</string>
     <string name="rotation_type">Jenis putaran skrin</string>
-    <string name="default_rotation_type">Lalai</string>
     <string name="pref_grayscale">Skala kelabu</string>
     <string name="notification_incognito_text">Nyahdaya mod inkognito</string>
     <string name="automatic_background">Automatik</string>
@@ -650,7 +642,6 @@
     <string name="theme_greenapple">Epal Hijau</string>
     <string name="theme_blue">Biru</string>
     <string name="theme_monet">Dinamik</string>
-    <string name="theme_default">Lalai</string>
     <string name="pref_app_theme">Tema aplikasi</string>
     <string name="enhanced_tracking_info">Perkidmatan yang menyediakan fungsi yang dipertingkatkan untuk sumber tertentu. Manga akan dijejaki secara automatik apabila ditambahkan ke pustaka.</string>
     <string name="notification_updating">Mengemaskini pustaka… (%1$d/%2$d)</string>
@@ -659,4 +650,27 @@
     <string name="about_dont_kill_my_app">Sesetengah pengeluar ada sekatan tambahan pada aplikasi yang akan menghentikan perkidmatan latar belakang. Laman web ini ada maklumat cara membaikinya.</string>
     <string name="enhanced_services">Pertingkat perkhidmatan</string>
     <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
+    <string name="pref_lowest">Terendah</string>
+    <string name="pref_low">Rendah</string>
+    <string name="pref_high">Tinggi</string>
+    <string name="pref_highest">Tertinggi</string>
+    <string name="pref_hide_threshold">Automatik sembunyi menu pada sensitiviti skrol</string>
+    <string name="label_background_activity">Aktiviti latar belakang</string>
+    <string name="recently">Baru-baru ini</string>
+    <string name="pref_inverted_colors">Songsang</string>
+    <string name="pref_relative_time_long">Panjang (Pendek+, n hari yang lalu)</string>
+    <string name="pref_relative_time_short">Pendek (Hari ini, Semalam)</string>
+    <string name="pref_relative_format">Cap masa relatif</string>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d hari lalu</item>
+    </plurals>
+    <string name="relative_time_today">Hari ini</string>
+    <string name="theme_tealturquoise">Teal &amp; Turquoise</string>
+    <string name="confirm_lock_change">Sahkan untuk mengesahkan perubahan</string>
+    <string name="label_default">Lalai</string>
+    <string name="pref_category_appearance">Tampilan</string>
+    <string name="pref_category_timestamps">Cap Masa</string>
+    <string name="action_track">Jejak</string>
+    <string name="pref_category_navigation">Navigasi</string>
+    <string name="getting_started_guide">Panduan penggunaan</string>
 </resources>

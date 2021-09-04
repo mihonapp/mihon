@@ -75,7 +75,6 @@
     <string name="pref_category_about">Despre</string>
     <string name="pref_library_columns">Elemente pe rând</string>
     <string name="portrait">Portret</string>
-    <string name="default_columns">Prestabilit</string>
     <string name="pref_library_update_interval">Frecvență de actualizare</string>
     <string name="update_never">Manual</string>
     <string name="update_3hour">La fiecare 3 ore</string>
@@ -90,8 +89,6 @@
     <string name="pref_update_only_non_completed">Actualizați doar manga în desfășurare</string>
     <string name="pref_auto_update_manga_sync">Actualizați progresul capitolului după citire</string>
     <string name="pref_start_screen">Ecran principal</string>
-    <string name="pref_language">Limbă</string>
-    <string name="system_default">Implicit</string>
     <string name="default_category">Categorie implicită</string>
     <string name="default_category_summary">Întreabă mereu</string>
     <string name="all_lang">Toate</string>
@@ -132,7 +129,6 @@
     <string name="white_background">Alb</string>
     <string name="black_background">Negru</string>
     <string name="pref_viewer_type">Mod de citire implicit</string>
-    <string name="default_viewer">Implicit</string>
     <string name="left_to_right_viewer">De la stânga la dreapta</string>
     <string name="right_to_left_viewer">De la dreapta la stânga</string>
     <string name="vertical_viewer">Vertical</string>
@@ -322,7 +318,6 @@
     <string name="action_open_in_web_view">Deschide în WebView</string>
     <string name="pref_true_color">Culoare 32-bit</string>
     <string name="pref_color_filter_mode">Mod filtru de culoare</string>
-    <string name="filter_mode_default">Implicit</string>
     <string name="filter_mode_overlay">Acoperire</string>
     <string name="filter_mode_multiply">Înmulțește</string>
     <string name="filter_mode_screen">Ecran</string>
@@ -402,7 +397,6 @@
         <item quantity="few">Pentru %d titluri</item>
         <item quantity="other">Pentru %d titluri</item>
     </plurals>
-    <string name="theme_default">Implicit</string>
     <string name="action_menu">Meniu</string>
     <string name="action_reorganize_by">Reordonează</string>
     <string name="action_newest">Cele mai recente</string>
@@ -533,7 +527,6 @@
     <string name="download_insufficient_space">Imposibil de descărcat capitole din cauza spațiului-disc redus</string>
     <string name="action_global_search_query">Căutați „%1$s” la nivel global</string>
     <string name="pref_category_reading_mode">Mod citire</string>
-    <string name="pref_category_locale">Local</string>
     <string name="pref_category_theme">Temă</string>
     <string name="action_sort_date_added">Data adăugării</string>
     <string name="group_backup_restore">Creează copie de rezervă și restaurează</string>
@@ -614,7 +607,6 @@
     <string name="edge_nav">Margine</string>
     <string name="kindlish_nav">Similar unui Kindle</string>
     <string name="l_nav">În formă de L</string>
-    <string name="default_nav">Implicită</string>
     <string name="action_sort_chapter_fetch_date">Data preluată</string>
     <string name="action_filter_tracked">Urmărit</string>
     <string name="backup_restore_content_full">Datele din fișierul de rezervă vor fi restaurate.

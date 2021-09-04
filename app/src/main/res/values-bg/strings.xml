@@ -68,7 +68,6 @@
     <string name="pref_library_columns">Манга на ред</string>
     <string name="portrait">Портретно</string>
     <string name="landscape">Пейзажно</string>
-    <string name="default_columns">По подразбиране</string>
     <string name="pref_library_update_interval">Честота на обновяване на библиотеката</string>
     <string name="update_never">Самостоятелно</string>
     <string name="update_3hour">На всеки 3 часа</string>
@@ -82,8 +81,6 @@
     <string name="pref_update_only_non_completed">Обновявай само излизаща манга</string>
     <string name="pref_auto_update_manga_sync">Обнови прогреса по заглавието след прочитане</string>
     <string name="pref_start_screen">Начален екран</string>
-    <string name="pref_language">Език</string>
-    <string name="system_default">По подразбиране</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Цял екран</string>
     <string name="pref_lock_orientation">Заключи ориентацията</string>
@@ -99,7 +96,6 @@
     <string name="white_background">Бял</string>
     <string name="black_background">Черен</string>
     <string name="pref_viewer_type">Режим на четене по подразбиране</string>
-    <string name="default_viewer">По подразбиране</string>
     <string name="left_to_right_viewer">От ляво надясно</string>
     <string name="right_to_left_viewer">От дясно наляво</string>
     <string name="vertical_viewer">Вертикално</string>
@@ -358,7 +354,6 @@
     <string name="pref_true_color">32-битови цветове</string>
     <string name="pref_skip_read_chapters">Пропускай прочетените глави</string>
     <string name="pref_color_filter_mode">Режим на цветовия филтър</string>
-    <string name="filter_mode_default">По подразбиране</string>
     <string name="filter_mode_overlay">Наложен</string>
     <string name="filter_mode_multiply">Умножен</string>
     <string name="filter_mode_screen">Екранен</string>
@@ -468,7 +463,6 @@
     <string name="pref_category_security">Сигурност</string>
     <string name="pref_manage_notifications">Уведомления</string>
     <string name="pref_confirm_exit">Потвърждение при излизане</string>
-    <string name="theme_default">По подразбиране</string>
     <string name="theme_system">Система на абонаментите</string>
     <string name="theme_dark">Включено</string>
     <string name="theme_light">Изключено</string>
@@ -543,7 +537,6 @@
     <string name="action_disable_all">Деактивирай всички</string>
     <string name="action_enable_all">Активира всички</string>
     <string name="tapping_inverted_none">Без</string>
-    <string name="pref_category_locale">Език</string>
     <string name="tapping_inverted_both">И двете</string>
     <string name="tapping_inverted_vertical">Вертикално</string>
     <string name="tapping_inverted_horizontal">Хоризонтално</string>

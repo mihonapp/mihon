@@ -90,7 +90,6 @@
     <string name="theme_system">სისტემური</string>
     <string name="theme_light">მსუბუქი</string>
     <string name="theme_dark">ბნელი</string>
-    <string name="pref_language">ენა</string>
     <string name="pref_date_format">თარიღის ფორმატი</string>
     <string name="pref_confirm_exit">გამოსვლის დადასტურება</string>
     <string name="pref_manage_notifications">შეტყობინებების მართვა</string>
@@ -121,9 +120,6 @@
     <string name="pref_library_update_refresh_metadata">ავტომატურად განაახლე მეტადატა</string>
     <string name="label_migration">მიგრაცია</string>
     <string name="default_category">ნაგულისხმევი კატეგორია</string>
-    <string name="theme_default">ნაგულისხმევი</string>
-    <string name="system_default">ნაგულისხმევი</string>
-    <string name="default_columns">ნაგულისხმევი</string>
     <string name="default_category_summary">ყოველთვის მკითხე</string>
     <string name="all">ყველა</string>
     <string name="all_lang">ყველა</string>
@@ -147,7 +143,6 @@
     <string name="pref_show_reading_mode_summary">მოკლედ აჩვენე ახლანდელი რეჟიმი როცა მკითხველი გახსნილია</string>
     <string name="pref_true_color">32-bit ფერი</string>
     <string name="pref_crop_borders">კუთხეების ჩამოჭრა</string>
-    <string name="filter_mode_default">ნაგულისმევი</string>
     <string name="filter_mode_multiply">გაამრავლე</string>
     <string name="filter_mode_screen">ეკრანი</string>
     <string name="filter_mode_lighten">განათება</string>
@@ -164,7 +159,6 @@
     <string name="gray_background">ნაცრისფერი</string>
     <string name="black_background">შავი</string>
     <string name="pref_viewer_type">ნაგულისხმევი კითხვის რეჟიმი</string>
-    <string name="default_viewer">ნაგულისხმევი</string>
     <string name="left_to_right_viewer">მარცხნიდან მარჯვნივ</string>
     <string name="right_to_left_viewer">მარჯვნიდან მარცხნივ</string>
     <string name="vertical_viewer">ვერტიკალური</string>
@@ -519,7 +513,6 @@
         <item quantity="one">1 წუთის შემდეგ</item>
         <item quantity="other">%1$s წუთის შემდეგ</item>
     </plurals>
-    <string name="pref_category_locale">ადგილმდებარეობა</string>
     <string name="pref_category_theme">თემა</string>
     <string name="action_disable">გამორთვა</string>
     <string name="action_open_in_settings">პარამეტრებში გახსნა</string>

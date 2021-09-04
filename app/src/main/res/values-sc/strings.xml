@@ -77,7 +77,6 @@
     <string name="pref_library_columns">Elementos pro riga</string>
     <string name="portrait">Verticale</string>
     <string name="landscape">Orizontale</string>
-    <string name="default_columns">Predefinidu</string>
     <string name="pref_library_update_interval">Frecuèntzia de agiornamentu</string>
     <string name="update_never">Manuale</string>
     <string name="update_3hour">Cada 3 oras</string>
@@ -92,8 +91,6 @@
     <string name="pref_update_only_non_completed">Agiorna sos manga in cursu ebbia</string>
     <string name="pref_auto_update_manga_sync">Agiorna su progressu a pustis de sa leghidura</string>
     <string name="pref_start_screen">Ischermada de incumintzu</string>
-    <string name="pref_language">Limba</string>
-    <string name="system_default">Predefinida</string>
     <string name="default_category">Categoria predefinida</string>
     <string name="default_category_summary">Pedi semper</string>
     <string name="all_lang">Totus</string>
@@ -133,7 +130,6 @@
     <string name="white_background">Arbu/biancu</string>
     <string name="black_background">Nieddu</string>
     <string name="pref_viewer_type">Modalidade de leghidura predefinida</string>
-    <string name="default_viewer">Predefinidu</string>
     <string name="left_to_right_viewer">Dae manca a destra</string>
     <string name="right_to_left_viewer">Dae destra a manca</string>
     <string name="vertical_viewer">Verticale</string>
@@ -310,7 +306,7 @@
     <string name="information_no_downloads">Perunu iscarrigamentu</string>
     <string name="information_no_recent">Perunu agiornamentu reghente</string>
     <string name="information_no_recent_manga">Nudda de lèghidu dae pagu</string>
-    <string name="information_empty_library">Sa biblioteca tua est bòida. Annanghe sèries a sa biblioteca tua dae Esplora.</string>
+    <string name="information_empty_library">Sa biblioteca tua est bòida</string>
     <string name="information_empty_category">Non tenes categorias. Incarca su butone de su \"prus\" pro nde creare una pro organizare sa biblioteca tua.</string>
     <string name="download_notifier_downloader_title">Iscarrigadore</string>
     <string name="download_notifier_title_error">Errore</string>
@@ -324,7 +320,6 @@
     <string name="pref_true_color">Colore a 32 bit</string>
     <string name="pref_skip_read_chapters">Brinca sos capìtulos marcados comente lèghidos</string>
     <string name="pref_color_filter_mode">Modalidade de fusione de su filtru colore</string>
-    <string name="filter_mode_default">Predefinidu</string>
     <string name="filter_mode_overlay">Istratu superiore</string>
     <string name="filter_mode_multiply">Multìplica</string>
     <string name="filter_mode_screen">Ischermu</string>
@@ -522,7 +517,6 @@
     <string name="download_insufficient_space">Iscarrigamentu de sos capìtulos fallidu pro neghe de su pagu ispàtziu lìberu in su discu</string>
     <string name="action_global_search_query">Chirca «%1$s» globalmente</string>
     <string name="pref_category_reading_mode">Modalidade de leghidura</string>
-    <string name="pref_category_locale">Limba</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Data de annanghidura</string>
     <plurals name="num_trackers">
@@ -577,7 +571,6 @@
     <string name="pref_viewer_nav">Impaginatzione de su navigadore</string>
     <string name="kindlish_nav">A tipu Kindle</string>
     <string name="l_nav">A forma de L</string>
-    <string name="default_nav">Predefinidu</string>
     <string name="channel_crash_logs">Registros de sos arrestos anòmalos</string>
     <string name="track_finished_reading_date">Data de fine</string>
     <string name="track_started_reading_date">Data de incumintzu</string>
@@ -620,7 +613,6 @@
     <string name="rotation_landscape">Orizontale</string>
     <string name="rotation_portrait">Verticale</string>
     <string name="rotation_type">Casta de rotatzione</string>
-    <string name="default_rotation_type">Predefinida</string>
     <string name="pref_create_folder_per_manga_summary">Creat cartellas in base a su tìtulu de su manga</string>
     <string name="pref_create_folder_per_manga">Sarva sas pàginas in cartellas separadas</string>
     <string name="pref_reader_actions">Atziones</string>
@@ -656,7 +648,7 @@
     <string name="theme_tako">Tako</string>
     <string name="notification_updating">Agiornende sa biblioteca… (%1$d/%2$d)</string>
     <string name="tracker_komga_warning">Custu arrastadore est cumpatìbile petzi cun sa fonte Komga.</string>
-    <string name="restore_miui_warning">Su sarvamentu/su riprìstinu diat pòdere non funtzionare comente si tocat si s\'otimizatzione MIUI est disabilitada.</string>
+    <string name="restore_miui_warning">Sa còpia de seguresa e su riprìstinu diant pòdere non funtzionare comente si tocat si s\'otimizatzione MIUI est disabilitada.</string>
     <string name="enhanced_tracking_info">Servìtzios chi frunint funtzionalidades avantzadas pro fontes ispetzìficas. Sos mangas benint arrastados in manera automàtica cando los annanghes a sa biblioteca tua.</string>
     <string name="enhanced_services">Servìtzios avantzados</string>
     <string name="pref_dark_theme_pure_black">Modalidade iscura niedda pura</string>
@@ -667,8 +659,31 @@
     <string name="theme_greenapple">Mela birde</string>
     <string name="theme_blue">Biaitu</string>
     <string name="theme_monet">Dinàmicu</string>
-    <string name="theme_default">Predefinidu</string>
     <string name="pref_app_theme">Tema de s\'aplicatzione</string>
     <string name="action_sort_next_updated">Agiornamentu isetadu imbeniente</string>
     <string name="about_dont_kill_my_app">Unos cantos produtores tenent restritziones de s\'aplicatzione chi istudant sos servìtzios in s\'isfundu. Custu situ web tenet informatziones in prus in subra de comente acontzare su problema.</string>
+    <string name="pref_lowest">Bassa meda</string>
+    <string name="pref_low">Bassa</string>
+    <string name="pref_highest">Arta meda</string>
+    <string name="pref_high">Arta</string>
+    <string name="pref_hide_threshold">Sensibilidade de sa cuadura de su menù in manera automàtica cun s\'iscurrimentu</string>
+    <string name="label_background_activity">Atividade in s\'isfundu</string>
+    <string name="pref_inverted_colors">Furriada</string>
+    <string name="pref_relative_time_long">Longa (curtza+, n dies a oe)</string>
+    <string name="pref_relative_time_short">Curtza (oe, eris)</string>
+    <string name="pref_relative_format">Marcas temporales relativas</string>
+    <plurals name="relative_time">
+        <item quantity="one">Eris</item>
+        <item quantity="other">%1$d dies a oe</item>
+    </plurals>
+    <string name="relative_time_today">Oe</string>
+    <string name="recently">Dae pagu</string>
+    <string name="theme_tealturquoise">Birde abba e turchesu</string>
+    <string name="confirm_lock_change">Autèntica·ti pro cunfirmare sa modìfica</string>
+    <string name="label_default">Predefinida</string>
+    <string name="pref_category_timestamps">Marcas temporales</string>
+    <string name="pref_category_appearance">Aparèntzia</string>
+    <string name="action_track">Arrasta</string>
+    <string name="pref_category_navigation">Navigatzione</string>
+    <string name="getting_started_guide">Ghia pro incumintzare</string>
 </resources>

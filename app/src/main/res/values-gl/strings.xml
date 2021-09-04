@@ -55,7 +55,6 @@
     <string name="vertical_viewer">Vertical</string>
     <string name="right_to_left_viewer">De dereita a esquerda</string>
     <string name="left_to_right_viewer">De esquerda a dereita</string>
-    <string name="default_viewer">Por defecto</string>
     <string name="pref_viewer_type">Modo de lectura por defecto</string>
     <string name="black_background">Negro</string>
     <string name="gray_background">Gris</string>
@@ -74,7 +73,6 @@
     <string name="filter_mode_screen">Pantalla</string>
     <string name="filter_mode_multiply">Multiplicar</string>
     <string name="filter_mode_overlay">Superposición</string>
-    <string name="filter_mode_default">Por defecto</string>
     <string name="pref_color_filter_mode">Modo de mestura do filtro de cor</string>
     <string name="pref_custom_color_filter">Filtro de cor personalizado</string>
     <string name="pref_custom_brightness">Brillo presonalizado</string>
@@ -139,7 +137,6 @@
     <string name="pref_library_update_interval">Frecuancia de actualización da biblioteca</string>
     <string name="pref_category_library_update">Actualizacións</string>
     <string name="pref_jump_to_chapters">Saltar aos capítulos abertos</string>
-    <string name="default_columns">Por defecto</string>
     <string name="landscape">Horizontal</string>
     <string name="portrait">Vertical</string>
     <string name="pref_library_columns">Elementos por fila</string>
@@ -168,15 +165,11 @@
     <string name="pref_hide_bottom_bar_on_scroll">Esconder a barra inferior ao desprazar</string>
     <string name="pref_confirm_exit">Confirmar saír</string>
     <string name="pref_date_format">Formato de data</string>
-    <string name="system_default">Por defecto</string>
-    <string name="pref_language">Idioma</string>
     <string name="pref_start_screen">Pantalla inicial</string>
-    <string name="theme_default">Por defecto</string>
     <string name="theme_dark">Encendido</string>
     <string name="theme_light">Apagado</string>
     <string name="theme_system">Utilizar o do sistema</string>
     <string name="pref_theme_mode">Modo escuro</string>
-    <string name="pref_category_locale">Localización</string>
     <string name="pref_category_theme">Tema</string>
     <string name="pref_category_about">Acerca de</string>
     <string name="pref_category_advanced">Avanzado</string>

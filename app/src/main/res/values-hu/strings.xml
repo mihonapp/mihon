@@ -30,7 +30,6 @@
     <string name="pref_library_columns">Tételek soronként</string>
     <string name="portrait">Álló</string>
     <string name="landscape">Fekvő</string>
-    <string name="default_columns">Alapértelmezett</string>
     <string name="pref_library_update_interval">Könyvtárfrissítések gyakorisága</string>
     <string name="update_never">Kézi</string>
     <string name="update_3hour">3 óránként</string>
@@ -44,8 +43,6 @@
     <string name="charging">Töltés</string>
     <string name="pref_update_only_non_completed">Csak a jelenleg futó mangákat frissítse</string>
     <string name="pref_start_screen">Kezdőképernyő</string>
-    <string name="pref_language">Nyelv</string>
-    <string name="system_default">Alapértelmezett</string>
     <string name="default_category">Alapértelmezett kategória</string>
     <string name="default_category_summary">Mindig kérdezzen rá</string>
     <string name="pref_fullscreen">Teljes képernyő</string>
@@ -121,7 +118,6 @@
     <string name="white_background">Fehér</string>
     <string name="black_background">Fekete</string>
     <string name="pref_viewer_type">Alapértelmezett megjelenítő</string>
-    <string name="default_viewer">Alapértelmezett</string>
     <string name="left_to_right_viewer">Balról jobbra</string>
     <string name="right_to_left_viewer">Jobbról balra</string>
     <string name="vertical_viewer">Függőlegesen</string>
@@ -207,10 +203,8 @@
     <string name="pref_category_security">Biztonság</string>
     <string name="pref_manage_notifications">Értesítések kezelése</string>
     <string name="pref_confirm_exit">Kilépés megerősítése</string>
-    <string name="theme_default">Alapértelmezett</string>
     <string name="theme_system">Rendszerbeállítás követése</string>
     <string name="pref_theme_mode">Sötét mód</string>
-    <string name="pref_category_locale">Helyszín</string>
     <string name="pref_category_theme">Téma</string>
     <string name="action_move_to_bottom">Ugrás legalulra</string>
     <string name="action_move_to_top">Ugrás legfelülre</string>
@@ -308,8 +302,6 @@
     <string name="nav_zone_left">Bal</string>
     <string name="nav_zone_next">Következő</string>
     <string name="right_and_left_nav">Jobb és bal</string>
-    <string name="default_nav">Alapértelmezett</string>
-    <string name="filter_mode_default">Alapértelmezett</string>
     <string name="copy">Másolás</string>
     <string name="migrate">Áttelepítés</string>
     <string name="display_mode_chapter">%1$s. fejezet</string>
