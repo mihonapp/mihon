@@ -260,7 +260,23 @@ class MangaInfoHeaderAdapter(
             val mangaSource = source?.toString()
             with(binding.mangaSource) {
                 if (mangaSource != null) {
-                    text = mangaSource
+                    val preferences = controller.presenter.preferences
+                    val enabledLanguages = preferences.enabledLanguages().get()
+                        .filterNot { it == "all" }
+
+                    text = if (enabledLanguages.size == 1) {
+                        // For edge cases where user disables a source they got manga of in their library.
+                        if (source.lang !in enabledLanguages) {
+                            source.toString()
+                        } else {
+                            // Hide the language tag when only one language is used.
+                            source.name
+                        }
+                    } else {
+                        // Display the language tag when multiple languages are used.
+                        source.toString()
+                    }
+
                     setOnClickListener {
                         val sourceManager = Injekt.get<SourceManager>()
                         controller.performSearch(sourceManager.getOrStub(source.id).name)
