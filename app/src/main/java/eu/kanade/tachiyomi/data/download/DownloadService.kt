@@ -10,20 +10,26 @@ import android.os.IBinder
 import android.os.PowerManager
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.lang.plusAssign
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.connectivityManager
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import eu.kanade.tachiyomi.util.system.notification
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.wifiManager
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import ru.beryukhov.reactivenetwork.ReactiveNetwork
 import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.injectLazy
 
@@ -80,16 +86,15 @@ class DownloadService : Service() {
      */
     private lateinit var wakeLock: PowerManager.WakeLock
 
-    /**
-     * Subscriptions to store while the service is running.
-     */
     private lateinit var subscriptions: CompositeSubscription
+    private lateinit var ioScope: CoroutineScope
 
     /**
      * Called when the service is created.
      */
     override fun onCreate() {
         super.onCreate()
+        ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         startForeground(Notifications.ID_DOWNLOAD_CHAPTER_PROGRESS, getPlaceholderNotification())
         wakeLock = acquireWakeLock(javaClass.name)
         runningRelay.call(true)
@@ -102,6 +107,7 @@ class DownloadService : Service() {
      * Called when the service is destroyed.
      */
     override fun onDestroy() {
+        ioScope?.cancel()
         runningRelay.call(false)
         subscriptions.unsubscribe()
         downloadManager.stopDownloads()
@@ -129,18 +135,20 @@ class DownloadService : Service() {
      * @see onNetworkStateChanged
      */
     private fun listenNetworkChanges() {
-        subscriptions += ReactiveNetwork.observeNetworkConnectivity(applicationContext)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
+        ReactiveNetwork()
+            .observeNetworkConnectivity(applicationContext)
+            .onEach {
+                withUIContext {
                     onNetworkStateChanged()
-                },
-                {
+                }
+            }
+            .catch {
+                withUIContext {
                     toast(R.string.download_queue_error)
                     stopSelf()
                 }
-            )
+            }
+            .launchIn(ioScope)
     }
 
     /**

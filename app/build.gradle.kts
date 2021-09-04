@@ -161,7 +161,7 @@ dependencies {
     implementation("io.reactivex:rxandroid:1.2.1")
     implementation("io.reactivex:rxjava:1.3.8")
     implementation("com.jakewharton.rxrelay:rxrelay:1.2.0")
-    implementation("com.github.pwittchen:reactivenetwork:0.13.0")
+    implementation("ru.beryukhov:flowreactivenetwork:1.0.4")
 
     // Network client
     val okhttpVersion = "4.9.1"
