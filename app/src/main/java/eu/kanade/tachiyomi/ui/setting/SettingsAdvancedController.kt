@@ -196,7 +196,7 @@ class SettingsAdvancedController : SettingsController() {
                 summary = "%s"
                 entriesRes = arrayOf(R.string.lock_always, R.string.landscape, R.string.lock_never)
                 entryValues = PreferenceValues.TabletUiMode.values().map { it.name }.toTypedArray()
-                defaultValue = if (activity!!.applicationContext.isTablet()) {
+                defaultValue = if (context.isTablet()) {
                     PreferenceValues.TabletUiMode.ALWAYS
                 } else {
                     PreferenceValues.TabletUiMode.NEVER
