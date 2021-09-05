@@ -217,7 +217,7 @@ class DownloadManager(private val context: Context) {
      * @param download the download to cancel.
      */
     fun deletePendingDownload(download: Download) {
-        deleteChapters(listOf(download.chapter), download.manga, download.source)
+        deleteChapters(listOf(download.chapter), download.manga, download.source, true)
     }
 
     fun deletePendingDownloads(vararg downloads: Download) {
@@ -225,7 +225,7 @@ class DownloadManager(private val context: Context) {
         downloadsByManga.map { entry ->
             val manga = entry.value.first().manga
             val source = entry.value.first().source
-            deleteChapters(entry.value.map { it.chapter }, manga, source)
+            deleteChapters(entry.value.map { it.chapter }, manga, source, true)
         }
     }
 
@@ -235,9 +235,15 @@ class DownloadManager(private val context: Context) {
      * @param chapters the list of chapters to delete.
      * @param manga the manga of the chapters.
      * @param source the source of the chapters.
+     * @param isCancelling true if it's simply cancelling a download
      */
-    fun deleteChapters(chapters: List<Chapter>, manga: Manga, source: Source): List<Chapter> {
-        val filteredChapters = getChaptersToDelete(chapters)
+    fun deleteChapters(chapters: List<Chapter>, manga: Manga, source: Source, isCancelling: Boolean = false): List<Chapter> {
+        val filteredChapters = if (isCancelling) {
+            chapters
+        } else {
+            getChaptersToDelete(chapters)
+        }
+
         launchIO {
             removeFromDownloadQueue(filteredChapters)
 
