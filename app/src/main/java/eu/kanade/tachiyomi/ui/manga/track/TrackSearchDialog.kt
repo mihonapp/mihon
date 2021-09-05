@@ -189,9 +189,7 @@ class TrackSearchDialog : DialogController {
         binding.message.text = message ?: binding.message.context.getString(R.string.unknown_error)
         adapter?.items = emptyList()
     }
-
-    private companion object {
-        const val KEY_SERVICE = "service_id"
-        const val KEY_CURRENT_URL = "current_url"
-    }
 }
+
+private const val KEY_SERVICE = "service_id"
+private const val KEY_CURRENT_URL = "current_url"

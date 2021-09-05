@@ -226,8 +226,6 @@ class TrackSheet(
     fun getSearchDialog(): TrackSearchDialog? {
         return controller.router.getControllerWithTag(TAG_SEARCH_CONTROLLER) as? TrackSearchDialog
     }
-
-    private companion object {
-        const val TAG_SEARCH_CONTROLLER = "track_search_controller"
-    }
 }
+
+private const val TAG_SEARCH_CONTROLLER = "track_search_controller"

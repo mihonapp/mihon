@@ -69,9 +69,7 @@ class DownloadCustomChaptersDialog<T> : DialogController
     interface Listener {
         fun downloadCustomChapters(amount: Int)
     }
-
-    private companion object {
-        // Key to retrieve max chapters from bundle on process death.
-        const val KEY_ITEM_MAX = "DownloadCustomChaptersDialog.int.maxChapters"
-    }
 }
+
+// Key to retrieve max chapters from bundle on process death.
+private const val KEY_ITEM_MAX = "DownloadCustomChaptersDialog.int.maxChapters"

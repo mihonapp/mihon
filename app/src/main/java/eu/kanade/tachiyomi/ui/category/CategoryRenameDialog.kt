@@ -78,8 +78,6 @@ class CategoryRenameDialog<T>(bundle: Bundle? = null) : DialogController(bundle)
     interface Listener {
         fun renameCategory(category: Category, name: String)
     }
-
-    private companion object {
-        const val CATEGORY_KEY = "CategoryRenameDialog.category"
-    }
 }
+
+private const val CATEGORY_KEY = "CategoryRenameDialog.category"

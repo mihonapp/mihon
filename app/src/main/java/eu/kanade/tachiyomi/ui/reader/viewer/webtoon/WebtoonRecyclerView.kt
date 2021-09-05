@@ -314,11 +314,9 @@ open class WebtoonRecyclerView @JvmOverloads constructor(
             return super.onTouchEvent(ev)
         }
     }
-
-    private companion object {
-        const val ANIMATOR_DURATION_TIME = 200
-        const val MIN_RATE = 0.5f
-        const val DEFAULT_RATE = 1f
-        const val MAX_SCALE_RATE = 3f
-    }
 }
+
+private const val ANIMATOR_DURATION_TIME = 200
+private const val MIN_RATE = 0.5f
+private const val DEFAULT_RATE = 1f
+private const val MAX_SCALE_RATE = 3f

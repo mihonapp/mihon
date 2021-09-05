@@ -40,15 +40,13 @@ class PageIndicatorTextView(
 
         super.setText(finalText, BufferType.SPANNABLE)
     }
-
-    private companion object {
-        private val fillColor = Color.rgb(235, 235, 235)
-        private val strokeColor = Color.rgb(45, 45, 45)
-
-        // A span object with text outlining properties
-        val spanOutline = OutlineSpan(
-            strokeColor = strokeColor,
-            strokeWidth = 4f
-        )
-    }
 }
+
+private val fillColor = Color.rgb(235, 235, 235)
+private val strokeColor = Color.rgb(45, 45, 45)
+
+// A span object with text outlining properties
+private val spanOutline = OutlineSpan(
+    strokeColor = strokeColor,
+    strokeWidth = 4f
+)

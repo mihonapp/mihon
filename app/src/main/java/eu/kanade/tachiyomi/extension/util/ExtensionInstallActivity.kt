@@ -45,8 +45,6 @@ class ExtensionInstallActivity : Activity() {
         val extensionManager = Injekt.get<ExtensionManager>()
         extensionManager.setInstallationResult(downloadId, success)
     }
-
-    private companion object {
-        const val INSTALL_REQUEST_CODE = 500
-    }
 }
+
+private const val INSTALL_REQUEST_CODE = 500

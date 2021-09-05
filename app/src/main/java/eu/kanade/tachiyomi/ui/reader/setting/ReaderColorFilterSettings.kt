@@ -219,18 +219,16 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
         val updatedColor = (color shl bitShift) or (currentColor and mask.inv().toInt())
         preferences.colorFilterValue().set(updatedColor)
     }
-
-    private companion object {
-        /** Integer mask of alpha value **/
-        const val ALPHA_MASK: Long = 0xFF000000
-
-        /** Integer mask of red value **/
-        const val RED_MASK: Long = 0x00FF0000
-
-        /** Integer mask of green value **/
-        const val GREEN_MASK: Long = 0x0000FF00
-
-        /** Integer mask of blue value **/
-        const val BLUE_MASK: Long = 0x000000FF
-    }
 }
+
+/** Integer mask of alpha value **/
+private const val ALPHA_MASK: Long = 0xFF000000
+
+/** Integer mask of red value **/
+private const val RED_MASK: Long = 0x00FF0000
+
+/** Integer mask of green value **/
+private const val GREEN_MASK: Long = 0x0000FF00
+
+/** Integer mask of blue value **/
+private const val BLUE_MASK: Long = 0x000000FF

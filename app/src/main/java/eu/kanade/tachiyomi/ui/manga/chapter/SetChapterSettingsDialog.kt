@@ -37,8 +37,6 @@ class SetChapterSettingsDialog(bundle: Bundle? = null) : DialogController(bundle
             .setNegativeButton(android.R.string.cancel, null)
             .create()
     }
-
-    private companion object {
-        const val MANGA_KEY = "manga"
-    }
 }
+
+private const val MANGA_KEY = "manga"

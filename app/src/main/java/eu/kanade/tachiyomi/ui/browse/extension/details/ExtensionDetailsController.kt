@@ -235,10 +235,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
         activity!!.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
         return ContextThemeWrapper(activity, tv.resourceId)
     }
-
-    private companion object {
-        const val PKGNAME_KEY = "pkg_name"
-
-        private const val URL_EXTENSION_COMMITS = "https://github.com/tachiyomiorg/tachiyomi-extensions/commits/master"
-    }
 }
+
+private const val PKGNAME_KEY = "pkg_name"
+private const val URL_EXTENSION_COMMITS = "https://github.com/tachiyomiorg/tachiyomi-extensions/commits/master"

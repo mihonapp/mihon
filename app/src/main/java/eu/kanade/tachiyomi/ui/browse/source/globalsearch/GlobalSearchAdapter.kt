@@ -74,8 +74,6 @@ class GlobalSearchAdapter(val controller: GlobalSearchController) :
     interface OnTitleClickListener {
         fun onTitleClick(source: CatalogueSource)
     }
-
-    private companion object {
-        const val HOLDER_BUNDLE_KEY = "holder_bundle"
-    }
 }
+
+private const val HOLDER_BUNDLE_KEY = "holder_bundle"

@@ -65,8 +65,6 @@ class SetTrackScoreDialog<T> : DialogController
     interface Listener {
         fun setScore(item: TrackItem, score: Int)
     }
-
-    private companion object {
-        const val KEY_ITEM_TRACK = "SetTrackScoreDialog.item.track"
-    }
 }
+
+private const val KEY_ITEM_TRACK = "SetTrackScoreDialog.item.track"

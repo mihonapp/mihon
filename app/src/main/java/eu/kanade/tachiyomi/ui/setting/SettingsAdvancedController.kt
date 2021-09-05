@@ -243,8 +243,6 @@ class SettingsAdvancedController : SettingsController() {
         db.deleteHistoryNoLastRead().executeAsBlocking()
         activity?.toast(R.string.clear_database_completed)
     }
-
-    private companion object {
-        const val CLEAR_CACHE_KEY = "pref_clear_cache_key"
-    }
 }
+
+private const val CLEAR_CACHE_KEY = "pref_clear_cache_key"

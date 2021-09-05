@@ -77,8 +77,6 @@ class SettingsSearchAdapter(val controller: SettingsSearchController) :
     interface OnTitleClickListener {
         fun onTitleClick(ctrl: SettingsController)
     }
-
-    private companion object {
-        const val HOLDER_BUNDLE_KEY = "holder_bundle"
-    }
 }
+
+private const val HOLDER_BUNDLE_KEY = "holder_bundle"

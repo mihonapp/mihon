@@ -167,9 +167,7 @@ class SourcePreferencesController(bundle: Bundle? = null) :
         // [key] isn't useful since there may be duplicates
         return preferenceScreen!!.getPreference(lastOpenPreferencePosition!!) as T
     }
-
-    private companion object {
-        const val SOURCE_ID = "source_id"
-        const val LASTOPENPREFERENCE_KEY = "last_open_preference"
-    }
 }
+
+private const val SOURCE_ID = "source_id"
+private const val LASTOPENPREFERENCE_KEY = "last_open_preference"

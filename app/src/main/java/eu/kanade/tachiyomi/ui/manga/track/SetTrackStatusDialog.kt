@@ -54,8 +54,6 @@ class SetTrackStatusDialog<T> : DialogController
     interface Listener {
         fun setStatus(item: TrackItem, selection: Int)
     }
-
-    private companion object {
-        const val KEY_ITEM_TRACK = "SetTrackStatusDialog.item.track"
-    }
 }
+
+private const val KEY_ITEM_TRACK = "SetTrackStatusDialog.item.track"

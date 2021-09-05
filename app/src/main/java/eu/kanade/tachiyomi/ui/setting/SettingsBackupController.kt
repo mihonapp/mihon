@@ -329,16 +329,12 @@ class SettingsBackupController : SettingsController() {
                     .create()
             }
         }
-
-        private companion object {
-            const val KEY_URI = "RestoreBackupDialog.uri"
-            const val KEY_TYPE = "RestoreBackupDialog.type"
-        }
-    }
-
-    private companion object {
-        const val CODE_BACKUP_DIR = 503
-        const val CODE_BACKUP_CREATE = 504
-        const val CODE_BACKUP_RESTORE = 505
     }
 }
+
+private const val KEY_URI = "RestoreBackupDialog.uri"
+private const val KEY_TYPE = "RestoreBackupDialog.type"
+
+private const val CODE_BACKUP_DIR = 503
+private const val CODE_BACKUP_CREATE = 504
+private const val CODE_BACKUP_RESTORE = 505

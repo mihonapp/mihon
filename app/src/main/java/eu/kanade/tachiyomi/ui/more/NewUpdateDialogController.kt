@@ -30,9 +30,7 @@ class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundl
             .setNegativeButton(R.string.update_check_ignore, null)
             .create()
     }
-
-    private companion object {
-        const val BODY_KEY = "NewUpdateDialogController.body"
-        const val URL_KEY = "NewUpdateDialogController.key"
-    }
 }
+
+private const val BODY_KEY = "NewUpdateDialogController.body"
+private const val URL_KEY = "NewUpdateDialogController.key"

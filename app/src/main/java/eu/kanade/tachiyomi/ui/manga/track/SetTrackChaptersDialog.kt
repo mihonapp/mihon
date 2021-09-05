@@ -65,8 +65,6 @@ class SetTrackChaptersDialog<T> : DialogController
     interface Listener {
         fun setChaptersRead(item: TrackItem, chaptersRead: Int)
     }
-
-    private companion object {
-        const val KEY_ITEM_TRACK = "SetTrackChaptersDialog.item.track"
-    }
 }
+
+private const val KEY_ITEM_TRACK = "SetTrackChaptersDialog.item.track"
