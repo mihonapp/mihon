@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.source
 
 import android.content.Context
 import com.github.junrar.Archive
-import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
@@ -15,8 +14,16 @@ import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.EpubFile
 import eu.kanade.tachiyomi.util.system.ImageUtil
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonPrimitive
 import rx.Observable
 import timber.log.Timber
+import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -67,6 +74,8 @@ class LocalSource(private val context: Context) : CatalogueSource {
             return DiskUtil.getExternalStorages(context).map { File(it.absolutePath, c) }
         }
     }
+
+    private val json: Json by injectLazy()
 
     override val id = ID
     override val name = context.getString(R.string.local_source)
@@ -157,16 +166,15 @@ class LocalSource(private val context: Context) : CatalogueSource {
             .flatten()
             .firstOrNull { it.extension == "json" }
             ?.apply {
-                val reader = this.inputStream().bufferedReader()
-                val json = JsonParser.parseReader(reader).asJsonObject
+                val obj = json.decodeFromStream<JsonObject>(inputStream())
 
-                manga.title = json["title"]?.asString ?: manga.title
-                manga.author = json["author"]?.asString ?: manga.author
-                manga.artist = json["artist"]?.asString ?: manga.artist
-                manga.description = json["description"]?.asString ?: manga.description
-                manga.genre = json["genre"]?.asJsonArray?.joinToString(", ") { it.asString }
+                manga.title = obj["title"]?.jsonPrimitive?.contentOrNull ?: manga.title
+                manga.author = obj["author"]?.jsonPrimitive?.contentOrNull ?: manga.author
+                manga.artist = obj["artist"]?.jsonPrimitive?.contentOrNull ?: manga.artist
+                manga.description = obj["description"]?.jsonPrimitive?.contentOrNull ?: manga.description
+                manga.genre = obj["genre"]?.jsonArray?.joinToString(", ") { it.jsonPrimitive.content }
                     ?: manga.genre
-                manga.status = json["status"]?.asInt ?: manga.status
+                manga.status = obj["status"]?.jsonPrimitive?.intOrNull ?: manga.status
             }
 
         return Observable.just(manga)

@@ -5,9 +5,7 @@ import android.net.Uri
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.AbstractBackupRestoreValidator
 import eu.kanade.tachiyomi.data.backup.legacy.models.Backup
-import kotlinx.serialization.decodeFromString
-import okio.buffer
-import okio.source
+import kotlinx.serialization.json.decodeFromStream
 
 class LegacyBackupRestoreValidator : AbstractBackupRestoreValidator() {
     /**
@@ -19,8 +17,8 @@ class LegacyBackupRestoreValidator : AbstractBackupRestoreValidator() {
     override fun validate(context: Context, uri: Uri): Results {
         val backupManager = LegacyBackupManager(context)
 
-        val backup = backupManager.parser.decodeFromString<Backup>(
-            context.contentResolver.openInputStream(uri)!!.source().buffer().use { it.readUtf8() }
+        val backup = backupManager.parser.decodeFromStream<Backup>(
+            context.contentResolver.openInputStream(uri)!!
         )
 
         if (backup.version == null) {

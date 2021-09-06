@@ -13,13 +13,12 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.source.Source
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
-import okio.buffer
 import okio.source
 import java.util.Date
 
@@ -28,8 +27,8 @@ class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : Abstract
     override suspend fun performRestore(uri: Uri): Boolean {
         // Read the json and create a Json Object,
         // cannot use the backupManager json deserializer one because its not initialized yet
-        val backupObject = Json.decodeFromString<JsonObject>(
-            context.contentResolver.openInputStream(uri)!!.source().buffer().use { it.readUtf8() }
+        val backupObject = Json.decodeFromStream<JsonObject>(
+            context.contentResolver.openInputStream(uri)!!
         )
 
         // Get parser version
