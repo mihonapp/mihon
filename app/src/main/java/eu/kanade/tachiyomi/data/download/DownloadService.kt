@@ -4,8 +4,6 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.net.Network
-import android.net.NetworkCapabilities
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.annotation.StringRes
@@ -17,7 +15,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
-import eu.kanade.tachiyomi.util.system.connectivityManager
+import eu.kanade.tachiyomi.util.system.isOnline
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import eu.kanade.tachiyomi.util.system.notification
 import eu.kanade.tachiyomi.util.system.toast
@@ -155,28 +153,20 @@ class DownloadService : Service() {
      * Called when the network state changes.
      */
     private fun onNetworkStateChanged() {
-        val manager = connectivityManager
-        val activeNetwork: Network = manager.activeNetwork ?: return
-        val networkCapabilities = manager.getNetworkCapabilities(activeNetwork) ?: return
-        if (!networkCapabilities.connectedToInternet()) {
-            return stopDownloads(R.string.download_notifier_no_network)
-        }
-
-        if (preferences.downloadOnlyOverWifi() && !wifiManager.isWifiEnabled) {
-            stopDownloads(R.string.download_notifier_text_only_wifi)
+        if (isOnline()) {
+            if (preferences.downloadOnlyOverWifi() && !wifiManager.isWifiEnabled) {
+                stopDownloads(R.string.download_notifier_text_only_wifi)
+            } else {
+                val started = downloadManager.startDownloads()
+                if (!started) stopSelf()
+            }
         } else {
-            val started = downloadManager.startDownloads()
-            if (!started) stopSelf()
+            stopDownloads(R.string.download_notifier_no_network)
         }
     }
 
     private fun stopDownloads(@StringRes string: Int) {
         downloadManager.stopDownloads(getString(string))
-    }
-
-    private fun NetworkCapabilities.connectedToInternet(): Boolean {
-        return this.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-            this.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 
     /**
