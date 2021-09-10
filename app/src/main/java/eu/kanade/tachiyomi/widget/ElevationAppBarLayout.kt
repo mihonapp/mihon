@@ -3,10 +3,19 @@ package eu.kanade.tachiyomi.widget
 import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.TextView
+import androidx.annotation.FloatRange
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.view.findChild
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.android.view.HierarchyChangeEvent
+import reactivecircus.flowbinding.android.view.hierarchyChangeEvents
 
 class ElevationAppBarLayout @JvmOverloads constructor(
     context: Context,
@@ -17,6 +26,19 @@ class ElevationAppBarLayout @JvmOverloads constructor(
     private var transparent = false
 
     private val toolbar by lazy { findViewById<MaterialToolbar>(R.id.toolbar) }
+
+    @FloatRange(from = 0.0, to = 1.0)
+    var titleTextAlpha = 1F
+        set(value) {
+            field = value
+            titleTextView?.alpha = field
+        }
+
+    private var titleTextView: TextView? = null
+        set(value) {
+            field = value
+            field?.alpha = titleTextAlpha
+        }
 
     private var elevationAnimator: ValueAnimator? = null
     private var backgroundAlphaAnimator: ValueAnimator? = null
@@ -60,6 +82,29 @@ class ElevationAppBarLayout @JvmOverloads constructor(
             true
         } else {
             false
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        titleTextView = toolbar.findChild<TextView>()
+        findViewTreeLifecycleOwner()?.lifecycle?.coroutineScope?.let { scope ->
+            toolbar.hierarchyChangeEvents()
+                .onEach {
+                    when (it) {
+                        is HierarchyChangeEvent.ChildAdded -> {
+                            if (it.child is TextView) {
+                                titleTextView = it.child as TextView
+                            }
+                        }
+                        is HierarchyChangeEvent.ChildRemoved -> {
+                            if (it.child == titleTextView) {
+                                titleTextView = null
+                            }
+                        }
+                    }
+                }
+                .launchIn(scope)
         }
     }
 
