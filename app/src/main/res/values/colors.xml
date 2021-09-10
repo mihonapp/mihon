@@ -123,4 +123,8 @@
     <color name="navigation_right">#CCA6CFD5</color>
     <color name="navigation_left">#CC7D1128</color>
 
+    <!-- ActionMode status bar color -->
+    <color name="abc_decor_view_status_guard" tools:override="true">@android:color/transparent</color>
+    <color name="abc_decor_view_status_guard_light" tools:override="true">@android:color/transparent</color>
+
 </resources>
