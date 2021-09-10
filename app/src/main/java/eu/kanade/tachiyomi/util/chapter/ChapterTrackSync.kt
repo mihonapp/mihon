@@ -18,22 +18,15 @@ import timber.log.Timber
 fun syncChaptersWithTrackServiceTwoWay(db: DatabaseHelper, chapters: List<Chapter>, remoteTrack: Track, service: TrackService) {
     val sortedChapters = chapters.sortedBy { it.chapter_number }
     sortedChapters
-        .filterIndexed { index, chapter -> index < remoteTrack.last_chapter_read && !chapter.read }
+        .filter { chapter -> chapter.chapter_number <= remoteTrack.last_chapter_read && !chapter.read }
         .forEach { it.read = true }
     db.updateChaptersProgress(sortedChapters).executeAsBlocking()
 
-    // this uses the ordinal index of chapters instead of the chapter_number
-    // it was done that way because Track.last_chapter_read was an Int at the time, and Komga
-    // could have Float for the chapter number
-    // this will be addressed later on
-    val localLastRead = when {
-        sortedChapters.all { it.read } -> sortedChapters.size
-        sortedChapters.any { !it.read } -> sortedChapters.indexOfFirst { !it.read }
-        else -> 0
-    }
+    // only take into account continuous reading
+    val localLastRead = sortedChapters.takeWhile { it.read }.lastOrNull()?.chapter_number ?: 0F
 
     // update remote
-    remoteTrack.last_chapter_read = localLastRead.toFloat()
+    remoteTrack.last_chapter_read = localLastRead
 
     launchIO {
         try {

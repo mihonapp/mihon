@@ -64,6 +64,11 @@ data class ReadProgressUpdateDto(
 )
 
 @Serializable
+data class ReadProgressUpdateV2Dto(
+    val lastBookNumberSortRead: Float,
+)
+
+@Serializable
 data class ReadListDto(
     val id: String,
     val name: String,
@@ -80,4 +85,21 @@ data class ReadProgressDto(
     val booksUnreadCount: Int,
     val booksInProgressCount: Int,
     val lastReadContinuousIndex: Int,
+) {
+    fun toV2() = ReadProgressV2Dto(
+        booksCount,
+        booksReadCount,
+        booksUnreadCount,
+        booksInProgressCount,
+        lastReadContinuousIndex.toFloat()
+    )
+}
+
+@Serializable
+data class ReadProgressV2Dto(
+    val booksCount: Int,
+    val booksReadCount: Int,
+    val booksUnreadCount: Int,
+    val booksInProgressCount: Int,
+    val lastReadContinuousNumberSort: Float,
 )
