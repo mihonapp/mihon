@@ -195,7 +195,7 @@ class MangaController :
         // Hide toolbar title on enter
         if (type.isEnter) {
             updateToolbarTitleAlpha()
-        } else {
+        } else if (!type.isPush) {
             // Cancel listeners early
             viewScope.cancel()
             updateToolbarTitleAlpha(1F)
