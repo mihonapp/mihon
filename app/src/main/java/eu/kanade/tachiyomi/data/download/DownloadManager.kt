@@ -345,12 +345,10 @@ class DownloadManager(
     private fun getChaptersToDelete(chapters: List<Chapter>, manga: Manga): List<Chapter> {
         // Retrieve the categories that are set to exclude from being deleted on read
         val categoriesToExclude = preferences.removeExcludeCategories().get().map(String::toInt)
-        val categoriesForManga =
-            manga.let { it ->
-                db.getCategoriesForManga(it).executeAsBlocking()
-                    .mapNotNull { it.id }
-                    .takeUnless { it.isEmpty() }
-            } ?: listOf(0)
+        val categoriesForManga = db.getCategoriesForManga(manga).executeAsBlocking()
+            .mapNotNull { it.id }
+            .takeUnless { it.isEmpty() }
+            ?: listOf(0)
 
         return if (categoriesForManga.intersect(categoriesToExclude).isNotEmpty()) {
             chapters.filterNot { it.read }

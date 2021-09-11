@@ -382,7 +382,7 @@
     <string name="pref_remove_after_marked_as_read">After marked as read</string>
     <string name="pref_remove_after_read">Automatically after reading</string>
     <string name="pref_remove_bookmarked_chapters">Allow deleting bookmarked chapters</string>
-    <string name="pref_remove_exclude_categories">Categories to exclude in deleting</string>
+    <string name="pref_remove_exclude_categories">Excluded categories</string>
     <string name="custom_dir">Custom location</string>
     <string name="disabled">Disabled</string>
     <string name="last_read_chapter">Last read chapter</string>
