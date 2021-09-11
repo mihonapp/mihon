@@ -235,7 +235,7 @@ class MangaController :
             }
         binding.actionToolbar.applyInsetter {
             type(navigationBars = true) {
-                margin(bottom = true)
+                margin(bottom = true, horizontal = true)
             }
         }
 
@@ -329,8 +329,6 @@ class MangaController :
             }
             .launchIn(viewScope)
 
-        (activity as? MainActivity)?.fixViewToBottom(binding.actionToolbar)
-
         settingsSheet = ChaptersSettingsSheet(router, presenter) { group ->
             if (group is ChaptersSettingsSheet.Filter.FilterGroup) {
                 updateFilterIconState()
@@ -402,7 +400,6 @@ class MangaController :
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
-        (activity as? MainActivity)?.clearFixViewToBottom(binding.actionToolbar)
         binding.actionToolbar.destroy()
         mangaInfoAdapter = null
         chaptersHeaderAdapter = null

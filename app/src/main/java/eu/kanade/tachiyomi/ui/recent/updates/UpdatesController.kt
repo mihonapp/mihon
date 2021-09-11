@@ -82,7 +82,7 @@ class UpdatesController :
         }
         binding.actionToolbar.applyInsetter {
             type(navigationBars = true) {
-                margin(bottom = true)
+                margin(bottom = true, horizontal = true)
             }
         }
 
@@ -113,13 +113,10 @@ class UpdatesController :
                 binding.swipeRefresh.isRefreshing = false
             }
             .launchIn(viewScope)
-
-        (activity as? MainActivity)?.fixViewToBottom(binding.actionToolbar)
     }
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
-        (activity as? MainActivity)?.clearFixViewToBottom(binding.actionToolbar)
         binding.actionToolbar.destroy()
         adapter = null
         super.onDestroyView(view)

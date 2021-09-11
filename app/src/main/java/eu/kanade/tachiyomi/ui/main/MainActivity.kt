@@ -7,9 +7,9 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.view.ActionMode
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen
@@ -90,8 +90,6 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
     private var isConfirmingExit: Boolean = false
     private var isHandlingShortcut: Boolean = false
-
-    private var fixedViewsToBottom = mutableMapOf<View, AppBarLayout.OnOffsetChangedListener>()
 
     /**
      * App bar lift state for backstack
@@ -477,6 +475,24 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         }
     }
 
+    override fun onSupportActionModeStarted(mode: ActionMode) {
+        binding.appbar.apply {
+            tag = isTransparentWhenNotLifted
+            isTransparentWhenNotLifted = false
+        }
+        setToolbarScrolls(false)
+        super.onSupportActionModeStarted(mode)
+    }
+
+    override fun onSupportActionModeFinished(mode: ActionMode) {
+        binding.appbar.apply {
+            isTransparentWhenNotLifted = (tag as? Boolean) ?: false
+            tag = null
+        }
+        setToolbarScrolls(true)
+        super.onSupportActionModeFinished(mode)
+    }
+
     private suspend fun resetExitConfirmation() {
         isConfirmingExit = true
         val toast = toast(R.string.confirm_exit, Toast.LENGTH_LONG)
@@ -595,21 +611,15 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
     }
 
     /**
-     * Used to manually offset a view within the activity's child views that might be cut off due to
-     * the collapsing AppBarLayout.
+     * Sets toolbar CoordinatorLayout scroll flags
      */
-    fun fixViewToBottom(view: View) {
-        val listener = AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val maxAbsOffset = appBarLayout.measuredHeight - binding.tabs.measuredHeight
-            view.translationY = -maxAbsOffset - verticalOffset.toFloat() + appBarLayout.paddingTop
+    private fun setToolbarScrolls(enabled: Boolean) = binding.toolbar.updateLayoutParams<AppBarLayout.LayoutParams> {
+        if (isTablet()) return@updateLayoutParams
+        scrollFlags = if (enabled) {
+            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+        } else {
+            0
         }
-        binding.appbar.addOnOffsetChangedListener(listener)
-        fixedViewsToBottom[view] = listener
-    }
-
-    fun clearFixViewToBottom(view: View) {
-        val listener = fixedViewsToBottom.remove(view)
-        binding.appbar.removeOnOffsetChangedListener(listener)
     }
 
     private fun setBottomNavBehaviorOnScroll() {
