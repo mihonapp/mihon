@@ -409,6 +409,7 @@ class ReaderPresenter(
         val currentChapterPosition = chapterList.indexOf(currentChapter)
         val removeAfterReadSlots = preferences.removeAfterReadSlots()
         val chapterToDelete = chapterList.getOrNull(currentChapterPosition - removeAfterReadSlots)
+
         // Check if deleting option is enabled and chapter exists
         if (removeAfterReadSlots != -1 && chapterToDelete != null) {
             enqueueDeleteReadChapters(chapterToDelete)
