@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.backup.full.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.full.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.full.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.full.models.BackupSerializer
+import eu.kanade.tachiyomi.data.backup.full.models.BackupSource
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -33,7 +34,8 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBa
         }
 
         // Store source mapping for error messages
-        sourceMapping = backup.backupSources.map { it.sourceId to it.name }.toMap()
+        var backupMaps = backup.backupBrokenSources.map { BackupSource(it.name, it.sourceId) } + backup.backupSources
+        sourceMapping = backupMaps.map { it.sourceId to it.name }.toMap()
 
         // Restore individual manga
         backup.backupManga.forEach {
@@ -62,7 +64,7 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBa
         val manga = backupManga.getMangaImpl()
         val chapters = backupManga.getChaptersImpl()
         val categories = backupManga.categories
-        val history = backupManga.history
+        val history = backupManga.brokenHistory.map { BackupHistory(it.url, it.lastRead) } + backupManga.history
         val tracks = backupManga.getTrackingImpl()
 
         try {
