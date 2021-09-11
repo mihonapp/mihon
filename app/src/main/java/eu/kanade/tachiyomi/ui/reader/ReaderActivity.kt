@@ -65,7 +65,6 @@ import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.util.storage.getUriCompat
-import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.applySystemAnimatorScale
 import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.getThemeColor
@@ -108,11 +107,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
     }
 
     private val preferences: PreferencesHelper by injectLazy()
-
-    /**
-     * The maximum bitmap size supported by the device.
-     */
-    val maxBitmapSize by lazy { GLUtil.maxTextureSize }
 
     val hasCutout by lazy { hasDisplayCutout() }
 

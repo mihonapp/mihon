@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.EdgeNavigation
@@ -34,7 +35,7 @@ class PagerConfig(
     var imageScaleType = 1
         private set
 
-    var imageZoomType = ZoomType.Left
+    var imageZoomType = ReaderPageImageView.ZoomStartPosition.LEFT
         private set
 
     var imageCropBorders = false
@@ -86,16 +87,16 @@ class PagerConfig(
         imageZoomType = when (value) {
             // Auto
             1 -> when (viewer) {
-                is L2RPagerViewer -> ZoomType.Left
-                is R2LPagerViewer -> ZoomType.Right
-                else -> ZoomType.Center
+                is L2RPagerViewer -> ReaderPageImageView.ZoomStartPosition.LEFT
+                is R2LPagerViewer -> ReaderPageImageView.ZoomStartPosition.RIGHT
+                else -> ReaderPageImageView.ZoomStartPosition.CENTER
             }
             // Left
-            2 -> ZoomType.Left
+            2 -> ReaderPageImageView.ZoomStartPosition.LEFT
             // Right
-            3 -> ZoomType.Right
+            3 -> ReaderPageImageView.ZoomStartPosition.RIGHT
             // Center
-            else -> ZoomType.Center
+            else -> ReaderPageImageView.ZoomStartPosition.CENTER
         }
     }
 
@@ -121,9 +122,5 @@ class PagerConfig(
             else -> defaultNavigation()
         }
         navigationModeChangedListener?.invoke()
-    }
-
-    enum class ZoomType {
-        Left, Center, Right
     }
 }

@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
 import android.app.Dialog
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.TypedValue
@@ -12,7 +11,6 @@ import androidx.core.view.WindowCompat
 import coil.imageLoader
 import coil.request.Disposable
 import coil.request.ImageRequest
-import com.davemorrissey.labs.subscaleview.ImageSource
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -20,6 +18,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.databinding.MangaFullCoverDialogBinding
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
 import eu.kanade.tachiyomi.widget.TachiyomiFullscreenDialog
 import uy.kohesive.injekt.Injekt
@@ -63,12 +62,6 @@ class MangaFullCoverDialog : DialogController {
             menu?.findItem(R.id.action_edit_cover)?.isVisible = manga?.favorite ?: false
         }
 
-        binding?.fullCover?.apply {
-            setOnClickListener {
-                dialog?.dismiss()
-            }
-            setMinimumDpi(45)
-        }
         setImage(manga)
 
         binding?.appbar?.applyInsetter {
@@ -77,11 +70,10 @@ class MangaFullCoverDialog : DialogController {
             }
         }
 
-        binding?.fullCover?.applyInsetter {
+        binding?.container?.onViewClicked = { dialog?.dismiss() }
+        binding?.container?.applyInsetter {
             type(navigationBars = true) {
-                // Padding will make to image top align
-                // This is likely an issue with SubsamplingScaleImageView
-                margin(bottom = true)
+                padding(bottom = true)
             }
         }
 
@@ -108,12 +100,16 @@ class MangaFullCoverDialog : DialogController {
     }
 
     fun setImage(manga: Manga?) {
-        val manga = manga ?: return
+        if (manga == null) return
         val request = ImageRequest.Builder(applicationContext!!)
             .data(manga)
             .target {
-                val bitmap = (it as BitmapDrawable).bitmap
-                binding?.fullCover?.setImage(ImageSource.cachedBitmap(bitmap))
+                binding?.container?.setImage(
+                    it,
+                    ReaderPageImageView.Config(
+                        zoomDuration = 500
+                    )
+                )
             }
             .build()
 

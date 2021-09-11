@@ -23,10 +23,12 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/full_cover"
+    <eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+        android:id="@+id/container"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
