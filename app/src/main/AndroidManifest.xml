@@ -198,6 +198,11 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
+        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="false" />
+        <meta-data android:name="android.webkit.WebView.MetricsOptOut"
+            android:value="true" />
+
     </application>
 
 </manifest>
