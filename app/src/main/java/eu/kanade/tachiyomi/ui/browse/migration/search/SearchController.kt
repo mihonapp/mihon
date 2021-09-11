@@ -75,8 +75,14 @@ class SearchController(
         if (!isReplacingManga) {
             router.popController(this)
             if (newManga != null) {
-                // Replaces old MangaController
-                router.replaceTopController(RouterTransaction.with(MangaController(newManga)))
+                val newMangaController = RouterTransaction.with(MangaController(newManga))
+                if (router.backstack.last().controller is MangaController) {
+                    // Replace old MangaController
+                    router.replaceTopController(newMangaController)
+                } else {
+                    // Push MangaController on top of MigrationController
+                    router.pushController(newMangaController)
+                }
             }
         }
     }
