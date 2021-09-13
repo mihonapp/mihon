@@ -6,7 +6,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import androidx.core.content.pm.PackageInfoCompat
 import dalvik.system.PathClassLoader
-import eu.kanade.tachiyomi.annotations.Nsfw
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
@@ -154,13 +153,7 @@ internal object ExtensionLoader {
                 try {
                     when (val obj = Class.forName(it, false, classLoader).newInstance()) {
                         is Source -> listOf(obj)
-                        is SourceFactory -> {
-                            if (isSourceNsfw(obj)) {
-                                emptyList()
-                            } else {
-                                obj.createSources()
-                            }
-                        }
+                        is SourceFactory -> obj.createSources()
                         else -> throw Exception("Unknown source class type! ${obj.javaClass}")
                     }
                 } catch (e: Throwable) {
@@ -168,7 +161,6 @@ internal object ExtensionLoader {
                     return LoadResult.Error(e)
                 }
             }
-            .filter { !isSourceNsfw(it) }
 
         val langs = sources.filterIsInstance<CatalogueSource>()
             .map { it.lang }
@@ -214,23 +206,5 @@ internal object ExtensionLoader {
         } else {
             null
         }
-    }
-
-    /**
-     * Checks whether a Source or SourceFactory is annotated with @Nsfw.
-     */
-    private fun isSourceNsfw(clazz: Any): Boolean {
-        if (loadNsfwSource) {
-            return false
-        }
-
-        if (clazz !is Source && clazz !is SourceFactory) {
-            return false
-        }
-
-        // Annotations are proxied, hence this janky way of checking for them
-        return clazz.javaClass.annotations
-            .flatMap { it.javaClass.interfaces.map { it.simpleName } }
-            .firstOrNull { it == Nsfw::class.java.simpleName } != null
     }
 }
