@@ -258,7 +258,7 @@ class MangaInfoHeaderAdapter(
             with(binding.mangaSource) {
                 if (mangaSource != null) {
                     val enabledLanguages = preferences.enabledLanguages().get()
-                        .filterNot { it == "all" }
+                        .filterNot { it in listOf("all", "other") }
 
                     val hasOneActiveLanguages = enabledLanguages.size == 1
                     val isInEnabledLanguages = source.lang in enabledLanguages
