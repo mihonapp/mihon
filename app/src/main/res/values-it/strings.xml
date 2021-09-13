@@ -439,7 +439,7 @@
     <string name="action_oldest">Più vecchi</string>
     <string name="action_newest">Più nuovi</string>
     <string name="action_sort_last_checked">Ultimo controllo</string>
-    <string name="action_menu">Menú</string>
+    <string name="action_menu">Menù</string>
     <string name="label_sources">Fonti</string>
     <string name="updating_library">Libreria in aggiornamento</string>
     <string name="pref_category_reading">In Lettura</string>
@@ -481,7 +481,7 @@
         <item quantity="one">1 rimanente</item>
         <item quantity="other">%1$s rimanenti</item>
     </plurals>
-    <string name="downloaded_only_summary">Filtra tutti manga nella tua libreria</string>
+    <string name="downloaded_only_summary">Filtra tutti i manga nella tua libreria</string>
     <string name="check_for_updates">Controlla aggiornamenti</string>
     <string name="battery_optimization_setting_activity_not_found">Impossibile aprire le impostazioni del dispositivo</string>
     <string name="pref_refresh_library_covers">Aggiorna le copertine dei manga della libreria</string>
@@ -704,7 +704,7 @@
     <string name="theme_strawberrydaiquiri">Daiquiri alla Fragola</string>
     <string name="theme_midnightdusk">Crepuscolo di Mezzanotte</string>
     <string name="theme_greenapple">Mela Verde</string>
-    <string name="theme_blue">Blu</string>
+    <string name="theme_blue">Blu Legacy</string>
     <string name="theme_monet">Dinamico</string>
     <string name="pref_app_theme">Tema applicazione</string>
     <string name="action_sort_next_updated">Prossimo aggiornamento previsto</string>
@@ -719,4 +719,7 @@
     <string name="action_track">Traccia</string>
     <string name="pref_category_navigation">Navigazione</string>
     <string name="getting_started_guide">Guida introduttiva</string>
+    <string name="pref_tablet_ui_mode">Forza interfaccia tablet</string>
+    <string name="pref_remove_exclude_categories">Categorie escluse</string>
+    <string name="help_translate">Aiuta a tradurre</string>
 </resources>

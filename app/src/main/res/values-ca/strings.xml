@@ -158,8 +158,8 @@
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Ubicació de les baixades</string>
     <string name="pref_download_only_over_wifi">Baixa només amb Wi-Fi</string>
-    <string name="pref_remove_after_marked_as_read">Després de marcar-los manualment com a llegits</string>
-    <string name="pref_remove_after_read">Després de llegir-los</string>
+    <string name="pref_remove_after_marked_as_read">Després de marcar-los com a llegits</string>
+    <string name="pref_remove_after_read">Automàticament després de llegir-los</string>
     <string name="pref_double_tap_anim_speed">Velocitat de l\'animació del doble toc</string>
     <string name="custom_dir">Ubicació personalitzada</string>
     <string name="disabled">Desactivat</string>
@@ -305,7 +305,7 @@
     <string name="information_no_downloads">No hi ha baixades</string>
     <string name="information_no_recent">No hi ha actualitzacions recents</string>
     <string name="information_no_recent_manga">No heu llegit res recentment</string>
-    <string name="information_empty_library">La vostra biblioteca és buida. Afegiu-hi sèries a Explora.</string>
+    <string name="information_empty_library">La vostra biblioteca és buida</string>
     <string name="information_empty_category">No teniu categories. Premeu el botó més per a crear-ne una i organitzar la vostra biblioteca.</string>
     <string name="download_notifier_downloader_title">Baixades</string>
     <string name="download_notifier_title_error">Error</string>
@@ -531,7 +531,7 @@
     <string name="channel_progress">Progrés</string>
     <string name="channel_errors">Errors</string>
     <string name="backup_restore_missing_trackers">Seguidors sense sessió iniciada:</string>
-    <string name="pref_remove_bookmarked_chapters">Suprimeix els capítols preferits</string>
+    <string name="pref_remove_bookmarked_chapters">Permet la supressió dels capítols amb marcador</string>
     <string name="pref_category_delete_chapters">Suprimeix capítols</string>
     <string name="ext_nsfw_warning">Pot contenir contingut NSFW (+18)</string>
     <string name="ext_nsfw_short">+18</string>
@@ -551,7 +551,7 @@
     <string name="downloaded_chapters">Capítols baixats</string>
     <string name="manga_from_library">Manga de la biblioteca</string>
     <string name="pref_hide_bottom_bar_on_scroll">Amaga la barra inferior en desplaçar</string>
-    <string name="clear_history_confirmation">N\'esteu segur\? Es perdrà tot l\'historial.</string>
+    <string name="clear_history_confirmation">N’esteu segur\? Es perdrà tot l’historial.</string>
     <string name="pref_incognito_mode_summary">Pausa l\'historial de lectura</string>
     <string name="pref_incognito_mode">Mode d\'incògnit</string>
     <string name="pref_clear_history">Suprimeix l\'historial</string>
@@ -568,8 +568,8 @@
     <string name="pref_show_nsfw_source">Mostra a la llista de fonts</string>
     <string name="myanimelist_relogin">Torneu a iniciar la sessió a MAL</string>
     <string name="channel_crash_logs">Registres de fallades</string>
-    <string name="track_finished_reading_date">Data en què el vau acabar a llegir</string>
-    <string name="track_started_reading_date">Data en què el vau començar a llegir</string>
+    <string name="track_finished_reading_date">Data de finalització</string>
+    <string name="track_started_reading_date">Data d’inici</string>
     <string name="crash_log_saved">S\'han desat els registres de fallades</string>
     <string name="pref_dump_crash_logs_summary">Desa els registres d\'errors en un fitxer perquè el pugueu compartir amb els desenvolupadors</string>
     <string name="pref_dump_crash_logs">Bolca els registres de fallades</string>
@@ -602,7 +602,7 @@
     <string name="pref_dns_over_https">DNS al damunt d\'HTTPS</string>
     <string name="pref_download_new_categories_details">Els manga en les categoríes excloses no es descarregaràn encara que estiguen en les categoríes incloses.</string>
     <string name="pref_library_update_categories_details">Els manga en les categoríes excloses no s\'actualitzaràn encara que estiguen en les categoríes incloses.</string>
-    <string name="pref_category_auto_download">Auto-descarrega</string>
+    <string name="pref_category_auto_download">Baixada automàtica</string>
     <string name="rotation_landscape">Horitzontal</string>
     <string name="rotation_portrait">Vertical</string>
     <string name="rotation_type">Tipus de rotació</string>
@@ -643,4 +643,18 @@
     <string name="alignment_top">Part superior</string>
     <string name="pref_side_nav_icon_alignment">Alineació de la icona de navegació lateral</string>
     <string name="action_display_local_badge">Insígnies locals</string>
+    <string name="pref_lowest">La més baixa</string>
+    <string name="pref_low">Baixa</string>
+    <string name="pref_high">Alta</string>
+    <string name="pref_highest">La més alta</string>
+    <string name="pref_remove_exclude_categories">Categories excloses</string>
+    <string name="information_empty_category_dialog">Encara no teniu cap categoria.</string>
+    <string name="notification_updating">S’està actualitzant la biblioteca… (%1$d/%2$d)</string>
+    <string name="enhanced_services">Serveis millorats</string>
+    <plurals name="relative_time">
+        <item quantity="one">Ahir</item>
+        <item quantity="other">Fa %1$d dies</item>
+    </plurals>
+    <string name="relative_time_today">Avui</string>
+    <string name="label_default">Per defecte</string>
 </resources>

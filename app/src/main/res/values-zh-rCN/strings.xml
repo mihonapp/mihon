@@ -526,7 +526,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">这并不能防止非官方或可能被错误标记的扩展插件在应用中显示 NSFW (18+) 内容。</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">此处缺失 %d 个章节</item>
+        <item quantity="other">缺少 %d 个章节</item>
     </plurals>
     <string name="no_chapters_error">未找到章节</string>
     <string name="chapter_settings_updated">更新了默认章节设置</string>
@@ -643,7 +643,7 @@
     <string name="theme_strawberrydaiquiri">草莓黛琦丽</string>
     <string name="theme_midnightdusk">午夜幽暗</string>
     <string name="theme_greenapple">青苹果</string>
-    <string name="theme_blue">蓝色</string>
+    <string name="theme_blue">传统蓝</string>
     <string name="pref_app_theme">应用主题</string>
     <string name="action_sort_next_updated">下次预期更新</string>
     <string name="tracker_komga_warning">此追踪源仅与 Komga 图源兼容。</string>
@@ -673,5 +673,7 @@
     <string name="action_track">追踪</string>
     <string name="pref_category_navigation">导航</string>
     <string name="getting_started_guide">入门指南</string>
-    <string name="pref_tablet_ui_mode">平板用户界面</string>
+    <string name="pref_tablet_ui_mode">强制平板用户界面</string>
+    <string name="pref_remove_exclude_categories">排除的分类</string>
+    <string name="help_translate">帮忙翻译</string>
 </resources>

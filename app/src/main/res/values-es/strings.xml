@@ -105,15 +105,15 @@
     <string name="pref_download_only_over_wifi">Descargar sólo a través de Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Después de marcarlo como leído</string>
     <string name="pref_remove_after_read">Automáticamente después de leer</string>
-    <string name="custom_dir">Directorio personalizado</string>
+    <string name="custom_dir">Ubicación personalizada</string>
     <!-- Sources section -->
     <!-- Sync section -->
     <string name="services">Servicios</string>
     <!-- Advanced section -->
-    <string name="pref_clear_chapter_cache">Borrar la caché de los capítulos</string>
+    <string name="pref_clear_chapter_cache">Vaciar antememoria de capítulos</string>
     <string name="used_cache">Usado: %1$s</string>
-    <string name="cache_deleted">Caché borrada. %1$d archivos se han eliminado</string>
-    <string name="cache_delete_error">Se ha producido un error al borrar el caché</string>
+    <string name="cache_deleted">Se vació la antememoria. Se eliminaron %1$d archivos</string>
+    <string name="cache_delete_error">Se produjo un error al vaciar la antememoria</string>
     <string name="pref_clear_cookies">Borrar cookies</string>
     <string name="cookies_cleared">Cookies borradas</string>
     <string name="pref_clear_database">Borrar redundancia de la base de datos</string>
@@ -246,7 +246,7 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
-    <string name="disabled">Deshabilitado</string>
+    <string name="disabled">Desactivado</string>
     <string name="last_read_chapter">Último capitulo leído</string>
     <string name="second_to_last">Penúltimo capítulo</string>
     <string name="third_to_last">Antepenúltimo capítulo</string>
@@ -441,7 +441,7 @@
     <string name="action_sort_last_checked">Última comprobación</string>
     <string name="channel_ext_updates">Actualizaciones de extensión</string>
     <string name="pref_skip_filtered_chapters">Saltar capítulos filtrados</string>
-    <string name="pref_category_reading">Leyendo</string>
+    <string name="pref_category_reading">Lectura</string>
     <string name="label_sources">Fuentes</string>
     <string name="action_select_inverse">Invertir selección</string>
     <string name="vertical_plus_viewer">Vertical continuo</string>
@@ -449,8 +449,8 @@
     <string name="webtoon_side_padding_20">20 %</string>
     <string name="webtoon_side_padding_15">15 %</string>
     <string name="webtoon_side_padding_10">10 %</string>
-    <string name="webtoon_side_padding_0">Sin margen</string>
-    <string name="pref_webtoon_side_padding">Relleno lateral</string>
+    <string name="webtoon_side_padding_0">Ninguno</string>
+    <string name="pref_webtoon_side_padding">Espaciado lateral</string>
     <string name="pinned_sources">Fijado</string>
     <string name="action_unpin">Desfijar</string>
     <string name="action_pin">Fijar</string>
@@ -474,7 +474,7 @@
     <string name="restore_duration">%02d min, %02d seg</string>
     <string name="error_invalid_date_supplied">Fecha indicada invalida</string>
     <string name="last_used_source">Ultímo usado</string>
-    <string name="check_for_updates">Comprobar las actualizaciones</string>
+    <string name="check_for_updates">Buscar actualizaciones</string>
     <string name="local_source_help_guide">Guía de fuente local</string>
     <plurals name="download_queue_summary">
         <item quantity="one">Queda 1</item>
@@ -493,8 +493,8 @@
     <string name="battery_optimization_setting_activity_not_found">No pudo abrir la configuración del dispositivo</string>
     <string name="pref_refresh_library_covers">Actualizar portadas de manga de la biblioteca</string>
     <plurals name="restore_completed_message">
-        <item quantity="one">Hecho %1$s con %2$s error</item>
-        <item quantity="other">Hecho %1$s con %2$s errores</item>
+        <item quantity="one">Hecho en %1$s con %2$s error</item>
+        <item quantity="other">Hecho en %1$s con %2$s errores</item>
     </plurals>
     <string name="tracking_info">Sincronización unidireccional para actualizar el progreso del capítulo en los servicios de rastreo. Configurar el seguimiento de las entradas de manga individuales desde sus botones de seguimiento.</string>
     <string name="action_display_unread_badge">Icono de no leídas</string>
@@ -601,10 +601,10 @@
     <string name="kindlish_nav">Kindle-ish</string>
     <string name="channel_crash_logs">Registros de accidentes</string>
     <string name="track_finished_reading_date">Fecha de finalización</string>
-    <string name="track_started_reading_date">Fecha de Inicio</string>
+    <string name="track_started_reading_date">Fecha de inicio</string>
     <string name="crash_log_saved">Registros de fallos guardados</string>
     <string name="pref_dump_crash_logs_summary">Guarda los registros de errores en un archivo para compartirlos con los desarrolladores</string>
-    <string name="pref_dump_crash_logs">Volcar registros de accidentes</string>
+    <string name="pref_dump_crash_logs">Volcar registros de cierres inesperados</string>
     <string name="pref_viewer_nav">Estructura de navegación</string>
     <string name="edge_nav">Borde</string>
     <string name="l_nav">En forma de L</string>
@@ -648,7 +648,7 @@
     <string name="pref_create_folder_per_manga">Guarda las páginas en carpetas separadas</string>
     <string name="pref_reader_actions">Acciones</string>
     <string name="pref_grayscale">Escala de grises</string>
-    <string name="restore_miui_warning">La copia de seguridad/restauración puede no funcionar correctamente si la Optimización de MIUI está desactivada.</string>
+    <string name="restore_miui_warning">Es posible que las funciones de copia de seguridad y restauración no funcionen correctamente si la opción Optimización de MIUI está desactivada.</string>
     <string name="theme_midnightdusk">Crepúsculo de medianoche</string>
     <string name="theme_strawberrydaiquiri">Daiquiri de fresa</string>
     <string name="pref_dark_theme_pure_black">Modo oscuro negro puro</string>
@@ -660,7 +660,7 @@
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin y yang</string>
     <string name="theme_greenapple">Manzana verde</string>
-    <string name="theme_blue">Azul</string>
+    <string name="theme_blue">Azul tradicional</string>
     <string name="theme_monet">Dinámico</string>
     <string name="pref_app_theme">Tema de la aplicación</string>
     <string name="action_start_downloading_now">Empezar a descargar ahora</string>
@@ -671,7 +671,7 @@
     <string name="information_empty_category_dialog">Todavía no existen categorías.</string>
     <string name="notification_updating">Actualizando biblioteca... (%1$d/%2$d)</string>
     <string name="error_no_match">No se encontraron coincidencias</string>
-    <string name="source_unsupported">Fuente no soportada</string>
+    <string name="source_unsupported">No se admite el origen</string>
     <string name="unread">No leídos</string>
     <string name="tracker_komga_warning">Este rastreador sólo es compatible con la fuente Komga.</string>
     <string name="error_sharing_cover">Error al compartir portada</string>
@@ -694,4 +694,30 @@
     <string name="pref_library_update_refresh_trackers">Actualizar automáticamente los rastreadores</string>
     <string name="pref_side_nav_icon_alignment">Alineamientos de icono de navegación lateral</string>
     <string name="label_background_activity">Actividad en segundo plano</string>
+    <string name="action_track">Pista</string>
+    <string name="getting_started_guide">Guía de introducción</string>
+    <string name="pref_tablet_ui_mode">Forzar la UI para tabletas</string>
+    <string name="pref_lowest">Más baja</string>
+    <string name="pref_low">Baja</string>
+    <string name="pref_high">Alta</string>
+    <string name="pref_highest">Más alta</string>
+    <string name="pref_hide_threshold">Sensibilidad para ocultar automáticamente el menú al desplazarse</string>
+    <string name="pref_inverted_colors">Invertido</string>
+    <plurals name="relative_time">
+        <item quantity="one">Ayer</item>
+        <item quantity="other">Hace %1$d días</item>
+    </plurals>
+    <string name="relative_time_today">Hoy</string>
+    <string name="recently">Recientemente</string>
+    <string name="pref_relative_time_long">Largo (Corto+, hace n días)</string>
+    <string name="pref_relative_time_short">Corto (Hoy, Ayer)</string>
+    <string name="pref_relative_format">Marcas de tiempo relativas</string>
+    <string name="pref_category_timestamps">Marca de tiempo</string>
+    <string name="pref_category_navigation">Navegación</string>
+    <string name="theme_tealturquoise">Azul marino y Turquesa</string>
+    <string name="pref_category_appearance">Apariencia</string>
+    <string name="confirm_lock_change">Autentíquese para confirmar el cambio</string>
+    <string name="label_default">Predeterminado</string>
+    <string name="pref_remove_exclude_categories">Categorías excluidas</string>
+    <string name="help_translate">Ayudar a traducir</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="name">Meno</string>
+    <string name="name">Názov</string>
     <string name="categories">Kategórie</string>
     <string name="manga">Manga</string>
     <string name="chapters">Kapitoly</string>
@@ -53,7 +53,7 @@
     <string name="action_resume">Pokračovať</string>
     <string name="action_open_in_browser">Otvoriť v browseri</string>
     <string name="action_open_in_web_view">Otvoriť vo WebView</string>
-    <string name="action_display_mode">Zmeniť zobrazenie</string>
+    <string name="action_display_mode">Režim zobrazenia</string>
     <string name="action_display">Zobraziť</string>
     <string name="action_display_grid">Mriežka</string>
     <string name="action_display_list">List</string>
@@ -174,7 +174,7 @@
     <string name="pref_remove_after_marked_as_read">Odstrániť keď označené ako prečítané</string>
     <string name="pref_remove_after_read">Odstrániť po prečítaní</string>
     <string name="custom_dir">Vlastný adresár</string>
-    <string name="disabled">Vypnuté</string>
+    <string name="disabled">Zakázané</string>
     <string name="last_read_chapter">Naposledy čítaná kapitola</string>
     <string name="second_to_last">Predposledná kapitola</string>
     <string name="third_to_last">Predpred posledná kapitola</string>
@@ -219,7 +219,7 @@
     <string name="version">Verzia</string>
     <string name="pref_enable_acra">Odosielať správy o zlyhaní</string>
     <string name="pref_acra_summary">Pomáha opraviť akékoľvek chyby. Nebudú odoslané žiadne citlivé údaje</string>
-    <string name="login_title">Prihlásení pre %1$s</string>
+    <string name="login_title">Prihláste sa do %1$s</string>
     <string name="username">Užívateľské meno</string>
     <string name="password">Heslo</string>
     <string name="show_password">Ukázať heslo</string>
@@ -230,7 +230,7 @@
     <string name="updating_category">Aktualizuje sa kategória</string>
     <string name="local_source_badge">Lokálny</string>
     <string name="no_more_results">Žiadne ďalšie výsledky</string>
-    <string name="local_source">Lokálna manga</string>
+    <string name="local_source">Lokálny zdroj</string>
     <string name="other_source">Ostatné</string>
     <string name="action_global_search_hint">Globálne vyhľadávanie…</string>
     <string name="latest">Najnovší</string>
@@ -245,14 +245,15 @@
     <string name="manga_added_library">Pridané do knižnice</string>
     <string name="manga_removed_library">Odstránené z knižnice</string>
     <string name="delete_downloads_for_manga">Odstrániť stiahnuté kapitoly\?</string>
-    <string name="copied_to_clipboard">%1$s bol skopírovaný do schránky</string>
+    <string name="copied_to_clipboard">Skopírované do schránky:
+\n%1$s</string>
     <string name="source_not_installed">Zdroj nie je nainštalovaný: %1$s</string>
     <string name="display_mode_chapter">Kapitola %1$s</string>
     <string name="chapter_downloading_progress">Sťahovanie (%1$d/%2$d)</string>
     <string name="chapter_error">Chyba</string>
     <string name="chapter_paused">Pozastavené</string>
     <string name="show_title">Zobraziť názov</string>
-    <string name="show_chapter_number">Zobraziť číslo kapitoly</string>
+    <string name="show_chapter_number">Číslo kapitoly</string>
     <string name="sorting_mode">Režim triedenia</string>
     <string name="sort_by_source">Podľa zdroja</string>
     <string name="sort_by_number">Podľa čísla kapitoly</string>
@@ -263,7 +264,7 @@
     <string name="download_10">Stiahnuť ďalších 10 kapitol</string>
     <string name="download_custom">Stiahnuť vlastné</string>
     <string name="download_all">Stiahnuť všetko</string>
-    <string name="download_unread">Stiahnuť neprečítané</string>
+    <string name="download_unread">Neprečítané</string>
     <string name="confirm_delete_chapters">Naozaj chcete odstrániť vybrané kapitoly\?</string>
     <string name="manga_tracking_tab">Sledovanie</string>
     <string name="reading">Čítanie</string>
@@ -291,7 +292,7 @@
     <string name="chapter_progress">Strana: %1$d</string>
     <string name="no_next_chapter">Ďalšia kapitola nebola nájdená</string>
     <string name="no_previous_chapter">Predchádzajúca kapitola nebola nájdená</string>
-    <string name="decode_image_error">Obrázok sa nepodarilo dekódovať</string>
+    <string name="decode_image_error">Obrázok sa nepodarilo načítať</string>
     <string name="confirm_set_image_as_cover">Chcete použiť tento obrázok ako obal\?</string>
     <string name="transition_finished">Dokončená:</string>
     <string name="transition_current">Aktuálna:</string>
@@ -317,14 +318,14 @@
     <string name="update_check_notification_download_in_progress">Prebiehá stahovanie…</string>
     <string name="update_check_notification_download_complete">Sťahovanie dokončené</string>
     <string name="update_check_notification_download_error">Chyba sťahovania</string>
-    <string name="update_check_notification_update_available">Dostupná aktualizácia</string>
+    <string name="update_check_notification_update_available">Dostupná nová aktualizácia!</string>
     <string name="description_cover">Obal mangy</string>
     <string name="information_no_downloads">Žiadne sťahovanie</string>
-    <string name="information_no_recent">Žiadne nedávne kapitoly</string>
+    <string name="information_no_recent">Žiadne nedávne aktualizácie</string>
     <string name="information_no_recent_manga">Žiadna nedávno čítaná manga</string>
-    <string name="information_empty_library">Vaša knižnica je prázdna, môžete si sem pridat niečo z katalógov.</string>
+    <string name="information_empty_library">Vaša knižnica je prázdna</string>
     <string name="information_empty_category">Nemáte žiadne kategórie. Kliknite na tlačidlo plus a vytvorte nejakú na usporiadanie knižnice.</string>
-    <string name="download_notifier_downloader_title">Sťahovač</string>
+    <string name="download_notifier_downloader_title">Preberanie</string>
     <string name="download_notifier_title_error">Chyba</string>
     <string name="download_notifier_unknown_error">Kapitolu sa nepodarilo stiahnuť z dôvodu neočakávanej chyby</string>
     <string name="download_notifier_text_only_wifi">WiFi pripojenie nie je dostupné</string>
@@ -344,4 +345,42 @@
     <string name="action_newest">Najnovšie</string>
     <string name="action_oldest">Najstaršie</string>
     <string name="action_move_to_top">Presunúť navrch</string>
+    <string name="information_webview_outdated">Prosím aktualizujte si aplikáciu WebView pre lepšiu kompatibilitu</string>
+    <string name="information_cloudflare_bypass_failure">Nepodarilo sa obísť službu Cloudflare</string>
+    <string name="paused">Pozastavené</string>
+    <string name="unread">Neprečítané</string>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Pre 1 titul</item>
+        <item quantity="few">Pre %d titulov</item>
+        <item quantity="other"/>
+    </plurals>
+    <string name="notification_check_updates">Hľadám nové kapitoly</string>
+    <string name="hide_notification_content">Skryť obsah upozornení</string>
+    <string name="action_disable_all">Zakázať všetko</string>
+    <string name="action_enable_all">Povoliť všetko</string>
+    <string name="action_download_unread">Stiahnuť neprečítané kapitoly</string>
+    <string name="action_select_inverse">Vyberte inverzne</string>
+    <string name="action_search_settings">Hľadať v nastaveniach</string>
+    <string name="action_sort_date_added">Dátum pridaný</string>
+    <string name="action_sort_chapter_fetch_date">Dátum načítaný</string>
+    <string name="action_sort_next_updated">Ďalšia očakávaná aktualizácia</string>
+    <string name="action_sort_last_checked">Naposledy skontrolované</string>
+    <string name="confirm_exit">Stlačte tlačidlo späť znova pre ukončenie</string>
+    <string name="confirm_lock_change">Prihlásiť sa pre potvrdenie zmien</string>
+    <string name="label_default">Predvolené</string>
+    <string name="label_sources">Zdroje</string>
+    <string name="label_more">Viac</string>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Dostupná aktualizácia rozšírenia</item>
+        <item quantity="few">%d dostupných aktualizácii rozšírenia</item>
+        <item quantity="other">%d dostupné aktualizácie rozšírenia</item>
+    </plurals>
+    <string name="notification_chapters_multiple">%1$s kapitoly</string>
+    <string name="notification_chapters_single_and_more">Kapitola %1$s a %2$d ďalšie</string>
+    <string name="notification_chapters_single">Kapitola %1$s</string>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">1 nová kapitola</item>
+        <item quantity="few">%1$d nových kapitol</item>
+        <item quantity="other">%1$d nové kapitoly</item>
+    </plurals>
 </resources>

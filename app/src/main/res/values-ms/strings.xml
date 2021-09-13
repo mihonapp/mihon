@@ -640,7 +640,7 @@
     <string name="theme_tako">Tako</string>
     <string name="theme_midnightdusk">Suasana tengah malam</string>
     <string name="theme_greenapple">Epal Hijau</string>
-    <string name="theme_blue">Biru</string>
+    <string name="theme_blue">Biru lama</string>
     <string name="theme_monet">Dinamik</string>
     <string name="pref_app_theme">Tema aplikasi</string>
     <string name="enhanced_tracking_info">Perkidmatan yang menyediakan fungsi yang dipertingkatkan untuk sumber tertentu. Manga akan dijejaki secara automatik apabila ditambahkan ke pustaka.</string>
@@ -673,4 +673,7 @@
     <string name="action_track">Jejak</string>
     <string name="pref_category_navigation">Navigasi</string>
     <string name="getting_started_guide">Panduan penggunaan</string>
+    <string name="pref_tablet_ui_mode">Paksa UI tablet</string>
+    <string name="pref_remove_exclude_categories">Kategori dikecualikan</string>
+    <string name="help_translate">Bantu menterjemah</string>
 </resources>

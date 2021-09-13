@@ -648,7 +648,7 @@
     <string name="action_sort_next_updated">Επόμενη αναμενόμενη ενημέρωση</string>
     <string name="theme_midnightdusk">Midnight Dusk</string>
     <string name="theme_greenapple">Πράσινο Μήλο</string>
-    <string name="theme_blue">Μπλε</string>
+    <string name="theme_blue">Legacy Μπλε</string>
     <string name="pref_app_theme">Θέμα εφαρμογής</string>
     <string name="notification_updating">Ενημέρωση βιβλιοθήκης… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Ορισμένοι κατασκευαστές έχουν πρόσθετους περιορισμούς εφαρμογών που εξουδετερώνουν τις υπηρεσίες παρασκηνίου. Αυτός ο ιστότοπος έχει περισσότερες πληροφορίες για το πώς να το διορθώσετε.</string>
@@ -686,4 +686,7 @@
     <string name="action_track">Παρακολούθηση</string>
     <string name="pref_category_navigation">Πλοήγηση</string>
     <string name="getting_started_guide">Οδηγός για τα πρώτα βήματα</string>
+    <string name="pref_tablet_ui_mode">Επιβολή περιβάλλοντος εργασίας tablet</string>
+    <string name="pref_remove_exclude_categories">Εξαιρούμενες κατηγορίες</string>
+    <string name="help_translate">Βοηθήστε στη μετάφραση</string>
 </resources>

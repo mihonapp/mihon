@@ -656,7 +656,7 @@
     <string name="theme_strawberrydaiquiri">Daiquiri de Morango</string>
     <string name="theme_midnightdusk">Aurora-da-noite</string>
     <string name="theme_greenapple">Maçã-verde</string>
-    <string name="theme_blue">Azul</string>
+    <string name="theme_blue">Azul Antigo</string>
     <string name="pref_app_theme">Tema do aplicativo</string>
     <string name="enhanced_tracking_info">Serviços que oferecem recursos aprimorados para fontes específicas. Os mangás são automaticamente monitorados quando adicionados em sua biblioteca.</string>
     <string name="enhanced_services">Serviços aprimorados</string>
@@ -687,4 +687,6 @@
     <string name="pref_category_navigation">Navegação</string>
     <string name="getting_started_guide">Guia de introdução</string>
     <string name="pref_tablet_ui_mode">Forçar a interface de tablet</string>
+    <string name="pref_remove_exclude_categories">Categorias ignoradas</string>
+    <string name="help_translate">Ajudar a traduzir</string>
 </resources>

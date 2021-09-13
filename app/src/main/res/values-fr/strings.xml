@@ -232,7 +232,7 @@
     <string name="information_no_downloads">Aucun téléchargement</string>
     <string name="information_no_recent">Pas de mises à jour récentes</string>
     <string name="information_no_recent_manga">Rien de lu récemment</string>
-    <string name="information_empty_library">La bibliothèque est vide. Ajoutez des séries à votre bibliothèque depuis l\'onglet « Explorer ».</string>
+    <string name="information_empty_library">La bibliothèque est vide</string>
     <!-- Download Notification -->
     <string name="download_notifier_downloader_title">Téléchargement</string>
     <string name="download_notifier_title_error">Erreur</string>
@@ -388,7 +388,7 @@
     <string name="theme_system">Par défaut du système</string>
     <string name="pref_manage_notifications">Notifications</string>
     <string name="pref_category_security">Sécurité</string>
-    <string name="lock_with_biometrics">Imposer un déverrouillage</string>
+    <string name="lock_with_biometrics">Nécessite un déverrouillage</string>
     <string name="lock_when_idle">Verrouiller en cas d\'inactivité</string>
     <string name="lock_always">Toujours</string>
     <string name="lock_never">Jamais</string>
@@ -580,10 +580,10 @@
     <string name="pref_hide_bottom_bar_on_scroll">Cacher la barre inférieure lors du défilement</string>
     <string name="also_set_chapter_settings_for_library">Appliquer à ma librairie</string>
     <string name="set_chapter_settings_as_default">Appliquer par défaut</string>
-    <string name="share_page_info">%1$s: %2$s, page %3$d</string>
+    <string name="share_page_info">%1$s : %2$s, page %3$d</string>
     <string name="downloaded_chapters">Chapitres téléchargés</string>
     <string name="manga_from_library">Manga de la bibliothèque</string>
-    <string name="action_search_settings">Paramètres de la recherche</string>
+    <string name="action_search_settings">Rechercher des paramètres</string>
     <string name="pref_incognito_mode_summary">Met en pause l\'historique de lecture</string>
     <string name="clear_history_confirmation">Êtes-vous sûr(e) \? Tout l\'Historique sera perdue.</string>
     <string name="pref_incognito_mode">Mode navigation privée</string>
@@ -691,7 +691,7 @@
     <string name="theme_strawberrydaiquiri">Daiquiri aux fraises</string>
     <string name="theme_midnightdusk">Crépuscule de minuit</string>
     <string name="theme_greenapple">Pomme verte</string>
-    <string name="theme_blue">Bleu</string>
+    <string name="theme_blue">Bleu legacy</string>
     <string name="theme_monet">Dynamique</string>
     <string name="pref_app_theme">Thème de l\'appli</string>
     <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
@@ -719,4 +719,8 @@
     <string name="label_default">Par défaut</string>
     <string name="action_track">Traquer</string>
     <string name="pref_category_navigation">Navigation</string>
+    <string name="getting_started_guide">Guide de démarrage</string>
+    <string name="pref_tablet_ui_mode">Forcer le mode tablette</string>
+    <string name="help_translate">Aider à traduire</string>
+    <string name="pref_remove_exclude_categories">Catégories exclues</string>
 </resources>

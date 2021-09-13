@@ -658,7 +658,7 @@
     <string name="theme_strawberrydaiquiri">Çilekli Kokteyl</string>
     <string name="theme_midnightdusk">Alacakaranlık</string>
     <string name="theme_greenapple">Yeşil Elma</string>
-    <string name="theme_blue">Mavi</string>
+    <string name="theme_blue">Eski Mavi</string>
     <string name="theme_monet">Dinamik</string>
     <string name="pref_app_theme">Uygulama teması</string>
     <string name="action_sort_next_updated">Sonraki beklenen güncelleme</string>
@@ -686,4 +686,5 @@
     <string name="action_track">İzle</string>
     <string name="pref_category_navigation">Gezinme</string>
     <string name="getting_started_guide">Başlangıç kılavuzu</string>
+    <string name="pref_tablet_ui_mode">Tablet arayüzü kullan</string>
 </resources>

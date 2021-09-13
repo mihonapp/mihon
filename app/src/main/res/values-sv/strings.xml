@@ -657,7 +657,7 @@
     <string name="theme_strawberrydaiquiri">Jordgubbs-Daiquiri</string>
     <string name="theme_midnightdusk">Midnattskymning</string>
     <string name="theme_greenapple">Grönt äpple</string>
-    <string name="theme_blue">Blå</string>
+    <string name="theme_blue">Äldre blå</string>
     <string name="theme_monet">Dynamisk</string>
     <string name="pref_app_theme">App-tema</string>
     <string name="action_sort_next_updated">Nästa förväntade uppdatering</string>
@@ -686,4 +686,7 @@
     <string name="getting_started_guide">Komma igång guide</string>
     <string name="action_track">Spår</string>
     <string name="pref_category_navigation">Navigering</string>
+    <string name="pref_tablet_ui_mode">Tvinga tablettgränssnitt</string>
+    <string name="help_translate">Hjälp till med översättning</string>
+    <string name="pref_remove_exclude_categories">Uteslutna kategorier</string>
 </resources>

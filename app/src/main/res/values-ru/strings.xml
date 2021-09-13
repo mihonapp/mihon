@@ -670,7 +670,7 @@
     <string name="action_start_downloading_now">Начать загрузку сейчас</string>
     <string name="action_sort_next_updated">Следующее ожидаемое обновление</string>
     <string name="theme_greenapple">Зелёное Яблоко</string>
-    <string name="theme_blue">Синяя</string>
+    <string name="theme_blue">Синее Наследие</string>
     <string name="pref_app_theme">Тема приложения</string>
     <string name="pref_dark_theme_pure_black">Чисто чёрный тёмный режим</string>
     <string name="theme_yotsuba">Ёцуба</string>
@@ -711,4 +711,7 @@
     <string name="getting_started_guide">Руководство по началу работы</string>
     <string name="action_track">Отслеживать</string>
     <string name="pref_category_navigation">Навигация</string>
+    <string name="pref_tablet_ui_mode">Принудительный планшетный интерфейс</string>
+    <string name="pref_remove_exclude_categories">Исключенные категории</string>
+    <string name="help_translate">Помочь перевести</string>
 </resources>

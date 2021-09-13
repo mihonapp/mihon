@@ -653,7 +653,7 @@
     <string name="enhanced_services">Pinahusay na serbisyo</string>
     <string name="theme_midnightdusk">Hatinggabi</string>
     <string name="theme_greenapple">Berdeng Mansanas</string>
-    <string name="theme_blue">Bughaw</string>
+    <string name="theme_blue">Bughaw (Legacy)</string>
     <string name="theme_monet">Nagbabago</string>
     <string name="pref_app_theme">Tema</string>
     <string name="action_sort_next_updated">Inaasahang susunod na bago</string>
@@ -686,5 +686,7 @@
     <string name="action_track">Sundan</string>
     <string name="pref_category_navigation">Nabigasyon</string>
     <string name="getting_started_guide">Gabay sa Pagsisimula</string>
-    <string name="pref_tablet_ui_mode">Tablet UI</string>
+    <string name="pref_tablet_ui_mode">Puwersahang Tablet UI</string>
+    <string name="help_translate">Tumulong sa pagsalin</string>
+    <string name="pref_remove_exclude_categories">Kategoryang di-kasama</string>
 </resources>

@@ -581,12 +581,12 @@
     <string name="action_global_search_query">إبحث عن \"%1$s\" بشكلٍ شامل</string>
     <string name="updated_version">حُدِّث إلى الإصدار v%1$s</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="zero">لا توجد فصول مفقودة</item>
-        <item quantity="one">هناك فصل واحد مفقود</item>
-        <item quantity="two">هناك فصلان مفقودتان</item>
-        <item quantity="few">هناك %d فصول مفقودة</item>
-        <item quantity="many">هناك %d فصول مفقودة</item>
-        <item quantity="other">هناك %d فصول مفقودة</item>
+        <item quantity="zero">لا يوجد فصول مفقودة</item>
+        <item quantity="one">هناك فصل مفقود</item>
+        <item quantity="two">هناك فصلان مفقودان</item>
+        <item quantity="few">هناك %d فصل مفقود</item>
+        <item quantity="many">هناك %d فصل مفقود</item>
+        <item quantity="other">هناك %d فصل مفقود</item>
     </plurals>
     <string name="no_chapters_error">لم يتم العثور على الفصول</string>
     <string name="share_page_info">%1$s: %2$s, صفحة %3$d</string>
@@ -721,12 +721,12 @@
     <string name="label_default">الافتراضي</string>
     <string name="label_background_activity">الأنشطة التي تعمل في الخلفية</string>
     <plurals name="relative_time">
-        <item quantity="zero"></item>
-        <item quantity="one"></item>
-        <item quantity="two"></item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="zero"/>
+        <item quantity="one"/>
+        <item quantity="two"/>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="pref_relative_time_short">قصير (اليوم، الأمس)</string>
     <string name="action_track">تتبع</string>
@@ -737,4 +737,5 @@
     <string name="pref_category_navigation">التنقل</string>
     <string name="theme_tealturquoise">ازرق مخضر و فيروز</string>
     <string name="pref_category_appearance">المظهر</string>
+    <string name="getting_started_guide">دليل البدء</string>
 </resources>

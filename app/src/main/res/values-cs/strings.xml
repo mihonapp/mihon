@@ -129,9 +129,9 @@
     <string name="download_all">Stáhnout vše</string>
     <string name="download_unread">Stáhnout nepřečtené</string>
     <string name="confirm_delete_chapters">Opravdu chcete smazat vybrané kapitoly\?</string>
-    <string name="reading">Čtení</string>
+    <string name="reading">Rozečtené</string>
     <string name="completed">Kompletní</string>
-    <string name="plan_to_read">Plánováno číst</string>
+    <string name="plan_to_read">Plánuji číst</string>
     <string name="repeating">Znovu čtu</string>
     <string name="score">Skóre</string>
     <string name="title">Název</string>
@@ -272,7 +272,7 @@
     <string name="sort_by_number">Podle čísla kapitoly</string>
     <string name="custom_download">Stažení vlastního počtu</string>
     <string name="manga_tracking_tab">Sledování</string>
-    <string name="dropped">Upuštěno</string>
+    <string name="dropped">Již nečtu</string>
     <string name="on_hold">Pozastaveno</string>
     <string name="status">Stav</string>
     <string name="track_status">Stav</string>
@@ -311,7 +311,7 @@
     <string name="update_check_notification_download_in_progress">Probíhá stahování…</string>
     <string name="description_cover">Obal mangy</string>
     <string name="information_no_downloads">Žádné stahování</string>
-    <string name="information_empty_library">Vaše knihovna je prázdná. Přidejte si nějaké série ze sekce Procházet.</string>
+    <string name="information_empty_library">Vaše knihovna je prázdná</string>
     <string name="information_empty_category">Nemáte žádné kategorie. Klikněte na tlačítko plus a vytvořte nějakou pro zorganizování vaší knihovny.</string>
     <string name="download_notifier_downloader_title">Stahovač</string>
     <string name="channel_common">Běžný</string>
@@ -678,4 +678,24 @@
     <string name="pref_low">Nízké</string>
     <string name="pref_high">Vysoké</string>
     <string name="pref_highest">Nejvyšší</string>
+    <string name="getting_started_guide">Příručka Začínáme</string>
+    <string name="pref_tablet_ui_mode">Vynutit uživ. rozhrání tabletu</string>
+    <string name="action_track">Sledovat</string>
+    <plurals name="relative_time">
+        <item quantity="one">Včera</item>
+        <item quantity="few">Před %1$d dny</item>
+        <item quantity="other">Před %1$d dny</item>
+    </plurals>
+    <string name="relative_time_today">Dnes</string>
+    <string name="recently">Nedávno</string>
+    <string name="pref_relative_time_long">Dlouhé (Krátké+, před n dny)</string>
+    <string name="pref_relative_time_short">Krátký (dnes, včera)</string>
+    <string name="pref_relative_format">Relativní časová razítka</string>
+    <string name="pref_category_timestamps">Časová razítka</string>
+    <string name="theme_tealturquoise">Modrozelená a Tyrkysová</string>
+    <string name="pref_category_appearance">Vzhled</string>
+    <string name="confirm_lock_change">Potvrďte změnu ověřením</string>
+    <string name="label_default">Výchozí</string>
+    <string name="help_translate">Pomozte s překladem</string>
+    <string name="pref_remove_exclude_categories">Vyloučené kategorie</string>
 </resources>

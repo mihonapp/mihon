@@ -657,7 +657,7 @@
     <string name="theme_strawberrydaiquiri">Daiquiri a sa Fràgola</string>
     <string name="theme_midnightdusk">Intrinada de mesanote</string>
     <string name="theme_greenapple">Mela birde</string>
-    <string name="theme_blue">Biaitu</string>
+    <string name="theme_blue">Biaitu traditzionale</string>
     <string name="theme_monet">Dinàmicu</string>
     <string name="pref_app_theme">Tema de s\'aplicatzione</string>
     <string name="action_sort_next_updated">Agiornamentu isetadu imbeniente</string>
@@ -686,4 +686,7 @@
     <string name="action_track">Arrasta</string>
     <string name="pref_category_navigation">Navigatzione</string>
     <string name="getting_started_guide">Ghia pro incumintzare</string>
+    <string name="pref_tablet_ui_mode">Fortza sa modalidade pro tauleddas</string>
+    <string name="help_translate">Agiuda a bortare</string>
+    <string name="pref_remove_exclude_categories">Categorias esclùdidas</string>
 </resources>

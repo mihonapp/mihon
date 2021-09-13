@@ -547,7 +547,7 @@
     <string name="confirm_set_chapter_settings">Bist du sicher, dass du diese Einstellungen als Standard speichern willst\?</string>
     <string name="chapter_settings">Kapiteleinstellungen</string>
     <string name="share_page_info">%1$s: %2$s, Seite %3$d</string>
-    <string name="action_search_settings">Sucheinstellungen</string>
+    <string name="action_search_settings">Einstellungen durchsuchen</string>
     <string name="downloaded_chapters">Heruntergeladene Kapitel</string>
     <string name="manga_from_library">Manga aus der Bibliothek</string>
     <string name="pref_hide_bottom_bar_on_scroll">Untere Leiste beim Scrollen ausblenden</string>
@@ -656,7 +656,7 @@
     <string name="theme_strawberrydaiquiri">Erdbeer-Daiquiri</string>
     <string name="theme_midnightdusk">Mitternachtsdämmerung</string>
     <string name="theme_greenapple">Grüner Apfel</string>
-    <string name="theme_blue">Blau</string>
+    <string name="theme_blue">Legacy-Blau</string>
     <string name="pref_app_theme">App-Design</string>
     <string name="enhanced_services">Erweiterte Anbieter</string>
     <string name="enhanced_tracking_info">Anbieter, die für bestimmte Quellen erweiterte Features anbieten. Manga werden automatisch getrackt, wenn sie deiner Bibliothek hinzugefügt werden.</string>
@@ -686,5 +686,7 @@
     <string name="pref_category_navigation">Navigation</string>
     <string name="action_track">Tracken</string>
     <string name="getting_started_guide">Leitfaden für den Einstieg</string>
-    <string name="pref_tablet_ui_mode">Tablet UI erzwingen</string>
+    <string name="pref_tablet_ui_mode">Tablet-Benutzeroberfläche erzwingen</string>
+    <string name="pref_remove_exclude_categories">Ausgeschlossene Kategorien</string>
+    <string name="help_translate">Beim Übersetzen mithelfen</string>
 </resources>

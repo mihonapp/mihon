@@ -208,7 +208,7 @@
     <string name="pref_clear_chapter_cache">Wyczyść cache rozdziałów</string>
     <string name="used_cache">W użyciu: %1$s</string>
     <string name="cache_deleted">Wyczyszczono cache. Usunięto plików: %1$d</string>
-    <string name="cache_delete_error">Podczas czyszczenia cache wystąpił błąd</string>
+    <string name="cache_delete_error">Podczas czyszczenia pamięci podręcznej wystąpił błąd</string>
     <string name="pref_clear_cookies">Usuń ciasteczka</string>
     <string name="cookies_cleared">Ciasteczka usunięte</string>
     <string name="pref_clear_database_summary">Usuń historię mang, których nie ma w twojej bibliotece</string>
@@ -227,7 +227,7 @@
     <string name="login_success">Zalogowano</string>
     <string name="local_source">Źródło lokalne</string>
     <string name="ongoing">Nieukończone</string>
-    <string name="unknown">Nieznane</string>
+    <string name="unknown">Nie wiadomo</string>
     <string name="licensed">Licencjonowane</string>
     <string name="delete_downloads_for_manga">Usunąć pobrane rozdziały?</string>
     <string name="chapter_downloading_progress">Pobieranie (%1$d/%2$d)</string>
@@ -550,10 +550,10 @@
     <string name="chapter_settings_updated">Zaktualizowano domyślne ustawienia rozdziałów</string>
     <string name="migration_help_guide">Instrukcja przenoszenia źródeł</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Jest %d brakujący rozdział</item>
-        <item quantity="few">Są %d brakujące rozdziały</item>
-        <item quantity="many">Jest %d brakujących rozdziałów</item>
-        <item quantity="other">Jest %d brakujących rozdziałów</item>
+        <item quantity="one">Jeden brakujący rozdział</item>
+        <item quantity="few">%d brakujących rozdziałów</item>
+        <item quantity="many">%d brakujące rozdziały</item>
+        <item quantity="other">%d brakujące rozdziały</item>
     </plurals>
     <string name="share_page_info">%1$s: %2$s, strona %3$d</string>
     <plurals name="num_trackers">
@@ -685,8 +685,8 @@
     <plurals name="relative_time">
         <item quantity="one">Wczoraj</item>
         <item quantity="few">%1$d dni temu</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="pref_relative_time_long">Długi (Krótki+, n dni temu)</string>
     <string name="pref_relative_time_short">Krótki (Dzisiaj, Jutro)</string>
@@ -697,4 +697,6 @@
     <string name="pref_category_appearance">Wygląd</string>
     <string name="confirm_lock_change">Autoryzuj, aby potwierdzić zmianę</string>
     <string name="label_default">Domyślny</string>
+    <string name="getting_started_guide">Wprowadzenie - poradnik</string>
+    <string name="help_translate">Pomóż tłumaczyć</string>
 </resources>

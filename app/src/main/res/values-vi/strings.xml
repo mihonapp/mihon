@@ -79,7 +79,7 @@
     <string name="pref_library_update_restriction">Hạn chế cập nhật thư viện</string>
     <string name="charging">Đang sạc</string>
     <string name="pref_update_only_non_completed">Chỉ cập nhật truyện đang tiến hành</string>
-    <string name="pref_auto_update_manga_sync">Đồng bộ các chương sau khi đọc</string>
+    <string name="pref_auto_update_manga_sync">Cập nhật tiến triển sau khi đọc</string>
     <string name="pref_start_screen">Màn hình khởi động</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Toàn màn hình</string>
@@ -246,7 +246,7 @@
     <string name="information_no_downloads">Không có tải xuống</string>
     <string name="information_no_recent">Không có cập nhật mới</string>
     <string name="information_no_recent_manga">Không có truyện đã đọc gần đây</string>
-    <string name="information_empty_library">Thư viện trống, bạn có thể thêm truyện vào thư viện từ Nguồn truyện.</string>
+    <string name="information_empty_library">Thư viện trống</string>
     <!-- Download Notification -->
     <string name="download_notifier_downloader_title">Trình tải xuống</string>
     <string name="download_notifier_title_error">Lỗi</string>
@@ -479,7 +479,7 @@
     <string name="label_downloaded_only">Chỉ hiện truyện đã tải</string>
     <string name="migration_help_guide">Hướng dẫn di chuyển nguồn</string>
     <string name="action_search_settings">Cài đặt tìm kiếm</string>
-    <string name="backup_in_progress">Đang trong quá trình sao lưu</string>
+    <string name="backup_in_progress">Đã đang trong quá trình sao lưu</string>
     <string name="clear_history_confirmation">Bạn có chắc không\? Tất cả lịch sử sẽ bị xoá.</string>
     <string name="invalid_backup_file_missing_data">Dữ liệu bị mất.</string>
     <string name="pref_library_update_categories_details">Manga trong danh mục bị loại trừ sẽ không được cập nhật.</string>
@@ -666,9 +666,9 @@
     <string name="tracker_komga_warning">Trình theo dõi này chỉ tương thích với nguồn Komga.</string>
     <string name="notification_updating">Cập nhật thư viện… (%1$d/%2$d)</string>
     <string name="information_empty_category_dialog">Người dùng chưa có danh mục.</string>
-    <string name="restore_miui_warning">Tính năng tối ưu hóa của MIUI phải được bật lên để việc lưu trữ/khôi phục hoạt động tốt.</string>
+    <string name="restore_miui_warning">Tính năng tối ưu hóa của MIUI phải được bật lên để việc sao lưu/khôi phục hoạt động tốt.</string>
     <string name="theme_greenapple">Chủ đề Green Apple</string>
-    <string name="theme_blue">Chủ đề xanh dương</string>
+    <string name="theme_blue">Chủ đề Xanh dương nhẹ</string>
     <string name="theme_monet">Động</string>
     <string name="pref_app_theme">Chủ đề ứng dụng</string>
     <string name="action_start_downloading_now">Bắt đầu tải xuống ngay</string>
@@ -684,4 +684,29 @@
     <string name="enhanced_services">Nguồn nâng cao</string>
     <string name="enhanced_tracking_info">Dịch vụ cung cấp các tính năng nâng cao cho các nguồn cụ thể. Manga được tự động theo dõi khi được thêm vào thư viện của bạn.</string>
     <string name="about_dont_kill_my_app">Một vài nhà sản xuất có các hạn chế về việc chạy ngầm của ứng dụng. Xem thêm ở địa chỉ này để sửa chữa chúng.</string>
+    <string name="pref_relative_format">Dấu thời gian liên quan</string>
+    <string name="pref_category_timestamps">Dấu thời gian</string>
+    <string name="pref_category_navigation">Thanh điều hướng</string>
+    <string name="theme_tealturquoise">Chủ đề Xanh lam &amp; Xanh ngọc</string>
+    <string name="pref_category_appearance">Giao diện</string>
+    <string name="confirm_lock_change">Xác thực để xác nhận thay đổi</string>
+    <string name="label_default">Mặc định</string>
+    <string name="action_track">Theo dõi</string>
+    <string name="pref_remove_exclude_categories">Các thể loại bị loại trừ</string>
+    <string name="pref_hide_threshold">Độ nhạy tự động ẩn menu</string>
+    <string name="getting_started_guide">Hướng dẫn sử dụng</string>
+    <string name="pref_tablet_ui_mode">Sử dụng giao diện máy tính bảng</string>
+    <string name="label_background_activity">Hoạt động ngầm</string>
+    <string name="pref_lowest">Thấp nhất</string>
+    <string name="pref_low">Thấp</string>
+    <string name="pref_high">Cao</string>
+    <string name="pref_highest">Cao nhất</string>
+    <string name="pref_inverted_colors">Đảo màu</string>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d ngày trước</item>
+    </plurals>
+    <string name="relative_time_today">Hôm nay</string>
+    <string name="recently">Gần đây</string>
+    <string name="pref_relative_time_long">Dài (Ngắn+, nhiều ngày trước)</string>
+    <string name="pref_relative_time_short">Ngắn (Hôm nay, Hôm qua)</string>
 </resources>
