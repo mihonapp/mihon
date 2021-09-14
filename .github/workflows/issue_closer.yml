@@ -25,7 +25,7 @@ jobs:
               },
               {
                 "type": "both",
-                "regex": ".*(aniyomi|anime).*",
+                "regex": "^(?!.*myanimelist.*).*(aniyomi|anime).*$",
                 "ignoreCase": true,
                 "message": "Tachiyomi does not support anime, and has no plans to support anime. In addition Tachiyomi is not affiliated with Aniyomi https://github.com/jmir1/aniyomi"
               }
