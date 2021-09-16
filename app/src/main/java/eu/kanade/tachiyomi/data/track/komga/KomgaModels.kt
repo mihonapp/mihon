@@ -91,7 +91,8 @@ data class ReadProgressDto(
         booksReadCount,
         booksUnreadCount,
         booksInProgressCount,
-        lastReadContinuousIndex.toFloat()
+        lastReadContinuousIndex.toFloat(),
+        booksCount.toFloat(),
     )
 }
 
@@ -102,4 +103,5 @@ data class ReadProgressV2Dto(
     val booksUnreadCount: Int,
     val booksInProgressCount: Int,
     val lastReadContinuousNumberSort: Float,
+    val maxNumberSort: Float,
 )

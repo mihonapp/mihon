@@ -47,7 +47,7 @@ class KomgaApi(private val client: OkHttpClient) {
                 track.apply {
                     cover_url = "$url/thumbnail"
                     tracking_url = url
-                    total_chapters = progress.booksCount
+                    total_chapters = progress.maxNumberSort.toInt()
                     status = when (progress.booksCount) {
                         progress.booksUnreadCount -> Komga.UNREAD
                         progress.booksReadCount -> Komga.COMPLETED
