@@ -10,7 +10,6 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.view.ActionMode
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -64,7 +63,6 @@ import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isTablet
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
-import eu.kanade.tachiyomi.widget.HideBottomNavigationOnScrollBehavior
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -85,8 +83,6 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             else -> R.id.nav_library
         }
     }
-
-    private var bottomNavAnimator: ViewHeightAnimator? = null
 
     private var isConfirmingExit: Boolean = false
     private var isHandlingShortcut: Boolean = false
@@ -137,15 +133,6 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             elapsed <= SPLASH_MIN_DURATION || (!ready && elapsed <= SPLASH_MAX_DURATION)
         }
         setSplashScreenExitAnimation(splashScreen)
-
-        if (binding.bottomNav != null) {
-            bottomNavAnimator = ViewHeightAnimator(binding.bottomNav!!)
-
-            // Set behavior of bottom nav
-            preferences.hideBottomBarOnScroll()
-                .asImmediateFlow { setBottomNavBehaviorOnScroll() }
-                .launchIn(lifecycleScope)
-        }
 
         if (binding.sideNav != null) {
             preferences.sideNavIconAlignment()
@@ -532,11 +519,11 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         binding.appbar.setExpanded(true)
 
         if ((from == null || from is RootController) && to !is RootController) {
-            showNav(visible = false, expand = true)
+            showNav(false)
         }
         if (to is RootController) {
             // Always show bottom nav again when returning to a RootController
-            showNav(visible = true, expand = from !is RootController)
+            showNav(true)
         }
 
         if (from is TabbedController) {
@@ -587,27 +574,22 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         }
     }
 
-    private fun showNav(visible: Boolean, expand: Boolean = false) {
-        showBottomNav(visible, expand)
+    private fun showNav(visible: Boolean) {
+        showBottomNav(visible)
         showSideNav(visible)
     }
 
     // Also used from some controllers to swap bottom nav with action toolbar
-    fun showBottomNav(visible: Boolean, expand: Boolean = false) {
+    fun showBottomNav(visible: Boolean) {
         if (visible) {
-            binding.bottomNav?.translationY = 0F
-            if (expand) {
-                bottomNavAnimator?.expand()
-            }
+            binding.bottomNav?.slideUp()
         } else {
-            bottomNavAnimator?.collapse()
+            binding.bottomNav?.slideDown()
         }
     }
 
     private fun showSideNav(visible: Boolean) {
-        binding.sideNav?.let {
-            it.isVisible = visible
-        }
+        binding.sideNav?.isVisible = visible
     }
 
     /**
@@ -620,18 +602,6 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         } else {
             0
         }
-    }
-
-    private fun setBottomNavBehaviorOnScroll() {
-        showNav(visible = true)
-
-        binding.bottomNav?.updateLayoutParams<CoordinatorLayout.LayoutParams> {
-            behavior = when {
-                preferences.hideBottomBarOnScroll().get() -> HideBottomNavigationOnScrollBehavior()
-                else -> null
-            }
-        }
-        binding.bottomNav?.translationY = 0F
     }
 
     private val nav: NavigationBarView

@@ -75,7 +75,7 @@
         android:id="@+id/fab_layout"
         layout="@layout/main_activity_fab" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

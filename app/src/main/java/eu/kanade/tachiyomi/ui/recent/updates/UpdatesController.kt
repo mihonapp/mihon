@@ -180,7 +180,7 @@ class UpdatesController :
                 actionMode!!,
                 R.menu.updates_chapter_selection
             ) { onActionItemClicked(it!!) }
-            (activity as? MainActivity)?.showBottomNav(visible = false, expand = true)
+            (activity as? MainActivity)?.showBottomNav(false)
         }
 
         toggleSelection(position)
@@ -386,7 +386,7 @@ class UpdatesController :
         adapter?.clearSelection()
 
         binding.actionToolbar.hide()
-        (activity as? MainActivity)?.showBottomNav(visible = true, expand = true)
+        (activity as? MainActivity)?.showBottomNav(true)
 
         actionMode = null
     }
