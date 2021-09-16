@@ -83,7 +83,6 @@
     <!-- Do not translate "WebView" -->
     <string name="action_open_in_web_view">Open in WebView</string>
     <string name="action_web_view" translatable="false">WebView</string>
-    <string name="action_open_in_settings">Open in Settings</string>
     <string name="action_migrate">Migrate</string>
     <string name="action_display_mode">Display mode</string>
     <string name="action_display">Display</string>
@@ -257,6 +256,7 @@
     <string name="ext_untrusted">Untrusted</string>
     <string name="ext_uninstall">Uninstall</string>
     <string name="ext_available">Available</string>
+    <string name="ext_app_info">App info</string>
     <string name="untrusted_extension">Untrusted extension</string>
     <string name="untrusted_extension_message">This extension was signed with an untrusted certificate and wasn\'t activated.\n\nA malicious extension could read any login credentials stored in Tachiyomi or execute arbitrary code.\n\nBy trusting this certificate you accept these risks.</string>
     <string name="obsolete_extension_message">This extension is no longer available.</string>

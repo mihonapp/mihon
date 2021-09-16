@@ -98,11 +98,24 @@
 
         <Button
             android:id="@+id/btn_uninstall"
+            style="@style/Widget.Tachiyomi.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
             android:text="@string/ext_uninstall"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_app_info"
+            app:layout_constraintTop_toBottomOf="@id/pkgname" />
+
+        <Button
+            android:id="@+id/btn_app_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="4dp"
+            android:text="@string/ext_app_info"
+            app:layout_constraintStart_toEndOf="@+id/btn_uninstall"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pkgname" />
 

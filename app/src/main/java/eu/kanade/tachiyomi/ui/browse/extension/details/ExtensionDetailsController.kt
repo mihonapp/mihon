@@ -2,10 +2,7 @@ package eu.kanade.tachiyomi.ui.browse.extension.details
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
@@ -68,7 +65,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
     }
 
     override fun createPresenter(): ExtensionDetailsPresenter {
-        return ExtensionDetailsPresenter(args.getString(PKGNAME_KEY)!!)
+        return ExtensionDetailsPresenter(this, args.getString(PKGNAME_KEY)!!)
     }
 
     override fun getTitle(): String? {
@@ -188,7 +185,6 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
             R.id.action_history -> openCommitHistory()
             R.id.action_enable_all -> toggleAllSources(true)
             R.id.action_disable_all -> toggleAllSources(false)
-            R.id.action_open_in_settings -> openInSettings()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -217,13 +213,6 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
             else -> "$URL_EXTENSION_COMMITS/src/${pkgName.replace(".", "/")}"
         }
         openInBrowser(url)
-    }
-
-    private fun openInSettings() {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = Uri.fromParts("package", presenter.pkgName, null)
-        }
-        startActivity(intent)
     }
 
     private fun Source.isEnabled(): Boolean {

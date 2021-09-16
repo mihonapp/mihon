@@ -240,6 +240,8 @@
         <item name="rippleColor">@null</item>
     </style>
 
+    <style name="Widget.Tachiyomi.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton" />
+
 
     <!--=================-->
     <!--Widgets.TabLayout-->
