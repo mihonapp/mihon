@@ -226,7 +226,6 @@
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
     <string name="pref_library_update_refresh_trackers">Automatically refresh trackers</string>
     <string name="pref_library_update_refresh_trackers_summary">Update trackers when updating library</string>
-    <string name="pref_library_update_error_notification">Show update errors notifications</string>
 
     <string name="default_category">Default category</string>
     <string name="default_category_summary">Always ask</string>
@@ -775,9 +774,6 @@
     <string name="channel_progress">Progress</string>
     <string name="channel_complete">Complete</string>
     <string name="channel_errors">Errors</string>
-    <string name="channel_library">Library</string>
-    <string name="group_downloader">Downloads</string>
-    <string name="group_backup_restore">Backup and restore</string>
     <string name="channel_new_chapters">Chapter updates</string>
     <string name="channel_ext_updates">Extension updates</string>
     <string name="channel_crash_logs">Crash logs</string>

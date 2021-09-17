@@ -86,8 +86,6 @@ class PreferencesHelper(val context: Context) {
 
     fun autoUpdateTrackers() = prefs.getBoolean(Keys.autoUpdateTrackers, false)
 
-    fun showLibraryUpdateErrors() = prefs.getBoolean(Keys.showLibraryUpdateErrors, true)
-
     fun themeMode() = flowPrefs.getEnum(Keys.themeMode, system)
 
     fun appTheme() = flowPrefs.getEnum(Keys.appTheme, Values.AppTheme.DEFAULT)
