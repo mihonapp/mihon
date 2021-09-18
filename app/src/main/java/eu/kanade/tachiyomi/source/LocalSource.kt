@@ -271,18 +271,13 @@ class LocalSource(private val context: Context) : CatalogueSource {
         throw Exception(context.getString(R.string.chapter_not_found))
     }
 
-    private fun getFormat(file: File): Format {
-        return file.run {
-            when {
-                isDirectory -> Format.Directory(file)
-                extension.equals("zip", true) -> Format.Zip(file)
-                extension.equals("cbz", true) -> Format.Zip(file)
-                extension.equals("rar", true) -> Format.Rar(file)
-                extension.equals("cbr", true) -> Format.Rar(file)
-                extension.equals("epub", true) -> Format.Epub(file)
-
-                else -> throw Exception("Invalid chapter format")
-            }
+    private fun getFormat(file: File) = with(file) {
+        when {
+            isDirectory -> Format.Directory(this)
+            extension.equals("zip", true) || extension.equals("cbz", true) -> Format.Zip(this)
+            extension.equals("rar", true) || extension.equals("cbr", true) -> Format.Rar(this)
+            extension.equals("epub", true) -> Format.Epub(this)
+            else -> throw Exception(context.getString(R.string.local_invalid_format))
         }
     }
 
