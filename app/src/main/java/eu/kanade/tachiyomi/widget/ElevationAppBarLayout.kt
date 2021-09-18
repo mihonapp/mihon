@@ -5,10 +5,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import androidx.annotation.FloatRange
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.HideToolbarOnScrollBehavior
 import com.google.android.material.appbar.MaterialToolbar
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.view.findChild
@@ -50,6 +52,8 @@ class ElevationAppBarLayout @JvmOverloads constructor(
                 updateBackgroundAlpha()
             }
         }
+
+    override fun getBehavior(): CoordinatorLayout.Behavior<AppBarLayout> = HideToolbarOnScrollBehavior()
 
     /**
      * Disabled. Lift on scroll is handled manually with [TachiyomiCoordinatorLayout]
