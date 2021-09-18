@@ -49,7 +49,7 @@ fun View.getCoordinates() = Point((left + right) / 2, (top + bottom) / 2)
  */
 inline fun View.snack(
     message: String,
-    length: Int = Snackbar.LENGTH_LONG,
+    length: Int = 10_000,
     f: Snackbar.() -> Unit = {}
 ): Snackbar {
     val snack = Snackbar.make(this, message, length)
