@@ -365,10 +365,12 @@ class MangaInfoHeaderAdapter(
             }
         }
 
-        private fun updateDescription(description: String?, isCurrentlyExpanded: Boolean): CharSequence? {
+        private fun updateDescription(description: String?, isCurrentlyExpanded: Boolean): CharSequence {
             return when {
                 description.isNullOrBlank() -> view.context.getString(R.string.unknown)
-                isCurrentlyExpanded -> description.replace(Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE)), "\n")
+                isCurrentlyExpanded -> description
+                        .replace(Regex(" +\$", setOf(RegexOption.MULTILINE)), "")
+                        .replace(Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE)), "\n")
                 else -> description
             }
         }
