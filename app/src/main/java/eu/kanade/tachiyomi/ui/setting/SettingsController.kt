@@ -68,6 +68,9 @@ abstract class SettingsController : PreferenceController() {
                         animatePreferenceHighlight(it.itemView)
                     }
                 }
+
+                // Explicitly clear it to avoid re-scrolling/animating on activity recreations
+                preferenceKey = null
             }
         }
     }
