@@ -12,9 +12,8 @@ import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
@@ -45,14 +44,14 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.security.Security
 
-open class App : Application(), LifecycleObserver, ImageLoaderFactory {
+open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
     private val preferences: PreferencesHelper by injectLazy()
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
 
     override fun onCreate() {
-        super.onCreate()
+        super<Application>.onCreate()
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         // TLS 1.3 support for Android < 10
@@ -131,9 +130,7 @@ open class App : Application(), LifecycleObserver, ImageLoaderFactory {
         }.build()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    @Suppress("unused")
-    fun onAppBackgrounded() {
+    override fun onStop(owner: LifecycleOwner) {
         if (!AuthenticatorUtil.isAuthenticating && preferences.lockAppAfter().get() >= 0) {
             SecureActivityDelegate.locked = true
         }

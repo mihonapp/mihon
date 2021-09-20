@@ -141,16 +141,17 @@ dependencies {
     implementation("androidx.annotation:annotation:1.3.0-alpha01")
     implementation("androidx.appcompat:appcompat:1.4.0-alpha03")
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha03")
-    implementation("androidx.browser:browser:1.3.0")
+    implementation("androidx.browser:browser:1.4.0-alpha01")
     implementation("androidx.constraintlayout:constraintlayout:2.1.0")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
-    implementation("androidx.core:core-ktx:1.7.0-alpha02")
+    implementation("androidx.core:core-ktx:1.7.0-beta01")
     implementation("androidx.core:core-splashscreen:1.0.0-alpha01")
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.0-alpha01")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+    implementation("androidx.viewpager:viewpager:1.1.0-alpha01")
 
-    val lifecycleVersion = "2.4.0-alpha01"
-    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
+    val lifecycleVersion = "2.4.0-beta01"
+    implementation("androidx.lifecycle:lifecycle-common:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
 
@@ -231,7 +232,9 @@ dependencies {
     implementation("eu.davidea:flexible-adapter-ui:1.0.0")
     implementation("com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.1.0")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
-    implementation("com.github.tachiyomiorg:DirectionalViewPager:1.0.0")
+    implementation("com.github.tachiyomiorg:DirectionalViewPager:1.0.0") {
+        exclude(group = "androidx.viewpager", module = "viewpager")
+    }
     implementation("dev.chrisbanes.insetter:insetter:0.6.0")
 
     // Conductor
