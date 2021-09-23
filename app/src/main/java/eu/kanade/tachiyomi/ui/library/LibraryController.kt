@@ -42,9 +42,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.clicks
 import reactivecircus.flowbinding.viewpager.pageSelections
+import rx.Observable
 import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.concurrent.TimeUnit
 
 class LibraryController(
     bundle: Bundle? = null,
@@ -199,10 +202,12 @@ class LibraryController(
                 is LibrarySettingsSheet.Filter.FilterGroup -> onFilterChanged()
                 is LibrarySettingsSheet.Sort.SortGroup -> onSortChanged()
                 is LibrarySettingsSheet.Display.DisplayGroup -> {
-                    if (!preferences.categorisedDisplaySettings().get() || activeCategory == 0) {
-                        // Reattach adapter when flow preference change
-                        reattachAdapter()
-                    }
+                    val delay = if (preferences.categorisedDisplaySettings().get()) 125L else 0L
+
+                    Observable.timer(delay, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                        .subscribe {
+                            reattachAdapter()
+                        }
                 }
                 is LibrarySettingsSheet.Display.BadgeGroup -> onBadgeSettingChanged()
                 is LibrarySettingsSheet.Display.TabsGroup -> onTabsSettingsChanged()
@@ -298,11 +303,6 @@ class LibraryController(
         adapter.itemsPerCategory = adapter.categories
             .map { (it.id ?: -1) to (mangaMap[it.id]?.size ?: 0) }
             .toMap()
-
-        if (preferences.categorisedDisplaySettings().get()) {
-            // Reattach adapter so it doesn't get de-synced
-            reattachAdapter()
-        }
 
         // Restore active category.
         binding.libraryPager.setCurrentItem(activeCat, false)
