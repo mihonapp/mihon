@@ -14,7 +14,7 @@ import rx.Observable
 import rx.Producer
 import rx.Subscription
 import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.fullType
+import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resumeWithException
@@ -116,10 +116,6 @@ fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListene
 }
 
 inline fun <reified T> Response.parseAs(): T {
-    // Avoiding Injekt.get<Json>() due to compiler issues
-    val json = Injekt.getInstance<Json>(fullType<Json>().type)
-    this.use {
-        val responseBody = it.body?.string().orEmpty()
-        return json.decodeFromString(responseBody)
-    }
+    val responseBody = this.body?.string().orEmpty()
+    return Injekt.get<Json>().decodeFromString(responseBody)
 }
