@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.inputmethod.EditorInfoCompat
 import eu.kanade.tachiyomi.R
@@ -37,6 +38,18 @@ class TachiyomiSearchView @JvmOverloads constructor(
                 imeOptions and EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING.inv()
             }
         }.launchIn(scope!!)
+    }
+
+    override fun setOnQueryTextListener(listener: OnQueryTextListener?) {
+        super.setOnQueryTextListener(listener)
+        val searchAutoComplete: SearchAutoComplete = findViewById(R.id.search_src_text)
+        searchAutoComplete.setOnEditorActionListener { _, actionID, _ ->
+            if (actionID == EditorInfo.IME_ACTION_SEARCH || actionID == EditorInfo.IME_NULL) {
+                clearFocus()
+                listener?.onQueryTextSubmit(query.toString())
+                true
+            } else false
+        }
     }
 
     override fun onDetachedFromWindow() {
