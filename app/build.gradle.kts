@@ -175,7 +175,7 @@ dependencies {
     implementation("org.conscrypt:conscrypt-android:2.5.2")
 
     // Data serialization (JSON, protobuf)
-    val kotlinSerializationVersion = "1.3.0-RC"
+    val kotlinSerializationVersion = "1.3.0"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinSerializationVersion")
 
