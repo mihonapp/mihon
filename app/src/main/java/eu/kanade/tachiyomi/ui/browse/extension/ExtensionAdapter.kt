@@ -22,5 +22,6 @@ class ExtensionAdapter(controller: ExtensionController) :
 
     interface OnButtonClickListener {
         fun onButtonClick(position: Int)
+        fun onCancelButtonClick(position: Int)
     }
 }

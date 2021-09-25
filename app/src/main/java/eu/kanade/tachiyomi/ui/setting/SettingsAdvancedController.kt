@@ -36,6 +36,8 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
+import eu.kanade.tachiyomi.util.system.MiuiUtil
+import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import eu.kanade.tachiyomi.util.system.isTablet
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.toast
@@ -184,6 +186,45 @@ class SettingsAdvancedController : SettingsController() {
                 summaryRes = R.string.pref_refresh_library_tracking_summary
 
                 onClick { LibraryUpdateService.start(context, target = Target.TRACKING) }
+            }
+        }
+
+        preferenceCategory {
+            titleRes = R.string.label_extensions
+
+            listPreference {
+                key = Keys.extensionInstaller
+                titleRes = R.string.ext_installer_pref
+                summary = "%s"
+                entriesRes = arrayOf(
+                    R.string.ext_installer_legacy,
+                    R.string.ext_installer_packageinstaller,
+                    R.string.ext_installer_shizuku
+                )
+                entryValues = PreferenceValues.ExtensionInstaller.values().map { it.name }.toTypedArray()
+                defaultValue = if (MiuiUtil.isMiui()) {
+                    PreferenceValues.ExtensionInstaller.LEGACY
+                } else {
+                    PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER
+                }.name
+
+                onChange {
+                    if (it == PreferenceValues.ExtensionInstaller.SHIZUKU.name &&
+                        !context.isPackageInstalled("moe.shizuku.privileged.api")
+                    ) {
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(R.string.ext_installer_shizuku)
+                            .setMessage(R.string.ext_installer_shizuku_unavailable_dialog)
+                            .setPositiveButton(android.R.string.ok) { _, _ ->
+                                openInBrowser("https://shizuku.rikka.app/download")
+                            }
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show()
+                        false
+                    } else {
+                        true
+                    }
+                }
             }
         }
 

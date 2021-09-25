@@ -77,14 +77,14 @@ open class ExtensionPresenter(
         if (updatesSorted.isNotEmpty()) {
             val header = ExtensionGroupItem(context.getString(R.string.ext_updates_pending), updatesSorted.size, true)
             items += updatesSorted.map { extension ->
-                ExtensionItem(extension, header, currentDownloads[extension.pkgName])
+                ExtensionItem(extension, header, currentDownloads[extension.pkgName] ?: InstallStep.Idle)
             }
         }
         if (installedSorted.isNotEmpty() || untrustedSorted.isNotEmpty()) {
             val header = ExtensionGroupItem(context.getString(R.string.ext_installed), installedSorted.size + untrustedSorted.size)
 
             items += installedSorted.map { extension ->
-                ExtensionItem(extension, header, currentDownloads[extension.pkgName])
+                ExtensionItem(extension, header, currentDownloads[extension.pkgName] ?: InstallStep.Idle)
             }
 
             items += untrustedSorted.map { extension ->
@@ -100,7 +100,7 @@ open class ExtensionPresenter(
                 .forEach {
                     val header = ExtensionGroupItem(it.key, it.value.size)
                     items += it.value.map { extension ->
-                        ExtensionItem(extension, header, currentDownloads[extension.pkgName])
+                        ExtensionItem(extension, header, currentDownloads[extension.pkgName] ?: InstallStep.Idle)
                     }
                 }
         }
@@ -131,6 +131,10 @@ open class ExtensionPresenter(
 
     fun updateExtension(extension: Extension.Installed) {
         extensionManager.updateExtension(extension).subscribeToInstallUpdate(extension)
+    }
+
+    fun cancelInstallUpdateExtension(extension: Extension) {
+        extensionManager.cancelInstallUpdateExtension(extension)
     }
 
     private fun Observable<InstallStep>.subscribeToInstallUpdate(extension: Extension) {

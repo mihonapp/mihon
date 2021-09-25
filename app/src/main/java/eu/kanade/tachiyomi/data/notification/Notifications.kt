@@ -53,6 +53,7 @@ object Notifications {
      */
     const val CHANNEL_UPDATES_TO_EXTS = "updates_ext_channel"
     const val ID_UPDATES_TO_EXTS = -401
+    const val ID_EXTENSION_INSTALLER = -402
 
     /**
      * Notification channel and ids used by the backup/restore system.

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
+    android:layout_marginEnd="16dp"
     android:background="@drawable/list_item_selector_background">
 
     <ImageView
@@ -79,10 +80,24 @@
         style="?attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cancel_button"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Details" />
+
+    <ImageButton
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@android:string/cancel"
+        android:padding="12dp"
+        android:src="@drawable/ic_close_24dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Details" />
+        app:tint="?android:attr/textColorPrimary"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

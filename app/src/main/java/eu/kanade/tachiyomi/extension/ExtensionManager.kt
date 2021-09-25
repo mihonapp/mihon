@@ -227,14 +227,26 @@ class ExtensionManager(
         return installExtension(availableExt)
     }
 
+    fun cancelInstallUpdateExtension(extension: Extension) {
+        installer.cancelInstall(extension.pkgName)
+    }
+
     /**
-     * Sets the result of the installation of an extension.
+     * Sets to "installing" status of an extension installation.
      *
      * @param downloadId The id of the download.
-     * @param result Whether the extension was installed or not.
      */
+    fun setInstalling(downloadId: Long) {
+        installer.updateInstallStep(downloadId, InstallStep.Installing)
+    }
+
     fun setInstallationResult(downloadId: Long, result: Boolean) {
-        installer.setInstallationResult(downloadId, result)
+        val step = if (result) InstallStep.Installed else InstallStep.Error
+        installer.updateInstallStep(downloadId, step)
+    }
+
+    fun updateInstallStep(downloadId: Long, step: InstallStep) {
+        installer.updateInstallStep(downloadId, step)
     }
 
     /**

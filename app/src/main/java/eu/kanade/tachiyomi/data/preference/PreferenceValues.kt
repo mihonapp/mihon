@@ -57,4 +57,10 @@ object PreferenceValues {
         LANDSCAPE,
         NEVER,
     }
+
+    enum class ExtensionInstaller {
+        LEGACY,
+        PACKAGEINSTALLER,
+        SHIZUKU
+    }
 }

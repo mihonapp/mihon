@@ -7,15 +7,21 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Environment
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.tachiyomi.data.preference.PreferenceValues
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.extension.installer.Installer
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -46,6 +52,8 @@ internal class ExtensionInstaller(private val context: Context) {
      * Relay used to notify the installation step of every download.
      */
     private val downloadsRelay = PublishRelay.create<Pair<Long, InstallStep>>()
+
+    private val installerPref = Injekt.get<PreferencesHelper>().extensionInstaller()
 
     /**
      * Adds the given extension to the downloads queue and returns an observable containing its
@@ -79,8 +87,6 @@ internal class ExtensionInstaller(private val context: Context) {
             .map { it.second }
             // Poll download status
             .mergeWith(pollStatus(id))
-            // Force an error if the download takes more than 3 minutes
-            .mergeWith(Observable.timer(3, TimeUnit.MINUTES).map { InstallStep.Error })
             // Stop when the application is installed or errors
             .takeUntil { it.isCompleted() }
             // Always notify on main thread
@@ -126,12 +132,29 @@ internal class ExtensionInstaller(private val context: Context) {
      * @param uri The uri of the extension to install.
      */
     fun installApk(downloadId: Long, uri: Uri) {
-        val intent = Intent(context, ExtensionInstallActivity::class.java)
-            .setDataAndType(uri, APK_MIME)
-            .putExtra(EXTRA_DOWNLOAD_ID, downloadId)
-            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        when (val installer = installerPref.get()) {
+            PreferenceValues.ExtensionInstaller.LEGACY -> {
+                val intent = Intent(context, ExtensionInstallActivity::class.java)
+                    .setDataAndType(uri, APK_MIME)
+                    .putExtra(EXTRA_DOWNLOAD_ID, downloadId)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-        context.startActivity(intent)
+                context.startActivity(intent)
+            }
+            else -> {
+                val intent = ExtensionInstallService.getIntent(context, downloadId, uri, installer)
+                ContextCompat.startForegroundService(context, intent)
+            }
+        }
+    }
+
+    /**
+     * Cancels extension install and remove from download manager and installer.
+     */
+    fun cancelInstall(pkgName: String) {
+        val downloadId = activeDownloads.remove(pkgName) ?: return
+        downloadManager.remove(downloadId)
+        Installer.cancelInstallQueue(context, downloadId)
     }
 
     /**
@@ -147,13 +170,12 @@ internal class ExtensionInstaller(private val context: Context) {
     }
 
     /**
-     * Sets the result of the installation of an extension.
+     * Sets the step of the installation of an extension.
      *
      * @param downloadId The id of the download.
-     * @param result Whether the extension was installed or not.
+     * @param step New install step.
      */
-    fun setInstallationResult(downloadId: Long, result: Boolean) {
-        val step = if (result) InstallStep.Installed else InstallStep.Error
+    fun updateInstallStep(downloadId: Long, step: InstallStep) {
         downloadsRelay.call(downloadId to step)
     }
 
@@ -216,9 +238,7 @@ internal class ExtensionInstaller(private val context: Context) {
             val uri = downloadManager.getUriForDownloadedFile(id)
 
             // Set next installation step
-            if (uri != null) {
-                downloadsRelay.call(id to InstallStep.Installing)
-            } else {
+            if (uri == null) {
                 Timber.e("Couldn't locate downloaded APK")
                 downloadsRelay.call(id to InstallStep.Error)
                 return

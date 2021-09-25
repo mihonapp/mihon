@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 data class ExtensionItem(
     val extension: Extension,
     val header: ExtensionGroupItem? = null,
-    val installStep: InstallStep? = null
+    val installStep: InstallStep = InstallStep.Idle
 ) :
     AbstractSectionableItem<ExtensionHolder, ExtensionGroupItem>(header) {
 
@@ -49,7 +49,7 @@ data class ExtensionItem(
         if (payloads == null || payloads.isEmpty()) {
             holder.bind(this)
         } else {
-            holder.bindButton(this)
+            holder.bindButtons(this)
         }
     }
 

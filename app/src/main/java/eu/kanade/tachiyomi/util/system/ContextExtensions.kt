@@ -41,6 +41,7 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.core.net.toUri
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -376,4 +377,25 @@ fun Context.isOnline(): Boolean {
         else -> NetworkCapabilities.TRANSPORT_VPN
     }
     return (NetworkCapabilities.TRANSPORT_CELLULAR..maxTransport).any(actNw::hasTransport)
+}
+
+/**
+ * Gets document size of provided [Uri]
+ *
+ * @return document size of [uri] or null if size can't be obtained
+ */
+fun Context.getUriSize(uri: Uri): Long? {
+    return UniFile.fromUri(this, uri).length().takeIf { it >= 0 }
+}
+
+/**
+ * Returns true if [packageName] is installed.
+ */
+fun Context.isPackageInstalled(packageName: String): Boolean {
+    return try {
+        packageManager.getApplicationInfo(packageName, 0)
+        true
+    } catch (e: PackageManager.NameNotFoundException) {
+        false
+    }
 }

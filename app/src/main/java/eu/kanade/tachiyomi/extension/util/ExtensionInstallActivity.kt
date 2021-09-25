@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import eu.kanade.tachiyomi.extension.ExtensionManager
+import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.system.toast
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -40,10 +41,13 @@ class ExtensionInstallActivity : Activity() {
 
     private fun checkInstallationResult(resultCode: Int) {
         val downloadId = intent.extras!!.getLong(ExtensionInstaller.EXTRA_DOWNLOAD_ID)
-        val success = resultCode == RESULT_OK
-
         val extensionManager = Injekt.get<ExtensionManager>()
-        extensionManager.setInstallationResult(downloadId, success)
+        val newStep = when (resultCode) {
+            RESULT_OK -> InstallStep.Installed
+            RESULT_CANCELED -> InstallStep.Idle
+            else -> InstallStep.Error
+        }
+        extensionManager.updateInstallStep(downloadId, newStep)
     }
 }
 
