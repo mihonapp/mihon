@@ -199,7 +199,7 @@ class SettingsAdvancedController : SettingsController() {
                 entriesRes = arrayOf(
                     R.string.ext_installer_legacy,
                     R.string.ext_installer_packageinstaller,
-                    R.string.ext_installer_shizuku
+                    R.string.ext_installer_shizuku,
                 )
                 entryValues = PreferenceValues.ExtensionInstaller.values().map { it.name }.toTypedArray()
                 defaultValue = if (MiuiUtil.isMiui()) {
