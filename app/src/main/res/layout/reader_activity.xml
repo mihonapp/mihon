@@ -13,7 +13,8 @@
         <FrameLayout
             android:id="@+id/viewer_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants" />
 
         <eu.kanade.tachiyomi.ui.reader.PageIndicatorTextView
             android:id="@+id/page_number"
