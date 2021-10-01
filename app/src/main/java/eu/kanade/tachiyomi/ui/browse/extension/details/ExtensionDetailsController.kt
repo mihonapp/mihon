@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.os.bundleOf
-import androidx.preference.Preference
 import androidx.preference.PreferenceGroupAdapter
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
@@ -103,70 +102,85 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
         val isMultiLangSingleSource = isMultiSource && extension.sources.map { it.name }.distinct().size == 1
 
         with(screen) {
-            extension.sources
-                .groupBy { (it as CatalogueSource).lang }
-                .toSortedMap(compareBy { LocaleHelper.getSourceDisplayName(it, context) })
-                .forEach {
-                    val preferenceBlock = {
-                        it.value
-                            .sortedWith(compareBy({ !it.isEnabled() }, { it.name.lowercase() }))
-                            .forEach { source ->
-                                val sourcePrefs = mutableListOf<Preference>()
-
-                                val block: (@DSL SwitchPreferenceCompat).() -> Unit = {
-                                    key = source.getPreferenceKey()
-                                    title = when {
-                                        isMultiSource && !isMultiLangSingleSource -> source.toString()
-                                        else -> LocaleHelper.getSourceDisplayName(it.key, context)
-                                    }
-                                    isPersistent = false
-                                    isChecked = source.isEnabled()
-
-                                    onChange { newValue ->
-                                        val checked = newValue as Boolean
-                                        toggleSource(source, checked)
-                                        true
-                                    }
-
-                                    // React to enable/disable all changes
-                                    preferences.disabledSources().asFlow()
-                                        .onEach {
-                                            val enabled = source.isEnabled()
-                                            isChecked = enabled
-                                            sourcePrefs.forEach { pref -> pref.isVisible = enabled }
-                                        }
-                                        .launchIn(viewScope)
-                                }
-
-                                // Source enable/disable
-                                if (source is ConfigurableSource) {
-                                    switchSettingsPreference {
-                                        block()
-                                        onSettingsClick = View.OnClickListener {
-                                            router.pushController(
-                                                SourcePreferencesController(source.id).withFadeTransaction()
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    switchPreference(block)
-                                }
-                            }
-                    }
-
-                    if (isMultiSource && !isMultiLangSingleSource) {
-                        preferenceCategory {
-                            title = LocaleHelper.getSourceDisplayName(it.key, context)
-
-                            preferenceBlock()
-                        }
-                    } else {
-                        preferenceBlock()
-                    }
-                }
+            if (isMultiSource && isMultiLangSingleSource.not()) {
+                multiLanguagePreference(context, extension.sources)
+            } else {
+                singleLanguagePreference(context, extension.sources)
+            }
         }
 
         return PreferenceGroupAdapter(screen)
+    }
+
+    private fun PreferenceScreen.singleLanguagePreference(context: Context, sources: List<Source>) {
+        sources
+            .map { source -> LocaleHelper.getSourceDisplayName(source.lang, context) to source }
+            .sortedWith(compareBy({ (_, source) -> !source.isEnabled() }, { (lang, _) -> lang.lowercase() }))
+            .forEach { (lang, source) ->
+                val preferenceBlock = {
+                    sourceSwitchPreference(source, LocaleHelper.getSourceDisplayName(lang, context))
+                }
+
+                preferenceBlock()
+            }
+    }
+
+    private fun PreferenceScreen.multiLanguagePreference(context: Context, sources: List<Source>) {
+        sources
+            .groupBy { (it as CatalogueSource).lang }
+            .toSortedMap(compareBy { LocaleHelper.getSourceDisplayName(it, context) })
+            .forEach { entry ->
+                val preferenceBlock = {
+                    entry.value
+                        .sortedWith(compareBy({ source -> !source.isEnabled() }, { source -> source.name.lowercase() }))
+                        .forEach { source ->
+                            sourceSwitchPreference(source, source.toString())
+                        }
+                }
+
+                preferenceCategory {
+                    title = LocaleHelper.getSourceDisplayName(entry.key, context)
+
+                    preferenceBlock()
+                }
+            }
+    }
+
+    private fun PreferenceScreen.sourceSwitchPreference(source: Source, name: String) {
+        val block: (@DSL SwitchPreferenceCompat).() -> Unit = {
+            key = source.getPreferenceKey()
+            title = name
+            isPersistent = false
+            isChecked = source.isEnabled()
+
+            onChange { newValue ->
+                val checked = newValue as Boolean
+                toggleSource(source, checked)
+                true
+            }
+
+            // React to enable/disable all changes
+            preferences.disabledSources().asFlow()
+                .onEach {
+                    val enabled = source.isEnabled()
+                    isChecked = enabled
+                }
+                .launchIn(viewScope)
+        }
+
+        // Source enable/disable
+        if (source is ConfigurableSource) {
+            switchSettingsPreference {
+                block()
+                onSettingsClick = View.OnClickListener {
+                    router.pushController(
+                        SourcePreferencesController(source.id).withFadeTransaction()
+                    )
+                }
+            }
+        } else {
+            switchPreference(block)
+        }
     }
 
     override fun onDestroyView(view: View) {
