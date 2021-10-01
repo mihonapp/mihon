@@ -77,6 +77,10 @@ class HideToolbarOnScrollBehavior : AppBarLayout.Behavior() {
         child: AppBarLayout,
         isVisible: Boolean
     ) {
+        val current = getTopBottomOffsetForScrollingSibling(child)
+        val target = if (isVisible) 0 else -toolbarHeight
+        if (current == target) return
+
         offsetAnimator?.cancel()
         offsetAnimator = ValueAnimator().apply {
             interpolator = DecelerateInterpolator()
@@ -85,18 +89,12 @@ class HideToolbarOnScrollBehavior : AppBarLayout.Behavior() {
                 setHeaderTopBottomOffset(coordinatorLayout, child, it.animatedValue as Int)
             }
             doOnEnd {
-                if (!isVisible &&
-                    !child.isLifted &&
-                    (child as? ElevationAppBarLayout)?.isTransparentWhenNotLifted == true
-                ) {
-                    child.isLifted = true
+                if ((child as? ElevationAppBarLayout)?.isTransparentWhenNotLifted == true) {
+                    child.isLifted = !isVisible
                 }
             }
+            setIntValues(current, target)
+            start()
         }
-        offsetAnimator?.setIntValues(
-            getTopBottomOffsetForScrollingSibling(child),
-            if (isVisible) 0 else -toolbarHeight
-        )
-        offsetAnimator?.start()
     }
 }
