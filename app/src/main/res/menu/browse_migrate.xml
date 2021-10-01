@@ -2,15 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_source_migration_help"
-        android:icon="@drawable/ic_help_24dp"
-        android:title="@string/migration_help_guide"
-        app:iconTint="?attr/colorOnToolbar"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort_24dp"
         android:title="@string/action_sort"
-        app:showAsAction="never">
+        app:iconTint="?attr/colorOnToolbar"
+        app:showAsAction="collapseActionView|ifRoom" >
         <menu>
             <item
                 android:id="@+id/action_sort_alphabetical"
@@ -40,5 +36,12 @@
             </item>
         </menu>
     </item>
+
+    <item
+        android:id="@+id/action_source_migration_help"
+        android:icon="@drawable/ic_help_24dp"
+        android:title="@string/migration_help_guide"
+        app:iconTint="?attr/colorOnToolbar"
+        app:showAsAction="ifRoom" />
 
 </menu>
