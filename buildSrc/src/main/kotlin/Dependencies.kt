@@ -3,5 +3,5 @@ object BuildPluginsVersion {
     const val KOTLIN = "1.5.31"
     const val KOTLINTER = "3.6.0"
     const val VERSIONS_PLUGIN = "0.39.0"
-    const val ABOUTLIB_PLUGIN = "8.9.1"
+    const val ABOUTLIB_PLUGIN = "8.9.2"
 }
