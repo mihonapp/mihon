@@ -13,6 +13,7 @@ class UpdatesAdapter(
 
     var readColor = context.getResourceColor(R.attr.colorOnSurface, 0.38f)
     var unreadColor = context.getResourceColor(R.attr.colorOnSurface)
+    var bookmarkedColor = context.getResourceColor(R.attr.colorAccent)
 
     val coverClickListener: OnCoverClickListener = controller
 

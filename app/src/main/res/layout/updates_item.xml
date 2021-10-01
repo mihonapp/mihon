@@ -37,17 +37,31 @@
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="Manga title" />
 
+    <ImageView
+        android:id="@+id/bookmark_icon"
+        android:layout_width="16dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintStart_toStartOf="@id/manga_title"
+        app:layout_constraintTop_toBottomOf="@id/manga_title"
+        app:layout_constraintBottom_toBottomOf="@id/chapter_title"
+        app:layout_constraintEnd_toStartOf="@id/chapter_title"
+        app:srcCompat="@drawable/ic_bookmark_24dp"
+        app:tint="?attr/colorAccent"
+        tools:visibility="visible"
+         />
+
     <TextView
         android:id="@+id/chapter_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.Regular.Caption"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/download"
-        app:layout_constraintStart_toEndOf="@+id/manga_cover"
+        app:layout_constraintStart_toEndOf="@id/bookmark_icon"
         app:layout_constraintTop_toBottomOf="@+id/manga_title"
         tools:text="Chapter title" />
 

@@ -39,14 +39,17 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
         // Set manga title
         binding.mangaTitle.text = item.manga.title
 
-        // Check if chapter is read and set correct color
+        // Check if chapter is read and/or bookmarked and set correct color
         if (item.chapter.read) {
             binding.chapterTitle.setTextColor(adapter.readColor)
             binding.mangaTitle.setTextColor(adapter.readColor)
         } else {
-            binding.chapterTitle.setTextColor(adapter.unreadColor)
             binding.mangaTitle.setTextColor(adapter.unreadColor)
+            binding.chapterTitle.setTextColor(if (item.bookmark) adapter.bookmarkedColor else adapter.unreadColor)
         }
+
+        // Set bookmark status
+        binding.bookmarkIcon.isVisible = item.bookmark
 
         // Set chapter status
         binding.download.isVisible = item.manga.source != LocalSource.ID

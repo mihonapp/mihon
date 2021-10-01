@@ -181,6 +181,22 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
     }
 
     /**
+     * Mark selected chapters as bookmarked
+     * @param items list of selected chapters
+     * @param bookmarked bookmark status
+     */
+    fun bookmarkChapters(items: List<UpdatesItem>, bookmarked: Boolean) {
+        val chapters = items.map { it.chapter }
+        chapters.forEach {
+            it.bookmark = bookmarked
+        }
+
+        Observable.fromCallable { db.updateChaptersProgress(chapters).executeAsBlocking() }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
+    }
+
+    /**
      * Download selected chapters
      * @param items list of recent chapters seleted.
      */
