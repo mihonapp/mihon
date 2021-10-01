@@ -39,6 +39,7 @@
     <string name="action_filter_unread">Unread</string>
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
+    <string name="action_sort_count">Total manga</string>
     <string name="action_sort_total">Total chapters</string>
     <string name="action_sort_last_read">Last read</string>
     <string name="action_sort_last_checked">Last checked</string>

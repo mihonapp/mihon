@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferenceValues.ThemeMode.system
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
+import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrationSourcesController
 import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
@@ -266,6 +267,9 @@ class PreferencesHelper(val context: Context) {
 
     fun librarySortingMode() = flowPrefs.getEnum(Keys.librarySortingMode, SortModeSetting.ALPHABETICAL)
     fun librarySortingAscending() = flowPrefs.getEnum(Keys.librarySortingDirection, SortDirectionSetting.ASCENDING)
+
+    fun migrationSortingMode() = flowPrefs.getEnum(Keys.migrationSortingMode, MigrationSourcesController.SortSetting.ALPHABETICAL)
+    fun migrationSortingDirection() = flowPrefs.getEnum(Keys.migrationSortingDirection, MigrationSourcesController.DirectionSetting.ASCENDING)
 
     fun automaticExtUpdates() = flowPrefs.getBoolean(Keys.automaticExtUpdates, true)
 

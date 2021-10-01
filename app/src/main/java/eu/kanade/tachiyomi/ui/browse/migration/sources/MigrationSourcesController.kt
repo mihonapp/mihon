@@ -9,15 +9,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dev.chrisbanes.insetter.applyInsetter
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.MigrationSourcesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaController
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import uy.kohesive.injekt.injectLazy
 
 class MigrationSourcesController :
     NucleusController<MigrationSourcesControllerBinding, MigrationSourcesPresenter>(),
     FlexibleAdapter.OnItemClickListener {
+
+    private val preferences: PreferencesHelper by injectLazy()
 
     private var adapter: SourceAdapter? = null
 
@@ -56,10 +60,29 @@ class MigrationSourcesController :
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        when (val itemId = item.itemId) {
             R.id.action_source_migration_help -> activity?.openInBrowser(HELP_URL)
+            R.id.asc_alphabetical, R.id.desc_alphabetical -> {
+                setSortingDirection(SortSetting.ALPHABETICAL, itemId == R.id.asc_alphabetical)
+            }
+            R.id.asc_count, R.id.desc_count -> {
+                setSortingDirection(SortSetting.TOTAL, itemId == R.id.asc_count)
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setSortingDirection(sortSetting: SortSetting, isAscending: Boolean) {
+        val direction = if (isAscending) {
+            DirectionSetting.ASCENDING
+        } else {
+            DirectionSetting.DESCENDING
+        }
+
+        preferences.migrationSortingDirection().set(direction)
+        preferences.migrationSortingMode().set(sortSetting)
+
+        presenter.requestSortUpdate()
     }
 
     fun setSources(sourcesWithManga: List<SourceItem>) {
@@ -78,6 +101,16 @@ class MigrationSourcesController :
         val controller = MigrationMangaController(item.source.id, item.source.name)
         parentController!!.router.pushController(controller.withFadeTransaction())
         return false
+    }
+
+    enum class DirectionSetting {
+        ASCENDING,
+        DESCENDING;
+    }
+
+    enum class SortSetting {
+        ALPHABETICAL,
+        TOTAL;
     }
 }
 

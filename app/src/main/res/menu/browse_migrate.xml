@@ -7,5 +7,38 @@
         android:title="@string/migration_help_guide"
         app:iconTint="?attr/colorOnToolbar"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_sort"
+        android:title="@string/action_sort"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/action_sort_alphabetical"
+                android:title="@string/action_sort_alpha"
+                app:showAsAction="never">
+                <menu>
+                    <item
+                        android:id="@+id/asc_alphabetical"
+                        android:title="@string/action_asc" />
+                    <item
+                        android:id="@+id/desc_alphabetical"
+                        android:title="@string/action_desc" />
+                </menu>
+            </item>
+            <item
+                android:id="@+id/action_sort_count"
+                android:title="@string/action_sort_count"
+                app:showAsAction="never">
+                <menu>
+                    <item
+                        android:id="@+id/asc_count"
+                        android:title="@string/action_asc" />
+                    <item
+                        android:id="@+id/desc_count"
+                        android:title="@string/action_desc" />
+                </menu>
+            </item>
+        </menu>
+    </item>
 
 </menu>

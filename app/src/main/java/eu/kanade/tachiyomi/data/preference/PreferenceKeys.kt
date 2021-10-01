@@ -151,6 +151,9 @@ object PreferenceKeys {
     const val librarySortingMode = "library_sorting_mode"
     const val librarySortingDirection = "library_sorting_ascending"
 
+    const val migrationSortingMode = "pref_migration_sorting"
+    const val migrationSortingDirection = "pref_migration_direction"
+
     const val automaticExtUpdates = "automatic_ext_updates"
 
     const val showNsfwSource = "show_nsfw_source"
