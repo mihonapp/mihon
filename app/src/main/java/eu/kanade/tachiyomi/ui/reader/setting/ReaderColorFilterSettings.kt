@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.reader.setting
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.SeekBar
 import androidx.annotation.ColorInt
 import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
@@ -15,7 +14,6 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.ReaderColorFilterSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.preference.bindToPreference
-import eu.kanade.tachiyomi.widget.listener.SimpleSeekBarListener
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
@@ -54,13 +52,13 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
 
         // Set brightness value
         binding.txtBrightnessSeekbarValue.text = brightness.toString()
-        binding.brightnessSeekbar.progress = brightness
+        binding.sliderBrightness.value = brightness.toFloat()
 
         // Initialize seekBar progress
-        binding.seekbarColorFilterAlpha.progress = argb[0]
-        binding.seekbarColorFilterRed.progress = argb[1]
-        binding.seekbarColorFilterGreen.progress = argb[2]
-        binding.seekbarColorFilterBlue.progress = argb[3]
+        binding.sliderColorFilterAlpha.value = argb[0].toFloat()
+        binding.sliderColorFilterRed.value = argb[1].toFloat()
+        binding.sliderColorFilterGreen.value = argb[2].toFloat()
+        binding.sliderColorFilterBlue.value = argb[3].toFloat()
 
         // Set listeners
         binding.switchColorFilter.bindToPreference(preferences.colorFilter())
@@ -69,55 +67,32 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
         binding.grayscale.bindToPreference(preferences.grayscale())
         binding.invertedColors.bindToPreference(preferences.invertedColors())
 
-        binding.seekbarColorFilterAlpha.setOnSeekBarChangeListener(
-            object : SimpleSeekBarListener() {
-                override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        setColorValue(value, ALPHA_MASK, 24)
-                    }
-                }
+        binding.sliderColorFilterAlpha.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                setColorValue(value.toInt(), ALPHA_MASK, 24)
             }
-        )
+        }
+        binding.sliderColorFilterRed.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                setColorValue(value.toInt(), RED_MASK, 16)
+            }
+        }
+        binding.sliderColorFilterGreen.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                setColorValue(value.toInt(), GREEN_MASK, 8)
+            }
+        }
+        binding.sliderColorFilterBlue.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                setColorValue(value.toInt(), BLUE_MASK, 0)
+            }
+        }
 
-        binding.seekbarColorFilterRed.setOnSeekBarChangeListener(
-            object : SimpleSeekBarListener() {
-                override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        setColorValue(value, RED_MASK, 16)
-                    }
-                }
+        binding.sliderBrightness.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                preferences.customBrightnessValue().set(value.toInt())
             }
-        )
-
-        binding.seekbarColorFilterGreen.setOnSeekBarChangeListener(
-            object : SimpleSeekBarListener() {
-                override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        setColorValue(value, GREEN_MASK, 8)
-                    }
-                }
-            }
-        )
-
-        binding.seekbarColorFilterBlue.setOnSeekBarChangeListener(
-            object : SimpleSeekBarListener() {
-                override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        setColorValue(value, BLUE_MASK, 0)
-                    }
-                }
-            }
-        )
-
-        binding.brightnessSeekbar.setOnSeekBarChangeListener(
-            object : SimpleSeekBarListener() {
-                override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        preferences.customBrightnessValue().set(value)
-                    }
-                }
-            }
-        )
+        }
     }
 
     /**
@@ -125,10 +100,10 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
      * @param enabled determines if seekBar gets enabled
      */
     private fun setColorFilterSeekBar(enabled: Boolean) {
-        binding.seekbarColorFilterRed.isEnabled = enabled
-        binding.seekbarColorFilterGreen.isEnabled = enabled
-        binding.seekbarColorFilterBlue.isEnabled = enabled
-        binding.seekbarColorFilterAlpha.isEnabled = enabled
+        binding.sliderColorFilterRed.isEnabled = enabled
+        binding.sliderColorFilterGreen.isEnabled = enabled
+        binding.sliderColorFilterBlue.isEnabled = enabled
+        binding.sliderColorFilterAlpha.isEnabled = enabled
     }
 
     /**
@@ -136,14 +111,14 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
      * @param enabled value which determines if seekBar gets enabled
      */
     private fun setCustomBrightnessSeekBar(enabled: Boolean) {
-        binding.brightnessSeekbar.isEnabled = enabled
+        binding.sliderBrightness.isEnabled = enabled
     }
 
     /**
      * Set the text value's of color filter
      * @param color integer containing color information
      */
-    fun setValues(color: Int): Array<Int> {
+    private fun setValues(color: Int): Array<Int> {
         val alpha = color.alpha
         val red = color.red
         val green = color.green
@@ -214,21 +189,14 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
      * @param mask contains hex mask of chosen color
      * @param bitShift amounts of bits that gets shifted to receive value
      */
-    fun setColorValue(color: Int, mask: Long, bitShift: Int) {
+    private fun setColorValue(color: Int, mask: Long, bitShift: Int) {
         val currentColor = preferences.colorFilterValue().get()
         val updatedColor = (color shl bitShift) or (currentColor and mask.inv().toInt())
         preferences.colorFilterValue().set(updatedColor)
     }
 }
 
-/** Integer mask of alpha value **/
 private const val ALPHA_MASK: Long = 0xFF000000
-
-/** Integer mask of red value **/
 private const val RED_MASK: Long = 0x00FF0000
-
-/** Integer mask of green value **/
 private const val GREEN_MASK: Long = 0x0000FF00
-
-/** Integer mask of blue value **/
 private const val BLUE_MASK: Long = 0x000000FF
