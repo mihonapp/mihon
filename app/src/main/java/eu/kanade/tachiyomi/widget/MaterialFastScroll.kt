@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.core.view.ViewCompat
+import dev.chrisbanes.insetter.applyInsetter
 import eu.davidea.fastscroller.FastScroller
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.dpToPxEnd
@@ -21,6 +22,12 @@ class MaterialFastScroll @JvmOverloads constructor(context: Context, attrs: Attr
         )
         autoHideEnabled = true
         ignoreTouchesOutsideHandle = true
+
+        applyInsetter {
+            type(navigationBars = true) {
+                margin()
+            }
+        }
     }
 
     // Overridden to handle RTL

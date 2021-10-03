@@ -281,11 +281,6 @@ class MangaController :
                 scroller.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     topMargin = getMainAppBarHeight()
                 }
-                scroller.applyInsetter {
-                    type(navigationBars = true) {
-                        margin()
-                    }
-                }
             }
 
             binding.swipeRefresh.doOnLayout { swipeRefresh ->
