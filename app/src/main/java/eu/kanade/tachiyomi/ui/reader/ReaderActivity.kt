@@ -27,7 +27,6 @@ import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
-import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.WindowCompat
@@ -39,6 +38,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.slider.Slider
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -74,7 +74,6 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.popupMenu
 import eu.kanade.tachiyomi.util.view.setTooltip
 import eu.kanade.tachiyomi.widget.listener.SimpleAnimationListener
-import eu.kanade.tachiyomi.widget.listener.SimpleSeekBarListener
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
@@ -328,26 +327,22 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         }
 
         // Init listeners on bottom menu
-        binding.pageSeekbar.setOnSeekBarChangeListener(
-            object : SimpleSeekBarListener() {
-                override fun onStartTrackingTouch(seekBar: SeekBar) {
-                    super.onStartTrackingTouch(seekBar)
-                    isScrollingThroughPages = true
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar) {
-                    super.onStopTrackingTouch(seekBar)
-                    isScrollingThroughPages = false
-                }
-
-                override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
-                    if (viewer != null && fromUser) {
-                        moveToPageIndex(value)
-                        binding.pageSeekbar.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                    }
-                }
+        binding.pageSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
+                isScrollingThroughPages = true
             }
-        )
+
+            override fun onStopTrackingTouch(slider: Slider) {
+                isScrollingThroughPages = false
+            }
+        })
+        binding.pageSlider.addOnChangeListener { slider, value, fromUser ->
+            if (viewer != null && fromUser) {
+                isScrollingThroughPages = true
+                moveToPageIndex(value.toInt())
+                slider.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            }
+        }
         binding.leftChapter.setOnClickListener {
             if (viewer != null) {
                 if (viewer is R2LPagerViewer) {
@@ -600,7 +595,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
         binding.toolbar.title = manga.title
 
-        binding.pageSeekbar.isRTL = newViewer is R2LPagerViewer
+        binding.pageSlider.isRTL = newViewer is R2LPagerViewer
         if (newViewer is R2LPagerViewer) {
             binding.leftChapter.setTooltip(R.string.action_next_chapter)
             binding.rightChapter.setTooltip(R.string.action_previous_chapter)
@@ -724,7 +719,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         // Set bottom page number
         binding.pageNumber.text = "${page.number}/${pages.size}"
 
-        // Set seekbar page number
+        // Set page numbers
         if (viewer !is R2LPagerViewer) {
             binding.leftPageText.text = "${page.number}"
             binding.rightPageText.text = "${pages.size}"
@@ -733,9 +728,9 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             binding.leftPageText.text = "${pages.size}"
         }
 
-        // Set seekbar progress
-        binding.pageSeekbar.max = pages.lastIndex
-        binding.pageSeekbar.progress = page.index
+        // Set slider progress
+        binding.pageSlider.valueTo = pages.lastIndex.toFloat()
+        binding.pageSlider.value = page.index.toFloat()
     }
 
     /**
