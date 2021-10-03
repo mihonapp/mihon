@@ -9,6 +9,8 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.LicensesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
+import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.openInBrowser
 
 class LicensesController :
@@ -30,15 +32,25 @@ class LicensesController :
                 padding()
             }
         }
+        binding.progress.applyInsetter {
+            type(navigationBars = true) {
+                padding()
+            }
+        }
 
         binding.recycler.layoutManager = LinearLayoutManager(view.context)
         adapter = LicensesAdapter(this)
         binding.recycler.adapter = adapter
 
-        val licenseItems = Libs(view.context).libraries
-            .sortedBy { it.libraryName.lowercase() }
-            .map { LicensesItem(it) }
-        adapter?.updateDataSet(licenseItems)
+        viewScope.launchUI {
+            val licenseItems = withIOContext {
+                Libs(view.context).libraries
+                    .sortedBy { it.libraryName.lowercase() }
+                    .map { LicensesItem(it) }
+            }
+            binding.progress.hide()
+            adapter?.updateDataSet(licenseItems)
+        }
     }
 
     override fun onDestroyView(view: View) {
