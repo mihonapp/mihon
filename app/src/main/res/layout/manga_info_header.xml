@@ -70,27 +70,29 @@
 
         <TextView
             android:id="@+id/manga_full_title"
-            style="@style/TextAppearance.Medium.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/manga_info_full_title_label"
+            android:textAppearance="?attr/textAppearanceHeadline6"
             android:textIsSelectable="false" />
 
         <TextView
             android:id="@+id/manga_author"
-            style="@style/TextAppearance.Regular.Body1.Secondary.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="?android:attr/textColorSecondary"
             android:textIsSelectable="false"
             tools:text="Author" />
 
         <TextView
             android:id="@+id/manga_artist"
-            style="@style/TextAppearance.Regular.Body1.Secondary.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="?android:attr/textColorSecondary"
             android:textIsSelectable="false"
             tools:text="Artist" />
 
@@ -111,31 +113,34 @@
 
             <TextView
                 android:id="@+id/manga_status"
-                style="@style/TextAppearance.Regular.Body1.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textIsSelectable="false"
                 tools:text="Status" />
 
             <TextView
-                style="@style/TextAppearance.Regular.Body1.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:text="•"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textIsSelectable="false"
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/manga_source"
-                style="@style/TextAppearance.Regular.Body1.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textIsSelectable="false"
                 tools:text="Source" />
 
@@ -205,7 +210,6 @@
 
         <TextView
             android:id="@+id/manga_summary_text"
-            style="@style/TextAppearance.Regular.Body1.Secondary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -214,6 +218,8 @@
             android:ellipsize="end"
             android:focusable="true"
             android:maxLines="3"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:attr/textColorSecondary"
             android:textIsSelectable="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

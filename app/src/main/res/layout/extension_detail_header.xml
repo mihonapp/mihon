@@ -36,11 +36,11 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/TextAppearance.Regular.SubHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:elevation="3dp"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintStart_toEndOf="@id/icon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Tachiyomi: Extension" />
@@ -53,6 +53,7 @@
             android:layout_weight="1"
             android:elevation="3dp"
             android:gravity="center"
+            android:textAppearance="?attr/textAppearanceCaption"
             app:layout_constraintStart_toStartOf="@id/title"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="Version: 1.0.0" />
@@ -65,6 +66,7 @@
             android:layout_weight="1"
             android:elevation="3dp"
             android:gravity="center"
+            android:textAppearance="?attr/textAppearanceCaption"
             app:layout_constraintStart_toStartOf="@id/title"
             app:layout_constraintTop_toBottomOf="@id/version"
             tools:text="Language: English" />
@@ -78,6 +80,7 @@
             android:elevation="3dp"
             android:gravity="center"
             android:text="@string/ext_nsfw_warning"
+            android:textAppearance="?attr/textAppearanceCaption"
             android:textColor="?attr/colorError"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/title"
@@ -91,6 +94,7 @@
             android:elevation="3dp"
             android:ellipsize="middle"
             android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceCaption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/title"
             app:layout_constraintTop_toBottomOf="@id/nsfw"

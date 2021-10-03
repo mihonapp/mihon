@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:background="@drawable/list_item_selector_background"
-    android:paddingStart="12dp"
+    android:paddingStart="16dp"
     android:paddingEnd="4dp">
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -29,7 +29,7 @@
         android:layout_marginStart="16dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.Medium.Body2"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
         app:layout_constraintBottom_toTopOf="@+id/chapter_title"
         app:layout_constraintEnd_toStartOf="@+id/download"
         app:layout_constraintStart_toEndOf="@+id/manga_cover"
@@ -58,7 +58,9 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.Regular.Caption"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/download"
         app:layout_constraintStart_toEndOf="@id/bookmark_icon"

@@ -18,7 +18,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="@string/pref_category_for_this_series"
-            android:textAppearance="@style/TextAppearance.Medium.SubHeading" />
+            android:textAppearance="@style/TextAppearance.Tachiyomi.SectionHeader" />
 
         <eu.kanade.tachiyomi.widget.MaterialSpinnerView
             android:id="@+id/viewer"

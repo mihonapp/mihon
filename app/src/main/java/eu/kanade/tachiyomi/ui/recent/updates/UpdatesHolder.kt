@@ -45,7 +45,9 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
             binding.mangaTitle.setTextColor(adapter.readColor)
         } else {
             binding.mangaTitle.setTextColor(adapter.unreadColor)
-            binding.chapterTitle.setTextColor(if (item.bookmark) adapter.bookmarkedColor else adapter.unreadColor)
+            binding.chapterTitle.setTextColor(
+                if (item.bookmark) adapter.bookmarkedColor else adapter.unreadColorSecondary
+            )
         }
 
         // Set bookmark status

@@ -13,12 +13,11 @@
 
     <TextView
         android:id="@+id/chapters_label"
-        style="@style/TextAppearance.Regular.SubHeading"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/chapters"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textIsSelectable="false"
-        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_chapters_filter"
         app:layout_constraintStart_toStartOf="parent"

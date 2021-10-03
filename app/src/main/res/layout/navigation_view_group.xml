@@ -17,7 +17,7 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.Medium.SubHeading"
+        android:textAppearance="@style/TextAppearance.Tachiyomi.SectionHeader"
         tools:text="Header" />
 
     <ImageView

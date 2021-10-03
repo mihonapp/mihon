@@ -17,6 +17,8 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingEnd="8dp"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?android:attr/textColorSecondary"
         tools:text="Filter:" />
 
     <Spinner

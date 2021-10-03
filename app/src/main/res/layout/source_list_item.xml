@@ -23,14 +23,13 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/TextAppearance.Regular.SubHeading"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="16sp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/badges"
         app:layout_constraintHorizontal_bias="0.007"
@@ -51,7 +50,6 @@
 
         <TextView
             android:id="@+id/local_text"
-            style="@style/TextAppearance.Regular.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/colorTertiary"
@@ -61,13 +59,13 @@
             android:paddingEnd="3dp"
             android:paddingBottom="1dp"
             android:text="@string/local_source_badge"
+            android:textAppearance="?attr/textAppearanceCaption"
             android:textColor="?attr/colorOnTertiary"
             android:visibility="gone"
             tools:visibility="visible" />
 
         <TextView
             android:id="@+id/download_text"
-            style="@style/TextAppearance.Regular.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/colorTertiary"
@@ -76,6 +74,7 @@
             android:paddingTop="1dp"
             android:paddingEnd="3dp"
             android:paddingBottom="1dp"
+            android:textAppearance="?attr/textAppearanceCaption"
             android:textColor="?attr/colorOnTertiary"
             android:visibility="gone"
             tools:text="122"
@@ -83,7 +82,6 @@
 
         <TextView
             android:id="@+id/unread_text"
-            style="@style/TextAppearance.Regular.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/colorSecondary"
@@ -92,6 +90,7 @@
             android:paddingTop="1dp"
             android:paddingEnd="3dp"
             android:paddingBottom="1dp"
+            android:textAppearance="?attr/textAppearanceCaption"
             android:textColor="?attr/colorOnSecondary"
             android:visibility="gone"
             tools:text="130"
@@ -99,7 +98,6 @@
 
         <TextView
             android:id="@+id/favorite_text"
-            style="@style/TextAppearance.Regular.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/colorSecondary"
@@ -109,6 +107,7 @@
             android:paddingEnd="3dp"
             android:paddingBottom="1dp"
             android:text="@string/in_library"
+            android:textAppearance="?attr/textAppearanceCaption"
             android:textColor="?attr/colorOnSecondary"
             android:visibility="gone"
             tools:visibility="visible" />

@@ -33,7 +33,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.Regular.SubHeading"
+            android:textAppearance="?attr/textAppearanceBody2"
             tools:text="Category Title" />
 
     </LinearLayout>

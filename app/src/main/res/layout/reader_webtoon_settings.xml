@@ -13,7 +13,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/webtoon_viewer"
-        android:textAppearance="@style/TextAppearance.Medium.SubHeading" />
+        android:textAppearance="@style/TextAppearance.Tachiyomi.SectionHeader" />
 
     <eu.kanade.tachiyomi.widget.MaterialSpinnerView
         android:id="@+id/webtoon_nav"

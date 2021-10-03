@@ -9,20 +9,22 @@
 
     <TextView
         android:id="@+id/text_face"
-        style="@style/TextAppearance.Medium.Body2.Hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="48sp"
         tools:text="-_-" />
 
     <TextView
         android:id="@+id/text_label"
-        style="@style/TextAppearance.Medium.Body2.Hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?android:attr/textColorSecondary"
         tools:text="Label" />
 
     <LinearLayout

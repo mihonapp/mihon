@@ -42,14 +42,16 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textAppearance="@style/TextAppearance.Medium"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/manga_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:attr/textColorSecondary"
             tools:text="Subtitle" />
 
     </LinearLayout>
