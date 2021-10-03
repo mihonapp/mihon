@@ -36,7 +36,9 @@ interface Manga : SManga {
     }
 
     fun getGenres(): List<String>? {
-        return genre?.split(", ")?.map { it.trim() }
+        if (genre.isNullOrBlank()) return null
+        return genre?.split(", ")?.map { it.trim() } ?.filterNot { it.isBlank() } ?.distinct()
+        
     }
 
     private fun setChapterFlags(flag: Int, mask: Int) {
