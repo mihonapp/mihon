@@ -15,11 +15,11 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
+import eu.kanade.tachiyomi.util.system.isConnectedToWifi
 import eu.kanade.tachiyomi.util.system.isOnline
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import eu.kanade.tachiyomi.util.system.notification
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.util.system.wifiManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -154,7 +154,7 @@ class DownloadService : Service() {
      */
     private fun onNetworkStateChanged() {
         if (isOnline()) {
-            if (preferences.downloadOnlyOverWifi() && !wifiManager.isWifiEnabled) {
+            if (preferences.downloadOnlyOverWifi() && !isConnectedToWifi()) {
                 stopDownloads(R.string.download_notifier_text_only_wifi)
             } else {
                 val started = downloadManager.startDownloads()
