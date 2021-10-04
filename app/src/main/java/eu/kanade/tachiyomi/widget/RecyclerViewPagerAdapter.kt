@@ -8,7 +8,7 @@ import java.util.Stack
 
 abstract class RecyclerViewPagerAdapter : ViewStatePagerAdapter() {
 
-    private val pool = Stack<View>()
+    private val pool = HashMap<Int, Stack<View>>()
 
     var recycle = true
         set(value) {
@@ -16,17 +16,20 @@ abstract class RecyclerViewPagerAdapter : ViewStatePagerAdapter() {
             field = value
         }
 
-    protected abstract fun createView(container: ViewGroup): View
+    protected abstract fun getViewType(position: Int): Int
+
+    protected abstract fun inflateView(container: ViewGroup, viewType: Int): View
 
     protected abstract fun bindView(view: View, position: Int)
 
     protected open fun recycleView(view: View, position: Int) {}
 
     override fun createView(container: ViewGroup, position: Int): View {
-        val view = if (pool.isNotEmpty()) {
-            pool.pop().setViewPagerPositionParam(position)
+        val viewType = getViewType(position)
+        val view = if (pool[viewType] != null && pool[viewType]!!.isNotEmpty()) {
+            pool[viewType]!!.pop().setViewPagerPositionParam(position)
         } else {
-            createView(container)
+            inflateView(container, viewType)
         }
         bindView(view, position)
         return view
@@ -34,7 +37,9 @@ abstract class RecyclerViewPagerAdapter : ViewStatePagerAdapter() {
 
     override fun destroyView(container: ViewGroup, position: Int, view: View) {
         recycleView(view, position)
-        if (recycle) pool.push(view)
+        val viewType = getViewType(position)
+        if (pool[viewType] == null) pool[viewType] = Stack<View>()
+        if (recycle) pool[viewType]!!.push(view)
     }
 
     /**

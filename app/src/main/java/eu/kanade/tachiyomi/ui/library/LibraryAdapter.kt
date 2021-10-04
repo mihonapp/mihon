@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.LibraryCategoryBinding
+import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
 import eu.kanade.tachiyomi.widget.RecyclerViewPagerAdapter
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -45,15 +46,18 @@ class LibraryAdapter(
 
     private var boundViews = arrayListOf<View>()
 
+    private val isPerCategory by lazy { preferences.categorisedDisplaySettings().get() }
+    private val currentDisplayMode by lazy { preferences.libraryDisplayMode().get() }
+
     /**
      * Creates a new view for this adapter.
      *
      * @return a new view.
      */
-    override fun createView(container: ViewGroup): View {
+    override fun inflateView(container: ViewGroup, viewType: Int): View {
         val binding = LibraryCategoryBinding.inflate(LayoutInflater.from(container.context), container, false)
         val view: LibraryCategoryView = binding.root
-        view.onCreate(controller, binding)
+        view.onCreate(controller, binding, viewType)
         return view
     }
 
@@ -119,5 +123,27 @@ class LibraryAdapter(
                 view.onDestroy()
             }
         }
+    }
+
+    override fun getViewType(position: Int): Int {
+        val category = categories[position]
+        return if (isPerCategory && category.id != 0) {
+            if (DisplayModeSetting.fromFlag(category.displayMode) == DisplayModeSetting.LIST) {
+                LIST_DISPLAY_MODE
+            } else {
+                GRID_DISPLAY_MODE
+            }
+        } else {
+            if (currentDisplayMode == DisplayModeSetting.LIST) {
+                LIST_DISPLAY_MODE
+            } else {
+                GRID_DISPLAY_MODE
+            }
+        }
+    }
+
+    companion object {
+        const val LIST_DISPLAY_MODE = 1
+        const val GRID_DISPLAY_MODE = 2
     }
 }
