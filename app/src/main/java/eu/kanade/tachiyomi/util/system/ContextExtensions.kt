@@ -17,7 +17,6 @@ import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
-import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.PowerManager
@@ -381,21 +380,21 @@ fun Context.isOnline(): Boolean {
 }
 
 /**
- * Returns true if device is connected to wifi.
+ * Returns true if device is connected to Wifi.
  */
 fun Context.isConnectedToWifi(): Boolean {
     if (!wifiManager.isWifiEnabled) return false
 
-    val wifiInfo: WifiInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         val activeNetwork = connectivityManager.activeNetwork ?: return false
         val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        networkCapabilities.transportInfo as WifiInfo
+
+        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) &&
+            networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     } else {
         @Suppress("DEPRECATION")
-        wifiManager.connectionInfo
+        wifiManager.connectionInfo.bssid != null
     }
-
-    return wifiInfo.bssid != null
 }
 
 /**
