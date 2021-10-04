@@ -5,7 +5,7 @@
     <string name="label_more">अधिक</string>
     <string name="label_settings">सेटिंग्ज</string>
     <string name="label_recent_manga">इतिहास</string>
-    <string name="label_backup">बॅकअप</string>
+    <string name="label_backup">बॅकअप आंही रीस्टोर</string>
     <string name="label_help">मदत</string>
     <string name="action_settings">सेटिंग्ज</string>
     <string name="action_filter">फिल्टर</string>
@@ -35,7 +35,7 @@
     <string name="manga">मांगा</string>
     <string name="categories">श्रेण्या</string>
     <string name="information_empty_category">तुम्ही श्रेण्या बनविल्या नाही आहेत, प्लस वर दाबून तुम्ही श्रेणी बनवू शकता.</string>
-    <string name="information_empty_library">तुमची संग्रहालय खाली आहे, तुम्ही ब्राउझ मधून सीरिज टाकू शकता.</string>
+    <string name="information_empty_library">तुमची संग्रहालय खाली आहे</string>
     <string name="information_no_recent_manga">अलीकडे काहीही वाचले नाही</string>
     <string name="information_no_recent">कोणतेही अलीकडील अद्यतने नाही</string>
     <string name="information_no_downloads">डाऊनलोड नाहीत</string>
@@ -222,4 +222,12 @@
     <string name="unofficial_extension_message">हा विस्तार अधिकृत ताचिओमी विस्तार सूचीतून नाही.</string>
     <string name="double_tap_anim_speed_normal">सामान्य</string>
     <string name="ext_unofficial">अनधिकृत</string>
+    <string name="pref_viewer_nav">नैविगेशन माध्य</string>
+    <string name="nav_zone_right">उजवी</string>
+    <string name="nav_zone_left">डावी</string>
+    <string name="nav_zone_next">पुढचं</string>
+    <string name="nav_zone_prev">मागचं</string>
+    <string name="right_and_left_nav">उजवी आंही डावी</string>
+    <string name="edge_nav">कडा</string>
+    <string name="kindlish_nav">किंडल सारख</string>
 </resources>

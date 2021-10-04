@@ -262,7 +262,6 @@
     <string name="download_notifier_no_network">Tiada sambungan rangkaian tersedia</string>
     <string name="download_notifier_download_paused">Muat turun dihentikan sebentar</string>
     <string name="channel_common">Biasa</string>
-    <string name="channel_library">Pustaka</string>
     <string name="label_migration">Pindah sumber</string>
     <string name="label_extensions">Sambungan</string>
     <string name="label_extension_info">Info sambungan</string>
@@ -471,7 +470,6 @@
     <string name="source_not_found_name">Sumber tidak dijumpai: %1$s</string>
     <string name="unofficial_extension_message">Sambungan ini bukan daripada senarai sambungan Tachiyomi yang rasmi.</string>
     <string name="ext_unofficial">Tidak rasmi</string>
-    <string name="pref_library_update_error_notification">Tunjuk pemberitahuan kemas kini ralat</string>
     <string name="pref_library_update_refresh_metadata_summary">Semak muka hadapan dan tentang baharu bila mengemaskini pustaka</string>
     <string name="pref_library_update_refresh_metadata">Segar semula metadata secara automatik</string>
     <string name="action_migrate">Pindah sumber</string>
@@ -486,7 +484,6 @@
     <string name="pref_show_reading_mode">Tunjuk mod membaca</string>
     <string name="loader_not_implemented_error">Sumber tidak dijumpai</string>
     <string name="action_start">Mula</string>
-    <string name="action_open_in_settings">Buka di Tetapan</string>
     <plurals name="manga_num_chapters">
         <item quantity="other">Jumlah bab: %1$s</item>
     </plurals>
@@ -515,8 +512,6 @@
     <string name="no_pinned_sources">Tiada sumber yang disematkan</string>
     <string name="download_notifier_download_finish">Muat turun selesai</string>
     <string name="channel_progress">Kemajuan</string>
-    <string name="group_backup_restore">Sandaran dan memulih</string>
-    <string name="group_downloader">Muat turun</string>
     <string name="channel_complete">Selesai</string>
     <string name="channel_errors">Ralat</string>
     <string name="backup_restore_missing_trackers">Penjejak yang tidak dilog masuk:</string>
@@ -550,9 +545,7 @@
     <string name="invalid_backup_file_type">Jenis fail sandaran tidak sah: %1$s\t
 \nIa sepatutnya berakhir dengan .proto.gz atau .json.</string>
     <string name="pref_category_nsfw_content">Sumber NSFW (18+)</string>
-    <string name="pref_label_nsfw_extension">Label dalam senarai</string>
-    <string name="pref_show_nsfw_extension">Tunjuk dalam senarai sambungan</string>
-    <string name="pref_show_nsfw_source">Tunjuk dalam senarai sumber</string>
+    <string name="pref_show_nsfw_source">Tunjuk dalam senarai sumber dan sambungan</string>
     <string name="file_picker_error">Tiada aplikasi memilih fail</string>
     <string name="myanimelist_relogin">Sila log masuk ke MAL sekali lagi</string>
     <string name="pref_viewer_nav">Tataletak navigasi</string>
@@ -676,4 +669,11 @@
     <string name="pref_tablet_ui_mode">Paksa UI tablet</string>
     <string name="pref_remove_exclude_categories">Kategori dikecualikan</string>
     <string name="help_translate">Bantu menterjemah</string>
+    <string name="ext_app_info">Maklumat aplikasi</string>
+    <string name="ext_installer_legacy">Legasi</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Pasang dan mulakan Shizuku untuk guna Shizuku sebagai pemasang sambungan.</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku tidak dijalankan</string>
+    <string name="ext_installer_pref">Pemasang</string>
+    <string name="ext_install_service_notif">Memasang sambungan…</string>
+    <string name="action_sort_count">Jumlah manga</string>
 </resources>

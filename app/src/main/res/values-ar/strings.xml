@@ -252,7 +252,7 @@
     <string name="information_no_downloads">لا يوجد تنزيلات</string>
     <string name="information_no_recent">لا توجد تحديثات جديدة</string>
     <string name="information_no_recent_manga">لم تقم بقراءة شيء مُؤخّراً</string>
-    <string name="information_empty_library">مكتبتك فارغة، يمكنك إضافة سلسلة إلى مكتبتك من قائمة \"تصفّح\".</string>
+    <string name="information_empty_library">مكتبتك فارغة</string>
     <string name="download_notifier_downloader_title">مدير التنزيل</string>
     <string name="download_notifier_title_error">خطأ</string>
     <string name="download_notifier_unknown_error">فشل تنزيل الفصل بسبب حدوث خطأ غير متوقع</string>
@@ -260,7 +260,6 @@
     <string name="download_notifier_no_network">لا يتوفر اتصال بالشبكة</string>
     <string name="download_notifier_download_paused">تم إيقاف التنزيل مؤقتاً</string>
     <string name="channel_common">عامٌّ</string>
-    <string name="channel_library">المكتبة</string>
     <string name="label_migration">ترحيل</string>
     <string name="label_extensions">الإضافات</string>
     <string name="label_extension_info">معلومات اﻹضافة</string>
@@ -350,7 +349,7 @@
     <string name="lock_never">أبدًا</string>
     <string name="lock_always">دائماً</string>
     <string name="lock_when_idle">قفل في حالة السكون</string>
-    <string name="lock_with_biometrics">يتطلب الفتح</string>
+    <string name="lock_with_biometrics">تتطلب فتح</string>
     <string name="pref_category_security">إعدادات الأمان</string>
     <string name="pref_manage_notifications">إدارة الإشعارات</string>
     <string name="pref_date_format">صيغة التاريخ</string>
@@ -498,7 +497,6 @@
     <string name="tracking_info">مزامنة أحاديّة لتحديث تقدم الفصول في خدمات التتبع. قم بإعداد التتبع الخاص بمانجا محدّدة من زر التتبع الخاص بها.</string>
     <string name="unofficial_extension_message">هذه الإضافة ليست من قائمة إضافات Tachiyomi الرسميّة.</string>
     <string name="ext_unofficial">غير رسمي</string>
-    <string name="pref_library_update_error_notification">عرض إشعارات أخطاء التحديث</string>
     <string name="pref_library_update_refresh_metadata_summary">تحقق من وجود غلاف جديد وتفاصيل جديدة عند تحديث المكتبة</string>
     <string name="pref_library_update_refresh_metadata">تحديث البيانات الوصفية تلقائياً</string>
     <string name="action_display_unread_badge">شارات لعدد الفصول غير المقروءة</string>
@@ -544,15 +542,12 @@
     <string name="ext_nsfw_short">محتوى غير لائق</string>
     <string name="pref_jump_to_chapters">الذهاب إلى الفصول المفتوحة</string>
     <string name="parental_controls_info">هذا لا يمنع الإضافات غير الرسمية أو التي تم وضع علامة عليها بشكل غير صحيح من إظهار محتوى غير لائق داخل التطبيق.</string>
-    <string name="action_open_in_settings">افتح في الإعدادات</string>
     <string name="action_download_unread">تنزيل الفصول غير المقروءة</string>
     <string name="tapping_inverted_both">كليهما</string>
     <string name="tapping_inverted_vertical">عمودي</string>
     <string name="tapping_inverted_horizontal">أفقي</string>
     <string name="tapping_inverted_none">لا شيء</string>
     <string name="pref_read_with_tapping_inverted">عكس جهة النقر</string>
-    <string name="group_backup_restore">النسخ الاحتياطي والاستعادة</string>
-    <string name="group_downloader">التنزيلات</string>
     <string name="channel_errors">أخطاء</string>
     <string name="channel_complete">مُكتمل</string>
     <string name="channel_progress">التقدّم</string>
@@ -610,9 +605,7 @@
     <string name="invalid_backup_file_type">ملف النسخ الاحتياطي غير صالح: %1$s
 \nيجب أن ينتهي ب.proto.gz أو .json.</string>
     <string name="pref_category_nsfw_content">محتوى +18</string>
-    <string name="pref_label_nsfw_extension">تسمية في قائمة الملحقات</string>
-    <string name="pref_show_nsfw_source">إعرض في قائمة المصادر</string>
-    <string name="pref_show_nsfw_extension">إعرض في قائمة الإضافات</string>
+    <string name="pref_show_nsfw_source">اعرض في قوائم المصادر والامتدادات</string>
     <string name="myanimelist_relogin">رجاء سجل دخولك في MAL مجدداً</string>
     <string name="file_picker_error">لم يتم العثور على تطبيق منتقي الملفات</string>
     <string name="pref_viewer_nav">تخطيط التنقل</string>
@@ -721,12 +714,12 @@
     <string name="label_default">الافتراضي</string>
     <string name="label_background_activity">الأنشطة التي تعمل في الخلفية</string>
     <plurals name="relative_time">
-        <item quantity="zero"/>
-        <item quantity="one"/>
-        <item quantity="two"/>
-        <item quantity="few"/>
-        <item quantity="many"/>
-        <item quantity="other"/>
+        <item quantity="zero">٠</item>
+        <item quantity="one">١</item>
+        <item quantity="two">٢</item>
+        <item quantity="few">عدد قليل</item>
+        <item quantity="many">عديدة</item>
+        <item quantity="other">اخر</item>
     </plurals>
     <string name="pref_relative_time_short">قصير (اليوم، الأمس)</string>
     <string name="action_track">تتبع</string>
@@ -738,4 +731,7 @@
     <string name="theme_tealturquoise">ازرق مخضر و فيروز</string>
     <string name="pref_category_appearance">المظهر</string>
     <string name="getting_started_guide">دليل البدء</string>
+    <string name="help_translate">ساعد بالترجمة</string>
+    <string name="pref_tablet_ui_mode">فرض واجهة مستخدم الجهاز اللوحي</string>
+    <string name="pref_remove_exclude_categories">فئات المستثناة</string>
 </resources>

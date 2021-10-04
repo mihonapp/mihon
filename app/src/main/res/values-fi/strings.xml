@@ -71,7 +71,6 @@
     <string name="download_notifier_no_network">Ei verkkoyhteyttä</string>
     <string name="download_notifier_download_paused">Lataus pysäytetty</string>
     <string name="channel_common">Tavallinen</string>
-    <string name="channel_library">Kirjasto</string>
     <string name="label_backup">Varmuuskopiointi ja palautus</string>
     <string name="label_migration">Siirrä</string>
     <string name="label_extensions">Laajennukset</string>
@@ -480,7 +479,6 @@
     <string name="invalid_backup_file">Virheellinen varmuuskopio</string>
     <string name="tracker_not_logged_in">Et ole kirjautunut sisään: %1$s</string>
     <string name="source_not_found_name">Lähdettä ei löytynyt: %1$s</string>
-    <string name="pref_library_update_error_notification">Näytä päivitysvirheilmoitukset</string>
     <string name="pref_library_update_refresh_metadata_summary">Tarkista uusi kansi ja tiedot päivitettäessä kirjastoa</string>
     <string name="pref_library_update_refresh_metadata">Päivitä metatiedot automaattisesti</string>
     <string name="action_migrate">Siirrä</string>
@@ -500,7 +498,6 @@
         <item quantity="one">1 luku</item>
         <item quantity="other">%1$s lukua</item>
     </plurals>
-    <string name="action_open_in_settings">Avaa Asetuksissa</string>
     <string name="requires_app_restart">Edellyttää sovelluksen käynnisstämisen uudelleen</string>
     <string name="label_network">Verkko</string>
     <string name="pref_jump_to_chapters">Siirry lukuihin avatessa</string>
@@ -524,8 +521,6 @@
         <item quantity="other">%d seurantapalvelinta</item>
     </plurals>
     <string name="no_pinned_sources">Sinulla ei ole kiinnitettyjä lähteitä</string>
-    <string name="group_backup_restore">Varmuuskopiointi ja palautus</string>
-    <string name="group_downloader">Lataukset</string>
     <string name="channel_complete">Valmis</string>
     <string name="channel_progress">Edistyminen</string>
     <string name="download_notifier_download_finish">Lataus valmis</string>
@@ -562,8 +557,6 @@
     <string name="invalid_backup_file_type">Virheellinen varmuuskopiotiedosto: %1$s
 \nSen pitäisi päättyä .proto.gz or .json.</string>
     <string name="pref_category_nsfw_content">NSFW (18+) lähteet</string>
-    <string name="pref_label_nsfw_extension">Laajennusluettelon otsikko</string>
-    <string name="pref_show_nsfw_extension">Näytä laajennusluettelossa</string>
     <string name="pref_show_nsfw_source">Näytä lähdeluettelossa</string>
     <string name="file_picker_error">Tiedostonvalitsinsovellusta ei löytynyt</string>
     <string name="myanimelist_relogin">Kirjaudu uudelleen MAL: iin</string>

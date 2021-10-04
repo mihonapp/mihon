@@ -314,7 +314,6 @@
     <string name="download_notifier_no_network">No hi ha cap connexió de xarxa disponible</string>
     <string name="download_notifier_download_paused">Baixada pausada</string>
     <string name="channel_common">General</string>
-    <string name="channel_library">Biblioteca</string>
     <string name="pref_read_with_long_tap">Mostra amb un toc llarg</string>
     <string name="action_open_in_web_view">Obre en una visualització web</string>
     <string name="pref_true_color">Color de 32 bits</string>
@@ -480,7 +479,6 @@
     <string name="invalid_backup_file">Fitxer de còpia de seguretat invàlid</string>
     <string name="tracker_not_logged_in">Sessió no iniciada: %1$s</string>
     <string name="source_not_found_name">La font no s\'ha trobat: %1$s</string>
-    <string name="pref_library_update_error_notification">Mostra notificacions dels errors d\'actualització</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprova si hi ha noves portades o detalls en actualitzar la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Refresca les metadades automàticament</string>
     <string name="action_display_comfortable_grid">Graella confortable</string>
@@ -515,7 +513,6 @@
     <string name="pref_jump_to_chapters">Salta als capítols en obrir</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_disable">Desactiva</string>
-    <string name="action_open_in_settings">Obre a Configuració</string>
     <string name="action_start">Inicia</string>
     <string name="action_download_unread">Baixa els capítols no llegits</string>
     <string name="action_sort_date_added">Data d\'incorporació</string>
@@ -525,8 +522,6 @@
     </plurals>
     <string name="no_pinned_sources">No teniu cap origen fixat</string>
     <string name="download_notifier_download_finish">Baixada completada</string>
-    <string name="group_backup_restore">Còpia de seguretat i restauració</string>
-    <string name="group_downloader">Baixades</string>
     <string name="channel_complete">Completada</string>
     <string name="channel_progress">Progrés</string>
     <string name="channel_errors">Errors</string>
@@ -563,8 +558,6 @@
 \nHauria d\'acabar en .proto.gz o .json.</string>
     <string name="pref_category_nsfw_content">Fonts NSFW (+18)</string>
     <string name="file_picker_error">No s\'ha trobat cap aplicació de selecció de fitxers</string>
-    <string name="pref_label_nsfw_extension">Etiqueta a la llista d\'extensions</string>
-    <string name="pref_show_nsfw_extension">Mostra a la llista d\'extensions</string>
     <string name="pref_show_nsfw_source">Mostra a la llista de fonts</string>
     <string name="myanimelist_relogin">Torneu a iniciar la sessió a MAL</string>
     <string name="channel_crash_logs">Registres de fallades</string>

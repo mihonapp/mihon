@@ -31,7 +31,6 @@
     <string name="action_display">Pagpapakita</string>
     <string name="action_display_mode">Pagpapakita</string>
     <string name="action_migrate">Ilipat</string>
-    <string name="action_open_in_settings">Buksan sa Pagsasaayos</string>
     <string name="action_open_in_web_view">Buksan sa WebView</string>
     <string name="action_open_in_browser">Buksan sa browser</string>
     <string name="action_resume">Ituloy</string>
@@ -134,7 +133,7 @@
     <string name="custom_dir">Pinili kong lugar</string>
     <string name="pref_remove_after_marked_as_read">Pagkamarkahang nabasa na</string>
     <string name="pref_remove_after_read">Kusa pagkabasa</string>
-    <string name="pref_download_only_over_wifi">Mag-download lamang kapag nakaWi-Fi</string>
+    <string name="pref_download_only_over_wifi">Mag-download lang kung naka-wifi</string>
     <string name="pref_download_directory">Lugar ng paglalagyan</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_15">15%</string>
@@ -237,7 +236,6 @@
     <string name="default_category_summary">Palaging tanungin</string>
     <string name="default_category">Panimulang kategorya</string>
     <string name="pref_library_update_refresh_metadata_summary">Maghanap ng mga bagong pabalat at detalye tuwing nag-a-update</string>
-    <string name="pref_library_update_error_notification">Ipakita ang error sa pag-update</string>
     <string name="pref_library_update_refresh_metadata">Kusang sariwain ang metadata</string>
     <string name="pref_update_only_non_completed">I-update lang ang Patuloy</string>
     <string name="charging">Naka-charge</string>
@@ -281,7 +279,7 @@
     <string name="tracking_info">Isahang pagsabay para ma-update ang bilang ng nabasang kabanata sa mga tracker. Isaayos ang pag-track sa mga ito sa Pagta-track na makikita sa screen nila.</string>
     <string name="services">Mga Serbisyo</string>
     <string name="pref_auto_update_manga_sync">I-update ang progress pagkabasa</string>
-    <string name="pref_download_new">I-download ang mga bagong kabanata</string>
+    <string name="pref_download_new">I-download ang mga bago</string>
     <string name="fifth_to_last">Panlima sa huli</string>
     <string name="fourth_to_last">Pang-apat sa huli</string>
     <string name="third_to_last">Pangatlo sa huli</string>
@@ -295,7 +293,6 @@
     <string name="channel_ext_updates">Mga update sa dugtong</string>
     <string name="tapping_inverted_none">Hindi</string>
     <string name="channel_new_chapters">Mga update sa kabanata</string>
-    <string name="channel_library">Aklatan</string>
     <string name="channel_common">Komon</string>
     <string name="download_notifier_download_paused">Nakahinto ang pag-download</string>
     <string name="download_notifier_no_network">Walang koneksyon sa Internet</string>
@@ -524,14 +521,12 @@
         <item quantity="other">%d (na) tracker</item>
     </plurals>
     <string name="no_pinned_sources">Wala kang naka-pin na pinagkukunan</string>
-    <string name="group_backup_restore">Pag-backup at Pag-restore</string>
-    <string name="group_downloader">Mga Download</string>
     <string name="channel_complete">Tapos na</string>
     <string name="channel_errors">Mga Error</string>
     <string name="channel_progress">Takbo</string>
     <string name="download_notifier_download_finish">Tapos na sa pag-download</string>
     <string name="backup_restore_missing_trackers">Di naka-login sa (mga) tracker:</string>
-    <string name="pref_remove_bookmarked_chapters">Payagang burahin ang mga tinandaang kabanata</string>
+    <string name="pref_remove_bookmarked_chapters">Burahin din ang may pananda</string>
     <string name="pref_category_delete_chapters">Magbura ng kabanata</string>
     <string name="parental_controls_info">Hindi nito naiiwasan ang pagpakita ng mga NSFW (18+) sa mga di-opisyal o posibleng maling naka-flag na dugtong sa loob ng app.</string>
     <string name="ext_nsfw_warning">Maaaring may NSFW (18+)</string>
@@ -553,18 +548,16 @@
     <string name="action_search_settings">Maghanap</string>
     <string name="pref_incognito_mode_summary">Hinihinto ang pagtala sa mga binabasa</string>
     <string name="pref_incognito_mode">Nakatago</string>
-    <string name="pref_clear_history">Burahin ang kasaysayan</string>
-    <string name="clear_history_completed">Nabura na ang buong kasaysayan</string>
-    <string name="clear_history_confirmation">Sigurado ka ba\? Buburahin nito ang buong kasaysayan ng binuksan mo.</string>
-    <string name="pref_label_nsfw_extension">Label sa listahan ng dugtong</string>
+    <string name="pref_clear_history">Linisin ang kasaysayan</string>
+    <string name="clear_history_completed">Linis na ang buong kasaysayan</string>
+    <string name="clear_history_confirmation">Sigurado ka ba\? Lilinisin nito ang buong kasaysayan ng binuksan mo.</string>
     <string name="migration_help_guide">Gabay sa Paglipat ng Source</string>
     <string name="spen_next_page">Abante</string>
     <string name="spen_previous_page">Balik</string>
     <string name="file_picker_error">Walang nakitang app para makapili</string>
     <string name="invalid_backup_file_type">Invalid na backup: %1$s
 \nDapat nagtatapos ito sa .proto.gz o .json.</string>
-    <string name="pref_show_nsfw_extension">Ipakita sa listahan ng dugtong</string>
-    <string name="pref_show_nsfw_source">Ipakita sa Mga Source</string>
+    <string name="pref_show_nsfw_source">Ipakita sa Mga Source at Dugtong</string>
     <string name="pref_category_nsfw_content">Mga source na NSFW (18+)</string>
     <string name="myanimelist_relogin">Mag-login muli po sa MAL</string>
     <string name="channel_crash_logs">Crash log</string>
@@ -595,7 +588,7 @@
     <string name="update_4hour">Kada 4 na oras</string>
     <string name="pref_dns_over_https">DNS kesa HTTPS</string>
     <string name="pref_download_new_categories_details">Hindi ida-download ang mga manga na nasa di-kasamang kategorya kahit na nasa kasamang kategorya ang mga ito.</string>
-    <string name="pref_category_auto_download">Kusang i-download</string>
+    <string name="pref_category_auto_download">Kusang pag-download</string>
     <string name="nav_zone_right">Kanan</string>
     <string name="nav_zone_left">Kaliwa</string>
     <string name="nav_zone_next">Susunod</string>
@@ -682,11 +675,18 @@
     <string name="theme_tealturquoise">Teal at Turquoise</string>
     <string name="pref_category_appearance">Hitsura</string>
     <string name="confirm_lock_change">I-authenticate para makumpirma ang pagbabago</string>
-    <string name="label_default">Pinagpaubaya</string>
+    <string name="label_default">Ipagpaubaya</string>
     <string name="action_track">Sundan</string>
     <string name="pref_category_navigation">Nabigasyon</string>
     <string name="getting_started_guide">Gabay sa Pagsisimula</string>
     <string name="pref_tablet_ui_mode">Puwersahang Tablet UI</string>
     <string name="help_translate">Tumulong sa pagsalin</string>
     <string name="pref_remove_exclude_categories">Kategoryang di-kasama</string>
+    <string name="ext_app_info">Patungkol</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Paki-install at buksan ang Shizuku para magamit ito bilang taga-install ng dugtong.</string>
+    <string name="ext_installer_shizuku_stopped">Di tumatakbo ang Shizuku</string>
+    <string name="ext_installer_legacy">Legasiya</string>
+    <string name="ext_installer_pref">Taga-install</string>
+    <string name="ext_install_service_notif">Ini-install ang dugtong…</string>
+    <string name="action_sort_count">Bilang ng manga</string>
 </resources>

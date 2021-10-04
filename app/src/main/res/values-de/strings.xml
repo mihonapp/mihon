@@ -259,7 +259,6 @@
     <string name="action_global_search_hint">Globale Suche …</string>
     <string name="latest">Neueste</string>
     <string name="browse">Stöbern</string>
-    <string name="channel_library">Bibliothek</string>
     <string name="channel_common">Allgemein</string>
     <string name="action_display_download_badge">Download-Plaketten</string>
     <string name="local_source_badge">Lokal</string>
@@ -480,7 +479,6 @@
     <string name="invalid_backup_file">Ungültige Sicherungsdatei</string>
     <string name="tracker_not_logged_in">Nicht angemeldet: %1$s</string>
     <string name="source_not_found_name">Quelle nicht gefunden: %1$s</string>
-    <string name="pref_library_update_error_notification">Aktualisierungsfehler-Benachrichtigungen anzeigen</string>
     <string name="pref_library_update_refresh_metadata_summary">Auf neue Cover und Details überprüfen, wenn die Bibliothek aktualisiert wird</string>
     <string name="pref_library_update_refresh_metadata">Metadaten automatisch aktualisieren</string>
     <string name="action_migrate">Migrieren</string>
@@ -500,7 +498,6 @@
         <item quantity="one">1 Kapitel</item>
         <item quantity="other">%1$s Kapitel</item>
     </plurals>
-    <string name="action_open_in_settings">In den Einstellungen öffnen</string>
     <string name="requires_app_restart">Erfordert einen Neustart der Anwendung, um wirksam zu werden</string>
     <string name="label_network">Netzwerk</string>
     <string name="pref_jump_to_chapters">Beim Öffnen zu den Kapiteln springen</string>
@@ -525,8 +522,6 @@
     </plurals>
     <string name="no_pinned_sources">Du hast keine angehefteten Quellen</string>
     <string name="download_notifier_download_finish">Download abgeschlossen</string>
-    <string name="group_backup_restore">Sichern und Wiederherstellen</string>
-    <string name="group_downloader">Downloads</string>
     <string name="channel_complete">Abgeschlossen</string>
     <string name="channel_progress">Fortschritt</string>
     <string name="channel_errors">Fehler</string>
@@ -562,9 +557,7 @@
     <string name="invalid_backup_file_type">Ungültiger Sicherungsdateientyp: %1$s
 \nDie Datei sollte mit .proto.gz oder .json enden.</string>
     <string name="pref_category_nsfw_content">NSFW/Ü18-Quellen</string>
-    <string name="pref_label_nsfw_extension">In der Erweiterungsliste markieren</string>
-    <string name="pref_show_nsfw_extension">In der Erweiterungsliste</string>
-    <string name="pref_show_nsfw_source">In der Quellenliste anzeigen</string>
+    <string name="pref_show_nsfw_source">In Quellen- und Erweiterungslisten anzeigen</string>
     <string name="file_picker_error">Keine Dateiauswahl-App gefunden</string>
     <string name="myanimelist_relogin">Bitte logge dich erneut in MAL ein</string>
     <string name="edge_nav">Rand</string>
@@ -689,4 +682,13 @@
     <string name="pref_tablet_ui_mode">Tablet-Benutzeroberfläche erzwingen</string>
     <string name="pref_remove_exclude_categories">Ausgeschlossene Kategorien</string>
     <string name="help_translate">Beim Übersetzen mithelfen</string>
+    <string name="ext_app_info">Anwendungsinformationen</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Installiere und starte Shizuku, um Shizuku als Installationsprogramm für Erweiterungen zu verwenden.</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku läuft nicht</string>
+    <string name="ext_installer_shizuku">Shizuku</string>
+    <string name="ext_installer_packageinstaller">PackageInstaller</string>
+    <string name="ext_installer_legacy">Legacy</string>
+    <string name="ext_installer_pref">Installationsprogramm</string>
+    <string name="ext_install_service_notif">Erweiterung wird installiert…</string>
+    <string name="action_sort_count">Mangaanzahl</string>
 </resources>

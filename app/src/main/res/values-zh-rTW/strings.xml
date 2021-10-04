@@ -221,7 +221,6 @@
     <string name="file_select_cover">選擇書封圖片</string>
     <string name="information_no_recent_manga">沒有近期閱讀</string>
     <string name="channel_common">一般</string>
-    <string name="channel_library">書櫃</string>
     <string name="all_lang">全球</string>
     <string name="pref_create_backup_summ">可用來保存目前書櫃內容</string>
     <string name="backup_restore_content">還原時需連線至來源以取得資料，可能要支付數據傳輸費用。
@@ -382,7 +381,6 @@
     <string name="manga_info_collapse">較少</string>
     <string name="updating_library">正在更新書櫃</string>
     <string name="add_to_library">加入書櫃</string>
-    <string name="pref_library_update_error_notification">顯示更新錯誤通知</string>
     <string name="logout_success">你已登出</string>
     <string name="logout">登出</string>
     <string name="last_used_source">最近使用</string>
@@ -423,7 +421,6 @@
     <string name="channel_new_chapters">新刊發行</string>
     <string name="in_library">在書櫃中</string>
     <string name="viewer">閱讀模式</string>
-    <string name="action_open_in_settings">前往系統設定</string>
     <string name="action_disable">停用</string>
     <string name="action_migrate">遷移</string>
     <string name="currently_reading">閱讀中</string>
@@ -507,14 +504,12 @@
     <string name="page_list_empty_error">沒有任何頁面</string>
     <string name="backup_restore_missing_sources">遺失來源：</string>
     <string name="invalid_backup_file_missing_data">檔案遺失資料</string>
-    <string name="group_backup_restore">備份與還原</string>
     <string name="source_not_found_name">找不到來源：%1$s</string>
     <string name="backup_restore_missing_trackers">尚未登入至歷程平台：</string>
     <string name="channel_progress">進度</string>
     <string name="channel_errors">錯誤</string>
     <string name="channel_complete">作業完成</string>
     <string name="download_notifier_download_finish">下載完成</string>
-    <string name="group_downloader">下載</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">即使啟用監護限制，還是可能有漏網之魚。使用者仍可藉由非官方或未正確標幟的擴充套件在本應用程式中瀏覽未滿十八歲之人不宜觀賞的內容。</string>
     <string name="ext_nsfw_warning">可能包含未滿十八歲之人不宜觀賞的內容</string>
@@ -550,9 +545,7 @@
     <plurals name="notification_new_chapters_summary">
         <item quantity="other">共 %d 本漫畫</item>
     </plurals>
-    <string name="pref_label_nsfw_extension">在擴充套件清單中標幟</string>
-    <string name="pref_show_nsfw_extension">在擴充套件清單中顯示</string>
-    <string name="pref_show_nsfw_source">在來源清單中顯示</string>
+    <string name="pref_show_nsfw_source">在來源和擴充套件清單中顯示</string>
     <string name="track_finished_reading_date">閱讀完畢日期</string>
     <string name="track_started_reading_date">開始閱讀日期</string>
     <string name="edge_nav">邊緣式</string>
@@ -598,12 +591,12 @@
     <string name="backup_restore_content_full">即將還原備份中的資料。
 \n
 \n隨後請重新安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
-    <string name="pref_download_new_categories_details">被歸在任一「被排除的分類」的漫畫將不會被自動下載，即便其亦被歸在「被包含的分類」。</string>
+    <string name="pref_download_new_categories_details">分類同時屬於「排除」及「包含」的漫畫，將不會自動下載。</string>
     <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
     <string name="pref_create_folder_per_manga_summary">根據漫畫標題建立資料夾</string>
     <string name="pref_show_navigation_mode_summary">開始閱讀時，浮現輕觸翻頁的點擊區域</string>
     <string name="pref_show_navigation_mode">翻頁方式提示</string>
-    <string name="pref_library_update_categories_details">同時存在於「排除」及「包捨」類別中的漫畫不會更新。</string>
+    <string name="pref_library_update_categories_details">分類同時屬於「排除」及「包含」的漫畫，將不會自動更新。</string>
     <string name="cancel_all_for_series">取消此叢書</string>
     <string name="automatic_background">自動</string>
     <string name="pref_grayscale">灰階</string>
@@ -635,7 +628,7 @@
     <string name="about_dont_kill_my_app">部分裝置製造商設有額外的應用程式限制來終止背景服務。此網站提供了修復這項問題的詳細資訊。</string>
     <string name="label_background_activity">背景活動</string>
     <string name="restore_miui_warning">若停用 MIUI 最佳化，備份與還原可能無法正確執行。</string>
-    <string name="enhanced_tracking_info">為特定圖源提供增強功能的服務。 應用程式會在漫畫添加到您的書庫後自動跟蹤其更新。</string>
+    <string name="enhanced_tracking_info">為特定來源提供增強功能的服務。當漫畫被加入書櫃時，將自動登錄閱讀歷程。</string>
     <string name="enhanced_services">增強服務</string>
     <string name="tracking_guide">歷程平台說明</string>
     <string name="categorized_display_settings">獨立各分類的排序和檢視設定</string>
@@ -674,4 +667,13 @@
     <string name="getting_started_guide">入門指南</string>
     <string name="action_track">新增</string>
     <string name="pref_category_navigation">導覽</string>
+    <string name="help_translate">協助翻譯</string>
+    <string name="pref_remove_exclude_categories">排除的分類</string>
+    <string name="ext_app_info">程式資訊</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">若要使用 Shizuku 來安裝擴充套件，請先安裝 Shizuku 並開啟之。</string>
+    <string name="ext_installer_legacy">傳統</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku 未執行</string>
+    <string name="ext_installer_pref">套件安裝程式</string>
+    <string name="ext_install_service_notif">正在安裝擴充套件…</string>
+    <string name="action_sort_count">漫畫總數</string>
 </resources>

@@ -314,7 +314,6 @@
     <string name="download_notifier_no_network">无网络连接</string>
     <string name="download_notifier_download_paused">下载已暂停</string>
     <string name="channel_common">一般</string>
-    <string name="channel_library">书架</string>
     <string name="pref_read_with_long_tap">长按显示</string>
     <string name="action_open_in_web_view">在 WebView 中打开</string>
     <string name="pref_true_color">32 位色彩</string>
@@ -471,7 +470,6 @@
     <string name="invalid_backup_file">无效的备份文件</string>
     <string name="tracker_not_logged_in">尚未登录：%1$s</string>
     <string name="source_not_found_name">未找到图源：%1$s</string>
-    <string name="pref_library_update_error_notification">显示更新错误通知</string>
     <string name="pref_library_update_refresh_metadata_summary">在更新书架时检查新封面和详细信息</string>
     <string name="pref_library_update_refresh_metadata">自动刷新元数据</string>
     <string name="action_migrate">迁移</string>
@@ -490,7 +488,6 @@
     <plurals name="manga_num_chapters">
         <item quantity="other">%1$s 个章节</item>
     </plurals>
-    <string name="action_open_in_settings">在设置中打开</string>
     <string name="requires_app_restart">需要重启应用才能生效</string>
     <string name="label_network">网络</string>
     <string name="pref_jump_to_chapters">打开时跳转到阅读章节</string>
@@ -513,8 +510,6 @@
     </plurals>
     <string name="pref_read_with_tapping_inverted">反转轻触方向</string>
     <string name="no_pinned_sources">你没有已置顶的图源</string>
-    <string name="group_backup_restore">备份和还原</string>
-    <string name="group_downloader">下载</string>
     <string name="channel_complete">完成</string>
     <string name="channel_progress">进度</string>
     <string name="download_notifier_download_finish">下载已完成</string>
@@ -552,9 +547,7 @@
     <string name="pref_category_nsfw_content">NSFW (18+) 图源</string>
     <string name="file_picker_error">未找到文件选择应用</string>
     <string name="myanimelist_relogin">请重新登录 MyAnimeList</string>
-    <string name="pref_label_nsfw_extension">在扩展插件列表中添加标签</string>
-    <string name="pref_show_nsfw_extension">在扩展插件列表中显示</string>
-    <string name="pref_show_nsfw_source">在图源列表中显示</string>
+    <string name="pref_show_nsfw_source">显示在图源和扩展列表中</string>
     <string name="pref_viewer_nav">导航布局</string>
     <string name="edge_nav">边缘样式</string>
     <string name="kindlish_nav">Kindle 样式</string>
@@ -675,5 +668,12 @@
     <string name="getting_started_guide">入门指南</string>
     <string name="pref_tablet_ui_mode">强制平板用户界面</string>
     <string name="pref_remove_exclude_categories">排除的分类</string>
-    <string name="help_translate">帮忙翻译</string>
+    <string name="help_translate">协助翻译</string>
+    <string name="ext_app_info">应用信息</string>
+    <string name="ext_installer_legacy">旧式安装程序</string>
+    <string name="ext_installer_pref">安装程序</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">安装并启动 Shizuku 以将 Shizuku 用作扩展安装程序。</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku 未在运行</string>
+    <string name="ext_install_service_notif">安装扩展中…</string>
+    <string name="action_sort_count">漫画总数</string>
 </resources>

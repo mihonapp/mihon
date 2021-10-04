@@ -457,7 +457,6 @@
     </plurals>
     <string name="channel_ext_updates">Ažuriranja proširenja</string>
     <string name="channel_new_chapters">Ažuriranja poglavlja</string>
-    <string name="channel_library">Biblioteka</string>
     <string name="channel_common">Opće</string>
     <string name="download_notifier_download_paused">Preuzimanje zaustavljeno</string>
     <string name="download_notifier_no_network">Nema mrežne veze</string>
@@ -483,7 +482,6 @@
     <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
     <string name="unofficial_extension_message">Ovo proširenje nije sa službenog popisa Tachiyomi proširenja.</string>
     <string name="ext_unofficial">Neslužbeno</string>
-    <string name="pref_library_update_error_notification">Prikaži obavijesti o greškama pri ažuriranju</string>
     <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom ažuriranja biblioteke</string>
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
     <string name="action_display_unread_badge">Značke za nepročitane</string>
@@ -505,7 +503,6 @@
     <string name="action_start">Pokreni</string>
     <string name="action_disable">Deaktiviraj</string>
     <string name="loader_not_implemented_error">Izvor nije pronađen</string>
-    <string name="action_open_in_settings">Otvori u postavkama</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s poglavlje</item>
         <item quantity="few">%1$s poglavlja</item>
@@ -535,8 +532,6 @@
         <item quantity="other">%d pratilaca</item>
     </plurals>
     <string name="no_pinned_sources">Nemaš označenih izvora</string>
-    <string name="group_backup_restore">Sigurnosna kopija i obnavljanje</string>
-    <string name="group_downloader">Preuzimanja</string>
     <string name="channel_complete">Gotovo</string>
     <string name="channel_progress">Napredak</string>
     <string name="download_notifier_download_finish">Preuzimanje gotovo</string>
@@ -576,8 +571,6 @@
     <string name="pref_category_nsfw_content">Izvori neprikladnog sadržaja (18+)</string>
     <string name="file_picker_error">Nije pronađen nijedan program za biranje datoteka</string>
     <string name="myanimelist_relogin">Ponovo se prijavi na MAL</string>
-    <string name="pref_label_nsfw_extension">Oznaka u popisu proširenja</string>
-    <string name="pref_show_nsfw_extension">Prikaži u popisu proširenja</string>
     <string name="pref_show_nsfw_source">Prikaži u popisu izvora</string>
     <string name="channel_crash_logs">Zapisi rušenja programa</string>
     <string name="track_finished_reading_date">Datum kraja</string>
@@ -686,4 +679,6 @@
     <string name="getting_started_guide">Početni vodič</string>
     <string name="confirm_lock_change">Ovjeri za potvrditi promjenu</string>
     <string name="label_default">Zadano</string>
+    <string name="restore_miui_warning">Spremanje sigurnosne kopije i obnavljanje možda neće ispravno raditi, ako MIUI optimizacija nije aktivirana.</string>
+    <string name="help_translate">Pomogni prevoditi</string>
 </resources>

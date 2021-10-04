@@ -176,11 +176,11 @@
     <string name="action_open_in_web_view">WebViewで開く</string>
     <string name="pref_category_reader">ビューア</string>
     <string name="pref_category_tracking">同期</string>
-    <string name="untrusted_extension_message">これは信頼できない証明書でサインされている拡張のため、有効にしていません。
+    <string name="untrusted_extension_message">これは信頼できない証明書でサインされている拡張機能であるため、有効にされていません。
 \n
-\n悪意のある拡張はTachiyomiに保存されているすべてのログイン情報を読み取ること、または任意のコードを実行することができます。
+\n悪意のある拡張機能はTachiyomiに保存されているすべてのログイン情報を読み取ること、または任意のコードを実行することができます。
 \n
-\nこれらのリスクを受け入れ、この拡張を信頼してもよろしいですか？</string>
+\nこれらのリスクを受け入れ、この拡張機能を信頼してもよろしいですか？</string>
     <string name="pref_lock_orientation">ロックの向き</string>
     <string name="pref_show_page_number">ページ数を表示</string>
     <string name="pref_keep_screen_on">画面を常にON</string>
@@ -294,7 +294,7 @@
     <string name="information_no_downloads">ダウンロードがありません</string>
     <string name="information_no_recent">最近の更新はありません</string>
     <string name="information_no_recent_manga">最近に読んだマンガがありません</string>
-    <string name="information_empty_library">ライブラリは空です。「ブラウズ」から新しいマンガシリーズを追加してください。</string>
+    <string name="information_empty_library">ライブラリは空です</string>
     <string name="information_empty_category">カテゴリーがありません。「+」をタップしてカテゴリーを追加し、ライブラリを整理できます。</string>
     <string name="download_notifier_downloader_title">ダウンロード</string>
     <string name="download_notifier_title_error">エラー</string>
@@ -303,7 +303,6 @@
     <string name="download_notifier_no_network">ネットワーク接続が利用できません</string>
     <string name="download_notifier_download_paused">ダウンロード一時停止済み</string>
     <string name="channel_common">一般設定</string>
-    <string name="channel_library">ライブラリ</string>
     <string name="repeating">読み直している</string>
     <string name="source_not_installed">未インストールのソース：%1$s</string>
     <string name="transition_finished">読み終わりました：</string>
@@ -423,12 +422,11 @@
     <plurals name="num_categories">
         <item quantity="other">%d件のカテゴリー</item>
     </plurals>
-    <string name="pref_library_update_error_notification">更新エラーを通知で表示</string>
     <string name="pref_library_update_refresh_metadata_summary">ライブラリを更新時、新しい表紙と情報を確認します</string>
     <string name="pref_library_update_refresh_metadata">メタデータを自動で更新</string>
     <string name="pref_library_columns">行あたりの項目数</string>
     <string name="pref_category_display">画面</string>
-    <string name="hide_notification_content">通知コンテンツを非表示</string>
+    <string name="hide_notification_content">通知内容を非表示</string>
     <string name="secure_screen_summary">スクリーンショットを無効化し、「最近使ったアプリ」画面にアプリの内容を非表示します</string>
     <string name="pref_confirm_exit">終了時に確認</string>
     <string name="action_move_to_bottom">底に移動</string>
@@ -489,7 +487,6 @@
         <item quantity="other">%1$s章</item>
     </plurals>
     <string name="action_disable">無効化</string>
-    <string name="action_open_in_settings">設定で開く</string>
     <string name="action_start">開始</string>
     <string name="tapping_inverted_both">両方</string>
     <string name="tapping_inverted_vertical">縦</string>
@@ -505,8 +502,6 @@
     <string name="whats_new">更新情報</string>
     <string name="action_download_unread">未読の章をダウンロード</string>
     <string name="pref_category_reading_mode">読み方</string>
-    <string name="group_backup_restore">バックアップと復元</string>
-    <string name="group_downloader">ダウンロード</string>
     <string name="channel_complete">完了</string>
     <string name="channel_progress">プログレス</string>
     <string name="download_notifier_download_finish">ダウンロード完了</string>
@@ -526,7 +521,7 @@
     <string name="ext_nsfw_short">成人向け</string>
     <string name="parental_controls_info">非公式や誤ってフラグ付けされた可能性のある拡張機能の成人向けのコンテンツはこれからも表示される恐れがあります。</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">%d章が欠けています</item>
+        <item quantity="other">%d章が足りていません</item>
     </plurals>
     <string name="no_chapters_error">章が見つかりません</string>
     <string name="chapter_settings_updated">デフォルトの章設定を更新しました</string>
@@ -550,9 +545,7 @@
     <string name="invalid_backup_file_type">無効なバックアップ ファイル：%1$s
 \nファイル拡張子は.proto.gzもしくは.jsonであるよう確認してください。</string>
     <string name="pref_category_nsfw_content">成人向けのソース</string>
-    <string name="pref_label_nsfw_extension">拡張機能リストでマーク</string>
-    <string name="pref_show_nsfw_extension">拡張機能リストに表示</string>
-    <string name="pref_show_nsfw_source">ソースリストに表示</string>
+    <string name="pref_show_nsfw_source">ソース・拡張機能リストに表示</string>
     <string name="file_picker_error">ファイルを選択できるアプリが見つかりません</string>
     <string name="myanimelist_relogin">もう一度MALにログインしてください</string>
     <string name="action_display_show_number_of_items">アイテム数を表示する</string>
@@ -599,7 +592,7 @@
     <string name="information_empty_category_dialog">まだカテゴリを登録していません。</string>
     <string name="update_check_eol">このAndroidはもうサポートされていません</string>
     <string name="error_no_match">結果が見つかりませんでした</string>
-    <string name="source_unsupported">このソースには非対応です</string>
+    <string name="source_unsupported">非対応ソースです</string>
     <string name="unread">未読</string>
     <string name="error_sharing_cover">表紙を共有できませんでした</string>
     <string name="error_saving_cover">表紙を保存できませんでした</string>
@@ -639,7 +632,7 @@
     <string name="theme_strawberrydaiquiri">ストロベリーダイキリ</string>
     <string name="theme_midnightdusk">黄昏</string>
     <string name="theme_greenapple">青りんご</string>
-    <string name="theme_blue">青い</string>
+    <string name="theme_blue">レガシーブルー</string>
     <string name="pref_app_theme">アプリテーマ</string>
     <string name="action_start_downloading_now">ダウンロードを開始します</string>
     <string name="notification_updating">ライブラリを更新中... (%1$d/%2$d)</string>
@@ -648,7 +641,7 @@
     <string name="tracker_komga_warning">このトラッカーはKomgaにのみ対応します。</string>
     <string name="about_dont_kill_my_app">一部のスマホメーカーはバックアップグラウンドサービスを終了する追加のアプリ制限を施しています。修正する方法についてはこのWebサイトをご覧ください。</string>
     <string name="label_background_activity">バックアップアクティビティ</string>
-    <string name="restore_miui_warning">MIUI最適化が無効な時、バックアップ及び復元は正常に機能しない場合があります。</string>
+    <string name="restore_miui_warning">MIUI最適化が有効な場合はバックアップ・復元が正常に機能しない恐れがあります。</string>
     <string name="pref_lowest">最低</string>
     <string name="pref_low">低い</string>
     <string name="pref_high">高い</string>
@@ -662,4 +655,19 @@
     </plurals>
     <string name="relative_time_today">今日</string>
     <string name="recently">最近</string>
+    <string name="help_translate">翻訳に協力</string>
+    <string name="getting_started_guide">入門ガイド</string>
+    <string name="pref_tablet_ui_mode">タブレットUIを常に使用</string>
+    <string name="action_track">追跡</string>
+    <string name="pref_remove_exclude_categories">除外されるカテゴリー</string>
+    <string name="pref_hide_threshold">メニューを自動で非表示する時のスクロール感度</string>
+    <string name="pref_category_timestamps">タイムスタンプ</string>
+    <string name="pref_category_navigation">ナビゲーション</string>
+    <string name="theme_tealturquoise">青緑&amp;トルコ石</string>
+    <string name="pref_category_appearance">外観</string>
+    <string name="confirm_lock_change">認証を行って変更を確認してください</string>
+    <string name="label_default">既定</string>
+    <string name="ext_installer_legacy">レガシー</string>
+    <string name="ext_installer_pref">インストーラ</string>
+    <string name="ext_app_info">アプリの情報</string>
 </resources>

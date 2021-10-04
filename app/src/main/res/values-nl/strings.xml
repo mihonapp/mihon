@@ -192,7 +192,7 @@
     <string name="description_cover">Omslag van de manga</string>
     <string name="information_no_downloads">Geen downloads</string>
     <string name="information_no_recent">Geen recente updates</string>
-    <string name="information_empty_library">Je bibliotheek is leeg. Voeg series toe aan je bibliotheek via Bladeren.</string>
+    <string name="information_empty_library">Je bibliotheek is leeg</string>
     <string name="information_empty_category">Er zijn nog geen categorieën. Druk op de plus-knop om er een aan te maken.</string>
     <string name="download_notifier_downloader_title">Downloader</string>
     <string name="download_notifier_title_error">Fout</string>
@@ -261,7 +261,6 @@
     <string name="other_source">Anders</string>
     <string name="action_global_search_hint">Globaal zoeken…</string>
     <string name="latest">Nieuwste</string>
-    <string name="channel_library">Bibliotheek</string>
     <string name="browse">Bladeren</string>
     <string name="channel_common">Algemeen</string>
     <string name="label_migration">Migreren</string>
@@ -487,7 +486,6 @@
     <string name="source_not_found_name">Bron niet gevonden: %1$s</string>
     <string name="pref_show_reading_mode_summary">Laat huidige modus kort zien als lezer geopend wordt</string>
     <string name="pref_show_reading_mode">Toon leesmodus</string>
-    <string name="pref_library_update_error_notification">Geef updatefoutmeldingen weer</string>
     <string name="pref_library_update_refresh_metadata">Metadata automatisch bijwerken</string>
     <string name="action_disable">Uitzetten</string>
     <string name="action_display_show_tabs">Toon categorietabbladen</string>
@@ -500,7 +498,6 @@
         <item quantity="one">1 hoofdstuk</item>
         <item quantity="other">%1$s hoofdstukken</item>
     </plurals>
-    <string name="action_open_in_settings">In Instellingen openen</string>
     <string name="requires_app_restart">Herstart van de app nodig om van kracht te worden</string>
     <string name="label_network">Netwerk</string>
     <string name="pref_jump_to_chapters">Ga naar de hoofdstukken bij openen</string>
@@ -524,8 +521,6 @@
         <item quantity="other">%d trackers</item>
     </plurals>
     <string name="no_pinned_sources">Je hebt geen vastgepinde bronnen</string>
-    <string name="group_backup_restore">Back-up en herstel</string>
-    <string name="group_downloader">Downloads</string>
     <string name="channel_complete">Voltooid</string>
     <string name="channel_progress">Voortgang</string>
     <string name="download_notifier_download_finish">Download voltooid</string>
@@ -564,9 +559,7 @@
     <string name="pref_category_nsfw_content">NSFW-bronnen (18+)</string>
     <string name="file_picker_error">Geen bestandskiezer-app gevonden</string>
     <string name="myanimelist_relogin">Log alstublieft opnieuw in op MAL</string>
-    <string name="pref_label_nsfw_extension">Markeren in extensielijst</string>
-    <string name="pref_show_nsfw_extension">Weergeven in extensielijst</string>
-    <string name="pref_show_nsfw_source">Weergeven in bronnenlijst</string>
+    <string name="pref_show_nsfw_source">Weergeven in bronnen- en extensielijst</string>
     <string name="pref_viewer_nav">Navigatie-indeling</string>
     <string name="edge_nav">Rand</string>
     <string name="kindlish_nav">Kindle-achtig</string>
@@ -648,7 +641,7 @@
     <string name="action_sort_next_updated">Volgende verwachte update</string>
     <string name="notification_updating">Bibliotheek updaten... (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Sommige fabrikanten hebben extra beperkingen op apps die achtergronddiensten uitschakelen. Informatie over hoe je dit kan oplossen kan je vinden op de deze website.</string>
-    <string name="restore_miui_warning">Back-uppen en terugzetten werken mogelijk niet goed wanneer MIUI-optimalisatie is uitgeschakeld.</string>
+    <string name="restore_miui_warning">Backup/herstellen werkt waarschijnlijk niet goed als de MIUI Optimalisatie is uitgeschakeld.</string>
     <string name="pref_dark_theme_pure_black">Puur-zwarte donkere modus</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin &amp; Yang</string>
@@ -656,10 +649,38 @@
     <string name="theme_strawberrydaiquiri">Aardbeien Daiquiri</string>
     <string name="theme_midnightdusk">Nachtschemering</string>
     <string name="theme_greenapple">Groene Appel</string>
-    <string name="theme_blue">Blauw</string>
+    <string name="theme_blue">Legacy Blauw</string>
     <string name="pref_app_theme">Appthema</string>
     <string name="tracker_komga_warning">Deze tracker werkt alleen met de Komga-bron.</string>
     <string name="enhanced_tracking_info">Diensten die uitgebreidere functionaliteit bieden voor bepaalde bronnen. Het tracken van manga gebeurt automatisch wanneer je deze toevoegt aan je bibliotheek.</string>
     <string name="enhanced_services">Verbeterde diensten</string>
     <string name="theme_monet">Dynamisch</string>
+    <string name="getting_started_guide">Gids voor beginners</string>
+    <string name="help_translate">Help met vertalen</string>
+    <string name="pref_tablet_ui_mode">Forceer tablet UI</string>
+    <string name="label_background_activity">Achtergrond activiteit</string>
+    <string name="action_track">Volg</string>
+    <string name="pref_remove_exclude_categories">Uitgesloten categoriën</string>
+    <string name="pref_lowest">Laagste</string>
+    <string name="pref_low">Laag</string>
+    <string name="pref_high">Hoog</string>
+    <string name="pref_highest">Hoogste</string>
+    <string name="pref_hide_threshold">Menu automatisch verbergen bij scrollgevoeligheid</string>
+    <string name="pref_inverted_colors">Omgekeerd</string>
+    <plurals name="relative_time">
+        <item quantity="one">Gisteren</item>
+        <item quantity="other">%1$d dagen geleden</item>
+    </plurals>
+    <string name="relative_time_today">Vandaag</string>
+    <string name="recently">Recent</string>
+    <string name="pref_relative_time_long">Lang (Kort+, n dagen geleden)</string>
+    <string name="pref_relative_time_short">Kort (vandaag, gisteren)</string>
+    <string name="pref_relative_format">Relatieve tijdstempel</string>
+    <string name="pref_category_timestamps">Tijdstempel</string>
+    <string name="pref_category_navigation">Navigatie</string>
+    <string name="theme_tealturquoise">Blauwgroen &amp; Turkoois</string>
+    <string name="pref_category_appearance">Uiterlijk</string>
+    <string name="confirm_lock_change">Authenticeer om de wijziging te bevestigen</string>
+    <string name="label_default">Standaard</string>
+    <string name="ext_app_info">App-informatie</string>
 </resources>

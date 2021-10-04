@@ -314,7 +314,6 @@
     <string name="download_notifier_no_network">Δεν υπάρχει διαθέσιμη σύνδεση δικτύου</string>
     <string name="download_notifier_download_paused">Λήψη σε παύση</string>
     <string name="channel_common">Κοινό</string>
-    <string name="channel_library">Βιβλιοθήκη</string>
     <string name="pref_read_with_long_tap">Εμφάνιση με παρατεταμένο πάτημα</string>
     <string name="action_open_in_web_view">Άνοιγμα στο WebView</string>
     <string name="pref_true_color">Χρώμα 32-bit</string>
@@ -480,7 +479,6 @@
     <string name="invalid_backup_file">Μη έγκυρο αρχείο αντιγράφου ασφαλείας</string>
     <string name="tracker_not_logged_in">Δεν έχετε συνδεθεί: %1$s</string>
     <string name="source_not_found_name">Η πηγή δεν βρέθηκε: %1$s</string>
-    <string name="pref_library_update_error_notification">Εμφάνιση ειδοποιήσεων για σφάλματα ενημέρωσης</string>
     <string name="pref_library_update_refresh_metadata_summary">Έλεγχος για νέο εξώφυλλο και λεπτομέρειες κατά την ενημέρωση της βιβλιοθήκης</string>
     <string name="pref_library_update_refresh_metadata">Αυτόματη ανανέωση μεταδεδομένων</string>
     <string name="action_migrate">Μεταφορά</string>
@@ -500,7 +498,6 @@
         <item quantity="one">1 κεφάλαιο</item>
         <item quantity="other">%1$s κεφάλαια</item>
     </plurals>
-    <string name="action_open_in_settings">Άνοιγμα στις Ρυθμίσεις</string>
     <string name="requires_app_restart">Απαιτείται επανεκκίνηση της εφαρμογής για να τεθεί σε ισχύ</string>
     <string name="label_network">Δίκτυο</string>
     <string name="pref_jump_to_chapters">Μετάβαση στα κεφάλαια κατά το άνοιγμα</string>
@@ -524,8 +521,6 @@
         <item quantity="other">%d trackers</item>
     </plurals>
     <string name="no_pinned_sources">Δεν έχετε καρφιτσωμένες πηγές</string>
-    <string name="group_backup_restore">Δημιουργία αντιγράφων ασφαλείας και επαναφορά</string>
-    <string name="group_downloader">Λήψεις</string>
     <string name="channel_complete">Ολοκληρωμένο</string>
     <string name="channel_progress">Η λήψη ολοκληρώθηκε</string>
     <string name="download_notifier_download_finish">Η λήψη ολοκληρώθηκε</string>
@@ -562,9 +557,7 @@
     <string name="invalid_backup_file_type">Μη έγκυρος τύπος αρχείου αντιγράφου ασφαλείας: %1$s
 \nΘα πρέπει να τελειώνει με .proto.gz ή .json.</string>
     <string name="pref_category_nsfw_content">Πηγές NSFW (18+)</string>
-    <string name="pref_label_nsfw_extension">Ετικέτα στη λίστα επεκτάσεων</string>
-    <string name="pref_show_nsfw_extension">Εμφάνιση στη λίστα επεκτάσεων</string>
-    <string name="pref_show_nsfw_source">Εμφάνιση στη λίστα πηγών</string>
+    <string name="pref_show_nsfw_source">Εμφάνιση στις λίστες πηγών και επεκτάσεων</string>
     <string name="file_picker_error">Δεν βρέθηκε εφαρμογή επιλογής αρχείων</string>
     <string name="myanimelist_relogin">Συνδεθείτε ξανά στο MAL</string>
     <string name="pref_viewer_nav">Διάταξη πλοήγησης</string>
@@ -689,4 +682,11 @@
     <string name="pref_tablet_ui_mode">Επιβολή περιβάλλοντος εργασίας tablet</string>
     <string name="pref_remove_exclude_categories">Εξαιρούμενες κατηγορίες</string>
     <string name="help_translate">Βοηθήστε στη μετάφραση</string>
+    <string name="ext_app_info">Πληροφορίες εφαρμογής</string>
+    <string name="ext_installer_pref">Εγκαταστάτης</string>
+    <string name="ext_install_service_notif">Εγκατάσταση επέκτασης…</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Εγκαταστήστε και ξεκινήστε το Shizuku για να χρησιμοποιήσετε το Shizuku ως πρόγραμμα εγκατάστασης επεκτάσεων.</string>
+    <string name="ext_installer_shizuku_stopped">Το Shizuku δεν τρέχει</string>
+    <string name="ext_installer_legacy">Παλαιό</string>
+    <string name="action_sort_count">Σύνολο manga</string>
 </resources>

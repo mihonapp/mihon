@@ -29,7 +29,6 @@
     </plurals>
     <string name="default_category_summary">ሁል ጊዜም ይጠይቁ</string>
     <string name="default_category">ነባሪ ምድብ</string>
-    <string name="pref_library_update_error_notification">የዝማኔ ስህተቶችን ማሳወቂያዎችን አሳይ</string>
     <string name="pref_library_update_refresh_metadata_summary">ቤተ-መጽሐፍትን ሲያዘምኑ አዲስ ሽፋን እና ዝርዝሮችን ይፈልጉ</string>
     <string name="pref_library_update_refresh_metadata">ዲበ ውሂብን በራስ-ሰር አድስ</string>
     <string name="pref_update_only_non_completed">ቀጣይ ማንጋን ብቻ ያዘምኑ</string>
@@ -112,7 +111,6 @@
     <string name="action_display">ማሳያ</string>
     <string name="action_display_mode">የማሳያ ሁነታ</string>
     <string name="action_migrate">ፍልሰት</string>
-    <string name="action_open_in_settings">በቅንብሮች ውስጥ ይክፈቱ</string>
     <string name="action_open_in_web_view">በድር እይታ ውስጥ ክፈት</string>
     <string name="action_open_in_browser">በአሳሽ ውስጥ ክፈት</string>
     <string name="action_resume">የራስ መግለጫ</string>
@@ -273,9 +271,6 @@
     <string name="pref_read_with_tapping_inverted">ተገልብጦ መታ ማድረግ</string>
     <string name="channel_ext_updates">የቅጥያ ዝመናዎች</string>
     <string name="channel_new_chapters">የምዕራፍ ዝመናዎች</string>
-    <string name="group_backup_restore">ምትኬ እና እነበረበት መልስ</string>
-    <string name="group_downloader">ውርዶች</string>
-    <string name="channel_library">ቤተ መጻሕፍት</string>
     <string name="channel_errors">ስህተቶች</string>
     <string name="channel_complete">ተጠናቀቀ</string>
     <string name="channel_progress">እድገት</string>

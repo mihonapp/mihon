@@ -2,12 +2,12 @@
 <resources>
     <string name="name">Nome</string>
     <string name="categories">Categorias</string>
-    <string name="manga">Mangá</string>
+    <string name="manga">Mangás</string>
     <string name="chapters">Capítulos</string>
     <string name="track">Monitoramento</string>
     <string name="history">Histórico</string>
     <string name="label_settings">Configurações</string>
-    <string name="label_download_queue">Fila de download</string>
+    <string name="label_download_queue">Fila de downloads</string>
     <string name="label_library">Biblioteca</string>
     <string name="label_recent_manga">Histórico</string>
     <string name="label_recent_updates">Atualizações</string>
@@ -260,7 +260,6 @@
     <string name="latest">Recentes</string>
     <string name="browse">Navegar</string>
     <string name="channel_common">Comum</string>
-    <string name="channel_library">Biblioteca</string>
     <string name="action_display_download_badge">Selos de disponível offline</string>
     <string name="local_source_badge">Local</string>
     <string name="information_empty_category">Você ainda não tem nenhuma categoria. Toque no botão Adicionar para criar uma e organizar a sua biblioteca.</string>
@@ -313,8 +312,8 @@
     <string name="transition_previous">Anterior:</string>
     <string name="transition_no_next">Não há próximo capítulo</string>
     <string name="transition_no_previous">Não há capítulo anterior</string>
-    <string name="transition_pages_loading">Carregando páginas…</string>
-    <string name="transition_pages_error">Falha ao carregar páginas: %1$s</string>
+    <string name="transition_pages_loading">Carregando as páginas…</string>
+    <string name="transition_pages_error">Falha ao carregar as páginas: %1$s</string>
     <string name="pref_read_with_long_tap">Mostrar ao toque longo</string>
     <string name="action_open_in_web_view">Abrir na WebView</string>
     <string name="pref_true_color">Cor de 32 bits</string>
@@ -354,7 +353,7 @@
     <string name="theme_system">Seguir o sistema</string>
     <string name="pref_manage_notifications">Gerenciar notificações</string>
     <string name="pref_category_security">Segurança</string>
-    <string name="lock_with_biometrics">Requer desbloqueio</string>
+    <string name="lock_with_biometrics">Exigir desbloqueio</string>
     <string name="lock_when_idle">Bloquear quando ocioso</string>
     <string name="lock_always">Sempre</string>
     <string name="lock_never">Nunca</string>
@@ -480,7 +479,6 @@
     <string name="invalid_backup_file">Arquivo de backup inválido</string>
     <string name="tracker_not_logged_in">Login não realizado: %1$s</string>
     <string name="source_not_found_name">Fonte não encontrada: %1$s</string>
-    <string name="pref_library_update_error_notification">Mostrar as notificações de erros de atualização</string>
     <string name="pref_library_update_refresh_metadata_summary">Verifica por novas capas e detalhes durante a atualização da biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Atualizar os metadados automaticamente</string>
     <string name="action_migrate">Migrar</string>
@@ -500,7 +498,6 @@
         <item quantity="one">1 capítulo</item>
         <item quantity="other">%1$s capítulos</item>
     </plurals>
-    <string name="action_open_in_settings">Abrir nas Configurações</string>
     <string name="requires_app_restart">Requer o reinício do aplicativo para ter efeito</string>
     <string name="label_network">Rede</string>
     <string name="pref_jump_to_chapters">Pular para os capítulos ao abrir</string>
@@ -523,11 +520,9 @@
         <item quantity="one">1 monitorador</item>
         <item quantity="other">%d monitoradores</item>
     </plurals>
-    <string name="no_pinned_sources">Você não tem nenhuma fonte fixada</string>
+    <string name="no_pinned_sources">Você não tem fontes fixadas</string>
     <string name="download_notifier_download_finish">Download concluído</string>
     <string name="channel_progress">Andamento</string>
-    <string name="group_backup_restore">Backup e restauração</string>
-    <string name="group_downloader">Downloads</string>
     <string name="channel_complete">Concluído</string>
     <string name="channel_errors">Erros</string>
     <string name="backup_restore_missing_trackers">Monitoradores sem login realizado:</string>
@@ -547,7 +542,7 @@
     <string name="confirm_set_chapter_settings">Você tem certeza que quer salvar como padrão essas configurações\?</string>
     <string name="chapter_settings">Configurações de capítulo</string>
     <string name="share_page_info">%1$s: %2$s, página %3$d</string>
-    <string name="action_search_settings">Pesquisar configurações</string>
+    <string name="action_search_settings">Pesquisar nas configurações</string>
     <string name="manga_from_library">Mangás da biblioteca</string>
     <string name="downloaded_chapters">Capítulos disponíveis offline</string>
     <string name="pref_hide_bottom_bar_on_scroll">Ocultar a barra inferior durante a rolagem</string>
@@ -562,9 +557,7 @@
     <string name="invalid_backup_file_type">Tipo de arquivo de backup inválido: %1$s
 \nO arquivo deve terminar com .proto.gz ou .json.</string>
     <string name="pref_category_nsfw_content">Fontes NSFW (+18)</string>
-    <string name="pref_label_nsfw_extension">Rotular na lista de extensões</string>
-    <string name="pref_show_nsfw_extension">Mostrar na lista de extensões</string>
-    <string name="pref_show_nsfw_source">Mostrar na lista de fontes</string>
+    <string name="pref_show_nsfw_source">Mostrar na lista de fontes e extensões</string>
     <string name="file_picker_error">Nenhum aplicativo de seleção de arquivos encontrado</string>
     <string name="myanimelist_relogin">Por favor, faça login no MAL novamente</string>
     <string name="edge_nav">Borda</string>
@@ -606,7 +599,7 @@
     <string name="action_sort_chapter_fetch_date">Data de busca</string>
     <string name="pref_library_update_categories_details">Os mangás nas categorias excluídas não serão atualizados mesmo que eles também estejam nas categorias incluídas.</string>
     <string name="pref_download_new_categories_details">Os mangás nas categorias excluídas não serão disponibilizados offline mesmo que eles também estejam nas categorias incluídas.</string>
-    <string name="pref_category_auto_download">Disponibilizar offline automaticamente</string>
+    <string name="pref_category_auto_download">Download automático</string>
     <string name="action_show_errors">Mostrar erros</string>
     <string name="update_check_eol">Esta versão do Android não é mais suportada</string>
     <string name="clipboard_copy_error">Erro ao copiar para a área de transferência</string>
@@ -643,20 +636,20 @@
     <string name="pref_side_nav_icon_alignment">Alinhamento dos ícones de navegação lateral</string>
     <string name="categorized_display_settings">Configurações por categoria para ordenação e visualização</string>
     <string name="tracking_guide">Guia sobre o monitoramento</string>
-    <string name="information_empty_category_dialog">Você não tem nenhuma categoria ainda.</string>
+    <string name="information_empty_category_dialog">Você não tem categorias ainda.</string>
     <string name="action_start_downloading_now">Começar o download agora</string>
     <string name="action_sort_next_updated">Próxima atualização prevista</string>
     <string name="notification_updating">Atualizando a biblioteca... (%1$d/%2$d)</string>
-    <string name="about_dont_kill_my_app">Algumas fabricantes possuem restrições adicionais de aplicativos que matam os serviços em segundo plano. Este site possui mais informações sobre como corrigir.</string>
+    <string name="about_dont_kill_my_app">Algumas fabricantes possuem restrições adicionais de aplicativos que encerram os serviços em segundo plano. Este site possui mais informações sobre como corrigir este problema.</string>
     <string name="restore_miui_warning">O backup e restauração podem não funcionar corretamente se a Otimização da MIUI estiver desabilitada.</string>
-    <string name="pref_dark_theme_pure_black">Modo noturno com preto puro</string>
+    <string name="pref_dark_theme_pure_black">Modo noturno com preto absoluto</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin &amp; Yang</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Daiquiri de Morango</string>
     <string name="theme_midnightdusk">Aurora-da-noite</string>
     <string name="theme_greenapple">Maçã-verde</string>
-    <string name="theme_blue">Azul Antigo</string>
+    <string name="theme_blue">Azul Legado</string>
     <string name="pref_app_theme">Tema do aplicativo</string>
     <string name="enhanced_tracking_info">Serviços que oferecem recursos aprimorados para fontes específicas. Os mangás são automaticamente monitorados quando adicionados em sua biblioteca.</string>
     <string name="enhanced_services">Serviços aprimorados</string>
@@ -689,4 +682,13 @@
     <string name="pref_tablet_ui_mode">Forçar a interface de tablet</string>
     <string name="pref_remove_exclude_categories">Categorias ignoradas</string>
     <string name="help_translate">Ajudar a traduzir</string>
+    <string name="ext_app_info">Informações do aplicativo</string>
+    <string name="ext_installer_shizuku_stopped">O Shizuku não está em execução</string>
+    <string name="ext_installer_shizuku">Shizuku</string>
+    <string name="ext_installer_packageinstaller">PackageInstaller</string>
+    <string name="ext_installer_legacy">Legado</string>
+    <string name="ext_installer_pref">Instalador</string>
+    <string name="ext_install_service_notif">Instalando a extensão…</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Instale e inicie o Shizuku para utilizá-lo como o instalador de extensões.</string>
+    <string name="action_sort_count">Total de mangás</string>
 </resources>

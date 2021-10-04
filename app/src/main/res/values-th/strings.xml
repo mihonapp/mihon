@@ -9,7 +9,7 @@
     <string name="label_settings">ตั้งค่า</string>
     <string name="label_download_queue">คิวดาวน์โหลด</string>
     <string name="label_library">คลัง</string>
-    <string name="label_backup">การสำรองข้อมูล</string>
+    <string name="label_backup">การสำรองข้อมูลและเรียกคืน</string>
     <string name="label_extensions">ส่วนขยาย</string>
     <string name="label_extension_info">ข้อมูลส่วนขยาย</string>
     <string name="action_settings">ตั้งค่า</string>
@@ -316,7 +316,7 @@
     <string name="information_no_downloads">ไม่มีการดาวน์โหลด</string>
     <string name="information_no_recent">ไม่มีอัพเดท</string>
     <string name="information_no_recent_manga">ไม่มีอะไรที่เพิ่งอ่าน</string>
-    <string name="information_empty_library">คลังของคุณว่างเปล่า เพิ่มชุดข้อมูลลงในคลังของคุณ</string>
+    <string name="information_empty_library">คลังของคุณว่างเปล่า</string>
     <string name="information_empty_category">คุณไม่มีหมวดหมู่ กดปุ่มบวกเพื่อเพิ่มหมวดหมู่สำหรับการจัดระเบียบคลังของคุณ</string>
     <string name="download_notifier_downloader_title">การดาวน์โหลด</string>
     <string name="download_notifier_title_error">เกิดข้อผิดพลาด</string>
@@ -325,7 +325,6 @@
     <string name="download_notifier_no_network">ไม่มีการเชื่อมต่อเครือข่าย</string>
     <string name="download_notifier_download_paused">ดาวน์โหลดหยุดชั่วคราว</string>
     <string name="channel_common">สามัญ</string>
-    <string name="channel_library">คลัง</string>
     <string name="filter_mode_multiply">คูณ</string>
     <string name="filter_mode_darken">เผา / มืด</string>
     <string name="migration_selection_prompt">เลือกแหล่งข้อมูลที่จะย้ายจาก</string>
@@ -374,7 +373,6 @@
     <plurals name="num_categories">
         <item quantity="other">หมวดหมู่ %d</item>
     </plurals>
-    <string name="pref_library_update_error_notification">แสดงการแจ้งเตือนข้อผิดพลาดในการอัพเดต</string>
     <string name="pref_library_update_refresh_metadata_summary">ตรวจสอบหน้าปกและรายละเอียดใหม่เมื่ออัปเดตคลัง</string>
     <string name="pref_library_update_refresh_metadata">รีเฟรชเมทาดาทาโดยอัตโนมัติ</string>
     <string name="network_unmetered">เครือข่ายที่ไม่มีการวัด</string>
@@ -384,8 +382,6 @@
     <string name="pref_jump_to_chapters">ไปที่ตอนเมื่อเปิด</string>
     <string name="pref_category_display">การแสดงผล</string>
     <string name="parental_controls_info">สิ่งนี้ไม่ได้ป้องกันไม่ให้ส่วนขยายที่ไม่เป็นทางการหรืออาจถูกตั้งค่าสถานะไม่ถูกต้องจากการแสดงเนื้อหา NSFW (18+) ภายในแอป</string>
-    <string name="pref_label_nsfw_extension">ป้ายกำกับในรายการส่วนขยาย</string>
-    <string name="pref_show_nsfw_extension">แสดงในรายการส่วนขยาย</string>
     <string name="pref_show_nsfw_source">แสดงในรายการแหล่งข้อมูล</string>
     <string name="pref_category_nsfw_content">แหล่ง NSFW (18+)</string>
     <string name="hide_notification_content">ซ่อนเนื้อหาการแจ้งเตือน</string>
@@ -432,7 +428,6 @@
     <string name="action_display_unread_badge">ป้ายยังไม่ได้อ่าน</string>
     <string name="action_display_comfortable_grid">ตารางแบบเพียงพอ</string>
     <string name="action_migrate">เคลื่อนย้าย</string>
-    <string name="action_open_in_settings">เปิดในการตั้งค่า</string>
     <string name="action_start">เริ่ม</string>
     <string name="action_view_chapters">ดูตอน</string>
     <string name="action_disable_all">ปิดใช้งานทั้งหมด</string>
@@ -594,8 +589,6 @@
     <string name="channel_crash_logs">บันทึกข้อขัดข้อง</string>
     <string name="channel_ext_updates">การอัปเดตส่วนขยาย</string>
     <string name="channel_new_chapters">การอัปเดตตอน</string>
-    <string name="group_backup_restore">สำรองและเรียกคืน</string>
-    <string name="group_downloader">ดาวน์โหลด</string>
     <string name="channel_errors">ข้อผิดพลาด</string>
     <string name="channel_complete">เสร็จสมบูรณ์</string>
     <string name="channel_progress">ความคืบหน้า</string>
@@ -607,4 +600,5 @@
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">มี %d การอัปเดตส่วนขยาย</item>
     </plurals>
+    <string name="information_empty_category_dialog">คุณยังไม่มีหมวดหมู่</string>
 </resources>

@@ -171,7 +171,6 @@
     <string name="download_notifier_text_only_wifi">WiFi připojení není dostupné</string>
     <string name="download_notifier_no_network">Síťové připojení není dostupné</string>
     <string name="download_notifier_download_paused">Stahování pozastaveno</string>
-    <string name="channel_library">Knihovna</string>
     <string name="label_download_queue">Stahovací fronta</string>
     <string name="name">Název</string>
     <string name="track">Sledování</string>
@@ -473,8 +472,7 @@
     <string name="update_8hour">Každých 8 hodin</string>
     <string name="update_4hour">Každé 4 hodiny</string>
     <string name="parental_controls_info">Toto nastavení nemůže zamezit neoficiálním nebo špatně označeným rozšířením v zobrazování NSFW (18+) obsahu v aplikaci.</string>
-    <string name="pref_show_nsfw_extension">Zobrazovat v seznamu rozšíření</string>
-    <string name="pref_show_nsfw_source">Zobrazovat v seznamu zdrojů</string>
+    <string name="pref_show_nsfw_source">Zobrazovat v seznamu zdrojů a rozšíření</string>
     <string name="pref_category_nsfw_content">NSFW (18+) zdroje</string>
     <string name="secure_screen_summary">Skrýt obsah aplikace při přepínání aplikací a blokovat tvorbu snímků obrazovky</string>
     <string name="secure_screen">Chráněná obrazovka</string>
@@ -494,13 +492,10 @@
     <string name="action_pin">Připnout</string>
     <string name="action_disable">Zakázat</string>
     <string name="action_display_show_number_of_items">Zobrazovat počet položek</string>
-    <string name="action_open_in_settings">Otevřít v Nastavení</string>
     <string name="action_start">Začít</string>
     <string name="channel_crash_logs">Záznamy o pádech</string>
     <string name="channel_ext_updates">Aktualizace rozšíření</string>
     <string name="channel_new_chapters">Aktualizace kapitol</string>
-    <string name="group_backup_restore">Záloha a obnova</string>
-    <string name="group_downloader">Stažené</string>
     <string name="channel_errors">Chyby</string>
     <string name="channel_complete">Dokončeno</string>
     <string name="channel_progress">Postup</string>
@@ -557,9 +552,7 @@
     <string name="track_started_reading_date">Datum zahájení čtení</string>
     <string name="pref_always_show_chapter_transition">Vždy zobrazovat přechod mezi kapitolami</string>
     <string name="kindlish_nav">Podobné Kindlu</string>
-    <string name="pref_library_update_error_notification">Zobrazovat oznámení o chybách aktualizace</string>
     <string name="pref_jump_to_chapters">Při otevření přejít na kapitoly</string>
-    <string name="pref_label_nsfw_extension">Štítek v seznamu rozšíření</string>
     <string name="pref_hide_bottom_bar_on_scroll">Skrýt spodní lištu při projíždění</string>
     <string name="action_move_to_bottom">Přesunout dolů</string>
     <string name="action_cancel_all">Zrušit vše</string>
@@ -668,7 +661,7 @@
     <string name="theme_strawberrydaiquiri">Jahodové Daiquiri</string>
     <string name="theme_midnightdusk">Půlnoční Soumrak</string>
     <string name="theme_greenapple">Zelené Jablko</string>
-    <string name="theme_blue">Modrý</string>
+    <string name="theme_blue">Starší Modrý</string>
     <string name="theme_monet">Dynamické</string>
     <string name="pref_app_theme">Motiv aplikace</string>
     <string name="action_sort_next_updated">Další očekávaný aktualizace</string>
@@ -698,4 +691,10 @@
     <string name="label_default">Výchozí</string>
     <string name="help_translate">Pomozte s překladem</string>
     <string name="pref_remove_exclude_categories">Vyloučené kategorie</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Nainstalujte a spusťte Shizuku, abyste jej mohli používat jako instalátor rozšíření.</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku neběží</string>
+    <string name="ext_installer_legacy">Původní</string>
+    <string name="ext_installer_pref">Instalátor</string>
+    <string name="ext_install_service_notif">Instaluji rozšíření…</string>
+    <string name="ext_app_info">Info o Aplikaci</string>
 </resources>

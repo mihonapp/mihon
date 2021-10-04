@@ -263,7 +263,6 @@
     <string name="download_notifier_no_network">কোন নেটওয়ার্ক সংযোগ খুঁজে পাওয়া যায়নি</string>
     <string name="download_notifier_download_paused">ডাউনলোড বিরতি</string>
     <string name="channel_common">সাধারণ</string>
-    <string name="channel_library">সংগ্রহশালা</string>
     <string name="label_migration">স্থানান্তর করুন</string>
     <string name="label_extensions">এক্সটেনশন গুলো</string>
     <string name="label_extension_info">এক্সটেনশনের বিবরন</string>
@@ -379,7 +378,6 @@
     <string name="action_display_unread_badge">অপঠিত চিহ্ন</string>
     <string name="action_display_comfortable_grid">আরামপ্রদ গ্রিড</string>
     <string name="action_migrate">স্থানান্তর করুন</string>
-    <string name="action_open_in_settings">সেটিংসে খুলুন</string>
     <string name="action_start">শুরু করুন</string>
     <string name="action_view_chapters">অধ্যায়গুলি দেখুন</string>
     <string name="action_disable_all">সব অক্ষম করুন</string>
@@ -433,7 +431,6 @@
     <string name="unofficial_extension_message">এক্সটেনশনটি তাচিওমির অনুমোদিত এক্সটেনশন তালিকায় নেই।</string>
     <string name="ext_unofficial">অনুমোদনহীন</string>
     <string name="ext_updates_pending">অনিষ্পন্ন হালনাগাদ</string>
-    <string name="pref_library_update_error_notification">হালনাগাদের ত্রুটিগুলোর বিজ্ঞপ্তি দেখান</string>
     <string name="pref_library_update_refresh_metadata_summary">সংগ্রহশালা হালনাগেদের সময় নতুন মোড়ক এবং বর্ণনা খুঁজুন</string>
     <string name="pref_jump_to_chapters">খোলার পর অধ্যায়ে যান</string>
     <plurals name="notification_chapters_multiple_and_more">
@@ -462,8 +459,6 @@
     <string name="pref_read_with_tapping_inverted">উল্টানো ট্যাপিং</string>
     <string name="channel_ext_updates">এক্সটেনশনের হালনাগাদগুলো</string>
     <string name="channel_new_chapters">অধ্যায়ের হালনাগাদগুলো</string>
-    <string name="group_backup_restore">ব্যাকআপ এবং পুনঃস্থাপন</string>
-    <string name="group_downloader">ডাউনলোডগুলি</string>
     <string name="channel_errors">ত্রুটিসমূহ</string>
     <string name="channel_complete">সম্পূর্ণ</string>
     <string name="channel_progress">অগ্রগতি</string>
@@ -556,8 +551,6 @@
     <string name="pref_disable_battery_optimization_summary">পিছেনে লাইব্রেরী হালনাগাদ ও ব্যাকআপে সাহায্য করে</string>
     <string name="pref_disable_battery_optimization">ব্যাটারি অপ্টিমাইজেশন অক্ষম করুন</string>
     <string name="tracking_info">ট্র্যাকিং সার্ভিসে অধ্যায়ের অগ্রগতি হালনাগাদের একমুখী পথ। স্বতন্ত্র মাঙ্গার ট্র্যকিং সেটাপের জন্য তাদের নিজস্ব ট্র্যাকিং বাটন ব্যবহার করুন।</string>
-    <string name="pref_label_nsfw_extension">এক্সটেনশন গুলোর তালিকায় লেবেল করুন</string>
-    <string name="pref_show_nsfw_extension">এক্সটেনশন গুলোর তালিকায় প্রদর্শন করুন</string>
     <string name="pref_show_nsfw_source">উৎস তালিকায় প্রদর্শন করুন</string>
     <string name="pref_category_nsfw_content">প্রাপ্তবয়স্কদের জন্য (18+) উৎস</string>
     <string name="action_filter_tracked">ট্র্যাক করা হয়েছে</string>
@@ -684,4 +677,6 @@
     <string name="action_sort_chapter_fetch_date">প্রাপ্তির তারিখ</string>
     <string name="action_sort_next_updated">পরবর্তী প্রত্যাশিত আপডেট</string>
     <string name="label_default">সাধারণ</string>
+    <string name="pref_remove_exclude_categories">বর্জিত বিভাগ</string>
+    <string name="ext_app_info">অ্যাপের তথ্য</string>
 </resources>

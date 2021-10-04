@@ -16,7 +16,7 @@
     <string name="action_filter_downloaded">Terunduh</string>
     <string name="action_filter_bookmarked">Tertandai</string>
     <string name="action_filter_unread">Belum dibaca</string>
-    <string name="action_filter_empty">Hapus filter</string>
+    <string name="action_filter_empty">Hapus saringan</string>
     <string name="action_sort_alpha">Menurut abjad</string>
     <string name="action_sort_total">Total chapter</string>
     <string name="action_sort_last_read">Terakhir dibaca</string>
@@ -94,7 +94,7 @@
     <string name="pref_show_page_number">Tampilkan nomor halaman</string>
     <string name="pref_crop_borders">Potong pinggiran</string>
     <string name="pref_custom_brightness">Sesuaikan kecerahan layar</string>
-    <string name="pref_custom_color_filter">Gunakan filter warna khusus</string>
+    <string name="pref_custom_color_filter">Saringan warna khusus</string>
     <string name="pref_keep_screen_on">Biarkan layar tetap menyala</string>
     <string name="pref_reader_navigation">Navigasi</string>
     <string name="pref_read_with_volume_keys">Tombol volume</string>
@@ -132,7 +132,7 @@
     <string name="pref_download_only_over_wifi">Hanya unduh melalui Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Setelah ditandai telah dibaca</string>
     <string name="pref_remove_after_read">Otomatis setelah dibaca</string>
-    <string name="custom_dir">Tempat kustom</string>
+    <string name="custom_dir">Lokasi kustom</string>
     <string name="disabled">Tidak Aktif</string>
     <string name="last_read_chapter">Chapter terakhir yang dibaca</string>
     <string name="second_to_last">Chapter kedua dari terakhir</string>
@@ -190,7 +190,7 @@
     <string name="licensed">Berlisensi</string>
     <string name="remove_from_library">Hapus dari pustaka</string>
     <string name="delete_downloads_for_manga">Hapus chapter terunduh\?</string>
-    <string name="display_mode_chapter">Chapter %1$s</string>
+    <string name="display_mode_chapter">Bab %1$s</string>
     <string name="chapter_downloading_progress">Mengunduh (%1$d/%2$d)</string>
     <string name="chapter_error">Kesalahan</string>
     <string name="chapter_paused">Berhenti</string>
@@ -262,7 +262,6 @@
     <string name="latest">Terbaru</string>
     <string name="browse">Jelajahi</string>
     <string name="channel_common">Umum</string>
-    <string name="channel_library">Pustaka</string>
     <string name="information_empty_category">Anda belum memiliki kategori. Tekan tombol tambah untuk menambahkan kategori baru untuk mengatur pustaka Anda.</string>
     <string name="label_migration">Pindah</string>
     <string name="label_extensions">Ekstensi</string>
@@ -318,7 +317,7 @@
     <string name="action_open_in_web_view">Buka dalam WebView</string>
     <string name="pref_true_color">Warna 32-bit</string>
     <string name="pref_skip_read_chapters">Lewati chapter yang sudah dibaca</string>
-    <string name="pref_read_with_long_tap">Tampil pada tap lama</string>
+    <string name="pref_read_with_long_tap">Tampilkan saat tekan lama</string>
     <string name="pref_color_filter_mode">Mode saringan warna campur</string>
     <string name="filter_mode_overlay">Lapisan</string>
     <string name="filter_mode_multiply">Gandakan</string>
@@ -385,13 +384,13 @@
     <plurals name="notification_chapters_generic">
         <item quantity="other">%1$d chapter baru</item>
     </plurals>
-    <string name="notification_chapters_single">Chapter %1$s</string>
+    <string name="notification_chapters_single">Bab %1$s</string>
     <string name="notification_chapters_single_and_more">Chapter %1$s dan %2$d lainnya</string>
     <string name="notification_chapters_multiple">Chapter %1$s</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="other">Chapter %1$s dan %2$d lainnya</item>
     </plurals>
-    <string name="pref_disable_battery_optimization_summary">Membantu pembaruan pustaka dan pencadangan di layar belakang</string>
+    <string name="pref_disable_battery_optimization_summary">Membantu pembaruan pustaka dan pencadangan di latar belakang</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="other">Untuk judul %d</item>
     </plurals>
@@ -437,7 +436,7 @@
     <plurals name="download_queue_summary">
         <item quantity="other">%1$s lagi</item>
     </plurals>
-    <string name="downloaded_only_summary">Filter semua manga di pustaka</string>
+    <string name="downloaded_only_summary">Saring semua manga di pustaka</string>
     <string name="check_for_updates">Periksa pembaruan</string>
     <string name="restoring_backup_canceled">Pemulihan dibatalkan</string>
     <string name="restore_in_progress">Pemulihan masih dalam proses</string>
@@ -453,7 +452,7 @@
     <string name="gray_background">Abu-abu</string>
     <string name="pref_category_for_this_series">Untuk seri ini</string>
     <string name="battery_optimization_setting_activity_not_found">Tidak dapat membuka pengaturan perangkat</string>
-    <string name="pref_refresh_library_covers">Segarkan pustaka sampul manga</string>
+    <string name="pref_refresh_library_covers">Segarkan sampul manga pustaka</string>
     <plurals name="restore_completed_message">
         <item quantity="other">Selesai dalam %1$s dengan %2$s kesalahan</item>
     </plurals>
@@ -473,8 +472,7 @@
     <string name="invalid_backup_file">Berkas cadangan tidak valid</string>
     <string name="tracker_not_logged_in">Belum masuk dalam: %1$s</string>
     <string name="source_not_found_name">Sumber tidak ditemukan: %1$s</string>
-    <string name="sort_by_upload_date">Berdasarkan tanggal pengunggahan</string>
-    <string name="pref_library_update_error_notification">Tampilkan notifikasi pembaruan yang gagal</string>
+    <string name="sort_by_upload_date">Menurut tanggal pengunggahan</string>
     <string name="action_display_comfortable_grid">Grid nyaman</string>
     <string name="tabs_header">Tab</string>
     <string name="badges_header">Penanda</string>
@@ -482,7 +480,7 @@
     <string name="page_list_empty_error">Halaman tidak ditemukan</string>
     <string name="action_disable_all">Nonaktifkan semua</string>
     <string name="action_enable_all">Aktifkan semua</string>
-    <string name="pref_show_reading_mode_summary">Perlihatkan mode saat ini secara singkat ketika pembaca dibuka</string>
+    <string name="pref_show_reading_mode_summary">Perlihatkan mode saat ini secara singkat saat pembaca dibuka</string>
     <string name="pref_show_reading_mode">Tampilkan mode membaca</string>
     <string name="action_start">Mulai</string>
     <string name="loader_not_implemented_error">Sumber tidak ditemukan</string>
@@ -493,7 +491,6 @@
     <string name="label_network">Jaringan</string>
     <string name="pref_jump_to_chapters">Lompat ke chapter saat dibuka</string>
     <string name="action_disable">Matikan</string>
-    <string name="action_open_in_settings">Buka di pengaturan</string>
     <string name="tapping_inverted_both">Keduanya</string>
     <string name="tapping_inverted_vertical">Tegak</string>
     <string name="tapping_inverted_horizontal">Mendatar</string>
@@ -513,8 +510,6 @@
         <item quantity="other">%d pelacak</item>
     </plurals>
     <string name="no_pinned_sources">Anda tidak memiliki sumber yang disematkan</string>
-    <string name="group_backup_restore">Cadangkan dan pulihkan</string>
-    <string name="group_downloader">Unduhan</string>
     <string name="channel_complete">Lengkap</string>
     <string name="channel_progress">Kemajuan</string>
     <string name="download_notifier_download_finish">Unduhan selesai</string>
@@ -526,7 +521,7 @@
     <string name="pref_category_delete_chapters">Hapus chapter</string>
     <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau salah dilabeli untuk menampilkan konten NSFW (18+) dalam aplikasi.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Ada %d chapter yang hilang</item>
+        <item quantity="other">Terdapat %d chapter hilang</item>
     </plurals>
     <string name="no_chapters_error">Chapter tidak ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan chapter default diperbarui</string>
@@ -552,15 +547,13 @@
     <string name="migration_help_guide">Petunjuk migrasi</string>
     <string name="file_picker_error">Tidak ada aplikasi pemilih berkas yang ditemukan</string>
     <string name="myanimelist_relogin">Harap login kembali ke MAL</string>
-    <string name="pref_label_nsfw_extension">Labeli di daftar ekstensi</string>
-    <string name="pref_show_nsfw_extension">Tampilkan di daftar ekstensi</string>
-    <string name="pref_show_nsfw_source">Tampilkan di daftar sumber</string>
+    <string name="pref_show_nsfw_source">Tampilkan di daftar sumber dan ekstensi</string>
     <string name="edge_nav">Tepi</string>
     <string name="l_nav">Berbentuk L</string>
     <string name="action_desc">Urutan turun</string>
     <string name="action_asc">Urutan naik</string>
-    <string name="action_order_by_chapter_number">Berdasarkan nomor chapter</string>
-    <string name="action_order_by_upload_date">Berdasarkan tanggal unggahan</string>
+    <string name="action_order_by_chapter_number">Menurut nomor chapter</string>
+    <string name="action_order_by_upload_date">Menurut tanggal unggahan</string>
     <string name="action_filter_tracked">Dilacak</string>
     <string name="pref_dump_crash_logs">Buat log kerusakan</string>
     <string name="channel_crash_logs">Log kerusakan</string>
@@ -609,12 +602,12 @@
     <string name="pref_show_navigation_mode">Tampilkan tata letak navigasi</string>
     <string name="pref_library_update_categories_details">Manga dalam kategori yang dikecualikan tidak akan diperbarui meskipun masuk dalam kategori yang disertakan.</string>
     <string name="date">Tanggal</string>
-    <string name="local_filter_order_by">Urutkan berdasarkan</string>
+    <string name="local_filter_order_by">Urutkan menurut</string>
     <string name="local_invalid_format">Format chapter tidak valid</string>
     <string name="chapter_not_found">Chapter tidak ditemukan</string>
     <string name="pref_dual_page_invert_summary">Jika penempatan dari pemisah halaman ganda tidak cocok dengan arah membaca</string>
     <string name="pref_dual_page_invert">Balikkan penempatan pemisah halaman ganda</string>
-    <string name="pref_show_navigation_mode_summary">Tampilkan zona ketuk ketika pembaca terbuka</string>
+    <string name="pref_show_navigation_mode_summary">Tampilkan zona ketuk ketika pembaca dibuka</string>
     <string name="pref_library_update_refresh_trackers_summary">Perbarui pelacak ketika memperbarui pustaka</string>
     <string name="pref_library_update_refresh_trackers">Segarkan pelacak secara otomatis</string>
     <string name="restrictions">Batasan: %s</string>
@@ -646,7 +639,7 @@
     <string name="theme_strawberrydaiquiri">Stroberi Daiquiri</string>
     <string name="theme_midnightdusk">Senja Malam</string>
     <string name="theme_greenapple">Hijau Apel</string>
-    <string name="theme_blue">Biru</string>
+    <string name="theme_blue">Biru Lama</string>
     <string name="theme_monet">Dinamis</string>
     <string name="pref_app_theme">Tema aplikasi</string>
     <string name="action_sort_next_updated">Perbaruan selanjutnya</string>
@@ -673,4 +666,14 @@
     <string name="pref_category_appearance">Penampilan</string>
     <string name="confirm_lock_change">Otentikasi untuk konfirmasi pengubahan</string>
     <string name="label_default">Default</string>
+    <string name="pref_remove_exclude_categories">Kategori yang dikecualikan</string>
+    <string name="help_translate">Bantu terjemahkan</string>
+    <string name="pref_tablet_ui_mode">Paksa UI tablet</string>
+    <string name="ext_app_info">Informasi aplikasi</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku tidak berjalan</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Pasang dan mulai Shizuku untuk menggunakan Shizuku sebagai pemasang ekstensi.</string>
+    <string name="ext_install_service_notif">Memasang ekstensi…</string>
+    <string name="ext_installer_legacy">Warisan</string>
+    <string name="ext_installer_pref">Pemasang</string>
+    <string name="action_sort_count">Total manga</string>
 </resources>

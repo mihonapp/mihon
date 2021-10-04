@@ -215,7 +215,6 @@
     <string name="action_bookmark">بوک مارک</string>
     <string name="channel_ext_updates">آپدیت افزونه‌ها</string>
     <string name="channel_new_chapters">آپدیت قسمت‌ها</string>
-    <string name="channel_library">کتابخانه</string>
     <string name="channel_common">عمومی</string>
     <string name="download_notifier_download_paused">دانلود متوقف شد</string>
     <string name="download_notifier_no_network">هیچ اتصال به شبکه در دسترس نیست</string>
@@ -304,7 +303,6 @@
     <string name="all">همه</string>
     <string name="default_category_summary">همیشه بپرس</string>
     <string name="default_category">دسته بندی پیشفرض</string>
-    <string name="pref_library_update_error_notification">خطاهای آپدیت در اعلان‌ها نمایش داده شود</string>
     <string name="pref_library_update_refresh_metadata_summary">هنگام آپدیت عکس روی جلد و اطلاعات مانگا ها (در صورت تغییر) آپدیت شوند</string>
     <string name="pref_library_update_refresh_metadata">متادیتا فقط به صورت خودکار آپدیت شود</string>
     <string name="pref_update_only_non_completed">فقط مانگاهایی آپدیت شوند که تمام نشده</string>
@@ -494,8 +492,6 @@
     <string name="chapters">قسمت ها</string>
     <string name="manga">مانگا</string>
     <string name="categories">دسته بندی ها</string>
-    <string name="group_backup_restore">پشتیبان گیری و بازیابی</string>
-    <string name="group_downloader">دانلودها</string>
     <string name="channel_errors">خطاها</string>
     <string name="channel_complete">تکمیل شده</string>
     <string name="channel_progress">پیشرفت</string>
@@ -522,7 +518,6 @@
     <string name="pref_jump_to_chapters">برنامه در تب \"قسمت ها\" باز شود</string>
     <string name="pref_category_theme">تم</string>
     <string name="action_disable">غیرفعال کردن</string>
-    <string name="action_open_in_settings">در تنظیمات باز شود</string>
     <string name="action_download_unread">دانلود قسمت‌های خوانده‌نشده</string>
     <string name="action_sort_date_added">تاریخ اضافه شدن</string>
     <string name="updated_version">به نسخه v%1$s آپدیت شد</string>
@@ -563,7 +558,5 @@
     </plurals>
     <string name="migration_help_guide">راهنمای تعویض منبع</string>
     <string name="pref_clear_history">پاک کردن سابقه</string>
-    <string name="pref_label_nsfw_extension">برچسب دهی در لیست افزونه ها</string>
-    <string name="pref_show_nsfw_extension">نمایش در لیست افزونه ها</string>
     <string name="pref_show_nsfw_source">نمایش در لیست منابع</string>
 </resources>

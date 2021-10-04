@@ -263,7 +263,6 @@
     <string name="download_notifier_no_network">कोई नेटवर्क कनेक्शन उपलब्ध नहीं है</string>
     <string name="download_notifier_download_paused">डाउनलोड रोक दिया है</string>
     <string name="channel_common">सामान्य</string>
-    <string name="channel_library">पुस्तकालय</string>
     <string name="label_migration">प्रवास</string>
     <string name="label_extensions">विस्तार</string>
     <string name="label_extension_info">विस्तार की जानकारी</string>
@@ -480,7 +479,6 @@
     <string name="invalid_backup_file">अमान्य बैकअप फ़ाइल</string>
     <string name="tracker_not_logged_in">लॉग इन नहीं है: %1$s</string>
     <string name="source_not_found_name">स्रोत नहीं मिला: %1$s</string>
-    <string name="pref_library_update_error_notification">अद्यतन त्रुटियों की सूचनाएँ दिखाएँ</string>
     <string name="pref_library_update_refresh_metadata_summary">लाइब्रेरी को अपडेट करते समय नए कवर और विवरण की जांच करें</string>
     <string name="pref_library_update_refresh_metadata">मेटाडेटा को स्वचालित रूप से ताज़ा करें</string>
     <string name="action_migrate">प्रवास</string>
@@ -500,7 +498,6 @@
         <item quantity="one">1 अध्याय</item>
         <item quantity="other">%1$s अध्याय</item>
     </plurals>
-    <string name="action_open_in_settings">सेटिंग्स में खोलें</string>
     <string name="label_network">नेटवर्क</string>
     <string name="pref_jump_to_chapters">खुलने पर अध्यायों पर जाएं</string>
     <string name="tapping_inverted_both">दोनों</string>
@@ -524,8 +521,6 @@
         <item quantity="other">%d ट्रैकरस</item>
     </plurals>
     <string name="no_pinned_sources">कोई पिन किया हुआ सोर्स नही है</string>
-    <string name="group_backup_restore">बैकअप और पुनर्स्थापना</string>
-    <string name="group_downloader">डाउनलोड</string>
     <string name="channel_complete">पूर्ण</string>
     <string name="channel_progress">प्रगती</string>
     <string name="download_notifier_download_finish">डाउनलोड सम्पन्न हुआ</string>
@@ -561,8 +556,6 @@
     <string name="spen_next_page">अगला पृष्ठ</string>
     <string name="spen_previous_page">पिछला पृष्ठ</string>
     <string name="migration_help_guide">स्रोत माइग्रेशन गाइड</string>
-    <string name="pref_label_nsfw_extension">एक्सटेंशन सूची में लेबल</string>
-    <string name="pref_show_nsfw_extension">एक्सटेंशन सूची में दिखाएं</string>
     <string name="pref_show_nsfw_source">स्रोत सूची में दिखाएं</string>
     <string name="pref_category_nsfw_content">NSFW (18+) स्रोत</string>
     <string name="channel_crash_logs">क्रैश लॉग</string>
@@ -576,7 +569,7 @@
     <string name="pref_viewer_nav">नेविगेशन लेआउट</string>
     <string name="right_and_left_nav">दाएं और बाएं</string>
     <string name="edge_nav">धार</string>
-    <string name="kindlish_nav">किंडल-ईश</string>
+    <string name="kindlish_nav">किंडल-जैसे</string>
     <string name="l_nav">एल आकार</string>
     <string name="network_unmetered">अनमीटर्ड नेटवर्क</string>
     <string name="action_desc">अवरोही</string>
@@ -602,4 +595,16 @@
     <string name="cancel_all_for_series">इस श्रृंखला के लिए सभी रद्द करें</string>
     <string name="action_display_local_badge">स्थानीय बैज</string>
     <string name="action_sort_next_updated">अगला अपेक्षित अपडेट</string>
+    <string name="pref_dark_theme_pure_black">पूरा काला मोड़</string>
+    <string name="theme_tako">टाको</string>
+    <string name="theme_strawberrydaiquiri">स्ट्रॉबेरी</string>
+    <string name="theme_greenapple">हरा सेब</string>
+    <string name="theme_blue">लेगासी ब्लू</string>
+    <string name="theme_monet">डायनेमिक</string>
+    <string name="pref_app_theme">एप थीम</string>
+    <string name="pref_category_auto_download">ऑटोमैटिक डाउनलोड</string>
+    <string name="theme_yotsuba">योटसूबा</string>
+    <string name="theme_yinyang">यीन और यैंन्ग</string>
+    <string name="theme_tealturquoise">टील</string>
+    <string name="pref_category_appearance">रूप</string>
 </resources>

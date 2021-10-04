@@ -52,8 +52,8 @@
     <string name="pref_category_about">Sobre</string>
     <!-- General section -->
     <string name="pref_library_columns">Itens por fila</string>
-    <string name="portrait">Vertical</string>
-    <string name="landscape">Horizontal</string>
+    <string name="portrait">Retrato</string>
+    <string name="landscape">Paisagem</string>
     <string name="pref_library_update_interval">Frequência de atualização</string>
     <string name="update_never">Manual</string>
     <string name="update_3hour">A cada 3 horas</string>
@@ -348,7 +348,6 @@
     <string name="download_notifier_no_network">Conexão à rede indisponível</string>
     <string name="download_notifier_download_paused">Transferência pausada</string>
     <string name="channel_common">Comum</string>
-    <string name="channel_library">Biblioteca</string>
     <string name="filter_mode_overlay">Sobrepor</string>
     <string name="filter_mode_multiply">Multiplicação</string>
     <string name="filter_mode_screen">Divisão</string>
@@ -407,7 +406,7 @@
         <item quantity="one">Capítulos %1$s e 1 mais</item>
         <item quantity="other">Capítulos %1$s e %2$d mais</item>
     </plurals>
-    <string name="hide_notification_content">Ocultar conteúdo da notificação</string>
+    <string name="hide_notification_content">Esconder conteúdo das notificações</string>
     <string name="notification_check_updates">Verificando por novos capítulos</string>
     <string name="pref_disable_battery_optimization">Desativar otimização de bateria</string>
     <string name="pref_disable_battery_optimization_summary">Ajuda com a atualização e cópia de segurança da biblioteca em segundo plano</string>
@@ -515,7 +514,6 @@
     <string name="source_not_found_name">Fonte não encontrada: %1$s</string>
     <string name="pref_show_reading_mode">Mostrar modo de leitura</string>
     <string name="ext_unofficial">Não oficial</string>
-    <string name="pref_library_update_error_notification">Notificar erros de atualizações</string>
     <string name="pref_library_update_refresh_metadata_summary">Procurar nova capa e detalhes quando a biblioteca atualizar</string>
     <string name="pref_library_update_refresh_metadata">Atualizar automaticamente os metadados</string>
     <string name="action_display_show_tabs">Mostrar abas de categoria</string>
@@ -524,8 +522,7 @@
     <string name="action_disable_all">Desativar todas</string>
     <string name="action_enable_all">Ativar todas</string>
     <string name="action_start">Iniciar</string>
-    <string name="pref_jump_to_chapters">Saltar para capítulos ao entrar</string>
-    <string name="action_open_in_settings">Abrir em Definições</string>
+    <string name="pref_jump_to_chapters">Saltar para capítulos ao abrir</string>
     <string name="action_disable">Desativar</string>
     <string name="tapping_inverted_both">Ambos</string>
     <string name="tapping_inverted_vertical">Vertical</string>
@@ -554,8 +551,6 @@
         <item quantity="other">%d monitorizadores</item>
     </plurals>
     <string name="no_pinned_sources">Você não possui fontes fixadas</string>
-    <string name="group_backup_restore">Cópia de segurança e restauração</string>
-    <string name="group_downloader">Transferências</string>
     <string name="channel_complete">Completo</string>
     <string name="channel_progress">Progresso</string>
     <string name="download_notifier_download_finish">Transferência concluída</string>
@@ -565,10 +560,10 @@
     <string name="pref_category_delete_chapters">Eliminar capítulos</string>
     <string name="ext_nsfw_warning">Pode conter conteúdo NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Isto não impede que extensões não oficiais ou potencialmente marcadas de forma incorreta surjam com conteúdos de NSFW (18+) dentro da aplicação.</string>
+    <string name="parental_controls_info">Isso não impede extensões não-oficiais ou incorretamente marcadas de mostrarem counteúdo NSFW (18+) dentro do aplicativo.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Há 1 capítulo em falta</item>
-        <item quantity="other">Há %d capítulos em falta</item>
+        <item quantity="one">Existe 1 capítulo faltando</item>
+        <item quantity="other">Existem %d capítulos faltando</item>
     </plurals>
     <string name="no_chapters_error">Nenhum capítulo encontrado</string>
     <string name="chapter_settings_updated">Definições padrão de capítulo atualizadas</string>
@@ -594,9 +589,7 @@
 \nDeve terminar com .proto.gz ou .json.</string>
     <string name="file_picker_error">Não foi encontrada app de selecção de ficheiros</string>
     <string name="myanimelist_relogin">Por favor inicie sessão no MAL novamente</string>
-    <string name="pref_label_nsfw_extension">Nome na lista de extensões</string>
-    <string name="pref_show_nsfw_extension">Mostrar na lista de extensões</string>
-    <string name="pref_show_nsfw_source">Mostrar na lista de fontes</string>
+    <string name="pref_show_nsfw_source">Mostrar na lista de fontes e extensões</string>
     <string name="pref_viewer_nav">Esquema de navegação</string>
     <string name="kindlish_nav">Estilo Kindle</string>
     <string name="l_nav">Em forma de L</string>
@@ -659,7 +652,7 @@
     <string name="theme_strawberrydaiquiri">Daiquiri de Morango</string>
     <string name="theme_midnightdusk">Crepúsculo da Meia-Noite</string>
     <string name="theme_greenapple">Maçã Verde</string>
-    <string name="theme_blue">Azul</string>
+    <string name="theme_blue">Azul Antigo</string>
     <string name="pref_app_theme">Tema da aplicação</string>
     <string name="action_start_downloading_now">Começar a transferir agora</string>
     <string name="cancel_all_for_series">Cancelar tudo para esta série</string>
@@ -690,4 +683,16 @@
     <string name="enhanced_services">Serviços melhorados</string>
     <string name="pref_library_update_refresh_trackers">Atualizar monitorizadores automaticamente</string>
     <string name="pref_library_update_refresh_trackers_summary">Atualizar monitorizadores ao atualizar biblioteca</string>
+    <string name="getting_started_guide">Iniciar o guia de introdução</string>
+    <string name="theme_tealturquoise">Azul-petróleo e Turquesa</string>
+    <string name="pref_relative_time_long">Longo (Curto+, n dias atrás)</string>
+    <string name="pref_relative_time_short">Curto (Hoje, Ontem)</string>
+    <string name="recently">Recentemente</string>
+    <plurals name="relative_time">
+        <item quantity="one">Ontem</item>
+        <item quantity="other">%1$d dias atrás</item>
+    </plurals>
+    <string name="relative_time_today">Hoje</string>
+    <string name="pref_category_navigation">Navegação</string>
+    <string name="theme_monet">Dinâmico</string>
 </resources>

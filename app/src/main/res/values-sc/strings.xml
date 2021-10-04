@@ -315,7 +315,6 @@
     <string name="download_notifier_no_network">Peruna connessione de retza disponìbile</string>
     <string name="download_notifier_download_paused">Iscarrigamentu in pàusa</string>
     <string name="channel_common">Comunu</string>
-    <string name="channel_library">Biblioteca</string>
     <string name="action_open_in_web_view">Aberi in sa vista web</string>
     <string name="pref_true_color">Colore a 32 bit</string>
     <string name="pref_skip_read_chapters">Brinca sos capìtulos marcados comente lèghidos</string>
@@ -480,7 +479,6 @@
     <string name="invalid_backup_file">Documentu de sa còpia de seguresa non vàlidu</string>
     <string name="tracker_not_logged_in">No intradu in su contu de: %1$s</string>
     <string name="source_not_found_name">Mitza no agatada: %1$s</string>
-    <string name="pref_library_update_error_notification">Ammustra sas notìficas de faddinas de agiornamentu</string>
     <string name="pref_library_update_refresh_metadata_summary">Verìfica si b\'est una cobertedda noa o bi sunt detàllios noos cando agiornas sa biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Annoa automaticamente sos metadatos</string>
     <string name="action_migrate">Tràmuda</string>
@@ -496,7 +494,6 @@
     <string name="action_start">Incumintza</string>
     <string name="loader_not_implemented_error">Mitza no agatada</string>
     <string name="action_disable">Disabìlita</string>
-    <string name="action_open_in_settings">Aberi in sas impostatziones</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">1 capìtulu</item>
         <item quantity="other">%1$s capìtulos</item>
@@ -524,8 +521,6 @@
         <item quantity="other">%d arrastadores</item>
     </plurals>
     <string name="no_pinned_sources">Non tenes mitzas apicadas</string>
-    <string name="group_backup_restore">Còpia de seguresa e riprìstinu</string>
-    <string name="group_downloader">Iscarrigamentos</string>
     <string name="channel_complete">Acabada</string>
     <string name="channel_progress">Progressu</string>
     <string name="download_notifier_download_finish">Iscarrigamentu acabadu</string>
@@ -562,9 +557,7 @@
     <string name="invalid_backup_file_type">Casta de documentu de còpia de seguresa non vàlidu: %1$s
 \nDiat dèpere acabbare cun .proto.gz o .json.</string>
     <string name="pref_category_nsfw_content">Cuntenutu NSFW (18+)</string>
-    <string name="pref_label_nsfw_extension">Eticheta in sa lista de sas estensiones</string>
-    <string name="pref_show_nsfw_extension">Ammustra in sa lista de sas estensiones</string>
-    <string name="pref_show_nsfw_source">Ammustra in sa lista de sas mitzas</string>
+    <string name="pref_show_nsfw_source">Ammustra in sa lista de sas mitzas e de sas estensiones</string>
     <string name="file_picker_error">Peruna aplicatzione pro ischertare documentos agatada</string>
     <string name="myanimelist_relogin">Pro praghere torra a intrare in MAL</string>
     <string name="edge_nav">Oru</string>
@@ -689,4 +682,11 @@
     <string name="pref_tablet_ui_mode">Fortza sa modalidade pro tauleddas</string>
     <string name="help_translate">Agiuda a bortare</string>
     <string name="pref_remove_exclude_categories">Categorias esclùdidas</string>
+    <string name="ext_app_info">Informatziones de s\'aplicatzione</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Installa e avia Shizuku pro l\'impreare comente installadore de estensiones.</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku no est in esecutzione</string>
+    <string name="ext_installer_legacy">In disusu</string>
+    <string name="ext_installer_pref">Installadore</string>
+    <string name="ext_install_service_notif">Installende s\'estensione…</string>
+    <string name="action_sort_count">Manga totales</string>
 </resources>

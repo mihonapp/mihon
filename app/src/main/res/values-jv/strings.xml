@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="group_downloader">Donlot</string>
     <string name="update_check_notification_download_in_progress">Ndonlot…</string>
     <string name="update_check_confirm">Donlot</string>
     <string name="track_author">Panganggit</string>
@@ -68,7 +67,6 @@
     <string name="action_newest">Paling anyar</string>
     <string name="action_disable">Pateni</string>
     <string name="action_display_list">Dhaptar</string>
-    <string name="action_open_in_settings">Bukak ing Setting</string>
     <string name="action_open_in_web_view">Bukak ing WebView</string>
     <string name="action_open_in_browser">Bukak ing browser</string>
     <string name="action_retry">Jajal maneh</string>
@@ -145,5 +143,50 @@
     <string name="track">Ngelacak</string>
     <string name="chapters">Bab</string>
     <string name="information_empty_category">Sampeyan ora duwe kategori. Dhemok tombol tambah kanggo nggawe siji kategori kanggo ngatur perpustakaane sampeyan.</string>
-    <string name="information_empty_library">Perpustakaane sampeyan kosong. Tambahake seri menyang perpustakaane sampeyan saka Browse.</string>
+    <string name="information_empty_library">Koleksine sampeyan kosong</string>
+    <string name="pref_category_about">Babagan</string>
+    <string name="pref_category_advanced">Majeng</string>
+    <string name="pref_category_tracking">Ngelacak</string>
+    <string name="pref_category_reader">Pamaca</string>
+    <string name="pref_category_library">Koleksi</string>
+    <string name="pref_category_appearance">Tampilan</string>
+    <string name="pref_category_general">Umum</string>
+    <string name="app_not_available">Aplikasi ora ono</string>
+    <string name="loading">Ngemot…</string>
+    <string name="action_start_downloading_now">Wiwiti ngunduh saiki</string>
+    <string name="action_webview_refresh">Segerke</string>
+    <string name="action_webview_forward">Maju</string>
+    <string name="action_restore">Pulihke</string>
+    <string name="action_show_errors">Tampilke error</string>
+    <string name="action_undo">Baleni</string>
+    <string name="action_reset">Balekke</string>
+    <string name="action_share">Bagi</string>
+    <string name="action_install">Pasang</string>
+    <string name="action_desc">Mudun</string>
+    <string name="action_asc">Munggah</string>
+    <string name="action_order_by_upload_date">Miturut tanggal unggah</string>
+    <string name="action_order_by_chapter_number">Miturut nomer bab</string>
+    <string name="action_reorganize_by">Atur maneh</string>
+    <string name="action_sort">Urutke</string>
+    <string name="cancel_all_for_series">Batalke kabeh seri iki</string>
+    <string name="action_cancel_all">Batalke kabeh</string>
+    <string name="action_cancel">Batalke</string>
+    <string name="action_unpin">Copot pin</string>
+    <string name="action_pin">Pin</string>
+    <string name="action_display_show_number_of_items">Tampilke jumlah item</string>
+    <string name="action_display_show_tabs">Tampilke tab kategori</string>
+    <string name="action_display_local_badge">Lencana lokal</string>
+    <string name="action_display_unread_badge">Lencana durung diwaca</string>
+    <string name="action_display_download_badge">Unduh lencana</string>
+    <string name="action_display_comfortable_grid">Kothak penak</string>
+    <string name="action_display_grid">Kothak kompak</string>
+    <string name="action_display">Tampilan</string>
+    <string name="action_display_mode">Mode tampilan</string>
+    <string name="action_migrate">Migrasi</string>
+    <string name="action_resume">Teruske</string>
+    <string name="action_start">Mulai</string>
+    <string name="action_remove">Hapus</string>
+    <string name="action_sort_count">Total manga</string>
+    <string name="confirm_lock_change">Otentikasi kanggo konfirmasi perubahan</string>
+    <string name="label_default">Default</string>
 </resources>

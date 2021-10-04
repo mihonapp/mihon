@@ -348,7 +348,6 @@
     <string name="copy">Sao chép</string>
     <string name="information_empty_category">Không có danh mục. Nhấn vào dấu cộng để tạo một nhóm từ thư viện.</string>
     <string name="channel_common">Thường gặp</string>
-    <string name="channel_library">Thư viện</string>
     <string name="pref_read_with_long_tap">Nhấn giữ để mở hộp thoại</string>
     <string name="action_open_in_web_view">Mở bằng WebView</string>
     <string name="pref_true_color">Màu 32-bit</string>
@@ -450,7 +449,6 @@
     <plurals name="num_categories">
         <item quantity="other">%d danh mục</item>
     </plurals>
-    <string name="pref_library_update_error_notification">Hiển thị thông báo lỗi cập nhật</string>
     <string name="pref_library_update_refresh_metadata_summary">Kiểm tra ảnh bìa và chi tiết khi cập nhật thư viện</string>
     <string name="pref_confirm_exit">Xác nhận thoát</string>
     <string name="pref_category_theme">Chủ đề</string>
@@ -461,7 +459,6 @@
     <string name="action_display_unread_badge">Phù hiệu chưa đọc</string>
     <string name="action_display_comfortable_grid">Lưới</string>
     <string name="action_migrate">Chuyển</string>
-    <string name="action_open_in_settings">Mở trong Cài đặt</string>
     <string name="action_start">Bắt đầu</string>
     <string name="action_disable_all">Tắt tất cả</string>
     <string name="action_enable_all">Bật tất cả</string>
@@ -513,8 +510,6 @@
     <string name="badges_header">Huy hiệu</string>
     <string name="channel_new_chapters">Cập nhật chương</string>
     <string name="chapter_settings_updated">Đã cập nhật tuỳ chỉnh mặc định cho chương</string>
-    <string name="group_backup_restore">Lưu trữ và phục hồi</string>
-    <string name="group_downloader">Tải xuống</string>
     <string name="channel_errors">Lỗi</string>
     <string name="channel_complete">Hoàn thành</string>
     <string name="channel_progress">Quá trình</string>
@@ -630,8 +625,6 @@
     <string name="update_4hour">Mỗi 4 tiếng</string>
     <string name="action_display_show_number_of_items">Hiện số truyện</string>
     <string name="pref_category_nsfw_content">Nguồn 18+</string>
-    <string name="pref_label_nsfw_extension">Gắn nhãn trong danh sách mở rộng</string>
-    <string name="pref_show_nsfw_extension">Hiển thị trong danh sách mở rộng</string>
     <string name="pref_show_nsfw_source">Hiển thị trong danh sách nguồn</string>
     <string name="pref_hide_bottom_bar_on_scroll">Ẩn thanh dưới cùng khi cuộn</string>
     <string name="action_show_errors">Hiện lỗi</string>
@@ -709,4 +702,6 @@
     <string name="recently">Gần đây</string>
     <string name="pref_relative_time_long">Dài (Ngắn+, nhiều ngày trước)</string>
     <string name="pref_relative_time_short">Ngắn (Hôm nay, Hôm qua)</string>
+    <string name="help_translate">Trợ giúp dịch thuật</string>
+    <string name="ext_app_info">Thông tin ứng dụng</string>
 </resources>

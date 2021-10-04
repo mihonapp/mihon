@@ -33,7 +33,6 @@
     <string name="action_display">ပြသပုံ</string>
     <string name="action_display_mode">ပြသသည့်ပုံစံ</string>
     <string name="action_migrate">ရွှေ့ပြောင်းသည်</string>
-    <string name="action_open_in_settings">ဆက်တင်တွင်ဖွင့်သည်</string>
     <string name="action_open_in_web_view">WebView တွင်ဖွင့်သည်</string>
     <string name="action_open_in_browser">Browser တွင်ဖွင့်သည်</string>
     <string name="action_resume">ဆက်လုပ်သည်</string>

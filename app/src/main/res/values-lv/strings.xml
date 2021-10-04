@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Nosaukums</string>
     <string name="categories">Kategorijas</string>
-    <string name="manga">Manga</string>
+    <string name="manga"></string>
     <string name="chapters">Nodaļas</string>
     <string name="track">Sekošana</string>
     <string name="history">Vēsture</string>
@@ -86,7 +86,7 @@
     <string name="backup_in_progress">Dublēšana jau notiek</string>
     <plurals name="restore_completed_message">
         <item quantity="zero">Pabeigts %1$s ar %2$s kļūdām</item>
-        <item quantity="one">Pabeigts %1$s ar %2$s kļūdām</item>
+        <item quantity="one">Pabeigts %1$s ar %2$s kļūdu</item>
         <item quantity="other">Pabeigts %1$s ar %2$s kļūdām</item>
     </plurals>
     <string name="restore_duration">%02d min, %02d sec</string>
@@ -106,7 +106,6 @@
     <string name="pref_read_with_tapping_inverted">Invertēt spiešanu</string>
     <string name="channel_ext_updates">Paplašinājumu atjauninājumi</string>
     <string name="channel_new_chapters">Nodaļu atjauninājumi</string>
-    <string name="channel_library">Bibliotēka</string>
     <string name="download_notifier_download_paused">Lejuplāde pauzēta</string>
     <string name="information_no_downloads">Nav lejuplāžu</string>
     <string name="label_help">Palīdzība</string>
@@ -115,7 +114,6 @@
     <string name="label_more">Vairāk</string>
     <string name="action_display_comfortable_grid">Ērts režģis</string>
     <string name="action_migrate">Migrēt</string>
-    <string name="action_open_in_settings">Atveriet sadaļā Iestatījumi</string>
     <string name="action_open_in_web_view">Atvērt WebView</string>
     <string name="action_start">Sākt</string>
     <string name="action_view_chapters">Skatīt nodaļas</string>
@@ -194,4 +192,16 @@
     <string name="ongoing">Vēl turpinās</string>
     <string name="description">Apraksts</string>
     <string name="title">Nosaukums</string>
+    <string name="pref_category_delete_chapters">Izdzēst nodaļas</string>
+    <string name="pref_download_only_over_wifi">Lejuplādēt vienīgi ar Wi-Fi</string>
+    <string name="pref_download_directory">Lejuplādes vieta</string>
+    <string name="pref_category_auto_download">Automātiska lejuplāde</string>
+    <string name="pref_restore_backup">Atjaunot dublējumu</string>
+    <string name="backup_restore_missing_trackers">Nav pieslēgts pie izsekotājiems:</string>
+    <string name="backup_restore_content_full">Dati no dublējuma faila būs atjaunoti.
+\n
+\nJums būs nepieciešams instalēt jebkādus trūkstošos paplašinājumus un pēc tam pieslēgties izsekošanas pakalpojumiem.</string>
+    <string name="invalid_backup_file_type">"Nederīgs dublējuma faila tips: %1$s
+\nTam vajadzētu beigties ar  .proto.gz vai .json."</string>
+    <string name="unread">Neizlasītie</string>
 </resources>

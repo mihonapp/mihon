@@ -46,7 +46,6 @@
         <item quantity="other">%d пухмӑш</item>
     </plurals>
     <string name="default_category_summary">Кашнинчех ыйтмалла</string>
-    <string name="pref_library_update_error_notification">Ҫӗнетӳ йӑнӑшсен ҫинчен систерӳсем кӑтарт</string>
     <string name="charging">Тулать</string>
     <string name="pref_library_update_restriction">Ҫӗнетни чарӑвӗсем</string>
     <string name="pref_library_update_prioritization">Ҫӗнетни йӗрки</string>
@@ -98,7 +97,6 @@
     <string name="action_display_list">Ят-йыш</string>
     <string name="action_display">Кӑтарт</string>
     <string name="action_display_mode">Кӑтарту тытӑмӗ</string>
-    <string name="action_open_in_settings">Ӗнерлевре уҫ</string>
     <string name="action_open_in_web_view">WebView-ра уҫ</string>
     <string name="action_open_in_browser">Тишкерӗшре уҫ</string>
     <string name="action_resume">Малалла</string>
@@ -313,7 +311,6 @@
     <string name="tapping_inverted_none">Ҫук</string>
     <string name="channel_ext_updates">Хушмасен ҫӗнетӗвӗсем</string>
     <string name="channel_new_chapters">Сыпӑксен ҫӗнетӗвӗсем</string>
-    <string name="channel_library">Вулавӑш</string>
     <string name="channel_common">Яланхи</string>
     <string name="download_notifier_download_paused">Тиеве вӑхӑтлӑха чарнӑ</string>
     <string name="download_notifier_unknown_error">Кӗтмен йӑнӑша пула сыпӑксене тиесе илеймест</string>
@@ -524,8 +521,6 @@
         <item quantity="other">%d сӑнану</item>
     </plurals>
     <string name="no_pinned_sources">Санӑн ҫакнӑ ҫӑл куҫ ҫук</string>
-    <string name="group_backup_restore">Янтӑв тата тавӑрни</string>
-    <string name="group_downloader">Тиевсем</string>
     <string name="channel_complete">Вӗҫленӗ</string>
     <string name="channel_progress">Ӳсӗм</string>
     <string name="download_notifier_download_finish">Тиев вӗҫленӗ</string>
@@ -564,8 +559,6 @@
     <string name="pref_category_nsfw_content">NSFW (18+) шалаш</string>
     <string name="file_picker_error">Файлсене суйламалли хушӑм тупӑнман</string>
     <string name="myanimelist_relogin">Тархасшӑн MAL-а ҫӗнӗрен кӗр</string>
-    <string name="pref_label_nsfw_extension">Хушмасен ят-йышра карт</string>
-    <string name="pref_show_nsfw_extension">Хушмасен ят-йышра кӑтарт</string>
     <string name="pref_show_nsfw_source">Ҫӑл куҫсен ят-йышӗнче кӑтарт</string>
     <string name="track_finished_reading_date">Вулама вӗҫленӗ вӑхӑчӗ</string>
     <string name="track_started_reading_date">Вулама пуҫланӑ вӑхӑчӗ</string>

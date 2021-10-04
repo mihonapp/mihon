@@ -2,7 +2,6 @@
 <resources>
     <string name="channel_ext_updates">עדכונים לתוסף</string>
     <string name="channel_new_chapters">עדכונים לפרק</string>
-    <string name="channel_library">ספרייה</string>
     <string name="channel_common">נפוץ</string>
     <string name="download_notifier_download_paused">ההורדה מושהית</string>
     <string name="download_notifier_no_network">אין חיבור רשת זמין</string>

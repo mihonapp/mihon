@@ -120,7 +120,6 @@
     </plurals>
     <string name="default_category_summary">Preguntar sempre</string>
     <string name="default_category">Categoría por defecto</string>
-    <string name="pref_library_update_error_notification">Mostra notificacións de erros nas actualizacións</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprobar novas portadas e detalles cando se actualiza a biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Refrescar metadatos automáticamente</string>
     <string name="pref_update_only_non_completed">Actualiza só manga en curso</string>
@@ -156,8 +155,6 @@
     <string name="file_picker_error">Non se atopou unha aplicación para seleccionar arquivos</string>
     <string name="myanimelist_relogin">Por favor, inicia sesión en MAL de novo</string>
     <string name="requires_app_restart">Require reiniciar a aplicación para que surxa efecto</string>
-    <string name="pref_label_nsfw_extension">Etiquetar na lista de extensións</string>
-    <string name="pref_show_nsfw_extension">Amosar na lista de extensións</string>
     <string name="pref_show_nsfw_source">Amosar na lista de fontes</string>
     <string name="pref_category_nsfw_content">Fontes NSFW (+18)</string>
     <string name="pref_category_security">Seguridade</string>
@@ -211,7 +208,6 @@
     <string name="action_display">Amosar</string>
     <string name="action_display_mode">Modo de visualización</string>
     <string name="action_migrate">Migrar</string>
-    <string name="action_open_in_settings">Abrir nos Axustes</string>
     <string name="action_open_in_web_view">Abrir en WebView</string>
     <string name="action_open_in_browser">Abrir no navegador</string>
     <string name="action_resume">Continuar</string>

@@ -339,7 +339,6 @@
     <string name="copy">Copia</string>
     <string name="information_empty_category">Non hai categorie. Tocca il pulsante più per crearne una e organizzare la tua libreria.</string>
     <string name="channel_common">Comune</string>
-    <string name="channel_library">Libreria</string>
     <string name="transition_finished">Finito:</string>
     <string name="transition_current">Corrente:</string>
     <string name="transition_next">Prossimo:</string>
@@ -387,7 +386,7 @@
     <string name="theme_system">Segui l\'impostazione di sistema</string>
     <string name="pref_manage_notifications">Gestisci le notifiche</string>
     <string name="pref_category_security">Sicurezza</string>
-    <string name="lock_with_biometrics">Sblocco richiesto</string>
+    <string name="lock_with_biometrics">Richiede sblocco</string>
     <string name="lock_when_idle">Blocca quando inattivo</string>
     <string name="lock_always">Sempre</string>
     <string name="lock_never">Mai</string>
@@ -516,7 +515,6 @@
     <string name="source_not_found_name">Fonte non trovata: %1$s</string>
     <string name="unofficial_extension_message">Questa estensione non è presente nella lista ufficiale delle estensioni di Tachiyomi.</string>
     <string name="ext_unofficial">Non ufficiale</string>
-    <string name="pref_library_update_error_notification">Mostra notifiche per gli errori degli aggiornamenti</string>
     <string name="pref_library_update_refresh_metadata_summary">Controlla nuove cover e descrizioni durante l\'aggiornamento della libreria</string>
     <string name="pref_library_update_refresh_metadata">Ricarica metadati automaticamente</string>
     <string name="action_display_show_tabs">Mostra schede delle categorie</string>
@@ -544,7 +542,6 @@
     <string name="pref_show_reading_mode">Mostra modalità di lettura</string>
     <string name="pref_jump_to_chapters">Vai ai capitoli all\'apertura</string>
     <string name="action_disable">Disabilita</string>
-    <string name="action_open_in_settings">Apri nelle impostazioni</string>
     <string name="action_start">Inizia</string>
     <string name="action_download_unread">Scarica capitoli non letti</string>
     <string name="action_global_search_query">Ricerca \"%1$s\" globalmente</string>
@@ -557,8 +554,6 @@
         <item quantity="other">%d tracciatori</item>
     </plurals>
     <string name="channel_progress">Progresso</string>
-    <string name="group_backup_restore">Backup e ripristino</string>
-    <string name="group_downloader">Scaricamenti</string>
     <string name="channel_errors">Errori</string>
     <string name="channel_complete">Completo</string>
     <string name="download_notifier_download_finish">Scaricamento completato</string>
@@ -595,9 +590,7 @@
     <string name="invalid_backup_file_type">File di backup invalido: %1$s
 \nDovrebbe terminare con .proto.gz oppure .json.</string>
     <string name="pref_category_nsfw_content">Fonti NSFW (18+)</string>
-    <string name="pref_label_nsfw_extension">Etichetta nella lista delle estensioni</string>
-    <string name="pref_show_nsfw_extension">Mostra nella lista delle estensioni</string>
-    <string name="pref_show_nsfw_source">Mostra nella lista delle fonti</string>
+    <string name="pref_show_nsfw_source">Mostra nelle liste delle fonti e delle estensioni</string>
     <string name="myanimelist_relogin">Per favore accedi di nuovo a MAL</string>
     <string name="file_picker_error">Nessuna app per la selezione dei file trovata</string>
     <string name="pref_viewer_nav">Layout della navigazione</string>
@@ -658,7 +651,7 @@
     <string name="chapter_not_found">Capitolo non trovato</string>
     <string name="source_unsupported">Fonte non supportata</string>
     <string name="date">Data</string>
-    <string name="off">Diattivato</string>
+    <string name="off">Disattivato</string>
     <string name="alignment_center">Al centro</string>
     <string name="error_sharing_cover">Errore nella condivisione della copertina</string>
     <string name="error_saving_cover">Errore nel salvataggio della copertina</string>
@@ -722,4 +715,13 @@
     <string name="pref_tablet_ui_mode">Forza interfaccia tablet</string>
     <string name="pref_remove_exclude_categories">Categorie escluse</string>
     <string name="help_translate">Aiuta a tradurre</string>
+    <string name="ext_app_info">Informazioni app</string>
+    <string name="ext_installer_packageinstaller">PackageInstaller</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Installa e avvia Shizuku per usarlo come installatore delle estensioni.</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku non è in esecuzione</string>
+    <string name="ext_installer_shizuku">Shizuku</string>
+    <string name="ext_installer_legacy">Legacy</string>
+    <string name="ext_installer_pref">Installatore</string>
+    <string name="ext_install_service_notif">Installazione dell\'estensione…</string>
+    <string name="action_sort_count">Manga totali</string>
 </resources>

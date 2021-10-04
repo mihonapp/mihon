@@ -229,10 +229,10 @@
     <!--Content Description-->
     <string name="description_cover">Couverture du manga</string>
     <!-- Information Text -->
-    <string name="information_no_downloads">Aucun téléchargement</string>
+    <string name="information_no_downloads">Aucun téléchargement en cours</string>
     <string name="information_no_recent">Pas de mises à jour récentes</string>
     <string name="information_no_recent_manga">Rien de lu récemment</string>
-    <string name="information_empty_library">La bibliothèque est vide</string>
+    <string name="information_empty_library">Votre bibliothèque est vide</string>
     <!-- Download Notification -->
     <string name="download_notifier_downloader_title">Téléchargement</string>
     <string name="download_notifier_title_error">Erreur</string>
@@ -262,7 +262,7 @@
     <string name="download_notifier_download_paused">Téléchargement en pause</string>
     <string name="local_source">Source locale</string>
     <string name="chapter_paused">En pause</string>
-    <string name="action_open_log">Ouvrir le fichier journal</string>
+    <string name="action_open_log">Ouvrir le fichier</string>
     <string name="action_restore">Restaurer</string>
     <string name="pref_backup_directory">Dossier de sauvegarde</string>
     <string name="pref_backup_service_category">Sauvegardes automatiques</string>
@@ -281,7 +281,7 @@
     <string name="restoring_backup">Restauration de sauvegarde en cours</string>
     <string name="creating_backup">Création de sauvegarde en cours</string>
     <string name="pref_refresh_library_tracking">Actualiser les métadonnées de suivi</string>
-    <string name="pref_refresh_library_tracking_summary">Actualise le statut, appréciation et dernier chapitre lu des services de suivi</string>
+    <string name="pref_refresh_library_tracking_summary">Actualise le statut, la note et le dernier chapitre lu depuis les services de suivi</string>
     <string name="default_category_summary">Toujours demander</string>
     <string name="pref_read_with_volume_keys_inverted">Inverser les boutons de volume</string>
     <string name="pref_crop_borders">Rogner les bordures</string>
@@ -293,7 +293,6 @@
     <string name="action_global_search_hint">Recherche globale…</string>
     <string name="latest">Récents</string>
     <string name="browse">Explorer</string>
-    <string name="channel_library">Bibliothèque</string>
     <string name="action_display_download_badge">Badges des téléchargements</string>
     <string name="local_source_badge">Local</string>
     <string name="channel_common">Général</string>
@@ -374,7 +373,7 @@
     <string name="ext_obsolete">Obsolète</string>
     <string name="logout_title">Se déconnecter de %1$s \?</string>
     <string name="logout">Se déconnecter</string>
-    <string name="logout_success">Vous êtes maintenant déconnecté</string>
+    <string name="logout_success">Vous êtes maintenant déconnecté(e)</string>
     <string name="currently_reading">En cours de lecture</string>
     <string name="paused">En pause</string>
     <string name="want_to_read">À lire plus tard</string>
@@ -388,7 +387,7 @@
     <string name="theme_system">Par défaut du système</string>
     <string name="pref_manage_notifications">Notifications</string>
     <string name="pref_category_security">Sécurité</string>
-    <string name="lock_with_biometrics">Nécessite un déverrouillage</string>
+    <string name="lock_with_biometrics">Imposer un déverrouillage à l\'ouverture</string>
     <string name="lock_when_idle">Verrouiller en cas d\'inactivité</string>
     <string name="lock_always">Toujours</string>
     <string name="lock_never">Jamais</string>
@@ -418,9 +417,9 @@
     </plurals>
     <string name="hide_notification_content">Cacher le contenu des notifications</string>
     <string name="notification_check_updates">Recherche de nouveaux chapitres</string>
-    <string name="pref_disable_battery_optimization">Désactiver la fonction Optimisation utilisation batterie</string>
-    <string name="pref_disable_battery_optimization_summary">Aide aux mises à jour et sauvegardes de la bibliothèque en arrière-plan</string>
-    <string name="battery_optimization_disabled">La fonction Optimisation utilisation batterie est déjà désactivée</string>
+    <string name="pref_disable_battery_optimization">Désactiver la fonction d\'optimisation de la batterie</string>
+    <string name="pref_disable_battery_optimization_summary">Facilite les mises à jour et sauvegardes de la bibliothèque en arrière-plan</string>
+    <string name="battery_optimization_disabled">La fonction d\'optimisation de la batterie est déjà désactivée</string>
     <string name="email">Adresse courriel</string>
     <string name="pref_always_show_chapter_transition">Toujours afficher la transition entre les chapitres</string>
     <plurals name="notification_new_chapters_summary">
@@ -468,7 +467,7 @@
     <string name="manga_info_collapse">Moins</string>
     <string name="manga_info_expand">Plus</string>
     <string name="website">Site web</string>
-    <string name="pref_confirm_exit">Confirmer la sortie</string>
+    <string name="pref_confirm_exit">Confirmer la fermeture</string>
     <string name="recent_manga_time">Ch. %1$s – %2$s</string>
     <string name="error_invalid_date_supplied">Date fournie invalide</string>
     <string name="licenses">Licences à code source ouvert</string>
@@ -515,7 +514,6 @@
     <string name="invalid_backup_file_missing_data">Il manque des données au fichier.</string>
     <string name="invalid_backup_file">Fichier de sauvegarde invalide</string>
     <string name="source_not_found_name">Source introuvable : %1$s</string>
-    <string name="pref_library_update_error_notification">Afficher les notifications d\'erreurs de mise à jour</string>
     <string name="pref_library_update_refresh_metadata">Actualiser automatiquement les métadonnées</string>
     <string name="action_migrate">Migrer</string>
     <string name="action_display_comfortable_grid">Grille espacée</string>
@@ -534,7 +532,6 @@
         <item quantity="other">%1$s chapitres</item>
     </plurals>
     <string name="action_disable">Désactiver</string>
-    <string name="action_open_in_settings">Ouvrir dans les paramètres</string>
     <string name="requires_app_restart">Nécessite un redémarrage de l\'application pour prendre effet</string>
     <string name="label_network">Réseau</string>
     <string name="tapping_inverted_both">Les deux</string>
@@ -554,12 +551,10 @@
     <string name="pref_category_reading_mode">Mode de lecture</string>
     <string name="pref_category_theme">Thème</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 traqueur</item>
-        <item quantity="other">%d traqueurs</item>
+        <item quantity="one">Suivi par 1 service</item>
+        <item quantity="other">Suivi par %d services</item>
     </plurals>
     <string name="no_pinned_sources">Vous n\'avez aucune source épinglée</string>
-    <string name="group_downloader">Téléchargement</string>
-    <string name="group_backup_restore">Sauvegarde et restauration</string>
     <string name="channel_complete">Compléter</string>
     <string name="channel_progress">Progression</string>
     <string name="download_notifier_download_finish">Téléchargement terminé</string>
@@ -585,7 +580,7 @@
     <string name="manga_from_library">Manga de la bibliothèque</string>
     <string name="action_search_settings">Rechercher des paramètres</string>
     <string name="pref_incognito_mode_summary">Met en pause l\'historique de lecture</string>
-    <string name="clear_history_confirmation">Êtes-vous sûr(e) \? Tout l\'Historique sera perdue.</string>
+    <string name="clear_history_confirmation">Êtes-vous sûr(e) \? Tout l\'historique sera effacé.</string>
     <string name="pref_incognito_mode">Mode navigation privée</string>
     <string name="pref_clear_history">Effacer l\'historique</string>
     <string name="clear_history_completed">Historique supprimé</string>
@@ -598,16 +593,14 @@
 \nIl devrait se terminer par .proto.gz ou .json.</string>
     <string name="myanimelist_relogin">Veuillez vous reconnecter à MAL</string>
     <string name="file_picker_error">L’application de sélection de fichier est introuvable</string>
-    <string name="pref_label_nsfw_extension">Étiqueter dans la liste d\'extension</string>
-    <string name="pref_show_nsfw_extension">Afficher dans la liste d\'extensions</string>
-    <string name="pref_show_nsfw_source">Afficher dans la liste de sources</string>
-    <string name="channel_crash_logs">Journaux d\'erreur</string>
+    <string name="pref_show_nsfw_source">Afficher dans les listes de sources et d\'extensions</string>
+    <string name="channel_crash_logs">Registres d\'incident</string>
     <string name="track_finished_reading_date">Date de fin</string>
     <string name="track_started_reading_date">Date de début</string>
     <string name="kindlish_nav">Plutôt provoquant</string>
-    <string name="crash_log_saved">Sauvegarde des journaux endommagés</string>
-    <string name="pref_dump_crash_logs">Copie des journaux endommagés</string>
-    <string name="pref_dump_crash_logs_summary">Enregistre les journaux d\'erreur dans un fichier pour le partager avec les développeurs</string>
+    <string name="crash_log_saved">Registre d\'incident sauvegardé</string>
+    <string name="pref_dump_crash_logs">Archivage des registres d\'incident</string>
+    <string name="pref_dump_crash_logs_summary">Enregistre les traces d\'incident dans un fichier pour les partager avec les développeurs</string>
     <string name="pref_viewer_nav">Plan de navigation</string>
     <string name="edge_nav">Bord</string>
     <string name="l_nav">En forme de L</string>
@@ -660,8 +653,8 @@
     <string name="chapter_not_found">Chapitre non trouvé</string>
     <string name="rotation_type">Mode de rotation</string>
     <string name="automatic_background">Automatique</string>
-    <string name="pref_library_update_refresh_trackers_summary">Mise à jour des traqueurs lors de la mise à jour de la bibliothèque</string>
-    <string name="pref_library_update_refresh_trackers">Actualisation automatique des traqueurs</string>
+    <string name="pref_library_update_refresh_trackers_summary">Mettre à jour les services de suivi lors de la mise à jour de la bibliothèque</string>
+    <string name="pref_library_update_refresh_trackers">Actualiser automatiquement les services de suivi</string>
     <string name="restrictions">Restrictions : %s</string>
     <string name="cancel_all_for_series">Tout annuler pour cette série</string>
     <string name="action_display_local_badge">Badges locaux</string>
@@ -717,10 +710,19 @@
     <string name="pref_category_timestamps">Horodatage</string>
     <string name="pref_category_appearance">Apparence</string>
     <string name="label_default">Par défaut</string>
-    <string name="action_track">Traquer</string>
+    <string name="action_track">Suivre</string>
     <string name="pref_category_navigation">Navigation</string>
     <string name="getting_started_guide">Guide de démarrage</string>
     <string name="pref_tablet_ui_mode">Forcer le mode tablette</string>
     <string name="help_translate">Aider à traduire</string>
     <string name="pref_remove_exclude_categories">Catégories exclues</string>
+    <string name="ext_app_info">Infos sur l\'application</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Installez et démarrez Shizuku pour utiliser Shizuku comme installateur d\'extensions.</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku n\'est pas en exécution</string>
+    <string name="ext_installer_shizuku">Shizuku</string>
+    <string name="ext_installer_packageinstaller">PackageInstaller</string>
+    <string name="ext_installer_legacy">Legacy</string>
+    <string name="ext_installer_pref">Installateur</string>
+    <string name="ext_install_service_notif">Installation de l\'extension…</string>
+    <string name="action_sort_count">Total des mangas</string>
 </resources>

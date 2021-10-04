@@ -61,7 +61,6 @@
     </plurals>
     <string name="default_category_summary">Наар ыйыт</string>
     <string name="default_category">Куолутунан бөлөх</string>
-    <string name="pref_library_update_error_notification">Саҥардыы сыаһатын туһунан биллэриилэри көрдөр</string>
     <string name="pref_library_update_refresh_metadata_summary">Саҥа тас уонна кыра чаастар баалларын, бэрэбиэркэлээ</string>
     <string name="pref_library_update_refresh_metadata">Метаданнайдары автоматическайдык саҥарт</string>
     <string name="pref_update_only_non_completed">Бүтэ илик маанганы эрэ, саҥарт</string>
@@ -142,7 +141,6 @@
     <string name="action_display">Көрдөр</string>
     <string name="action_display_mode">Көрүнүн уларыт</string>
     <string name="action_migrate">Көһүү</string>
-    <string name="action_open_in_settings">Түстэлгэ арый</string>
     <string name="action_open_in_web_view">WebViewга арый</string>
     <string name="action_open_in_browser">Көрдөөһүнҥэ арый</string>
     <string name="action_resume">Салҕаа</string>
@@ -323,7 +321,6 @@
     <string name="pref_disable_battery_optimization_summary">Бэбэлэтиэкэ уонна хаппаас куопуйатыгар кэннинээҕи саҥардыытыгар көмөлөһөр</string>
     <string name="battery_optimization_setting_activity_not_found">Устройства түстэлэ сатаан арыллыбата</string>
     <string name="battery_optimization_disabled">Батарея тупсуруута араарыллынна</string>
-    <string name="group_backup_restore">Хаппаас куопуйаны оҥоруу уонна төнүҥнэрии</string>
     <string name="file_select_backup">Хаппаас куопуйа билэтин талыы</string>
     <string name="whats_new">Туох саҥа баарый</string>
     <string name="version">Биэрсия</string>
@@ -495,8 +492,6 @@
     <string name="edge_nav">Кытыы</string>
     <string name="kindlish_nav">Kindle курдук</string>
     <string name="l_nav">L курдук</string>
-    <string name="pref_label_nsfw_extension">Кэҥэтиилэр испииһиктэригэр бэлиэ</string>
-    <string name="pref_show_nsfw_extension">Кэҥэтиилэр испииһэктэригэр көрдөрүү</string>
     <string name="pref_show_nsfw_source">Төрүттэр испииһэктэригэр көрдөрүү</string>
     <string name="pref_category_nsfw_content">NSFW (18+) төрүттэр</string>
     <string name="exclude">Киллэримэ: %s</string>

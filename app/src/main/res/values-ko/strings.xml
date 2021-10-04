@@ -254,7 +254,6 @@
     <string name="download_notifier_title_error">오류</string>
     <string name="download_notifier_unknown_error">챕터 다운로드중에 예기치 않은 오류가 발생하였습니다</string>
     <string name="download_notifier_download_paused">다운로드 일시중지됨</string>
-    <string name="channel_library">서재</string>
     <string name="action_display_download_badge">다운로드 배지</string>
     <string name="pref_update_only_non_completed">연재 중인 만화만 업데이트</string>
     <string name="pref_auto_update_manga_sync">읽은 뒤 챕터 동기화</string>

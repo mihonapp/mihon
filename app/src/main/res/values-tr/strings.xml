@@ -306,7 +306,6 @@
     <string name="download_notifier_no_network">Ağ bağlantısı yok</string>
     <string name="download_notifier_download_paused">İndirme duraklatıldı</string>
     <string name="channel_common">Genel</string>
-    <string name="channel_library">Kitaplık</string>
     <string name="transition_finished">Biten:</string>
     <string name="transition_current">Şu anki:</string>
     <string name="transition_next">Sonraki:</string>
@@ -480,7 +479,6 @@
     <string name="invalid_backup_file">Geçersiz yedekleme dosyası</string>
     <string name="tracker_not_logged_in">Giriş yapılmadı: %1$s</string>
     <string name="source_not_found_name">Kaynak bulunamadı: %1$s</string>
-    <string name="pref_library_update_error_notification">Güncelleme hataları bildirimlerini göster</string>
     <string name="pref_library_update_refresh_metadata_summary">Kitaplığı güncellerken yeni kapağı ve ayrıntıları denetle</string>
     <string name="pref_library_update_refresh_metadata">Üst veriyi kendiliğinden yenile</string>
     <string name="action_migrate">Taşın</string>
@@ -500,7 +498,6 @@
         <item quantity="one">1 bölüm</item>
         <item quantity="other">%1$s bölüm</item>
     </plurals>
-    <string name="action_open_in_settings">Ayarlarda aç</string>
     <string name="requires_app_restart">Etkili olması için uygulamanın yeniden başlatılmasını gerektirir</string>
     <string name="label_network">Ağ</string>
     <string name="pref_jump_to_chapters">Açınca bölümlere git</string>
@@ -524,8 +521,6 @@
         <item quantity="other">%d izleyici</item>
     </plurals>
     <string name="no_pinned_sources">Sabitlenmiş kaynağınız yok</string>
-    <string name="group_backup_restore">Yedekle ve geri yükle</string>
-    <string name="group_downloader">İndirilenler</string>
     <string name="channel_complete">Tamamlandı</string>
     <string name="channel_progress">İlerleme</string>
     <string name="download_notifier_download_finish">İndirme tamamlandı</string>
@@ -562,9 +557,7 @@
     <string name="invalid_backup_file_type">Geçersiz yedekleme dosyası türü: %1$s
 \n.proto.gz veya .json ile bitmelidir.</string>
     <string name="pref_category_nsfw_content">Yetişkin içerik (18+) kaynakları</string>
-    <string name="pref_label_nsfw_extension">Uzantılar listesinde etiketle</string>
-    <string name="pref_show_nsfw_extension">Uzantılar listesinde göster</string>
-    <string name="pref_show_nsfw_source">Kaynaklar listesinde göster</string>
+    <string name="pref_show_nsfw_source">Kaynaklar ve uzantılar listesinde göster</string>
     <string name="file_picker_error">Dosya seçme uygulaması bulunamadı</string>
     <string name="myanimelist_relogin">Lütfen MAL\'ye tekrar giriş yapın</string>
     <string name="pref_viewer_nav">Gezinme düzeni</string>
@@ -687,4 +680,13 @@
     <string name="pref_category_navigation">Gezinme</string>
     <string name="getting_started_guide">Başlangıç kılavuzu</string>
     <string name="pref_tablet_ui_mode">Tablet arayüzü kullan</string>
+    <string name="pref_remove_exclude_categories">İstenmeyen kategoriler</string>
+    <string name="help_translate">Çeviriye yardım edin</string>
+    <string name="ext_app_info">Uygulama bilgisi</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Uzantı kurucusu olarak kullanmak için Shizuku\'yu kurun ve başlatın.</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku çalışmıyor</string>
+    <string name="ext_installer_legacy">Eski</string>
+    <string name="ext_installer_pref">Kurucu</string>
+    <string name="ext_install_service_notif">Uzantı kuruluyor…</string>
+    <string name="action_sort_count">Toplam manga</string>
 </resources>

@@ -99,7 +99,7 @@
     <string name="update_check_notification_download_complete">Pobieranie ukończone</string>
     <string name="update_check_notification_download_error">Błąd pobierania</string>
     <string name="update_check_notification_update_available">Dostępna nowa wersja!</string>
-    <string name="information_empty_library">Twoja biblioteka jest pusta. Aby dodać nowe pozycje, przejdź do zakładki Przeglądaj.</string>
+    <string name="information_empty_library">Twoja biblioteka jest pusta.</string>
     <string name="download_notifier_title_error">Błąd</string>
     <string name="download_notifier_unknown_error">Podczas pobierania rozdziału wystąpił nieoczekiwany błąd</string>
     <string name="download_notifier_download_paused">Pobieranie wstrzymane</string>
@@ -122,8 +122,8 @@
     <string name="action_open_log">Otwórz log</string>
     <string name="show_title">Tytuł</string>
     <string name="show_chapter_number">Numer rozdziału</string>
-    <string name="portrait">Orientacja pionowa</string>
-    <string name="landscape">Orientacja pozioma</string>
+    <string name="portrait">Pionowo</string>
+    <string name="landscape">Poziomo</string>
     <string name="pref_library_update_interval">Częstotliwość aktualizacji</string>
     <string name="update_never">Ręcznie</string>
     <string name="update_3hour">Co 3 godziny</string>
@@ -156,7 +156,7 @@
     <string name="black_background">Czarny</string>
     <string name="left_to_right_viewer">Od lewej do prawej</string>
     <string name="right_to_left_viewer">Od prawej do lewej</string>
-    <string name="vertical_viewer">Pionowo</string>
+    <string name="vertical_viewer">Pionowy</string>
     <string name="webtoon_viewer">Web-komiks</string>
     <string name="pref_viewer_type">Domyślny styl czytania</string>
     <string name="scale_type_fit_screen">Dopasuj do ekranu</string>
@@ -259,7 +259,6 @@
     <string name="action_global_search_hint">Wyszukiwanie globalne…</string>
     <string name="browse">Przeglądaj</string>
     <string name="channel_common">Zwykły</string>
-    <string name="channel_library">Biblioteka</string>
     <string name="latest">Najnowsze</string>
     <string name="action_display_download_badge">Plakietki pobrań</string>
     <string name="local_source_badge">Lokalna</string>
@@ -408,7 +407,7 @@
     <string name="backup_in_progress">Kopia zapasowa jest już w trakcie tworzenia</string>
     <string name="restore_duration">%02d min, %02d s</string>
     <string name="pref_search_pinned_sources_only">Pokazuj tylko przypięte źródła</string>
-    <string name="pref_webtoon_side_padding">Odstępy po bokach</string>
+    <string name="pref_webtoon_side_padding">Marginesy boczne</string>
     <string name="gray_background">Szary</string>
     <string name="pref_true_color_summary">Ogranicza banding, ale ma wpływ na wydajność</string>
     <string name="ext_updates_pending">Dostępne aktualizacje</string>
@@ -497,7 +496,6 @@
     <string name="invalid_backup_file">Nieprawidłowy plik kopii zapasowej</string>
     <string name="tracker_not_logged_in">Nie zalogowano do: %1$s</string>
     <string name="source_not_found_name">Nie znaleziono źródła: %1$s</string>
-    <string name="pref_library_update_error_notification">Pokaż powiadomienia o błędach aktualizacji</string>
     <string name="pref_library_update_refresh_metadata_summary">Sprawdź, czy są nowe okładki i opisy podczas aktualizowania biblioteki</string>
     <string name="pref_library_update_refresh_metadata">Automatycznie odświeżaj metadane</string>
     <string name="action_display_comfortable_grid">Wygodna siatka</string>
@@ -512,7 +510,6 @@
     <string name="pref_show_reading_mode">Tryb czytania</string>
     <string name="loader_not_implemented_error">Nie znaleziono źródła</string>
     <string name="action_disable">Wyłącz</string>
-    <string name="action_open_in_settings">Otwórz w ustawieniach</string>
     <string name="action_start">Start</string>
     <string name="requires_app_restart">Wymaga ponownego uruchomienia aplikacji</string>
     <string name="label_network">Sieć</string>
@@ -541,8 +538,6 @@
     <string name="action_search_settings">Ustawienia szukania</string>
     <string name="spen_next_page">Następna strona</string>
     <string name="spen_previous_page">Poprzednia strona</string>
-    <string name="group_backup_restore">Kopia zapasowa i odzyskiwanie</string>
-    <string name="group_downloader">Pobrane</string>
     <string name="channel_errors">Błędy</string>
     <string name="channel_complete">Ukończone</string>
     <string name="channel_progress">Postęp</string>
@@ -551,9 +546,9 @@
     <string name="migration_help_guide">Instrukcja przenoszenia źródeł</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Jeden brakujący rozdział</item>
-        <item quantity="few">%d brakujących rozdziałów</item>
-        <item quantity="many">%d brakujące rozdziały</item>
-        <item quantity="other">%d brakujące rozdziały</item>
+        <item quantity="few">%d brakujące rozdziały</item>
+        <item quantity="many">%d brakujących rozdziałów</item>
+        <item quantity="other">%d brakujących rozdziałów</item>
     </plurals>
     <string name="share_page_info">%1$s: %2$s, strona %3$d</string>
     <plurals name="num_trackers">
@@ -587,9 +582,7 @@
     <string name="pref_category_nsfw_content">NFSW Materiały 18+</string>
     <string name="file_picker_error">Nie znaleziono aplikacji do przeglądania plików</string>
     <string name="myanimelist_relogin">Wymagane ponowne zalogowanie do MAL</string>
-    <string name="pref_label_nsfw_extension">Pokazuj etykiety na liście rozszerzeń</string>
-    <string name="pref_show_nsfw_extension">Pokazuj na liście rozszerzeń</string>
-    <string name="pref_show_nsfw_source">Pokazuj na liście źródeł</string>
+    <string name="pref_show_nsfw_source">Pokazuj na liście źródeł i rozszerzeń</string>
     <string name="channel_crash_logs">Logi crashy</string>
     <string name="track_finished_reading_date">Data zakończenia</string>
     <string name="track_started_reading_date">Data rozpoczęcia</string>
@@ -659,7 +652,7 @@
     <string name="tracking_guide">Przewodnik śledzenia postępu</string>
     <string name="off">Wyłączone</string>
     <string name="on">Włączone</string>
-    <string name="categorized_display_settings">Ustawienia wyświetlania dla kategorii</string>
+    <string name="categorized_display_settings">Ustawienia wyświetlania dla kategorii i sortowania</string>
     <string name="alignment_bottom">Dół</string>
     <string name="alignment_center">Środek</string>
     <string name="alignment_top">Góra</string>
@@ -685,8 +678,8 @@
     <plurals name="relative_time">
         <item quantity="one">Wczoraj</item>
         <item quantity="few">%1$d dni temu</item>
-        <item quantity="many"/>
-        <item quantity="other"/>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
     </plurals>
     <string name="pref_relative_time_long">Długi (Krótki+, n dni temu)</string>
     <string name="pref_relative_time_short">Krótki (Dzisiaj, Jutro)</string>
@@ -699,4 +692,17 @@
     <string name="label_default">Domyślny</string>
     <string name="getting_started_guide">Wprowadzenie - poradnik</string>
     <string name="help_translate">Pomóż tłumaczyć</string>
+    <string name="tracker_komga_warning">Ten tracker jest kompatybilny tylko ze źródłem Komga.</string>
+    <string name="pref_tablet_ui_mode">Wymuś UI dla tabletu</string>
+    <string name="pref_remove_exclude_categories">Wykluczone kategorie</string>
+    <string name="pref_lowest">Najniższe</string>
+    <string name="pref_low">Niskie</string>
+    <string name="pref_high">Wysokie</string>
+    <string name="pref_highest">Najwyższy</string>
+    <string name="pref_inverted_colors">Odwrócone</string>
+    <string name="ext_app_info">Informacje o aplikacji</string>
+    <string name="relative_time_today">Dzisiaj</string>
+    <string name="recently">Ostatnio</string>
+    <string name="theme_tealturquoise">Błękitny &amp; Turkusowy</string>
+    <string name="theme_midnightdusk">Zmierzch północy</string>
 </resources>
