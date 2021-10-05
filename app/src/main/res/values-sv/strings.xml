@@ -688,4 +688,5 @@
     <string name="ext_installer_pref">Installatör</string>
     <string name="ext_install_service_notif">Installerar tillägg…</string>
     <string name="action_sort_count">Total manga</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Installera och starta Shizuku för att använda Shizuku som tilläggsinstallationsprogram.</string>
 </resources>
