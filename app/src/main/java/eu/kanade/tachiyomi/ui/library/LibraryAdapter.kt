@@ -8,6 +8,9 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.LibraryCategoryBinding
 import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
 import eu.kanade.tachiyomi.widget.RecyclerViewPagerAdapter
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -47,7 +50,17 @@ class LibraryAdapter(
     private var boundViews = arrayListOf<View>()
 
     private val isPerCategory by lazy { preferences.categorisedDisplaySettings().get() }
-    private val currentDisplayMode by lazy { preferences.libraryDisplayMode().get() }
+    private var currentDisplayMode = preferences.libraryDisplayMode().get()
+
+    init {
+        preferences.libraryDisplayMode()
+            .asFlow()
+            .drop(1)
+            .onEach {
+                currentDisplayMode = it
+            }
+            .launchIn(controller.viewScope)
+    }
 
     /**
      * Creates a new view for this adapter.
