@@ -170,10 +170,15 @@ class MoreController :
     }
 
     private fun updateDownloadQueueSummary(preference: Preference) {
+        var pendingDownloadExists = downloadQueueSize != 0
+        var pauseMessage = resources?.getString(R.string.paused)
+        var numberOfPendingDownloads = resources?.getQuantityString(R.plurals.download_queue_summary, downloadQueueSize, downloadQueueSize)
+
         preference.summary = when {
-            downloadQueueSize == 0 -> null
-            !isDownloading -> resources?.getString(R.string.paused)
-            else -> resources?.getQuantityString(R.plurals.download_queue_summary, downloadQueueSize, downloadQueueSize)
+            !pendingDownloadExists -> null
+            !isDownloading && !pendingDownloadExists -> pauseMessage
+            !isDownloading && pendingDownloadExists -> "$pauseMessage • $numberOfPendingDownloads"
+            else -> numberOfPendingDownloads
         }
     }
 
