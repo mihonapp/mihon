@@ -36,7 +36,6 @@ class DownloadController :
      * Adapter containing the active downloads.
      */
     private var adapter: DownloadAdapter? = null
-
     private var actionFab: ExtendedFloatingActionButton? = null
     private var actionFabScrollListener: RecyclerView.OnScrollListener? = null
 
@@ -100,6 +99,12 @@ class DownloadController :
         presenter.getDownloadProgressObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeUntilDestroy { onUpdateDownloadedPages(it) }
+
+        presenter.downloadQueue.getUpdatedObservable()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeUntilDestroy {
+                updateTitle(it.size)
+            }
     }
 
     override fun configureFab(fab: ExtendedFloatingActionButton) {
@@ -290,6 +295,7 @@ class DownloadController :
         if (presenter.downloadQueue.isEmpty()) {
             binding.emptyView.show(R.string.information_no_downloads)
             actionFab?.isVisible = false
+            updateTitle()
         } else {
             binding.emptyView.hide()
             actionFab?.apply {
@@ -366,6 +372,16 @@ class DownloadController :
                     presenter.cancelDownloads(allDownloadsForSeries)
                 }
             }
+        }
+    }
+
+    private fun updateTitle(queueSize: Int = 0) {
+        val defaultTitle = getTitle()
+
+        if (queueSize == 0) {
+            setTitle(defaultTitle)
+        } else {
+            setTitle("$defaultTitle ($queueSize)")
         }
     }
 }
