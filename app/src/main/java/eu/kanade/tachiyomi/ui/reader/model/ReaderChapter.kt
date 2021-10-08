@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.reader.model
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.ui.reader.loader.PageLoader
-import timber.log.Timber
+import eu.kanade.tachiyomi.util.system.logcat
 
 data class ReaderChapter(val chapter: Chapter) {
 
@@ -36,7 +36,7 @@ data class ReaderChapter(val chapter: Chapter) {
         references--
         if (references == 0) {
             if (pageLoader != null) {
-                Timber.d("Recycling chapter ${chapter.name}")
+                logcat { "Recycling chapter ${chapter.name}" }
             }
             pageLoader?.recycle()
             pageLoader = null

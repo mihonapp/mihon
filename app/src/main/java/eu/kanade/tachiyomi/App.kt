@@ -20,6 +20,7 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import coil.util.DebugLogger
 import eu.kanade.tachiyomi.data.coil.ByteBufferFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
@@ -34,11 +35,13 @@ import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.notification
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import logcat.AndroidLogcatLogger
+import logcat.LogPriority
+import logcat.LogcatLogger
 import org.acra.config.httpSender
 import org.acra.ktx.initAcra
 import org.acra.sender.HttpSender
 import org.conscrypt.Conscrypt
-import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -52,7 +55,6 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
     override fun onCreate() {
         super<Application>.onCreate()
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         // TLS 1.3 support for Android < 10
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -110,6 +112,10 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
                     }
                 )
             }.launchIn(ProcessLifecycleOwner.get().lifecycleScope)
+
+        if (!LogcatLogger.isInstalled && preferences.verboseLogging()) {
+            LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))
+        }
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -127,6 +133,7 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
             okHttpClient(Injekt.get<NetworkHelper>().coilClient)
             crossfade((300 * this@App.animatorDurationScale).toInt())
             allowRgb565(getSystemService<ActivityManager>()!!.isLowRamDevice)
+            if (preferences.verboseLogging()) logger(DebugLogger())
         }.build()
     }
 

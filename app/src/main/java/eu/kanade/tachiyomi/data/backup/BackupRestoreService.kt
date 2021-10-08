@@ -13,13 +13,14 @@ import eu.kanade.tachiyomi.data.backup.legacy.LegacyBackupRestore
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isServiceRunning
+import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import logcat.LogPriority
 
 /**
  * Restores backup.
@@ -128,7 +129,7 @@ class BackupRestoreService : Service() {
         }
 
         val handler = CoroutineExceptionHandler { _, exception ->
-            Timber.e(exception)
+            logcat(LogPriority.ERROR, exception)
             backupRestore?.writeErrorLog()
 
             notifier.showRestoreError(exception.message)

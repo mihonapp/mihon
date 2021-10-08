@@ -8,7 +8,8 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.widget.doOnTextChanged
 import eu.kanade.tachiyomi.databinding.DownloadCustomAmountBinding
-import timber.log.Timber
+import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 
 /**
  * Custom dialog to select how many chapters to download.
@@ -71,7 +72,7 @@ class DialogCustomDownloadView @JvmOverloads constructor(context: Context, attrs
                 amount = getAmount(text.toString().toInt())
             } catch (error: NumberFormatException) {
                 // Catch NumberFormatException to prevent parse exception when input is empty.
-                Timber.e(error)
+                logcat(LogPriority.ERROR, error)
             }
         }
     }

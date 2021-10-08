@@ -331,6 +331,8 @@ class PreferencesHelper(val context: Context) {
         if (MiuiUtil.isMiui()) Values.ExtensionInstaller.LEGACY else Values.ExtensionInstaller.PACKAGEINSTALLER
     )
 
+    fun verboseLogging() = prefs.getBoolean(Keys.verboseLogging, false)
+
     fun setChapterSettingsDefault(manga: Manga) {
         prefs.edit {
             putInt(Keys.defaultChapterFilterByRead, manga.readFilter)

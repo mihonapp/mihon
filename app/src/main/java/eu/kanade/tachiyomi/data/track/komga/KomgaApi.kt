@@ -7,13 +7,14 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
+import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import logcat.LogPriority
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
 const val READLIST_API = "/api/v1/readlists"
@@ -56,7 +57,7 @@ class KomgaApi(private val client: OkHttpClient) {
                     last_chapter_read = progress.lastReadContinuousNumberSort
                 }
             } catch (e: Exception) {
-                Timber.w(e, "Could not get item: $url")
+                logcat(LogPriority.WARN, e) { "Could not get item: $url" }
                 throw e
             }
         }

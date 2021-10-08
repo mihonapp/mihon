@@ -47,7 +47,7 @@ import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity
 import eu.kanade.tachiyomi.util.lang.truncateCenter
-import timber.log.Timber
+import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -93,7 +93,7 @@ fun Context.copyToClipboard(label: String, content: String) {
 
         toast(getString(R.string.copied_to_clipboard, content.truncateCenter(50)))
     } catch (e: Throwable) {
-        Timber.e(e)
+        logcat(LogPriority.ERROR, e)
         toast(R.string.clipboard_copy_error)
     }
 }

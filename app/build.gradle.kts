@@ -252,7 +252,7 @@ dependencies {
     implementation("io.github.reactivecircus.flowbinding:flowbinding-viewpager:$flowbindingVersion")
 
     // Logging
-    implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation("com.squareup.logcat:logcat:0.1")
 
     // Crash reports/analytics
     implementation("ch.acra:acra-http:5.8.1")

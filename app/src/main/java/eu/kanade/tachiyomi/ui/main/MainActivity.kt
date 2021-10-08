@@ -61,13 +61,14 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isTablet
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
+import logcat.LogPriority
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -340,7 +341,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
                     NewUpdateDialogController(result).showDialog(router)
                 }
             } catch (e: Exception) {
-                Timber.e(e)
+                logcat(LogPriority.ERROR, e)
             }
         }
     }
@@ -356,7 +357,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
                 val pendingUpdates = ExtensionGithubApi().checkForUpdates(this@MainActivity)
                 preferences.extensionUpdatesCount().set(pendingUpdates.size)
             } catch (e: Exception) {
-                Timber.e(e)
+                logcat(LogPriority.ERROR, e)
             }
         }
     }

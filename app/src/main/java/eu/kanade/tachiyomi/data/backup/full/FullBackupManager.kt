@@ -26,11 +26,12 @@ import eu.kanade.tachiyomi.data.database.models.History
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.serialization.protobuf.ProtoBuf
+import logcat.LogPriority
 import okio.buffer
 import okio.gzip
 import okio.sink
-import timber.log.Timber
 import kotlin.math.max
 
 class FullBackupManager(context: Context) : AbstractBackupManager(context) {
@@ -86,7 +87,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
             file.openOutputStream().sink().gzip().buffer().use { it.write(byteArray) }
             return file.uri.toString()
         } catch (e: Exception) {
-            Timber.e(e)
+            logcat(LogPriority.ERROR, e)
             throw e
         }
     }

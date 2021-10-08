@@ -70,6 +70,7 @@ import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.getThemeColor
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import eu.kanade.tachiyomi.util.system.isNightMode
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.popupMenu
 import eu.kanade.tachiyomi.util.view.setTooltip
@@ -79,8 +80,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
+import logcat.LogPriority
 import nucleus.factory.RequiresPresenter
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import kotlin.math.abs
@@ -620,7 +621,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             readingModeToast?.cancel()
             readingModeToast = toast(strings[mode])
         } catch (e: ArrayIndexOutOfBoundsException) {
-            Timber.e("Unknown reading mode: $mode")
+            logcat(LogPriority.ERROR) { "Unknown reading mode: $mode" }
         }
     }
 
@@ -660,7 +661,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
      * this case the activity is closed and a toast is shown to the user.
      */
     fun setInitialChapterError(error: Throwable) {
-        Timber.e(error)
+        logcat(LogPriority.ERROR, error)
         finish()
         toast(error.message)
     }
@@ -822,7 +823,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 toast(R.string.picture_saved)
             }
             is ReaderPresenter.SaveImageResult.Error -> {
-                Timber.e(result.error)
+                logcat(LogPriority.ERROR, result.error)
             }
         }
     }

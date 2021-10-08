@@ -3,7 +3,8 @@ package eu.kanade.tachiyomi.data.track.job
 import android.content.Context
 import androidx.core.content.edit
 import eu.kanade.tachiyomi.data.database.models.Track
-import timber.log.Timber
+import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 
 class DelayedTrackingStore(context: Context) {
 
@@ -17,7 +18,7 @@ class DelayedTrackingStore(context: Context) {
         val (_, lastChapterRead) = preferences.getString(trackId, "0:0.0")!!.split(":")
         if (track.last_chapter_read > lastChapterRead.toFloat()) {
             val value = "${track.manga_id}:${track.last_chapter_read}"
-            Timber.i("Queuing track item: $trackId, $value")
+            logcat(LogPriority.INFO) { "Queuing track item: $trackId, $value" }
             preferences.edit {
                 putString(trackId, value)
             }

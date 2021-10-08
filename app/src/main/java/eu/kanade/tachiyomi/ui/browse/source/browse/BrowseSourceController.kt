@@ -42,6 +42,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.connectivityManager
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.inflate
@@ -54,7 +55,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
+import logcat.LogPriority
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -405,7 +406,7 @@ open class BrowseSourceController(bundle: Bundle) :
      * @param error the error received.
      */
     fun onAddPageError(error: Throwable) {
-        Timber.e(error)
+        logcat(LogPriority.ERROR, error)
         val adapter = adapter ?: return
         adapter.onLoadMoreComplete(null)
         hideProgressBar()

@@ -87,6 +87,7 @@ import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.storage.getUriCompat
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.getCoordinates
@@ -95,9 +96,9 @@ import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import logcat.LogPriority
 import reactivecircus.flowbinding.recyclerview.scrollStateChanges
 import reactivecircus.flowbinding.swiperefreshlayout.refreshes
-import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -595,7 +596,9 @@ class MangaController :
                                 presenter.registerTracking(track, service as TrackService)
                             }
                         } catch (e: Exception) {
-                            Timber.w(e, "Could not match manga: ${manga.title} with service $service")
+                            logcat(LogPriority.WARN, e) {
+                                "Could not match manga: ${manga.title} with service $service"
+                            }
                         }
                     }
                 }
@@ -767,7 +770,7 @@ class MangaController :
                 startActivity(uri.toShareIntent(activity))
             }
         } catch (e: Exception) {
-            Timber.e(e)
+            logcat(LogPriority.ERROR, e)
             activity?.toast(R.string.error_sharing_cover)
         }
     }
@@ -780,7 +783,7 @@ class MangaController :
                 activity.toast(R.string.cover_saved)
             }
         } catch (e: Exception) {
-            Timber.e(e)
+            logcat(LogPriority.ERROR, e)
             activity?.toast(R.string.error_saving_cover)
         }
     }
@@ -836,7 +839,7 @@ class MangaController :
 
     fun onSetCoverError(error: Throwable) {
         activity?.toast(R.string.notification_cover_update_failed)
-        Timber.e(error)
+        logcat(LogPriority.ERROR, error)
     }
 
     /**
@@ -1177,7 +1180,7 @@ class MangaController :
     }
 
     fun onChaptersDeletedError(error: Throwable) {
-        Timber.e(error)
+        logcat(LogPriority.ERROR, error)
     }
 
     override fun startDownloadNow(position: Int) {
@@ -1231,7 +1234,7 @@ class MangaController :
     }
 
     fun onTrackingRefreshError(error: Throwable) {
-        Timber.e(error)
+        logcat(LogPriority.ERROR, error)
         activity?.toast(error.message)
     }
 
@@ -1240,7 +1243,7 @@ class MangaController :
     }
 
     fun onTrackingSearchResultsError(error: Throwable) {
-        Timber.e(error)
+        logcat(LogPriority.ERROR, error)
         getTrackingSearchDialog()?.onSearchResultsError(error.message)
     }
 

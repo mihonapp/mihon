@@ -26,13 +26,14 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.ProgressItem
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.onAnimationsFinished
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import logcat.LogPriority
 import reactivecircus.flowbinding.appcompat.queryTextChanges
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -123,7 +124,7 @@ class HistoryController :
     fun onAddPageError(error: Throwable) {
         adapter?.onLoadMoreComplete(null)
         adapter?.endlessTargetCount = 1
-        Timber.e(error)
+        logcat(LogPriority.ERROR, error)
     }
 
     override fun onUpdateEmptyView(size: Int) {

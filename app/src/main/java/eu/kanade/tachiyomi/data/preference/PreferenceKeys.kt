@@ -227,6 +227,8 @@ object PreferenceKeys {
 
     const val extensionInstaller = "extension_installer"
 
+    const val verboseLogging = "verbose_logging"
+
     fun trackUsername(syncId: Int) = "pref_mangasync_username_$syncId"
 
     fun trackPassword(syncId: Int) = "pref_mangasync_password_$syncId"

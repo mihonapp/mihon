@@ -9,10 +9,11 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.storage.DiskUtil
+import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
+import logcat.LogPriority
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -54,7 +55,7 @@ class DownloadProvider(private val context: Context) {
                 .createDirectory(getSourceDirName(source))
                 .createDirectory(getMangaDirName(manga))
         } catch (e: Throwable) {
-            Timber.e(e, "Invalid download directory")
+            logcat(LogPriority.ERROR, e) { "Invalid download directory" }
             throw Exception(context.getString(R.string.invalid_download_dir))
         }
     }

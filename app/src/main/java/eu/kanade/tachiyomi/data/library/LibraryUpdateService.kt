@@ -37,6 +37,7 @@ import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.isServiceRunning
+import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +51,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import timber.log.Timber
+import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -212,7 +213,7 @@ class LibraryUpdateService(
 
         // Destroy service when completed or in case of an error.
         val handler = CoroutineExceptionHandler { _, exception ->
-            Timber.e(exception)
+            logcat(LogPriority.ERROR, exception)
             stopSelf(startId)
         }
         updateJob = ioScope.launch(handler) {
@@ -377,7 +378,7 @@ class LibraryUpdateService(
         // Update manga details metadata in the background
         if (preferences.autoUpdateMetadata()) {
             val handler = CoroutineExceptionHandler { _, exception ->
-                Timber.e(exception)
+                logcat(LogPriority.ERROR, exception)
             }
             GlobalScope.launch(Dispatchers.IO + handler) {
                 val updatedManga = source.getMangaDetails(manga.toMangaInfo())
@@ -433,7 +434,7 @@ class LibraryUpdateService(
                                             }
                                         } catch (e: Throwable) {
                                             // Ignore errors and continue
-                                            Timber.e(e)
+                                            logcat(LogPriority.ERROR, e)
                                         }
                                     }
 
@@ -494,7 +495,7 @@ class LibraryUpdateService(
                                 }
                             } catch (e: Throwable) {
                                 // Ignore errors and continue
-                                Timber.e(e)
+                                logcat(LogPriority.ERROR, e)
                             }
                         }
                     }

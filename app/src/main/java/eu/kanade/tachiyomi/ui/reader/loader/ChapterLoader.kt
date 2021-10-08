@@ -8,11 +8,11 @@ import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import eu.kanade.tachiyomi.util.system.logcat
 import rx.Completable
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import timber.log.Timber
 
 /**
  * Loader used to retrieve the [PageLoader] for a given chapter.
@@ -37,7 +37,7 @@ class ChapterLoader(
             .doOnNext { chapter.state = ReaderChapter.State.Loading }
             .observeOn(Schedulers.io())
             .flatMap { readerChapter ->
-                Timber.d("Loading pages for ${chapter.chapter.name}")
+                logcat { "Loading pages for ${chapter.chapter.name}" }
 
                 val loader = getPageLoader(readerChapter)
                 chapter.pageLoader = loader

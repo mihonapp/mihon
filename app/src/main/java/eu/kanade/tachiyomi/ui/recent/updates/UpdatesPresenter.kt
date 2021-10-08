@@ -11,10 +11,11 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.recent.DateSectionItem
 import eu.kanade.tachiyomi.util.lang.toDateKey
+import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
 import java.util.Calendar
@@ -53,7 +54,7 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
                     view.onChapterDownloadUpdate(it)
                 },
                 { _, error ->
-                    Timber.e(error)
+                    logcat(LogPriority.ERROR, error)
                 }
             )
 
@@ -62,7 +63,7 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
             .onBackpressureBuffer()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeLatestCache(UpdatesController::onChapterDownloadUpdate) { _, error ->
-                Timber.e(error)
+                logcat(LogPriority.ERROR, error)
             }
     }
 

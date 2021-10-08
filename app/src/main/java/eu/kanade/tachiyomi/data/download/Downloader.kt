@@ -22,13 +22,14 @@ import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.saveTo
 import eu.kanade.tachiyomi.util.system.ImageUtil
+import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.async
+import logcat.LogPriority
 import okhttp3.Response
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 
@@ -209,7 +210,7 @@ class Downloader(
                 },
                 { error ->
                     DownloadService.stop(context)
-                    Timber.e(error)
+                    logcat(LogPriority.ERROR, error)
                     notifier.onError(error.message)
                 }
             )

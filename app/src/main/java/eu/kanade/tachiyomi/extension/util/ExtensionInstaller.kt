@@ -17,9 +17,10 @@ import eu.kanade.tachiyomi.extension.installer.Installer
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.storage.getUriCompat
+import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
-import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -239,7 +240,7 @@ internal class ExtensionInstaller(private val context: Context) {
 
             // Set next installation step
             if (uri == null) {
-                Timber.e("Couldn't locate downloaded APK")
+                logcat(LogPriority.ERROR) { "Couldn't locate downloaded APK" }
                 downloadsRelay.call(id to InstallStep.Error)
                 return
             }

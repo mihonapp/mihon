@@ -6,14 +6,15 @@ import android.os.Build
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.system.getUriSize
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import logcat.LogPriority
 import rikka.shizuku.Shizuku
-import timber.log.Timber
 import java.io.BufferedReader
 import java.io.InputStream
 
@@ -22,7 +23,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
     private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val shizukuDeadListener = Shizuku.OnBinderDeadListener {
-        Timber.e("Shizuku was killed prematurely")
+        logcat { "Shizuku was killed prematurely" }
         service.stopSelf()
     }
 
@@ -72,7 +73,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
                     continueQueue(InstallStep.Installed)
                 }
             } catch (e: Exception) {
-                Timber.e(e, "Failed to install extension ${entry.downloadId} ${entry.uri}")
+                logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
                 if (sessionId != null) {
                     exec("pm install-abandon $sessionId")
                 }
@@ -115,7 +116,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
                 false
             }
         } else {
-            Timber.e("Shizuku is not ready to use.")
+            logcat(LogPriority.ERROR) { "Shizuku is not ready to use." }
             service.toast(R.string.ext_installer_shizuku_stopped)
             service.stopSelf()
             false

@@ -74,6 +74,18 @@ class SettingsAdvancedController : SettingsController() {
             }
         }
 
+        switchPreference {
+            key = Keys.verboseLogging
+            titleRes = R.string.pref_verbose_logging
+            summaryRes = R.string.pref_verbose_logging_summary
+            defaultValue = false
+
+            onChange {
+                activity?.toast(R.string.requires_app_restart)
+                true
+            }
+        }
+
         preferenceCategory {
             titleRes = R.string.label_background_activity
 

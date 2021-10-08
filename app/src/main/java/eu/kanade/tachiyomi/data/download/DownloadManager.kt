@@ -14,8 +14,9 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 import rx.Observable
-import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -338,7 +339,7 @@ class DownloadManager(
             cache.removeChapter(oldChapter, manga)
             cache.addChapter(newName, mangaDir, manga)
         } else {
-            Timber.e("Could not rename downloaded chapter: %s.", oldNames.joinToString())
+            logcat(LogPriority.ERROR) { "Could not rename downloaded chapter: ${oldNames.joinToString()}." }
         }
     }
 

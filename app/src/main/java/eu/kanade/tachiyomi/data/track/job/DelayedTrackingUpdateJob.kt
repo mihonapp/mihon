@@ -11,9 +11,10 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
+import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
@@ -44,7 +45,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
                         db.insertTrack(track).executeAsBlocking()
                     }
                 } catch (e: Exception) {
-                    Timber.e(e)
+                    logcat(LogPriority.ERROR, e)
                 }
             }
 

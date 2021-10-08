@@ -20,7 +20,8 @@ import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.storage.saveTo
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isServiceRunning
-import timber.log.Timber
+import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 
@@ -121,7 +122,7 @@ class UpdaterService : Service() {
             }
             notifier.onDownloadFinished(apkFile.getUriCompat(this))
         } catch (error: Exception) {
-            Timber.e(error)
+            logcat(LogPriority.ERROR, error)
             notifier.onDownloadError(url)
         }
     }

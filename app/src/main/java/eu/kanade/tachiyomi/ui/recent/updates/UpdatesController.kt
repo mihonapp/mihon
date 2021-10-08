@@ -25,14 +25,15 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.manga.chapter.base.BaseChaptersAdapter
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.onAnimationsFinished
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import logcat.LogPriority
 import reactivecircus.flowbinding.recyclerview.scrollStateChanges
 import reactivecircus.flowbinding.swiperefreshlayout.refreshes
-import timber.log.Timber
 
 /**
  * Fragment that shows recent chapters.
@@ -300,7 +301,7 @@ class UpdatesController :
      * @param error error message
      */
     fun onChaptersDeletedError(error: Throwable) {
-        Timber.e(error)
+        logcat(LogPriority.ERROR, error)
     }
 
     override fun downloadChapter(position: Int) {

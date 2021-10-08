@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.util.system
 
 import android.annotation.SuppressLint
-import timber.log.Timber
+import logcat.LogPriority
 
 object MiuiUtil {
 
@@ -32,7 +32,7 @@ object MiuiUtil {
                 .getDeclaredMethod("get", String::class.java)
                 .invoke(null, key) as String
         } catch (e: Exception) {
-            Timber.w(e, "Unable to use SystemProperties.get")
+            logcat(LogPriority.WARN, e) { "Unable to use SystemProperties.get()" }
             null
         }
     }

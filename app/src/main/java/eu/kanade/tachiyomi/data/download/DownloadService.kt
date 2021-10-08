@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isConnectedToWifi
 import eu.kanade.tachiyomi.util.system.isOnline
 import eu.kanade.tachiyomi.util.system.isServiceRunning
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notification
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
@@ -27,9 +28,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import logcat.LogPriority
 import ru.beryukhov.reactivenetwork.ReactiveNetwork
 import rx.subscriptions.CompositeSubscription
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -143,7 +144,7 @@ class DownloadService : Service() {
             }
             .catch { error ->
                 withUIContext {
-                    Timber.e(error)
+                    logcat(LogPriority.ERROR, error)
                     toast(R.string.download_queue_error)
                     stopSelf()
                 }
