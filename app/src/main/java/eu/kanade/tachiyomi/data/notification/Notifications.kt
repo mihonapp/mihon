@@ -27,6 +27,7 @@ object Notifications {
     private const val GROUP_LIBRARY = "group_library"
     const val CHANNEL_LIBRARY_PROGRESS = "library_progress_channel"
     const val ID_LIBRARY_PROGRESS = -101
+    const val ID_LIBRARY_SIZE_WARNING = -103
     const val CHANNEL_LIBRARY_ERROR = "library_errors_channel"
     const val ID_LIBRARY_ERROR = -102
 

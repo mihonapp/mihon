@@ -117,7 +117,7 @@ internal class UpdaterNotifier(private val context: Context) {
     fun onDownloadError(url: String) {
         with(notificationBuilder) {
             setContentText(context.getString(R.string.update_check_notification_download_error))
-            setSmallIcon(android.R.drawable.stat_sys_warning)
+            setSmallIcon(R.drawable.ic_warning_white_24dp)
             setOnlyAlertOnce(false)
             setProgress(0, 0, false)
 

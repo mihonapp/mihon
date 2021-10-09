@@ -264,6 +264,10 @@ class LibraryUpdateService(
         mangaToUpdate = listToUpdate
             .distinctBy { it.id }
             .sortedWith(rankingScheme[selectedScheme])
+
+        if (mangaToUpdate.size > QUEUE_SIZE_WARNING_THRESHOLD) {
+            notifier.showQueueSizeWarningNotification()
+        }
     }
 
     /**
@@ -567,3 +571,5 @@ class LibraryUpdateService(
         return File("")
     }
 }
+
+const val QUEUE_SIZE_WARNING_THRESHOLD = 100

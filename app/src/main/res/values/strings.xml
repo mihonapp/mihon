@@ -24,6 +24,7 @@
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
     <string name="label_default">Default</string>
+    <string name="label_warning">Warning</string>
 
     <string name="unlock_app">Unlock Tachiyomi</string>
     <string name="confirm_lock_change">Authenticate to confirm change</string>
@@ -706,6 +707,7 @@
     <!-- Library update service notifications -->
     <string name="notification_check_updates">Checking for new chapters</string>
     <string name="notification_updating">Updating library… (%1$d/%2$d)</string>
+    <string name="notification_size_warning">Large updates may lead to increased battery usage and sources becoming slower</string>
     <string name="notification_new_chapters">New chapters found</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">For 1 title</item>
