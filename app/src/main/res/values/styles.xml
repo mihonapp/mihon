@@ -224,6 +224,14 @@
         <item name="elevationOverlayEnabled">@bool/elevationOverlayEnabled</item>
     </style>
 
+    <!--==============-->
+    <!--Widgets.Slider-->
+    <!--==============-->
+    <style name="Widget.Tachiyomi.Slider" parent="Widget.MaterialComponents.Slider">
+        <item name="labelBehavior">gone</item>
+        <item name="tickVisible">false</item>
+    </style>
+
 
     <!--================-->
     <!--Navigation Views-->

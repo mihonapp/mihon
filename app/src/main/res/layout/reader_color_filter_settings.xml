@@ -44,8 +44,6 @@
             android:stepSize="1.0"
             android:valueTo="255.0"
             android:padding="8dp"
-            app:labelBehavior="gone"
-            app:tickVisible="false"
             app:layout_constraintEnd_toStartOf="@id/txt_color_filter_red_value"
             app:layout_constraintStart_toEndOf="@id/color_filter_symbols_barrier"
             app:layout_constraintTop_toBottomOf="@id/switch_color_filter" />
@@ -84,8 +82,6 @@
             android:stepSize="1.0"
             android:valueTo="255.0"
             android:padding="8dp"
-            app:labelBehavior="gone"
-            app:tickVisible="false"
             app:layout_constraintEnd_toStartOf="@id/txt_color_filter_green_value"
             app:layout_constraintStart_toEndOf="@id/color_filter_symbols_barrier"
             app:layout_constraintTop_toBottomOf="@id/slider_color_filter_red" />
@@ -124,8 +120,6 @@
             android:stepSize="1.0"
             android:valueTo="255.0"
             android:padding="8dp"
-            app:labelBehavior="gone"
-            app:tickVisible="false"
             app:layout_constraintEnd_toStartOf="@id/txt_color_filter_blue_value"
             app:layout_constraintStart_toEndOf="@id/color_filter_symbols_barrier"
             app:layout_constraintTop_toBottomOf="@id/slider_color_filter_green" />
@@ -164,8 +158,6 @@
             android:stepSize="1.0"
             android:valueTo="255.0"
             android:padding="8dp"
-            app:labelBehavior="gone"
-            app:tickVisible="false"
             app:layout_constraintEnd_toStartOf="@id/txt_color_filter_alpha_value"
             app:layout_constraintStart_toEndOf="@id/color_filter_symbols_barrier"
             app:layout_constraintTop_toBottomOf="@id/slider_color_filter_blue" />
@@ -251,8 +243,6 @@
             android:valueFrom="-75.0"
             android:valueTo="100.0"
             android:stepSize="1.0"
-            app:labelBehavior="gone"
-            app:tickVisible="false"
             app:layout_constraintEnd_toStartOf="@id/txt_brightness_seekbar_value"
             app:layout_constraintStart_toEndOf="@id/txt_brightness_seekbar_icon"
             app:layout_constraintTop_toBottomOf="@id/custom_brightness" />

@@ -13,7 +13,6 @@ class ReaderSlider @JvmOverloads constructor(
 ) : Slider(context, attrs) {
 
     init {
-        isTickVisible = false
         stepSize = 1f
         setLabelFormatter { value ->
             (value.toInt() + 1).toString()

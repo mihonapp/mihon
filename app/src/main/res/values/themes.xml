@@ -67,6 +67,7 @@
         <item name="bottomNavigationStyle">@style/Widget.Tachiyomi.BottomNavigationView</item>
         <item name="navigationRailStyle">@style/Widget.Tachiyomi.NavigationRailView</item>
         <item name="switchStyle">@style/Widget.Tachiyomi.Switch</item>
+        <item name="sliderStyle">@style/Widget.Tachiyomi.Slider</item>
         <item name="elevationOverlayEnabled">false</item>
         <item name="lightSystemBarsOnPrimary">false</item>
 
