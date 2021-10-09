@@ -20,9 +20,7 @@ import eu.kanade.tachiyomi.ui.base.controller.getMainAppBarHeight
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.view.loadAnyAutoPause
-import eu.kanade.tachiyomi.util.view.setChips
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.clicks
 import reactivecircus.flowbinding.android.view.longClicks
@@ -45,13 +43,14 @@ class MangaInfoHeaderAdapter(
 
     private lateinit var binding: MangaInfoHeaderBinding
 
-    private var initialLoad: Boolean = true
-
-    private val maxLines = 3
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
         binding = MangaInfoHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         updateCoverPosition()
+
+        // Expand manga info if navigated from source listing or explicitly set to
+        // (e.g. on tablets)
+        binding.mangaSummarySection.expanded = fromSource || isTablet
+
         return HeaderViewHolder(binding.root)
     }
 
@@ -180,15 +179,6 @@ class MangaInfoHeaderAdapter(
                 }
                 .launchIn(controller.viewScope)
 
-            binding.mangaSummaryText.longClicks()
-                .onEach {
-                    controller.activity?.copyToClipboard(
-                        view.context.getString(R.string.description),
-                        binding.mangaSummaryText.text.toString()
-                    )
-                }
-                .launchIn(controller.viewScope)
-
             binding.mangaCover.clicks()
                 .onEach {
                     controller.showFullCoverDialog()
@@ -201,7 +191,7 @@ class MangaInfoHeaderAdapter(
                 }
                 .launchIn(controller.viewScope)
 
-            setMangaInfo(manga, source)
+            setMangaInfo()
         }
 
         private fun showCoverOptionsDialog() {
@@ -231,7 +221,7 @@ class MangaInfoHeaderAdapter(
          * @param manga manga object containing information about manga.
          * @param source the source of the manga.
          */
-        private fun setMangaInfo(manga: Manga, source: Source?) {
+        private fun setMangaInfo() {
             // Update full title TextView.
             binding.mangaFullTitle.text = if (manga.title.isBlank()) {
                 view.context.getString(R.string.unknown)
@@ -254,27 +244,23 @@ class MangaInfoHeaderAdapter(
             }
 
             // If manga source is known update source TextView.
-            val mangaSource = source?.toString()
+            val mangaSource = source.toString()
             with(binding.mangaSource) {
-                if (mangaSource != null) {
-                    val enabledLanguages = preferences.enabledLanguages().get()
-                        .filterNot { it in listOf("all", "other") }
+                val enabledLanguages = preferences.enabledLanguages().get()
+                    .filterNot { it in listOf("all", "other") }
 
-                    val hasOneActiveLanguages = enabledLanguages.size == 1
-                    val isInEnabledLanguages = source.lang in enabledLanguages
-                    text = when {
-                        // For edge cases where user disables a source they got manga of in their library.
-                        hasOneActiveLanguages && !isInEnabledLanguages -> mangaSource
-                        // Hide the language tag when only one language is used.
-                        hasOneActiveLanguages && isInEnabledLanguages -> source.name
-                        else -> mangaSource
-                    }
+                val hasOneActiveLanguages = enabledLanguages.size == 1
+                val isInEnabledLanguages = source.lang in enabledLanguages
+                text = when {
+                    // For edge cases where user disables a source they got manga of in their library.
+                    hasOneActiveLanguages && !isInEnabledLanguages -> mangaSource
+                    // Hide the language tag when only one language is used.
+                    hasOneActiveLanguages && isInEnabledLanguages -> source.name
+                    else -> mangaSource
+                }
 
-                    setOnClickListener {
-                        controller.performSearch(sourceManager.getOrStub(source.id).name)
-                    }
-                } else {
-                    text = view.context.getString(R.string.unknown)
+                setOnClickListener {
+                    controller.performSearch(sourceManager.getOrStub(source.id).name)
                 }
             }
 
@@ -296,84 +282,9 @@ class MangaInfoHeaderAdapter(
             binding.mangaCover.loadAnyAutoPause(manga)
 
             // Manga info section
-            val hasInfoContent = !manga.description.isNullOrBlank() || !manga.genre.isNullOrBlank()
-            showMangaInfo(hasInfoContent)
-            if (hasInfoContent) {
-                // Update description TextView.
-                binding.mangaSummaryText.text = updateDescription(manga.description, (fromSource || isTablet).not())
-
-                // Update genres list
-                if (!manga.genre.isNullOrBlank()) {
-                    binding.mangaGenresTagsCompactChips.setChips(
-                        manga.getGenres(),
-                        controller::performGenreSearch
-                    )
-                    binding.mangaGenresTagsFullChips.setChips(
-                        manga.getGenres(),
-                        controller::performGenreSearch
-                    )
-                } else {
-                    binding.mangaGenresTagsCompact.isVisible = false
-                    binding.mangaGenresTagsCompactChips.isVisible = false
-                    binding.mangaGenresTagsFullChips.isVisible = false
-                }
-
-                // Handle showing more or less info
-                merge(
-                    binding.mangaSummaryText.clicks(),
-                    binding.mangaInfoToggleMore.clicks(),
-                    binding.mangaInfoToggleLess.clicks(),
-                    binding.mangaSummarySection.clicks(),
-                )
-                    .onEach { toggleMangaInfo() }
-                    .launchIn(controller.viewScope)
-
-                if (initialLoad) {
-                    binding.mangaGenresTagsCompact.requestLayout()
-                }
-
-                // Expand manga info if navigated from source listing or explicitly set to
-                // (e.g. on tablets)
-                if (initialLoad && (fromSource || isTablet)) {
-                    toggleMangaInfo()
-                    initialLoad = false
-                }
-            }
-        }
-
-        private fun showMangaInfo(visible: Boolean) {
-            binding.mangaSummarySection.isVisible = visible
-        }
-
-        private fun toggleMangaInfo() {
-            val isCurrentlyExpanded = binding.mangaSummaryText.maxLines != maxLines
-
-            binding.mangaInfoToggleMore.isVisible = isCurrentlyExpanded
-            binding.mangaInfoScrim.isVisible = isCurrentlyExpanded
-            binding.mangaInfoToggleMoreScrim.isVisible = isCurrentlyExpanded
-            binding.mangaGenresTagsCompact.isVisible = isCurrentlyExpanded
-            binding.mangaGenresTagsCompactChips.isVisible = isCurrentlyExpanded
-
-            binding.mangaInfoToggleLess.isVisible = !isCurrentlyExpanded
-            binding.mangaGenresTagsFullChips.isVisible = !isCurrentlyExpanded
-
-            binding.mangaSummaryText.text = updateDescription(manga.description, isCurrentlyExpanded)
-
-            binding.mangaSummaryText.maxLines = when {
-                isCurrentlyExpanded -> maxLines
-                else -> Int.MAX_VALUE
-            }
-        }
-
-        private fun updateDescription(description: String?, isCurrentlyExpanded: Boolean): CharSequence {
-            return when {
-                description.isNullOrBlank() -> view.context.getString(R.string.unknown)
-                isCurrentlyExpanded ->
-                    description
-                        .replace(Regex(" +\$", setOf(RegexOption.MULTILINE)), "")
-                        .replace(Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE)), "\n")
-                else -> description
-            }
+            binding.mangaSummarySection.isVisible = !manga.description.isNullOrBlank() || !manga.genre.isNullOrBlank()
+            binding.mangaSummarySection.description = manga.description
+            binding.mangaSummarySection.setTags(manga.getGenres(), controller::performGenreSearch)
         }
 
         /**

@@ -188,126 +188,12 @@
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <eu.kanade.tachiyomi.widget.MangaSummaryView
         android:id="@+id/manga_summary_section"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/manga_actions">
-
-        <TextView
-            android:id="@+id/manga_summary_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:clickable="true"
-            android:ellipsize="end"
-            android:focusable="true"
-            android:maxLines="3"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textIsSelectable="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Collapsed summary content Collapsed summary content Collapsed summary content Collapsed summary content Collapsed summary content Collapsed summary content" />
-
-        <View
-            android:id="@+id/manga_info_scrim"
-            android:layout_width="0dp"
-            android:layout_height="32sp"
-            android:background="@drawable/manga_info_gradient"
-            android:backgroundTint="?android:attr/colorBackground"
-            app:layout_constraintBottom_toBottomOf="@+id/manga_summary_text"
-            app:layout_constraintEnd_toEndOf="@+id/manga_summary_text"
-            app:layout_constraintStart_toStartOf="@+id/manga_summary_text" />
-
-        <View
-            android:id="@+id/manga_info_toggle_more_scrim"
-            android:layout_width="36sp"
-            android:layout_height="18sp"
-            android:background="@drawable/manga_info_more_gradient"
-            android:backgroundTint="?android:attr/colorBackground"
-            app:layout_constraintBottom_toBottomOf="@+id/manga_info_toggle_more"
-            app:layout_constraintEnd_toEndOf="@+id/manga_info_toggle_more"
-            app:layout_constraintStart_toStartOf="@+id/manga_info_toggle_more"
-            app:layout_constraintTop_toTopOf="@+id/manga_info_toggle_more" />
-
-        <ImageButton
-            android:id="@+id/manga_info_toggle_more"
-            style="@style/Widget.Tachiyomi.Button.InlineButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="-4dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/manga_info_expand"
-            android:src="@drawable/ic_expand_more_24dp"
-            app:layout_constraintBottom_toBottomOf="@id/manga_summary_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tint="?android:attr/textColorPrimary" />
-
-        <ImageButton
-            android:id="@+id/manga_info_toggle_less"
-            style="@style/Widget.Tachiyomi.Button.InlineButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/manga_info_collapse"
-            android:src="@drawable/ic_expand_less_24dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/manga_summary_text"
-            app:tint="?android:attr/textColorPrimary"
-            tools:visibility="visible" />
-
-        <HorizontalScrollView
-            android:id="@+id/manga_genres_tags_compact"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:requiresFadingEdge="horizontal"
-            android:scrollbars="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/manga_info_toggle_more">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/manga_genres_tags_compact_chips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
-                app:chipSpacingHorizontal="4dp"
-                app:singleLine="true" />
-
-        </HorizontalScrollView>
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/manga_genres_tags_full_chips"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:visibility="gone"
-            app:chipSpacingHorizontal="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/manga_info_toggle_less"
-            tools:visibility="gone" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@id/manga_actions" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
