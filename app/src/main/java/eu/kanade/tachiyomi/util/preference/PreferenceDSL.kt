@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.util.preference
 
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.biometric.BiometricPrompt
+import androidx.fragment.app.FragmentActivity
 import androidx.preference.CheckBoxPreference
 import androidx.preference.DialogPreference
 import androidx.preference.EditTextPreference
@@ -14,7 +16,11 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreferenceCompat
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.startAuthentication
 import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.preference.AdaptiveTitlePreferenceCategory
 import eu.kanade.tachiyomi.widget.preference.IntListPreference
 import eu.kanade.tachiyomi.widget.preference.SwitchPreferenceCategory
@@ -123,6 +129,37 @@ inline fun Preference.onClick(crossinline block: () -> Unit) {
 
 inline fun Preference.onChange(crossinline block: (Any?) -> Boolean) {
     setOnPreferenceChangeListener { _, newValue -> block(newValue) }
+}
+
+inline fun SwitchPreferenceCompat.requireAuthentication(activity: FragmentActivity?, title: String, subtitle: String?) {
+    onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+        if (context.isAuthenticationSupported()) {
+            activity?.startAuthentication(
+                title,
+                subtitle,
+                callback = object : AuthenticatorUtil.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(
+                        activity: FragmentActivity?,
+                        result: BiometricPrompt.AuthenticationResult
+                    ) {
+                        super.onAuthenticationSucceeded(activity, result)
+                        isChecked = newValue as Boolean
+                    }
+
+                    override fun onAuthenticationError(
+                        activity: FragmentActivity?,
+                        errorCode: Int,
+                        errString: CharSequence
+                    ) {
+                        super.onAuthenticationError(activity, errorCode, errString)
+                        activity?.toast(errString.toString())
+                    }
+                }
+            )
+        }
+
+        false
+    }
 }
 
 var Preference.defaultValue: Any?
