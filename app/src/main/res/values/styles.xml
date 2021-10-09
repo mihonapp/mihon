@@ -297,11 +297,16 @@
         <item name="android:windowExitAnimation">@anim/fade_out_short</item>
     </style>
 
-    <!--==========-->
-    <!--Preference-->
-    <!--==========-->
+    <!--===========-->
+    <!--Preferences-->
+    <!--===========-->
     <style name="PreferenceThemeOverlay.Tachiyomi">
         <item name="preferenceCategoryTitleTextAppearance">?attr/textAppearanceBody2</item>
+        <item name="switchPreferenceCompatStyle">@style/PreferenceThemeOverlay.Tachiyomi.SwitchPreferenceCompat</item>
+    </style>
+
+    <style name="PreferenceThemeOverlay.Tachiyomi.SwitchPreferenceCompat" parent="Preference.SwitchPreferenceCompat.Material">
+        <item name="android:widgetLayout">@layout/pref_widget_switch_material</item>
     </style>
 
 </resources>
