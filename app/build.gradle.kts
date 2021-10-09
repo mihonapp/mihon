@@ -140,7 +140,7 @@ dependencies {
 
     // AndroidX libraries
     implementation("androidx.annotation:annotation:1.3.0-beta01")
-    implementation("androidx.appcompat:appcompat:1.4.0-alpha03")
+    implementation("androidx.appcompat:appcompat:1.4.0-beta01")
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha03")
     implementation("androidx.browser:browser:1.4.0-beta01")
     implementation("androidx.constraintlayout:constraintlayout:2.1.1")
@@ -188,7 +188,7 @@ dependencies {
     implementation("com.squareup.duktape:duktape-android:1.4.0")
 
     // HTML parser
-    implementation("org.jsoup:jsoup:1.14.2")
+    implementation("org.jsoup:jsoup:1.14.3")
 
     // Disk
     implementation("com.jakewharton:disklrucache:2.0.2")
@@ -214,7 +214,7 @@ dependencies {
     implementation("com.github.inorichi.injekt:injekt-core:65b0440")
 
     // Image loading
-    val coilVersion = "1.3.2"
+    val coilVersion = "1.4.0"
     implementation("io.coil-kt:coil:$coilVersion")
     implementation("io.coil-kt:coil-gif:$coilVersion")
 
@@ -257,7 +257,7 @@ dependencies {
 
     // Crash reports/analytics
     implementation("ch.acra:acra-http:5.8.1")
-    "standardImplementation"("com.google.firebase:firebase-analytics:19.0.1")
+    "standardImplementation"("com.google.firebase:firebase-analytics:19.0.2")
 
     // Licenses
     implementation("com.mikepenz:aboutlibraries-core:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
