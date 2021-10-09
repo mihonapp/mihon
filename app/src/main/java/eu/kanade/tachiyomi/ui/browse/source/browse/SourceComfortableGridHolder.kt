@@ -39,11 +39,11 @@ class SourceComfortableGridHolder(private val view: View, private val adapter: F
         binding.thumbnail.alpha = if (manga.favorite) 0.3f else 1.0f
 
         // For rounded corners
-        binding.leftBadges.clipToOutline = true
-        binding.rightBadges.clipToOutline = true
+        binding.badges.leftBadges.clipToOutline = true
+        binding.badges.rightBadges.clipToOutline = true
 
         // Set favorite badge
-        binding.favoriteText.isVisible = manga.favorite
+        binding.badges.favoriteText.isVisible = manga.favorite
 
         setImage(manga)
     }

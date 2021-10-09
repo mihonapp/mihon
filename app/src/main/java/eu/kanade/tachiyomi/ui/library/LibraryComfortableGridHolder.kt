@@ -36,26 +36,26 @@ class LibraryComfortableGridHolder(
         binding.title.text = item.manga.title
 
         // For rounded corners
-        binding.leftBadges.clipToOutline = true
-        binding.rightBadges.clipToOutline = true
+        binding.badges.leftBadges.clipToOutline = true
+        binding.badges.rightBadges.clipToOutline = true
 
         // Update the unread count and its visibility.
-        with(binding.unreadText) {
+        with(binding.badges.unreadText) {
             isVisible = item.unreadCount > 0
             text = item.unreadCount.toString()
         }
         // Update the download count and its visibility.
-        with(binding.downloadText) {
+        with(binding.badges.downloadText) {
             isVisible = item.downloadCount > 0
             text = item.downloadCount.toString()
         }
         // Update the source language and its visibility
-        with(binding.languageText) {
+        with(binding.badges.languageText) {
             isVisible = item.sourceLanguage.isNotEmpty()
             text = item.sourceLanguage
         }
         // set local visibility if its local manga
-        binding.localText.isVisible = item.isLocal
+        binding.badges.localText.isVisible = item.isLocal
 
         // For rounded corners
         binding.card.clipToOutline = true
