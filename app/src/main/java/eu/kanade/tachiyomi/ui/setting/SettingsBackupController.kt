@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
+import eu.kanade.tachiyomi.util.preference.infoPreference
 import eu.kanade.tachiyomi.util.preference.intListPreference
 import eu.kanade.tachiyomi.util.preference.onChange
 import eu.kanade.tachiyomi.util.preference.onClick
@@ -159,6 +160,8 @@ class SettingsBackupController : SettingsController() {
                     .launchIn(viewScope)
             }
         }
+
+        infoPreference(R.string.backup_info)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

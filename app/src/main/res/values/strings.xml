@@ -449,6 +449,7 @@
     <string name="restoring_backup">Restoring backup</string>
     <string name="restoring_backup_error">Restoring backup failed</string>
     <string name="restoring_backup_canceled">Canceled restore</string>
+    <string name="backup_info">Automatic backups are highly recommended. You should keep copies in other places as well.</string>
 
       <!-- Advanced section -->
     <string name="label_network">Network</string>
