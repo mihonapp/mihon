@@ -29,7 +29,15 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
 
         downloadQueue.getUpdatedObservable()
             .observeOn(AndroidSchedulers.mainThread())
-            .map { it.map(::DownloadItem) }
+            .map { downloads ->
+                downloads
+                    .groupBy { it.source }
+                    .map { entry ->
+                        DownloadHeaderItem(entry.key.name, entry.value.size).apply {
+                            addSubItems(0, entry.value.map { DownloadItem(it, this) })
+                        }
+                    }
+            }
             .subscribeLatestCache(DownloadController::onNextDownloads) { _, error ->
                 logcat(LogPriority.ERROR, error)
             }
