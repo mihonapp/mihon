@@ -34,7 +34,8 @@ open class LibraryCompactGridHolder(
         binding.title.text = item.manga.title
 
         // For rounded corners
-        binding.badges.clipToOutline = true
+        binding.leftBadges.clipToOutline = true
+        binding.rightBadges.clipToOutline = true
 
         // Update the unread count and its visibility.
         with(binding.unreadText) {
@@ -45,6 +46,11 @@ open class LibraryCompactGridHolder(
         with(binding.downloadText) {
             isVisible = item.downloadCount > 0
             text = item.downloadCount.toString()
+        }
+        // Update the source language and its visibility
+        with(binding.languageText) {
+            isVisible = item.sourceLanguage.isNotEmpty()
+            text = item.sourceLanguage
         }
         // set local visibility if its local manga
         binding.localText.isVisible = item.isLocal

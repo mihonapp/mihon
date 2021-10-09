@@ -46,6 +46,11 @@ class LibraryListHolder(
             isVisible = item.downloadCount > 0
             text = "${item.downloadCount}"
         }
+        // Update the source language and its visibility
+        with(binding.languageText) {
+            isVisible = item.sourceLanguage.isNotEmpty()
+            text = item.sourceLanguage
+        }
         // show local text badge if local manga
         binding.localText.isVisible = item.isLocal
 

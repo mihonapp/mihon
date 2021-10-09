@@ -112,6 +112,22 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
+        <TextView
+            android:id="@+id/language_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorTertiary"
+            android:maxLines="1"
+            android:paddingStart="3dp"
+            android:paddingTop="1dp"
+            android:paddingEnd="3dp"
+            android:paddingBottom="1dp"
+            tools:text="EN"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorOnTertiary"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
