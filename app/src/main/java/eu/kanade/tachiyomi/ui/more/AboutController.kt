@@ -40,10 +40,16 @@ class AboutController : SettingsController(), NoAppBarElevationController {
         preference {
             key = "pref_about_version"
             titleRes = R.string.version
-            summary = if (BuildConfig.DEBUG) {
-                "Preview r${BuildConfig.COMMIT_COUNT} (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
-            } else {
-                "Stable ${BuildConfig.VERSION_NAME} (${getFormattedBuildTime()})"
+            summary = when {
+                BuildConfig.DEBUG -> {
+                    "Debug ${BuildConfig.COMMIT_SHA} (${getFormattedBuildTime()})"
+                }
+                BuildConfig.PREVIEW -> {
+                    "Preview r${BuildConfig.COMMIT_COUNT} (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
+                }
+                else -> {
+                    "Stable ${BuildConfig.VERSION_NAME} (${getFormattedBuildTime()})"
+                }
             }
 
             onClick {
@@ -61,17 +67,19 @@ class AboutController : SettingsController(), NoAppBarElevationController {
                 onClick { checkVersion() }
             }
         }
-        preference {
-            key = "pref_about_whats_new"
-            titleRes = R.string.whats_new
+        if (!BuildConfig.DEBUG) {
+            preference {
+                key = "pref_about_whats_new"
+                titleRes = R.string.whats_new
 
-            onClick {
-                val url = if (BuildConfig.DEBUG) {
-                    "https://github.com/tachiyomiorg/tachiyomi-preview/releases/tag/r${BuildConfig.COMMIT_COUNT}"
-                } else {
-                    "https://github.com/tachiyomiorg/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
+                onClick {
+                    val url = if (BuildConfig.PREVIEW) {
+                        "https://github.com/tachiyomiorg/tachiyomi-preview/releases/tag/r${BuildConfig.COMMIT_COUNT}"
+                    } else {
+                        "https://github.com/tachiyomiorg/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
+                    }
+                    openInBrowser(url)
                 }
-                openInBrowser(url)
             }
         }
         preference {

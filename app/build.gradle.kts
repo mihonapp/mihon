@@ -36,6 +36,7 @@ android {
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
         buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
         buildConfigField("boolean", "INCLUDE_UPDATER", "false")
+        buildConfigField("boolean", "PREVIEW", "false")
 
         // Please disable ACRA or use your own instance in forked versions of the project
         buildConfigField("String", "ACRA_URI", "\"https://tachiyomi.kanade.eu/crash_report\"")
@@ -58,25 +59,25 @@ android {
         named("debug") {
             versionNameSuffix = "-${getCommitCount()}"
             applicationIdSuffix = ".debug"
-
-            isShrinkResources = true
-            isMinifyEnabled = true
-            proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
-        }
-        create("debugFull") { // Debug without R8
-            initWith(getByName("debug"))
-            isShrinkResources = false
-            isMinifyEnabled = false
         }
         named("release") {
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
         }
+        create("preview") {
+            initWith(getByName("release"))
+            buildConfigField("boolean", "PREVIEW", "true")
+
+            val debugType = getByName("debug")
+            signingConfig = debugType.signingConfig
+            versionNameSuffix = debugType.versionNameSuffix
+            applicationIdSuffix = debugType.applicationIdSuffix
+        }
     }
 
     sourceSets {
-        getByName("debugFull").res.srcDirs("src/debug/res")
+        getByName("preview").res.srcDirs("src/debug/res")
     }
 
     flavorDimensions.add("default")
