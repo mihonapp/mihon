@@ -120,10 +120,9 @@ class SourcePresenter(
         val disabledSourceIds = preferences.disabledSources().get()
 
         return sourceManager.getCatalogueSources()
-            .filter { it.lang in languages }
+            .filter { it.lang in languages || it.id == LocalSource.ID }
             .filterNot { it.id.toString() in disabledSourceIds }
-            .sortedBy { "(${it.lang}) ${it.name.lowercase()}" } +
-            sourceManager.get(LocalSource.ID) as LocalSource
+            .sortedBy { "(${it.lang}) ${it.name.lowercase()}" }
     }
 
     companion object {
