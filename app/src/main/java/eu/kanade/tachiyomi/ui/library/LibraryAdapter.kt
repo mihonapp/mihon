@@ -139,9 +139,9 @@ class LibraryAdapter(
     }
 
     override fun getViewType(position: Int): Int {
-        val category = categories[position]
-        return if (isPerCategory && category.id != 0) {
-            if (DisplayModeSetting.fromFlag(category.displayMode) == DisplayModeSetting.LIST) {
+        val category = categories.getOrNull(position)
+        return if (isPerCategory && category?.id != 0) {
+            if (DisplayModeSetting.fromFlag(category?.displayMode) == DisplayModeSetting.LIST) {
                 LIST_DISPLAY_MODE
             } else {
                 GRID_DISPLAY_MODE
