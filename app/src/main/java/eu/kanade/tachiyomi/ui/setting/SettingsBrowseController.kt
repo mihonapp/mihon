@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.util.preference.requireAuthentication
 import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsBrowseController : SettingsController() {
@@ -54,11 +55,13 @@ class SettingsBrowseController : SettingsController() {
                 summaryRes = R.string.requires_app_restart
                 defaultValue = true
 
-                requireAuthentication(
-                    activity as? FragmentActivity,
-                    activity!!.getString(R.string.pref_category_nsfw_content),
-                    activity!!.getString(R.string.confirm_lock_change),
-                )
+                if (context.isAuthenticationSupported() && activity != null) {
+                    requireAuthentication(
+                        activity as? FragmentActivity,
+                        activity!!.getString(R.string.pref_category_nsfw_content),
+                        activity!!.getString(R.string.confirm_lock_change),
+                    )
+                }
             }
 
             infoPreference(R.string.parental_controls_info)
