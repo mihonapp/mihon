@@ -9,7 +9,6 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.toSManga
@@ -165,7 +164,7 @@ open class GlobalSearchPresenter(
         fetchSourcesSubscription = Observable.from(sources)
             .flatMap(
                 { source ->
-                    Observable.defer { source.fetchSearchManga(1, query, FilterList()) }
+                    Observable.defer { source.fetchSearchManga(1, query, source.getFilterList()) }
                         .subscribeOn(Schedulers.io())
                         .onErrorReturn { MangasPage(emptyList(), false) } // Ignore timeouts or other exceptions
                         .map { it.mangas }
