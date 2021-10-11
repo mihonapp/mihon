@@ -56,7 +56,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
         val response = chain.proceed(originalRequest)
 
         // Check if Cloudflare anti-bot is on
-        if (response.code != 503 || response.header("Server") !in SERVER_CHECK) {
+        if (response.code !in ERROR_CODES || response.header("Server") !in SERVER_CHECK) {
             return response
         }
 
@@ -127,7 +127,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
                     isMainFrame: Boolean
                 ) {
                     if (isMainFrame) {
-                        if (errorCode == 503) {
+                        if (errorCode in ERROR_CODES) {
                             // Found the Cloudflare challenge page.
                             challengeFound = true
                         } else {
@@ -167,6 +167,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
     }
 
     companion object {
+        private val ERROR_CODES = listOf(403, 503)
         private val SERVER_CHECK = arrayOf("cloudflare-nginx", "cloudflare")
         private val COOKIE_NAMES = listOf("cf_clearance")
     }
