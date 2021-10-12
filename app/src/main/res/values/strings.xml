@@ -681,8 +681,8 @@
     <string name="page_list_empty_error">No pages found</string>
     <string name="loader_not_implemented_error">Source not found</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Skipping %d chapter, this could be because the source does not have them, or you are filtering them out</item>
-        <item quantity="other">Skipping %d chapters, this could be because the source does not have them, or you are filtering them out</item>
+        <item quantity="one">Skipping 1 chapter, either the source is missing it or it has been filtered out</item>
+        <item quantity="other">Skipping %d chapters, either the source is missing them or they have been filtered out</item>
     </plurals>
 
     <!-- Updates fragment -->
