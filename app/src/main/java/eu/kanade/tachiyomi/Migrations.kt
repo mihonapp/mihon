@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.plusAssign
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
@@ -227,6 +228,11 @@ object Migrations {
                 prefs.edit {
                     putString(PreferenceKeys.librarySortingMode, newSortingMode.name)
                     putString(PreferenceKeys.librarySortingDirection, newSortingDirection.name)
+                }
+            }
+            if (oldVersion < 70) {
+                if (preferences.enabledLanguages().isSet()) {
+                    preferences.enabledLanguages() += "all"
                 }
             }
 
