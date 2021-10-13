@@ -105,7 +105,7 @@ class ReaderPresenter(
 
         val chaptersForReader = when {
             (preferences.skipRead() || preferences.skipFiltered()) -> {
-                val list = dbChapters.filterNot {
+                val filteredChapters = dbChapters.filterNot {
                     when {
                         preferences.skipRead() && it.read -> true
                         preferences.skipFiltered() -> {
@@ -119,13 +119,12 @@ class ReaderPresenter(
                         else -> false
                     }
                 }
-                    .toMutableList()
 
-                val find = list.find { it.id == chapterId }
-                if (find == null) {
-                    list.add(selectedChapter)
+                if (filteredChapters.any { it.id == chapterId }) {
+                    filteredChapters
+                } else {
+                    filteredChapters + listOf(selectedChapter)
                 }
-                list
             }
             else -> dbChapters
         }
