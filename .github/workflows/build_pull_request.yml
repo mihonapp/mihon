@@ -1,6 +1,9 @@
 name: PR build check
 on:
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'app/src/main/res/**/strings.xml'
 
 jobs:
   build:
