@@ -56,6 +56,8 @@ class MangaInfoHeaderAdapter(
 
     override fun getItemCount(): Int = 1
 
+    override fun getItemId(position: Int): Long = hashCode().toLong()
+
     override fun onBindViewHolder(holder: HeaderViewHolder, position: Int) {
         holder.bind()
     }
@@ -69,14 +71,16 @@ class MangaInfoHeaderAdapter(
     fun update(manga: Manga, source: Source) {
         this.manga = manga
         this.source = source
+        update()
+    }
 
-        notifyDataSetChanged()
+    fun update() {
+        notifyItemChanged(0, this)
     }
 
     fun setTrackingCount(trackCount: Int) {
         this.trackCount = trackCount
-
-        notifyDataSetChanged()
+        update()
     }
 
     private fun updateCoverPosition() {

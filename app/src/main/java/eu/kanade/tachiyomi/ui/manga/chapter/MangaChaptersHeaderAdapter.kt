@@ -30,20 +30,20 @@ class MangaChaptersHeaderAdapter(
 
     override fun getItemCount(): Int = 1
 
+    override fun getItemId(position: Int): Long = hashCode().toLong()
+
     override fun onBindViewHolder(holder: HeaderViewHolder, position: Int) {
         holder.bind()
     }
 
     fun setNumChapters(numChapters: Int) {
         this.numChapters = numChapters
-
-        notifyDataSetChanged()
+        notifyItemChanged(0, this)
     }
 
     fun setHasActiveFilters(hasActiveFilters: Boolean) {
         this.hasActiveFilters = hasActiveFilters
-
-        notifyDataSetChanged()
+        notifyItemChanged(0, this)
     }
 
     inner class HeaderViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {

@@ -116,7 +116,7 @@ class ChaptersSettingsSheet(
                 }
 
                 initModels()
-                item.group.items.forEach { adapter.notifyItemChanged(it) }
+                adapter.notifyItemChanged(items.indexOf(item), item)
             }
         }
     }
@@ -158,18 +158,18 @@ class ChaptersSettingsSheet(
             }
 
             override fun onItemClicked(item: Item) {
-                item as Item.MultiStateGroup
-                val prevState = item.state
-
-                item.group.items.forEach {
-                    (it as Item.MultiStateGroup).state =
+                items.forEachIndexed { i, multiSort ->
+                    multiSort.state = if (multiSort == item) {
+                        when (item.state) {
+                            Item.MultiSort.SORT_NONE -> Item.MultiSort.SORT_ASC
+                            Item.MultiSort.SORT_ASC -> Item.MultiSort.SORT_DESC
+                            Item.MultiSort.SORT_DESC -> Item.MultiSort.SORT_ASC
+                            else -> throw Exception("Unknown state")
+                        }
+                    } else {
                         Item.MultiSort.SORT_NONE
-                }
-                item.state = when (prevState) {
-                    Item.MultiSort.SORT_NONE -> Item.MultiSort.SORT_ASC
-                    Item.MultiSort.SORT_ASC -> Item.MultiSort.SORT_DESC
-                    Item.MultiSort.SORT_DESC -> Item.MultiSort.SORT_ASC
-                    else -> throw Exception("Unknown state")
+                    }
+                    adapter.notifyItemChanged(i, multiSort)
                 }
 
                 when (item) {
@@ -180,8 +180,6 @@ class ChaptersSettingsSheet(
                 }
 
                 presenter.reverseSortOrder()
-
-                item.group.items.forEach { adapter.notifyItemChanged(it) }
             }
         }
     }
@@ -215,16 +213,16 @@ class ChaptersSettingsSheet(
                 item as Item.Radio
                 if (item.checked) return
 
-                item.group.items.forEach { (it as Item.Radio).checked = false }
-                item.checked = true
+                items.forEachIndexed { index, radio ->
+                    radio.checked = item == radio
+                    adapter.notifyItemChanged(index, radio)
+                }
 
                 when (item) {
                     displayTitle -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NAME)
                     displayChapterNum -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NUMBER)
                     else -> throw NotImplementedError("Unknown display mode")
                 }
-
-                item.group.items.forEach { adapter.notifyItemChanged(it) }
             }
         }
     }

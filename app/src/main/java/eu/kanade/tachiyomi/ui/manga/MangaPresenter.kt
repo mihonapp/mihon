@@ -718,6 +718,7 @@ class MangaPresenter(
     fun setDisplayMode(mode: Int) {
         manga.displayMode = mode
         db.updateChapterFlags(manga).executeAsBlocking()
+        refreshChapters()
     }
 
     /**
