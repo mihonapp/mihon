@@ -64,8 +64,9 @@ class MangaSummaryView @JvmOverloads constructor(
         }
 
     fun setTags(items: List<String>?, onClick: (item: String) -> Unit) {
-        binding.tagChipsShrunk.setChips(items, onClick)
-        binding.tagChipsExpanded.setChips(items, onClick)
+        listOfNotNull(binding.tagChipsShrunk, binding.tagChipsExpanded).forEach { chips ->
+            chips.setChips(items, onClick) { tag -> context.copyToClipboard(tag, tag) }
+        }
     }
 
     private fun updateExpandState() = binding.apply {
