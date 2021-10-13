@@ -574,4 +574,4 @@ class LibraryUpdateService(
     }
 }
 
-const val PER_SOURCE_QUEUE_WARNING_THRESHOLD = 50
+const val PER_SOURCE_QUEUE_WARNING_THRESHOLD = 60
