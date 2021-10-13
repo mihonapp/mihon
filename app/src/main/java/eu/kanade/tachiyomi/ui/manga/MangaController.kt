@@ -287,7 +287,7 @@ class MangaController :
 
             binding.fastScroller.doOnLayout { scroller ->
                 scroller.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    topMargin = getMainAppBarHeight()
+                    topMargin += getMainAppBarHeight()
                 }
             }
 
