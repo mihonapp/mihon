@@ -178,7 +178,6 @@
     <string name="disabled">غیرفعال شده</string>
     <string name="pref_remove_after_read">بعد از خواندن پاک شود</string>
     <string name="pref_remove_after_marked_as_read">وقتی خوانده شده علامت گذاری شد، پاک شود</string>
-    <string name="pref_download_only_over_wifi">فقط از طریق Wi-Fi بارگیری شود</string>
     <string name="webtoon_side_padding_25">۲۵٪</string>
     <string name="webtoon_side_padding_20">۲۰٪</string>
     <string name="webtoon_side_padding_15">۱۵٪</string>

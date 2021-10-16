@@ -158,7 +158,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Locația descărcărilor</string>
-    <string name="pref_download_only_over_wifi">Descarcă doar prin Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">După ce a fost marcat manual ca citit</string>
     <string name="pref_remove_after_read">După citit</string>
     <string name="custom_dir">Locație personalizată</string>
@@ -576,7 +575,6 @@
     <string name="pref_dual_page_split">împărțirea paginilor duble</string>
     <string name="pref_show_navigation_mode_summary">Afișați zonele de atingere atunci când cititorul este deschis</string>
     <string name="pref_show_navigation_mode">Afișați suprapunerea aspectului de navigare</string>
-    <string name="network_unmetered">Rețea nemăsurată</string>
     <string name="update_8hour">O dată la 8 ore</string>
     <string name="update_4hour">O dată la 4 ore</string>
     <string name="action_desc">Descendent</string>

@@ -118,7 +118,6 @@
     <string name="color_filter_a_value">A</string>
     <!-- Downloads section -->
     <string name="pref_download_directory">Posizione degli scaricamenti</string>
-    <string name="pref_download_only_over_wifi">Scarica solo tramite Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Dopo averli contrassegnati come letti</string>
     <string name="pref_remove_after_read">Automaticamente dopo la lettura</string>
     <string name="custom_dir">Posizione personalizzata</string>
@@ -289,7 +288,7 @@
     <string name="label_extensions">Estensioni</string>
     <string name="label_extension_info">Informazioni estensione</string>
     <string name="action_global_search">Ricerca globale</string>
-    <string name="action_display_download_badge">Indicatore scaricati</string>
+    <string name="action_display_download_badge">Capitoli scaricati</string>
     <string name="action_reset">Reimposta</string>
     <string name="all_lang">Tutto</string>
     <string name="ext_update">Aggiorna</string>
@@ -496,7 +495,7 @@
         <item quantity="one">%d categoria</item>
         <item quantity="other">%d categorie</item>
     </plurals>
-    <string name="action_display_unread_badge">Indicatore non letti</string>
+    <string name="action_display_unread_badge">Capitoli non letti</string>
     <string name="gray_background">Grigio</string>
     <plurals name="notification_update_error">
         <item quantity="one">Un aggiornamento fallito</item>
@@ -563,8 +562,8 @@
     <string name="ext_nsfw_warning">Potrebbe contenere materiale NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">C\'è un capitolo mancante</item>
-        <item quantity="other">Ci sono %d capitoli mancanti</item>
+        <item quantity="one">1 capitolo saltato, o la fonte non ce l\'ha o è stato filtrato</item>
+        <item quantity="other">%d capitoli saltati, o la fonte non ce li ha o sono stati filtrati</item>
     </plurals>
     <string name="backup_restore_missing_trackers">Tracciatori non collegati:</string>
     <string name="no_chapters_error">Nessun capitolo trovato</string>
@@ -603,7 +602,6 @@
     <string name="crash_log_saved">Registro dei crash salvato</string>
     <string name="pref_dump_crash_logs_summary">Salva un registro degli errori su un file per condividerlo con gli sviluppatori</string>
     <string name="pref_dump_crash_logs">Salva un registro dei crash</string>
-    <string name="network_unmetered">Connessione senza restrizioni</string>
     <string name="action_desc">Decrescente</string>
     <string name="action_asc">Crescente</string>
     <string name="action_order_by_chapter_number">Per numero di capitolo</string>
@@ -664,7 +662,7 @@
     <string name="alignment_bottom">In fondo</string>
     <string name="alignment_top">In cima</string>
     <string name="pref_side_nav_icon_alignment">Allineamento delle icone di navigazione laterali</string>
-    <string name="action_display_local_badge">Indicatori locali</string>
+    <string name="action_display_local_badge">Manga locali</string>
     <string name="manga_cover">Copertina</string>
     <string name="local_invalid_format">Formato capitolo non valido</string>
     <string name="tracking_guide">Guida al tracciamento</string>
@@ -724,4 +722,10 @@
     <string name="ext_installer_pref">Installatore</string>
     <string name="ext_install_service_notif">Installazione dell\'estensione…</string>
     <string name="action_sort_count">Manga totali</string>
+    <string name="pref_verbose_logging_summary">Stampa i registri dettagliati nel registro di sistema (riduce le prestazioni dell\'app)</string>
+    <string name="pref_verbose_logging">Registrazione dettagliata</string>
+    <string name="action_display_language_badge">Lingua</string>
+    <string name="label_warning">Attenzione</string>
+    <string name="backup_info">I backup automatici sono altamente consigliati. Dovresti tenere delle copie anche in altri posti.</string>
+    <string name="notification_size_warning">Grossi aggiornamenti possono portare a un maggiore utilizzo della batteria e a un rallentamento delle fonti</string>
 </resources>

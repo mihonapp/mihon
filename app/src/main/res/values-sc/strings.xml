@@ -55,7 +55,7 @@
     <string name="action_display">Visualizatzione</string>
     <string name="action_display_grid">Grìllia cumpata</string>
     <string name="action_display_list">Lista</string>
-    <string name="action_display_download_badge">Iconas de sos iscarrigamentos</string>
+    <string name="action_display_download_badge">Capìtulos iscarrigados</string>
     <string name="action_cancel">Annulla</string>
     <string name="action_sort">Òrdina</string>
     <string name="action_install">Installa</string>
@@ -159,7 +159,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Cartella de sos iscarrigamentos</string>
-    <string name="pref_download_only_over_wifi">Iscàrriga petzi impreende su WiFi</string>
     <string name="pref_remove_after_marked_as_read">A pustis de l\'àere marcadu comente lèghidu</string>
     <string name="pref_remove_after_read">Automaticamente a pustis de sa leghidura</string>
     <string name="custom_dir">Cartella personalizada</string>
@@ -463,7 +462,7 @@
         <item quantity="other">Fatu in %1$s cun %2$s errores</item>
     </plurals>
     <string name="tracking_info">Sincronizatzione a una diretzione ebbia pro agiornare su progressu in sos capìtulos in su servìtziu de arrastamentu. Imposta s\'arrastamentu pro sos elementos de sos manga dae su butone de arrastamentu issoro.</string>
-    <string name="action_display_unread_badge">Iconas de sos non lèghidos</string>
+    <string name="action_display_unread_badge">Capìtulos non lèghidos</string>
     <string name="pref_refresh_library_covers">Annoa sas coberteddas de sos manga de sa biblioteca</string>
     <plurals name="notification_update_error">
         <item quantity="one">1 agiornamentu fallidu</item>
@@ -532,8 +531,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Custu no impedit a estensiones no ufitziales o potentzialmente non curretas de ammustrare cuntenutos NSFW (18+) in s\'aplicatzione.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Mancat 1 capìtulu</item>
-        <item quantity="other">Mancant %d capìtulos</item>
+        <item quantity="one">Brinchende 1 capìtulu, sa fonte non lu tenet o est istadu bogadu cun unu filtru</item>
+        <item quantity="other">Brinchende %d capìtulos, sa fonte non los tenet o sunt istados bogados cun unu filtru</item>
     </plurals>
     <string name="no_chapters_error">Perunu capìtulu agatadu</string>
     <string name="chapter_settings_updated">Impostatziones predefinidas de sos capìtulos agiornadas</string>
@@ -570,7 +569,6 @@
     <string name="crash_log_saved">Registros de sos arrestos anòmalos sarvados</string>
     <string name="pref_dump_crash_logs_summary">Sarva sos registros de sos errores in unu documentu pro lu cumpartzire cun sos isvilupadores</string>
     <string name="pref_dump_crash_logs">Iscàrriga sos registros de sos arrestos anòmalos</string>
-    <string name="network_unmetered">Retza chene lìmites de datos</string>
     <string name="action_desc">In achirrada</string>
     <string name="action_asc">Creschente</string>
     <string name="action_order_by_chapter_number">Pro nùmeru de capìtulu</string>
@@ -625,7 +623,7 @@
     <string name="off">Istudadu</string>
     <string name="on">Allutu</string>
     <string name="restrictions">Restritziones: %s</string>
-    <string name="action_display_local_badge">Distintivos locales</string>
+    <string name="action_display_local_badge">Manga locales</string>
     <string name="error_sharing_cover">B\'at àpidu un\'errore cumpartende sa cobertedda</string>
     <string name="error_saving_cover">B\'at àpidu un\'errore sarvende sa cobertedda</string>
     <string name="cover_saved">Cobertedda sarvada</string>
@@ -689,4 +687,10 @@
     <string name="ext_installer_pref">Installadore</string>
     <string name="ext_install_service_notif">Installende s\'estensione…</string>
     <string name="action_sort_count">Manga totales</string>
+    <string name="pref_verbose_logging">Registru a sa minuda</string>
+    <string name="pref_verbose_logging_summary">Imprenta registros fatos a sa minuda in su registru de sistema (abbassat su rendimentu de s\'aplicatzione)</string>
+    <string name="label_warning">Dae cara</string>
+    <string name="action_display_language_badge">Limba</string>
+    <string name="backup_info">Sas còpias de seguresa automàticas sunt racumandadas meda. Dias dèpere tènnere còpias fintzas in àteros logos.</string>
+    <string name="notification_size_warning">Sos agiornamentos mannos diant pòdere batire a un\'impreu de sa bateria prus mannu e a unu rallentamentu de sas fontes</string>
 </resources>

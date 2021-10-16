@@ -131,7 +131,6 @@
     <string name="pref_update_only_non_completed">Абнаўляць толькі незавершаную мангу</string>
     <string name="restrictions">Абмежаванні: %s</string>
     <string name="charging">Зарадка</string>
-    <string name="network_unmetered">Безлімітная сетка</string>
     <string name="pref_library_update_restriction">Абмежаванні на абнаўленне</string>
     <string name="pref_library_update_prioritization">Парадак абнаўлення</string>
     <string name="update_weekly">Штотыдзень</string>
@@ -350,7 +349,6 @@
     <string name="pref_remove_after_read">Аўтаматычна пасля чытання</string>
     <string name="pref_remove_after_marked_as_read">Пасля таго, як пазначана як \"Прачытанае\"</string>
     <string name="pref_category_delete_chapters">Выдаліць часткі</string>
-    <string name="pref_download_only_over_wifi">Загружаць толькі праз Wi-Fi</string>
     <string name="pref_download_directory">Каталог загрузак</string>
     <string name="pref_lowest">Найнізкая</string>
     <string name="pref_low">Нізкая</string>

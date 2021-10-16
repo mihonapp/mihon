@@ -55,7 +55,7 @@
     <string name="action_display">Visa</string>
     <string name="action_display_grid">Kompakt rutnät</string>
     <string name="action_display_list">Lista</string>
-    <string name="action_display_download_badge">Nedladdningsmärken</string>
+    <string name="action_display_download_badge">Nedladdade kapitel</string>
     <string name="action_cancel">Avbryt</string>
     <string name="action_sort">Sortera</string>
     <string name="action_install">Installera</string>
@@ -158,7 +158,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Nedladdningsplats</string>
-    <string name="pref_download_only_over_wifi">Ladda bara ner över WiFi</string>
     <string name="pref_remove_after_marked_as_read">Efter markerad som läst</string>
     <string name="pref_remove_after_read">Automatiskt efter läsning</string>
     <string name="custom_dir">Anpassad plats</string>
@@ -462,7 +461,7 @@
         <item quantity="other">Klar på %1$s med %2$s fel</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Det gick inte att öppna enhetsinställningarna</string>
-    <string name="action_display_unread_badge">Olästa märken</string>
+    <string name="action_display_unread_badge">Olästa kapitel</string>
     <string name="pref_refresh_library_covers">Uppdatera bibliotekets manga omslag</string>
     <string name="tracking_info">Envägssynkronisering för att uppdatera kapitelförloppet i spårningstjänster. Ställ in spårning för enskilda manga från spårningsknappen under manga info.</string>
     <plurals name="notification_update_error">
@@ -534,8 +533,8 @@
     <string name="chapter_settings_updated">Uppdaterade standardinställningar för kapitel</string>
     <string name="confirm_set_chapter_settings">Vill du spara de här inställningarna som standard\?</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Där saknas 1 kapitel</item>
-        <item quantity="other">Där sankas %d kapitlar</item>
+        <item quantity="one">Hoppar över ett kapitel, antingen saknar källan det eller så har det filtrerats bort</item>
+        <item quantity="other">Hoppar över %d kapitel, antingen saknar källan det eller så har det filtrerats bort</item>
     </plurals>
     <string name="share_page_info">%1$s: %2$s, sida %3$d</string>
     <string name="no_chapters_error">Inga kapitel hittades</string>
@@ -574,7 +573,6 @@
     <string name="edge_nav">Kant</string>
     <string name="kindlish_nav">Kindle-ish</string>
     <string name="l_nav">L-formad</string>
-    <string name="network_unmetered">Ouppmätt nätverk</string>
     <string name="action_filter_tracked">Spåras</string>
     <string name="right_and_left_nav">Höger och Vänster</string>
     <string name="action_display_show_number_of_items">Visa antal objekt</string>
@@ -623,7 +621,7 @@
     <string name="pref_library_update_refresh_trackers_summary">Uppdatera spårare när du uppdaterar biblioteket</string>
     <string name="pref_library_update_refresh_trackers">Uppdatera spårare automatiskt</string>
     <string name="restrictions">Begränsningar: %s</string>
-    <string name="action_display_local_badge">Lokala märken</string>
+    <string name="action_display_local_badge">Lokal manga</string>
     <string name="off">Av</string>
     <string name="on">På</string>
     <string name="error_sharing_cover">Fel vid delning av omslag</string>
@@ -689,4 +687,9 @@
     <string name="ext_install_service_notif">Installerar tillägg…</string>
     <string name="action_sort_count">Total manga</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installera och starta Shizuku för att använda Shizuku som tilläggsinstallationsprogram.</string>
+    <string name="pref_verbose_logging_summary">Skriv ut utförliga loggar till systemloggen (minskar appprestanda)</string>
+    <string name="backup_info">Automatisk säkerhetskopiering rekommenderas starkt. Du bör också förvara kopior på andra ställen.</string>
+    <string name="pref_verbose_logging">Omfattande loggning</string>
+    <string name="label_warning">Varning</string>
+    <string name="action_display_language_badge">Språk</string>
 </resources>

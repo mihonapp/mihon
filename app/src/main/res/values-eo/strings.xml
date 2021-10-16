@@ -160,7 +160,6 @@
     <string name="add_to_library">Aldoni al biblioteko</string>
     <string name="custom_dir">Propra dosierujo</string>
     <string name="pref_remove_after_read">Aŭtomate post legado</string>
-    <string name="pref_download_only_over_wifi">Elŝuti nur per Vifio</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_15">15%</string>
@@ -460,7 +459,6 @@
     <string name="action_sort_last_checked">Laste kontrolitaj</string>
     <string name="label_default">Defaŭlte</string>
     <string name="information_empty_category">Vi havas neniun kategorion. Tuŝeti la butonon kun plus por krei unu por organizi vian bibliotekon.</string>
-    <string name="network_unmetered">Nemezurata reto</string>
     <string name="channel_ext_updates">Kromaĵaj ĝisdatigoj</string>
     <string name="download_notifier_download_paused">Elŝutito paŭzigita</string>
     <string name="download_notifier_downloader_title">Elŝutilo</string>

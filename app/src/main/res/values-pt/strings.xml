@@ -102,7 +102,6 @@
     <string name="rotation_force_landscape">Horizontal bloqueado</string>
     <!-- Downloads section -->
     <string name="pref_download_directory">Localização das Transferências</string>
-    <string name="pref_download_only_over_wifi">Apenas transferir por Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Depois de marcado como lido</string>
     <string name="pref_remove_after_read">Automaticamente depois de lido</string>
     <string name="custom_dir">Localização personalizada</string>
@@ -593,7 +592,6 @@
     <string name="pref_viewer_nav">Esquema de navegação</string>
     <string name="kindlish_nav">Estilo Kindle</string>
     <string name="l_nav">Em forma de L</string>
-    <string name="network_unmetered">Rede ilimitada</string>
     <string name="action_desc">Descendente</string>
     <string name="action_asc">Ascendente</string>
     <string name="action_order_by_chapter_number">Por número do capítulo</string>

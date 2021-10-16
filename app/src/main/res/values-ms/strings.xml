@@ -130,7 +130,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Lokasi muat turun</string>
-    <string name="pref_download_only_over_wifi">Hanya muat turun melalui Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Selepas ditandakan sebagai dibaca</string>
     <string name="pref_remove_after_read">Secara automatik setelah membaca</string>
     <string name="custom_dir">Lokasi tersuai</string>
@@ -226,7 +225,7 @@
     <string name="dialog_with_checkbox_remove_description">Tarikh bacaan bab ini akan dipadam. Adakah anda pasti?</string>
     <string name="dialog_with_checkbox_reset">Set semula semua bab bagi manga ini</string>
     <string name="snack_add_to_library">Tambah manga ke pustaka\?</string>
-    <string name="action_display_download_badge">Penanda muat turun</string>
+    <string name="action_display_download_badge">Bab dimuat turun</string>
     <string name="picture_saved">Gambar disimpan</string>
     <string name="custom_filter">Tapisan tersuai</string>
     <string name="set_as_cover">Set sebagai muka hadapan</string>
@@ -454,7 +453,7 @@
     <plurals name="restore_completed_message">
         <item quantity="other">Selesai dalam %1$s dengan %2$s ralat</item>
     </plurals>
-    <string name="action_display_unread_badge">Penanda tidak dibaca</string>
+    <string name="action_display_unread_badge">Bab tidak dibaca</string>
     <string name="tracking_info">Sinkron satu hala untuk kemas kini bab kemajuan dalam sistem penjejakan. Sediakan penjejakan untuk penyertaan manga persendirian dari butang penjejakan mereka.</string>
     <string name="pref_refresh_library_covers">Segar semula muka hadapan manga pustaka</string>
     <plurals name="notification_update_error">
@@ -521,7 +520,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Ini tidak menghalang sambungan yang tidak rasmi atau berpotensi tidak menggunakan tetapan yang betul daripada menayangkan kandungan 18+ tahun keatas dalam aplikasi.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Ada %d bab yang hilang</item>
+        <item quantity="other">Melangkau %d bab, sama ada sumber tidak mempunyai bab tersebut, atau ia ditapis keluar</item>
     </plurals>
     <string name="no_chapters_error">Tiada bab dijumpai</string>
     <string name="chapter_settings_updated">Tetapan bab lalai dikemaskini</string>
@@ -560,7 +559,6 @@
     <string name="crash_log_saved">Log kerosakan disimpan</string>
     <string name="pref_dump_crash_logs_summary">Simpan log ralat untuk dikongsi dengan pembangunan aplikasi</string>
     <string name="pref_dump_crash_logs">Kumpulan log kerosakan</string>
-    <string name="network_unmetered">Rangkaian tidak bermeter</string>
     <string name="track_started_reading_date">Tarikh mula</string>
     <string name="track_finished_reading_date">Tarikh selesai</string>
     <string name="action_filter_tracked">Dijejaki</string>
@@ -611,7 +609,7 @@
     <string name="pref_library_update_refresh_trackers_summary">Kemas kini penjejak ketika mengemaskini pustaka</string>
     <string name="pref_library_update_refresh_trackers">Segar semula penjejak secara automatik</string>
     <string name="restrictions">Sekatan: %s</string>
-    <string name="action_display_local_badge">Penanda setempat</string>
+    <string name="action_display_local_badge">Manga setempat</string>
     <string name="off">Mati</string>
     <string name="on">Hidup</string>
     <string name="error_sharing_cover">Ralat berkongsi muka hadapan</string>
@@ -676,4 +674,10 @@
     <string name="ext_installer_pref">Pemasang</string>
     <string name="ext_install_service_notif">Memasang sambungan…</string>
     <string name="action_sort_count">Jumlah manga</string>
+    <string name="pref_verbose_logging">Pengelogan berjela-jela</string>
+    <string name="pref_verbose_logging_summary">Cetak log berjela ke log sistem (mengurangkan prestasi aplikasi)</string>
+    <string name="label_warning">Amaran</string>
+    <string name="action_display_language_badge">Bahasa</string>
+    <string name="backup_info">Sandaran automatik sangat disyorkan. Anda patut simpan salinan di tempat lain juga.</string>
+    <string name="notification_size_warning">Kemas kini yang besar kemungkinan mengakibatkan penggunaan bateri yang tinggi dan sumber menjadi perlahan</string>
 </resources>

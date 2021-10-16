@@ -170,7 +170,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Kam stahovať</string>
-    <string name="pref_download_only_over_wifi">Sťahovať, iba pri pripojení na Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Odstrániť keď označené ako prečítané</string>
     <string name="pref_remove_after_read">Odstrániť po prečítaní</string>
     <string name="custom_dir">Vlastný adresár</string>

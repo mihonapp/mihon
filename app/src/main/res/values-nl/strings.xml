@@ -109,7 +109,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Downloadlocatie</string>
-    <string name="pref_download_only_over_wifi">Download alleen over Wi-Fi</string>
     <string name="custom_dir">Aangepaste locatie</string>
     <string name="last_read_chapter">Laatst gelezen hoofdstuk</string>
     <string name="second_to_last">Een-na-laatste hoofdstuk</string>
@@ -570,7 +569,6 @@
     <string name="crash_log_saved">Crashlogboeken opgeslagen</string>
     <string name="pref_dump_crash_logs_summary">Slaat foutmeldingslogboeken op in een bestand om te delen met de ontwikkelaars</string>
     <string name="pref_dump_crash_logs">Crashlogboeken opslaan</string>
-    <string name="network_unmetered">Onbeperkt netwerk</string>
     <string name="action_desc">Aflopend</string>
     <string name="action_asc">Oplopend</string>
     <string name="action_order_by_chapter_number">Op hoofdstuknummer</string>

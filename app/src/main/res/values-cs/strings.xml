@@ -93,7 +93,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Umístění pro stažení</string>
-    <string name="pref_download_only_over_wifi">Stahovat pouze na Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Po označení jako přečtené</string>
     <string name="pref_remove_after_read">Automaticky po přečtení</string>
     <string name="custom_dir">Vlastní umístění</string>
@@ -468,7 +467,6 @@
     </plurals>
     <string name="pref_library_update_refresh_metadata_summary">Kontrolovat dostupnost nových přebalů a detailů při aktualizaci knihovny</string>
     <string name="pref_library_update_refresh_metadata">Automaticky obnovovat metadata</string>
-    <string name="network_unmetered">Nelimitovaná síť</string>
     <string name="update_8hour">Každých 8 hodin</string>
     <string name="update_4hour">Každé 4 hodiny</string>
     <string name="parental_controls_info">Toto nastavení nemůže zamezit neoficiálním nebo špatně označeným rozšířením v zobrazování NSFW (18+) obsahu v aplikaci.</string>
@@ -697,4 +695,5 @@
     <string name="ext_installer_pref">Instalátor</string>
     <string name="ext_install_service_notif">Instaluji rozšíření…</string>
     <string name="ext_app_info">Info o Aplikaci</string>
+    <string name="pref_inverted_colors">Invertované</string>
 </resources>

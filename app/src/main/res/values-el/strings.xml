@@ -55,7 +55,7 @@
     <string name="action_display">Προβολή</string>
     <string name="action_display_grid">Συμπαγές πλέγμα</string>
     <string name="action_display_list">Λίστα</string>
-    <string name="action_display_download_badge">Σήματα ληφθέντων</string>
+    <string name="action_display_download_badge">Ληφθέντα κεφάλαια</string>
     <string name="action_cancel">Άκυρο</string>
     <string name="action_sort">Ταξινόμηση</string>
     <string name="action_install">Εγκατάσταση</string>
@@ -158,7 +158,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Τοποθεσία λήψεων</string>
-    <string name="pref_download_only_over_wifi">Λήψη μόνο μέσω Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Μετά τη σήμανση ως αναγνωσμένο</string>
     <string name="pref_remove_after_read">Αυτόματα μετά την ανάγνωση</string>
     <string name="custom_dir">Προσαρμοσμένη τοποθεσία</string>
@@ -462,7 +461,7 @@
         <item quantity="one">Έγινε σε %1$s με %2$s σφάλμα</item>
         <item quantity="other">Έγινε σε %1$s με %2$s σφάλματα</item>
     </plurals>
-    <string name="action_display_unread_badge">Μη αναγνωσμένα σήματα</string>
+    <string name="action_display_unread_badge">Μη αναγνωσμένα κεφάλαια</string>
     <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις manga από το κουμπί παρακολούθησης τους.</string>
     <string name="pref_refresh_library_covers">Ανανέωση εξώφυλλων manga της βιβλιοθήκης</string>
     <plurals name="notification_update_error">
@@ -532,8 +531,8 @@
     <string name="pref_remove_bookmarked_chapters">Να επιτρέπεται η διαγραφή κεφαλαίων με σελιδοδείκτη</string>
     <string name="parental_controls_info">Αυτό δεν εμποδίζει τις ανεπίσημες ή ενδεχομένως εσφαλμένα επισημασμένες επεκτάσεις να εμφανίζουν περιεχόμενο NSFW (18+) μέσα στην εφαρμογή.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Λείπει 1 κεφάλαιο</item>
-        <item quantity="other">Λείπουν %d κεφάλαια</item>
+        <item quantity="one">Παραλείπεται 1 κεφάλαιο, είτε λείπει από την πηγή είτε έχει φιλτραριστεί</item>
+        <item quantity="other">Παραλείπονται %d κεφάλαια, είτε λείπουν από την πηγή είτε έχουν φιλτραριστεί</item>
     </plurals>
     <string name="no_chapters_error">Δεν βρέθηκαν κεφάλαια</string>
     <string name="chapter_settings_updated">Ενημερώθηκαν οι προεπιλεγμένες ρυθμίσεις κεφαλαίου</string>
@@ -570,7 +569,6 @@
     <string name="crash_log_saved">Τα αρχεία καταγραφής σφαλμάτων αποθηκεύτηκαν</string>
     <string name="pref_dump_crash_logs_summary">Αποθηκεύει αρχεία καταγραφής σφαλμάτων σε ένα αρχείο για κοινή χρήση με τους προγραμματιστές</string>
     <string name="pref_dump_crash_logs">Άδειασμα αρχείων καταγραφής σφαλμάτων</string>
-    <string name="network_unmetered">Δίκτυο χωρίς μέτρηση</string>
     <string name="action_desc">Φθίνουσα</string>
     <string name="action_asc">Αύξουσα</string>
     <string name="action_order_by_chapter_number">Κατά αριθμό κεφαλαίου</string>
@@ -623,7 +621,7 @@
     <string name="local_invalid_format">Μη έγκυρη μορφή κεφαλαίου</string>
     <string name="chapter_not_found">Το κεφάλαιο δε βρέθηκε</string>
     <string name="restrictions">Περιορισμοί: %s</string>
-    <string name="action_display_local_badge">Τοπικά σήματα</string>
+    <string name="action_display_local_badge">Τοπικά manga</string>
     <string name="off">Απενεργοποιημένο</string>
     <string name="on">Ενεργοποιημένο</string>
     <string name="error_sharing_cover">Σφάλμα κοινής χρήσης του εξωφύλλου</string>
@@ -689,4 +687,10 @@
     <string name="ext_installer_shizuku_stopped">Το Shizuku δεν τρέχει</string>
     <string name="ext_installer_legacy">Παλαιό</string>
     <string name="action_sort_count">Σύνολο manga</string>
+    <string name="pref_verbose_logging">Λεπτομερής καταγραφή</string>
+    <string name="pref_verbose_logging_summary">Εκτύπωση λεπτομερών αρχείων καταγραφής στο αρχείο καταγραφής συστήματος (μειώνει την απόδοση της εφαρμογής)</string>
+    <string name="action_display_language_badge">Γλώσσα</string>
+    <string name="label_warning">Προειδοποίηση</string>
+    <string name="backup_info">Συνιστάται ιδιαίτερα η δημιουργία αυτόματων αντιγράφων ασφαλείας. Θα πρέπει να διατηρείτε αντίγραφα και σε άλλα μέρη.</string>
+    <string name="notification_size_warning">Οι μεγάλες ενημερώσεις μπορεί να οδηγήσουν σε αυξημένη χρήση της μπαταρίας και οι πηγές να γίνουν πιο αργές</string>
 </resources>

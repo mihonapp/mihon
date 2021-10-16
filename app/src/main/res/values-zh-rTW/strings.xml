@@ -118,7 +118,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">下載位置</string>
-    <string name="pref_download_only_over_wifi">僅透過 Wi-Fi 下載</string>
     <string name="pref_remove_after_marked_as_read">標示為已讀後</string>
     <string name="custom_dir">自訂位置</string>
     <string name="disabled">停用</string>
@@ -308,7 +307,7 @@
     <string name="latest">新上架</string>
     <string name="manga_not_in_db">該漫畫已從資料庫中移除。</string>
     <string name="manga_tracking_tab">歷程</string>
-    <string name="reading">翻閱</string>
+    <string name="reading">閱讀中</string>
     <string name="plan_to_read">準備讀</string>
     <string name="repeating">重溫中</string>
     <string name="track_start_date">創刊</string>
@@ -502,10 +501,10 @@
     <string name="tracker_not_logged_in">尚未登入：%1$s</string>
     <string name="no_pinned_sources">你尚未釘選任何來源</string>
     <string name="page_list_empty_error">沒有任何頁面</string>
-    <string name="backup_restore_missing_sources">遺失來源：</string>
+    <string name="backup_restore_missing_sources">未安裝擴充套件：</string>
     <string name="invalid_backup_file_missing_data">檔案遺失資料</string>
     <string name="source_not_found_name">找不到來源：%1$s</string>
-    <string name="backup_restore_missing_trackers">尚未登入至歷程平台：</string>
+    <string name="backup_restore_missing_trackers">未登入歷程平台：</string>
     <string name="channel_progress">進度</string>
     <string name="channel_errors">錯誤</string>
     <string name="channel_complete">作業完成</string>
@@ -518,7 +517,7 @@
     <string name="pref_category_delete_chapters">刪除章節</string>
     <string name="chapter_settings_updated">已更新章節設定預設值</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">此處有 %d 篇章節散佚</item>
+        <item quantity="other">略過了 %d 章，也許是來源沒有這些章節，或其已被你的篩選規則排除</item>
     </plurals>
     <string name="action_search_settings">搜尋設定</string>
     <string name="chapter_settings">章節設定</string>
@@ -565,7 +564,6 @@
     <string name="action_display_show_number_of_items">顯示藏書數目</string>
     <string name="manga_from_library">書櫃上的漫畫</string>
     <string name="downloaded_chapters">已下載的章節</string>
-    <string name="network_unmetered">非計量付費網路</string>
     <string name="pref_dual_page_split">雙頁分割</string>
     <string name="pref_dual_page_invert_summary">若分割後的排版方向與翻閱順序不符</string>
     <string name="pref_dual_page_invert">反轉雙頁分割排版</string>
@@ -590,7 +588,7 @@
     <string name="clipboard_copy_error">無法複製至剪貼簿</string>
     <string name="backup_restore_content_full">即將還原備份中的資料。
 \n
-\n隨後請重新安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
+\n隨後請安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
     <string name="pref_download_new_categories_details">分類同時屬於「排除」及「包含」的漫畫，將不會自動下載。</string>
     <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
     <string name="pref_create_folder_per_manga_summary">根據漫畫標題建立資料夾</string>
@@ -613,7 +611,7 @@
     <string name="restrictions">限制：%s</string>
     <string name="local_filter_order_by">排序</string>
     <string name="local_invalid_format">無效的章節格式</string>
-    <string name="action_display_local_badge">本機標記</string>
+    <string name="action_display_local_badge">本機漫畫</string>
     <string name="information_empty_category_dialog">你目前沒有任何分類。</string>
     <string name="error_sharing_cover">分享封面時發生錯誤</string>
     <string name="error_saving_cover">儲存封面時發生錯誤</string>
@@ -648,7 +646,7 @@
     <string name="pref_low">低</string>
     <string name="pref_high">高</string>
     <string name="pref_highest">最高</string>
-    <string name="pref_hide_threshold">捲動時自動隱藏選單靈敏度</string>
+    <string name="pref_hide_threshold">捲動時自動隱藏選單的靈敏度</string>
     <string name="pref_inverted_colors">反轉</string>
     <string name="theme_tealturquoise">綠松色</string>
     <string name="confirm_lock_change">驗證以確認變更</string>
@@ -676,4 +674,10 @@
     <string name="ext_installer_pref">套件安裝程式</string>
     <string name="ext_install_service_notif">正在安裝擴充套件…</string>
     <string name="action_sort_count">漫畫總數</string>
+    <string name="action_display_language_badge">語言</string>
+    <string name="label_warning">警告</string>
+    <string name="notification_size_warning">大型更新可能增加電池用量，並拖慢來源效能</string>
+    <string name="pref_verbose_logging">錄製詳細記錄</string>
+    <string name="backup_info">強烈建議啟用自動備份，並在他處保留副本。</string>
+    <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
 </resources>

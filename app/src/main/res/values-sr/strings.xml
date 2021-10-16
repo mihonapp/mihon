@@ -158,7 +158,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Lokacija preuzimanja</string>
-    <string name="pref_download_only_over_wifi">Preuzimaj samo putem Wi-Fi -a</string>
     <string name="pref_remove_after_marked_as_read">Obriši kada je označeno kao pročitano</string>
     <string name="pref_remove_after_read">Obriši nakon čitanja</string>
     <string name="custom_dir">Posebna lokacija</string>

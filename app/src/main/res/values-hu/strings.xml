@@ -379,7 +379,6 @@
     <string name="categorized_display_settings">Kategóriakénti beállítások rendezés és megjelenítésre</string>
     <string name="pref_library_update_refresh_trackers_summary">Követők frissítése könyvtár frissítésekor</string>
     <string name="pref_library_update_refresh_trackers">Követők automatikus frissítése</string>
-    <string name="network_unmetered">Adatkorlátlan hálózat</string>
     <string name="theme_tako">Polip</string>
     <string name="theme_strawberrydaiquiri">Eper koktél</string>
     <plurals name="relative_time">
@@ -428,7 +427,6 @@
     <string name="pref_remove_after_read">Olvasás után automatikusan</string>
     <string name="pref_remove_after_marked_as_read">Olvasottnak jelölés után</string>
     <string name="pref_category_delete_chapters">Fejezetek törlése</string>
-    <string name="pref_download_only_over_wifi">Csak wifin keresztül töltsön le</string>
     <string name="pref_lowest">Legalacsonyabb</string>
     <string name="pref_low">Alacsony</string>
     <string name="pref_high">Magas</string>

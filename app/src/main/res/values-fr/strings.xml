@@ -121,7 +121,6 @@
     <string name="color_filter_a_value">O</string>
     <!-- Downloads section -->
     <string name="pref_download_directory">Répertoire de téléchargement</string>
-    <string name="pref_download_only_over_wifi">Télécharger uniquement via Wi-Fi</string>
     <string name="pref_remove_after_read">Automatiquement après la lecture</string>
     <string name="disabled">Désactivé</string>
     <string name="last_read_chapter">Dernier chapitre lu</string>
@@ -293,7 +292,7 @@
     <string name="action_global_search_hint">Recherche globale…</string>
     <string name="latest">Récents</string>
     <string name="browse">Explorer</string>
-    <string name="action_display_download_badge">Badges des téléchargements</string>
+    <string name="action_display_download_badge">Chapitres téléchargés</string>
     <string name="local_source_badge">Local</string>
     <string name="channel_common">Général</string>
     <string name="information_empty_category">Vous n\'avez aucune catégorie. Appuyez sur le bouton « + » pour en créer une afin d\'organiser votre bibliothèque.</string>
@@ -496,7 +495,7 @@
         <item quantity="other">Effectuée en %1$s avec %2$s erreurs</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Impossible d\'ouvrir les paramètres de l\'appareil</string>
-    <string name="action_display_unread_badge">Badges des non lus</string>
+    <string name="action_display_unread_badge">Chapitres non lus</string>
     <string name="pref_refresh_library_covers">Actualiser les couvertures des séries de la bibliothèque</string>
     <string name="tracking_info">Permet de synchroniser automatiquement les chapitres lus avec les services externes proposés. Allez dans le bouton « Suivi » d\'une série pour activer son suivi.</string>
     <string name="unofficial_extension_message">Cette extension ne fait pas partie de la liste des extensions officielles de Tachiyomi.</string>
@@ -566,8 +565,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Cela n\'empêche pas les extensions non officielles ou potentiellement mal signalées de diffuser du contenu +18 dans l\'application.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Il manque 1 chapitre</item>
-        <item quantity="other">Il manque %d chapitres</item>
+        <item quantity="one">Un chapitre a été sauté, soit la source ne l\'a pas, soit il a été filtré</item>
+        <item quantity="other">%d chapitres ont été sautés, soit la source ne l\'a pas, soit il ont été filtrés</item>
     </plurals>
     <string name="no_chapters_error">Aucun chapitre trouvé</string>
     <string name="confirm_set_chapter_settings">Appliquer ce paramétrage par défaut \?</string>
@@ -604,7 +603,6 @@
     <string name="pref_viewer_nav">Plan de navigation</string>
     <string name="edge_nav">Bord</string>
     <string name="l_nav">En forme de L</string>
-    <string name="network_unmetered">Réseau illimité</string>
     <string name="action_desc">Décroissant</string>
     <string name="action_asc">Croissante</string>
     <string name="action_order_by_chapter_number">Par numéro de chapitre</string>
@@ -657,7 +655,7 @@
     <string name="pref_library_update_refresh_trackers">Actualiser automatiquement les services de suivi</string>
     <string name="restrictions">Restrictions : %s</string>
     <string name="cancel_all_for_series">Tout annuler pour cette série</string>
-    <string name="action_display_local_badge">Badges locaux</string>
+    <string name="action_display_local_badge">Mangas en local</string>
     <string name="alignment_bottom">Bas</string>
     <string name="alignment_center">Centre</string>
     <string name="alignment_top">Haut</string>
@@ -725,4 +723,10 @@
     <string name="ext_installer_pref">Installateur</string>
     <string name="ext_install_service_notif">Installation de l\'extension…</string>
     <string name="action_sort_count">Total des mangas</string>
+    <string name="pref_verbose_logging">Journalisation détaillée</string>
+    <string name="pref_verbose_logging_summary">Imprimer les journaux détaillés dans le journal du système (réduit les performances de l\'application)</string>
+    <string name="action_display_language_badge">Langue</string>
+    <string name="label_warning">Attention</string>
+    <string name="notification_size_warning">Les mises à jour importantes peuvent entraîner une augmentation de la consommation de la batterie et un ralentissement des sources</string>
+    <string name="backup_info">Les sauvegardes automatiques sont fortement conseillées. Nous vous recommandons aussi de conserver des copies ailleurs.</string>
 </resources>

@@ -158,7 +158,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Директорія завантаження</string>
-    <string name="pref_download_only_over_wifi">Завантажувати лише через Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Після того, як було відмічено прочитаним</string>
     <string name="pref_remove_after_read">Автоматично після прочитування</string>
     <string name="custom_dir">Користувацька директорія</string>
@@ -578,7 +577,7 @@
     <string name="myanimelist_relogin">Будь ласка, увійдіть в MAL знову</string>
     <string name="invalid_backup_file_type">Невірний файл резервної копії: %1$s
 \nЙого розширення повинне бути .proto.gz or .json.</string>
-    <string name="pref_show_nsfw_source">Показувати в списку джерел</string>
+    <string name="pref_show_nsfw_source">Показувати в списку джерел та розширень</string>
     <string name="pref_category_nsfw_content">NSFW (18+) джерела</string>
     <string name="channel_crash_logs">Логи падінь</string>
     <string name="track_finished_reading_date">Дата закінчення</string>
@@ -590,7 +589,6 @@
     <string name="edge_nav">Межа</string>
     <string name="kindlish_nav">Kindle-подібна</string>
     <string name="l_nav">L-подібна</string>
-    <string name="network_unmetered">Безлімітна мережа</string>
     <string name="action_desc">За спаданням</string>
     <string name="action_asc">За зростанням</string>
     <string name="action_order_by_chapter_number">За номером глави</string>
@@ -702,4 +700,13 @@
     <string name="pref_category_navigation">Навігація</string>
     <string name="getting_started_guide">Посібник з початку роботи</string>
     <string name="pref_tablet_ui_mode">Примусовий планшетний інтерфейс</string>
+    <string name="help_translate">Допомогти з перекладом</string>
+    <string name="ext_installer_pref">Встановлювач</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku не парцює</string>
+    <string name="pref_remove_exclude_categories">Виключені категорії</string>
+    <string name="action_sort_count">За кількістю манги</string>
+    <string name="ext_install_service_notif">Встановлюю розширення…</string>
+    <string name="ext_app_info">Про додаток</string>
+    <string name="ext_installer_legacy">Спадок</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Встановіть та запустіть Shizuku для використання Shizuku, як встановлювача розширень.</string>
 </resources>

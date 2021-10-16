@@ -127,7 +127,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Speicherort</string>
-    <string name="pref_download_only_over_wifi">Nur über WLAN herunterladen</string>
     <string name="pref_remove_after_marked_as_read">Nachdem als gelesen markiert</string>
     <string name="pref_remove_after_read">Automatisch nach dem Lesen</string>
     <string name="custom_dir">Eigener Speicherort</string>
@@ -260,7 +259,7 @@
     <string name="latest">Neueste</string>
     <string name="browse">Stöbern</string>
     <string name="channel_common">Allgemein</string>
-    <string name="action_display_download_badge">Download-Plaketten</string>
+    <string name="action_display_download_badge">Heruntergelade Kapitel</string>
     <string name="local_source_badge">Lokal</string>
     <string name="information_empty_category">Keine Kategorien vorhanden. Tippe auf die Plus-Schaltfläche, um eine Kategorie zum Sortieren deiner Bibliothek zu erstellen.</string>
     <string name="label_migration">Migrieren</string>
@@ -462,7 +461,7 @@
         <item quantity="one">Erledigt in %1$s mit %2$s Fehler</item>
         <item quantity="other">Erledigt in %1$s mit %2$s Fehlern</item>
     </plurals>
-    <string name="action_display_unread_badge">Ungelesen-Plaketten</string>
+    <string name="action_display_unread_badge">Ungelesene Kapitel</string>
     <string name="tracking_info">Einweg-Synchronisation zum Aktualisieren der Kapitelfortschritte in den Trackingdiensten. Richte Tracking für einzelne Manga über deren jeweiligen Tracking-Button ein.</string>
     <string name="pref_refresh_library_covers">Bibliotheksmangacover aktualisieren</string>
     <plurals name="notification_update_error">
@@ -532,8 +531,8 @@
     <string name="ext_nsfw_short">Ü18</string>
     <string name="parental_controls_info">Dies verhindert nicht, dass inoffizielle oder möglicherweise falsch gekennzeichnete Erweiterungen NSFW/Ü18-Inhalte in der App anzeigen.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Es gibt 1 fehlendes Kapitel</item>
-        <item quantity="other">Es gibt %d fehlende Kapitel</item>
+        <item quantity="one">1 Kapitel wird übersprungen, da die Quelle dieses entweder nicht besitzt, oder, weil es rausgefiltert wurde</item>
+        <item quantity="other">%d Kapitel werden übersprungen, da die Quelle diese entweder nicht besitzt, oder, weil sie rausgefiltert wurden</item>
     </plurals>
     <string name="no_chapters_error">Keine Kapitel gefunden</string>
     <string name="chapter_settings_updated">Standard-Kapiteleinstellungen aktualisiert</string>
@@ -570,7 +569,6 @@
     <string name="crash_log_saved">Absturzprotokolle gespeichert</string>
     <string name="pref_dump_crash_logs_summary">Speichert Fehlerprotokolle in einer Datei, die dann mit den Entwicklern geteilt wird</string>
     <string name="pref_dump_crash_logs">Absturzprotokolle ausgeben</string>
-    <string name="network_unmetered">Unbegrenztes Netzwerk</string>
     <string name="action_desc">Absteigend</string>
     <string name="action_asc">Aufsteigend</string>
     <string name="action_order_by_chapter_number">Nach Kapitelnummer</string>
@@ -623,7 +621,7 @@
     <string name="pref_library_update_refresh_trackers_summary">Tracker aktualisieren, wenn die Bibliothek aktualisiert wird</string>
     <string name="pref_library_update_refresh_trackers">Tracker automatisch aktualisieren</string>
     <string name="restrictions">Einschränkungen: %s</string>
-    <string name="action_display_local_badge">Lokal-Plaketten</string>
+    <string name="action_display_local_badge">Lokale Manga</string>
     <string name="off">Aus</string>
     <string name="on">An</string>
     <string name="error_sharing_cover">Fehler beim Teilen des Covers</string>
@@ -691,4 +689,11 @@
     <string name="ext_installer_pref">Installationsprogramm</string>
     <string name="ext_install_service_notif">Erweiterung wird installiert…</string>
     <string name="action_sort_count">Mangaanzahl</string>
+    <string name="pref_verbose_logging">Ausführliche Protokollierung</string>
+    <string name="pref_verbose_logging_summary">Ausführliche Protokolle im Systemprotokoll ausgeben (verringert die Anwendungsleistung)</string>
+    <string name="action_display_language_badge">Sprache</string>
+    <string name="label_warning">Warnung</string>
+    <string name="notification_size_warning">Große Aktualisierungen könnten zu einem höheren Akkuverbrauch und langsameren Quellen führen</string>
+    <string name="backup_info">Automatische Sicherungen sind sehr zu empfehlen. Du solltest auch Kopien an anderen Orten aufbewahren.</string>
+    <string name="connected_to_wifi">Nur über WLAN</string>
 </resources>

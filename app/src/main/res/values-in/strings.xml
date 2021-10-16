@@ -127,7 +127,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Lokasi unduhan</string>
-    <string name="pref_download_only_over_wifi">Hanya unduh melalui Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Setelah ditandai telah dibaca</string>
     <string name="pref_remove_after_read">Otomatis setelah dibaca</string>
     <string name="custom_dir">Lokasi kustom</string>
@@ -511,7 +510,7 @@
     <string name="channel_complete">Lengkap</string>
     <string name="channel_progress">Kemajuan</string>
     <string name="download_notifier_download_finish">Unduhan selesai</string>
-    <string name="channel_errors">error</string>
+    <string name="channel_errors">Masalah</string>
     <string name="backup_restore_missing_trackers">Pelacakan tidak tersinkronisasi di:</string>
     <string name="ext_nsfw_warning">Mungkin berisi konten 18+</string>
     <string name="ext_nsfw_short">18+</string>
@@ -561,7 +560,6 @@
     <string name="pref_dump_crash_logs_summary">Simpan log kerusakan ke sebuah berkas untuk dibagikan dengan pengembang aplikasi</string>
     <string name="pref_viewer_nav">Tata letak navigasi</string>
     <string name="right_and_left_nav">Kanan dan Kiri</string>
-    <string name="network_unmetered">Jaringan yang tidak terukur</string>
     <string name="action_display_show_number_of_items">Tampilkan jumlah item</string>
     <string name="update_8hour">Tiap 8 jam</string>
     <string name="update_4hour">Tiap 4 jam</string>

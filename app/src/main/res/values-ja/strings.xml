@@ -136,7 +136,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">ダウンロードフォルダ</string>
-    <string name="pref_download_only_over_wifi">Wi-Fi経由でのみダウンロード</string>
     <string name="pref_remove_after_marked_as_read">既読にした後</string>
     <string name="pref_remove_after_read">読んだ後自動で</string>
     <string name="custom_dir">カスタムディレクトリ</string>
@@ -521,7 +520,7 @@
     <string name="ext_nsfw_short">成人向け</string>
     <string name="parental_controls_info">非公式や誤ってフラグ付けされた可能性のある拡張機能の成人向けのコンテンツはこれからも表示される恐れがあります。</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">%d章が足りていません</item>
+        <item quantity="other">ソースにないか、フィルターによって排除されたため、%d章がスキップされました</item>
     </plurals>
     <string name="no_chapters_error">章が見つかりません</string>
     <string name="chapter_settings_updated">デフォルトの章設定を更新しました</string>
@@ -563,7 +562,6 @@
     <string name="right_and_left_nav">右と左</string>
     <string name="kindlish_nav">Kindleスタイル</string>
     <string name="l_nav">L形</string>
-    <string name="network_unmetered">従量制データではないネットワーク</string>
     <string name="action_desc">降順</string>
     <string name="action_asc">昇順</string>
     <string name="pref_dual_page_invert_summary">分割したダブルページは閲覧方向に一致しない場合は有効にしてください</string>
@@ -622,7 +620,7 @@
     <string name="alignment_top">トップ</string>
     <string name="pref_side_nav_icon_alignment">サイド ナビ アイコンの整列</string>
     <string name="cancel_all_for_series">このシリーズの全項目をキャンセル</string>
-    <string name="action_display_local_badge">ローカル バッジ</string>
+    <string name="action_display_local_badge">ローカル マンガ</string>
     <string name="rotation_landscape">横向き</string>
     <string name="rotation_portrait">縦向き</string>
     <string name="pref_dark_theme_pure_black">真っ黒モード</string>
@@ -670,4 +668,16 @@
     <string name="ext_installer_legacy">レガシー</string>
     <string name="ext_installer_pref">インストーラ</string>
     <string name="ext_app_info">アプリの情報</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Shizukuを拡張機能インストーラーとして使用するには、Shizukuをインストールして起動してください。</string>
+    <string name="ext_installer_shizuku_stopped">Shizukuは実行中ではありません</string>
+    <string name="action_sort_count">漫画の総数</string>
+    <string name="ext_install_service_notif">拡張機能をインストール中…</string>
+    <string name="enhanced_services">高度なサービス</string>
+    <string name="enhanced_tracking_info">特定ソース専用の高度な機能を提供するサービスです。漫画はライブラリに追加される時、自動で追跡され始めます。</string>
+    <string name="backup_info">バックアップの自動作成は強くおすすめされます。ほかの場所にもコピーを保管してください。</string>
+    <string name="pref_verbose_logging_summary">システムログにverboseログを出力（アプリパフォーマンスには悪影響）</string>
+    <string name="notification_size_warning">大規模のアップデートは電池を急激に消耗し、ソースを遅くする可能性があります</string>
+    <string name="action_display_language_badge">言語</string>
+    <string name="label_warning">警告</string>
+    <string name="pref_verbose_logging">Verboseロギング</string>
 </resources>

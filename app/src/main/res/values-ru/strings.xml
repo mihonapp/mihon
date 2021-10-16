@@ -44,7 +44,7 @@
     <string name="action_stop">Остановить</string>
     <string name="action_update">Обновить</string>
     <string name="action_update_library">Обновить библиотеку</string>
-    <string name="all">Все</string>
+    <string name="all">Объединить</string>
     <string name="black_background">Чёрный</string>
     <string name="cache_delete_error">Возникла ошибка при удалении кэша</string>
     <string name="cache_deleted">Кэш очищен. %1$d файлов было удалено</string>
@@ -68,7 +68,7 @@
     <string name="custom_filter">Пользовательский фильтр</string>
     <string name="decode_image_error">Не удалось загрузить изображение</string>
     <string name="description">Описание</string>
-    <string name="description_cover">Обложка манги</string>
+    <string name="description_cover">Обложка комикса</string>
     <string name="dialog_with_checkbox_remove_description">Это действие удалит дату прочтения главы. Вы уверены?</string>
     <string name="dialog_with_checkbox_reset">Сбросить все главы для этого комикса</string>
     <string name="disabled">Отключено</string>
@@ -93,7 +93,7 @@
     <string name="information_empty_library">Пустая библиотека</string>
     <string name="information_no_downloads">Нет загрузок</string>
     <string name="information_no_recent">Нет новых обновлений</string>
-    <string name="information_no_recent_manga">Нет недавно прочитанной манги</string>
+    <string name="information_no_recent_manga">Нет недавно прочитанного комикса</string>
     <string name="invalid_login">Ошибка входа</string>
     <string name="label_backup">Резервная копия и восстановление</string>
     <string name="label_download_queue">Очередь загрузки</string>
@@ -140,7 +140,6 @@
     <string name="pref_custom_color_filter">Пользовательский цветовой фильтр</string>
     <string name="pref_download_directory">Каталог загрузок</string>
     <string name="pref_download_new">Загружать новые главы</string>
-    <string name="pref_download_only_over_wifi">Только по Wi-Fi</string>
     <string name="pref_enable_acra">Отсылать отчеты об ошибках</string>
     <string name="pref_page_transitions">Анимированные переходы страниц</string>
     <string name="pref_fullscreen">Полноэкранный режим</string>
@@ -157,7 +156,7 @@
     <string name="pref_remove_after_marked_as_read">Если помечено как \"Прочитано\"</string>
     <string name="pref_remove_after_read">Удалять главы после прочтения</string>
     <string name="pref_rotation_type">Ориентация</string>
-    <string name="pref_show_page_number">Показывать номер страницы</string>
+    <string name="pref_show_page_number">Показать номер страницы</string>
     <string name="pref_start_screen">Начальный экран</string>
     <string name="pref_update_only_non_completed">Обновлять только незавершенные комиксы</string>
     <string name="pref_viewer_type">Режим чтения</string>
@@ -179,7 +178,7 @@
     <string name="services">Услуги</string>
     <string name="set_as_cover">Установить как обложку</string>
     <string name="show_chapter_number">Номер главы</string>
-    <string name="show_password">Показывать пароль</string>
+    <string name="show_password">Показать пароль</string>
     <string name="show_title">Название источника</string>
     <string name="snack_add_to_library">Добавить комикс в библиотеку\?</string>
     <string name="sort_by_number">По номеру главы</string>
@@ -255,7 +254,7 @@
     <string name="app_not_available">Приложение недоступно</string>
     <string name="pref_read_with_volume_keys_inverted">Клавиши громкости наоборот</string>
     <string name="action_global_search">Искать глобально</string>
-    <string name="action_display_download_badge">Значки загруженных глав</string>
+    <string name="action_display_download_badge">Загруженные главы</string>
     <string name="local_source_badge">Локальный значок источника</string>
     <string name="other_source">Другие</string>
     <string name="action_global_search_hint">Глобальный поиск…</string>
@@ -479,7 +478,7 @@
         <item quantity="other">Выполнено за %1$s с %2$s ошибками</item>
     </plurals>
     <string name="tracking_info">Односторонняя синхронизация для обновления прогресса комиксов в сервисах отслеживания. Настройте отслеживание для комиксов при помощи их кнопок отслеживания.</string>
-    <string name="action_display_unread_badge">Значки непрочитанных глав</string>
+    <string name="action_display_unread_badge">Непрочитанные главы</string>
     <plurals name="notification_update_error">
         <item quantity="one">%1$d неудачное обновление</item>
         <item quantity="few">%1$d неудачных обновления</item>
@@ -502,7 +501,7 @@
     <string name="action_migrate">Мигрировать</string>
     <string name="tabs_header">Вкладки</string>
     <string name="badges_header">Значки</string>
-    <string name="action_display_show_tabs">Показывать вкладки категорий</string>
+    <string name="action_display_show_tabs">Показать вкладки категорий</string>
     <string name="page_list_empty_error">Страницы не найдены</string>
     <string name="action_enable_all">Включить всё</string>
     <string name="action_disable_all">Выключить всё</string>
@@ -527,7 +526,7 @@
     <string name="pref_read_with_tapping_inverted">Нажатие наоборот</string>
     <string name="unknown_status">Неизвестный статус</string>
     <string name="unknown_author">Неизвестный автор</string>
-    <string name="action_download_unread">Загрузить не прочитанные главы</string>
+    <string name="action_download_unread">Загрузить непрочитанные главы</string>
     <string name="updated_version">Обновлено до в%1$s</string>
     <string name="whats_new">Что нового</string>
     <string name="download_insufficient_space">Невозможно загрузить главы из-за малого объема памяти</string>
@@ -580,7 +579,7 @@
     <string name="invalid_backup_file_type">Неверный тип файла резервной копии: %1$s
 \nФайл должен заканчиваться на .proto.gz или .json.</string>
     <string name="pref_category_nsfw_content">Источники NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Показывать в списке источников и расширений</string>
+    <string name="pref_show_nsfw_source">Показать в списке источников и расширений</string>
     <string name="file_picker_error">Приложение для выбора файлов не найдено</string>
     <string name="myanimelist_relogin">Пожалуйста, войдите в MAL снова</string>
     <string name="pref_viewer_nav">Схема навигации</string>
@@ -593,7 +592,6 @@
     <string name="crash_log_saved">Логи ошибок сохранены</string>
     <string name="pref_dump_crash_logs_summary">Сохраняет логи ошибок в файл для отправки разработчикам</string>
     <string name="pref_dump_crash_logs">Выгрузка логи ошибок</string>
-    <string name="network_unmetered">Безлимитная сеть</string>
     <string name="action_desc">По убыванию</string>
     <string name="action_asc">По возрастанию</string>
     <string name="action_order_by_chapter_number">По номеру главы</string>
@@ -613,8 +611,8 @@
     <string name="nav_zone_right">Справа</string>
     <string name="nav_zone_next">Следующая</string>
     <string name="nav_zone_prev">Предыдущая</string>
-    <string name="pref_show_navigation_mode_summary">Показывать зоны касания при чтении</string>
-    <string name="pref_show_navigation_mode">Показывать наложение схемы навигации</string>
+    <string name="pref_show_navigation_mode_summary">Показать зоны касания при чтении</string>
+    <string name="pref_show_navigation_mode">Показать наложение схемы навигации</string>
     <string name="pref_dns_over_https">DNS по HTTPS</string>
     <string name="none">Нет</string>
     <string name="exclude">Исключать: %s</string>
@@ -646,7 +644,7 @@
     <string name="pref_library_update_refresh_trackers_summary">При обновлении библиотеки, обновлять отслеживание</string>
     <string name="pref_library_update_refresh_trackers">Oбновлять отслеживание</string>
     <string name="restrictions">Ограничения: %s</string>
-    <string name="action_display_local_badge">Значки локальных глав</string>
+    <string name="action_display_local_badge">Локальный комикс</string>
     <string name="off">Выключено</string>
     <string name="on">Включено</string>
     <string name="pref_side_nav_icon_alignment">Выравнивание значков боковой навигации</string>
@@ -674,7 +672,7 @@
     <string name="notification_updating">Обновление библиотеки... (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">У некоторых производителей есть дополнительные ограничения для приложений, которые убивают фоновые службы. На этом веб-сайте есть более подробная информация о том, как это исправить.</string>
     <string name="restore_miui_warning">Резервная копия/Восстановление может не работать должным образом, если отключена Оптимизация MIUI.</string>
-    <string name="enhanced_tracking_info">Услуги, предоставляющие расширенные возможности для определенных источников. При добавлении манги в библиотеку, она будет автоматически отслеживаться.</string>
+    <string name="enhanced_tracking_info">Услуги, предоставляющие расширенные возможности для определенных источников. При добавлении комикса в библиотеку, он будет автоматически отслеживаться.</string>
     <string name="enhanced_services">Расширенные услуги</string>
     <string name="tracker_komga_warning">Эта услуга отслеживания совместима только с источником Komga.</string>
     <string name="theme_monet">Динамическая</string>
@@ -711,9 +709,15 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Установите и запустите Shizuku, для использования Shizuku, как установщик расширений.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku не работает</string>
     <string name="ext_installer_shizuku">Шизуку</string>
-    <string name="ext_installer_legacy">Наследие</string>
+    <string name="ext_installer_legacy">Старый</string>
     <string name="ext_installer_packageinstaller">Система</string>
     <string name="ext_installer_pref">Установщик</string>
     <string name="ext_install_service_notif">Устанавливается расширение…</string>
     <string name="action_sort_count">По количеству комиксов</string>
+    <string name="pref_verbose_logging">Подробное логирование</string>
+    <string name="pref_verbose_logging_summary">Записывать подробные логи, в системный лог (снижает производительность приложения)</string>
+    <string name="action_display_language_badge">Язык</string>
+    <string name="label_warning">Предупреждение</string>
+    <string name="notification_size_warning">Большие обновления, могут привести, к повышенному расходу батареи и замедлению работы источников</string>
+    <string name="backup_info">Настоятельно рекомендуется использовать автоматические резервные копии. Вы также должны хранить копии в других местах.</string>
 </resources>

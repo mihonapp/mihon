@@ -131,7 +131,6 @@
     <string name="pref_update_only_non_completed">केवल जारी मांगा अपडेट गर्नुहोस्</string>
     <string name="restrictions">प्रतिबन्धहरु: %s</string>
     <string name="charging">चार्ज हुँदा</string>
-    <string name="network_unmetered">अनमीटर्ड नेटवर्क</string>
     <string name="pref_library_update_restriction">अपडेटको प्रतिबन्धहरु</string>
     <string name="pref_library_update_prioritization">अपडेटको अनुक्रम</string>
     <string name="update_weekly">साप्ताहिक</string>

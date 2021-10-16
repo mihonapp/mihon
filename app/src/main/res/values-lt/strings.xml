@@ -38,7 +38,6 @@
     <string name="pref_update_only_non_completed">Naujinti tik šiuo metu išleidžiamą mangą</string>
     <string name="restrictions">Ribojimai: %s</string>
     <string name="charging">Kraunasi</string>
-    <string name="network_unmetered">Nematuojamas tinklas</string>
     <string name="pref_library_update_restriction">Naujinimo ribojimai</string>
     <string name="pref_library_update_prioritization">Naujinimo tvarka</string>
     <string name="update_weekly">Kas savaitę</string>
@@ -262,6 +261,6 @@
     <plurals name="num_categories">
         <item quantity="one">Kategorija</item>
         <item quantity="few">Kategorijos</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
 </resources>

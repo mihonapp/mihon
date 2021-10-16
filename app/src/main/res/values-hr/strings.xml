@@ -196,7 +196,6 @@
     <string name="custom_dir">Prilagođeno mjesto</string>
     <string name="pref_remove_after_read">Nakon čitanja</string>
     <string name="pref_remove_after_marked_as_read">Nakon ručnog označivanja kao pročitano</string>
-    <string name="pref_download_only_over_wifi">Preuzimaj samo putem Wi-Fi veze</string>
     <string name="pref_download_directory">Mjesto preuzimanja</string>
     <string name="webtoon_side_padding_25">25 %</string>
     <string name="webtoon_side_padding_20">20 %</string>
@@ -582,7 +581,6 @@
     <string name="edge_nav">Rub</string>
     <string name="kindlish_nav">Kao Kindle</string>
     <string name="l_nav">U obliku slova L</string>
-    <string name="network_unmetered">Neograničena mreža</string>
     <string name="action_desc">Silazno</string>
     <string name="action_asc">Uzlazno</string>
     <string name="action_order_by_chapter_number">Po broju poglavlja</string>

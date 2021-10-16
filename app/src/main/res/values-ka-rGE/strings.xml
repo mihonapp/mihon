@@ -195,7 +195,6 @@
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="pref_download_directory">გადმოწერის ადგილი დისკზე</string>
-    <string name="pref_download_only_over_wifi">გადმოწერე მხოლოდ Wi-Fi -ს მეშვეობით</string>
     <string name="pref_remove_after_marked_as_read">წაშალე წაკითხულად მონიშვნის შემდეგ</string>
     <string name="pref_remove_after_read">წაკკითხვის შემდეგ წაშალე</string>
     <string name="custom_dir">ინდივიდუალური ადგილმდებარეობა</string>

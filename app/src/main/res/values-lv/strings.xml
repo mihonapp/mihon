@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Nosaukums</string>
     <string name="categories">Kategorijas</string>
-    <string name="manga"></string>
+    <string name="manga"/>
     <string name="chapters">Nodaļas</string>
     <string name="track">Sekošana</string>
     <string name="history">Vēsture</string>
@@ -193,7 +193,6 @@
     <string name="description">Apraksts</string>
     <string name="title">Nosaukums</string>
     <string name="pref_category_delete_chapters">Izdzēst nodaļas</string>
-    <string name="pref_download_only_over_wifi">Lejuplādēt vienīgi ar Wi-Fi</string>
     <string name="pref_download_directory">Lejuplādes vieta</string>
     <string name="pref_category_auto_download">Automātiska lejuplāde</string>
     <string name="pref_restore_backup">Atjaunot dublējumu</string>

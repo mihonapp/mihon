@@ -139,7 +139,6 @@
     <string name="rotation_free">자유</string>
     <string name="rotation_force_portrait">세로로 고정</string>
     <string name="rotation_force_landscape">가로로 고정</string>
-    <string name="pref_download_only_over_wifi">Wi-Fi만 사용해서 다운로드</string>
     <string name="pref_remove_after_marked_as_read">읽음 표시 후에 자동으로 삭제</string>
     <string name="pref_remove_after_read">읽은 후에 자동으로 삭제</string>
     <string name="disabled">비활성화 됨</string>

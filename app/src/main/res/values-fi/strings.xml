@@ -209,7 +209,6 @@
     <string name="color_filter_b_value">Sininen</string>
     <string name="color_filter_a_value">Alpha</string>
     <string name="pref_download_directory">Lataus kansio</string>
-    <string name="pref_download_only_over_wifi">Lataa vain Wi-Fi-yhteydellä</string>
     <string name="pref_remove_after_marked_as_read">Manuaalisesti luetuksi merkitsemisen jälkeen</string>
     <string name="pref_remove_after_read">Lukemisen jälkeen</string>
     <string name="custom_dir">Mukautettu kansio</string>
@@ -570,7 +569,6 @@
     <string name="track_started_reading_date">Aloituspäivämäärä</string>
     <string name="crash_log_saved">Kaatumislokit tallennettu</string>
     <string name="pref_dump_crash_logs_summary">Tallentaa virhelokit tiedostoon jaettavaksi kehittäjien kanssa</string>
-    <string name="network_unmetered">Mittaamaton verkko</string>
     <string name="action_desc">Laskeva</string>
     <string name="action_asc">Nouseva</string>
     <string name="action_order_by_chapter_number">Luvunumeron mukaan</string>

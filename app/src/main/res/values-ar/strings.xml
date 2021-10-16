@@ -125,7 +125,6 @@
     <string name="rotation_force_portrait">الوضع الرأسي اﻹجباري</string>
     <string name="rotation_force_landscape">الوضع الأفقي الإجباري</string>
     <string name="pref_download_directory">موقع التنزيل</string>
-    <string name="pref_download_only_over_wifi">التنزيل عبر الواي فاي فقط</string>
     <string name="pref_remove_after_marked_as_read">وضع علامة \"مقروءة\" يدويًا</string>
     <string name="pref_remove_after_read">تلقائيا بعد القراءة</string>
     <string name="custom_dir">مجلد مخصص</string>
@@ -263,7 +262,7 @@
     <string name="label_migration">ترحيل</string>
     <string name="label_extensions">الإضافات</string>
     <string name="label_extension_info">معلومات اﻹضافة</string>
-    <string name="action_display_download_badge">شارات لعدد الفصول المُنزلة</string>
+    <string name="action_display_download_badge">عدد الفصول المُنزلة</string>
     <string name="all_lang">الكل</string>
     <string name="ext_update">تحديث</string>
     <string name="ext_install">تثبيت</string>
@@ -499,7 +498,7 @@
     <string name="ext_unofficial">غير رسمي</string>
     <string name="pref_library_update_refresh_metadata_summary">تحقق من وجود غلاف جديد وتفاصيل جديدة عند تحديث المكتبة</string>
     <string name="pref_library_update_refresh_metadata">تحديث البيانات الوصفية تلقائياً</string>
-    <string name="action_display_unread_badge">شارات لعدد الفصول غير المقروءة</string>
+    <string name="action_display_unread_badge">الفصول غير المقروءة</string>
     <plurals name="restore_completed_message">
         <item quantity="zero">تم في %1$s مع %2$sأخطاء</item>
         <item quantity="one">تم في %1$s ووجد خطأ واحد</item>
@@ -624,7 +623,6 @@
     <string name="pref_dual_page_invert_summary">إذا كان موضع تقسيم الصفحات المزدوجة لا يتطابق مع اتجاه القراءة</string>
     <string name="pref_dual_page_invert">عكس موضع تقسيم الصفحة المزدوجة</string>
     <string name="pref_dual_page_split">شق الصفحة لنصفين</string>
-    <string name="network_unmetered">شبكة غير مصنفة</string>
     <string name="action_desc">تنازلياً</string>
     <string name="action_asc">تصاعدياً</string>
     <string name="action_order_by_upload_date">حسب تاريخ الرفع</string>
@@ -683,7 +681,7 @@
     <string name="alignment_top">أعلى</string>
     <string name="pref_side_nav_icon_alignment">محاذاة رموز التنقل الجانبية</string>
     <string name="cancel_all_for_series">إلغاء الكل لهذه السلسلة</string>
-    <string name="action_display_local_badge">الشارات المحلية</string>
+    <string name="action_display_local_badge">مانغا محلية</string>
     <string name="information_empty_category_dialog">ليس لديك اي قوائم بعد.</string>
     <string name="action_start_downloading_now">ابدأ التحميل الآن</string>
     <string name="theme_strawberrydaiquiri">أحمر</string>
@@ -734,4 +732,14 @@
     <string name="help_translate">ساعد بالترجمة</string>
     <string name="pref_tablet_ui_mode">فرض واجهة مستخدم الجهاز اللوحي</string>
     <string name="pref_remove_exclude_categories">فئات المستثناة</string>
+    <string name="ext_installer_pref">مثبت</string>
+    <string name="action_sort_count">مجموع مانغا</string>
+    <string name="label_warning">تحذير</string>
+    <string name="action_display_language_badge">لغة</string>
+    <string name="backup_info">يوصى بشدة بالنسخ الاحتياطي التلقائي. يجب عليك الإحتفاظ بنُسخ في أماكن أخرى أيضًا.</string>
+    <string name="notification_size_warning">قد تؤدي التحديثات الكبيرة إلى زيادة استخدام البطارية وتصبح المصادر أبطأ</string>
+    <string name="pref_verbose_logging">التسجيل المطول</string>
+    <string name="ext_app_info">معلومات التطبيق</string>
+    <string name="ext_install_service_notif">جارٍ تثبيت الإضافة …</string>
+    <string name="pref_verbose_logging_summary">طباعة السجلات المطولة في سجل النظام (يقلل من أداء التطبيق)</string>
 </resources>

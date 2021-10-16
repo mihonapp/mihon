@@ -188,7 +188,6 @@
     <string name="pref_remove_after_read">ካነበብኩ በኋላ</string>
     <string name="pref_remove_after_marked_as_read">በእጅ እንደተነበበ ምልክት ከተደረገ በኋላ</string>
     <string name="pref_category_delete_chapters">ምዕራፎችን ሰርዝ</string>
-    <string name="pref_download_only_over_wifi">በ Wi-Fi ብቻ ያውርዱ</string>
     <string name="pref_download_directory">አካባቢን ያውርዱ</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_20">20%</string>

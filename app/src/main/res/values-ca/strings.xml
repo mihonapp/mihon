@@ -157,7 +157,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Ubicació de les baixades</string>
-    <string name="pref_download_only_over_wifi">Baixa només amb Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Després de marcar-los com a llegits</string>
     <string name="pref_remove_after_read">Automàticament després de llegir-los</string>
     <string name="pref_double_tap_anim_speed">Velocitat de l\'animació del doble toc</string>
@@ -570,7 +569,6 @@
     <string name="edge_nav">Vora</string>
     <string name="kindlish_nav">Semblant al Kindle</string>
     <string name="l_nav">En forma d\'L</string>
-    <string name="network_unmetered">Xarxa sense límit de dades</string>
     <string name="action_desc">Descendent</string>
     <string name="action_asc">Ascendent</string>
     <string name="action_order_by_chapter_number">Per número de capítol</string>

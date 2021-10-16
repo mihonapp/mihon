@@ -133,7 +133,6 @@
     <string name="custom_dir">Pinili kong lugar</string>
     <string name="pref_remove_after_marked_as_read">Pagkamarkahang nabasa na</string>
     <string name="pref_remove_after_read">Kusa pagkabasa</string>
-    <string name="pref_download_only_over_wifi">Mag-download lang kung naka-wifi</string>
     <string name="pref_download_directory">Lugar ng paglalagyan</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_15">15%</string>
@@ -532,8 +531,8 @@
     <string name="ext_nsfw_warning">Maaaring may NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">May nawawalang kabanata</item>
-        <item quantity="other">May %d (na) nawawalang kabanata</item>
+        <item quantity="one">Lalaktawan ang isang kabanata, siguro baka wala sa source ito, o baka nasala ito</item>
+        <item quantity="other">Lalaktawan ang %d (na) kabanata, siguro baka wala sa source sila, o baka nasala sila</item>
     </plurals>
     <string name="no_chapters_error">Walang nakitang kabanata</string>
     <string name="confirm_set_chapter_settings">Gusto mo bang i-save at ipagpaubaya ang pagsasaayos na ito\?</string>
@@ -570,7 +569,6 @@
     <string name="edge_nav">Sulok</string>
     <string name="kindlish_nav">mala-Kindle</string>
     <string name="l_nav">Hugis-L</string>
-    <string name="network_unmetered">Di-nakametrong network</string>
     <string name="action_desc">Pababa</string>
     <string name="action_asc">Pataas</string>
     <string name="action_order_by_chapter_number">Kabanata</string>
@@ -633,7 +631,7 @@
     <string name="on">Buksan</string>
     <string name="alignment_bottom">Baba</string>
     <string name="alignment_top">Taas</string>
-    <string name="action_display_local_badge">Lokal na pananda</string>
+    <string name="action_display_local_badge">Lokal na manga</string>
     <string name="categorized_display_settings">Pagpapakita kada kategorya</string>
     <string name="information_empty_category_dialog">Wala ka pang kategorya.</string>
     <string name="tracking_guide">Gabay sa pag-track</string>
@@ -689,4 +687,10 @@
     <string name="ext_installer_pref">Taga-install</string>
     <string name="ext_install_service_notif">Ini-install ang dugtong…</string>
     <string name="action_sort_count">Bilang ng manga</string>
+    <string name="pref_verbose_logging">Verbose na pagla-log</string>
+    <string name="pref_verbose_logging_summary">Mag-print ng mga verbose na log sa log ng sistema (dagdag-pasanin sa app)</string>
+    <string name="notification_size_warning">Maaaring humantong sa pagtaas ng paggamit sa baterya at mabagal na pag-load ng mga source ang mga malalaking update</string>
+    <string name="action_display_language_badge">Wika</string>
+    <string name="label_warning">Babala</string>
+    <string name="backup_info">Lubos na rinerekomenda ang kusang pag-backup. Kailangan mo ring magtabi ng mga kopya sa ibang lugar.</string>
 </resources>

@@ -99,7 +99,7 @@
     <string name="update_check_notification_download_complete">Pobieranie ukończone</string>
     <string name="update_check_notification_download_error">Błąd pobierania</string>
     <string name="update_check_notification_update_available">Dostępna nowa wersja!</string>
-    <string name="information_empty_library">Twoja biblioteka jest pusta.</string>
+    <string name="information_empty_library">Twoja biblioteka jest pusta</string>
     <string name="download_notifier_title_error">Błąd</string>
     <string name="download_notifier_unknown_error">Podczas pobierania rozdziału wystąpił nieoczekiwany błąd</string>
     <string name="download_notifier_download_paused">Pobieranie wstrzymane</string>
@@ -180,7 +180,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Lokalizacja pobierania</string>
-    <string name="pref_download_only_over_wifi">Pobieraj tylko przez Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Usuwaj po ręcznym oznaczeniu jako przeczytane</string>
     <string name="pref_remove_after_read">Usuwaj rozdziały po przeczytaniu</string>
     <string name="custom_dir">Niestandardowa lokalizacja</string>
@@ -227,7 +226,7 @@
     <string name="login_success">Zalogowano</string>
     <string name="local_source">Źródło lokalne</string>
     <string name="ongoing">Nieukończone</string>
-    <string name="unknown">Nie wiadomo</string>
+    <string name="unknown">Nieznany</string>
     <string name="licensed">Licencjonowane</string>
     <string name="delete_downloads_for_manga">Usunąć pobrane rozdziały?</string>
     <string name="chapter_downloading_progress">Pobieranie (%1$d/%2$d)</string>
@@ -260,7 +259,7 @@
     <string name="browse">Przeglądaj</string>
     <string name="channel_common">Zwykły</string>
     <string name="latest">Najnowsze</string>
-    <string name="action_display_download_badge">Plakietki pobrań</string>
+    <string name="action_display_download_badge">Pobrane rozdziały</string>
     <string name="local_source_badge">Lokalna</string>
     <string name="information_empty_category">Nie masz żadnych kategorii. Dotknij plusa, aby je utworzyć i zorganizować swoją bibliotekę.</string>
     <string name="label_extensions">Rozszerzenia</string>
@@ -466,7 +465,7 @@
         <item quantity="other">Pozostało %1$s</item>
     </plurals>
     <string name="pref_cutout_short">Pokazuj zawartość w strefie odcięcia</string>
-    <string name="action_display_unread_badge">Plakietki nieprzeczytanych rozdziałów</string>
+    <string name="action_display_unread_badge">Nieprzeczytane rozdziały</string>
     <string name="action_view_chapters">Przeglądaj rozdziały</string>
     <string name="add_tracking">Dodaj śledzenie</string>
     <string name="battery_optimization_setting_activity_not_found">Niepowodzenie otwarcia ustawień urządzenia</string>
@@ -593,7 +592,6 @@
     <string name="edge_nav">Przy krawędzi</string>
     <string name="kindlish_nav">Podobnie jak w czytniku Kindle</string>
     <string name="l_nav">W kształcie litery \"L\"</string>
-    <string name="network_unmetered">Sieć bez limitu danych</string>
     <string name="action_desc">Malejąco</string>
     <string name="action_asc">Rosnąco</string>
     <string name="action_order_by_chapter_number">Według numeru rozdziału</string>
@@ -657,7 +655,7 @@
     <string name="alignment_center">Środek</string>
     <string name="alignment_top">Góra</string>
     <string name="pref_side_nav_icon_alignment">Ułożenie ikon nawigacji bocznej</string>
-    <string name="action_display_local_badge">Plakietki lokalnych serii</string>
+    <string name="action_display_local_badge">Lokalne mangi</string>
     <string name="information_empty_category_dialog">Nie masz jeszcze żadnych kategorii.</string>
     <string name="restrictions">Ograniczenia: %s</string>
     <string name="about_dont_kill_my_app">Niektórzy producenci mają dodatkowe ograniczenia, które zabijają usługi działające w tle. Ta strona zawiera więcej informacji na ten temat.</string>
@@ -678,8 +676,8 @@
     <plurals name="relative_time">
         <item quantity="one">Wczoraj</item>
         <item quantity="few">%1$d dni temu</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many">%1$d dni temu</item>
+        <item quantity="other">%1$d dni temu</item>
     </plurals>
     <string name="pref_relative_time_long">Długi (Krótki+, n dni temu)</string>
     <string name="pref_relative_time_short">Krótki (Dzisiaj, Jutro)</string>
@@ -705,4 +703,15 @@
     <string name="recently">Ostatnio</string>
     <string name="theme_tealturquoise">Błękitny &amp; Turkusowy</string>
     <string name="theme_midnightdusk">Zmierzch północy</string>
+    <string name="notification_size_warning">Duże aktualizacje biblioteki mogą prowadzić do zwiększonego zużycia baterii oraz spowolnienia działania źródeł</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Zainstaluj i uruchom Shizuku, aby używać go jako instalatora rozszerzeń.</string>
+    <string name="ext_installer_pref">Instalator</string>
+    <string name="pref_verbose_logging">Szczegółowe logi</string>
+    <string name="ext_install_service_notif">Instalowanie rozszerzenia…</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku nie jest aktywne</string>
+    <string name="pref_verbose_logging_summary">Zapisuje szczegółowe logi w logu systemu (obniża wydajność aplikacji)</string>
+    <string name="backup_info">Automatyczne kopie zapasowe są wysoce zalecane. Radzimy również przechowywać kopie w innych miejscach.</string>
+    <string name="action_sort_count">Ilość mang</string>
+    <string name="action_display_language_badge">Język</string>
+    <string name="label_warning">Ostrzeżenie</string>
 </resources>

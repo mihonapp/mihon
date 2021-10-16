@@ -301,7 +301,6 @@
     <string name="custom_dir">Туттааччы ыйдарыыта</string>
     <string name="pref_remove_after_read">Ааҕы кэннэ</string>
     <string name="pref_remove_after_marked_as_read">Ааҕыллыбыт диэн суруллубутун кэннэ</string>
-    <string name="pref_download_only_over_wifi">Wi-Fi эрэ баар буоллаҕына хачайдаа</string>
     <string name="pref_download_directory">Хачайдааһын сурунаала</string>
     <string name="requires_app_restart">Уларыйыы киирэрин гына эбилиги хос холбоо</string>
     <string name="cache_delete_error">Кээс сотторуутугар сыыһааһын буолла</string>
@@ -498,7 +497,6 @@
     <string name="include">Киллэр: %s</string>
     <string name="none">Суох</string>
     <string name="pref_library_update_categories_details">Сотуллубут категориялар маангалара саҥардыллыа суоҕа, холбоммут категорияларга баарын үрдүнэн.</string>
-    <string name="network_unmetered">Лимиитэ суох ситим</string>
     <string name="update_8hour">Аҕыс чаас аайы</string>
     <string name="update_4hour">Түөрт чаас аайы</string>
     <string name="action_show_errors">Сыһааһыннары көрдөр</string>
