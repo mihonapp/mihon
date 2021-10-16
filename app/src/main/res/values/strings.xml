@@ -221,7 +221,7 @@
     <string name="update_weekly">Weekly</string>
     <string name="pref_library_update_prioritization">Update order</string>
     <string name="pref_library_update_restriction">Update restrictions</string>
-    <string name="network_unmetered">Unmetered network</string>
+    <string name="connected_to_wifi">Only on Wi-Fi</string>
     <string name="charging">Charging</string>
     <string name="restrictions">Restrictions: %s</string>
     <string name="pref_update_only_non_completed">Only update ongoing manga</string>
@@ -384,7 +384,6 @@
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Download location</string>
-    <string name="pref_download_only_over_wifi">Only download over Wi-Fi</string>
     <string name="pref_category_delete_chapters">Delete chapters</string>
     <string name="pref_remove_after_marked_as_read">After marked as read</string>
     <string name="pref_remove_after_read">Automatically after reading</string>

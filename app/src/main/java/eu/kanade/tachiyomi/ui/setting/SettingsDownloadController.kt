@@ -66,7 +66,7 @@ class SettingsDownloadController : SettingsController() {
         }
         switchPreference {
             key = Keys.downloadOnlyOverWifi
-            titleRes = R.string.pref_download_only_over_wifi
+            titleRes = R.string.connected_to_wifi
             defaultValue = true
         }
         preferenceCategory {
