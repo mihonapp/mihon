@@ -5,12 +5,10 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginTop
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.findChild
-import eu.kanade.tachiyomi.widget.ElevationAppBarLayout
 import kotlin.math.roundToLong
 
 /**
@@ -87,11 +85,6 @@ class HideToolbarOnScrollBehavior : AppBarLayout.Behavior() {
             duration = (150 * child.context.animatorDurationScale).roundToLong()
             addUpdateListener {
                 setHeaderTopBottomOffset(coordinatorLayout, child, it.animatedValue as Int)
-            }
-            doOnEnd {
-                if ((child as? ElevationAppBarLayout)?.isTransparentWhenNotLifted == true) {
-                    child.isLifted = !isVisible
-                }
             }
             setIntValues(current, target)
             start()

@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.widget
 
+import android.animation.AnimatorSet
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
@@ -12,6 +14,8 @@ import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.HideToolbarOnScrollBehavior
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.getStateAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.view.findChild
 import kotlinx.coroutines.flow.launchIn
@@ -25,7 +29,6 @@ class ElevationAppBarLayout @JvmOverloads constructor(
 ) : AppBarLayout(context, attrs) {
 
     private var lifted = true
-    private var transparent = false
 
     private val toolbar by lazy { findViewById<MaterialToolbar>(R.id.toolbar) }
 
@@ -42,14 +45,37 @@ class ElevationAppBarLayout @JvmOverloads constructor(
             field?.alpha = titleTextAlpha
         }
 
-    private var elevationAnimator: ValueAnimator? = null
-    private var backgroundAlphaAnimator: ValueAnimator? = null
+    private var animatorSet: AnimatorSet? = null
+
+    private var statusBarForegroundAnimator: ValueAnimator? = null
+    private val offsetListener = OnOffsetChangedListener { appBarLayout, verticalOffset ->
+        // Show status bar foreground when offset
+        val foreground = appBarLayout?.statusBarForeground ?: return@OnOffsetChangedListener
+        val start = foreground.alpha
+        val end = if (verticalOffset != 0) 255 else 0
+
+        statusBarForegroundAnimator?.cancel()
+        if (animatorSet?.isRunning == true) {
+            foreground.alpha = end
+            return@OnOffsetChangedListener
+        }
+        if (start != end) {
+            statusBarForegroundAnimator = ValueAnimator.ofInt(start, end).apply {
+                duration = resources.getInteger(R.integer.app_bar_elevation_anim_duration).toLong()
+                interpolator = AnimationUtils.LINEAR_INTERPOLATOR
+                addUpdateListener {
+                    foreground.alpha = it.animatedValue as Int
+                }
+                start()
+            }
+        }
+    }
 
     var isTransparentWhenNotLifted = false
         set(value) {
             if (field != value) {
                 field = value
-                updateBackgroundAlpha()
+                updateStates()
             }
         }
 
@@ -65,24 +91,7 @@ class ElevationAppBarLayout @JvmOverloads constructor(
     override fun setLifted(lifted: Boolean): Boolean {
         return if (this.lifted != lifted) {
             this.lifted = lifted
-            val from = elevation
-            val to = if (lifted) {
-                resources.getDimension(R.dimen.design_appbar_elevation)
-            } else {
-                0F
-            }
-
-            elevationAnimator?.cancel()
-            elevationAnimator = ValueAnimator.ofFloat(from, to).apply {
-                duration = resources.getInteger(R.integer.app_bar_elevation_anim_duration).toLong()
-                interpolator = AnimationUtils.LINEAR_INTERPOLATOR
-                addUpdateListener {
-                    elevation = it.animatedValue as Float
-                }
-                start()
-            }
-
-            updateBackgroundAlpha()
+            updateStates()
             true
         } else {
             false
@@ -91,6 +100,9 @@ class ElevationAppBarLayout @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        addOnOffsetChangedListener(offsetListener)
+        toolbar.background.alpha = 0 // Use app bar background
+
         titleTextView = toolbar.findChild<TextView>()
         findViewTreeLifecycleOwner()?.lifecycle?.coroutineScope?.let { scope ->
             toolbar.hierarchyChangeEvents()
@@ -112,23 +124,49 @@ class ElevationAppBarLayout @JvmOverloads constructor(
         }
     }
 
-    private fun updateBackgroundAlpha() {
-        val newTransparent = if (lifted) false else isTransparentWhenNotLifted
-        if (transparent != newTransparent) {
-            transparent = newTransparent
-            val fromAlpha = if (transparent) 255 else 0
-            val toAlpha = if (transparent) 0 else 255
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        removeOnOffsetChangedListener(offsetListener)
+    }
 
-            backgroundAlphaAnimator?.cancel()
-            backgroundAlphaAnimator = ValueAnimator.ofInt(fromAlpha, toAlpha).apply {
+    @SuppressLint("Recycle")
+    private fun updateStates() {
+        val animators = mutableListOf<ValueAnimator>()
+
+        val fromElevation = elevation
+        val toElevation = if (lifted) {
+            resources.getDimension(R.dimen.design_appbar_elevation)
+        } else {
+            0F
+        }
+        if (fromElevation != toElevation) {
+            ValueAnimator.ofFloat(fromElevation, toElevation).apply {
+                addUpdateListener {
+                    elevation = it.animatedValue as Float
+                }
+                animators.add(this)
+            }
+        }
+
+        val transparent = if (lifted) false else isTransparentWhenNotLifted
+        val fromAlpha = (background as? MaterialShapeDrawable)?.getStateAlpha() ?: background.alpha
+        val toAlpha = if (transparent) 0 else 255
+        if (fromAlpha != toAlpha) {
+            ValueAnimator.ofInt(fromAlpha, toAlpha).apply {
+                addUpdateListener {
+                    val value = it.animatedValue as Int
+                    background.alpha = value
+                }
+                animators.add(this)
+            }
+        }
+
+        if (animators.isNotEmpty()) {
+            animatorSet?.cancel()
+            animatorSet = AnimatorSet().apply {
                 duration = resources.getInteger(R.integer.app_bar_elevation_anim_duration).toLong()
                 interpolator = AnimationUtils.LINEAR_INTERPOLATOR
-                addUpdateListener {
-                    val alpha = it.animatedValue as Int
-                    background.alpha = alpha
-                    toolbar?.background?.alpha = alpha
-                    statusBarForeground?.alpha = alpha
-                }
+                playTogether(*animators.toTypedArray())
                 start()
             }
         }
