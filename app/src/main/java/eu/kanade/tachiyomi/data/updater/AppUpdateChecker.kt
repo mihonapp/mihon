@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.updater
 
+import android.content.Context
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.network.GET
@@ -23,9 +24,9 @@ class AppUpdateChecker {
         }
     }
 
-    suspend fun checkForUpdate(): AppUpdateResult {
+    suspend fun checkForUpdate(context: Context): AppUpdateResult {
         return withIOContext {
-            networkService.client
+            val result = networkService.client
                 .newCall(GET("https://api.github.com/repos/$repo/releases/latest"))
                 .await()
                 .parseAs<GithubRelease>()
@@ -39,6 +40,12 @@ class AppUpdateChecker {
                         AppUpdateResult.NoNewUpdate
                     }
                 }
+
+            if (result is AppUpdateResult.NewUpdate) {
+                AppUpdateNotifier(context).promptUpdate(result.release)
+            }
+
+            result
         }
     }
 

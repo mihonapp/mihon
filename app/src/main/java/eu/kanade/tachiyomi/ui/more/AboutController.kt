@@ -107,11 +107,11 @@ class AboutController : SettingsController(), NoAppBarElevationController {
     private fun checkVersion() {
         if (activity == null) return
 
-        activity?.toast(R.string.update_check_look_for_updates)
+        activity!!.toast(R.string.update_check_look_for_updates)
 
         launchNow {
             try {
-                when (val result = updateChecker.checkForUpdate()) {
+                when (val result = updateChecker.checkForUpdate(activity!!)) {
                     is AppUpdateResult.NewUpdate -> {
                         NewUpdateDialogController(result).showDialog(router)
                     }

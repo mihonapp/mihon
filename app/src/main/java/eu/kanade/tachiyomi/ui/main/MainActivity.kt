@@ -336,7 +336,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
         lifecycleScope.launchIO {
             try {
-                val result = AppUpdateChecker().checkForUpdate()
+                val result = AppUpdateChecker().checkForUpdate(this@MainActivity)
                 if (result is AppUpdateResult.NewUpdate) {
                     NewUpdateDialogController(result).showDialog(router)
                 }

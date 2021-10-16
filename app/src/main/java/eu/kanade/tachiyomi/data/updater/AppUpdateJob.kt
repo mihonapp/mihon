@@ -17,10 +17,7 @@ class AppUpdateJob(private val context: Context, workerParams: WorkerParameters)
 
     override suspend fun doWork() = coroutineScope {
         try {
-            val result = AppUpdateChecker().checkForUpdate()
-            if (result is AppUpdateResult.NewUpdate) {
-                AppUpdateNotifier(context).promptUpdate(result.release.getDownloadLink())
-            }
+            AppUpdateChecker().checkForUpdate(context)
             Result.success()
         } catch (e: Exception) {
             Result.failure()
