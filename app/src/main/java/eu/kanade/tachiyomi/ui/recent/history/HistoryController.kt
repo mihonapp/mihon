@@ -105,7 +105,7 @@ class HistoryController :
      * @param mangaHistory list of manga history
      */
     fun onNextManga(mangaHistory: List<HistoryItem>, cleanBatch: Boolean = false) {
-        if (adapter?.itemCount ?: 0 == 0 || cleanBatch) {
+        if (adapter?.itemCount ?: 0 == 0) {
             resetProgressItem()
         }
         if (cleanBatch) {
