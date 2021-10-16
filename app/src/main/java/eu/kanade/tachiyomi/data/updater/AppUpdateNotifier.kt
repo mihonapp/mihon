@@ -12,12 +12,7 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
 
-/**
- * DownloadNotifier is used to show notifications when downloading and update.
- *
- * @param context context of application.
- */
-internal class UpdaterNotifier(private val context: Context) {
+internal class AppUpdateNotifier(private val context: Context) {
 
     private val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_COMMON)
 
@@ -31,8 +26,8 @@ internal class UpdaterNotifier(private val context: Context) {
     }
 
     fun promptUpdate(url: String) {
-        val intent = Intent(context, UpdaterService::class.java).apply {
-            putExtra(UpdaterService.EXTRA_DOWNLOAD_URL, url)
+        val intent = Intent(context, AppUpdateService::class.java).apply {
+            putExtra(AppUpdateService.EXTRA_DOWNLOAD_URL, url)
         }
         val pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         with(notificationBuilder) {
@@ -125,7 +120,7 @@ internal class UpdaterNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_refresh_24dp,
                 context.getString(R.string.action_retry),
-                UpdaterService.downloadApkPendingService(context, url)
+                AppUpdateService.downloadApkPendingService(context, url)
             )
             addAction(
                 R.drawable.ic_close_24dp,

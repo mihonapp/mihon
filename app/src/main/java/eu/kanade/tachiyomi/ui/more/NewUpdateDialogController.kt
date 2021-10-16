@@ -6,7 +6,7 @@ import androidx.core.os.bundleOf
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
-import eu.kanade.tachiyomi.data.updater.UpdaterService
+import eu.kanade.tachiyomi.data.updater.AppUpdateService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 
 class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundle) {
@@ -24,7 +24,7 @@ class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundl
                 if (appContext != null) {
                     // Start download
                     val url = args.getString(URL_KEY) ?: ""
-                    UpdaterService.start(appContext, url)
+                    AppUpdateService.start(appContext, url)
                 }
             }
             .setNegativeButton(R.string.update_check_ignore, null)

@@ -178,7 +178,7 @@
             android:exported="false" />
 
         <service
-            android:name=".data.updater.UpdaterService"
+            android:name=".data.updater.AppUpdateService"
             android:exported="false" />
 
         <service

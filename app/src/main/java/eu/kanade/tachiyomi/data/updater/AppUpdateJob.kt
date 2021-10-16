@@ -2,25 +2,24 @@ package eu.kanade.tachiyomi.data.updater
 
 import android.content.Context
 import androidx.work.Constraints
+import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.BuildConfig
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.coroutineScope
 import java.util.concurrent.TimeUnit
 
-class UpdaterJob(private val context: Context, workerParams: WorkerParameters) :
-    Worker(context, workerParams) {
+class AppUpdateJob(private val context: Context, workerParams: WorkerParameters) :
+    CoroutineWorker(context, workerParams) {
 
-    override fun doWork() = runBlocking {
+    override suspend fun doWork() = coroutineScope {
         try {
             val result = AppUpdateChecker().checkForUpdate()
-
             if (result is AppUpdateResult.NewUpdate) {
-                UpdaterNotifier(context).promptUpdate(result.release.getDownloadLink())
+                AppUpdateNotifier(context).promptUpdate(result.release.getDownloadLink())
             }
             Result.success()
         } catch (e: Exception) {
@@ -32,8 +31,8 @@ class UpdaterJob(private val context: Context, workerParams: WorkerParameters) :
         private const val TAG = "UpdateChecker"
 
         fun setupTask(context: Context) {
-            // Never check for updates in debug builds that don't include the updater
-            if (BuildConfig.DEBUG && !BuildConfig.INCLUDE_UPDATER) {
+            // Never check for updates in builds that don't include the updater
+            if (!BuildConfig.INCLUDE_UPDATER) {
                 cancelTask(context)
                 return
             }
@@ -42,7 +41,7 @@ class UpdaterJob(private val context: Context, workerParams: WorkerParameters) :
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-            val request = PeriodicWorkRequestBuilder<UpdaterJob>(
+            val request = PeriodicWorkRequestBuilder<AppUpdateJob>(
                 7,
                 TimeUnit.DAYS,
                 3,
