@@ -235,6 +235,14 @@ object Migrations {
                     preferences.enabledLanguages() += "all"
                 }
             }
+            if (oldVersion < 71) {
+                // Handle removed every 3, 4, 6, and 8 hour library updates
+                val updateInterval = preferences.libraryUpdateInterval().get()
+                if (updateInterval in listOf(3, 4, 6, 8)) {
+                    preferences.libraryUpdateInterval().set(12)
+                    LibraryUpdateJob.setupTask(context, 12)
+                }
+            }
 
             return true
         }
