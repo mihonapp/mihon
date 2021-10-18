@@ -187,7 +187,7 @@ internal class DownloadNotifier(private val context: Context) {
      */
     fun onWarning(reason: String) {
         with(errorNotificationBuilder) {
-            setContentTitle(context.getString(R.string.label_warning))
+            setContentTitle(context.getString(R.string.download_notifier_downloader_title))
             setStyle(NotificationCompat.BigTextStyle().bigText(reason))
             setSmallIcon(R.drawable.ic_warning_white_24dp)
             setAutoCancel(true)

@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
 import android.webkit.MimeTypeMap
+import android.widget.Toast
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
@@ -11,7 +12,6 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
-import eu.kanade.tachiyomi.data.library.PER_SOURCE_QUEUE_WARNING_THRESHOLD
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -24,6 +24,7 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.saveTo
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.system.logcat
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.async
 import logcat.LogPriority
 import okhttp3.Response
@@ -265,8 +266,8 @@ class Downloader(
             // Start downloader if needed
             if (autoStart && wasEmpty) {
                 val maxDownloadsFromSource = queue.groupBy { it.source }.maxOf { it.value.size }
-                if (maxDownloadsFromSource > PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
-                    notifier.onWarning(context.getString(R.string.notification_size_warning))
+                if (maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
+                    context.toast(R.string.download_queue_size_warning, Toast.LENGTH_LONG)
                 }
                 DownloadService.start(context)
             }
@@ -506,8 +507,10 @@ class Downloader(
 
     companion object {
         const val TMP_DIR_SUFFIX = "_tmp"
-
-        // Arbitrary minimum required space to start a download: 50 MB
-        const val MIN_DISK_SPACE = 50 * 1024 * 1024
     }
 }
+
+private const val CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 15
+
+// Arbitrary minimum required space to start a download: 50 MB
+private const val MIN_DISK_SPACE = 50 * 1024 * 1024
