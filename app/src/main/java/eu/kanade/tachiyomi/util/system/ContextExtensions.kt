@@ -307,10 +307,10 @@ fun Context.createFileInCacheDir(name: String): File {
 }
 
 /**
- * We consider anything with a width of >= 720dp as a tablet, i.e. with layouts in layout-sw720dp.
+ * We consider anything with a width of >= 720dp as a tablet, i.e. with layouts in layout-w720dp.
  */
 fun Context.isTablet(): Boolean {
-    return resources.configuration.smallestScreenWidthDp >= TABLET_UI_MIN_SCREEN_WIDTH_DP
+    return resources.configuration.screenWidthDp >= TABLET_UI_MIN_SCREEN_WIDTH_DP
 }
 
 fun Context.prepareTabletUiContext(): Context {
@@ -320,13 +320,13 @@ fun Context.prepareTabletUiContext(): Context {
         PreferenceValues.TabletUiMode.LANDSCAPE -> configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         PreferenceValues.TabletUiMode.NEVER -> false
     }
-    if (configuration.smallestScreenWidthDp >= TABLET_UI_MIN_SCREEN_WIDTH_DP != expected) {
+    if (configuration.screenWidthDp >= TABLET_UI_MIN_SCREEN_WIDTH_DP != expected) {
         val overrideConf = Configuration()
         overrideConf.setTo(configuration)
-        overrideConf.smallestScreenWidthDp = if (expected) {
-            overrideConf.smallestScreenWidthDp.coerceAtLeast(TABLET_UI_MIN_SCREEN_WIDTH_DP)
+        overrideConf.screenWidthDp = if (expected) {
+            overrideConf.screenWidthDp.coerceAtLeast(TABLET_UI_MIN_SCREEN_WIDTH_DP)
         } else {
-            overrideConf.smallestScreenWidthDp.coerceAtMost(TABLET_UI_MIN_SCREEN_WIDTH_DP - 1)
+            overrideConf.screenWidthDp.coerceAtMost(TABLET_UI_MIN_SCREEN_WIDTH_DP - 1)
         }
         return createConfigurationContext(overrideConf)
     }
