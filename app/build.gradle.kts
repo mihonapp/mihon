@@ -231,8 +231,8 @@ dependencies {
     // UI libraries
     implementation("com.google.android.material:material:1.5.0-alpha04")
     implementation("com.github.dmytrodanylyk.android-process-button:library:1.0.4")
-    implementation("eu.davidea:flexible-adapter:5.1.0")
-    implementation("eu.davidea:flexible-adapter-ui:1.0.0")
+    implementation("com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533")
+    implementation("com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533")
     implementation("com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.1.0")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
     implementation("com.github.tachiyomiorg:DirectionalViewPager:1.0.0") {
