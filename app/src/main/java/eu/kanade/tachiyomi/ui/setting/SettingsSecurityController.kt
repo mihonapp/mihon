@@ -31,8 +31,8 @@ class SettingsSecurityController : SettingsController() {
                 defaultValue = false
 
                 requireAuthentication(
-                    context as? FragmentActivity,
-                    context!!.getString(R.string.lock_with_biometrics),
+                    activity as? FragmentActivity,
+                    context.getString(R.string.lock_with_biometrics),
                     context.getString(R.string.confirm_lock_change),
                 )
             }

@@ -58,8 +58,8 @@ class SettingsBrowseController : SettingsController() {
                 if (context.isAuthenticationSupported() && activity != null) {
                     requireAuthentication(
                         activity as? FragmentActivity,
-                        activity!!.getString(R.string.pref_category_nsfw_content),
-                        activity!!.getString(R.string.confirm_lock_change),
+                        context.getString(R.string.pref_category_nsfw_content),
+                        context.getString(R.string.confirm_lock_change),
                     )
                 }
             }
