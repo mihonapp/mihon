@@ -117,23 +117,10 @@ class LibraryUpdateNotifier(private val context: Context) {
             Notifications.ID_LIBRARY_ERROR,
             context.notificationBuilder(Notifications.CHANNEL_LIBRARY_ERROR) {
                 setContentTitle(context.resources.getQuantityString(R.plurals.notification_update_error, errors.size, errors.size))
-                setStyle(
-                    NotificationCompat.BigTextStyle().bigText(
-                        errors.joinToString("\n") {
-                            it.chop(NOTIF_TITLE_MAX_LEN)
-                        }
-                    )
-                )
+                setContentText(context.getString(R.string.action_show_errors))
                 setSmallIcon(R.drawable.ic_tachi)
 
-                val errorLogIntent = NotificationReceiver.openErrorLogPendingActivity(context, uri)
-
-                setContentIntent(errorLogIntent)
-                addAction(
-                    R.drawable.ic_folder_24dp,
-                    context.getString(R.string.action_show_errors),
-                    errorLogIntent
-                )
+                setContentIntent(NotificationReceiver.openErrorLogPendingActivity(context, uri))
             }
                 .build()
         )

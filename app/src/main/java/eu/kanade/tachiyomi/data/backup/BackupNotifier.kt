@@ -139,10 +139,12 @@ class BackupNotifier(private val context: Context) {
                 val destFile = File(path, file)
                 val uri = destFile.getUriCompat(context)
 
+                val errorLogIntent = NotificationReceiver.openErrorLogPendingActivity(context, uri)
+                setContentIntent(errorLogIntent)
                 addAction(
                     R.drawable.ic_folder_24dp,
                     context.getString(R.string.action_show_errors),
-                    NotificationReceiver.openErrorLogPendingActivity(context, uri)
+                    errorLogIntent,
                 )
             }
 

@@ -119,7 +119,7 @@
     <string name="action_reset">Reset</string>
     <string name="action_undo">Undo</string>
     <string name="action_open_log">Open log</string>
-    <string name="action_show_errors">Show errors</string>
+    <string name="action_show_errors">See full error details</string>
     <string name="action_create">Create</string>
     <string name="action_restore">Restore</string>
     <string name="action_webview_back">Back</string>
