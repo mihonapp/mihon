@@ -5,7 +5,7 @@
     <!--Toolbars-->
     <!--========-->
 
-    <style name="ThemeOverlay.Tachiyomi.ActionBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
+    <style name="ThemeOverlay.Tachiyomi.ActionBar" parent="ThemeOverlay.Material3.ActionBar">
         <item name="android:colorControlHighlight">?attr/rippleColorToolbar</item>
     </style>
 
@@ -30,7 +30,7 @@
     <!--===========-->
     <!--AlertDialog-->
     <!--===========-->
-    <style name="ThemeOverlay.Tachiyomi.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+    <style name="ThemeOverlay.Tachiyomi.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="android:background">?attr/colorSurface</item>
         <item name="android:textColorPrimary">?attr/colorOnSurface</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
@@ -41,12 +41,12 @@
     <!--BottomSheet-->
     <!--===========-->
 
-    <style name="ThemeOverlay.Tachiyomi.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+    <style name="ThemeOverlay.Tachiyomi.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/Widget.Tachiyomi.BottomSheet.Modal</item>
         <item name="android:windowAnimationStyle">@style/Animation.Tachiyomi.BottomSheetDialog</item>
     </style>
 
-    <style name="Widget.Tachiyomi.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">
+    <style name="Widget.Tachiyomi.BottomSheet.Modal" parent="Widget.Material3.BottomSheet.Modal">
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Tachiyomi.BottomSheet</item>
     </style>
 
@@ -67,23 +67,19 @@
     <!--===============-->
     <!--Text Appearance-->
     <!--===============-->
-    <style name="TextAppearance.Widget.Button" parent="TextAppearance.MaterialComponents.Subtitle2" />
+    <style name="TextAppearance.Widget.Button" parent="TextAppearance.Material3.TitleSmall" />
 
     <style name="TextAppearance.Widget.Menu" parent="TextAppearance.AppCompat.Menu">
         <item name="android:textColor">?attr/colorOnBackground</item>
     </style>
 
-    <style name="TextAppearance.Tachiyomi.ActionMode.Title" parent="TextAppearance.MaterialComponents.Headline6">
+    <style name="TextAppearance.Tachiyomi.ActionMode.Title" parent="TextAppearance.Material3.HeadlineSmall">
         <item name="android:textColor">?attr/colorOnToolbar</item>
     </style>
 
-    <style name="TextAppearance.Tachiyomi.Preference.Secondary" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textSize">13sp</item>
-    </style>
+    <style name="TextAppearance.Tachiyomi.Preference.Secondary" parent="TextAppearance.Material3.BodySmall" />
 
-    <style name="TextAppearance.Tachiyomi.SectionHeader" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="textAllCaps">true</item>
-        <item name="android:letterSpacing">0.0357142857</item>
+    <style name="TextAppearance.Tachiyomi.SectionHeader" parent="TextAppearance.Material3.LabelLarge">
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
@@ -115,16 +111,16 @@
     </style>
 
 
-    <style name="Widget.Tachiyomi.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+    <style name="Widget.Tachiyomi.Snackbar" parent="Widget.Material3.Snackbar">
         <item name="android:background">@drawable/snackbar_background</item>
         <item name="actionTextColorAlpha">1</item>
     </style>
-    <style name="Widget.Tachiyomi.Snackbar.TextView" parent="Widget.MaterialComponents.Snackbar.TextView">
+    <style name="Widget.Tachiyomi.Snackbar.TextView" parent="Widget.Material3.Snackbar.TextView">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
 
-    <style name="Widget.Tachiyomi.Chip.Action" parent="Widget.MaterialComponents.Chip.Action">
+    <style name="Widget.Tachiyomi.Chip.Action" parent="Widget.Material3.Chip.Suggestion">
         <item name="chipBackgroundColor">?attr/chipBackgroundColor</item>
         <item name="android:textColor">?attr/chipTextColor</item>
         <item name="rippleColor">?attr/colorControlHighlight</item>
@@ -134,7 +130,6 @@
         <item name="android:focusable">true</item>
 
         <!-- Smaller text/height -->
-        <item name="chipCornerRadius">12dp</item>
         <item name="chipMinHeight">24dp</item>
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
 
@@ -143,7 +138,7 @@
     </style>
 
 
-    <style name="Widget.Tachiyomi.CircularProgressIndicator.Small" parent="Widget.MaterialComponents.CircularProgressIndicator">
+    <style name="Widget.Tachiyomi.CircularProgressIndicator.Small" parent="Widget.Material3.CircularProgressIndicator">
         <item name="indicatorSize">16dp</item>
         <item name="trackThickness">2dp</item>
     </style>
@@ -152,7 +147,7 @@
     <!--==============-->
     <!--Widgets.Button-->
     <!--==============-->
-    <style name="Widget.Tachiyomi.Button.ActionButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+    <style name="Widget.Tachiyomi.Button.ActionButton" parent="Widget.Material3.Button.TextButton.Icon">
         <item name="iconGravity">top</item>
         <item name="iconTint">@color/button_action_selector</item>
         <item name="iconPadding">4dp</item>
@@ -160,7 +155,7 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="Widget.Tachiyomi.Button.InlineButton" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="Widget.Tachiyomi.Button.InlineButton" parent="Widget.Material3.Button.TextButton">
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>
         <item name="android:paddingTop">0dp</item>
@@ -173,13 +168,13 @@
         <item name="rippleColor">@null</item>
     </style>
 
-    <style name="Widget.Tachiyomi.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton" />
+    <style name="Widget.Tachiyomi.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton" />
 
 
     <!--=================-->
     <!--Widgets.TabLayout-->
     <!--=================-->
-    <style name="Widget.Tachiyomi.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+    <style name="Widget.Tachiyomi.TabLayout" parent="Widget.Material3.TabLayout">
         <item name="tabGravity">center</item>
         <item name="tabIndicator">@drawable/tab_indicator</item>
         <item name="tabIndicatorFullWidth">false</item>
@@ -190,10 +185,11 @@
         <item name="tabRippleColor">@color/ripple_toolbar_fainter</item>
     </style>
 
+
     <!--==============-->
     <!--Widgets.Switch-->
     <!--==============-->
-    <style name="Widget.Tachiyomi.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+    <style name="Widget.Tachiyomi.Switch" parent="Widget.Material3.CompoundButton.Switch">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Tachiyomi.Switch</item>
     </style>
 
@@ -204,7 +200,7 @@
     <!--==============-->
     <!--Widgets.Slider-->
     <!--==============-->
-    <style name="Widget.Tachiyomi.Slider" parent="Widget.MaterialComponents.Slider">
+    <style name="Widget.Tachiyomi.Slider" parent="Widget.Material3.Slider">
         <item name="labelBehavior">gone</item>
         <item name="tickVisible">false</item>
     </style>
@@ -213,12 +209,16 @@
     <!--================-->
     <!--Navigation Views-->
     <!--================-->
-    <style name="Widget.Tachiyomi.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+    <style name="Widget.Tachiyomi.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemPaddingBottom">10dp</item>
+        <item name="itemPaddingTop">10dp</item>
+        <item name="android:minHeight">68dp</item>
+
         <item name="itemRippleColor">@color/ripple_toolbar_fainter</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
 
-    <style name="Widget.Tachiyomi.NavigationRailView" parent="Widget.MaterialComponents.NavigationRailView">
+    <style name="Widget.Tachiyomi.NavigationRailView" parent="Widget.Material3.NavigationRailView">
         <item name="itemRippleColor">@color/ripple_toolbar_fainter</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
@@ -252,7 +252,7 @@
         <item name="cornerSize">@dimen/card_radius</item>
     </style>
 
-    <style name="ThemeOverlay.Tachiyomi.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents">
+    <style name="ThemeOverlay.Tachiyomi.Dialog.Fullscreen" parent="ThemeOverlay.Material3">
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">?android:attr/colorBackground</item>
         <item name="android:windowAnimationStyle">@style/Animation.Tachiyomi.Dialog</item>

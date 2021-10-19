@@ -6,16 +6,17 @@
     <!--============-->
 
     <!--== Theme Base ==-->
-    <style name="Base.Theme.Tachiyomi" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Base.Theme.Tachiyomi" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Disallow "Force dark theme" -->
         <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
 
         <!-- Theme Colors -->
         <item name="colorPrimary">@color/accent_default</item>
-        <item name="colorPrimaryVariant">?attr/colorPrimary</item>
         <item name="colorOnPrimary">@color/md_white_1000</item>
+        <item name="colorPrimaryContainer">?attr/colorPrimary</item>
+        <item name="colorOnPrimaryContainer">?attr/colorOnPrimary</item>
         <item name="colorSecondary">?attr/colorPrimary</item>
-        <item name="colorSecondaryVariant">?attr/colorPrimaryVariant</item>
+        <item name="colorSecondaryContainer">?attr/colorPrimaryContainer</item>
         <item name="colorOnSecondary">?attr/colorOnPrimary</item>
         <item name="colorTertiary">@color/green</item>
         <item name="colorOnTertiary">@color/md_white_1000</item>
@@ -60,9 +61,9 @@
         <item name="chipBackgroundColor">?android:attr/divider</item>
         <item name="snackbarStyle">@style/Widget.Tachiyomi.Snackbar</item>
         <item name="snackbarTextViewStyle">@style/Widget.Tachiyomi.Snackbar.TextView</item>
-        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
-        <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
-        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Surface</item>
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
+        <item name="appBarLayoutStyle">@style/Widget.Material3.AppBarLayout</item>
+        <item name="toolbarStyle">@style/Widget.Material3.Toolbar.Surface</item>
         <item name="tabStyle">@style/Widget.Tachiyomi.TabLayout</item>
         <item name="bottomNavigationStyle">@style/Widget.Tachiyomi.BottomNavigationView</item>
         <item name="navigationRailStyle">@style/Widget.Tachiyomi.NavigationRailView</item>

@@ -15,7 +15,7 @@ import androidx.core.view.forEach
 import androidx.core.view.get
 import com.tfcporciuncula.flow.Preference
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.databinding.SpinnerPreferenceBinding
+import eu.kanade.tachiyomi.databinding.PrefSpinnerBinding
 import eu.kanade.tachiyomi.util.system.getResourceColor
 
 class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
@@ -46,7 +46,7 @@ class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: Att
         }
     }
 
-    private val binding = SpinnerPreferenceBinding.inflate(LayoutInflater.from(context), this, false)
+    private val binding = PrefSpinnerBinding.inflate(LayoutInflater.from(context), this, false)
 
     init {
         addView(binding.root)

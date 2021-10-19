@@ -121,7 +121,7 @@
         android:maxLines="2"
         android:layout_marginTop="4dp"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        android:textAppearance="?android:attr/textAppearanceListItemSecondary"
         tools:text="Theme Name" />
 
 </LinearLayout>

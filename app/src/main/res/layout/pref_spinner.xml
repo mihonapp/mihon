@@ -10,7 +10,6 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
-        style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -26,7 +25,6 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/details"
-        style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="1"

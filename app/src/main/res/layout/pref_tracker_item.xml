@@ -14,6 +14,7 @@
         android:layout_height="48dp"
         app:cardBackgroundColor="#2E51A2"
         app:cardElevation="0dp"
+        app:strokeWidth="0dp"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialCardView.Tracker">
 
         <ImageView
