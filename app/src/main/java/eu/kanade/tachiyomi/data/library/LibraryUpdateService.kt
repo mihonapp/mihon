@@ -445,14 +445,6 @@ class LibraryUpdateService(
                                             logcat(LogPriority.ERROR, e)
                                         }
                                     }
-
-                                    currentlyUpdatingManga.remove(manga)
-                                    progressCount.andIncrement
-                                    notifier.showProgressNotification(
-                                        currentlyUpdatingManga,
-                                        progressCount.get(),
-                                        mangaToUpdate.size
-                                    )
                                 }
                             }
                         }
