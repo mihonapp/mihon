@@ -10,24 +10,22 @@ import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
 class AppUpdateChecker {
 
     private val networkService: NetworkHelper by injectLazy()
     private val preferences: PreferencesHelper by injectLazy()
 
-    private val repo: String by lazy {
-        if (BuildConfig.PREVIEW) {
-            "tachiyomiorg/tachiyomi-preview"
-        } else {
-            "tachiyomiorg/tachiyomi"
-        }
-    }
-
     suspend fun checkForUpdate(context: Context): AppUpdateResult {
+        // Limit checks to once a day at most
+        if (Date().time < preferences.lastAppCheck().get() + TimeUnit.DAYS.toMillis(1)) {
+            return AppUpdateResult.NoNewUpdate
+        }
+
         return withIOContext {
             val result = networkService.client
-                .newCall(GET("https://api.github.com/repos/$repo/releases/latest"))
+                .newCall(GET("https://api.github.com/repos/$GITHUB_REPO/releases/latest"))
                 .await()
                 .parseAs<GithubRelease>()
                 .let {
@@ -62,5 +60,13 @@ class AppUpdateChecker {
             // tagged as something like "v0.1.2"
             newVersion != BuildConfig.VERSION_NAME
         }
+    }
+}
+
+val GITHUB_REPO: String by lazy {
+    if (BuildConfig.PREVIEW) {
+        "tachiyomiorg/tachiyomi-preview"
+    } else {
+        "tachiyomiorg/tachiyomi"
     }
 }
