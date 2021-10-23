@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.util.lang.RetryWithDelay
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.lang.plusAssign
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.saveTo
 import eu.kanade.tachiyomi.util.system.ImageUtil
@@ -267,7 +268,9 @@ class Downloader(
             if (autoStart && wasEmpty) {
                 val maxDownloadsFromSource = queue.groupBy { it.source }.maxOf { it.value.size }
                 if (maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
-                    context.toast(R.string.download_queue_size_warning, Toast.LENGTH_LONG)
+                    withUIContext {
+                        context.toast(R.string.download_queue_size_warning, Toast.LENGTH_LONG)
+                    }
                 }
                 DownloadService.start(context)
             }
