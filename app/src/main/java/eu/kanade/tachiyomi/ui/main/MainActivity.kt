@@ -215,7 +215,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             }
         )
 
-        syncActivityViewWithController(router.backstack.lastOrNull()?.controller)
+        syncActivityViewWithController()
 
         if (savedInstanceState == null) {
             // Reset Incognito Mode on relaunch
@@ -320,6 +320,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
     override fun onResume() {
         super.onResume()
+        syncActivityViewWithController()
 
         checkForUpdates()
     }
@@ -488,7 +489,11 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         }
     }
 
-    private fun syncActivityViewWithController(to: Controller?, from: Controller? = null, isPush: Boolean = true) {
+    private fun syncActivityViewWithController(
+        to: Controller? = router.backstack.lastOrNull()?.controller,
+        from: Controller? = null,
+        isPush: Boolean = true,
+    ) {
         if (from is DialogController || to is DialogController) {
             return
         }
