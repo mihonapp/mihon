@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
+import eu.kanade.tachiyomi.data.updater.RELEASE_URL
 import eu.kanade.tachiyomi.ui.base.controller.NoAppBarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
@@ -73,12 +74,7 @@ class AboutController : SettingsController(), NoAppBarElevationController {
                 titleRes = R.string.whats_new
 
                 onClick {
-                    val url = if (BuildConfig.PREVIEW) {
-                        "https://github.com/tachiyomiorg/tachiyomi-preview/releases/tag/r${BuildConfig.COMMIT_COUNT}"
-                    } else {
-                        "https://github.com/tachiyomiorg/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
-                    }
-                    openInBrowser(url)
+                    openInBrowser(RELEASE_URL)
                 }
             }
         }
