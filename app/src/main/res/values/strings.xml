@@ -374,7 +374,7 @@
     <string name="webtoon_side_padding_15">15%</string>
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_25">25%</string>
-    <string name="pref_hide_threshold">Auto hide menu on scroll sensitivity</string>
+    <string name="pref_hide_threshold">Sensitivity for hiding menu on scroll</string>
     <string name="pref_highest">Highest</string>
     <string name="pref_high">High</string>
     <string name="pref_low">Low</string>
