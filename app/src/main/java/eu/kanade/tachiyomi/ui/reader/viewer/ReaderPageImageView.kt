@@ -141,7 +141,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         setOnImageEventListener(
             object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
-                    // 3x zoom
+                    // 5x zoom
                     maxScale = scale * MAX_ZOOM_SCALE
                     setDoubleTapZoomScale(scale * 2)
 
@@ -261,4 +261,4 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 }
 
-private const val MAX_ZOOM_SCALE = 3F
+private const val MAX_ZOOM_SCALE = 5F
