@@ -85,7 +85,12 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
 
             val byteArray = parser.encodeToByteArray(BackupSerializer, backup!!)
             file.openOutputStream().sink().gzip().buffer().use { it.write(byteArray) }
-            return file.uri.toString()
+            val fileUri = file.uri
+
+            // Validate it to make sure it works
+            FullBackupRestoreValidator().validate(context, fileUri)
+
+            return fileUri.toString()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             throw e
