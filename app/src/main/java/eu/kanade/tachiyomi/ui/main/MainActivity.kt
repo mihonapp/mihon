@@ -68,6 +68,7 @@ import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
 
@@ -227,6 +228,10 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             }
         }
 
+        merge(preferences.libraryUpdateShowTabBadge().asFlow(), preferences.libraryUnreadUpdatesCount().asFlow())
+            .onEach { setUnreadUpdatesBadge() }
+            .launchIn(lifecycleScope)
+
         preferences.extensionUpdatesCount()
             .asImmediateFlow { setExtensionsBadge() }
             .launchIn(lifecycleScope)
@@ -346,6 +351,15 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
             }
+        }
+    }
+
+    private fun setUnreadUpdatesBadge() {
+        val updates = if (preferences.libraryUpdateShowTabBadge().get()) preferences.libraryUnreadUpdatesCount().get() else 0
+        if (updates > 0) {
+            nav.getOrCreateBadge(R.id.nav_updates).number = updates
+        } else {
+            nav.removeBadge(R.id.nav_updates)
         }
     }
 

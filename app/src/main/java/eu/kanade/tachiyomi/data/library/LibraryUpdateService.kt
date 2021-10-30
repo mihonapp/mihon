@@ -291,6 +291,7 @@ class LibraryUpdateService(
         val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val hasDownloads = AtomicBoolean(false)
         val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
+        val currentUnreadUpdatesCount = preferences.libraryUnreadUpdatesCount().get()
 
         withIOContext {
             mangaToUpdate.groupBy { it.source }
@@ -354,6 +355,8 @@ class LibraryUpdateService(
 
         if (newUpdates.isNotEmpty()) {
             notifier.showUpdateNotifications(newUpdates)
+            val newChapterCount = newUpdates.sumOf { it.second.size }
+            preferences.libraryUnreadUpdatesCount().set(currentUnreadUpdatesCount + newChapterCount)
             if (hasDownloads.get()) {
                 DownloadService.start(this)
             }
