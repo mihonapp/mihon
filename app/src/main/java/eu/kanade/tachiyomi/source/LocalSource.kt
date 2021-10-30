@@ -39,6 +39,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
 
         private val SUPPORTED_ARCHIVE_TYPES = setOf("zip", "rar", "cbr", "cbz", "epub")
 
+        private const val COVER_NAME = "cover.jpg"
         private val LATEST_THRESHOLD = TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)
 
         fun updateCover(context: Context, manga: SManga, input: InputStream): File? {
@@ -47,9 +48,11 @@ class LocalSource(private val context: Context) : CatalogueSource {
                 input.close()
                 return null
             }
-            val cover = getCoverFile(File("${dir.absolutePath}/${manga.url}"))
-
-            if (cover != null && cover.exists()) {
+            var cover = getCoverFile(File("${dir.absolutePath}/${manga.url}"))
+            if (cover == null) {
+                cover = File("${dir.absolutePath}/${manga.url}", COVER_NAME)
+            }
+            if (cover != null && !cover.exists()) {
                 // It might not exist if using the external SD card
                 cover.parentFile?.mkdirs()
                 input.use {
