@@ -705,9 +705,7 @@
     <string name="ext_app_info">О приложении</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Установите и запустите Shizuku, для использования Shizuku, как установщик расширений.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku не работает</string>
-    <string name="ext_installer_shizuku">Шизуку</string>
     <string name="ext_installer_legacy">Старый</string>
-    <string name="ext_installer_packageinstaller">Система</string>
     <string name="ext_installer_pref">Установщик</string>
     <string name="ext_install_service_notif">Устанавливается расширение…</string>
     <string name="action_sort_count">По количеству комиксов</string>

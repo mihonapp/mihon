@@ -679,8 +679,6 @@
     <string name="help_translate">Ajudar a traduzir</string>
     <string name="ext_app_info">Informações do app</string>
     <string name="ext_installer_shizuku_stopped">O Shizuku não está em execução</string>
-    <string name="ext_installer_shizuku">Shizuku</string>
-    <string name="ext_installer_packageinstaller">PackageInstaller</string>
     <string name="ext_installer_legacy">Legado</string>
     <string name="ext_installer_pref">Instalador</string>
     <string name="ext_install_service_notif">Instalando a extensão…</string>
