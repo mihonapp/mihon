@@ -202,6 +202,10 @@ open class BrowseSourcePresenter(
             val result = db.insertManga(newManga).executeAsBlocking()
             newManga.id = result.insertedId()
             localManga = newManga
+        } else if (!localManga.favorite) {
+            // if the manga isn't a favorite, set its display title from source
+            // if it later becomes a favorite, updated title will go to db
+            localManga.title = sManga.title
         }
         return localManga
     }
