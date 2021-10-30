@@ -37,8 +37,6 @@ class LocalSource(private val context: Context) : CatalogueSource {
         const val ID = 0L
         const val HELP_URL = "https://tachiyomi.org/help/guides/local-manga/"
 
-        private val SUPPORTED_ARCHIVE_TYPES = setOf("zip", "rar", "cbr", "cbz", "epub")
-
         private const val COVER_NAME = "cover.jpg"
         private val LATEST_THRESHOLD = TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)
 
@@ -52,7 +50,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
             if (cover == null) {
                 cover = File("${dir.absolutePath}/${manga.url}", COVER_NAME)
             }
-            if (cover != null && !cover.exists()) {
+            if (!cover.exists()) {
                 // It might not exist if using the external SD card
                 cover.parentFile?.mkdirs()
                 input.use {
@@ -86,7 +84,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
     override val lang = "other"
     override val supportsLatest = true
 
-    override fun toString() = context.getString(R.string.local_source)
+    override fun toString() = name
 
     override fun fetchPopularManga(page: Int) = fetchSearchManga(page, "", POPULAR_FILTERS)
 
@@ -168,7 +166,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
             .asSequence()
             .mapNotNull { File(it, manga.url).listFiles()?.toList() }
             .flatten()
-            .firstOrNull { it.extension == "json" }
+            .firstOrNull { it.extension.lowercase() == "json" }
             ?.apply {
                 val obj = json.decodeFromStream<JsonObject>(inputStream())
 
@@ -200,15 +198,14 @@ class LocalSource(private val context: Context) : CatalogueSource {
                     }
                     date_upload = chapterFile.lastModified()
 
-                    val format = getFormat(this)
+                    val format = getFormat(chapterFile)
                     if (format is Format.Epub) {
                         EpubFile(format.file).use { epub ->
                             epub.fillChapterMetadata(this)
                         }
                     }
 
-                    val chapNameCut = stripMangaTitle(name, manga.title)
-                    if (chapNameCut.isNotEmpty()) name = chapNameCut
+                    name = getCleanChapterTitle(name, manga.title)
                     ChapterRecognition.parseChapterNumber(this, manga)
                 }
             }
@@ -222,37 +219,12 @@ class LocalSource(private val context: Context) : CatalogueSource {
     }
 
     /**
-     * Strips the manga title from a chapter name, matching only based on alphanumeric and whitespace
-     * characters.
+     * Strips the manga title from a chapter name and trim whitespace/delimiter characters.
      */
-    private fun stripMangaTitle(chapterName: String, mangaTitle: String): String {
-        var chapterNameIndex = 0
-        var mangaTitleIndex = 0
-        while (chapterNameIndex < chapterName.length && mangaTitleIndex < mangaTitle.length) {
-            val chapterChar = chapterName[chapterNameIndex]
-            val mangaChar = mangaTitle[mangaTitleIndex]
-            if (!chapterChar.equals(mangaChar, true)) {
-                val invalidChapterChar = !chapterChar.isLetterOrDigit() && !chapterChar.isWhitespace()
-                val invalidMangaChar = !mangaChar.isLetterOrDigit() && !mangaChar.isWhitespace()
-
-                if (!invalidChapterChar && !invalidMangaChar) {
-                    return chapterName
-                }
-
-                if (invalidChapterChar) {
-                    chapterNameIndex++
-                }
-
-                if (invalidMangaChar) {
-                    mangaTitleIndex++
-                }
-            } else {
-                chapterNameIndex++
-                mangaTitleIndex++
-            }
-        }
-
-        return chapterName.substring(chapterNameIndex).trimStart(' ', '-', '_', ',', ':')
+    private fun getCleanChapterTitle(chapterName: String, mangaTitle: String): String {
+        return chapterName
+            .replace(mangaTitle, "")
+            .trim(*WHITESPACE_CHARS.toCharArray(), '-', '_', ',', ':')
     }
 
     override fun fetchPageList(chapter: SChapter): Observable<List<Page>> {
@@ -342,3 +314,34 @@ class LocalSource(private val context: Context) : CatalogueSource {
         data class Epub(val file: File) : Format()
     }
 }
+
+private val SUPPORTED_ARCHIVE_TYPES = listOf("zip", "cbz", "rar", "cbr", "epub")
+
+private val WHITESPACE_CHARS = arrayOf(
+    ' ',
+    '\u0009',
+    '\u000A',
+    '\u000B',
+    '\u000C',
+    '\u000D',
+    '\u0020',
+    '\u0085',
+    '\u00A0',
+    '\u1680',
+    '\u2000',
+    '\u2001',
+    '\u2002',
+    '\u2003',
+    '\u2004',
+    '\u2005',
+    '\u2006',
+    '\u2007',
+    '\u2008',
+    '\u2009',
+    '\u200A',
+    '\u2028',
+    '\u2029',
+    '\u202F',
+    '\u205F',
+    '\u3000',
+)
