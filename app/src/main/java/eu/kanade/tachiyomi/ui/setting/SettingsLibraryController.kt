@@ -199,11 +199,6 @@ class SettingsLibraryController : SettingsController() {
                 titleRes = R.string.pref_update_only_non_completed
                 defaultValue = false
             }
-            switchPreference {
-                key = Keys.libraryUpdateShowTabBadge
-                titleRes = R.string.pref_library_update_show_tab_badge
-                defaultValue = true
-            }
             preference {
                 key = Keys.libraryUpdateCategories
                 titleRes = R.string.categories

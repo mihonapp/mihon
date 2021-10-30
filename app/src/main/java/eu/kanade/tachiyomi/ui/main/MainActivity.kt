@@ -228,7 +228,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             }
         }
 
-        merge(preferences.libraryUpdateShowTabBadge().asFlow(), preferences.libraryUnreadUpdatesCount().asFlow())
+        merge(preferences.showUpdatesNavBadge().asFlow(), preferences.unreadUpdatesCount().asFlow())
             .onEach { setUnreadUpdatesBadge() }
             .launchIn(lifecycleScope)
 
@@ -355,7 +355,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
     }
 
     private fun setUnreadUpdatesBadge() {
-        val updates = if (preferences.libraryUpdateShowTabBadge().get()) preferences.libraryUnreadUpdatesCount().get() else 0
+        val updates = if (preferences.showUpdatesNavBadge().get()) preferences.unreadUpdatesCount().get() else 0
         if (updates > 0) {
             nav.getOrCreateBadge(R.id.nav_updates).number = updates
         } else {
