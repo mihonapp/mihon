@@ -42,7 +42,7 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
         NotificationManagerCompat.from(context).apply {
             notify(
                 Notifications.ID_UPDATES_TO_EXTS,
-                context.notification(Notifications.CHANNEL_UPDATES_TO_EXTS) {
+                context.notification(Notifications.CHANNEL_EXTENSIONS_UPDATE) {
                     setContentTitle(
                         context.resources.getQuantityString(
                             R.plurals.update_check_notification_ext_updates,

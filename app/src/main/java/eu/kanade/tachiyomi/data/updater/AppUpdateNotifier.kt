@@ -15,14 +15,14 @@ import eu.kanade.tachiyomi.util.system.notificationManager
 
 internal class AppUpdateNotifier(private val context: Context) {
 
-    private val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_COMMON)
+    private val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_APP_UPDATE)
 
     /**
      * Call to show notification.
      *
      * @param id id of the notification channel.
      */
-    private fun NotificationCompat.Builder.show(id: Int = Notifications.ID_UPDATER) {
+    private fun NotificationCompat.Builder.show(id: Int = Notifications.ID_APP_UPDATER) {
         context.notificationManager.notify(id, build())
     }
 
@@ -109,7 +109,7 @@ internal class AppUpdateNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_close_24dp,
                 context.getString(R.string.action_cancel),
-                NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_UPDATER)
+                NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_APP_UPDATER)
             )
         }
         notificationBuilder.show()
@@ -136,9 +136,9 @@ internal class AppUpdateNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_close_24dp,
                 context.getString(R.string.action_cancel),
-                NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_UPDATER)
+                NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_APP_UPDATER)
             )
         }
-        notificationBuilder.show(Notifications.ID_UPDATER)
+        notificationBuilder.show(Notifications.ID_APP_UPDATER)
     }
 }

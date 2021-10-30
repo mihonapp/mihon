@@ -22,7 +22,7 @@ class ExtensionInstallService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        val notification = notificationBuilder(Notifications.CHANNEL_DOWNLOADER_PROGRESS) {
+        val notification = notificationBuilder(Notifications.CHANNEL_EXTENSIONS_UPDATE) {
             setSmallIcon(R.drawable.ic_tachi)
             setAutoCancel(false)
             setOngoing(true)

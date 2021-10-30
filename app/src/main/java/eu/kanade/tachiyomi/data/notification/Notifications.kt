@@ -18,7 +18,6 @@ object Notifications {
      * Common notification channel and ids used anywhere.
      */
     const val CHANNEL_COMMON = "common_channel"
-    const val ID_UPDATER = 1
     const val ID_DOWNLOAD_IMAGE = 2
 
     /**
@@ -49,13 +48,6 @@ object Notifications {
     const val GROUP_NEW_CHAPTERS = "eu.kanade.tachiyomi.NEW_CHAPTERS"
 
     /**
-     * Notification channel and ids used by the library updater.
-     */
-    const val CHANNEL_UPDATES_TO_EXTS = "updates_ext_channel"
-    const val ID_UPDATES_TO_EXTS = -401
-    const val ID_EXTENSION_INSTALLER = -402
-
-    /**
      * Notification channel and ids used by the backup/restore system.
      */
     private const val GROUP_BACKUP_RESTORE = "group_backup_restore"
@@ -78,10 +70,22 @@ object Notifications {
     const val CHANNEL_INCOGNITO_MODE = "incognito_mode_channel"
     const val ID_INCOGNITO_MODE = -701
 
+    /**
+     * Notification channel and ids used for app and extension updates.
+     */
+    private const val GROUP_APK_UPDATES = "group_apk_updates"
+    const val CHANNEL_APP_UPDATE = "app_apk_update_channel"
+    const val ID_APP_UPDATER = 1
+    const val CHANNEL_EXTENSIONS_UPDATE = "ext_apk_update_channel"
+    const val ID_UPDATES_TO_EXTS = -401
+    const val ID_EXTENSION_INSTALLER = -402
+
     private val deprecatedChannels = listOf(
         "downloader_channel",
         "backup_restore_complete_channel",
         "library_channel",
+        "library_progress_channel",
+        "updates_ext_channel",
     )
 
     /**
@@ -93,6 +97,9 @@ object Notifications {
     fun createChannels(context: Context) {
         val notificationService = NotificationManagerCompat.from(context)
 
+        // Delete old notification channels
+        deprecatedChannels.forEach(notificationService::deleteNotificationChannel)
+
         notificationService.createNotificationChannelGroupsCompat(
             listOf(
                 buildNotificationChannelGroup(GROUP_BACKUP_RESTORE) {
@@ -103,6 +110,9 @@ object Notifications {
                 },
                 buildNotificationChannelGroup(GROUP_LIBRARY) {
                     setName(context.getString(R.string.label_library))
+                },
+                buildNotificationChannelGroup(GROUP_APK_UPDATES) {
+                    setName(context.getString(R.string.label_recent_updates))
                 },
             )
         )
@@ -157,13 +167,15 @@ object Notifications {
                 buildNotificationChannel(CHANNEL_INCOGNITO_MODE, IMPORTANCE_LOW) {
                     setName(context.getString(R.string.pref_incognito_mode))
                 },
-                buildNotificationChannel(CHANNEL_UPDATES_TO_EXTS, IMPORTANCE_DEFAULT) {
+                buildNotificationChannel(CHANNEL_APP_UPDATE, IMPORTANCE_DEFAULT) {
+                    setGroup(GROUP_APK_UPDATES)
+                    setName(context.getString(R.string.channel_app_updates))
+                },
+                buildNotificationChannel(CHANNEL_EXTENSIONS_UPDATE, IMPORTANCE_DEFAULT) {
+                    setGroup(GROUP_APK_UPDATES)
                     setName(context.getString(R.string.channel_ext_updates))
                 },
             )
         )
-
-        // Delete old notification channels
-        deprecatedChannels.forEach(notificationService::deleteNotificationChannel)
     }
 }

@@ -42,7 +42,7 @@ class AppUpdateService : Service() {
         notifier = AppUpdateNotifier(this)
         wakeLock = acquireWakeLock(javaClass.name)
 
-        startForeground(Notifications.ID_UPDATER, notifier.onDownloadStarted().build())
+        startForeground(Notifications.ID_APP_UPDATER, notifier.onDownloadStarted().build())
     }
 
     /**
