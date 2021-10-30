@@ -66,7 +66,6 @@
     <string name="landscape">Orizzontale</string>
     <string name="pref_library_update_interval">Frequenza di aggiornamento</string>
     <string name="update_never">Manuale</string>
-    <string name="update_3hour">Ogni 3 ore</string>
     <string name="update_6hour">Ogni 6 ore</string>
     <string name="update_12hour">Ogni 12 ore</string>
     <string name="update_24hour">Ogni giorno</string>
@@ -615,8 +614,6 @@
     <string name="backup_restore_content_full">Verranno recuperati i dati dal file di backup.
 \n
 \nAvrai bisogno di installare le estensioni mancanti ed effettuare l\'accesso ai servizi di tracciamento per utilizzarli.</string>
-    <string name="update_8hour">Ogni 8 ore</string>
-    <string name="update_4hour">Ogni 4 ore</string>
     <string name="exclude">Escludi: %s</string>
     <string name="include">Includi: %s</string>
     <string name="none">Nessuno</string>
@@ -631,7 +628,7 @@
     <string name="pref_dns_over_https">DNS over HTTPS</string>
     <string name="pref_show_navigation_mode">Mostra schema di navigazione</string>
     <string name="pref_show_navigation_mode_summary">Mostra zone di tocco quando il lettore viene aperto</string>
-    <string name="action_show_errors">Mostra errori</string>
+    <string name="action_show_errors">Mostra dettagli completi degli errori</string>
     <string name="update_check_eol">Questa versione di Android non è più supportata</string>
     <string name="clipboard_copy_error">Impossibile copiare negli appunti</string>
     <string name="rotation_type">Orientamento</string>
@@ -676,7 +673,7 @@
     <string name="pref_low">Basso</string>
     <string name="pref_high">Alto</string>
     <string name="pref_highest">Più alto</string>
-    <string name="pref_hide_threshold">Sensibilità nascondimento automatico del menù allo scorrimento</string>
+    <string name="pref_hide_threshold">Sensibilità per nascondere il menù allo scorrimento</string>
     <string name="pref_inverted_colors">Inversa</string>
     <string name="pref_relative_time_long">Lunga (Corta+, n giorni fa)</string>
     <string name="pref_relative_time_short">Corta (Oggi, Ieri)</string>
@@ -727,5 +724,8 @@
     <string name="action_display_language_badge">Lingua</string>
     <string name="label_warning">Attenzione</string>
     <string name="backup_info">I backup automatici sono altamente consigliati. Dovresti tenere delle copie anche in altri posti.</string>
-    <string name="notification_size_warning">Grossi aggiornamenti possono portare a un maggiore utilizzo della batteria e a un rallentamento delle fonti</string>
+    <string name="notification_size_warning">Attenzione: grossi aggiornamenti danneggiano le fonti, possono rallentare gli aggiornamenti e aumentare il consumo di batteria</string>
+    <string name="connected_to_wifi">Solo su Wi-Fi</string>
+    <string name="update_72hour">Ogni 3 giorni</string>
+    <string name="download_queue_size_warning">Attenzione: grossi download di massa possono rallentare le fonti e/o bloccare tachiyomi</string>
 </resources>

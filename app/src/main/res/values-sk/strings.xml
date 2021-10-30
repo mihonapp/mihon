@@ -81,7 +81,6 @@
     <string name="landscape">Na šírku</string>
     <string name="pref_library_update_interval">Frekvencia aktualizácie knižnice</string>
     <string name="update_never">Manuálne</string>
-    <string name="update_3hour">Každé 3 hodiny</string>
     <string name="update_6hour">Každých 6 hodín</string>
     <string name="update_12hour">Každých 12 hodín</string>
     <string name="update_24hour">Raz za deň</string>

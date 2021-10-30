@@ -79,7 +79,6 @@
     <string name="landscape">Οριζόντια</string>
     <string name="pref_library_update_interval">Συχνότητα ενημέρωσης</string>
     <string name="update_never">Χειροκίνητα</string>
-    <string name="update_3hour">Κάθε 3 ώρες</string>
     <string name="update_6hour">Κάθε 6 ώρες</string>
     <string name="update_12hour">Κάθε 12 ώρες</string>
     <string name="update_24hour">Καθημερινά</string>
@@ -582,8 +581,6 @@
     <string name="backup_restore_content_full">Τα δεδομένα από το αντίγραφο ασφαλείας θα αποκατασταθούν
 \n
 \nΘα χρειαστεί να εγκαταστήσετε τυχόν επεκτάσεις που λείπουν και στη συνέχεια να συνδεθείτε στις υπηρεσίες παρακολούθησης για να τις χρησιμοποιήσετε.</string>
-    <string name="update_8hour">Κάθε 8 ώρες</string>
-    <string name="update_4hour">Κάθε 4 ώρες</string>
     <string name="pref_show_navigation_mode_summary">Εμφάνιση ζωνών πατήματος όταν ανοίγει ο αναγνώστης</string>
     <string name="pref_show_navigation_mode">Εμφάνιση επικάλυψης διάταξης πλοήγησης</string>
     <string name="nav_zone_right">Δεξιά</string>
@@ -598,7 +595,7 @@
     <string name="pref_download_new_categories_details">Τα Manga σε εξαιρούμενες κατηγορίες δεν θα ληφθούν ακόμα κι αν ανήκουν και σε κατηγορίες που περιλαμβάνονται.</string>
     <string name="pref_category_auto_download">Αυτόματη λήψη</string>
     <string name="pref_library_update_categories_details">Τα manga στις αποκλεισμένες κατηγορίες δεν θα ενημερώνονται ακόμη και αν βρίσκονται επίσης στις συμπεριλαμβανόμενες κατηγορίες.</string>
-    <string name="action_show_errors">Εμφάνιση σφαλμάτων</string>
+    <string name="action_show_errors">Δείτε πλήρεις λεπτομέρειες σφάλματος</string>
     <string name="update_check_eol">Αυτή η έκδοση Android δεν υποστηρίζεται πλέον</string>
     <string name="clipboard_copy_error">Απέτυχε η αντιγραφή στο πρόχειρο</string>
     <string name="rotation_landscape">Οριζόντια</string>
@@ -658,7 +655,7 @@
     <string name="pref_low">Χαμηλή</string>
     <string name="pref_highest">Ύψιστη</string>
     <string name="pref_high">Υψηλή</string>
-    <string name="pref_hide_threshold">Ευαισθησία αυτόματης απόκρυψης μενού κατά την κύλιση</string>
+    <string name="pref_hide_threshold">Ευαισθησία για την απόκρυψη του μενού κατά την κύλιση</string>
     <plurals name="relative_time">
         <item quantity="one">Εχθές</item>
         <item quantity="other">%1$d μέρες πριν</item>
@@ -692,5 +689,8 @@
     <string name="action_display_language_badge">Γλώσσα</string>
     <string name="label_warning">Προειδοποίηση</string>
     <string name="backup_info">Συνιστάται ιδιαίτερα η δημιουργία αυτόματων αντιγράφων ασφαλείας. Θα πρέπει να διατηρείτε αντίγραφα και σε άλλα μέρη.</string>
-    <string name="notification_size_warning">Οι μεγάλες ενημερώσεις μπορεί να οδηγήσουν σε αυξημένη χρήση της μπαταρίας και οι πηγές να γίνουν πιο αργές</string>
+    <string name="notification_size_warning">Προειδοποίηση: οι μεγάλες ενημερώσεις βλάπτουν τις πηγές και μπορεί να οδηγήσουν σε πιο αργές ενημερώσεις και σε αυξημένη χρήση της μπαταρίας</string>
+    <string name="connected_to_wifi">Μόνο σε Wi-Fi</string>
+    <string name="update_72hour">Κάθε 3 ημέρες</string>
+    <string name="download_queue_size_warning">Προειδοποίηση: οι μαζικές λήψεις ενδέχεται να οδηγήσουν σε επιβράδυνση των πηγών ή/και αποκλεισμό του Tachiyomi</string>
 </resources>

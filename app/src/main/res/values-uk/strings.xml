@@ -79,7 +79,6 @@
     <string name="landscape">Альбомна</string>
     <string name="pref_library_update_interval">Частота оновлень</string>
     <string name="update_never">Ручне</string>
-    <string name="update_3hour">Кожні 3 години</string>
     <string name="update_6hour">Кожні 6 годин</string>
     <string name="update_12hour">Кожні 12 годин</string>
     <string name="update_24hour">Щодня</string>
@@ -608,8 +607,6 @@
     <string name="nav_zone_prev">Попередній</string>
     <string name="pref_show_navigation_mode_summary">Показувати області дотику при відкритті читалки</string>
     <string name="pref_show_navigation_mode">Показувати оверлей схеми навігації</string>
-    <string name="update_8hour">Кожні 8 годин</string>
-    <string name="update_4hour">Кожні 4 години</string>
     <string name="pref_dns_over_https">DNS поверх HTTPS</string>
     <string name="pref_download_new_categories_details">Мангу в виключених категоріях не буде завантажено, навіть якщо вона також знаходиться у включених категоріях.</string>
     <string name="pref_category_auto_download">Автозавантаження</string>

@@ -76,7 +76,6 @@
     <string name="landscape">लैंडस्केप</string>
     <string name="pref_library_update_interval">पुस्तकालय अपडेट आवृत्ति</string>
     <string name="update_never">खुद से</string>
-    <string name="update_3hour">हर ३ घंटे</string>
     <string name="update_6hour">हर ६ घंटे</string>
     <string name="update_12hour">हर १२ घंटे</string>
     <string name="update_24hour">हर रोज़</string>
@@ -582,8 +581,6 @@
     <string name="pref_dual_page_invert_summary">यदि दोहरे पृष्ठ विभाजन की नियुक्ति पढ़ने की दिशा से मेल नहीं खाती है</string>
     <string name="pref_dual_page_invert">दोहरे पृष्ठ विभाजन प्लेसमेंट को पलटना</string>
     <string name="pref_dual_page_split">दोहरी पृष्ठ विभाजन</string>
-    <string name="update_8hour">हर 8 घंटे में</string>
-    <string name="update_4hour">हर 4 घंटे में</string>
     <string name="alignment_bottom">नीचे</string>
     <string name="alignment_center">मध्य</string>
     <string name="alignment_top">ऊपर</string>

@@ -68,7 +68,6 @@
     <string name="landscape">横向き</string>
     <string name="pref_library_update_interval">更新頻度</string>
     <string name="update_never">マニュアル</string>
-    <string name="update_3hour">3時間ごと</string>
     <string name="update_6hour">6時間ごと</string>
     <string name="update_12hour">12時間ごと</string>
     <string name="update_24hour">毎日</string>
@@ -365,7 +364,7 @@
     <string name="local_source">ローカルソース</string>
     <string name="http_error_hint">WebViewでサイトを開く</string>
     <string name="tabs_header">タブ</string>
-    <string name="badges_header">カウンター</string>
+    <string name="badges_header">情報バッジ</string>
     <string name="email">メールアドレス</string>
     <plurals name="download_queue_summary">
         <item quantity="other">残り%1$s件</item>
@@ -406,7 +405,7 @@
     <string name="webtoon_side_padding_0">なし</string>
     <string name="pref_webtoon_side_padding">余白</string>
     <string name="pref_category_reading">読書中</string>
-    <string name="pref_always_show_chapter_transition">章の間の遷移エフェクトを常に表示</string>
+    <string name="pref_always_show_chapter_transition">章の間の遷移ページを常に表示</string>
     <string name="vertical_plus_viewer">上から下へ（連続）</string>
     <string name="gray_background">灰色</string>
     <string name="pref_skip_filtered_chapters">フィルターされた章をスキップ</string>
@@ -570,8 +569,6 @@
     <string name="backup_restore_content_full">バックアップファイルからデータを復旧します。
 \n
 \n後で手動で必要な拡張機能をインストールし、使用したい追跡サービスにログインしてください。</string>
-    <string name="update_8hour">8時間ごと</string>
-    <string name="update_4hour">4時間ごと</string>
     <string name="nav_zone_right">右</string>
     <string name="nav_zone_left">左</string>
     <string name="nav_zone_next">次へ</string>
@@ -585,8 +582,8 @@
     <string name="include">下記を含む：%s</string>
     <string name="none">なし</string>
     <string name="pref_library_update_categories_details">含まれているカテゴリーに入っていても、除外対象カテゴリーにあるマンガは更新されません。</string>
-    <string name="action_show_errors">エラーを表示</string>
-    <string name="action_sort_chapter_fetch_date">日付を取得しました</string>
+    <string name="action_show_errors">エラーの詳細を見る</string>
+    <string name="action_sort_chapter_fetch_date">章の取得された日付順</string>
     <string name="information_empty_category_dialog">まだカテゴリを登録していません。</string>
     <string name="update_check_eol">このAndroidはもうサポートされていません</string>
     <string name="error_no_match">結果が見つかりませんでした</string>
@@ -674,10 +671,13 @@
     <string name="ext_install_service_notif">拡張機能をインストール中…</string>
     <string name="enhanced_services">高度なサービス</string>
     <string name="enhanced_tracking_info">特定ソース専用の高度な機能を提供するサービスです。漫画はライブラリに追加される時、自動で追跡され始めます。</string>
-    <string name="backup_info">バックアップの自動作成は強くおすすめされます。ほかの場所にもコピーを保管してください。</string>
+    <string name="backup_info">バックアップの自動作成は強く推奨されます。ほかの場所にもコピーを保管してください。</string>
     <string name="pref_verbose_logging_summary">システムログにverboseログを出力（アプリパフォーマンスには悪影響）</string>
-    <string name="notification_size_warning">大規模のアップデートは電池を急激に消耗し、ソースを遅くする可能性があります</string>
+    <string name="notification_size_warning">警告：大規模のアップデートはソースに有害で、ソースを遅くし、電池の消耗を増加する可能性があります</string>
     <string name="action_display_language_badge">言語</string>
     <string name="label_warning">警告</string>
     <string name="pref_verbose_logging">Verboseロギング</string>
+    <string name="download_queue_size_warning">警告：大量の一括ダウンロードにより、ソースは遅くなったり、Tachiyomiを接続禁止したりする恐れがあります</string>
+    <string name="update_72hour">3日ごと</string>
+    <string name="connected_to_wifi">Wi-Fi接続時のみ</string>
 </resources>

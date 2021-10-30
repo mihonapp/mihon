@@ -126,7 +126,6 @@
     <string name="landscape">Poziomo</string>
     <string name="pref_library_update_interval">Częstotliwość aktualizacji</string>
     <string name="update_never">Ręcznie</string>
-    <string name="update_3hour">Co 3 godziny</string>
     <string name="update_6hour">Co 6 godzin</string>
     <string name="update_12hour">Co 12 godzin</string>
     <string name="update_24hour">Co 1 dzień</string>
@@ -611,8 +610,6 @@
     <string name="nav_zone_next">Następne</string>
     <string name="nav_zone_prev">Poprzednie</string>
     <string name="pref_show_navigation_mode_summary">Pokazuj strefy klikania kiedy czytnik zostaje otwarty</string>
-    <string name="update_8hour">Co 8 godzin</string>
-    <string name="update_4hour">Co 4 godziny</string>
     <string name="pref_show_navigation_mode">Pokazuj nakładkę układu nawigacji</string>
     <string name="exclude">Wyklucz: %s</string>
     <string name="include">Uwzględnij: %s</string>
@@ -624,7 +621,7 @@
     <string name="pref_category_auto_download">Automatyczne pobieranie</string>
     <string name="rotation_landscape">Poziomo</string>
     <string name="rotation_portrait">Pionowo</string>
-    <string name="action_show_errors">Pokaż błędy</string>
+    <string name="action_show_errors">Pokaż pełny log błędów</string>
     <string name="notification_incognito_text">Wyłącz tryb incognito</string>
     <string name="action_sort_chapter_fetch_date">Data pobrania</string>
     <string name="error_no_match">Nie znaleziono pasującego wyniku</string>
@@ -703,7 +700,7 @@
     <string name="recently">Ostatnio</string>
     <string name="theme_tealturquoise">Błękitny &amp; Turkusowy</string>
     <string name="theme_midnightdusk">Zmierzch północy</string>
-    <string name="notification_size_warning">Duże aktualizacje biblioteki mogą prowadzić do zwiększonego zużycia baterii oraz spowolnienia działania źródeł</string>
+    <string name="notification_size_warning">Ostrzeżenie: duże aktualizacje biblioteki mogą prowadzić do zwiększonego zużycia baterii oraz spowolnienia działania źródeł</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Zainstaluj i uruchom Shizuku, aby używać go jako instalatora rozszerzeń.</string>
     <string name="ext_installer_pref">Instalator</string>
     <string name="pref_verbose_logging">Szczegółowe logi</string>
@@ -714,4 +711,8 @@
     <string name="action_sort_count">Ilość mang</string>
     <string name="action_display_language_badge">Język</string>
     <string name="label_warning">Ostrzeżenie</string>
+    <string name="download_queue_size_warning">Ostrzeżenie: duża ilość zakolejkowanych pobrań może doprowadzić do spowolnienia źródeł i/lub zablokowania Tachiyomi</string>
+    <string name="update_72hour">Co 3 dni</string>
+    <string name="connected_to_wifi">Tylko przez Wi-Fi</string>
+    <string name="enhanced_tracking_info">Usługi dostarczania ulepszonych funkcji dla niektórych źródeł. Mangi po dodaniu do biblioteki są automatycznie śledzone.</string>
 </resources>

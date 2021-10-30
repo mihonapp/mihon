@@ -191,7 +191,6 @@
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="update_12hour">Каждые 12 часов</string>
     <string name="update_24hour">Ежедневно</string>
-    <string name="update_3hour">Каждые 3 часа</string>
     <string name="update_48hour">Каждые 2 дня</string>
     <string name="update_6hour">Каждые 6 часов</string>
     <string name="update_check_confirm">Загрузить</string>
@@ -605,8 +604,6 @@
     <string name="backup_restore_content_full">Данные из файла резевной копии будут восстановлены.
 \n
 \nВам будет нужно установить все недостающие расширения, и после этого войти в услуги отслеживания для их использования.</string>
-    <string name="update_8hour">Каждые 8 часов</string>
-    <string name="update_4hour">Каждые 4 часа</string>
     <string name="nav_zone_left">Слева</string>
     <string name="nav_zone_right">Справа</string>
     <string name="nav_zone_next">Следующая</string>
@@ -621,7 +618,7 @@
     <string name="pref_download_new_categories_details">Комикс не будет загружаться в исключённых категориях, даже, если находится во включённых категориях.</string>
     <string name="pref_library_update_categories_details">Комикс не будет обновляться в исключённых категориях, даже, если находится во включённых категориях.</string>
     <string name="pref_category_auto_download">Автозагрузка</string>
-    <string name="action_show_errors">Показать ошибки</string>
+    <string name="action_show_errors">Посмотреть все детали ошибки</string>
     <string name="update_check_eol">Эта версия Андроида больше не поддерживается</string>
     <string name="clipboard_copy_error">Не удалось скопировать в буфер обмена</string>
     <string name="rotation_landscape">Альбомная</string>
@@ -633,7 +630,7 @@
     <string name="pref_grayscale">Оттенки серого</string>
     <string name="notification_incognito_text">Выключить режим инкогнито</string>
     <string name="automatic_background">Автоматически</string>
-    <string name="cancel_all_for_series">Отменить всё, для этих комиксов</string>
+    <string name="cancel_all_for_series">Отменить всё, для этого комикса</string>
     <string name="error_no_match">Совпадений не найдено</string>
     <string name="source_unsupported">Источник не поддерживается</string>
     <string name="unread">Не прочитано</string>
@@ -681,7 +678,7 @@
     <string name="pref_low">Низкая</string>
     <string name="pref_high">Быстрая</string>
     <string name="pref_highest">Самая быстрая</string>
-    <string name="pref_hide_threshold">Скорость скрытия меню при прокрутке</string>
+    <string name="pref_hide_threshold">Чувствительность скрытия меню при прокрутке</string>
     <string name="pref_inverted_colors">Цвета наоборот</string>
     <string name="pref_relative_time_long">Длинные (Короткие+, н-кол дней назад)</string>
     <string name="pref_relative_time_short">Короткие (Сегодня, Вчера)</string>
@@ -718,6 +715,9 @@
     <string name="pref_verbose_logging_summary">Записывать подробные логи, в системный лог (снижает производительность приложения)</string>
     <string name="action_display_language_badge">Язык</string>
     <string name="label_warning">Предупреждение</string>
-    <string name="notification_size_warning">Большие обновления, могут привести, к повышенному расходу батареи и замедлению работы источников</string>
+    <string name="notification_size_warning">Предупреждение: большие обновления комиксов могут привести, к замедлению работы источников, а также, к увеличению расхода батареи</string>
     <string name="backup_info">Настоятельно рекомендуется использовать автоматические резервные копии. Вы также должны хранить копии в других местах.</string>
+    <string name="connected_to_wifi">Только по Wi-Fi</string>
+    <string name="update_72hour">Каждые 3 дня</string>
+    <string name="download_queue_size_warning">Предупреждение: большие объемы загрузок глав, могут привести, к замедлению работы источников и/или блокировке Tachiyomi</string>
 </resources>

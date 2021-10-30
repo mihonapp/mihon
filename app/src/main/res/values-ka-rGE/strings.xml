@@ -107,7 +107,6 @@
     <string name="pref_category_library_update">განახლებები</string>
     <string name="pref_library_update_interval">ბიბლიოთეკის განახლების სიხშირე</string>
     <string name="update_never">ხელით</string>
-    <string name="update_3hour">ყოველ 3 საათში</string>
     <string name="update_6hour">ყოველ 6 საათში</string>
     <string name="update_12hour">ყოველ 12 საათში</string>
     <string name="update_24hour">ყოველდღე</string>

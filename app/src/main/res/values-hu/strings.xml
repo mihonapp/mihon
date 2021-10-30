@@ -32,7 +32,6 @@
     <string name="landscape">Fekvő</string>
     <string name="pref_library_update_interval">Frissítések gyakorisága</string>
     <string name="update_never">Kézi</string>
-    <string name="update_3hour">3 óránként</string>
     <string name="update_6hour">6 óránként</string>
     <string name="update_12hour">12 óránként</string>
     <string name="update_24hour">Naponta</string>
@@ -345,8 +344,6 @@
     <string name="none">Semmi</string>
     <string name="pref_download_new_categories_details">Manga tiltott kategóriákban nem lesz letöltve, még akkor is ha kedvelt kategóriában van.</string>
     <string name="pref_library_update_categories_details">Manga a tiltott kategóriákban nem lesznek frissítve, még akkor is ha kedvelt kategóriákban vannak.</string>
-    <string name="update_8hour">8 óránként</string>
-    <string name="update_4hour">4 óránként</string>
     <string name="secure_screen">Biztonságos képernyő</string>
     <string name="lock_when_idle">Zárás tétlen állapotban</string>
     <string name="lock_with_biometrics">Feloldás igénylése</string>

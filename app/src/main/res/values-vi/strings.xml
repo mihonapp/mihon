@@ -70,7 +70,6 @@
     <string name="landscape">Ngang</string>
     <string name="pref_library_update_interval">Lịch cập nhật thư viện</string>
     <string name="update_never">Thủ công</string>
-    <string name="update_3hour">Mỗi 3 tiếng</string>
     <string name="update_6hour">Mỗi 6 tiếng</string>
     <string name="update_12hour">Mỗi 12 tiếng</string>
     <string name="update_24hour">Mỗi ngày</string>
@@ -268,7 +267,7 @@
     <string name="action_restore">Khôi phục</string>
     <string name="app_not_available">Ứng dụng không có sẵn</string>
     <string name="update_weekly">Mỗi tuần</string>
-    <string name="default_category">Danh mục Mặc định</string>
+    <string name="default_category">Danh mục mặc định</string>
     <string name="default_category_summary">Luôn hỏi</string>
     <string name="all_lang">Tất cả</string>
     <string name="ext_update">Cập nhật</string>
@@ -315,7 +314,7 @@
     <string name="pref_refresh_library_tracking">Làm mới theo dõi</string>
     <string name="pref_refresh_library_tracking_summary">Cập nhật trạng thái, điểm số và chương cuối đã đọc từ dịch vụ theo dõi</string>
     <string name="local_source_badge">Địa phương</string>
-    <string name="local_source">Nguồn địa phương</string>
+    <string name="local_source">Nguồn cục bộ</string>
     <string name="other_source">Khác</string>
     <string name="action_global_search_hint">Tìm kiếm toàn bộ…</string>
     <string name="latest">Mới nhất</string>
@@ -525,12 +524,12 @@
     <string name="download_insufficient_space">Không thể tãi chương vì dung lượng bộ nhớ xuống thấp</string>
     <string name="recent_manga_time">Ch.%1$s-%2$s</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Có tất cả %d chương không tìm thấy</item>
+        <item quantity="other">Đã bỏ qua %d chương, vì nguồn đang bị thiếu hoặc chúng đã bị lọc ra</item>
     </plurals>
     <string name="loader_not_implemented_error">Nguồn không tìm thấy</string>
     <string name="page_list_empty_error">Trang không tìm thấy</string>
     <string name="viewer">Chế độ đọc</string>
-    <string name="pref_category_for_this_series">Dành cho loạt truyện này</string>
+    <string name="pref_category_for_this_series">Dành cho phần truyện này</string>
     <string name="share_page_info">%1$s:%2$s,trang %3$d</string>
     <string name="error_invalid_date_supplied">Ngày tháng không hợp lệ</string>
     <string name="add_tracking">Thêm theo dõi</string>
@@ -550,7 +549,7 @@
     <string name="manga_info_collapse">Hiện bớt</string>
     <string name="manga_info_expand">Xem thêm</string>
     <string name="in_library">Trong thư viện</string>
-    <string name="unknown_status">Không rõ tình trạng</string>
+    <string name="unknown_status">Không rõ trạng thái</string>
     <string name="unknown_author">Không rõ tác giả</string>
     <string name="pinned_sources">Đã ghim</string>
     <string name="last_used_source">Sử dụng lần cuối</string>
@@ -619,20 +618,18 @@
     <string name="exclude">Loại trừ:%s</string>
     <string name="include">Bao gồm: %s</string>
     <string name="none">Không có</string>
-    <string name="update_8hour">Mỗi 8 tiếng</string>
-    <string name="update_4hour">Mỗi 4 tiếng</string>
     <string name="action_display_show_number_of_items">Hiện số truyện</string>
     <string name="pref_category_nsfw_content">Nguồn NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Dẫn vào các danh sách nguồn và tiện ích mở rộng</string>
+    <string name="pref_show_nsfw_source">Hiển thị trong các danh sách nguồn và tiện ích mở rộng</string>
     <string name="pref_hide_bottom_bar_on_scroll">Ẩn thanh dưới cùng khi cuộn</string>
-    <string name="action_show_errors">Hiện lỗi</string>
+    <string name="action_show_errors">Hiện toàn bộ chi tiết lỗi</string>
     <string name="action_desc">Giảm dần</string>
     <string name="action_asc">Tăng dần</string>
     <string name="action_order_by_chapter_number">Theo số chương</string>
     <string name="action_order_by_upload_date">Theo ngày đăng</string>
     <string name="action_sort_chapter_fetch_date">Ngày nhập</string>
     <string name="action_filter_tracked">Đã theo dõi</string>
-    <string name="cancel_all_for_series">Hủy bỏ tất cả cho loạt truyện này</string>
+    <string name="cancel_all_for_series">Hủy bỏ tất cả cho phần truyền này</string>
     <string name="action_display_local_badge">Số truyện cục bộ</string>
     <string name="error_no_match">Không tìm thấy chính sác</string>
     <string name="source_unsupported">Nguồn không còn được hỗ trợ</string>
@@ -712,6 +709,9 @@
     <string name="action_display_language_badge">Ngôn ngữ</string>
     <string name="backup_info">Tự động sao lưu là phương án an toàn nhất. Bạn cũng nên giữ lại các bản sao chép ở những nơi khác nữa.</string>
     <string name="pref_verbose_logging_summary">In các ghi chép tường tận đến cả ghi chép hệ thống ( giảm hiệu suất ứng dụng )</string>
-    <string name="notification_size_warning">Các phần cập nhật lớn có thể làm tăng hiệu suất sử dụng pin và các nguồn sẽ trở lên chậm hơn</string>
+    <string name="notification_size_warning">Cảnh báo: các bản cập nhật lớn sẽ gây hại cho các nguồn và có thể dẫn đến các bản cập nhật chậm hơn và cũng làm tăng mức sử dụng pin</string>
     <string name="ext_install_service_notif">Đang cài đặt tiện ích mở rộng…</string>
+    <string name="update_72hour">3 ngày một lần</string>
+    <string name="connected_to_wifi">Chỉ qua Wi-Fi</string>
+    <string name="download_queue_size_warning">Cảnh báo: các tải xuống hàng loạt lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn Tachiyomi</string>
 </resources>

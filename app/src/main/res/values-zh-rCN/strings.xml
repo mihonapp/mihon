@@ -79,7 +79,6 @@
     <string name="landscape">横屏</string>
     <string name="pref_library_update_interval">更新频率</string>
     <string name="update_never">手动</string>
-    <string name="update_3hour">每 3 小时</string>
     <string name="update_6hour">每 6 小时</string>
     <string name="update_12hour">每 12 小时</string>
     <string name="update_24hour">每天</string>
@@ -570,8 +569,6 @@
     <string name="backup_restore_content_full">即将还原备份文件中的数据。
 \n
 \n随后请重新安装所有缺失的扩展插件并重新登录追踪服务。</string>
-    <string name="update_4hour">每 4 小时</string>
-    <string name="update_8hour">每 8 小时</string>
     <string name="nav_zone_right">右</string>
     <string name="nav_zone_left">左</string>
     <string name="nav_zone_next">下页</string>
@@ -586,7 +583,7 @@
     <string name="pref_library_update_categories_details">「排除」分类中的漫画将不会更新，即使他们同时在「包括」分类中。</string>
     <string name="pref_download_new_categories_details">应用不会下载位于排除分类中的漫画，即使它们同样位于包括的分类中。</string>
     <string name="pref_category_auto_download">自动下载</string>
-    <string name="action_show_errors">显示错误</string>
+    <string name="action_show_errors">查看完整错误详情</string>
     <string name="update_check_eol">应用不再支持此 Android 版本</string>
     <string name="clipboard_copy_error">未能复制到剪贴板</string>
     <string name="rotation_landscape">横屏</string>
@@ -646,7 +643,7 @@
     <string name="pref_low">低</string>
     <string name="pref_high">高</string>
     <string name="pref_highest">最高</string>
-    <string name="pref_hide_threshold">设置滚动时自动隐藏菜单的灵敏度</string>
+    <string name="pref_hide_threshold">滚动时隐藏菜单的灵敏度</string>
     <string name="pref_inverted_colors">反转</string>
     <string name="pref_relative_time_long">长 (短+、n 天前)</string>
     <string name="relative_time_today">今天</string>
@@ -679,6 +676,8 @@
     <string name="label_warning">警告</string>
     <string name="action_display_language_badge">语言</string>
     <string name="backup_info">强烈建议使用自动备份。 您也应该在其他地方保留副本。</string>
-    <string name="notification_size_warning">大型更新可能会导致电池使用量增加和来源变慢</string>
+    <string name="notification_size_warning">警告：大型更新会损害图源，并可能导致更新速度变慢以及电池使用量增加</string>
     <string name="connected_to_wifi">仅当连接至 Wi-Fi 时</string>
+    <string name="update_72hour">每 3 天</string>
+    <string name="download_queue_size_warning">警告：批量下载可能会导致图源变慢和/或图源阻止 Tachiyomi</string>
 </resources>

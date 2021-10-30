@@ -137,10 +137,7 @@
     <string name="update_48hour">प्रत्येक 2 दिन</string>
     <string name="update_24hour">सँधै</string>
     <string name="update_12hour">प्रत्येक 12 घण्टा</string>
-    <string name="update_8hour">प्रत्येक 8 घण्टा</string>
     <string name="update_6hour">प्रत्येक 6 घण्टा</string>
-    <string name="update_4hour">प्रत्येक 4 घण्टा</string>
-    <string name="update_3hour">प्रत्येक 3 घण्टा</string>
     <string name="update_never">आफैं</string>
     <string name="pref_library_update_interval">अपडेट आवृत्ति</string>
     <string name="pref_category_library_update">ग्लोबल अपडेट</string>

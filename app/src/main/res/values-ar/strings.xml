@@ -74,7 +74,6 @@
     <string name="landscape">افقي</string>
     <string name="pref_library_update_interval">معدل تحديث المكتبة</string>
     <string name="update_never">يدوياً</string>
-    <string name="update_3hour">كل ٣ ساعات</string>
     <string name="update_6hour">كل ٦ ساعات</string>
     <string name="update_12hour">كل ١٢ ساعة</string>
     <string name="update_24hour">يومياً</string>
@@ -637,8 +636,6 @@
     <string name="nav_zone_prev">السابق</string>
     <string name="pref_show_navigation_mode_summary">عرض مناطق اللمس للتنقل عند فتح القارئ</string>
     <string name="pref_show_navigation_mode">إظهار حدود التنقل</string>
-    <string name="update_8hour">كل ثمان ساعات</string>
-    <string name="update_4hour">كل ٤ ساعات</string>
     <string name="action_sort_chapter_fetch_date">تاريخ الجلب</string>
     <string name="rotation_landscape">افقي</string>
     <string name="rotation_portrait">رأسي</string>

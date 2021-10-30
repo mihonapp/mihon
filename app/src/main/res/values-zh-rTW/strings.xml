@@ -41,7 +41,7 @@
     <string name="action_edit_categories">管理分類</string>
     <string name="action_rename_category">重新命名分類</string>
     <string name="action_move_category">選擇分類</string>
-    <string name="action_edit_cover">編輯書封</string>
+    <string name="action_edit_cover">編輯封面</string>
     <string name="action_stop">停止</string>
     <string name="action_pause">暫停</string>
     <string name="action_previous_chapter">上一章</string>
@@ -76,7 +76,6 @@
     <string name="landscape">橫向</string>
     <string name="pref_library_update_interval">更新頻率</string>
     <string name="update_never">手動</string>
-    <string name="update_3hour">每 3 小時</string>
     <string name="update_6hour">每 6 小時</string>
     <string name="update_12hour">每 12 小時</string>
     <string name="update_24hour">每日</string>
@@ -120,7 +119,7 @@
     <string name="pref_download_directory">下載位置</string>
     <string name="pref_remove_after_marked_as_read">標示為已讀後</string>
     <string name="custom_dir">自訂位置</string>
-    <string name="disabled">停用</string>
+    <string name="disabled">已停用</string>
     <string name="pref_download_new">自動下載新章節</string>
     <string name="services">服務</string>
     <string name="pref_create_backup">建立備份</string>
@@ -153,8 +152,8 @@
     <string name="manga_download">下載</string>
     <string name="snack_categories_deleted">已刪除分類</string>
     <string name="picture_saved">圖片已儲存</string>
-    <string name="set_as_cover">設為書封</string>
-    <string name="cover_updated">已更新書封</string>
+    <string name="set_as_cover">設為封面</string>
+    <string name="cover_updated">已更新封面</string>
     <string name="copy">副本</string>
     <string name="update_check_confirm">下載</string>
     <string name="update_check_ignore">忽略</string>
@@ -217,7 +216,7 @@
     <string name="updating_category">正在更新分類</string>
     <string name="action_global_search_hint">全域搜尋…</string>
     <string name="snack_add_to_library">將漫畫收藏至書櫃？</string>
-    <string name="file_select_cover">選擇書封圖片</string>
+    <string name="file_select_cover">選擇封面圖片</string>
     <string name="information_no_recent_manga">沒有近期閱讀</string>
     <string name="channel_common">一般</string>
     <string name="all_lang">全球</string>
@@ -265,13 +264,13 @@
     <string name="download_custom">自訂範圍</string>
     <string name="download_all">全部</string>
     <string name="download_unread">未讀</string>
-    <string name="confirm_set_image_as_cover">要將該圖片設為書封嗎？</string>
+    <string name="confirm_set_image_as_cover">要將該圖片設為封面嗎？</string>
     <string name="transition_pages_loading">正在載入頁面…</string>
     <string name="information_empty_library">尚未收藏任何作品</string>
     <string name="dialog_with_checkbox_reset">重設此漫畫所有章節</string>
     <string name="custom_filter">濾鏡</string>
     <string name="migrate">遷移</string>
-    <string name="notification_cover_update_failed">書封更新失敗</string>
+    <string name="notification_cover_update_failed">封面更新失敗</string>
     <string name="confirm_delete_chapters">確定要刪除所選的章節嗎？</string>
     <string name="error_category_exists">已有名稱相同的分類！</string>
     <string name="chapter_progress">第 %1$d 頁</string>
@@ -388,8 +387,8 @@
     <string name="information_webview_required">WebView 為 Tachiyomi 的必要元件</string>
     <string name="action_select_inverse">反向選擇</string>
     <string name="pref_library_update_refresh_metadata">自動重新整理中繼資料</string>
-    <string name="pref_library_update_refresh_metadata_summary">更新書櫃時一併檢查漫畫的書封與簡介是否有更動</string>
-    <string name="pref_refresh_library_covers">重新整理書櫃中的書封</string>
+    <string name="pref_library_update_refresh_metadata_summary">更新書櫃時一併檢查漫畫的封面與簡介是否有更動</string>
+    <string name="pref_refresh_library_covers">重新整理書櫃中的漫畫封面</string>
     <string name="ext_updates_pending">等待更新中</string>
     <string name="pref_disable_battery_optimization_summary">有助於背景更新書櫃與自動備份</string>
     <string name="webtoon_side_padding_25">25%</string>
@@ -581,9 +580,7 @@
     <string name="exclude">排除：%s</string>
     <string name="include">包含：%s</string>
     <string name="none">無</string>
-    <string name="update_8hour">每 8 小時</string>
-    <string name="update_4hour">每 4 小時</string>
-    <string name="action_show_errors">顯示錯誤</string>
+    <string name="action_show_errors">檢視完整錯誤資訊</string>
     <string name="update_check_eol">不再支援此 Android 版本</string>
     <string name="clipboard_copy_error">無法複製至剪貼簿</string>
     <string name="backup_restore_content_full">即將還原備份中的資料。
@@ -646,7 +643,7 @@
     <string name="pref_low">低</string>
     <string name="pref_high">高</string>
     <string name="pref_highest">最高</string>
-    <string name="pref_hide_threshold">捲動時自動隱藏選單的靈敏度</string>
+    <string name="pref_hide_threshold">捲動時隱藏選單的靈敏度</string>
     <string name="pref_inverted_colors">反轉</string>
     <string name="theme_tealturquoise">綠松色</string>
     <string name="confirm_lock_change">驗證以確認變更</string>
@@ -676,8 +673,11 @@
     <string name="action_sort_count">漫畫總數</string>
     <string name="action_display_language_badge">語言</string>
     <string name="label_warning">警告</string>
-    <string name="notification_size_warning">大型更新可能增加電池用量，並拖慢來源效能</string>
+    <string name="notification_size_warning">警告：大量更新會損害來源，並可能導致更新速度緩慢、電池用量增加</string>
     <string name="pref_verbose_logging">錄製詳細記錄</string>
     <string name="backup_info">強烈建議啟用自動備份，並在他處保留副本。</string>
     <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
+    <string name="connected_to_wifi">僅透過 Wi-Fi</string>
+    <string name="update_72hour">每 3 日</string>
+    <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源並 (或) 使其封鎖 Tachiyomi</string>
 </resources>

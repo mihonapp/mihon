@@ -71,7 +71,6 @@
     <string name="pref_category_advanced">Avansert</string>
     <string name="pref_category_about">Om</string>
     <string name="update_never">Manuell</string>
-    <string name="update_3hour">Hver tredje time</string>
     <string name="update_6hour">Hver sjette time</string>
     <string name="update_12hour">Hver tolvte time</string>
     <string name="update_24hour">Daglig</string>
@@ -592,8 +591,6 @@
     <string name="action_display_show_number_of_items">Vis antall gjenstander</string>
     <string name="exclude">Eksluder: %s</string>
     <string name="include">Inkluder: %s</string>
-    <string name="update_8hour">Hver 8 time</string>
-    <string name="update_4hour">Hver 4 time</string>
     <string name="action_sort_chapter_fetch_date">Dato hentet</string>
     <string name="pref_download_new_categories_details">Manga i utelukkede kategorier vil ikke bli nedlastet selv om de også er i inkluderte kategorier.</string>
     <string name="pref_category_auto_download">Last ned automatisk</string>
@@ -693,5 +690,5 @@
     <string name="pref_verbose_logging">Sirlig loggføring</string>
     <string name="pref_verbose_logging_summary">Skriv utfyllende logg til systemloggen (reduserer programytelse)</string>
     <string name="label_warning">Advarsel</string>
-    <string name="notification_size_warning">Store oppdateringer leder til økt batteribruk og at kilder blir tregere</string>
+    <string name="notification_size_warning">Store oppdateringer kan lede til økt batteribruk og tregere kilder</string>
 </resources>

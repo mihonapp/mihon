@@ -79,7 +79,6 @@
     <string name="landscape">Landskap</string>
     <string name="pref_library_update_interval">Uppdateringsfrekvens</string>
     <string name="update_never">Manuell</string>
-    <string name="update_3hour">Var tredje timme</string>
     <string name="update_6hour">Var 6:e timme</string>
     <string name="update_12hour">Var 12:e timme</string>
     <string name="update_24hour">Dagligen</string>
@@ -134,14 +133,14 @@
     <string name="vertical_viewer">Vertikal</string>
     <string name="webtoon_viewer">Webtoon</string>
     <string name="pager_viewer">Sidläsare</string>
-    <string name="pref_image_scale_type">Skal typ</string>
+    <string name="pref_image_scale_type">Bildanpassning</string>
     <string name="scale_type_fit_screen">Passa skärmen</string>
     <string name="scale_type_stretch">Sträck ut</string>
     <string name="scale_type_fit_width">Passa bredd</string>
     <string name="scale_type_fit_height">Passa höjd</string>
     <string name="scale_type_original_size">Originalstorlek</string>
     <string name="scale_type_smart_fit">Smart passning</string>
-    <string name="pref_zoom_start">Zoom start position</string>
+    <string name="pref_zoom_start">Startposition på Zoom</string>
     <string name="zoom_start_automatic">Automatisk</string>
     <string name="zoom_start_left">Vänster</string>
     <string name="zoom_start_right">Höger</string>
@@ -315,7 +314,7 @@
     <string name="channel_common">Vanlig</string>
     <string name="action_open_in_web_view">Öppna i WebView</string>
     <string name="pref_true_color">32-bitars färg</string>
-    <string name="pref_skip_read_chapters">Skippa lästa kapitel</string>
+    <string name="pref_skip_read_chapters">Hoppa över lästa kapitel</string>
     <string name="pref_read_with_long_tap">Visa vid lång tryckning</string>
     <string name="pref_color_filter_mode">Färgfilterblandningsläge</string>
     <string name="filter_mode_overlay">Överlägg</string>
@@ -407,7 +406,7 @@
     <string name="pref_enable_automatic_extension_updates">Sök efter tilläggsuppdateringar</string>
     <string name="action_sort_last_checked">Senast kontrollerad</string>
     <string name="pref_category_reading">Läser</string>
-    <string name="pref_skip_filtered_chapters">Skippa filtrerade kapitel</string>
+    <string name="pref_skip_filtered_chapters">Hoppa över filtrerade kapitel</string>
     <string name="label_sources">Källor</string>
     <string name="add_tracking">Lägg till spårning</string>
     <string name="in_library">I biblioteket</string>
@@ -548,7 +547,7 @@
     <string name="pref_clear_history">Rensa historik</string>
     <string name="clear_history_confirmation">Är du säker\? All historik kommer att försvinna.</string>
     <string name="clear_history_completed">Historiken har tagits bort</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Dölj navigationsfältet vid scroll</string>
+    <string name="pref_hide_bottom_bar_on_scroll">Dölj navigationsfältet vid skrollning</string>
     <string name="action_search_settings">Sök inställningar</string>
     <string name="spen_next_page">Nästa sida</string>
     <string name="spen_previous_page">Föregående sida</string>
@@ -588,8 +587,6 @@
     <string name="pref_dual_page_invert">Invertera dubbelsidig delad placering</string>
     <string name="pref_show_navigation_mode_summary">Visa tryckzoner kort när läsaren öppnas</string>
     <string name="pref_show_navigation_mode">Visa överlägg för navigeringslayout</string>
-    <string name="update_8hour">Var 8:e timme</string>
-    <string name="update_4hour">Var 4:e timme</string>
     <string name="pref_dns_over_https">DNS över HTTPS</string>
     <string name="exclude">Exkludera: %s</string>
     <string name="include">Inkludera: %s</string>
@@ -598,7 +595,7 @@
     <string name="pref_download_new_categories_details">Manga i uteslutna kategorier laddas inte ner även om de också ingår i inkluderade kategorier.</string>
     <string name="pref_category_auto_download">Ladda ned automatiskt</string>
     <string name="pref_library_update_categories_details">Manga i uteslutna kategorier uppdateras inte även om de också ingår i inkluderade kategorier.</string>
-    <string name="action_show_errors">Visa fel</string>
+    <string name="action_show_errors">Se fullstäning felinformation</string>
     <string name="update_check_eol">Denna Android-version stöds inte längre</string>
     <string name="clipboard_copy_error">Kunde inte kopiera till urklipp</string>
     <string name="rotation_landscape">Liggande</string>
@@ -643,9 +640,9 @@
     <string name="enhanced_services">Förbättrade tjänster</string>
     <string name="pref_dark_theme_pure_black">Rent svart mörkt läge</string>
     <string name="theme_yotsuba">Yotsuba</string>
-    <string name="theme_yinyang">Yin &amp; Yang</string>
+    <string name="theme_yinyang">Yin och yang</string>
     <string name="theme_tako">Tako</string>
-    <string name="theme_strawberrydaiquiri">Jordgubbs-Daiquiri</string>
+    <string name="theme_strawberrydaiquiri">Jordgubbsdaiquiri</string>
     <string name="theme_midnightdusk">Midnattskymning</string>
     <string name="theme_greenapple">Grönt äpple</string>
     <string name="theme_blue">Äldre blå</string>
@@ -658,7 +655,7 @@
     <string name="pref_low">Låg</string>
     <string name="pref_high">Hög</string>
     <string name="pref_highest">Högsta</string>
-    <string name="pref_hide_threshold">Automatisk döljning av menyn vid rullningskänslighet</string>
+    <string name="pref_hide_threshold">Känslighet för att dölja menyn vid rullning</string>
     <string name="pref_inverted_colors">Omvänd</string>
     <string name="pref_relative_time_long">Lång (Kort+, n dagar sedan)</string>
     <string name="pref_relative_time_short">Kort (idag, igår)</string>
@@ -670,7 +667,7 @@
     <string name="relative_time_today">Idag</string>
     <string name="recently">Nyligen</string>
     <string name="pref_category_timestamps">Tidsstämplar</string>
-    <string name="theme_tealturquoise">Teal &amp; turkos</string>
+    <string name="theme_tealturquoise">Teal och turkos</string>
     <string name="pref_category_appearance">Utseende</string>
     <string name="confirm_lock_change">Autentisera för att bekräfta ändringen</string>
     <string name="label_default">Standard</string>
@@ -692,4 +689,8 @@
     <string name="pref_verbose_logging">Omfattande loggning</string>
     <string name="label_warning">Varning</string>
     <string name="action_display_language_badge">Språk</string>
+    <string name="connected_to_wifi">Bara över Wi-Fi</string>
+    <string name="notification_size_warning">Varning: stora uppdateringar skadar källor och kan leda till långsammare uppdateringer samt en ökad batterianvändning</string>
+    <string name="download_queue_size_warning">Varning: stora massnerladdningar kan leda till att källor blir långsamma och/eller blockerar Tachiyomi</string>
+    <string name="update_72hour">Var 3:e dag</string>
 </resources>

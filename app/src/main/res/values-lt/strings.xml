@@ -44,10 +44,7 @@
     <string name="update_48hour">Kas 2 dienas</string>
     <string name="update_24hour">Kasdien</string>
     <string name="update_12hour">Kas 12 valandų</string>
-    <string name="update_8hour">Kas 8 valandas</string>
     <string name="update_6hour">Kas 6 valandas</string>
-    <string name="update_4hour">Kas 4 valandas</string>
-    <string name="update_3hour">Kas 3 valandas</string>
     <string name="update_never">Rankinis</string>
     <string name="pref_library_update_interval">Naujinių dažnis</string>
     <string name="pref_category_library_update">Globalus naujinimas</string>

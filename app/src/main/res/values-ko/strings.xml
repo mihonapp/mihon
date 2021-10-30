@@ -78,7 +78,6 @@
     <string name="landscape">가로</string>
     <string name="pref_library_update_interval">서재 업데이트 주기</string>
     <string name="update_never">수동</string>
-    <string name="update_3hour">3시간</string>
     <string name="update_6hour">6시간</string>
     <string name="update_12hour">12시간</string>
     <string name="update_24hour">1일</string>
@@ -386,8 +385,6 @@
     <string name="pref_grayscale">그레이스케일</string>
     <string name="pref_dual_page_split">이중 페이지 분할</string>
     <string name="ext_unofficial">비공식</string>
-    <string name="update_8hour">8시간</string>
-    <string name="update_4hour">4시간</string>
     <string name="action_display_comfortable_grid">보기편한 그리드</string>
     <string name="pref_dark_theme_pure_black">검은색 다크모드</string>
     <string name="pref_app_theme">앱 테마</string>

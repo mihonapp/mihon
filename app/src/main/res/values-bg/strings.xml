@@ -70,7 +70,6 @@
     <string name="landscape">Пейзажно</string>
     <string name="pref_library_update_interval">Честота на обновяване</string>
     <string name="update_never">Самостоятелно</string>
-    <string name="update_3hour">На всеки 3 часа</string>
     <string name="update_6hour">На всеки 6 часа</string>
     <string name="update_12hour">На всеки 12 часа</string>
     <string name="update_24hour">Ежедневно</string>
@@ -650,8 +649,6 @@
     <string name="theme_tealturquoise">Циан и тюркоаз</string>
     <string name="theme_yinyang">Ин и Янг</string>
     <string name="theme_yotsuba">Йоцуба</string>
-    <string name="update_4hour">На всеки 4 часа</string>
-    <string name="update_8hour">На всеки 8 часа</string>
     <string name="restrictions">Ограничения: %s</string>
     <string name="pref_library_update_refresh_trackers">Автоматично обновявай тракерите</string>
     <string name="categorized_display_settings">Различно сортиране и показване за всяка категоря</string>

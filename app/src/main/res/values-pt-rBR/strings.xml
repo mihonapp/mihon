@@ -74,7 +74,6 @@
     <string name="landscape">Paisagem</string>
     <string name="pref_library_update_interval">Frequência de atualização</string>
     <string name="update_never">Manualmente</string>
-    <string name="update_3hour">A cada 3 horas</string>
     <string name="update_6hour">A cada 6 horas</string>
     <string name="update_12hour">A cada 12 horas</string>
     <string name="update_24hour">Diariamente</string>
@@ -582,8 +581,6 @@
     <string name="backup_restore_content_full">Os dados do arquivo de backup serão restaurados.
 \n
 \nVocê precisará instalar quaisquer extensões que estejam faltando e depois realizar o login nos serviços de monitoramento para utilizá-los.</string>
-    <string name="update_8hour">A cada 8 horas</string>
-    <string name="update_4hour">A cada 4 horas</string>
     <string name="pref_show_navigation_mode_summary">Mostrar as zonas de toque quando o leitor está aberto</string>
     <string name="pref_show_navigation_mode">Mostrar a sobreposição do layout de navegação</string>
     <string name="nav_zone_right">Direita</string>
@@ -598,7 +595,7 @@
     <string name="pref_library_update_categories_details">Os mangás nas categorias excluídas não serão atualizados mesmo que eles também estejam nas categorias incluídas.</string>
     <string name="pref_download_new_categories_details">Os mangás nas categorias excluídas não serão disponibilizados offline mesmo que eles também estejam nas categorias incluídas.</string>
     <string name="pref_category_auto_download">Download automático</string>
-    <string name="action_show_errors">Mostrar erros</string>
+    <string name="action_show_errors">Ver detalhes completos dos erros</string>
     <string name="update_check_eol">Esta versão do Android não é mais suportada</string>
     <string name="clipboard_copy_error">Erro ao copiar para a área de transferência</string>
     <string name="rotation_landscape">Paisagem</string>
@@ -658,7 +655,7 @@
     <string name="pref_low">Baixa</string>
     <string name="pref_high">Alta</string>
     <string name="pref_highest">Mais alta</string>
-    <string name="pref_hide_threshold">Ocultar o menu automaticamente na sensibilidade de rolagem</string>
+    <string name="pref_hide_threshold">Sensibilidade para ocultar o menu na rolagem</string>
     <string name="pref_inverted_colors">Invertido</string>
     <string name="pref_relative_time_long">Longo (Curto+, n dias atrás)</string>
     <string name="pref_relative_time_short">Curto (Hoje, Ontem)</string>
@@ -692,8 +689,10 @@
     <string name="pref_verbose_logging_summary">Imprime registros detalhados no registro de eventos do sistema (reduz o desempenho do aplicativo)</string>
     <string name="pref_verbose_logging">Registro de eventos verboso</string>
     <string name="action_display_language_badge">Idioma</string>
-    <string name="notification_size_warning">Atualizações com muitos itens podem aumentar o uso de bateria e tornar as fontes mais lentas</string>
+    <string name="notification_size_warning">Aviso: atualizações com muitos itens prejudicam as fontes e podem deixar as atualizações lentas e aumentar o uso da bateria</string>
     <string name="label_warning">Aviso</string>
     <string name="backup_info">Backups automáticos são altamente recomendados. Você deve manter cópias em outros locais também.</string>
     <string name="connected_to_wifi">Somente no Wi-Fi</string>
+    <string name="update_72hour">A cada 3 dias</string>
+    <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi</string>
 </resources>

@@ -79,7 +79,6 @@
     <string name="landscape">Orizontale</string>
     <string name="pref_library_update_interval">Frecuèntzia de agiornamentu</string>
     <string name="update_never">Manuale</string>
-    <string name="update_3hour">Cada 3 oras</string>
     <string name="update_6hour">Cada 6 oras</string>
     <string name="update_12hour">Cada 12 oras</string>
     <string name="update_24hour">Cada die</string>
@@ -582,8 +581,6 @@
     <string name="backup_restore_content_full">Sos datos dae su documentu de sa còpia de seguresa s\'ant a ripristinare.
 \n
 \nA pustis as a dèpere installare sas estensiones chi mancant e atzèdere a sos servìtzios de arrastamentu pro los pòdere impreare.</string>
-    <string name="update_8hour">Cada 8 oras</string>
-    <string name="update_4hour">Cada 4 oras</string>
     <string name="nav_zone_right">Destra</string>
     <string name="nav_zone_left">Manca</string>
     <string name="nav_zone_next">Imbeniente</string>
@@ -598,7 +595,7 @@
     <string name="pref_download_new_categories_details">Sos manga in sas categorias esclùdidas non s\'ant a iscarrigare nemmancu si sunt fintzas in categorias inclùdidas.</string>
     <string name="pref_category_auto_download">Iscarrigamentu automàticu</string>
     <string name="pref_library_update_categories_details">Sos manga in sas categorias esclùdidas non s\'ant a agiornare nemmancu si sunt fintzas in categorias inclùdidas.</string>
-    <string name="action_show_errors">Ammustra sos errores</string>
+    <string name="action_show_errors">Ammustra s\'errore a sa minuda</string>
     <string name="clipboard_copy_error">Còpia in punta de billete fallida</string>
     <string name="update_check_eol">Custa versione de Android no est prus suportada</string>
     <string name="rotation_landscape">Orizontale</string>
@@ -692,5 +689,8 @@
     <string name="label_warning">Dae cara</string>
     <string name="action_display_language_badge">Limba</string>
     <string name="backup_info">Sas còpias de seguresa automàticas sunt racumandadas meda. Dias dèpere tènnere còpias fintzas in àteros logos.</string>
-    <string name="notification_size_warning">Sos agiornamentos mannos diant pòdere batire a un\'impreu de sa bateria prus mannu e a unu rallentamentu de sas fontes</string>
+    <string name="notification_size_warning">Dae cara: sos agiornamentos mannos diant pòdere fàghere dannu a sas fontes e causare agiornamentos prus lentos e fintzas un\'impreu de sa bateria prus mannu</string>
+    <string name="update_72hour">Cada 3 dies</string>
+    <string name="connected_to_wifi">Petzi cun su Wi-Fi</string>
+    <string name="download_queue_size_warning">Dae cara: sos iscarrigamentos de massa mannos diant pòdere rallentare sas fontes e/o blocare Tachiyomi</string>
 </resources>

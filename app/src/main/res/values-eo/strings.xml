@@ -208,10 +208,7 @@
     <string name="pref_library_update_prioritization">Ĝisdatiga ordigo</string>
     <string name="update_48hour">Po unu fojon 2 tage</string>
     <string name="update_12hour">Po unu fojon 12 hore</string>
-    <string name="update_8hour">Po unu fojon 8 hore</string>
     <string name="update_6hour">Po unu fojon 6 hore</string>
-    <string name="update_4hour">Po unu fojon 4 hore</string>
-    <string name="update_3hour">Po unu fojon 3 hore</string>
     <string name="update_never">Mana</string>
     <string name="pref_library_update_interval">Ofteco de ĝisdatigoj</string>
     <string name="pref_category_library_update">Tuta ĝisdatigo</string>

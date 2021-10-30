@@ -67,7 +67,6 @@
     <string name="pref_library_columns">Elementen per rij</string>
     <string name="pref_library_update_interval">Updatefrequentie</string>
     <string name="update_never">Handmatig</string>
-    <string name="update_3hour">Iedere 3 uur</string>
     <string name="update_6hour">Iedere 6 uur</string>
     <string name="update_12hour">Iedere 12 uur</string>
     <string name="update_24hour">Dagelijks</string>
@@ -255,7 +254,7 @@
     <string name="licensed">Gelicenseerd</string>
     <string name="plan_to_read">Van plan te lezen</string>
     <string name="action_global_search">Globaal zoeken</string>
-    <string name="action_display_download_badge">Download badges</string>
+    <string name="action_display_download_badge">Gedownloade hoofdstukken</string>
     <string name="local_source_badge">Lokaal</string>
     <string name="other_source">Anders</string>
     <string name="action_global_search_hint">Globaal zoeken…</string>
@@ -461,7 +460,7 @@
         <item quantity="one">%d categorie</item>
         <item quantity="other">%d categorieën</item>
     </plurals>
-    <string name="action_display_unread_badge">Ongelezen badges</string>
+    <string name="action_display_unread_badge">Ongelezen hoofdstukken</string>
     <string name="pref_refresh_library_covers">Omslagen van manga in bibliotheek bijwerken</string>
     <string name="tracking_info">Eenzijdige synchronisatie om voortang van hoofdstukken bij te werken bij trackingdiensten. Stel tracking in bij individuele manga via de \"Tracking\"-knop.</string>
     <plurals name="notification_update_error">
@@ -523,7 +522,7 @@
     <string name="channel_complete">Voltooid</string>
     <string name="channel_progress">Voortgang</string>
     <string name="download_notifier_download_finish">Download voltooid</string>
-    <string name="channel_errors">Fouten</string>
+    <string name="channel_errors">Foutmeldingen</string>
     <string name="backup_restore_missing_trackers">Niet-ingelogde trackers:</string>
     <string name="pref_remove_bookmarked_chapters">Verwijderen van hoofdstukken met bladwijzers toestaan</string>
     <string name="pref_category_delete_chapters">Hoofdstukken verwijderen</string>
@@ -531,8 +530,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Dit voorkomt niet dat onofficiële of mogelijk incorrect gemarkeerde extensies NSFW-inhoud (18+) kunnen laten zien in de app.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Er is 1 missend hoofdstuk</item>
-        <item quantity="other">Er zijn %d missende hoofstukken</item>
+        <item quantity="one">1 hoofstuk wordt overgeslagen, mogelijk mist de bron deze of wordt deze eruit gefilterd</item>
+        <item quantity="other">"%d hoofstukken  worden overgeslagen, mogelijk missen de bronnen deze of worden deze eruit gefilterd"</item>
     </plurals>
     <string name="no_chapters_error">Geen hoofdstukken gevonden</string>
     <string name="chapter_settings_updated">Standaard hoofdstukinstellingen bijgewerkt</string>
@@ -588,8 +587,6 @@
     <string name="pref_dual_page_invert">Plaatsing van dubbele-paginasplitsing omkeren</string>
     <string name="pref_show_navigation_mode_summary">Laat de tikzones zien als de lezer wordt geopend</string>
     <string name="pref_show_navigation_mode">Navigatielayout als overlay laten zien</string>
-    <string name="update_8hour">Elke 8 uur</string>
-    <string name="update_4hour">Elke 4 uur</string>
     <string name="pref_dns_over_https">DNS over HTTPS</string>
     <string name="pref_download_new_categories_details">Manga in uitgezonderde categorieën worden niet gedownload, zelfs niet als ze onder opgenomen categorieën vallen.</string>
     <string name="pref_category_auto_download">Automatisch downloaden</string>
@@ -633,7 +630,7 @@
     <string name="alignment_center">Midden</string>
     <string name="alignment_top">Bovenkant</string>
     <string name="pref_side_nav_icon_alignment">Uitlijning zijnavigatiepictogram</string>
-    <string name="action_display_local_badge">Lokale badges</string>
+    <string name="action_display_local_badge">Lokale manga</string>
     <string name="information_empty_category_dialog">Er zijn nog geen categorieën.</string>
     <string name="action_start_downloading_now">Begin nu met downloaden</string>
     <string name="action_sort_next_updated">Volgende verwachte update</string>
@@ -681,4 +678,15 @@
     <string name="confirm_lock_change">Authenticeer om de wijziging te bevestigen</string>
     <string name="label_default">Standaard</string>
     <string name="ext_app_info">App-informatie</string>
+    <string name="ext_install_service_notif">Extensies installeren…</string>
+    <string name="action_display_language_badge">Taal</string>
+    <string name="label_warning">Waarschuwing</string>
+    <string name="ext_installer_legacy">Verouderd</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku wordt niet uitgevoerd</string>
+    <string name="ext_installer_pref">Installatieprogramma</string>
+    <string name="backup_info">Het is erg aangeraden om automatische back-ups te gebruiken en deze op meerdere plekken te bewaren.</string>
+    <string name="connected_to_wifi">Alleen via Wi-Fi</string>
+    <string name="pref_verbose_logging">Uitgebreide logging</string>
+    <string name="notification_size_warning">Grote updates kunnen leiden tot een verhoogd batterijgebruik en trager werkende bronnen</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Installeer en start Shizuku om deze als extensie-installer te gebruiken.</string>
 </resources>

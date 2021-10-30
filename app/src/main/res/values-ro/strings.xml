@@ -77,7 +77,6 @@
     <string name="portrait">Portret</string>
     <string name="pref_library_update_interval">Frecvență de actualizare</string>
     <string name="update_never">Manual</string>
-    <string name="update_3hour">La fiecare 3 ore</string>
     <string name="update_6hour">La fiecare 6 ore</string>
     <string name="update_12hour">La fiecare 12 ore</string>
     <string name="update_24hour">Zilnic</string>
@@ -575,8 +574,6 @@
     <string name="pref_dual_page_split">împărțirea paginilor duble</string>
     <string name="pref_show_navigation_mode_summary">Afișați zonele de atingere atunci când cititorul este deschis</string>
     <string name="pref_show_navigation_mode">Afișați suprapunerea aspectului de navigare</string>
-    <string name="update_8hour">O dată la 8 ore</string>
-    <string name="update_4hour">O dată la 4 ore</string>
     <string name="action_desc">Descendent</string>
     <string name="action_asc">Ascendent</string>
     <string name="action_order_by_chapter_number">După numărul capitolului</string>

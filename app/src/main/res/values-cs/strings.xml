@@ -46,7 +46,6 @@
     <string name="loading">Načítání…</string>
     <string name="app_not_available">Aplikace není k dispozici</string>
     <string name="pref_category_downloads">Stahování</string>
-    <string name="update_3hour">Každé 3 hodiny</string>
     <string name="update_6hour">Každých 6 hodiny</string>
     <string name="update_12hour">Každých 12 hodiny</string>
     <string name="update_24hour">Denně</string>
@@ -188,7 +187,7 @@
     <string name="action_resume">Pokračovat</string>
     <string name="action_display_mode">Režim zobrazení</string>
     <string name="action_display">Zobrazení</string>
-    <string name="action_display_download_badge">Odznáček stažení</string>
+    <string name="action_display_download_badge">Stažené kapitoly</string>
     <string name="action_sort">Seřadit</string>
     <string name="action_reset">Resetovat</string>
     <string name="action_open_log">Otevřít log</string>
@@ -467,8 +466,6 @@
     </plurals>
     <string name="pref_library_update_refresh_metadata_summary">Kontrolovat dostupnost nových přebalů a detailů při aktualizaci knihovny</string>
     <string name="pref_library_update_refresh_metadata">Automaticky obnovovat metadata</string>
-    <string name="update_8hour">Každých 8 hodin</string>
-    <string name="update_4hour">Každé 4 hodiny</string>
     <string name="parental_controls_info">Toto nastavení nemůže zamezit neoficiálním nebo špatně označeným rozšířením v zobrazování NSFW (18+) obsahu v aplikaci.</string>
     <string name="pref_show_nsfw_source">Zobrazovat v seznamu zdrojů a rozšíření</string>
     <string name="pref_category_nsfw_content">NSFW (18+) zdroje</string>
@@ -539,9 +536,9 @@
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
     <string name="updating_library">Aktualizuji knihovnu</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Chybí 1 kapitola</item>
-        <item quantity="few">Chybí %d kapitoly</item>
-        <item quantity="other">Chybí %d kapitol</item>
+        <item quantity="one">Přeskočena 1 kapitola, buď chybí ve zdroji nebo byla vyfiltrována.</item>
+        <item quantity="few">Přeskočeny %d kapitoly, buď chybí ve zdroji nebo byly vyfiltrovány.</item>
+        <item quantity="other">Přeskočeno %d kapitol, buď chybí ve zdroji nebo byly vyfiltrovány.</item>
     </plurals>
     <string name="loader_not_implemented_error">Zdroj nenalezen</string>
     <string name="page_list_empty_error">Žádné stránky nenalezeny</string>
@@ -596,7 +593,7 @@
     <string name="pref_library_update_categories_details">Manga ve vynechaných kategoriích nebude aktualizována, i kdyby byla také v zahrnutých kategoriích.</string>
     <string name="pref_category_display">Zobrazení</string>
     <string name="action_display_show_tabs">Zobrazovat karty kategorií</string>
-    <string name="action_display_unread_badge">Odznáček u nepřečtených</string>
+    <string name="action_display_unread_badge">Nepřečtené kapitoly</string>
     <string name="update_check_eol">Tato verze systému Android již není podporována</string>
     <string name="clipboard_copy_error">Kopírování do schránky se nezdařilo</string>
     <string name="tracker_not_logged_in">Nejsi přihlášen/a: %1$s</string>
@@ -606,7 +603,7 @@
     <string name="pref_dual_page_split">Rozdělení na dvě stránky</string>
     <string name="pref_show_navigation_mode_summary">Ukázat oblast klepnutí když je čtečka otevřená</string>
     <string name="theme_system">Sledování systému</string>
-    <string name="action_show_errors">Zobrazit chyby</string>
+    <string name="action_show_errors">Zobrazit podrobnosti o chybě</string>
     <string name="action_sort_chapter_fetch_date">Datum načtení</string>
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
@@ -631,7 +628,7 @@
     <string name="pref_library_update_refresh_trackers_summary">Aktualizovat sledovače při aktualizaci knihovny</string>
     <string name="pref_library_update_refresh_trackers">Automaticky aktualizovat sledovače</string>
     <string name="restrictions">Omezení: %s</string>
-    <string name="action_display_local_badge">Místní odznaky</string>
+    <string name="action_display_local_badge">Lokální manga</string>
     <string name="error_sharing_cover">Při sdílení přebalu došlo k chybě</string>
     <string name="error_saving_cover">Při ukládání přebalu došlo k chybě</string>
     <string name="cover_saved">Přebal uložen</string>
@@ -696,4 +693,12 @@
     <string name="ext_install_service_notif">Instaluji rozšíření…</string>
     <string name="ext_app_info">Info o Aplikaci</string>
     <string name="pref_inverted_colors">Invertované</string>
+    <string name="label_warning">Varování</string>
+    <string name="backup_info">Automatické zálohy jsou vřele doporučeny. Měli byste si uchovat kopii zálohy na více místech.</string>
+    <string name="action_sort_count">Celkem mangy</string>
+    <string name="action_select_inverse">Vybrat obráceně</string>
+    <string name="pref_category_navigation">Navigace</string>
+    <string name="action_display_language_badge">Jazyk</string>
+    <string name="update_72hour">Každé 3 dny</string>
+    <string name="connected_to_wifi">Jen na Wi-Fi</string>
 </resources>

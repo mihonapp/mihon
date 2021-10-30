@@ -56,7 +56,6 @@
     <string name="landscape">Paisagem</string>
     <string name="pref_library_update_interval">Frequência de atualização</string>
     <string name="update_never">Manual</string>
-    <string name="update_3hour">A cada 3 horas</string>
     <string name="update_6hour">A cada 6 horas</string>
     <string name="update_12hour">A cada 12 horas</string>
     <string name="update_24hour">Diariamente</string>
@@ -618,8 +617,6 @@
     <string name="nav_zone_prev">Anterior</string>
     <string name="pref_show_navigation_mode_summary">Mostrar zonas de toque quando o leitor é aberto</string>
     <string name="pref_show_navigation_mode">Mostrar sobreposição da disposição de navegação</string>
-    <string name="update_8hour">A cada 8 horas</string>
-    <string name="update_4hour">A cada 4 horas</string>
     <string name="none">Nenhum</string>
     <string name="pref_dns_over_https">DNS por HTTPS</string>
     <string name="pref_category_auto_download">Transferir automaticamente</string>

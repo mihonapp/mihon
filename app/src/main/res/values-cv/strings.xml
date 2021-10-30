@@ -53,7 +53,6 @@
     <string name="update_24hour">Кашни кун</string>
     <string name="update_12hour">Кашни 12 сехет</string>
     <string name="update_6hour">Кашни 6 сехет</string>
-    <string name="update_3hour">Кашни 3 сехет</string>
     <string name="pref_library_update_interval">Ҫӗнетни тӑтӑшлӑхӗ</string>
     <string name="pref_category_library_update">Пӗтӗм ҫӗнетӳ</string>
     <string name="pref_jump_to_chapters">Уҫӑ сыпӑксем патне куҫ</string>
@@ -583,8 +582,6 @@
     <string name="nav_zone_left">Сулахай</string>
     <string name="nav_zone_next">Малалли</string>
     <string name="nav_zone_prev">Унченхи</string>
-    <string name="update_8hour">Кашни 8 сехет</string>
-    <string name="update_4hour">Кашни 4 сехет</string>
     <string name="pref_dns_over_https">HTTPS урлӑ DNS</string>
     <string name="pref_category_auto_download">Хӑй хальлӗн тиени</string>
     <string name="exclude">Кӑлар: %s</string>

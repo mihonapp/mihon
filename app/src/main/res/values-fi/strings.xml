@@ -127,7 +127,6 @@
     <string name="landscape">Vaakataso</string>
     <string name="pref_library_update_interval">Päivitystiheys</string>
     <string name="update_never">Manuaalinen</string>
-    <string name="update_3hour">Kolmen tunnin välein</string>
     <string name="update_6hour">Kuuden tunnin välein</string>
     <string name="update_12hour">12 tunnin välein</string>
     <string name="update_24hour">Päivittäin</string>
@@ -582,8 +581,6 @@
     <string name="backup_restore_content_full">Varmuuskopiotiedoston tiedot palautetaan.
 \n
 \nSinun on asennattava puuttuvat laajennukset ja kirjauduttava seurantapalveluihin jälkeenpäin käyttääksesi niitä.</string>
-    <string name="update_8hour">Kahdeksan tunnin välein</string>
-    <string name="update_4hour">Neljän tunnin välein</string>
     <string name="nav_zone_right">Oikea</string>
     <string name="nav_zone_left">Vasen</string>
     <string name="nav_zone_next">Seuraava</string>

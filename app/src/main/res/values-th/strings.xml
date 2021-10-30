@@ -51,7 +51,6 @@
     <string name="pref_category_reader">ตัวอ่าน</string>
     <string name="pref_category_advanced">ขั้นสูง</string>
     <string name="pref_category_about">เกี่ยวกับ</string>
-    <string name="update_3hour">ทุก 3 ชั่วโมง</string>
     <string name="update_6hour">ทุก 6 ชั่วโมง</string>
     <string name="update_12hour">ทุก 12 ชั่วโมง</string>
     <string name="update_24hour">ทุกวัน</string>
@@ -374,8 +373,6 @@
     </plurals>
     <string name="pref_library_update_refresh_metadata_summary">ตรวจสอบหน้าปกและรายละเอียดใหม่เมื่ออัปเดตคลัง</string>
     <string name="pref_library_update_refresh_metadata">รีเฟรชเมทาดาทาโดยอัตโนมัติ</string>
-    <string name="update_8hour">ทุก 8 ชั่วโมง</string>
-    <string name="update_4hour">ทุก 4 ชั่วโมง</string>
     <string name="pref_category_library_update">การอัปเดตทั้งหมด</string>
     <string name="pref_jump_to_chapters">ไปที่ตอนเมื่อเปิด</string>
     <string name="pref_category_display">การแสดงผล</string>

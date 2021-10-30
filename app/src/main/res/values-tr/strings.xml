@@ -79,7 +79,6 @@
     <string name="landscape">Yatay</string>
     <string name="pref_library_update_interval">Güncelleme sıklığı</string>
     <string name="update_never">Elle</string>
-    <string name="update_3hour">3 saatte bir</string>
     <string name="update_6hour">6 saatte bir</string>
     <string name="update_12hour">12 saatte bir</string>
     <string name="update_24hour">Her gün</string>
@@ -531,8 +530,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Bu, resmi olmayan veya yanlış işaretlenmiş uzantıların, uygulama içinde yetişkin (18+) içeriği göstermesini engellemez.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Bir bölüm atlanıyor, bunun nedeni bunların kaynakta olmaması veya onları filtreliyor olmanız olabilir</item>
-        <item quantity="other">%d bölüm atlanıyor, bunun nedeni bunların kaynakta olmaması veya onları filtreliyor olmanız olabilir</item>
+        <item quantity="one">1 bölüm atlanıyor, ya kaynakta yok ya da filtrelenmiş</item>
+        <item quantity="other">%d bölüm atlanıyor, ya kaynakta yok ya da filtrelenmiş</item>
     </plurals>
     <string name="no_chapters_error">Bölüm bulunamadı</string>
     <string name="chapter_settings_updated">Öntanımlı bölüm ayarları güncellendi</string>
@@ -582,8 +581,6 @@
     <string name="backup_restore_content_full">Yedek dosyadaki veriler geri yüklenecek.
 \n
 \nEksik uzantıları yüklemeniz ve daha sonra bunları kullanmak için izleme hizmetlerinde oturum açmanız gerekecektir.</string>
-    <string name="update_8hour">8 saatte bir</string>
-    <string name="update_4hour">4 saatte bir</string>
     <string name="nav_zone_right">Sağ</string>
     <string name="nav_zone_left">Sol</string>
     <string name="nav_zone_next">Sonraki</string>
@@ -598,7 +595,7 @@
     <string name="pref_download_new_categories_details">Hariç tutulan kategorilerdeki manga, dahil edilen kategorilerde olsa bile indirilmeyecektir.</string>
     <string name="pref_category_auto_download">Otomatik indir</string>
     <string name="pref_library_update_categories_details">Hariç tutulan kategorilerdeki manga, dahil edilen kategorilerde olsa bile güncellenmeyecektir.</string>
-    <string name="action_show_errors">Hataları göster</string>
+    <string name="action_show_errors">Hata ayrıntılarının tamamını göster</string>
     <string name="update_check_eol">Bu Android sürümü artık desteklenmiyor</string>
     <string name="clipboard_copy_error">Panoya kopyalanamadı</string>
     <string name="rotation_landscape">Yatay</string>
@@ -658,7 +655,7 @@
     <string name="pref_low">Düşük</string>
     <string name="pref_high">Yüksek</string>
     <string name="pref_highest">En yüksek</string>
-    <string name="pref_hide_threshold">Kaydırma algılandığında menüyü gizle</string>
+    <string name="pref_hide_threshold">Kaydırmada menüyü gizleme hassasiyeti</string>
     <string name="pref_inverted_colors">Ters Çevrilmiş</string>
     <string name="pref_relative_time_long">Uzun (Kısa+, n gün önce)</string>
     <string name="pref_relative_time_short">Kısa (Bugün, Dün)</string>
@@ -690,7 +687,10 @@
     <string name="label_warning">Uyarı</string>
     <string name="action_display_language_badge">Dil</string>
     <string name="backup_info">Otomatik yedeklemeler şiddetle tavsiye edilir. Kopyaları başka yerlerde de tutmalısınız.</string>
-    <string name="notification_size_warning">Büyük güncellemeler pil kullanımının artmasına ve kaynakların yavaşlamasına neden olabilir</string>
+    <string name="notification_size_warning">Uyarı: büyük güncellemeler kaynaklara zarar verir ve daha yavaş güncellemelere ve de pil kullanımının artmasına neden olabilir</string>
     <string name="pref_verbose_logging">Ayrıntılı günlük kaydı</string>
     <string name="pref_verbose_logging_summary">Ayrıntılı günlükleri sistem günlüğüne yaz (uygulama performansını düşürür)</string>
+    <string name="connected_to_wifi">Yalnızca Wi-Fi\'de</string>
+    <string name="download_queue_size_warning">Uyarı: büyük toplu indirmeler kaynakların yavaşlamasına ve/veya Tachiyomi\'yi engellemesine neden olabilir</string>
+    <string name="update_72hour">Her 3 günde</string>
 </resources>

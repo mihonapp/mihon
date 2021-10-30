@@ -76,7 +76,6 @@
     <string name="landscape">ভূদৃশ্য</string>
     <string name="pref_library_update_interval">হালনাগাদের হার</string>
     <string name="update_never">স্বনির্ধারিত</string>
-    <string name="update_3hour">প্রতি ৩ ঘন্টায়</string>
     <string name="update_6hour">প্রতি ৬ ঘন্টায়</string>
     <string name="update_12hour">প্রতি ১২ ঘন্টায়</string>
     <string name="update_24hour">প্রতিদিন</string>
@@ -636,8 +635,6 @@
     <string name="pref_library_update_refresh_trackers_summary">লাইব্রেরি আপডেট করার সময় ট্র্যাকার আপডেট করুন</string>
     <string name="pref_library_update_refresh_trackers">স্বয়ংক্রিয়ভাবে রিফ্রেশ ট্র্যাকার</string>
     <string name="restrictions">বিধিনিষেধ: %s</string>
-    <string name="update_8hour">প্রতি ৮ ঘন্টায়</string>
-    <string name="update_4hour">প্রতি ৪ ঘন্টায়</string>
     <plurals name="relative_time">
         <item quantity="one">গতকাল</item>
         <item quantity="other">%1$d দিন আগে</item>

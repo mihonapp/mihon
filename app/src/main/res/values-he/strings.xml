@@ -176,7 +176,6 @@
     <string name="update_24hour">פעם ביום</string>
     <string name="update_12hour">כל 12 שעות</string>
     <string name="update_6hour">כל 6 שעות</string>
-    <string name="update_3hour">כל 3 שעות</string>
     <string name="update_never">ידני</string>
     <string name="pref_library_update_interval">תדירות עדכון ספרייה</string>
     <string name="pref_category_library_update">עדכון גלובלי</string>
@@ -437,7 +436,6 @@
     <string name="relative_time_today">היום</string>
     <string name="pref_category_display">הצג</string>
     <string name="pref_jump_to_chapters">קפצו לפרקים בפתיחה</string>
-    <string name="update_8hour">כל 8 שעות</string>
     <string name="pref_library_update_refresh_trackers_summary">עדכן עוקבים בעת עדכון הספרייה</string>
     <string name="action_enable_all">אפשר הכל</string>
     <string name="action_disable_all">השבת הכל</string>
@@ -458,6 +456,5 @@
     <string name="theme_midnightdusk">דמדומים של חצות</string>
     <string name="pref_side_nav_icon_alignment">יישור סמלי ניווט בצד</string>
     <string name="theme_tako">לכן</string>
-    <string name="update_4hour">כל 4 שעות</string>
     <string name="pref_library_update_refresh_metadata">רענן נתונים באופן אוטומטי</string>
 </resources>

@@ -69,7 +69,6 @@
     <string name="landscape">Paysage</string>
     <string name="pref_library_update_interval">Fréquence de mise à jour de la bibliothèque</string>
     <string name="update_never">Manuelle</string>
-    <string name="update_3hour">Toutes les 3 heures</string>
     <string name="update_6hour">Toutes les 6 heures</string>
     <string name="update_12hour">Toutes les 12 heures</string>
     <string name="update_24hour">Tous les jours</string>
@@ -616,8 +615,6 @@
     <string name="backup_restore_content_full">Les données du fichier de sauvegarde seront restaurées.
 \n
 \nVous devrez installer les extensions manquantes et vous connecter ensuite aux services de suivi pour les utiliser.</string>
-    <string name="update_8hour">Toutes les 8 heures</string>
-    <string name="update_4hour">Toutes les 4 heures</string>
     <string name="nav_zone_prev">Précédent</string>
     <string name="pref_dns_over_https">DNS via HTTPS</string>
     <string name="nav_zone_right">Droite</string>
@@ -632,7 +629,7 @@
     <string name="pref_library_update_categories_details">Les mangas dans les catégories exclues ne seront pas mis à jour même s\'ils sont aussi dans les catégories inclues.</string>
     <string name="pref_download_new_categories_details">Les mangas des catégories exclues ne seront pas mis à jour même s\'ils appartiennent aussi à des catégories incluses.</string>
     <string name="pref_category_auto_download">Téléchargement automatique</string>
-    <string name="action_show_errors">Afficher les erreurs</string>
+    <string name="action_show_errors">Voir tous les détails de l\'erreur</string>
     <string name="update_check_eol">Cette version d\'Android n\'est plus supportée</string>
     <string name="clipboard_copy_error">Échec de la copie dans le presse-papiers</string>
     <string name="rotation_landscape">Paysage</string>
@@ -692,7 +689,7 @@
     <string name="pref_low">Basse</string>
     <string name="pref_high">Élevée</string>
     <string name="pref_highest">La plus élevée</string>
-    <string name="pref_hide_threshold">Masquage automatique du menu par sensibilité au défilement</string>
+    <string name="pref_hide_threshold">Sensibilité pour masquer le menu lors du défilement</string>
     <string name="pref_inverted_colors">Inversé</string>
     <string name="pref_relative_time_long">Long (Court+, il y a n jours)</string>
     <string name="pref_relative_time_short">Court (Aujourd\'hui, Hier)</string>
@@ -727,6 +724,9 @@
     <string name="pref_verbose_logging_summary">Imprimer les journaux détaillés dans le journal du système (réduit les performances de l\'application)</string>
     <string name="action_display_language_badge">Langue</string>
     <string name="label_warning">Attention</string>
-    <string name="notification_size_warning">Les mises à jour importantes peuvent entraîner une augmentation de la consommation de la batterie et un ralentissement des sources</string>
+    <string name="notification_size_warning">Avertissement : les mises à jour importantes nuisent aux sources et peuvent entraîner un ralentissement des mises à jour ainsi qu\'une augmentation de l\'utilisation de la batterie</string>
     <string name="backup_info">Les sauvegardes automatiques sont fortement conseillées. Nous vous recommandons aussi de conserver des copies ailleurs.</string>
+    <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
+    <string name="update_72hour">Tous les 3 jours</string>
+    <string name="download_queue_size_warning">Avertissement : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Tachiyomi</string>
 </resources>

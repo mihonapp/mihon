@@ -44,10 +44,7 @@
     <string name="update_48hour">Saben 2 dina</string>
     <string name="update_24hour">Saben dina</string>
     <string name="update_12hour">Saben 12 jam</string>
-    <string name="update_8hour">Saben 8 jam</string>
     <string name="update_6hour">Saben 6 jam</string>
-    <string name="update_4hour">Saben 4 jam</string>
-    <string name="update_3hour">Saben 3 jam</string>
     <string name="landscape">Lansekap</string>
     <string name="portrait">Potret</string>
     <string name="pref_category_display">Tampilan</string>

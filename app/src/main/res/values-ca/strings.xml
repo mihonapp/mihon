@@ -79,7 +79,6 @@
     <string name="landscape">Horitzontal</string>
     <string name="pref_library_update_interval">Freqüència d\'actualització</string>
     <string name="update_never">Manual</string>
-    <string name="update_3hour">Cada 3 hores</string>
     <string name="update_6hour">Cada 6 hores</string>
     <string name="update_12hour">Cada 12 hores</string>
     <string name="update_24hour">Cada dia</string>
@@ -582,8 +581,6 @@
     <string name="backup_restore_content_full">Es restauraran les dades del fitxer de còpia de seguretat.
 \n
 \nCaldrà que instal·leu les extensions que manquin i que després inicieu la sessió als serveis de seguiment per a utilitzar-los.</string>
-    <string name="update_8hour">Cada 8 hores</string>
-    <string name="update_4hour">Cada 4 hores</string>
     <string name="update_check_eol">Aquesta versió d\'Android ja no és compatible</string>
     <string name="error_no_match">No s\'ha trobat cap coincidència</string>
     <string name="source_unsupported">Font no es compatible</string>

@@ -74,7 +74,6 @@
     <string name="landscape">Layar mendatar</string>
     <string name="pref_library_update_interval">Frekuensi pembaruan</string>
     <string name="update_never">Manual</string>
-    <string name="update_3hour">Tiap 3 jam</string>
     <string name="update_6hour">Tiap 6 jam</string>
     <string name="update_12hour">Tiap 12 jam</string>
     <string name="update_24hour">Tiap hari</string>
@@ -518,7 +517,7 @@
     <string name="pref_category_delete_chapters">Hapus chapter</string>
     <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau salah dilabeli untuk menampilkan konten NSFW (18+) dalam aplikasi.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Terdapat %d chapter hilang</item>
+        <item quantity="other">Melewati %d chapter, diantara sumber menghilangkannya atau telah disaringkan</item>
     </plurals>
     <string name="no_chapters_error">Chapter tidak ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan chapter default diperbarui</string>
@@ -561,10 +560,8 @@
     <string name="pref_viewer_nav">Tata letak navigasi</string>
     <string name="right_and_left_nav">Kanan dan Kiri</string>
     <string name="action_display_show_number_of_items">Tampilkan jumlah item</string>
-    <string name="update_8hour">Tiap 8 jam</string>
-    <string name="update_4hour">Tiap 4 jam</string>
     <string name="none">Kosong</string>
-    <string name="action_show_errors">Tampilkan error</string>
+    <string name="action_show_errors">Tampilkan detail error</string>
     <string name="action_sort_chapter_fetch_date">Tanggal diambil</string>
     <string name="pref_reader_actions">Aksi</string>
     <string name="nav_zone_right">Kanan</string>
@@ -607,7 +604,7 @@
     <string name="pref_library_update_refresh_trackers_summary">Perbarui pelacak ketika memperbarui pustaka</string>
     <string name="pref_library_update_refresh_trackers">Segarkan pelacak secara otomatis</string>
     <string name="restrictions">Batasan: %s</string>
-    <string name="action_display_local_badge">Lokal</string>
+    <string name="action_display_local_badge">Manga lokal</string>
     <string name="error_sharing_cover">Gagal berbagi sampul</string>
     <string name="error_saving_cover">Gagal menyimpan sampul</string>
     <string name="cover_saved">Sampul disimpan</string>
@@ -642,7 +639,7 @@
     <string name="label_background_activity">Aktivitas latar belakang</string>
     <string name="pref_lowest">Terendah</string>
     <string name="pref_low">Rendah</string>
-    <string name="pref_hide_threshold">Otomatis sembunyikan menu menurut sensitivitas scroll</string>
+    <string name="pref_hide_threshold">Sensitivitas sembunyikan menu saat scroll</string>
     <string name="pref_high">Tinggi</string>
     <string name="pref_highest">Tertinggi</string>
     <string name="pref_inverted_colors">Terbalik</string>
@@ -650,7 +647,7 @@
     <string name="pref_relative_time_short">Pendek (Hari Ini, Kemarin)</string>
     <string name="pref_relative_format">Waktu relatif</string>
     <plurals name="relative_time">
-        <item quantity="other">%1$d</item>
+        <item quantity="other">%1$d hari yang lalu</item>
     </plurals>
     <string name="recently">Baru saja</string>
     <string name="relative_time_today">Hari Ini</string>
@@ -672,4 +669,15 @@
     <string name="ext_installer_legacy">Warisan</string>
     <string name="ext_installer_pref">Pemasang</string>
     <string name="action_sort_count">Total manga</string>
+    <string name="notification_size_warning">Pembaruan berskala besar membahayakan sumber, dapat membuat pembaruan lambat dan dapat meningkatkan penggunaan baterai</string>
+    <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Tachiyomi</string>
+    <string name="label_warning">Peringatan</string>
+    <string name="pref_verbose_logging_summary">Cetak catatan berlebih ke catatan sistem (mengurangi kinerja aplikasi)</string>
+    <string name="backup_info">Pencadangan otomatis sangat disarankan. Anda juga harus menyimpan duplikat di tempat lain.</string>
+    <string name="pref_verbose_logging">Pencatatan berlebihan</string>
+    <string name="pref_custom_color_filter">Filter warna kustom</string>
+    <string name="pref_custom_brightness">Atur kecerahan</string>
+    <string name="action_display_language_badge">Bahasa</string>
+    <string name="update_72hour">Tiap 3 hari</string>
+    <string name="connected_to_wifi">Hanya pada Wi-FI</string>
 </resources>

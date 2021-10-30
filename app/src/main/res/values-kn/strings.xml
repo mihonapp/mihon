@@ -263,7 +263,6 @@
     <string name="update_24hour">ಪ್ರತಿದಿನ</string>
     <string name="update_12hour">ಪ್ರತಿ 12 ಗಂಟೆಗಳಿಗೊಮ್ಮೆ</string>
     <string name="update_6hour">ಪ್ರತಿ 6 ಗಂಟೆಗಳಿಗೊಮ್ಮೆ</string>
-    <string name="update_3hour">ಪ್ರತಿ 3 ಗಂಟೆಗಳಿಗೊಮ್ಮೆ</string>
     <string name="update_never">ಸ್ವಂತ ಮಾಡು</string>
     <string name="pref_library_update_interval">ನವೀಕರಣ ಆವರ್ತನ</string>
     <string name="pref_category_library_update">ನವೀಕರಣಗಳು</string>
@@ -560,8 +559,6 @@
     <string name="pref_show_nsfw_source">ಮೂಲಗಳ ಪಟ್ಟಿಯಲ್ಲಿ ತೋರಿಸಿ</string>
     <string name="pref_category_nsfw_content">ವಯಸ್ಕ (18+) ಮೂಲಗಳು</string>
     <string name="action_filter_tracked">ಟ್ರ್ಯಾಕ್ ಮಾಡಲಾದ</string>
-    <string name="update_8hour">ಪ್ರತಿ ೮ ಗಂಟೆಗೆ</string>
-    <string name="update_4hour">ಪ್ರತಿ ೪ ಗಂಟೆಗೆ</string>
     <string name="action_desc">ಮೊದಲು ಚಿಕ್ಕದು</string>
     <string name="action_asc">ಮೊದಲ ಸಾಣ್ಣದ್ದು</string>
     <string name="action_order_by_chapter_number">ಅಧ್ಯಾಯ ಸಂಖ್ಯೆಯಿಂದ</string>

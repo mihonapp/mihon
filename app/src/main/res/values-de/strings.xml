@@ -72,7 +72,6 @@
     <string name="landscape">Querformat</string>
     <string name="pref_library_update_interval">Häufigkeit der Aktualisierung</string>
     <string name="update_never">Manuell</string>
-    <string name="update_3hour">Alle 3 Stunden</string>
     <string name="update_6hour">Alle 6 Stunden</string>
     <string name="update_12hour">Alle 12 Stunden</string>
     <string name="update_24hour">Täglich</string>
@@ -235,7 +234,7 @@
     <string name="update_check_confirm">Herunterladen</string>
     <string name="update_check_ignore">Ignorieren</string>
     <string name="update_check_no_new_updates">Keine neue Aktualisierung verfügbar</string>
-    <string name="update_check_look_for_updates">Suche nach Aktualisierungen …</string>
+    <string name="update_check_look_for_updates">Suche nach Aktualisierungen…</string>
     <string name="update_check_notification_download_in_progress">Herunterladen…</string>
     <string name="update_check_notification_download_complete">Download abgeschlossen</string>
     <string name="update_check_notification_download_error">Fehler beim Herunterladen</string>
@@ -427,7 +426,7 @@
     <string name="add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="confirm_exit">Zum Beenden nochmal die Zurück-Taste drücken</string>
     <string name="information_webview_required">WebView ist für Tachiyomi erforderlich</string>
-    <string name="licenses">Open Source-Lizenzen</string>
+    <string name="licenses">Open-Source-Lizenzen</string>
     <string name="website">Website</string>
     <string name="pref_confirm_exit">Beenden bestätigen</string>
     <string name="label_downloaded_only">Nur Heruntergeladenes</string>
@@ -582,8 +581,6 @@
     <string name="backup_restore_content_full">Die Daten der Sicherungsdatei werden wiederhergestellt.
 \n
 \nDu musst jegliche fehlende Erweiterungen installieren und dich anschließend bei den Tracking-Anbietern einloggen, um sie zu benutzen.</string>
-    <string name="update_8hour">Alle 8 Stunden</string>
-    <string name="update_4hour">Alle 4 Stunden</string>
     <string name="pref_show_navigation_mode_summary">Tipp-Zonen anzeigen, wenn der Leser geöffnet wird</string>
     <string name="pref_show_navigation_mode">Navigationslayout-Overlay anzeigen</string>
     <string name="nav_zone_right">Rechts</string>
@@ -598,7 +595,7 @@
     <string name="pref_download_new_categories_details">Manga in ausgeschlossenen Kategorien werden nicht heruntergeladen, auch wenn sie in eingeschlossenen Kategorien vorhanden sind.</string>
     <string name="pref_category_auto_download">Automatisches Herunterladen</string>
     <string name="pref_library_update_categories_details">Manga in ausgeschlossenen Kategorien werden nicht aktualisiert, auch wenn sie in eingeschlossenen Kategorien vorhanden sind.</string>
-    <string name="action_show_errors">Fehler anzeigen</string>
+    <string name="action_show_errors">Vollständige Fehlerdetails anzeigen</string>
     <string name="update_check_eol">Diese Android-Version wird nicht mehr unterstützt</string>
     <string name="clipboard_copy_error">Kopieren in die Zwischenablage fehlgeschlagen</string>
     <string name="rotation_landscape">Querformat</string>
@@ -658,7 +655,7 @@
     <string name="pref_low">Niedrig</string>
     <string name="pref_high">Hoch</string>
     <string name="pref_highest">Höchste</string>
-    <string name="pref_hide_threshold">Empfindlichkeit des automatischen Versteckens des Menüs beim Scrollen</string>
+    <string name="pref_hide_threshold">Empfindlichkeit für das Ausblenden des Menüs beim Scrollen</string>
     <string name="pref_inverted_colors">Invertiert</string>
     <string name="pref_relative_time_short">Kurz (Heute, Gestern)</string>
     <string name="pref_relative_format">Relative Zeitstempel</string>
@@ -693,7 +690,9 @@
     <string name="pref_verbose_logging_summary">Ausführliche Protokolle im Systemprotokoll ausgeben (verringert die Anwendungsleistung)</string>
     <string name="action_display_language_badge">Sprache</string>
     <string name="label_warning">Warnung</string>
-    <string name="notification_size_warning">Große Aktualisierungen könnten zu einem höheren Akkuverbrauch und langsameren Quellen führen</string>
+    <string name="notification_size_warning">Achtung: Große Aktualisierungen schaden Quellen und könnten zu langsameren Aktualisierungen sowie höherem Akkuverbrauch führen</string>
     <string name="backup_info">Automatische Sicherungen sind sehr zu empfehlen. Du solltest auch Kopien an anderen Orten aufbewahren.</string>
     <string name="connected_to_wifi">Nur über WLAN</string>
+    <string name="update_72hour">Alle 3 Tage</string>
+    <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Tachiyomi blockieren</string>
 </resources>
