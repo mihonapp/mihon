@@ -246,6 +246,7 @@
     <string name="all_lang">All</string>
     <string name="ext_updates_pending">Updates pending</string>
     <string name="ext_update">Update</string>
+    <string name="ext_update_all">Update all</string>
     <string name="ext_obsolete">Obsolete</string>
     <string name="ext_install">Install</string>
     <string name="ext_pending">Pending</string>

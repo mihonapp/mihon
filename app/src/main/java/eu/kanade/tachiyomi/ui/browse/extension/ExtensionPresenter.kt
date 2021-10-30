@@ -2,7 +2,9 @@ package eu.kanade.tachiyomi.ui.browse.extension
 
 import android.app.Application
 import android.os.Bundle
+import android.view.View
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -76,6 +78,14 @@ open class ExtensionPresenter(
 
         if (updatesSorted.isNotEmpty()) {
             val header = ExtensionGroupItem(context.getString(R.string.ext_updates_pending), updatesSorted.size, true)
+            if (preferences.extensionInstaller().get() != PreferenceValues.ExtensionInstaller.LEGACY) {
+                header.actionLabel = context.getString(R.string.ext_update_all)
+                header.actionOnClick = View.OnClickListener { _ ->
+                    extensions
+                        .filter { it.extension is Extension.Installed && it.extension.hasUpdate }
+                        .forEach { updateExtension(it.extension as Extension.Installed) }
+                }
+            }
             items += updatesSorted.map { extension ->
                 ExtensionItem(extension, header, currentDownloads[extension.pkgName] ?: InstallStep.Idle)
             }
