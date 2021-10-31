@@ -268,7 +268,7 @@ class LibraryUpdateService(
             .sortedWith(rankingScheme[selectedScheme])
 
         // Warn when excessively checking a single source
-        val maxUpdatesFromSource = mangaToUpdate.groupBy { it.source }.maxOf { it.value.size }
+        val maxUpdatesFromSource = mangaToUpdate.groupBy { it.source }.maxOfOrNull { it.value.size } ?: 0
         if (maxUpdatesFromSource > MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
             toast(R.string.notification_size_warning, Toast.LENGTH_LONG)
         }
