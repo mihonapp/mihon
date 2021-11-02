@@ -43,7 +43,6 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
@@ -386,24 +385,19 @@ class LibraryUpdateService(
     suspend fun updateManga(manga: Manga): Pair<List<Chapter>, List<Chapter>> {
         val source = sourceManager.getOrStub(manga.source)
 
-        // Update manga details metadata in the background
+        // Update manga details metadata
         if (preferences.autoUpdateMetadata()) {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                logcat(LogPriority.ERROR, exception)
+            val updatedManga = source.getMangaDetails(manga.toMangaInfo())
+            val sManga = updatedManga.toSManga()
+            // Avoid "losing" existing cover
+            if (!sManga.thumbnail_url.isNullOrEmpty()) {
+                manga.prepUpdateCover(coverCache, sManga, false)
+            } else {
+                sManga.thumbnail_url = manga.thumbnail_url
             }
-            GlobalScope.launch(Dispatchers.IO + handler) {
-                val updatedManga = source.getMangaDetails(manga.toMangaInfo())
-                val sManga = updatedManga.toSManga()
-                // Avoid "losing" existing cover
-                if (!sManga.thumbnail_url.isNullOrEmpty()) {
-                    manga.prepUpdateCover(coverCache, sManga, false)
-                } else {
-                    sManga.thumbnail_url = manga.thumbnail_url
-                }
 
-                manga.copyFrom(sManga)
-                db.insertManga(manga).executeAsBlocking()
-            }
+            manga.copyFrom(sManga)
+            db.insertManga(manga).executeAsBlocking()
         }
 
         val chapters = source.getChapterList(manga.toMangaInfo())
