@@ -27,7 +27,7 @@ data class ExtensionItem(
      * Returns the layout resource of this item.
      */
     override fun getLayoutRes(): Int {
-        return R.layout.extension_card_item
+        return R.layout.extension_item
     }
 
     /**

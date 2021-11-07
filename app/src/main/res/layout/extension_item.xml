@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:layout_marginEnd="16dp"
-    android:background="@drawable/list_item_selector_background">
+    android:background="@drawable/list_item_selector_background"
+    android:paddingEnd="16dp">
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/icon"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingStart="16dp"
@@ -21,7 +21,7 @@
         tools:src="@mipmap/ic_launcher_round" />
 
     <TextView
-        android:id="@+id/ext_title"
+        android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
@@ -30,7 +30,7 @@
         android:textAppearance="?attr/textAppearanceBody2"
         app:layout_constraintBottom_toTopOf="@id/lang"
         app:layout_constraintEnd_toStartOf="@id/ext_button"
-        app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="Batoto" />
@@ -42,8 +42,8 @@
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceCaption"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@+id/ext_title"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toBottomOf="@+id/name"
         tools:text="English"
         tools:visibility="visible" />
 
@@ -55,7 +55,7 @@
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceCaption"
         app:layout_constraintStart_toEndOf="@id/lang"
-        app:layout_constraintTop_toBottomOf="@+id/ext_title"
+        app:layout_constraintTop_toBottomOf="@+id/name"
         tools:text="Version" />
 
     <TextView
@@ -67,7 +67,7 @@
         android:textAppearance="?attr/textAppearanceCaption"
         android:textColor="?attr/colorError"
         app:layout_constraintStart_toEndOf="@id/version"
-        app:layout_constraintTop_toBottomOf="@+id/ext_title"
+        app:layout_constraintTop_toBottomOf="@+id/name"
         tools:text="Warning" />
 
     <Button
