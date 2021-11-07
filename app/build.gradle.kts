@@ -28,7 +28,6 @@ android {
         applicationId = "eu.kanade.tachiyomi"
         minSdk = AndroidConfig.minSdk
         targetSdk = AndroidConfig.targetSdk
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 71
         versionName = "0.12.3"
 
@@ -44,6 +43,8 @@ android {
         ndk {
             abiFilters += SUPPORTED_ABIS
         }
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     splits {
@@ -112,6 +113,11 @@ android {
 
     buildFeatures {
         viewBinding = true
+
+        // Disable some unused things
+        aidl = false
+        renderScript = false
+        shaders = false
     }
 
     lint {
