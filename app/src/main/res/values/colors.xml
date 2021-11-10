@@ -21,9 +21,7 @@
     <color name="on_background_monet" tools:targetApi="31">@color/on_surface_monet</color>
 
     <!-- Blue Theme -->
-    <color name="primary_blue">#3598FE</color>
     <color name="accent_blue">#54759E</color>
-    <color name="ripple_colored_blue">#1F54759E</color>
 
     <!-- Green Apple Theme -->
     <color name="accent_greenapple">#188140</color>

@@ -31,11 +31,11 @@ object PreferenceValues {
         GREEN_APPLE(R.string.theme_greenapple),
         TEALTURQUOISE(R.string.theme_tealturquoise),
         YINYANG(R.string.theme_yinyang),
-        BLUE(R.string.theme_blue),
 
         // Deprecated
         DARK_BLUE(null),
         HOT_PINK(null),
+        BLUE(null),
     }
 
     enum class TappingInvertMode(val shouldInvertHorizontal: Boolean = false, val shouldInvertVertical: Boolean = false) {
@@ -61,6 +61,6 @@ object PreferenceValues {
     enum class ExtensionInstaller {
         LEGACY,
         PACKAGEINSTALLER,
-        SHIZUKU
+        SHIZUKU,
     }
 }

@@ -85,15 +85,6 @@
     <!-- Monet theme only support S+ -->
     <style name="Theme.Tachiyomi.Monet" />
 
-    <!--== Blue Theme ==-->
-    <style name="Theme.Tachiyomi.Blue">
-        <!-- Theme Colors -->
-        <item name="colorToolbar">@color/accent_blue</item>
-        <item name="colorOnToolbar">@color/md_white_1000</item>
-        <item name="colorPrimary">@color/primary_blue</item>
-        <item name="colorControlHighlight">@color/ripple_colored_blue</item>
-    </style>
-
     <!--== Green Apple Theme ==-->
     <style name="Theme.Tachiyomi.GreenApple">
         <!-- Theme Colors -->
@@ -171,26 +162,6 @@
 
     <!--== AMOLED Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.Amoled" parent="" />
-
-    <!--== Colored Bars (toolbar-navbar-navrail) Mode Overlay ==-->
-    <style name="ThemeOverlay.Tachiyomi.ColoredBars" parent="">
-        <!-- Base background/text colors -->
-        <item name="background">?attr/colorPrimary</item>
-
-        <!-- Themes -->
-        <item name="actionBarTheme">@style/ThemeOverlay.Tachiyomi.ActionBar.Colored</item>
-        <item name="toolbarNavigationButtonStyle">@style/Widget.Tachiyomi.Toolbar.Button.Navigation</item>
-        <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Primary</item>
-        <item name="toolbarStyle">@style/Widget.Tachiyomi.Toolbar.Colored</item>
-        <item name="tabStyle">@style/Widget.Tachiyomi.TabLayout.Colored</item>
-        <item name="bottomNavigationStyle">@style/Widget.Tachiyomi.BottomNavigationView.Colored</item>
-        <item name="navigationRailStyle">@style/Widget.Tachiyomi.NavigationRailView.Colored</item>
-
-        <!-- Status/Navigation bar -->
-        <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/lightSystemBarsOnPrimary</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">?attr/lightSystemBarsOnPrimary</item>
-        <item name="android:navigationBarColor">?attr/colorToolbar</item>
-    </style>
 
     <!--===============-->
     <!-- Launch Screen -->

@@ -34,10 +34,6 @@ abstract class BaseThemedActivity : AppCompatActivity() {
                 PreferenceValues.AppTheme.MONET -> {
                     resIds += R.style.Theme_Tachiyomi_Monet
                 }
-                PreferenceValues.AppTheme.BLUE -> {
-                    resIds += R.style.Theme_Tachiyomi_Blue
-                    resIds += R.style.ThemeOverlay_Tachiyomi_ColoredBars
-                }
                 PreferenceValues.AppTheme.GREEN_APPLE -> {
                     resIds += R.style.Theme_Tachiyomi_GreenApple
                 }

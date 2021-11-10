@@ -33,7 +33,6 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
@@ -568,8 +567,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
             binding.root.isLiftAppBarOnScroll = to !is NoAppBarElevationController
 
-            binding.appbar.isTransparentWhenNotLifted = to is MangaController &&
-                preferences.appTheme().get() != PreferenceValues.AppTheme.BLUE
+            binding.appbar.isTransparentWhenNotLifted = to is MangaController
             binding.controllerContainer.overlapHeader = to is MangaController
         }
     }
