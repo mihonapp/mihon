@@ -316,6 +316,7 @@ fun Context.isTablet(): Boolean {
 fun Context.prepareTabletUiContext(): Context {
     val configuration = resources.configuration
     val expected = when (Injekt.get<PreferencesHelper>().tabletUiMode().get()) {
+        PreferenceValues.TabletUiMode.AUTOMATIC -> isTablet()
         PreferenceValues.TabletUiMode.ALWAYS -> true
         PreferenceValues.TabletUiMode.LANDSCAPE -> configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         PreferenceValues.TabletUiMode.NEVER -> false

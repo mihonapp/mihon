@@ -53,6 +53,7 @@ object PreferenceValues {
     }
 
     enum class TabletUiMode {
+        AUTOMATIC,
         ALWAYS,
         LANDSCAPE,
         NEVER,
