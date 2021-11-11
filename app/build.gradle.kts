@@ -184,7 +184,7 @@ dependencies {
     implementation("org.conscrypt:conscrypt-android:2.5.2")
 
     // Data serialization (JSON, protobuf)
-    val kotlinSerializationVersion = "1.3.0"
+    val kotlinSerializationVersion = "1.3.1"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinSerializationVersion")
 
@@ -235,7 +235,7 @@ dependencies {
     implementation("com.github.gpanther:java-nat-sort:natural-comparator-1.1")
 
     // UI libraries
-    implementation("com.google.android.material:material:1.5.0-alpha05")
+    implementation("com.google.android.material:material:1.5.0-beta01")
     implementation("com.github.dmytrodanylyk.android-process-button:library:1.0.4")
     implementation("com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533")
     implementation("com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533")
