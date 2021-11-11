@@ -60,7 +60,10 @@ fun Manga.shouldDownloadNewChapters(db: DatabaseHelper, prefs: PreferencesHelper
     if (!downloadNew) return false
 
     val categoriesToDownload = prefs.downloadNewCategories().get().map(String::toInt)
-    if (categoriesToDownload.isEmpty()) return true
+    val categoriesToExclude = prefs.downloadNewCategoriesExclude().get().map(String::toInt)
+
+    // Default: download from all categories
+    if (categoriesToDownload.isEmpty() && categoriesToExclude.isEmpty()) return true
 
     // Get all categories, else default category (0)
     val categoriesForManga =
@@ -68,8 +71,9 @@ fun Manga.shouldDownloadNewChapters(db: DatabaseHelper, prefs: PreferencesHelper
             .mapNotNull { it.id }
             .takeUnless { it.isEmpty() } ?: listOf(0)
 
-    val categoriesToExclude = prefs.downloadNewCategoriesExclude().get().map(String::toInt)
+    // In excluded category
     if (categoriesForManga.intersect(categoriesToExclude).isNotEmpty()) return false
 
+    // In included category
     return categoriesForManga.intersect(categoriesToDownload).isNotEmpty()
 }
