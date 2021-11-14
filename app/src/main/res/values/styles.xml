@@ -176,9 +176,6 @@
     <!--=================-->
     <style name="Widget.Tachiyomi.TabLayout" parent="Widget.Material3.TabLayout">
         <item name="tabGravity">center</item>
-        <item name="tabIndicator">@drawable/tab_indicator</item>
-        <item name="tabIndicatorFullWidth">false</item>
-        <item name="tabIndicatorHeight">3dp</item>
         <item name="tabInlineLabel">true</item>
         <item name="tabMinWidth">75dp</item>
         <item name="tabMode">scrollable</item>
