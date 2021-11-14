@@ -55,13 +55,6 @@
         <item>@string/zoom_start_center</item>
     </string-array>
 
-    <string-array name="zoom_start_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
     <string-array name="rotation_type">
         <item>@string/label_default</item>
         <item>@string/rotation_free</item>

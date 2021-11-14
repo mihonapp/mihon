@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.widget.TextViewCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getThemeColor
 
@@ -31,7 +32,7 @@ class QuadStateTextView @JvmOverloads constructor(context: Context, attrs: Attri
             context.getThemeColor(R.attr.colorAccent)
         }
         if (tint != 0) {
-            compoundDrawableTintList = ColorStateList.valueOf(tint)
+            TextViewCompat.setCompoundDrawableTintList(this, ColorStateList.valueOf(tint))
         }
     }
 

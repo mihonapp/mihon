@@ -49,8 +49,7 @@
         app:layout_constraintEnd_toStartOf="@id/chapter_title"
         app:srcCompat="@drawable/ic_bookmark_24dp"
         app:tint="?attr/colorAccent"
-        tools:visibility="visible"
-         />
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/chapter_title"

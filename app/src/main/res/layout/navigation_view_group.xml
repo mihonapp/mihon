@@ -24,6 +24,7 @@
         android:id="@+id/expand_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:tint="?attr/colorOnBackground" />
+        app:tint="?attr/colorOnBackground"
+        tools:ignore="ContentDescription" />
 
 </LinearLayout>

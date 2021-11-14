@@ -59,7 +59,6 @@
     <color name="accent_yinyang">#000000</color>
     <color name="color_on_secondary_yinyang">#FFFFFF</color>
     <color name="ripple_colored_yinyang">#999999</color>
-    <color name="chip_text_yinyang">#000000</color>
 
     <!-- Yotsuba Theme -->
     <color name="accent_yotsuba">#FC8C5C</color>

@@ -7,7 +7,7 @@
         android:icon="@drawable/ic_share_24dp"
         android:title="@string/action_share"
         app:iconTint="?attr/colorOnToolbar"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_save_cover"
         android:icon="@drawable/ic_save_24dp"
