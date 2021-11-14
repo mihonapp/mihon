@@ -16,7 +16,7 @@
         android:drawablePadding="16dp"
         android:gravity="center_vertical|start"
         android:maxLines="1"
-        android:textAppearance="?attr/textAppearanceBody2"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
         tools:text="Title" />
 
 </LinearLayout>

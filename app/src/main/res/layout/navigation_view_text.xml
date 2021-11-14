@@ -23,7 +23,7 @@
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBody2" />
+            android:textAppearance="?attr/textAppearanceBodyMedium" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

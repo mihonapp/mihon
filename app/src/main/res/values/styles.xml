@@ -131,7 +131,7 @@
 
         <!-- Smaller text/height -->
         <item name="chipMinHeight">24dp</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
 
         <!-- Collapse horizontal margin -->
         <item name="chipMinTouchTargetSize">30dp</item>
@@ -267,7 +267,7 @@
     <!--Preferences-->
     <!--===========-->
     <style name="PreferenceThemeOverlay.Tachiyomi">
-        <item name="preferenceCategoryTitleTextAppearance">?attr/textAppearanceBody2</item>
+        <item name="preferenceCategoryTitleTextAppearance">?attr/textAppearanceBodyMedium</item>
         <item name="switchPreferenceCompatStyle">@style/PreferenceThemeOverlay.Tachiyomi.SwitchPreferenceCompat</item>
     </style>
 

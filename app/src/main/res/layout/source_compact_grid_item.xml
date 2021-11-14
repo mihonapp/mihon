@@ -46,7 +46,7 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="4"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
             android:textSize="12sp"
             android:textColor="@color/md_white_1000"
             tools:text="Sample name" />

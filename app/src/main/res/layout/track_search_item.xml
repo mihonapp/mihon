@@ -38,7 +38,7 @@
             android:layout_marginEnd="36dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
             android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/track_search_cover"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="@string/track_type"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
             app:layout_constraintStart_toStartOf="@+id/track_search_title"
             app:layout_constraintTop_toBottomOf="@id/track_search_title" />
 
@@ -62,7 +62,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="12dp"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBody2"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/track_search_type"
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="@string/track_start_date"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
             app:layout_constraintStart_toStartOf="@+id/track_search_type"
             app:layout_constraintTop_toBottomOf="@id/track_search_type" />
 
@@ -87,7 +87,7 @@
             android:layout_marginEnd="12dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBody2"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/track_search_start"
@@ -101,7 +101,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/track_status"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
             app:layout_constraintStart_toStartOf="@+id/track_search_start"
             app:layout_constraintTop_toBottomOf="@id/track_search_start" />
 
@@ -113,7 +113,7 @@
             android:layout_marginEnd="12dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBody2"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/track_search_status"
@@ -129,7 +129,7 @@
             android:layout_marginEnd="12dp"
             android:ellipsize="end"
             android:maxLines="4"
-            android:textAppearance="?attr/textAppearanceCaption"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -69,14 +69,14 @@
             android:layout_marginBottom="4dp"
             android:gravity="center"
             android:text="@string/manga_info_full_title_label"
-            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
             android:textIsSelectable="false" />
 
         <TextView
             android:id="@+id/manga_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
             android:textColor="?android:attr/textColorSecondary"
             android:textAlignment="center"
             android:textIsSelectable="false"
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
             android:textColor="?android:attr/textColorSecondary"
             android:textIsSelectable="false"
             tools:text="Artist" />
@@ -112,7 +112,7 @@
                 android:layout_height="match_parent"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textIsSelectable="false"
                 tools:text="Status" />
@@ -123,7 +123,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:text="•"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textIsSelectable="false"
                 tools:ignore="HardcodedText" />
@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textIsSelectable="false"
                 tools:text="Source" />
