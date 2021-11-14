@@ -17,9 +17,9 @@ class AppUpdateChecker {
     private val networkService: NetworkHelper by injectLazy()
     private val preferences: PreferencesHelper by injectLazy()
 
-    suspend fun checkForUpdate(context: Context): AppUpdateResult {
+    suspend fun checkForUpdate(context: Context, isUserPrompt: Boolean = false): AppUpdateResult {
         // Limit checks to once a day at most
-        if (Date().time < preferences.lastAppCheck().get() + TimeUnit.DAYS.toMillis(1)) {
+        if (isUserPrompt.not() && Date().time < preferences.lastAppCheck().get() + TimeUnit.DAYS.toMillis(1)) {
             return AppUpdateResult.NoNewUpdate
         }
 

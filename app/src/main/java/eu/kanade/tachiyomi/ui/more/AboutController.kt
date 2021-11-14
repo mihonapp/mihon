@@ -107,7 +107,7 @@ class AboutController : SettingsController(), NoAppBarElevationController {
 
         launchNow {
             try {
-                when (val result = updateChecker.checkForUpdate(activity!!)) {
+                when (val result = updateChecker.checkForUpdate(activity!!, isUserPrompt = true)) {
                     is AppUpdateResult.NewUpdate -> {
                         NewUpdateDialogController(result).showDialog(router)
                     }
