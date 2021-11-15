@@ -8,8 +8,7 @@
     android:layout_marginTop="8dp"
     app:cardBackgroundColor="?android:attr/colorBackground"
     app:cardElevation="0dp"
-    app:cardForegroundColor="@color/draggable_card_foreground"
-    app:strokeWidth="0dp">
+    app:cardForegroundColor="@color/draggable_card_foreground">
 
     <LinearLayout
         android:layout_width="match_parent"

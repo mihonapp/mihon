@@ -85,6 +85,7 @@
         <item name="navigationRailStyle">@style/Widget.Tachiyomi.NavigationRailView</item>
         <item name="switchStyle">@style/Widget.Tachiyomi.Switch</item>
         <item name="sliderStyle">@style/Widget.Tachiyomi.Slider</item>
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
         <item name="elevationOverlayEnabled">false</item>
         <item name="lightSystemBarsOnPrimary">false</item>
 
