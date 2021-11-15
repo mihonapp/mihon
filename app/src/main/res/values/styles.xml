@@ -124,17 +124,18 @@
         <item name="chipBackgroundColor">?attr/chipBackgroundColor</item>
         <item name="android:textColor">?attr/chipTextColor</item>
         <item name="rippleColor">?attr/colorControlHighlight</item>
+        <item name="chipStrokeWidth">0dp</item>
+
+        <!-- Smaller text/height -->
+        <item name="chipMinHeight">28dp</item>
+        <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
+
+        <!-- Collapse horizontal margin -->
+        <item name="chipMinTouchTargetSize">28dp</item>
 
         <!-- Custom chip states -->
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
-
-        <!-- Smaller text/height -->
-        <item name="chipMinHeight">24dp</item>
-        <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
-
-        <!-- Collapse horizontal margin -->
-        <item name="chipMinTouchTargetSize">30dp</item>
     </style>
 
 
