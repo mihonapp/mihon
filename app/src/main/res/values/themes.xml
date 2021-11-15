@@ -209,9 +209,6 @@
         <item name="colorOnSurfaceInverse">@color/tako_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/tako_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/tako_primaryInverse</item>
-
-        <!-- Custom Attributes-->
-        <item name="colorFilterActive">?attr/colorTertiary</item>
     </style>
 
     <!--== Teal & Turquoise Theme ==-->
