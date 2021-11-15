@@ -11,24 +11,40 @@
         <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
 
         <!-- Theme Colors -->
-        <item name="colorPrimary">@color/accent_default</item>
-        <item name="colorOnPrimary">@color/md_white_1000</item>
-        <item name="colorPrimaryContainer">?attr/colorPrimary</item>
-        <item name="colorOnPrimaryContainer">?attr/colorOnPrimary</item>
-        <item name="colorSecondary">?attr/colorPrimary</item>
-        <item name="colorSecondaryContainer">?attr/colorPrimaryContainer</item>
-        <item name="colorOnSecondary">?attr/colorOnPrimary</item>
-        <item name="colorTertiary">@color/green</item>
-        <item name="colorOnTertiary">@color/md_white_1000</item>
+        <item name="colorPrimary">@color/tachiyomi_primary</item>
+        <item name="colorOnPrimary">@color/tachiyomi_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/tachiyomi_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/tachiyomi_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/tachiyomi_secondary</item>
+        <item name="colorOnSecondary">@color/tachiyomi_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/tachiyomi_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/tachiyomi_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/tachiyomi_tertiary</item>
+        <item name="colorOnTertiary">@color/tachiyomi_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/tachiyomi_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/tachiyomi_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/tachiyomi_background</item>
+        <item name="colorOnBackground">@color/tachiyomi_onBackground</item>
+        <item name="colorSurface">@color/tachiyomi_surface</item>
+        <item name="colorOnSurface">@color/tachiyomi_onSurface</item>
+        <item name="colorSurfaceVariant">@color/tachiyomi_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/tachiyomi_onSurfaceVariant</item>
+        <item name="colorOutline">@color/tachiyomi_outline</item>
+        <item name="colorOnSurfaceInverse">@color/tachiyomi_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/tachiyomi_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/tachiyomi_primaryInverse</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/onError</item>
+        <item name="colorErrorContainer">@color/errorContainer</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainer</item>
+
         <item name="colorToolbar">?attr/colorSurface</item>
         <item name="colorOnToolbar">?attr/colorOnSurface</item>
-        <item name="colorSurface">@color/surface_default</item>
-        <item name="android:colorBackground">@color/background_default</item>
         <item name="android:divider">@color/divider_default</item>
         <item name="android:listDivider">@drawable/line_divider</item>
 
         <!-- Ripples -->
-        <item name="colorControlHighlight">@color/ripple_colored_default</item>
+        <item name="colorControlHighlight">?attr/colorSurfaceVariant</item>
         <item name="rippleColorToolbar">?attr/colorControlHighlight</item>
 
         <!-- Handles RTL Text -->
@@ -89,76 +105,194 @@
     <!--== Green Apple Theme ==-->
     <style name="Theme.Tachiyomi.GreenApple">
         <!-- Theme Colors -->
-        <item name="colorPrimary">@color/accent_greenapple</item>
-        <item name="colorOnPrimary">@color/color_on_primary_greenapple</item>
-        <item name="colorTertiary">@color/md_blue_A400</item>
-        <item name="colorControlHighlight">@color/ripple_colored_greenapple</item>
+        <item name="colorPrimary">@color/greenapple_primary</item>
+        <item name="colorOnPrimary">@color/greenapple_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/greenapple_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/greenapple_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/greenapple_secondary</item>
+        <item name="colorOnSecondary">@color/greenapple_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/greenapple_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/greenapple_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/greenapple_tertiary</item>
+        <item name="colorOnTertiary">@color/greenapple_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/greenapple_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/greenapple_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/greenapple_background</item>
+        <item name="colorOnBackground">@color/greenapple_onBackground</item>
+        <item name="colorSurface">@color/greenapple_surface</item>
+        <item name="colorOnSurface">@color/greenapple_onSurface</item>
+        <item name="colorSurfaceVariant">@color/greenapple_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/greenapple_onSurfaceVariant</item>
+        <item name="colorOutline">@color/greenapple_outline</item>
+        <item name="colorOnSurfaceInverse">@color/greenapple_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/greenapple_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/greenapple_primaryInverse</item>
         <item name="lightSystemBarsOnPrimary">true</item>
     </style>
 
     <!--== Midnight Dusk Theme ==-->
     <style name="Theme.Tachiyomi.MidnightDusk">
         <!-- Theme Colors -->
-        <item name="colorPrimary">@color/accent_midnightdusk</item>
-        <item name="colorTertiary">@color/md_blue_A400</item>
-        <item name="colorControlHighlight">@color/ripple_colored_midnightdusk</item>
+        <item name="colorPrimary">@color/midnightdusk_primary</item>
+        <item name="colorOnPrimary">@color/midnightdusk_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/midnightdusk_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/midnightdusk_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/midnightdusk_secondary</item>
+        <item name="colorOnSecondary">@color/midnightdusk_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/midnightdusk_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/midnightdusk_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/midnightdusk_tertiary</item>
+        <item name="colorOnTertiary">@color/midnightdusk_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/midnightdusk_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/midnightdusk_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/midnightdusk_background</item>
+        <item name="colorOnBackground">@color/midnightdusk_onBackground</item>
+        <item name="colorSurface">@color/midnightdusk_surface</item>
+        <item name="colorOnSurface">@color/midnightdusk_onSurface</item>
+        <item name="colorSurfaceVariant">@color/midnightdusk_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/midnightdusk_onSurfaceVariant</item>
+        <item name="colorOutline">@color/midnightdusk_outline</item>
+        <item name="colorOnSurfaceInverse">@color/midnightdusk_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/midnightdusk_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/midnightdusk_primaryInverse</item>
     </style>
 
     <!--== Strawberry Daiquiri Theme ==-->
     <style name="Theme.Tachiyomi.StrawberryDaiquiri">
         <!-- Theme Colors -->
-        <item name="colorPrimary">@color/accent_strawberry</item>
-        <item name="colorTertiary">@color/md_blue_A400</item>
-        <item name="colorControlHighlight">@color/ripple_colored_strawberry</item>
+        <item name="colorPrimary">@color/strawberry_primary</item>
+        <item name="colorOnPrimary">@color/strawberry_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/strawberry_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/strawberry_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/strawberry_secondary</item>
+        <item name="colorOnSecondary">@color/strawberry_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/strawberry_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/strawberry_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/strawberry_tertiary</item>
+        <item name="colorOnTertiary">@color/strawberry_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/strawberry_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/strawberry_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/strawberry_background</item>
+        <item name="colorOnBackground">@color/strawberry_onBackground</item>
+        <item name="colorSurface">@color/strawberry_surface</item>
+        <item name="colorOnSurface">@color/strawberry_onSurface</item>
+        <item name="colorSurfaceVariant">@color/strawberry_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/strawberry_onSurfaceVariant</item>
+        <item name="colorOutline">@color/strawberry_outline</item>
+        <item name="colorOnSurfaceInverse">@color/strawberry_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/strawberry_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/strawberry_primaryInverse</item>
     </style>
 
     <!--== Tako Theme ==-->
     <style name="Theme.Tachiyomi.Tako">
         <!-- Theme Colors -->
-        <item name="colorPrimary">@color/accent_tako</item>
-        <item name="colorOnPrimary">@color/color_on_primary_tako</item>
-        <item name="colorTertiary">@color/tertiary_tako</item>
-        <item name="colorOnTertiary">@color/color_on_tertiary_tako</item>
-        <item name="colorControlHighlight">@color/ripple_colored_tako</item>
-        <item name="colorSurface">@color/surface_tako</item>
-        <item name="android:colorBackground">@color/background_tako</item>
+        <item name="colorPrimary">@color/tako_primary</item>
+        <item name="colorOnPrimary">@color/tako_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/tako_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/tako_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/tako_secondary</item>
+        <item name="colorOnSecondary">@color/tako_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/tako_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/tako_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/tako_tertiary</item>
+        <item name="colorOnTertiary">@color/tako_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/tako_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/tako_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/tako_background</item>
+        <item name="colorOnBackground">@color/tako_onBackground</item>
+        <item name="colorSurface">@color/tako_surface</item>
+        <item name="colorOnSurface">@color/tako_onSurface</item>
+        <item name="colorSurfaceVariant">@color/tako_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/tako_onSurfaceVariant</item>
+        <item name="colorOutline">@color/tako_outline</item>
+        <item name="colorOnSurfaceInverse">@color/tako_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/tako_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/tako_primaryInverse</item>
 
         <!-- Custom Attributes-->
-        <item name="colorFilterActive">@color/filter_tako</item>
+        <item name="colorFilterActive">?attr/colorTertiary</item>
     </style>
 
     <!--== Teal & Turquoise Theme ==-->
     <style name="Theme.Tachiyomi.TealTurquoise">
         <!-- Theme Colors -->
-        <item name="colorPrimary">@color/accent_tealturquoise</item>
-        <item name="colorOnPrimary">@color/color_on_primary_tealturquoise</item>
-        <item name="colorOnSecondary">@color/color_on_primary_tealturquoise</item>
-        <item name="colorTertiary">@color/tertiary_tealturquoise</item>
-        <item name="colorOnTertiary">@color/color_on_tertiary_tealturquoise</item>
-        <item name="colorControlHighlight">@color/ripple_colored_tealturquoise</item>
+        <item name="colorPrimary">@color/tealturquoise_primary</item>
+        <item name="colorOnPrimary">@color/tealturquoise_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/tealturquoise_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/tealturquoise_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/tealturquoise_secondary</item>
+        <item name="colorOnSecondary">@color/tealturquoise_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/tealturquoise_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/tealturquoise_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/tealturquoise_tertiary</item>
+        <item name="colorOnTertiary">@color/tealturquoise_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/tealturquoise_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/tealturquoise_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/tealturquoise_background</item>
+        <item name="colorOnBackground">@color/tealturquoise_onBackground</item>
+        <item name="colorSurface">@color/tealturquoise_surface</item>
+        <item name="colorOnSurface">@color/tealturquoise_onSurface</item>
+        <item name="colorSurfaceVariant">@color/tealturquoise_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/tealturquoise_onSurfaceVariant</item>
+        <item name="colorOutline">@color/tealturquoise_outline</item>
+        <item name="colorOnSurfaceInverse">@color/tealturquoise_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/tealturquoise_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/tealturquoise_primaryInverse</item>
     </style>
 
     <!--== Yin & Yang Theme ==-->
     <style name="Theme.Tachiyomi.YinYang">
         <!-- Theme Colors -->
-        <item name="colorPrimary">@color/accent_yinyang</item>
-        <item name="colorOnPrimary">@color/color_on_secondary_yinyang</item>
-        <item name="colorOnSecondary">@color/color_on_secondary_yinyang</item>
-        <item name="colorTertiary">@color/color_on_secondary_yinyang</item>
-        <item name="colorOnTertiary">@color/accent_yinyang</item>
-        <item name="colorControlHighlight">@color/ripple_colored_yinyang</item>
-
-        <!-- Themes -->
-        <item name="chipTextColor">@color/color_on_secondary_yinyang</item>
-        <item name="chipBackgroundColor">@color/accent_yinyang</item>
+        <item name="colorPrimary">@color/yinyang_primary</item>
+        <item name="colorOnPrimary">@color/yinyang_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/yinyang_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/yinyang_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/yinyang_secondary</item>
+        <item name="colorOnSecondary">@color/yinyang_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/yinyang_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/yinyang_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/yinyang_tertiary</item>
+        <item name="colorOnTertiary">@color/yinyang_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/yinyang_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/yinyang_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/yinyang_background</item>
+        <item name="colorOnBackground">@color/yinyang_onBackground</item>
+        <item name="colorSurface">@color/yinyang_surface</item>
+        <item name="colorOnSurface">@color/yinyang_onSurface</item>
+        <item name="colorSurfaceVariant">@color/yinyang_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/yinyang_onSurfaceVariant</item>
+        <item name="colorOutline">@color/yinyang_outline</item>
+        <item name="colorOnSurfaceInverse">@color/yinyang_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/yinyang_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/yinyang_primaryInverse</item>
     </style>
 
     <!--== Yotsuba Theme ==-->
     <style name="Theme.Tachiyomi.Yotsuba">
         <!-- Theme Colors -->
-        <item name="colorPrimary">@color/accent_yotsuba</item>
-        <item name="colorTertiary">@color/md_blue_A400</item>
-        <item name="colorControlHighlight">@color/ripple_colored_yotsuba</item>
+        <item name="colorPrimary">@color/yotsuba_primary</item>
+        <item name="colorOnPrimary">@color/yotsuba_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/yotsuba_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/yotsuba_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/yotsuba_secondary</item>
+        <item name="colorOnSecondary">@color/yotsuba_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/yotsuba_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/yotsuba_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/yotsuba_tertiary</item>
+        <item name="colorOnTertiary">@color/yotsuba_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/yotsuba_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/yotsuba_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/yotsuba_background</item>
+        <item name="colorOnBackground">@color/yotsuba_onBackground</item>
+        <item name="colorSurface">@color/yotsuba_surface</item>
+        <item name="colorOnSurface">@color/yotsuba_onSurface</item>
+        <item name="colorSurfaceVariant">@color/yotsuba_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/yotsuba_onSurfaceVariant</item>
+        <item name="colorOutline">@color/yotsuba_outline</item>
+        <item name="colorOnSurfaceInverse">@color/yotsuba_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/yotsuba_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/yotsuba_primaryInverse</item>
     </style>
 
     <!--== AMOLED Mode Overlay ==-->

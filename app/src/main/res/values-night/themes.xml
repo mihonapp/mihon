@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--== Midnight Dusk Theme ==-->
-    <style name="Theme.Tachiyomi.MidnightDusk">
-        <!-- Theme Colors -->
-        <item name="colorPrimary">@color/accent_midnightdusk</item>
-        <item name="colorTertiary">@color/md_blue_A400</item>
-        <item name="colorControlHighlight">@color/ripple_colored_midnightdusk</item>
-        <item name="colorSurface">@color/surface_midnightdusk</item>
-        <item name="android:colorBackground">@color/background_midnightdusk</item>
-    </style>
-
     <!--== AMOLED Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.Amoled" parent="">
         <!-- Theme Colors -->
