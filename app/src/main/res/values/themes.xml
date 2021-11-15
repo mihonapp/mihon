@@ -69,7 +69,6 @@
         <item name="actionModeCloseButtonStyle">@style/Theme.Tachiyomi.ActionMode.CloseButton</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close_24dp</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Tachiyomi.ActionBar</item>
-        <item name="toolbarNavigationButtonStyle">@style/Widget.Tachiyomi.Toolbar.Button.Navigation</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.Tachiyomi</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Tachiyomi.BottomSheetDialog</item>
         <item name="chipStyle">@style/Widget.Tachiyomi.Chip.Action</item>

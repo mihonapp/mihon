@@ -9,13 +9,8 @@
         <item name="android:colorControlHighlight">?attr/rippleColorToolbar</item>
     </style>
 
-    <style name="Widget.Tachiyomi.Toolbar.Button.Navigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
-        <item name="tint">?attr/colorOnToolbar</item>
-    </style>
-
-    <style name="Widget.Tachiyomi.ActionMode" parent="Widget.AppCompat.ActionMode">
+    <style name="Widget.Tachiyomi.ActionMode" parent="Widget.Material3.ActionMode">
         <item name="background">?attr/colorToolbar</item>
-        <item name="titleTextStyle">@style/TextAppearance.Tachiyomi.ActionMode.Title</item>
     </style>
 
     <style name="Theme.Tachiyomi.ActionMode.CloseButton" parent="Widget.AppCompat.ActionButton.CloseMode">
@@ -71,10 +66,6 @@
 
     <style name="TextAppearance.Widget.Menu" parent="TextAppearance.AppCompat.Menu">
         <item name="android:textColor">?attr/colorOnBackground</item>
-    </style>
-
-    <style name="TextAppearance.Tachiyomi.ActionMode.Title" parent="TextAppearance.Material3.HeadlineSmall">
-        <item name="android:textColor">?attr/colorOnToolbar</item>
     </style>
 
     <style name="TextAppearance.Tachiyomi.Preference.Secondary" parent="TextAppearance.Material3.BodySmall" />
