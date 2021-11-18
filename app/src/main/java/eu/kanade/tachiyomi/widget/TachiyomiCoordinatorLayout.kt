@@ -93,7 +93,8 @@ class TachiyomiCoordinatorLayout @JvmOverloads constructor(
         consumed: IntArray
     ) {
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed)
-        if (canLiftAppBarOnScroll) {
+        // Disable elevation overlay when tabs are visible
+        if (canLiftAppBarOnScroll && viewPager == null) {
             appBarLayout?.isLifted = dyConsumed != 0 || dyUnconsumed >= 0
         }
     }

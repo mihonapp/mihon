@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.widget
+package com.google.android.material.appbar
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
@@ -11,9 +11,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.animation.AnimationUtils
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.HideToolbarOnScrollBehavior
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.getStateAlpha
 import eu.kanade.tachiyomi.R
@@ -23,7 +20,12 @@ import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.HierarchyChangeEvent
 import reactivecircus.flowbinding.android.view.hierarchyChangeEvents
 
-class ElevationAppBarLayout @JvmOverloads constructor(
+/**
+ * [AppBarLayout] with our own lift state handler and custom title alpha.
+ *
+ * Inside this package to access some package-private methods.
+ */
+class TachiyomiAppBarLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
 ) : AppBarLayout(context, attrs) {
@@ -50,8 +52,8 @@ class ElevationAppBarLayout @JvmOverloads constructor(
     private var statusBarForegroundAnimator: ValueAnimator? = null
     private val offsetListener = OnOffsetChangedListener { appBarLayout, verticalOffset ->
         // Show status bar foreground when offset
-        val foreground = appBarLayout?.statusBarForeground ?: return@OnOffsetChangedListener
-        val start = foreground.alpha
+        val foreground = (appBarLayout?.statusBarForeground as? MaterialShapeDrawable) ?: return@OnOffsetChangedListener
+        val start = foreground.getStateAlpha()
         val end = if (verticalOffset != 0) 255 else 0
 
         statusBarForegroundAnimator?.cancel()
@@ -82,7 +84,7 @@ class ElevationAppBarLayout @JvmOverloads constructor(
     override fun getBehavior(): CoordinatorLayout.Behavior<AppBarLayout> = HideToolbarOnScrollBehavior()
 
     /**
-     * Disabled. Lift on scroll is handled manually with [TachiyomiCoordinatorLayout]
+     * Disabled. Lift on scroll is handled manually with [eu.kanade.tachiyomi.widget.TachiyomiCoordinatorLayout]
      */
     override fun isLiftOnScroll(): Boolean = false
 
@@ -97,6 +99,8 @@ class ElevationAppBarLayout @JvmOverloads constructor(
             false
         }
     }
+
+    override fun setLiftedState(lifted: Boolean, force: Boolean): Boolean = false
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -143,6 +147,7 @@ class ElevationAppBarLayout @JvmOverloads constructor(
             ValueAnimator.ofFloat(fromElevation, toElevation).apply {
                 addUpdateListener {
                     elevation = it.animatedValue as Float
+                    (statusBarForeground as? MaterialShapeDrawable)?.elevation = it.animatedValue as Float
                 }
                 animators.add(this)
             }
@@ -170,5 +175,9 @@ class ElevationAppBarLayout @JvmOverloads constructor(
                 start()
             }
         }
+    }
+
+    init {
+        statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
     }
 }

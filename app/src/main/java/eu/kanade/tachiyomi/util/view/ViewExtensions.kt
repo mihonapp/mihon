@@ -22,15 +22,12 @@ import androidx.core.view.descendants
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getResourceColor
-import eu.kanade.tachiyomi.util.system.isNightMode
 
 /**
  * Returns coordinates of view.
@@ -184,16 +181,6 @@ inline fun ChipGroup.setChips(
         }
 
         addView(chip)
-    }
-}
-
-/**
- * Applies elevation overlay to a MaterialCardView
- */
-inline fun MaterialCardView.applyElevationOverlay() {
-    if (context.isNightMode()) {
-        val provider = ElevationOverlayProvider(context)
-        setCardBackgroundColor(provider.compositeOverlay(cardBackgroundColor.defaultColor, cardElevation))
     }
 }
 

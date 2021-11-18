@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import eu.kanade.tachiyomi.databinding.TrackItemBinding
-import eu.kanade.tachiyomi.util.view.applyElevationOverlay
 
 class TrackAdapter(listener: OnClickListener) : RecyclerView.Adapter<TrackHolder>() {
 
@@ -30,7 +29,6 @@ class TrackAdapter(listener: OnClickListener) : RecyclerView.Adapter<TrackHolder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
         binding = TrackItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        binding.card.applyElevationOverlay()
         return TrackHolder(binding, this)
     }
 

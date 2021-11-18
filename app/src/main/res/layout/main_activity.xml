@@ -12,13 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <eu.kanade.tachiyomi.widget.ElevationAppBarLayout
+    <com.google.android.material.appbar.TachiyomiAppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:elevation="0dp"
-        app:statusBarForeground="?attr/colorToolbar">
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -69,7 +68,7 @@
 
         </FrameLayout>
 
-    </eu.kanade.tachiyomi.widget.ElevationAppBarLayout>
+    </com.google.android.material.appbar.TachiyomiAppBarLayout>
 
     <include
         android:id="@+id/fab_layout"
