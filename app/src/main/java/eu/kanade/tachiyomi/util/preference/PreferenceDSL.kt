@@ -189,7 +189,7 @@ var Preference.summaryRes: Int
 var Preference.iconTint: Int
     get() = 0 // set only
     set(value) {
-        icon.setTint(value)
+        icon?.setTint(value)
     }
 
 var ListPreference.entriesRes: Array<Int>

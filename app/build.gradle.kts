@@ -149,10 +149,10 @@ dependencies {
     // AndroidX libraries
     implementation("androidx.annotation:annotation:1.3.0")
     implementation("androidx.appcompat:appcompat:1.4.0-rc01")
-    implementation("androidx.biometric:biometric-ktx:1.2.0-alpha03")
+    implementation("androidx.biometric:biometric-ktx:1.2.0-alpha04")
     implementation("androidx.browser:browser:1.4.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.1")
-    implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0-beta01")
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.core:core-splashscreen:1.0.0-alpha02")
     implementation("androidx.recyclerview:recyclerview:1.3.0-alpha01")
@@ -210,7 +210,7 @@ dependencies {
     implementation("com.github.requery:sqlite-android:3.36.0")
 
     // Preferences
-    implementation("androidx.preference:preference-ktx:1.1.1")
+    implementation("androidx.preference:preference-ktx:1.2.0-beta01")
     implementation("com.github.tfcporciuncula.flow-preferences:flow-preferences:1.4.0")
 
     // Model View Presenter

@@ -94,7 +94,7 @@ abstract class SettingsController : PreferenceController() {
         activity!!.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
         themedContext = ContextThemeWrapper(activity, tv.resourceId)
 
-        val screen = preferenceManager.createPreferenceScreen(themedContext)
+        val screen = preferenceManager.createPreferenceScreen(themedContext!!)
         preferenceScreen = screen
         setupPreferenceScreen(screen)
     }
