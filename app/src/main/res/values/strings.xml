@@ -458,6 +458,7 @@
     <string name="used_cache">Used: %1$s</string>
     <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
     <string name="cache_delete_error">An error occurred while clearing cache</string>
+    <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app close</string>
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for manga that are not saved in your library</string>
     <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library manga will be lost</string>

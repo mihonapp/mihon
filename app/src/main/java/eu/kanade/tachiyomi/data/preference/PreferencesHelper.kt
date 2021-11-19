@@ -334,6 +334,8 @@ class PreferencesHelper(val context: Context) {
 
     fun verboseLogging() = prefs.getBoolean(Keys.verboseLogging, false)
 
+    fun autoClearChapterCache() = prefs.getBoolean(Keys.autoClearChapterCache, false)
+
     fun setChapterSettingsDefault(manga: Manga) {
         prefs.edit {
             putInt(Keys.defaultChapterFilterByRead, manga.readFilter)

@@ -233,6 +233,8 @@ object PreferenceKeys {
 
     const val verboseLogging = "verbose_logging"
 
+    const val autoClearChapterCache = "auto_clear_chapter_cache"
+
     fun trackUsername(syncId: Int) = "pref_mangasync_username_$syncId"
 
     fun trackPassword(syncId: Int) = "pref_mangasync_password_$syncId"

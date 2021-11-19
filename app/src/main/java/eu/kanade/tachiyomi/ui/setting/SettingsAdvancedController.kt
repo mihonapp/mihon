@@ -132,6 +132,11 @@ class SettingsAdvancedController : SettingsController() {
 
                 onClick { clearChapterCache() }
             }
+            switchPreference {
+                key = Keys.autoClearChapterCache
+                titleRes = R.string.pref_auto_clear_chapter_cache
+                defaultValue = false
+            }
             preference {
                 key = "pref_clear_database"
                 titleRes = R.string.pref_clear_database
