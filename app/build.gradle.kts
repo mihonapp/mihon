@@ -244,7 +244,7 @@ dependencies {
     implementation("com.github.tachiyomiorg:DirectionalViewPager:1.0.0") {
         exclude(group = "androidx.viewpager", module = "viewpager")
     }
-    implementation("dev.chrisbanes.insetter:insetter:0.6.0")
+    implementation("dev.chrisbanes.insetter:insetter:0.6.1")
 
     // Conductor
     val conductorVersion = "3.0.0"
