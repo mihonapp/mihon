@@ -47,8 +47,8 @@ class ThemesPreference @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     override fun onItemClick(position: Int) {
-        value = entries[position].name
         callChangeListener(value)
+        value = entries[position].name
     }
 
     override fun onClick() {
