@@ -54,6 +54,9 @@ class ThemesPreferenceAdapter(private val clickListener: OnItemClickListener) :
         fun bind(appTheme: PreferenceValues.AppTheme) {
             binding.name.text = view.context.getString(appTheme.titleResId!!)
 
+            // For rounded corners
+            binding.badges.clipToOutline = true
+
             val isSelected = preferences.appTheme().get() == appTheme
             binding.themeCard.isChecked = isSelected
             binding.themeCard.strokeColor = if (isSelected) selectedColor else unselectedColor

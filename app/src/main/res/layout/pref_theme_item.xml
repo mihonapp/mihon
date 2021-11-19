@@ -59,16 +59,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:tint="?android:attr/divider" />
 
-            <ImageView
-                android:id="@+id/cover_badge"
-                android:layout_width="12dp"
-                android:layout_height="16dp"
+            <LinearLayout
+                android:id="@+id/badges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
-                android:src="@drawable/rounded_rectangle"
-                app:tint="?attr/colorAccent"
+                android:background="@drawable/rounded_rectangle"
                 app:layout_constraintStart_toStartOf="@+id/cover_container"
-                app:layout_constraintTop_toTopOf="@+id/cover_container" />
+                app:layout_constraintTop_toTopOf="@+id/cover_container">
+
+                <View
+                    android:layout_width="12dp"
+                    android:layout_height="16dp"
+                    android:background="?attr/colorTertiary" />
+
+                <View
+                    android:layout_width="12dp"
+                    android:layout_height="16dp"
+                    android:background="?attr/colorSecondary" />
+
+            </LinearLayout>
 
             <View
                 android:id="@+id/bottom_nav"
