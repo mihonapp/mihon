@@ -6,15 +6,19 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
-import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.model.toChapterInfo
+import eu.kanade.tachiyomi.source.model.toMangaInfo
+import eu.kanade.tachiyomi.source.model.toSChapter
+import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.util.chapter.ChapterRecognition
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.EpubFile
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
@@ -24,6 +28,8 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import logcat.LogPriority
 import rx.Observable
+import tachiyomi.source.model.ChapterInfo
+import tachiyomi.source.model.MangaInfo
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.FileInputStream
@@ -133,23 +139,27 @@ class LocalSource(private val context: Context) : CatalogueSource {
                     }
                 }
 
-                val chapters = fetchChapterList(this).toBlocking().first()
-                if (chapters.isNotEmpty()) {
-                    val chapter = chapters.last()
-                    val format = getFormat(chapter)
-                    if (format is Format.Epub) {
-                        EpubFile(format.file).use { epub ->
-                            epub.fillMangaMetadata(this)
+                val sManga = this
+                val mangaInfo = this.toMangaInfo()
+                runBlocking {
+                    val chapters = getChapterList(mangaInfo)
+                    if (chapters.isNotEmpty()) {
+                        val chapter = chapters.last().toSChapter()
+                        val format = getFormat(chapter)
+                        if (format is Format.Epub) {
+                            EpubFile(format.file).use { epub ->
+                                epub.fillMangaMetadata(sManga)
+                            }
                         }
-                    }
 
-                    // Copy the cover from the first chapter found.
-                    if (thumbnail_url == null) {
-                        try {
-                            val dest = updateCover(chapter, this)
-                            thumbnail_url = dest?.absolutePath
-                        } catch (e: Exception) {
-                            logcat(LogPriority.ERROR, e)
+                        // Copy the cover from the first chapter found.
+                        if (thumbnail_url == null) {
+                            try {
+                                val dest = updateCover(chapter, sManga)
+                                thumbnail_url = dest?.absolutePath
+                            } catch (e: Exception) {
+                                logcat(LogPriority.ERROR, e)
+                            }
                         }
                     }
                 }
@@ -161,36 +171,40 @@ class LocalSource(private val context: Context) : CatalogueSource {
 
     override fun fetchLatestUpdates(page: Int) = fetchSearchManga(page, "", LATEST_FILTERS)
 
-    override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
-        getBaseDirectories(context)
+    override suspend fun getMangaDetails(manga: MangaInfo): MangaInfo {
+        val localDetails = getBaseDirectories(context)
             .asSequence()
-            .mapNotNull { File(it, manga.url).listFiles()?.toList() }
+            .mapNotNull { File(it, manga.key).listFiles()?.toList() }
             .flatten()
             .firstOrNull { it.extension.lowercase() == "json" }
-            ?.apply {
-                val obj = json.decodeFromStream<JsonObject>(inputStream())
 
-                manga.title = obj["title"]?.jsonPrimitive?.contentOrNull ?: manga.title
-                manga.author = obj["author"]?.jsonPrimitive?.contentOrNull ?: manga.author
-                manga.artist = obj["artist"]?.jsonPrimitive?.contentOrNull ?: manga.artist
-                manga.description = obj["description"]?.jsonPrimitive?.contentOrNull ?: manga.description
-                manga.genre = obj["genre"]?.jsonArray?.joinToString(", ") { it.jsonPrimitive.content }
-                    ?: manga.genre
-                manga.status = obj["status"]?.jsonPrimitive?.intOrNull ?: manga.status
-            }
+        return if (localDetails != null) {
+            val obj = json.decodeFromStream<JsonObject>(localDetails.inputStream())
 
-        return Observable.just(manga)
+            manga.copy(
+                title = obj["title"]?.jsonPrimitive?.contentOrNull ?: manga.title,
+                author = obj["author"]?.jsonPrimitive?.contentOrNull ?: manga.author,
+                artist = obj["artist"]?.jsonPrimitive?.contentOrNull ?: manga.artist,
+                description = obj["description"]?.jsonPrimitive?.contentOrNull ?: manga.description,
+                genres = obj["genre"]?.jsonArray?.map { it.jsonPrimitive.content } ?: manga.genres,
+                status = obj["status"]?.jsonPrimitive?.intOrNull ?: manga.status,
+            )
+        } else {
+            manga
+        }
     }
 
-    override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
+    override suspend fun getChapterList(manga: MangaInfo): List<ChapterInfo> {
+        val sManga = manga.toSManga()
+
         val chapters = getBaseDirectories(context)
             .asSequence()
-            .mapNotNull { File(it, manga.url).listFiles()?.toList() }
+            .mapNotNull { File(it, manga.key).listFiles()?.toList() }
             .flatten()
             .filter { it.isDirectory || isSupportedFile(it.extension) }
             .map { chapterFile ->
                 SChapter.create().apply {
-                    url = "${manga.url}/${chapterFile.name}"
+                    url = "${manga.key}/${chapterFile.name}"
                     name = if (chapterFile.isDirectory) {
                         chapterFile.name
                     } else {
@@ -206,17 +220,20 @@ class LocalSource(private val context: Context) : CatalogueSource {
                     }
 
                     name = getCleanChapterTitle(name, manga.title)
-                    ChapterRecognition.parseChapterNumber(this, manga)
+                    ChapterRecognition.parseChapterNumber(this, sManga)
                 }
             }
+            .map { it.toChapterInfo() }
             .sortedWith { c1, c2 ->
-                val c = c2.chapter_number.compareTo(c1.chapter_number)
+                val c = c2.number.compareTo(c1.number)
                 if (c == 0) c2.name.compareToCaseInsensitiveNaturalOrder(c1.name) else c
             }
             .toList()
 
-        return Observable.just(chapters)
+        return chapters
     }
+
+    override suspend fun getPageList(chapter: ChapterInfo) = throw Exception("Unused")
 
     /**
      * Strips the manga title from a chapter name and trim whitespace/delimiter characters.
@@ -225,10 +242,6 @@ class LocalSource(private val context: Context) : CatalogueSource {
         return chapterName
             .replace(mangaTitle, "")
             .trim(*WHITESPACE_CHARS.toCharArray(), '-', '_', ',', ':')
-    }
-
-    override fun fetchPageList(chapter: SChapter): Observable<List<Page>> {
-        return Observable.error(Exception("Unused"))
     }
 
     private fun isSupportedFile(extension: String): Boolean {

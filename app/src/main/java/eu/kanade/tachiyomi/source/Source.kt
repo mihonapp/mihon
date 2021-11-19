@@ -41,7 +41,7 @@ interface Source : tachiyomi.source.Source {
      * @param manga the manga to update.
      */
     @Deprecated("Use getMangaDetails instead")
-    fun fetchMangaDetails(manga: SManga): Observable<SManga>
+    fun fetchMangaDetails(manga: SManga): Observable<SManga> = Observable.empty()
 
     /**
      * Returns an observable with all the available chapters for a manga.
@@ -49,7 +49,7 @@ interface Source : tachiyomi.source.Source {
      * @param manga the manga to update.
      */
     @Deprecated("Use getChapterList instead")
-    fun fetchChapterList(manga: SManga): Observable<List<SChapter>>
+    fun fetchChapterList(manga: SManga): Observable<List<SChapter>> = Observable.empty()
 
     /**
      * Returns an observable with the list of pages a chapter has.
@@ -57,7 +57,7 @@ interface Source : tachiyomi.source.Source {
      * @param chapter the chapter.
      */
     @Deprecated("Use getPageList instead")
-    fun fetchPageList(chapter: SChapter): Observable<List<Page>>
+    fun fetchPageList(chapter: SChapter): Observable<List<Page>> = Observable.empty()
 
     /**
      * [1.x API] Get the updated details for a manga.
