@@ -43,10 +43,9 @@ import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsAdvancedController : SettingsController() {
+
     private val network: NetworkHelper by injectLazy()
-
     private val chapterCache: ChapterCache by injectLazy()
-
     private val db: DatabaseHelper by injectLazy()
 
     @SuppressLint("BatteryLife")
