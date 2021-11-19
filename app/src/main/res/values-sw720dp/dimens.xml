@@ -5,4 +5,6 @@
     <dimen name="activity_horizontal_margin">64dp</dimen>
 
     <dimen name="bottom_sheet_width">480dp</dimen>
+
+    <dimen name="screen_edge_margin">24dp</dimen>
 </resources>

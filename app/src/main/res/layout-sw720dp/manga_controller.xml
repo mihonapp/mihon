@@ -26,7 +26,7 @@
                 app:layout_constraintEnd_toStartOf="@id/chapters_recycler"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_max="450dp"
+                app:layout_constraintWidth_max="@dimen/tablet_sidebar_max_width"
                 app:layout_constraintWidth_percent="0.5"
                 tools:itemCount="1"
                 tools:listitem="@layout/manga_info_header" />
