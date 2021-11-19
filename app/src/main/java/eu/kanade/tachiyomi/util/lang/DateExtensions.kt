@@ -6,7 +6,6 @@ import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
-import kotlin.math.floor
 
 fun Date.toDateTimestampString(dateFormatter: DateFormat): String {
     val date = dateFormatter.format(this)
@@ -98,7 +97,7 @@ fun Long.toLocalCalendar(): Calendar? {
     }
 }
 
-private const val MILLISECONDS_IN_DAY = 86_400_000.0
+private const val MILLISECONDS_IN_DAY = 86_400_000L
 
 fun Date.toRelativeString(
     context: Context,
@@ -109,8 +108,8 @@ fun Date.toRelativeString(
         return dateFormat.format(this)
     }
     val now = Date()
-    val difference = now.time - this.time
-    val days = floor(difference / MILLISECONDS_IN_DAY).toInt()
+    val difference = now.timeWithOffset.floorNearest(MILLISECONDS_IN_DAY) - this.timeWithOffset.floorNearest(MILLISECONDS_IN_DAY)
+    val days = difference.floorDiv(MILLISECONDS_IN_DAY).toInt()
     return when {
         difference < 0 -> context.getString(R.string.recently)
         difference < MILLISECONDS_IN_DAY -> context.getString(R.string.relative_time_today)
@@ -121,4 +120,16 @@ fun Date.toRelativeString(
         )
         else -> dateFormat.format(this)
     }
+}
+
+private val Date.timeWithOffset: Long
+    get() {
+        return Calendar.getInstance().run {
+            time = this@timeWithOffset
+            this@timeWithOffset.time + timeZone.rawOffset
+        }
+    }
+
+fun Long.floorNearest(to: Long): Long {
+    return this.floorDiv(to) * to
 }
