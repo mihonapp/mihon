@@ -33,4 +33,5 @@
     <color name="tako_inverseOnSurface">#F3EFF4</color>
     <color name="tako_inverseSurface">#313033</color>
     <color name="tako_primaryInverse">#D6BAFF</color>
+    <color name="tako_elevationOverlay">@color/tako_primary</color>
 </resources>

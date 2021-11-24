@@ -208,6 +208,7 @@
         <item name="colorOnSurfaceInverse">@color/tako_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/tako_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/tako_primaryInverse</item>
+        <item name="elevationOverlayColor">@color/tako_elevationOverlay</item>
     </style>
 
     <!--== Teal & Turquoise Theme ==-->
