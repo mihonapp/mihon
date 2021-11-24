@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -19,6 +20,7 @@ class ClearDatabasePresenter : BasePresenter<ClearDatabaseController>() {
         super.onCreate(savedState)
         getDatabaseSourcesObservable()
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeLatestCache(ClearDatabaseController::setItems)
     }
 
