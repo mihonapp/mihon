@@ -235,6 +235,9 @@
         <item name="colorOnSurfaceInverse">@color/tealturquoise_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/tealturquoise_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/tealturquoise_primaryInverse</item>
+        <item name="colorError">@color/tealturquoise_tertiary</item>
+        <item name="colorOnError">@color/tealturquoise_onTertiary</item>
+        <item name="elevationOverlayColor">@color/tealturquoise_elevationOverlay</item>
     </style>
 
     <!--== Yin & Yang Theme ==-->
