@@ -22,7 +22,6 @@
             android:id="@+id/portrait_columns"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:descendantFocusability="blocksDescendants"
             app:max="10"
             app:min="0" />
 
@@ -44,7 +43,6 @@
             android:id="@+id/landscape_columns"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:descendantFocusability="blocksDescendants"
             app:max="10"
             app:min="0" />
 
