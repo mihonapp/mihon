@@ -82,7 +82,6 @@
     <string name="pref_start_screen">Начален екран</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Цял екран</string>
-    <string name="pref_lock_orientation">Заключи ориентацията</string>
     <string name="pref_page_transitions">Анимирани преходи</string>
     <string name="pref_show_page_number">Номер на страница</string>
     <string name="pref_custom_brightness">Персонализирана яркост</string>
@@ -153,7 +152,6 @@
     <string name="login_title">Влизане в %1$s</string>
     <string name="username">Потребителско име</string>
     <string name="password">Парола</string>
-    <string name="show_password">Покажи парола</string>
     <string name="login">Влез</string>
     <string name="login_success">Влязохте</string>
     <string name="invalid_login">Неуспешно влизане</string>
@@ -308,7 +306,6 @@
     <string name="ext_trust">Потвърдени</string>
     <string name="ext_untrusted">Непотвърдени</string>
     <string name="ext_uninstall">Деинсталирай</string>
-    <string name="ext_available">Достъпни</string>
     <string name="untrusted_extension">Непотвърдено разширение</string>
     <string name="untrusted_extension_message">Следното разширение имаше непотвърден сертификат и не беше активирано.
 \n
@@ -577,7 +574,6 @@
     <string name="action_filter_tracked">Следени</string>
     <string name="edge_nav">Край</string>
     <string name="date">Дата</string>
-    <string name="theme_blue">Наследствено синьо</string>
     <string name="pref_dark_theme_pure_black">Чисто черен режим</string>
     <string name="label_default">По подразбиране</string>
     <string name="backup_restore_content_full">Ще бъдат възстановени данните от резервното копие.

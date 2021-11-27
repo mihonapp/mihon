@@ -138,7 +138,6 @@
     <string name="version">版本</string>
     <string name="pref_enable_acra">傳送錯誤報告</string>
     <string name="password">密碼</string>
-    <string name="show_password">顯示密碼</string>
     <string name="login">登入</string>
     <string name="login_success">已登入</string>
     <string name="invalid_login">登入失敗</string>
@@ -169,8 +168,6 @@
     <string name="download_notifier_no_network">尚未連接至網路</string>
     <string name="download_notifier_download_paused">下載已暫停</string>
     <string name="pref_library_columns">書櫃欄位數目</string>
-    <string name="ext_available">可用的套件</string>
-    <string name="pref_lock_orientation">鎖定螢幕方向</string>
     <string name="pref_page_transitions">翻頁轉場動畫</string>
     <string name="pref_crop_borders">邊緣裁剪</string>
     <string name="pref_color_filter_mode">濾鏡融合機制</string>
@@ -361,7 +358,7 @@
     <string name="hide_notification_content">隱藏通知內容</string>
     <string name="pref_manage_notifications">管理通知設定</string>
     <string name="pref_enable_automatic_extension_updates">自動檢查擴充套件更新</string>
-    <string name="channel_ext_updates">擴充套件可供更新</string>
+    <string name="channel_ext_updates">擴充套件更新</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">%d 個擴充套件可更新</item>
     </plurals>
@@ -501,7 +498,7 @@
     <string name="no_pinned_sources">你尚未釘選任何來源</string>
     <string name="page_list_empty_error">沒有任何頁面</string>
     <string name="backup_restore_missing_sources">未安裝擴充套件：</string>
-    <string name="invalid_backup_file_missing_data">檔案遺失資料</string>
+    <string name="invalid_backup_file_missing_data">檔案遺失資料。</string>
     <string name="source_not_found_name">找不到來源：%1$s</string>
     <string name="backup_restore_missing_trackers">未登入歷程平台：</string>
     <string name="channel_progress">進度</string>
@@ -511,7 +508,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">即使啟用監護限制，還是可能有漏網之魚。使用者仍可藉由非官方或未正確標幟的擴充套件在本應用程式中瀏覽未滿十八歲之人不宜觀賞的內容。</string>
     <string name="ext_nsfw_warning">可能包含未滿十八歲之人不宜觀賞的內容</string>
-    <string name="invalid_backup_file_missing_manga">備份檔並未包含任何漫畫</string>
+    <string name="invalid_backup_file_missing_manga">備份檔並未包含任何漫畫。</string>
     <string name="pref_remove_bookmarked_chapters">允許刪除有書籤的章節</string>
     <string name="pref_category_delete_chapters">刪除章節</string>
     <string name="chapter_settings_updated">已更新章節設定預設值</string>
@@ -535,7 +532,7 @@
     <string name="share_page_info">《%1$s》：%2$s，第 %3$d 頁</string>
     <string name="migration_help_guide">來源遷移說明</string>
     <string name="invalid_backup_file_type">無效的備份檔格式：%1$s
-\n副檔名應為 .proto.gz 或 .json</string>
+\n副檔名應為 .proto.gz 或 .json。</string>
     <string name="spen_next_page">下一頁</string>
     <string name="spen_previous_page">上一頁</string>
     <string name="myanimelist_relogin">請重新登入 MAL</string>
@@ -635,7 +632,6 @@
     <string name="theme_strawberrydaiquiri">草莓黛綺莉</string>
     <string name="theme_midnightdusk">午夜幽暗</string>
     <string name="theme_greenapple">青蘋果</string>
-    <string name="theme_blue">舊款藍</string>
     <string name="theme_monet">動態</string>
     <string name="pref_app_theme">應用程式主題</string>
     <string name="action_sort_next_updated">下次預定更新</string>
@@ -658,7 +654,7 @@
         <item quantity="other">%1$d 天前</item>
     </plurals>
     <string name="label_default">預設</string>
-    <string name="pref_tablet_ui_mode">強制使用平板電腦介面</string>
+    <string name="pref_tablet_ui_mode">平板電腦介面</string>
     <string name="getting_started_guide">入門指南</string>
     <string name="action_track">新增</string>
     <string name="pref_category_navigation">導覽</string>
@@ -680,4 +676,10 @@
     <string name="connected_to_wifi">僅透過 Wi-Fi</string>
     <string name="update_72hour">每 3 日</string>
     <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源並 (或) 使其封鎖 Tachiyomi</string>
+    <string name="ext_update_all">全部更新</string>
+    <string name="pref_library_update_show_tab_badge">在「新刊」導覽圖示上標記未讀章數</string>
+    <string name="channel_app_updates">應用程式更新</string>
+    <string name="pref_auto_clear_chapter_cache">結束應用程式時清除章節快取</string>
+    <string name="clear_database_source_item_count">資料庫中有 %1$d 本漫畫不屬於藏書</string>
+    <string name="database_clean">資料庫一塵不染</string>
 </resources>

@@ -150,7 +150,6 @@
     <string name="ext_trust">Luota</string>
     <string name="ext_untrusted">Luottamaton</string>
     <string name="ext_uninstall">Poista asennus</string>
-    <string name="ext_available">Saatavilla</string>
     <string name="untrusted_extension">Luottamattomat laajennukset</string>
     <string name="untrusted_extension_message">Tämä laajennus on allekirjoitettu luottamattomalla sertifikaatilla ja sitä ei ole aktivoitu.
 \n
@@ -160,7 +159,6 @@
     <string name="ext_version_info">Versio: %1$s</string>
     <string name="ext_language_info">Kieli: %1$s</string>
     <string name="pref_fullscreen">Koko näyttö</string>
-    <string name="pref_lock_orientation">Lukitse näkymän suunta</string>
     <string name="pref_page_transitions">Animoi sivusiirtymät</string>
     <string name="pref_double_tap_anim_speed">Tuplanäpäytyksen animaation nopeus</string>
     <string name="pref_show_page_number">Näytä sivunumero</string>
@@ -250,7 +248,6 @@
     <string name="login_title">%1$s kirjautuminen</string>
     <string name="username">Käyttäjätunnus</string>
     <string name="password">Salasana</string>
-    <string name="show_password">Näytä salasana</string>
     <string name="login">Kirjaudu</string>
     <string name="login_success">Kirjauduttu sisään</string>
     <string name="invalid_login">Kirjautuminen epäonnistui</string>

@@ -70,7 +70,7 @@
     <string name="update_6hour">Iedere 6 uur</string>
     <string name="update_12hour">Iedere 12 uur</string>
     <string name="update_24hour">Dagelijks</string>
-    <string name="update_48hour">Tweedagelijks</string>
+    <string name="update_48hour">Iedere 2 dagen</string>
     <string name="update_weekly">Wekelijks</string>
     <string name="all">Alles</string>
     <string name="pref_start_screen">Beginscherm</string>
@@ -135,7 +135,6 @@
     <string name="login_title">Log in op %1$s</string>
     <string name="username">Gebruikersnaam</string>
     <string name="password">Wachtwoord</string>
-    <string name="show_password">Toon wachtwoord</string>
     <string name="login">Log in</string>
     <string name="unknown_error">Onbekende fout</string>
     <string name="updating_category">Categorie bijwerken</string>
@@ -229,7 +228,6 @@
     <string name="pref_library_update_restriction">Updatebeperkingen</string>
     <string name="pref_update_only_non_completed">Update alleen lopende manga</string>
     <string name="pref_auto_update_manga_sync">Voortgang bijwerken na lezen</string>
-    <string name="pref_lock_orientation">Scherm niet draaien</string>
     <string name="pref_keep_screen_on">Scherm aanhouden</string>
     <string name="clear_database_confirmation">Weet je het zeker\? Gelezen hoofdstukken en voortgang voor manga die niet in de bibliotheek zitten zullen verloren gaan</string>
     <string name="clear_database_completed">Database geleegd</string>
@@ -274,7 +272,6 @@
     <string name="ext_trust">Vertrouwen</string>
     <string name="ext_untrusted">Niet vertrouwd</string>
     <string name="ext_uninstall">Verwijderen</string>
-    <string name="ext_available">Beschikbaar</string>
     <string name="untrusted_extension">Niet vertrouwde extensie</string>
     <string name="untrusted_extension_message">Deze extensie is door een niet vertrouwd certificaat ondertekend en is niet geactiveerd.
 \n
@@ -522,7 +519,7 @@
     <string name="channel_complete">Voltooid</string>
     <string name="channel_progress">Voortgang</string>
     <string name="download_notifier_download_finish">Download voltooid</string>
-    <string name="channel_errors">Foutmeldingen</string>
+    <string name="channel_errors">Fouten</string>
     <string name="backup_restore_missing_trackers">Niet-ingelogde trackers:</string>
     <string name="pref_remove_bookmarked_chapters">Verwijderen van hoofdstukken met bladwijzers toestaan</string>
     <string name="pref_category_delete_chapters">Hoofdstukken verwijderen</string>
@@ -530,8 +527,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Dit voorkomt niet dat onofficiële of mogelijk incorrect gemarkeerde extensies NSFW-inhoud (18+) kunnen laten zien in de app.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">1 hoofstuk wordt overgeslagen, mogelijk mist de bron deze of wordt deze eruit gefilterd</item>
-        <item quantity="other">"%d hoofstukken  worden overgeslagen, mogelijk missen de bronnen deze of worden deze eruit gefilterd"</item>
+        <item quantity="one">1 hoofdstuk is overgeslagen, of de bron mist 1 hoofdstuk of het is uitgefilterd</item>
+        <item quantity="other">%d hoofdstukken zijn overgeslagen, de bron mist ze of ze zijn uitgefilterd</item>
     </plurals>
     <string name="no_chapters_error">Geen hoofdstukken gevonden</string>
     <string name="chapter_settings_updated">Standaard hoofdstukinstellingen bijgewerkt</string>
@@ -595,7 +592,7 @@
     <string name="pref_library_update_categories_details">Manga in uitgesloten categorieën worden niet bijgewerkt, zelfs niet als ze onder opgenomen categorieën vallen.</string>
     <string name="action_sort_chapter_fetch_date">Datum opgehaald</string>
     <string name="none">Geen</string>
-    <string name="action_show_errors">Fouten weergeven</string>
+    <string name="action_show_errors">Volledige foutdetails weergeven</string>
     <string name="update_check_eol">Deze Android versie wordt niet meer ondersteund</string>
     <string name="clipboard_copy_error">Mislukt om naar het klemboord te kopiëren</string>
     <string name="notification_incognito_text">Incognitomodus uitschakelen</string>
@@ -644,7 +641,6 @@
     <string name="theme_strawberrydaiquiri">Aardbeien Daiquiri</string>
     <string name="theme_midnightdusk">Nachtschemering</string>
     <string name="theme_greenapple">Groene Appel</string>
-    <string name="theme_blue">Legacy Blauw</string>
     <string name="pref_app_theme">Appthema</string>
     <string name="tracker_komga_warning">Deze tracker werkt alleen met de Komga-bron.</string>
     <string name="enhanced_tracking_info">Diensten die uitgebreidere functionaliteit bieden voor bepaalde bronnen. Het tracken van manga gebeurt automatisch wanneer je deze toevoegt aan je bibliotheek.</string>
@@ -652,7 +648,7 @@
     <string name="theme_monet">Dynamisch</string>
     <string name="getting_started_guide">Gids voor beginners</string>
     <string name="help_translate">Help met vertalen</string>
-    <string name="pref_tablet_ui_mode">Forceer tablet UI</string>
+    <string name="pref_tablet_ui_mode">Tablet UI</string>
     <string name="label_background_activity">Achtergrond activiteit</string>
     <string name="action_track">Volg</string>
     <string name="pref_remove_exclude_categories">Uitgesloten categoriën</string>
@@ -660,7 +656,7 @@
     <string name="pref_low">Laag</string>
     <string name="pref_high">Hoog</string>
     <string name="pref_highest">Hoogste</string>
-    <string name="pref_hide_threshold">Menu automatisch verbergen bij scrollgevoeligheid</string>
+    <string name="pref_hide_threshold">Sensitiviteit voor het verbergen van het menu tijdens scrollen</string>
     <string name="pref_inverted_colors">Omgekeerd</string>
     <plurals name="relative_time">
         <item quantity="one">Gisteren</item>
@@ -687,6 +683,13 @@
     <string name="backup_info">Het is erg aangeraden om automatische back-ups te gebruiken en deze op meerdere plekken te bewaren.</string>
     <string name="connected_to_wifi">Alleen via Wi-Fi</string>
     <string name="pref_verbose_logging">Uitgebreide logging</string>
-    <string name="notification_size_warning">Grote updates kunnen leiden tot een verhoogd batterijgebruik en trager werkende bronnen</string>
-    <string name="ext_installer_shizuku_unavailable_dialog">Installeer en start Shizuku om deze als extensie-installer te gebruiken.</string>
+    <string name="notification_size_warning">Waarschuwing: grote updates schaden bronnen en kunnen leiden tot slomere updates en verhoogd batterijgebruik</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Installeer en start Shizuku om deze als extensie-installatieprogramma te gebruiken.</string>
+    <string name="action_sort_count">Totaal aantal manga</string>
+    <string name="pref_verbose_logging_summary">Houd uitgebreide logs bij in de systeemlogs (verslechterd de werking van de app)</string>
+    <string name="channel_app_updates">App updates</string>
+    <string name="pref_library_update_show_tab_badge">Geef ongelezen aantal weer op het Update icoon</string>
+    <string name="download_queue_size_warning">Waarschuwing: grote bulk downloads kunnen leiden tot trager werkende bronnen en/of Tachiyomi blokkeren</string>
+    <string name="ext_update_all">Alles updaten</string>
+    <string name="update_72hour">Iedere 3 dagen</string>
 </resources>

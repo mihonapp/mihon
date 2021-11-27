@@ -82,7 +82,6 @@
     <string name="pref_start_screen">Màn hình khởi động</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Toàn màn hình</string>
-    <string name="pref_lock_orientation">Khóa xoay</string>
     <string name="pref_page_transitions">Hoạt ảnh chuyển trang</string>
     <string name="pref_show_page_number">Hiện số trang</string>
     <string name="pref_custom_brightness">Độ sáng tùy chỉnh</string>
@@ -153,7 +152,6 @@
     <string name="login_title">Đăng nhập vào %1$s</string>
     <string name="username">Tên đăng nhập</string>
     <string name="password">Mật khẩu</string>
-    <string name="show_password">Hiện mật khẩu</string>
     <string name="login">Đăng nhập</string>
     <string name="login_success">Đăng nhập thành công</string>
     <string name="invalid_login">Lỗi đăng nhập</string>
@@ -279,7 +277,6 @@
     <string name="ext_trust">Đáng tin cậy</string>
     <string name="ext_untrusted">Không đáng tin cậy</string>
     <string name="ext_uninstall">Gỡ cài đặt</string>
-    <string name="ext_available">Có sẵn</string>
     <string name="untrusted_extension">Tiện ích mở rộng không đáng tin cậy</string>
     <string name="untrusted_extension_message">Tiện ích mở rộng này được đăng ký bằng chứng chỉ không đáng tin cậy và chưa được kích hoạt.
 \n
@@ -426,7 +423,7 @@
     <string name="action_select_inverse">Đảo ngược lựa chọn</string>
     <string name="action_sort_latest_chapter">Chương mới nhất</string>
     <string name="action_sort_last_checked">Lần kiểm tra gần nhất</string>
-    <string name="action_menu">Bảng chính</string>
+    <string name="action_menu">Mục chính</string>
     <string name="unlock_app">Mở Khoá Tachiyomi</string>
     <string name="label_sources">Nguồn</string>
     <string name="label_more">Thêm</string>
@@ -621,7 +618,7 @@
     <string name="action_display_show_number_of_items">Hiện số truyện</string>
     <string name="pref_category_nsfw_content">Nguồn NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Hiển thị trong các danh sách nguồn và tiện ích mở rộng</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Ẩn thanh dưới cùng khi cuộn</string>
+    <string name="pref_hide_bottom_bar_on_scroll">Ẩn thanh dưới cùng khi kéo cuộn</string>
     <string name="action_show_errors">Hiện toàn bộ chi tiết lỗi</string>
     <string name="action_desc">Giảm dần</string>
     <string name="action_asc">Tăng dần</string>
@@ -656,7 +653,6 @@
     <string name="information_empty_category_dialog">Người dùng chưa có danh mục.</string>
     <string name="restore_miui_warning">Tính năng tối ưu hóa của MIUI phải được bật lên để việc sao lưu/khôi phục hoạt động tốt.</string>
     <string name="theme_greenapple">Chủ đề: Táo Xanh</string>
-    <string name="theme_blue">Chủ đề: Xanh Di Sản</string>
     <string name="theme_monet">Chủ đề: Động</string>
     <string name="pref_app_theme">Chủ đề ứng dụng</string>
     <string name="action_start_downloading_now">Bắt đầu tải xuống ngay</string>
@@ -671,7 +667,7 @@
     <string name="tracking_guide">Hướng dẫn theo dõi</string>
     <string name="enhanced_services">Nguồn nâng cao</string>
     <string name="enhanced_tracking_info">Dịch vụ cung cấp các tính năng nâng cao cho các nguồn cụ thể. Truyện sẽ được tự động theo dõi khi được thêm vào thư viện của bạn.</string>
-    <string name="about_dont_kill_my_app">Một vài nhà sản xuất có các hạn chế về việc chạy ngầm của ứng dụng. Xem thêm ở địa chỉ này để sửa chữa chúng.</string>
+    <string name="about_dont_kill_my_app">Một vài nhà sản xuất có các hạn chế về việc chạy ngầm của ứng dụng có thể gây dừng hiện thị dịch vụ nền. Xem thêm ở địa chỉ này để sửa chữa chúng.</string>
     <string name="pref_relative_format">Dấu thời gian liên quan</string>
     <string name="pref_category_timestamps">Dấu thời gian</string>
     <string name="pref_category_navigation">Thanh điều hướng</string>
@@ -681,9 +677,9 @@
     <string name="label_default">Mặc định</string>
     <string name="action_track">Theo dõi</string>
     <string name="pref_remove_exclude_categories">Các thể loại bị loại trừ</string>
-    <string name="pref_hide_threshold">Độ nhạy tự động ẩn menu</string>
-    <string name="getting_started_guide">Hướng dẫn sử dụng</string>
-    <string name="pref_tablet_ui_mode">Sử dụng giao diện máy tính bảng</string>
+    <string name="pref_hide_threshold">Độ nhạy cho phần tự ẩn mục chính khi kéo cuộn</string>
+    <string name="getting_started_guide">Hướng dẫn sử dụng khởi đầu</string>
+    <string name="pref_tablet_ui_mode">Giao diện máy tính bảng</string>
     <string name="label_background_activity">Hoạt động ngầm</string>
     <string name="pref_lowest">Thấp nhất</string>
     <string name="pref_low">Thấp</string>
@@ -714,4 +710,10 @@
     <string name="update_72hour">3 ngày một lần</string>
     <string name="connected_to_wifi">Chỉ qua Wi-Fi</string>
     <string name="download_queue_size_warning">Cảnh báo: các tải xuống hàng loạt lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn Tachiyomi</string>
+    <string name="pref_library_update_show_tab_badge">Hiển thị số lượng chưa đọc ở phần biểu tượng Cập nhật</string>
+    <string name="channel_app_updates">Cập nhật ứng dụng</string>
+    <string name="ext_update_all">Cập nhật tất cả</string>
+    <string name="pref_auto_clear_chapter_cache">Xóa bộ nhớ đệm các chương khi tắt ứng dụng</string>
+    <string name="clear_database_source_item_count">%1$d truyện ngoài thư viện trong cơ sở dữ liệu</string>
+    <string name="database_clean">Dọn cơ sở dữ liệu</string>
 </resources>

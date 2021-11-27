@@ -81,7 +81,6 @@
     <string name="pref_start_screen">Page d\'accueil</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Plein écran</string>
-    <string name="pref_lock_orientation">Verrouiller l\'orientation</string>
     <string name="pref_page_transitions">Activer les transitions</string>
     <string name="pref_show_page_number">Afficher le numéro des pages</string>
     <string name="pref_custom_brightness">Luminosité personnalisée</string>
@@ -147,7 +146,6 @@
     <string name="login_title">Connexion à %1$s</string>
     <string name="username">Nom d\'utilisateur</string>
     <string name="password">Mot de passe</string>
-    <string name="show_password">Afficher le mot de passe</string>
     <string name="login">Se connecter</string>
     <string name="invalid_login">Erreur de connexion</string>
     <string name="unknown_error">Erreur inconnue</string>
@@ -303,7 +301,6 @@
     <string name="ext_installing">En cours d\'installation</string>
     <string name="ext_installed">Installée</string>
     <string name="ext_uninstall">Désinstaller</string>
-    <string name="ext_available">Disponible</string>
     <string name="untrusted_extension">Extension non reconnue</string>
     <string name="untrusted_extension_message">Cette extension a été signée avec un certificat non fiable et n\'a pas été activée.
 \n
@@ -679,7 +676,6 @@
     <string name="theme_strawberrydaiquiri">Daiquiri aux fraises</string>
     <string name="theme_midnightdusk">Crépuscule de minuit</string>
     <string name="theme_greenapple">Pomme verte</string>
-    <string name="theme_blue">Bleu legacy</string>
     <string name="theme_monet">Dynamique</string>
     <string name="pref_app_theme">Thème de l\'appli</string>
     <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
@@ -708,7 +704,7 @@
     <string name="action_track">Suivre</string>
     <string name="pref_category_navigation">Navigation</string>
     <string name="getting_started_guide">Guide de démarrage</string>
-    <string name="pref_tablet_ui_mode">Forcer le mode tablette</string>
+    <string name="pref_tablet_ui_mode">Mode tablette</string>
     <string name="help_translate">Aider à traduire</string>
     <string name="pref_remove_exclude_categories">Catégories exclues</string>
     <string name="ext_app_info">Infos sur l\'application</string>
@@ -727,4 +723,10 @@
     <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
     <string name="update_72hour">Tous les 3 jours</string>
     <string name="download_queue_size_warning">Avertissement : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Tachiyomi</string>
+    <string name="pref_library_update_show_tab_badge">Afficher le nombre de messages non lus sur l\'icône des mises à jour</string>
+    <string name="ext_update_all">Tout mettre à jour</string>
+    <string name="channel_app_updates">Mises à jour de l\'application</string>
+    <string name="pref_auto_clear_chapter_cache">Effacer le cache du chapitre à la fermeture de l\'application</string>
+    <string name="clear_database_source_item_count">%1$d manga hors bibliothèque dans la base de données</string>
+    <string name="database_clean">Base de données effacée</string>
 </resources>

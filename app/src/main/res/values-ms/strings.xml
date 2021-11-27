@@ -89,7 +89,6 @@
     <string name="default_category">Kategori lalai</string>
     <string name="default_category_summary">Sentiasa tanya</string>
     <string name="pref_fullscreen">Skrin penuh</string>
-    <string name="pref_lock_orientation">Kunci orientasi</string>
     <string name="pref_page_transitions">Menggerakkan peralihan muka surat</string>
     <string name="pref_show_page_number">Tunjuk nombor muka surat</string>
     <string name="pref_crop_borders">Potong pinggiran</string>
@@ -174,12 +173,11 @@
     <string name="login_title">Log masuk ke %1$s</string>
     <string name="username">Nama pengguna</string>
     <string name="password">Kata laluan</string>
-    <string name="show_password">Perlihatkan kata laluan</string>
     <string name="login">Log masuk</string>
     <string name="login_success">Log masuk berjaya</string>
     <string name="invalid_login">Log masuk gagal</string>
     <string name="unknown_error">Ralat tidak diketahui</string>
-    <string name="updating_category">Kemaskini kategori dalam progres</string>
+    <string name="updating_category">mengemaskinikan kategori</string>
     <string name="local_source_badge">Setempat</string>
     <string name="no_more_results">Tiada lagi hasil</string>
     <string name="local_source">Sumber setempat</string>
@@ -265,7 +263,7 @@
     <string name="label_extension_info">Info sambungan</string>
     <string name="action_open_in_web_view">Buka dalam WebView</string>
     <string name="all_lang">Semua</string>
-    <string name="ext_update">Kemaskini</string>
+    <string name="ext_update">Kemas kini</string>
     <string name="ext_install">Pasang</string>
     <string name="ext_pending">Masih menunggu</string>
     <string name="ext_downloading">Memuat turun</string>
@@ -274,7 +272,6 @@
     <string name="ext_trust">Dipercayai</string>
     <string name="ext_untrusted">Tidak dipercayai</string>
     <string name="ext_uninstall">Nyahpasang</string>
-    <string name="ext_available">Tersedia</string>
     <string name="untrusted_extension">Sambungan tak dipercayai</string>
     <string name="untrusted_extension_message">Sambungan ini telah ditandatangani dengan sijil tidak dipercayai dan ia tidak diaktifkan.
 \n
@@ -315,7 +312,7 @@
     <string name="migration_dialog_what_to_include">Pilih data untuk disertakan</string>
     <string name="migrate">Beralih</string>
     <string name="copy">Salin</string>
-    <string name="information_empty_category">Tiada kategori dijumpai. Tekan butang tambah untuk membuat satu bagi menyusun pustaka.</string>
+    <string name="information_empty_category">Anda tidak mempunyai kategori. Ketik butang tambah untuk membuat satu untuk mengatur pustaka anda.</string>
     <string name="pref_color_filter_mode">Mod turas warna campuran</string>
     <string name="label_help">Bantuan</string>
     <string name="pref_library_update_prioritization">Susunan kemas kini</string>
@@ -497,7 +494,7 @@
     <string name="unknown_status">Status tidak diketahui</string>
     <string name="unknown_author">Pengarang tidak diketahui</string>
     <string name="action_download_unread">Muat turun bab belum dibaca</string>
-    <string name="updated_version">Dikemaskini ke v%1$s</string>
+    <string name="updated_version">Dikemas kini ke v%1$s</string>
     <string name="whats_new">Apa yang terbaharu</string>
     <string name="action_sort_date_added">Tarikh ditambah</string>
     <string name="download_insufficient_space">Memuat turun tidak berjaya kerana kekurangan ruang storan</string>
@@ -522,7 +519,7 @@
         <item quantity="other">Melangkau %d bab, sama ada sumber tidak mempunyai bab tersebut, atau ia ditapis keluar</item>
     </plurals>
     <string name="no_chapters_error">Tiada bab dijumpai</string>
-    <string name="chapter_settings_updated">Tetapan bab lalai dikemaskini</string>
+    <string name="chapter_settings_updated">Tetapan bab lalai dikemas kini</string>
     <string name="set_chapter_settings_as_default">Tetapkan sebagai lalai</string>
     <string name="also_set_chapter_settings_for_library">Gunakan juga untuk semua manga dalam pustaka</string>
     <string name="confirm_set_chapter_settings">Adakah anda pasti ingin simpan tetapan ini sebagai lalai\?</string>
@@ -580,7 +577,7 @@
     <string name="exclude">Kecuali: %s</string>
     <string name="include">Hanya: %s</string>
     <string name="none">Tiada</string>
-    <string name="pref_library_update_categories_details">Manga di dalam kategori berkecuali tidak akan dikemaskini walaupun ianya ada di dalam kategori hanya.</string>
+    <string name="pref_library_update_categories_details">Manga di dalam kategori berkecuali tidak akan dikemas kini walaupun ianya ada di dalam kategori hanya.</string>
     <string name="pref_download_new_categories_details">Manga di dalam kategori berkecuali tidak akan dimuat turun walaupun ianya ada di dalam kategori hanya.</string>
     <string name="pref_category_auto_download">Muat turun automatik</string>
     <string name="action_show_errors">Lihat butiran ralat penuh</string>
@@ -628,7 +625,6 @@
     <string name="theme_tako">Tako</string>
     <string name="theme_midnightdusk">Suasana tengah malam</string>
     <string name="theme_greenapple">Epal Hijau</string>
-    <string name="theme_blue">Biru lama</string>
     <string name="theme_monet">Dinamik</string>
     <string name="pref_app_theme">Tema aplikasi</string>
     <string name="enhanced_tracking_info">Perkidmatan yang menyediakan fungsi yang dipertingkatkan untuk sumber tertentu. Manga akan dijejaki secara automatik apabila ditambahkan ke pustaka.</string>
@@ -661,7 +657,7 @@
     <string name="action_track">Jejak</string>
     <string name="pref_category_navigation">Navigasi</string>
     <string name="getting_started_guide">Panduan penggunaan</string>
-    <string name="pref_tablet_ui_mode">Paksa UI tablet</string>
+    <string name="pref_tablet_ui_mode">UI tablet</string>
     <string name="pref_remove_exclude_categories">Kategori dikecualikan</string>
     <string name="help_translate">Bantu menterjemah</string>
     <string name="ext_app_info">Maklumat aplikasi</string>
@@ -680,4 +676,10 @@
     <string name="connected_to_wifi">Hanya menggunakan Wi-Fi</string>
     <string name="update_72hour">Setiap 3 hari</string>
     <string name="download_queue_size_warning">Amaran: muat turun secara pukal besar boleh menyebabkan sumber menjadi lebih perlahan dan/atau menyekat Tachiyomi</string>
+    <string name="pref_library_update_show_tab_badge">Tunjuk bilangan belum dibaca pada ikon Kemas kini</string>
+    <string name="ext_update_all">Kemas kini semua</string>
+    <string name="channel_app_updates">Kemas kini aplikasi</string>
+    <string name="pref_auto_clear_chapter_cache">Hapus cache bab apabila menutup aplikasi</string>
+    <string name="database_clean">Bersihkan pengkalan data</string>
+    <string name="clear_database_source_item_count">%1$d manga bukan pustaka dalam pangkalan data</string>
 </resources>

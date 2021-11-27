@@ -174,7 +174,6 @@
     <string name="rotation_free">Босхо</string>
     <string name="pref_rotation_type">Эргичийии</string>
     <string name="ext_language_info">Тыл: %1$s</string>
-    <string name="pref_lock_orientation">Эргичийиини хатаа</string>
     <string name="double_tap_anim_speed_fast">Түргэнник</string>
     <string name="double_tap_anim_speed_normal">Көннөрү</string>
     <string name="double_tap_anim_speed_0">Хамсааһына суох</string>
@@ -229,7 +228,6 @@
     <string name="pref_fullscreen">Толору экран</string>
     <string name="ext_version_info">Биэрсия:%1$s</string>
     <string name="unofficial_extension_message">Бу кэҥэтии официальнай Tachiyomi испииһэгиттэн буолбатах.</string>
-    <string name="ext_available">Кыаллар</string>
     <string name="obsolete_extension_message">Бу кэҥэтии кыаллыбат буолла.</string>
     <string name="untrusted_extension_message">Бу кэҥэтии эрэлэ суох туоһу суругунан бэлиэтэммит уонна холбоммотох.
 \n
@@ -345,7 +343,6 @@
     <string name="logout_title">%1$s\'тан тахсаҕын\?</string>
     <string name="login_success">Киирдин</string>
     <string name="login">Киири</string>
-    <string name="show_password">Аһарыгы көрдөрүү</string>
     <string name="password">Аһарык</string>
     <string name="email">Эл.пуoчта аадырыһа</string>
     <string name="username">Туттааччы аата</string>

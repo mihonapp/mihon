@@ -100,7 +100,6 @@
     <string name="ext_trust">Ai încredere</string>
     <string name="ext_untrusted">Nesigură</string>
     <string name="ext_uninstall">Dezinstalează</string>
-    <string name="ext_available">Valabilă</string>
     <string name="untrusted_extension">Extensie nesigură</string>
     <string name="untrusted_extension_message">Extensia a fost semnată cu un certificat nesigur și nu a fost activată.
 \n
@@ -110,7 +109,6 @@
     <string name="ext_version_info">Versiune: %1$s</string>
     <string name="ext_language_info">Limbă: %1$s</string>
     <string name="pref_fullscreen">Ecran complet</string>
-    <string name="pref_lock_orientation">Orientare blocată</string>
     <string name="pref_page_transitions">Animați tranzițiile de pagini</string>
     <string name="action_display_download_badge">Insigne pentru descărcări</string>
     <string name="landscape">Peisaj</string>
@@ -202,7 +200,6 @@
     <string name="login_title">Conectați-vă la %1$s</string>
     <string name="username">Nume de utilizator</string>
     <string name="password">Parolă</string>
-    <string name="show_password">Arată parola</string>
     <string name="login">Autentificare</string>
     <string name="login_success">Autentificat</string>
     <string name="invalid_login">Nu s-a putut face autentificarea</string>

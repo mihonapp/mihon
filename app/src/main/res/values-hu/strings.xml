@@ -109,7 +109,6 @@
     <string name="action_restore">Visszaállítás</string>
     <string name="app_not_available">Az app nem elérhető</string>
     <string name="pref_auto_update_manga_sync">Olvasás után a fejezetek haladásának frissítése</string>
-    <string name="pref_lock_orientation">Elforgatás zárolása</string>
     <string name="pref_page_transitions">Áttűnés lapozáskor</string>
     <string name="pref_crop_borders">Szegélyek vágása</string>
     <string name="pref_custom_brightness">Egyéni fényerő</string>
@@ -134,7 +133,6 @@
     <string name="ext_downloading">Letöltés</string>
     <string name="ext_installing">Telepítés</string>
     <string name="ext_installed">Telepítve</string>
-    <string name="ext_available">Elérhető</string>
     <string name="action_open_in_web_view">Megnyitás WebView-ben</string>
     <string name="label_help">Segítség</string>
     <string name="pref_library_update_prioritization">Frissítési sorrend</string>
@@ -260,7 +258,6 @@
     <string name="website">Weboldal</string>
     <string name="check_for_updates">Frissítések keresése</string>
     <string name="licenses">Nyílt forráskódú licenc</string>
-    <string name="show_password">Jelszó megjelenítése</string>
     <string name="tabs_header">Lapok</string>
     <string name="badges_header">Jelvények</string>
     <string name="manga_from_library">Manga a könyvtárból</string>
@@ -399,7 +396,6 @@
     <string name="theme_tealturquoise">Cián-zöld és türkiz</string>
     <string name="theme_midnightdusk">Éjfél szürkület</string>
     <string name="theme_greenapple">Zöldalma</string>
-    <string name="theme_blue">Legacy kék</string>
     <string name="theme_monet">Dinamikus</string>
     <string name="pref_app_theme">Alkalmazás témája</string>
     <string name="pref_category_appearance">Kinézet</string>
@@ -488,4 +484,15 @@
     <string name="ext_installer_pref">Telepítő</string>
     <string name="ext_install_service_notif">Bővítmény telepítése…</string>
     <string name="action_sort_count">Összes manga</string>
+    <string name="pref_library_update_show_tab_badge">Az olvasatlanok számának megjelnítése a Frissítések ikonon</string>
+    <string name="ext_update_all">Az összes frissítése</string>
+    <string name="action_display_language_badge">Nyelv</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Telepítsd és indítsd el a Shizukut, hogy kiegészítő telepítőként használd.</string>
+    <string name="enhanced_services">Továbbfejlesztett szolgáltatások</string>
+    <string name="label_warning">Figyelmeztetés</string>
+    <string name="ext_installer_shizuku_stopped">A Shizuku nem fut</string>
+    <string name="ext_installer_legacy">Régi</string>
+    <string name="tracking_info">Egyirányú szinkronizálás, hogy a fejezetben való előrehaladás frissítve legyen a követési szolgáltatásokban. Állíts be követést egyéni manga bejegyzésekre, a követési gomb lenyomásával.</string>
+    <string name="update_72hour">3 naponta</string>
+    <string name="connected_to_wifi">Csak Wi-Fi-n keresztül</string>
 </resources>

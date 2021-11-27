@@ -105,7 +105,6 @@
     <string name="ext_trust">Dôverovať</string>
     <string name="ext_untrusted">Odobrať dôveru</string>
     <string name="ext_uninstall">Odinštalovať</string>
-    <string name="ext_available">K dispozícii</string>
     <string name="untrusted_extension">Nedôveryhodné rozšírenie</string>
     <string name="untrusted_extension_message">Toto rozšírenie bolo podpísané nedôveryhodným certifikátom a nebolo aktivované.
 \n
@@ -115,7 +114,6 @@
     <string name="ext_version_info">Verzia: %1$s</string>
     <string name="ext_language_info">Jazyk: %1$s</string>
     <string name="pref_fullscreen">Na celú obrazovku</string>
-    <string name="pref_lock_orientation">Zamknúť orientáciu</string>
     <string name="pref_page_transitions">Prechod stránok</string>
     <string name="pref_double_tap_anim_speed">Rýchlosť animácie pre dvojité ťuknutie</string>
     <string name="pref_show_page_number">Zobraziť číslo strany</string>
@@ -220,7 +218,6 @@
     <string name="login_title">Prihláste sa do %1$s</string>
     <string name="username">Užívateľské meno</string>
     <string name="password">Heslo</string>
-    <string name="show_password">Ukázať heslo</string>
     <string name="login">Prihlásenie</string>
     <string name="login_success">Prihlásený</string>
     <string name="invalid_login">Nepodarilo sa prihlásiť</string>

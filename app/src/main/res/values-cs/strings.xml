@@ -64,7 +64,6 @@
     <string name="ext_trust">Důvěryhodné</string>
     <string name="ext_untrusted">Nedůvěryhodné</string>
     <string name="ext_uninstall">Odinstalovat</string>
-    <string name="ext_available">Dostupné</string>
     <string name="untrusted_extension">Nedůvěryhodné rozšíření</string>
     <string name="untrusted_extension_message">Toto rozšíření bylo podepsané nedůvěryhodným certifikátem a nebylo aktivované.
 \n
@@ -98,7 +97,6 @@
     <string name="pref_download_new">Stahovat nové kapitoly</string>
     <string name="username">Uživatelské jméno</string>
     <string name="password">Heslo</string>
-    <string name="show_password">Zobrazit heslo</string>
     <string name="login">Přihlásit se</string>
     <string name="login_success">Přihlášení proběhlo úspěšně</string>
     <string name="invalid_login">Chyba při přihlašování</string>
@@ -205,7 +203,6 @@
     <string name="charging">Nabíjení</string>
     <string name="default_category">Výchozí kategorie</string>
     <string name="default_category_summary">Vždy se zeptat</string>
-    <string name="pref_lock_orientation">Zámek orientace</string>
     <string name="pref_double_tap_anim_speed">Rychlost animace při dvojkliku</string>
     <string name="pref_crop_borders">Oříznout okraje</string>
     <string name="pref_custom_brightness">Vlastní jas</string>
@@ -656,18 +653,17 @@
     <string name="theme_strawberrydaiquiri">Jahodové Daiquiri</string>
     <string name="theme_midnightdusk">Půlnoční Soumrak</string>
     <string name="theme_greenapple">Zelené Jablko</string>
-    <string name="theme_blue">Starší Modrý</string>
     <string name="theme_monet">Dynamické</string>
     <string name="pref_app_theme">Motiv aplikace</string>
     <string name="action_sort_next_updated">Další očekávaný aktualizace</string>
     <string name="label_background_activity">Činnost na pozadí</string>
-    <string name="pref_hide_threshold">Automaticky skrýt nabídku při citlivosti posouvání</string>
+    <string name="pref_hide_threshold">Citlivost pro skrytí nabídky při rolování</string>
     <string name="pref_lowest">Nejnižší</string>
     <string name="pref_low">Nízké</string>
     <string name="pref_high">Vysoké</string>
     <string name="pref_highest">Nejvyšší</string>
     <string name="getting_started_guide">Příručka Začínáme</string>
-    <string name="pref_tablet_ui_mode">Vynutit uživ. rozhrání tabletu</string>
+    <string name="pref_tablet_ui_mode">Uživ. rozhraní tabletu</string>
     <string name="action_track">Sledovat</string>
     <plurals name="relative_time">
         <item quantity="one">Včera</item>
@@ -701,4 +697,6 @@
     <string name="action_display_language_badge">Jazyk</string>
     <string name="update_72hour">Každé 3 dny</string>
     <string name="connected_to_wifi">Jen na Wi-Fi</string>
+    <string name="pref_verbose_logging">Podrobné protokolování</string>
+    <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují Tachiyomi</string>
 </resources>

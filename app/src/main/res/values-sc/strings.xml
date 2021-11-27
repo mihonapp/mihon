@@ -102,7 +102,6 @@
     <string name="ext_trust">Mi fido</string>
     <string name="ext_untrusted">Nun mi fido</string>
     <string name="ext_uninstall">Disinstalla</string>
-    <string name="ext_available">Disponìbile</string>
     <string name="untrusted_extension">Estensione non afidàbile</string>
     <string name="untrusted_extension_message">Custa estensione est istada firmada cun unu tzertificadu chi no est afidàbile e no est istada ativada.
 \n
@@ -112,7 +111,6 @@
     <string name="ext_version_info">Versione: %1$s</string>
     <string name="ext_language_info">Limba: %1$s</string>
     <string name="pref_fullscreen">Ischermu intreu</string>
-    <string name="pref_lock_orientation">Bloca s\'orientamentu</string>
     <string name="pref_page_transitions">Ànima sas transitziones de sas pàginas</string>
     <string name="pref_double_tap_anim_speed">Lestresa de s\'animatzione de su tocu dòpiu</string>
     <string name="pref_show_page_number">Ammustra su nùmeru de sa pàgina</string>
@@ -203,7 +201,6 @@
     <string name="login_title">Intra in %1$s</string>
     <string name="username">Nùmene impreadore</string>
     <string name="password">Crae de intrada</string>
-    <string name="show_password">Ammustra sa crae</string>
     <string name="login">Intra</string>
     <string name="login_success">Ses intradu</string>
     <string name="invalid_login">Intrada fallida</string>
@@ -645,7 +642,6 @@
     <string name="theme_strawberrydaiquiri">Daiquiri a sa Fràgola</string>
     <string name="theme_midnightdusk">Intrinada de mesanote</string>
     <string name="theme_greenapple">Mela birde</string>
-    <string name="theme_blue">Biaitu traditzionale</string>
     <string name="theme_monet">Dinàmicu</string>
     <string name="pref_app_theme">Tema de s\'aplicatzione</string>
     <string name="action_sort_next_updated">Agiornamentu isetadu imbeniente</string>
@@ -654,7 +650,7 @@
     <string name="pref_low">Bassa</string>
     <string name="pref_highest">Arta meda</string>
     <string name="pref_high">Arta</string>
-    <string name="pref_hide_threshold">Sensibilidade de sa cuadura de su menù in manera automàtica cun s\'iscurrimentu</string>
+    <string name="pref_hide_threshold">Sensibilidade pro cuare su menù cun s\'iscurrimentu</string>
     <string name="label_background_activity">Atividade in s\'isfundu</string>
     <string name="pref_inverted_colors">Furriada</string>
     <string name="pref_relative_time_long">Longa (curtza+, n dies a oe)</string>
@@ -693,4 +689,7 @@
     <string name="update_72hour">Cada 3 dies</string>
     <string name="connected_to_wifi">Petzi cun su Wi-Fi</string>
     <string name="download_queue_size_warning">Dae cara: sos iscarrigamentos de massa mannos diant pòdere rallentare sas fontes e/o blocare Tachiyomi</string>
+    <string name="pref_library_update_show_tab_badge">Ammustra su nùmeru de capìtulos non lèghidos in s\'icona de sos agiornamentos</string>
+    <string name="ext_update_all">Agiorna totu</string>
+    <string name="channel_app_updates">Agiornamentos de s\'aplicatzione</string>
 </resources>

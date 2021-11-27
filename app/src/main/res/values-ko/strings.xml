@@ -98,7 +98,6 @@
     <string name="ext_trust">신뢰</string>
     <string name="ext_untrusted">신뢰되지않음</string>
     <string name="ext_uninstall">삭제</string>
-    <string name="ext_available">이용 가능</string>
     <string name="untrusted_extension">신뢰할 수 없는 확장기능</string>
     <string name="untrusted_extension_message">이 확장기능은 신뢰할 수 없는 인증서로 서명되었으며 활성화되지도 않았습니다.
 \n
@@ -108,7 +107,6 @@
     <string name="ext_version_info">버전: %1$s</string>
     <string name="ext_language_info">언어: %1$s</string>
     <string name="pref_fullscreen">전체화면</string>
-    <string name="pref_lock_orientation">회전 잠금</string>
     <string name="pref_double_tap_anim_speed">더블 탭 애니메이션 속도</string>
     <string name="pref_show_page_number">페이지 번호 표시</string>
     <string name="pref_crop_borders">모서리 자르기</string>
@@ -172,7 +170,6 @@
     <string name="login_title">%1$s 으로 로그인</string>
     <string name="username">유저네임</string>
     <string name="password">비밀번호</string>
-    <string name="show_password">비밀번호 표시</string>
     <string name="login">로그인</string>
     <string name="login_success">로그인 성공</string>
     <string name="invalid_login">로그인 오류</string>

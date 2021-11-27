@@ -91,7 +91,6 @@
     <string name="ext_trust">トラスト</string>
     <string name="ext_untrusted">信用できない</string>
     <string name="ext_uninstall">アンインストール</string>
-    <string name="ext_available">利用可能</string>
     <string name="untrusted_extension">信頼できない拡張</string>
     <string name="ext_version_info">バージョン：%1$s</string>
     <string name="ext_language_info">言語： %1$s</string>
@@ -159,7 +158,6 @@
     <string name="login_title">%1$sにログイン</string>
     <string name="username">ユーザー名</string>
     <string name="password">パスワード</string>
-    <string name="show_password">パスワードを表示</string>
     <string name="login">ログイン</string>
     <string name="login_success">ログインしました</string>
     <string name="action_add">追加</string>
@@ -179,7 +177,6 @@
 \n悪意のある拡張機能はTachiyomiに保存されているすべてのログイン情報を読み取ること、または任意のコードを実行することができます。
 \n
 \nこれらのリスクを受け入れ、この拡張機能を信頼してもよろしいですか？</string>
-    <string name="pref_lock_orientation">ロックの向き</string>
     <string name="pref_show_page_number">ページ数を表示</string>
     <string name="pref_keep_screen_on">画面を常にON</string>
     <string name="scale_type_fit_height">高さに合わせる</string>
@@ -627,7 +624,6 @@
     <string name="theme_strawberrydaiquiri">ストロベリーダイキリ</string>
     <string name="theme_midnightdusk">黄昏</string>
     <string name="theme_greenapple">青りんご</string>
-    <string name="theme_blue">レガシーブルー</string>
     <string name="pref_app_theme">アプリテーマ</string>
     <string name="action_start_downloading_now">ダウンロードを開始します</string>
     <string name="notification_updating">ライブラリを更新中... (%1$d/%2$d)</string>
@@ -652,7 +648,7 @@
     <string name="recently">最近</string>
     <string name="help_translate">翻訳に協力</string>
     <string name="getting_started_guide">入門ガイド</string>
-    <string name="pref_tablet_ui_mode">タブレットUIを常に使用</string>
+    <string name="pref_tablet_ui_mode">タブレットUI</string>
     <string name="action_track">追跡</string>
     <string name="pref_remove_exclude_categories">除外されるカテゴリー</string>
     <string name="pref_hide_threshold">メニューを自動で非表示する時のスクロール感度</string>
@@ -672,12 +668,18 @@
     <string name="enhanced_services">高度なサービス</string>
     <string name="enhanced_tracking_info">特定ソース専用の高度な機能を提供するサービスです。漫画はライブラリに追加される時、自動で追跡され始めます。</string>
     <string name="backup_info">バックアップの自動作成は強く推奨されます。ほかの場所にもコピーを保管してください。</string>
-    <string name="pref_verbose_logging_summary">システムログにverboseログを出力（アプリパフォーマンスには悪影響）</string>
+    <string name="pref_verbose_logging_summary">システムログにverboseログを出力（アプリのパフォーマンスが低下します）</string>
     <string name="notification_size_warning">警告：大規模のアップデートはソースに有害で、ソースを遅くし、電池の消耗を増加する可能性があります</string>
     <string name="action_display_language_badge">言語</string>
     <string name="label_warning">警告</string>
-    <string name="pref_verbose_logging">Verboseロギング</string>
+    <string name="pref_verbose_logging">Verboseログ出力</string>
     <string name="download_queue_size_warning">警告：大量の一括ダウンロードにより、ソースは遅くなったり、Tachiyomiを接続禁止したりする恐れがあります</string>
     <string name="update_72hour">3日ごと</string>
     <string name="connected_to_wifi">Wi-Fi接続時のみ</string>
+    <string name="pref_library_update_show_tab_badge">更新アイコンで未読カウンターを表示</string>
+    <string name="ext_update_all">全て更新</string>
+    <string name="channel_app_updates">アプリ更新</string>
+    <string name="clear_database_source_item_count">データベースにはライブラリにない%1$d件のマンガがあります</string>
+    <string name="pref_auto_clear_chapter_cache">アプリ終了時に章のキャッシュを消去</string>
+    <string name="database_clean">データベースクリーンアップ</string>
 </resources>

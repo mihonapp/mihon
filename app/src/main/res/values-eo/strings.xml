@@ -17,7 +17,6 @@
     <string name="label_backup">Arkivi kaj restaŭri</string>
     <string name="website">Retejo</string>
     <string name="username">Uzantnomo</string>
-    <string name="show_password">Montri pasvorton</string>
     <string name="password">Pasvorto</string>
     <string name="email">Retpoŝta adreso</string>
     <string name="action_stop">Halti</string>
@@ -102,7 +101,6 @@
     <string name="action_retry">Klopodi denove</string>
     <string name="action_next_chapter">Sekvanta ĉapitro</string>
     <string name="action_previous_chapter">Antaŭa ĉapitro</string>
-    <string name="ext_available">Disponebla</string>
     <string name="ext_uninstall">Malinstali</string>
     <string name="ext_untrusted">Malfidanta</string>
     <string name="ext_unofficial">Neoficiala</string>
@@ -200,7 +198,6 @@
     <string name="pref_true_color">32-bitaj koloroj</string>
     <string name="pref_show_reading_mode">Legada reĝimo</string>
     <string name="pref_show_page_number">Montri numero de paĝo</string>
-    <string name="pref_lock_orientation">Ŝlosi orientiĝon</string>
     <string name="pref_fullscreen">Plenekrano</string>
     <string name="obsolete_extension_message">Ĉi tiu aldonaĵo ne estas plu disponebla.</string>
     <string name="all_lang">Ĉiuj</string>
@@ -539,7 +536,6 @@
     <string name="theme_yotsuba">Jotsuba</string>
     <string name="theme_tealturquoise">Bluverda k verdblua</string>
     <string name="theme_strawberrydaiquiri">Fraga Dajkŭiri</string>
-    <string name="theme_blue">Malnovblua</string>
     <string name="theme_monet">Dinamika</string>
     <string name="pref_category_tracking">Ŝanĝspurado</string>
     <string name="action_display_local_badge">Lokaj ŝildoj</string>

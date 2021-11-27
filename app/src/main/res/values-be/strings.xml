@@ -179,7 +179,6 @@
     <string name="theme_strawberrydaiquiri">Клубнічны дайкiры</string>
     <string name="theme_midnightdusk">Паўночнае змярканне</string>
     <string name="theme_greenapple">Зялёны яблык</string>
-    <string name="theme_blue">Сіні</string>
     <string name="theme_monet">Дынамічная</string>
     <string name="pref_app_theme">Тэма прыкладання</string>
     <string name="theme_dark">Уключаны</string>
@@ -213,7 +212,6 @@
     <string name="information_no_recent">Ніякіх апошніх абнаўленняў</string>
     <string name="information_no_downloads">Ніякіх загрузак</string>
     <string name="pref_page_transitions">Анімацыя пераходаў паміж старонкамі</string>
-    <string name="pref_lock_orientation">Блакаваць арыентацыю</string>
     <string name="pref_cutout_short">Паказваць змесціва ў галіне выраза</string>
     <string name="pref_dual_page_invert_summary">Калі размяшчэнне падзелу на дзве старонкі не адпавядае кірунку чытання</string>
     <string name="pref_dual_page_invert">Інвертаваць размяшчэнне з падзелам на дзве старонкі</string>
@@ -233,7 +231,6 @@
 \n
 \nДавяраючы гэтаму сертыфікату, вы прымаеце на сябе гэтыя рызыкі.</string>
     <string name="untrusted_extension">Ненадзейнае пашырэнне</string>
-    <string name="ext_available">Даступна</string>
     <string name="pref_viewer_nav">Схема навігацыі</string>
     <string name="pager_viewer">Пастаронкава</string>
     <string name="vertical_plus_viewer">Бесперапынна вертыкальна</string>

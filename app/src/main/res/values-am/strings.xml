@@ -8,7 +8,6 @@
 \n
 \nበዚህ የምስክር ወረቀት በመተማመን እነዚህን አደጋዎች ይቀበላሉ ፡፡</string>
     <string name="untrusted_extension">የማይታመን ቅጥያ</string>
-    <string name="ext_available">ይገኛል</string>
     <string name="ext_uninstall">ማራገፍ</string>
     <string name="ext_untrusted">የማይታመን</string>
     <string name="ext_unofficial">ኦፊሴላዊ ያልሆነ</string>
@@ -251,7 +250,6 @@
     <string name="pref_show_page_number">የገጽ ቁጥርን አሳይ</string>
     <string name="pref_double_tap_anim_speed">ሁለቴ መታ የአኒሜሽን ፍጥነት</string>
     <string name="pref_page_transitions">የገጽ ሽግግሮች</string>
-    <string name="pref_lock_orientation">የመቆለፊያ አቀማመጥ</string>
     <string name="pref_cutout_short">በመቁረጥ አካባቢ ውስጥ ይዘትን አሳይ</string>
     <string name="pref_fullscreen">ሙሉ ማያ</string>
     <string name="ext_nsfw_warning">18+ ይዘትን ይያዝ</string>

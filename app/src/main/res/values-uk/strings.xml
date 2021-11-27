@@ -55,7 +55,7 @@
     <string name="action_display">Відобразити</string>
     <string name="action_display_grid">Компактна сітка</string>
     <string name="action_display_list">Список</string>
-    <string name="action_display_download_badge">Значок завантажених</string>
+    <string name="action_display_download_badge">Завантажені глави</string>
     <string name="action_cancel">Скасувати</string>
     <string name="action_sort">Сортувати</string>
     <string name="action_install">Встановити</string>
@@ -102,7 +102,6 @@
     <string name="ext_trust">Довірений</string>
     <string name="ext_untrusted">Ненадійне</string>
     <string name="ext_uninstall">Видалити</string>
-    <string name="ext_available">Доступно</string>
     <string name="untrusted_extension">Ненадійне розширення</string>
     <string name="untrusted_extension_message">Це розширення було підписано ненадійним сертифікатом та не було активовано.
 \n
@@ -112,7 +111,6 @@
     <string name="ext_version_info">Версія:%1$s</string>
     <string name="ext_language_info">Мова: %1$s</string>
     <string name="pref_fullscreen">Повноекранний режим</string>
-    <string name="pref_lock_orientation">Блокувати орієнтацію</string>
     <string name="pref_page_transitions">Анімація переходів сторінки</string>
     <string name="pref_double_tap_anim_speed">Швидкість анімації при подвійному натиснені</string>
     <string name="pref_show_page_number">Показувати номер сторінки</string>
@@ -202,7 +200,6 @@
     <string name="login_title">Авторизація до %1$s</string>
     <string name="username">Ім`я користувача</string>
     <string name="password">Пароль</string>
-    <string name="show_password">Показувати пароль</string>
     <string name="login">Логін</string>
     <string name="login_success">Вхід успішний</string>
     <string name="invalid_login">Помилка авторизації</string>
@@ -448,7 +445,7 @@
     </plurals>
     <string name="pref_library_update_refresh_metadata_summary">Перевірити наявність нової обкладинки та подробиць при оновленні бібліотеки</string>
     <string name="pref_library_update_refresh_metadata">Автоматично оновлювати метадані</string>
-    <string name="action_display_unread_badge">Значок непрочитаних</string>
+    <string name="action_display_unread_badge">Непрочитані глави</string>
     <string name="action_migrate">Мігрувати</string>
     <string name="sort_by_upload_date">За датою завантаження</string>
     <string name="local_source_help_guide">Посібник місцевого джерела</string>
@@ -615,7 +612,7 @@
     <string name="none">Ніхто</string>
     <string name="pref_library_update_categories_details">Мангу в виключених категоріях не буде оновлено, навіть якщо вона також знаходиться у включених категоріях.</string>
     <string name="action_sort_chapter_fetch_date">Дата отримання</string>
-    <string name="action_show_errors">Показати помилки</string>
+    <string name="action_show_errors">Побачити всі деталі помилки</string>
     <string name="update_check_eol">Ця версія Android більше не підтримується</string>
     <string name="clipboard_copy_error">Не вдалось скопіювати до буферу обміну</string>
     <string name="rotation_landscape">Альбомна</string>
@@ -650,7 +647,7 @@
     <string name="alignment_center">Посередині</string>
     <string name="alignment_top">Згори</string>
     <string name="pref_side_nav_icon_alignment">Вирівнювання значків бокової навігації</string>
-    <string name="action_display_local_badge">Локальні значки</string>
+    <string name="action_display_local_badge">Локальна манга</string>
     <string name="information_empty_category_dialog">У вашій бібліотеці ще немає категорій.</string>
     <string name="notification_updating">Оновлення бібліотеки... (%1$d/%2$d)</string>
     <string name="tracker_komga_warning">Цей трекер сумісний тільки з джерелом Komga.</string>
@@ -663,7 +660,7 @@
     <string name="pref_low">Низька</string>
     <string name="pref_high">Висока</string>
     <string name="pref_highest">Найвища</string>
-    <string name="pref_hide_threshold">Чутливість автоматичного приховування меню при прокручуванні</string>
+    <string name="pref_hide_threshold">Чутливість приховування меню при прокручуванні</string>
     <string name="pref_dark_theme_pure_black">Чистий чорний темний режим</string>
     <string name="theme_yotsuba">Йоцуба</string>
     <string name="theme_yinyang">Інь та Янь</string>
@@ -671,7 +668,6 @@
     <string name="theme_strawberrydaiquiri">Полуничний Дайкірі</string>
     <string name="theme_midnightdusk">Опівнічні Сутінки</string>
     <string name="theme_greenapple">Зелене яблуко</string>
-    <string name="theme_blue">Спадкова синя</string>
     <string name="theme_monet">Динамічна</string>
     <string name="pref_app_theme">Тема додатку</string>
     <string name="action_start_downloading_now">Розпочати завантаження зараз</string>
@@ -696,7 +692,7 @@
     <string name="action_track">Доріжка</string>
     <string name="pref_category_navigation">Навігація</string>
     <string name="getting_started_guide">Посібник з початку роботи</string>
-    <string name="pref_tablet_ui_mode">Примусовий планшетний інтерфейс</string>
+    <string name="pref_tablet_ui_mode">Планшетний інтерфейс</string>
     <string name="help_translate">Допомогти з перекладом</string>
     <string name="ext_installer_pref">Встановлювач</string>
     <string name="ext_installer_shizuku_stopped">Shizuku не парцює</string>
@@ -706,4 +702,16 @@
     <string name="ext_app_info">Про додаток</string>
     <string name="ext_installer_legacy">Спадок</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Встановіть та запустіть Shizuku для використання Shizuku, як встановлювача розширень.</string>
+    <string name="pref_verbose_logging">Докладне журналювання</string>
+    <string name="pref_verbose_logging_summary">Записувати докладні журнали до системного журналу (знижує продуктивність додатку)</string>
+    <string name="notification_size_warning">Попередження: великі оновлення можуть призвести до сповільнення джерел або збільшити використання батареї</string>
+    <string name="channel_app_updates">Оновлення додатку</string>
+    <string name="download_queue_size_warning">Попередження: великі об`єми завантажень можуть призвести до сповільнення роботи джерел та/або блокуванню Tachiyomi</string>
+    <string name="pref_library_update_show_tab_badge">Показувати кількість непрочитаних на значку оновлення</string>
+    <string name="ext_update_all">Оновити все</string>
+    <string name="backup_info">Наполегливо рекомендується використовувати автоматичне резервування. Також ви повинні зберігати копії в інших місцях.</string>
+    <string name="label_warning">Попередження</string>
+    <string name="action_display_language_badge">Мова</string>
+    <string name="update_72hour">Що 3 дні</string>
+    <string name="connected_to_wifi">Тільки через Wi-Fi</string>
 </resources>

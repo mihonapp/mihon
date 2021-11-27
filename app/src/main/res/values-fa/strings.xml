@@ -274,7 +274,6 @@
     <string name="pref_show_reading_mode">نمایش حالت خواندن</string>
     <string name="pref_show_page_number">نمایش شماره صفحه</string>
     <string name="pref_page_transitions">انمیشن‌های تغییر صفحه</string>
-    <string name="pref_lock_orientation">جهت قفل</string>
     <string name="pref_fullscreen">تمام صفحه</string>
     <string name="ext_language_info">زبان: %1$s</string>
     <string name="ext_version_info">نگارش %1$s</string>
@@ -286,7 +285,6 @@
 \n
 \nبا اعتماد به این گواهی شما این خطرات را می‌پذیرید.</string>
     <string name="untrusted_extension">افزونه نامطمئن</string>
-    <string name="ext_available">موجود</string>
     <string name="ext_uninstall">حذف نصب</string>
     <string name="ext_untrusted">نامطمئن</string>
     <string name="ext_unofficial">غیررسمی</string>
@@ -398,7 +396,6 @@
     <string name="logout_title">از%1$s خارج می شوید؟</string>
     <string name="login_success">وارد شدید</string>
     <string name="login">ورود</string>
-    <string name="show_password">نمایش گذرواژه</string>
     <string name="password">گذرواژه</string>
     <string name="email">آدرس ایمیل</string>
     <string name="username">نام کاربری</string>

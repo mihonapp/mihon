@@ -81,7 +81,7 @@
     <string name="history">Kasaysayan</string>
     <string name="track">Tina-track</string>
     <string name="chapters">Mga Kabanata</string>
-    <string name="manga">Mga Manga</string>
+    <string name="manga">Manga</string>
     <string name="categories">Mga Kategorya</string>
     <string name="information_empty_category">Wala ka pang kategorya. Pindutin ang plus button para makagawa ka ng isa para maayos mo ang Aklatan mo.</string>
     <string name="information_empty_library">Walang laman ang Aklatan mo</string>
@@ -200,7 +200,6 @@
     <string name="pref_show_page_number">Ipakita ang bilang ng pahina</string>
     <string name="pref_double_tap_anim_speed">Bilis ng animasyon sa pagdoble-pindot</string>
     <string name="pref_page_transitions">I-animate ang paglipat-pahina</string>
-    <string name="pref_lock_orientation">I-lock ang ayos</string>
     <string name="pref_cutout_short">Ipakita ang laman sa cutout area</string>
     <string name="pref_fullscreen">Naka-fullscreen</string>
     <string name="ext_language_info">Wika: %1$s</string>
@@ -213,7 +212,6 @@
 \n
 \nTinatanggap mo ang mga bantang ito sa pagtiwala sa certificate na ito.</string>
     <string name="untrusted_extension">Kaduda-dudang dugtong</string>
-    <string name="ext_available">Mayroon</string>
     <string name="ext_uninstall">I-uninstall</string>
     <string name="ext_trust">Tiwala</string>
     <string name="ext_untrusted">Kaduda-duda</string>
@@ -458,7 +456,6 @@
     <string name="logout_title">Mag-logout sa %1$s\?</string>
     <string name="login_success">Naka-login ka na</string>
     <string name="login">Mag-login</string>
-    <string name="show_password">Ipakita ang password</string>
     <string name="password">Hudyat (password)</string>
     <string name="email">Email address</string>
     <string name="username">Sagisag (username)</string>
@@ -641,7 +638,6 @@
     <string name="enhanced_services">Pinahusay na serbisyo</string>
     <string name="theme_midnightdusk">Hatinggabi</string>
     <string name="theme_greenapple">Berdeng Mansanas</string>
-    <string name="theme_blue">Bughaw (Legacy)</string>
     <string name="theme_monet">Nagbabago</string>
     <string name="pref_app_theme">Tema</string>
     <string name="action_sort_next_updated">Inaasahang susunod na bago</string>
@@ -674,7 +670,7 @@
     <string name="action_track">Sundan</string>
     <string name="pref_category_navigation">Nabigasyon</string>
     <string name="getting_started_guide">Gabay sa Pagsisimula</string>
-    <string name="pref_tablet_ui_mode">Puwersahang Tablet UI</string>
+    <string name="pref_tablet_ui_mode">Pang-tablet na UI</string>
     <string name="help_translate">Tumulong sa pagsalin</string>
     <string name="pref_remove_exclude_categories">Kategoryang di-kasama</string>
     <string name="ext_app_info">Patungkol</string>
@@ -693,4 +689,10 @@
     <string name="connected_to_wifi">Sa Wi-Fi lang</string>
     <string name="update_72hour">Kada 3 araw</string>
     <string name="download_queue_size_warning">Babala: maaaring humantong sa pagbagal ng mga source at/o pagharang sa Tachiyomi kung magda-download nang maramihan</string>
+    <string name="pref_library_update_show_tab_badge">Ipakita ang bilang ng di pa nabasa sa Bago</string>
+    <string name="channel_app_updates">Mga update sa app</string>
+    <string name="ext_update_all">I-update lahat</string>
+    <string name="clear_database_source_item_count">May %1$d (na) manga sa database na wala sa Aklatan</string>
+    <string name="pref_auto_clear_chapter_cache">Linisin ang cache ng kabanata pagkasara</string>
+    <string name="database_clean">Linisin ang database</string>
 </resources>

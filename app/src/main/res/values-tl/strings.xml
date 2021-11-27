@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="categories">Kategorya</string>
+    <string name="name">Pangalan</string>
+    <string name="manga">Manga</string>
+    <string name="chapters">Mga Kabanata</string>
+</resources>

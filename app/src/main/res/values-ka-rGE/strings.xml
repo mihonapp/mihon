@@ -130,12 +130,10 @@
     <string name="ext_pending">მოლოდინში</string>
     <string name="ext_unofficial">არაოფიციცალური</string>
     <string name="ext_uninstall">წაშლა</string>
-    <string name="ext_available">ხელმისაწვდომია</string>
     <string name="ext_version_info">ვერსია: %1$s</string>
     <string name="ext_language_info">ენა: %1$s</string>
     <string name="pref_fullscreen">მთლიან ეკრანზე</string>
     <string name="pref_cutout_short">კონტენტის ჩვენება ჩამოჭრილ ადგილზე</string>
-    <string name="pref_lock_orientation">ორიენტაციის დაფიქსირება</string>
     <string name="pref_page_transitions">გვერდის გადასვლების ანიმირება</string>
     <string name="pref_show_page_number">გვერდის ნომრის ჩვენება</string>
     <string name="pref_show_reading_mode">კითხვის რეჟიმის ჩვენება</string>
@@ -258,7 +256,6 @@
     <string name="username">მომხმარებლის სახელი</string>
     <string name="email">ელ. ფოსტა</string>
     <string name="password">პაროლი</string>
-    <string name="show_password">პაროლის ჩვენება</string>
     <string name="login">შესვლა</string>
     <string name="login_success">შესულია</string>
     <string name="logout_title">გამოვიდე %1$s-დან?</string>

@@ -108,7 +108,6 @@
     <string name="ext_trust">เชื่อถือ</string>
     <string name="ext_untrusted">ไม่น่าเชื่อถือ</string>
     <string name="ext_uninstall">ลบการติดตั้ง</string>
-    <string name="ext_available">พร้อมใช้งาน</string>
     <string name="untrusted_extension">ส่วนขยายที่ไม่น่าเชื่อถือ</string>
     <string name="untrusted_extension_message">ส่วนต่อขยายนี้ถูกรับรองจากใบรับรองที่ไม่น่าเชื่อถือ และมันไม่ทำงาน
 \n
@@ -117,7 +116,6 @@
 \nคุณยอมต้องยอมรับความเสี่ยง กรณีเชื่อถือใบรับรองนี้</string>
     <string name="ext_version_info">เวอร์ชัน: %1$s</string>
     <string name="pref_fullscreen">เต็มจอ</string>
-    <string name="pref_lock_orientation">ล๊อคหมุนจอ</string>
     <string name="pref_page_transitions">เล่นแอนนิเมเชินเปลี่ยนหน้า</string>
     <string name="pref_double_tap_anim_speed">ความเร็วการแตะ2รอบ</string>
     <string name="pref_show_page_number">แสดงเลขหน้า</string>
@@ -200,7 +198,6 @@
     <string name="login_title">เข้าสู่ระบบสำหรับ %1$s</string>
     <string name="username">ชื่อผู้ใช้</string>
     <string name="password">รหัสผ่าน</string>
-    <string name="show_password">แสดงรหัสผ่าน</string>
     <string name="login">ลงชื่อเข้าใช้</string>
     <string name="login_success">เข้าสู่ระบบแล้ว</string>
     <string name="invalid_login">ไม่สามารถเข้าสู่ระบบได้</string>

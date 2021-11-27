@@ -148,7 +148,6 @@
     <string name="pref_library_columns">Количество элементов</string>
     <string name="pref_library_update_interval">Частота обновления</string>
     <string name="pref_library_update_restriction">Ограничения при обновлении</string>
-    <string name="pref_lock_orientation">Блокировать ориентацию</string>
     <string name="pref_read_with_tapping">Нажатие</string>
     <string name="pref_read_with_volume_keys">Клавиши громкости</string>
     <string name="pref_reader_navigation">Навигация</string>
@@ -178,7 +177,6 @@
     <string name="services">Услуги</string>
     <string name="set_as_cover">Установить как обложку</string>
     <string name="show_chapter_number">Номер главы</string>
-    <string name="show_password">Показать пароль</string>
     <string name="show_title">Название источника</string>
     <string name="snack_add_to_library">Добавить комикс в библиотеку\?</string>
     <string name="sort_by_number">По номеру главы</string>
@@ -273,7 +271,6 @@
     <string name="ext_installed">Установлено</string>
     <string name="ext_untrusted">Ненадёжное</string>
     <string name="ext_uninstall">Удалить</string>
-    <string name="ext_available">Доступно</string>
     <string name="untrusted_extension">Ненадежное расширение</string>
     <string name="untrusted_extension_message">Это расширение было подписано ненадежным сертификатом и не было активировано.
 \n
@@ -658,7 +655,6 @@
     <string name="action_start_downloading_now">Начать загрузку сейчас</string>
     <string name="action_sort_next_updated">Следующее ожидаемое обновление</string>
     <string name="theme_greenapple">Зелёное Яблоко</string>
-    <string name="theme_blue">Синее Наследие</string>
     <string name="pref_app_theme">Тема приложения</string>
     <string name="pref_dark_theme_pure_black">Тёмный режим с чистым чёрным</string>
     <string name="theme_yotsuba">Ёцуба</string>
@@ -701,21 +697,27 @@
     <string name="pref_category_navigation">Навигация</string>
     <string name="pref_tablet_ui_mode">Планшетный интерфейс</string>
     <string name="pref_remove_exclude_categories">Исключенные категории</string>
-    <string name="help_translate">Помочь перевести</string>
+    <string name="help_translate">Помочь с переводом</string>
     <string name="ext_app_info">О приложении</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Установите и запустите Shizuku, для использования Shizuku, как установщик расширений.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku не работает</string>
     <string name="ext_installer_legacy">Старый</string>
     <string name="ext_installer_pref">Установщик</string>
-    <string name="ext_install_service_notif">Устанавливается расширение…</string>
+    <string name="ext_install_service_notif">Установка расширения…</string>
     <string name="action_sort_count">По количеству комиксов</string>
     <string name="pref_verbose_logging">Подробное логирование</string>
-    <string name="pref_verbose_logging_summary">Записывать подробные логи, в системный лог (снижает производительность приложения)</string>
+    <string name="pref_verbose_logging_summary">Записывать подробные логи в системный лог (снижает производительность приложения)</string>
     <string name="action_display_language_badge">Язык</string>
     <string name="label_warning">Предупреждение</string>
-    <string name="notification_size_warning">Предупреждение: большие обновления комиксов могут привести, к замедлению работы источников, а также, к увеличению расхода батареи</string>
+    <string name="notification_size_warning">Предупреждение: большие обновления комиксов могут привести к замедлению работы источников, а также к увеличению расхода батареи</string>
     <string name="backup_info">Настоятельно рекомендуется использовать автоматические резервные копии. Вы также должны хранить копии в других местах.</string>
     <string name="connected_to_wifi">Только по Wi-Fi</string>
     <string name="update_72hour">Каждые 3 дня</string>
-    <string name="download_queue_size_warning">Предупреждение: большие объемы загрузок глав, могут привести, к замедлению работы источников и/или блокировке Tachiyomi</string>
+    <string name="download_queue_size_warning">Предупреждение: большие объемы загрузок глав могут привести к замедлению работы источников и/или блокировке Tachiyomi</string>
+    <string name="pref_library_update_show_tab_badge">Показывать кол-во непрочитанных на иконке Обновления</string>
+    <string name="ext_update_all">Обновить все</string>
+    <string name="channel_app_updates">Обновления приложения</string>
+    <string name="pref_auto_clear_chapter_cache">Очищать кэш главы при закрытии приложения</string>
+    <string name="clear_database_source_item_count">%1$d не-библиотечный комикс в базе данных</string>
+    <string name="database_clean">Очистка базы данных</string>
 </resources>

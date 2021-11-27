@@ -111,7 +111,6 @@
     <string name="login_title">Logowanie do %1$s</string>
     <string name="username">Nazwa użytkownika</string>
     <string name="password">Hasło</string>
-    <string name="show_password">Pokaż hasło</string>
     <string name="login">Zaloguj się</string>
     <string name="invalid_login">Nie udało się zalogować</string>
     <string name="unknown_error">Nieznany błąd</string>
@@ -140,7 +139,6 @@
     <string name="default_category">Domyślna kategoria</string>
     <string name="default_category_summary">Zawsze pytaj</string>
     <string name="pref_fullscreen">Pełny ekran</string>
-    <string name="pref_lock_orientation">Zablokuj orientację</string>
     <string name="pref_page_transitions">Animacje przejścia stron</string>
     <string name="pref_show_page_number">Pokazuj numer strony</string>
     <string name="pref_crop_borders">Przycinaj krawędzie</string>
@@ -286,7 +284,6 @@
     <string name="ext_update">Aktualizuj</string>
     <string name="ext_trust">Ufaj</string>
     <string name="ext_untrusted">Niezaufane</string>
-    <string name="ext_available">Dostępne</string>
     <string name="untrusted_extension">Niezaufane rozszerzenie</string>
     <string name="untrusted_extension_message">To rozszerzenie było podpisane niezaufanym certyfikatem i nie zostało aktywowane.
 \n
@@ -441,7 +438,7 @@
         <item quantity="other">Rozdziały %1$s i %2$d</item>
     </plurals>
     <string name="notification_chapters_multiple">Rozdziały %1$s</string>
-    <string name="notification_chapters_single_and_more">%1$s i %2$d więcej rozdziałów</string>
+    <string name="notification_chapters_single_and_more">Rozdział %1$s i %2$d więcej</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d nowy rozdział</item>
         <item quantity="few">%1$d nowych rozdziałów</item>
@@ -659,7 +656,6 @@
     <string name="action_start_downloading_now">Zacznij pobierać teraz</string>
     <string name="notification_updating">Aktualizowanie biblioteki… (%1$d/%2$d)</string>
     <string name="theme_greenapple">Zielone jabłko</string>
-    <string name="theme_blue">Niebieski</string>
     <string name="theme_monet">Dynamiczny</string>
     <string name="pref_app_theme">Motyw aplikacji</string>
     <string name="action_sort_next_updated">Następna spodziewana aktualizacja</string>
@@ -715,4 +711,10 @@
     <string name="update_72hour">Co 3 dni</string>
     <string name="connected_to_wifi">Tylko przez Wi-Fi</string>
     <string name="enhanced_tracking_info">Usługi dostarczania ulepszonych funkcji dla niektórych źródeł. Mangi po dodaniu do biblioteki są automatycznie śledzone.</string>
+    <string name="pref_library_update_show_tab_badge">Pokaż wskaźnik nieprzeczytanych na ikonie Aktualizacje</string>
+    <string name="enhanced_services">Ulepszone usługi śledzenia</string>
+    <string name="channel_app_updates">Aktualizacje aplikacji</string>
+    <string name="ext_update_all">Zaktualizuj wszystko</string>
+    <string name="ext_installer_legacy">Przestarzały</string>
+    <string name="pref_relative_format">Relatywne znaczniki czasowe</string>
 </resources>

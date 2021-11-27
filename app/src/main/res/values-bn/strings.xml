@@ -2,7 +2,7 @@
 <resources>
     <string name="name">নাম</string>
     <string name="categories">বিভাগসমূহ</string>
-    <string name="manga">মাংগা</string>
+    <string name="manga">মাঙ্গা</string>
     <string name="chapters">অধ্যায়সমূহ</string>
     <string name="track">ট্র্যাকিং</string>
     <string name="history">ইতিহাস</string>
@@ -52,7 +52,7 @@
     <string name="action_display">প্রদর্শন</string>
     <string name="action_display_grid">কমপ্যাক্ট গ্রিড</string>
     <string name="action_display_list">তালিকা</string>
-    <string name="action_display_download_badge">ডাউনলোড চিহ্ন</string>
+    <string name="action_display_download_badge">ডাউনলোড করা অধ্যায়</string>
     <string name="action_cancel">বাতিল</string>
     <string name="action_sort">সাজান</string>
     <string name="action_install">ইন্সটল করুন</string>
@@ -90,7 +90,6 @@
     <string name="default_category">সাধারণ বিভাগ</string>
     <string name="default_category_summary">সর্বদা জিজ্ঞাসা করুন</string>
     <string name="pref_fullscreen">সম্পূর্ণ পর্দা</string>
-    <string name="pref_lock_orientation">অরিয়েন্টেশন বন্ধ রাখুন</string>
     <string name="pref_page_transitions">পৃষ্ঠা পালটানো এনিমেট করুন</string>
     <string name="pref_show_page_number">পৃষ্ঠা নম্বর দেখান</string>
     <string name="pref_crop_borders">প্রান্তগুলো কাটুন</string>
@@ -175,7 +174,6 @@
     <string name="login_title">প্রবেশ করুন %1$sতে</string>
     <string name="username">ব্যাবহারকারীর নাম</string>
     <string name="password">গোপন শব্দ</string>
-    <string name="show_password">গোপন শব্দ দেখান</string>
     <string name="login">প্রবেশ করুন</string>
     <string name="login_success">প্রবেশ হয়েছে</string>
     <string name="invalid_login">প্রবেশ সফল হয়নি</string>
@@ -232,7 +230,7 @@
     <string name="chapter_progress">পৃষ্ঠা: %1$d</string>
     <string name="no_next_chapter">পরবর্তী অধ্যায় খুঁজে পাওয়া যায়নি</string>
     <string name="no_previous_chapter">আগের অধ্যায় খুঁজে পাওয়া যায়নি</string>
-    <string name="decode_image_error">ছবিটি লোড করা যায়নি</string>
+    <string name="decode_image_error">ছবিটি লোড করা জাছে না</string>
     <string name="confirm_set_image_as_cover">এই চিত্রটি কভার আর্ট হিসাবে ব্যবহার করবেন\?</string>
     <string name="download_queue_error">অধ্যায়গুলি ডাউনলোড করা যায়নি। ডাউনলোড বিভাগে আপনি আবার চেষ্টা করতে পারেন</string>
     <string name="notification_new_chapters">নতুন অধ্যায় পাওয়া গিয়েছে</string>
@@ -252,7 +250,7 @@
     <string name="information_no_downloads">ডাউনলোড নেই</string>
     <string name="information_no_recent">কোন নতুন হালনাগাদ নেই</string>
     <string name="information_no_recent_manga">সম্প্রতি কিছু পড়া হয়নি</string>
-    <string name="information_empty_library">আপনার সংগ্রহশালা খালি, ব্রাউজ অংশ থেকে আপনার সংগ্রহশালায় সিরিজ যোগ করুন।</string>
+    <string name="information_empty_library">আপনার সংগ্রহশালা খালি</string>
     <string name="information_empty_category">আপনার কোন বিভাগ নেই। আপনার সংগ্রহশালা সাজাতে যোগ চিহ্ন বাটনে চেপে একটি বিভাগ তৈরী করুন।</string>
     <string name="download_notifier_downloader_title">ডাউনলোডার</string>
     <string name="download_notifier_title_error">ত্রুটি</string>
@@ -274,7 +272,6 @@
     <string name="ext_trust">বিশ্বাস</string>
     <string name="ext_untrusted">অনির্ভরযোগ্য</string>
     <string name="ext_uninstall">আন ইন্সটল</string>
-    <string name="ext_available">উপলব্ধ</string>
     <string name="untrusted_extension">অনির্ভর‍যোগ্য এক্সটেনশন</string>
     <string name="untrusted_extension_message">এই এক্সটেনশনটি একটি অবিশ্বস্ত সার্টিফিকেট দিয়ে স্বাক্ষরিত হয়েছিল এবং সক্রিয় করা হয়নি।
 \n
@@ -353,7 +350,7 @@
     <string name="secure_screen">পর্দা নিরাপদ করুন</string>
     <string name="lock_never">কখনই না</string>
     <string name="lock_always">সবসময়</string>
-    <string name="lock_with_biometrics">বায়োমেট্রিক্স দিয়ে লক আনলক প্রয়োজন</string>
+    <string name="lock_with_biometrics">আনলক প্রয়োজন</string>
     <string name="pref_category_security">নিরাপত্তা</string>
     <string name="pref_manage_notifications">বিজ্ঞপ্তিগুলি নিয়ন্ত্রণ করুন</string>
     <string name="pref_confirm_exit">বের হতে নিশ্চিত করুন</string>
@@ -373,7 +370,7 @@
     <string name="action_pin">আটকান</string>
     <string name="action_disable">অক্ষম</string>
     <string name="action_display_show_tabs">বিভাগের ট্যাবগুলি দেখুন</string>
-    <string name="action_display_unread_badge">অপঠিত চিহ্ন</string>
+    <string name="action_display_unread_badge">অপঠিত অধ্যায়</string>
     <string name="action_display_comfortable_grid">আরামপ্রদ গ্রিড</string>
     <string name="action_migrate">স্থানান্তর করুন</string>
     <string name="action_start">শুরু করুন</string>
@@ -397,7 +394,7 @@
     <string name="restoring_backup_error">ব্যাকআপ পুনরুদ্ধার ব্যর্থ হয়েছে</string>
     <string name="restore_in_progress">বর্তমানে পুনরুদ্ধার চলছে</string>
     <string name="creating_backup_error">ব্যাকআপ ব্যর্থ হয়েছে</string>
-    <string name="backup_in_progress">বর্তমানে ব্যাকআপ হচ্ছে</string>
+    <string name="backup_in_progress">ব্যাকআপ ইতিমধ্যেই চলছে</string>
     <string name="restore_duration">%02d মিনিট, %02d সেকেন্ড</string>
     <string name="backup_restore_missing_sources">উৎস অনুপলব্ধ:</string>
     <string name="invalid_backup_file_missing_manga">ব্যাকআপে কোনো মাংগা নেই।</string>
@@ -484,12 +481,12 @@
         <item quantity="other">%dটি শিরোনামের জন্য</item>
     </plurals>
     <string name="notification_check_updates">নতুন অধ্যায়ের জন্য অনুসন্ধান করা হচ্ছে</string>
-    <string name="download_insufficient_space">ডিস্কের কম জায়গার কারণে অধ্যায়গুলি ডাউনলোড করা যায়নি</string>
+    <string name="download_insufficient_space">কম সঞ্চয়স্থানের কারণে অধ্যায়গুলি ডাউনলোড করা যায়নি</string>
     <string name="recent_manga_time">অঃ %1$s - %2$s</string>
     <string name="updating_library">সংগ্রহশালার হালনাগাদ হচ্ছে</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">অনুপস্থিত ১ টি অধ্যায় আছে</item>
-        <item quantity="other">অনুপস্থিত %dটি অধ্যায় আছে</item>
+        <item quantity="one">1 অধ্যায় এড়িয়ে জাছি, হয় উৎসটি অনুপস্থিত বা এটি ফিল্টার করা হয়েছে</item>
+        <item quantity="other">%d অধ্যায় কিপ করা হচ্ছে, হয় উৎসটি তাদের অনুপস্থিত অথবা সেগুলি ফিল্টার করা হয়েছে</item>
     </plurals>
     <string name="loader_not_implemented_error">উৎস খুঁজে পাওয়া যায়নি</string>
     <string name="page_list_empty_error">কোনও পৃষ্ঠা পাওয়া যায় নি</string>
@@ -549,7 +546,7 @@
     <string name="pref_disable_battery_optimization_summary">পিছেনে লাইব্রেরী হালনাগাদ ও ব্যাকআপে সাহায্য করে</string>
     <string name="pref_disable_battery_optimization">ব্যাটারি অপ্টিমাইজেশন অক্ষম করুন</string>
     <string name="tracking_info">ট্র্যাকিং সার্ভিসে অধ্যায়ের অগ্রগতি হালনাগাদের একমুখী পথ। স্বতন্ত্র মাঙ্গার ট্র্যকিং সেটাপের জন্য তাদের নিজস্ব ট্র্যাকিং বাটন ব্যবহার করুন।</string>
-    <string name="pref_show_nsfw_source">উৎস তালিকায় প্রদর্শন করুন</string>
+    <string name="pref_show_nsfw_source">উৎস এবং এক্সটেনশন তালিকায় প্রদর্শন করুন</string>
     <string name="pref_category_nsfw_content">প্রাপ্তবয়স্কদের জন্য (18+) উৎস</string>
     <string name="action_filter_tracked">ট্র্যাক করা হয়েছে</string>
     <string name="pref_viewer_nav">ন্যাভিগেশন নকশা</string>
@@ -606,7 +603,7 @@
     <string name="pref_low">নিম্ম</string>
     <string name="pref_high">উচ্চ</string>
     <string name="pref_highest">সর্বোচ্চ</string>
-    <string name="pref_hide_threshold">স্ক্রোল সংবেদনশীলতার উপর স্বয়ংক্রিয় লুকানো মেনু</string>
+    <string name="pref_hide_threshold">স্ক্রলে মেনু লুকানোর জন্য সংবেদনশীলতা</string>
     <string name="rotation_landscape">ভূদৃশ্য</string>
     <string name="rotation_portrait">প্রতিকৃতি</string>
     <string name="rotation_type">ঘূর্ণনের ধরন</string>
@@ -658,20 +655,44 @@
     <string name="theme_strawberrydaiquiri">স্ট্রবেরি ডাইকুইরি</string>
     <string name="theme_midnightdusk">মধ্যরাতের সন্ধ্যা</string>
     <string name="theme_greenapple">সবুজ আপেল</string>
-    <string name="theme_blue">নীল</string>
     <string name="theme_monet">প্রগতিশীল</string>
     <string name="pref_app_theme">অ্যাপ থিম</string>
     <string name="pref_category_appearance">দৃশ্য</string>
     <string name="action_start_downloading_now">এখনই ডাউনলোড শুরু করুন</string>
-    <string name="action_show_errors">ত্রুটি দেখান</string>
+    <string name="action_show_errors">সকল ত্রুটি দেখুন</string>
     <string name="cancel_all_for_series">এই সিরিজের সব বাতিল করুন</string>
-    <string name="action_display_local_badge">স্থানীয় ব্যাজ</string>
+    <string name="action_display_local_badge">স্থানীয় মাঙ্গা</string>
     <string name="information_empty_category_dialog">আপনার এখনও কোন বিভাগ নেই |</string>
     <string name="update_check_eol">এই অ্যান্ড্রয়েড সংস্করণটি আর সমর্থিত নয়</string>
     <string name="confirm_lock_change">পরিবর্তন নিশ্চিত করতে প্রমাণীকরণ করুন</string>
     <string name="action_sort_chapter_fetch_date">প্রাপ্তির তারিখ</string>
     <string name="action_sort_next_updated">পরবর্তী প্রত্যাশিত আপডেট</string>
     <string name="label_default">সাধারণ</string>
-    <string name="pref_remove_exclude_categories">বর্জিত বিভাগ</string>
+    <string name="pref_remove_exclude_categories">বর্জিত বিভাগ গুলি</string>
     <string name="ext_app_info">অ্যাপের তথ্য</string>
+    <string name="pref_library_update_show_tab_badge">অপঠিত গণনা আপডেট আইকন এ দেখাও</string>
+    <string name="ext_update_all">শব উপদাতে কর</string>
+    <string name="backup_info">স্বয়ংক্রিয় ব্যাকআপ অত্যন্ত সুপারিশময়. আপনি অন্যান্য জায়গায়ও কপি রাখা উচিত।</string>
+    <string name="getting_started_guide">শুরু হওয়ার গাইড</string>
+    <string name="channel_app_updates">অ্যাপ আপডেট</string>
+    <string name="ext_installer_pref">ইন্সটলআর</string>
+    <string name="ext_installer_legacy">লেগাছি</string>
+    <string name="ext_installer_shizuku_stopped">শিজুকু চলছে না</string>
+    <string name="ext_install_service_notif">এক্সটেনশন ইন্সটল করা হচ্ছে…</string>
+    <string name="pref_verbose_logging">ভার্বোস লগিং</string>
+    <string name="pref_verbose_logging_summary">সিস্টেম লগে ভার্বোস লগ প্রিন্ট করুন (অ্যাপের কার্যক্ষমতা হ্রাস করে)</string>
+    <string name="help_translate">অনুবাদে সাহায্য করুন</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">এক্সটেনশন ইনস্টলার হিসাবে Shizuku ব্যবহার করতে Shizuku ইনস্টল করুন এবং শুরু করুন।</string>
+    <string name="pref_tablet_ui_mode">তাব্লেত উই</string>
+    <string name="action_sort_count">মোট মাঙ্গা</string>
+    <string name="label_warning">সতর্কতা</string>
+    <string name="action_display_language_badge">ভাষা</string>
+    <string name="update_72hour">প্রতি ৩ দিন</string>
+    <string name="connected_to_wifi">সুধু মাত্র ওয়িফি তে</string>
+    <string name="notification_size_warning">সতর্কতা: বড় আপডেটগুলি উত্সের ক্ষতি করে এবং ধীরগতির আপডেটের দিকে নিয়ে যেতে পারে এবং ব্যাটারি ব্যবহারও বাড়িয়ে দিতে পারে</string>
+    <string name="notification_updating">লাইব্রেরি আপডেট করা হচ্ছে... (%1$d/%2$d)</string>
+    <string name="download_queue_size_warning">সতর্কতা: বৃহৎ বাল্ক ডাউনলোডের ফলে উৎসগুলি ধীর হয়ে যেতে পারে এবং/অথবা ব্লক হতে পারে তাছিয়মি</string>
+    <string name="pref_auto_clear_chapter_cache">অ্যাপ বন্দ্ধ করার সময় অধ্যায়ের ক্যাশে পরিষ্কার করুন</string>
+    <string name="database_clean">তথ্যশালা পরিষ্কার</string>
+    <string name="clear_database_source_item_count">তথ্যশালায় %1$d টি মাঙ্গা যেগুলি লাইব্রেরীতে নেই</string>
 </resources>

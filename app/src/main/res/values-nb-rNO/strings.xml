@@ -91,12 +91,10 @@
     <string name="ext_trust">Tillit</string>
     <string name="ext_untrusted">Ubetrodd</string>
     <string name="ext_uninstall">Avinstaller</string>
-    <string name="ext_available">Tilgjengelig</string>
     <string name="untrusted_extension">Ubetrodd utvidelse</string>
     <string name="ext_version_info">Versjon: %1$s</string>
     <string name="ext_language_info">Språk: %1$s</string>
     <string name="pref_fullscreen">Fullskjermsvisning</string>
-    <string name="pref_lock_orientation">Lås sideretning</string>
     <string name="pref_page_transitions">Sideovergangsanimasjoner</string>
     <string name="pref_show_page_number">Vis sidenummer</string>
     <string name="pref_keep_screen_on">Behold skjerm på</string>
@@ -194,7 +192,6 @@
     <string name="login_title">Logg på %1$s</string>
     <string name="username">Brukernavn</string>
     <string name="password">Passord</string>
-    <string name="show_password">Vis passord</string>
     <string name="login">Logg inn</string>
     <string name="login_success">Innlogget</string>
     <string name="invalid_login">Kunne ikke logge inn</string>
@@ -669,7 +666,6 @@
     <string name="theme_strawberrydaiquiri">Jordbær-Daiquiri</string>
     <string name="theme_midnightdusk">Midnattsskumring</string>
     <string name="theme_greenapple">Grønt eple</string>
-    <string name="theme_blue">Gammelblå</string>
     <string name="action_display_local_badge">Lokale merker</string>
     <string name="error_no_match">Ingen samsvar</string>
     <string name="tracker_komga_warning">Denne sporeren er kun kompatibel med Komga-kilder.</string>

@@ -205,7 +205,6 @@
     <string name="pref_library_update_refresh_metadata">Хӑй-халлӗн метта пӗлӗмсене ҫӗнетмелле</string>
     <string name="pref_update_only_non_completed">Тухакан манкка ҫеҫ ҫӗнетмелле</string>
     <string name="pref_category_about">Хушӑм ҫинчен</string>
-    <string name="ext_available">Юрӑхлӑ</string>
     <string name="ext_untrusted">Шанчӑклӑ мар</string>
     <string name="ext_unofficial">Официаллӑ мар</string>
     <string name="ext_trust">Шанчӑклӑ</string>
@@ -274,7 +273,6 @@
     <string name="pref_show_page_number">Эл шутне кӑтарт</string>
     <string name="pref_double_tap_anim_speed">Икӗ хут пуссан эним хӑвӑртлӑхӗ</string>
     <string name="pref_page_transitions">Энимленӗ элсен куҫни</string>
-    <string name="pref_lock_orientation">Урлӑ-тӑрӑх ҫаклат</string>
     <string name="unofficial_extension_message">Ҫак хушма Tachiyomi-н официаллӑ хушмасен ят-йыша кӗмест.</string>
     <string name="obsolete_extension_message">Ҫак хушмана урӑх кӗме май ҫук.</string>
     <string name="untrusted_extension_message">Ку хушмана шанчӑклӑ мар сертификатпа алӑ пуснӑ тата ӑна активламан.
@@ -456,7 +454,6 @@
     <string name="logout_title">“%1$s тухмалла-и\?</string>
     <string name="login_success">Ӑнӑҫлӑ кӗни</string>
     <string name="login">Кӗр</string>
-    <string name="show_password">Кӗме сӑмах кӑтарт</string>
     <string name="password">Кӗме сӑмах</string>
     <string name="email">Ылӑккӑтрунлӑ пуштӑ тӗлӗ</string>
     <string name="username">Усӑҫ ячӗ</string>

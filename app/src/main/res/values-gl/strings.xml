@@ -83,7 +83,6 @@
     <string name="pref_show_page_number">Amosar número de páxina</string>
     <string name="pref_double_tap_anim_speed">Velocidade da animación ao dar dous toques</string>
     <string name="pref_page_transitions">Animar transición de páxinas</string>
-    <string name="pref_lock_orientation">Bloquear orientación</string>
     <string name="pref_cutout_short">Mostrar contido na área recortada</string>
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="ext_nsfw_warning">Pode conter contido non apto para menores de 18 anos</string>
@@ -98,7 +97,6 @@
 \n
 \nConfiando neste certificado aceptas estes riscos.</string>
     <string name="untrusted_extension">Extensión non confiable</string>
-    <string name="ext_available">Dispñible</string>
     <string name="ext_untrusted">Non confiable</string>
     <string name="ext_uninstall">Desinstalar</string>
     <string name="ext_unofficial">Non oficial</string>

@@ -102,7 +102,6 @@
     <string name="ext_trust">Förtroende</string>
     <string name="ext_untrusted">Opålitlig</string>
     <string name="ext_uninstall">Avinstallera</string>
-    <string name="ext_available">Tillgänglig</string>
     <string name="untrusted_extension">Opålitlig extension</string>
     <string name="untrusted_extension_message">Detta tillägg tecknades med ett otillförlitligt certifikat och var inte aktiverat.
 \n
@@ -112,7 +111,6 @@
     <string name="ext_version_info">Version: %1$s</string>
     <string name="ext_language_info">Språk: %1$s</string>
     <string name="pref_fullscreen">Fullskärm</string>
-    <string name="pref_lock_orientation">Lås orientering</string>
     <string name="pref_page_transitions">Animera sidbyten</string>
     <string name="pref_double_tap_anim_speed">Animationshastighet för dubbelklick</string>
     <string name="pref_show_page_number">Visa sidnummer</string>
@@ -202,7 +200,6 @@
     <string name="login_title">Logga in för %1$s</string>
     <string name="username">Användarnamn</string>
     <string name="password">Lösenord</string>
-    <string name="show_password">Visa lösenord</string>
     <string name="login">Logga in</string>
     <string name="login_success">Inloggad</string>
     <string name="invalid_login">Inloggningsfel</string>
@@ -645,7 +642,6 @@
     <string name="theme_strawberrydaiquiri">Jordgubbsdaiquiri</string>
     <string name="theme_midnightdusk">Midnattskymning</string>
     <string name="theme_greenapple">Grönt äpple</string>
-    <string name="theme_blue">Äldre blå</string>
     <string name="theme_monet">Dynamisk</string>
     <string name="pref_app_theme">App-tema</string>
     <string name="action_sort_next_updated">Nästa förväntade uppdatering</string>
@@ -674,7 +670,7 @@
     <string name="getting_started_guide">Komma igång guide</string>
     <string name="action_track">Spår</string>
     <string name="pref_category_navigation">Navigering</string>
-    <string name="pref_tablet_ui_mode">Tvinga tablettgränssnitt</string>
+    <string name="pref_tablet_ui_mode">Tablettgränssnitt</string>
     <string name="help_translate">Hjälp till med översättning</string>
     <string name="pref_remove_exclude_categories">Uteslutna kategorier</string>
     <string name="ext_app_info">Appinformation</string>
@@ -693,4 +689,10 @@
     <string name="notification_size_warning">Varning: stora uppdateringar skadar källor och kan leda till långsammare uppdateringer samt en ökad batterianvändning</string>
     <string name="download_queue_size_warning">Varning: stora massnerladdningar kan leda till att källor blir långsamma och/eller blockerar Tachiyomi</string>
     <string name="update_72hour">Var 3:e dag</string>
+    <string name="pref_library_update_show_tab_badge">Visa antalet olästa på ikonen Uppdateringar</string>
+    <string name="ext_update_all">Uppdatera alla</string>
+    <string name="channel_app_updates">Appuppdateringar</string>
+    <string name="pref_auto_clear_chapter_cache">Rensa kapitelcache när appen stängs</string>
+    <string name="clear_database_source_item_count">%1$d manga i databasen som inte är biblioteksmanga</string>
+    <string name="database_clean">Rengör databasen</string>
 </resources>

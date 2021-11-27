@@ -222,7 +222,6 @@
     <string name="pref_show_page_number">ಪುಟ ಸಂಖ್ಯೆಯನ್ನು ತೋರಿಸಿ</string>
     <string name="pref_double_tap_anim_speed">ಡಬಲ್ ಟ್ಯಾಪ್ ಅನಿಮೇಷನ್ ವೇಗ</string>
     <string name="pref_page_transitions">ಪುಟ ಪರಿವರ್ತನೆಗಳನ್ನು ಅನಿಮೇಟ್ ಮಾಡಿ</string>
-    <string name="pref_lock_orientation">ಲಾಕ್ ದೃಷ್ಟಿಕೋನ</string>
     <string name="pref_cutout_short">ಕಟೌಟ್ ಆದಂತಹ ಪ್ರದೇಶದಲ್ಲಿ ವಿಷಯವನ್ನು ತೋರಿಸಿ</string>
     <string name="pref_fullscreen">ಪೂರ್ಣ ಪರದೆ</string>
     <string name="ext_version_info">ಆವೃತ್ತಿ: %1$s</string>
@@ -234,7 +233,6 @@
 \n
 \nಈ ಪ್ರಮಾಣಪತ್ರವನ್ನು ನಂಬುವ ಮೂಲಕ ನೀವು ಈ ಅಪಾಯಗಳನ್ನು ಸ್ವೀಕರಿಸುತ್ತೀರಿ.</string>
     <string name="untrusted_extension">ವಿಶ್ವಾಸಾರ್ಹವಲ್ಲದ ವಿಸ್ತರಣೆ</string>
-    <string name="ext_available">ಲಭ್ಯವಿರುವ</string>
     <string name="ext_uninstall">ಅನ್ಇನ್ಸ್ಟಾಲ್</string>
     <string name="ext_untrusted">ವಿಶ್ವಾಸಾರ್ಹವಲ್ಲ</string>
     <string name="ext_trust">ನ೦ಬು</string>
@@ -418,7 +416,6 @@
     <string name="logout_title">%1$s ನಿಂದ ಲಾಗ್ ಔಟ್ ಆಗುವುದೇ\?</string>
     <string name="login_success">ಲಾಗ್ ಇನ್ ಮಾಡಲಾಗಿದೆ</string>
     <string name="login">ಲಾಗಿನ್</string>
-    <string name="show_password">ಪಾಸ್ ವರ್ಡ್ ತೋರಿಸಿ</string>
     <string name="password">ಪಾಸ್ ವರ್ಡ್</string>
     <string name="email">ಇಮೇಲ್ ವಿಳಾಸ</string>
     <string name="username">ಬಳಕೆದಾರ ಹೆಸರು</string>

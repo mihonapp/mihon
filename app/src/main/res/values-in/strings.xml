@@ -2,7 +2,7 @@
 <resources>
     <string name="categories">Kategori</string>
     <string name="manga">Manga</string>
-    <string name="chapters">Chapter</string>
+    <string name="chapters">Bab</string>
     <string name="track">Pelacakan</string>
     <string name="history">Riwayat</string>
     <string name="label_settings">Pengaturan</string>
@@ -88,7 +88,6 @@
     <string name="default_category">Kategori default</string>
     <string name="default_category_summary">Selalu tanya</string>
     <string name="pref_fullscreen">Layar penuh</string>
-    <string name="pref_lock_orientation">Kunci orientasi</string>
     <string name="pref_page_transitions">Animasikan transisi halaman</string>
     <string name="pref_show_page_number">Tampilkan nomor halaman</string>
     <string name="pref_crop_borders">Potong pinggiran</string>
@@ -171,7 +170,6 @@
     <string name="login_title">Masuk ke %1$s</string>
     <string name="username">Nama pengguna</string>
     <string name="password">Kata sandi</string>
-    <string name="show_password">Perlihatkan kata sandi</string>
     <string name="login">Masuk</string>
     <string name="login_success">Sudah Masuk</string>
     <string name="invalid_login">Tidak bisa masuk</string>
@@ -182,7 +180,7 @@
     <string name="manga_not_in_db">Manga ini telah dihapus dari database.</string>
     <string name="description">Deskripsi</string>
     <string name="ongoing">Berlanjut</string>
-    <string name="unknown">Tidak diketahui</string>
+    <string name="unknown">Tak diketahui</string>
     <string name="licensed">Berlisensi</string>
     <string name="remove_from_library">Hapus dari pustaka</string>
     <string name="delete_downloads_for_manga">Hapus chapter terunduh\?</string>
@@ -272,7 +270,6 @@
     <string name="ext_trust">Percaya</string>
     <string name="ext_untrusted">Tidak terpercaya</string>
     <string name="ext_uninstall">Lepas</string>
-    <string name="ext_available">Tersedia</string>
     <string name="untrusted_extension">Ekstensi tidak terpercaya</string>
     <string name="untrusted_extension_message">Ekstensi ini ditanda tangani dengan sertifikat yang tidak terpercaya dan belum diaktifkan.
 \n
@@ -350,7 +347,7 @@
     <string name="action_move_to_bottom">Pindahkan ke bawah</string>
     <string name="label_more">Lainnya</string>
     <string name="pref_category_library_update">Pembaruan</string>
-    <string name="lock_with_biometrics">Perlu buka kunci</string>
+    <string name="lock_with_biometrics">Memerlukan kunci biometrik</string>
     <string name="lock_when_idle">Kunci saat diam</string>
     <string name="lock_always">Selalu</string>
     <string name="lock_never">Tidak pernah</string>
@@ -519,7 +516,7 @@
     <plurals name="missing_chapters_warning">
         <item quantity="other">Melewati %d chapter, diantara sumber menghilangkannya atau telah disaringkan</item>
     </plurals>
-    <string name="no_chapters_error">Chapter tidak ditemukan</string>
+    <string name="no_chapters_error">Bab tak ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan chapter default diperbarui</string>
     <string name="set_chapter_settings_as_default">Tetapkan sebagai default</string>
     <string name="also_set_chapter_settings_for_library">Juga terapkan untuk semua manga di pustaka saya</string>
@@ -597,7 +594,7 @@
     <string name="date">Tanggal</string>
     <string name="local_filter_order_by">Urutkan menurut</string>
     <string name="local_invalid_format">Format chapter tidak valid</string>
-    <string name="chapter_not_found">Chapter tidak ditemukan</string>
+    <string name="chapter_not_found">Bab tak ditemukan</string>
     <string name="pref_dual_page_invert_summary">Jika penempatan dari pemisah halaman ganda tidak cocok dengan arah membaca</string>
     <string name="pref_dual_page_invert">Balikkan penempatan pemisah halaman ganda</string>
     <string name="pref_show_navigation_mode_summary">Tampilkan zona ketuk ketika pembaca dibuka</string>
@@ -627,19 +624,18 @@
     <string name="enhanced_services">Servis yang ditingkatkan</string>
     <string name="pref_dark_theme_pure_black">Mode gelap hitam pekat</string>
     <string name="theme_yotsuba">Yotsuba</string>
-    <string name="theme_yinyang">Yin &amp; Yang</string>
+    <string name="theme_yinyang">Yin dan Yang</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Stroberi Daiquiri</string>
     <string name="theme_midnightdusk">Senja Malam</string>
     <string name="theme_greenapple">Hijau Apel</string>
-    <string name="theme_blue">Biru Lama</string>
     <string name="theme_monet">Dinamis</string>
     <string name="pref_app_theme">Tema aplikasi</string>
     <string name="action_sort_next_updated">Perbaruan selanjutnya</string>
     <string name="label_background_activity">Aktivitas latar belakang</string>
     <string name="pref_lowest">Terendah</string>
     <string name="pref_low">Rendah</string>
-    <string name="pref_hide_threshold">Sensitivitas sembunyikan menu saat scroll</string>
+    <string name="pref_hide_threshold">Sensitivitas untuk menyembunyikan menu dalam gulir</string>
     <string name="pref_high">Tinggi</string>
     <string name="pref_highest">Tertinggi</string>
     <string name="pref_inverted_colors">Terbalik</string>
@@ -661,7 +657,7 @@
     <string name="label_default">Default</string>
     <string name="pref_remove_exclude_categories">Kategori yang dikecualikan</string>
     <string name="help_translate">Bantu terjemahkan</string>
-    <string name="pref_tablet_ui_mode">Paksa UI tablet</string>
+    <string name="pref_tablet_ui_mode">UI tablet</string>
     <string name="ext_app_info">Informasi aplikasi</string>
     <string name="ext_installer_shizuku_stopped">Shizuku tidak berjalan</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Pasang dan mulai Shizuku untuk menggunakan Shizuku sebagai pemasang ekstensi.</string>
@@ -680,4 +676,10 @@
     <string name="action_display_language_badge">Bahasa</string>
     <string name="update_72hour">Tiap 3 hari</string>
     <string name="connected_to_wifi">Hanya pada Wi-FI</string>
+    <string name="channel_app_updates">Pembaruan aplikasi</string>
+    <string name="pref_library_update_show_tab_badge">Tampilkan jumlah yang belum dibaca pada ikon Pembaruan</string>
+    <string name="ext_update_all">Perbarui semuanya</string>
+    <string name="pref_auto_clear_chapter_cache">Bersihkan cache saat aplikasi tertutup</string>
+    <string name="database_clean">Bersihkan database</string>
+    <string name="clear_database_source_item_count">%1$d manga diluar kategori pustaka pada database</string>
 </resources>

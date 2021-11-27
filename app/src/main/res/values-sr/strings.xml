@@ -10,7 +10,7 @@
     <string name="label_download_queue">Redosled preuzimanja</string>
     <string name="label_library">Biblioteka</string>
     <string name="label_recent_manga">Istorija</string>
-    <string name="label_recent_updates">Apdejti</string>
+    <string name="label_recent_updates">Novo</string>
     <string name="label_backup">Rezervna kopija i oporavak</string>
     <string name="label_migration">Migracija</string>
     <string name="label_extensions">Dodaci</string>
@@ -102,7 +102,6 @@
     <string name="ext_trust">Veruj</string>
     <string name="ext_untrusted">Ne veruj</string>
     <string name="ext_uninstall">Izbriši</string>
-    <string name="ext_available">Dostupno</string>
     <string name="untrusted_extension">Nepouzdan dodatak</string>
     <string name="untrusted_extension_message">Ova ekstenzija je potpisana nepovjerljivim sertifikatima i nije aktivirana,.
 \n
@@ -112,7 +111,6 @@
     <string name="ext_version_info">Verzija: %1$s</string>
     <string name="ext_language_info">Jezik: %1$s</string>
     <string name="pref_fullscreen">Ceo ekran</string>
-    <string name="pref_lock_orientation">Zaključaj orjentaciju</string>
     <string name="pref_page_transitions">Animacije pri promeni stranice</string>
     <string name="pref_double_tap_anim_speed">Brzina animacije dvoklika</string>
     <string name="pref_show_page_number">Prikaži broj stranice</string>
@@ -202,7 +200,6 @@
     <string name="login_title">Prijavi se do %1$s</string>
     <string name="username">Korisničko ime</string>
     <string name="password">Lozinka</string>
-    <string name="show_password">Prikaži lozinku</string>
     <string name="login">Prijavi se</string>
     <string name="login_success">Prijavljeni ste</string>
     <string name="invalid_login">Neuspešno prijavljivanje</string>
@@ -292,7 +289,7 @@
     <string name="email">Imejl adresa</string>
     <string name="information_empty_library">Biblioteka je prazna</string>
     <string name="information_no_recent_manga">Nema nedavno čitanih stvari</string>
-    <string name="information_no_recent">Nema nedavnih promjena</string>
+    <string name="information_no_recent">Nema nedavnih promena</string>
     <string name="information_no_downloads">Nema preuzimanja</string>
     <string name="label_sources">Izvori</string>
     <string name="pref_enable_automatic_extension_updates">Provjeri da li ima ažuriranja dodataka</string>
@@ -471,7 +468,6 @@
     <string name="action_display_language_badge">Jezik</string>
     <string name="action_order_by_chapter_number">Po broju poglavlja</string>
     <string name="pref_app_theme">Tema aplikacije</string>
-    <string name="theme_blue">Stara Plava</string>
     <string name="theme_greenapple">Zelena Jabuka</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="action_asc">Rastuće</string>
@@ -519,7 +515,7 @@
     <string name="restore_miui_warning">Rezervna kopija/oporavak možda neće raditi ispravno ako nije aktivirana MIUI optimizacija.</string>
     <string name="backup_info">Automatsko pravljenje rezervne kopije je preporučeno. Čuvajte kopije i na drugim mestima.</string>
     <string name="pref_dns_over_https">DNS preko HTTPS</string>
-    <string name="pref_tablet_ui_mode">Forsiraj izgled za tablet</string>
+    <string name="pref_tablet_ui_mode">Izgled za tablet</string>
     <string name="requires_app_restart">Zahteva ponovno pokretanje aplikacije</string>
     <string name="pref_dump_crash_logs_summary">Čuva logove grešaka u fajl za dalji uvid developerima</string>
     <string name="label_background_activity">Aktivnost u pozadini</string>
@@ -706,4 +702,7 @@
     <string name="download_queue_size_warning">Upozorenje: preuzimanja u velikom broju mogu dovesti do blokiranja i/ili usporavanja Tachiyomi-ja od strane izvora</string>
     <string name="notification_updating">Ažuriranje biblioteke… (%1$d/%2$d)</string>
     <string name="notification_size_warning">Upozorenje: velika ažuriranja štete izvorima i mogu dovesti to sporijih ažuriranja i takođe povećane potrošnje baterije</string>
+    <string name="pref_library_update_show_tab_badge">Prikaži broj nepročitanih na ikoni „Novo”</string>
+    <string name="ext_update_all">Ažuriraj sve</string>
+    <string name="channel_app_updates">Ažuriranja aplikacije</string>
 </resources>

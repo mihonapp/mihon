@@ -17,7 +17,6 @@
 \n
 \nVjerujući ovom certifikatu, prihvaćaš te rizike.</string>
     <string name="untrusted_extension">Nepovjerljivo proširenje</string>
-    <string name="ext_available">Dostupno</string>
     <string name="ext_uninstall">Deinstaliraj</string>
     <string name="ext_untrusted">Nepovjerljivo</string>
     <string name="ext_trust">Vjeruj</string>
@@ -84,7 +83,7 @@
     <string name="chapters">Poglavlja</string>
     <string name="categories">Kategorije</string>
     <string name="information_empty_category">Nemaš kategorija. Za stvaranje kategorije i organiziranje biblioteke dodirni gumb plus.</string>
-    <string name="information_empty_library">Biblioteka je prazna. Dodaj serijale u biblioteku u odjeljku „Pregledaj”.</string>
+    <string name="information_empty_library">Tvoja biblioteka je prazna</string>
     <string name="information_no_recent_manga">Ništa nije nedavno čitano</string>
     <string name="information_no_recent">Nema nedavnih ažuriranja</string>
     <string name="information_no_downloads">Nema preuzimanja</string>
@@ -119,7 +118,7 @@
     <string name="action_cancel">Prekini</string>
     <string name="action_unpin">Odznači</string>
     <string name="action_pin">Označi</string>
-    <string name="action_display_download_badge">Značke za preuzimanja</string>
+    <string name="action_display_download_badge">Preuzeta poglavlja</string>
     <string name="action_display_list">Popis</string>
     <string name="action_display_grid">Zbijeno popločeno</string>
     <string name="action_display">Prikaz</string>
@@ -252,7 +251,6 @@
     <string name="pref_show_page_number">Prikaži broj stranice</string>
     <string name="pref_double_tap_anim_speed">Brzina animacije dvostrukog dodira</string>
     <string name="pref_page_transitions">Animiraj prijelaze stranica</string>
-    <string name="pref_lock_orientation">Zaključaj položaj</string>
     <string name="pref_cutout_short">Prikaži sadržaj u izrezanom području</string>
     <string name="pref_reader_theme">Boja pozadine</string>
     <string name="pref_read_with_long_tap">Prikaži pri dugom dodiru</string>
@@ -395,7 +393,6 @@
     <string name="logout_title">Odjaviti se iz %1$s\?</string>
     <string name="login_success">Prijava uspjela</string>
     <string name="login">Prijava</string>
-    <string name="show_password">Prikaži lozinku</string>
     <string name="password">Lozinka</string>
     <string name="email">Adresa e-pošte</string>
     <string name="username">Korisničko ime</string>
@@ -482,7 +479,7 @@
     <string name="ext_unofficial">Neslužbeno</string>
     <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom ažuriranja biblioteke</string>
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
-    <string name="action_display_unread_badge">Značke za nepročitane</string>
+    <string name="action_display_unread_badge">Nepročitana poglavlja</string>
     <string name="action_migrate">Migriraj</string>
     <plurals name="notification_update_error">
         <item quantity="one">%1$d neuspjelo ažuriranje</item>
@@ -541,9 +538,9 @@
     <string name="backup_restore_missing_trackers">Praćenja bez prijave:</string>
     <string name="parental_controls_info">To ne sprečava neslužbene ili potencijalno krivo označena proširenja prikazati neprikladan sadržaj (18+) unutar aplikacije.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Nedostaje %d poglavlje</item>
-        <item quantity="few">Nedostaju %d poglavlja</item>
-        <item quantity="other">Nedostaje %d poglavlja</item>
+        <item quantity="one">Preskače se %d poglavlje. Izvor ga nema ili je izdvojen filtrom</item>
+        <item quantity="few">Preskaču se %d poglavlja. Izvor ih nema ili su izdvojeni filtrom</item>
+        <item quantity="other">Preskaču se %d poglavlja. Izvor ih nema ili su izdvojeni filtrom</item>
     </plurals>
     <string name="no_chapters_error">Nema poglavlja</string>
     <string name="chapter_settings_updated">Standardne postavke poglavlja su aktualizirane</string>
@@ -607,7 +604,7 @@
     <string name="include">Uključi: %s</string>
     <string name="pref_library_update_categories_details">Manga u isključenim kategorijama neće se ažurirati čak niti ako se također nalaze u uključenim kategorijama.</string>
     <string name="action_sort_chapter_fetch_date">Datum preuzimanja</string>
-    <string name="action_show_errors">Prikaži greške</string>
+    <string name="action_show_errors">Prikaži sve detalje greške</string>
     <string name="update_check_eol">Ove verzija androida više nije podržana</string>
     <string name="clipboard_copy_error">Kopiranje nije uspješno</string>
     <string name="rotation_landscape">Ležeće</string>
@@ -622,7 +619,7 @@
     <string name="cancel_all_for_series">Prekini sve za ovu seriju</string>
     <string name="chapter_not_found">Poglavlje nije pronađeno</string>
     <string name="unread">Nepročitano</string>
-    <string name="action_display_local_badge">Lokalne značke</string>
+    <string name="action_display_local_badge">Lokalne mange</string>
     <string name="error_sharing_cover">Greška tijekom dijeljenja naslovnice</string>
     <string name="error_saving_cover">Greška tijekom spremanja naslovnice</string>
     <string name="cover_saved">Naslovnica spremljena</string>
@@ -649,7 +646,6 @@
     <string name="theme_tako">Tako</string>
     <string name="theme_midnightdusk">Ponoćni sumrak</string>
     <string name="theme_greenapple">Zelena jabuka</string>
-    <string name="theme_blue">Plava</string>
     <string name="theme_monet">Dinamički</string>
     <string name="pref_app_theme">Tema programa</string>
     <string name="action_sort_next_updated">Sljedeće očekivano aktualiziranje</string>
@@ -676,4 +672,9 @@
     <string name="label_default">Zadano</string>
     <string name="restore_miui_warning">Spremanje sigurnosne kopije i obnavljanje možda neće ispravno raditi, ako MIUI optimizacija nije aktivirana.</string>
     <string name="help_translate">Pomogni prevoditi</string>
+    <string name="action_sort_count">Ukupan broj manga</string>
+    <string name="action_display_language_badge">Jezik</string>
+    <string name="label_warning">Upozorenje</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku ne radi</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Instaliraj i pokreni Shizuku za korištenje Shizukua kao instalacijskog programa za proširenja.</string>
 </resources>

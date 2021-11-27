@@ -102,7 +102,6 @@
     <string name="ext_trust">Confia-hi</string>
     <string name="ext_untrusted">No és de confiança</string>
     <string name="ext_uninstall">Desinstal·la</string>
-    <string name="ext_available">Disponible</string>
     <string name="untrusted_extension">Extensió no fiable</string>
     <string name="untrusted_extension_message">Aquesta extensió s\'ha signat amb un certificat que no és de confiança i no s\'ha activat.
 \n
@@ -112,7 +111,6 @@
     <string name="ext_version_info">Versió: %1$s</string>
     <string name="ext_language_info">Llengua: %1$s</string>
     <string name="pref_fullscreen">Pantalla completa</string>
-    <string name="pref_lock_orientation">Bloca l\'orientació</string>
     <string name="pref_page_transitions">Anima les transicions de pàgina</string>
     <string name="pref_show_page_number">Mostra el número de pàgina</string>
     <string name="pref_crop_borders">Retalla les vores</string>
@@ -202,7 +200,6 @@
     <string name="login_title">Inicia la sessió a %1$s</string>
     <string name="username">Nom d\'usuari</string>
     <string name="password">Contrasenya</string>
-    <string name="show_password">Mostra la contrasenya</string>
     <string name="login">Inicia la sessió</string>
     <string name="login_success">S\'ha iniciat la sessió</string>
     <string name="invalid_login">No s\'ha pogut iniciar la sessió</string>

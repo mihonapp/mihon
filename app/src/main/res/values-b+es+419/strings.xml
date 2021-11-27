@@ -172,7 +172,6 @@
     <string name="pref_show_page_number">Mostrar el número de página</string>
     <string name="pref_double_tap_anim_speed">Velocidad de animación de doble toque</string>
     <string name="pref_page_transitions">Animar las transiciones de página</string>
-    <string name="pref_lock_orientation">Bloquear orientación</string>
     <string name="pref_cutout_short">Mostrar contenido en el área recortada</string>
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="ext_language_info">Idioma: %1$s</string>
@@ -185,7 +184,6 @@
 \n
 \nAl confiar en este certificado aceptas estos riesgos.</string>
     <string name="untrusted_extension">Extensión no confiable</string>
-    <string name="ext_available">Disponible</string>
     <string name="ext_uninstall">Desinstalar</string>
     <string name="ext_untrusted">No confiable</string>
     <string name="ext_unofficial">No oficial</string>
@@ -207,7 +205,7 @@
     <string name="default_category_summary">Preguntar siempre</string>
     <string name="default_category">Categoría por defecto</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprobar nueva portada y los detalles cuando actualizes la biblioteca</string>
-    <string name="pref_library_update_refresh_metadata">Refrescar automaticamente los metadatos</string>
+    <string name="pref_library_update_refresh_metadata">Actualizar metadatos automáticamente</string>
     <string name="pref_update_only_non_completed">Solo actualizar manga no finalizado</string>
     <string name="charging">Cargando</string>
     <string name="pref_library_update_restriction">Restricciones de actualización</string>
@@ -363,7 +361,6 @@
     <string name="logout_title">¿Cerrar sesión de %1$s\?</string>
     <string name="login_success">Conectado</string>
     <string name="login">Iniciar sesión</string>
-    <string name="show_password">Mostrar contraseña</string>
     <string name="password">Contraseña</string>
     <string name="email">Correo electrónico</string>
     <string name="username">Nombre de usuario</string>
@@ -530,8 +527,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Esto no evita que las extensiones no oficiales o potencialmente marcadas incorrectamente muestren contenido para mayores de 18 años dentro de la aplicación.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Falta un capítulo</item>
-        <item quantity="other">Faltan %d capítulos</item>
+        <item quantity="one">Omitiendo 1 capítulo, o la fuente no lo encuentra o se ha filtrado</item>
+        <item quantity="other">Omitiendo %d capítulos, o la fuente no los encuentra o se han filtrado</item>
     </plurals>
     <string name="share_page_info">%1$s: %2$s, página %3$d</string>
     <string name="chapter_settings_updated">Las configuraciones predeterminadas del capítulo han sido actualizadas</string>
@@ -610,7 +607,6 @@
     <string name="action_sort_next_updated">Próxima actualización esperada</string>
     <string name="label_default">Por defecto</string>
     <string name="confirm_lock_change">Autentificar para confirmar cambios</string>
-    <string name="theme_blue">Azul (Legacy)</string>
     <string name="pref_download_new_categories_details">El manga en las categorías excluidas no se descargara, incluso si estos tambien estan en las categorías incluidas.</string>
     <string name="restore_miui_warning">La copia de seguridad y restauración pueden no funcionar correctamente si la Optimización de MIUI está deshabilitada.</string>
     <string name="theme_greenapple">Verde manzana</string>
@@ -630,7 +626,7 @@
     <string name="local_invalid_format">Formato de capítulo invalido</string>
     <string name="chapter_not_found">Capítulo no encontrado</string>
     <string name="help_translate">Ayuda con las traducciones</string>
-    <string name="pref_tablet_ui_mode">Forzar IU de tableta</string>
+    <string name="pref_tablet_ui_mode">Interfaz Tablet</string>
     <string name="about_dont_kill_my_app">Algunos fabricantes tienen restricciones adicionales que cierran de forma forzada los servicios en segundo plano. Este sitio web tiene más información sobre cómo arreglarlo.</string>
     <string name="label_background_activity">Actividad en segundo plano</string>
     <string name="action_track">Rastrear</string>
@@ -687,4 +683,11 @@
     <string name="label_warning">Alerta</string>
     <string name="action_display_language_badge">Idioma</string>
     <string name="update_72hour">Cada 3 días</string>
+    <string name="pref_verbose_logging">Registro detallado</string>
+    <string name="pref_verbose_logging_summary">Imprimir registros detallados al registro del sistema (reduce el rendimiento de la aplicación)</string>
+    <string name="channel_app_updates">Actualizaciones de la aplicación</string>
+    <string name="pref_auto_clear_chapter_cache">Borrar la caché de capítulos al cerrar la aplicación</string>
+    <string name="database_clean">Base de datos limpia</string>
+    <string name="ext_update_all">Actualizar todo</string>
+    <string name="connected_to_wifi">Solo con Wi-Fi</string>
 </resources>

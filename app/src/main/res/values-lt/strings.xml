@@ -98,7 +98,6 @@
     <string name="theme_strawberrydaiquiri">Braškinis Daikiri</string>
     <string name="theme_midnightdusk">Vidurnakčio saulėlydis</string>
     <string name="theme_greenapple">Obuolių žalia</string>
-    <string name="theme_blue">Klasikinė mėlyna</string>
     <string name="theme_monet">Dinamiška</string>
     <string name="pref_app_theme">Programos tema</string>
     <string name="theme_dark">Įjungta</string>
@@ -217,7 +216,6 @@
     <string name="pref_show_page_number">Parodyti puslapio numerį</string>
     <string name="pref_double_tap_anim_speed">Dvigubo paspaudimo animacijos greitis</string>
     <string name="pref_page_transitions">Puslapių perėjimų animacijos</string>
-    <string name="pref_lock_orientation">Užrakinti orientaciją</string>
     <string name="pref_cutout_short">Parodyti turinį iškirptoje zonoje</string>
     <string name="pref_dual_page_invert_summary">Jeigu dvigubų puslapių pozicijos nesutampa su skaitymo kryptimi</string>
     <string name="pref_dual_page_invert">Apkeisti dvigubų puslapių padėtis</string>
@@ -237,7 +235,6 @@
 \nJūs priimate šias rizikas pasitikėdami sertifikatu.</string>
     <string name="untrusted_extension">Nepatikimas plėtinys</string>
     <string name="ext_app_info">Aplikacijos informacija</string>
-    <string name="ext_available">Prieinamas</string>
     <string name="ext_uninstall">Išinstaliuoti</string>
     <string name="ext_trust">Patikimas</string>
     <string name="ext_untrusted">Nepatikimas</string>

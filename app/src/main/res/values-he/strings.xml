@@ -141,7 +141,6 @@
     <string name="logout">התנתק</string>
     <string name="logout_title">התנתק מ-%1$s\?</string>
     <string name="login_success">מחובר</string>
-    <string name="show_password">הראה סיסמה</string>
     <string name="password">סיסמה</string>
     <string name="email">כתובת דוא\"ל</string>
     <string name="username">שם משתמש</string>
@@ -153,7 +152,6 @@
 \nתוסף זדוני יכול לקרוא את אישורי ההתחברות המאוחסנים ב-Tachiyomi או להריץ קוד שרירותי.
 \n
 \nעל ידי אמון באישור זה אתה מקבל סיכונים אלה.</string>
-    <string name="ext_available">זמין</string>
     <string name="ext_uninstall">הסר התקנה</string>
     <string name="ext_untrusted">לא מאומת</string>
     <string name="ext_installed">הותקן</string>
@@ -340,7 +338,6 @@
     <string name="pref_show_page_number">הצג מספר עמוד</string>
     <string name="pref_double_tap_anim_speed">מהירות הנפשה בהקשה כפולה</string>
     <string name="pref_page_transitions">מעברי דפים</string>
-    <string name="pref_lock_orientation">נעל כיוון מסך</string>
     <string name="pref_cutout_short">הצג תוכן באזור החתוך</string>
     <string name="pref_enable_automatic_extension_updates">בדוק אם קיימים עדכונים עבור תוספים</string>
     <string name="untrusted_extension">תוסף לא מאומת</string>
@@ -395,7 +392,6 @@
     <string name="recently">לאחרונה</string>
     <string name="pref_relative_time_short">קצר (היום, אתמול)</string>
     <string name="pref_library_update_refresh_trackers">רענון עוקבים אוטומטית</string>
-    <string name="theme_blue">כחול מדור</string>
     <string name="label_default">ברירת מחדל</string>
     <string name="pref_app_theme">נושא האפליקציה</string>
     <string name="action_start_downloading_now">התחל להוריד עכשיו</string>
