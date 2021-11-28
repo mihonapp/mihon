@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.await
-import eu.kanade.tachiyomi.network.interceptor.RateLimitInterceptor
+import eu.kanade.tachiyomi.network.interceptor.rateLimit
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
@@ -25,13 +25,13 @@ import kotlinx.serialization.json.putJsonObject
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.Calendar
-import java.util.concurrent.TimeUnit.MINUTES
+import java.util.concurrent.TimeUnit
 
 class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
 
     private val authClient = client.newBuilder()
         .addInterceptor(interceptor)
-        .addInterceptor(RateLimitInterceptor(85, 1, MINUTES))
+        .rateLimit(permits = 85, period = 1, unit = TimeUnit.MINUTES)
         .build()
 
     suspend fun addLibManga(track: Track): Track {

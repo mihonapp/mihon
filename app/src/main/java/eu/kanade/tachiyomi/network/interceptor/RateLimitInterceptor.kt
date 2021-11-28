@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.network.interceptor
 
 import android.os.SystemClock
 import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import okhttp3.Response
 import java.util.concurrent.TimeUnit
 
@@ -17,10 +18,16 @@ import java.util.concurrent.TimeUnit
  * @param period {Long}   The limiting duration. Defaults to 1.
  * @param unit {TimeUnit} The unit of time for the period. Defaults to seconds.
  */
-class RateLimitInterceptor(
+fun OkHttpClient.Builder.rateLimit(
+    permits: Int,
+    period: Long = 1,
+    unit: TimeUnit = TimeUnit.SECONDS,
+) = addInterceptor(RateLimitInterceptor(permits, period, unit))
+
+private class RateLimitInterceptor(
     private val permits: Int,
-    private val period: Long = 1,
-    private val unit: TimeUnit = TimeUnit.SECONDS
+    period: Long,
+    unit: TimeUnit,
 ) : Interceptor {
 
     private val requestQueue = ArrayList<Long>(permits)
