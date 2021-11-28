@@ -40,23 +40,33 @@ interface Source : tachiyomi.source.Source {
      *
      * @param manga the manga to update.
      */
-    @Deprecated("Use getMangaDetails instead")
-    fun fetchMangaDetails(manga: SManga): Observable<SManga> = Observable.empty()
+    @Deprecated(
+        "Use the 1.x API instead",
+        ReplaceWith("getMangaDetails")
+    )
+    fun fetchMangaDetails(manga: SManga): Observable<SManga> = throw IllegalStateException("Not used")
 
     /**
      * Returns an observable with all the available chapters for a manga.
      *
      * @param manga the manga to update.
      */
-    @Deprecated("Use getChapterList instead")
-    fun fetchChapterList(manga: SManga): Observable<List<SChapter>> = Observable.empty()
+    @Deprecated(
+        "Use the 1.x API instead",
+        ReplaceWith("getChapterList")
+    )
+    fun fetchChapterList(manga: SManga): Observable<List<SChapter>> = throw IllegalStateException("Not used")
 
+    // TODO: remove direct usages on this method
     /**
      * Returns an observable with the list of pages a chapter has.
      *
      * @param chapter the chapter.
      */
-    @Deprecated("Use getPageList instead")
+    @Deprecated(
+        "Use the 1.x API instead",
+        ReplaceWith("getPageList")
+    )
     fun fetchPageList(chapter: SChapter): Observable<List<Page>> = Observable.empty()
 
     /**

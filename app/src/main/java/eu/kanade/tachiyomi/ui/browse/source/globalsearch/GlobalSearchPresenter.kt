@@ -222,7 +222,7 @@ open class GlobalSearchPresenter(
                 Observable.from(first)
                     .filter { it.thumbnail_url == null && !it.initialized }
                     .map { Pair(it, source) }
-                    .concatMap { runAsObservable({ getMangaDetails(it.first, it.second) }) }
+                    .concatMap { runAsObservable { getMangaDetails(it.first, it.second) } }
                     .map { Pair(source as CatalogueSource, it) }
             }
             .onBackpressureBuffer()
