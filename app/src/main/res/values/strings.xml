@@ -261,6 +261,7 @@
     <string name="untrusted_extension_message">This extension was signed with an untrusted certificate and wasn\'t activated.\n\nA malicious extension could read any login credentials stored in Tachiyomi or execute arbitrary code.\n\nBy trusting this certificate you accept these risks.</string>
     <string name="obsolete_extension_message">This extension is no longer available.</string>
     <string name="unofficial_extension_message">This extension is not from the official Tachiyomi extensions list.</string>
+    <string name="extension_api_error">Failed to get extensions list</string>
     <string name="ext_version_info">Version: %1$s</string>
     <string name="ext_language_info">Language: %1$s</string>
     <string name="ext_nsfw_short">18+</string>

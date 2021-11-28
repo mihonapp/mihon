@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.extension
 import android.content.Context
 import android.graphics.drawable.Drawable
 import com.jakewharton.rxrelay.BehaviorRelay
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.plusAssign
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
@@ -15,8 +16,10 @@ import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.lang.launchNow
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.async
+import logcat.LogPriority
 import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -160,7 +163,8 @@ class ExtensionManager(
             val extensions: List<Extension.Available> = try {
                 api.findExtensions()
             } catch (e: Exception) {
-                context.toast(e.message)
+                logcat(LogPriority.ERROR, e)
+                context.toast(R.string.extension_api_error)
                 emptyList()
             }
 

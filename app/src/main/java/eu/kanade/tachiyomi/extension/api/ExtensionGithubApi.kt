@@ -22,11 +22,19 @@ internal class ExtensionGithubApi {
 
     suspend fun findExtensions(): List<Extension.Available> {
         return withIOContext {
-            networkService.client
+            val extensions = networkService.client
                 .newCall(GET("${REPO_URL_PREFIX}index.min.json"))
                 .await()
                 .parseAs<List<ExtensionJsonObject>>()
                 .toExtensions()
+
+            // Sanity check - a small number of extensions probably means something broke
+            // with the repo generator
+            if (extensions.size < 100) {
+                throw Exception()
+            }
+
+            extensions
         }
     }
 
