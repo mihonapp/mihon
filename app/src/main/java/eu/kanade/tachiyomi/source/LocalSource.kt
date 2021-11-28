@@ -38,7 +38,8 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipFile
 
-class LocalSource(private val context: Context) : CatalogueSource {
+class LocalSource(private val context: Context) : CatalogueSource, UnmeteredSource {
+
     companion object {
         const val ID = 0L
         const val HELP_URL = "https://tachiyomi.org/help/guides/local-manga/"
