@@ -148,10 +148,10 @@ dependencies {
 
     // AndroidX libraries
     implementation("androidx.annotation:annotation:1.3.0")
-    implementation("androidx.appcompat:appcompat:1.4.0-rc01")
+    implementation("androidx.appcompat:appcompat:1.4.0")
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha04")
     implementation("androidx.browser:browser:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.2")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0-beta01")
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.core:core-splashscreen:1.0.0-alpha02")
