@@ -102,15 +102,6 @@
     </style>
 
 
-    <style name="Widget.Tachiyomi.Snackbar" parent="Widget.Material3.Snackbar">
-        <item name="android:background">@drawable/snackbar_background</item>
-        <item name="actionTextColorAlpha">1</item>
-    </style>
-    <style name="Widget.Tachiyomi.Snackbar.TextView" parent="Widget.Material3.Snackbar.TextView">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-
     <style name="Widget.Tachiyomi.Chip.Action" parent="Widget.Material3.Chip.Suggestion">
         <item name="chipBackgroundColor">?attr/chipBackgroundColor</item>
         <item name="android:textColor">?attr/chipTextColor</item>

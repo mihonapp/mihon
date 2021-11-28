@@ -74,8 +74,6 @@
         <item name="chipStyle">@style/Widget.Tachiyomi.Chip.Action</item>
         <item name="chipTextColor">?android:attr/textColorPrimary</item>
         <item name="chipBackgroundColor">?android:attr/divider</item>
-        <item name="snackbarStyle">@style/Widget.Tachiyomi.Snackbar</item>
-        <item name="snackbarTextViewStyle">@style/Widget.Tachiyomi.Snackbar.TextView</item>
         <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
         <item name="appBarLayoutStyle">@style/Widget.Material3.AppBarLayout</item>
         <item name="toolbarStyle">@style/Widget.Material3.Toolbar.Surface</item>
