@@ -43,17 +43,6 @@ open class SimpleNavigationView @JvmOverloads constructor(
             R.style.Widget_Design_NavigationView
         )
 
-        setBackground(a.getDrawable(R.styleable.NavigationView_android_background))
-
-        if (a.hasValue(R.styleable.NavigationView_elevation)) {
-            setElevation(
-                a.getDimensionPixelSize(
-                    R.styleable.NavigationView_elevation,
-                    0
-                ).toFloat()
-            )
-        }
-
         a.recycle()
 
         recycler.layoutManager = LinearLayoutManager(context)
