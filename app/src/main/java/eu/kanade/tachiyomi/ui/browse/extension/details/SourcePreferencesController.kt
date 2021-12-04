@@ -19,6 +19,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceGroupAdapter
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
+import androidx.preference.getOnBindEditTextListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.SharedPreferencesDataStore
@@ -117,7 +118,9 @@ class SourcePreferencesController(bundle: Bundle? = null) :
 
                 // Apply incognito IME for EditTextPreference
                 if (pref is EditTextPreference) {
+                    val setListener = pref.getOnBindEditTextListener()
                     pref.setOnBindEditTextListener {
+                        setListener?.onBindEditText(it)
                         it.setIncognito(viewScope)
                     }
                 }
