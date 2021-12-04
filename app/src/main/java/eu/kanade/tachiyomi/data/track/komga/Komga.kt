@@ -59,7 +59,11 @@ class Komga(private val context: Context, id: Int) : TrackService(id), EnhancedT
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         if (track.status != COMPLETED) {
             if (didReadChapter) {
-                track.status = READING
+                if (track.last_chapter_read.toInt() == track.total_chapters && track.total_chapters > 0) {
+                    track.status = COMPLETED
+                } else {
+                    track.status = READING
+                }
             }
         }
 

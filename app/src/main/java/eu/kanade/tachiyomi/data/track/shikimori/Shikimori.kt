@@ -46,8 +46,12 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
 
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         if (track.status != COMPLETED) {
-            if (track.status != REPEATING && didReadChapter) {
-                track.status = READING
+            if (didReadChapter) {
+                if (track.last_chapter_read.toInt() == track.total_chapters && track.total_chapters > 0) {
+                    track.status = COMPLETED
+                } else if (track.status != REPEATING) {
+                    track.status = READING
+                }
             }
         }
 
