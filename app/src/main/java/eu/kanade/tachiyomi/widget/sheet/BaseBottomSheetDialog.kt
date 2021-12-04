@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.getElevation
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.displayCompat
 import eu.kanade.tachiyomi.util.system.isNightMode
@@ -40,7 +41,7 @@ abstract class BaseBottomSheetDialog(context: Context) : BottomSheetDialog(conte
         // TODO Replace deprecated systemUiVisibility when material-components uses new API to modify status bar icons
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            window?.setNavigationBarTransparentCompat(context)
+            window?.setNavigationBarTransparentCompat(context, behavior.getElevation())
             val bottomSheet = rootView.parent as ViewGroup
             var flags = bottomSheet.systemUiVisibility
             flags = if (context.isNightMode()) {
