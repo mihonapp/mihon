@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceScreen
+import com.google.android.material.color.DynamicColors
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.util.preference.defaultValue
@@ -69,7 +70,7 @@ class SettingsAppearanceController : SettingsController() {
 
                 val appThemes = Values.AppTheme.values().filter {
                     val monetFilter = if (it == Values.AppTheme.MONET) {
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                        DynamicColors.isDynamicColorAvailable()
                     } else {
                         true
                     }
