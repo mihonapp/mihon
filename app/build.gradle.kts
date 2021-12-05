@@ -271,7 +271,7 @@ dependencies {
     implementation("com.mikepenz:aboutlibraries-core:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
 
     // Shizuku
-    val shizukuVersion = "12.0.0"
+    val shizukuVersion = "12.1.0"
     implementation("dev.rikka.shizuku:api:$shizukuVersion")
     implementation("dev.rikka.shizuku:provider:$shizukuVersion")
 

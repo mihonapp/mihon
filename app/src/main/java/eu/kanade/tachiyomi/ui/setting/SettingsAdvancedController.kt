@@ -39,6 +39,7 @@ import eu.kanade.tachiyomi.util.system.MiuiUtil
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.toast
+import rikka.sui.Sui
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
@@ -222,7 +223,7 @@ class SettingsAdvancedController : SettingsController() {
 
                 onChange {
                     if (it == PreferenceValues.ExtensionInstaller.SHIZUKU.name &&
-                        !context.isPackageInstalled("moe.shizuku.privileged.api")
+                        !(context.isPackageInstalled("moe.shizuku.privileged.api") || Sui.isSui())
                     ) {
                         MaterialAlertDialogBuilder(context)
                             .setTitle(R.string.ext_installer_shizuku)
