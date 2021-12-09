@@ -11,18 +11,18 @@
   ~ Neutral #16151D
 -->
 <resources>
-    <color name="midnightdusk_primary">#FFB1C4</color>
-    <color name="midnightdusk_onPrimary">#66002A</color>
-    <color name="midnightdusk_primaryContainer">#8F003F</color>
+    <color name="midnightdusk_primary">#BB0054</color>
+    <color name="midnightdusk_onPrimary">#FFD9E1</color>
+    <color name="midnightdusk_primaryContainer">#87003d</color>
     <color name="midnightdusk_onPrimaryContainer">#FFD9E1</color>
-    <color name="midnightdusk_secondary">#FFB1C4</color>
-    <color name="midnightdusk_onSecondary">#66002A</color>
-    <color name="midnightdusk_secondaryContainer">#8F003F</color>
-    <color name="midnightdusk_onSecondaryContainer">#FFD9E1</color>
-    <color name="midnightdusk_tertiary">#EDBE91</color>
-    <color name="midnightdusk_onTertiary">#462A09</color>
-    <color name="midnightdusk_tertiaryContainer">#60401D</color>
-    <color name="midnightdusk_onTertiaryContainer">#FFDCBA</color>
+    <color name="midnightdusk_secondary">#BB0054</color>
+    <color name="midnightdusk_onSecondary">#E5E1E5</color>
+    <color name="midnightdusk_secondaryContainer">#BB0054</color>
+    <color name="midnightdusk_onSecondaryContainer">#E5E1E5</color>
+    <color name="midnightdusk_tertiary">#006638</color>
+    <color name="midnightdusk_onTertiary">#E5E1E5</color>
+    <color name="midnightdusk_tertiaryContainer">#00894b</color>
+    <color name="midnightdusk_onTertiaryContainer">#E5E1E5</color>
     <color name="midnightdusk_background">#16151D</color>
     <color name="midnightdusk_onBackground">#E5E1E5</color>
     <color name="midnightdusk_surface">#16151D</color>
@@ -32,5 +32,5 @@
     <color name="midnightdusk_outline">#9F8C8F</color>
     <color name="midnightdusk_inverseOnSurface">#1C1B1F</color>
     <color name="midnightdusk_inverseSurface">#E5E1E5</color>
-    <color name="midnightdusk_primaryInverse">#BB0054</color>
+    <color name="midnightdusk_primaryInverse">#FFB1C4</color>
 </resources>
