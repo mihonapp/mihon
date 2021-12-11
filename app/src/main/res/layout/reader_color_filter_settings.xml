@@ -9,6 +9,57 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Brightness -->
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/custom_brightness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/pref_custom_brightness"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Brightness value -->
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/txt_brightness_seekbar_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintBottom_toBottomOf="@id/slider_brightness"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/slider_brightness"
+            app:srcCompat="@drawable/ic_brightness_5_24dp" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_brightness"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:valueFrom="-75.0"
+            android:valueTo="100.0"
+            android:stepSize="1.0"
+            app:layout_constraintEnd_toStartOf="@id/txt_brightness_seekbar_value"
+            app:layout_constraintStart_toEndOf="@id/txt_brightness_seekbar_icon"
+            app:layout_constraintTop_toBottomOf="@id/custom_brightness" />
+
+        <TextView
+            android:id="@+id/txt_brightness_seekbar_value"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            app:layout_constraintBottom_toBottomOf="@id/slider_brightness"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/slider_brightness"
+            tools:text="50" />
+
         <!-- Color filter -->
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -20,7 +71,7 @@
             android:text="@string/pref_custom_color_filter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/slider_brightness" />
 
         <!-- Red filter -->
 
@@ -206,57 +257,6 @@
             android:text="@string/pref_inverted_colors"
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintTop_toBottomOf="@id/grayscale" />
-
-        <!-- Brightness -->
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/custom_brightness"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:text="@string/pref_custom_brightness"
-            app:layout_constraintTop_toBottomOf="@id/inverted_colors" />
-
-        <!-- Brightness value -->
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/txt_brightness_seekbar_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:textAppearance="?attr/textAppearanceTitleSmall"
-            android:tint="?attr/colorOnBackground"
-            app:layout_constraintBottom_toBottomOf="@id/slider_brightness"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/slider_brightness"
-            app:srcCompat="@drawable/ic_brightness_5_24dp" />
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/slider_brightness"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:padding="8dp"
-            android:valueFrom="-75.0"
-            android:valueTo="100.0"
-            android:stepSize="1.0"
-            app:layout_constraintEnd_toStartOf="@id/txt_brightness_seekbar_value"
-            app:layout_constraintStart_toEndOf="@id/txt_brightness_seekbar_icon"
-            app:layout_constraintTop_toBottomOf="@id/custom_brightness" />
-
-        <TextView
-            android:id="@+id/txt_brightness_seekbar_value"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:textAppearance="?attr/textAppearanceTitleSmall"
-            app:layout_constraintBottom_toBottomOf="@id/slider_brightness"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/slider_brightness"
-            tools:text="50" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/color_filter_symbols_barrier"
