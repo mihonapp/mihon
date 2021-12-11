@@ -32,7 +32,7 @@ class DeleteLibraryMangasDialog<T>(bundle: Bundle? = null) :
             .toTypedArray()
 
         val selected = items
-            .mapIndexed { i, _ -> i == 0 }
+            .map { false }
             .toBooleanArray()
         return MaterialAlertDialogBuilder(activity!!)
             .setTitle(R.string.action_remove)
