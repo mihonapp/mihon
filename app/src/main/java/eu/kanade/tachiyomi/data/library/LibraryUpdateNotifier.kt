@@ -16,6 +16,7 @@ import coil.transform.CircleCropTransformation
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.download.Downloader
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -212,6 +213,20 @@ class LibraryUpdateNotifier(private val context: Context) {
                     Notifications.ID_NEW_CHAPTERS
                 )
             )
+            // Download chapters action
+            // Only add the action when chapters is within threshold
+            if (chapters.size <= Downloader.CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
+                addAction(
+                    R.drawable.ic_download_24dp,
+                    context.getString(R.string.action_download),
+                    NotificationReceiver.downloadChaptersPendingBroadcast(
+                        context,
+                        manga,
+                        chapters,
+                        Notifications.ID_NEW_CHAPTERS
+                    )
+                )
+            }
         }
     }
 

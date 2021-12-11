@@ -514,10 +514,9 @@ class Downloader(
 
     companion object {
         const val TMP_DIR_SUFFIX = "_tmp"
+        const val CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 15
     }
 }
-
-private const val CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 15
 
 // Arbitrary minimum required space to start a download: 50 MB
 private const val MIN_DISK_SPACE = 50 * 1024 * 1024

@@ -102,6 +102,18 @@ class NotificationReceiver : BroadcastReceiver() {
                     markAsRead(urls, mangaId)
                 }
             }
+            // Download manga chapters
+            ACTION_DOWNLOAD_CHAPTER -> {
+                val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
+                if (notificationId > -1) {
+                    dismissNotification(context, notificationId, intent.getIntExtra(EXTRA_GROUP_ID, 0))
+                }
+                val urls = intent.getStringArrayExtra(EXTRA_CHAPTER_URL) ?: return
+                val mangaId = intent.getLongExtra(EXTRA_MANGA_ID, -1)
+                if (mangaId > -1) {
+                    downloadChapters(urls, mangaId)
+                }
+            }
             // Share crash dump file
             ACTION_SHARE_CRASH_LOG ->
                 shareFile(
@@ -235,6 +247,24 @@ class NotificationReceiver : BroadcastReceiver() {
         }
     }
 
+    /**
+     * Method called when user wants to download chapters
+     *
+     * @param chapterUrls URLs of chapter to download
+     * @param mangaId id of manga
+     */
+    private fun downloadChapters(chapterUrls: Array<String>, mangaId: Long) {
+        val db: DatabaseHelper = Injekt.get()
+
+        launchIO {
+            val chapters = chapterUrls.mapNotNull { db.getChapter(it, mangaId).executeAsBlocking() }
+            val manga = db.getManga(mangaId).executeAsBlocking()
+            if (chapters.isNotEmpty() && manga != null) {
+                downloadManager.downloadChapters(manga, chapters)
+            }
+        }
+    }
+
     companion object {
         private const val NAME = "NotificationReceiver"
 
@@ -251,6 +281,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
         private const val ACTION_MARK_AS_READ = "$ID.$NAME.MARK_AS_READ"
         private const val ACTION_OPEN_CHAPTER = "$ID.$NAME.ACTION_OPEN_CHAPTER"
+        private const val ACTION_DOWNLOAD_CHAPTER = "$ID.$NAME.ACTION_DOWNLOAD_CHAPTER"
 
         private const val ACTION_RESUME_DOWNLOADS = "$ID.$NAME.ACTION_RESUME_DOWNLOADS"
         private const val ACTION_PAUSE_DOWNLOADS = "$ID.$NAME.ACTION_PAUSE_DOWNLOADS"
@@ -434,6 +465,28 @@ class NotificationReceiver : BroadcastReceiver() {
         ): PendingIntent {
             val newIntent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_MARK_AS_READ
+                putExtra(EXTRA_CHAPTER_URL, chapters.map { it.url }.toTypedArray())
+                putExtra(EXTRA_MANGA_ID, manga.id)
+                putExtra(EXTRA_NOTIFICATION_ID, manga.id.hashCode())
+                putExtra(EXTRA_GROUP_ID, groupId)
+            }
+            return PendingIntent.getBroadcast(context, manga.id.hashCode(), newIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        /**
+         * Returns [PendingIntent] that downloads chapters
+         *
+         * @param context context of application
+         * @param manga manga of chapter
+         */
+        internal fun downloadChaptersPendingBroadcast(
+            context: Context,
+            manga: Manga,
+            chapters: Array<Chapter>,
+            groupId: Int
+        ): PendingIntent {
+            val newIntent = Intent(context, NotificationReceiver::class.java).apply {
+                action = ACTION_DOWNLOAD_CHAPTER
                 putExtra(EXTRA_CHAPTER_URL, chapters.map { it.url }.toTypedArray())
                 putExtra(EXTRA_MANGA_ID, manga.id)
                 putExtra(EXTRA_NOTIFICATION_ID, manga.id.hashCode())
