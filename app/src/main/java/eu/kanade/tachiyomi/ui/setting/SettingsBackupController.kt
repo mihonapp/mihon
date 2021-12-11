@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
-import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hippo.unifile.UniFile
@@ -201,26 +200,7 @@ class SettingsBackupController : SettingsController() {
                     )
                 }
                 CODE_BACKUP_RESTORE -> {
-                    uri?.path?.let {
-                        val fileName = DocumentFile.fromSingleUri(activity, uri)?.name ?: uri.toString()
-                        when {
-                            fileName.endsWith(".proto.gz") -> {
-                                RestoreBackupDialog(
-                                    uri,
-                                    BackupConst.BACKUP_TYPE_FULL
-                                ).showDialog(router)
-                            }
-                            fileName.endsWith(".json") -> {
-                                RestoreBackupDialog(
-                                    uri,
-                                    BackupConst.BACKUP_TYPE_LEGACY
-                                ).showDialog(router)
-                            }
-                            else -> {
-                                activity.toast(activity.getString(R.string.invalid_backup_file_type, fileName))
-                            }
-                        }
-                    }
+                    uri?.let { RestoreBackupDialog(it).showDialog(router) }
                 }
             }
         }
@@ -284,32 +264,28 @@ class SettingsBackupController : SettingsController() {
     }
 
     class RestoreBackupDialog(bundle: Bundle? = null) : DialogController(bundle) {
-        constructor(uri: Uri, type: Int) : this(
-            bundleOf(
-                KEY_URI to uri,
-                KEY_TYPE to type
-            )
+        constructor(uri: Uri) : this(
+            bundleOf(KEY_URI to uri)
         )
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
             val activity = activity!!
             val uri: Uri = args.getParcelable(KEY_URI)!!
-            val type: Int = args.getInt(KEY_TYPE)
 
             return try {
+                var type = BackupConst.BACKUP_TYPE_FULL
+                val results = runCatching {
+                    FullBackupRestoreValidator().validate(activity, uri)
+                }.recoverCatching {
+                    type = BackupConst.BACKUP_TYPE_LEGACY
+                    LegacyBackupRestoreValidator().validate(activity, uri)
+                }.getOrThrow()
+
                 var message = if (type == BackupConst.BACKUP_TYPE_FULL) {
                     activity.getString(R.string.backup_restore_content_full)
                 } else {
                     activity.getString(R.string.backup_restore_content)
                 }
-
-                val validator = if (type == BackupConst.BACKUP_TYPE_FULL) {
-                    FullBackupRestoreValidator()
-                } else {
-                    LegacyBackupRestoreValidator()
-                }
-
-                val results = validator.validate(activity, uri)
                 if (results.missingSources.isNotEmpty()) {
                     message += "\n\n${activity.getString(R.string.backup_restore_missing_sources)}\n${results.missingSources.joinToString("\n") { "- $it" }}"
                 }
@@ -336,7 +312,6 @@ class SettingsBackupController : SettingsController() {
 }
 
 private const val KEY_URI = "RestoreBackupDialog.uri"
-private const val KEY_TYPE = "RestoreBackupDialog.type"
 
 private const val CODE_BACKUP_DIR = 503
 private const val CODE_BACKUP_CREATE = 504
