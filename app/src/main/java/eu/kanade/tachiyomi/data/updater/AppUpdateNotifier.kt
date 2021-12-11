@@ -39,12 +39,12 @@ internal class AppUpdateNotifier(private val context: Context) {
 
         with(notificationBuilder) {
             setContentTitle(context.getString(R.string.update_check_notification_update_available))
-            setSmallIcon(android.R.drawable.stat_sys_download_done)
+            setSmallIcon(R.drawable.ic_download_24dp)
             setContentIntent(updateIntent)
 
             clearActions()
             addAction(
-                android.R.drawable.stat_sys_download_done,
+                R.drawable.ic_download_24dp,
                 context.getString(R.string.action_download),
                 updateIntent,
             )
@@ -66,7 +66,7 @@ internal class AppUpdateNotifier(private val context: Context) {
         with(notificationBuilder) {
             title?.let { setContentTitle(title) }
             setContentText(context.getString(R.string.update_check_notification_download_in_progress))
-            setSmallIcon(android.R.drawable.stat_sys_download)
+            setSmallIcon(R.drawable.ic_photo_24dp)
             setOngoing(true)
         }
         notificationBuilder.show()
@@ -95,7 +95,7 @@ internal class AppUpdateNotifier(private val context: Context) {
         val installIntent = NotificationHandler.installApkPendingActivity(context, uri)
         with(notificationBuilder) {
             setContentText(context.getString(R.string.update_check_notification_download_complete))
-            setSmallIcon(android.R.drawable.stat_sys_download_done)
+            setSmallIcon(R.drawable.ic_download_24dp)
             setOnlyAlertOnce(false)
             setProgress(0, 0, false)
             setContentIntent(installIntent)
