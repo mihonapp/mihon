@@ -188,10 +188,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinSerializationVersion")
 
-    // TODO: remove these once they're no longer used in any extensions
-    implementation("com.google.code.gson:gson:2.8.7")
-    implementation("com.github.salomonbrys.kotson:kotson:2.5.0")
-
     // JavaScript engine
     implementation("com.squareup.duktape:duktape-android:1.4.0")
 
