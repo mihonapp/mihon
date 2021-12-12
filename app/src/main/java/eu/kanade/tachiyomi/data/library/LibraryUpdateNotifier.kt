@@ -217,7 +217,7 @@ class LibraryUpdateNotifier(private val context: Context) {
             // Only add the action when chapters is within threshold
             if (chapters.size <= Downloader.CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
                 addAction(
-                    R.drawable.ic_download_24dp,
+                    android.R.drawable.stat_sys_download_done,
                     context.getString(R.string.action_download),
                     NotificationReceiver.downloadChaptersPendingBroadcast(
                         context,

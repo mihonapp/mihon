@@ -84,7 +84,7 @@ internal class DownloadNotifier(private val context: Context) {
     fun onProgressChange(download: Download) {
         with(progressNotificationBuilder) {
             if (!isDownloading) {
-                setSmallIcon(R.drawable.ic_photo_24dp)
+                setSmallIcon(android.R.drawable.stat_sys_download)
                 clearActions()
                 // Open download manager when clicked
                 setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
@@ -165,7 +165,7 @@ internal class DownloadNotifier(private val context: Context) {
             with(completeNotificationBuilder) {
                 setContentTitle(context.getString(R.string.download_notifier_downloader_title))
                 setContentText(context.getString(R.string.download_notifier_download_finish))
-                setSmallIcon(R.drawable.ic_download_24dp)
+                setSmallIcon(android.R.drawable.stat_sys_download_done)
                 clearActions()
                 setAutoCancel(true)
                 setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))

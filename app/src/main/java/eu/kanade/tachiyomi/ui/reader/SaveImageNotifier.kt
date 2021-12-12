@@ -103,7 +103,7 @@ class SaveImageNotifier(private val context: Context) {
         with(notificationBuilder) {
             setContentTitle(context.getString(R.string.download_notifier_title_error))
             setContentText(error ?: context.getString(R.string.unknown_error))
-            setSmallIcon(R.drawable.ic_error_outline_24dp)
+            setSmallIcon(android.R.drawable.ic_menu_report_image)
         }
         updateNotification()
     }
