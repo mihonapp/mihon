@@ -11,17 +11,17 @@
   ~ Neutral #16151D
 -->
 <resources>
-    <color name="midnightdusk_primary">#BB0054</color>
-    <color name="midnightdusk_onPrimary">#FFD9E1</color>
-    <color name="midnightdusk_primaryContainer">#87003d</color>
-    <color name="midnightdusk_onPrimaryContainer">#FFD9E1</color>
-    <color name="midnightdusk_secondary">#BB0054</color>
-    <color name="midnightdusk_onSecondary">#E5E1E5</color>
-    <color name="midnightdusk_secondaryContainer">#BB0054</color>
-    <color name="midnightdusk_onSecondaryContainer">#E5E1E5</color>
-    <color name="midnightdusk_tertiary">#006638</color>
-    <color name="midnightdusk_onTertiary">#E5E1E5</color>
-    <color name="midnightdusk_tertiaryContainer">#00894b</color>
+    <color name="midnightdusk_primary">#F02475</color>
+    <color name="midnightdusk_onPrimary">#FFFFFF</color>
+    <color name="midnightdusk_primaryContainer">#BD1C5C</color>
+    <color name="midnightdusk_onPrimaryContainer">#FFFFFF</color>
+    <color name="midnightdusk_secondary">#F02475</color>
+    <color name="midnightdusk_onSecondary">#FFFFFF</color>
+    <color name="midnightdusk_secondaryContainer">#F02475</color>
+    <color name="midnightdusk_onSecondaryContainer">#FFFFFF</color>
+    <color name="midnightdusk_tertiary">#55971C</color>
+    <color name="midnightdusk_onTertiary">#FFFFFF</color>
+    <color name="midnightdusk_tertiaryContainer">#386412</color>
     <color name="midnightdusk_onTertiaryContainer">#E5E1E5</color>
     <color name="midnightdusk_background">#16151D</color>
     <color name="midnightdusk_onBackground">#E5E1E5</color>
@@ -30,7 +30,8 @@
     <color name="midnightdusk_surfaceVariant">#524346</color>
     <color name="midnightdusk_onSurfaceVariant">#D6C1C4</color>
     <color name="midnightdusk_outline">#9F8C8F</color>
-    <color name="midnightdusk_inverseOnSurface">#1C1B1F</color>
-    <color name="midnightdusk_inverseSurface">#E5E1E5</color>
-    <color name="midnightdusk_primaryInverse">#FFB1C4</color>
+    <color name="midnightdusk_inverseSurface">#333043</color>
+    <color name="midnightdusk_inverseOnSurface">#FFFFFF</color>
+    <color name="midnightdusk_primaryInverse">#F02475</color>
+    <color name="midnightdusk_elevationOverlay">#2C0013</color>
 </resources>

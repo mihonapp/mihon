@@ -153,6 +153,7 @@
         <item name="colorOnSurfaceInverse">@color/midnightdusk_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/midnightdusk_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/midnightdusk_primaryInverse</item>
+        <item name="elevationOverlayColor">@color/midnightdusk_elevationOverlay</item>
     </style>
 
     <!--== Strawberry Daiquiri Theme ==-->
