@@ -93,6 +93,13 @@ class AboutController : SettingsController(), NoAppBarElevationController {
                 router.pushController(LicensesController().withFadeTransaction())
             }
         }
+        preference {
+            key = "pref_about_privacy_policy"
+            titleRes = R.string.privacy_policy
+            onClick {
+                openInBrowser("https://tachiyomi.org/privacy")
+            }
+        }
 
         add(AboutLinksPreference(context))
     }
