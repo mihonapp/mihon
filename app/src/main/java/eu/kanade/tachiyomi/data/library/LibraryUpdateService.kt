@@ -262,6 +262,10 @@ class LibraryUpdateService(
             listToUpdate = listToUpdate.filterNot { it.status == SManga.COMPLETED }
         }
 
+        if (target == Target.CHAPTERS && preferences.updateOnlyCompletelyRead()) {
+            listToUpdate = listToUpdate.filter { it.unread == 0 }
+        }
+
         val selectedScheme = preferences.libraryUpdatePrioritization().get()
         mangaToUpdate = listToUpdate
             .distinctBy { it.id }

@@ -179,6 +179,8 @@ class PreferencesHelper(val context: Context) {
 
     fun updateOnlyNonCompleted() = prefs.getBoolean(Keys.updateOnlyNonCompleted, true)
 
+    fun updateOnlyCompletelyRead() = prefs.getBoolean(Keys.updateOnlyCompletelyRead, true)
+
     fun autoUpdateTrack() = prefs.getBoolean(Keys.autoUpdateTrack, true)
 
     fun lastUsedSource() = flowPrefs.getLong(Keys.lastUsedSource, -1)

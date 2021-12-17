@@ -199,6 +199,12 @@ class SettingsLibraryController : SettingsController() {
                 titleRes = R.string.pref_update_only_non_completed
                 defaultValue = true
             }
+            switchPreference {
+                key = Keys.updateOnlyCompletelyRead
+                titleRes = R.string.pref_update_only_completely_read
+                summaryRes = R.string.pref_update_only_completely_read_summary
+                defaultValue = false
+            }
             preference {
                 key = Keys.libraryUpdateCategories
                 titleRes = R.string.categories
