@@ -42,7 +42,7 @@ class MangaChapterHistoryGetResolver : DefaultGetResolver<MangaChapterHistory>()
 
         // Make certain column conflicts are dealt with
         manga.id = chapter.manga_id
-        manga.url = cursor.getString(cursor.getColumnIndex("mangaUrl"))
+        manga.url = cursor.getString(cursor.getColumnIndexOrThrow("mangaUrl"))
         chapter.id = history.chapter_id
 
         // Return result

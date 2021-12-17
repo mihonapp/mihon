@@ -47,10 +47,10 @@ open class HistoryPutResolver : DefaultPutResolver<History>() {
 class HistoryGetResolver : DefaultGetResolver<History>() {
 
     override fun mapFromCursor(cursor: Cursor): History = HistoryImpl().apply {
-        id = cursor.getLong(cursor.getColumnIndex(COL_ID))
-        chapter_id = cursor.getLong(cursor.getColumnIndex(COL_CHAPTER_ID))
-        last_read = cursor.getLong(cursor.getColumnIndex(COL_LAST_READ))
-        time_read = cursor.getLong(cursor.getColumnIndex(COL_TIME_READ))
+        id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_ID))
+        chapter_id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_CHAPTER_ID))
+        last_read = cursor.getLong(cursor.getColumnIndexOrThrow(COL_LAST_READ))
+        time_read = cursor.getLong(cursor.getColumnIndexOrThrow(COL_TIME_READ))
     }
 }
 

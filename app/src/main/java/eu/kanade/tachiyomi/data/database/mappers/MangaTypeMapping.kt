@@ -72,23 +72,23 @@ class MangaPutResolver : DefaultPutResolver<Manga>() {
 
 interface BaseMangaGetResolver {
     fun mapBaseFromCursor(manga: Manga, cursor: Cursor) = manga.apply {
-        id = cursor.getLong(cursor.getColumnIndex(COL_ID))
-        source = cursor.getLong(cursor.getColumnIndex(COL_SOURCE))
-        url = cursor.getString(cursor.getColumnIndex(COL_URL))
-        artist = cursor.getString(cursor.getColumnIndex(COL_ARTIST))
-        author = cursor.getString(cursor.getColumnIndex(COL_AUTHOR))
-        description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION))
-        genre = cursor.getString(cursor.getColumnIndex(COL_GENRE))
-        title = cursor.getString(cursor.getColumnIndex(COL_TITLE))
-        status = cursor.getInt(cursor.getColumnIndex(COL_STATUS))
-        thumbnail_url = cursor.getString(cursor.getColumnIndex(COL_THUMBNAIL_URL))
-        favorite = cursor.getInt(cursor.getColumnIndex(COL_FAVORITE)) == 1
-        last_update = cursor.getLong(cursor.getColumnIndex(COL_LAST_UPDATE))
-        initialized = cursor.getInt(cursor.getColumnIndex(COL_INITIALIZED)) == 1
-        viewer_flags = cursor.getInt(cursor.getColumnIndex(COL_VIEWER))
-        chapter_flags = cursor.getInt(cursor.getColumnIndex(COL_CHAPTER_FLAGS))
-        cover_last_modified = cursor.getLong(cursor.getColumnIndex(COL_COVER_LAST_MODIFIED))
-        date_added = cursor.getLong(cursor.getColumnIndex(COL_DATE_ADDED))
+        id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_ID))
+        source = cursor.getLong(cursor.getColumnIndexOrThrow(COL_SOURCE))
+        url = cursor.getString(cursor.getColumnIndexOrThrow(COL_URL))
+        artist = cursor.getString(cursor.getColumnIndexOrThrow(COL_ARTIST))
+        author = cursor.getString(cursor.getColumnIndexOrThrow(COL_AUTHOR))
+        description = cursor.getString(cursor.getColumnIndexOrThrow(COL_DESCRIPTION))
+        genre = cursor.getString(cursor.getColumnIndexOrThrow(COL_GENRE))
+        title = cursor.getString(cursor.getColumnIndexOrThrow(COL_TITLE))
+        status = cursor.getInt(cursor.getColumnIndexOrThrow(COL_STATUS))
+        thumbnail_url = cursor.getString(cursor.getColumnIndexOrThrow(COL_THUMBNAIL_URL))
+        favorite = cursor.getInt(cursor.getColumnIndexOrThrow(COL_FAVORITE)) == 1
+        last_update = cursor.getLong(cursor.getColumnIndexOrThrow(COL_LAST_UPDATE))
+        initialized = cursor.getInt(cursor.getColumnIndexOrThrow(COL_INITIALIZED)) == 1
+        viewer_flags = cursor.getInt(cursor.getColumnIndexOrThrow(COL_VIEWER))
+        chapter_flags = cursor.getInt(cursor.getColumnIndexOrThrow(COL_CHAPTER_FLAGS))
+        cover_last_modified = cursor.getLong(cursor.getColumnIndexOrThrow(COL_COVER_LAST_MODIFIED))
+        date_added = cursor.getLong(cursor.getColumnIndexOrThrow(COL_DATE_ADDED))
     }
 }
 

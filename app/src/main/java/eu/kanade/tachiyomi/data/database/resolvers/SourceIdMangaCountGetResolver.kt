@@ -15,8 +15,8 @@ class SourceIdMangaCountGetResolver : DefaultGetResolver<SourceIdMangaCount>() {
 
     @SuppressLint("Range")
     override fun mapFromCursor(cursor: Cursor): SourceIdMangaCount {
-        val sourceID = cursor.getLong(cursor.getColumnIndex(MangaTable.COL_SOURCE))
-        val count = cursor.getInt(cursor.getColumnIndex(COL_COUNT))
+        val sourceID = cursor.getLong(cursor.getColumnIndexOrThrow(MangaTable.COL_SOURCE))
+        val count = cursor.getInt(cursor.getColumnIndexOrThrow(COL_COUNT))
 
         return SourceIdMangaCount(sourceID, count)
     }

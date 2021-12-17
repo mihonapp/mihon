@@ -47,10 +47,10 @@ class CategoryPutResolver : DefaultPutResolver<Category>() {
 class CategoryGetResolver : DefaultGetResolver<Category>() {
 
     override fun mapFromCursor(cursor: Cursor): Category = CategoryImpl().apply {
-        id = cursor.getInt(cursor.getColumnIndex(COL_ID))
-        name = cursor.getString(cursor.getColumnIndex(COL_NAME))
-        order = cursor.getInt(cursor.getColumnIndex(COL_ORDER))
-        flags = cursor.getInt(cursor.getColumnIndex(COL_FLAGS))
+        id = cursor.getInt(cursor.getColumnIndexOrThrow(COL_ID))
+        name = cursor.getString(cursor.getColumnIndexOrThrow(COL_NAME))
+        order = cursor.getInt(cursor.getColumnIndexOrThrow(COL_ORDER))
+        flags = cursor.getInt(cursor.getColumnIndexOrThrow(COL_FLAGS))
     }
 }
 

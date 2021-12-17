@@ -65,19 +65,19 @@ class TrackPutResolver : DefaultPutResolver<Track>() {
 class TrackGetResolver : DefaultGetResolver<Track>() {
 
     override fun mapFromCursor(cursor: Cursor): Track = TrackImpl().apply {
-        id = cursor.getLong(cursor.getColumnIndex(COL_ID))
-        manga_id = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID))
-        sync_id = cursor.getInt(cursor.getColumnIndex(COL_SYNC_ID))
-        media_id = cursor.getInt(cursor.getColumnIndex(COL_MEDIA_ID))
-        library_id = cursor.getLong(cursor.getColumnIndex(COL_LIBRARY_ID))
-        title = cursor.getString(cursor.getColumnIndex(COL_TITLE))
-        last_chapter_read = cursor.getFloat(cursor.getColumnIndex(COL_LAST_CHAPTER_READ))
-        total_chapters = cursor.getInt(cursor.getColumnIndex(COL_TOTAL_CHAPTERS))
-        status = cursor.getInt(cursor.getColumnIndex(COL_STATUS))
-        score = cursor.getFloat(cursor.getColumnIndex(COL_SCORE))
-        tracking_url = cursor.getString(cursor.getColumnIndex(COL_TRACKING_URL))
-        started_reading_date = cursor.getLong(cursor.getColumnIndex(COL_START_DATE))
-        finished_reading_date = cursor.getLong(cursor.getColumnIndex(COL_FINISH_DATE))
+        id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_ID))
+        manga_id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_MANGA_ID))
+        sync_id = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SYNC_ID))
+        media_id = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MEDIA_ID))
+        library_id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_LIBRARY_ID))
+        title = cursor.getString(cursor.getColumnIndexOrThrow(COL_TITLE))
+        last_chapter_read = cursor.getFloat(cursor.getColumnIndexOrThrow(COL_LAST_CHAPTER_READ))
+        total_chapters = cursor.getInt(cursor.getColumnIndexOrThrow(COL_TOTAL_CHAPTERS))
+        status = cursor.getInt(cursor.getColumnIndexOrThrow(COL_STATUS))
+        score = cursor.getFloat(cursor.getColumnIndexOrThrow(COL_SCORE))
+        tracking_url = cursor.getString(cursor.getColumnIndexOrThrow(COL_TRACKING_URL))
+        started_reading_date = cursor.getLong(cursor.getColumnIndexOrThrow(COL_START_DATE))
+        finished_reading_date = cursor.getLong(cursor.getColumnIndexOrThrow(COL_FINISH_DATE))
     }
 }
 

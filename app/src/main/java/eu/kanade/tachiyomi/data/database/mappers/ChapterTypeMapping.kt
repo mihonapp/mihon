@@ -63,18 +63,18 @@ class ChapterPutResolver : DefaultPutResolver<Chapter>() {
 class ChapterGetResolver : DefaultGetResolver<Chapter>() {
 
     override fun mapFromCursor(cursor: Cursor): Chapter = ChapterImpl().apply {
-        id = cursor.getLong(cursor.getColumnIndex(COL_ID))
-        manga_id = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID))
-        url = cursor.getString(cursor.getColumnIndex(COL_URL))
-        name = cursor.getString(cursor.getColumnIndex(COL_NAME))
-        scanlator = cursor.getString(cursor.getColumnIndex(COL_SCANLATOR))
-        read = cursor.getInt(cursor.getColumnIndex(COL_READ)) == 1
-        bookmark = cursor.getInt(cursor.getColumnIndex(COL_BOOKMARK)) == 1
-        date_fetch = cursor.getLong(cursor.getColumnIndex(COL_DATE_FETCH))
-        date_upload = cursor.getLong(cursor.getColumnIndex(COL_DATE_UPLOAD))
-        last_page_read = cursor.getInt(cursor.getColumnIndex(COL_LAST_PAGE_READ))
-        chapter_number = cursor.getFloat(cursor.getColumnIndex(COL_CHAPTER_NUMBER))
-        source_order = cursor.getInt(cursor.getColumnIndex(COL_SOURCE_ORDER))
+        id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_ID))
+        manga_id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_MANGA_ID))
+        url = cursor.getString(cursor.getColumnIndexOrThrow(COL_URL))
+        name = cursor.getString(cursor.getColumnIndexOrThrow(COL_NAME))
+        scanlator = cursor.getString(cursor.getColumnIndexOrThrow(COL_SCANLATOR))
+        read = cursor.getInt(cursor.getColumnIndexOrThrow(COL_READ)) == 1
+        bookmark = cursor.getInt(cursor.getColumnIndexOrThrow(COL_BOOKMARK)) == 1
+        date_fetch = cursor.getLong(cursor.getColumnIndexOrThrow(COL_DATE_FETCH))
+        date_upload = cursor.getLong(cursor.getColumnIndexOrThrow(COL_DATE_UPLOAD))
+        last_page_read = cursor.getInt(cursor.getColumnIndexOrThrow(COL_LAST_PAGE_READ))
+        chapter_number = cursor.getFloat(cursor.getColumnIndexOrThrow(COL_CHAPTER_NUMBER))
+        source_order = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SOURCE_ORDER))
     }
 }
 
