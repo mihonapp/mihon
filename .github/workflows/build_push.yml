@@ -13,9 +13,10 @@ jobs:
 
     steps:
       - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.5.0
+        uses: styfle/cancel-workflow-action@0.9.1
         with:
           access_token: ${{ github.token }}
+          all_but_latest: true
 
       - name: Clone repo
         uses: actions/checkout@v2
