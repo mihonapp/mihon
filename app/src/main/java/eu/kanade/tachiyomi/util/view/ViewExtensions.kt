@@ -3,7 +3,9 @@
 package eu.kanade.tachiyomi.util.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Point
+import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.Menu
@@ -25,6 +27,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.snackbar.Snackbar
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getResourceColor
@@ -243,5 +246,16 @@ fun ViewPager.getActivePageView(): View? {
         } catch (e: IllegalAccessException) {
         }
         false
+    }
+}
+
+/**
+ * Returns a deep copy of the provided [Drawable]
+ */
+inline fun <reified T : Drawable> T.copy(context: Context): T? {
+    return (constantState?.newDrawable()?.mutate() as? T).apply {
+        if (this is MaterialShapeDrawable) {
+            initializeElevationOverlay(context)
+        }
     }
 }
