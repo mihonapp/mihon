@@ -137,8 +137,6 @@ object PreferenceKeys {
     const val libraryUpdateCategories = "library_update_categories"
     const val libraryUpdateCategoriesExclude = "library_update_categories_exclude"
 
-    const val libraryUpdatePrioritization = "library_update_prioritization"
-
     const val downloadedOnly = "pref_downloaded_only"
 
     const val filterDownloaded = "pref_filter_library_downloaded"

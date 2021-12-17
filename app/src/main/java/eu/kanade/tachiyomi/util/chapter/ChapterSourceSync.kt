@@ -97,24 +97,10 @@ fun syncChaptersWithSource(
 
     // Return if there's nothing to add, delete or change, avoiding unnecessary db transactions.
     if (toAdd.isEmpty() && toDelete.isEmpty() && toChange.isEmpty()) {
-        val topChapters = dbChapters.sortedByDescending { it.date_upload }.take(4)
-        val newestDate = topChapters.getOrNull(0)?.date_upload ?: 0L
-
-        // Recalculate update rate if unset and enough chapters are present
-        if (manga.next_update == 0L && topChapters.size > 1) {
-            var delta = 0L
-            for (i in 0 until topChapters.size - 1) {
-                delta += (topChapters[i].date_upload - topChapters[i + 1].date_upload)
-            }
-            delta /= topChapters.size - 1
-            manga.next_update = newestDate + delta
-            db.updateNextUpdated(manga).executeAsBlocking()
-        }
-
         return Pair(emptyList(), emptyList())
     }
 
-    val readded = mutableListOf<Chapter>()
+    val readded = mutableSetOf<Chapter>()
 
     db.inTransaction {
         val deletedChapterNumbers = TreeSet<Float>()
@@ -153,20 +139,6 @@ fun syncChaptersWithSource(
 
         if (toChange.isNotEmpty()) {
             db.insertChapters(toChange).executeAsBlocking()
-        }
-
-        val topChapters = db.getChapters(manga).executeAsBlocking()
-            .sortedByDescending { it.date_upload }
-            .take(4)
-        // Recalculate next update since chapters were changed
-        if (topChapters.size > 1) {
-            var delta = 0L
-            for (i in 0 until topChapters.size - 1) {
-                delta += (topChapters[i].date_upload - topChapters[i + 1].date_upload)
-            }
-            delta /= topChapters.size - 1
-            manga.next_update = topChapters[0].date_upload + delta
-            db.updateNextUpdated(manga).executeAsBlocking()
         }
 
         // Fix order in source.

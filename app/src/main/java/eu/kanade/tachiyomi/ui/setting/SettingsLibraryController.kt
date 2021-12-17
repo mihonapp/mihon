@@ -270,34 +270,6 @@ class SettingsLibraryController : SettingsController() {
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
             }
-            intListPreference {
-                key = Keys.libraryUpdatePrioritization
-                titleRes = R.string.pref_library_update_prioritization
-
-                visibleIfGlobalUpdateEnabled()
-
-                // The following array lines up with the list rankingScheme in:
-                // ../../data/library/LibraryUpdateRanker.kt
-                val priorities = arrayOf(
-                    Pair("0", R.string.action_sort_alpha),
-                    Pair("1", R.string.action_sort_last_checked),
-                    Pair("2", R.string.action_sort_next_updated)
-                )
-                val defaultPriority = priorities[0]
-
-                entriesRes = priorities.map { it.second }.toTypedArray()
-                entryValues = priorities.map { it.first }.toTypedArray()
-                defaultValue = defaultPriority.first
-
-                val selectedPriority = priorities.find { it.first.toInt() == preferences.libraryUpdatePrioritization().get() }
-                summaryRes = selectedPriority?.second ?: defaultPriority.second
-                onChange { newValue ->
-                    summaryRes = priorities.find {
-                        it.first == (newValue as String)
-                    }?.second ?: defaultPriority.second
-                    true
-                }
-            }
             switchPreference {
                 key = Keys.autoUpdateMetadata
                 titleRes = R.string.pref_library_update_refresh_metadata

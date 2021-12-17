@@ -16,9 +16,6 @@ interface Manga : SManga {
     // last time the chapter list changed in any way
     var last_update: Long
 
-    // predicted next update time based on latest (by date) 4 chapters' deltas
-    var next_update: Long
-
     var date_added: Long
 
     var viewer_flags: Int

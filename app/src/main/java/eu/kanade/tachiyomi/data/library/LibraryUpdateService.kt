@@ -17,7 +17,6 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
-import eu.kanade.tachiyomi.data.library.LibraryUpdateRanker.rankingScheme
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Companion.start
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.MANGA_FULLY_READ
@@ -271,10 +270,9 @@ class LibraryUpdateService(
             }
         }
 
-        val selectedScheme = preferences.libraryUpdatePrioritization().get()
         mangaToUpdate = listToUpdate
             .distinctBy { it.id }
-            .sortedWith(rankingScheme[selectedScheme])
+            .sortedBy { it.title }
 
         // Warn when excessively checking a single source
         val maxUpdatesFromSource = mangaToUpdate

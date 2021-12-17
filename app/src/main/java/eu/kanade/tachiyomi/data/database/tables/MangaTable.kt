@@ -28,6 +28,7 @@ object MangaTable {
 
     const val COL_LAST_UPDATE = "last_update"
 
+    // Not actually used anymore
     const val COL_NEXT_UPDATE = "next_update"
 
     const val COL_DATE_ADDED = "date_added"
