@@ -8,8 +8,8 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import eu.kanade.tachiyomi.data.preference.CHARGING
-import eu.kanade.tachiyomi.data.preference.ONLY_ON_WIFI
+import eu.kanade.tachiyomi.data.preference.DEVICE_CHARGING
+import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.system.isConnectedToWifi
 import uy.kohesive.injekt.Injekt
@@ -39,10 +39,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             val preferences = Injekt.get<PreferencesHelper>()
             val interval = prefInterval ?: preferences.libraryUpdateInterval().get()
             if (interval > 0) {
-                val restrictions = preferences.libraryUpdateRestriction().get()
+                val restrictions = preferences.libraryUpdateDeviceRestriction().get()
                 val constraints = Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .setRequiresCharging(CHARGING in restrictions)
+                    .setRequiresCharging(DEVICE_CHARGING in restrictions)
                     .build()
 
                 val request = PeriodicWorkRequestBuilder<LibraryUpdateJob>(
@@ -62,8 +62,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         }
 
         fun requiresWifiConnection(preferences: PreferencesHelper): Boolean {
-            val restrictions = preferences.libraryUpdateRestriction().get()
-            return ONLY_ON_WIFI in restrictions
+            val restrictions = preferences.libraryUpdateDeviceRestriction().get()
+            return DEVICE_ONLY_ON_WIFI in restrictions
         }
     }
 }

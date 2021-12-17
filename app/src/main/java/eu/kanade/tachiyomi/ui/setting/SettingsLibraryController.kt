@@ -11,8 +11,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
-import eu.kanade.tachiyomi.data.preference.CHARGING
-import eu.kanade.tachiyomi.data.preference.ONLY_ON_WIFI
+import eu.kanade.tachiyomi.data.preference.DEVICE_CHARGING
+import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
+import eu.kanade.tachiyomi.data.preference.MANGA_FULLY_READ
+import eu.kanade.tachiyomi.data.preference.MANGA_ONGOING
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -156,11 +158,11 @@ class SettingsLibraryController : SettingsController() {
                 }
             }
             multiSelectListPreference {
-                key = Keys.libraryUpdateRestriction
+                key = Keys.libraryUpdateDeviceRestriction
                 titleRes = R.string.pref_library_update_restriction
                 entriesRes = arrayOf(R.string.connected_to_wifi, R.string.charging)
-                entryValues = arrayOf(ONLY_ON_WIFI, CHARGING)
-                defaultValue = setOf(ONLY_ON_WIFI)
+                entryValues = arrayOf(DEVICE_ONLY_ON_WIFI, DEVICE_CHARGING)
+                defaultValue = preferences.libraryUpdateDeviceRestriction().defaultValue
 
                 preferences.libraryUpdateInterval().asImmediateFlow { isVisible = it > 0 }
                     .launchIn(viewScope)
@@ -172,12 +174,12 @@ class SettingsLibraryController : SettingsController() {
                 }
 
                 fun updateSummary() {
-                    val restrictions = preferences.libraryUpdateRestriction().get()
+                    val restrictions = preferences.libraryUpdateDeviceRestriction().get()
                         .sorted()
                         .map {
                             when (it) {
-                                ONLY_ON_WIFI -> context.getString(R.string.connected_to_wifi)
-                                CHARGING -> context.getString(R.string.charging)
+                                DEVICE_ONLY_ON_WIFI -> context.getString(R.string.connected_to_wifi)
+                                DEVICE_CHARGING -> context.getString(R.string.charging)
                                 else -> it
                             }
                         }
@@ -190,20 +192,42 @@ class SettingsLibraryController : SettingsController() {
                     summary = context.getString(R.string.restrictions, restrictionsText)
                 }
 
-                preferences.libraryUpdateRestriction().asFlow()
+                preferences.libraryUpdateDeviceRestriction().asFlow()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
             }
-            switchPreference {
-                key = Keys.updateOnlyNonCompleted
-                titleRes = R.string.pref_update_only_non_completed
-                defaultValue = true
-            }
-            switchPreference {
-                key = Keys.updateOnlyCompletelyRead
-                titleRes = R.string.pref_update_only_completely_read
-                summaryRes = R.string.pref_update_only_completely_read_summary
-                defaultValue = false
+            multiSelectListPreference {
+                key = Keys.libraryUpdateMangaRestriction
+                titleRes = R.string.pref_library_update_manga_restriction
+                entriesRes = arrayOf(R.string.pref_update_only_completely_read, R.string.pref_update_only_non_completed)
+                entryValues = arrayOf(MANGA_FULLY_READ, MANGA_ONGOING)
+                defaultValue = preferences.libraryUpdateMangaRestriction().defaultValue
+
+                preferences.libraryUpdateInterval().asImmediateFlow { isVisible = it > 0 }
+                    .launchIn(viewScope)
+
+                fun updateSummary() {
+                    val restrictions = preferences.libraryUpdateMangaRestriction().get()
+                        .sorted()
+                        .map {
+                            when (it) {
+                                MANGA_ONGOING -> context.getString(R.string.pref_update_only_non_completed)
+                                MANGA_FULLY_READ -> context.getString(R.string.pref_update_only_completely_read)
+                                else -> it
+                            }
+                        }
+                    val restrictionsText = if (restrictions.isEmpty()) {
+                        context.getString(R.string.none)
+                    } else {
+                        restrictions.joinToString()
+                    }
+
+                    summary = context.getString(R.string.restrictions, restrictionsText)
+                }
+
+                preferences.libraryUpdateMangaRestriction().asFlow()
+                    .onEach { updateSummary() }
+                    .launchIn(viewScope)
             }
             preference {
                 key = Keys.libraryUpdateCategories

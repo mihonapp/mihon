@@ -217,13 +217,13 @@
     <string name="update_72hour">Every 3 days</string>
     <string name="update_weekly">Weekly</string>
     <string name="pref_library_update_prioritization">Update order</string>
-    <string name="pref_library_update_restriction">Update restrictions</string>
+    <string name="pref_library_update_restriction">Device restrictions</string>
     <string name="connected_to_wifi">Only on Wi-Fi</string>
     <string name="charging">Charging</string>
     <string name="restrictions">Restrictions: %s</string>
-    <string name="pref_update_only_non_completed">Only update ongoing manga</string>
-    <string name="pref_update_only_completely_read">Only update completely read manga</string>
-    <string name="pref_update_only_completely_read_summary">Only update manga if there is no unread chapter(completely read)</string>
+    <string name="pref_library_update_manga_restriction">Manga restrictions</string>
+    <string name="pref_update_only_completely_read">Completely read</string>
+    <string name="pref_update_only_non_completed">Ongoing</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>

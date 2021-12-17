@@ -28,7 +28,7 @@ android {
         applicationId = "eu.kanade.tachiyomi"
         minSdk = AndroidConfig.minSdk
         targetSdk = AndroidConfig.targetSdk
-        versionCode = 71
+        versionCode = 72
         versionName = "0.12.3"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")

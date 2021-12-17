@@ -177,10 +177,6 @@ class PreferencesHelper(val context: Context) {
 
     fun jumpToChapters() = prefs.getBoolean(Keys.jumpToChapters, false)
 
-    fun updateOnlyNonCompleted() = prefs.getBoolean(Keys.updateOnlyNonCompleted, true)
-
-    fun updateOnlyCompletelyRead() = prefs.getBoolean(Keys.updateOnlyCompletelyRead, true)
-
     fun autoUpdateTrack() = prefs.getBoolean(Keys.autoUpdateTrack, true)
 
     fun lastUsedSource() = flowPrefs.getLong(Keys.lastUsedSource, -1)
@@ -237,7 +233,8 @@ class PreferencesHelper(val context: Context) {
 
     fun libraryUpdateInterval() = flowPrefs.getInt(Keys.libraryUpdateInterval, 24)
 
-    fun libraryUpdateRestriction() = flowPrefs.getStringSet(Keys.libraryUpdateRestriction, setOf(ONLY_ON_WIFI))
+    fun libraryUpdateDeviceRestriction() = flowPrefs.getStringSet(Keys.libraryUpdateDeviceRestriction, setOf(DEVICE_ONLY_ON_WIFI))
+    fun libraryUpdateMangaRestriction() = flowPrefs.getStringSet(Keys.libraryUpdateMangaRestriction, setOf(MANGA_FULLY_READ, MANGA_ONGOING))
 
     fun showUpdatesNavBadge() = flowPrefs.getBoolean(Keys.showUpdatesNavBadge, false)
     fun unreadUpdatesCount() = flowPrefs.getInt("library_unread_updates_count", 0)

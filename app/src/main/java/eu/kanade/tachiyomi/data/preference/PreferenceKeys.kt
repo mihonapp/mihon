@@ -99,10 +99,6 @@ object PreferenceKeys {
 
     const val jumpToChapters = "jump_to_chapters"
 
-    const val updateOnlyNonCompleted = "pref_update_only_non_completed_key"
-
-    const val updateOnlyCompletelyRead = "pref_update_only_completely_read"
-
     const val autoUpdateTrack = "pref_auto_update_manga_sync_key"
 
     const val lastUsedSource = "last_catalogue_source"
@@ -133,7 +129,8 @@ object PreferenceKeys {
 
     const val libraryUpdateInterval = "pref_library_update_interval_key"
 
-    const val libraryUpdateRestriction = "library_update_restriction"
+    const val libraryUpdateDeviceRestriction = "library_update_restriction"
+    const val libraryUpdateMangaRestriction = "library_update_manga_restriction"
 
     const val showUpdatesNavBadge = "library_update_show_tab_badge"
 
