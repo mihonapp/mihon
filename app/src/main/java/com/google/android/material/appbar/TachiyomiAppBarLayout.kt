@@ -7,12 +7,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import androidx.annotation.FloatRange
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.getStateAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.view.findChild
 import kotlinx.coroutines.flow.launchIn
@@ -53,7 +51,7 @@ class TachiyomiAppBarLayout @JvmOverloads constructor(
     private val offsetListener = OnOffsetChangedListener { appBarLayout, verticalOffset ->
         // Show status bar foreground when offset
         val foreground = (appBarLayout?.statusBarForeground as? MaterialShapeDrawable) ?: return@OnOffsetChangedListener
-        val start = foreground.getStateAlpha()
+        val start = foreground.alpha
         val end = if (verticalOffset != 0) 255 else 0
 
         statusBarForegroundAnimator?.cancel()
@@ -80,8 +78,6 @@ class TachiyomiAppBarLayout @JvmOverloads constructor(
                 updateStates()
             }
         }
-
-    override fun getBehavior(): CoordinatorLayout.Behavior<AppBarLayout> = HideToolbarOnScrollBehavior()
 
     /**
      * Disabled. Lift on scroll is handled manually with [eu.kanade.tachiyomi.widget.TachiyomiCoordinatorLayout]
@@ -154,7 +150,7 @@ class TachiyomiAppBarLayout @JvmOverloads constructor(
         }
 
         val transparent = if (lifted) false else isTransparentWhenNotLifted
-        val fromAlpha = (background as? MaterialShapeDrawable)?.getStateAlpha() ?: background.alpha
+        val fromAlpha = (background as? MaterialShapeDrawable)?.alpha ?: background.alpha
         val toAlpha = if (transparent) 0 else 255
         if (fromAlpha != toAlpha) {
             ValueAnimator.ofInt(fromAlpha, toAlpha).apply {

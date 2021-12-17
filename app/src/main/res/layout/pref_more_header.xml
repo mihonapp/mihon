@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorToolbar"
+    android:background="?attr/colorSurface"
     android:elevation="2dp"
     android:padding="32dp">
 
@@ -13,7 +13,7 @@
         android:layout_height="56dp"
         android:layout_gravity="center"
         app:srcCompat="@drawable/ic_tachi"
-        app:tint="?attr/colorOnToolbar"
+        app:tint="?attr/colorOnSurface"
         tools:ignore="ContentDescription" />
 
 </FrameLayout>

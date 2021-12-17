@@ -7,14 +7,14 @@
         android:icon="@drawable/ic_search_24dp"
         android:title="@string/action_search"
         app:actionViewClass="eu.kanade.tachiyomi.widget.TachiyomiSearchView"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/action_clear_history"
         android:icon="@drawable/ic_delete_sweep_24dp"
         android:title="@string/pref_clear_history"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom" />
 
 </menu>

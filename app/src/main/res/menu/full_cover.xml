@@ -6,19 +6,19 @@
         android:id="@+id/action_share_cover"
         android:icon="@drawable/ic_share_24dp"
         android:title="@string/action_share"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_save_cover"
         android:icon="@drawable/ic_save_24dp"
         android:title="@string/action_save"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_edit_cover"
         android:icon="@drawable/ic_edit_24dp"
         android:title="@string/action_edit"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom" />
 
 </menu>

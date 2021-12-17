@@ -6,14 +6,14 @@
         android:icon="@drawable/ic_travel_explore_24dp"
         android:title="@string/action_global_search"
         app:actionViewClass="eu.kanade.tachiyomi.widget.TachiyomiSearchView"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="collapseActionView|ifRoom" />
 
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_filter_list_24dp"
         android:title="@string/action_filter"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom" />
 
 </menu>

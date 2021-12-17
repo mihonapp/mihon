@@ -20,8 +20,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorToolbar"
-        android:elevation="2dp"
         android:padding="16dp">
 
         <ImageView

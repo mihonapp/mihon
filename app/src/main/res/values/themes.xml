@@ -38,14 +38,11 @@
         <item name="colorErrorContainer">@color/errorContainer</item>
         <item name="colorOnErrorContainer">@color/onErrorContainer</item>
 
-        <item name="colorToolbar">?attr/colorSurface</item>
-        <item name="colorOnToolbar">?attr/colorOnSurface</item>
         <item name="android:divider">@color/divider_default</item>
         <item name="android:listDivider">@drawable/line_divider</item>
 
         <!-- Ripples -->
         <item name="colorControlHighlight">?attr/colorSurfaceVariant</item>
-        <item name="rippleColorToolbar">?attr/colorControlHighlight</item>
 
         <!-- Handles RTL Text -->
         <item name="android:textAlignment">gravity</item>
@@ -65,11 +62,9 @@
         <item name="android:buttonStyle">?attr/borderlessButtonStyle</item>
         <item name="android:backgroundDimAmount">0.32</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeStyle">@style/Widget.Tachiyomi.ActionMode</item>
         <item name="actionOverflowButtonStyle">@style/Theme.Tachiyomi.ActionButton.Overflow</item>
         <item name="actionModeCloseButtonStyle">@style/Theme.Tachiyomi.ActionMode.CloseButton</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close_24dp</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.Tachiyomi.ActionBar</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.Tachiyomi</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Tachiyomi.BottomSheetDialog</item>
         <item name="chipStyle">@style/Widget.Tachiyomi.Chip.Action</item>
@@ -84,7 +79,6 @@
         <item name="switchStyle">@style/Widget.Tachiyomi.Switch</item>
         <item name="sliderStyle">@style/Widget.Tachiyomi.Slider</item>
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
-        <item name="lightSystemBarsOnPrimary">false</item>
 
         <!-- Custom Attributes-->
         <item name="colorFilterActive">@color/filter_light</item>
@@ -125,7 +119,6 @@
         <item name="colorOnSurfaceInverse">@color/greenapple_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/greenapple_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/greenapple_primaryInverse</item>
-        <item name="lightSystemBarsOnPrimary">true</item>
     </style>
 
     <!--== Midnight Dusk Theme ==-->

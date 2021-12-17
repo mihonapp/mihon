@@ -7,7 +7,7 @@
         android:id="@+id/action_download"
         android:icon="@drawable/ic_get_app_24dp"
         android:title="@string/action_download"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
@@ -15,7 +15,7 @@
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_delete_24dp"
         android:title="@string/action_delete"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
@@ -23,7 +23,7 @@
         android:id="@+id/action_bookmark"
         android:icon="@drawable/ic_bookmark_border_24dp"
         android:title="@string/action_bookmark"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
@@ -31,7 +31,7 @@
         android:id="@+id/action_remove_bookmark"
         android:icon="@drawable/ic_bookmark_24dp"
         android:title="@string/action_remove_bookmark"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
@@ -39,7 +39,7 @@
         android:id="@+id/action_mark_as_read"
         android:icon="@drawable/ic_done_24dp"
         android:title="@string/action_mark_as_read"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
@@ -47,7 +47,7 @@
         android:id="@+id/action_mark_as_unread"
         android:icon="@drawable/ic_done_outline_24dp"
         android:title="@string/action_mark_as_unread"
-        app:iconTint="?attr/colorOnToolbar"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 

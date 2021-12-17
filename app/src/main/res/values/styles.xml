@@ -5,21 +5,12 @@
     <!--Toolbars-->
     <!--========-->
 
-    <style name="ThemeOverlay.Tachiyomi.ActionBar" parent="ThemeOverlay.Material3.ActionBar">
-        <item name="android:colorControlHighlight">?attr/rippleColorToolbar</item>
-        <item name="android:tint">?attr/colorOnToolbar</item>
-    </style>
-
-    <style name="Widget.Tachiyomi.ActionMode" parent="Widget.Material3.ActionMode">
-        <item name="background">?attr/colorToolbar</item>
-    </style>
-
     <style name="Theme.Tachiyomi.ActionMode.CloseButton" parent="Widget.AppCompat.ActionButton.CloseMode">
-        <item name="android:tint">?attr/colorOnToolbar</item>
+        <item name="android:tint">?attr/colorOnSurface</item>
     </style>
 
     <style name="Theme.Tachiyomi.ActionButton.Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:tint">?attr/colorOnToolbar</item>
+        <item name="android:tint">?attr/colorOnSurface</item>
     </style>
 
 
