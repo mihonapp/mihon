@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.animation.doOnEnd
 import androidx.core.view.updatePadding
+import androidx.preference.Preference
 import androidx.preference.PreferenceController
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
@@ -21,12 +22,14 @@ import com.bluelinelabs.conductor.ControllerChangeType
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.launchIn
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -132,5 +135,10 @@ abstract class SettingsController : PreferenceController() {
         }
 
         (activity as? AppCompatActivity)?.supportActionBar?.title = getTitle()
+    }
+
+    inline fun <T> Preference.visibleIf(preference: com.tfcporciuncula.flow.Preference<T>, crossinline block: (T) -> Boolean) {
+        preference.asImmediateFlow { isVisible = block(it) }
+            .launchIn(viewScope)
     }
 }

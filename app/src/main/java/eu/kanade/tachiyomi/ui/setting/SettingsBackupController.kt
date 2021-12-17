@@ -23,7 +23,6 @@ import eu.kanade.tachiyomi.data.backup.BackupRestoreService
 import eu.kanade.tachiyomi.data.backup.full.FullBackupRestoreValidator
 import eu.kanade.tachiyomi.data.backup.full.models.BackupFull
 import eu.kanade.tachiyomi.data.backup.legacy.LegacyBackupRestoreValidator
-import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.util.preference.defaultValue
@@ -137,8 +136,7 @@ class SettingsBackupController : SettingsController() {
                     }
                 }
 
-                preferences.backupInterval().asImmediateFlow { isVisible = it > 0 }
-                    .launchIn(viewScope)
+                visibleIf(preferences.backupInterval()) { it > 0 }
 
                 preferences.backupsDirectory().asFlow()
                     .onEach { path ->
@@ -155,8 +153,7 @@ class SettingsBackupController : SettingsController() {
                 defaultValue = "1"
                 summary = "%s"
 
-                preferences.backupInterval().asImmediateFlow { isVisible = it > 0 }
-                    .launchIn(viewScope)
+                visibleIf(preferences.backupInterval()) { it > 0 }
             }
         }
 

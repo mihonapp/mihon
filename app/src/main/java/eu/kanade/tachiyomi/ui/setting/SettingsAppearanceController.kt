@@ -7,7 +7,6 @@ import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceScreen
 import com.google.android.material.color.DynamicColors
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.initThenAdd
@@ -19,7 +18,6 @@ import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.isTablet
 import eu.kanade.tachiyomi.widget.preference.ThemesPreference
-import kotlinx.coroutines.flow.launchIn
 import java.util.Date
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
@@ -89,8 +87,7 @@ class SettingsAppearanceController : SettingsController() {
                 titleRes = R.string.pref_dark_theme_pure_black
                 defaultValue = false
 
-                preferences.themeMode().asImmediateFlow { isVisible = it != Values.ThemeMode.light }
-                    .launchIn(viewScope)
+                visibleIf(preferences.themeMode()) { it != Values.ThemeMode.light }
 
                 onChange {
                     activity?.let { ActivityCompat.recreate(it) }

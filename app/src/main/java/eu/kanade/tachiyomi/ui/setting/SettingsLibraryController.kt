@@ -16,7 +16,6 @@ import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
 import eu.kanade.tachiyomi.data.preference.MANGA_FULLY_READ
 import eu.kanade.tachiyomi.data.preference.MANGA_ONGOING
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.databinding.PrefLibraryColumnsBinding
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
@@ -164,8 +163,7 @@ class SettingsLibraryController : SettingsController() {
                 entryValues = arrayOf(DEVICE_ONLY_ON_WIFI, DEVICE_CHARGING)
                 defaultValue = preferences.libraryUpdateDeviceRestriction().defaultValue
 
-                preferences.libraryUpdateInterval().asImmediateFlow { isVisible = it > 0 }
-                    .launchIn(viewScope)
+                visibleIf(preferences.libraryUpdateInterval()) { it > 0 }
 
                 onChange {
                     // Post to event looper to allow the preference to be updated.
@@ -203,8 +201,7 @@ class SettingsLibraryController : SettingsController() {
                 entryValues = arrayOf(MANGA_FULLY_READ, MANGA_ONGOING)
                 defaultValue = preferences.libraryUpdateMangaRestriction().defaultValue
 
-                preferences.libraryUpdateInterval().asImmediateFlow { isVisible = it > 0 }
-                    .launchIn(viewScope)
+                visibleIf(preferences.libraryUpdateInterval()) { it > 0 }
 
                 fun updateSummary() {
                     val restrictions = preferences.libraryUpdateMangaRestriction().get()
