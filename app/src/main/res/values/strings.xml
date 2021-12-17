@@ -207,15 +207,15 @@
     <string name="pref_jump_to_chapters">Jump to chapters on open</string>
 
     <string name="pref_category_library_update">Global update</string>
-    <string name="pref_library_update_interval">Update frequency</string>
-    <string name="update_never">Manual</string>
+    <string name="pref_library_update_interval">Automatic updates</string>
+    <string name="update_never">Off</string>
     <string name="update_6hour">Every 6 hours</string>
     <string name="update_12hour">Every 12 hours</string>
     <string name="update_24hour">Daily</string>
     <string name="update_48hour">Every 2 days</string>
     <string name="update_72hour">Every 3 days</string>
     <string name="update_weekly">Weekly</string>
-    <string name="pref_library_update_restriction">Device restrictions</string>
+    <string name="pref_library_update_restriction">Automatic updates device restrictions</string>
     <string name="connected_to_wifi">Only on Wi-Fi</string>
     <string name="charging">Charging</string>
     <string name="restrictions">Restrictions: %s</string>

@@ -21,7 +21,7 @@
     <item
         android:id="@+id/action_update_library"
         android:icon="@drawable/ic_refresh_24dp"
-        android:title="@string/action_update_library"
+        android:title="@string/pref_category_library_update"
         app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom" />
 
