@@ -52,46 +52,43 @@ fun syncChaptersWithSource(
     // Chapters whose metadata have changed.
     val toChange = mutableListOf<Chapter>()
 
+    // Chapters from the db not in source.
+    val toDelete = dbChapters.filterNot { dbChapter ->
+        sourceChapters.any { sourceChapter ->
+            dbChapter.url == sourceChapter.url
+        }
+    }
+
     for (sourceChapter in sourceChapters) {
+        // This forces metadata update for the main viewable things in the chapter list.
+        if (source is HttpSource) {
+            source.prepareNewChapter(sourceChapter, manga)
+        }
+        // Recognize chapter number for the chapter.
+        ChapterRecognition.parseChapterNumber(sourceChapter, manga)
+
         val dbChapter = dbChapters.find { it.url == sourceChapter.url }
 
         // Add the chapter if not in db already, or update if the metadata changed.
         if (dbChapter == null) {
+            if (sourceChapter.date_upload == 0L) {
+                sourceChapter.date_upload = Date().time
+            }
             toAdd.add(sourceChapter)
         } else {
-            // this forces metadata update for the main viewable things in the chapter list
-            if (source is HttpSource) {
-                source.prepareNewChapter(sourceChapter, manga)
-            }
-
-            ChapterRecognition.parseChapterNumber(sourceChapter, manga)
-
             if (shouldUpdateDbChapter(dbChapter, sourceChapter)) {
                 if (dbChapter.name != sourceChapter.name && downloadManager.isChapterDownloaded(dbChapter, manga)) {
                     downloadManager.renameChapter(source, manga, dbChapter, sourceChapter)
                 }
                 dbChapter.scanlator = sourceChapter.scanlator
                 dbChapter.name = sourceChapter.name
-                dbChapter.date_upload = sourceChapter.date_upload
                 dbChapter.chapter_number = sourceChapter.chapter_number
                 dbChapter.source_order = sourceChapter.source_order
+                if (sourceChapter.date_upload != 0L) {
+                    dbChapter.date_upload = sourceChapter.date_upload
+                }
                 toChange.add(dbChapter)
             }
-        }
-    }
-
-    // Recognize number for new chapters.
-    toAdd.forEach {
-        if (source is HttpSource) {
-            source.prepareNewChapter(it, manga)
-        }
-        ChapterRecognition.parseChapterNumber(it, manga)
-    }
-
-    // Chapters from the db not in the source.
-    val toDelete = dbChapters.filterNot { dbChapter ->
-        sourceChapters.any { sourceChapter ->
-            dbChapter.url == sourceChapter.url
         }
     }
 
@@ -105,12 +102,13 @@ fun syncChaptersWithSource(
     db.inTransaction {
         val deletedChapterNumbers = TreeSet<Float>()
         val deletedReadChapterNumbers = TreeSet<Float>()
+
         if (toDelete.isNotEmpty()) {
-            for (c in toDelete) {
-                if (c.read) {
-                    deletedReadChapterNumbers.add(c.chapter_number)
+            for (chapter in toDelete) {
+                if (chapter.read) {
+                    deletedReadChapterNumbers.add(chapter.chapter_number)
                 }
-                deletedChapterNumbers.add(c.chapter_number)
+                deletedChapterNumbers.add(chapter.chapter_number)
             }
             db.deleteChapters(toDelete).executeAsBlocking()
         }
@@ -121,14 +119,14 @@ fun syncChaptersWithSource(
             var now = Date().time
 
             for (i in toAdd.indices.reversed()) {
-                val c = toAdd[i]
-                c.date_fetch = now++
+                val chapter = toAdd[i]
+                chapter.date_fetch = now++
                 // Try to mark already read chapters as read when the source deletes them
-                if (c.isRecognizedNumber && c.chapter_number in deletedReadChapterNumbers) {
-                    c.read = true
+                if (chapter.isRecognizedNumber && chapter.chapter_number in deletedReadChapterNumbers) {
+                    chapter.read = true
                 }
-                if (c.isRecognizedNumber && c.chapter_number in deletedChapterNumbers) {
-                    readded.add(c)
+                if (chapter.isRecognizedNumber && chapter.chapter_number in deletedChapterNumbers) {
+                    readded.add(chapter)
                 }
             }
             val chapters = db.insertChapters(toAdd).executeAsBlocking()
