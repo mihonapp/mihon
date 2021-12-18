@@ -32,6 +32,7 @@ sealed class Extension {
         override val versionCode: Long,
         override val lang: String,
         override val isNsfw: Boolean,
+        val sources: List<AvailableExtensionSources>,
         val apkName: String,
         val iconUrl: String
     ) : Extension()
@@ -46,3 +47,9 @@ sealed class Extension {
         override val isNsfw: Boolean = false
     ) : Extension()
 }
+
+data class AvailableExtensionSources(
+    val name: String,
+    val id: Long,
+    val baseUrl: String
+)
