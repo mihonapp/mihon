@@ -12,13 +12,13 @@ import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.core.animation.doOnEnd
+import androidx.core.graphics.ColorUtils
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +27,6 @@ import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.Router
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import dev.chrisbanes.insetter.applyInsetter
@@ -63,10 +62,12 @@ import eu.kanade.tachiyomi.ui.setting.SettingsMainController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.dpToPx
+import eu.kanade.tachiyomi.util.system.getThemeColor
 import eu.kanade.tachiyomi.util.system.isTablet
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
+import eu.kanade.tachiyomi.widget.ActionModeWithToolbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -482,7 +483,11 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             tag = isTransparentWhenNotLifted
             isTransparentWhenNotLifted = false
         }
-        setToolbarScrolls(false)
+        // Color taken from m3_appbar_background
+        window.statusBarColor = ColorUtils.compositeColors(
+            getColor(R.color.m3_appbar_overlay_color),
+            getThemeColor(R.attr.colorSurface)
+        )
         super.onSupportActionModeStarted(mode)
     }
 
@@ -491,8 +496,13 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             isTransparentWhenNotLifted = (tag as? Boolean) ?: false
             tag = null
         }
-        setToolbarScrolls(true)
+        window.statusBarColor = getThemeColor(android.R.attr.statusBarColor)
         super.onSupportActionModeFinished(mode)
+    }
+
+    fun startActionModeAndToolbar(modeCallback: ActionModeWithToolbar.Callback): ActionModeWithToolbar {
+        binding.actionToolbar.start(modeCallback)
+        return binding.actionToolbar
     }
 
     private suspend fun resetExitConfirmation() {
@@ -604,18 +614,6 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
     private fun showSideNav(visible: Boolean) {
         binding.sideNav?.isVisible = visible
-    }
-
-    /**
-     * Sets toolbar CoordinatorLayout scroll flags
-     */
-    private fun setToolbarScrolls(enabled: Boolean) = binding.toolbar.updateLayoutParams<AppBarLayout.LayoutParams> {
-        if (isTablet()) return@updateLayoutParams
-        scrollFlags = if (enabled) {
-            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-        } else {
-            0
-        }
     }
 
     private val nav: NavigationBarView

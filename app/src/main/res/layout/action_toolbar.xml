@@ -1,35 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/action_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="12dp"
     android:clipToPadding="false"
-    android:padding="8dp"
     android:visibility="gone"
     tools:visibility="visible">
 
-    <com.google.android.material.card.MaterialCardView
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/dialog_radius">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom"
+        app:contentInsetEnd="8dp"
+        app:contentInsetStart="8dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.appcompat.widget.ActionMenuView
+            android:id="@+id/menu"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="bottom"
-            app:contentInsetEnd="8dp"
-            app:contentInsetStart="8dp">
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
 
-            <androidx.appcompat.widget.ActionMenuView
-                android:id="@+id/menu"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center" />
+    </com.google.android.material.appbar.MaterialToolbar>
 
-        </com.google.android.material.appbar.MaterialToolbar>
-
-    </com.google.android.material.card.MaterialCardView>
-
-</FrameLayout>
+</com.google.android.material.card.MaterialCardView>

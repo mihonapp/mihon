@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.chrisbanes.insetter.applyInsetter
@@ -29,6 +28,7 @@ import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.onAnimationsFinished
+import eu.kanade.tachiyomi.widget.ActionModeWithToolbar
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
@@ -41,7 +41,7 @@ import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 class UpdatesController :
     NucleusController<UpdatesControllerBinding, UpdatesPresenter>(),
     RootController,
-    ActionMode.Callback,
+    ActionModeWithToolbar.Callback,
     FlexibleAdapter.OnItemClickListener,
     FlexibleAdapter.OnItemLongClickListener,
     FlexibleAdapter.OnUpdateListener,
@@ -52,7 +52,7 @@ class UpdatesController :
     /**
      * Action mode for multiple selection.
      */
-    private var actionMode: ActionMode? = null
+    private var actionMode: ActionModeWithToolbar? = null
 
     /**
      * Adapter containing the recent chapters.
@@ -79,11 +79,6 @@ class UpdatesController :
         binding.recycler.applyInsetter {
             type(navigationBars = true) {
                 padding()
-            }
-        }
-        binding.actionToolbar.applyInsetter {
-            type(navigationBars = true) {
-                margin(bottom = true, horizontal = true)
             }
         }
 
@@ -118,7 +113,6 @@ class UpdatesController :
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
-        binding.actionToolbar.destroy()
         adapter = null
         super.onDestroyView(view)
     }
@@ -175,15 +169,11 @@ class UpdatesController :
      * @param position position of clicked item
      */
     override fun onItemLongClick(position: Int) {
-        if (actionMode == null) {
-            actionMode = (activity as AppCompatActivity).startSupportActionMode(this)
-            binding.actionToolbar.show(
-                actionMode!!,
-                R.menu.updates_chapter_selection
-            ) { onActionItemClicked(it!!) }
-            (activity as? MainActivity)?.showBottomNav(false)
+        val activity = activity
+        if (actionMode == null && activity is MainActivity) {
+            actionMode = activity.startActionModeAndToolbar(this)
+            activity.showBottomNav(false)
         }
-
         toggleSelection(position)
     }
 
@@ -341,6 +331,10 @@ class UpdatesController :
         return true
     }
 
+    override fun onCreateActionToolbar(menuInflater: MenuInflater, menu: Menu) {
+        menuInflater.inflate(R.menu.updates_chapter_selection, menu)
+    }
+
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val count = adapter?.selectedItemCount ?: 0
         if (count == 0) {
@@ -348,17 +342,19 @@ class UpdatesController :
             destroyActionModeIfNeeded()
         } else {
             mode.title = count.toString()
-
-            val chapters = getSelectedChapters()
-            binding.actionToolbar.findItem(R.id.action_download)?.isVisible = chapters.any { !it.isDownloaded }
-            binding.actionToolbar.findItem(R.id.action_delete)?.isVisible = chapters.any { it.isDownloaded }
-            binding.actionToolbar.findItem(R.id.action_bookmark)?.isVisible = chapters.any { !it.bookmark }
-            binding.actionToolbar.findItem(R.id.action_remove_bookmark)?.isVisible = chapters.all { it.bookmark }
-            binding.actionToolbar.findItem(R.id.action_mark_as_read)?.isVisible = chapters.any { !it.chapter.read }
-            binding.actionToolbar.findItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
         }
+        return true
+    }
 
-        return false
+    override fun onPrepareActionToolbar(toolbar: ActionModeWithToolbar, menu: Menu) {
+        val chapters = getSelectedChapters()
+        if (chapters.isEmpty()) return
+        toolbar.findToolbarItem(R.id.action_download)?.isVisible = chapters.any { !it.isDownloaded }
+        toolbar.findToolbarItem(R.id.action_delete)?.isVisible = chapters.any { it.isDownloaded }
+        toolbar.findToolbarItem(R.id.action_bookmark)?.isVisible = chapters.any { !it.bookmark }
+        toolbar.findToolbarItem(R.id.action_remove_bookmark)?.isVisible = chapters.all { it.bookmark }
+        toolbar.findToolbarItem(R.id.action_mark_as_read)?.isVisible = chapters.any { !it.chapter.read }
+        toolbar.findToolbarItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
     }
 
     /**
@@ -391,11 +387,10 @@ class UpdatesController :
      * Called when ActionMode destroyed
      * @param mode the ActionMode object
      */
-    override fun onDestroyActionMode(mode: ActionMode?) {
+    override fun onDestroyActionMode(mode: ActionMode) {
         adapter?.mode = SelectableAdapter.Mode.IDLE
         adapter?.clearSelection()
 
-        binding.actionToolbar.hide()
         (activity as? MainActivity)?.showBottomNav(true)
 
         actionMode = null

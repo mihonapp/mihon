@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.view.isVisible
 import com.bluelinelabs.conductor.ControllerChangeHandler
@@ -16,7 +15,6 @@ import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
 import com.tfcporciuncula.flow.Preference
-import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -35,6 +33,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.widget.ActionModeWithToolbar
 import eu.kanade.tachiyomi.widget.EmptyView
 import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
 import kotlinx.coroutines.flow.drop
@@ -55,7 +54,7 @@ class LibraryController(
 ) : SearchableNucleusController<LibraryControllerBinding, LibraryPresenter>(bundle),
     RootController,
     TabbedController,
-    ActionMode.Callback,
+    ActionModeWithToolbar.Callback,
     ChangeMangaCategoriesDialog.Listener,
     DeleteLibraryMangasDialog.Listener {
 
@@ -67,7 +66,7 @@ class LibraryController(
     /**
      * Action mode for selections.
      */
-    private var actionMode: ActionMode? = null
+    private var actionMode: ActionModeWithToolbar? = null
 
     /**
      * Currently selected mangas.
@@ -170,12 +169,6 @@ class LibraryController(
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
-        binding.actionToolbar.applyInsetter {
-            type(navigationBars = true) {
-                margin(bottom = true, horizontal = true)
-            }
-        }
-
         adapter = LibraryAdapter(this)
         binding.libraryPager.adapter = adapter
         binding.libraryPager.pageSelections()
@@ -233,7 +226,6 @@ class LibraryController(
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
-        binding.actionToolbar.destroy()
         adapter?.onDestroy()
         adapter = null
         settingsSheet = null
@@ -377,13 +369,10 @@ class LibraryController(
      * Creates the action mode if it's not created already.
      */
     fun createActionModeIfNeeded() {
-        if (actionMode == null) {
-            actionMode = (activity as AppCompatActivity).startSupportActionMode(this)
-            binding.actionToolbar.show(
-                actionMode!!,
-                R.menu.library_selection
-            ) { onActionItemClicked(it!!) }
-            (activity as? MainActivity)?.showBottomNav(false)
+        val activity = activity
+        if (actionMode == null && activity is MainActivity) {
+            actionMode = activity.startActionModeAndToolbar(this)
+            activity.showBottomNav(false)
         }
     }
 
@@ -455,6 +444,10 @@ class LibraryController(
         return true
     }
 
+    override fun onCreateActionToolbar(menuInflater: MenuInflater, menu: Menu) {
+        menuInflater.inflate(R.menu.library_selection, menu)
+    }
+
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val count = selectedMangas.size
         if (count == 0) {
@@ -462,17 +455,17 @@ class LibraryController(
             destroyActionModeIfNeeded()
         } else {
             mode.title = count.toString()
-
-            binding.actionToolbar.findItem(R.id.action_download_unread)?.isVisible = selectedMangas.any { it.source != LocalSource.ID }
         }
-        return false
+        return true
+    }
+
+    override fun onPrepareActionToolbar(toolbar: ActionModeWithToolbar, menu: Menu) {
+        if (selectedMangas.isEmpty()) return
+        toolbar.findToolbarItem(R.id.action_download_unread)?.isVisible =
+            selectedMangas.any { it.source != LocalSource.ID }
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-        return onActionItemClicked(item)
-    }
-
-    private fun onActionItemClicked(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_move_to_category -> showChangeMangaCategoriesDialog()
             R.id.action_download_unread -> downloadUnreadChapters()
@@ -486,12 +479,11 @@ class LibraryController(
         return true
     }
 
-    override fun onDestroyActionMode(mode: ActionMode?) {
+    override fun onDestroyActionMode(mode: ActionMode) {
         // Clear all the manga selections and notify child views.
         selectedMangas.clear()
         selectionRelay.call(LibrarySelectionEvent.Cleared())
 
-        binding.actionToolbar.hide()
         (activity as? MainActivity)?.showBottomNav(true)
 
         actionMode = null

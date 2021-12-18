@@ -74,6 +74,12 @@
         android:id="@+id/fab_layout"
         layout="@layout/main_activity_fab" />
 
+    <eu.kanade.tachiyomi.widget.ActionModeWithToolbar
+        android:id="@+id/action_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
     <eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"

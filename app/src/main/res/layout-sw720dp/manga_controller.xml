@@ -43,16 +43,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/chapters_item" />
 
-            <eu.kanade.tachiyomi.widget.ActionToolbar
-                android:id="@+id/action_toolbar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/chapters_recycler"
-                app:layout_constraintStart_toStartOf="@+id/chapters_recycler"
-                app:layout_dodgeInsetEdges="bottom" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </eu.kanade.tachiyomi.widget.ThemedSwipeRefreshLayout>

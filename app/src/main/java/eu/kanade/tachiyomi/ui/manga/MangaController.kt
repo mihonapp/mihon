@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.FloatRange
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
@@ -91,6 +90,7 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.snack
+import eu.kanade.tachiyomi.widget.ActionModeWithToolbar
 import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -106,7 +106,7 @@ import kotlin.math.min
 class MangaController :
     NucleusController<MangaControllerBinding, MangaPresenter>,
     FabController,
-    ActionMode.Callback,
+    ActionModeWithToolbar.Callback,
     FlexibleAdapter.OnItemClickListener,
     FlexibleAdapter.OnItemLongClickListener,
     BaseChaptersAdapter.OnChapterClickListener,
@@ -161,7 +161,7 @@ class MangaController :
     /**
      * Action mode for multiple selection.
      */
-    private var actionMode: ActionMode? = null
+    private var actionMode: ActionModeWithToolbar? = null
 
     /**
      * Selected items. Used to restore selections after a rotation.
@@ -238,11 +238,6 @@ class MangaController :
                 it.layoutManager = LinearLayoutManager(view.context)
                 it.setHasFixedSize(true)
             }
-        binding.actionToolbar.applyInsetter {
-            type(navigationBars = true) {
-                margin(bottom = true, horizontal = true)
-            }
-        }
 
         if (manga == null || source == null) return
 
@@ -382,16 +377,19 @@ class MangaController :
         val context = view?.context ?: return
         val adapter = chaptersAdapter ?: return
         val fab = actionFab ?: return
-        fab.isVisible = adapter.items.any { !it.read }
         if (adapter.items.any { it.read }) {
             fab.text = context.getString(R.string.action_resume)
+        }
+        if (adapter.items.any { !it.read }) {
+            fab.show()
+        } else {
+            fab.hide()
         }
     }
 
     override fun onDestroyView(view: View) {
         recyclerViewUpdatesToolbarTitleAlpha(false)
         destroyActionModeIfNeeded()
-        binding.actionToolbar.destroy()
         mangaInfoAdapter = null
         chaptersHeaderAdapter = null
         chaptersAdapter = null
@@ -978,11 +976,7 @@ class MangaController :
 
     private fun createActionModeIfNeeded() {
         if (actionMode == null) {
-            actionMode = (activity as? AppCompatActivity)?.startSupportActionMode(this)
-            binding.actionToolbar.show(
-                actionMode!!,
-                R.menu.chapter_selection
-            ) { onActionItemClicked(it!!) }
+            actionMode = (activity as MainActivity).startActionModeAndToolbar(this)
         }
     }
 
@@ -998,6 +992,10 @@ class MangaController :
         return true
     }
 
+    override fun onCreateActionToolbar(menuInflater: MenuInflater, menu: Menu) {
+        menuInflater.inflate(R.menu.chapter_selection, menu)
+    }
+
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val count = chaptersAdapter?.selectedItemCount ?: 0
         if (count == 0) {
@@ -1006,25 +1004,24 @@ class MangaController :
         } else {
             mode.title = count.toString()
 
-            val chapters = getSelectedChapters()
-            binding.actionToolbar.findItem(R.id.action_download)?.isVisible = !isLocalSource && chapters.any { !it.isDownloaded }
-            binding.actionToolbar.findItem(R.id.action_delete)?.isVisible = !isLocalSource && chapters.any { it.isDownloaded }
-            binding.actionToolbar.findItem(R.id.action_bookmark)?.isVisible = chapters.any { !it.chapter.bookmark }
-            binding.actionToolbar.findItem(R.id.action_remove_bookmark)?.isVisible = chapters.all { it.chapter.bookmark }
-            binding.actionToolbar.findItem(R.id.action_mark_as_read)?.isVisible = chapters.any { !it.chapter.read }
-            binding.actionToolbar.findItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
-
             // Hide FAB to avoid interfering with the bottom action toolbar
-            actionFab?.isVisible = false
+            actionFab?.hide()
         }
-        return false
+        return true
+    }
+
+    override fun onPrepareActionToolbar(toolbar: ActionModeWithToolbar, menu: Menu) {
+        val chapters = getSelectedChapters()
+        if (chapters.isEmpty()) return
+        toolbar.findToolbarItem(R.id.action_download)?.isVisible = !isLocalSource && chapters.any { !it.isDownloaded }
+        toolbar.findToolbarItem(R.id.action_delete)?.isVisible = !isLocalSource && chapters.any { it.isDownloaded }
+        toolbar.findToolbarItem(R.id.action_bookmark)?.isVisible = chapters.any { !it.chapter.bookmark }
+        toolbar.findToolbarItem(R.id.action_remove_bookmark)?.isVisible = chapters.all { it.chapter.bookmark }
+        toolbar.findToolbarItem(R.id.action_mark_as_read)?.isVisible = chapters.any { !it.chapter.read }
+        toolbar.findToolbarItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-        return onActionItemClicked(item)
-    }
-
-    private fun onActionItemClicked(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_select_all -> selectAll()
             R.id.action_select_inverse -> selectInverse()
@@ -1041,11 +1038,13 @@ class MangaController :
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-        binding.actionToolbar.hide()
         chaptersAdapter?.mode = SelectableAdapter.Mode.SINGLE
         chaptersAdapter?.clearSelection()
         selectedChapters.clear()
         actionMode = null
+    }
+
+    override fun onDestroyActionToolbar() {
         updateFabVisibility()
     }
 

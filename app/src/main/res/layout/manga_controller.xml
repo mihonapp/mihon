@@ -33,11 +33,4 @@
         app:fastScrollerBubbleEnabled="false"
         tools:visibility="visible" />
 
-    <eu.kanade.tachiyomi.widget.ActionToolbar
-        android:id="@+id/action_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:layout_dodgeInsetEdges="bottom" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
