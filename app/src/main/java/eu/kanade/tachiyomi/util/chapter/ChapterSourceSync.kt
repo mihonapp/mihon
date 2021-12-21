@@ -97,7 +97,7 @@ fun syncChaptersWithSource(
         return Pair(emptyList(), emptyList())
     }
 
-    val readded = mutableSetOf<Chapter>()
+    val readded = mutableListOf<Chapter>()
 
     db.inTransaction {
         val deletedChapterNumbers = TreeSet<Float>()
