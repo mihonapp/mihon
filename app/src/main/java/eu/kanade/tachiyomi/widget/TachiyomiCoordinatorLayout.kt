@@ -12,14 +12,12 @@ import androidx.core.view.doOnLayout
 import androidx.customview.view.AbsSavedState
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.bluelinelabs.conductor.ChangeHandlerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import eu.kanade.tachiyomi.util.system.isTablet
 import eu.kanade.tachiyomi.util.view.findChild
 import eu.kanade.tachiyomi.util.view.findDescendant
-import eu.kanade.tachiyomi.util.view.getActivePageView
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.HierarchyChangeEvent
@@ -31,10 +29,6 @@ import reactivecircus.flowbinding.android.view.hierarchyChangeEvents
  *
  * 1. When nested scroll detected, lift state will be decided from the nested
  * scroll target. (See [onNestedScroll])
- *
- * 2. When a descendant ViewPager active page is changed and the page contains RecyclerView,
- * lift state will be decided from the said RecyclerView. (See [pageChangeListener])
- *
  *
  * With those conditions, this view expects the following direct child:
  *
@@ -55,22 +49,6 @@ class TachiyomiCoordinatorLayout @JvmOverloads constructor(
 
     private var appBarLayout: AppBarLayout? = null
     private var viewPager: ViewPager? = null
-        set(value) {
-            field?.removeOnPageChangeListener(pageChangeListener)
-            field = value
-            field?.addOnPageChangeListener(pageChangeListener)
-        }
-
-    private val pageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
-        override fun onPageScrollStateChanged(state: Int) {
-            // Wait until idle to make sure all the views laid out properly before checked
-            if (canLiftAppBarOnScroll && state == ViewPager.SCROLL_STATE_IDLE) {
-                appBarLayout?.isLifted = (viewPager?.getActivePageView() as? ViewGroup)
-                    ?.findDescendant<RecyclerView>()
-                    ?.canScrollVertically(-1) ?: false
-            }
-        }
-    }
 
     /**
      * If true, [AppBarLayout] child will be lifted on nested scroll.
