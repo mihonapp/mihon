@@ -209,7 +209,9 @@ open class GlobalSearchController(
      * Opens a catalogue with the given search.
      */
     override fun onTitleClick(source: CatalogueSource) {
-        presenter.preferences.lastUsedSource().set(source.id)
+        if (!preferences.incognitoMode().get()) {
+            preferences.lastUsedSource().set(source.id)
+        }
         router.pushController(BrowseSourceController(source, presenter.query).withFadeTransaction())
     }
 }
