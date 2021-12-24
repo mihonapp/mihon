@@ -121,11 +121,17 @@ fun syncChaptersWithSource(
             for (i in toAdd.indices.reversed()) {
                 val chapter = toAdd[i]
                 chapter.date_fetch = now++
-                // Try to mark already read chapters as read when the source deletes them
-                if (chapter.isRecognizedNumber && chapter.chapter_number in deletedReadChapterNumbers) {
-                    chapter.read = true
-                }
+
                 if (chapter.isRecognizedNumber && chapter.chapter_number in deletedChapterNumbers) {
+                    // Try to mark already read chapters as read when the source deletes them
+                    if (chapter.chapter_number in deletedReadChapterNumbers) {
+                        chapter.read = true
+                    }
+                    // Try to to use the fetch date it originally had to not pollute 'Updates' tab
+                    toDelete.filter { it.chapter_number == chapter.chapter_number }
+                        .minByOrNull { it.date_fetch }!!.let {
+                            chapter.date_fetch = it.date_fetch
+                        }
                     readded.add(chapter)
                 }
             }
