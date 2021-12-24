@@ -63,9 +63,15 @@ open class ExtensionPresenter(
 
         val items = mutableListOf<ExtensionItem>()
 
-        val updatesSorted = installed.filter { it.hasUpdate && (showNsfwSources || !it.isNsfw) }.sortedBy { it.name }
-        val installedSorted = installed.filter { !it.hasUpdate && (showNsfwSources || !it.isNsfw) }.sortedWith(compareBy({ !it.isObsolete }, { it.name }))
-        val untrustedSorted = untrusted.sortedBy { it.name }
+        val updatesSorted = installed.filter { it.hasUpdate && (showNsfwSources || !it.isNsfw) }
+            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
+
+        val installedSorted = installed.filter { !it.hasUpdate && (showNsfwSources || !it.isNsfw) }
+            .sortedWith(compareBy<Extension.Installed> { !it.isObsolete }
+                .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+
+        val untrustedSorted = untrusted.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
+
         val availableSorted = available
             // Filter out already installed extensions and disabled languages
             .filter { avail ->
@@ -74,7 +80,7 @@ open class ExtensionPresenter(
                     avail.lang in activeLangs &&
                     (showNsfwSources || !avail.isNsfw)
             }
-            .sortedBy { it.name }
+            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
 
         if (updatesSorted.isNotEmpty()) {
             val header = ExtensionGroupItem(context.getString(R.string.ext_updates_pending), updatesSorted.size, true)
