@@ -234,22 +234,29 @@ class SettingsLibraryController : SettingsController() {
                 }
 
                 fun updateSummary() {
-                    val selectedCategories = preferences.libraryUpdateCategories().get()
+                    val dbCategories = db.getCategories().executeAsBlocking()
+                    val allCategories = listOf(Category.createDefault(activity!!)) + dbCategories
+
+                    val includedCategories = preferences.libraryUpdateCategories().get()
                         .mapNotNull { id -> categories.find { it.id == id.toInt() } }
                         .sortedBy { it.order }
-                    val includedItemsText = if (selectedCategories.isEmpty()) {
-                        context.getString(R.string.all)
-                    } else {
-                        selectedCategories.joinToString { it.name }
-                    }
 
                     val excludedCategories = preferences.libraryUpdateCategoriesExclude().get()
                         .mapNotNull { id -> categories.find { it.id == id.toInt() } }
                         .sortedBy { it.order }
+
+                    val includedItemsText = if (includedCategories.isEmpty()) {
+                        if (excludedCategories.size == allCategories.size) context.getString(R.string.none)
+                        else context.getString(R.string.all)
+                    } else {
+                        includedCategories.joinToString { it.name }
+                    }
+
                     val excludedItemsText = if (excludedCategories.isEmpty()) {
                         context.getString(R.string.none)
                     } else {
-                        excludedCategories.joinToString { it.name }
+                        if (excludedCategories.size == allCategories.size) context.getString(R.string.all)
+                        else excludedCategories.joinToString { it.name }
                     }
 
                     summary = buildSpannedString {
