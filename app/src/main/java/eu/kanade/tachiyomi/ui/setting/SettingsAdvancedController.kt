@@ -215,7 +215,7 @@ class SettingsAdvancedController : SettingsController() {
                     R.string.ext_installer_shizuku,
                 )
                 entryValues = PreferenceValues.ExtensionInstaller.values().map { it.name }.toTypedArray()
-                defaultValue = if (DeviceUtil.isMiui()) {
+                defaultValue = if (DeviceUtil.isMiui) {
                     PreferenceValues.ExtensionInstaller.LEGACY
                 } else {
                     PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER

@@ -41,7 +41,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
     private val initWebView by lazy {
         // Avoid crashes on Samsung devices on Android 12
         // See https://bugs.chromium.org/p/chromium/issues/detail?id=1279562
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S && DeviceUtil.isSamsung()) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S && DeviceUtil.isSamsung) {
             return@lazy
         }
 

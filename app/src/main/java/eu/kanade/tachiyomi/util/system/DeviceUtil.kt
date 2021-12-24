@@ -3,11 +3,12 @@ package eu.kanade.tachiyomi.util.system
 import android.annotation.SuppressLint
 import android.os.Build
 import logcat.LogPriority
-import java.util.Locale
 
 object DeviceUtil {
 
-    fun isMiui() = getSystemProperty("ro.miui.ui.version.name")?.isNotEmpty() ?: false
+    val isMiui by lazy {
+        getSystemProperty("ro.miui.ui.version.name")?.isNotEmpty() ?: false
+    }
 
     @SuppressLint("PrivateApi")
     fun isMiuiOptimizationDisabled(): Boolean {
@@ -25,7 +26,9 @@ object DeviceUtil {
         }
     }
 
-    fun isSamsung() = Build.MANUFACTURER.lowercase(Locale.ENGLISH) == "samsung"
+    val isSamsung by lazy {
+        Build.MANUFACTURER.equals("samsung", ignoreCase = true)
+    }
 
     @SuppressLint("PrivateApi")
     private fun getSystemProperty(key: String?): String? {

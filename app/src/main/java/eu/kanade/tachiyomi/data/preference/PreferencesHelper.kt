@@ -326,7 +326,7 @@ class PreferencesHelper(val context: Context) {
 
     fun extensionInstaller() = flowPrefs.getEnum(
         Keys.extensionInstaller,
-        if (DeviceUtil.isMiui()) Values.ExtensionInstaller.LEGACY else Values.ExtensionInstaller.PACKAGEINSTALLER
+        if (DeviceUtil.isMiui) Values.ExtensionInstaller.LEGACY else Values.ExtensionInstaller.PACKAGEINSTALLER
     )
 
     fun verboseLogging() = prefs.getBoolean(Keys.verboseLogging, false)
