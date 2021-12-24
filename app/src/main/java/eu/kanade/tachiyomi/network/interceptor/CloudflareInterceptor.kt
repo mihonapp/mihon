@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.network.interceptor
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Toast
@@ -10,6 +11,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.isOutdated
@@ -37,6 +39,12 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
      * Application class.
      */
     private val initWebView by lazy {
+        // Avoid crashes on Samsung devices on Android 12
+        // See https://bugs.chromium.org/p/chromium/issues/detail?id=1279562
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S && DeviceUtil.isSamsung()) {
+            return@lazy
+        }
+
         WebSettings.getDefaultUserAgent(context)
     }
 

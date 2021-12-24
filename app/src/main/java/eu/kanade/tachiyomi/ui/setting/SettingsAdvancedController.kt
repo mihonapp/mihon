@@ -35,7 +35,7 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
-import eu.kanade.tachiyomi.util.system.MiuiUtil
+import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.toast
@@ -215,7 +215,7 @@ class SettingsAdvancedController : SettingsController() {
                     R.string.ext_installer_shizuku,
                 )
                 entryValues = PreferenceValues.ExtensionInstaller.values().map { it.name }.toTypedArray()
-                defaultValue = if (MiuiUtil.isMiui()) {
+                defaultValue = if (DeviceUtil.isMiui()) {
                     PreferenceValues.ExtensionInstaller.LEGACY
                 } else {
                     PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER
