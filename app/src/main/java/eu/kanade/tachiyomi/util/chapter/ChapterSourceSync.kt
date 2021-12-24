@@ -130,8 +130,8 @@ fun syncChaptersWithSource(
                     // Try to to use the fetch date it originally had to not pollute 'Updates' tab
                     toDelete.filter { it.chapter_number == chapter.chapter_number }
                         .minByOrNull { it.date_fetch }!!.let {
-                            chapter.date_fetch = it.date_fetch
-                        }
+                        chapter.date_fetch = it.date_fetch
+                    }
                     readded.add(chapter)
                 }
             }
