@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
-import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.tachiyomi.R
@@ -22,6 +21,7 @@ import eu.kanade.tachiyomi.databinding.PrefLibraryColumnsBinding
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.category.CategoryController
+import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.intListPreference
@@ -127,9 +127,8 @@ class SettingsLibraryController : SettingsController() {
             }
 
             switchPreference {
-                key = Keys.categorizedDisplay
+                bindTo(preferences.categorizedDisplaySettings())
                 titleRes = R.string.categorized_display_settings
-                defaultValue = false
             }
         }
 
@@ -137,7 +136,7 @@ class SettingsLibraryController : SettingsController() {
             titleRes = R.string.pref_category_library_update
 
             intListPreference {
-                key = Keys.libraryUpdateInterval
+                bindTo(preferences.libraryUpdateInterval())
                 titleRes = R.string.pref_library_update_interval
                 entriesRes = arrayOf(
                     R.string.update_never,
@@ -148,7 +147,6 @@ class SettingsLibraryController : SettingsController() {
                     R.string.update_weekly
                 )
                 entryValues = arrayOf("0", "12", "24", "48", "72", "168")
-                defaultValue = "24"
                 summary = "%s"
 
                 onChange { newValue ->
@@ -158,13 +156,12 @@ class SettingsLibraryController : SettingsController() {
                 }
             }
             multiSelectListPreference {
-                key = Keys.libraryUpdateDeviceRestriction
+                bindTo(preferences.libraryUpdateDeviceRestriction())
                 titleRes = R.string.pref_library_update_restriction
                 entriesRes = arrayOf(R.string.connected_to_wifi, R.string.charging)
                 entryValues = arrayOf(DEVICE_ONLY_ON_WIFI, DEVICE_CHARGING)
-                defaultValue = preferences.libraryUpdateDeviceRestriction().defaultValue
 
-                visibleIfGlobalUpdateEnabled()
+                visibleIf(preferences.libraryUpdateInterval()) { it > 0 }
 
                 onChange {
                     // Post to event looper to allow the preference to be updated.
@@ -196,11 +193,10 @@ class SettingsLibraryController : SettingsController() {
                     .launchIn(viewScope)
             }
             multiSelectListPreference {
-                key = Keys.libraryUpdateMangaRestriction
+                bindTo(preferences.libraryUpdateMangaRestriction())
                 titleRes = R.string.pref_library_update_manga_restriction
                 entriesRes = arrayOf(R.string.pref_update_only_completely_read, R.string.pref_update_only_non_completed)
                 entryValues = arrayOf(MANGA_FULLY_READ, MANGA_ONGOING)
-                defaultValue = preferences.libraryUpdateMangaRestriction().defaultValue
 
                 fun updateSummary() {
                     val restrictions = preferences.libraryUpdateMangaRestriction().get()
@@ -226,7 +222,7 @@ class SettingsLibraryController : SettingsController() {
                     .launchIn(viewScope)
             }
             preference {
-                key = Keys.libraryUpdateCategories
+                bindTo(preferences.libraryUpdateCategories())
                 titleRes = R.string.categories
 
                 onClick {
@@ -288,10 +284,6 @@ class SettingsLibraryController : SettingsController() {
                 }
             }
         }
-    }
-
-    private inline fun Preference.visibleIfGlobalUpdateEnabled() {
-        visibleIf(preferences.libraryUpdateInterval()) { it > 0 }
     }
 
     class LibraryColumnsDialog : DialogController() {

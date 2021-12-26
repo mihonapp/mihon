@@ -123,6 +123,11 @@ inline fun <P : Preference> PreferenceGroup.addThenInit(p: P, block: P.() -> Uni
     }
 }
 
+inline fun <T> Preference.bindTo(preference: com.tfcporciuncula.flow.Preference<T>) {
+    key = preference.key
+    defaultValue = preference.defaultValue
+}
+
 inline fun Preference.onClick(crossinline block: () -> Unit) {
     setOnPreferenceClickListener { block(); true }
 }

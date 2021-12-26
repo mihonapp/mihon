@@ -22,7 +22,7 @@ enum class SortModeSetting(val flag: Int) {
         }
 
         fun get(preferences: PreferencesHelper, category: Category?): SortModeSetting {
-            return if (preferences.categorisedDisplaySettings().get() && category != null && category.id != 0) {
+            return if (preferences.categorizedDisplaySettings().get() && category != null && category.id != 0) {
                 fromFlag(category.sortMode)
             } else {
                 preferences.librarySortingMode().get()

@@ -67,8 +67,10 @@ open class ExtensionPresenter(
             .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
 
         val installedSorted = installed.filter { !it.hasUpdate && (showNsfwSources || !it.isNsfw) }
-            .sortedWith(compareBy<Extension.Installed> { !it.isObsolete }
-                .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+            .sortedWith(
+                compareBy<Extension.Installed> { !it.isObsolete }
+                    .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name }
+            )
 
         val untrustedSorted = untrusted.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
 

@@ -49,7 +49,7 @@ class LibraryAdapter(
 
     private var boundViews = arrayListOf<View>()
 
-    private val isPerCategory by lazy { preferences.categorisedDisplaySettings().get() }
+    private val isPerCategory by lazy { preferences.categorizedDisplaySettings().get() }
     private var currentDisplayMode = preferences.libraryDisplayMode().get()
 
     init {

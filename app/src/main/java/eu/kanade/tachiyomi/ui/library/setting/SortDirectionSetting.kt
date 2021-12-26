@@ -15,7 +15,7 @@ enum class SortDirectionSetting(val flag: Int) {
         }
 
         fun get(preferences: PreferencesHelper, category: Category?): SortDirectionSetting {
-            return if (preferences.categorisedDisplaySettings().get() && category != null && category.id != 0) {
+            return if (preferences.categorizedDisplaySettings().get() && category != null && category.id != 0) {
                 fromFlag(category.sortDirection)
             } else {
                 preferences.librarySortingAscending().get()

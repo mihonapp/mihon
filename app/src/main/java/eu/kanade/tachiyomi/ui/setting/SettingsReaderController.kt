@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferenceValues.TappingInvertMode
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.intListPreference
@@ -39,11 +40,10 @@ class SettingsReaderController : SettingsController() {
             summary = "%s"
         }
         intListPreference {
-            key = Keys.doubleTapAnimationSpeed
+            bindTo(preferences.doubleTapAnimSpeed())
             titleRes = R.string.pref_double_tap_anim_speed
             entries = arrayOf(context.getString(R.string.double_tap_anim_speed_0), context.getString(R.string.double_tap_anim_speed_normal), context.getString(R.string.double_tap_anim_speed_fast))
             entryValues = arrayOf("1", "500", "250") // using a value of 0 breaks the image viewer, so min is 1
-            defaultValue = "500"
             summary = "%s"
         }
         switchPreference {
@@ -53,23 +53,20 @@ class SettingsReaderController : SettingsController() {
             defaultValue = true
         }
         switchPreference {
-            key = Keys.showNavigationOverlayOnStart
+            bindTo(preferences.showNavigationOverlayOnStart())
             titleRes = R.string.pref_show_navigation_mode
             summaryRes = R.string.pref_show_navigation_mode_summary
-            defaultValue = false
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             switchPreference {
-                key = Keys.trueColor
+                bindTo(preferences.trueColor())
                 titleRes = R.string.pref_true_color
                 summaryRes = R.string.pref_true_color_summary
-                defaultValue = false
             }
         }
         switchPreference {
-            key = Keys.enableTransitions
+            bindTo(preferences.pageTransitions())
             titleRes = R.string.pref_page_transitions
-            defaultValue = true
         }
 
         preferenceCategory {
@@ -91,38 +88,33 @@ class SettingsReaderController : SettingsController() {
                 summary = "%s"
             }
             intListPreference {
-                key = Keys.readerTheme
+                bindTo(preferences.readerTheme())
                 titleRes = R.string.pref_reader_theme
                 entriesRes = arrayOf(R.string.black_background, R.string.gray_background, R.string.white_background, R.string.automatic_background)
                 entryValues = arrayOf("1", "2", "0", "3")
-                defaultValue = "1"
                 summary = "%s"
             }
             switchPreference {
-                key = Keys.fullscreen
+                bindTo(preferences.fullscreen())
                 titleRes = R.string.pref_fullscreen
-                defaultValue = true
             }
 
             if (activity?.hasDisplayCutout() == true) {
                 switchPreference {
-                    key = Keys.cutoutShort
+                    bindTo(preferences.cutoutShort())
                     titleRes = R.string.pref_cutout_short
-                    defaultValue = true
 
                     visibleIf(preferences.fullscreen()) { it }
                 }
             }
 
             switchPreference {
-                key = Keys.keepScreenOn
+                bindTo(preferences.keepScreenOn())
                 titleRes = R.string.pref_keep_screen_on
-                defaultValue = true
             }
             switchPreference {
-                key = Keys.showPageNumber
+                bindTo(preferences.showPageNumber())
                 titleRes = R.string.pref_show_page_number
-                defaultValue = true
             }
         }
 
@@ -140,9 +132,8 @@ class SettingsReaderController : SettingsController() {
                 defaultValue = true
             }
             switchPreference {
-                key = Keys.alwaysShowChapterTransition
+                bindTo(preferences.alwaysShowChapterTransition())
                 titleRes = R.string.pref_always_show_chapter_transition
-                defaultValue = true
             }
         }
 
@@ -150,18 +141,17 @@ class SettingsReaderController : SettingsController() {
             titleRes = R.string.pager_viewer
 
             intListPreference {
-                key = Keys.navigationModePager
+                bindTo(preferences.navigationModePager())
                 titleRes = R.string.pref_viewer_nav
                 entries = context.resources.getStringArray(R.array.pager_nav).also { values ->
                     entryValues = values.indices.map { index -> "$index" }.toTypedArray()
                 }
-                defaultValue = "0"
                 summary = "%s"
 
                 visibleIf(preferences.readWithTapping()) { it }
             }
             listPreference {
-                key = Keys.pagerNavInverted
+                bindTo(preferences.pagerNavInverted())
                 titleRes = R.string.pref_read_with_tapping_inverted
                 entriesRes = arrayOf(
                     R.string.tapping_inverted_none,
@@ -175,13 +165,12 @@ class SettingsReaderController : SettingsController() {
                     TappingInvertMode.VERTICAL.name,
                     TappingInvertMode.BOTH.name
                 )
-                defaultValue = TappingInvertMode.NONE.name
                 summary = "%s"
 
                 visibleIf(preferences.readWithTapping()) { it }
             }
             intListPreference {
-                key = Keys.imageScaleType
+                bindTo(preferences.imageScaleType())
                 titleRes = R.string.pref_image_scale_type
                 entriesRes = arrayOf(
                     R.string.scale_type_fit_screen,
@@ -192,11 +181,10 @@ class SettingsReaderController : SettingsController() {
                     R.string.scale_type_smart_fit
                 )
                 entryValues = arrayOf("1", "2", "3", "4", "5", "6")
-                defaultValue = "1"
                 summary = "%s"
             }
             intListPreference {
-                key = Keys.zoomStart
+                bindTo(preferences.zoomStart())
                 titleRes = R.string.pref_zoom_start
                 entriesRes = arrayOf(
                     R.string.zoom_start_automatic,
@@ -205,24 +193,20 @@ class SettingsReaderController : SettingsController() {
                     R.string.zoom_start_center
                 )
                 entryValues = arrayOf("1", "2", "3", "4")
-                defaultValue = "1"
                 summary = "%s"
             }
             switchPreference {
-                key = Keys.cropBorders
+                bindTo(preferences.cropBorders())
                 titleRes = R.string.pref_crop_borders
-                defaultValue = false
             }
             switchPreference {
-                key = Keys.dualPageSplitPaged
+                bindTo(preferences.dualPageSplitPaged())
                 titleRes = R.string.pref_dual_page_split
-                defaultValue = false
             }
             switchPreference {
-                key = Keys.dualPageInvertPaged
+                bindTo(preferences.dualPageInvertPaged())
                 titleRes = R.string.pref_dual_page_invert
                 summaryRes = R.string.pref_dual_page_invert_summary
-                defaultValue = false
                 visibleIf(preferences.dualPageSplitPaged()) { it }
             }
         }
@@ -231,18 +215,16 @@ class SettingsReaderController : SettingsController() {
             titleRes = R.string.webtoon_viewer
 
             intListPreference {
-                key = Keys.navigationModeWebtoon
+                bindTo(preferences.navigationModeWebtoon())
                 titleRes = R.string.pref_viewer_nav
                 entries = context.resources.getStringArray(R.array.webtoon_nav).also { values ->
                     entryValues = values.indices.map { index -> "$index" }.toTypedArray()
                 }
-                defaultValue = "0"
                 summary = "%s"
-
                 visibleIf(preferences.readWithTapping()) { it }
             }
             listPreference {
-                key = Keys.webtoonNavInverted
+                bindTo(preferences.webtoonNavInverted())
                 titleRes = R.string.pref_read_with_tapping_inverted
                 entriesRes = arrayOf(
                     R.string.tapping_inverted_none,
@@ -256,13 +238,12 @@ class SettingsReaderController : SettingsController() {
                     TappingInvertMode.VERTICAL.name,
                     TappingInvertMode.BOTH.name
                 )
-                defaultValue = TappingInvertMode.NONE.name
                 summary = "%s"
 
                 visibleIf(preferences.readWithTapping()) { it }
             }
             intListPreference {
-                key = Keys.webtoonSidePadding
+                bindTo(preferences.webtoonSidePadding())
                 titleRes = R.string.pref_webtoon_side_padding
                 entriesRes = arrayOf(
                     R.string.webtoon_side_padding_0,
@@ -272,11 +253,10 @@ class SettingsReaderController : SettingsController() {
                     R.string.webtoon_side_padding_25
                 )
                 entryValues = arrayOf("0", "10", "15", "20", "25")
-                defaultValue = "0"
                 summary = "%s"
             }
             listPreference {
-                key = Keys.readerHideThreshold
+                bindTo(preferences.readerHideThreshold())
                 titleRes = R.string.pref_hide_threshold
                 entriesRes = arrayOf(
                     R.string.pref_highest,
@@ -287,24 +267,20 @@ class SettingsReaderController : SettingsController() {
                 entryValues = PreferenceValues.ReaderHideThreshold.values()
                     .map { it.name }
                     .toTypedArray()
-                defaultValue = "${PreferenceValues.ReaderHideThreshold.LOW}"
                 summary = "%s"
             }
             switchPreference {
-                key = Keys.cropBordersWebtoon
+                bindTo(preferences.cropBordersWebtoon())
                 titleRes = R.string.pref_crop_borders
-                defaultValue = false
             }
             switchPreference {
-                key = Keys.dualPageSplitWebtoon
+                bindTo(preferences.dualPageSplitWebtoon())
                 titleRes = R.string.pref_dual_page_split
-                defaultValue = false
             }
             switchPreference {
-                key = Keys.dualPageInvertWebtoon
+                bindTo(preferences.dualPageInvertWebtoon())
                 titleRes = R.string.pref_dual_page_invert
                 summaryRes = R.string.pref_dual_page_invert_summary
-                defaultValue = false
                 visibleIf(preferences.dualPageSplitWebtoon()) { it }
             }
         }
@@ -313,19 +289,16 @@ class SettingsReaderController : SettingsController() {
             titleRes = R.string.pref_reader_navigation
 
             switchPreference {
-                key = Keys.readWithTapping
+                bindTo(preferences.readWithTapping())
                 titleRes = R.string.pref_read_with_tapping
-                defaultValue = true
             }
             switchPreference {
-                key = Keys.readWithVolumeKeys
+                bindTo(preferences.readWithVolumeKeys())
                 titleRes = R.string.pref_read_with_volume_keys
-                defaultValue = false
             }
             switchPreference {
-                key = Keys.readWithVolumeKeysInverted
+                bindTo(preferences.readWithVolumeKeysInverted())
                 titleRes = R.string.pref_read_with_volume_keys_inverted
-                defaultValue = false
                 visibleIf(preferences.readWithVolumeKeys()) { it }
             }
         }
@@ -334,9 +307,8 @@ class SettingsReaderController : SettingsController() {
             titleRes = R.string.pref_reader_actions
 
             switchPreference {
-                key = Keys.readWithLongTap
+                bindTo(preferences.readWithLongTap())
                 titleRes = R.string.pref_read_with_long_tap
-                defaultValue = true
             }
             switchPreference {
                 key = Keys.folderPerManga

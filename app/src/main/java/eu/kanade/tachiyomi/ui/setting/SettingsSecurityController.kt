@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.intListPreference
 import eu.kanade.tachiyomi.util.preference.requireAuthentication
@@ -24,9 +25,8 @@ class SettingsSecurityController : SettingsController() {
 
         if (context.isAuthenticationSupported()) {
             switchPreference {
-                key = Keys.useAuthenticator
+                bindTo(preferences.useAuthenticator())
                 titleRes = R.string.lock_with_biometrics
-                defaultValue = false
 
                 requireAuthentication(
                     activity as? FragmentActivity,
@@ -36,7 +36,7 @@ class SettingsSecurityController : SettingsController() {
             }
 
             intListPreference {
-                key = Keys.lockAppAfter
+                bindTo(preferences.lockAppAfter())
                 titleRes = R.string.lock_when_idle
                 val values = arrayOf("0", "1", "2", "5", "10", "-1")
                 entries = values.mapNotNull {
@@ -47,7 +47,6 @@ class SettingsSecurityController : SettingsController() {
                     }
                 }.toTypedArray()
                 entryValues = values
-                defaultValue = "0"
                 summary = "%s"
                 onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
                     if (value == newValue) return@OnPreferenceChangeListener false
@@ -82,10 +81,9 @@ class SettingsSecurityController : SettingsController() {
         }
 
         switchPreference {
-            key = Keys.secureScreen
+            bindTo(preferences.secureScreen())
             titleRes = R.string.secure_screen
             summaryRes = R.string.secure_screen_summary
-            defaultValue = false
         }
 
         switchPreference {

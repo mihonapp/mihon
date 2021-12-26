@@ -24,6 +24,7 @@ import eu.kanade.tachiyomi.ui.setting.database.ClearDatabaseController
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.withUIContext
+import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.intListPreference
@@ -35,7 +36,6 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
-import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.toast
@@ -206,7 +206,7 @@ class SettingsAdvancedController : SettingsController() {
             titleRes = R.string.label_extensions
 
             listPreference {
-                key = Keys.extensionInstaller
+                bindTo(preferences.extensionInstaller())
                 titleRes = R.string.ext_installer_pref
                 summary = "%s"
                 entriesRes = arrayOf(
@@ -215,11 +215,6 @@ class SettingsAdvancedController : SettingsController() {
                     R.string.ext_installer_shizuku,
                 )
                 entryValues = PreferenceValues.ExtensionInstaller.values().map { it.name }.toTypedArray()
-                defaultValue = if (DeviceUtil.isMiui) {
-                    PreferenceValues.ExtensionInstaller.LEGACY
-                } else {
-                    PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER
-                }.name
 
                 onChange {
                     if (it == PreferenceValues.ExtensionInstaller.SHIZUKU.name &&
@@ -245,12 +240,11 @@ class SettingsAdvancedController : SettingsController() {
             titleRes = R.string.pref_category_display
 
             listPreference {
-                key = Keys.tabletUiMode
+                bindTo(preferences.tabletUiMode())
                 titleRes = R.string.pref_tablet_ui_mode
                 summary = "%s"
                 entriesRes = arrayOf(R.string.automatic_background, R.string.lock_always, R.string.landscape, R.string.lock_never)
                 entryValues = PreferenceValues.TabletUiMode.values().map { it.name }.toTypedArray()
-                defaultValue = PreferenceValues.TabletUiMode.AUTOMATIC.name
 
                 onChange {
                     activity?.toast(R.string.requires_app_restart)

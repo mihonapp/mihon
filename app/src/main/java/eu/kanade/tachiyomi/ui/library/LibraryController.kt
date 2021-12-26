@@ -195,7 +195,7 @@ class LibraryController(
                 is LibrarySettingsSheet.Filter.FilterGroup -> onFilterChanged()
                 is LibrarySettingsSheet.Sort.SortGroup -> onSortChanged()
                 is LibrarySettingsSheet.Display.DisplayGroup -> {
-                    val delay = if (preferences.categorisedDisplaySettings().get()) 125L else 0L
+                    val delay = if (preferences.categorizedDisplaySettings().get()) 125L else 0L
 
                     Observable.timer(delay, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
                         .subscribe {

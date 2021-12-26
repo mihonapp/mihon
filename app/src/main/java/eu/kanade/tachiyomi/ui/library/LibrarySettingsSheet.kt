@@ -245,7 +245,7 @@ class LibrarySettingsSheet(
                     SortDirectionSetting.DESCENDING
                 }
 
-                if (preferences.categorisedDisplaySettings().get() && currentCategory != null && currentCategory?.id != 0) {
+                if (preferences.categorizedDisplaySettings().get() && currentCategory != null && currentCategory?.id != 0) {
                     currentCategory?.sortDirection = flag.flag
 
                     db.insertCategory(currentCategory!!).executeAsBlocking()
@@ -267,7 +267,7 @@ class LibrarySettingsSheet(
                     else -> throw NotImplementedError("Unknown display mode")
                 }
 
-                if (preferences.categorisedDisplaySettings().get() && currentCategory != null && currentCategory?.id != 0) {
+                if (preferences.categorizedDisplaySettings().get() && currentCategory != null && currentCategory?.id != 0) {
                     currentCategory?.sortMode = flag.flag
 
                     db.insertCategory(currentCategory!!).executeAsBlocking()
@@ -304,7 +304,7 @@ class LibrarySettingsSheet(
 
         // Gets user preference of currently selected display mode at current category
         private fun getDisplayModePreference(): DisplayModeSetting {
-            return if (preferences.categorisedDisplaySettings().get() && currentCategory != null && currentCategory?.id != 0) {
+            return if (preferences.categorizedDisplaySettings().get() && currentCategory != null && currentCategory?.id != 0) {
                 DisplayModeSetting.fromFlag(currentCategory?.displayMode)
             } else {
                 preferences.libraryDisplayMode().get()
@@ -353,7 +353,7 @@ class LibrarySettingsSheet(
                     else -> throw NotImplementedError("Unknown display mode")
                 }
 
-                if (preferences.categorisedDisplaySettings().get() && currentCategory != null && currentCategory?.id != 0) {
+                if (preferences.categorizedDisplaySettings().get() && currentCategory != null && currentCategory?.id != 0) {
                     currentCategory?.displayMode = flag.flag
 
                     db.insertCategory(currentCategory!!).executeAsBlocking()

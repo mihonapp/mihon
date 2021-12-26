@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceScreen
 import com.google.android.material.color.DynamicColors
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.initThenAdd
@@ -33,7 +34,7 @@ class SettingsAppearanceController : SettingsController() {
             titleRes = R.string.pref_category_theme
 
             listPreference {
-                key = Keys.themeMode
+                bindTo(preferences.themeMode())
                 titleRes = R.string.pref_theme_mode
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -47,7 +48,6 @@ class SettingsAppearanceController : SettingsController() {
                         Values.ThemeMode.light.name,
                         Values.ThemeMode.dark.name
                     )
-                    defaultValue = Values.ThemeMode.system.name
                 } else {
                     entriesRes = arrayOf(
                         R.string.theme_light,
@@ -57,13 +57,12 @@ class SettingsAppearanceController : SettingsController() {
                         Values.ThemeMode.light.name,
                         Values.ThemeMode.dark.name
                     )
-                    defaultValue = Values.ThemeMode.light.name
                 }
 
                 summary = "%s"
             }
             themesPreference = initThenAdd(ThemesPreference(context)) {
-                key = Keys.appTheme
+                bindTo(preferences.appTheme())
                 titleRes = R.string.pref_app_theme
 
                 val appThemes = Values.AppTheme.values().filter {
@@ -75,7 +74,6 @@ class SettingsAppearanceController : SettingsController() {
                     it.titleResId != null && monetFilter
                 }
                 entries = appThemes
-                defaultValue = appThemes[0].name
 
                 onChange {
                     activity?.let { ActivityCompat.recreate(it) }
@@ -83,9 +81,8 @@ class SettingsAppearanceController : SettingsController() {
                 }
             }
             switchPreference {
-                key = Keys.themeDarkAmoled
+                bindTo(preferences.themeDarkAmoled())
                 titleRes = R.string.pref_dark_theme_pure_black
-                defaultValue = false
 
                 visibleIf(preferences.themeMode()) { it != Values.ThemeMode.light }
 
@@ -101,7 +98,7 @@ class SettingsAppearanceController : SettingsController() {
 
             if (context.isTablet()) {
                 intListPreference {
-                    key = Keys.sideNavIconAlignment
+                    bindTo(preferences.sideNavIconAlignment())
                     titleRes = R.string.pref_side_nav_icon_alignment
                     entriesRes = arrayOf(
                         R.string.alignment_top,
@@ -109,14 +106,12 @@ class SettingsAppearanceController : SettingsController() {
                         R.string.alignment_bottom,
                     )
                     entryValues = arrayOf("0", "1", "2")
-                    defaultValue = "0"
                     summary = "%s"
                 }
             } else {
                 switchPreference {
-                    key = Keys.hideBottomBarOnScroll
+                    bindTo(preferences.hideBottomBarOnScroll())
                     titleRes = R.string.pref_hide_bottom_bar_on_scroll
-                    defaultValue = true
                 }
             }
         }
@@ -125,7 +120,7 @@ class SettingsAppearanceController : SettingsController() {
             titleRes = R.string.pref_category_timestamps
 
             intListPreference {
-                key = Keys.relativeTime
+                bindTo(preferences.relativeTime())
                 titleRes = R.string.pref_relative_format
                 val values = arrayOf("0", "2", "7")
                 entryValues = values
@@ -136,7 +131,6 @@ class SettingsAppearanceController : SettingsController() {
                         else -> context.getString(R.string.pref_relative_time_long)
                     }
                 }.toTypedArray()
-                defaultValue = "7"
                 summary = "%s"
             }
 

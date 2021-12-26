@@ -369,7 +369,7 @@ class LibraryPresenter(
      */
     private fun getLibraryMangasObservable(): Observable<LibraryMap> {
         val defaultLibraryDisplayMode = preferences.libraryDisplayMode()
-        val shouldSetFromCategory = preferences.categorisedDisplaySettings()
+        val shouldSetFromCategory = preferences.categorizedDisplaySettings()
         return db.getLibraryMangas().asRxObservable()
             .map { list ->
                 list.map { libraryManga ->
