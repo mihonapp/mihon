@@ -242,10 +242,10 @@ class SettingsLibraryController : SettingsController() {
                         .sortedBy { it.order }
 
                     val includedItemsText = if (includedCategories.isEmpty()) {
-                        if (excludedCategories.size == allCategories.size) context.getString(R.string.none)
-                        else context.getString(R.string.all)
+                        context.getString(R.string.none)
                     } else {
-                        includedCategories.joinToString { it.name }
+                        if (includedCategories.size == allCategories.size) context.getString(R.string.all)
+                        else includedCategories.joinToString { it.name }
                     }
 
                     val excludedItemsText = if (excludedCategories.isEmpty()) {
