@@ -562,12 +562,13 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         binding.tabs.isVisible = to is TabbedController
 
         if (from is FabController) {
-            binding.fabLayout.rootFab.isVisible = false
             from.cleanupFab(binding.fabLayout.rootFab)
         }
         if (to is FabController) {
-            binding.fabLayout.rootFab.isVisible = true
+            binding.fabLayout.rootFab.show()
             to.configureFab(binding.fabLayout.rootFab)
+        } else {
+            binding.fabLayout.rootFab.hide()
         }
 
         if (!isTablet()) {

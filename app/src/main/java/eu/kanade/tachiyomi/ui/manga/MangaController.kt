@@ -303,7 +303,7 @@ class MangaController :
 
         actionFabScrollListener = actionFab?.shrinkOnScroll(chapterRecycler)
         // Initially set FAB invisible; will become visible if unread chapters are present
-        actionFab?.isVisible = false
+        actionFab?.hide()
 
         binding.swipeRefresh.refreshes()
             .onEach {

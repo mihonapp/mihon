@@ -159,13 +159,12 @@ open class BrowseSourceController(bundle: Bundle) :
         )
         filterSheet?.setFilters(presenter.filterItems)
 
-        // TODO: [ExtendedFloatingActionButton] hide/show methods don't work properly
-        filterSheet?.setOnShowListener { actionFab?.isVisible = false }
-        filterSheet?.setOnDismissListener { actionFab?.isVisible = true }
+        filterSheet?.setOnShowListener { actionFab?.hide() }
+        filterSheet?.setOnDismissListener { actionFab?.show() }
 
         actionFab?.setOnClickListener { filterSheet?.show() }
 
-        actionFab?.isVisible = true
+        actionFab?.show()
     }
 
     override fun configureFab(fab: ExtendedFloatingActionButton) {
@@ -175,7 +174,7 @@ open class BrowseSourceController(bundle: Bundle) :
         fab.setIconResource(R.drawable.ic_filter_list_24dp)
 
         // Controlled by initFilterSheet()
-        fab.isVisible = false
+        fab.hide()
         initFilterSheet()
     }
 
