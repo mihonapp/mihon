@@ -218,7 +218,7 @@ class SettingsLibraryController : SettingsController() {
                         restrictions.joinToString()
                     }
 
-                    summary = context.getString(R.string.restrictions, restrictionsText)
+                    summary = context.getString(R.string.only_update_restrictions, restrictionsText)
                 }
 
                 preferences.libraryUpdateMangaRestriction().asFlow()
