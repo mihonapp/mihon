@@ -36,7 +36,6 @@ import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.util.preference.DSL
 import eu.kanade.tachiyomi.util.preference.onChange
-import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.switchSettingsPreference
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -122,11 +121,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
             .map { source -> LocaleHelper.getSourceDisplayName(source.lang, context) to source }
             .sortedWith(compareBy({ (_, source) -> !source.isEnabled() }, { (lang, _) -> lang.lowercase() }))
             .forEach { (lang, source) ->
-                val preferenceBlock = {
-                    sourceSwitchPreference(source, LocaleHelper.getSourceDisplayName(lang, context))
-                }
-
-                preferenceBlock()
+                sourceSwitchPreference(source, lang)
             }
     }
 
@@ -135,19 +130,11 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
             .groupBy { (it as CatalogueSource).lang }
             .toSortedMap(compareBy { LocaleHelper.getSourceDisplayName(it, context) })
             .forEach { entry ->
-                val preferenceBlock = {
-                    entry.value
-                        .sortedWith(compareBy({ source -> !source.isEnabled() }, { source -> source.name.lowercase() }))
-                        .forEach { source ->
-                            sourceSwitchPreference(source, source.toString())
-                        }
-                }
-
-                preferenceCategory {
-                    title = LocaleHelper.getSourceDisplayName(entry.key, context)
-
-                    preferenceBlock()
-                }
+                entry.value
+                    .sortedWith(compareBy({ source -> !source.isEnabled() }, { source -> source.name.lowercase() }))
+                    .forEach { source ->
+                        sourceSwitchPreference(source, source.toString())
+                    }
             }
     }
 
