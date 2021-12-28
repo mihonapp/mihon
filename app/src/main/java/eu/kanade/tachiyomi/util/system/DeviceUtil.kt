@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.util.system
 
 import android.annotation.SuppressLint
-import android.os.Build
 import logcat.LogPriority
 
 object DeviceUtil {
@@ -24,10 +23,6 @@ object DeviceUtil {
         } catch (e: Exception) {
             false
         }
-    }
-
-    val isSamsung by lazy {
-        Build.MANUFACTURER.equals("samsung", ignoreCase = true)
     }
 
     @SuppressLint("PrivateApi")

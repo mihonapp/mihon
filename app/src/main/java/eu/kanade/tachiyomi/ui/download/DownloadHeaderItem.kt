@@ -8,6 +8,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 
 data class DownloadHeaderItem(
+    val id: Long,
     val name: String,
     val size: Int
 ) : AbstractExpandableHeaderItem<DownloadHeaderHolder, DownloadItem>() {
@@ -41,7 +42,7 @@ data class DownloadHeaderItem(
     }
 
     override fun hashCode(): Int {
-        return name.hashCode()
+        return id.hashCode()
     }
 
     init {

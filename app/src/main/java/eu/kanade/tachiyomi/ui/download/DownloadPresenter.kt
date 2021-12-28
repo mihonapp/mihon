@@ -33,7 +33,7 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
                 downloads
                     .groupBy { it.source }
                     .map { entry ->
-                        DownloadHeaderItem(entry.key.name, entry.value.size).apply {
+                        DownloadHeaderItem(entry.key.id, entry.key.name, entry.value.size).apply {
                             addSubItems(0, entry.value.map { DownloadItem(it, this) })
                         }
                     }
