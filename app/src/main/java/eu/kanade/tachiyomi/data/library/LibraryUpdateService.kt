@@ -552,6 +552,7 @@ class LibraryUpdateService(
             if (errors.isNotEmpty()) {
                 val file = createFileInCacheDir("tachiyomi_update_errors.txt")
                 file.bufferedWriter().use { out ->
+                    out.write(getString(R.string.library_errors_help, ERROR_LOG_HELP_URL) + "\n\n")
                     // Error file format:
                     // ! Error
                     //   # Source
@@ -577,3 +578,4 @@ class LibraryUpdateService(
 }
 
 private const val MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 60
+private const val ERROR_LOG_HELP_URL = "https://tachiyomi.org/help/guides/troubleshooting"

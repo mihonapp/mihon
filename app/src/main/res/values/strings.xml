@@ -118,7 +118,7 @@
     <string name="action_reset">Reset</string>
     <string name="action_undo">Undo</string>
     <string name="action_open_log">Open log</string>
-    <string name="action_show_errors">See full error details</string>
+    <string name="action_show_errors">Tap to see error details</string>
     <string name="action_create">Create</string>
     <string name="action_restore">Restore</string>
     <string name="action_webview_back">Back</string>
@@ -732,6 +732,7 @@
     </plurals>
     <string name="notification_cover_update_failed">Failed to update cover</string>
     <string name="notification_first_add_to_library">Please add the manga to your library before doing this</string>
+    <string name="library_errors_help">For help on how to fix library update errors, see %1$s</string>
 
     <!-- File Picker Titles -->
     <string name="file_select_cover">Select cover image</string>
