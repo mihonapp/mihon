@@ -260,8 +260,8 @@ dependencies {
     implementation("com.squareup.logcat:logcat:0.1")
 
     // Crash reports/analytics
-    implementation("ch.acra:acra-http:5.8.1")
-    "standardImplementation"("com.google.firebase:firebase-analytics-ktx:20.0.1")
+    implementation("ch.acra:acra-http:5.8.4")
+    "standardImplementation"("com.google.firebase:firebase-analytics-ktx:20.0.2")
 
     // Licenses
     implementation("com.mikepenz:aboutlibraries-core:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
