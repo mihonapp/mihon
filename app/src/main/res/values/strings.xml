@@ -384,7 +384,7 @@
       <!-- Downloads section -->
     <string name="pref_download_directory">Download location</string>
     <string name="pref_category_delete_chapters">Delete chapters</string>
-    <string name="pref_remove_after_marked_as_read">After marked as read</string>
+    <string name="pref_remove_after_marked_as_read">After manually marked as read</string>
     <string name="pref_remove_after_read">After reading automatically delete</string>
     <string name="pref_remove_bookmarked_chapters">Allow deleting bookmarked chapters</string>
     <string name="pref_remove_exclude_categories">Excluded categories</string>
