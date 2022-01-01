@@ -209,12 +209,11 @@ internal class DownloadNotifier(private val context: Context) {
      * @param error string containing error information.
      * @param chapter string containing chapter title.
      */
-    fun onError(error: String? = null, chapter: String? = null) {
+    fun onError(error: String? = null, chapter: String? = null, mangaTitle: String? = null) {
         // Create notification
         with(errorNotificationBuilder) {
             setContentTitle(
-                chapter
-                    ?: context.getString(R.string.download_notifier_downloader_title)
+                mangaTitle?.plus(": $chapter") ?: context.getString(R.string.download_notifier_downloader_title)
             )
             setContentText(error ?: context.getString(R.string.download_notifier_unknown_error))
             setSmallIcon(R.drawable.ic_warning_white_24dp)

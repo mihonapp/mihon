@@ -292,7 +292,7 @@ class Downloader(
         val availSpace = DiskUtil.getAvailableStorageSpace(mangaDir)
         if (availSpace != -1L && availSpace < MIN_DISK_SPACE) {
             download.status = Download.State.ERROR
-            notifier.onError(context.getString(R.string.download_insufficient_space), download.chapter.name)
+            notifier.onError(context.getString(R.string.download_insufficient_space), download.chapter.name, download.manga.title)
             return@defer Observable.just(download)
         }
 
@@ -338,7 +338,7 @@ class Downloader(
             // If the page list threw, it will resume here
             .onErrorReturn { error ->
                 download.status = Download.State.ERROR
-                notifier.onError(error.message, download.chapter.name)
+                notifier.onError(error.message, download.chapter.name, download.manga.title)
                 download
             }
     }
