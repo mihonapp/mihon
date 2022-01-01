@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit
  * permits = 5,  period = 1, unit = seconds  =>  5 requests per second
  * permits = 10, period = 2, unit = minutes  =>  10 requests per 2 minutes
  *
+ * @since extension-lib 1.3
+ *
  * @param permits {Int}   Number of requests allowed within a period of units.
  * @param period {Long}   The limiting duration. Defaults to 1.
  * @param unit {TimeUnit} The unit of time for the period. Defaults to seconds.
