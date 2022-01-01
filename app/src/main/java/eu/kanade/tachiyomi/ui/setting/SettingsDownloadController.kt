@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.text.buildSpannedString
 import androidx.preference.PreferenceScreen
@@ -210,7 +209,7 @@ class SettingsDownloadController : SettingsController() {
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
             val activity = activity!!
             val currentDir = preferences.downloadsDirectory().get()
-            val externalDirs = (getExternalDirs() + File(activity.getString(R.string.custom_dir))).map(File::toString)
+            val externalDirs = listOf(getDefaultDownloadDir(), File(activity.getString(R.string.custom_dir))).map(File::toString)
             var selectedIndex = externalDirs.indexOfFirst { it in currentDir }
 
             return MaterialAlertDialogBuilder(activity)
@@ -229,13 +228,12 @@ class SettingsDownloadController : SettingsController() {
                 .create()
         }
 
-        private fun getExternalDirs(): List<File> {
+        private fun getDefaultDownloadDir(): File {
             val defaultDir = Environment.getExternalStorageDirectory().absolutePath +
                 File.separator + resources?.getString(R.string.app_name) +
                 File.separator + "downloads"
 
-            return mutableListOf(File(defaultDir)) +
-                ContextCompat.getExternalFilesDirs(activity!!, "").filterNotNull()
+            return File(defaultDir)
         }
     }
 
