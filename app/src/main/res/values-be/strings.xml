@@ -64,7 +64,6 @@
     <string name="action_sort_date_added">Дата дадання</string>
     <string name="action_sort_chapter_fetch_date">Дата атрымання</string>
     <string name="action_sort_latest_chapter">Апошняя частка</string>
-    <string name="action_sort_next_updated">Наступнае чаканае абнаўленне</string>
     <string name="action_sort_last_checked">Апошняя праверка</string>
     <string name="action_sort_last_read">Апошняе чытанне</string>
     <string name="action_sort_total">Усяго частак</string>
@@ -132,7 +131,6 @@
     <string name="restrictions">Абмежаванні: %s</string>
     <string name="charging">Зарадка</string>
     <string name="pref_library_update_restriction">Абмежаванні на абнаўленне</string>
-    <string name="pref_library_update_prioritization">Парадак абнаўлення</string>
     <string name="update_weekly">Штотыдзень</string>
     <string name="update_48hour">Кожныя 2 дні</string>
     <string name="update_24hour">Штодня</string>

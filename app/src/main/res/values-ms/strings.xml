@@ -73,17 +73,17 @@
     <string name="pref_library_columns">Kandungan setiap baris</string>
     <string name="portrait">Potret</string>
     <string name="landscape">Landskap</string>
-    <string name="pref_library_update_interval">Kekerapan kemas kini</string>
-    <string name="update_never">Manual</string>
+    <string name="pref_library_update_interval">Kemas kini automatik</string>
+    <string name="update_never">Mati</string>
     <string name="update_6hour">Setiap 6 jam</string>
     <string name="update_12hour">Setiap 12 jam</string>
     <string name="update_24hour">Setiap hari</string>
     <string name="update_48hour">Setiap 2 hari</string>
     <string name="update_weekly">Setiap minggu</string>
     <string name="all">Semua</string>
-    <string name="pref_library_update_restriction">Batasan kemas kini</string>
+    <string name="pref_library_update_restriction">Sekatan kemas kini automatik peranti</string>
     <string name="charging">Ketika mengecas</string>
-    <string name="pref_update_only_non_completed">Hanya kemas kini manga yang masih berterusan</string>
+    <string name="pref_update_only_non_completed">Siri berterusan</string>
     <string name="pref_auto_update_manga_sync">Kemas kini selepas dibaca</string>
     <string name="pref_start_screen">Skrin permulaan</string>
     <string name="default_category">Kategori lalai</string>
@@ -128,15 +128,15 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Lokasi muat turun</string>
-    <string name="pref_remove_after_marked_as_read">Selepas ditandakan sebagai dibaca</string>
-    <string name="pref_remove_after_read">Secara automatik setelah membaca</string>
+    <string name="pref_remove_after_marked_as_read">Selepas secara manual ditandakan sebagai dibaca</string>
+    <string name="pref_remove_after_read">Selepas membaca padam secara automatik</string>
     <string name="custom_dir">Lokasi tersuai</string>
     <string name="disabled">Dinyahkan</string>
     <string name="last_read_chapter">Bab terakhir dibaca</string>
-    <string name="second_to_last">Bab kedua terakhir</string>
-    <string name="third_to_last">Bab ketiga terakhir</string>
-    <string name="fourth_to_last">Bab keempat terakhir</string>
-    <string name="fifth_to_last">Bab kelima terakhir</string>
+    <string name="second_to_last">Bab kedua terakhir dibaca</string>
+    <string name="third_to_last">Bab ketiga terakhir dibaca</string>
+    <string name="fourth_to_last">Bab keempat terakhir dibaca</string>
+    <string name="fifth_to_last">Bab kelima terakhir dibaca</string>
     <string name="pref_download_new">Muat turun bab baharu</string>
     <string name="services">Perkhidmatan</string>
     <string name="pref_create_backup">Buat sandaran</string>
@@ -315,7 +315,6 @@
     <string name="information_empty_category">Anda tidak mempunyai kategori. Ketik butang tambah untuk membuat satu untuk mengatur pustaka anda.</string>
     <string name="pref_color_filter_mode">Mod turas warna campuran</string>
     <string name="label_help">Bantuan</string>
-    <string name="pref_library_update_prioritization">Susunan kemas kini</string>
     <string name="filter_mode_overlay">Lapisan atas</string>
     <string name="filter_mode_multiply">Berganda</string>
     <string name="filter_mode_screen">Skrin</string>
@@ -537,8 +536,6 @@
     <string name="spen_next_page">Muka surat seterusnya</string>
     <string name="spen_previous_page">Muka surat terdahulu</string>
     <string name="migration_help_guide">Panduan memindahkan sumber</string>
-    <string name="invalid_backup_file_type">Jenis fail sandaran tidak sah: %1$s\t
-\nIa sepatutnya berakhir dengan .proto.gz atau .json.</string>
     <string name="pref_category_nsfw_content">Sumber NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Tunjuk dalam senarai sumber dan sambungan</string>
     <string name="file_picker_error">Tiada aplikasi memilih fail</string>
@@ -580,7 +577,7 @@
     <string name="pref_library_update_categories_details">Manga di dalam kategori berkecuali tidak akan dikemas kini walaupun ianya ada di dalam kategori hanya.</string>
     <string name="pref_download_new_categories_details">Manga di dalam kategori berkecuali tidak akan dimuat turun walaupun ianya ada di dalam kategori hanya.</string>
     <string name="pref_category_auto_download">Muat turun automatik</string>
-    <string name="action_show_errors">Lihat butiran ralat penuh</string>
+    <string name="action_show_errors">Ketik untuk lihat butiran ralat</string>
     <string name="update_check_eol">Versi Android ini tidak lagi disokong</string>
     <string name="clipboard_copy_error">Gagal menyalin ke papan keratan</string>
     <string name="rotation_landscape">Landskap</string>
@@ -618,7 +615,6 @@
     <string name="tracking_guide">Panduan penjejakan</string>
     <string name="information_empty_category_dialog">Anda belum mempunyai kategori.</string>
     <string name="action_start_downloading_now">Mula memuat turun sekarang</string>
-    <string name="action_sort_next_updated">Jangkaan kemas kini seterusnya</string>
     <string name="pref_dark_theme_pure_black">Mod gelap hitam asli</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin &amp; Yang</string>
@@ -682,4 +678,10 @@
     <string name="pref_auto_clear_chapter_cache">Hapus cache bab apabila menutup aplikasi</string>
     <string name="database_clean">Bersihkan pengkalan data</string>
     <string name="clear_database_source_item_count">%1$d manga bukan pustaka dalam pangkalan data</string>
+    <string name="extension_api_error">Gagal mendapatkan senarai sambungan</string>
+    <string name="privacy_policy">Dasar privasi</string>
+    <string name="pref_library_update_manga_restriction">Sekatan kemas kini pustaka</string>
+    <string name="pref_update_only_completely_read">Siri dibaca sepenuhnya</string>
+    <string name="only_update_restrictions">Hanya kemas kini: %s</string>
+    <string name="library_errors_help">Untuk bantuan cara menyelesaikan ralat kemas kini pustaka, lihat %1$s</string>
 </resources>

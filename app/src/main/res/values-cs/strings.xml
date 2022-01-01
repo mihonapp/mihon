@@ -51,7 +51,7 @@
     <string name="update_24hour">Denně</string>
     <string name="update_48hour">Každé 2 dny</string>
     <string name="update_weekly">Týdně</string>
-    <string name="pref_update_only_non_completed">Aktualizovat pouze vycházející mangy</string>
+    <string name="pref_update_only_non_completed">Nadcházející série</string>
     <string name="pref_auto_update_manga_sync">Aktualizovat počet kapitol po přečtení</string>
     <string name="pref_start_screen">Úvodní obrazovka</string>
     <string name="all_lang">Vše</string>
@@ -92,7 +92,7 @@
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Umístění pro stažení</string>
     <string name="pref_remove_after_marked_as_read">Po označení jako přečtené</string>
-    <string name="pref_remove_after_read">Automaticky po přečtení</string>
+    <string name="pref_remove_after_read">Po přečtení automaticky smazat</string>
     <string name="custom_dir">Vlastní umístění</string>
     <string name="pref_download_new">Stahovat nové kapitoly</string>
     <string name="username">Uživatelské jméno</string>
@@ -197,8 +197,8 @@
     <string name="pref_library_columns">Počet položek na řádek</string>
     <string name="portrait">Na výšku</string>
     <string name="landscape">Na šířku</string>
-    <string name="pref_library_update_interval">Frekvence aktualizace</string>
-    <string name="update_never">Ručně</string>
+    <string name="pref_library_update_interval">Automatické aktualizace</string>
+    <string name="update_never">Nikdy</string>
     <string name="all">Vše</string>
     <string name="charging">Nabíjení</string>
     <string name="default_category">Výchozí kategorie</string>
@@ -245,7 +245,7 @@
     <string name="cookies_cleared">Cookies vymazány</string>
     <string name="pref_clear_database">Vyčistit databázi</string>
     <string name="pref_clear_database_summary">Smazat historii pro mangy, které nejsou uloženy v knihovně</string>
-    <string name="clear_database_confirmation">Jste si jistý\? Přečtené kapitoly a postup v mangách mimo knihovnu budou ztraceny</string>
+    <string name="clear_database_confirmation">Jsi si jist\? Přečtené kapitoly a postup v mangách mimo knihovnu budou ztraceny</string>
     <string name="clear_database_completed">Položky byly smazány</string>
     <string name="pref_refresh_library_tracking">Obnovit sledování</string>
     <string name="pref_refresh_library_tracking_summary">Aktualizuje status, skóre a poslední přečtenou kapitolu ze sledovacích služeb</string>
@@ -275,16 +275,16 @@
     <string name="set_as_cover">Nastavit jako obal</string>
     <string name="cover_updated">Obal aktualizován</string>
     <string name="action_edit_cover">Upravit přebal</string>
-    <string name="pref_library_update_restriction">Omezení aktualizace</string>
+    <string name="pref_library_update_restriction">Omezení zařízení pro automatické aktualizace</string>
     <string name="pref_keep_screen_on">Udržovat obrazovku zapnutou</string>
     <string name="pref_reader_navigation">Navigování</string>
     <string name="pager_viewer">Stránkovač</string>
     <string name="disabled">Zakázáno</string>
     <string name="last_read_chapter">Poslední přečtená kapitola</string>
     <string name="second_to_last">Předposlední kapitola</string>
-    <string name="third_to_last">Třetí až poslední kapitola</string>
-    <string name="fourth_to_last">Čtvrtá až poslední kapitola</string>
-    <string name="fifth_to_last">Pátá až poslední kapitola</string>
+    <string name="third_to_last">Třetí předposlední přečtená kapitola</string>
+    <string name="fourth_to_last">Čtvrtá předposlední přečtená kapitola</string>
+    <string name="fifth_to_last">Pátá předposlední přečtená kapitola</string>
     <string name="pref_create_backup_summ">Lze použít k obnovení aktuální knihovny</string>
     <string name="pref_restore_backup_summ">Obnovit knihovnu ze záložního souboru</string>
     <string name="pref_backup_slots">Maximum záloh</string>
@@ -320,7 +320,6 @@
     <string name="filter_mode_screen">Obrazovka</string>
     <string name="filter_mode_lighten">Zesvětlit</string>
     <string name="filter_mode_darken">Ztmavit</string>
-    <string name="pref_library_update_prioritization">Pořadí aktualizace</string>
     <string name="no_results_found">Nenalezeny žádné výsledky</string>
     <string name="migration_selection_prompt">Vyberte zdroj ze kterého chcete migrovat</string>
     <string name="action_webview_back">Zpět</string>
@@ -404,7 +403,7 @@
     <string name="pref_disable_battery_optimization_summary">Pomáhá s aktualizacemi knihovny a záloh na pozadí</string>
     <string name="pref_disable_battery_optimization">Vypnout optimalizaci baterie</string>
     <string name="crash_log_saved">Chybový protokol uložen</string>
-    <string name="pref_dump_crash_logs_summary">Uloží chybové protokoly do souboru pro možné sdílení s vývojáři</string>
+    <string name="pref_dump_crash_logs_summary">Uloží chybové protokoly do souboru pro sdílení s vývojáři</string>
     <string name="pref_dump_crash_logs">Vypsat protokoly o selhání</string>
     <string name="pref_refresh_library_covers">Obnovit přebaly mang v knihovně</string>
     <string name="label_data">Data</string>
@@ -429,8 +428,6 @@
     <string name="backup_restore_missing_sources">Chybějící zdroje:</string>
     <string name="invalid_backup_file_missing_manga">Záloha neobsahuje žádnou mangu.</string>
     <string name="invalid_backup_file_missing_data">V souboru chybí data.</string>
-    <string name="invalid_backup_file_type">Neplatný typ souboru se zálohou: %1$s
-\nSoubor by měl končit na .proto.gz nebo .json.</string>
     <string name="invalid_backup_file">Neplatný soubor se zálohou</string>
     <string name="source_not_found_name">Zdroj nenalezen: %1$s</string>
     <string name="pref_enable_automatic_extension_updates">Kontrolovat dostupnost aktualizací rozšíření</string>
@@ -468,7 +465,7 @@
     <string name="pref_category_nsfw_content">NSFW (18+) zdroje</string>
     <string name="secure_screen_summary">Skrýt obsah aplikace při přepínání aplikací a blokovat tvorbu snímků obrazovky</string>
     <string name="secure_screen">Chráněná obrazovka</string>
-    <string name="lock_with_biometrics">Vyžadovat odemknutí</string>
+    <string name="lock_with_biometrics">Vyžaduje odemknutí</string>
     <string name="pref_confirm_exit">Potvrdit opuštění</string>
     <string name="theme_dark">Zapnuto</string>
     <string name="theme_light">Vypnuto</string>
@@ -641,7 +638,7 @@
     <string name="action_start_downloading_now">Začít stahovat nyní</string>
     <string name="notification_updating">Aktualizuji knihovnu… (%1$d / %2$d)</string>
     <string name="tracker_komga_warning">Tento sledovač je kompatibilní pouze se zdrojem Komga.</string>
-    <string name="about_dont_kill_my_app">Někteří výrobci používají další omezení aplikací, která vypíná služby na pozadí. Na této webové stránce najdete další informace o tom, jak to napravit.</string>
+    <string name="about_dont_kill_my_app">Někteří výrobci používají další omezení aplikací, která vypíná služby na pozadí. Na této webové stránce najdete další informace o tom, jak to opravit.</string>
     <string name="restore_miui_warning">Pokud je MIUI optimalizace vypnutá, zálohování/obnovování nemusí fungovat správně.</string>
     <string name="enhanced_tracking_info">Služby, které poskytují rozšířené funkce pro konkrétní zdroje. Mangy jsou po přidání do knihovny automaticky sledovány.</string>
     <string name="enhanced_services">Rozšířené služby</string>
@@ -655,15 +652,14 @@
     <string name="theme_greenapple">Zelené Jablko</string>
     <string name="theme_monet">Dynamické</string>
     <string name="pref_app_theme">Motiv aplikace</string>
-    <string name="action_sort_next_updated">Další očekávaný aktualizace</string>
     <string name="label_background_activity">Činnost na pozadí</string>
-    <string name="pref_hide_threshold">Citlivost pro skrytí nabídky při rolování</string>
+    <string name="pref_hide_threshold">Citlivost pro skrytí menu při posouvání</string>
     <string name="pref_lowest">Nejnižší</string>
     <string name="pref_low">Nízké</string>
     <string name="pref_high">Vysoké</string>
     <string name="pref_highest">Nejvyšší</string>
     <string name="getting_started_guide">Příručka Začínáme</string>
-    <string name="pref_tablet_ui_mode">Uživ. rozhraní tabletu</string>
+    <string name="pref_tablet_ui_mode">Uživatelské rozhraní tabletu</string>
     <string name="action_track">Sledovat</string>
     <plurals name="relative_time">
         <item quantity="one">Včera</item>
@@ -699,4 +695,18 @@
     <string name="connected_to_wifi">Jen na Wi-Fi</string>
     <string name="pref_verbose_logging">Podrobné protokolování</string>
     <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují Tachiyomi</string>
+    <string name="pref_library_update_show_tab_badge">Zobrazit počet nepřečtených kapitol na ikoně Aktualizace</string>
+    <string name="ext_update_all">Aktualizovat vše</string>
+    <string name="pref_verbose_logging_summary">Vypisovat podrobné informace do systémového protokolu (sníží výkon aplikace)</string>
+    <string name="channel_app_updates">Aktualizace aplikace</string>
+    <string name="notification_size_warning">Varování: velké aktualizace poškozují zdroje a můžou vést k pomalejším aktualizacím a zvýšenému využití baterie</string>
+    <string name="pref_auto_clear_chapter_cache">Vymazat cache kapitol při zavření aplikace</string>
+    <string name="extension_api_error">Chyba v získání seznamu rozšíření</string>
+    <string name="privacy_policy">Zásady ochrany osobních údajů</string>
+    <string name="only_update_restrictions">Pouze aktualizuj: %s</string>
+    <string name="clear_database_source_item_count">v databázi je manga %1$d mimo knihovnu</string>
+    <string name="pref_true_color_summary">Snižuje proužkování, ale ovlivňuje výkon</string>
+    <string name="pref_library_update_manga_restriction">Omezení aktualizace knihovny</string>
+    <string name="pref_update_only_completely_read">Plně přečtené série</string>
+    <string name="database_clean">vyčištění databáze</string>
 </resources>

@@ -55,15 +55,15 @@
     <string name="pref_library_columns">Elementos por fila</string>
     <string name="portrait">En vertical</string>
     <string name="landscape">En horizontal</string>
-    <string name="pref_library_update_interval">Frecuencia de la búsqueda de capítulos nuevos</string>
-    <string name="update_never">Manual</string>
+    <string name="pref_library_update_interval">Actualizaciones automáticas</string>
+    <string name="update_never">No</string>
     <string name="update_6hour">Cada 6 horas</string>
     <string name="update_12hour">Cada 12 horas</string>
     <string name="update_24hour">Diaria</string>
     <string name="update_48hour">Cada 2 días</string>
-    <string name="pref_library_update_restriction">Solo buscar actualizaciones en los siguientes casos</string>
+    <string name="pref_library_update_restriction">Restricciones de actualización automática del dispositivo</string>
     <string name="charging">Mientras se carga la batería</string>
-    <string name="pref_update_only_non_completed">Solo actualizar manga en curso</string>
+    <string name="pref_update_only_non_completed">Manga en curso</string>
     <string name="pref_auto_update_manga_sync">Actualizar progreso después de leer</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Pantalla completa</string>
@@ -72,12 +72,12 @@
     <string name="pref_custom_brightness">Utilizar brillo personalizado</string>
     <string name="pref_keep_screen_on">Mantener la pantalla encendida</string>
     <string name="pref_reader_navigation">Navegación</string>
-    <string name="pref_read_with_volume_keys">Teclas de volumen</string>
-    <string name="pref_read_with_tapping">Tocar pantalla</string>
+    <string name="pref_read_with_volume_keys">Con las teclas de volumen</string>
+    <string name="pref_read_with_tapping">Tocando la pantalla</string>
     <string name="pref_reader_theme">Color de fondo</string>
     <string name="white_background">Blanco</string>
     <string name="black_background">Negro</string>
-    <string name="pref_viewer_type">Dirección de lectura normal</string>
+    <string name="pref_viewer_type">Sentido de lectura normal</string>
     <string name="left_to_right_viewer">De izquierda a derecha</string>
     <string name="right_to_left_viewer">De derecha a izquierda</string>
     <string name="vertical_viewer">Vertical</string>
@@ -99,9 +99,9 @@
     <string name="rotation_force_portrait">Forzar en vertical</string>
     <string name="rotation_force_landscape">Forzar en horizontal</string>
     <!-- Downloads section -->
-    <string name="pref_download_directory">Ubicación de descargas</string>
-    <string name="pref_remove_after_marked_as_read">Tras marcarlo como leído</string>
-    <string name="pref_remove_after_read">Automáticamente después de leer</string>
+    <string name="pref_download_directory">Carpeta de descarga</string>
+    <string name="pref_remove_after_marked_as_read">Tras marcarlos como leídos de forma manual</string>
+    <string name="pref_remove_after_read">Una vez leído borrar automáticamente</string>
     <string name="custom_dir">Ubicación personalizada</string>
     <!-- Sources section -->
     <!-- Sync section -->
@@ -211,8 +211,8 @@
     <string name="history">Historial</string>
     <string name="action_filter_bookmarked">Favoritos</string>
     <string name="action_sort_alpha">Alfabéticamente</string>
-    <string name="action_sort_total">Por número de capítulos totales</string>
-    <string name="action_sort_last_read">Último leído</string>
+    <string name="action_sort_total">Por número de capítulos</string>
+    <string name="action_sort_last_read">Por último leído</string>
     <string name="action_bookmark">Marcar capítulo como favorito</string>
     <string name="action_remove_bookmark">Quitar como favorito</string>
     <string name="action_add">Añadir</string>
@@ -244,12 +244,12 @@
     <string name="color_filter_a_value">A</string>
     <string name="disabled">Desactivado</string>
     <string name="last_read_chapter">Último capítulo leído</string>
-    <string name="second_to_last">Penúltimo capítulo</string>
-    <string name="third_to_last">Antepenúltimo capítulo</string>
-    <string name="fourth_to_last">Cuarto al último capítulo</string>
-    <string name="fifth_to_last">Quinto al último capítulo</string>
+    <string name="second_to_last">El penúltimo capítulo leído</string>
+    <string name="third_to_last">El antepenúltimo capítulo leído</string>
+    <string name="fourth_to_last">El trasantepenúltimo capítulo leído</string>
+    <string name="fifth_to_last">El anteanteantepenúltimo capítulo leído</string>
     <string name="pref_download_new">Descargar capítulos nuevos</string>
-    <string name="pref_create_backup">Crear copia de seguridad</string>
+    <string name="pref_create_backup">Crear una copia de seguridad</string>
     <string name="pref_create_backup_summ">Se puede utilizar para restaurar la biblioteca actual</string>
     <string name="pref_restore_backup">Restaurar copia de seguridad</string>
     <string name="pref_restore_backup_summ">Restaurar la biblioteca a partir de una copia de seguridad</string>
@@ -352,9 +352,8 @@
     <string name="filter_mode_lighten">Subexponer / Aclarar</string>
     <string name="filter_mode_darken">Quemar / Oscurecer</string>
     <string name="label_help">Ayuda</string>
-    <string name="pref_library_update_prioritization">Buscar manga actualizado en el siguiente orden</string>
     <string name="no_results_found">No se han encontrado resultados</string>
-    <string name="migration_selection_prompt">Selecciona una fuente para migrar</string>
+    <string name="migration_selection_prompt">Selecciona una fuente a migrar</string>
     <string name="action_webview_back">Atrás</string>
     <string name="action_webview_forward">Adelante</string>
     <string name="action_webview_refresh">Actualizar</string>
@@ -371,7 +370,7 @@
     <string name="logout_title">¿Cerrar sesión en %1$s\?</string>
     <string name="want_to_read">Quiero leer</string>
     <string name="label_more">Más</string>
-    <string name="action_sort_latest_chapter">Capítulo más reciente</string>
+    <string name="action_sort_latest_chapter">Por capítulo más reciente</string>
     <string name="action_view_chapters">Ver capítulos</string>
     <string name="action_cancel_all">Cancelar todo</string>
     <string name="pref_theme_mode">Modo oscuro</string>
@@ -408,7 +407,7 @@
         <item quantity="one">Capítulos %1$s y 1 más</item>
         <item quantity="other">Capítulos %1$s y %2$d más</item>
     </plurals>
-    <string name="hide_notification_content">Ocultar contenido de la notificación</string>
+    <string name="hide_notification_content">Ocultar el contenido de las notificaciones</string>
     <string name="notification_check_updates">Buscando nuevos capítulos</string>
     <string name="pref_disable_battery_optimization">Desactivar la optimización de batería</string>
     <string name="email">Correo electrónico</string>
@@ -432,7 +431,7 @@
     <string name="updating_library">Actualizando biblioteca</string>
     <string name="http_error_hint">Abrir sitio en WebView</string>
     <string name="pref_enable_automatic_extension_updates">Buscar actualizaciones de extensiones</string>
-    <string name="action_sort_last_checked">Última comprobación</string>
+    <string name="action_sort_last_checked">Por fecha de comprobación</string>
     <string name="channel_ext_updates">Actualizaciones de extensión</string>
     <string name="pref_skip_filtered_chapters">Saltar capítulos excluidos por filtros</string>
     <string name="pref_category_reading">Lectura</string>
@@ -474,7 +473,7 @@
         <item quantity="one">Queda 1</item>
         <item quantity="other">Quedan %1$s</item>
     </plurals>
-    <string name="downloaded_only_summary">Filtra todo el manga de tu biblioteca, ve solo el que esté disponible sin conexión</string>
+    <string name="downloaded_only_summary">Filtra todo el manga de tu biblioteca para ver solo el que esté disponible sin conexión</string>
     <string name="pref_search_pinned_sources_only">Solo incluir fuentes ancladas</string>
     <string name="viewer">Modo de lectura</string>
     <string name="pref_category_for_this_series">Para esta serie</string>
@@ -487,10 +486,10 @@
     <string name="battery_optimization_setting_activity_not_found">No se pudieron abrir los ajustes del dispositivo</string>
     <string name="pref_refresh_library_covers">Recargar portadas del manga en la biblioteca</string>
     <plurals name="restore_completed_message">
-        <item quantity="one">Hecho en %1$s con %2$s error</item>
-        <item quantity="other">Hecho en %1$s con %2$s errores</item>
+        <item quantity="one">Completada en %1$s con %2$s error</item>
+        <item quantity="other">Completada en %1$s con %2$s errores</item>
     </plurals>
-    <string name="tracking_info">La sincronización de estos servicios solo funciona en una sola dirección. Cada manga en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
+    <string name="tracking_info">La sincronización de estos servicios solo funciona en un solo sentido. Cada manga en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
     <string name="action_display_unread_badge">Capítulos no leídos</string>
     <plurals name="notification_update_error">
         <item quantity="one">1 actualización fallida</item>
@@ -505,7 +504,7 @@
     <string name="invalid_backup_file">El archivo de copia de respaldo no es correcto</string>
     <string name="tracker_not_logged_in">No has iniciado sesión: %1$s</string>
     <string name="source_not_found_name">Fuente no encontrada: %1$s</string>
-    <string name="pref_library_update_refresh_metadata_summary">Comprobar si hay nueva portada y detalles al actualizar la biblioteca</string>
+    <string name="pref_library_update_refresh_metadata_summary">Comprobar si hay una nueva portada y detalles al actualizar la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Actualizar automáticamente los metadatos</string>
     <string name="action_display_comfortable_grid">Rejilla amplia</string>
     <string name="action_migrate">Migrar</string>
@@ -526,7 +525,7 @@
     <string name="action_disable">Desactivar</string>
     <string name="requires_app_restart">Es necesario reiniciar la aplicación para que surja efecto</string>
     <string name="label_network">Red</string>
-    <string name="pref_jump_to_chapters">Saltar a la lista capítulos al abrir un manga</string>
+    <string name="pref_jump_to_chapters">Saltar al listado de capítulos al abrir un manga</string>
     <string name="unknown_status">Estado desconocido</string>
     <string name="tapping_inverted_both">Ambos</string>
     <string name="tapping_inverted_vertical">Vertical</string>
@@ -541,7 +540,7 @@
     <string name="action_global_search_query">Buscar por «%1$s» en todas las fuentes</string>
     <string name="pref_category_reading_mode">Modo de lectura</string>
     <string name="pref_category_theme">Tema de colores</string>
-    <string name="action_sort_date_added">Fecha en la que se añadió a la biblioteca</string>
+    <string name="action_sort_date_added">Por fecha en la biblioteca</string>
     <plurals name="num_trackers">
         <item quantity="one">1 servicio de seguimiento</item>
         <item quantity="other">%d servicios de seguimiento</item>
@@ -580,8 +579,6 @@
     <string name="spen_next_page">Siguiente página</string>
     <string name="spen_previous_page">Página anterior</string>
     <string name="migration_help_guide">Guía de migración de fuentes</string>
-    <string name="invalid_backup_file_type">El tipo de archivo de respaldo no es correcto: %1$s
-\nDebería terminar en «.proto.gz» o «.json».</string>
     <string name="pref_category_nsfw_content">Fuentes para adultos (18+)</string>
     <string name="pref_show_nsfw_source">Mostrar en la lista de fuentes y extensiones</string>
     <string name="file_picker_error">No se ha encontrado ninguna aplicación con la que elegir archivos</string>
@@ -625,9 +622,9 @@
     <string name="include">Incluir: %s</string>
     <string name="none">Ninguna</string>
     <string name="pref_library_update_categories_details">El manga de las categorías excluidas no se actualizará, ni siquiera si pertenece a alguna de las categorías que sí estén incluidas.</string>
-    <string name="action_show_errors">Mostrar errores de forma detallada</string>
+    <string name="action_show_errors">Toca para ver los detalles del error</string>
     <string name="action_display_show_number_of_items">Mostrar número de elementos</string>
-    <string name="action_sort_chapter_fetch_date">Fecha obtenida</string>
+    <string name="action_sort_chapter_fetch_date">Por fecha de comprobación</string>
     <string name="rotation_type">Tipo de rotación</string>
     <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título del manga</string>
     <string name="pref_create_folder_per_manga">Guardar páginas en carpetas separadas</string>
@@ -650,7 +647,6 @@
     <string name="action_start_downloading_now">Empezar a descargar ahora</string>
     <string name="cancel_all_for_series">Cancelar todo para esta serie</string>
     <string name="action_display_local_badge">Manga local</string>
-    <string name="action_sort_next_updated">Próxima actualización prevista</string>
     <string name="about_dont_kill_my_app">Algunos fabricantes tienen restricciones adicionales para aplicaciones que detienen los servicios en segundo plano. Esta página web tiene más información sobre cómo solucionarlo.</string>
     <string name="information_empty_category_dialog">Todavía no existen categorías.</string>
     <string name="notification_updating">Actualizando biblioteca… (%1$d/%2$d)</string>
@@ -704,7 +700,7 @@
     <string name="label_default">Predeterminado</string>
     <string name="pref_remove_exclude_categories">Categorías excluidas</string>
     <string name="help_translate">Ayudar a traducir</string>
-    <string name="action_sort_count">Todo el manga</string>
+    <string name="action_sort_count">Por número de manga</string>
     <string name="ext_installer_pref">Instalador</string>
     <string name="ext_installer_shizuku_stopped">Shizuku no está activo</string>
     <string name="ext_installer_legacy">Clásico</string>
@@ -719,11 +715,17 @@
     <string name="backup_info">Es una buena idea tener copias de respaldo automáticas, así como respaldarlas fuera de tu dispositivo.</string>
     <string name="connected_to_wifi">Solo con Wi-Fi</string>
     <string name="update_72hour">Cada 3 días</string>
-    <string name="download_queue_size_warning">Cuidado: las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a Tachiyomi</string>
+    <string name="download_queue_size_warning">Advertencia: Las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a Tachiyomi</string>
     <string name="pref_library_update_show_tab_badge">Mostrar el número de capítulos sin leer en el icono de actualizaciones</string>
     <string name="ext_update_all">Actualizar todos</string>
     <string name="channel_app_updates">Actualizaciones de la aplicación</string>
     <string name="pref_auto_clear_chapter_cache">Borrar la caché de capítulos al cerrar la aplicación</string>
     <string name="database_clean">Base de datos limpia</string>
     <string name="clear_database_source_item_count">Hay %1$d manga que no pertenece a la biblioteca en la base de datos</string>
+    <string name="extension_api_error">No se pudo descargar el listado de extensiones</string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="pref_update_only_completely_read">Manga ya leído</string>
+    <string name="pref_library_update_manga_restriction">Restricciones al actualizar la biblioteca</string>
+    <string name="only_update_restrictions">Actualizar solo: %s</string>
+    <string name="library_errors_help">Si necesitas ayuda para resolver los errores de actualización de la biblioteca mira en %1$s</string>
 </resources>

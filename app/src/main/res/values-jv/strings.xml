@@ -129,7 +129,6 @@
     <string name="action_mark_as_read">Tandai dadi diwaca</string>
     <string name="action_global_search">Penggolekan global</string>
     <string name="action_sort_chapter_fetch_date">Tanggal dijupuk</string>
-    <string name="action_sort_next_updated">Sabanjure nganyari sing diarepake</string>
     <string name="action_sort_last_checked">Terakhir dipriksa</string>
     <string name="action_sort_last_read">Terakhir di waca</string>
     <string name="action_filter_empty">Ngilangno saringan</string>

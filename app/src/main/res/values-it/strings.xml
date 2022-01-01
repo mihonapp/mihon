@@ -64,16 +64,16 @@
     <string name="pref_library_columns">Elementi per riga</string>
     <string name="portrait">Verticale</string>
     <string name="landscape">Orizzontale</string>
-    <string name="pref_library_update_interval">Frequenza di aggiornamento</string>
-    <string name="update_never">Manuale</string>
+    <string name="pref_library_update_interval">Aggiornamenti automatici</string>
+    <string name="update_never">Disabilitati</string>
     <string name="update_6hour">Ogni 6 ore</string>
     <string name="update_12hour">Ogni 12 ore</string>
     <string name="update_24hour">Ogni giorno</string>
     <string name="update_48hour">Ogni 2 giorni</string>
     <string name="all">Tutte</string>
-    <string name="pref_library_update_restriction">Restrizioni dell\'aggiornamento</string>
+    <string name="pref_library_update_restriction">Restrizioni agli aggiornamenti automatici del dispositivo</string>
     <string name="charging">In carica</string>
-    <string name="pref_update_only_non_completed">Aggiorna solo manga in corso</string>
+    <string name="pref_update_only_non_completed">Serie in corso</string>
     <string name="pref_auto_update_manga_sync">Aggiorna il monitoraggio dopo la lettura</string>
     <string name="pref_start_screen">Schermata iniziale</string>
     <!-- Reader section -->
@@ -116,15 +116,15 @@
     <string name="color_filter_a_value">A</string>
     <!-- Downloads section -->
     <string name="pref_download_directory">Posizione degli scaricamenti</string>
-    <string name="pref_remove_after_marked_as_read">Dopo averli contrassegnati come letti</string>
-    <string name="pref_remove_after_read">Automaticamente dopo la lettura</string>
+    <string name="pref_remove_after_marked_as_read">Dopo averli contrassegnati manualmente come letti</string>
+    <string name="pref_remove_after_read">Cancella automaticamente dopo la lettura</string>
     <string name="custom_dir">Posizione personalizzata</string>
     <string name="disabled">Disabilitato</string>
     <string name="last_read_chapter">Ultimo capitolo letto</string>
-    <string name="second_to_last">Penultimo capitolo</string>
-    <string name="third_to_last">Terzultimo capitolo</string>
-    <string name="fourth_to_last">Quartultimo capitolo</string>
-    <string name="fifth_to_last">Quintultimo capitolo</string>
+    <string name="second_to_last">Penultimo capitolo letto</string>
+    <string name="third_to_last">Terzultimo capitolo letto</string>
+    <string name="fourth_to_last">Quartultimo capitolo letto</string>
+    <string name="fifth_to_last">Quintultimo capitolo letto</string>
     <string name="pref_download_new">Scarica nuovi capitoli</string>
     <!-- Sync section -->
     <string name="services">Servizi</string>
@@ -353,7 +353,6 @@
     <string name="filter_mode_lighten">Scherma / Schiarisci</string>
     <string name="filter_mode_darken">Brucia / Scurisci</string>
     <string name="label_help">Aiuto</string>
-    <string name="pref_library_update_prioritization">Ordine di aggiornamento</string>
     <string name="no_results_found">Nessun risultato trovato</string>
     <string name="migration_selection_prompt">Seleziona una fonte da cui migrare</string>
     <string name="action_webview_back">Indietro</string>
@@ -582,8 +581,6 @@
     <string name="spen_next_page">Pagina successiva</string>
     <string name="spen_previous_page">Pagina precedente</string>
     <string name="migration_help_guide">Guida alla migrazione delle fonti</string>
-    <string name="invalid_backup_file_type">File di backup invalido: %1$s
-\nDovrebbe terminare con .proto.gz oppure .json.</string>
     <string name="pref_category_nsfw_content">Fonti NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Mostra nelle liste delle fonti e delle estensioni</string>
     <string name="myanimelist_relogin">Per favore accedi di nuovo a MAL</string>
@@ -625,7 +622,7 @@
     <string name="pref_dns_over_https">DNS su HTTPS</string>
     <string name="pref_show_navigation_mode">Mostra schema di navigazione</string>
     <string name="pref_show_navigation_mode_summary">Mostra zone di tocco quando il lettore viene aperto</string>
-    <string name="action_show_errors">Mostra dettagli completi degli errori</string>
+    <string name="action_show_errors">Tocca per vedere i dettagli dell\'errore</string>
     <string name="update_check_eol">Questa versione di Android non è più supportata</string>
     <string name="clipboard_copy_error">Impossibile copiare negli appunti</string>
     <string name="rotation_type">Orientamento</string>
@@ -691,7 +688,6 @@
     <string name="theme_greenapple">Mela Verde</string>
     <string name="theme_monet">Dinamico</string>
     <string name="pref_app_theme">Tema applicazione</string>
-    <string name="action_sort_next_updated">Prossimo aggiornamento previsto</string>
     <string name="confirm_lock_change">Autenticarsi per confermare i cambiamenti</string>
     <string name="label_default">Predefinita</string>
     <string name="label_background_activity">Attività in secondo piano</string>
@@ -728,4 +724,10 @@
     <string name="pref_auto_clear_chapter_cache">Cancella la cache capitoli alla chiusura dell\'app</string>
     <string name="clear_database_source_item_count">%1$d manga non presenti in libreria nel database</string>
     <string name="database_clean">Database pulito</string>
+    <string name="extension_api_error">Impossibile ottenere l\'elenco estensioni</string>
+    <string name="privacy_policy">Politica sulla privacy</string>
+    <string name="pref_update_only_completely_read">Serie completamente lette</string>
+    <string name="pref_library_update_manga_restriction">Restrizioni agli aggiornamenti della libreria</string>
+    <string name="only_update_restrictions">Aggiorna solo: %s</string>
+    <string name="library_errors_help">Per un aiuto su come risolvere gli errori di aggiornamento della libreria vedi %1$s</string>
 </resources>

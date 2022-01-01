@@ -320,7 +320,6 @@
     <string name="filter_mode_lighten">Väitävä / Vaalentava</string>
     <string name="filter_mode_darken">Polttava / Tummentava</string>
     <string name="label_help">Apu</string>
-    <string name="pref_library_update_prioritization">Päivitys järjestys</string>
     <string name="no_results_found">Ei tuloksia</string>
     <string name="migration_selection_prompt">Valitse lähde josta vaihdetaan</string>
     <string name="action_webview_back">Takaisin</string>
@@ -549,8 +548,6 @@
     <string name="spen_next_page">Seuraava sivu</string>
     <string name="spen_previous_page">Edellinen sivu</string>
     <string name="migration_help_guide">Lähteen siirto-opas</string>
-    <string name="invalid_backup_file_type">Virheellinen varmuuskopiotiedosto: %1$s
-\nSen pitäisi päättyä .proto.gz or .json.</string>
     <string name="pref_category_nsfw_content">NSFW (18+) lähteet</string>
     <string name="pref_show_nsfw_source">Näytä lähdeluettelossa</string>
     <string name="file_picker_error">Tiedostonvalitsinsovellusta ei löytynyt</string>
@@ -614,5 +611,4 @@
     <string name="date">Päivämäärä</string>
     <string name="off">Pois päältä</string>
     <string name="on">Päällä</string>
-    <string name="action_sort_next_updated">Seuraava odotettu päivitys</string>
 </resources>

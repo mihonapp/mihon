@@ -160,7 +160,6 @@
     <string name="pref_update_only_non_completed">फक्त चालू असलेल्याच मांगा आधीतणीत करायचे</string>
     <string name="charging">चार्ज होत आहे</string>
     <string name="pref_library_update_restriction">लायब्ररी अद्ययावत प्रतिबंधी</string>
-    <string name="pref_library_update_prioritization">लायब्ररी अद्ययावत क्रम</string>
     <string name="double_tap_anim_speed_0">अनिमेशन नाही</string>
     <string name="zoom_start_center">सेंटर</string>
     <string name="zoom_start_right">उजवी बाजू</string>

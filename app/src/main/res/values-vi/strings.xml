@@ -68,16 +68,16 @@
     <string name="pref_library_columns">Số truyện hiển thị mỗi dòng</string>
     <string name="portrait">Dọc</string>
     <string name="landscape">Ngang</string>
-    <string name="pref_library_update_interval">Lịch cập nhật thư viện</string>
-    <string name="update_never">Thủ công</string>
+    <string name="pref_library_update_interval">Tự động cập nhật</string>
+    <string name="update_never">Tắt</string>
     <string name="update_6hour">Mỗi 6 tiếng</string>
     <string name="update_12hour">Mỗi 12 tiếng</string>
     <string name="update_24hour">Mỗi ngày</string>
     <string name="update_48hour">Mỗi 2 ngày</string>
     <string name="all">Tất cả</string>
-    <string name="pref_library_update_restriction">Hạn chế cập nhật thư viện</string>
+    <string name="pref_library_update_restriction">Những hạn chế cập nhật thiết bị tự động</string>
     <string name="charging">Đang sạc</string>
-    <string name="pref_update_only_non_completed">Chỉ cập nhật truyện đang tiến hành</string>
+    <string name="pref_update_only_non_completed">Bộ truyện đang tiến hành</string>
     <string name="pref_auto_update_manga_sync">Cập nhật tiến triển sau khi đọc</string>
     <string name="pref_start_screen">Màn hình khởi động</string>
     <!-- Reader section -->
@@ -125,10 +125,10 @@
     <string name="custom_dir">Đường dẫn tùy chỉnh</string>
     <string name="disabled">Vô hiệu hóa</string>
     <string name="last_read_chapter">Chương đã đọc gần nhất</string>
-    <string name="second_to_last">Hai chương gần nhất</string>
-    <string name="third_to_last">Ba chương gần nhất</string>
-    <string name="fourth_to_last">Bốn chương gần nhất</string>
-    <string name="fifth_to_last">Năm chương gần nhất</string>
+    <string name="second_to_last">Hai chương đã đọc gần nhất</string>
+    <string name="third_to_last">Ba chương đã đọc gần nhất</string>
+    <string name="fourth_to_last">Bốn chương đã đọc gần nhất</string>
+    <string name="fifth_to_last">Năm chương đã đọc gần nhất</string>
     <string name="pref_download_new">Tải chương mới</string>
     <!-- Sync section -->
     <string name="services">Dịch vụ</string>
@@ -351,7 +351,6 @@
     <string name="filter_mode_overlay">Phủ lên</string>
     <string name="filter_mode_multiply">Nhân</string>
     <string name="label_help">Trợ giúp</string>
-    <string name="pref_library_update_prioritization">Thứ tự ưu tiên cập nhật</string>
     <string name="no_results_found">Không tìm thấy kết quả nào</string>
     <string name="migration_selection_prompt">Chọn 1 nguồn để di chuyển từ</string>
     <string name="channel_ext_updates">Cập nhật tiện ích mở rộng</string>
@@ -481,8 +480,6 @@
     <string name="manga_from_library">Truyện từ thư viện</string>
     <string name="downloaded_chapters">Các chương đã tải</string>
     <string name="requires_app_restart">Yêu cầu khởi động lại ứng dụng để có hiệu lực</string>
-    <string name="invalid_backup_file_type">Lỗi định dạng : %1$s
-\nPhải kết thúc với đuôi .proto.gz hay .json.</string>
     <string name="edge_nav">Dạng góc cạnh</string>
     <string name="kindlish_nav">Dạng giống Kindle</string>
     <string name="l_nav">Dạng chữ L</string>
@@ -656,7 +653,6 @@
     <string name="theme_monet">Chủ đề: Động</string>
     <string name="pref_app_theme">Chủ đề ứng dụng</string>
     <string name="action_start_downloading_now">Bắt đầu tải xuống ngay</string>
-    <string name="action_sort_next_updated">Cập nhật dự kiến tiếp theo</string>
     <string name="theme_midnightdusk">Chủ đề: Hoàng Hôn Giữa Đêm</string>
     <string name="theme_strawberrydaiquiri">Chủ đề: Daiquiri Dâu Tây</string>
     <string name="theme_tako">Chủ đề: Tako</string>
@@ -716,4 +712,9 @@
     <string name="pref_auto_clear_chapter_cache">Xóa bộ nhớ đệm các chương khi tắt ứng dụng</string>
     <string name="clear_database_source_item_count">%1$d truyện ngoài thư viện trong cơ sở dữ liệu</string>
     <string name="database_clean">Dọn cơ sở dữ liệu</string>
+    <string name="extension_api_error">Không tải được danh sách tiện ích mở rộng</string>
+    <string name="privacy_policy">Chính sách quyền riêng tư</string>
+    <string name="pref_library_update_manga_restriction">Những hạn chế về cập nhật thư viện</string>
+    <string name="pref_update_only_completely_read">Bộ truyện được đọc toàn bộ</string>
+    <string name="only_update_restrictions">Chỉ cập nhật: %s</string>
 </resources>

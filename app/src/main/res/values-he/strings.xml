@@ -11,7 +11,7 @@
     <string name="information_webview_outdated">אנא עדכן את אפליקציית WebView לקבלת תאימות טובה יותר</string>
     <string name="information_cloudflare_bypass_failure">עקיפה של Cloudflare נכשלה</string>
     <string name="information_empty_category">אין לך קטגוריות. לחץ על כפתור הפלוס כדי ליצור אחד לארגון הספרייה שלך.</string>
-    <string name="information_empty_library">הספרייה שלך ריקה, הוסף סדרות לספרייה שלך מהספריה.</string>
+    <string name="information_empty_library">הספרייה שלך ריקה</string>
     <string name="information_no_downloads">אין הורדות</string>
     <string name="description_cover">כריכה של מנגה</string>
     <plurals name="update_check_notification_ext_updates">
@@ -168,7 +168,6 @@
     <string name="pref_update_only_non_completed">עדכן רק מאנגה מתמשכת</string>
     <string name="charging">טוען</string>
     <string name="pref_library_update_restriction">מגבלות עדכון הספריה</string>
-    <string name="pref_library_update_prioritization">סדר עדכון הספריה</string>
     <string name="update_weekly">פעם בשבוע</string>
     <string name="update_48hour">פעם ביומיים</string>
     <string name="update_24hour">פעם ביום</string>
@@ -404,7 +403,6 @@
     <string name="theme_system">עקוב אחר המערכת</string>
     <string name="pref_library_update_refresh_metadata_summary">בדוק אם יש כריכה ופרטים חדשים בעת עדכון הספרייה</string>
     <string name="action_sort_count">סה\"כ מנגה</string>
-    <string name="action_sort_next_updated">העדכון הצפוי הבא</string>
     <string name="action_search_settings">הגדרות חיפוש</string>
     <string name="action_select_inverse">בחר הפוך</string>
     <string name="action_display_language_badge">שפה</string>
@@ -447,10 +445,14 @@
     <string name="theme_yinyang">יין ויאנג</string>
     <string name="theme_yotsuba">ארבעה עלים</string>
     <string name="pref_category_navigation">ניווט</string>
-    <string name="action_show_errors">הצג שגיאות</string>
+    <string name="action_show_errors">ראה פרטי שגיאה מלאים</string>
     <string name="pref_category_appearance">מראה</string>
     <string name="theme_midnightdusk">דמדומים של חצות</string>
     <string name="pref_side_nav_icon_alignment">יישור סמלי ניווט בצד</string>
     <string name="theme_tako">לכן</string>
     <string name="pref_library_update_refresh_metadata">רענן נתונים באופן אוטומטי</string>
+    <string name="action_filter_tracked">במעקב</string>
+    <string name="action_sort_date_added">תאריך הוספה</string>
+    <string name="action_sort_chapter_fetch_date">תאריך אחזור</string>
+    <string name="theme_monet">דינמי</string>
 </resources>

@@ -68,16 +68,16 @@
     <string name="pref_library_columns">Манга на ред</string>
     <string name="portrait">Портретно</string>
     <string name="landscape">Пейзажно</string>
-    <string name="pref_library_update_interval">Честота на обновяване</string>
-    <string name="update_never">Самостоятелно</string>
+    <string name="pref_library_update_interval">Автоматини ъпдейти</string>
+    <string name="update_never">Изключено</string>
     <string name="update_6hour">На всеки 6 часа</string>
     <string name="update_12hour">На всеки 12 часа</string>
     <string name="update_24hour">Ежедневно</string>
     <string name="update_48hour">През ден</string>
     <string name="all">Всички</string>
-    <string name="pref_library_update_restriction">Ограничения при обновяване</string>
+    <string name="pref_library_update_restriction">Автоматични актуализации на ограниченията на устройството</string>
     <string name="charging">На зарядно устройство</string>
-    <string name="pref_update_only_non_completed">Обновявай само излизаща манга</string>
+    <string name="pref_update_only_non_completed">Излизащи серии</string>
     <string name="pref_auto_update_manga_sync">Обнови прогреса след прочитане</string>
     <string name="pref_start_screen">Начален екран</string>
     <!-- Reader section -->
@@ -121,14 +121,14 @@
     <!-- Downloads section -->
     <string name="pref_download_directory">Директория на изтеглянията</string>
     <string name="pref_remove_after_marked_as_read">След маркиране като прочетено</string>
-    <string name="pref_remove_after_read">Автоматично след прочитане</string>
+    <string name="pref_remove_after_read">След прочитане автоматично изтрийте</string>
     <string name="custom_dir">Персонализирана директория</string>
     <string name="disabled">Изключено</string>
     <string name="last_read_chapter">Последно прочетена глава</string>
-    <string name="second_to_last">Втора последно прочетена глава</string>
-    <string name="third_to_last">Трета последно прочетена глава</string>
-    <string name="fourth_to_last">Четвърта последно прочетена глава</string>
-    <string name="fifth_to_last">Пета последно прочетена глава</string>
+    <string name="second_to_last">Предпоследна прочетена глава</string>
+    <string name="third_to_last">Предпоследна трета прочетена глава</string>
+    <string name="fourth_to_last">Четвърта предпоследна прочетена глава</string>
+    <string name="fifth_to_last">Пета предпоследна прочетена глава</string>
     <string name="pref_download_new">Изтегляй нови глави</string>
     <!-- Sync section -->
     <string name="services">Услуги</string>
@@ -354,7 +354,6 @@
     <string name="filter_mode_lighten">Осветен</string>
     <string name="filter_mode_darken">Затъмнен</string>
     <string name="label_help">Помощ</string>
-    <string name="pref_library_update_prioritization">Ред на обновяване</string>
     <string name="no_results_found">Не бяха намерени резултати</string>
     <string name="migration_selection_prompt">Изберете източник, от който да мигрирате</string>
     <string name="action_webview_back">Назад</string>
@@ -561,8 +560,8 @@
     <string name="action_sort_date_added">Добавено на</string>
     <string name="no_chapters_error">Не са намерени глави</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Има 1 липсваща глава</item>
-        <item quantity="other">Има %d липсващи глави</item>
+        <item quantity="one">Има 1 липсваща глава, източникът липса или е филтриран</item>
+        <item quantity="other">Има %d липсващи глави, източникът липса или е филтриран</item>
     </plurals>
     <string name="pref_category_nsfw_content">NSFW (18+) източници</string>
     <string name="action_desc">Низходящ</string>
@@ -622,7 +621,7 @@
     <string name="action_sort_count">Общ брой манга</string>
     <string name="action_sort_chapter_fetch_date">Дата на получаване</string>
     <string name="action_display_local_badge">Локална манга</string>
-    <string name="pref_hide_threshold">Чувствителност за скриване на менюто при разгръщане</string>
+    <string name="pref_hide_threshold">Чувствителност за скриване на менюто при превъртане</string>
     <string name="pref_highest">Най-висока</string>
     <string name="unread">Непрочетена</string>
     <plurals name="relative_time">
@@ -633,9 +632,8 @@
     <string name="manga_cover">Корица</string>
     <string name="label_warning">Предупреждение</string>
     <string name="confirm_lock_change">Удостоверете, за да потвърдите промяната</string>
-    <string name="action_sort_next_updated">Следваща очаквана актуализация</string>
     <string name="cancel_all_for_series">Премахни всичко от тази серия</string>
-    <string name="action_show_errors">Покажи грешките</string>
+    <string name="action_show_errors">Вижте пълните подробности за грешката</string>
     <string name="pref_app_theme">Тема</string>
     <string name="theme_monet">Динамично</string>
     <string name="theme_greenapple">Зелена ябълка</string>
@@ -667,8 +665,6 @@
     <string name="pref_low">Ниска</string>
     <string name="pref_lowest">Най-ниска</string>
     <string name="pref_remove_exclude_categories">Изключени категории</string>
-    <string name="invalid_backup_file_type">Невалиден тип на файла: %1$s
-\nТрябва да завършва на .proto.gz или .json.</string>
     <string name="pref_category_auto_download">Автоматично изтегляне</string>
     <string name="pref_download_new_categories_details">Манга в изключени категории няма да бъде изтеглена, дори да се намира във включени категории.</string>
     <string name="tracking_guide">Наръчник при проследяване</string>
@@ -690,7 +686,7 @@
     <string name="clear_history_completed">Историята изтрита</string>
     <string name="clear_history_confirmation">Напълно ли сте сигурен\? Всичката ви история ще бъде загубена.</string>
     <string name="migration_help_guide">Наръчник за мигриране между източници</string>
-    <string name="notification_size_warning">Големи обновления може да доведат до повече разход на батерия и забавяне на източниците</string>
+    <string name="notification_size_warning">Предупреждение: големите актуализации вредят на източниците и могат да доведат до по-бавни актуализации, както и до повишено използване на батерията</string>
     <string name="file_picker_error">Не бе намерено приложение за подбор на файлове</string>
     <string name="getting_started_guide">Първи стъпки</string>
     <string name="chapter_settings_updated">Стандартните настройки на главите бяха обновени</string>
@@ -719,5 +715,19 @@
     <string name="error_no_match">Не е намерено съвпадение</string>
     <string name="share_page_info">%1$s: %2$s, страница %3$d</string>
     <string name="update_check_eol">Тази версия на Android повече не се поддържа</string>
-    <string name="pref_tablet_ui_mode">Наложи таблетен интерфейс</string>
+    <string name="pref_tablet_ui_mode">Потребителски интерфейс на таблет</string>
+    <string name="clear_database_source_item_count">%1$d небиблиотечна манга в базата данни</string>
+    <string name="database_clean">Почистване на базата данни</string>
+    <string name="channel_app_updates">Актуализации на приложението</string>
+    <string name="pref_auto_clear_chapter_cache">Изчистване на кеша на главата при затваряне на приложението</string>
+    <string name="privacy_policy">Политика за поверителност</string>
+    <string name="pref_update_only_completely_read">Прочети напълно поредицата</string>
+    <string name="pref_library_update_show_tab_badge">Покажи броя на непрочетените в иконата за ъпдейти</string>
+    <string name="ext_update_all">Обнови всички</string>
+    <string name="pref_library_update_manga_restriction">Ограничения за актуализиране на библиотеката</string>
+    <string name="extension_api_error">Неуспешно получаване на списък с разширения</string>
+    <string name="update_72hour">На всеки 3 дена</string>
+    <string name="connected_to_wifi">Само през Wi-Fi</string>
+    <string name="download_queue_size_warning">Предупреждение: големите масови изтегляния могат да доведат до забавяне на източниците и/или блокиране на Tachiyomi</string>
+    <string name="only_update_restrictions">Актуализирай само: %s</string>
 </resources>

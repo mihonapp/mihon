@@ -320,7 +320,6 @@
     <string name="pref_skip_read_chapters">Treci peste capitolele marcate ca Citit</string>
     <string name="pref_read_with_long_tap">Dialog prin apăsare lunga</string>
     <string name="label_help">Ajutor</string>
-    <string name="pref_library_update_prioritization">Ordinea actualizărilor</string>
     <string name="no_results_found">Nici un rezultat găsit</string>
     <string name="migration_selection_prompt">Selectați o sursă din care să migrați</string>
     <string name="action_webview_back">Înapoi</string>
@@ -561,8 +560,6 @@
     <string name="spen_next_page">Pagina următoare</string>
     <string name="spen_previous_page">Pagina anterioară</string>
     <string name="migration_help_guide">Ghid de migrare a sursei</string>
-    <string name="invalid_backup_file_type">Tip de fișier de restaurare nevalid: %1$s
-\nAr trebui să se termine cu .proto.gz sau .json.</string>
     <string name="pref_category_nsfw_content">Conținut NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Arată în lista surselor</string>
     <string name="file_picker_error">Nicio aplicație de ales fișiere nu a fost găsite</string>

@@ -5,7 +5,7 @@
     <string name="label_extension_info">ఎక్సటెంషన్ల గురించి సమాచారం</string>
     <string name="label_extensions">ఎక్సటెంషన్లు</string>
     <string name="label_migration">వలస</string>
-    <string name="label_backup">బ్యాకప్</string>
+    <string name="label_backup">బ్యాకప్ మరియు పునరుద్ధరించండి</string>
     <string name="label_sources">మూలాలు</string>
     <string name="label_recent_manga">చరిత్ర</string>
     <string name="label_recent_updates">అప్డేట్లు</string>
@@ -24,8 +24,8 @@
     <string name="action_update_library">లైబ్రరీని నవీకరించు</string>
     <string name="action_update">నవీకరించు</string>
     <string name="action_delete">తొలగించు</string>
-    <string name="action_remove_bookmark">అన్ బుక్ మార్క్</string>
-    <string name="action_bookmark">బుక్ మార్క్</string>
+    <string name="action_remove_bookmark">అధ్యాయాన్నీ అన్ బుక్ మార్క్ చేయి</string>
+    <string name="action_bookmark">అధ్యాయాని బుక్ మార్క్ చేయండి</string>
     <string name="action_download_unread">చదవని అధ్యాయాలను డౌన్లోడ్ చేసుకోండి</string>
     <string name="action_download">డౌన్లోడ్</string>
     <string name="action_mark_previous_as_read">దీని ముందున్నవాటిని చదివినట్లు గుర్తించండి</string>
@@ -36,11 +36,11 @@
     <string name="action_global_search">ప్రపంచ శోధన</string>
     <string name="action_search_settings">వెతికే సెట్టింగ్లు</string>
     <string name="action_search">వెతకండి</string>
-    <string name="action_sort_date_added">యాడ్ చేసిన తేదీ</string>
+    <string name="action_sort_date_added">తేదీ జోడించబడింది</string>
     <string name="action_sort_latest_chapter">తాజా అధ్యాయం</string>
     <string name="action_sort_last_checked">చివరిగా తనిఖీ చేయబడింది</string>
     <string name="action_sort_last_read">చివరిగా చదివింది</string>
-    <string name="action_sort_total">అన్ని అధ్యాయాలు</string>
+    <string name="action_sort_total">మొత్తం అధ్యాయాలు</string>
     <string name="action_sort_alpha">అక్షరక్రమంలో</string>
     <string name="action_filter_empty">ఫిల్టర్ తొలగించండి</string>
     <string name="action_filter_unread">చదవనిది</string>
@@ -69,6 +69,10 @@
     <string name="action_view_chapters">అధ్యాయాన్ని చూపీయు</string>
     <string name="action_edit_cover">కవర్ ని ఎడిట్ చేయు</string>
     <string name="action_move_category">కేటగోరీలను సెట్ చేయు</string>
-    <string name="action_sort_chapter_fetch_date">పొందిన తేదీ</string>
-    <string name="action_filter_tracked">ట్రాకింగ్</string>
+    <string name="action_sort_chapter_fetch_date">తేదీ పొందబడింది</string>
+    <string name="action_filter_tracked">ట్రాక్ చేయబడింది</string>
+    <string name="label_default">డిఫాల్ట్</string>
+    <string name="action_sort_count">మొత్తం మాంగా</string>
+    <string name="label_warning">హెచ్చరిక</string>
+    <string name="confirm_lock_change">మార్పును నిర్ధారించడానికి ప్రమాణీకరించండి</string>
 </resources>

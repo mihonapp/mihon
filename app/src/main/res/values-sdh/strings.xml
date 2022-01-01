@@ -48,7 +48,6 @@
     <string name="action_sort_latest_chapter">نوێترین چاپتەر</string>
     <string name="action_sort_chapter_fetch_date">بەرواری دەرچوون</string>
     <string name="action_global_search">گەڕانی گشتگیر</string>
-    <string name="action_sort_next_updated">نوێکاری چاوەڕوانکراوی داهاتوو</string>
     <string name="action_sort_date_added">بەرواری بەردەست بوون</string>
     <string name="action_search">گەڕان</string>
     <string name="action_download">داونلۆد</string>

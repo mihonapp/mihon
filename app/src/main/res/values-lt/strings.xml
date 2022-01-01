@@ -39,7 +39,6 @@
     <string name="restrictions">Ribojimai: %s</string>
     <string name="charging">Kraunasi</string>
     <string name="pref_library_update_restriction">Naujinimo ribojimai</string>
-    <string name="pref_library_update_prioritization">Naujinimo tvarka</string>
     <string name="update_weekly">Kas savaitę</string>
     <string name="update_48hour">Kas 2 dienas</string>
     <string name="update_24hour">Kasdien</string>
@@ -193,7 +192,6 @@
     <string name="action_sort_date_added">Pridėtas</string>
     <string name="action_sort_chapter_fetch_date">Tikrinimo datą</string>
     <string name="action_sort_latest_chapter">Naujausiais skyrius</string>
-    <string name="action_sort_next_updated">Numatomas naujinimas</string>
     <string name="action_sort_last_checked">Paskiausiai žiūrėtas</string>
     <string name="action_sort_last_read">Paskutinis skaitytas</string>
     <string name="action_sort_total">Skyrių skaičius</string>

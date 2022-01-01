@@ -317,7 +317,6 @@
     <string name="filter_mode_multiply">مضاعفة</string>
     <string name="filter_mode_screen">الشاشة</string>
     <string name="label_help">المساعدة</string>
-    <string name="pref_library_update_prioritization">ترتيب تحديث المكتبة</string>
     <string name="pref_color_filter_mode">مُرشح الألوان ”وضع الألوان الممزوجة“</string>
     <string name="filter_mode_lighten">مراوغة / تفتيح</string>
     <string name="filter_mode_darken">حرق / تغميق</string>
@@ -597,8 +596,6 @@
     <string name="spen_next_page">الصفحة التالية</string>
     <string name="spen_previous_page">الصفحة سابقة</string>
     <string name="migration_help_guide">دليل ترحيل المصدر</string>
-    <string name="invalid_backup_file_type">ملف النسخ الاحتياطي غير صالح: %1$s
-\nيجب أن ينتهي ب.proto.gz أو .json.</string>
     <string name="pref_category_nsfw_content">محتوى +18</string>
     <string name="pref_show_nsfw_source">اعرض في قوائم المصادر والامتدادات</string>
     <string name="myanimelist_relogin">رجاء سجل دخولك في MAL مجدداً</string>
@@ -682,7 +679,6 @@
     <string name="theme_midnightdusk">منتصف الليل</string>
     <string name="theme_greenapple">أخضر</string>
     <string name="pref_app_theme">مظهر التطبيق</string>
-    <string name="action_sort_next_updated">التحديث القادم المتوقع</string>
     <string name="pref_lowest">أَدان</string>
     <string name="pref_low">أدنى</string>
     <string name="pref_high">أعلى</string>

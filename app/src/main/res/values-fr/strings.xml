@@ -67,16 +67,16 @@
     <string name="pref_library_columns">Affichage par liste</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Paysage</string>
-    <string name="pref_library_update_interval">Fréquence de mise à jour de la bibliothèque</string>
-    <string name="update_never">Manuelle</string>
+    <string name="pref_library_update_interval">Mises à jour automatiques</string>
+    <string name="update_never">Désactivé</string>
     <string name="update_6hour">Toutes les 6 heures</string>
     <string name="update_12hour">Toutes les 12 heures</string>
     <string name="update_24hour">Tous les jours</string>
     <string name="update_48hour">Tous les 2 jours</string>
     <string name="all">Tout</string>
-    <string name="pref_library_update_restriction">Restrictions de mise à jour de la bibliothèque</string>
+    <string name="pref_library_update_restriction">Mises à jour automatiques des restrictions des dispositifs</string>
     <string name="charging">En charge</string>
-    <string name="pref_update_only_non_completed">Mettre à jour uniquement les séries en cours</string>
+    <string name="pref_update_only_non_completed">Séries en cours</string>
     <string name="pref_auto_update_manga_sync">Synchroniser la progression après lecture</string>
     <string name="pref_start_screen">Page d\'accueil</string>
     <!-- Reader section -->
@@ -119,12 +119,12 @@
     <string name="color_filter_a_value">O</string>
     <!-- Downloads section -->
     <string name="pref_download_directory">Répertoire de téléchargement</string>
-    <string name="pref_remove_after_read">Automatiquement après la lecture</string>
+    <string name="pref_remove_after_read">Après la lecture, supprimer automatiquement</string>
     <string name="disabled">Désactivé</string>
     <string name="last_read_chapter">Dernier chapitre lu</string>
     <string name="second_to_last">Avant-dernier chapitre lu</string>
-    <string name="third_to_last">Troisième chapitre avant la fin</string>
-    <string name="fourth_to_last">Quatrième chapitre avant la fin</string>
+    <string name="third_to_last">Troisième chapitre avant le denier lu</string>
+    <string name="fourth_to_last">Quatrième chapitre avant le dernier lu</string>
     <string name="pref_download_new">Télécharger les nouveaux chapitres</string>
     <!-- Sync section -->
     <string name="services">Services</string>
@@ -239,7 +239,7 @@
     <string name="custom_dir">Répertoire personnalisé</string>
     <string name="download_10">10 prochains chapitres</string>
     <string name="download_notifier_unknown_error">Impossible de télécharger le chapitre en raison d\'une erreur inattendue</string>
-    <string name="fifth_to_last">Cinquième chapitre avant la fin</string>
+    <string name="fifth_to_last">Cinquième chapitre avant le dernier lu</string>
     <string name="login_success">Connecté</string>
     <string name="pref_clear_chapter_cache">Effacer le cache des chapitres</string>
     <string name="pref_remove_after_marked_as_read">Après avoir été marqué comme lu</string>
@@ -352,7 +352,6 @@
     <string name="pref_color_filter_mode">Mode de filtrage via couleurs mélangées</string>
     <string name="filter_mode_overlay">Incrustation</string>
     <string name="label_help">Aide</string>
-    <string name="pref_library_update_prioritization">Ordre de mise à jour de la bibliothèque</string>
     <string name="filter_mode_lighten">Éclaircir</string>
     <string name="filter_mode_darken">Obscurcir</string>
     <string name="no_results_found">Aucun résultat trouvé</string>
@@ -584,8 +583,6 @@
     <string name="spen_previous_page">Page précédente</string>
     <string name="migration_help_guide">Guide de migration des sources</string>
     <string name="pref_category_nsfw_content">Contenu +18</string>
-    <string name="invalid_backup_file_type">Fichier de sauvegarde invalide : %1$s
-\nIl devrait se terminer par .proto.gz ou .json.</string>
     <string name="myanimelist_relogin">Veuillez vous reconnecter à MAL</string>
     <string name="file_picker_error">L’application de sélection de fichier est introuvable</string>
     <string name="pref_show_nsfw_source">Afficher dans les listes de sources et d\'extensions</string>
@@ -678,7 +675,6 @@
     <string name="theme_greenapple">Pomme verte</string>
     <string name="theme_monet">Dynamique</string>
     <string name="pref_app_theme">Thème de l\'appli</string>
-    <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
     <string name="about_dont_kill_my_app">Certains fabricants ont mis en place des restrictions supplémentaires sur les applications qui tuent les services d\'arrière-plan. Ce site Web contient plus d\'informations sur la manière de résoudre ce problème.</string>
     <string name="label_background_activity">Activité en arrière-plan</string>
     <string name="pref_lowest">La plus basse</string>
@@ -729,4 +725,9 @@
     <string name="pref_auto_clear_chapter_cache">Effacer le cache du chapitre à la fermeture de l\'application</string>
     <string name="clear_database_source_item_count">%1$d manga hors bibliothèque dans la base de données</string>
     <string name="database_clean">Base de données effacée</string>
+    <string name="extension_api_error">Échec de la récupération de la liste des extensions</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="pref_library_update_manga_restriction">Restrictions de mise à jour de la bibliothèque</string>
+    <string name="pref_update_only_completely_read">Séries entièrement lues</string>
+    <string name="only_update_restrictions">Mise à jour uniquement de : %s</string>
 </resources>

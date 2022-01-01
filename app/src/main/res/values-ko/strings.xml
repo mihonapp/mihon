@@ -361,8 +361,6 @@
     <string name="restoring_backup_canceled">복원 취소</string>
     <string name="creating_backup_error">백업 실패</string>
     <string name="restore_duration">%02d 분,%02d초</string>
-    <string name="invalid_backup_file_type">부적합한 백업 파일 타입: %1$s
-\n백업파일은 .photo .gz 또는 .json으로 끝나야 합니다.</string>
     <string name="invalid_backup_file">부적합한 백업 파일</string>
     <string name="pref_enable_automatic_extension_updates">확장 프로그램 업데이트 확인</string>
     <string name="pref_category_auto_download">자동 다운로드</string>

@@ -135,7 +135,6 @@
     <string name="ext_installed">Telepítve</string>
     <string name="action_open_in_web_view">Megnyitás WebView-ben</string>
     <string name="label_help">Segítség</string>
-    <string name="pref_library_update_prioritization">Frissítési sorrend</string>
     <string name="label_downloaded_only">Csak letöltött</string>
     <string name="label_more">Több</string>
     <string name="label_sources">Források</string>
@@ -178,7 +177,7 @@
     <string name="update_check_notification_update_available">Új verzió érhető el!</string>
     <string name="update_check_notification_download_error">Letöltési hiba</string>
     <string name="update_check_notification_download_complete">Letöltés kész</string>
-    <string name="email">E-mail cím</string>
+    <string name="email">E-mail-cím</string>
     <string name="pref_category_nsfw_content">NSFW (18+) források</string>
     <string name="pref_hide_bottom_bar_on_scroll">Az alsó sáv elrejtése görgetéskor</string>
     <string name="show_chapter_number">Fejezetszám</string>
@@ -401,7 +400,6 @@
     <string name="pref_category_appearance">Kinézet</string>
     <string name="action_start_downloading_now">Letöltés elkezdése most</string>
     <string name="action_display_local_badge">Helyi jelvények</string>
-    <string name="action_sort_next_updated">Következő várt frissülés</string>
     <string name="action_filter_tracked">Követve</string>
     <string name="confirm_lock_change">Hitelesítsd magad a változtatás elfogadásához</string>
     <string name="label_default">Alapértelmezett</string>

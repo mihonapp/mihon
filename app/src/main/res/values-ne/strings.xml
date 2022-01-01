@@ -132,7 +132,6 @@
     <string name="restrictions">प्रतिबन्धहरु: %s</string>
     <string name="charging">चार्ज हुँदा</string>
     <string name="pref_library_update_restriction">अपडेटको प्रतिबन्धहरु</string>
-    <string name="pref_library_update_prioritization">अपडेटको अनुक्रम</string>
     <string name="update_weekly">साप्ताहिक</string>
     <string name="update_48hour">प्रत्येक २ दिन</string>
     <string name="update_24hour">सँधै</string>
@@ -196,7 +195,6 @@
     <string name="cancel_all_for_series">यो श्रृंखला को सबै रद्द गर्नुहोस्</string>
     <string name="action_display_local_badge">स्थानीय माङ्गा</string>
     <string name="action_open_in_web_view">वेब-भ्यूमा खोल्नु होस</string>
-    <string name="action_sort_next_updated">अर्को अपेक्षित अपडेट</string>
     <string name="confirm_lock_change">परिवर्तन पुष्टि गर्न प्रमाणित गर्नुहोस्</string>
     <string name="label_default">पूर्वनिर्धारित</string>
     <string name="pref_tablet_ui_mode">ट्याब्लेट UI राख्नुहोस</string>

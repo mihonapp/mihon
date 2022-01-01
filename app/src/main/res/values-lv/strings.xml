@@ -200,7 +200,5 @@
     <string name="backup_restore_content_full">Dati no dublējuma faila būs atjaunoti.
 \n
 \nJums būs nepieciešams instalēt jebkādus trūkstošos paplašinājumus un pēc tam pieslēgties izsekošanas pakalpojumiem.</string>
-    <string name="invalid_backup_file_type">"Nederīgs dublējuma faila tips: %1$s
-\nTam vajadzētu beigties ar  .proto.gz vai .json."</string>
     <string name="unread">Neizlasītie</string>
 </resources>

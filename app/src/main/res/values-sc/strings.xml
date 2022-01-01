@@ -320,7 +320,6 @@
     <string name="filter_mode_lighten">Istransi / Acrari</string>
     <string name="filter_mode_darken">Brùsia / Iscuri</string>
     <string name="label_help">Agiudu</string>
-    <string name="pref_library_update_prioritization">Òrdine de agiornamentu</string>
     <string name="no_results_found">Perunu resultadu agadadu</string>
     <string name="migration_selection_prompt">Ischerta una mitza dae sa cale tramudare</string>
     <string name="action_webview_back">In segus</string>
@@ -549,8 +548,6 @@
     <string name="spen_next_page">Pàgina imbeniente</string>
     <string name="spen_previous_page">Pàgina anteposta</string>
     <string name="migration_help_guide">Ghia a su tramudòngiu de sas mitzas</string>
-    <string name="invalid_backup_file_type">Casta de documentu de còpia de seguresa non vàlidu: %1$s
-\nDiat dèpere acabbare cun .proto.gz o .json.</string>
     <string name="pref_category_nsfw_content">Cuntenutu NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Ammustra in sa lista de sas mitzas e de sas estensiones</string>
     <string name="file_picker_error">Peruna aplicatzione pro ischertare documentos agatada</string>
@@ -644,7 +641,6 @@
     <string name="theme_greenapple">Mela birde</string>
     <string name="theme_monet">Dinàmicu</string>
     <string name="pref_app_theme">Tema de s\'aplicatzione</string>
-    <string name="action_sort_next_updated">Agiornamentu isetadu imbeniente</string>
     <string name="about_dont_kill_my_app">Unos cantos produtores tenent restritziones de s\'aplicatzione chi istudant sos servìtzios in s\'isfundu. Custu situ web tenet informatziones in prus in subra de comente acontzare su problema.</string>
     <string name="pref_lowest">Bassa meda</string>
     <string name="pref_low">Bassa</string>
@@ -670,7 +666,7 @@
     <string name="action_track">Arrasta</string>
     <string name="pref_category_navigation">Navigatzione</string>
     <string name="getting_started_guide">Ghia pro incumintzare</string>
-    <string name="pref_tablet_ui_mode">Fortza sa modalidade pro tauleddas</string>
+    <string name="pref_tablet_ui_mode">Modalidade pro tauleddas</string>
     <string name="help_translate">Agiuda a bortare</string>
     <string name="pref_remove_exclude_categories">Categorias esclùdidas</string>
     <string name="ext_app_info">Informatziones de s\'aplicatzione</string>
@@ -692,4 +688,9 @@
     <string name="pref_library_update_show_tab_badge">Ammustra su nùmeru de capìtulos non lèghidos in s\'icona de sos agiornamentos</string>
     <string name="ext_update_all">Agiorna totu</string>
     <string name="channel_app_updates">Agiornamentos de s\'aplicatzione</string>
+    <string name="clear_database_source_item_count">%1$d manga chi non sunt in sa biblioteca in sa base de datos</string>
+    <string name="extension_api_error">Recùperu de sa lista de sas estensiones fallidu</string>
+    <string name="pref_auto_clear_chapter_cache">Isbòida sa memòria temporànea de sos capìtulos cando serras s\'aplicatzione</string>
+    <string name="database_clean">Base de datos neta</string>
+    <string name="privacy_policy">Polìtica de riservadesa</string>
 </resources>

@@ -112,7 +112,6 @@
     <string name="update_24hour">ყოველდღე</string>
     <string name="update_48hour">ყოველ 2 დღეში ერთხელ</string>
     <string name="update_weekly">ყოველ კვირა</string>
-    <string name="pref_library_update_prioritization">ბიბლიოთეკის განახლების რიგითობა</string>
     <string name="pref_library_update_restriction">ბიბლიოთეკის განახლების შეზღუდვები</string>
     <string name="charging">იტენება</string>
     <string name="pref_update_only_non_completed">მხოლოდ განაახლე მიმდინარე მანგა</string>

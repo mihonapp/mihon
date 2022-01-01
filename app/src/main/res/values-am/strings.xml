@@ -33,7 +33,6 @@
     <string name="pref_update_only_non_completed">ቀጣይ ማንጋን ብቻ ያዘምኑ</string>
     <string name="charging">ኃይል በመሙላት ላይ</string>
     <string name="pref_library_update_restriction">የቤተ-መጽሐፍት ዝመና ገደቦች</string>
-    <string name="pref_library_update_prioritization">የቤተ-መጽሐፍት ዝመና ትዕዛዝ</string>
     <string name="update_weekly">ሳምንታዊ</string>
     <string name="update_48hour">በየ 2 ቀኑ</string>
     <string name="update_24hour">በየቀኑ</string>

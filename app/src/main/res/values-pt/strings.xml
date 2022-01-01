@@ -350,7 +350,6 @@
     <string name="pref_color_filter_mode">Modo de mistura do filtro de cores</string>
     <string name="filter_mode_lighten">Sub-exposição / Clarear</string>
     <string name="label_help">Ajuda</string>
-    <string name="pref_library_update_prioritization">Ordem de atualização</string>
     <string name="no_results_found">Nenhum resultado encontrado</string>
     <string name="migration_selection_prompt">Selecione uma fonte da qual migrar</string>
     <string name="action_webview_back">Voltar</string>
@@ -580,8 +579,6 @@
     <string name="spen_next_page">Página seguinte</string>
     <string name="spen_previous_page">Página anterior</string>
     <string name="migration_help_guide">Guia de migração de fonte</string>
-    <string name="invalid_backup_file_type">Tipo de ficheiro da cópia de segurança inválido: %1$s
-\nDeve terminar com .proto.gz ou .json.</string>
     <string name="file_picker_error">Não foi encontrada app de selecção de ficheiros</string>
     <string name="myanimelist_relogin">Por favor inicie sessão no MAL novamente</string>
     <string name="pref_show_nsfw_source">Mostrar na lista de fontes e extensões</string>
@@ -647,7 +644,6 @@
     <string name="pref_app_theme">Tema da aplicação</string>
     <string name="action_start_downloading_now">Começar a transferir agora</string>
     <string name="cancel_all_for_series">Cancelar tudo para esta série</string>
-    <string name="action_sort_next_updated">Próxima atualização esperada</string>
     <string name="unread">Não Lido</string>
     <string name="error_sharing_cover">Erro ao partilhar capa</string>
     <string name="error_saving_cover">Erro ao guardar capa</string>

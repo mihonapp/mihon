@@ -202,7 +202,6 @@
     <string name="obsolete_extension_message">Ĉi tiu aldonaĵo ne estas plu disponebla.</string>
     <string name="all_lang">Ĉiuj</string>
     <string name="all">Ĉio</string>
-    <string name="pref_library_update_prioritization">Ĝisdatiga ordigo</string>
     <string name="update_48hour">Po unu fojon 2 tage</string>
     <string name="update_12hour">Po unu fojon 12 hore</string>
     <string name="update_6hour">Po unu fojon 6 hore</string>
@@ -484,8 +483,6 @@
     <string name="restoring_backup">Restaŭras savkopion</string>
     <string name="restore_completed">Restaŭrado kompletita</string>
     <string name="invalid_backup_file_missing_manga">Savkopio enhavas neniun mangaon.</string>
-    <string name="invalid_backup_file_type">Nevalida savkopia dosierspeco: %1$s
-\nĜi devas fini kun .proto.gz aŭ .json.</string>
     <string name="pref_backup_slots">Maksimume savkopioj</string>
     <string name="rotation_force_landscape">Deviga horizontala</string>
     <string name="rotation_force_portrait">Deviga vertikala</string>
@@ -507,7 +504,6 @@
     <string name="theme_midnightdusk">Meznokta Vesperiĝo</string>
     <string name="loading">Ŝargas…</string>
     <string name="cancel_all_for_series">Nuligi ĉiujn por ĉi tiu serio</string>
-    <string name="action_sort_next_updated">Sekva atendata ĝisdatigo</string>
     <string name="confirm_exit">Premi «reen» denove por eliri</string>
     <string name="confirm_lock_change">Aŭtentigi por konfirmi ŝanĝon</string>
     <string name="restoring_backup_canceled">Rezignita restaŭro</string>

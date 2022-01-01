@@ -66,7 +66,6 @@
     <string name="pref_update_only_non_completed">Бүтэ илик маанганы эрэ, саҥарт</string>
     <string name="charging">Иитиллэр</string>
     <string name="pref_library_update_restriction">Саҥардыы хааччахтааһына</string>
-    <string name="pref_library_update_prioritization">Саҥардыы бэрээдэгэ</string>
     <string name="update_weekly">Нэдиэлэ аайы</string>
     <string name="update_48hour">Икки күн аайы</string>
     <string name="update_24hour">Күн аайы</string>
@@ -481,8 +480,6 @@
     <string name="file_picker_error">Билэни талар эбилик булуллубата</string>
     <string name="migration_help_guide">Төрүттэр көһөрүүтүн туһунан салалта</string>
     <string name="myanimelist_relogin">Бука диэн MALга эмиэ киир</string>
-    <string name="invalid_backup_file_type">Хаппаас куопуйа сыыһа ааттах: %1$s
-\n.proto.gz or .json. диэн бүтүөхтээх</string>
     <string name="pref_viewer_nav">Нэбигээссийэ бэлиэтэ</string>
     <string name="edge_nav">Кытыы</string>
     <string name="kindlish_nav">Kindle курдук</string>

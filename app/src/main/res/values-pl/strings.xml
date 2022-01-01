@@ -319,7 +319,6 @@
     <string name="filter_mode_lighten">Rozjaśnienie</string>
     <string name="filter_mode_darken">Ściemnienie</string>
     <string name="label_help">Pomoc</string>
-    <string name="pref_library_update_prioritization">Kolejność aktualizacji</string>
     <string name="action_webview_back">Wstecz</string>
     <string name="filter_mode_screen">Ekran</string>
     <string name="no_results_found">Nie znaleziono wyników</string>
@@ -572,8 +571,6 @@
     <string name="ext_nsfw_warning">Może zawierać treści NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Nie zapobiega to nieoficjalnym lub potencjalnie niepoprawnie oflagowanym rozszerzeniom przed pokazywaniem zwartości NSFW(18+) w aplikacji.</string>
-    <string name="invalid_backup_file_type">Nieprawidłowe rozszczerzenie pliku kopii zapasowej: %1$s
-\nPowinno być .proto.gz albo .json.</string>
     <string name="pref_category_nsfw_content">NFSW Materiały 18+</string>
     <string name="file_picker_error">Nie znaleziono aplikacji do przeglądania plików</string>
     <string name="myanimelist_relogin">Wymagane ponowne zalogowanie do MAL</string>
@@ -658,7 +655,6 @@
     <string name="theme_greenapple">Zielone jabłko</string>
     <string name="theme_monet">Dynamiczny</string>
     <string name="pref_app_theme">Motyw aplikacji</string>
-    <string name="action_sort_next_updated">Następna spodziewana aktualizacja</string>
     <string name="restore_miui_warning">Funkcje kopii zapasowej mogą nie działać, jeśli optymalizacja nakładki MIUI jest wyłączona.</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin i Yang</string>
@@ -717,4 +713,6 @@
     <string name="ext_update_all">Zaktualizuj wszystko</string>
     <string name="ext_installer_legacy">Przestarzały</string>
     <string name="pref_relative_format">Relatywne znaczniki czasowe</string>
+    <string name="pref_auto_clear_chapter_cache">Wyczyść cache rozdziałów przy wychodzeniu z aplikacji</string>
+    <string name="extension_api_error">Nie można uzyskać listy rozszerzeń</string>
 </resources>

@@ -317,7 +317,6 @@
     <string name="filter_mode_multiply">Vermenigvuldigen</string>
     <string name="filter_mode_screen">Bleken</string>
     <string name="label_help">Help</string>
-    <string name="pref_library_update_prioritization">Updatevolgorde</string>
     <string name="pref_color_filter_mode">Mengmodus kleurfilter</string>
     <string name="filter_mode_lighten">Tegenhouden / Lichter</string>
     <string name="filter_mode_darken">Doordrukken / Donkerder</string>
@@ -549,8 +548,6 @@
     <string name="spen_next_page">Volgende pagina</string>
     <string name="spen_previous_page">Vorige pagina</string>
     <string name="migration_help_guide">Bronmigratiegids</string>
-    <string name="invalid_backup_file_type">Ongeldig type back-upbestand: %1$s
-\nDe bestandsnaam moet eindigen op .proto.gz of .json.</string>
     <string name="pref_category_nsfw_content">NSFW-bronnen (18+)</string>
     <string name="file_picker_error">Geen bestandskiezer-app gevonden</string>
     <string name="myanimelist_relogin">Log alstublieft opnieuw in op MAL</string>
@@ -630,7 +627,6 @@
     <string name="action_display_local_badge">Lokale manga</string>
     <string name="information_empty_category_dialog">Er zijn nog geen categorieën.</string>
     <string name="action_start_downloading_now">Begin nu met downloaden</string>
-    <string name="action_sort_next_updated">Volgende verwachte update</string>
     <string name="notification_updating">Bibliotheek updaten... (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Sommige fabrikanten hebben extra beperkingen op apps die achtergronddiensten uitschakelen. Informatie over hoe je dit kan oplossen kan je vinden op de deze website.</string>
     <string name="restore_miui_warning">Backup/herstellen werkt waarschijnlijk niet goed als de MIUI Optimalisatie is uitgeschakeld.</string>

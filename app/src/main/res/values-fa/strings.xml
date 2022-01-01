@@ -305,7 +305,6 @@
     <string name="pref_update_only_non_completed">فقط مانگاهایی آپدیت شوند که تمام نشده</string>
     <string name="charging">درحال شارژ</string>
     <string name="pref_library_update_restriction">محدودیت‌های آپدیت کتابخانه</string>
-    <string name="pref_library_update_prioritization">ترتیب آپدیت کتابخانه</string>
     <string name="update_weekly">هفتگی</string>
     <string name="update_48hour">هر ۴۸ ساعت یکبار</string>
     <string name="update_24hour">هر ۲۴ ساعت یکبار</string>
@@ -524,7 +523,6 @@
     <string name="pref_incognito_mode">حالت ناشناس</string>
     <string name="clear_history_confirmation">آیا مطمئن هستید؟ تمام سابقه از دست خواهد رفت.</string>
     <string name="clear_history_completed">سابقه پاک شد</string>
-    <string name="invalid_backup_file_type">فایل پشتیبان نامعتبر: %1$s</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="pref_category_nsfw_content">منابع محتوای جنسی (+18)</string>
     <string name="parental_controls_info">این مانع از این نمی شود که افزونه های غیررسمی یا به طور بالقوه به اشتباه پرچم گذاری شده و روی محتوای بالای 18+ در برنامه ظاهر شوند.</string>
