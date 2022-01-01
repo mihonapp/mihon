@@ -398,6 +398,7 @@
     <string name="pref_category_auto_download">Auto-download</string>
     <string name="pref_download_new">Download new chapters</string>
     <string name="pref_download_new_categories_details">Manga in excluded categories will not be downloaded even if they are also in included categories.</string>
+    <string name="save_chapter_as_cbz">Save as CBZ archive</string>
 
       <!-- Tracking section -->
     <string name="tracking_guide">Tracking guide</string>

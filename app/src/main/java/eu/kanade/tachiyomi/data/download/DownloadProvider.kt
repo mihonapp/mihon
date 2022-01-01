@@ -148,10 +148,14 @@ class DownloadProvider(private val context: Context) {
      * @param chapter the chapter to query.
      */
     fun getValidChapterDirNames(chapter: Chapter): List<String> {
+        val chapterName = getChapterDirName(chapter)
         return listOf(
-            getChapterDirName(chapter),
+            // Folder of images
+            chapterName,
 
-            // TODO: remove this
+            // Archived chapters
+            "$chapterName.cbz",
+
             // Legacy chapter directory name used in v0.9.2 and before
             DiskUtil.buildValidFilename(chapter.name)
         )

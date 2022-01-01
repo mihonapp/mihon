@@ -68,6 +68,10 @@ class SettingsDownloadController : SettingsController() {
             titleRes = R.string.connected_to_wifi
             defaultValue = true
         }
+        switchPreference {
+            bindTo(preferences.saveChaptersAsCBZ())
+            titleRes = R.string.save_chapter_as_cbz
+        }
         preferenceCategory {
             titleRes = R.string.pref_category_delete_chapters
 

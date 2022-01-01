@@ -39,7 +39,7 @@ class DownloadManager(
     /**
      * Downloads provider, used to retrieve the folders where the chapters are or should be stored.
      */
-    private val provider = DownloadProvider(context)
+    val provider = DownloadProvider(context)
 
     /**
      * Cache of downloaded chapters.
