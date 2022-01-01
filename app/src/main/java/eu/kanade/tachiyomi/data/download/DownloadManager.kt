@@ -327,15 +327,19 @@ class DownloadManager(
      */
     fun renameChapter(source: Source, manga: Manga, oldChapter: Chapter, newChapter: Chapter) {
         val oldNames = provider.getValidChapterDirNames(oldChapter)
-        val newName = provider.getChapterDirName(newChapter)
         val mangaDir = provider.getMangaDir(manga, source)
 
         // Assume there's only 1 version of the chapter name formats present
-        val oldFolder = oldNames.asSequence()
+        val oldDownload = oldNames.asSequence()
             .mapNotNull { mangaDir.findFile(it) }
-            .firstOrNull()
+            .firstOrNull() ?: return
 
-        if (oldFolder?.renameTo(newName) == true) {
+        var newName = provider.getChapterDirName(newChapter)
+        if (oldDownload.isFile && oldDownload.name?.endsWith(".cbz") == true) {
+            newName += ".cbz"
+        }
+
+        if (oldDownload.renameTo(newName)) {
             cache.removeChapter(oldChapter, manga)
             cache.addChapter(newName, mangaDir, manga)
         } else {
