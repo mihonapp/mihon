@@ -12,6 +12,7 @@
 -keep,allowoptimization class com.google.gson.** { public protected *; }
 -keep,allowoptimization class com.github.salomonbrys.kotson.** { public protected *; }
 -keep,allowoptimization class com.squareup.duktape.** { public protected *; }
+-keep,allowoptimization class app.cash.quickjs.** { public protected *; }
 -keep,allowoptimization class uy.kohesive.injekt.** { public protected *; }
 
 ##---------------Begin: proguard configuration for RxJava 1.x  ----------

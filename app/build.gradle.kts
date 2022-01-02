@@ -189,6 +189,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinSerializationVersion")
 
     // JavaScript engine
+    implementation("app.cash.quickjs:quickjs-android:0.9.2")
+    // TODO: remove Duktape once all extensions are using QuickJS
     implementation("com.squareup.duktape:duktape-android:1.4.0")
 
     // HTML parser
