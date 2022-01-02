@@ -77,9 +77,12 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
             resolveWithWebView(originalRequest, oldCookie)
 
             return chain.proceed(originalRequest)
+        }
+        // Because OkHttp's enqueue only handles IOExceptions, wrap the exception so that
+        // we don't crash the entire app
+        catch (e: CloudflareBypassException) {
+            throw IOException(context.getString(R.string.information_cloudflare_bypass_failure))
         } catch (e: Exception) {
-            // Because OkHttp's enqueue only handles IOExceptions, wrap the exception so that
-            // we don't crash the entire app
             throw IOException(e)
         }
     }
@@ -171,7 +174,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
                 context.toast(R.string.information_webview_outdated, Toast.LENGTH_LONG)
             }
 
-            throw Exception(context.getString(R.string.information_cloudflare_bypass_failure))
+            throw CloudflareBypassException()
         }
     }
 
@@ -181,3 +184,5 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
         private val COOKIE_NAMES = listOf("cf_clearance")
     }
 }
+
+private class CloudflareBypassException : Exception()
