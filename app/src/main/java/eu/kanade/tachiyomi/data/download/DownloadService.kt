@@ -176,13 +176,15 @@ class DownloadService : Service() {
      * Listens to downloader status. Enables or disables the wake lock depending on the status.
      */
     private fun listenDownloaderState() {
-        subscriptions += downloadManager.runningRelay.subscribe { running ->
-            if (running) {
-                wakeLock.acquireIfNeeded()
-            } else {
-                wakeLock.releaseIfNeeded()
+        subscriptions += downloadManager.runningRelay
+            .doOnError { /* Swallow wakelock error */ }
+            .subscribe { running ->
+                if (running) {
+                    wakeLock.acquireIfNeeded()
+                } else {
+                    wakeLock.releaseIfNeeded()
+                }
             }
-        }
     }
 
     /**

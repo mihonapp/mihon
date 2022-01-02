@@ -159,14 +159,16 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         applyAppTheme(preferences)
 
         // Setup shared element transitions
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-        findViewById<View>(android.R.id.content).transitionName = SHARED_ELEMENT_NAME
-        setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        window.sharedElementEnterTransition = buildContainerTransform(true)
-        window.sharedElementReturnTransition = buildContainerTransform(false)
+        findViewById<View>(android.R.id.content)?.let { contentView ->
+            window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+            contentView.transitionName = SHARED_ELEMENT_NAME
+            setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+            window.sharedElementEnterTransition = buildContainerTransform(true)
+            window.sharedElementReturnTransition = buildContainerTransform(false)
 
-        // Postpone custom transition until manga ready
-        postponeEnterTransition()
+            // Postpone custom transition until manga ready
+            postponeEnterTransition()
+        }
 
         super.onCreate(savedInstanceState)
 

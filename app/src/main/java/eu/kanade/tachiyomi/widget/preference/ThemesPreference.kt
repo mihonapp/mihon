@@ -47,6 +47,10 @@ class ThemesPreference @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     override fun onItemClick(position: Int) {
+        if (position !in 0..entries.size) {
+            return
+        }
+
         callChangeListener(value)
         value = entries[position].name
     }
