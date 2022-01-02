@@ -16,15 +16,6 @@ class BangumiInterceptor(val bangumi: Bangumi) : Interceptor {
      */
     private var oauth: OAuth? = bangumi.restoreToken()
 
-    fun addToken(token: String, oidFormBody: FormBody): FormBody {
-        val newFormBody = FormBody.Builder()
-        for (i in 0 until oidFormBody.size) {
-            newFormBody.add(oidFormBody.name(i), oidFormBody.value(i))
-        }
-        newFormBody.add("access_token", token)
-        return newFormBody.build()
-    }
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 
@@ -64,5 +55,14 @@ class BangumiInterceptor(val bangumi: Bangumi) : Interceptor {
         )
 
         bangumi.saveToken(oauth)
+    }
+
+    private fun addToken(token: String, oidFormBody: FormBody): FormBody {
+        val newFormBody = FormBody.Builder()
+        for (i in 0 until oidFormBody.size) {
+            newFormBody.add(oidFormBody.name(i), oidFormBody.value(i))
+        }
+        newFormBody.add("access_token", token)
+        return newFormBody.build()
     }
 }

@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.anilist
 
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.io.IOException
 
 class AnilistInterceptor(val anilist: Anilist, private var token: String?) : Interceptor {
 
@@ -28,12 +29,12 @@ class AnilistInterceptor(val anilist: Anilist, private var token: String?) : Int
         // Refresh access token if null or expired.
         if (oauth!!.isExpired()) {
             anilist.logout()
-            throw Exception("Token expired")
+            throw IOException("Token expired")
         }
 
         // Throw on null auth.
         if (oauth == null) {
-            throw Exception("No authentication token")
+            throw IOException("No authentication token")
         }
 
         // Add the authorization header to the original request.

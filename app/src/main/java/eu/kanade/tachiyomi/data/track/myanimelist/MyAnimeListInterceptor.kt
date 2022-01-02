@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
+import java.io.IOException
 
 class MyAnimeListInterceptor(private val myanimelist: MyAnimeList, private var token: String?) : Interceptor {
 
@@ -16,7 +17,7 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList, private var t
         val originalRequest = chain.request()
 
         if (token.isNullOrEmpty()) {
-            throw Exception("Not authenticated with MyAnimeList")
+            throw IOException("Not authenticated with MyAnimeList")
         }
         if (oauth == null) {
             oauth = myanimelist.loadOAuth()
@@ -30,7 +31,7 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList, private var t
             }
         }
         if (oauth == null) {
-            throw Exception("No authentication token")
+            throw IOException("No authentication token")
         }
 
         // Add the authorization header to the original request
