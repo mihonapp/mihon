@@ -24,6 +24,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class BangumiApi(private val client: OkHttpClient, interceptor: BangumiInterceptor) {
 
@@ -70,7 +71,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
 
     suspend fun search(search: String): List<TrackSearch> {
         return withIOContext {
-            val url = "$apiUrl/search/subject/${URLEncoder.encode(search, Charsets.UTF_8.name())}"
+            val url = "$apiUrl/search/subject/${URLEncoder.encode(search, StandardCharsets.UTF_8.name())}"
                 .toUri()
                 .buildUpon()
                 .appendQueryParameter("max_results", "20")
