@@ -1,3 +1,5 @@
+@file:Suppress("PackageDirectoryMismatch")
+
 package com.google.android.material.appbar
 
 import android.animation.AnimatorSet
