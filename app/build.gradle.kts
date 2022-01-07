@@ -248,7 +248,7 @@ dependencies {
     val conductorVersion = "3.1.1"
     implementation("com.bluelinelabs:conductor:$conductorVersion")
     implementation("com.bluelinelabs:conductor-viewpager:$conductorVersion")
-    implementation("com.github.tachiyomiorg:conductor-support-preference:$conductorVersion")
+    implementation("com.github.tachiyomiorg:conductor-support-preference:3.1.2")
 
     // FlowBinding
     val flowbindingVersion = "1.2.0"
