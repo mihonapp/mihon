@@ -245,10 +245,10 @@ dependencies {
     implementation("dev.chrisbanes.insetter:insetter:0.6.1")
 
     // Conductor
-    val conductorVersion = "3.1.1"
+    val conductorVersion = "3.1.2"
     implementation("com.bluelinelabs:conductor:$conductorVersion")
     implementation("com.bluelinelabs:conductor-viewpager:$conductorVersion")
-    implementation("com.github.tachiyomiorg:conductor-support-preference:3.1.2")
+    implementation("com.github.tachiyomiorg:conductor-support-preference:$conductorVersion")
 
     // FlowBinding
     val flowbindingVersion = "1.2.0"
