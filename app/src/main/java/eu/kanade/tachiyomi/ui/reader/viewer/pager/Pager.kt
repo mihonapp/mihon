@@ -84,6 +84,8 @@ open class Pager(
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         return try {
             super.onTouchEvent(ev)
+        } catch (e: NullPointerException) {
+            false
         } catch (e: IndexOutOfBoundsException) {
             false
         } catch (e: IllegalArgumentException) {
