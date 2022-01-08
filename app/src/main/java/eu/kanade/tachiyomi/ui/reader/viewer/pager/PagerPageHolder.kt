@@ -6,10 +6,10 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
+import com.google.android.material.textview.MaterialTextView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
@@ -202,7 +202,7 @@ class PagerPageHolder(
      * Called when the page is ready.
      */
     private fun setImage() {
-        progressIndicator.hide()
+        progressIndicator.setProgress(0)
         retryButton?.isVisible = false
         decodeErrorLayout?.isVisible = false
 
@@ -244,7 +244,7 @@ class PagerPageHolder(
                         )
                     )
                     if (!isAnimated) {
-                        this.background = background
+                        pageBackground = background
                     }
                 }
             }
@@ -302,6 +302,11 @@ class PagerPageHolder(
         initRetryButton().isVisible = true
     }
 
+    override fun onImageLoaded() {
+        super.onImageLoaded()
+        progressIndicator.hide()
+    }
+
     /**
      * Called when an image fails to decode.
      */
@@ -352,7 +357,7 @@ class PagerPageHolder(
         }
         decodeErrorLayout = decodeLayout
 
-        TextView(context).apply {
+        MaterialTextView(context).apply {
             layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
                 setMargins(margins)
             }

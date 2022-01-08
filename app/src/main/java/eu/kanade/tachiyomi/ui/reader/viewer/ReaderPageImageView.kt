@@ -53,9 +53,15 @@ open class ReaderPageImageView @JvmOverloads constructor(
     var onScaleChanged: ((newScale: Float) -> Unit)? = null
     var onViewClicked: (() -> Unit)? = null
 
+    /**
+     * For automatic background. Will be set as background color when [onImageLoaded] is called.
+     */
+    var pageBackground: Drawable? = null
+
     @CallSuper
     open fun onImageLoaded() {
         onImageLoaded?.invoke()
+        background = pageBackground
     }
 
     @CallSuper
