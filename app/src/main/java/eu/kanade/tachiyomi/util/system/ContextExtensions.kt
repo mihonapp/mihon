@@ -14,6 +14,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -416,5 +417,13 @@ fun Context.isPackageInstalled(packageName: String): Boolean {
         true
     } catch (e: PackageManager.NameNotFoundException) {
         false
+    }
+}
+
+fun Context.getApplicationIcon(pkgName: String): Drawable? {
+    return try {
+        packageManager.getApplicationIcon(pkgName)
+    } catch (e: PackageManager.NameNotFoundException) {
+        null
     }
 }

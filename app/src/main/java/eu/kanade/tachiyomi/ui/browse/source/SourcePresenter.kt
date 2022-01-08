@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.browse.source
 
-import android.os.Bundle
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.LocalSource
@@ -36,14 +35,6 @@ class SourcePresenter(
      * Subscription for retrieving enabled sources.
      */
     private var sourceSubscription: Subscription? = null
-
-    override fun onCreate(savedState: Bundle?) {
-        super.onCreate(savedState)
-
-        // Load enabled and last used sources
-        loadSources()
-        loadLastUsedSource()
-    }
 
     /**
      * Unsubscribe and create a new subscription to fetch enabled sources.

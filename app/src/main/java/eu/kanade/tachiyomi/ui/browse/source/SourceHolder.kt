@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.browse.source
 
 import android.view.View
 import androidx.core.view.isVisible
+import coil.load
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.SourceMainControllerItemBinding
@@ -10,7 +11,7 @@ import eu.kanade.tachiyomi.source.icon
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.view.setVectorCompat
 
-class SourceHolder(private val view: View, val adapter: SourceAdapter) :
+class SourceHolder(view: View, val adapter: SourceAdapter) :
     FlexibleViewHolder(view, adapter) {
 
     private val binding = SourceMainControllerItemBinding.bind(view)
@@ -33,12 +34,10 @@ class SourceHolder(private val view: View, val adapter: SourceAdapter) :
         binding.subtitle.text = LocaleHelper.getDisplayName(source.lang)
 
         // Set source icon
-        itemView.post {
-            val icon = source.icon()
-            when {
-                icon != null -> binding.image.setImageDrawable(icon)
-                item.source.id == LocalSource.ID -> binding.image.setImageResource(R.mipmap.ic_local_source)
-            }
+        val icon = source.icon()
+        when {
+            icon != null -> binding.image.load(icon)
+            item.source.id == LocalSource.ID -> binding.image.load(R.mipmap.ic_local_source)
         }
 
         binding.sourceLatest.isVisible = source.supportsLatest

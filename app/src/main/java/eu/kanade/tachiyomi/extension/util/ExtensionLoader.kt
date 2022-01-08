@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceFactory
 import eu.kanade.tachiyomi.util.lang.Hash
+import eu.kanade.tachiyomi.util.system.getApplicationIcon
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -181,7 +182,8 @@ internal object ExtensionLoader {
             isNsfw,
             sources = sources,
             pkgFactory = appInfo.metaData.getString(METADATA_SOURCE_FACTORY),
-            isUnofficial = signatureHash != officialSignature
+            isUnofficial = signatureHash != officialSignature,
+            icon = context.getApplicationIcon(pkgName)
         )
         return LoadResult.Success(extension)
     }

@@ -47,7 +47,7 @@ open class ExtensionPresenter(
             .startWith(emptyList<Extension.Available>())
 
         return Observable.combineLatest(installedObservable, untrustedObservable, availableObservable) { installed, untrusted, available -> Triple(installed, untrusted, available) }
-            .debounce(100, TimeUnit.MILLISECONDS)
+            .debounce(500, TimeUnit.MILLISECONDS)
             .map(::toItems)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeLatestCache({ view, _ -> view.setExtensions(extensions) })

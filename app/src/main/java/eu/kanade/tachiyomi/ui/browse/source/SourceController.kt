@@ -92,6 +92,7 @@ class SourceController :
 
         // Update list on extension changes (e.g. new installation)
         (parentController as BrowseController).extensionListUpdateRelay
+            .skip(1) // Skip first update when ExtensionController created
             .subscribeUntilDestroy {
                 presenter.updateSources()
             }

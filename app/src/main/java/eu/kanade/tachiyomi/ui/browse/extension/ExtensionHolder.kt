@@ -42,8 +42,8 @@ class ExtensionHolder(view: View, val adapter: ExtensionAdapter) :
         binding.icon.clear()
         if (extension is Extension.Available) {
             binding.icon.load(extension.iconUrl)
-        } else {
-            extension.getApplicationIcon(itemView.context)?.let { binding.icon.setImageDrawable(it) }
+        } else if (extension is Extension.Installed) {
+            binding.icon.load(extension.icon)
         }
         bindButtons(item)
     }

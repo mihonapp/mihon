@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsController
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -143,6 +144,7 @@ open class ExtensionController :
         }
 
         searchView.queryTextChanges()
+            .drop(1) // Drop first event after subscribed
             .filter { router.backstack.lastOrNull()?.controller == this }
             .onEach {
                 query = it.toString()

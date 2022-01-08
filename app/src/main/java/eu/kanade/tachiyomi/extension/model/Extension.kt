@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.extension.model
 
+import android.graphics.drawable.Drawable
 import eu.kanade.tachiyomi.source.Source
 
 sealed class Extension {
@@ -20,6 +21,7 @@ sealed class Extension {
         override val isNsfw: Boolean,
         val pkgFactory: String?,
         val sources: List<Source>,
+        val icon: Drawable?,
         val hasUpdate: Boolean = false,
         val isObsolete: Boolean = false,
         val isUnofficial: Boolean = false
