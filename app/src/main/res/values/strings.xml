@@ -561,6 +561,9 @@
     <string name="unknown_author">Unknown author</string>
     <string name="unknown_status">Unknown status</string>
     <string name="licensed">Licensed</string>
+    <string name="publishing_finished">Publishing finished</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="on_hiatus">On hiatus</string>
     <string name="add_to_library">Add to library</string>
     <string name="in_library">In library</string>
     <string name="remove_from_library">Remove from library</string>
