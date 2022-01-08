@@ -64,10 +64,10 @@ data class ALUserManga(
     fun toTrackStatus() = when (list_status) {
         "CURRENT" -> Anilist.READING
         "COMPLETED" -> Anilist.COMPLETED
-        "PAUSED" -> Anilist.PAUSED
+        "PAUSED" -> Anilist.ON_HOLD
         "DROPPED" -> Anilist.DROPPED
-        "PLANNING" -> Anilist.PLANNING
-        "REPEATING" -> Anilist.REPEATING
+        "PLANNING" -> Anilist.PLAN_TO_READ
+        "REPEATING" -> Anilist.REREADING
         else -> throw NotImplementedError("Unknown status: $list_status")
     }
 }
@@ -75,10 +75,10 @@ data class ALUserManga(
 fun Track.toAnilistStatus() = when (status) {
     Anilist.READING -> "CURRENT"
     Anilist.COMPLETED -> "COMPLETED"
-    Anilist.PAUSED -> "PAUSED"
+    Anilist.ON_HOLD -> "PAUSED"
     Anilist.DROPPED -> "DROPPED"
-    Anilist.PLANNING -> "PLANNING"
-    Anilist.REPEATING -> "REPEATING"
+    Anilist.PLAN_TO_READ -> "PLANNING"
+    Anilist.REREADING -> "REPEATING"
     else -> throw NotImplementedError("Unknown status: $status")
 }
 

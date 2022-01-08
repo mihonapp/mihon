@@ -40,7 +40,7 @@ class Komga(private val context: Context, id: Int) : TrackService(id), EnhancedT
     override fun getStatus(status: Int): String = with(context) {
         when (status) {
             UNREAD -> getString(R.string.unread)
-            READING -> getString(R.string.currently_reading)
+            READING -> getString(R.string.reading)
             COMPLETED -> getString(R.string.completed)
             else -> ""
         }

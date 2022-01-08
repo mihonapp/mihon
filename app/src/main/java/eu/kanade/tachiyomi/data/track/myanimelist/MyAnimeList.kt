@@ -47,10 +47,10 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
     override fun getStatus(status: Int): String = with(context) {
         when (status) {
             READING -> getString(R.string.reading)
+            PLAN_TO_READ -> getString(R.string.plan_to_read)
             COMPLETED -> getString(R.string.completed)
             ON_HOLD -> getString(R.string.on_hold)
             DROPPED -> getString(R.string.dropped)
-            PLAN_TO_READ -> getString(R.string.plan_to_read)
             REREADING -> getString(R.string.repeating)
             else -> ""
         }

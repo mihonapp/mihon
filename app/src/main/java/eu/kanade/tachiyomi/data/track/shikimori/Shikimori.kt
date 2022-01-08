@@ -19,8 +19,8 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
         const val COMPLETED = 2
         const val ON_HOLD = 3
         const val DROPPED = 4
-        const val PLANNING = 5
-        const val REPEATING = 6
+        const val PLAN_TO_READ = 5
+        const val REREADING = 6
     }
 
     private val json: Json by injectLazy()
@@ -49,7 +49,7 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
             if (didReadChapter) {
                 if (track.last_chapter_read.toInt() == track.total_chapters && track.total_chapters > 0) {
                     track.status = COMPLETED
-                } else if (track.status != REPEATING) {
+                } else if (track.status != REREADING) {
                     track.status = READING
                 }
             }
@@ -65,14 +65,14 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
             track.library_id = remoteTrack.library_id
 
             if (track.status != COMPLETED) {
-                val isRereading = track.status == REPEATING
+                val isRereading = track.status == REREADING
                 track.status = if (isRereading.not() && hasReadChapters) READING else track.status
             }
 
             update(track)
         } else {
             // Set default fields if it's not found in the list
-            track.status = if (hasReadChapters) READING else PLANNING
+            track.status = if (hasReadChapters) READING else PLAN_TO_READ
             track.score = 0F
             add(track)
         }
@@ -95,24 +95,24 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
     override fun getLogoColor() = Color.rgb(40, 40, 40)
 
     override fun getStatusList(): List<Int> {
-        return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLANNING, REPEATING)
+        return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ, REREADING)
     }
 
     override fun getStatus(status: Int): String = with(context) {
         when (status) {
             READING -> getString(R.string.reading)
+            PLAN_TO_READ -> getString(R.string.plan_to_read)
             COMPLETED -> getString(R.string.completed)
             ON_HOLD -> getString(R.string.on_hold)
             DROPPED -> getString(R.string.dropped)
-            PLANNING -> getString(R.string.plan_to_read)
-            REPEATING -> getString(R.string.repeating)
+            REREADING -> getString(R.string.repeating)
             else -> ""
         }
     }
 
     override fun getReadingStatus(): Int = READING
 
-    override fun getRereadingStatus(): Int = REPEATING
+    override fun getRereadingStatus(): Int = REREADING
 
     override fun getCompletionStatus(): Int = COMPLETED
 
