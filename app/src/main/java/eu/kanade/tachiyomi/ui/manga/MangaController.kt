@@ -339,7 +339,7 @@ class MangaController :
 
     private fun updateToolbarTitleAlpha(@FloatRange(from = 0.0, to = 1.0) alpha: Float? = null) {
         // Controller may actually already be destroyed by the time this gets run
-        binding ?: return
+        if (!isAttached) return
 
         val scrolledList = binding.fullRecycler ?: binding.infoRecycler!!
         (activity as? MainActivity)?.binding?.appbar?.titleTextAlpha = when {
