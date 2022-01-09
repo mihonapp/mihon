@@ -89,7 +89,7 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
      *
      * @param animate True if slide up should be animated
      */
-    fun slideUp(animate: Boolean = true) {
+    fun slideUp(animate: Boolean = true) = post {
         currentAnimator?.cancel()
         clearAnimation()
 
@@ -106,7 +106,7 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
      *
      * @param animate True if slide down should be animated
      */
-    fun slideDown(animate: Boolean = true) {
+    fun slideDown(animate: Boolean = true) = post {
         currentAnimator?.cancel()
         clearAnimation()
 

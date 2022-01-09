@@ -228,8 +228,6 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             }
         )
 
-        syncActivityViewWithController()
-
         if (savedInstanceState == null) {
             // Reset Incognito Mode on relaunch
             preferences.incognitoMode().set(false)
@@ -339,6 +337,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
     override fun onResume() {
         super.onResume()
         checkForUpdates()
+        syncActivityViewWithController()
     }
 
     private fun checkForUpdates() {
