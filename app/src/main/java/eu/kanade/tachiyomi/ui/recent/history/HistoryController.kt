@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.onAnimationsFinished
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -200,6 +201,7 @@ class HistoryController :
             searchView.clearFocus()
         }
         searchView.queryTextChanges()
+            .drop(1) // Drop first event after subscribed
             .filter { router.backstack.lastOrNull()?.controller == this }
             .onEach {
                 query = it.toString()
