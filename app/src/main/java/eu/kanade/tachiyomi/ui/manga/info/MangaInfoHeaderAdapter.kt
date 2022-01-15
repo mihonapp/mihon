@@ -84,6 +84,7 @@ class MangaInfoHeaderAdapter(
     }
 
     private fun updateCoverPosition() {
+        if (isTablet) return
         val appBarHeight = controller.getMainAppBarHeight()
         binding.mangaCover.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin += appBarHeight
