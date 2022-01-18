@@ -141,7 +141,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
         }
 
         val startTime = System.currentTimeMillis()
-        splashScreen?.setKeepVisibleCondition {
+        splashScreen?.setKeepOnScreenCondition() {
             val elapsed = System.currentTimeMillis() - startTime
             elapsed <= SPLASH_MIN_DURATION || (!ready && elapsed <= SPLASH_MAX_DURATION)
         }
@@ -293,9 +293,6 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             window.navigationBarColor = Color.TRANSPARENT
 
             splashScreen.setOnExitAnimationListener { splashProvider ->
-                // For some reason the SplashScreen applies (incorrect) Y translation to the iconView
-                splashProvider.iconView.translationY = 0F
-
                 val activityAnim = ValueAnimator.ofFloat(1F, 0F).apply {
                     interpolator = LinearOutSlowInInterpolator()
                     duration = SPLASH_EXIT_ANIM_DURATION
