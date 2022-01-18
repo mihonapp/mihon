@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.app.ActionBar
 import android.app.ProgressDialog
 import android.content.ClipData
 import android.content.Context
@@ -212,7 +211,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         readingModeToast?.cancel()
         progressDialog?.dismiss()
         progressDialog = null
-        listeners = mutableListOf()
     }
 
     /**
@@ -534,23 +532,12 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         )
     }
 
-    private var listeners: MutableList<ActionBar.OnMenuVisibilityListener> = mutableListOf()
-
-    fun addOnMenuVisibilityListener(listener: ActionBar.OnMenuVisibilityListener) {
-        listeners.add(listener)
-    }
-
-    fun removeOnMenuVisibilityListener(listener: ActionBar.OnMenuVisibilityListener) {
-        listeners.remove(listener)
-    }
-
     /**
      * Sets the visibility of the menu according to [visible] and with an optional parameter to
      * [animate] the views.
      */
     fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
         menuVisible = visible
-        listeners.forEach { listener -> listener.onMenuVisibilityChanged(visible) }
         if (visible) {
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
             binding.readerMenu.isVisible = true
