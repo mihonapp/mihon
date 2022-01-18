@@ -148,11 +148,11 @@ dependencies {
 
     // AndroidX libraries
     implementation("androidx.annotation:annotation:1.4.0-alpha01")
-    implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha04")
     implementation("androidx.browser:browser:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.2")
-    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0-rc01")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
     implementation("androidx.core:core-ktx:1.8.0-alpha02")
     implementation("androidx.core:core-splashscreen:1.0.0-beta01")
     implementation("androidx.recyclerview:recyclerview:1.3.0-alpha01")
@@ -233,7 +233,7 @@ dependencies {
     implementation("com.github.gpanther:java-nat-sort:natural-comparator-1.1")
 
     // UI libraries
-    implementation("com.google.android.material:material:1.6.0-alpha01")
+    implementation("com.google.android.material:material:1.6.0-alpha02")
     implementation("com.github.dmytrodanylyk.android-process-button:library:1.0.4")
     implementation("com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533")
     implementation("com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533")
