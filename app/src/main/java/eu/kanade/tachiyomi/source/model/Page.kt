@@ -2,9 +2,12 @@ package eu.kanade.tachiyomi.source.model
 
 import android.net.Uri
 import eu.kanade.tachiyomi.network.ProgressListener
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import rx.subjects.Subject
 import tachiyomi.source.model.PageUrl
 
+@Serializable
 open class Page(
     val index: Int,
     val url: String = "",
