@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceScreen
-import com.google.android.material.color.DynamicColors
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
@@ -17,6 +16,7 @@ import eu.kanade.tachiyomi.util.preference.onChange
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
+import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isTablet
 import eu.kanade.tachiyomi.widget.preference.ThemesPreference
 import java.util.Date
@@ -67,7 +67,7 @@ class SettingsAppearanceController : SettingsController() {
 
                 val appThemes = Values.AppTheme.values().filter {
                     val monetFilter = if (it == Values.AppTheme.MONET) {
-                        DynamicColors.isDynamicColorAvailable()
+                        DeviceUtil.isDynamicColorAvailable
                     } else {
                         true
                     }
