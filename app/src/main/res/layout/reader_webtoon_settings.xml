@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/webtoon_viewer"
         android:textAppearance="@style/TextAppearance.Tachiyomi.SectionHeader" />
 
