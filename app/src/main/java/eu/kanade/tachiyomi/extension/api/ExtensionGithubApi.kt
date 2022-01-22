@@ -81,6 +81,8 @@ internal class ExtensionGithubApi {
                     versionCode = it.code,
                     lang = it.lang,
                     isNsfw = it.nsfw == 1,
+                    hasReadme = it.hasReadme == 1,
+                    hasChangelog = it.hasChangelog == 1,
                     sources = it.sources?.toExtensionSources() ?: emptyList(),
                     apkName = it.apk,
                     iconUrl = "${REPO_URL_PREFIX}icon/${it.apk.replace(".apk", ".png")}"
@@ -114,6 +116,8 @@ private data class ExtensionJsonObject(
     val code: Long,
     val version: String,
     val nsfw: Int,
+    val hasReadme: Int = 0,
+    val hasChangelog: Int = 0,
     val sources: List<ExtensionSourceJsonObject>?,
 )
 

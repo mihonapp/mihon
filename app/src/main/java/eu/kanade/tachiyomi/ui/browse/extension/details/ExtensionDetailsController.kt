@@ -183,12 +183,16 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.extension_details, menu)
 
-        menu.findItem(R.id.action_history).isVisible = presenter.extension?.isUnofficial == false
+        presenter.extension?.let { extension ->
+            menu.findItem(R.id.action_history).isVisible = !extension.isUnofficial
+            menu.findItem(R.id.action_faq_and_guides).isVisible = !extension.isUnofficial
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_history -> openCommitHistory()
+            R.id.action_history -> openChangelog()
+            R.id.action_faq_and_guides -> openReadme()
             R.id.action_enable_all -> toggleAllSources(true)
             R.id.action_disable_all -> toggleAllSources(false)
             R.id.action_clear_cookies -> clearCookies()
@@ -212,14 +216,41 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
         }
     }
 
-    private fun openCommitHistory() {
-        val pkgName = presenter.extension!!.pkgName.substringAfter("eu.kanade.tachiyomi.extension.")
-        val pkgFactory = presenter.extension!!.pkgFactory
-        val url = when {
-            !pkgFactory.isNullOrEmpty() -> "$URL_EXTENSION_COMMITS/multisrc/src/main/java/eu/kanade/tachiyomi/multisrc/$pkgFactory"
-            else -> "$URL_EXTENSION_COMMITS/src/${pkgName.replace(".", "/")}"
+    private fun openChangelog() {
+        val extension = presenter.extension!!
+        val pkgName = extension.pkgName.substringAfter("eu.kanade.tachiyomi.extension.")
+        val pkgFactory = extension.pkgFactory
+        if (extension.hasChangelog) {
+            val url = createUrl(URL_EXTENSION_BLOB, pkgName, pkgFactory, "/CHANGELOG.md")
+            openInBrowser(url)
+            return
         }
+
+        // Falling back on GitHub commit history because there is no explicit changelog in extension
+        val url = createUrl(URL_EXTENSION_COMMITS, pkgName, pkgFactory)
         openInBrowser(url)
+    }
+
+    private fun openReadme() {
+        val extension = presenter.extension!!
+
+        if (!extension.hasReadme) {
+            openInBrowser("https://tachiyomi.org/help/faq/#extensions")
+            return
+        }
+
+        val pkgName = extension.pkgName.substringAfter("eu.kanade.tachiyomi.extension.")
+        val pkgFactory = extension.pkgFactory
+        val url = createUrl(URL_EXTENSION_BLOB, pkgName, pkgFactory, "/README.md")
+        openInBrowser(url)
+        return
+    }
+
+    private fun createUrl(url: String, pkgName: String, pkgFactory: String?, path: String = ""): String {
+        return when {
+            !pkgFactory.isNullOrEmpty() -> "$url/multisrc/src/main/java/eu/kanade/tachiyomi/multisrc/$pkgFactory$path"
+            else -> "$url/src/${pkgName.replace(".", "/")}$path"
+        }
     }
 
     private fun clearCookies() {
@@ -248,3 +279,4 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
 
 private const val PKGNAME_KEY = "pkg_name"
 private const val URL_EXTENSION_COMMITS = "https://github.com/tachiyomiorg/tachiyomi-extensions/commits/master"
+private const val URL_EXTENSION_BLOB = "https://github.com/tachiyomiorg/tachiyomi-extensions/blob/master"

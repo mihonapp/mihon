@@ -11,6 +11,8 @@ sealed class Extension {
     abstract val versionCode: Long
     abstract val lang: String?
     abstract val isNsfw: Boolean
+    abstract val hasReadme: Boolean
+    abstract val hasChangelog: Boolean
 
     data class Installed(
         override val name: String,
@@ -19,6 +21,8 @@ sealed class Extension {
         override val versionCode: Long,
         override val lang: String,
         override val isNsfw: Boolean,
+        override val hasReadme: Boolean,
+        override val hasChangelog: Boolean,
         val pkgFactory: String?,
         val sources: List<Source>,
         val icon: Drawable?,
@@ -34,6 +38,8 @@ sealed class Extension {
         override val versionCode: Long,
         override val lang: String,
         override val isNsfw: Boolean,
+        override val hasReadme: Boolean,
+        override val hasChangelog: Boolean,
         val sources: List<AvailableExtensionSources>,
         val apkName: String,
         val iconUrl: String
@@ -46,7 +52,9 @@ sealed class Extension {
         override val versionCode: Long,
         val signatureHash: String,
         override val lang: String? = null,
-        override val isNsfw: Boolean = false
+        override val isNsfw: Boolean = false,
+        override val hasReadme: Boolean = false,
+        override val hasChangelog: Boolean = false,
     ) : Extension()
 }
 
