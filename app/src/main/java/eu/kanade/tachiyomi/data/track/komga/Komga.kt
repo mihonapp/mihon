@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.NoLoginTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.source.Source
 import okhttp3.Dns
 import okhttp3.OkHttpClient
 
@@ -101,6 +102,16 @@ class Komga(private val context: Context, id: Int) : TrackService(id), EnhancedT
         try {
             api.getTrackSearch(manga.url)
         } catch (e: Exception) {
+            null
+        }
+
+    override fun isTrackFrom(track: Track, manga: Manga, source: Source): Boolean =
+        accept(source) && track.tracking_url == manga.url
+
+    override fun migrateTrack(track: Track, manga: Manga, newSource: Source): Track? =
+        if (accept(newSource)) {
+            track.also { track.tracking_url = manga.url }
+        } else {
             null
         }
 }
