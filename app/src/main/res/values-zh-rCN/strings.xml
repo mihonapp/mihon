@@ -335,8 +335,6 @@
     <string name="logout">登出</string>
     <string name="logout_success">你已登出</string>
     <string name="paused">已暂停</string>
-    <string name="currently_reading">阅读中</string>
-    <string name="want_to_read">计划读</string>
     <string name="label_more">更多</string>
     <string name="action_sort_latest_chapter">最新章节</string>
     <string name="action_view_chapters">查看章节</string>
@@ -569,7 +567,7 @@
     <string name="nav_zone_prev">上页</string>
     <string name="pref_show_navigation_mode_summary">开始阅读时，显示点按区域</string>
     <string name="pref_show_navigation_mode">显示导航布局覆盖层</string>
-    <string name="pref_dns_over_https">DNS over HTTPS</string>
+    <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="none">无</string>
     <string name="exclude">排除：%s</string>
     <string name="include">包含：%s</string>
@@ -684,4 +682,8 @@
     <string name="pref_library_update_manga_restriction">漫画库更新限制</string>
     <string name="only_update_restrictions">仅更新：%s</string>
     <string name="library_errors_help">有关如何修复库更新错误的帮助，请参阅 %1$s</string>
+    <string name="save_chapter_as_cbz">保存为 CBZ 存档</string>
+    <string name="publishing_finished">发布完成</string>
+    <string name="cancelled">已取消</string>
+    <string name="on_hiatus">中断</string>
 </resources>

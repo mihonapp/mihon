@@ -493,9 +493,7 @@
     <string name="pref_category_for_this_series">এই সিরিজের জন্য</string>
     <string name="share_page_info">%1$s: %2$s, পৃষ্ঠা %3$d</string>
     <string name="error_invalid_date_supplied">অবৈধ তারিখ সরবরাহ করা হয়েছে</string>
-    <string name="want_to_read">পড়তে চাই</string>
     <string name="paused">বিরতি</string>
-    <string name="currently_reading">বর্তমানে পড়া হচ্ছে</string>
     <string name="add_tracking">ট্র্যাকিং যোগ করুন</string>
     <plurals name="num_trackers">
         <item quantity="one">1টি ট্র্যাকার</item>

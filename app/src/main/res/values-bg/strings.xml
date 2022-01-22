@@ -368,9 +368,7 @@
     <string name="logout_title">Искате ли да излезете от %1$s\?</string>
     <string name="logout">Излез</string>
     <string name="logout_success">Излязохте успешно</string>
-    <string name="currently_reading">В прочит сега</string>
     <string name="paused">На пауза</string>
-    <string name="want_to_read">Искам да чета</string>
     <string name="secure_screen">Сигурност</string>
     <string name="channel_ext_updates">Ъпдейти на разширенията</string>
     <string name="channel_new_chapters">Нови глави</string>

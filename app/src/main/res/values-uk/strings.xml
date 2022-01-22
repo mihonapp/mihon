@@ -155,7 +155,7 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Директорія завантаження</string>
-    <string name="pref_remove_after_marked_as_read">Після того, як було відмічено прочитаним</string>
+    <string name="pref_remove_after_marked_as_read">Після того, як було відмічено прочитаним вручну</string>
     <string name="pref_remove_after_read">Автоматично видаляти після прочитання</string>
     <string name="custom_dir">Користувацька директорія</string>
     <string name="disabled">Вимкнено</string>
@@ -269,7 +269,7 @@
     <string name="chapter_progress">Сторінка %1$d</string>
     <string name="no_next_chapter">Наступну главу не знайдено</string>
     <string name="no_previous_chapter">Попередню главу не знайдено</string>
-    <string name="decode_image_error">Не вдалося завантажити зображення</string>
+    <string name="decode_image_error">Зображення не може бути завантажене</string>
     <string name="confirm_set_image_as_cover">Ви бажаєте встановити цю картинку як обкладинку\?</string>
     <string name="transition_finished">Завершено:</string>
     <string name="transition_current">Поточна:</string>
@@ -334,9 +334,7 @@
     <string name="logout_title">Вихід із %1$s\?</string>
     <string name="logout">Вихід</string>
     <string name="logout_success">Ви вийшли з системи</string>
-    <string name="currently_reading">Зараз читається</string>
     <string name="paused">Призупинено</string>
-    <string name="want_to_read">Читатиму</string>
     <string name="label_more">Ще</string>
     <string name="action_sort_latest_chapter">Остання глава</string>
     <string name="action_view_chapters">Подивитись глави</string>
@@ -468,10 +466,10 @@
     <string name="creating_backup_error">Помилка резервування</string>
     <string name="backup_in_progress">Резервна копія вже зберігається</string>
     <plurals name="restore_completed_message">
-        <item quantity="one">Зроблено %1$s з %2$s помилкою</item>
-        <item quantity="few">Зроблено %1$s з %2$s помилками</item>
-        <item quantity="many"/>
-        <item quantity="other"/>
+        <item quantity="one">Зроблено за %1$s з %2$s помилкою</item>
+        <item quantity="few">Зроблено за %1$s з %2$s помилками</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
     </plurals>
     <string name="restore_duration">%02d хв, %02d сек</string>
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
@@ -544,10 +542,10 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Це не заважає неофіційним або потенційно невірним розширенням розміщувати вміст NSFW (18+) у додатку.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Пропускається 1 розділ, або джерело відсутнє, або воно було відфільтровано</item>
-        <item quantity="few">Пропускається %d розділи, або джерело відсутнє, або вони були відфільтровані</item>
-        <item quantity="many">Пропускається %d розділів, або джерело відсутнє, або вони були відфільтровані</item>
-        <item quantity="other">Пропускається %d розділів, або джерело відсутнє, або вони були відфільтровані</item>
+        <item quantity="one">Пропускається 1 глава, тому що джерело не має її, або вона була відфільтрована</item>
+        <item quantity="few">Пропускається %d глав, тому що джерело не має їх, або вони була відфільтровані</item>
+        <item quantity="many">Пропускається %d глав, тому що джерело не має їх, або вони була відфільтровані</item>
+        <item quantity="other">Пропускається %d глав, тому що джерело не має їх, або вони була відфільтровані</item>
     </plurals>
     <string name="no_chapters_error">Немає глав</string>
     <string name="chapter_settings_updated">Оновлено налаштування глави за замовчуванням</string>
@@ -601,7 +599,7 @@
     <string name="nav_zone_prev">Попередній</string>
     <string name="pref_show_navigation_mode_summary">Показувати області дотику при відкритті читалки</string>
     <string name="pref_show_navigation_mode">Показувати оверлей схеми навігації</string>
-    <string name="pref_dns_over_https">DNS поверх HTTPS</string>
+    <string name="pref_dns_over_https">DNS поверх HTTPS (DoH)</string>
     <string name="pref_download_new_categories_details">Мангу в виключених категоріях не буде завантажено, навіть якщо вона також знаходиться у включених категоріях.</string>
     <string name="pref_category_auto_download">Автозавантаження</string>
     <string name="exclude">Виключати: %s</string>
@@ -609,7 +607,7 @@
     <string name="none">Ніхто</string>
     <string name="pref_library_update_categories_details">Мангу в виключених категоріях не буде оновлено, навіть якщо вона також знаходиться у включених категоріях.</string>
     <string name="action_sort_chapter_fetch_date">Дата отримання</string>
-    <string name="action_show_errors">Побачити всі деталі помилки</string>
+    <string name="action_show_errors">Тицьніть для перегляду подробиць помилки</string>
     <string name="update_check_eol">Ця версія Android більше не підтримується</string>
     <string name="clipboard_copy_error">Не вдалось скопіювати до буферу обміну</string>
     <string name="rotation_landscape">Альбомна</string>
@@ -718,4 +716,9 @@
     <string name="pref_library_update_manga_restriction">Обмеження оновлення бібліотеки</string>
     <string name="pref_update_only_completely_read">Повністю прочитані серії</string>
     <string name="only_update_restrictions">Оновлювати тільки: %s</string>
+    <string name="save_chapter_as_cbz">Зберегти архів як CBZ</string>
+    <string name="library_errors_help">Для допомоги в виправленні помилок оновлення бібліотеки, дивіться %1$s</string>
+    <string name="publishing_finished">Публікація завершена</string>
+    <string name="cancelled">Відмінено</string>
+    <string name="on_hiatus">На хіатусі</string>
 </resources>

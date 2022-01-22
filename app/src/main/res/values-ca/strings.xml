@@ -55,7 +55,7 @@
     <string name="action_display">Mostra</string>
     <string name="action_display_grid">Graella compacta</string>
     <string name="action_display_list">Llista</string>
-    <string name="action_display_download_badge">Icones de baixada</string>
+    <string name="action_display_download_badge">Capítols baixats</string>
     <string name="action_cancel">Cancel·la</string>
     <string name="action_sort">Ordena</string>
     <string name="action_install">Instal·la</string>
@@ -77,8 +77,8 @@
     <string name="pref_library_columns">Elements per fila</string>
     <string name="portrait">Vertical</string>
     <string name="landscape">Horitzontal</string>
-    <string name="pref_library_update_interval">Freqüència d\'actualització</string>
-    <string name="update_never">Manual</string>
+    <string name="pref_library_update_interval">Actualització automàtica</string>
+    <string name="update_never">Desactivar</string>
     <string name="update_6hour">Cada 6 hores</string>
     <string name="update_12hour">Cada 12 hores</string>
     <string name="update_24hour">Cada dia</string>
@@ -334,9 +334,7 @@
     <string name="logout_title">Voleu tancar la sessió a %1$s\?</string>
     <string name="logout">Tancar sessió</string>
     <string name="logout_success">S\'ha tancat la sessió</string>
-    <string name="currently_reading">Llegint actualment</string>
     <string name="paused">Pausat</string>
-    <string name="want_to_read">Pendent de llegir</string>
     <string name="label_more">Més</string>
     <string name="action_sort_latest_chapter">Darrer capítol</string>
     <string name="action_view_chapters">Mostra els capítols</string>
@@ -456,7 +454,7 @@
         <item quantity="one">%d categoria</item>
         <item quantity="other">%d categories</item>
     </plurals>
-    <string name="action_display_unread_badge">Icones de no llegit</string>
+    <string name="action_display_unread_badge">Capítols sense llegir</string>
     <string name="tracking_info">Sincronització unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment. Configureu el seguiment d\'entrades individuals de manga al seu botó de seguiment.</string>
     <string name="pref_refresh_library_covers">Refresca les portades del manga de la biblioteca</string>
     <plurals name="notification_update_error">
@@ -550,7 +548,7 @@
     <string name="migration_help_guide">Guia de migració de fonts</string>
     <string name="pref_category_nsfw_content">Fonts NSFW (+18)</string>
     <string name="file_picker_error">No s\'ha trobat cap aplicació de selecció de fitxers</string>
-    <string name="pref_show_nsfw_source">Mostra a la llista de fonts</string>
+    <string name="pref_show_nsfw_source">Mostra a la llista de fonts i extensions</string>
     <string name="myanimelist_relogin">Torneu a iniciar la sessió a MAL</string>
     <string name="channel_crash_logs">Registres de fallades</string>
     <string name="track_finished_reading_date">Data de finalització</string>
@@ -602,7 +600,7 @@
     <string name="include">Inclou: %s</string>
     <string name="exclude">Exclou: %s</string>
     <string name="none">Cap</string>
-    <string name="action_show_errors">Mostrar Errors</string>
+    <string name="action_show_errors">Pitja per mostrar Errors</string>
     <string name="cancel_all_for_series">Cancel·la-ho tot per a aquesta sèrie</string>
     <string name="action_sort_chapter_fetch_date">Data obtinguda</string>
     <string name="date">Data</string>
@@ -624,7 +622,7 @@
     <string name="alignment_center">Centrat</string>
     <string name="alignment_top">Part superior</string>
     <string name="pref_side_nav_icon_alignment">Alineació de la icona de navegació lateral</string>
-    <string name="action_display_local_badge">Insígnies locals</string>
+    <string name="action_display_local_badge">Mangas locals</string>
     <string name="pref_lowest">La més baixa</string>
     <string name="pref_low">Baixa</string>
     <string name="pref_high">Alta</string>
@@ -639,4 +637,28 @@
     </plurals>
     <string name="relative_time_today">Avui</string>
     <string name="label_default">Per defecte</string>
+    <string name="label_warning">Advertència</string>
+    <string name="confirm_lock_change">Autenticar per a confirmar canvis</string>
+    <string name="theme_greenapple">Poma Verda</string>
+    <string name="pref_category_appearance">Aparença</string>
+    <string name="action_start_downloading_now">Començar la baixada ara</string>
+    <string name="action_sort_count">Mangas en total</string>
+    <string name="pref_app_theme">Tema de l\'aplicació</string>
+    <string name="theme_monet">Dinàmica</string>
+    <string name="recently">Recentment</string>
+    <string name="action_display_language_badge">Llengua</string>
+    <string name="theme_midnightdusk">Capvespre</string>
+    <string name="theme_strawberrydaiquiri">Daiquiri de Maduixa</string>
+    <string name="theme_tako">Tako</string>
+    <string name="theme_tealturquoise">Verd Blavós i Turquesa</string>
+    <string name="theme_yinyang">Ying i Yang</string>
+    <string name="theme_yotsuba">Yotsuba</string>
+    <string name="pref_dark_theme_pure_black">Mode negre fosc pur</string>
+    <string name="pref_category_navigation">Navegació</string>
+    <string name="pref_category_timestamps">Marques</string>
+    <string name="pref_relative_format">Marques relatives</string>
+    <string name="update_72hour">Cada 3 dies</string>
+    <string name="connected_to_wifi">Només amb Wi-Fi</string>
+    <string name="pref_relative_time_short">Curt (Avui, Ahir)</string>
+    <string name="pref_relative_time_long">Llarg (Curt +, N dies abans)</string>
 </resources>

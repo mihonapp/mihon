@@ -381,13 +381,11 @@
     <string name="title">Ят</string>
     <string name="score">Хаклав</string>
     <string name="repeating">Ҫӗнӗрен вулатӑп</string>
-    <string name="want_to_read">Вуласшӑн</string>
     <string name="plan_to_read">Вулӑп</string>
     <string name="paused">Чарнӑ</string>
     <string name="on_hold">Чарнӑ</string>
     <string name="dropped">Пӑрахнӑ</string>
     <string name="completed">Вӗҫленӗ</string>
-    <string name="currently_reading">Халь вулатӑп</string>
     <string name="reading">Вулатӑп</string>
     <string name="confirm_delete_chapters">Эсӗ суйланӑ сыпӑксене катертесшӗнех-и\?</string>
     <string name="download_unread">Вуламанине</string>

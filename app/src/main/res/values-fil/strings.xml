@@ -242,7 +242,7 @@
     <string name="update_24hour">Araw-araw</string>
     <string name="update_12hour">Kada 12 oras</string>
     <string name="update_6hour">Kada 6 na oras</string>
-    <string name="update_never">Naka-patay</string>
+    <string name="update_never">Nakapatay</string>
     <string name="pref_library_update_interval">Kusang pag-update</string>
     <string name="pref_category_library_update">Panlahatang update</string>
     <string name="landscape">Pahiga</string>
@@ -378,13 +378,11 @@
     <string name="title">Pamagat</string>
     <string name="score">Iskor</string>
     <string name="repeating">Binabasa uli</string>
-    <string name="want_to_read">Gustong basahin</string>
     <string name="plan_to_read">Binabalak</string>
     <string name="paused">Hininto</string>
     <string name="on_hold">Tinigil</string>
     <string name="completed">Kumpleto</string>
     <string name="dropped">Binitawan</string>
-    <string name="currently_reading">Kasalukuyang binabasa</string>
     <string name="reading">Binabasa</string>
     <string name="add_tracking">Magdagdag ng tracker</string>
     <string name="manga_tracking_tab">Pagta-track</string>
@@ -527,7 +525,7 @@
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Lalaktawan ang isang kabanata, siguro baka wala sa source ito, o baka nasala ito</item>
-        <item quantity="other">Lalaktawan ang %d na kabanata, siguro baka wala sa source sila, o baka nasala sila</item>
+        <item quantity="other">Lalaktawan ang %d (na) kabanata, siguro baka wala sa source sila, o baka nasala sila</item>
     </plurals>
     <string name="no_chapters_error">Walang nakitang kabanata</string>
     <string name="confirm_set_chapter_settings">Gusto mo bang i-save at ipagpaubaya ang pagsasaayos na ito\?</string>
@@ -575,7 +573,7 @@
     <string name="backup_restore_content_full">Ire-restore ang mga datos mula sa backup.
 \n
 \nKailangan mong i-install muli ang mga nawawalang dugtong at mag-login muli sa mga tracker pagkatapos para magamit ang mga ito.</string>
-    <string name="pref_dns_over_https">DNS kesa HTTPS</string>
+    <string name="pref_dns_over_https">DNS kesa HTTPS (DoH)</string>
     <string name="pref_download_new_categories_details">Hindi ida-download ang mga manga na nasa di-kasamang kategorya kahit na nasa kasamang kategorya ang mga ito.</string>
     <string name="pref_category_auto_download">Kusang pag-download</string>
     <string name="nav_zone_right">Kanan</string>
@@ -654,7 +652,7 @@
     <string name="pref_relative_format">Pagpepetsa</string>
     <plurals name="relative_time">
         <item quantity="one">Kahapon</item>
-        <item quantity="other">%1$d na araw na nakalipas</item>
+        <item quantity="other">%1$d (na) araw na nakalipas</item>
     </plurals>
     <string name="recently">Kamakailan</string>
     <string name="relative_time_today">Ngayon</string>
@@ -693,8 +691,12 @@
     <string name="database_clean">Linisin ang database</string>
     <string name="extension_api_error">Bigong makuha ang mga dugtong</string>
     <string name="privacy_policy">Patakaran sa Pagkapribado</string>
-    <string name="only_update_restrictions">I-update lamang: %s</string>
-    <string name="library_errors_help">Kung kailangan ng tulong ayusin ang errors ng pag-update ng aklata, maaring tignan ang %1$s</string>
+    <string name="only_update_restrictions">I-update lang: %s</string>
+    <string name="library_errors_help">Para makahingi ng tulong sa pag-ayos sa mga error sa pag-update ng Aklatan, tingnan ang %1$s</string>
     <string name="pref_update_only_completely_read">Natapos nang basahin na serye</string>
     <string name="pref_library_update_manga_restriction">Kondisyon sa pag-update ng Aklatan</string>
+    <string name="save_chapter_as_cbz">I-save bilang CBZ archive</string>
+    <string name="publishing_finished">Tapos na\'ng mailathala</string>
+    <string name="on_hiatus">Naka-hiatus</string>
+    <string name="cancelled">Kinansela</string>
 </resources>

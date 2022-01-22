@@ -348,13 +348,11 @@
     <string name="repeating">ಪುನಃ ಓದುತ್ತಿರುವ</string>
     <string name="title">ಶೀರ್ಷಿಕೆ</string>
     <string name="score">ಅಂಕ</string>
-    <string name="want_to_read">ಓದಲು ಬಯಸುವ</string>
     <string name="plan_to_read">ಓದಲು ಯೋಜನೆ</string>
     <string name="paused">ವಿರಾಮಗೊಳಿಸಲಾದ</string>
     <string name="on_hold">ತಡೆಹಿಡಿಯಲಾದ</string>
     <string name="dropped">ಕೈಬಿಡಲಾದ</string>
     <string name="completed">ಪೂರ್ಣಗೊಂಡಿದೆ</string>
-    <string name="currently_reading">ಪ್ರಸ್ತುತ ಓದುತ್ತಿರುವ</string>
     <string name="reading">ಓದುತ್ತಿರುವ</string>
     <string name="add_tracking">ಟ್ರ್ಯಾಕಿಂಗ್ ಸೇರಿಸಿ</string>
     <string name="manga_tracking_tab">ಟ್ರ್ಯಾಕಿಂಗ್</string>

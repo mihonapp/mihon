@@ -254,7 +254,7 @@
     <string name="rotation_portrait">Bertikala</string>
     <string name="rotation_landscape">Horizontala</string>
     <string name="rotation_force_portrait">Bertikal blokeatua</string>
-    <string name="pref_remove_after_marked_as_read">Irakurria bezala markatu ondoren</string>
+    <string name="pref_remove_after_marked_as_read">Irakurria bezala eskuz markatu ondoren</string>
     <string name="pref_remove_bookmarked_chapters">Baimendu laster-markadun kapituluak ezabatzea</string>
     <string name="pref_remove_after_read">Irakurri ondoren automatikoki ezabatu</string>
     <string name="custom_dir">Kokapen pertsonalizatua</string>
@@ -333,7 +333,7 @@
     <string name="sort_by_number">Kapitulu zenbakiaren arabera</string>
     <string name="sort_by_upload_date">Igoera dataren arabera</string>
     <string name="confirm_set_image_as_cover">Irudi hau azaleko arte gisa erabili\?</string>
-    <string name="download_insufficient_space">Ezin izan dira kapituluak deskargatu diskoan leku gutxi dagoelako</string>
+    <string name="download_insufficient_space">Ezin izan dira kapituluak deskargatu memorian leku gutxi dagoelako</string>
     <string name="notification_updating">Liburutegia eguneratzen… (%1$d/%2$d)</string>
     <string name="notification_size_warning">Eguneratze handiek bateriaren erabilera areagotzea eta iturriak motelagoak izatea eragin dezakete</string>
     <string name="download_notifier_download_paused">Deskarga pausatu da</string>
@@ -346,7 +346,7 @@
 \n
 \nZiurtatu beharrezko luzapen guztiak instalatu dituzula eta iturrietan eta jarraipen-zerbitzuetan saioa hasi duzula berreskuratu aurretik.</string>
     <string name="downloaded_only_summary">Zure liburutegiko manga guztiak iragazten ditu</string>
-    <string name="pref_dns_over_https">DNS HTTPS bidez</string>
+    <string name="pref_dns_over_https">DNS HTTPS bidez (DoH)</string>
     <string name="pref_enable_acra">Bidali hutsegite-txostenak</string>
     <string name="notification_incognito_text">Desgaitu ezkutuko modua</string>
     <string name="used_cache">Erabilia: %1$s</string>
@@ -606,7 +606,7 @@
     <string name="password">Pasahitza</string>
     <string name="login">Hasi saioa</string>
     <string name="action_global_search_query">Bilatu \"%1$s\" toki guztietan</string>
-    <string name="action_show_errors">Ikusi erroreen xehetasun guztiak</string>
+    <string name="action_show_errors">Klik egin erroreen xehetasun guztiak ikusteko</string>
     <string name="update_72hour">3 egunean behin</string>
     <string name="update_weekly">Astero</string>
     <string name="connected_to_wifi">Wi-Fi bidez bakarrik</string>
@@ -617,7 +617,86 @@
     <string name="pref_library_update_refresh_trackers_summary">Eguneratu jarraitzaileak liburutegia eguneratzean</string>
     <string name="invalid_backup_file_missing_manga">Babeskopiak ez du mangarik.</string>
     <string name="manga_tracking_tab">Jarraitzen</string>
-    <string name="currently_reading">Une honetan irakurtzen</string>
-    <string name="want_to_read">Irakurri nahi dut</string>
     <string name="repeating">Berrirakurtzen</string>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Titulu baterako</item>
+        <item quantity="other">%d titulurako</item>
+    </plurals>
+    <string name="pref_show_reading_mode_summary">Erakutsi erabilitako irakurketa modua laburki irakurlea irekitzen denean</string>
+    <string name="tracking_guide">Jarraipen gida</string>
+    <string name="pref_auto_update_manga_sync">Eguneratu aurrerapena irakurri ondoren</string>
+    <string name="action_track">Jarraitu</string>
+    <string name="cache_deleted">Cachea garbitu da. %1$d fitxategi ezabatu dira</string>
+    <string name="label_background_activity">Atzeko planoko ekintzak</string>
+    <string name="pref_disable_battery_optimization_summary">Liburutegiaren eguneraketak eta babeskopiak atzeko planoan egiten laguntzen du</string>
+    <string name="battery_optimization_setting_activity_not_found">Ezin izan dira gailuaren ezarpenak ireki</string>
+    <plurals name="download_queue_summary">
+        <item quantity="one">1 geratzen da</item>
+        <item quantity="other">%1$s geratzen dira</item>
+    </plurals>
+    <string name="local_filter_order_by">Ordenatu honen arabera</string>
+    <plurals name="num_categories">
+        <item quantity="one">kategoria %d</item>
+        <item quantity="other">%d kategoria</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">kapitulu 1</item>
+        <item quantity="other">%1$s kapitulu</item>
+    </plurals>
+    <string name="ext_updates_pending">Eguneraketak egiteke</string>
+    <string name="pref_cutout_short">Erakutsi edukia eremu ebakian</string>
+    <plurals name="num_trackers">
+        <item quantity="one">jarraitzaile 1</item>
+        <item quantity="other">%d jarraitzaile</item>
+    </plurals>
+    <string name="download_queue_error">Ezin izan dira kapituluak deskargatu. Berriro saia zaitezke deskargen atalean</string>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">Kapitulu berri bat</item>
+        <item quantity="other">%1$d kapitulu berri</item>
+    </plurals>
+    <string name="save_chapter_as_cbz">Gorde CBZ artxibo gisa</string>
+    <string name="pref_refresh_library_covers">Eguneratu liburutegiko manga azalak</string>
+    <string name="pref_tablet_ui_mode">Tablet interfazea</string>
+    <string name="share_page_info">%1$s: %2$s, %3$d orrialdea</string>
+    <string name="information_empty_category_dialog">Oraindik ez duzu kategoriarik sortu.</string>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Luzapen baten eguneraketa eskuragarri</item>
+        <item quantity="other">%d luzapenen eguneraketak eskuragarri</item>
+    </plurals>
+    <string name="pref_library_update_show_tab_badge">Erakutsi irakurri gabekoen kopurua Eguneraketak ikonoan</string>
+    <string name="extension_api_error">Ezin izan da luzapenen zerrenda lortu</string>
+    <string name="pref_library_update_refresh_metadata_summary">Bilatu azal eta xehetasun berriak liburutegia eguneratzean</string>
+    <string name="tracker_komga_warning">Jarraitzaile hau Komga iturriarekin bakarrik da bateragarria.</string>
+    <string name="pref_library_update_categories_details">Baztertutako kategorietako mangak ez dira eguneratuko, sarturiko kategorietan egon arren.</string>
+    <string name="pref_hide_threshold">Pantaila mugitzean menua ezkutatzeko sentikortasuna</string>
+    <string name="clear_database_source_item_count">Liburutegian ez dauden %1$d manga datubasean</string>
+    <string name="pref_verbose_logging">Erregistroaren bertsio luzea</string>
+    <string name="pref_verbose_logging_summary">Gorde bertsio luzedun erregistroak sistemaren erregistroan (aplikazioaren errendimentua murrizten du)</string>
+    <string name="recent_manga_time">Kap. %1$s-%2$s</string>
+    <string name="categorized_display_settings">Kategoria bakoitzeko ordenatze eta bistaratze ezarpenak</string>
+    <string name="pref_download_new_categories_details">Baztertutako kategorietako mangak ez dira deskargatuko, sarturiko kategorietan egon arren.</string>
+    <string name="cancelled">Bertan behera utzia</string>
+    <string name="on_hiatus">Etenaldian</string>
+    <string name="library_errors_help">Liburutegi eguneraketen akatsak nola konpondu jakiteko, ikusi %1$s</string>
+    <string name="pref_refresh_library_tracking_summary">Egoera, puntuaketa eta azken kapitulu irakurria eguneratzen ditu jarraipen-zerbitzuetatik</string>
+    <string name="action_display_local_badge">Manga lokala</string>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">%1$s kapituluak eta bat gehiago</item>
+        <item quantity="other">%1$s kapituluak eta %2$d gehiago</item>
+    </plurals>
+    <string name="notification_chapters_single_and_more">%1$s kapitulua eta %2$d gehiago</string>
+    <string name="tracking_info">Norabide bakarreko sinkronizazioa jarraipen-zerbitzuetan kapituluaren aurrerapena eguneratzeko. Konfiguratu manga bakoitzaren jarraipena haien jarraipen botoia erabilita.</string>
+    <plurals name="notification_update_error">
+        <item quantity="one">Eguneraketa batek huts egin du</item>
+        <item quantity="other">%1$d eguneraketek huts egin dute</item>
+    </plurals>
+    <string name="pref_show_navigation_mode">Nabigazio-diseinuaren geruza erakutsi</string>
+    <string name="pref_show_navigation_mode_summary">Erakutsi ukipen-zonak irakurgailua irekitzen denean</string>
+    <string name="enhanced_tracking_info">Iturri zehatzetarako ezaugarri hobetuak eskaintzen dituzten zerbitzuak. Mangen jarraipena automatikoki egiten da zure liburutegira gehitzen direnean.</string>
+    <string name="pref_clear_database_summary">Ezabatu zure liburutegian gordeta ez dauden mangen historia</string>
+    <string name="publishing_finished">Argitarapena amaitua</string>
+    <string name="pref_dual_page_split">Orrialde biko zatiketa</string>
+    <string name="pref_dual_page_invert">Alderantzikatu orrialde bikoitzeko zatiketa</string>
+    <string name="pref_dual_page_invert_summary">Orrialde bikoitzeko zatiketaren kokapena irakurketa noranzkoarekin bat ez badator</string>
+    <string name="pref_library_update_restriction">Eguneraketa automatikoentzako gailuaren murrizketak</string>
 </resources>

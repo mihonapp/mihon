@@ -309,7 +309,6 @@
     <string name="repeating">Legataj denove</string>
     <string name="dropped">Forĵetitaj</string>
     <string name="completed">Finitaj</string>
-    <string name="currently_reading">Aktuale legataj</string>
     <string name="reading">Legata</string>
     <string name="add_tracking">Aldoni ŝanospuron</string>
     <plurals name="num_trackers">
@@ -463,7 +462,6 @@
     <string name="source_unsupported">Fonto ne subtenita</string>
     <string name="myanimelist_relogin">Bonvole ensalutu al MAL denove</string>
     <string name="track_start_date">Komencita</string>
-    <string name="want_to_read">Volas legi</string>
     <string name="plan_to_read">Planas legi</string>
     <string name="paused">Paŭzita</string>
     <string name="on_hold">Haltetita</string>

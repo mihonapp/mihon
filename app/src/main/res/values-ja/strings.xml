@@ -328,9 +328,7 @@
     <string name="logout_title">%1$sからログアウトしますか？</string>
     <string name="logout">ログアウト</string>
     <string name="logout_success">ログアウトしました</string>
-    <string name="currently_reading">現在の位置</string>
     <string name="paused">一時停止</string>
-    <string name="want_to_read">読みたい</string>
     <string name="other_source">他</string>
     <string name="label_more">その他</string>
     <string name="action_sort_latest_chapter">最新章の更新順</string>
@@ -569,7 +567,7 @@
     <string name="nav_zone_prev">前へ</string>
     <string name="pref_show_navigation_mode_summary">ビューアが立ち上がるとタップゾーンを表示します</string>
     <string name="pref_show_navigation_mode">ﾅﾋﾞｹﾞｰｼｮﾝﾚｲｱｳﾄｵｰﾊﾞｰﾚｲを表示</string>
-    <string name="pref_dns_over_https">DNS over HTTPS</string>
+    <string name="pref_dns_over_https">DNS over HTTPS（DoH）</string>
     <string name="pref_download_new_categories_details">含まれているカテゴリーに入っていても、除外対象カテゴリーにあるマンガは更新されません。</string>
     <string name="pref_category_auto_download">自動ダウンロード</string>
     <string name="exclude">下記を除外：%s</string>
@@ -684,4 +682,8 @@
     <string name="pref_update_only_completely_read">読了済みのシリーズ</string>
     <string name="only_update_restrictions">下記のみ更新：%s</string>
     <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください</string>
+    <string name="save_chapter_as_cbz">CBZアーカイブとして保存</string>
+    <string name="publishing_finished">完結済み</string>
+    <string name="cancelled">キャンセル済み</string>
+    <string name="on_hiatus">休止中</string>
 </resources>

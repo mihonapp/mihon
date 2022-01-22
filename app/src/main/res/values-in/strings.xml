@@ -82,7 +82,7 @@
     <string name="all">Semua</string>
     <string name="pref_library_update_restriction">Pembatasan pembaruan otomatis</string>
     <string name="charging">Sedang mengisi daya</string>
-    <string name="pref_update_only_non_completed">Manga yang masih berjalan</string>
+    <string name="pref_update_only_non_completed">Seri yang masih berjalan</string>
     <string name="pref_auto_update_manga_sync">Perbarui progres setelah dibaca</string>
     <string name="pref_start_screen">Layar mulai</string>
     <string name="default_category">Kategori default</string>
@@ -160,7 +160,7 @@
     <string name="cookies_cleared">Cookies dihapus</string>
     <string name="pref_clear_database">Hapus database</string>
     <string name="pref_clear_database_summary">Hapus riwayat manga yang tidak disimpan di pustaka Anda</string>
-    <string name="clear_database_confirmation">Apakah Anda yakin\? Bab yang dibaca dan progres manga yang tidak disimpan dalam pustaka akan hilang</string>
+    <string name="clear_database_confirmation">Apakah Anda yakin\? Bab yang telah dibaca dan progres manga bukan-pustaka akan hilang</string>
     <string name="clear_database_completed">Entri dihapus</string>
     <string name="pref_refresh_library_tracking">Segarkan pelacakan metadata</string>
     <string name="pref_refresh_library_tracking_summary">Perbarui status, nilai dan bab terakhir yang dibaca dari layanan pelacakan</string>
@@ -360,9 +360,7 @@
     <string name="pref_always_show_chapter_transition">Selalu tampilkan transisi bab</string>
     <string name="logout">Keluar</string>
     <string name="logout_success">Anda sudah keluar</string>
-    <string name="currently_reading">Sedang dibaca</string>
     <string name="paused">Dijeda</string>
-    <string name="want_to_read">Ingin dibaca</string>
     <string name="information_cloudflare_bypass_failure">Gagal untuk menembus Cloudflare</string>
     <string name="information_webview_outdated">Harap perbarui aplikasi WebView untuk kompatibilitas yang lebih baik</string>
     <string name="channel_new_chapters">Pembaruan bab</string>
@@ -513,9 +511,9 @@
     <string name="pref_category_delete_chapters">Hapus bab</string>
     <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau salah dilabeli untuk menampilkan konten NSFW (18+) dalam aplikasi.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Melewati %d bab, sumber menghapusnya atau mungkin karena difilter</item>
+        <item quantity="other">Melewati %d bab, entah sumber kehilangan mereka atau mungkin karena sudah difilter</item>
     </plurals>
-    <string name="no_chapters_error">Bab tak ditemukan</string>
+    <string name="no_chapters_error">Tidak ada bab yang ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan bab default diperbarui</string>
     <string name="set_chapter_settings_as_default">Tetapkan sebagai default</string>
     <string name="also_set_chapter_settings_for_library">Juga terapkan untuk semua manga di pustaka saya</string>
@@ -571,7 +569,7 @@
     <string name="cancel_all_for_series">Batal semua untuk seri ini</string>
     <string name="update_check_eol">Versi Android ini tidak lagi didukung</string>
     <string name="clipboard_copy_error">Gagal menyalin ke papan klip</string>
-    <string name="pref_dns_over_https">DNS melalui HTTPS</string>
+    <string name="pref_dns_over_https">DNS melalui HTTPS (DoH)</string>
     <string name="kindlish_nav">semacam Kindle</string>
     <string name="pref_category_auto_download">Unduh otomatis</string>
     <string name="backup_restore_content_full">Data dari berkas cadangan akan dipulihkan.
@@ -679,7 +677,13 @@
     <string name="database_clean">Bersihkan database</string>
     <string name="clear_database_source_item_count">%1$d manga diluar kategori pustaka pada database</string>
     <string name="extension_api_error">Gagal mendapatkan daftar ekstensi</string>
-    <string name="pref_library_update_manga_restriction">Pembatasan manga</string>
-    <string name="pref_update_only_completely_read">Selesai dibaca</string>
+    <string name="pref_library_update_manga_restriction">Pembatasan pembaruan pustaka</string>
+    <string name="pref_update_only_completely_read">Seri selesai dibaca</string>
     <string name="privacy_policy">Kebijakan privasi</string>
+    <string name="publishing_finished">Penerbitan selesai</string>
+    <string name="cancelled">Dibatalkan</string>
+    <string name="on_hiatus">Sedang Hiatus</string>
+    <string name="only_update_restrictions">Hanya perbarui: %s</string>
+    <string name="library_errors_help">Untuk bantuan cara memperbaiki kesalahan pembaruan pustaka, lihat %1$s</string>
+    <string name="save_chapter_as_cbz">Simpan sebagai arsip CBZ</string>
 </resources>

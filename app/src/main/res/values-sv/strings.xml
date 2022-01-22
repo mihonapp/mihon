@@ -334,9 +334,7 @@
     <string name="logout_title">Logga ut från %1$s\?</string>
     <string name="logout">Logga ut</string>
     <string name="logout_success">Du är nu utloggad</string>
-    <string name="currently_reading">Läser</string>
     <string name="paused">Pausad</string>
-    <string name="want_to_read">Planerar att läsa</string>
     <string name="label_more">Mer</string>
     <string name="action_sort_latest_chapter">Senaste kapitel</string>
     <string name="action_view_chapters">Visa kapitel</string>

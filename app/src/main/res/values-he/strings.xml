@@ -91,12 +91,10 @@
     <string name="score">ציון</string>
     <string name="repeating">קריאה מחדש</string>
     <string name="plan_to_read">מתכנן לקרוא</string>
-    <string name="want_to_read">רוצה לקרוא</string>
     <string name="paused">מושהה</string>
     <string name="on_hold">בהמתנה</string>
     <string name="dropped">הושמט</string>
     <string name="completed">הושלם</string>
-    <string name="currently_reading">כרגע נקרא</string>
     <string name="invalid_download_dir">מיקום הורדה לא חוקי</string>
     <string name="confirm_delete_chapters">האם אתה בטוח שברצונך למחוק את הפרקים שנבחרו\?</string>
     <string name="download_unread">לא נקרא</string>

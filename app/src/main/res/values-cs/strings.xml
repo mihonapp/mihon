@@ -91,7 +91,7 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Umístění pro stažení</string>
-    <string name="pref_remove_after_marked_as_read">Po označení jako přečtené</string>
+    <string name="pref_remove_after_marked_as_read">Po ručním označení jako přečtené</string>
     <string name="pref_remove_after_read">Po přečtení automaticky smazat</string>
     <string name="custom_dir">Vlastní umístění</string>
     <string name="pref_download_new">Stahovat nové kapitoly</string>
@@ -357,7 +357,6 @@
     <string name="action_download_unread">Stáhnout nepřečtené kapitoly</string>
     <string name="action_sort_latest_chapter">Poslední kapitola</string>
     <string name="unlock_app">Odemknout Tachiyomi</string>
-    <string name="want_to_read">Chci číst</string>
     <string name="add_tracking">Přidat sledování</string>
     <string name="no_chapters_error">Nebyly nalezeny žádné kapitoly</string>
     <string name="set_chapter_settings_as_default">Nastavit jako výchozí</string>
@@ -559,7 +558,6 @@
     <string name="pref_category_for_this_series">Pro tuto sérii</string>
     <string name="share_page_info">%1$s: %2$s, strana %3$d</string>
     <string name="error_invalid_date_supplied">Zadáno neplatné datum</string>
-    <string name="currently_reading">Právě čtu</string>
     <plurals name="num_trackers">
         <item quantity="one">1 sledovač</item>
         <item quantity="few">%d sledovače</item>
@@ -597,7 +595,7 @@
     <string name="pref_dual_page_split">Rozdělení na dvě stránky</string>
     <string name="pref_show_navigation_mode_summary">Ukázat oblast klepnutí když je čtečka otevřená</string>
     <string name="theme_system">Sledování systému</string>
-    <string name="action_show_errors">Zobrazit podrobnosti o chybě</string>
+    <string name="action_show_errors">Klepněte pro zobrazení podrobností o chybě</string>
     <string name="action_sort_chapter_fetch_date">Datum načtení</string>
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
@@ -709,4 +707,5 @@
     <string name="pref_library_update_manga_restriction">Omezení aktualizace knihovny</string>
     <string name="pref_update_only_completely_read">Plně přečtené série</string>
     <string name="database_clean">vyčištění databáze</string>
+    <string name="save_chapter_as_cbz">Uložit jako CBZ archiv</string>
 </resources>

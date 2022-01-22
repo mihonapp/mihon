@@ -54,17 +54,17 @@
     <string name="pref_library_columns">Itens por fila</string>
     <string name="portrait">Retrato</string>
     <string name="landscape">Paisagem</string>
-    <string name="pref_library_update_interval">Frequência de atualização</string>
-    <string name="update_never">Manual</string>
+    <string name="pref_library_update_interval">Atualizações automáticas</string>
+    <string name="update_never">Desligado</string>
     <string name="update_6hour">A cada 6 horas</string>
     <string name="update_12hour">A cada 12 horas</string>
     <string name="update_24hour">Diariamente</string>
     <string name="update_48hour">A cada 2 dias</string>
     <string name="all">Tudo</string>
-    <string name="pref_library_update_restriction">Restrições sobre a atualização</string>
+    <string name="pref_library_update_restriction">Restrições do aparelho para atualizações automáticas</string>
     <string name="charging">A carregar</string>
-    <string name="pref_update_only_non_completed">Atualizar apenas mangas a decorrer</string>
-    <string name="pref_auto_update_manga_sync">Atualizar progresso do capítulo após leitura</string>
+    <string name="pref_update_only_non_completed">Séries em andamento</string>
+    <string name="pref_auto_update_manga_sync">Atualizar o progresso após a leitura</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Ecrã inteiro</string>
     <string name="pref_page_transitions">Animar transições de página</string>
@@ -100,15 +100,15 @@
     <string name="rotation_force_landscape">Horizontal bloqueado</string>
     <!-- Downloads section -->
     <string name="pref_download_directory">Localização das Transferências</string>
-    <string name="pref_remove_after_marked_as_read">Depois de marcado como lido</string>
-    <string name="pref_remove_after_read">Automaticamente depois de lido</string>
+    <string name="pref_remove_after_marked_as_read">Após marcado como lido manualmente</string>
+    <string name="pref_remove_after_read">Excluir automaticamente após a leitura</string>
     <string name="custom_dir">Localização personalizada</string>
     <string name="disabled">Desativado</string>
     <string name="last_read_chapter">Último capítulo</string>
-    <string name="second_to_last">Penúltimo capítulo</string>
-    <string name="third_to_last">Terceiro capítulo antes do último</string>
-    <string name="fourth_to_last">Quarto capítulo antes do último</string>
-    <string name="fifth_to_last">Quinto capítulo antes do último</string>
+    <string name="second_to_last">Penúltimo capítulo lido</string>
+    <string name="third_to_last">Antepenúltimo capítulo lido</string>
+    <string name="fourth_to_last">Quarto capítulo lido antes do último</string>
+    <string name="fifth_to_last">Quinto capítulo lido antes do último</string>
     <!-- Sync section -->
     <string name="services">Serviços</string>
     <!-- Advanced section -->
@@ -364,9 +364,7 @@
     <string name="logout_title">Terminar sessão em %1$s\?</string>
     <string name="logout">Terminar sessão</string>
     <string name="logout_success">Sua sessão está agora encerrada</string>
-    <string name="currently_reading">Lendo atualmente</string>
     <string name="paused">Pausado</string>
-    <string name="want_to_read">Quero ler</string>
     <string name="label_more">Mais</string>
     <string name="action_sort_latest_chapter">Último capítulo</string>
     <string name="action_view_chapters">Ver capítulos</string>
@@ -556,8 +554,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Isto não impede extensões não oficiais ou incorretamente marcadas de mostrarem counteúdo NSFW (18+) dentro do aplicativo.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Existe 1 capítulo faltando</item>
-        <item quantity="other">Existem %d capítulos faltando</item>
+        <item quantity="one">Pulando %d capítulo, ou ele está faltando na fonte, ou ele foi filtrado</item>
+        <item quantity="other">Pulando %d capítulos, ou eles estão faltando na fonte, ou eles foram filtrados</item>
     </plurals>
     <string name="no_chapters_error">Nenhum capítulo encontrado</string>
     <string name="chapter_settings_updated">Definições padrão de capítulo atualizadas</string>
@@ -620,7 +618,7 @@
     <string name="exclude">Excluir: %s</string>
     <string name="include">Incluir: %s</string>
     <string name="pref_library_update_categories_details">Mangá em categorias excluídas não será atualizada mesmo que também estejam nas categorias incluídas.</string>
-    <string name="action_show_errors">Ver detalhes do erro</string>
+    <string name="action_show_errors">Toque para ver os detalhes dos erros</string>
     <string name="action_sort_chapter_fetch_date">Data de procura</string>
     <string name="rotation_landscape">Horizontal</string>
     <string name="rotation_portrait">Vertical</string>
@@ -666,7 +664,7 @@
     <string name="notification_updating">Atualizando biblioteca… (%1$d/%2$d)</string>
     <string name="error_no_match">Nenhuma correspondência encontrada</string>
     <string name="source_unsupported">Fonte não é suportada</string>
-    <string name="enhanced_tracking_info">Serviços que oferecem funcionalidades melhoradas para fontes específicas.</string>
+    <string name="enhanced_tracking_info">Serviços que oferecem recursos aprimorados para fontes específicas. Os mangás são automaticamente monitorados quando adicionados à sua biblioteca.</string>
     <string name="enhanced_services">Serviços melhorados</string>
     <string name="pref_library_update_refresh_trackers">Atualizar monitorizadores automaticamente</string>
     <string name="pref_library_update_refresh_trackers_summary">Atualizar monitorizadores ao atualizar biblioteca</string>
@@ -691,4 +689,44 @@
     <string name="pref_category_appearance">Aparência</string>
     <string name="connected_to_wifi">Só com Wi-Fi</string>
     <string name="update_72hour">A cada 3 dias</string>
+    <string name="only_update_restrictions">Somente atualizar: %s</string>
+    <string name="ext_update_all">Atualizar tudo</string>
+    <string name="ext_app_info">Informações do app</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Instale e inicie o Shizuku para utilizá-lo como o instalador de extensões.</string>
+    <string name="pref_verbose_logging_summary">Imprime registos detalhados no registo de eventos do sistema (reduz o desempenho da ap)</string>
+    <string name="action_track">Monitorar</string>
+    <string name="save_chapter_as_cbz">Gravar como ficheiro CBZ</string>
+    <string name="clear_database_source_item_count">%1$d mangás que não estão na biblioteca no banco de dados</string>
+    <string name="database_clean">Banco de dados limpo</string>
+    <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi</string>
+    <string name="notification_size_warning">Aviso: atualizações com muitos itens prejudicam as fontes e podem deixar as atualizações lentas e aumentar o uso da bateria</string>
+    <string name="library_errors_help">Para obter ajuda sobre como corrigir erros de atualização da biblioteca, veja %1$s</string>
+    <string name="pref_auto_clear_chapter_cache">Limpar o cache de capítulos ao fechar a app</string>
+    <string name="tracker_komga_warning">Este serviço de monitoramento só é compatível com a fonte Komga.</string>
+    <string name="pref_update_only_completely_read">Séries lidas completamente</string>
+    <string name="pref_hide_threshold">Sensibilidade para ocultar o menu na rolagem</string>
+    <string name="pref_high">Alta</string>
+    <string name="pref_low">Baixa</string>
+    <string name="pref_lowest">Mais baixa</string>
+    <string name="pref_remove_exclude_categories">Categorias ignoradas</string>
+    <string name="label_background_activity">Atividade em segundo plano</string>
+    <string name="channel_app_updates">Atualizações da app</string>
+    <string name="pref_library_update_manga_restriction">Restrições de atualização da biblioteca</string>
+    <string name="pref_inverted_colors">Invertido</string>
+    <string name="backup_info">Backups automáticos são altamente recomendados. Deve manter cópias em outros locais também.</string>
+    <string name="pref_tablet_ui_mode">Interface de tablet</string>
+    <string name="pref_verbose_logging">Registo de eventos verboso</string>
+    <string name="privacy_policy">Política de privacidade</string>
+    <string name="extension_api_error">Erro ao obter a lista de extensões</string>
+    <string name="ext_install_service_notif">Instalando a extensão…</string>
+    <string name="ext_installer_pref">Instalador</string>
+    <string name="ext_installer_legacy">Legado</string>
+    <string name="ext_installer_shizuku_stopped">O Shizuku não está em execução</string>
+    <string name="pref_category_timestamps">Data e hora</string>
+    <string name="pref_relative_format">Datas relativas</string>
+    <string name="help_translate">Ajudar a traduzir</string>
+    <string name="pref_highest">Mais alta</string>
+    <string name="on_hiatus">Em hiato</string>
+    <string name="publishing_finished">Publicação concluída</string>
+    <string name="cancelled">Cancelado</string>
 </resources>

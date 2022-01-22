@@ -365,7 +365,6 @@
     <string name="on_hold">На паузи</string>
     <string name="dropped">Прекинуто</string>
     <string name="completed">Završeno</string>
-    <string name="currently_reading">Тренутно се чита</string>
     <string name="reading">Читање</string>
     <string name="add_tracking">Додај пратиоца</string>
     <string name="manga_tracking_tab">Праћење</string>
@@ -400,7 +399,6 @@
     <string name="pref_skip_filtered_chapters">Прескочи филтрирана поглавља</string>
     <string name="pref_cutout_short">Прикажи садржај у исечку</string>
     <string name="set_as_cover">Постави као омот</string>
-    <string name="want_to_read">Желим да читам</string>
     <string name="pref_disable_battery_optimization_summary">Помаже при ажурирању колекције и резервних копија</string>
     <string name="download_notifier_title_error">Грешка</string>
     <string name="download_notifier_downloader_title">Преузимања</string>

@@ -334,9 +334,7 @@
     <string name="logout_title">Aus %1$s abmelden\?</string>
     <string name="logout">Abmelden</string>
     <string name="logout_success">Du bist jetzt abgemeldet</string>
-    <string name="currently_reading">Am Lesen</string>
     <string name="paused">Pausiert</string>
-    <string name="want_to_read">Möchte ich lesen</string>
     <string name="label_more">Mehr</string>
     <string name="action_sort_latest_chapter">Neueste Kapitel</string>
     <string name="action_view_chapters">Kapitel anzeigen</string>
@@ -581,7 +579,7 @@
     <string name="nav_zone_left">Links</string>
     <string name="nav_zone_next">Weiter</string>
     <string name="nav_zone_prev">Zurück</string>
-    <string name="pref_dns_over_https">DNS over HTTPS</string>
+    <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="exclude">Ausschließen: %s</string>
     <string name="include">Einschließen: %s</string>
     <string name="none">Nichts</string>
@@ -697,4 +695,8 @@
     <string name="pref_library_update_manga_restriction">Bibliotheksaktualisierungsbeschränkungen</string>
     <string name="only_update_restrictions">Nur aktualisieren: %s</string>
     <string name="library_errors_help">Für Hilfe zum Beheben von Fehlern bei Bibliotheksaktualisierungen, siehe %1$s</string>
+    <string name="save_chapter_as_cbz">Als CBZ-Archiv speichern</string>
+    <string name="cancelled">Abgebrochen</string>
+    <string name="on_hiatus">Unterbrochen</string>
+    <string name="publishing_finished">Veröffentlichung abgeschlossen</string>
 </resources>

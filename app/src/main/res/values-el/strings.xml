@@ -355,9 +355,7 @@
     <string name="recent_manga_time">Κεφ. %1$s - %2$s</string>
     <string name="updating_library">Ενημέρωση βιβλιοθήκης</string>
     <string name="error_invalid_date_supplied">Η ημερομηνία που δόθηκε δεν είναι έγκυρη</string>
-    <string name="want_to_read">Θέλω να διαβάσω</string>
     <string name="paused">Σε παύση</string>
-    <string name="currently_reading">Διαβάζετε αυτή τη στιγμή</string>
     <string name="manga_info_collapse">Λιγότερα</string>
     <string name="manga_info_expand">Περισσότερα</string>
     <string name="in_library">Στη βιβλιοθήκη</string>
@@ -581,7 +579,7 @@
     <string name="nav_zone_left">Αριστερά</string>
     <string name="nav_zone_next">Επόμενο</string>
     <string name="nav_zone_prev">Προηγούμενο</string>
-    <string name="pref_dns_over_https">DNS μέσω HTTPS</string>
+    <string name="pref_dns_over_https">DNS μέσω HTTPS (DoH)</string>
     <string name="exclude">Εξαίρεση: %s</string>
     <string name="include">Συμπερίληψη: %s</string>
     <string name="none">Κανένα</string>
@@ -697,4 +695,8 @@
     <string name="pref_update_only_completely_read">Πλήρως διαβασμένη σειρά</string>
     <string name="only_update_restrictions">Μόνο ενημέρωση: %s</string>
     <string name="library_errors_help">Για βοήθεια σχετικά με τον τρόπο διόρθωσης σφαλμάτων ενημέρωσης βιβλιοθήκης, ανατρέξτε στο %1$s</string>
+    <string name="save_chapter_as_cbz">Αποθήκευση ως αρχείο CBZ</string>
+    <string name="cancelled">Ακυρώθηκε</string>
+    <string name="on_hiatus">Σε αναστολή</string>
+    <string name="publishing_finished">Η έκδοσή ολοκληρώθηκε</string>
 </resources>

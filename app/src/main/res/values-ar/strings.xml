@@ -72,17 +72,17 @@
     <string name="pref_library_columns">العناصر لكل صف</string>
     <string name="portrait">رأسي</string>
     <string name="landscape">افقي</string>
-    <string name="pref_library_update_interval">معدل تحديث المكتبة</string>
-    <string name="update_never">يدوياً</string>
+    <string name="pref_library_update_interval">التحديثات التلقائية</string>
+    <string name="update_never">إيقاف</string>
     <string name="update_6hour">كل ٦ ساعات</string>
     <string name="update_12hour">كل ١٢ ساعة</string>
     <string name="update_24hour">يومياً</string>
     <string name="update_48hour">كل يومان</string>
     <string name="update_weekly">أسبوعياً</string>
     <string name="all">الكل</string>
-    <string name="pref_library_update_restriction">قيود تحديث المكتبة</string>
+    <string name="pref_library_update_restriction">تقييد التحديث التلقائي للجهاز</string>
     <string name="charging">جاري الشحن</string>
-    <string name="pref_update_only_non_completed">تحديث المانجا المستمرة فقط</string>
+    <string name="pref_update_only_non_completed">سلسلة جارية</string>
     <string name="pref_auto_update_manga_sync">تحديث تقدّم الفصول بعد القراءة</string>
     <string name="pref_start_screen">شاشة البداية</string>
     <string name="default_category">الفئة الافتراضية</string>
@@ -123,15 +123,15 @@
     <string name="rotation_force_portrait">الوضع الرأسي اﻹجباري</string>
     <string name="rotation_force_landscape">الوضع الأفقي الإجباري</string>
     <string name="pref_download_directory">موقع التنزيل</string>
-    <string name="pref_remove_after_marked_as_read">وضع علامة \"مقروءة\" يدويًا</string>
-    <string name="pref_remove_after_read">تلقائيا بعد القراءة</string>
+    <string name="pref_remove_after_marked_as_read">بعد وضع علامة \"مقروءة\" يدوياً</string>
+    <string name="pref_remove_after_read">الحذف تلقائيا بعد القراءة</string>
     <string name="custom_dir">مجلد مخصص</string>
     <string name="disabled">معطل</string>
     <string name="last_read_chapter">آخر فصل مقروء</string>
-    <string name="second_to_last">من الفصل الثاني إلى اﻷخير</string>
-    <string name="third_to_last">‪من الفصل الثالث إلى اﻷخير</string>
-    <string name="fourth_to_last">من الفصل الرابع إلى اﻷخير</string>
-    <string name="fifth_to_last">من الفصل الخامس إلى اﻷخير</string>
+    <string name="second_to_last">من الفصل الثاني قبل الأخير</string>
+    <string name="third_to_last">‪من الفصل الثالث قبل اﻷخير</string>
+    <string name="fourth_to_last">من الفصل الرابع قبل اﻷخير</string>
+    <string name="fifth_to_last">من الفصل الخامس قبل اﻷخير</string>
     <string name="pref_download_new">تنزيل الفصول الجديدة</string>
     <string name="services">الخدمات</string>
     <string name="pref_create_backup">إنشاء نسخة إحتياطية</string>
@@ -228,7 +228,7 @@
     <string name="chapter_progress">الصفحة: %1$d</string>
     <string name="no_next_chapter">لم يتم العثور على الفصل التالي</string>
     <string name="no_previous_chapter">لم يتم العثور على الفصل السابق</string>
-    <string name="decode_image_error">تعذر تحميل الصورة</string>
+    <string name="decode_image_error">تعذّر تحميل الصورة</string>
     <string name="confirm_set_image_as_cover">هل تريد تعيين هذه الصورة كغلاف؟</string>
     <string name="download_queue_error">فشل تنزيل الفصول. يمكنك إعادة المحاولة في قسم التنزيلات</string>
     <string name="notification_new_chapters">تم إيجاد فصول جديدة</string>
@@ -343,7 +343,7 @@
     <string name="lock_never">أبدًا</string>
     <string name="lock_always">دائماً</string>
     <string name="lock_when_idle">قفل في حالة السكون</string>
-    <string name="lock_with_biometrics">تتطلب فتح</string>
+    <string name="lock_with_biometrics">تتطلب فتح القفل</string>
     <string name="pref_category_security">إعدادات الأمان</string>
     <string name="pref_manage_notifications">إدارة الإشعارات</string>
     <string name="pref_date_format">صيغة التاريخ</string>
@@ -433,9 +433,7 @@
     <string name="viewer">وضع القراءة</string>
     <string name="pref_category_for_this_series">القسم الخاص بهذه السلسلة</string>
     <string name="error_invalid_date_supplied">التاريخ الذي أدخلته غير صالح</string>
-    <string name="want_to_read">أرغب بقرأتها</string>
     <string name="paused">متوقّف</string>
-    <string name="currently_reading">تقرأ حالياً</string>
     <string name="add_tracking">إضافة تتبع</string>
     <string name="manga_info_collapse">أقل</string>
     <string name="manga_info_expand">المزيد</string>
@@ -620,7 +618,7 @@
     <string name="action_asc">تصاعدياً</string>
     <string name="action_order_by_upload_date">حسب تاريخ الرفع</string>
     <string name="action_order_by_chapter_number">حسب رقم الفصل</string>
-    <string name="pref_dns_over_https">إستخدام DNS بدلا من HTTPS</string>
+    <string name="pref_dns_over_https">إستخدام DNS عبر HTTPS (DoH)</string>
     <string name="backup_restore_content_full">تم استيراد البيانات من ملف نسخ الاحتياطي.
 \n
 \nيتوجب تثبيت الإضافات المفقودة و تسجيل الدخول إلى منصات التعقب تالياً لاستعمالهم.</string>
@@ -643,7 +641,7 @@
     <string name="include">تضمين: %s</string>
     <string name="none">لا شيء</string>
     <string name="pref_library_update_categories_details">المانجا في الفئات المستبعدة لن يتم تحديثها حتى و ان كانت أيضا في الفئات المضمنة.</string>
-    <string name="action_show_errors">إظهار كافة تفاصيل الخطأ</string>
+    <string name="action_show_errors">اضغط لإظهار كافة تفاصيل الخطأ</string>
     <string name="pref_category_auto_download">التنزيل التلقائي</string>
     <string name="pref_download_new_categories_details">المانجا في الفئات المستبعدة لن يتم تنزيلها حتى و ان كانت أيضا في الفئات المضمنة.</string>
     <string name="notification_incognito_text">إلغاء تفعيل الوضع الخفي</string>
@@ -683,7 +681,7 @@
     <string name="pref_low">أدنى</string>
     <string name="pref_high">أعلى</string>
     <string name="pref_highest">أعلَى</string>
-    <string name="pref_hide_threshold">إخفاء تلقائي للقائمة عند تصفح حساسية</string>
+    <string name="pref_hide_threshold">حساسية التمرير لاخفاء القائمة</string>
     <string name="pref_dark_theme_pure_black">وضع داكن الأسود النقي</string>
     <string name="theme_yotsuba">يوتسوبا</string>
     <string name="theme_yinyang">ين &amp; يانغ</string>
@@ -701,12 +699,12 @@
     <string name="label_default">الافتراضي</string>
     <string name="label_background_activity">الأنشطة التي تعمل في الخلفية</string>
     <plurals name="relative_time">
-        <item quantity="zero">٠</item>
-        <item quantity="one">١</item>
-        <item quantity="two">٢</item>
-        <item quantity="few">عدد قليل</item>
-        <item quantity="many">عديدة</item>
-        <item quantity="other">اخر</item>
+        <item quantity="zero">الأمس</item>
+        <item quantity="one">منذ %1$d أيام</item>
+        <item quantity="two">منذ %1$d أيام</item>
+        <item quantity="few">منذ %1$d أيام</item>
+        <item quantity="many">منذ %1$d أيام</item>
+        <item quantity="other">منذ %1$d أيام</item>
     </plurals>
     <string name="pref_relative_time_short">قصير (اليوم، الأمس)</string>
     <string name="action_track">تتبع</string>
@@ -721,12 +719,12 @@
     <string name="help_translate">ساعد بالترجمة</string>
     <string name="pref_tablet_ui_mode">واجهة مستخدم الجهاز اللوحي</string>
     <string name="pref_remove_exclude_categories">فئات المستثناة</string>
-    <string name="ext_installer_pref">مثبت</string>
+    <string name="ext_installer_pref">المثبت</string>
     <string name="action_sort_count">مجموع المانغا</string>
     <string name="label_warning">تحذير</string>
     <string name="action_display_language_badge">اللغة</string>
     <string name="backup_info">يوصى بشدة بالنسخ الاحتياطي التلقائي. يجب عليك الإحتفاظ بنُسخ في أماكن أخرى أيضًا.</string>
-    <string name="notification_size_warning">قد تؤدي التحديثات الكبيرة إلى زيادة استخدام البطارية وتصبح المصادر أبطأ</string>
+    <string name="notification_size_warning">قد تؤدي التحديثات الكبيرة إلى زيادة استهلاك البطارية وتصبح المصادر أبطأ</string>
     <string name="pref_verbose_logging">التسجيل المطول</string>
     <string name="ext_app_info">معلومات التطبيق</string>
     <string name="ext_install_service_notif">جارٍ تثبيت الإضافة …</string>
@@ -736,4 +734,21 @@
     <string name="ext_update_all">تحديث الكل</string>
     <string name="update_72hour">كل ثلاثة ايام</string>
     <string name="connected_to_wifi">فقط على شبكة WI-FI</string>
+    <string name="only_update_restrictions">التحديث فقط: %s</string>
+    <string name="ext_installer_shizuku_stopped">\"Shizuku\" لا يعمل</string>
+    <string name="publishing_finished">تم النشر</string>
+    <string name="cancelled">ملغي</string>
+    <string name="on_hiatus">في فترة راحة</string>
+    <string name="library_errors_help">للحصول على المساعده في إصلاح أخطاء تحديث المكتبة، أنظر هنا%1$s</string>
+    <string name="save_chapter_as_cbz">احفظ كأرشيف CBZ</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="pref_library_update_manga_restriction">تقييد تحديث المكتبة</string>
+    <string name="pref_update_only_completely_read">سلسلة تم قراءتها</string>
+    <string name="ext_installer_legacy">قياسي</string>
+    <string name="pref_auto_clear_chapter_cache">امسح ملفات التخزين المؤقت عند إغلاق التطبيق</string>
+    <string name="database_clean">تنظيف قاعدة البيانات</string>
+    <string name="clear_database_source_item_count">عدد المانغا غير المتواجدة بقاعدة بيانات المكتبة %1$d</string>
+    <string name="extension_api_error">فشل الحصول على قائمة الملحقات</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">قم بتثبيت \"Shizuku\" لاستخدامه كمثبت ملحق</string>
+    <string name="download_queue_size_warning">تحذير: التحميلات كبيرة الحجم والعدد يمكن أن تؤدي إلى تباطؤ المصادر و/أو تقم بحظر \"Tachiyomi\"</string>
 </resources>

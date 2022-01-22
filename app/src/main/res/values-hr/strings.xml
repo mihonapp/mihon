@@ -192,7 +192,7 @@
     <string name="disabled">Deaktivirano</string>
     <string name="custom_dir">Prilagođeno mjesto</string>
     <string name="pref_remove_after_read">Automatski izbriši nakon čitanja</string>
-    <string name="pref_remove_after_marked_as_read">Nakon označivanja kao pročitano</string>
+    <string name="pref_remove_after_marked_as_read">Nakon ručnog označivanja kao pročitano</string>
     <string name="pref_download_directory">Mjesto preuzimanja</string>
     <string name="webtoon_side_padding_25">25 %</string>
     <string name="webtoon_side_padding_20">20 %</string>
@@ -325,13 +325,11 @@
     <string name="title">Naslov</string>
     <string name="score">Ocjena</string>
     <string name="repeating">Ponovno čitanje</string>
-    <string name="want_to_read">Želim čitati</string>
     <string name="plan_to_read">Planiram čitati</string>
     <string name="paused">Zaustavljeno</string>
     <string name="on_hold">Na čekanju</string>
     <string name="dropped">Ispušteno</string>
     <string name="completed">Završeno</string>
-    <string name="currently_reading">Trenutačno se čita</string>
     <string name="reading">Čitanje</string>
     <string name="add_tracking">Dodaj praćenje</string>
     <string name="manga_tracking_tab">Praćenje</string>
@@ -593,7 +591,7 @@
     <string name="nav_zone_next">Sljedeće</string>
     <string name="nav_zone_prev">Prethodno</string>
     <string name="pref_show_navigation_mode">Prikaži raspored navigacije</string>
-    <string name="pref_dns_over_https">DNS preko HTTPS-a</string>
+    <string name="pref_dns_over_https">DNS preko HTTPS-a (DoH)</string>
     <string name="none">Ništa</string>
     <string name="pref_download_new_categories_details">Manga u isključenim kategorijama neće se preuzeti čak niti ako se također nalaze u uključenim kategorijama.</string>
     <string name="pref_category_auto_download">Automatsko preuzimanje</string>
@@ -601,7 +599,7 @@
     <string name="include">Uključi: %s</string>
     <string name="pref_library_update_categories_details">Manga u isključenim kategorijama neće se ažurirati čak niti ako se također nalaze u uključenim kategorijama.</string>
     <string name="action_sort_chapter_fetch_date">Datum preuzimanja</string>
-    <string name="action_show_errors">Prikaži sve detalje greške</string>
+    <string name="action_show_errors">Dodirni za prikaz detalja greške</string>
     <string name="update_check_eol">Ove verzija androida više nije podržana</string>
     <string name="clipboard_copy_error">Kopiranje nije uspješno</string>
     <string name="rotation_landscape">Ležeće</string>
@@ -709,4 +707,9 @@
     <string name="pref_remove_exclude_categories">Isključene kategorije</string>
     <string name="pref_high">Visoka</string>
     <string name="pref_lowest">Najniža</string>
+    <string name="publishing_finished">Objavljivanje završeno</string>
+    <string name="cancelled">Prekinuto</string>
+    <string name="on_hiatus">Prekid</string>
+    <string name="library_errors_help">Za pomoć o tome kako popraviti greške aktualiziranja biblioteke, pogledaj %1$s</string>
+    <string name="save_chapter_as_cbz">Spremi kao CBZ arhivu</string>
 </resources>

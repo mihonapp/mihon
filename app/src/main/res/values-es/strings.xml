@@ -59,12 +59,12 @@
     <string name="update_never">No</string>
     <string name="update_6hour">Cada 6 horas</string>
     <string name="update_12hour">Cada 12 horas</string>
-    <string name="update_24hour">Diaria</string>
+    <string name="update_24hour">Diarias</string>
     <string name="update_48hour">Cada 2 días</string>
     <string name="pref_library_update_restriction">Restricciones de actualización automática del dispositivo</string>
     <string name="charging">Mientras se carga la batería</string>
     <string name="pref_update_only_non_completed">Manga en curso</string>
-    <string name="pref_auto_update_manga_sync">Actualizar progreso después de leer</string>
+    <string name="pref_auto_update_manga_sync">Actualizar progreso al terminar un capítulo</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="pref_page_transitions">Transiciones de página animadas</string>
@@ -82,9 +82,9 @@
     <string name="right_to_left_viewer">De derecha a izquierda</string>
     <string name="vertical_viewer">Vertical</string>
     <string name="webtoon_viewer">Webtoon</string>
-    <string name="pref_image_scale_type">Tipo de escalado</string>
-    <string name="scale_type_fit_screen">Ajustar a la pantalla</string>
-    <string name="scale_type_stretch">Estirado</string>
+    <string name="pref_image_scale_type">Método de ampliación</string>
+    <string name="scale_type_fit_screen">Ajustar al tamaño de pantalla</string>
+    <string name="scale_type_stretch">Estirar la imagen</string>
     <string name="scale_type_fit_width">Ajustar a anchura</string>
     <string name="scale_type_fit_height">Ajustar a altura</string>
     <string name="scale_type_original_size">Tamaño original</string>
@@ -100,8 +100,8 @@
     <string name="rotation_force_landscape">Forzar en horizontal</string>
     <!-- Downloads section -->
     <string name="pref_download_directory">Carpeta de descarga</string>
-    <string name="pref_remove_after_marked_as_read">Tras marcarlos como leídos de forma manual</string>
-    <string name="pref_remove_after_read">Una vez leído borrar automáticamente</string>
+    <string name="pref_remove_after_marked_as_read">Borrarlos tras marcarlos como leídos de forma manual</string>
+    <string name="pref_remove_after_read">Borrar el capítulo al terminarlo</string>
     <string name="custom_dir">Ubicación personalizada</string>
     <!-- Sources section -->
     <!-- Sync section -->
@@ -121,7 +121,7 @@
     <string name="version">Versión</string>
     <!-- ACRA -->
     <string name="pref_enable_acra">Enviar informes de fallos</string>
-    <string name="pref_acra_summary">Ayuda a corregir cualquier error. No se enviarán datos sensibles</string>
+    <string name="pref_acra_summary">Ayuda a corregir cualquier error. No se enviará ninguna información personal</string>
     <!-- Login dialog -->
     <string name="login_title">Iniciar sesión en %1$s</string>
     <string name="username">Nombre de usuario</string>
@@ -158,7 +158,7 @@
     <string name="confirm_delete_chapters">¿Seguro que quieres eliminar los capítulos seleccionados\?</string>
     <!-- MyAnimeList fragment -->
     <string name="reading">Leyendo</string>
-    <string name="completed">Finalizado</string>
+    <string name="completed">Terminados</string>
     <string name="dropped">Abandonado</string>
     <string name="on_hold">En espera</string>
     <string name="plan_to_read">Para leer luego</string>
@@ -219,7 +219,7 @@
     <string name="download_notifier_no_network">No hay conexión de red disponible</string>
     <string name="download_notifier_download_paused">Descarga pausada</string>
     <string name="confirm_set_image_as_cover">¿Usar esta imagen como portada\?</string>
-    <string name="action_display">Mostrar</string>
+    <string name="action_display">Apariencia</string>
     <string name="action_display_grid">Rejilla compacta</string>
     <string name="action_display_list">Lista</string>
     <string name="action_share">Compartir</string>
@@ -230,7 +230,7 @@
     <string name="action_create">Crear</string>
     <string name="action_restore">Restaurar</string>
     <string name="app_not_available">Aplicación no disponible</string>
-    <string name="update_weekly">Semanal</string>
+    <string name="update_weekly">Semanales</string>
     <string name="all">Todos</string>
     <string name="pref_start_screen">Pantalla inicial</string>
     <string name="default_category">Categoría predeterminada</string>
@@ -365,10 +365,8 @@
     <string name="pref_category_library_update">Ajustes globales de actualizaciones</string>
     <string name="logout">Cerrar sesión</string>
     <string name="logout_success">Has cerrado sesión</string>
-    <string name="currently_reading">Leyendo actualmente</string>
     <string name="paused">Pausado</string>
     <string name="logout_title">¿Cerrar sesión en %1$s\?</string>
-    <string name="want_to_read">Quiero leer</string>
     <string name="label_more">Más</string>
     <string name="action_sort_latest_chapter">Por capítulo más reciente</string>
     <string name="action_view_chapters">Ver capítulos</string>
@@ -478,13 +476,13 @@
     <string name="viewer">Modo de lectura</string>
     <string name="pref_category_for_this_series">Para esta serie</string>
     <string name="gray_background">Gris</string>
-    <string name="pref_true_color_summary">Reduce el efecto anillado y mejora la calidad de los grises, algo más lento</string>
+    <string name="pref_true_color_summary">Reduce el efecto anillado en los degradados y mejora la calidad de los grises, algo más lento</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoría</item>
         <item quantity="other">%d categorías</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">No se pudieron abrir los ajustes del dispositivo</string>
-    <string name="pref_refresh_library_covers">Recargar portadas del manga en la biblioteca</string>
+    <string name="pref_refresh_library_covers">Volver a descargar las portadas del manga en la biblioteca</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Completada en %1$s con %2$s error</item>
         <item quantity="other">Completada en %1$s con %2$s errores</item>
@@ -604,7 +602,7 @@
 \nTendrás que instalar las extensiones que falten e iniciar sesión en los servicios de seguimiento para poder usarlos.</string>
     <string name="update_check_eol">Esta versión de Android ya no es compatible</string>
     <string name="clipboard_copy_error">No se pudo copiar al portapapeles</string>
-    <string name="pref_dns_over_https">DNS por HTTPS</string>
+    <string name="pref_dns_over_https">DNS por HTTPS (DoH)</string>
     <string name="pref_download_new_categories_details">El manga de las categorías excluidas no se descargará, ni siquiera si pertenece a alguna de las categorías que sí estén incluidas.</string>
     <string name="pref_category_auto_download">Descarga automática</string>
     <string name="rotation_landscape">En horizontal</string>
@@ -623,7 +621,7 @@
     <string name="none">Ninguna</string>
     <string name="pref_library_update_categories_details">El manga de las categorías excluidas no se actualizará, ni siquiera si pertenece a alguna de las categorías que sí estén incluidas.</string>
     <string name="action_show_errors">Toca para ver los detalles del error</string>
-    <string name="action_display_show_number_of_items">Mostrar número de elementos</string>
+    <string name="action_display_show_number_of_items">Mostrar el número de elementos</string>
     <string name="action_sort_chapter_fetch_date">Por fecha de comprobación</string>
     <string name="rotation_type">Tipo de rotación</string>
     <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título del manga</string>
@@ -728,4 +726,8 @@
     <string name="pref_library_update_manga_restriction">Restricciones al actualizar la biblioteca</string>
     <string name="only_update_restrictions">Actualizar solo: %s</string>
     <string name="library_errors_help">Si necesitas ayuda para resolver los errores de actualización de la biblioteca mira en %1$s</string>
+    <string name="save_chapter_as_cbz">Guardar como archivo CBZ</string>
+    <string name="on_hiatus">En pausa</string>
+    <string name="publishing_finished">Serie terminada</string>
+    <string name="cancelled">Cancelada</string>
 </resources>

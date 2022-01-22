@@ -423,13 +423,11 @@
     <string name="title">Айымньы аата</string>
     <string name="score">Сыанабыл</string>
     <string name="repeating">Саҥаттаан ааҕабын</string>
-    <string name="want_to_read">Ааҕыахпын баҕарабын</string>
     <string name="plan_to_read">Ааҕаары гынабын</string>
     <string name="paused">Тохтотулунна</string>
     <string name="on_hold">Тохтообут</string>
     <string name="dropped">Быраҕыллыбыт</string>
     <string name="completed">Бүппүт</string>
-    <string name="currently_reading">Билигин ааҕабын</string>
     <string name="reading">Ааҕабын</string>
     <string name="add_tracking">эбии кэтээһини киллэрии</string>
     <plurals name="num_trackers">

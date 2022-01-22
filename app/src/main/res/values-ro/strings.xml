@@ -334,9 +334,7 @@
     <string name="logout_title">Deconectează-te de la %1$s\?</string>
     <string name="logout">Deconectează-te</string>
     <string name="logout_success">Acum ești deconectat</string>
-    <string name="currently_reading">Acum citesc</string>
     <string name="paused">Întrerupt</string>
-    <string name="want_to_read">Vreau să citesc</string>
     <string name="label_more">Mai multe</string>
     <string name="action_view_chapters">Vezi capitolele</string>
     <string name="action_cancel_all">Anulează tot</string>
@@ -609,4 +607,23 @@
     <string name="cover_saved">Copertă salvată</string>
     <string name="chapter_not_found">Capitolul nu a fost găsit</string>
     <string name="unread">Necitit</string>
+    <string name="action_start_downloading_now">Începe acum descărcarea</string>
+    <string name="information_empty_category_dialog">Tu înca nu ai nici-o catetegorie.</string>
+    <string name="theme_monet">Dinamic</string>
+    <string name="label_default">Implicit</string>
+    <string name="theme_midnightdusk">Amurg de Miazănoapte</string>
+    <string name="channel_app_updates">Actualizări de aplicație</string>
+    <string name="theme_tealturquoise">Teal și turcoaz</string>
+    <string name="action_display_local_badge">Manga local</string>
+    <string name="pref_category_appearance">Aspect</string>
+    <string name="pref_app_theme">Tematică Aplicație</string>
+    <string name="theme_greenapple">Măr Verde</string>
+    <string name="cancel_all_for_series">Anulează totul pentru această serie</string>
+    <string name="action_display_language_badge">Limbă</string>
+    <string name="confirm_lock_change">Autentifică-te pentru a confirma schimbările</string>
+    <string name="label_warning">Avertizare</string>
+    <string name="theme_strawberrydaiquiri">Daiquiri de căpșuni</string>
+    <string name="theme_tako">Tako</string>
+    <string name="theme_yinyang">Yin și Yang</string>
+    <string name="theme_yotsuba">Yotsuba</string>
 </resources>

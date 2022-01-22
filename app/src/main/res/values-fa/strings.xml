@@ -72,7 +72,6 @@
     <string name="on_hold">نگه داشته شده(On hold)</string>
     <string name="dropped">رها شده (Dropped)</string>
     <string name="completed">تکمیل شده(Completed)</string>
-    <string name="currently_reading">درحال حاضر خواندن(Currently reading)</string>
     <string name="reading">درحال خواندن(Reading)</string>
     <string name="add_tracking">اضافه کردن ردیابی</string>
     <string name="manga_tracking_tab">ردیابی</string>
@@ -196,7 +195,6 @@
     </plurals>
     <string name="pref_category_for_this_series">برای این مجموعه</string>
     <string name="decode_image_error">بازکردن عکس با خطا مواجه شد</string>
-    <string name="want_to_read">میخواهم بخوانم(Want to read)</string>
     <string name="plan_to_read">قصد خواندن دارم(Plan to read)</string>
     <string name="download_custom">سفارشی</string>
     <string name="custom_dir">مکان سفارشی</string>

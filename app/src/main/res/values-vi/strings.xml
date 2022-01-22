@@ -53,7 +53,7 @@
     <string name="action_share">Chia sẻ</string>
     <string name="action_save">Lưu lại</string>
     <string name="action_reset">Làm mới</string>
-    <string name="action_undo">Quay lại</string>
+    <string name="action_undo">Hoàn tác</string>
     <!-- Operations -->
     <string name="loading">Đang tải…</string>
     <!-- Preferences -->
@@ -120,7 +120,7 @@
     <string name="color_filter_a_value">A</string>
     <!-- Downloads section -->
     <string name="pref_download_directory">Đường dẫn tải xuống</string>
-    <string name="pref_remove_after_marked_as_read">Sau khi đọc chương đã đánh dấu</string>
+    <string name="pref_remove_after_marked_as_read">Sau khi đánh dấu thủ công là đã đọc</string>
     <string name="pref_remove_after_read">Tự động xóa sau khi đọc</string>
     <string name="custom_dir">Đường dẫn tùy chỉnh</string>
     <string name="disabled">Vô hiệu hóa</string>
@@ -368,9 +368,7 @@
     </plurals>
     <string name="notification_check_updates">Kiểm tra các chương cập nhật mới</string>
     <string name="updating_library">Đang cập nhật thư viện</string>
-    <string name="want_to_read">Muốn đọc</string>
     <string name="paused">Đã tạm ngưng</string>
-    <string name="currently_reading">Đang đọc</string>
     <string name="invalid_download_dir">Đường dẫn tải xuống không hợp lệ</string>
     <string name="http_error_hint">Kiểm tra trang web bằng WebView</string>
     <string name="logout_success">Bạn đã đăng xuất</string>
@@ -563,7 +561,7 @@
     <string name="website">Trang chủ</string>
     <string name="battery_optimization_setting_activity_not_found">Không thể mở tuỳ chỉnh thiết bị</string>
     <string name="label_data">Dữ liệu</string>
-    <string name="pref_dns_over_https">DNS thay vì HTTPS</string>
+    <string name="pref_dns_over_https">DNS thay vì HTTPS (DoH)</string>
     <string name="label_network">Mạng</string>
     <string name="restoring_backup_canceled">Quá trình phục hồi bị huỷ bỏ</string>
     <string name="restoring_backup_error">Khôi phục thất bại</string>
@@ -616,7 +614,7 @@
     <string name="pref_category_nsfw_content">Nguồn NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Hiển thị trong các danh sách nguồn và tiện ích mở rộng</string>
     <string name="pref_hide_bottom_bar_on_scroll">Ẩn thanh dưới cùng khi kéo cuộn</string>
-    <string name="action_show_errors">Hiện toàn bộ chi tiết lỗi</string>
+    <string name="action_show_errors">Chạm để hiện toàn bộ chi tiết lỗi</string>
     <string name="action_desc">Giảm dần</string>
     <string name="action_asc">Tăng dần</string>
     <string name="action_order_by_chapter_number">Theo số chương</string>
@@ -717,4 +715,9 @@
     <string name="pref_library_update_manga_restriction">Những hạn chế về cập nhật thư viện</string>
     <string name="pref_update_only_completely_read">Bộ truyện được đọc toàn bộ</string>
     <string name="only_update_restrictions">Chỉ cập nhật: %s</string>
+    <string name="publishing_finished">Xuất bản đã hoàn thành</string>
+    <string name="cancelled">Đã hủy</string>
+    <string name="on_hiatus">Bị gián đoạn</string>
+    <string name="library_errors_help">Để được trợ giúp về cách sửa lỗi cập nhật thư viện, hãy xem %1$s</string>
+    <string name="save_chapter_as_cbz">Lưu dưới dạng lưu trữ CBZ</string>
 </resources>

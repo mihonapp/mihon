@@ -242,7 +242,7 @@
     <string name="fifth_to_last">Cinquième chapitre avant le dernier lu</string>
     <string name="login_success">Connecté</string>
     <string name="pref_clear_chapter_cache">Effacer le cache des chapitres</string>
-    <string name="pref_remove_after_marked_as_read">Après avoir été marqué comme lu</string>
+    <string name="pref_remove_after_marked_as_read">Après avoir été marqué manuellement comme lu</string>
     <string name="sort_by_source">Par source</string>
     <string name="updating_category">Mise à jour de la catégorie</string>
     <string name="no_more_results">Pas d\'autres résultats</string>
@@ -368,9 +368,7 @@
     <string name="logout_title">Se déconnecter de %1$s \?</string>
     <string name="logout">Se déconnecter</string>
     <string name="logout_success">Vous êtes maintenant déconnecté(e)</string>
-    <string name="currently_reading">En cours de lecture</string>
     <string name="paused">En pause</string>
-    <string name="want_to_read">À lire plus tard</string>
     <string name="label_more">Plus</string>
     <string name="action_sort_latest_chapter">Dernier chapitre</string>
     <string name="action_view_chapters">Voir les chapitres</string>
@@ -610,7 +608,7 @@
 \n
 \nVous devrez installer les extensions manquantes et vous connecter ensuite aux services de suivi pour les utiliser.</string>
     <string name="nav_zone_prev">Précédent</string>
-    <string name="pref_dns_over_https">DNS via HTTPS</string>
+    <string name="pref_dns_over_https">DNS via HTTPS (DoH)</string>
     <string name="nav_zone_right">Droite</string>
     <string name="nav_zone_left">Gauche</string>
     <string name="nav_zone_next">Suivant</string>
@@ -623,7 +621,7 @@
     <string name="pref_library_update_categories_details">Les mangas dans les catégories exclues ne seront pas mis à jour même s\'ils sont aussi dans les catégories inclues.</string>
     <string name="pref_download_new_categories_details">Les mangas des catégories exclues ne seront pas mis à jour même s\'ils appartiennent aussi à des catégories incluses.</string>
     <string name="pref_category_auto_download">Téléchargement automatique</string>
-    <string name="action_show_errors">Voir tous les détails de l\'erreur</string>
+    <string name="action_show_errors">Appuyez pour voir tous les détails de l\'erreur</string>
     <string name="update_check_eol">Cette version d\'Android n\'est plus supportée</string>
     <string name="clipboard_copy_error">Échec de la copie dans le presse-papiers</string>
     <string name="rotation_landscape">Paysage</string>
@@ -730,4 +728,9 @@
     <string name="pref_library_update_manga_restriction">Restrictions de mise à jour de la bibliothèque</string>
     <string name="pref_update_only_completely_read">Séries entièrement lues</string>
     <string name="only_update_restrictions">Mise à jour uniquement de : %s</string>
+    <string name="save_chapter_as_cbz">Enregistrer comme archive CBZ</string>
+    <string name="library_errors_help">Pour savoir comment corriger les erreurs de mise à jour de la bibliothèque, voir %1$s</string>
+    <string name="on_hiatus">En hiatus</string>
+    <string name="publishing_finished">Publication terminée</string>
+    <string name="cancelled">Annulé</string>
 </resources>

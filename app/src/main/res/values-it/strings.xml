@@ -367,9 +367,7 @@
     <string name="logout_title">Disconnettersi da %1$s\?</string>
     <string name="logout">Disconnetti</string>
     <string name="logout_success">Ora sei disconnesso</string>
-    <string name="currently_reading">In lettura</string>
     <string name="paused">In pausa</string>
-    <string name="want_to_read">Voglio leggere</string>
     <string name="label_more">Altro</string>
     <string name="action_sort_latest_chapter">Ultimo capitolo</string>
     <string name="action_view_chapters">Vedi capitoli</string>
@@ -619,7 +617,7 @@
     <string name="nav_zone_right">Destra</string>
     <string name="nav_zone_left">Sinistra</string>
     <string name="pref_library_update_categories_details">I manga in categorie escluse non saranno aggiornati anche se si trovano pure in categorie incluse.</string>
-    <string name="pref_dns_over_https">DNS su HTTPS</string>
+    <string name="pref_dns_over_https">DNS su HTTPS (DoH)</string>
     <string name="pref_show_navigation_mode">Mostra schema di navigazione</string>
     <string name="pref_show_navigation_mode_summary">Mostra zone di tocco quando il lettore viene aperto</string>
     <string name="action_show_errors">Tocca per vedere i dettagli dell\'errore</string>
@@ -730,4 +728,8 @@
     <string name="pref_library_update_manga_restriction">Restrizioni agli aggiornamenti della libreria</string>
     <string name="only_update_restrictions">Aggiorna solo: %s</string>
     <string name="library_errors_help">Per un aiuto su come risolvere gli errori di aggiornamento della libreria vedi %1$s</string>
+    <string name="save_chapter_as_cbz">Salva come archivio CBZ</string>
+    <string name="cancelled">Cancellata</string>
+    <string name="on_hiatus">In pausa</string>
+    <string name="publishing_finished">Pubblicazione terminata</string>
 </resources>

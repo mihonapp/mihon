@@ -84,7 +84,7 @@
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">自動更新的裝置限制</string>
     <string name="charging">充電時</string>
-    <string name="pref_update_only_non_completed">連載中</string>
+    <string name="pref_update_only_non_completed">連載中的叢書</string>
     <string name="pref_start_screen">起始畫面</string>
     <string name="default_category">預設分類</string>
     <string name="default_category_summary">總是詢問</string>
@@ -116,7 +116,7 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">下載位置</string>
-    <string name="pref_remove_after_marked_as_read">標示為已讀後</string>
+    <string name="pref_remove_after_marked_as_read">手動標示為已讀後</string>
     <string name="custom_dir">自訂位置</string>
     <string name="disabled">已停用</string>
     <string name="pref_download_new">自動下載新章節</string>
@@ -417,9 +417,7 @@
     <string name="viewer">閱讀模式</string>
     <string name="action_disable">停用</string>
     <string name="action_migrate">遷移</string>
-    <string name="currently_reading">閱讀中</string>
     <string name="paused">擱置中</string>
-    <string name="want_to_read">準備讀</string>
     <string name="action_newest">由新到舊</string>
     <string name="action_oldest">由舊到新</string>
     <string name="action_move_to_bottom">排至最後</string>
@@ -560,7 +558,7 @@
     <string name="pref_dual_page_split">雙頁分割</string>
     <string name="pref_dual_page_invert_summary">若分割後的排版方向與翻閱順序不符</string>
     <string name="pref_dual_page_invert">反轉雙頁分割排版</string>
-    <string name="pref_dns_over_https">DNS over HTTPS</string>
+    <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_category_auto_download">自動下載</string>
     <string name="rotation_portrait">直向</string>
     <string name="rotation_type">螢幕方向</string>
@@ -574,7 +572,7 @@
     <string name="exclude">排除：%s</string>
     <string name="include">包含：%s</string>
     <string name="none">無</string>
-    <string name="action_show_errors">檢視完整錯誤資訊</string>
+    <string name="action_show_errors">輕觸以檢視錯誤資訊</string>
     <string name="update_check_eol">不再支援此 Android 版本</string>
     <string name="clipboard_copy_error">無法複製至剪貼簿</string>
     <string name="backup_restore_content_full">即將還原備份中的資料。
@@ -680,7 +678,12 @@
     <string name="database_clean">資料庫一塵不染</string>
     <string name="extension_api_error">擴充套件清單取得失敗</string>
     <string name="privacy_policy">隱私權政策</string>
-    <string name="pref_update_only_completely_read">全數閱畢</string>
+    <string name="pref_update_only_completely_read">全數閱畢的叢書</string>
     <string name="pref_library_update_manga_restriction">書櫃更新限制</string>
     <string name="only_update_restrictions">僅更新：%s</string>
+    <string name="library_errors_help">欲瞭解如何修復書櫃更新錯誤，請參閱 %1$s</string>
+    <string name="save_chapter_as_cbz">以 CBZ 封存檔格式儲存</string>
+    <string name="on_hiatus">休刊中</string>
+    <string name="cancelled">已取消</string>
+    <string name="publishing_finished">出版完畢</string>
 </resources>

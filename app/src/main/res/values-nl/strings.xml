@@ -65,8 +65,8 @@
     <string name="pref_category_tracking">Tracking</string>
     <string name="pref_category_advanced">Geavanceerd</string>
     <string name="pref_library_columns">Elementen per rij</string>
-    <string name="pref_library_update_interval">Updatefrequentie</string>
-    <string name="update_never">Handmatig</string>
+    <string name="pref_library_update_interval">Automatisch bijwerken</string>
+    <string name="update_never">Uit</string>
     <string name="update_6hour">Iedere 6 uur</string>
     <string name="update_12hour">Iedere 12 uur</string>
     <string name="update_24hour">Dagelijks</string>
@@ -110,8 +110,8 @@
     <string name="pref_download_directory">Downloadlocatie</string>
     <string name="custom_dir">Aangepaste locatie</string>
     <string name="last_read_chapter">Laatst gelezen hoofdstuk</string>
-    <string name="second_to_last">Een-na-laatste hoofdstuk</string>
-    <string name="third_to_last">Twee-na-laatste hoofdstuk</string>
+    <string name="second_to_last">Een-na-laatste gelezen hoofdstuk</string>
+    <string name="third_to_last">Twee-na-laatste gelezen hoofdstuk</string>
     <string name="pref_download_new">Download nieuwe hoofdstukken</string>
     <string name="services">Diensten</string>
     <string name="pref_create_backup">Back-up maken</string>
@@ -210,11 +210,11 @@
     <string name="pref_zoom_start">Zoom startpositie</string>
     <string name="rotation_force_portrait">Vergrendeld staand</string>
     <string name="rotation_force_landscape">Vergrendeld liggend</string>
-    <string name="pref_remove_after_marked_as_read">Nadat ze gemarkeerd zijn als gelezen</string>
-    <string name="pref_remove_after_read">Automatisch na het lezen</string>
+    <string name="pref_remove_after_marked_as_read">Nadat ze handmatig gemarkeerd zijn als gelezen</string>
+    <string name="pref_remove_after_read">Automatisch verwijderen na het lezen</string>
     <string name="disabled">Uitgeschakeld</string>
-    <string name="fourth_to_last">Drie-na-laatste hoofdstuk</string>
-    <string name="fifth_to_last">Vier-na-laatste hoofdstuk</string>
+    <string name="fourth_to_last">Drie-na-laatste gelezen hoofdstuk</string>
+    <string name="fifth_to_last">Vier-na-laatste gelezen hoofdstuk</string>
     <string name="pref_clear_chapter_cache">Leeg hoofdstukkencache</string>
     <string name="cache_deleted">Cache geleegd. %1$d bestanden zijn verwijderd</string>
     <string name="cache_delete_error">Er is een fout opgetreden bij het legen van de cache</string>
@@ -225,8 +225,8 @@
     <string name="pref_acra_summary">Helpt bij het oplossen van bugs. Er wordt geen gevoelige data verzonden</string>
     <string name="information_no_recent_manga">Niks recent gelezen</string>
     <string name="download_notifier_unknown_error">Kon dit hoofdstuk niet downloaden door een onverwachte fout</string>
-    <string name="pref_library_update_restriction">Updatebeperkingen</string>
-    <string name="pref_update_only_non_completed">Update alleen lopende manga</string>
+    <string name="pref_library_update_restriction">Toestel beperkingen voor automatisch bijwerken</string>
+    <string name="pref_update_only_non_completed">Lopende series</string>
     <string name="pref_auto_update_manga_sync">Voortgang bijwerken na lezen</string>
     <string name="pref_keep_screen_on">Scherm aanhouden</string>
     <string name="clear_database_confirmation">Weet je het zeker\? Gelezen hoofdstukken en voortgang voor manga die niet in de bibliotheek zitten zullen verloren gaan</string>
@@ -334,9 +334,7 @@
     <string name="logout_title">Uitloggen bij %1$s\?</string>
     <string name="logout">Uitloggen</string>
     <string name="logout_success">U bent nu uitgelogd</string>
-    <string name="currently_reading">Aan het lezen</string>
     <string name="paused">Gepauzeerd</string>
-    <string name="want_to_read">Wil ik lezen</string>
     <string name="label_more">Meer</string>
     <string name="action_sort_latest_chapter">Laatste hoofdstuk</string>
     <string name="action_view_chapters">Hoofdstukken bekijken</string>
@@ -347,7 +345,7 @@
     <string name="theme_system">Volg systeeminstelling</string>
     <string name="pref_manage_notifications">Meldingen beheren</string>
     <string name="pref_category_security">Beveiliging</string>
-    <string name="lock_with_biometrics">Ontgrendelen vereisen</string>
+    <string name="lock_with_biometrics">Ontgrendeling vereisen</string>
     <string name="lock_when_idle">Vergrendelen indien niet in gebruik</string>
     <string name="lock_always">Altijd</string>
     <string name="lock_never">Nooit</string>
@@ -581,7 +579,7 @@
     <string name="pref_dual_page_invert">Plaatsing van dubbele-paginasplitsing omkeren</string>
     <string name="pref_show_navigation_mode_summary">Laat de tikzones zien als de lezer wordt geopend</string>
     <string name="pref_show_navigation_mode">Navigatielayout als overlay laten zien</string>
-    <string name="pref_dns_over_https">DNS over HTTPS</string>
+    <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_download_new_categories_details">Manga in uitgezonderde categorieën worden niet gedownload, zelfs niet als ze onder opgenomen categorieën vallen.</string>
     <string name="pref_category_auto_download">Automatisch downloaden</string>
     <string name="exclude">Uitgezonderd: %s</string>
@@ -589,7 +587,7 @@
     <string name="pref_library_update_categories_details">Manga in uitgesloten categorieën worden niet bijgewerkt, zelfs niet als ze onder opgenomen categorieën vallen.</string>
     <string name="action_sort_chapter_fetch_date">Datum opgehaald</string>
     <string name="none">Geen</string>
-    <string name="action_show_errors">Volledige foutdetails weergeven</string>
+    <string name="action_show_errors">Foutmeldingen weergeven</string>
     <string name="update_check_eol">Deze Android versie wordt niet meer ondersteund</string>
     <string name="clipboard_copy_error">Mislukt om naar het klemboord te kopiëren</string>
     <string name="notification_incognito_text">Incognitomodus uitschakelen</string>
@@ -688,4 +686,17 @@
     <string name="download_queue_size_warning">Waarschuwing: grote bulk downloads kunnen leiden tot trager werkende bronnen en/of Tachiyomi blokkeren</string>
     <string name="ext_update_all">Alles updaten</string>
     <string name="update_72hour">Iedere 3 dagen</string>
+    <string name="library_errors_help">Voor hulp bij het oplossen van fouten bij het bijwerken van de bibliotheek, zie %1$s</string>
+    <string name="database_clean">Database leeg</string>
+    <string name="privacy_policy">Privacybeleid</string>
+    <string name="clear_database_source_item_count">%1$d niet-bibliotheek manga in database</string>
+    <string name="only_update_restrictions">Update alleen: %s</string>
+    <string name="save_chapter_as_cbz">Opslaan als CBZ archief</string>
+    <string name="pref_auto_clear_chapter_cache">Hoofdstuk cache leegmaken na het sluiten van de app</string>
+    <string name="pref_library_update_manga_restriction">Beperkingen voor bibliotheek updates</string>
+    <string name="pref_update_only_completely_read">Serie volledig gelezen</string>
+    <string name="extension_api_error">Lijst met extensies ophalen mislukt</string>
+    <string name="publishing_finished">Uitgave voltooid</string>
+    <string name="cancelled">Geannuleerd</string>
+    <string name="on_hiatus">Gepauzeerd</string>
 </resources>

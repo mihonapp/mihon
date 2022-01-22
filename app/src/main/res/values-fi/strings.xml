@@ -334,9 +334,7 @@
     <string name="logout_title">Kirjaa ulos kohteesta %1$s\?</string>
     <string name="logout">Kirjaudu ulos</string>
     <string name="logout_success">Kirjauduttu ulos</string>
-    <string name="currently_reading">Tällä hetkellä luettavana</string>
     <string name="paused">Pysäytetty</string>
-    <string name="want_to_read">Halu lukea</string>
     <string name="label_more">Lisää</string>
     <string name="action_sort_latest_chapter">Viimeisin luku</string>
     <string name="action_view_chapters">Näytä luvut</string>
