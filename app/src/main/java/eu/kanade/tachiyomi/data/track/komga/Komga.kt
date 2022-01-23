@@ -105,8 +105,8 @@ class Komga(private val context: Context, id: Int) : TrackService(id), EnhancedT
             null
         }
 
-    override fun isTrackFrom(track: Track, manga: Manga, source: Source): Boolean =
-        accept(source) && track.tracking_url == manga.url
+    override fun isTrackFrom(track: Track, manga: Manga, source: Source?): Boolean =
+        track.tracking_url == manga.url && source?.let { accept(it) } == true
 
     override fun migrateTrack(track: Track, manga: Manga, newSource: Source): Track? =
         if (accept(newSource)) {

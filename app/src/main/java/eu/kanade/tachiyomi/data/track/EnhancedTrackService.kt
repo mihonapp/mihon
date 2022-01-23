@@ -30,7 +30,7 @@ interface EnhancedTrackService {
     /**
      * Checks whether the provided source/track/manga triplet is from this TrackService
      */
-    fun isTrackFrom(track: Track, manga: Manga, source: Source): Boolean
+    fun isTrackFrom(track: Track, manga: Manga, source: Source?): Boolean
 
     /**
      * Migrates the given track for the manga to the newSource, if possible

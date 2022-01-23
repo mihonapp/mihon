@@ -63,8 +63,8 @@ class SearchPresenter(
     }
 
     fun migrateManga(prevManga: Manga, manga: Manga, replace: Boolean) {
-        val prevSource = sourceManager.get(prevManga.source) ?: return
         val source = sourceManager.get(manga.source) ?: return
+        val prevSource = sourceManager.get(prevManga.source)
 
         replacingMangaRelay.call(Pair(true, null))
 
@@ -83,7 +83,7 @@ class SearchPresenter(
     }
 
     private fun migrateMangaInternal(
-        prevSource: Source,
+        prevSource: Source?,
         source: Source,
         sourceChapters: List<SChapter>,
         prevManga: Manga,
