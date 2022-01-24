@@ -292,10 +292,20 @@ fun Context.openInBrowser(uri: Uri, @ColorInt toolbarColor: Int? = null) {
                     .build()
             )
             .build()
+        // Force allowing browser selection for Android 12+ so that verified extensions don't
+        // re-open Tachiyomi
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            intent.intent.setPackage(defaultBrowserPackageName())
+        }
         intent.launchUrl(this, uri)
     } catch (e: Exception) {
         toast(e.message)
     }
+}
+
+fun Context.defaultBrowserPackageName(): String? {
+    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://"))
+    return packageManager.resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo?.packageName
 }
 
 fun Context.createFileInCacheDir(name: String): File {
