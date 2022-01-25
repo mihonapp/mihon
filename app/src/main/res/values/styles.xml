@@ -129,6 +129,16 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="Widget.Tachiyomi.Button.IconButton" parent="Widget.Material3.Button.TextButton.Icon">
+        <item name="iconTint">?attr/colorAccent</item>
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
+
     <style name="Widget.Tachiyomi.Button.InlineButton" parent="Widget.Material3.Button.TextButton">
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>
