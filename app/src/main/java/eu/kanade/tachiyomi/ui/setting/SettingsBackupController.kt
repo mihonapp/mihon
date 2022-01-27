@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupCreateService
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.backup.BackupRestoreService
+import eu.kanade.tachiyomi.data.backup.ValidatorParseException
 import eu.kanade.tachiyomi.data.backup.full.FullBackupRestoreValidator
 import eu.kanade.tachiyomi.data.backup.full.models.BackupFull
 import eu.kanade.tachiyomi.data.backup.legacy.LegacyBackupRestoreValidator
@@ -262,12 +263,12 @@ class SettingsBackupController : SettingsController() {
 
             return try {
                 var type = BackupConst.BACKUP_TYPE_FULL
-                val results = runCatching {
+                val results = try {
                     FullBackupRestoreValidator().validate(activity, uri)
-                }.recoverCatching {
+                } catch (_: ValidatorParseException) {
                     type = BackupConst.BACKUP_TYPE_LEGACY
                     LegacyBackupRestoreValidator().validate(activity, uri)
-                }.getOrThrow()
+                }
 
                 var message = if (type == BackupConst.BACKUP_TYPE_FULL) {
                     activity.getString(R.string.backup_restore_content_full)

@@ -4,10 +4,12 @@ import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.AbstractBackupRestoreValidator
+import eu.kanade.tachiyomi.data.backup.ValidatorParseException
 import eu.kanade.tachiyomi.data.backup.legacy.models.Backup
 import kotlinx.serialization.json.decodeFromStream
 
 class LegacyBackupRestoreValidator : AbstractBackupRestoreValidator() {
+
     /**
      * Checks for critical backup file data.
      *
@@ -17,9 +19,13 @@ class LegacyBackupRestoreValidator : AbstractBackupRestoreValidator() {
     override fun validate(context: Context, uri: Uri): Results {
         val backupManager = LegacyBackupManager(context)
 
-        val backup = backupManager.parser.decodeFromStream<Backup>(
-            context.contentResolver.openInputStream(uri)!!
-        )
+        val backup = try {
+            backupManager.parser.decodeFromStream<Backup>(
+                context.contentResolver.openInputStream(uri)!!
+            )
+        } catch (e: Exception) {
+            throw ValidatorParseException(e)
+        }
 
         if (backup.version == null) {
             throw Exception(context.getString(R.string.invalid_backup_file_missing_data))
@@ -51,12 +57,10 @@ class LegacyBackupRestoreValidator : AbstractBackupRestoreValidator() {
 
     companion object {
         fun getSourceMapping(extensionsMapping: List<String>): Map<Long, String> {
-            return extensionsMapping
-                .map {
-                    val items = it.split(":")
-                    items[0].toLong() to items[1]
-                }
-                .toMap()
+            return extensionsMapping.associate {
+                val items = it.split(":")
+                items[0].toLong() to items[1]
+            }
         }
     }
 }
