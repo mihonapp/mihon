@@ -558,7 +558,7 @@ class LibraryUpdateService(
                     //   # Source
                     //     - Manga
                     errors.groupBy({ it.second }, { it.first }).forEach { (error, mangas) ->
-                        out.write("! ${error}\n")
+                        out.write("\n! ${error}\n")
                         mangas.groupBy { it.source }.forEach { (srcId, mangas) ->
                             val source = sourceManager.getOrStub(srcId)
                             out.write("  # $source\n")
