@@ -44,7 +44,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
      * @param uri path of Uri
      * @param isJob backup called from job
      */
-    override fun createBackup(uri: Uri, flags: Int, isJob: Boolean): String? {
+    override fun createBackup(uri: Uri, flags: Int, isJob: Boolean): String {
         // Create root object
         var backup: Backup? = null
 
@@ -87,7 +87,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
             file.openOutputStream().sink().gzip().buffer().use { it.write(byteArray) }
             val fileUri = file.uri
 
-            // Validate it to make sure it works
+            // Make sure it's a valid backup file
             FullBackupRestoreValidator().validate(context, fileUri)
 
             return fileUri.toString()

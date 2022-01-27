@@ -21,7 +21,7 @@ abstract class AbstractBackupManager(protected val context: Context) {
     internal val trackManager: TrackManager by injectLazy()
     protected val preferences: PreferencesHelper by injectLazy()
 
-    abstract fun createBackup(uri: Uri, flags: Int, isJob: Boolean): String?
+    abstract fun createBackup(uri: Uri, flags: Int, isJob: Boolean): String
 
     /**
      * Returns manga
