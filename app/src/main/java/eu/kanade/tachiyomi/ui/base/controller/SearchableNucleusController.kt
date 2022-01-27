@@ -2,12 +2,16 @@ package eu.kanade.tachiyomi.ui.base.controller
 
 import android.app.Activity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.text.style.StyleSpan
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.SearchView
 import androidx.viewbinding.ViewBinding
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -51,6 +55,21 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
         val searchView = searchItem.actionView as SearchView
         searchItem.fixExpand(onExpand = { invalidateMenuOnExpand() })
         searchView.maxWidth = Int.MAX_VALUE
+
+        // Remove formatting from pasted text
+        val searchAutoComplete: SearchView.SearchAutoComplete = searchView.findViewById(
+            R.id.search_src_text
+        )
+        searchAutoComplete.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(editable: Editable) {
+                editable.getSpans(0, editable.length, StyleSpan::class.java)
+                    .forEach { editable.removeSpan(it) }
+            }
+        })
 
         searchView.queryTextEvents()
             .onEach {
