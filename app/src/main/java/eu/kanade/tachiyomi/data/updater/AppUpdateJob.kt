@@ -9,7 +9,9 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.coroutineScope
+import logcat.LogPriority
 import java.util.concurrent.TimeUnit
 
 class AppUpdateJob(private val context: Context, workerParams: WorkerParameters) :
@@ -20,6 +22,7 @@ class AppUpdateJob(private val context: Context, workerParams: WorkerParameters)
             AppUpdateChecker().checkForUpdate(context)
             Result.success()
         } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
             Result.failure()
         }
     }

@@ -15,8 +15,10 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notification
 import kotlinx.coroutines.coroutineScope
+import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
@@ -28,6 +30,7 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
         val pendingUpdates = try {
             ExtensionGithubApi().checkForUpdates(context)
         } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
             return@coroutineScope Result.failure()
         }
 

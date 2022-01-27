@@ -9,6 +9,8 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.data.backup.full.FullBackupManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
@@ -24,6 +26,7 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
             FullBackupManager(context).createBackup(uri, flags, true)
             Result.success()
         } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
             Result.failure()
         }
     }

@@ -18,7 +18,7 @@ class DelayedTrackingStore(context: Context) {
         val (_, lastChapterRead) = preferences.getString(trackId, "0:0.0")!!.split(":")
         if (track.last_chapter_read > lastChapterRead.toFloat()) {
             val value = "${track.manga_id}:${track.last_chapter_read}"
-            logcat(LogPriority.INFO) { "Queuing track item: $trackId, $value" }
+            logcat(LogPriority.DEBUG) { "Queuing track item: $trackId, $value" }
             preferences.edit {
                 putString(trackId, value)
             }
@@ -31,6 +31,7 @@ class DelayedTrackingStore(context: Context) {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getItems(): List<DelayedTrackingItem> {
         return (preferences.all as Map<String, String>).entries
             .map {
