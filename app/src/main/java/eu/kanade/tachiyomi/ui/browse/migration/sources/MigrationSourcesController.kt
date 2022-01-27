@@ -14,12 +14,14 @@ import eu.kanade.tachiyomi.databinding.MigrationSourcesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaController
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import uy.kohesive.injekt.injectLazy
 
 class MigrationSourcesController :
     NucleusController<MigrationSourcesControllerBinding, MigrationSourcesPresenter>(),
-    FlexibleAdapter.OnItemClickListener {
+    FlexibleAdapter.OnItemClickListener,
+    FlexibleAdapter.OnItemLongClickListener {
 
     private val preferences: PreferencesHelper by injectLazy()
 
@@ -101,6 +103,12 @@ class MigrationSourcesController :
         val controller = MigrationMangaController(item.source.id, item.source.name)
         parentController!!.router.pushController(controller.withFadeTransaction())
         return false
+    }
+
+    override fun onItemLongClick(position: Int) {
+        val item = adapter?.getItem(position) as? SourceItem ?: return
+        val sourceId = item.source.id.toString()
+        activity?.copyToClipboard(sourceId, sourceId)
     }
 
     enum class DirectionSetting {
