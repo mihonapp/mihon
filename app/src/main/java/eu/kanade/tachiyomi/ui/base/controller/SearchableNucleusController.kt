@@ -4,7 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.style.StyleSpan
+import android.text.style.CharacterStyle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -66,7 +66,7 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(editable: Editable) {
-                editable.getSpans(0, editable.length, StyleSpan::class.java)
+                editable.getSpans(0, editable.length, CharacterStyle::class.java)
                     .forEach { editable.removeSpan(it) }
             }
         })
