@@ -290,9 +290,9 @@ class MangaInfoHeaderAdapter(
             binding.mangaCover.loadAnyAutoPause(manga)
 
             // Manga info section
-            binding.mangaSummarySection.isVisible = !manga.description.isNullOrBlank() || !manga.genre.isNullOrBlank()
-            binding.mangaSummarySection.description = manga.description
             binding.mangaSummarySection.setTags(manga.getGenres(), controller::performGenreSearch)
+            binding.mangaSummarySection.description = manga.description
+            binding.mangaSummarySection.isVisible = !manga.description.isNullOrBlank() || !manga.genre.isNullOrBlank()
         }
 
         /**
