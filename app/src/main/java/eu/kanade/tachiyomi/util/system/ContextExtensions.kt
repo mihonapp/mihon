@@ -293,7 +293,7 @@ fun Context.openInBrowser(uri: Uri, @ColorInt toolbarColor: Int? = null) {
             )
             .build()
         // Force default browser so that verified extensions don't re-open Tachiyomi
-        intent.intent.setPackage(defaultBrowserPackageName())
+        defaultBrowserPackageName()?.let { intent.intent.setPackage(it) }
         intent.launchUrl(this, uri)
     } catch (e: Exception) {
         toast(e.message)
@@ -302,7 +302,9 @@ fun Context.openInBrowser(uri: Uri, @ColorInt toolbarColor: Int? = null) {
 
 fun Context.defaultBrowserPackageName(): String? {
     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://"))
-    return packageManager.resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo?.packageName
+    return packageManager.resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY)
+        ?.activityInfo?.packageName
+        ?.takeIf { it != "android" }
 }
 
 fun Context.createFileInCacheDir(name: String): File {
