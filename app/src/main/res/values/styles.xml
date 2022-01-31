@@ -191,10 +191,6 @@
     <!--Navigation Views-->
     <!--================-->
     <style name="Widget.Tachiyomi.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="itemPaddingBottom">10dp</item>
-        <item name="itemPaddingTop">10dp</item>
-        <item name="android:minHeight">68dp</item>
-
         <item name="itemRippleColor">@color/ripple_toolbar_fainter</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
