@@ -24,11 +24,7 @@ data class ClearDatabaseSourceItem(val source: Source, private val mangaCount: I
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>?, holder: Holder?, position: Int, payloads: MutableList<Any>?) {
-        if (payloads.isNullOrEmpty()) {
-            holder?.bind(source, mangaCount)
-        } else {
-            holder?.updateCheckbox()
-        }
+        holder?.bind(source, mangaCount)
     }
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
@@ -46,9 +42,7 @@ data class ClearDatabaseSourceItem(val source: Source, private val mangaCount: I
                     source.icon() != null -> binding.thumbnail.setImageDrawable(source.icon())
                 }
             }
-        }
 
-        fun updateCheckbox() {
             binding.checkbox.isChecked = (bindingAdapter as FlexibleAdapter<*>).isSelected(bindingAdapterPosition)
         }
     }
