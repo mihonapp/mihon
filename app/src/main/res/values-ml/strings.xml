@@ -1,2 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="label_download_queue">ഡൗൺലോഡ് ക്യൂ</string>
+    <string name="information_no_downloads">ഡൗൺലോഡുകളൊന്നുമില്ല</string>
+    <string name="information_no_recent">സമീപകാല അപ്‌ഡേറ്റുകളൊന്നുമില്ല</string>
+    <string name="track">ട്രാക്കിംഗ്</string>
+    <string name="history">ചരിത്രം</string>
+    <string name="label_settings">ക്രമീകരണങ്ങൾ</string>
+    <string name="label_recent_updates">അപ്ഡേറ്റുകൾ</string>
+    <string name="information_empty_library">നിങ്ങളുടെ ലൈബ്രറി ശൂന്യമാണ്</string>
+    <string name="information_empty_category">നിങ്ങൾക്ക് വിഭാഗങ്ങളൊന്നുമില്ല. നിങ്ങളുടെ ലൈബ്രറി ഓർഗനൈസുചെയ്യുന്നതിന് ഒന്ന് സൃഷ്‌ടിക്കാൻ പ്ലസ് ബട്ടൺ ടാപ്പുചെയ്യുക.</string>
+    <string name="label_default">സ്ഥിരസ്ഥിതി</string>
+    <string name="action_filter">ഫിൽട്ടർ ചെയ്യുക</string>
+    <string name="label_warning">മുന്നറിയിപ്പ്</string>
+    <string name="unlock_app">ടാച്ചിയോമി അൺലോക്ക് ചെയ്യുക</string>
+    <string name="name">പേര്</string>
+    <string name="label_more">കൂടുതൽ</string>
+    <string name="label_library">പുസ്തകശാല</string>
+    <string name="label_recent_manga">ചരിത്രം</string>
+    <string name="label_sources">ഉറവിടങ്ങൾ</string>
+    <string name="label_backup">ബാക്കപ്പ് ചെയ്ത് പുനഃസ്ഥാപിക്കുക</string>
+    <string name="label_migration">മൈഗ്രേറ്റ് ചെയ്യുക</string>
+    <string name="label_extensions">വിപുലീകരണങ്ങൾ</string>
+    <string name="label_extension_info">വിപുലീകരണ വിവരം</string>
+    <string name="label_help">സഹായിക്കൂ</string>
+    <string name="categories">വിഭാഗങ്ങൾ</string>
+    <string name="manga">മാംഗ</string>
+    <string name="chapters">അധ്യായങ്ങൾ</string>
+    <string name="confirm_lock_change">മാറ്റം സ്ഥിരീകരിക്കാൻ പ്രാമാണീകരിക്കുക</string>
+    <string name="confirm_exit">പുറത്തുകടക്കാൻ വീണ്ടും അമർത്തുക</string>
+    <string name="action_settings">ക്രമീകരണങ്ങൾ</string>
+    <string name="action_menu">മെനു</string>
+    <string name="information_no_recent_manga">അടുത്തിടെ ഒന്നും വായിച്ചില്ല</string>
+</resources>

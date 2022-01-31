@@ -169,7 +169,7 @@
     <string name="services">บริการ</string>
     <string name="pref_create_backup">สำรองข้อมูล</string>
     <string name="pref_create_backup_summ">สามารถใช้ในการเรียกคืนค่าคลังปัจจุบัน</string>
-    <string name="pref_restore_backup">เรียกคืนการสำรองข้อมูล</string>
+    <string name="pref_restore_backup">เรียกคืนค่าการสำรองข้อมูล</string>
     <string name="pref_restore_backup_summ">เรียกคืนค่าคลังจากแฟ้มข้อมูลสำรอง</string>
     <string name="pref_backup_directory">ตําแหน่งที่ตั้งข้อมูลสํารอง</string>
     <string name="pref_backup_service_category">สํารองข้อมูลอัตโนมัติ</string>
@@ -273,7 +273,7 @@
     <string name="dialog_with_checkbox_reset">รีเซ็ตตอนทั้งหมดสำหรับมังงะนี้</string>
     <string name="snack_add_to_library">เพิ่มมังงะไปยังคลัง\?</string>
     <string name="picture_saved">บันทึกรูปภาพแล้ว</string>
-    <string name="custom_filter">ตัวกรองที่กำหนดเอง</string>
+    <string name="custom_filter">ตัวกรอง</string>
     <string name="set_as_cover">ตั้งเป็นปก</string>
     <string name="cover_updated">อัปเดตปกแล้ว</string>
     <string name="chapter_progress">หน้า: %1$d</string>
@@ -686,4 +686,6 @@
     <string name="publishing_finished">เผยแพร่จบแล้ว</string>
     <string name="cancelled">ถูกยกเลิก</string>
     <string name="on_hiatus">อยู่ระหว่างพัก</string>
+    <string name="backup_restore_invalid_uri">เกิดข้อผิดพลาด: URI ว่างเปล่า</string>
+    <string name="action_faq_and_guides">คำถามที่พบบ่อยและคู่มือ</string>
 </resources>

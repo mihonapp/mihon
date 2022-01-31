@@ -733,4 +733,6 @@
     <string name="on_hiatus">En hiatus</string>
     <string name="publishing_finished">Publication terminée</string>
     <string name="cancelled">Annulé</string>
+    <string name="action_faq_and_guides">FAQ et guides</string>
+    <string name="backup_restore_invalid_uri">Erreur : URI vide</string>
 </resources>

@@ -686,4 +686,6 @@
     <string name="publishing_finished">发布完成</string>
     <string name="cancelled">已取消</string>
     <string name="on_hiatus">中断</string>
+    <string name="action_faq_and_guides">常见问题和指南</string>
+    <string name="backup_restore_invalid_uri">错误：空 URI</string>
 </resources>

@@ -699,4 +699,6 @@
     <string name="publishing_finished">Publicação finalizada</string>
     <string name="cancelled">Cancelado</string>
     <string name="on_hiatus">Em hiato</string>
+    <string name="action_faq_and_guides">FAQ e Guias</string>
+    <string name="backup_restore_invalid_uri">Erro: URI vazia</string>
 </resources>

@@ -699,4 +699,6 @@
     <string name="cancelled">Abgebrochen</string>
     <string name="on_hiatus">Unterbrochen</string>
     <string name="publishing_finished">Veröffentlichung abgeschlossen</string>
+    <string name="action_faq_and_guides">Häufige Fragen und Leitfäden</string>
+    <string name="backup_restore_invalid_uri">Fehler: leerer URI</string>
 </resources>

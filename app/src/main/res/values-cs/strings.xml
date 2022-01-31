@@ -708,4 +708,9 @@
     <string name="pref_update_only_completely_read">Plně přečtené série</string>
     <string name="database_clean">vyčištění databáze</string>
     <string name="save_chapter_as_cbz">Uložit jako CBZ archiv</string>
+    <string name="backup_restore_invalid_uri">Chyba: prázdná URI</string>
+    <string name="library_errors_help">Nápovědu k tomu, jak opravit chyby při aktualizaci knihovny, viz %1$s</string>
+    <string name="action_faq_and_guides">FAQ a Návody</string>
+    <string name="publishing_finished">Zveřejnění dokončeno</string>
+    <string name="cancelled">Zrušeno</string>
 </resources>

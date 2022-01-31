@@ -230,7 +230,7 @@
     <string name="chapter_progress">पृष्ठ: %1$d</string>
     <string name="no_next_chapter">अगले अध्याय नहीं मिला</string>
     <string name="no_previous_chapter">पिछला अध्याय नहीं मिला</string>
-    <string name="decode_image_error">छवि को लोड नहीं किया जा सका</string>
+    <string name="decode_image_error">छवि को लोड नहीं कर पायें</string>
     <string name="confirm_set_image_as_cover">कवर कला के रूप में इस छवि का उपयोग करें\?</string>
     <string name="download_queue_error">अध्याय डाउनलोड नहीं कर सका। आप डाउनलोड अनुभाग में फिर से कोशिश कर सकते हैं</string>
     <string name="notification_new_chapters">नए अध्याय पाए गए</string>
@@ -429,7 +429,7 @@
     <string name="creating_backup_error">बैकअप फेल</string>
     <string name="restoring_backup_canceled">पुनर्स्थापना रद्द की गई</string>
     <string name="restore_in_progress">पुनर्स्थापना पहले से ही प्रगति पर है</string>
-    <string name="backup_in_progress">बैकअप पहले से ही प्रगति पर है</string>
+    <string name="backup_in_progress">बैकप पहले से ही प्रगति पर है</string>
     <string name="error_invalid_date_supplied">अमान्य दिनांक को आपूर्ति की गई</string>
     <string name="last_used_source">आखरी इस्त्तमाल किया गया</string>
     <string name="check_for_updates">अद्यतन के लिए जाँच</string>
@@ -696,4 +696,9 @@
     <string name="privacy_policy">गोपनीयता नीति</string>
     <string name="library_errors_help">लाइब्रेरी अपडेट त्रुटियों को ठीक करने के तरीके पर सहायता के लिए, %1$s देखें</string>
     <string name="extension_api_error">एक्सटेंशन सूची प्राप्त करने में विफल</string>
+    <string name="backup_restore_invalid_uri">त्रुटि: खाली यू॰आर॰ऐ</string>
+    <string name="action_faq_and_guides">सामान्य प्रश्नोत्तर और मार्गदर्शन</string>
+    <string name="cancelled">रद्द किया गया</string>
+    <string name="on_hiatus">अंतराल पर है</string>
+    <string name="publishing_finished">प्रकाशन समाप्त</string>
 </resources>

@@ -712,4 +712,5 @@
     <string name="on_hiatus">Prekid</string>
     <string name="library_errors_help">Za pomoć o tome kako popraviti greške aktualiziranja biblioteke, pogledaj %1$s</string>
     <string name="save_chapter_as_cbz">Spremi kao CBZ arhivu</string>
+    <string name="action_faq_and_guides">Često pitana pitanja i vodiči</string>
 </resources>

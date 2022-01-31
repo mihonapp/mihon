@@ -724,4 +724,5 @@
     <string name="clear_database_source_item_count">%1$d mang spoza biblioteki w bazie danych</string>
     <string name="pref_library_update_manga_restriction">Ograniczenia aktualizacji biblioteki</string>
     <string name="pref_update_only_completely_read">Całkowicie przeczytane serie</string>
+    <string name="action_faq_and_guides">FAQ i poradniki</string>
 </resources>

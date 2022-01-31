@@ -696,4 +696,9 @@
     <string name="library_errors_help">Pro tènnere un\'agiudu pro acontzare sos errores de agiornamentu de sa biblioteca pòmpia·ti %1$s</string>
     <string name="pref_library_update_manga_restriction">Restritziones a sos agiornamentos de sa biblioteca</string>
     <string name="pref_update_only_completely_read">Sèries lèghidas de su totu</string>
+    <string name="action_faq_and_guides">PF e ghias</string>
+    <string name="publishing_finished">Publicatzione acabada</string>
+    <string name="on_hiatus">In pàusa</string>
+    <string name="cancelled">Annullada</string>
+    <string name="backup_restore_invalid_uri">Errore: URI bòidu</string>
 </resources>

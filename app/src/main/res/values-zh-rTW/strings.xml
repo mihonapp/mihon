@@ -378,7 +378,7 @@
     <string name="logout_success">你已登出</string>
     <string name="logout">登出</string>
     <string name="last_used_source">最近使用</string>
-    <string name="local_source_help_guide">本機來源入門教學</string>
+    <string name="local_source_help_guide">本機來源入門指南</string>
     <string name="information_webview_outdated">請更新 WebView 以獲得更佳的相容性</string>
     <string name="information_webview_required">WebView 為 Tachiyomi 的必要元件</string>
     <string name="action_select_inverse">反向選擇</string>
@@ -686,4 +686,5 @@
     <string name="on_hiatus">休刊中</string>
     <string name="cancelled">已取消</string>
     <string name="publishing_finished">出版完畢</string>
+    <string name="action_faq_and_guides">常見問題與指南</string>
 </resources>

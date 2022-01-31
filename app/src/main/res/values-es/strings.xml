@@ -730,4 +730,6 @@
     <string name="on_hiatus">En pausa</string>
     <string name="publishing_finished">Serie terminada</string>
     <string name="cancelled">Cancelada</string>
+    <string name="action_faq_and_guides">Guías y soluciones</string>
+    <string name="backup_restore_invalid_uri">Error: dirección URI vacía</string>
 </resources>

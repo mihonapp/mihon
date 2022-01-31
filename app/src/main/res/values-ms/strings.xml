@@ -686,4 +686,6 @@
     <string name="cancelled">Dibatalkan</string>
     <string name="publishing_finished">Penerbitan selesai</string>
     <string name="on_hiatus">Dalam keadaan rehat</string>
+    <string name="action_faq_and_guides">Soalan Lazim dan Panduan</string>
+    <string name="backup_restore_invalid_uri">Ralat: tiada URI</string>
 </resources>

@@ -49,7 +49,7 @@
     <string name="action_display">प्रदर्शन</string>
     <string name="action_migrate">स्थानान्तरण</string>
     <string name="action_open_in_browser">ब्राउजरमा खाेल्नुहाेस्</string>
-    <string name="action_resume">पढ्न जारी राख्नुहोस्</string>
+    <string name="action_resume">डाउनलोड जारी राख्नुहोस्</string>
     <string name="action_start">सुरु गर्नुहोस्</string>
     <string name="action_remove">हटाउनुहोस्</string>
     <string name="action_retry">पुनःप्रयास गर्नुहोस्</string>
@@ -556,8 +556,9 @@
     <string name="publishing_finished">पबलिस् भयो</string>
     <string name="cancelled">रद्द गरियो</string>
     <string name="on_hiatus">हायटसमा छ</string>
-    <string name="add_to_library">लाईब्रेरीमा राखियो</string>
+    <string name="add_to_library">पुस्तकालयमा राख्नुहोस</string>
     <string name="manga_added_library">लाईब्रेरीमा जडान गरियो</string>
     <string name="manga_info_full_title_label">शिर्षक</string>
     <string name="in_library">लाईब्रेरीमा छ</string>
+    <string name="completed">समाप्त</string>
 </resources>

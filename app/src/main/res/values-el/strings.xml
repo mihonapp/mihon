@@ -699,4 +699,6 @@
     <string name="cancelled">Ακυρώθηκε</string>
     <string name="on_hiatus">Σε αναστολή</string>
     <string name="publishing_finished">Η έκδοσή ολοκληρώθηκε</string>
+    <string name="action_faq_and_guides">Συχνές ερωτήσεις και οδηγοί</string>
+    <string name="backup_restore_invalid_uri">Σφάλμα: κενό URI</string>
 </resources>

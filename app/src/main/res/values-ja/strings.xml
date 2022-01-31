@@ -685,5 +685,7 @@
     <string name="save_chapter_as_cbz">CBZアーカイブとして保存</string>
     <string name="publishing_finished">完結済み</string>
     <string name="cancelled">キャンセル済み</string>
-    <string name="on_hiatus">休止中</string>
+    <string name="on_hiatus">休載中</string>
+    <string name="action_faq_and_guides">よくあるご質問とガイド</string>
+    <string name="backup_restore_invalid_uri">エラー：URIは空です</string>
 </resources>

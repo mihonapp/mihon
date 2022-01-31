@@ -213,7 +213,7 @@
     <string name="chapter_progress">Trang: %1$d</string>
     <string name="no_next_chapter">Không tìm thấy chương kế tiếp</string>
     <string name="no_previous_chapter">Không tìm thấy chương trước</string>
-    <string name="decode_image_error">Ảnh không thể được hiện lên tổng thể</string>
+    <string name="decode_image_error">Loạt ảnh hiện không thể được tải lên</string>
     <string name="confirm_set_image_as_cover">Bạn có chắc muốn đặt ảnh này làm ảnh bìa?</string>
     <!-- Backup fragment -->
     <!-- Recent manga fragment -->
@@ -398,7 +398,7 @@
     <string name="lock_never">Không bao giờ</string>
     <string name="lock_always">Luôn luôn</string>
     <string name="lock_when_idle">Khóa khi hoạt động nền</string>
-    <string name="lock_with_biometrics">Yêu cầu mở khóa</string>
+    <string name="lock_with_biometrics">Cần được mở khóa</string>
     <string name="pref_category_security">Bảo mật</string>
     <string name="pref_manage_notifications">Quản lý thông báo</string>
     <string name="pref_date_format">Định dạng ngày</string>
@@ -720,4 +720,6 @@
     <string name="on_hiatus">Bị gián đoạn</string>
     <string name="library_errors_help">Để được trợ giúp về cách sửa lỗi cập nhật thư viện, hãy xem %1$s</string>
     <string name="save_chapter_as_cbz">Lưu dưới dạng lưu trữ CBZ</string>
+    <string name="backup_restore_invalid_uri">Lỗi: trống URI</string>
+    <string name="action_faq_and_guides">Câu Hỏi Thờng Gặp và Hướng Dẫn</string>
 </resources>

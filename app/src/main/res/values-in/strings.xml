@@ -82,7 +82,7 @@
     <string name="all">Semua</string>
     <string name="pref_library_update_restriction">Pembatasan pembaruan otomatis</string>
     <string name="charging">Sedang mengisi daya</string>
-    <string name="pref_update_only_non_completed">Seri yang masih berjalan</string>
+    <string name="pref_update_only_non_completed">Seri yang masih berlangsung</string>
     <string name="pref_auto_update_manga_sync">Perbarui progres setelah dibaca</string>
     <string name="pref_start_screen">Layar mulai</string>
     <string name="default_category">Kategori default</string>
@@ -125,7 +125,7 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_download_directory">Lokasi unduhan</string>
-    <string name="pref_remove_after_marked_as_read">Setelah ditandai telah dibaca</string>
+    <string name="pref_remove_after_marked_as_read">Setelah secara manual ditandai telah dibaca</string>
     <string name="pref_remove_after_read">Otomatis hapus setelah dibaca</string>
     <string name="custom_dir">Lokasi kustom</string>
     <string name="disabled">Tidak Aktif</string>
@@ -553,7 +553,7 @@
     <string name="right_and_left_nav">Kanan dan Kiri</string>
     <string name="action_display_show_number_of_items">Tampilkan jumlah item</string>
     <string name="none">Kosong</string>
-    <string name="action_show_errors">Tampilkan detail error</string>
+    <string name="action_show_errors">Ketuk untuk melihat detail error</string>
     <string name="action_sort_chapter_fetch_date">Tanggal diambil</string>
     <string name="pref_reader_actions">Aksi</string>
     <string name="nav_zone_right">Kanan</string>
@@ -611,7 +611,7 @@
     <string name="categorized_display_settings">Pengaturan per-kategori untuk tampilan dan urutan</string>
     <string name="information_empty_category_dialog">Anda belum memiliki kategori apapun.</string>
     <string name="action_start_downloading_now">Mulai mengunduh sekarang</string>
-    <string name="about_dont_kill_my_app">Beberapa pabrikan mempunyai batasan aplikasi tambahan yang mematikan layanan latar belakang. Website ini mempunyai informasi untuk membetulkannya.</string>
+    <string name="about_dont_kill_my_app">Beberapa pabrikan mempunyai batasan aplikasi tambahan yang mematikan layanan latar belakang. Website ini memiliki info lebih lanjut untuk memperbaikinya.</string>
     <string name="notification_updating">Memperbarui pustaka... (%1$d/%2$d)</string>
     <string name="tracker_komga_warning">Pelacak ini hanya kompatibel dengan sumber Komga.</string>
     <string name="restore_miui_warning">Pencadangan/pemulihan mungkin tidak berfungsi jika Optimisasi MIUI dimatikan.</string>
@@ -686,4 +686,5 @@
     <string name="only_update_restrictions">Hanya perbarui: %s</string>
     <string name="library_errors_help">Untuk bantuan cara memperbaiki kesalahan pembaruan pustaka, lihat %1$s</string>
     <string name="save_chapter_as_cbz">Simpan sebagai arsip CBZ</string>
+    <string name="action_faq_and_guides">Tanya Jawab dan Panduan</string>
 </resources>

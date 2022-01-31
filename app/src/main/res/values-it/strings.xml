@@ -732,4 +732,6 @@
     <string name="cancelled">Cancellata</string>
     <string name="on_hiatus">In pausa</string>
     <string name="publishing_finished">Pubblicazione terminata</string>
+    <string name="action_faq_and_guides">Domande frequenti e guide</string>
+    <string name="backup_restore_invalid_uri">Errore: URI vuoto</string>
 </resources>
