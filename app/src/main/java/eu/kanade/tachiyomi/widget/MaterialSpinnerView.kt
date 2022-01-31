@@ -13,7 +13,7 @@ import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.forEach
 import androidx.core.view.get
-import com.tfcporciuncula.flow.Preference
+import com.fredporciuncula.flow.preferences.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.PrefSpinnerBinding
 import eu.kanade.tachiyomi.util.system.getResourceColor

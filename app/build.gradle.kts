@@ -208,8 +208,8 @@ dependencies {
     implementation("com.github.requery:sqlite-android:3.36.0")
 
     // Preferences
-    implementation("androidx.preference:preference-ktx:1.2.0-rc01")
-    implementation("com.github.tfcporciuncula.flow-preferences:flow-preferences:1.4.0")
+    implementation("androidx.preference:preference-ktx:1.2.0")
+    implementation("com.fredporciuncula:flow-preferences:1.6.0")
 
     // Model View Presenter
     val nucleusVersion = "3.0.0"

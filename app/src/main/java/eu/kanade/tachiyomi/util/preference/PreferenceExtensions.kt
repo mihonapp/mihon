@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.util.preference
 
 import android.widget.CompoundButton
-import com.tfcporciuncula.flow.Preference
+import com.fredporciuncula.flow.preferences.Preference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 

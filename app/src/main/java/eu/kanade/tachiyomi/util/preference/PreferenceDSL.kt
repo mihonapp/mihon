@@ -114,12 +114,12 @@ inline fun <P : Preference> PreferenceGroup.addThenInit(p: P, block: P.() -> Uni
     }
 }
 
-inline fun <T> Preference.bindTo(preference: com.tfcporciuncula.flow.Preference<T>) {
+inline fun <T> Preference.bindTo(preference: com.fredporciuncula.flow.preferences.Preference<T>) {
     key = preference.key
     defaultValue = preference.defaultValue
 }
 
-inline fun <T> ListPreference.bindTo(preference: com.tfcporciuncula.flow.Preference<T>) {
+inline fun <T> ListPreference.bindTo(preference: com.fredporciuncula.flow.preferences.Preference<T>) {
     key = preference.key
     // ListPreferences persist values as strings, even when we're using our IntListPreference
     defaultValue = preference.defaultValue.toString()

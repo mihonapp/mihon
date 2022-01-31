@@ -6,7 +6,7 @@ import android.os.Environment
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
-import com.tfcporciuncula.flow.FlowSharedPreferences
+import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.track.TrackService
