@@ -891,15 +891,20 @@ class MangaController :
 
     private fun openChapter(chapter: Chapter, sharedElement: View? = null) {
         val activity = activity ?: return
-        val intent = ReaderActivity.newIntent(activity, presenter.manga, chapter)
         activity.apply {
+            val intent = ReaderActivity.newIntent(activity, presenter.manga, chapter)
             if (sharedElement != null && Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
                 val activityOptions = ActivityOptions.makeSceneTransitionAnimation(
                     activity,
                     sharedElement,
                     ReaderActivity.SHARED_ELEMENT_NAME
                 )
-                startActivity(intent, activityOptions.toBundle())
+                startActivity(
+                    intent.apply {
+                        putExtra(ReaderActivity.EXTRA_IS_TRANSITION, true)
+                    },
+                    activityOptions.toBundle(),
+                )
             } else {
                 startActivity(intent)
             }
