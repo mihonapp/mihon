@@ -35,6 +35,8 @@ object DeviceUtil {
         DynamicColors.isDynamicColorAvailable() || (isSamsung && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
     }
 
+    val invalidDefaultBrowsers = listOf("android", "com.huawei.android.internal.app")
+
     @SuppressLint("PrivateApi")
     private fun getSystemProperty(key: String?): String? {
         return try {

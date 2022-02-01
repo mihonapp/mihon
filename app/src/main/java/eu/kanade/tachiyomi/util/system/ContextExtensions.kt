@@ -304,7 +304,7 @@ fun Context.defaultBrowserPackageName(): String? {
     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://"))
     return packageManager.resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY)
         ?.activityInfo?.packageName
-        ?.takeIf { it != "android" }
+        ?.takeUnless { it in DeviceUtil.invalidDefaultBrowsers }
 }
 
 fun Context.createFileInCacheDir(name: String): File {
