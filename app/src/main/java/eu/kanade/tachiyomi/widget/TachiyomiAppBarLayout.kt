@@ -204,6 +204,7 @@ class TachiyomiAppBarLayout @JvmOverloads constructor(
             type(statusBars = true) {
                 padding(top = true)
             }
+            ignoreVisibility(true)
         }
     }
 
