@@ -3,14 +3,10 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.Gravity
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.LinearLayout
+import android.view.LayoutInflater
 import androidx.core.view.isVisible
-import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
-import com.google.android.material.textview.MaterialTextView
-import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -18,7 +14,6 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.ImageUtil
-import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 import rx.Observable
 import rx.Subscription
@@ -54,14 +49,9 @@ class PagerPageHolder(
     }
 
     /**
-     * Retry button used to allow retrying.
+     * Error layout to show when the image fails to load.
      */
-    private var retryButton: PagerButton? = null
-
-    /**
-     * Error layout to show when the image fails to decode.
-     */
-    private var decodeErrorLayout: ViewGroup? = null
+    private var errorLayout: ReaderErrorBinding? = null
 
     /**
      * Subscription for status changes of the page.
@@ -176,8 +166,7 @@ class PagerPageHolder(
      */
     private fun setQueued() {
         progressIndicator.show()
-        retryButton?.isVisible = false
-        decodeErrorLayout?.isVisible = false
+        errorLayout?.root?.isVisible = false
     }
 
     /**
@@ -185,8 +174,7 @@ class PagerPageHolder(
      */
     private fun setLoading() {
         progressIndicator.show()
-        retryButton?.isVisible = false
-        decodeErrorLayout?.isVisible = false
+        errorLayout?.root?.isVisible = false
     }
 
     /**
@@ -194,8 +182,7 @@ class PagerPageHolder(
      */
     private fun setDownloading() {
         progressIndicator.show()
-        retryButton?.isVisible = false
-        decodeErrorLayout?.isVisible = false
+        errorLayout?.root?.isVisible = false
     }
 
     /**
@@ -203,8 +190,7 @@ class PagerPageHolder(
      */
     private fun setImage() {
         progressIndicator.setProgress(0)
-        retryButton?.isVisible = false
-        decodeErrorLayout?.isVisible = false
+        errorLayout?.root?.isVisible = false
 
         unsubscribeReadImageHeader()
         val streamFn = page.stream ?: return
@@ -299,7 +285,7 @@ class PagerPageHolder(
      */
     private fun setError() {
         progressIndicator.hide()
-        initRetryButton().isVisible = true
+        showErrorLayout(withOpenInWebView = false)
     }
 
     override fun onImageLoaded() {
@@ -313,7 +299,7 @@ class PagerPageHolder(
     override fun onImageLoadError() {
         super.onImageLoadError()
         progressIndicator.hide()
-        initDecodeErrorLayout().isVisible = true
+        showErrorLayout(withOpenInWebView = true)
     }
 
     /**
@@ -324,78 +310,24 @@ class PagerPageHolder(
         viewer.activity.hideMenu()
     }
 
-    /**
-     * Initializes a button to retry pages.
-     */
-    private fun initRetryButton(): PagerButton {
-        if (retryButton != null) return retryButton!!
-
-        retryButton = PagerButton(context, viewer).apply {
-            layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                gravity = Gravity.CENTER
-            }
-            setText(R.string.action_retry)
-            setOnClickListener {
+    private fun showErrorLayout(withOpenInWebView: Boolean): ReaderErrorBinding {
+        if (errorLayout == null) {
+            errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), this, true)
+            errorLayout?.actionRetry?.viewer = viewer
+            errorLayout?.actionRetry?.setOnClickListener {
                 page.chapter.pageLoader?.retryPage(page)
             }
-        }
-        addView(retryButton)
-        return retryButton!!
-    }
-
-    /**
-     * Initializes a decode error layout.
-     */
-    private fun initDecodeErrorLayout(): ViewGroup {
-        if (decodeErrorLayout != null) return decodeErrorLayout!!
-
-        val margins = 8.dpToPx
-
-        val decodeLayout = LinearLayout(context).apply {
-            gravity = Gravity.CENTER
-            orientation = LinearLayout.VERTICAL
-        }
-        decodeErrorLayout = decodeLayout
-
-        MaterialTextView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                setMargins(margins)
-            }
-            gravity = Gravity.CENTER
-            setText(R.string.decode_image_error)
-
-            decodeLayout.addView(this)
-        }
-
-        PagerButton(context, viewer).apply {
-            layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                setMargins(margins)
-            }
-            setText(R.string.action_retry)
-            setOnClickListener {
-                page.chapter.pageLoader?.retryPage(page)
-            }
-
-            decodeLayout.addView(this)
-        }
-
-        val imageUrl = page.imageUrl
-        if (imageUrl.orEmpty().startsWith("http", true)) {
-            PagerButton(context, viewer).apply {
-                layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                    setMargins(margins)
-                }
-                setText(R.string.action_open_in_web_view)
-                setOnClickListener {
+            val imageUrl = page.imageUrl
+            if (imageUrl.orEmpty().startsWith("http", true)) {
+                errorLayout?.actionOpenInWebView?.viewer = viewer
+                errorLayout?.actionOpenInWebView?.setOnClickListener {
                     val intent = WebViewActivity.newIntent(context, imageUrl!!)
                     context.startActivity(intent)
                 }
-
-                decodeLayout.addView(this)
             }
         }
-
-        addView(decodeLayout)
-        return decodeLayout
+        errorLayout?.actionOpenInWebView?.isVisible = withOpenInWebView
+        errorLayout?.root?.isVisible = true
+        return errorLayout!!
     }
 }

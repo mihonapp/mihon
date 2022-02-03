@@ -2,18 +2,16 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.content.res.Resources
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textview.MaterialTextView
-import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
@@ -52,14 +50,9 @@ class WebtoonPageHolder(
     private lateinit var progressContainer: ViewGroup
 
     /**
-     * Retry button container used to allow retrying.
+     * Error layout to show when the image fails to load.
      */
-    private var retryContainer: ViewGroup? = null
-
-    /**
-     * Error layout to show when the image fails to decode.
-     */
-    private var decodeErrorLayout: ViewGroup? = null
+    private var errorLayout: ReaderErrorBinding? = null
 
     /**
      * Getter to retrieve the height of the recycler view.
@@ -125,7 +118,7 @@ class WebtoonPageHolder(
         unsubscribeProgress()
         unsubscribeReadImageHeader()
 
-        removeDecodeErrorLayout()
+        removeErrorLayout()
         frame.recycle()
         progressIndicator.setProgress(0, animated = false)
     }
@@ -219,8 +212,7 @@ class WebtoonPageHolder(
     private fun setQueued() {
         progressContainer.isVisible = true
         progressIndicator.show()
-        retryContainer?.isVisible = false
-        removeDecodeErrorLayout()
+        removeErrorLayout()
     }
 
     /**
@@ -229,8 +221,7 @@ class WebtoonPageHolder(
     private fun setLoading() {
         progressContainer.isVisible = true
         progressIndicator.show()
-        retryContainer?.isVisible = false
-        removeDecodeErrorLayout()
+        removeErrorLayout()
     }
 
     /**
@@ -239,8 +230,7 @@ class WebtoonPageHolder(
     private fun setDownloading() {
         progressContainer.isVisible = true
         progressIndicator.show()
-        retryContainer?.isVisible = false
-        removeDecodeErrorLayout()
+        removeErrorLayout()
     }
 
     /**
@@ -248,8 +238,7 @@ class WebtoonPageHolder(
      */
     private fun setImage() {
         progressIndicator.setProgress(0)
-        retryContainer?.isVisible = false
-        removeDecodeErrorLayout()
+        removeErrorLayout()
 
         unsubscribeReadImageHeader()
         val streamFn = page?.stream ?: return
@@ -302,7 +291,7 @@ class WebtoonPageHolder(
      */
     private fun setError() {
         progressContainer.isVisible = false
-        initRetryLayout().isVisible = true
+        initErrorLayout(withOpenInWebView = false)
     }
 
     /**
@@ -317,7 +306,7 @@ class WebtoonPageHolder(
      */
     private fun onImageDecodeError() {
         progressContainer.isVisible = false
-        initDecodeErrorLayout().isVisible = true
+        initErrorLayout(withOpenInWebView = true)
     }
 
     /**
@@ -340,94 +329,32 @@ class WebtoonPageHolder(
     /**
      * Initializes a button to retry pages.
      */
-    private fun initRetryLayout(): ViewGroup {
-        if (retryContainer != null) return retryContainer!!
-
-        retryContainer = FrameLayout(context)
-        frame.addView(retryContainer, MATCH_PARENT, parentHeight)
-
-        MaterialButton(context).apply {
-            layoutParams = FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                gravity = Gravity.CENTER_HORIZONTAL
-                setMargins(0, parentHeight / 4, 0, 0)
-            }
-            setText(R.string.action_retry)
-            setOnClickListener {
+    private fun initErrorLayout(withOpenInWebView: Boolean): ReaderErrorBinding {
+        if (errorLayout == null) {
+            errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), frame, true)
+            errorLayout?.root?.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, (parentHeight * 0.8).toInt())
+            errorLayout?.actionRetry?.setOnClickListener {
                 page?.let { it.chapter.pageLoader?.retryPage(it) }
             }
-
-            retryContainer!!.addView(this)
-        }
-        return retryContainer!!
-    }
-
-    /**
-     * Initializes a decode error layout.
-     */
-    private fun initDecodeErrorLayout(): ViewGroup {
-        if (decodeErrorLayout != null) return decodeErrorLayout!!
-
-        val margins = 8.dpToPx
-
-        val decodeLayout = LinearLayout(context).apply {
-            layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, parentHeight).apply {
-                setMargins(0, parentHeight / 6, 0, 0)
-            }
-            gravity = Gravity.CENTER_HORIZONTAL
-            orientation = LinearLayout.VERTICAL
-        }
-        decodeErrorLayout = decodeLayout
-
-        MaterialTextView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                setMargins(0, margins, 0, margins)
-            }
-            gravity = Gravity.CENTER
-            setText(R.string.decode_image_error)
-
-            decodeLayout.addView(this)
-        }
-
-        MaterialButton(context).apply {
-            layoutParams = FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                setMargins(0, margins, 0, margins)
-            }
-            setText(R.string.action_retry)
-            setOnClickListener {
-                page?.let { it.chapter.pageLoader?.retryPage(it) }
-            }
-
-            decodeLayout.addView(this)
-        }
-
-        val imageUrl = page?.imageUrl
-        if (imageUrl.orEmpty().startsWith("http", true)) {
-            MaterialButton(context).apply {
-                layoutParams = FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                    setMargins(0, margins, 0, margins)
-                }
-                setText(R.string.action_open_in_web_view)
-                setOnClickListener {
+            val imageUrl = page?.imageUrl
+            if (imageUrl.orEmpty().startsWith("http", true)) {
+                errorLayout?.actionOpenInWebView?.setOnClickListener {
                     val intent = WebViewActivity.newIntent(context, imageUrl!!)
                     context.startActivity(intent)
                 }
-
-                decodeLayout.addView(this)
             }
         }
-
-        frame.addView(decodeLayout)
-        return decodeLayout
+        errorLayout?.actionOpenInWebView?.isVisible = withOpenInWebView
+        return errorLayout!!
     }
 
     /**
      * Removes the decode error layout from the holder, if found.
      */
-    private fun removeDecodeErrorLayout() {
-        val layout = decodeErrorLayout
-        if (layout != null) {
-            frame.removeView(layout)
-            decodeErrorLayout = null
+    private fun removeErrorLayout() {
+        errorLayout?.let {
+            frame.removeView(it.root)
+            errorLayout = null
         }
     }
 }
