@@ -34,6 +34,7 @@
 
     <string-array name="webtoon_side_padding">
         <item>@string/webtoon_side_padding_0</item>
+        <item>@string/webtoon_side_padding_5</item>
         <item>@string/webtoon_side_padding_10</item>
         <item>@string/webtoon_side_padding_15</item>
         <item>@string/webtoon_side_padding_20</item>
@@ -42,6 +43,7 @@
 
     <string-array name="webtoon_side_padding_values">
         <item>0</item>
+        <item>5</item>
         <item>10</item>
         <item>15</item>
         <item>20</item>
