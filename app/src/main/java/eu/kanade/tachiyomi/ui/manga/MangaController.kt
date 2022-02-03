@@ -382,6 +382,8 @@ class MangaController :
         val fab = actionFab ?: return
         if (adapter.items.any { it.read }) {
             fab.text = context.getString(R.string.action_resume)
+        } else {
+            fab.text = context.getString(R.string.action_start)
         }
         if (adapter.items.any { !it.read }) {
             fab.show()
