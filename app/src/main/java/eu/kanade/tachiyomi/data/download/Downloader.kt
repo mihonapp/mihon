@@ -563,5 +563,5 @@ class Downloader(
     }
 }
 
-// Arbitrary minimum required space to start a download: 50 MB
-private const val MIN_DISK_SPACE = 50 * 1024 * 1024
+// Arbitrary minimum required space to start a download: 200 MB
+private const val MIN_DISK_SPACE = 200L * 1024 * 1024
