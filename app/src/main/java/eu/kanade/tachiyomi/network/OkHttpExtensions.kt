@@ -65,7 +65,7 @@ suspend fun Call.await(): Response {
             object : Callback {
                 override fun onResponse(call: Call, response: Response) {
                     if (!response.isSuccessful) {
-                        continuation.resumeWithException(Exception("HTTP error ${response.code}"))
+                        continuation.resumeWithException(HttpException(response.code))
                         return
                     }
 
@@ -96,7 +96,7 @@ fun Call.asObservableSuccess(): Observable<Response> {
     return asObservable().doOnNext { response ->
         if (!response.isSuccessful) {
             response.close()
-            throw Exception("HTTP error ${response.code}")
+            throw HttpException(response.code)
         }
     }
 }
@@ -123,3 +123,5 @@ inline fun <reified T> Response.parseAs(): T {
         return json.decodeFromString(responseBody)
     }
 }
+
+class HttpException(val code: Int) : IllegalStateException("HTTP error $code")

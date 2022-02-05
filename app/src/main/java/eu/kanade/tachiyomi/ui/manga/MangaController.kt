@@ -48,6 +48,7 @@ import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.databinding.MangaControllerBinding
+import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
@@ -473,6 +474,12 @@ class MangaController :
     fun onFetchMangaInfoError(error: Throwable) {
         isRefreshingInfo = false
         updateRefreshing()
+
+        // Ignore early hints "errors" that aren't handled by OkHttp
+        if (error is HttpException && error.code == 103) {
+            return
+        }
+
         activity?.toast(error.message)
     }
 
