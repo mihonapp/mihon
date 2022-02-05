@@ -5,11 +5,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
+import eu.kanade.tachiyomi.util.preference.entriesRes
+import eu.kanade.tachiyomi.util.preference.infoPreference
 import eu.kanade.tachiyomi.util.preference.intListPreference
+import eu.kanade.tachiyomi.util.preference.listPreference
 import eu.kanade.tachiyomi.util.preference.requireAuthentication
-import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
@@ -81,15 +84,23 @@ class SettingsSecurityController : SettingsController() {
         }
 
         switchPreference {
-            bindTo(preferences.secureScreen())
-            titleRes = R.string.secure_screen
-            summaryRes = R.string.secure_screen_summary
-        }
-
-        switchPreference {
             key = Keys.hideNotificationContent
             titleRes = R.string.hide_notification_content
             defaultValue = false
         }
+
+        listPreference {
+            bindTo(preferences.secureScreen())
+            titleRes = R.string.secure_screen
+            summary = "%s"
+            entriesRes = arrayOf(
+                R.string.lock_always,
+                R.string.pref_incognito_mode,
+                R.string.lock_never,
+            )
+            entryValues = PreferenceValues.SecureScreenMode.values().map { it.name }.toTypedArray()
+        }
+
+        infoPreference(R.string.secure_screen_summary)
     }
 }

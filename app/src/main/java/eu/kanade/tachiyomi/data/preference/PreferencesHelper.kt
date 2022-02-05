@@ -57,7 +57,7 @@ class PreferencesHelper(val context: Context) {
 
     fun lastAppUnlock() = flowPrefs.getLong("last_app_unlock", 0)
 
-    fun secureScreen() = flowPrefs.getBoolean("secure_screen", false)
+    fun secureScreen() = flowPrefs.getEnum("secure_screen_v2", Values.SecureScreenMode.INCOGNITO)
 
     fun hideNotificationContent() = prefs.getBoolean(Keys.hideNotificationContent, false)
 

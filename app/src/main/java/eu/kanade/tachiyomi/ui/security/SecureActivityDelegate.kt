@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.security
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
 import eu.kanade.tachiyomi.util.view.setSecureScreen
@@ -19,8 +20,8 @@ class SecureActivityDelegate(private val activity: FragmentActivity) {
     fun onCreate() {
         val secureScreenFlow = preferences.secureScreen().asFlow()
         val incognitoModeFlow = preferences.incognitoMode().asFlow()
-        secureScreenFlow.combine(incognitoModeFlow) { secureScreen, incognitoMode ->
-            secureScreen || incognitoMode
+        combine(secureScreenFlow, incognitoModeFlow) { secureScreen, incognitoMode ->
+            secureScreen == PreferenceValues.SecureScreenMode.ALWAYS || secureScreen == PreferenceValues.SecureScreenMode.INCOGNITO && incognitoMode
         }
             .onEach { activity.window.setSecureScreen(it) }
             .launchIn(activity.lifecycleScope)

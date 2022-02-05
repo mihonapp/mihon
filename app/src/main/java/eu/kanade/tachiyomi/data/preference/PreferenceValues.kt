@@ -67,4 +67,10 @@ object PreferenceValues {
         PACKAGEINSTALLER,
         SHIZUKU,
     }
+
+    enum class SecureScreenMode {
+        ALWAYS,
+        INCOGNITO,
+        NEVER,
+    }
 }

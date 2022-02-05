@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.MANGA_ONGOING
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
+import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.updater.AppUpdateJob
@@ -243,6 +244,12 @@ object Migrations {
                 val oldUpdateOngoingOnly = prefs.getBoolean("pref_update_only_non_completed_key", true)
                 if (!oldUpdateOngoingOnly) {
                     preferences.libraryUpdateMangaRestriction() -= MANGA_ONGOING
+                }
+            }
+            if (oldVersion < 75) {
+                val oldSecureScreen = prefs.getBoolean("secure_screen", false)
+                if (oldSecureScreen) {
+                    preferences.secureScreen().set(PreferenceValues.SecureScreenMode.ALWAYS)
                 }
             }
 
