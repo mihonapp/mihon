@@ -37,17 +37,16 @@ class ZipPageLoader(file: File) : PageLoader() {
      * comparator.
      */
     override fun getPages(): Observable<List<ReaderPage>> {
-        return zip.entries().toList()
+        return zip.entries().asSequence()
             .filter { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
             .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
             .mapIndexed { i, entry ->
-                val streamFn = { zip.getInputStream(entry) }
                 ReaderPage(i).apply {
-                    stream = streamFn
+                    stream = { zip.getInputStream(entry) }
                     status = Page.READY
                 }
             }
-            .let { Observable.just(it) }
+            .let { Observable.just(it.toList()) }
     }
 
     /**

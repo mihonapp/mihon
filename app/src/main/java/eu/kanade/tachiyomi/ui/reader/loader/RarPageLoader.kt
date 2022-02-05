@@ -42,18 +42,16 @@ class RarPageLoader(file: File) : PageLoader() {
      * comparator.
      */
     override fun getPages(): Observable<List<ReaderPage>> {
-        return archive.fileHeaders
+        return archive.fileHeaders.asSequence()
             .filter { !it.isDirectory && ImageUtil.isImage(it.fileName) { archive.getInputStream(it) } }
             .sortedWith { f1, f2 -> f1.fileName.compareToCaseInsensitiveNaturalOrder(f2.fileName) }
             .mapIndexed { i, header ->
-                val streamFn = { getStream(header) }
-
                 ReaderPage(i).apply {
-                    stream = streamFn
+                    stream = { getStream(header) }
                     status = Page.READY
                 }
             }
-            .let { Observable.just(it) }
+            .let { Observable.just(it.toList()) }
     }
 
     /**
