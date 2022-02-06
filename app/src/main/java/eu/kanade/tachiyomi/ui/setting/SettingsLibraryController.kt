@@ -73,7 +73,7 @@ class SettingsLibraryController : SettingsController() {
                     }
                 }
 
-                preferences.portraitColumns().asFlow().combine(preferences.landscapeColumns().asFlow()) { portraitCols, landscapeCols -> Pair(portraitCols, landscapeCols) }
+                combine(preferences.portraitColumns().asFlow(), preferences.landscapeColumns().asFlow()) { portraitCols, landscapeCols -> Pair(portraitCols, landscapeCols) }
                     .onEach { (portraitCols, landscapeCols) ->
                         val portrait = getColumnValue(portraitCols)
                         val landscape = getColumnValue(landscapeCols)

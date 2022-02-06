@@ -19,6 +19,7 @@ import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
+import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import uy.kohesive.injekt.Injekt
@@ -250,6 +251,9 @@ object Migrations {
                 val oldSecureScreen = prefs.getBoolean("secure_screen", false)
                 if (oldSecureScreen) {
                     preferences.secureScreen().set(PreferenceValues.SecureScreenMode.ALWAYS)
+                }
+                if (DeviceUtil.isMiui && preferences.extensionInstaller().get() == PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER) {
+                    preferences.extensionInstaller().set(PreferenceValues.ExtensionInstaller.LEGACY)
                 }
             }
 

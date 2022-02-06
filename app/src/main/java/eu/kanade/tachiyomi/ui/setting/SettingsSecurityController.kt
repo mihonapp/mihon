@@ -93,11 +93,7 @@ class SettingsSecurityController : SettingsController() {
             bindTo(preferences.secureScreen())
             titleRes = R.string.secure_screen
             summary = "%s"
-            entriesRes = arrayOf(
-                R.string.lock_always,
-                R.string.pref_incognito_mode,
-                R.string.lock_never,
-            )
+            entriesRes = PreferenceValues.SecureScreenMode.values().map { it.titleResId }.toTypedArray()
             entryValues = PreferenceValues.SecureScreenMode.values().map { it.name }.toTypedArray()
         }
 

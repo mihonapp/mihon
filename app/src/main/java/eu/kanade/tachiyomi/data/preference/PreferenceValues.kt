@@ -55,22 +55,22 @@ object PreferenceValues {
         LOWEST(47),
     }
 
-    enum class TabletUiMode {
-        AUTOMATIC,
-        ALWAYS,
-        LANDSCAPE,
-        NEVER,
+    enum class TabletUiMode(val titleResId: Int) {
+        AUTOMATIC(R.string.automatic_background),
+        ALWAYS(R.string.lock_always),
+        LANDSCAPE(R.string.landscape),
+        NEVER(R.string.lock_never),
     }
 
-    enum class ExtensionInstaller {
-        LEGACY,
-        PACKAGEINSTALLER,
-        SHIZUKU,
+    enum class ExtensionInstaller(val titleResId: Int) {
+        LEGACY(R.string.ext_installer_legacy),
+        PACKAGEINSTALLER(R.string.ext_installer_packageinstaller),
+        SHIZUKU(R.string.ext_installer_shizuku),
     }
 
-    enum class SecureScreenMode {
-        ALWAYS,
-        INCOGNITO,
-        NEVER,
+    enum class SecureScreenMode(val titleResId: Int) {
+        ALWAYS(R.string.lock_always),
+        INCOGNITO(R.string.pref_incognito_mode),
+        NEVER(R.string.lock_never),
     }
 }
