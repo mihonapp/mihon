@@ -22,9 +22,9 @@ class SourceItem(val manga: Manga, private val displayMode: Preference<DisplayMo
 
     override fun getLayoutRes(): Int {
         return when (displayMode.get()) {
-            DisplayModeSetting.COMPACT_GRID -> R.layout.source_compact_grid_item
-            DisplayModeSetting.COMFORTABLE_GRID -> R.layout.source_comfortable_grid_item
             DisplayModeSetting.LIST -> R.layout.source_list_item
+            DisplayModeSetting.COMFORTABLE_GRID -> R.layout.source_comfortable_grid_item
+            else -> R.layout.source_compact_grid_item
         }
     }
 
@@ -33,7 +33,22 @@ class SourceItem(val manga: Manga, private val displayMode: Preference<DisplayMo
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
     ): SourceHolder<*> {
         return when (displayMode.get()) {
-            DisplayModeSetting.COMPACT_GRID -> {
+            DisplayModeSetting.LIST -> {
+                SourceListHolder(view, adapter)
+            }
+            DisplayModeSetting.COMFORTABLE_GRID -> {
+                val binding = SourceComfortableGridItemBinding.bind(view)
+                val parent = adapter.recyclerView as AutofitRecyclerView
+                val coverHeight = parent.itemWidth / 3 * 4
+                view.apply {
+                    binding.card.layoutParams = ConstraintLayout.LayoutParams(
+                        MATCH_PARENT,
+                        coverHeight
+                    )
+                }
+                SourceComfortableGridHolder(view, adapter)
+            }
+            else -> {
                 val binding = SourceCompactGridItemBinding.bind(view)
                 val parent = adapter.recyclerView as AutofitRecyclerView
                 val coverHeight = parent.itemWidth / 3 * 4
@@ -49,21 +64,6 @@ class SourceItem(val manga: Manga, private val displayMode: Preference<DisplayMo
                     )
                 }
                 SourceCompactGridHolder(view, adapter)
-            }
-            DisplayModeSetting.COMFORTABLE_GRID -> {
-                val binding = SourceComfortableGridItemBinding.bind(view)
-                val parent = adapter.recyclerView as AutofitRecyclerView
-                val coverHeight = parent.itemWidth / 3 * 4
-                view.apply {
-                    binding.card.layoutParams = ConstraintLayout.LayoutParams(
-                        MATCH_PARENT,
-                        coverHeight
-                    )
-                }
-                SourceComfortableGridHolder(view, adapter)
-            }
-            DisplayModeSetting.LIST -> {
-                SourceListHolder(view, adapter)
             }
         }
     }

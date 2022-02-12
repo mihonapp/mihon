@@ -222,7 +222,7 @@ open class BrowseSourceController(bundle: Bundle) :
                 (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
                         return when (adapter?.getItemViewType(position)) {
-                            R.layout.source_compact_grid_item, R.layout.source_comfortable_grid_item, null -> 1
+                            R.layout.source_compact_grid_item, R.layout.source_comfortable_grid_item -> 1
                             else -> spanCount
                         }
                     }
@@ -273,9 +273,9 @@ open class BrowseSourceController(bundle: Bundle) :
         )
 
         val displayItem = when (preferences.sourceDisplayMode().get()) {
-            DisplayModeSetting.COMPACT_GRID -> R.id.action_compact_grid
-            DisplayModeSetting.COMFORTABLE_GRID -> R.id.action_comfortable_grid
             DisplayModeSetting.LIST -> R.id.action_list
+            DisplayModeSetting.COMFORTABLE_GRID -> R.id.action_comfortable_grid
+            else -> R.id.action_compact_grid
         }
         menu.findItem(displayItem).isChecked = true
     }
