@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="118dp"
+    android:layout_width="114dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="4dp">
@@ -15,102 +15,115 @@
         android:clickable="true"
         android:focusable="true"
         android:importantForAccessibility="no"
-        app:cardCornerRadius="@dimen/card_selector_radius"
-        app:contentPadding="4dp"
+        app:cardCornerRadius="17dp"
         app:strokeColor="?attr/colorAccent"
         app:strokeWidth="4dp"
         app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="176dp"
+            android:layout_height="170dp"
             android:background="?android:attr/colorBackground">
 
             <View
                 android:id="@+id/top_nav"
                 android:layout_width="0dp"
-                android:layout_height="32dp"
+                android:layout_height="40dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/top_nav_text"
-                android:layout_width="64dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="6dp"
-                android:src="@drawable/oval"
+                android:layout_width="54dp"
+                android:layout_height="17dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="12dp"
                 app:layout_constraintBottom_toBottomOf="@+id/top_nav"
                 app:layout_constraintStart_toStartOf="@+id/top_nav"
                 app:layout_constraintTop_toTopOf="@+id/top_nav"
-                app:tint="?attr/colorOnSurface" />
+                app:cardBackgroundColor="?attr/colorOnSurface"
+                app:cardCornerRadius="4dp"/>
 
-            <ImageView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cover_container"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/rounded_rectangle"
                 app:layout_constraintTop_toBottomOf="@+id/top_nav"
-                app:layout_constraintDimensionRatio="2:3"
-                app:layout_constraintEnd_toEndOf="@+id/center_guideline"
-                app:layout_constraintStart_toStartOf="parent"
-                app:tint="?android:attr/divider" />
+                app:layout_constraintDimensionRatio="2:2.7"
+                app:layout_constraintStart_toStartOf="@id/top_nav_text"
+                app:layout_constraintEnd_toStartOf="@id/center_guideline"
+                app:cardBackgroundColor="?android:attr/divider"
+                app:cardElevation="0dp" />
 
-            <LinearLayout
-                android:id="@+id/badges"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
-                android:background="@drawable/rounded_rectangle"
                 app:layout_constraintStart_toStartOf="@+id/cover_container"
-                app:layout_constraintTop_toTopOf="@+id/cover_container">
+                app:layout_constraintTop_toTopOf="@+id/cover_container"
+                app:cardCornerRadius="6dp">
 
-                <View
-                    android:layout_width="12dp"
-                    android:layout_height="16dp"
-                    android:background="?attr/colorTertiary" />
+                <LinearLayout
+                    android:id="@+id/badges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_rectangle">
 
-                <View
-                    android:layout_width="12dp"
-                    android:layout_height="16dp"
-                    android:background="?attr/colorSecondary" />
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="16dp"
+                        android:background="?attr/colorTertiary" />
 
-            </LinearLayout>
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="16dp"
+                        android:background="?attr/colorSecondary" />
 
-            <View
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/bottom_nav"
                 android:layout_width="0dp"
-                android:layout_height="32dp"
+                android:layout_height="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:cardCornerRadius="0dp">
 
-            <ImageView
-                android:id="@+id/bottom_nav_selected_item"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/oval"
-                android:layout_marginStart="6dp"
-                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
-                app:layout_constraintStart_toStartOf="@+id/bottom_nav"
-                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
-                app:tint="?attr/colorPrimary" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp">
 
-            <ImageView
-                android:id="@+id/bottom_nav_unselected_item"
-                android:layout_width="0dp"
-                android:layout_height="16dp"
-                android:src="@drawable/oval"
-                android:layout_marginHorizontal="6dp"
-                android:alpha="0.6"
-                app:layout_constraintBottom_toBottomOf="@+id/bottom_nav"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/bottom_nav_selected_item"
-                app:layout_constraintTop_toTopOf="@+id/bottom_nav"
-                app:tint="?attr/colorOnSurface" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/bottom_nav_selected_item"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_marginEnd="8dp"
+                        app:cardBackgroundColor="?attr/colorPrimary"
+                        app:cardCornerRadius="100dp"/>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/bottom_nav_unselected_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="17dp"
+                        android:src="@drawable/oval"
+                        android:alpha="0.6"
+                        app:cardBackgroundColor="?attr/colorOnSurface"
+                        app:cardCornerRadius="4dp"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/center_guideline"

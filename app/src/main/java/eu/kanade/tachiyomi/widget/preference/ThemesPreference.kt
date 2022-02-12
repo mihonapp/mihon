@@ -63,9 +63,9 @@ class ThemesPreference @JvmOverloads constructor(context: Context, attrs: Attrib
         recycler?.let {
             (it.layoutManager as LinearLayoutManager).apply {
                 scrollToPositionWithOffset(
-                    // 118dp is the width of the pref_theme_item layout
-                    lX / 118.dpToPx,
-                    -lX % 118.dpToPx
+                    // 114dp is the width of the pref_theme_item layout
+                    lX / 114.dpToPx,
+                    -lX % 114.dpToPx
                 )
             }
             lastScrollPosition = it.computeHorizontalScrollOffset()
