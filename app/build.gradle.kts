@@ -147,19 +147,19 @@ dependencies {
     implementation("org.tachiyomi:source-api:1.1")
 
     // AndroidX libraries
-    implementation("androidx.annotation:annotation:1.4.0-alpha01")
+    implementation("androidx.annotation:annotation:1.4.0-alpha02")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha04")
     implementation("androidx.browser:browser:1.4.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.3")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
-    implementation("androidx.core:core-ktx:1.8.0-alpha02")
+    implementation("androidx.core:core-ktx:1.8.0-alpha04")
     implementation("androidx.core:core-splashscreen:1.0.0-alpha02")
     implementation("androidx.recyclerview:recyclerview:1.3.0-alpha01")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     implementation("androidx.viewpager:viewpager:1.1.0-alpha01")
 
-    val lifecycleVersion = "2.4.0"
+    val lifecycleVersion = "2.5.0-alpha02"
     implementation("androidx.lifecycle:lifecycle-common:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
