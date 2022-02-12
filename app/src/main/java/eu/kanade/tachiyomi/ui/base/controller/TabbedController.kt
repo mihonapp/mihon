@@ -4,7 +4,10 @@ import com.google.android.material.tabs.TabLayout
 
 interface TabbedController {
 
-    fun configureTabs(tabs: TabLayout) {}
+    /**
+     * @return true to let activity updates tabs visibility (to visible)
+     */
+    fun configureTabs(tabs: TabLayout): Boolean = true
 
     fun cleanupTabs(tabs: TabLayout) {}
 }
