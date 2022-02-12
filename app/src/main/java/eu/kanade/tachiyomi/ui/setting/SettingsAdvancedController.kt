@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.PREF_DOH_ADGUARD
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
 import eu.kanade.tachiyomi.network.PREF_DOH_GOOGLE
+import eu.kanade.tachiyomi.network.PREF_DOH_QUAD9
 import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.setting.database.ClearDatabaseController
@@ -168,12 +169,14 @@ class SettingsAdvancedController : SettingsController() {
                     "Cloudflare",
                     "Google",
                     "AdGuard",
+                    "Quad9",
                 )
                 entryValues = arrayOf(
                     "-1",
                     PREF_DOH_CLOUDFLARE.toString(),
                     PREF_DOH_GOOGLE.toString(),
                     PREF_DOH_ADGUARD.toString(),
+                    PREF_DOH_QUAD9.toString(),
                 )
                 defaultValue = "-1"
                 summary = "%s"
