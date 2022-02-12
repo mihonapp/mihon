@@ -5,7 +5,7 @@
     <string name="channel_errors">Erroreak</string>
     <string name="unknown_error">Akats ezezaguna</string>
     <string name="description">Deskribapena</string>
-    <string name="ongoing">Aribidean</string>
+    <string name="ongoing">Argitaratzen</string>
     <string name="unknown">Ezezaguna</string>
     <string name="updating_library">Liburutegia eguneratzen</string>
     <string name="getting_started_guide">Hasiberrientzako gida</string>
@@ -19,7 +19,7 @@
     <string name="licensed">Lizentziatua</string>
     <string name="chapter_not_found">Kapitulua ez da aurkitu</string>
     <string name="loading">Kargatzen…</string>
-    <string name="charging">Kargatzen</string>
+    <string name="charging">Telefonoa kargatzen</string>
     <string name="title">Titulua</string>
     <string name="completed">Bukatua</string>
     <string name="unread">Irakurri gabea</string>
@@ -158,7 +158,7 @@
     <string name="pref_incognito_mode">Ezkutuko modua</string>
     <string name="pref_incognito_mode_summary">Irakurketa historia gelditu egiten du</string>
     <string name="downloaded_chapters">Deskargatutako kapituluak</string>
-    <string name="last_used_source">Ezken erabilera</string>
+    <string name="last_used_source">Azken erabilera</string>
     <string name="pinned_sources">Ainguratua</string>
     <string name="no_pinned_sources">Ez duzu iturri ainguraturik</string>
     <string name="local_invalid_format">Kapituluaren formatu baliogabea</string>
@@ -250,7 +250,7 @@
     <string name="pref_custom_color_filter">Kolore-iragazki pertsonalizatua</string>
     <string name="rotation_type">Biraketa mota</string>
     <string name="rotation_force_landscape">Horizontal blokeatua</string>
-    <string name="rotation_free">Doan</string>
+    <string name="rotation_free">Librea</string>
     <string name="rotation_portrait">Bertikala</string>
     <string name="rotation_landscape">Horizontala</string>
     <string name="rotation_force_portrait">Bertikal blokeatua</string>
@@ -276,7 +276,7 @@
     <string name="creating_backup_error">Babeskopia egiteak huts egin du</string>
     <string name="theme_midnightdusk">Gauerdiko ilunabarra</string>
     <string name="all_lang">Denak</string>
-    <string name="ext_installed">Instalatua</string>
+    <string name="ext_installed">Instalatuak</string>
     <string name="ext_app_info">Aplikazioaren informazioa</string>
     <string name="ext_language_info">Hizkuntza: %1$s</string>
     <string name="pref_page_transitions">Animatu orrialdeen trantsizioak</string>
@@ -374,7 +374,7 @@
     <string name="information_webview_required">WebView beharrezkoa da Tachiyomi-rentzat</string>
     <string name="download_notifier_text_only_wifi">Ez dago Wi-Fi konexiorik erabilgarri</string>
     <string name="label_default">Lehenetsia</string>
-    <string name="track">Jarraitzen</string>
+    <string name="track">Jarraipena</string>
     <string name="action_display_mode">Bistaratze-modua</string>
     <string name="action_display">Bistaratu</string>
     <string name="action_display_grid">Lauki-sare trinkoa</string>
@@ -419,7 +419,7 @@
     <string name="pref_library_update_manga_restriction">Liburutegia eguneratzeko mugaketak</string>
     <string name="action_sort_date_added">Gehiketa data</string>
     <string name="action_search">Bilatu</string>
-    <string name="action_search_settings">Bilaketa-ezarpenak</string>
+    <string name="action_search_settings">Bilatu ezarpenak</string>
     <string name="action_global_search">Bilaketa globala</string>
     <string name="action_select_all">Hautatu dena</string>
     <string name="action_select_inverse">Hautatu alderantzizkoa</string>
@@ -478,7 +478,7 @@
     <string name="pref_manage_notifications">Kudeatu jakinarazpenak</string>
     <string name="pref_category_security">Segurtasuna</string>
     <string name="lock_always">Beti</string>
-    <string name="secure_screen_summary">Ezkutatu aplikazioaren edukia aplikazioak aldatzean eta blokeatu pantaila-argazkiak</string>
+    <string name="secure_screen_summary">Pantaila seguruak aplikazioaren edukia ezkutatzen du aplikazioak aldatzean, eta pantaila-argazkiak blokeatzen ditu</string>
     <string name="pref_category_nsfw_content">NSFW (18+) iturriak</string>
     <string name="pref_show_nsfw_source">Erakutsi iturrien eta luzapenen zerrendetan</string>
     <string name="parental_controls_info">Honek ez du eragozten ofizialak ez diren edo oker markatutako luzapenek NSFW (18+) edukia aplikazioan erakustea.</string>
@@ -573,7 +573,7 @@
     <string name="pref_category_library">Liburutegia</string>
     <string name="pref_category_reader">Irakurgailua</string>
     <string name="pref_category_downloads">Deskargak</string>
-    <string name="pref_category_tracking">Jarraitzen</string>
+    <string name="pref_category_tracking">Jarraipena</string>
     <string name="pref_category_advanced">Aurreratua</string>
     <string name="pref_theme_mode">Modu iluna</string>
     <string name="action_display_language_badge">Hizkuntza</string>
@@ -597,7 +597,7 @@
     <string name="update_24hour">Egunero</string>
     <string name="update_48hour">2 egunean behin</string>
     <string name="ext_trust">Fidagarritzat jo</string>
-    <string name="tapping_inverted_both">BIak</string>
+    <string name="tapping_inverted_both">Biak</string>
     <string name="pref_reader_actions">Ekintzak</string>
     <string name="pref_read_with_long_tap">Erakutsi sakaketa luzean</string>
     <string name="login_title">Hasi saioa %1$s-n</string>
@@ -611,12 +611,12 @@
     <string name="update_weekly">Astero</string>
     <string name="connected_to_wifi">Wi-Fi bidez bakarrik</string>
     <string name="restrictions">Mugaketak: %s</string>
-    <string name="pref_update_only_non_completed">Argitaratzen ari den argitalpena</string>
+    <string name="pref_update_only_non_completed">Argitaratzen ari diren argitalpenak</string>
     <string name="pref_library_update_refresh_metadata">Freskatu metadatuak automatikoki</string>
     <string name="pref_library_update_refresh_trackers">Freskatu jarraitzaileak automatikoki</string>
     <string name="pref_library_update_refresh_trackers_summary">Eguneratu jarraitzaileak liburutegia eguneratzean</string>
     <string name="invalid_backup_file_missing_manga">Babeskopiak ez du mangarik.</string>
-    <string name="manga_tracking_tab">Jarraitzen</string>
+    <string name="manga_tracking_tab">Jarraipena</string>
     <string name="repeating">Berrirakurtzen</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">Titulu baterako</item>
@@ -699,4 +699,7 @@
     <string name="pref_dual_page_invert">Alderantzikatu orrialde bikoitzeko zatiketa</string>
     <string name="pref_dual_page_invert_summary">Orrialde bikoitzeko zatiketaren kokapena irakurketa noranzkoarekin bat ez badator</string>
     <string name="pref_library_update_restriction">Eguneraketa automatikoentzako gailuaren murrizketak</string>
+    <string name="action_faq_and_guides">Ohiko galderak eta gidak</string>
+    <string name="webtoon_side_padding_5">%5</string>
+    <string name="backup_restore_invalid_uri">Errorea: URI-a hutsik</string>
 </resources>

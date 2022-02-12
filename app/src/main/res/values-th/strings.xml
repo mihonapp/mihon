@@ -102,8 +102,8 @@
     <string name="pref_library_update_restriction">อัปเดตข้อจำกัดของอุปกรณ์โดยอัตโนมัติ</string>
     <string name="pref_update_only_non_completed">เรื่องที่ยังไม่จบ</string>
     <string name="pref_auto_update_manga_sync">อัปเดตความคืบหน้าหลังอ่าน</string>
-    <string name="pref_start_screen">หน้าจอเริ่ม</string>
-    <string name="default_category">หมวดหมู่เรื่มต้น</string>
+    <string name="pref_start_screen">หน้าเริ่มต้น</string>
+    <string name="default_category">หมวดหมู่เริ่มต้น</string>
     <string name="all_lang">ทั้งหมด</string>
     <string name="ext_trust">เชื่อถือได้</string>
     <string name="ext_untrusted">ไม่น่าเชื่อถือ</string>
@@ -335,7 +335,7 @@
     <string name="automatic_background">อัตโนมัติ</string>
     <string name="gray_background">เทา</string>
     <string name="pref_create_folder_per_manga_summary">สร้างโฟลเดอร์ตามชื่อเรื่องมังงะ</string>
-    <string name="pref_create_folder_per_manga">บันทึกเพจลงในโฟลเดอร์ที่แยกต่างหาก</string>
+    <string name="pref_create_folder_per_manga">บันทึกหน้าลงในโฟลเดอร์ที่แยกต่างหาก</string>
     <string name="pref_reader_actions">การกระทำ</string>
     <string name="tapping_inverted_both">ทั้งสอง</string>
     <string name="tapping_inverted_vertical">แนวตั้ง</string>
@@ -376,7 +376,7 @@
     <string name="pref_show_nsfw_source">แสดงในรายการแหล่งข้อมูลและส่วนขยาย</string>
     <string name="pref_category_nsfw_content">แหล่งที่มา NSFW (18+)</string>
     <string name="hide_notification_content">ซ่อนเนื้อหาการแจ้งเตือน</string>
-    <string name="secure_screen_summary">ซ่อนเนื้อหาของแอปเมื่อสลับแอปและกันไม่ให้ถ่ายภาพหน้าจอ</string>
+    <string name="secure_screen_summary">หน้าจอปลอดภัยจะซ่อนเนื้อหาของแอปเมื่อสลับแอปและกันไม่ให้ถ่ายภาพหน้าจอ</string>
     <string name="secure_screen">หน้าจอความปลอดภัย</string>
     <plurals name="lock_after_mins">
         <item quantity="other">หลังจาก %1$s นาที</item>
@@ -519,7 +519,7 @@
     <string name="website">เว็บไซต์</string>
     <string name="battery_optimization_setting_activity_not_found">ไม่สามารถเปิดการตั้งค่าอุปกรณ์</string>
     <string name="battery_optimization_disabled">การเพิ่มประสิทธิภาพแบตเตอรี่ถูกปิดใช้งานอยู่แล้ว</string>
-    <string name="pref_disable_battery_optimization_summary">ช่วยในการอัปเดตและสำรองข้อมูลคัลงในพื้นหลัง</string>
+    <string name="pref_disable_battery_optimization_summary">ช่วยในการอัปเดตและสำรองข้อมูลคลังในพื้นหลัง</string>
     <string name="pref_disable_battery_optimization">ปิดการใช้งานการเพิ่มประสิทธิภาพแบตเตอรี่</string>
     <string name="crash_log_saved">บันทึกบันทึกข้อขัดข้องแล้ว</string>
     <string name="pref_dump_crash_logs_summary">บันทึกบันทึกข้อผิดพลาดลงในแฟ้มเพื่อแบ่งปันกับผู้พัฒนา</string>
@@ -688,4 +688,5 @@
     <string name="on_hiatus">อยู่ระหว่างพัก</string>
     <string name="backup_restore_invalid_uri">เกิดข้อผิดพลาด: URI ว่างเปล่า</string>
     <string name="action_faq_and_guides">คำถามที่พบบ่อยและคู่มือ</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

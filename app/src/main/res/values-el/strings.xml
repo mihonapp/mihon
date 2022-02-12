@@ -398,7 +398,7 @@
     <string name="pref_category_library_update">Καθολική ενημέρωση</string>
     <string name="pref_category_display">Προβολή</string>
     <string name="hide_notification_content">Απόκρυψη περιεχομένου ειδοποιήσεων</string>
-    <string name="secure_screen_summary">Απόκρυψη περιεχομένων εφαρμογής κατά την εναλλαγή εφαρμογών και τον αποκλεισμό στιγμιότυπων οθόνης</string>
+    <string name="secure_screen_summary">Η ασφαλής οθόνη αποκρύπτει τα περιεχόμενα εφαρμογών κατά την εναλλαγή εφαρμογών και εμποδίζει τα στιγμιότυπα οθόνης</string>
     <string name="secure_screen">Ασφάλισε την οθόνη</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Μετά από 1 λεπτό</item>
@@ -701,4 +701,5 @@
     <string name="publishing_finished">Η έκδοσή ολοκληρώθηκε</string>
     <string name="action_faq_and_guides">Συχνές ερωτήσεις και οδηγοί</string>
     <string name="backup_restore_invalid_uri">Σφάλμα: κενό URI</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

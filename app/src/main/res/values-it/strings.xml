@@ -393,7 +393,7 @@
     <string name="information_webview_outdated">Per favore aggiorna l\'app WebView per una migliore compatibilità</string>
     <string name="channel_new_chapters">Aggiornamenti capitoli</string>
     <string name="unlock_app">Sblocca Tachiyomi</string>
-    <string name="secure_screen_summary">Nascondi i contenuti dell\'app quando cambi applicazione e blocca gli screenshot</string>
+    <string name="secure_screen_summary">Schermo sicuro nasconde i contenuti dell\'app quando cambi applicazione e blocca gli screenshot</string>
     <string name="pref_category_display">Visualizzazione</string>
     <string name="action_reorganize_by">Riordina</string>
     <string name="channel_ext_updates">Aggiornamenti estensione</string>
@@ -555,8 +555,8 @@
     <string name="ext_nsfw_warning">Potrebbe contenere materiale NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">1 capitolo saltato, o la fonte non ce l\'ha o è stato filtrato</item>
-        <item quantity="other">%d capitoli saltati, o la fonte non ce li ha o sono stati filtrati</item>
+        <item quantity="one">Un capitolo saltato, la fonte non ce l\'ha o è stato filtrato</item>
+        <item quantity="other">%d capitoli saltati, la fonte non ce li ha o sono stati filtrati</item>
     </plurals>
     <string name="backup_restore_missing_trackers">Tracciatori non collegati:</string>
     <string name="no_chapters_error">Nessun capitolo trovato</string>
@@ -716,7 +716,7 @@
     <string name="connected_to_wifi">Solo su Wi-Fi</string>
     <string name="update_72hour">Ogni 3 giorni</string>
     <string name="download_queue_size_warning">Attenzione: grossi download di massa possono rallentare le fonti e/o bloccare tachiyomi</string>
-    <string name="pref_library_update_show_tab_badge">Mostra numero di non capitoli letti nell\'icona degli aggiornamenti</string>
+    <string name="pref_library_update_show_tab_badge">Mostra numero di capitoli non letti nell\'icona degli aggiornamenti</string>
     <string name="ext_update_all">Aggiorna tutto</string>
     <string name="channel_app_updates">Aggiornamenti dell\'applicazione</string>
     <string name="pref_auto_clear_chapter_cache">Cancella la cache capitoli alla chiusura dell\'app</string>
@@ -734,4 +734,5 @@
     <string name="publishing_finished">Pubblicazione terminata</string>
     <string name="action_faq_and_guides">Domande frequenti e guide</string>
     <string name="backup_restore_invalid_uri">Errore: URI vuoto</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

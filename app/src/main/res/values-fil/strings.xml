@@ -250,7 +250,7 @@
     <string name="pref_library_columns">Item kada hilera</string>
     <string name="pref_category_display">Pagpapakita</string>
     <string name="hide_notification_content">Itago ang laman ng abiso</string>
-    <string name="secure_screen_summary">Itago ang nilalaman ng app habang nagpapalit ng app at harangin ang mga screenshot</string>
+    <string name="secure_screen_summary">Tinatago ng seguridad sa screen ang laman ng app habang nagpapalit ng app at hinaharangan din nito ang mga screenshot</string>
     <string name="secure_screen">Bantayan ang screen</string>
     <string name="pref_jump_to_chapters">Diretso agad sa kabanata pagbukas</string>
     <string name="pref_read_with_tapping_inverted">Baligtad na pagpindot</string>
@@ -699,4 +699,7 @@
     <string name="publishing_finished">Tapos na\'ng mailathala</string>
     <string name="on_hiatus">Naka-hiatus</string>
     <string name="cancelled">Kinansela</string>
+    <string name="backup_restore_invalid_uri">Error: walang URI</string>
+    <string name="action_faq_and_guides">Mga Madalas Itanong at Gabay</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

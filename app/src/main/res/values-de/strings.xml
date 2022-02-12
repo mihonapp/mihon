@@ -252,7 +252,7 @@
     <string name="label_recent_updates">Neu</string>
     <string name="action_global_search">Globale Suche</string>
     <string name="other_source">Andere</string>
-    <string name="action_global_search_hint">Globale Suche …</string>
+    <string name="action_global_search_hint">Globale Suche…</string>
     <string name="latest">Neueste</string>
     <string name="browse">Stöbern</string>
     <string name="channel_common">Allgemein</string>
@@ -360,7 +360,7 @@
     <string name="information_webview_outdated">Bitte aktualisiere die WebView-App für eine bessere Kompatibilität</string>
     <string name="channel_new_chapters">Kapitelaktualisierungen</string>
     <string name="unlock_app">Tachiyomi entsperren</string>
-    <string name="secure_screen_summary">App-Inhalte beim App-Wechseln verbergen und Screenshots blockieren</string>
+    <string name="secure_screen_summary">Sicherer Bildschirm verbirgt App-Inhalte beim Wechseln von Apps und blockiert Screenshots</string>
     <string name="pref_category_display">Anzeige</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">1 neues Kapitel</item>
@@ -701,4 +701,9 @@
     <string name="publishing_finished">Veröffentlichung abgeschlossen</string>
     <string name="action_faq_and_guides">Häufige Fragen und Leitfäden</string>
     <string name="backup_restore_invalid_uri">Fehler: leerer URI</string>
+    <string name="webtoon_side_padding_5">5 %</string>
+    <string name="action_show_manga">Manga anzeigen</string>
+    <string name="confirm_manga_add_duplicate">In deiner Bibliothek existiert ein Eintrag mit dem selben Namen, aber aus einer anderen Quelle (%1$s).
+\n
+\nMöchtest du trotzdem fortfahren\?</string>
 </resources>

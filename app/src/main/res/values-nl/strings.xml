@@ -359,7 +359,7 @@
     <string name="information_webview_outdated">Gelieve de WebView-app bij te werken voor betere compatibiliteit</string>
     <string name="channel_new_chapters">Hoofdstukupdates</string>
     <string name="unlock_app">Ontgrendel Tachiyomi</string>
-    <string name="secure_screen_summary">Verberg inhoud van app bij omschakelen tussen apps en blokkeer screenshots</string>
+    <string name="secure_screen_summary">Veilig scherm modus verbergt de inhoud van de app bij het wisselen en blokkeert schermafbeeldingen</string>
     <string name="pref_category_display">Weergave</string>
     <string name="action_move_to_bottom">Verplaats naar beneden</string>
     <string name="action_oldest">Oudste</string>
@@ -699,4 +699,7 @@
     <string name="publishing_finished">Uitgave voltooid</string>
     <string name="cancelled">Geannuleerd</string>
     <string name="on_hiatus">Gepauzeerd</string>
+    <string name="backup_restore_invalid_uri">Fout: lege URI</string>
+    <string name="action_faq_and_guides">Veelgestelde vragen en handleidingen</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

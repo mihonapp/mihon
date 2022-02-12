@@ -21,7 +21,7 @@
     <string name="action_select_all">Tout sélectionner</string>
     <string name="action_mark_as_read">Marquer comme lu</string>
     <string name="action_mark_as_unread">Marquer comme non lu</string>
-    <string name="action_mark_previous_as_read">Marquer précédent comme lu</string>
+    <string name="action_mark_previous_as_read">Marquer précédents comme lus</string>
     <string name="action_download">Télécharger</string>
     <string name="action_bookmark">Marquer le chapitre</string>
     <string name="action_remove_bookmark">Enlever le signet</string>
@@ -64,7 +64,7 @@
     <string name="pref_category_advanced">Avancé</string>
     <string name="pref_category_about">À propos</string>
     <!-- General section -->
-    <string name="pref_library_columns">Affichage par liste</string>
+    <string name="pref_library_columns">Nombre d\'éléments par ligne</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Paysage</string>
     <string name="pref_library_update_interval">Mises à jour automatiques</string>
@@ -74,8 +74,8 @@
     <string name="update_24hour">Tous les jours</string>
     <string name="update_48hour">Tous les 2 jours</string>
     <string name="all">Tout</string>
-    <string name="pref_library_update_restriction">Mises à jour automatiques des restrictions des dispositifs</string>
-    <string name="charging">En charge</string>
+    <string name="pref_library_update_restriction">Restrictions matérielles pour les mises à jour automatiques</string>
+    <string name="charging">Appareil en charge</string>
     <string name="pref_update_only_non_completed">Séries en cours</string>
     <string name="pref_auto_update_manga_sync">Synchroniser la progression après lecture</string>
     <string name="pref_start_screen">Page d\'accueil</string>
@@ -175,7 +175,7 @@
     <!-- MyAnimeList fragment -->
     <string name="manga_tracking_tab">Suivi</string>
     <string name="reading">En cours</string>
-    <string name="completed">Complété</string>
+    <string name="completed">Terminé</string>
     <string name="dropped">Abandonné</string>
     <string name="on_hold">En pause</string>
     <string name="plan_to_read">À lire</string>
@@ -394,7 +394,7 @@
     <string name="information_webview_outdated">Veuillez mettre à jour l\'application WebView pour une meilleure compatibilité</string>
     <string name="channel_new_chapters">Mises à jour des chapitres</string>
     <string name="unlock_app">Débloquer Tachiyomi</string>
-    <string name="secure_screen_summary">Cacher le contenu lors du changement d\'application et bloquer les captures d\'écran</string>
+    <string name="secure_screen_summary">L\'écran sécurisé cache le contenu lors du changement d\'application et bloque les captures d\'écran</string>
     <string name="pref_category_display">Affichage</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">1 nouveau chapitre</item>
@@ -656,7 +656,7 @@
     <string name="tracking_guide">Manuel de suivi</string>
     <string name="off">Désactivé</string>
     <string name="on">Activé</string>
-    <string name="categorized_display_settings">Paramètres de tri et d\'affichage par catégorie</string>
+    <string name="categorized_display_settings">Rendre les réglages de tri et d\'affichage propres à chaque catégorie</string>
     <string name="information_empty_category_dialog">Vous n\'avez pas encore de catégories.</string>
     <string name="action_start_downloading_now">Commencer à télécharger</string>
     <string name="notification_updating">Mise à jour de la bibliothèque… (%1$d/%2$d)</string>
@@ -725,14 +725,15 @@
     <string name="database_clean">Base de données effacée</string>
     <string name="extension_api_error">Échec de la récupération de la liste des extensions</string>
     <string name="privacy_policy">Politique de confidentialité</string>
-    <string name="pref_library_update_manga_restriction">Restrictions de mise à jour de la bibliothèque</string>
+    <string name="pref_library_update_manga_restriction">Restrictions pour les mises à jour de la bibliothèque</string>
     <string name="pref_update_only_completely_read">Séries entièrement lues</string>
-    <string name="only_update_restrictions">Mise à jour uniquement de : %s</string>
+    <string name="only_update_restrictions">Uniquement mettre à jour : %s</string>
     <string name="save_chapter_as_cbz">Enregistrer comme archive CBZ</string>
     <string name="library_errors_help">Pour savoir comment corriger les erreurs de mise à jour de la bibliothèque, voir %1$s</string>
-    <string name="on_hiatus">En hiatus</string>
+    <string name="on_hiatus">En attente</string>
     <string name="publishing_finished">Publication terminée</string>
     <string name="cancelled">Annulé</string>
     <string name="action_faq_and_guides">FAQ et guides</string>
     <string name="backup_restore_invalid_uri">Erreur : URI vide</string>
+    <string name="webtoon_side_padding_5">5 %</string>
 </resources>

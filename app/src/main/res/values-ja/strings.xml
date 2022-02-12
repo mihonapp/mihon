@@ -419,7 +419,7 @@
     <string name="pref_library_columns">行あたりの項目数</string>
     <string name="pref_category_display">画面</string>
     <string name="hide_notification_content">通知内容を非表示</string>
-    <string name="secure_screen_summary">スクリーンショットを無効化し、「最近使ったアプリ」画面にアプリの内容を非表示します</string>
+    <string name="secure_screen_summary">セキュア画面はアプリを切り替える時アプリの内容を非表示し、画面キャプチャを無効化します</string>
     <string name="pref_confirm_exit">終了時に確認</string>
     <string name="action_move_to_bottom">底に移動</string>
     <string name="action_move_to_top">トップに移動</string>
@@ -688,4 +688,5 @@
     <string name="on_hiatus">休載中</string>
     <string name="action_faq_and_guides">よくあるご質問とガイド</string>
     <string name="backup_restore_invalid_uri">エラー：URIは空です</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

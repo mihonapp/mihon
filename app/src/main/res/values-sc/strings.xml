@@ -701,4 +701,5 @@
     <string name="on_hiatus">In pàusa</string>
     <string name="cancelled">Annullada</string>
     <string name="backup_restore_invalid_uri">Errore: URI bòidu</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

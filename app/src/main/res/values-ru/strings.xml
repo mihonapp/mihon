@@ -398,7 +398,7 @@
     <string name="pref_always_show_chapter_transition">Переход между главами</string>
     <string name="pref_enable_automatic_extension_updates">Проверять обновления для расширений</string>
     <string name="hide_notification_content">Скрыть содержимое уведомлений</string>
-    <string name="secure_screen_summary">Скрыть содержимое при переключении между приложениями и блокировать создание скриншотов</string>
+    <string name="secure_screen_summary">Защита экрана скрывает содержимое при переключении между приложениями, а также блокирует создание скриншотов</string>
     <string name="action_oldest">Старейший</string>
     <string name="action_newest">Новейший</string>
     <string name="action_move_to_top">В начало</string>
@@ -726,4 +726,5 @@
     <string name="publishing_finished">Публикация завершена</string>
     <string name="action_faq_and_guides">Руководства и FAQ</string>
     <string name="backup_restore_invalid_uri">Ошибка: Пустой URI</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

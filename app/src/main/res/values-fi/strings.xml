@@ -150,7 +150,7 @@
     <string name="ext_trust">Luota</string>
     <string name="ext_untrusted">Luottamaton</string>
     <string name="ext_uninstall">Poista asennus</string>
-    <string name="untrusted_extension">Luottamattomat laajennukset</string>
+    <string name="untrusted_extension">Luottamattomat laajennokset</string>
     <string name="untrusted_extension_message">Tämä laajennus on allekirjoitettu luottamattomalla sertifikaatilla ja sitä ei ole aktivoitu.
 \n
 \nHaitallinen laajennus voisi lukea mahdolliset kirjautumistiedot Tachiyomista tai suorittaa luvatonta koodia.
@@ -609,4 +609,6 @@
     <string name="date">Päivämäärä</string>
     <string name="off">Pois päältä</string>
     <string name="on">Päällä</string>
+    <string name="getting_started_guide">Aloitusopas</string>
+    <string name="download_queue_size_warning">Varoitus: massalataukset voivat johtaa siihen, että lähteet muuttuvat hitaammiksi käyttää ja/tai ne estävät Tachiyomin käytön</string>
 </resources>

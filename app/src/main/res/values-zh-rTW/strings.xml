@@ -687,4 +687,6 @@
     <string name="cancelled">已取消</string>
     <string name="publishing_finished">出版完畢</string>
     <string name="action_faq_and_guides">常見問題與指南</string>
+    <string name="backup_restore_invalid_uri">錯誤：URI 空白</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

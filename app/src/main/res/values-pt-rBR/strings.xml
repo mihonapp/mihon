@@ -360,7 +360,7 @@
     <string name="information_webview_outdated">Por favor, atualize o aplicativo de WebView para uma melhor compatibilidade</string>
     <string name="channel_new_chapters">Atualizações de capítulos</string>
     <string name="unlock_app">Desbloquear o Tachiyomi</string>
-    <string name="secure_screen_summary">Oculta os conteúdos do aplicativo durante a troca de aplicativos e impede capturas de tela</string>
+    <string name="secure_screen_summary">A tela segura oculta os conteúdos do aplicativo durante a troca de aplicativos e impede capturas de tela</string>
     <string name="pref_category_display">Visualização</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">1 capítulo novo</item>
@@ -701,4 +701,11 @@
     <string name="on_hiatus">Em hiato</string>
     <string name="action_faq_and_guides">FAQ e Guias</string>
     <string name="backup_restore_invalid_uri">Erro: URI vazia</string>
+    <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">Mostrar o mangá</string>
+    <string name="confirm_manga_add_duplicate">Você tem um item na sua biblioteca com o mesmo nome, mas de uma fonte diferente (%1$s).
+\n
+\nVocê deseja continuar mesmo assim\?</string>
+    <string name="pref_navigate_pan">Navegar para o painel</string>
+    <string name="pref_landscape_zoom">Dar zoom em imagens horizontais</string>
 </resources>

@@ -272,7 +272,7 @@
     <string name="decode_image_error">无法加载该图片</string>
     <string name="confirm_set_image_as_cover">要将此页设为封面吗？</string>
     <string name="transition_finished">已读完：</string>
-    <string name="transition_current">当前章节：</string>
+    <string name="transition_current">本章：</string>
     <string name="transition_next">下一章：</string>
     <string name="transition_previous">上一章：</string>
     <string name="transition_no_next">后面没有啦</string>
@@ -356,7 +356,7 @@
     <string name="information_cloudflare_bypass_failure">无法绕过 Cloudflare</string>
     <string name="information_webview_outdated">请更新 WebView 应用以获得更好的兼容性</string>
     <string name="unlock_app">解锁 Tachiyomi</string>
-    <string name="secure_screen_summary">在切换应用时隐藏预览，并禁止截取屏幕截图</string>
+    <string name="secure_screen_summary">切换应用程序时，安全屏幕隐藏应用程序内容，并阻止截屏</string>
     <string name="pref_category_display">显示</string>
     <string name="channel_new_chapters">章节更新</string>
     <string name="hide_notification_content">隐藏通知内容</string>
@@ -688,4 +688,5 @@
     <string name="on_hiatus">中断</string>
     <string name="action_faq_and_guides">常见问题和指南</string>
     <string name="backup_restore_invalid_uri">错误：空 URI</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

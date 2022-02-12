@@ -429,7 +429,7 @@
     </plurals>
     <string name="notification_check_updates">جارٍ التحقق من وجود فصول جديدة</string>
     <string name="recent_manga_time">الفصل %1$s - %2$s</string>
-    <string name="updating_library">تحديث المكتبة</string>
+    <string name="updating_library">يجري تحديث المكتبة</string>
     <string name="viewer">وضع القراءة</string>
     <string name="pref_category_for_this_series">القسم الخاص بهذه السلسلة</string>
     <string name="error_invalid_date_supplied">التاريخ الذي أدخلته غير صالح</string>
@@ -569,11 +569,11 @@
     <string name="updated_version">حُدِّث إلى الإصدار v%1$s</string>
     <plurals name="missing_chapters_warning">
         <item quantity="zero">لا يوجد فصول مفقودة</item>
-        <item quantity="one">هناك فصل مفقود</item>
-        <item quantity="two">هناك فصلان مفقودان</item>
-        <item quantity="few">هناك %d فصل مفقود</item>
-        <item quantity="many">هناك %d فصل مفقود</item>
-        <item quantity="other">هناك %d فصل مفقود</item>
+        <item quantity="one">تخطي فصل واحد ، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="two">تخطي فصلان، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="few">تخطي بعض الفصول، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="many">تخطي الكثير من الفصول ، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="other">تخطي %d فصل، إما أن المصدر مفقود أو تمت تصفيته</item>
     </plurals>
     <string name="no_chapters_error">لم يتم العثور على الفصول</string>
     <string name="share_page_info">%1$s: %2$s, صفحة %3$d</string>
@@ -749,6 +749,9 @@
     <string name="database_clean">تنظيف قاعدة البيانات</string>
     <string name="clear_database_source_item_count">عدد المانغا غير المتواجدة بقاعدة بيانات المكتبة %1$d</string>
     <string name="extension_api_error">فشل الحصول على قائمة الملحقات</string>
-    <string name="ext_installer_shizuku_unavailable_dialog">قم بتثبيت \"Shizuku\" لاستخدامه كمثبت ملحق</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">قم بتثبيت \"Shizuku\" لاستخدامه كمثبت ملحق.</string>
     <string name="download_queue_size_warning">تحذير: التحميلات كبيرة الحجم والعدد يمكن أن تؤدي إلى تباطؤ المصادر و/أو تقم بحظر \"Tachiyomi\"</string>
+    <string name="backup_restore_invalid_uri">خطأ: URI فارغ</string>
+    <string name="action_faq_and_guides">الاسئله الشائعه والأدلة</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

@@ -158,7 +158,7 @@
     <string name="confirm_delete_chapters">¿Seguro que quieres eliminar los capítulos seleccionados\?</string>
     <!-- MyAnimeList fragment -->
     <string name="reading">Leyendo</string>
-    <string name="completed">Terminados</string>
+    <string name="completed">Completado</string>
     <string name="dropped">Abandonado</string>
     <string name="on_hold">En espera</string>
     <string name="plan_to_read">Para leer luego</string>
@@ -362,7 +362,7 @@
     <string name="ext_obsolete">Obsoleto</string>
     <string name="obsolete_extension_message">Esta extensión ya no está disponible.</string>
     <string name="pref_date_format">Formato de fecha</string>
-    <string name="pref_category_library_update">Ajustes globales de actualizaciones</string>
+    <string name="pref_category_library_update">Actualización global</string>
     <string name="logout">Cerrar sesión</string>
     <string name="logout_success">Has cerrado sesión</string>
     <string name="paused">Pausado</string>
@@ -377,8 +377,8 @@
     <string name="theme_system">Según ajustes del sistema</string>
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_category_security">Seguridad</string>
-    <string name="lock_with_biometrics">Desbloqueo obligatorio</string>
-    <string name="lock_when_idle">Bloquear cuando está inactivo</string>
+    <string name="lock_with_biometrics">Confirmar identidad al iniciar</string>
+    <string name="lock_when_idle">Bloquear por inactividad</string>
     <string name="lock_always">Siempre</string>
     <string name="lock_never">Nunca</string>
     <plurals name="lock_after_mins">
@@ -392,7 +392,7 @@
     <string name="information_webview_outdated">Actualiza la aplicación WebView para mejorar la compatibilidad</string>
     <string name="channel_new_chapters">Capítulos actualizados</string>
     <string name="unlock_app">Desbloquear Tachiyomi</string>
-    <string name="secure_screen_summary">Oculta el contenido al cambiar de aplicación y bloquea las capturas de pantalla</string>
+    <string name="secure_screen_summary">Pantalla segura oculta el contenido al cambiar de aplicación y bloquea las capturas de pantalla</string>
     <string name="pref_category_display">Visualización</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">1 nuevo capítulo</item>
@@ -732,4 +732,5 @@
     <string name="cancelled">Cancelada</string>
     <string name="action_faq_and_guides">Guías y soluciones</string>
     <string name="backup_restore_invalid_uri">Error: dirección URI vacía</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>

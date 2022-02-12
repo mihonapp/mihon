@@ -283,7 +283,7 @@
     <string name="pref_double_tap_anim_speed">डबल टैप एनीमेशन गति</string>
     <string name="double_tap_anim_speed_0">कोई एनीमेशन नहीं</string>
     <string name="double_tap_anim_speed_normal">साधारण</string>
-    <string name="double_tap_anim_speed_fast">उपवास</string>
+    <string name="double_tap_anim_speed_fast">तेज</string>
     <string name="manga_info_full_title_label">शीर्षक</string>
     <string name="manga_added_library">पुस्तकालय में जोड़ा गया</string>
     <string name="manga_removed_library">लाइब्रेरी से निकाला गया</string>
@@ -360,7 +360,7 @@
     <string name="information_webview_outdated">बेहतर संगतता के लिए कृपया WebView ऐप को अपडेट करें</string>
     <string name="channel_new_chapters">अध्याय अद्यतन</string>
     <string name="unlock_app">अनलॉक Tachiyomi</string>
-    <string name="secure_screen_summary">एप्लिकेशन स्विच करते समय एप्लिकेशन सामग्री छिपाएं और स्क्रीनशॉट ब्लॉक करें</string>
+    <string name="secure_screen_summary">सुरक्षित स्क्रीन एप्लिकेशन स्विच करते समय एप्लिकेशन सामग्री छिपाता हैं और स्क्रीनशॉट ब्लॉक करता हैं</string>
     <string name="pref_category_display">प्रदर्शन</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">1 नया अध्याय</item>
@@ -701,4 +701,5 @@
     <string name="cancelled">रद्द किया गया</string>
     <string name="on_hiatus">अंतराल पर है</string>
     <string name="publishing_finished">प्रकाशन समाप्त</string>
+    <string name="webtoon_side_padding_5">५%</string>
 </resources>

@@ -360,7 +360,7 @@
     <string name="information_webview_outdated">Uppdatera WebView-appen för bättre kompatibilitet</string>
     <string name="channel_new_chapters">Kapiteluppdateringar</string>
     <string name="unlock_app">Lås upp Tachiyomi</string>
-    <string name="secure_screen_summary">Dölj app-innehåll när du byter appar, och blockera skärmdumpar</string>
+    <string name="secure_screen_summary">Säker skärm döljer appinnehållet när du byter app och blockerar skärmdumpar</string>
     <string name="pref_category_display">Skärmvisning</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">1 nytt kapitel</item>
@@ -701,4 +701,5 @@
     <string name="action_faq_and_guides">Vanliga frågor och guider</string>
     <string name="pref_update_only_completely_read">Helt läst serie</string>
     <string name="extension_api_error">Det gick inte att hämta tilläggslistan</string>
+    <string name="webtoon_side_padding_5">5%</string>
 </resources>
