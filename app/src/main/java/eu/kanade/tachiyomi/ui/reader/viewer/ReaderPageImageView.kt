@@ -30,7 +30,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
-import eu.kanade.tachiyomi.util.view.isVisible
+import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import java.io.InputStream
 import java.nio.ByteBuffer
 
@@ -264,7 +264,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
                     setupZoom(config)
-                    if (isVisible()) landscapeZoom(true)
+                    if (isVisibleOnScreen()) landscapeZoom(true)
                     this@ReaderPageImageView.onImageLoaded()
                 }
 

@@ -262,7 +262,7 @@ inline fun <reified T : Drawable> T.copy(context: Context): T? {
     }
 }
 
-fun View?.isVisible(): Boolean {
+fun View?.isVisibleOnScreen(): Boolean {
     if (this == null) {
         return false
     }
