@@ -4,16 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorSurface"
-    android:elevation="2dp"
-    android:padding="32dp">
+    android:background="?attr/colorSurface">
 
     <ImageView
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="center"
+        android:layout_margin="32dp"
         app:srcCompat="@drawable/ic_tachi"
         app:tint="?attr/colorOnSurface"
         tools:ignore="ContentDescription" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 
 </FrameLayout>

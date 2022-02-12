@@ -40,6 +40,7 @@
 
         <item name="android:divider">@color/divider_default</item>
         <item name="android:listDivider">@drawable/line_divider</item>
+        <item name="materialDividerStyle">@style/Widget.Tachiyomi.MaterialDivider</item>
 
         <!-- Ripples -->
         <item name="colorControlHighlight">?attr/colorSurfaceVariant</item>
