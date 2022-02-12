@@ -805,4 +805,6 @@
     <!-- S Pen actions -->
     <string name="spen_previous_page">Previous page</string>
     <string name="spen_next_page">Next page</string>
+    <string name="pref_navigate_pan">Navigate to pan</string>
+    <string name="pref_landscape_zoom">Zoom landscape image</string>
 </resources>

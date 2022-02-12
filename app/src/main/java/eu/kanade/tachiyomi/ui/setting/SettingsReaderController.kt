@@ -183,6 +183,11 @@ class SettingsReaderController : SettingsController() {
                 entryValues = arrayOf("1", "2", "3", "4", "5", "6")
                 summary = "%s"
             }
+            switchPreference {
+                bindTo(preferences.landscapeZoom())
+                titleRes = R.string.pref_landscape_zoom
+                visibleIf(preferences.imageScaleType()) { it == 1 }
+            }
             intListPreference {
                 bindTo(preferences.zoomStart())
                 titleRes = R.string.pref_zoom_start
@@ -198,6 +203,10 @@ class SettingsReaderController : SettingsController() {
             switchPreference {
                 bindTo(preferences.cropBorders())
                 titleRes = R.string.pref_crop_borders
+            }
+            switchPreference {
+                bindTo(preferences.navigateToPan())
+                titleRes = R.string.pref_navigate_pan
             }
             switchPreference {
                 bindTo(preferences.dualPageSplitPaged())

@@ -37,6 +37,15 @@
         android:entries="@array/image_scale_type"
         app:title="@string/pref_image_scale_type" />
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/landscape_zoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/pref_landscape_zoom"
+        android:textColor="?android:attr/textColorSecondary" />
+
     <eu.kanade.tachiyomi.widget.MaterialSpinnerView
         android:id="@+id/zoom_start"
         android:layout_width="match_parent"
@@ -51,6 +60,15 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/pref_crop_borders"
+        android:textColor="?android:attr/textColorSecondary" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/navigate_pan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/pref_navigate_pan"
         android:textColor="?android:attr/textColorSecondary" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial

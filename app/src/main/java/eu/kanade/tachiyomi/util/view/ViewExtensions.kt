@@ -4,7 +4,9 @@ package eu.kanade.tachiyomi.util.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Point
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.view.Gravity
@@ -258,4 +260,17 @@ inline fun <reified T : Drawable> T.copy(context: Context): T? {
             initializeElevationOverlay(context)
         }
     }
+}
+
+fun View?.isVisible(): Boolean {
+    if (this == null) {
+        return false
+    }
+    if (!this.isShown) {
+        return false
+    }
+    val actualPosition = Rect()
+    this.getGlobalVisibleRect(actualPosition)
+    val screen = Rect(0, 0, Resources.getSystem().displayMetrics.widthPixels, Resources.getSystem().displayMetrics.heightPixels)
+    return actualPosition.intersect(screen)
 }
