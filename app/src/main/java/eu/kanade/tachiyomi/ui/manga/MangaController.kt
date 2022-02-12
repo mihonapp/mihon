@@ -19,7 +19,6 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
-import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +29,7 @@ import coil.request.ImageRequest
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import dev.chrisbanes.insetter.applyInsetter
@@ -145,6 +145,7 @@ class MangaController :
 
     private val preferences: PreferencesHelper by injectLazy()
     private val coverCache: CoverCache by injectLazy()
+    private val sourceManager: SourceManager by injectLazy()
 
     private var mangaInfoAdapter: MangaInfoHeaderAdapter? = null
     private var chaptersHeaderAdapter: MangaChaptersHeaderAdapter? = null
@@ -525,7 +526,32 @@ class MangaController :
             activity?.toast(activity?.getString(R.string.manga_removed_library))
             activity?.invalidateOptionsMenu()
         } else {
-            addToLibrary(manga)
+            val duplicateManga = presenter.getDuplicateLibraryManga(manga)
+            if (duplicateManga != null) {
+                showAddDuplicateDialog(
+                    manga,
+                    duplicateManga,
+                )
+            } else {
+                addToLibrary(manga)
+            }
+        }
+    }
+
+    private fun showAddDuplicateDialog(newManga: Manga, libraryManga: Manga) {
+        activity?.let {
+            val source = sourceManager.getOrStub(libraryManga.source)
+            MaterialAlertDialogBuilder(it).apply {
+                setMessage(activity?.getString(R.string.confirm_manga_add_duplicate, source.name))
+                setPositiveButton(activity?.getString(R.string.action_add)) { _, _, ->
+                    addToLibrary(newManga)
+                }
+                setNegativeButton(activity?.getString(R.string.action_cancel)) { _, _, -> }
+                setNeutralButton(activity?.getString(R.string.action_show_manga)) { _, _, ->
+                    router.pushController(MangaController(libraryManga).withFadeTransaction())
+                }
+                setCancelable(true)
+            }.create().show()
         }
     }
 
