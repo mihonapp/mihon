@@ -4,10 +4,10 @@ enum class DisplayModeSetting(val flag: Int) {
     COMPACT_GRID(0b00000000),
     COMFORTABLE_GRID(0b00000001),
     LIST(0b00000010),
-    COVER_ONLY_GRID(0b00000100);
+    COVER_ONLY_GRID(0b10000000);
 
     companion object {
-        const val MASK = 0b00000111
+        const val MASK = 0b10000011
 
         fun fromFlag(flag: Int?): DisplayModeSetting {
             return values()
