@@ -96,7 +96,7 @@ class BrowseController :
         /* It's possible to switch to the Library controller by the time setExtensionUpdateBadge
         is called, resulting in a badge being put on the category tabs (if enabled).
         This check prevents that from happening */
-        if (router.backstack.last().controller !is BrowseController) return
+        if (router.backstack.lastOrNull()?.controller !is BrowseController) return
 
         (activity as? MainActivity)?.binding?.tabs?.apply {
             val updates = preferences.extensionUpdatesCount().get()

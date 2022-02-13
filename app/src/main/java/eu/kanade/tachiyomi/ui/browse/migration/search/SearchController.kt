@@ -76,7 +76,7 @@ class SearchController(
             router.popController(this)
             if (newManga != null) {
                 val newMangaController = RouterTransaction.with(MangaController(newManga))
-                if (router.backstack.last().controller is MangaController) {
+                if (router.backstack.lastOrNull()?.controller is MangaController) {
                     // Replace old MangaController
                     router.replaceTopController(newMangaController)
                 } else {

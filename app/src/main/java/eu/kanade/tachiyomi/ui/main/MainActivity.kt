@@ -409,7 +409,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
             }
             SHORTCUT_MANGA -> {
                 val extras = intent.extras ?: return false
-                val fgController = router.backstack.last()?.controller as? MangaController
+                val fgController = router.backstack.lastOrNull()?.controller as? MangaController
                 if (fgController?.manga?.id != extras.getLong(MangaController.MANGA_EXTRA)) {
                     router.popToRoot()
                     setSelectedNavItem(R.id.nav_library)
