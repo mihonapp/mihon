@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.library
 
-import android.view.View
 import androidx.core.view.isVisible
 import coil.clear
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -9,19 +8,18 @@ import eu.kanade.tachiyomi.util.view.loadAnyAutoPause
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
- * All the elements from the layout file "item_source_grid" are available in this class.
+ * All the elements from the layout file "source_compact_grid_item" are available in this class.
  *
- * @param view the inflated view for this holder.
+ * @param binding the inflated view for this holder.
  * @param adapter the adapter handling this holder.
- * @param listener a listener to react to single tap and long tap events.
+ * @param coverOnly true if title should be hidden a.k.a cover only mode.
  * @constructor creates a new library holder.
  */
-open class LibraryCompactGridHolder(
-    private val view: View,
-    private val adapter: FlexibleAdapter<*>
-) : LibraryHolder<SourceCompactGridItemBinding>(view, adapter) {
-
-    override val binding = SourceCompactGridItemBinding.bind(view)
+class LibraryCompactGridHolder(
+    override val binding: SourceCompactGridItemBinding,
+    adapter: FlexibleAdapter<*>,
+    private val coverOnly: Boolean
+) : LibraryHolder<SourceCompactGridItemBinding>(binding.root, adapter) {
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this
@@ -55,11 +53,20 @@ open class LibraryCompactGridHolder(
         // set local visibility if its local manga
         binding.badges.localText.isVisible = item.isLocal
 
-        // For rounded corners
-        binding.card.clipToOutline = true
-
         // Update the cover.
         binding.thumbnail.clear()
-        binding.thumbnail.loadAnyAutoPause(item.manga)
+        if (coverOnly) {
+            // Cover only mode: Hides title text unless thumbnail is unavailable
+            if (!item.manga.thumbnail_url.isNullOrEmpty()) {
+                binding.thumbnail.loadAnyAutoPause(item.manga)
+                binding.title.isVisible = false
+            } else {
+                binding.title.text = item.manga.title
+                binding.title.isVisible = true
+            }
+            binding.thumbnail.foreground = null
+        } else {
+            binding.thumbnail.loadAnyAutoPause(item.manga)
+        }
     }
 }

@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.library
 
-import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.clear
@@ -13,17 +12,15 @@ import eu.kanade.tachiyomi.util.view.loadAnyAutoPause
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
  * All the elements from the layout file "item_source_grid" are available in this class.
  *
- * @param view the inflated view for this holder.
+ * @param binding the inflated view for this holder.
  * @param adapter the adapter handling this holder.
  * @param listener a listener to react to single tap and long tap events.
  * @constructor creates a new library holder.
  */
 class LibraryComfortableGridHolder(
-    private val view: View,
+    override val binding: SourceComfortableGridItemBinding,
     adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
-) : LibraryHolder<SourceComfortableGridItemBinding>(view, adapter) {
-
-    override val binding = SourceComfortableGridItemBinding.bind(view)
+) : LibraryHolder<SourceComfortableGridItemBinding>(binding.root, adapter) {
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this
@@ -56,9 +53,6 @@ class LibraryComfortableGridHolder(
         }
         // set local visibility if its local manga
         binding.badges.localText.isVisible = item.isLocal
-
-        // For rounded corners
-        binding.card.clipToOutline = true
 
         // Update the cover.
         binding.thumbnail.clear()

@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
-import android.view.View
 import androidx.core.view.isVisible
 import coil.clear
 import coil.imageLoader
@@ -16,14 +15,14 @@ import eu.kanade.tachiyomi.widget.StateImageViewTarget
  * Class used to hold the displayed data of a manga in the catalogue, like the cover or the title.
  * All the elements from the layout file "item_source_grid" are available in this class.
  *
- * @param view the inflated view for this holder.
+ * @param binding the inflated view for this holder.
  * @param adapter the adapter handling this holder.
  * @constructor creates a new catalogue holder.
  */
-class SourceComfortableGridHolder(private val view: View, private val adapter: FlexibleAdapter<*>) :
-    SourceHolder<SourceComfortableGridItemBinding>(view, adapter) {
-
-    override val binding = SourceComfortableGridItemBinding.bind(view)
+class SourceComfortableGridHolder(
+    override val binding: SourceComfortableGridItemBinding,
+    adapter: FlexibleAdapter<*>
+) : SourceHolder<SourceComfortableGridItemBinding>(binding.root, adapter) {
 
     /**
      * Method called from [CatalogueAdapter.onBindViewHolder]. It updates the data for this
@@ -49,15 +48,12 @@ class SourceComfortableGridHolder(private val view: View, private val adapter: F
     }
 
     override fun setImage(manga: Manga) {
-        // For rounded corners
-        binding.card.clipToOutline = true
-
         binding.thumbnail.clear()
         if (!manga.thumbnail_url.isNullOrEmpty()) {
-            val crossfadeDuration = view.context.imageLoader.defaults.transition.let {
+            val crossfadeDuration = binding.root.context.imageLoader.defaults.transition.let {
                 if (it is CrossfadeTransition) it.durationMillis else 0
             }
-            val request = ImageRequest.Builder(view.context)
+            val request = ImageRequest.Builder(binding.root.context)
                 .data(manga)
                 .setParameter(MangaCoverFetcher.USE_CUSTOM_COVER, false)
                 .target(StateImageViewTarget(binding.thumbnail, binding.progress, crossfadeDuration))
