@@ -26,7 +26,7 @@ fun OkHttpClient.Builder.dohCloudflare() = dns(
             InetAddress.getByName("2606:4700:4700::1111"),
             InetAddress.getByName("2606:4700:4700::1001"),
             InetAddress.getByName("2606:4700:4700::0064"),
-            InetAddress.getByName("2606:4700:4700::6400")
+            InetAddress.getByName("2606:4700:4700::6400"),
         )
         .build()
 )
@@ -43,7 +43,8 @@ fun OkHttpClient.Builder.dohGoogle() = dns(
         .build()
 )
 
-// AdGuard "Default" DNS works too but for the sake of making sure no site is blacklisted, i picked "Unfiltered"
+// AdGuard "Default" DNS works too but for the sake of making sure no site is blacklisted,
+// we use "Unfiltered"
 fun OkHttpClient.Builder.dohAdGuard() = dns(
     DnsOverHttps.Builder().client(build())
         .url("https://dns-unfiltered.adguard.com/dns-query".toHttpUrl())
