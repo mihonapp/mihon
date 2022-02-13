@@ -38,6 +38,7 @@
     <string name="action_filter_bookmarked">Bookmarked</string>
     <string name="action_filter_tracked">Tracked</string>
     <string name="action_filter_unread">Unread</string>
+    <string name="action_filter_started">Started</string>
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
     <string name="action_sort_count">Total manga</string>
@@ -222,10 +223,12 @@
     <string name="connected_to_wifi">Only on Wi-Fi</string>
     <string name="charging">Charging</string>
     <string name="restrictions">Restrictions: %s</string>
+
     <string name="pref_library_update_manga_restriction">Library update restrictions</string>
     <string name="only_update_restrictions">Only update: %s</string>
     <string name="pref_update_only_completely_read">Completely read series</string>
     <string name="pref_update_only_non_completed">Ongoing series</string>
+    <string name="pref_update_only_started">Started series</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>

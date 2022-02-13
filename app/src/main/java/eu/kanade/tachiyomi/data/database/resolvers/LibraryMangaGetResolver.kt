@@ -16,8 +16,9 @@ class LibraryMangaGetResolver : DefaultGetResolver<LibraryManga>(), BaseMangaGet
         val manga = LibraryManga()
 
         mapBaseFromCursor(manga, cursor)
-        manga.unread = cursor.getInt(cursor.getColumnIndexOrThrow(MangaTable.COL_UNREAD))
+        manga.unreadCount = cursor.getInt(cursor.getColumnIndexOrThrow(MangaTable.COMPUTED_COL_UNREAD_COUNT))
         manga.category = cursor.getInt(cursor.getColumnIndexOrThrow(MangaTable.COL_CATEGORY))
+        manga.readCount = cursor.getInt(cursor.getColumnIndexOrThrow(MangaTable.COMPUTED_COL_READ_COUNT))
 
         return manga
     }

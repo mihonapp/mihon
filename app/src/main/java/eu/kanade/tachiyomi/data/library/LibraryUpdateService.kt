@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Companion.start
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.MANGA_FULLY_READ
 import eu.kanade.tachiyomi.data.preference.MANGA_ONGOING
+import eu.kanade.tachiyomi.data.preference.MANGA_STARTED
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -266,7 +267,14 @@ class LibraryUpdateService(
                 listToUpdate = listToUpdate.filterNot { it.status == SManga.COMPLETED }
             }
             if (MANGA_FULLY_READ in restrictions) {
-                listToUpdate = listToUpdate.filter { it.unread == 0 }
+                listToUpdate = listToUpdate.filter { it.unreadCount == 0 }
+            }
+            if (MANGA_STARTED in restrictions) {
+                listToUpdate = listToUpdate.filter { manga ->
+                    // If the manga has 0 chapters you can't actually start reading it
+                    if (manga.totalChapters == 0) true
+                    else manga.hasStarted
+                }
             }
         }
 

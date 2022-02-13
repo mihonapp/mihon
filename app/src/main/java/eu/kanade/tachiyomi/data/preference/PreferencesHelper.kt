@@ -224,7 +224,7 @@ class PreferencesHelper(val context: Context) {
     fun libraryUpdateInterval() = flowPrefs.getInt("pref_library_update_interval_key", 24)
 
     fun libraryUpdateDeviceRestriction() = flowPrefs.getStringSet("library_update_restriction", setOf(DEVICE_ONLY_ON_WIFI))
-    fun libraryUpdateMangaRestriction() = flowPrefs.getStringSet("library_update_manga_restriction", setOf(MANGA_FULLY_READ, MANGA_ONGOING))
+    fun libraryUpdateMangaRestriction() = flowPrefs.getStringSet("library_update_manga_restriction", setOf(MANGA_FULLY_READ, MANGA_ONGOING, MANGA_STARTED))
 
     fun showUpdatesNavBadge() = flowPrefs.getBoolean("library_update_show_tab_badge", false)
     fun unreadUpdatesCount() = flowPrefs.getInt("library_unread_updates_count", 0)
@@ -251,6 +251,8 @@ class PreferencesHelper(val context: Context) {
     fun filterDownloaded() = flowPrefs.getInt(Keys.filterDownloaded, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
 
     fun filterUnread() = flowPrefs.getInt(Keys.filterUnread, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
+
+    fun filterStarted() = flowPrefs.getInt(Keys.filterStarted, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
 
     fun filterCompleted() = flowPrefs.getInt(Keys.filterCompleted, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
 
