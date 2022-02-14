@@ -121,7 +121,7 @@
     <string name="action_reset">Reset</string>
     <string name="action_undo">Undo</string>
     <string name="action_open_log">Open log</string>
-    <string name="action_show_errors">Tap to see error details</string>
+    <string name="action_show_errors">Tap to see details</string>
     <string name="action_create">Create</string>
     <string name="action_restore">Restore</string>
     <string name="action_webview_back">Back</string>
@@ -224,11 +224,11 @@
     <string name="charging">Charging</string>
     <string name="restrictions">Restrictions: %s</string>
 
-    <string name="pref_library_update_manga_restriction">Library update restrictions</string>
+    <string name="pref_library_update_manga_restriction">Skip updating</string>
     <string name="only_update_restrictions">Only update: %s</string>
-    <string name="pref_update_only_completely_read">Completely read series</string>
-    <string name="pref_update_only_non_completed">Ongoing series</string>
-    <string name="pref_update_only_started">Started series</string>
+    <string name="pref_update_only_completely_read">Has unread chapters</string>
+    <string name="pref_update_only_non_completed">Is completed series</string>
+    <string name="pref_update_only_started">No read chapters</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
@@ -737,13 +737,13 @@
         <item quantity="one">Chapters %1$s and 1 more</item>
         <item quantity="other">Chapters %1$s and %2$d more</item>
     </plurals>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 update failed</item>
-        <item quantity="other">%1$d updates failed</item>
-    </plurals>
+    <string name="notification_update_skipped_error">%1$d update(s) skipped and %2$d update(s) failed</string>
     <string name="notification_cover_update_failed">Failed to update cover</string>
     <string name="notification_first_add_to_library">Please add the manga to your library before doing this</string>
     <string name="library_errors_help">For help on how to fix library update errors, see %1$s</string>
+    <string name="skipped_reason_completed">Skipped because series is complete</string>
+    <string name="skipped_reason_not_caught_up">Skipped because there are unread chapters</string>
+    <string name="skipped_reason_not_started">Skipped because no chapters are read</string>
 
     <!-- File Picker Titles -->
     <string name="file_select_cover">Select cover image</string>

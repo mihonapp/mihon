@@ -19,9 +19,9 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Companion.start
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.preference.MANGA_FULLY_READ
-import eu.kanade.tachiyomi.data.preference.MANGA_ONGOING
-import eu.kanade.tachiyomi.data.preference.MANGA_STARTED
+import eu.kanade.tachiyomi.data.preference.MANGA_HAS_UNREAD
+import eu.kanade.tachiyomi.data.preference.MANGA_NON_COMPLETED
+import eu.kanade.tachiyomi.data.preference.MANGA_NON_READ
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -141,7 +141,7 @@ class LibraryUpdateService(
 
                 true
             } else {
-                instance?.addMangaToQueue(category?.id ?: -1, target)
+                instance?.addMangaToQueue(category?.id ?: -1)
                 false
             }
         }
@@ -213,7 +213,7 @@ class LibraryUpdateService(
 
         // Update favorite manga
         val categoryId = intent.getIntExtra(KEY_CATEGORY, -1)
-        addMangaToQueue(categoryId, target)
+        addMangaToQueue(categoryId)
 
         // Destroy service when completed or in case of an error.
         val handler = CoroutineExceptionHandler { _, exception ->
@@ -238,10 +238,10 @@ class LibraryUpdateService(
      * @param category the ID of the category to update, or -1 if no category specified.
      * @param target the target to update.
      */
-    fun addMangaToQueue(categoryId: Int, target: Target) {
+    fun addMangaToQueue(categoryId: Int) {
         val libraryManga = db.getLibraryMangas().executeAsBlocking()
 
-        var listToUpdate = if (categoryId != -1) {
+        val listToUpdate = if (categoryId != -1) {
             libraryManga.filter { it.category == categoryId }
         } else {
             val categoriesToUpdate = preferences.libraryUpdateCategories().get().map(String::toInt)
@@ -259,23 +259,6 @@ class LibraryUpdateService(
             }
 
             listToInclude.minus(listToExclude)
-        }
-
-        if (target == Target.CHAPTERS) {
-            val restrictions = preferences.libraryUpdateMangaRestriction().get()
-            if (MANGA_ONGOING in restrictions) {
-                listToUpdate = listToUpdate.filterNot { it.status == SManga.COMPLETED }
-            }
-            if (MANGA_FULLY_READ in restrictions) {
-                listToUpdate = listToUpdate.filter { it.unreadCount == 0 }
-            }
-            if (MANGA_STARTED in restrictions) {
-                listToUpdate = listToUpdate.filter { manga ->
-                    // If the manga has 0 chapters you can't actually start reading it
-                    if (manga.totalChapters == 0) true
-                    else manga.hasStarted
-                }
-            }
         }
 
         mangaToUpdate = listToUpdate
@@ -306,10 +289,12 @@ class LibraryUpdateService(
         val progressCount = AtomicInteger(0)
         val currentlyUpdatingManga = CopyOnWriteArrayList<LibraryManga>()
         val newUpdates = CopyOnWriteArrayList<Pair<LibraryManga, Array<Chapter>>>()
+        val skippedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val hasDownloads = AtomicBoolean(false)
         val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
         val currentUnreadUpdatesCount = preferences.unreadUpdatesCount().get()
+        val restrictions = preferences.libraryUpdateMangaRestriction().get()
 
         withIOContext {
             mangaToUpdate.groupBy { it.source }
@@ -328,6 +313,16 @@ class LibraryUpdateService(
                                     manga,
                                 ) { manga ->
                                     try {
+                                        if (MANGA_NON_COMPLETED in restrictions && manga.status == SManga.COMPLETED) {
+                                            throw SkipUpdateException(getString(R.string.skipped_reason_completed))
+                                        }
+                                        if (MANGA_HAS_UNREAD in restrictions && manga.unreadCount != 0) {
+                                            throw SkipUpdateException(getString(R.string.skipped_reason_not_caught_up))
+                                        }
+                                        if (MANGA_NON_READ in restrictions && manga.totalChapters > 0 && !manga.hasStarted) {
+                                            throw SkipUpdateException(getString(R.string.skipped_reason_not_started))
+                                        }
+
                                         val (newChapters, _) = updateManga(manga)
 
                                         if (newChapters.isNotEmpty()) {
@@ -342,6 +337,8 @@ class LibraryUpdateService(
                                                     .toTypedArray()
                                             )
                                         }
+                                    } catch (e: SkipUpdateException) {
+                                        skippedUpdates.add(manga to e.message)
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
                                             is NoChaptersException -> {
@@ -380,11 +377,12 @@ class LibraryUpdateService(
             }
         }
 
-        if (failedUpdates.isNotEmpty()) {
-            val errorFile = writeErrorFile(failedUpdates)
+        if (skippedUpdates.isNotEmpty() || failedUpdates.isNotEmpty()) {
+            val errorFile = writeErrorFile(skippedUpdates + failedUpdates)
             notifier.showUpdateErrorNotification(
-                failedUpdates.map { it.first.title },
-                errorFile.getUriCompat(this)
+                skippedUpdates.size,
+                failedUpdates.size,
+                errorFile.getUriCompat(this),
             )
         }
     }
@@ -587,3 +585,5 @@ class LibraryUpdateService(
 
 private const val MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 60
 private const val ERROR_LOG_HELP_URL = "https://tachiyomi.org/help/guides/troubleshooting"
+
+private class SkipUpdateException(override val message: String) : RuntimeException()

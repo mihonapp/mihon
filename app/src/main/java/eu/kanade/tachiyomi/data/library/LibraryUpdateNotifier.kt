@@ -92,18 +92,19 @@ class LibraryUpdateNotifier(private val context: Context) {
     /**
      * Shows notification containing update entries that failed with action to open full log.
      *
-     * @param errors List of entry titles that failed to update.
+     * @param skipped Number of entries that were skipped during the update.
+     * @param failed Number of entries that failed to update.
      * @param uri Uri for error log file containing all titles that failed.
      */
-    fun showUpdateErrorNotification(errors: List<String>, uri: Uri) {
-        if (errors.isEmpty()) {
+    fun showUpdateErrorNotification(skipped: Int, failed: Int, uri: Uri) {
+        if (skipped == 0 && failed == 0) {
             return
         }
 
         context.notificationManager.notify(
             Notifications.ID_LIBRARY_ERROR,
             context.notificationBuilder(Notifications.CHANNEL_LIBRARY_ERROR) {
-                setContentTitle(context.resources.getQuantityString(R.plurals.notification_update_error, errors.size, errors.size))
+                setContentTitle(context.resources.getString(R.string.notification_update_skipped_error, skipped, failed))
                 setContentText(context.getString(R.string.action_show_errors))
                 setSmallIcon(R.drawable.ic_tachi)
 

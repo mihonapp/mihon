@@ -13,9 +13,9 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.DEVICE_CHARGING
 import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
-import eu.kanade.tachiyomi.data.preference.MANGA_FULLY_READ
-import eu.kanade.tachiyomi.data.preference.MANGA_ONGOING
-import eu.kanade.tachiyomi.data.preference.MANGA_STARTED
+import eu.kanade.tachiyomi.data.preference.MANGA_HAS_UNREAD
+import eu.kanade.tachiyomi.data.preference.MANGA_NON_COMPLETED
+import eu.kanade.tachiyomi.data.preference.MANGA_NON_READ
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.databinding.PrefLibraryColumnsBinding
@@ -196,16 +196,16 @@ class SettingsLibraryController : SettingsController() {
             multiSelectListPreference {
                 bindTo(preferences.libraryUpdateMangaRestriction())
                 titleRes = R.string.pref_library_update_manga_restriction
-                entriesRes = arrayOf(R.string.pref_update_only_completely_read, R.string.pref_update_only_non_completed, R.string.pref_update_only_started)
-                entryValues = arrayOf(MANGA_FULLY_READ, MANGA_ONGOING, MANGA_STARTED)
+                entriesRes = arrayOf(R.string.pref_update_only_completely_read, R.string.pref_update_only_started, R.string.pref_update_only_non_completed)
+                entryValues = arrayOf(MANGA_HAS_UNREAD, MANGA_NON_READ, MANGA_NON_COMPLETED)
 
                 fun updateSummary() {
                     val restrictions = preferences.libraryUpdateMangaRestriction().get().sorted()
                         .map {
                             when (it) {
-                                MANGA_ONGOING -> context.getString(R.string.pref_update_only_non_completed)
-                                MANGA_FULLY_READ -> context.getString(R.string.pref_update_only_completely_read)
-                                MANGA_STARTED -> context.getString(R.string.pref_update_only_started)
+                                MANGA_NON_READ -> context.getString(R.string.pref_update_only_started)
+                                MANGA_HAS_UNREAD -> context.getString(R.string.pref_update_only_completely_read)
+                                MANGA_NON_COMPLETED -> context.getString(R.string.pref_update_only_non_completed)
                                 else -> it
                             }
                         }
@@ -215,7 +215,7 @@ class SettingsLibraryController : SettingsController() {
                         restrictions.joinToString()
                     }
 
-                    summary = context.getString(R.string.only_update_restrictions, restrictionsText)
+                    summary = restrictionsText
                 }
 
                 preferences.libraryUpdateMangaRestriction().asFlow()
@@ -234,23 +234,24 @@ class SettingsLibraryController : SettingsController() {
                     val includedCategories = preferences.libraryUpdateCategories().get()
                         .mapNotNull { id -> categories.find { it.id == id.toInt() } }
                         .sortedBy { it.order }
-
                     val excludedCategories = preferences.libraryUpdateCategoriesExclude().get()
                         .mapNotNull { id -> categories.find { it.id == id.toInt() } }
                         .sortedBy { it.order }
 
-                    val includedItemsText = if (includedCategories.isEmpty()) {
-                        context.getString(R.string.none)
-                    } else {
-                        if (includedCategories.size == categories.size) context.getString(R.string.all)
-                        else includedCategories.joinToString { it.name }
-                    }
+                    val allExcluded = excludedCategories.size == categories.size
 
-                    val excludedItemsText = if (excludedCategories.isEmpty()) {
-                        context.getString(R.string.none)
-                    } else {
-                        if (excludedCategories.size == categories.size) context.getString(R.string.all)
-                        else excludedCategories.joinToString { it.name }
+                    val includedItemsText = when {
+                        // Some selected, but not all
+                        includedCategories.isNotEmpty() && includedCategories.size != categories.size -> includedCategories.joinToString { it.name }
+                        // All explicitly selected
+                        includedCategories.size == categories.size -> context.getString(R.string.all)
+                        allExcluded -> context.getString(R.string.none)
+                        else -> context.getString(R.string.all)
+                    }
+                    val excludedItemsText = when {
+                        excludedCategories.isEmpty() -> context.getString(R.string.none)
+                        allExcluded -> context.getString(R.string.all)
+                        else -> excludedCategories.joinToString { it.name }
                     }
 
                     summary = buildSpannedString {
@@ -340,8 +341,10 @@ class SettingsLibraryController : SettingsController() {
             var selected = categories
                 .map {
                     when (it.id.toString()) {
-                        in preferences.libraryUpdateCategories().get() -> QuadStateTextView.State.CHECKED.ordinal
-                        in preferences.libraryUpdateCategoriesExclude().get() -> QuadStateTextView.State.INVERSED.ordinal
+                        in preferences.libraryUpdateCategories()
+                            .get() -> QuadStateTextView.State.CHECKED.ordinal
+                        in preferences.libraryUpdateCategoriesExclude()
+                            .get() -> QuadStateTextView.State.INVERSED.ordinal
                         else -> QuadStateTextView.State.UNCHECKED.ordinal
                     }
                 }
