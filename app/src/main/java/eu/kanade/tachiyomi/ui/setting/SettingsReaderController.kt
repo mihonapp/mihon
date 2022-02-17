@@ -256,12 +256,13 @@ class SettingsReaderController : SettingsController() {
                 titleRes = R.string.pref_webtoon_side_padding
                 entriesRes = arrayOf(
                     R.string.webtoon_side_padding_0,
+                    R.string.webtoon_side_padding_5,
                     R.string.webtoon_side_padding_10,
                     R.string.webtoon_side_padding_15,
                     R.string.webtoon_side_padding_20,
                     R.string.webtoon_side_padding_25
                 )
-                entryValues = arrayOf("0", "10", "15", "20", "25")
+                entryValues = arrayOf("0", "5", "10", "15", "20", "25")
                 summary = "%s"
             }
             listPreference {
