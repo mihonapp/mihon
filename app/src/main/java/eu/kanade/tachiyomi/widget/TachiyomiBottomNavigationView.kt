@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.ViewPropertyAnimator
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.doOnLayout
-import androidx.core.view.doOnNextLayout
 import androidx.core.view.updateLayoutParams
 import androidx.customview.view.AbsSavedState
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
@@ -60,19 +59,15 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
         val superState = super.onSaveInstanceState()
         return SavedState(superState).also {
             it.currentState = currentState
+            it.translationY = translationY
         }
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state is SavedState) {
             super.onRestoreInstanceState(state.superState)
-            doOnNextLayout {
-                if (state.currentState == STATE_UP) {
-                    slideUp(animate = false)
-                } else if (state.currentState == STATE_DOWN) {
-                    slideDown(animate = false)
-                }
-            }
+            super.setTranslationY(state.translationY)
+            currentState = state.currentState
         } else {
             super.onRestoreInstanceState(state)
         }
@@ -86,34 +81,30 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
 
     /**
      * Shows this view up.
-     *
-     * @param animate True if slide up should be animated
      */
-    fun slideUp(animate: Boolean = true) = post {
+    fun slideUp() = post {
         currentAnimator?.cancel()
         clearAnimation()
 
         currentState = STATE_UP
         animateTranslation(
             0F,
-            if (animate) SLIDE_UP_ANIMATION_DURATION else 0,
+            SLIDE_UP_ANIMATION_DURATION,
             LinearOutSlowInInterpolator()
         )
     }
 
     /**
      * Hides this view down. [setTranslationY] won't work until [slideUp] is called.
-     *
-     * @param animate True if slide down should be animated
      */
-    fun slideDown(animate: Boolean = true) = post {
+    fun slideDown() = post {
         currentAnimator?.cancel()
         clearAnimation()
 
         currentState = STATE_DOWN
         animateTranslation(
             height.toFloat(),
-            if (animate) SLIDE_DOWN_ANIMATION_DURATION else 0,
+            SLIDE_DOWN_ANIMATION_DURATION,
             FastOutLinearInInterpolator()
         )
     }
@@ -134,16 +125,19 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
 
     internal class SavedState : AbsSavedState {
         var currentState = STATE_UP
+        var translationY = 0F
 
         constructor(superState: Parcelable) : super(superState)
 
         constructor(source: Parcel, loader: ClassLoader?) : super(source, loader) {
-            currentState = source.readByte().toInt()
+            currentState = source.readInt()
+            translationY = source.readFloat()
         }
 
         override fun writeToParcel(out: Parcel, flags: Int) {
             super.writeToParcel(out, flags)
-            out.writeByte(currentState.toByte())
+            out.writeInt(currentState)
+            out.writeFloat(translationY)
         }
 
         companion object {
