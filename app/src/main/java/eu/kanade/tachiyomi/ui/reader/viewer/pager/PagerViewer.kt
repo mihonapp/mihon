@@ -161,7 +161,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
     private fun getPageHolder(page: ReaderPage): PagerPageHolder? =
         pager.children
             .filterIsInstance(PagerPageHolder::class.java)
-            .firstOrNull { it.item.index == page.index }
+            .firstOrNull { it.item == page }
 
     /**
      * Called when a new page (either a [ReaderPage] or [ChapterTransition]) is marked as active
@@ -171,8 +171,15 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
         if (page != null && currentPage != page) {
             val allowPreload = checkAllowPreload(page as? ReaderPage)
             val forward = when {
-                currentPage is ReaderPage && page is ReaderPage ->
-                    page.number > (currentPage as ReaderPage).number
+                currentPage is ReaderPage && page is ReaderPage -> {
+                    // if both pages have the same number, it's a split page with an InsertPage
+                    if (page.number == (currentPage as ReaderPage).number) {
+                        // the InsertPage is always the second in the reading direction
+                        page is InsertPage
+                    } else {
+                        page.number > (currentPage as ReaderPage).number
+                    }
+                }
                 currentPage is ChapterTransition.Prev && page is ReaderPage ->
                     false
                 else -> true
