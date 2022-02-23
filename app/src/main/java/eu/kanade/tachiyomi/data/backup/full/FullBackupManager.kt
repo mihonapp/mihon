@@ -32,6 +32,7 @@ import logcat.LogPriority
 import okio.buffer
 import okio.gzip
 import okio.sink
+import java.io.FileOutputStream
 import kotlin.math.max
 
 class FullBackupManager(context: Context) : AbstractBackupManager(context) {
@@ -85,7 +86,10 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
                 ?: throw Exception("Couldn't create backup file")
 
             val byteArray = parser.encodeToByteArray(BackupSerializer, backup!!)
-            file.openOutputStream().sink().gzip().buffer().use { it.write(byteArray) }
+            file.openOutputStream().also {
+                // Force overwrite old file size,
+                (it as? FileOutputStream)?.channel?.truncate(0)
+            }.sink().gzip().buffer().use { it.write(byteArray) }
             val fileUri = file.uri
 
             // Make sure it's a valid backup file
