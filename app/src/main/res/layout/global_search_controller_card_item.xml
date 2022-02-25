@@ -54,6 +54,7 @@
                 android:paddingTop="1dp"
                 android:paddingEnd="3dp"
                 android:paddingBottom="1dp"
+                android:fontFamily="sans-serif-condensed"
                 android:text="@string/in_library"
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textColor="?attr/colorOnSecondary"
