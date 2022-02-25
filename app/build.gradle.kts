@@ -233,7 +233,7 @@ dependencies {
     implementation("com.github.gpanther:java-nat-sort:natural-comparator-1.1")
 
     // UI libraries
-    implementation("com.google.android.material:material:1.6.0-alpha02")
+    implementation("com.google.android.material:material:1.6.0-alpha03")
     implementation("com.github.dmytrodanylyk.android-process-button:library:1.0.4")
     implementation("com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533")
     implementation("com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533")
