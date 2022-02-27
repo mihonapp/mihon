@@ -1,6 +1,8 @@
 name: Issue moderator
 
 on:
+  issues:
+    types: [opened, edited, reopened]
   issue_comment:
     types: [created]
 
@@ -12,3 +14,22 @@ jobs:
         uses: tachiyomiorg/issue-moderator-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-close-rules: |
+            [
+              {
+                "type": "body",
+                "regex": ".*DELETE THIS SECTION IF YOU HAVE READ AND ACKNOWLEDGED IT.*",
+                "message": "The acknowledgment section was not removed."
+              },
+              {
+                "type": "body",
+                "regex": ".*\\* (Tachiyomi version|Android version|Device): \\?.*",
+                "message": "Requested information in the template was not filled out."
+              },
+              {
+                "type": "both",
+                "regex": "^(?!.*myanimelist.*).*(aniyomi|anime).*$",
+                "ignoreCase": true,
+                "message": "Tachiyomi does not support anime, and has no plans to support anime. In addition Tachiyomi is not affiliated with Aniyomi https://github.com/jmir1/aniyomi"
+              }
+            ]
