@@ -1061,7 +1061,8 @@ class MangaController :
         toolbar.findToolbarItem(R.id.action_bookmark)?.isVisible = chapters.any { !it.chapter.bookmark }
         toolbar.findToolbarItem(R.id.action_remove_bookmark)?.isVisible = chapters.all { it.chapter.bookmark }
         toolbar.findToolbarItem(R.id.action_mark_as_read)?.isVisible = chapters.any { !it.chapter.read }
-        toolbar.findToolbarItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
+        toolbar.findToolbarItem(R.id.action_mark_as_unread)?.isVisible = chapters.any { it.chapter.read }
+        toolbar.findToolbarItem(R.id.action_mark_previous_as_read)?.isVisible = chapters.size == 1
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
