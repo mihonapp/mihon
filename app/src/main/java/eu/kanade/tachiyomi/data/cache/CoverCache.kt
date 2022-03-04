@@ -104,7 +104,7 @@ class CoverCache(private val context: Context) {
      * Clear coil's memory cache.
      */
     fun clearMemoryCache() {
-        context.imageLoader.memoryCache.clear()
+        context.imageLoader.memoryCache?.clear()
     }
 
     private fun getCacheDir(dir: String): File {

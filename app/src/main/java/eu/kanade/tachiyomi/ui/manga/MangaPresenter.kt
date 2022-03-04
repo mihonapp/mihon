@@ -334,7 +334,7 @@ class MangaPresenter(
      * @return cover as Bitmap or null if there is no thumbnail cached with the memoryCacheKey
      */
     private fun coverBitmapFromImageLoader(context: Context, memoryCacheKey: MemoryCache.Key): Bitmap? {
-        return context.imageLoader.memoryCache[memoryCacheKey]
+        return context.imageLoader.memoryCache?.get(memoryCacheKey)?.bitmap
     }
 
     /**

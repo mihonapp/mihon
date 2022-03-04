@@ -8,7 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import coil.ImageLoader
 import coil.imageLoader
-import coil.loadAny
+import coil.load
 import coil.request.ImageRequest
 import coil.target.ImageViewTarget
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
@@ -33,12 +33,13 @@ fun ImageView.setVectorCompat(@DrawableRes drawable: Int, @AttrRes tint: Int? = 
  * and if the image is animated, this will also disable that animation
  * if [Context.animatorDurationScale] is 0
  */
-fun ImageView.loadAnyAutoPause(
+fun ImageView.loadAutoPause(
     data: Any?,
     loader: ImageLoader = context.imageLoader,
     builder: ImageRequest.Builder.() -> Unit = {}
 ) {
-    this.loadAny(data, loader) {
+    // Build the original request so we can add on our success listener
+    load(data, loader) {
         // Build the original request so we can add on our success listener
         val originalBuild = apply(builder).build()
         listener(

@@ -1,10 +1,10 @@
 package eu.kanade.tachiyomi.ui.library
 
 import androidx.core.view.isVisible
-import coil.clear
+import coil.dispose
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.databinding.SourceCompactGridItemBinding
-import eu.kanade.tachiyomi.util.view.loadAnyAutoPause
+import eu.kanade.tachiyomi.util.view.loadAutoPause
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
@@ -54,11 +54,11 @@ class LibraryCompactGridHolder(
         binding.badges.localText.isVisible = item.isLocal
 
         // Update the cover.
-        binding.thumbnail.clear()
+        binding.thumbnail.dispose()
         if (coverOnly) {
             // Cover only mode: Hides title text unless thumbnail is unavailable
             if (!item.manga.thumbnail_url.isNullOrEmpty()) {
-                binding.thumbnail.loadAnyAutoPause(item.manga)
+                binding.thumbnail.loadAutoPause(item.manga)
                 binding.title.isVisible = false
             } else {
                 binding.title.text = item.manga.title
@@ -66,7 +66,7 @@ class LibraryCompactGridHolder(
             }
             binding.thumbnail.foreground = null
         } else {
-            binding.thumbnail.loadAnyAutoPause(item.manga)
+            binding.thumbnail.loadAutoPause(item.manga)
         }
     }
 }

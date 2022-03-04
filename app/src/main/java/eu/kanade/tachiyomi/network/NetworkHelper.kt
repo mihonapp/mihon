@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.network
 
 import android.content.Context
-import coil.util.CoilUtils
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
@@ -48,8 +47,6 @@ class NetworkHelper(context: Context) {
         }
 
     val client by lazy { baseClientBuilder.cache(Cache(cacheDir, cacheSize)).build() }
-
-    val coilClient by lazy { baseClientBuilder.cache(CoilUtils.createDefaultCache(context)).build() }
 
     val cloudflareClient by lazy {
         client.newBuilder()

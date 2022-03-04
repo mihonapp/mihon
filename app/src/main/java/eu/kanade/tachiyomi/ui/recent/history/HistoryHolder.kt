@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.ui.recent.history
 
 import android.view.View
-import coil.clear
-import coil.loadAny
+import coil.dispose
+import coil.load
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
@@ -65,7 +65,7 @@ class HistoryHolder(
         }
 
         // Set cover
-        binding.cover.clear()
-        binding.cover.loadAny(item.manga)
+        binding.cover.dispose()
+        binding.cover.load(item.manga)
     }
 }

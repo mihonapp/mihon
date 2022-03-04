@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.ui.browse.source.browse
 
 import android.view.View
 import androidx.core.view.isVisible
-import coil.clear
-import coil.loadAny
+import coil.dispose
+import coil.load
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
@@ -50,9 +50,9 @@ class SourceListHolder(private val view: View, adapter: FlexibleAdapter<*>) :
     }
 
     override fun setImage(manga: Manga) {
-        binding.thumbnail.clear()
+        binding.thumbnail.dispose()
         if (!manga.thumbnail_url.isNullOrEmpty()) {
-            binding.thumbnail.loadAny(manga) {
+            binding.thumbnail.load(manga) {
                 setParameter(MangaCoverFetcher.USE_CUSTOM_COVER, false)
             }
         }
