@@ -55,9 +55,9 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
      * Create backup Json file from database
      *
      * @param uri path of Uri
-     * @param isJob backup called from job
+     * @param isAutoBackup backup called from scheduled backup job
      */
-    override fun createBackup(uri: Uri, flags: Int, isJob: Boolean) =
+    override fun createBackup(uri: Uri, flags: Int, isAutoBackup: Boolean) =
         throw IllegalStateException("Legacy backup creation is not supported")
 
     fun restoreMangaNoFetch(manga: Manga, dbManga: Manga) {

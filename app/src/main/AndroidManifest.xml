@@ -182,10 +182,6 @@
             android:exported="false" />
 
         <service
-            android:name=".data.backup.BackupCreateService"
-            android:exported="false" />
-
-        <service
             android:name=".data.backup.BackupRestoreService"
             android:exported="false" />
 
