@@ -1,10 +1,10 @@
+enableFeaturePreview("VERSION_CATALOGS")
+
 pluginManagement {
     resolutionStrategy {
         eachPlugin {
-            if (requested.id.id == "com.android.library") {
-                useModule("com.android.tools.build:gradle:${requested.version}")
-            }
-            if (requested.id.id == "com.android.application") {
+            val regex = "com.android.(library|application)".toRegex()
+            if (regex matches requested.id.id) {
                 useModule("com.android.tools.build:gradle:${requested.version}")
             }
         }
@@ -13,6 +13,23 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("kotlinx") {
+            from(files("gradle/kotlinx.versions.toml"))
+        }
+        create("androidx") {
+            from(files("gradle/androidx.versions.toml"))
+        }
+    }
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        google()
+        maven(url = "https://www.jitpack.io")
     }
 }
 

@@ -1,8 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.io.ByteArrayOutputStream
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.TimeZone
 
 plugins {
     id("com.android.application")
@@ -13,7 +9,7 @@ plugins {
 }
 
 if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
-    apply(plugin = "com.google.gms.google-services")
+    apply<com.google.gms.googleservices.GoogleServicesPlugin>()
 }
 
 shortcutHelper.setFilePath("./shortcuts.xml")
@@ -137,153 +133,122 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("reflect", version = BuildPluginsVersion.KOTLIN))
+    implementation(kotlinx.reflect)
 
-    val coroutinesVersion = "1.6.0"
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation(kotlinx.bundles.coroutines)
 
     // Source models and interfaces from Tachiyomi 1.x
-    implementation("org.tachiyomi:source-api:1.1")
+    implementation(libs.tachiyomi.api)
 
     // AndroidX libraries
-    implementation("androidx.annotation:annotation:1.4.0-alpha02")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("androidx.biometric:biometric-ktx:1.2.0-alpha04")
-    implementation("androidx.browser:browser:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
-    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
-    implementation("androidx.core:core-ktx:1.8.0-alpha04")
-    implementation("androidx.core:core-splashscreen:1.0.0-alpha02")
-    implementation("androidx.recyclerview:recyclerview:1.3.0-alpha01")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
-    implementation("androidx.viewpager:viewpager:1.1.0-alpha01")
+    implementation(androidx.annotation)
+    implementation(androidx.appcompat)
+    implementation(androidx.biometricktx)
+    implementation(androidx.browser)
+    implementation(androidx.constraintlayout)
+    implementation(androidx.coordinatorlayout)
+    implementation(androidx.corektx)
+    implementation(androidx.splashscreen)
+    implementation(androidx.recyclerview)
+    implementation(androidx.swiperefreshlayout)
+    implementation(androidx.viewpager)
 
-    val lifecycleVersion = "2.5.0-alpha02"
-    implementation("androidx.lifecycle:lifecycle-common:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
+    implementation(androidx.bundles.lifecycle)
 
     // Job scheduling
-    implementation("androidx.work:work-runtime-ktx:2.6.0")
+    implementation(androidx.work.runtime)
 
     // RX
-    implementation("io.reactivex:rxandroid:1.2.1")
-    implementation("io.reactivex:rxjava:1.3.8")
-    implementation("com.jakewharton.rxrelay:rxrelay:1.2.0")
-    implementation("ru.beryukhov:flowreactivenetwork:1.0.4")
+    implementation(libs.bundles.reactivex)
+    implementation(libs.flowreactivenetwork)
 
     // Network client
-    val okhttpVersion = "4.9.1"
-    implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
-    implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:$okhttpVersion")
-    implementation("com.squareup.okio:okio:3.0.0")
+    implementation(libs.bundles.okhttp)
+    implementation(libs.okio)
 
     // TLS 1.3 support for Android < 10
-    implementation("org.conscrypt:conscrypt-android:2.5.2")
+    implementation(libs.conscrypt.android)
 
     // Data serialization (JSON, protobuf)
-    val kotlinSerializationVersion = "1.3.2"
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinSerializationVersion")
+    implementation(kotlinx.bundles.serialization)
 
     // JavaScript engine
-    implementation("app.cash.quickjs:quickjs-android:0.9.2")
-    // TODO: remove Duktape once all extensions are using QuickJS
-    implementation("com.squareup.duktape:duktape-android:1.4.0")
+    implementation(libs.bundles.js.engine)
 
     // HTML parser
-    implementation("org.jsoup:jsoup:1.14.3")
+    implementation(libs.jsoup)
 
     // Disk
-    implementation("com.jakewharton:disklrucache:2.0.2")
-    implementation("com.github.tachiyomiorg:unifile:17bec43")
-    implementation("com.github.junrar:junrar:7.4.0")
+    implementation(libs.disklrucache)
+    implementation(libs.unifile)
+    implementation(libs.junrar)
 
     // Database
-    implementation("androidx.sqlite:sqlite-ktx:2.2.0")
+    implementation(libs.bundles.sqlite)
     implementation("com.github.inorichi.storio:storio-common:8be19de@aar")
     implementation("com.github.inorichi.storio:storio-sqlite:8be19de@aar")
-    implementation("com.github.requery:sqlite-android:3.36.0")
 
     // Preferences
-    implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation("com.fredporciuncula:flow-preferences:1.6.0")
+    implementation(libs.preferencektx)
+    implementation(libs.flowpreferences)
 
     // Model View Presenter
-    val nucleusVersion = "3.0.0"
-    implementation("info.android15.nucleus:nucleus:$nucleusVersion")
-    implementation("info.android15.nucleus:nucleus-support-v7:$nucleusVersion")
+    implementation(libs.bundles.nucleus)
 
     // Dependency injection
-    implementation("com.github.inorichi.injekt:injekt-core:65b0440")
+    implementation(libs.injekt.core)
 
     // Image loading
-    val coilVersion = "1.4.0"
-    implementation("io.coil-kt:coil:$coilVersion")
-    implementation("io.coil-kt:coil-gif:$coilVersion")
+    implementation(libs.bundles.coil)
 
-    implementation("com.github.tachiyomiorg:subsampling-scale-image-view:846abe0") {
+    implementation(libs.subsamplingscaleimageview) {
         exclude(module = "image-decoder")
     }
-    implementation("com.github.tachiyomiorg:image-decoder:7481a4a")
+    implementation(libs.image.decoder)
 
     // Sort
-    implementation("com.github.gpanther:java-nat-sort:natural-comparator-1.1")
+    implementation(libs.natural.comparator)
 
     // UI libraries
-    implementation("com.google.android.material:material:1.6.0-alpha03")
-    implementation("com.github.dmytrodanylyk.android-process-button:library:1.0.4")
-    implementation("com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533")
-    implementation("com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533")
-    implementation("com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.1.0")
-    implementation("com.github.chrisbanes:PhotoView:2.3.0")
-    implementation("com.github.tachiyomiorg:DirectionalViewPager:1.0.0") {
+    implementation(libs.material)
+    implementation(libs.androidprocessbutton)
+    implementation(libs.flexible.adapter.core)
+    implementation(libs.flexible.adapter.ui)
+    implementation(libs.viewstatepageradapter)
+    implementation(libs.photoview)
+    implementation(libs.directionalviewpager) {
         exclude(group = "androidx.viewpager", module = "viewpager")
     }
-    implementation("dev.chrisbanes.insetter:insetter:0.6.1")
+    implementation(libs.insetter)
 
     // Conductor
-    val conductorVersion = "3.1.2"
-    implementation("com.bluelinelabs:conductor:$conductorVersion")
-    implementation("com.bluelinelabs:conductor-viewpager:$conductorVersion")
-    implementation("com.github.tachiyomiorg:conductor-support-preference:$conductorVersion")
+    implementation(libs.bundles.conductor)
 
     // FlowBinding
-    val flowbindingVersion = "1.2.0"
-    implementation("io.github.reactivecircus.flowbinding:flowbinding-android:$flowbindingVersion")
-    implementation("io.github.reactivecircus.flowbinding:flowbinding-appcompat:$flowbindingVersion")
-    implementation("io.github.reactivecircus.flowbinding:flowbinding-recyclerview:$flowbindingVersion")
-    implementation("io.github.reactivecircus.flowbinding:flowbinding-swiperefreshlayout:$flowbindingVersion")
-    implementation("io.github.reactivecircus.flowbinding:flowbinding-viewpager:$flowbindingVersion")
+    implementation(libs.bundles.flowbinding)
 
     // Logging
-    implementation("com.squareup.logcat:logcat:0.1")
+    implementation(libs.logcat)
 
     // Crash reports/analytics
-    implementation("ch.acra:acra-http:5.8.4")
-    "standardImplementation"("com.google.firebase:firebase-analytics-ktx:20.0.2")
+    implementation(libs.acra.http)
+    "standardImplementation"(libs.firebase.analytics)
 
     // Licenses
-    implementation("com.mikepenz:aboutlibraries-core:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
+    implementation(libs.aboutlibraries.core)
 
     // Shizuku
-    val shizukuVersion = "12.1.0"
-    implementation("dev.rikka.shizuku:api:$shizukuVersion")
-    implementation("dev.rikka.shizuku:provider:$shizukuVersion")
+    implementation(libs.bundles.shizuku)
 
     // Tests
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:3.16.1")
-    testImplementation("org.mockito:mockito-core:1.10.19")
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.mockito.core)
 
-    val robolectricVersion = "3.1.4"
-    testImplementation("org.robolectric:robolectric:$robolectricVersion")
-    testImplementation("org.robolectric:shadows-play-services:$robolectricVersion")
+    testImplementation(libs.bundles.robolectric)
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
-    // debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
+    // debugImplementation(libs.leakcanary.android)
 }
 
 tasks {
@@ -313,40 +278,8 @@ tasks {
     }
 }
 
-
 buildscript {
-    repositories {
-        mavenCentral()
-    }
     dependencies {
-        classpath(kotlin("gradle-plugin", version = BuildPluginsVersion.KOTLIN))
+        classpath(kotlinx.gradle)
     }
-}
-
-
-// Git is needed in your system PATH for these commands to work.
-// If it's not installed, you can return a random value as a workaround
-fun getCommitCount(): String {
-    return runCommand("git rev-list --count HEAD")
-    // return "1"
-}
-
-fun getGitSha(): String {
-    return runCommand("git rev-parse --short HEAD")
-    // return "1"
-}
-
-fun getBuildTime(): String {
-    val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-    df.timeZone = TimeZone.getTimeZone("UTC")
-    return df.format(Date())
-}
-
-fun runCommand(command: String): String {
-    val byteOut = ByteArrayOutputStream()
-    project.exec {
-        commandLine = command.split(" ")
-        standardOutput = byteOut
-    }
-    return String(byteOut.toByteArray()).trim()
 }

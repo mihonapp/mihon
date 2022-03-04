@@ -1,0 +1,111 @@
+[versions]
+aboutlib_version = "8.9.4"
+okhttp_version = "4.9.1"
+nucleus_version = "3.0.0"
+coil_version = "1.4.0"
+conductor_version = "3.1.2"
+flowbinding_version = "1.2.0"
+shizuku_version = "12.1.0"
+robolectric_version = "3.1.4"
+
+[libraries]
+android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
+google-services-gradle = "com.google.gms:google-services:4.3.10"
+
+tachiyomi-api = "org.tachiyomi:source-api:1.1"
+
+rxandroid = "io.reactivex:rxandroid:1.2.1"
+rxjava = "io.reactivex:rxjava:1.3.8"
+rxrelay = "com.jakewharton.rxrelay:rxrelay:1.2.0"
+flowreactivenetwork = "ru.beryukhov:flowreactivenetwork:1.0.4"
+
+okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_version" }
+okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
+okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
+okio = "com.squareup.okio:okio:3.0.0"
+
+conscrypt-android = "org.conscrypt:conscrypt-android:2.5.2"
+
+quickjs-android = "app.cash.quickjs:quickjs-android:0.9.2"
+# TODO: remove Duktape once all extensions are using QuickJS
+duktape-android = "com.squareup.duktape:duktape-android:1.4.0"
+
+jsoup = "org.jsoup:jsoup:1.14.3"
+
+disklrucache = "com.jakewharton:disklrucache:2.0.2"
+unifile = "com.github.tachiyomiorg:unifile:17bec43"
+junrar = "com.github.junrar:junrar:7.4.0"
+
+sqlitektx = "androidx.sqlite:sqlite-ktx:2.2.0"
+sqlite-android = "com.github.requery:sqlite-android:3.36.0"
+
+preferencektx = "androidx.preference:preference-ktx:1.2.0"
+flowpreferences = "com.fredporciuncula:flow-preferences:1.6.0"
+
+nucleus-core = { module = "info.android15.nucleus:nucleus", version.ref = "nucleus_version" }
+nucleus-supportv7 = { module = "info.android15.nucleus:nucleus-support-v7", version.ref = "nucleus_version" }
+
+injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
+
+coil-core = { module = "io.coil-kt:coil", version.ref = "coil_version" }
+coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil_version" }
+
+subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:846abe0"
+image-decoder = "com.github.tachiyomiorg:image-decoder:7481a4a"
+
+natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
+
+material = "com.google.android.material:material:1.6.0-alpha03"
+androidprocessbutton = "com.github.dmytrodanylyk.android-process-button:library:1.0.4"
+flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
+flexible-adapter-ui = "com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533"
+viewstatepageradapter = "com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.1.0"
+photoview = "com.github.chrisbanes:PhotoView:2.3.0"
+directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
+insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
+
+conductor-core = { module = "com.bluelinelabs:conductor", version.ref = "conductor_version" }
+conductor-viewpager = { module = "com.bluelinelabs:conductor-viewpager", version.ref = "conductor_version" }
+conductor-support-preference = { module = "com.github.tachiyomiorg:conductor-support-preference", version.ref = "conductor_version" }
+
+flowbinding-android = { module = "io.github.reactivecircus.flowbinding:flowbinding-android", version.ref = "flowbinding_version" }
+flowbinding-appcompat = { module = "io.github.reactivecircus.flowbinding:flowbinding-appcompat", version.ref = "flowbinding_version" }
+flowbinding-recyclerview = { module = "io.github.reactivecircus.flowbinding:flowbinding-recyclerview", version.ref = "flowbinding_version" }
+flowbinding-swiperefreshlayout = { module = "io.github.reactivecircus.flowbinding:flowbinding-swiperefreshlayout", version.ref = "flowbinding_version" }
+flowbinding-viewpager = { module = "io.github.reactivecircus.flowbinding:flowbinding-viewpager", version.ref = "flowbinding_version" }
+
+logcat = "com.squareup.logcat:logcat:0.1"
+
+acra-http = "ch.acra:acra-http:5.8.4"
+firebase-analytics = "com.google.firebase:firebase-analytics-ktx:20.0.2"
+
+aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlib_version" }
+aboutlibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
+
+shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku_version" }
+shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku_version" }
+
+junit = "junit:junit:4.13.2"
+assertj-core = "org.assertj:assertj-core:3.16.1"
+mockito-core = "org.mockito:mockito-core:1.10.19"
+
+robolectric-core = { module = "org.robolectric:robolectric", version.ref = "robolectric_version" }
+robolectric-playservices = { module = "org.robolectric:shadows-play-services", version.ref = "robolectric_version" }
+
+leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.7"
+
+[bundles]
+reactivex = ["rxandroid","rxjava","rxrelay"]
+okhttp = ["okhttp-core","okhttp-logging","okhttp-dnsoverhttps"]
+js-engine = ["quickjs-android", "duktape-android"]
+sqlite = ["sqlitektx", "sqlite-android"]
+nucleus = ["nucleus-core","nucleus-supportv7"]
+coil = ["coil-core","coil-gif",]
+flowbinding = ["flowbinding-android","flowbinding-appcompat","flowbinding-recyclerview","flowbinding-swiperefreshlayout","flowbinding-viewpager"]
+conductor = ["conductor-core","conductor-viewpager","conductor-support-preference"]
+shizuku = ["shizuku-api","shizuku-provider"]
+robolectric = ["robolectric-core","robolectric-playservices"]
+
+[plugins]
+kotlinter = { id = "org.jmailen.kotlinter", version = "3.6.0"}
+versionsx = { id = "com.github.ben-manes.versions", version = "0.42.0"}

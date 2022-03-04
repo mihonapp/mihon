@@ -1,21 +1,22 @@
-plugins {
-    id("com.android.application") version BuildPluginsVersion.AGP apply false
-    id("com.android.library") version BuildPluginsVersion.AGP apply false
-    kotlin("android") version BuildPluginsVersion.KOTLIN apply false
-    id("org.jmailen.kotlinter") version BuildPluginsVersion.KOTLINTER
-    id("com.github.ben-manes.versions") version BuildPluginsVersion.VERSIONS_PLUGIN
-}
-
-allprojects {
-    repositories {
-        mavenCentral()
-        google()
-        maven { setUrl("https://www.jitpack.io") }
+buildscript {
+    dependencies {
+        classpath(libs.android.shortcut.gradle)
+        classpath(libs.google.services.gradle)
+        classpath(libs.aboutlibraries.gradle)
+        classpath(kotlinx.serialization.gradle)
     }
 }
 
+plugins {
+    alias(androidx.plugins.application) apply false
+    alias(androidx.plugins.library) apply false
+    alias(kotlinx.plugins.android) apply false
+    alias(libs.plugins.kotlinter)
+    alias(libs.plugins.versionsx)
+}
+
 subprojects {
-    apply(plugin = "org.jmailen.kotlinter")
+    apply<org.jmailen.gradle.kotlinter.KotlinterPlugin>()
 
     kotlinter {
         experimentalRules = true
@@ -25,15 +26,6 @@ subprojects {
     }
 }
 
-buildscript {
-    dependencies {
-        classpath("com.github.zellius:android-shortcut-gradle-plugin:0.1.2")
-        classpath("com.google.gms:google-services:4.3.10")
-        classpath("com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:${BuildPluginsVersion.ABOUTLIB_PLUGIN}")
-        classpath(kotlin("serialization", version = BuildPluginsVersion.KOTLIN))
-    }
-}
-
-tasks.register("clean", Delete::class) {
+tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
 }
