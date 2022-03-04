@@ -225,7 +225,6 @@
     <string name="restrictions">Restrictions: %s</string>
 
     <string name="pref_library_update_manga_restriction">Skip updating</string>
-    <string name="only_update_restrictions">Only update: %s</string>
     <string name="pref_update_only_completely_read">Has unread chapters</string>
     <string name="pref_update_only_non_completed">Is completed series</string>
     <string name="pref_update_only_started">No read chapters</string>
