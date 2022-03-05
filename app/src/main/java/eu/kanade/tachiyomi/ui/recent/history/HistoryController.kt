@@ -152,7 +152,7 @@ class HistoryController :
             return
         }
         val adapter = adapter ?: return
-        presenter.requestNext(adapter.itemCount, query)
+        presenter.requestNext(adapter.itemCount - adapter.headerItems.size, query)
     }
 
     override fun noMoreLoad(newItemsSize: Int) {}
