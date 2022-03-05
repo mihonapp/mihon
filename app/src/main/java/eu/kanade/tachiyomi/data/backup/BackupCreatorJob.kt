@@ -49,14 +49,8 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
     }
 
     companion object {
-        private const val TAG = "BackupCreator"
-
-        private const val IS_AUTO_BACKUP_KEY = "is_auto_backup" // Boolean
-        private const val LOCATION_URI_KEY = "location_uri" // String
-        private const val BACKUP_FLAGS_KEY = "backup_flags" // Int
-
         fun isManualJobRunning(context: Context): Boolean {
-            val list = WorkManager.getInstance(context).getWorkInfosByTag(TAG).get()
+            val list = WorkManager.getInstance(context).getWorkInfosByTag(TAG_MANUAL).get()
             return list.find { it.state == WorkInfo.State.RUNNING } != null
         }
 
@@ -71,13 +65,13 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
                     10,
                     TimeUnit.MINUTES
                 )
-                    .addTag(TAG)
+                    .addTag(TAG_AUTO)
                     .setInputData(workDataOf(IS_AUTO_BACKUP_KEY to true))
                     .build()
 
-                workManager.enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
+                workManager.enqueueUniquePeriodicWork(TAG_AUTO, ExistingPeriodicWorkPolicy.REPLACE, request)
             } else {
-                workManager.cancelUniqueWork(TAG)
+                workManager.cancelUniqueWork(TAG_AUTO)
             }
         }
 
@@ -88,10 +82,17 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
                 BACKUP_FLAGS_KEY to flags
             )
             val request = OneTimeWorkRequestBuilder<BackupCreatorJob>()
-                .addTag(TAG)
+                .addTag(TAG_MANUAL)
                 .setInputData(inputData)
                 .build()
-            WorkManager.getInstance(context).enqueueUniqueWork("$TAG:manual", ExistingWorkPolicy.KEEP, request)
+            WorkManager.getInstance(context).enqueueUniqueWork(TAG_MANUAL, ExistingWorkPolicy.KEEP, request)
         }
     }
 }
+
+private const val TAG_AUTO = "BackupCreator"
+private const val TAG_MANUAL = "$TAG_AUTO:manual"
+
+private const val IS_AUTO_BACKUP_KEY = "is_auto_backup" // Boolean
+private const val LOCATION_URI_KEY = "location_uri" // String
+private const val BACKUP_FLAGS_KEY = "backup_flags" // Int
