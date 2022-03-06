@@ -33,8 +33,7 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
 import eu.kanade.tachiyomi.util.view.onAnimationsFinished
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
 
 /**
  * This controller shows and manages the different catalogues enabled by the user.
@@ -48,11 +47,8 @@ class SourceController :
     FlexibleAdapter.OnItemLongClickListener,
     SourceAdapter.OnSourceClickListener {
 
-    private val preferences: PreferencesHelper = Injekt.get()
+    private val preferences: PreferencesHelper by injectLazy()
 
-    /**
-     * Adapter containing sources.
-     */
     private var adapter: SourceAdapter? = null
 
     init {
@@ -128,18 +124,10 @@ class SourceController :
         val isPinned = item.header?.code?.equals(SourcePresenter.PINNED_KEY) ?: false
 
         val items = mutableListOf(
-            Pair(
-                activity.getString(if (isPinned) R.string.action_unpin else R.string.action_pin),
-                { toggleSourcePin(item.source) }
-            )
+            activity.getString(if (isPinned) R.string.action_unpin else R.string.action_pin) to { toggleSourcePin(item.source) }
         )
         if (item.source !is LocalSource) {
-            items.add(
-                Pair(
-                    activity.getString(R.string.action_disable),
-                    { disableSource(item.source) }
-                )
-            )
+            items.add(activity.getString(R.string.action_disable) to { disableSource(item.source) })
         }
 
         SourceOptionsDialog(item.source.toString(), items).showDialog(router)
