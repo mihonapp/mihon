@@ -256,6 +256,9 @@ object Migrations {
                     preferences.extensionInstaller().set(PreferenceValues.ExtensionInstaller.LEGACY)
                 }
             }
+            if (oldVersion < 76) {
+                BackupCreatorJob.setupTask(context)
+            }
 
             return true
         }
