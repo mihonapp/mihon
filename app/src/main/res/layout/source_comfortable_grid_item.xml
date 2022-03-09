@@ -9,19 +9,6 @@
     android:foreground="@drawable/library_item_selector_overlay"
     android:padding="4dp">
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/progress"
-        style="@style/Widget.Tachiyomi.CircularProgressIndicator.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/thumbnail"
-        app:layout_constraintEnd_toEndOf="@+id/thumbnail"
-        app:layout_constraintStart_toStartOf="@+id/thumbnail"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
-
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/thumbnail"
         android:layout_width="0dp"
