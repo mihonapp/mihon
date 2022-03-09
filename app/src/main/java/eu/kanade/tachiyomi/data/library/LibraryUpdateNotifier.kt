@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.Downloader
+import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -92,23 +93,43 @@ class LibraryUpdateNotifier(private val context: Context) {
     /**
      * Shows notification containing update entries that failed with action to open full log.
      *
-     * @param skipped Number of entries that were skipped during the update.
      * @param failed Number of entries that failed to update.
      * @param uri Uri for error log file containing all titles that failed.
      */
-    fun showUpdateErrorNotification(skipped: Int, failed: Int, uri: Uri) {
-        if (skipped == 0 && failed == 0) {
+    fun showUpdateErrorNotification(failed: Int, uri: Uri) {
+        if (failed == 0) {
             return
         }
 
         context.notificationManager.notify(
             Notifications.ID_LIBRARY_ERROR,
             context.notificationBuilder(Notifications.CHANNEL_LIBRARY_ERROR) {
-                setContentTitle(context.resources.getString(R.string.notification_update_skipped_error, skipped, failed))
+                setContentTitle(context.resources.getString(R.string.notification_update_error, failed))
                 setContentText(context.getString(R.string.action_show_errors))
                 setSmallIcon(R.drawable.ic_tachi)
 
                 setContentIntent(NotificationReceiver.openErrorLogPendingActivity(context, uri))
+            }
+                .build()
+        )
+    }
+
+    /**
+     * Shows notification containing update entries that were skipped.
+     *
+     * @param skipped Number of entries that were skipped during the update.
+     */
+    fun showUpdateSkippedNotification(skipped: Int) {
+        if (skipped == 0) {
+            return
+        }
+
+        context.notificationManager.notify(
+            Notifications.ID_LIBRARY_SKIPPED,
+            context.notificationBuilder(Notifications.CHANNEL_LIBRARY_SKIPPED) {
+                setContentTitle(context.resources.getString(R.string.notification_update_skipped, skipped))
+                setSmallIcon(R.drawable.ic_tachi)
+                addAction(R.drawable.ic_help_24dp, context.getString(R.string.learn_more), NotificationHandler.openUrl(context, HELP_SKIPPED_URL))
             }
                 .build()
         )
@@ -304,10 +325,9 @@ class LibraryUpdateNotifier(private val context: Context) {
         }
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
-
-    companion object {
-        private const val NOTIF_MAX_CHAPTERS = 5
-        private const val NOTIF_TITLE_MAX_LEN = 45
-        private const val NOTIF_ICON_SIZE = 192
-    }
 }
+
+private const val NOTIF_MAX_CHAPTERS = 5
+private const val NOTIF_TITLE_MAX_LEN = 45
+private const val NOTIF_ICON_SIZE = 192
+private const val HELP_SKIPPED_URL = "https://tachiyomi.org/help/faq/#why-does-global-update-skip-some-entries"

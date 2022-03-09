@@ -377,13 +377,15 @@ class LibraryUpdateService(
             }
         }
 
-        if (skippedUpdates.isNotEmpty() || failedUpdates.isNotEmpty()) {
-            val errorFile = writeErrorFile(skippedUpdates + failedUpdates)
+        if (failedUpdates.isNotEmpty()) {
+            val errorFile = writeErrorFile(failedUpdates)
             notifier.showUpdateErrorNotification(
-                skippedUpdates.size,
                 failedUpdates.size,
                 errorFile.getUriCompat(this),
             )
+        }
+        if (skippedUpdates.isNotEmpty()) {
+            notifier.showUpdateSkippedNotification(skippedUpdates.size)
         }
     }
 

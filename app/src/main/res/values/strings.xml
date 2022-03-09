@@ -736,7 +736,9 @@
         <item quantity="one">Chapters %1$s and 1 more</item>
         <item quantity="other">Chapters %1$s and %2$d more</item>
     </plurals>
-    <string name="notification_update_skipped_error">%1$d update(s) skipped and %2$d update(s) failed</string>
+    <string name="notification_update_error">%1$d update(s) failed</string>
+    <string name="notification_update_skipped">%1$d update(s) skipped</string>
+    <string name="learn_more">Learn more</string>
     <string name="notification_cover_update_failed">Failed to update cover</string>
     <string name="notification_first_add_to_library">Please add the manga to your library before doing this</string>
     <string name="library_errors_help">For help on how to fix library update errors, see %1$s</string>
@@ -800,6 +802,7 @@
     <string name="channel_progress">Progress</string>
     <string name="channel_complete">Complete</string>
     <string name="channel_errors">Errors</string>
+    <string name="channel_skipped">Skipped</string>
     <string name="channel_new_chapters">Chapter updates</string>
     <string name="channel_app_updates">App updates</string>
     <string name="channel_ext_updates">Extension updates</string>
