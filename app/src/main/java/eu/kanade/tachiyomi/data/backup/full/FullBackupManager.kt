@@ -85,9 +85,13 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
                 )
                 ?: throw Exception("Couldn't create backup file")
 
+            if (!file.isFile) {
+                throw IllegalStateException("Failed to get handle on file")
+            }
+
             val byteArray = parser.encodeToByteArray(BackupSerializer, backup!!)
             file.openOutputStream().also {
-                // Force overwrite old file size,
+                // Force overwrite old file
                 (it as? FileOutputStream)?.channel?.truncate(0)
             }.sink().gzip().buffer().use { it.write(byteArray) }
             val fileUri = file.uri
