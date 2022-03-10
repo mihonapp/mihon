@@ -313,32 +313,34 @@ class LibraryUpdateService(
                                     manga,
                                 ) { manga ->
                                     try {
-                                        if (MANGA_NON_COMPLETED in restrictions && manga.status == SManga.COMPLETED) {
-                                            throw SkipUpdateException(getString(R.string.skipped_reason_completed))
-                                        }
-                                        if (MANGA_HAS_UNREAD in restrictions && manga.unreadCount != 0) {
-                                            throw SkipUpdateException(getString(R.string.skipped_reason_not_caught_up))
-                                        }
-                                        if (MANGA_NON_READ in restrictions && manga.totalChapters > 0 && !manga.hasStarted) {
-                                            throw SkipUpdateException(getString(R.string.skipped_reason_not_started))
-                                        }
-
-                                        val (newChapters, _) = updateManga(manga)
-
-                                        if (newChapters.isNotEmpty()) {
-                                            if (manga.shouldDownloadNewChapters(db, preferences)) {
-                                                downloadChapters(manga, newChapters)
-                                                hasDownloads.set(true)
+                                        when {
+                                            MANGA_NON_COMPLETED in restrictions && manga.status == SManga.COMPLETED -> {
+                                                skippedUpdates.add(manga to getString(R.string.skipped_reason_completed))
                                             }
+                                            MANGA_HAS_UNREAD in restrictions && manga.unreadCount != 0 -> {
+                                                skippedUpdates.add(manga to getString(R.string.skipped_reason_not_caught_up))
+                                            }
+                                            MANGA_NON_READ in restrictions && manga.totalChapters > 0 && !manga.hasStarted -> {
+                                                skippedUpdates.add(manga to getString(R.string.skipped_reason_not_started))
+                                            }
+                                            else -> {
+                                                // Convert to the manga that contains new chapters
+                                                val (newChapters, _) = updateManga(manga)
 
-                                            // Convert to the manga that contains new chapters
-                                            newUpdates.add(
-                                                manga to newChapters.sortedByDescending { ch -> ch.source_order }
-                                                    .toTypedArray()
-                                            )
+                                                if (newChapters.isNotEmpty()) {
+                                                    if (manga.shouldDownloadNewChapters(db, preferences)) {
+                                                        downloadChapters(manga, newChapters)
+                                                        hasDownloads.set(true)
+                                                    }
+
+                                                    // Convert to the manga that contains new chapters
+                                                    newUpdates.add(
+                                                        manga to newChapters.sortedByDescending { ch -> ch.source_order }
+                                                            .toTypedArray()
+                                                    )
+                                                }
+                                            }
                                         }
-                                    } catch (e: SkipUpdateException) {
-                                        skippedUpdates.add(manga to e.message)
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
                                             is NoChaptersException -> {
@@ -587,5 +589,3 @@ class LibraryUpdateService(
 
 private const val MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 60
 private const val ERROR_LOG_HELP_URL = "https://tachiyomi.org/help/guides/troubleshooting"
-
-private class SkipUpdateException(override val message: String) : RuntimeException()
