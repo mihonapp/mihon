@@ -320,6 +320,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
     private fun buildContainerTransform(entering: Boolean): MaterialContainerTransform {
         return MaterialContainerTransform(this, entering).apply {
+            duration = 350 // ms
             addTarget(android.R.id.content)
         }
     }
