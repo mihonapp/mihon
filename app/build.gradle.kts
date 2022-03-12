@@ -17,13 +17,13 @@ shortcutHelper.setFilePath("./shortcuts.xml")
 val SUPPORTED_ABIS = setOf("armeabi-v7a", "arm64-v8a", "x86")
 
 android {
-    compileSdkPreview = "Tiramisu"
-    ndkVersion = "22.1.7171670"
+    compileSdk = AndroidConfig.compileSdk
+    ndkVersion = AndroidConfig.ndk
 
     defaultConfig {
         applicationId = "eu.kanade.tachiyomi"
-        minSdk = 23
-        targetSdk = 29
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
         versionCode = 76
         versionName = "0.13.1"
 

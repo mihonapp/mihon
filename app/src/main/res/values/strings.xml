@@ -178,7 +178,6 @@
     <string name="pref_start_screen">Start screen</string>
     <string name="pref_confirm_exit">Confirm exit</string>
     <string name="pref_manage_notifications">Manage notifications</string>
-    <string name="pref_app_language">App language</string>
 
     <string name="pref_category_security">Security</string>
     <string name="lock_with_biometrics">Require unlock</string>
