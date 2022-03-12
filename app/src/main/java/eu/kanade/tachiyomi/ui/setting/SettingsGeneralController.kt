@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.setting
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
+import androidx.core.net.toUri
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.preference.bindTo
@@ -49,6 +50,18 @@ class SettingsGeneralController : SettingsController() {
                 onClick {
                     val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                         putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                    }
+                    startActivity(intent)
+                }
+            }
+        }
+        if (Build.VERSION.CODENAME == "Tiramisu") {
+            preference {
+                key = "pref_manage_language"
+                titleRes = R.string.pref_app_language
+                onClick {
+                    val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
+                        data = "package:${context.packageName}".toUri()
                     }
                     startActivity(intent)
                 }
