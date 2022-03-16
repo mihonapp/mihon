@@ -2,6 +2,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="splash">@color/accent_blue</color>
 
+    <color name="cover_placeholder">#1F888888</color>
+
     <color name="error">#BA1B1B</color>
     <color name="errorContainer">#FFDAD4</color>
     <color name="onError">#FFFFFF</color>

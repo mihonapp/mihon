@@ -1,19 +1,18 @@
 package eu.kanade.tachiyomi.util.view
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.ColorDrawable
 import android.widget.ImageView
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.graphics.ColorUtils
 import coil.ImageLoader
 import coil.imageLoader
 import coil.load
 import coil.request.ImageRequest
 import coil.target.ImageViewTarget
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.getResourceColor
 
@@ -42,8 +41,8 @@ fun ImageView.loadAutoPause(
     builder: ImageRequest.Builder.() -> Unit = {}
 ) {
     load(data, loader) {
-        val placeholderColor = ColorUtils.setAlphaComponent(Color.GRAY, 0x1F) // 12% gray
-        placeholder(ColorDrawable(placeholderColor))
+        placeholder(ColorDrawable(context.getColor(R.color.cover_placeholder)))
+        error(R.drawable.cover_error)
 
         // Build the original request so we can add on our success listener
         val originalListener = apply(builder).build().listener
