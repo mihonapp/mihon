@@ -112,8 +112,15 @@ abstract class HttpSource : CatalogueSource {
      * @param filters the list of filters to apply.
      */
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
-        return client.newCall(searchMangaRequest(page, query, filters))
-            .asObservableSuccess()
+        return Observable.defer {
+            try {
+                client.newCall(searchMangaRequest(page, query, filters)).asObservableSuccess()
+            } catch (e: NoClassDefFoundError) {
+                // RxJava doesn't handle Errors, which tends to happen during global searches
+                // if an old extension using non-existent classes is still around
+                throw RuntimeException(e)
+            }
+        }
             .map { response ->
                 searchMangaParse(response)
             }
