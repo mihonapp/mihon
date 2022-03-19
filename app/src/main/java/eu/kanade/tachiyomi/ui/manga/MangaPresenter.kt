@@ -19,6 +19,8 @@ import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.saver.Image
+import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -39,10 +41,6 @@ import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
-import eu.kanade.tachiyomi.util.storage.DiskUtil
-import eu.kanade.tachiyomi.util.storage.getPicturesDir
-import eu.kanade.tachiyomi.util.storage.getTempShareDir
-import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.updateCoverLastModified
@@ -58,7 +56,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.io.File
+import uy.kohesive.injekt.injectLazy
 import java.util.Date
 
 class MangaPresenter(
@@ -109,6 +107,8 @@ class MangaPresenter(
     val trackList get() = _trackList
 
     private val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
+
+    private val imageSaver: ImageSaver by injectLazy()
 
     private var trackSubscription: Subscription? = null
     private var searchTrackerJob: Job? = null
@@ -338,44 +338,13 @@ class MangaPresenter(
     }
 
     /**
-     * Save manga cover Bitmap to temporary share directory.
+     * Save manga cover Bitmap to picture or temporary share directory.
      *
-     * @param context for the temporary share directory
-     * @param coverBitmap the cover to save (as Bitmap)
-     * @return cover File in temporary share directory
+     * @param image the image with specified location
+     * @return flow Flow which emits the Uri which specifies where the image is saved when
      */
-    fun shareCover(context: Context, coverBitmap: Bitmap): File {
-        return saveCover(getTempShareDir(context), coverBitmap)
-    }
-
-    /**
-     * Save manga cover to pictures directory of the device.
-     *
-     * @param context for the pictures directory of the user
-     * @param coverBitmap the cover to save (as Bitmap)
-     * @return cover File in pictures directory
-     */
-    fun saveCover(context: Context, coverBitmap: Bitmap) {
-        saveCover(getPicturesDir(context), coverBitmap)
-    }
-
-    /**
-     * Save a manga cover Bitmap to a new File in a given directory.
-     * Overwrites file if it already exists.
-     *
-     * @param directory The directory in which the new file will be created
-     * @param coverBitmap The manga cover to save
-     * @return the newly created File
-     */
-    private fun saveCover(directory: File, coverBitmap: Bitmap): File {
-        directory.mkdirs()
-        val filename = DiskUtil.buildValidFilename("${manga.title}.${ImageUtil.ImageType.PNG}")
-
-        val destFile = File(directory, filename)
-        destFile.outputStream().use { desFileOutputStream ->
-            coverBitmap.compress(Bitmap.CompressFormat.PNG, 100, desFileOutputStream)
-        }
-        return destFile
+    suspend fun saveImage(image: Image): Uri {
+        return imageSaver.save(image)
     }
 
     /**

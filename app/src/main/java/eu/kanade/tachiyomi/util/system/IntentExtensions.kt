@@ -6,10 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import eu.kanade.tachiyomi.R
 
-fun Uri.toShareIntent(context: Context, type: String = "image/*"): Intent {
+fun Uri.toShareIntent(context: Context, type: String = "image/*", message: String? = null): Intent {
     val uri = this
 
     val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        if (message != null) putExtra(Intent.EXTRA_TEXT, message)
         putExtra(Intent.EXTRA_STREAM, uri)
         clipData = ClipData.newRawUri(null, uri)
         setType(type)

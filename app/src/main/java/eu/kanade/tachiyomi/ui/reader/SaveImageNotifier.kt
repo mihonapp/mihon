@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.reader
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.core.app.NotificationCompat
 import coil.imageLoader
 import coil.request.CachePolicy
@@ -13,7 +14,6 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
-import java.io.File
 
 /**
  * Class used to show BigPictureStyle notifications
@@ -36,14 +36,14 @@ class SaveImageNotifier(private val context: Context) {
      *
      * @param file image file containing downloaded page image.
      */
-    fun onComplete(file: File) {
+    fun onComplete(uri: Uri) {
         val request = ImageRequest.Builder(context)
-            .data(file)
+            .data(uri)
             .memoryCachePolicy(CachePolicy.DISABLED)
             .size(720, 1280)
             .target(
                 onSuccess = { result ->
-                    showCompleteNotification(file, (result as BitmapDrawable).bitmap)
+                    showCompleteNotification(uri, (result as BitmapDrawable).bitmap)
                 },
                 onError = {
                     onError(null)
@@ -53,7 +53,7 @@ class SaveImageNotifier(private val context: Context) {
         context.imageLoader.enqueue(request)
     }
 
-    private fun showCompleteNotification(file: File, image: Bitmap) {
+    private fun showCompleteNotification(uri: Uri, image: Bitmap) {
         with(notificationBuilder) {
             setContentTitle(context.getString(R.string.picture_saved))
             setSmallIcon(R.drawable.ic_photo_24dp)
@@ -64,18 +64,18 @@ class SaveImageNotifier(private val context: Context) {
             // Clear old actions if they exist
             clearActions()
 
-            setContentIntent(NotificationHandler.openImagePendingActivity(context, file))
+            setContentIntent(NotificationHandler.openImagePendingActivity(context, uri))
             // Share action
             addAction(
                 R.drawable.ic_share_24dp,
                 context.getString(R.string.action_share),
-                NotificationReceiver.shareImagePendingBroadcast(context, file.absolutePath, notificationId)
+                NotificationReceiver.shareImagePendingBroadcast(context, uri.path!!, notificationId)
             )
             // Delete action
             addAction(
                 R.drawable.ic_delete_24dp,
                 context.getString(R.string.action_delete),
-                NotificationReceiver.deleteImagePendingBroadcast(context, file.absolutePath, notificationId)
+                NotificationReceiver.deleteImagePendingBroadcast(context, uri.path!!, notificationId)
             )
 
             updateNotification()

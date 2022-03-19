@@ -44,6 +44,8 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.saver.Image
+import eu.kanade.tachiyomi.data.saver.Location
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
@@ -85,7 +87,7 @@ import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.chapter.NoChaptersException
 import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.storage.getUriCompat
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
@@ -775,26 +777,47 @@ class MangaController :
 
     fun shareCover() {
         try {
+            val manga = manga!!
             val activity = activity!!
             useCoverAsBitmap(activity) { coverBitmap ->
-                val cover = presenter.shareCover(activity, coverBitmap)
-                val uri = cover.getUriCompat(activity)
-                startActivity(uri.toShareIntent(activity))
+                viewScope.launchIO {
+                    val uri = presenter.saveImage(
+                        image = Image.Cover(
+                            bitmap = coverBitmap,
+                            name = manga.title,
+                            location = Location.Cache
+                        )
+                    )
+                    launchUI {
+                        startActivity(uri.toShareIntent(activity))
+                    }
+                }
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
-            activity?.toast(R.string.error_sharing_cover)
+            activity?.toast(R.string.error_saving_cover)
         }
     }
 
     fun saveCover() {
         try {
+            val manga = manga!!
             val activity = activity!!
             useCoverAsBitmap(activity) { coverBitmap ->
-                presenter.saveCover(activity, coverBitmap)
-                activity.toast(R.string.cover_saved)
+                viewScope.launchIO {
+                    presenter.saveImage(
+                        image = Image.Cover(
+                            bitmap = coverBitmap,
+                            name = manga.title,
+                            location = Location.Pictures.create()
+                        )
+                    )
+                    launchUI {
+                        activity.toast(R.string.cover_saved)
+                    }
+                }
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
             activity?.toast(R.string.error_saving_cover)
         }
