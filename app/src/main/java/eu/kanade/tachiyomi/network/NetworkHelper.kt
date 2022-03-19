@@ -27,6 +27,7 @@ class NetworkHelper(context: Context) {
                 .cookieJar(cookieManager)
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
+                .fastFallback(true)
                 .addInterceptor(UserAgentInterceptor())
 
             if (preferences.verboseLogging()) {
