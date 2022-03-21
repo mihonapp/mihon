@@ -28,7 +28,7 @@ class ImageSaver(
         val data = image.data
 
         val type = ImageUtil.findImageType(data) ?: throw Exception("Not an image")
-        val filename = DiskUtil.buildValidFilename("${image.name}.$type")
+        val filename = DiskUtil.buildValidFilename("${image.name}.${type.extension}")
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             return save(data(), image.location.directory(context), filename)
@@ -43,6 +43,7 @@ class ImageSaver(
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, image.name)
+            put(MediaStore.Images.Media.MIME_TYPE, type.mime)
             put(
                 MediaStore.Images.Media.RELATIVE_PATH,
                 "${Environment.DIRECTORY_PICTURES}/${context.getString(R.string.app_name)}/" +
