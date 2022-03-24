@@ -112,8 +112,8 @@ fun Date.toRelativeString(
     val days = difference.floorDiv(MILLISECONDS_IN_DAY).toInt()
     return when {
         difference < 0 -> context.getString(R.string.recently)
-        difference < MILLISECONDS_IN_DAY -> context.getString(R.string.relative_time_today)
-        difference < MILLISECONDS_IN_DAY.times(range) -> context.resources.getQuantityString(
+        difference <= MILLISECONDS_IN_DAY -> context.getString(R.string.relative_time_today)
+        difference <= MILLISECONDS_IN_DAY.times(range) -> context.resources.getQuantityString(
             R.plurals.relative_time,
             days,
             days

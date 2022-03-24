@@ -84,7 +84,7 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
             .map { mangaChapters ->
                 val map = TreeMap<Date, MutableList<MangaChapter>> { d1, d2 -> d2.compareTo(d1) }
                 val byDay = mangaChapters
-                    .groupByTo(map, { it.chapter.date_fetch.toDateKey() })
+                    .groupByTo(map) { it.chapter.date_fetch.toDateKey() }
                 byDay.flatMap { entry ->
                     val dateItem = DateSectionItem(entry.key, relativeTime, dateFormat)
                     entry.value

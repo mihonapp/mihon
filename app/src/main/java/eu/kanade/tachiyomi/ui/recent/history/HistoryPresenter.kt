@@ -66,7 +66,7 @@ class HistoryPresenter : BasePresenter<HistoryController>() {
             .map { recents ->
                 val map = TreeMap<Date, MutableList<MangaChapterHistory>> { d1, d2 -> d2.compareTo(d1) }
                 val byDay = recents
-                    .groupByTo(map, { it.history.last_read.toDateKey() })
+                    .groupByTo(map) { it.history.last_read.toDateKey() }
                 byDay.flatMap { entry ->
                     val dateItem = DateSectionItem(entry.key, relativeTime, dateFormat)
                     entry.value.map { HistoryItem(it, dateItem) }
