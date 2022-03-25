@@ -34,7 +34,7 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
             return@coroutineScope Result.failure()
         }
 
-        if (pendingUpdates.isNotEmpty()) {
+        if (!pendingUpdates.isNullOrEmpty()) {
             createUpdateNotification(pendingUpdates.map { it.name })
         }
 

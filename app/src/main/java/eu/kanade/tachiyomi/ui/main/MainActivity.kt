@@ -361,8 +361,9 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
             // Extension updates
             try {
-                val pendingUpdates = ExtensionGithubApi().checkForUpdates(this@MainActivity)
-                preferences.extensionUpdatesCount().set(pendingUpdates.size)
+                ExtensionGithubApi().checkForUpdates(this@MainActivity)?.let { pendingUpdates ->
+                    preferences.extensionUpdatesCount().set(pendingUpdates.size)
+                }
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
             }
