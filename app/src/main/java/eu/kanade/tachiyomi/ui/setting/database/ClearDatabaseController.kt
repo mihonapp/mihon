@@ -88,11 +88,9 @@ class ClearDatabaseController :
         when (item.itemId) {
             R.id.action_select_all -> adapter.selectAll()
             R.id.action_select_inverse -> {
-                val currentSelection = adapter.selectedPositionsAsSet
-                val invertedSelection = (0..adapter.itemCount)
-                    .filterNot { currentSelection.contains(it) }
-                currentSelection.clear()
-                currentSelection.addAll(invertedSelection)
+                adapter.currentItems.forEachIndexed { index, _ ->
+                    adapter.toggleSelection(index)
+                }
             }
         }
         updateFab()
