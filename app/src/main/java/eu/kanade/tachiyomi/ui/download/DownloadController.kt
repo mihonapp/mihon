@@ -366,6 +366,14 @@ class DownloadController :
                     }
                     presenter.reorder(newDownloads)
                 }
+                R.id.move_to_top_series -> {
+                    val (selectedSeries, otherSeries) = adapter?.currentItems
+                        ?.filterIsInstance<DownloadItem>()
+                        ?.map(DownloadItem::download)
+                        ?.partition { item.download.manga.id == it.manga.id }
+                        ?: Pair(listOf<Download>(), listOf<Download>())
+                    presenter.reorder(selectedSeries + otherSeries)
+                }
                 R.id.cancel_download -> {
                     presenter.cancelDownload(item.download)
                 }
