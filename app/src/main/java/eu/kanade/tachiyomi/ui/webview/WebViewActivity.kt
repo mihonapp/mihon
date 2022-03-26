@@ -200,7 +200,7 @@ class WebViewActivity : BaseViewBindingActivity<WebviewActivityBinding>() {
     }
 
     private fun openInBrowser() {
-        openInBrowser(binding.webview.url!!)
+        openInBrowser(binding.webview.url!!, forceDefaultBrowser = true)
     }
 
     companion object {

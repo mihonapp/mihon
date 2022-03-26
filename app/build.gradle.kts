@@ -144,7 +144,6 @@ dependencies {
     implementation(androidx.annotation)
     implementation(androidx.appcompat)
     implementation(androidx.biometricktx)
-    implementation(androidx.browser)
     implementation(androidx.constraintlayout)
     implementation(androidx.coordinatorlayout)
     implementation(androidx.corektx)
