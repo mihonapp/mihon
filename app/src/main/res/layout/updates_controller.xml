@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
+            android:visibility="gone"
             app:fastScrollerBubbleEnabled="false"
             tools:visibility="visible" />
 

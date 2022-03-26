@@ -4,8 +4,9 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 
 abstract class BaseChaptersAdapter<T : IFlexible<*>>(
-    controller: OnChapterClickListener
-) : FlexibleAdapter<T>(null, controller, true) {
+    controller: OnChapterClickListener,
+    items: List<T>? = null,
+) : FlexibleAdapter<T>(items, controller, true) {
 
     /**
      * Listener for browse item clicks.
