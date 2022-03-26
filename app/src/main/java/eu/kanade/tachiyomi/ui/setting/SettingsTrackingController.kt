@@ -53,10 +53,10 @@ class SettingsTrackingController :
             titleRes = R.string.services
 
             trackPreference(trackManager.myAnimeList) {
-                activity?.openInBrowser(MyAnimeListApi.authUrl())
+                activity?.openInBrowser(MyAnimeListApi.authUrl(), forceDefaultBrowser = true)
             }
             trackPreference(trackManager.aniList) {
-                activity?.openInBrowser(AnilistApi.authUrl())
+                activity?.openInBrowser(AnilistApi.authUrl(), forceDefaultBrowser = true)
             }
             trackPreference(trackManager.kitsu) {
                 val dialog = TrackLoginDialog(trackManager.kitsu, R.string.email)
@@ -64,10 +64,10 @@ class SettingsTrackingController :
                 dialog.showDialog(router)
             }
             trackPreference(trackManager.shikimori) {
-                activity?.openInBrowser(ShikimoriApi.authUrl())
+                activity?.openInBrowser(ShikimoriApi.authUrl(), forceDefaultBrowser = true)
             }
             trackPreference(trackManager.bangumi) {
-                activity?.openInBrowser(BangumiApi.authUrl())
+                activity?.openInBrowser(BangumiApi.authUrl(), forceDefaultBrowser = true)
             }
 
             infoPreference(R.string.tracking_info)
