@@ -566,6 +566,20 @@ class ReaderPresenter(
     }
 
     /**
+     * Generate a filename for the given [manga] and [page]
+     */
+    private fun generateFilename(
+        manga: Manga,
+        page: ReaderPage,
+    ): String {
+        val chapter = page.chapter.chapter
+        val filenameSuffix = " - ${page.number}"
+        return DiskUtil.buildValidFilename(
+            "${manga.title} - ${chapter.name}".takeBytes(MAX_FILE_NAME_BYTES - filenameSuffix.byteSize())
+        ) + filenameSuffix
+    }
+
+    /**
      * Saves the image of this [page] on the pictures directory and notifies the UI of the result.
      * There's also a notification to allow sharing the image somewhere else or deleting it.
      */
@@ -577,12 +591,7 @@ class ReaderPresenter(
         val notifier = SaveImageNotifier(context)
         notifier.onClear()
 
-        // Generate filename
-        val chapter = page.chapter.chapter
-        val filenameSuffix = " - ${page.number}"
-        val filename = DiskUtil.buildValidFilename(
-            "${manga.title} - ${chapter.name}".takeBytes(MAX_FILE_NAME_BYTES - filenameSuffix.byteSize())
-        ) + filenameSuffix
+        val filename = generateFilename(manga, page)
 
         // Pictures directory.
         val relativePath = if (preferences.folderPerManga()) DiskUtil.buildValidFilename(manga.title) else ""
@@ -624,13 +633,15 @@ class ReaderPresenter(
         val context = Injekt.get<Application>()
         val destDir = context.cacheImageDir
 
+        val filename = generateFilename(manga, page)
+
         try {
             presenterScope.launchIO {
                 destDir.deleteRecursively()
                 val uri = imageSaver.save(
                     image = Image.Page(
                         inputStream = page.stream!!,
-                        name = manga.title,
+                        name = filename,
                         location = Location.Cache
                     )
                 )
