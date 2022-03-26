@@ -84,7 +84,7 @@
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">自動更新的裝置限制</string>
     <string name="charging">充電時</string>
-    <string name="pref_update_only_non_completed">連載中的叢書</string>
+    <string name="pref_update_only_non_completed">已完結的叢書</string>
     <string name="pref_start_screen">起始畫面</string>
     <string name="default_category">預設分類</string>
     <string name="default_category_summary">總是詢問</string>
@@ -475,9 +475,6 @@
         <item quantity="other">第 %1$s 章以及另外 %2$d 章</item>
     </plurals>
     <string name="whats_new">更新日誌</string>
-    <plurals name="notification_update_error">
-        <item quantity="other">有 %1$d 項更新失敗</item>
-    </plurals>
     <string name="unknown_status">連載狀態不明</string>
     <string name="unknown_author">佚名</string>
     <string name="action_download_unread">下載未讀章節</string>
@@ -572,7 +569,7 @@
     <string name="exclude">排除：%s</string>
     <string name="include">包含：%s</string>
     <string name="none">無</string>
-    <string name="action_show_errors">輕觸以檢視錯誤資訊</string>
+    <string name="action_show_errors">輕觸以檢視詳細資訊</string>
     <string name="update_check_eol">不再支援此 Android 版本</string>
     <string name="clipboard_copy_error">無法複製至剪貼簿</string>
     <string name="backup_restore_content_full">即將還原備份中的資料。
@@ -678,10 +675,9 @@
     <string name="database_clean">資料庫一塵不染</string>
     <string name="extension_api_error">擴充套件清單取得失敗</string>
     <string name="privacy_policy">隱私權政策</string>
-    <string name="pref_update_only_completely_read">全數閱畢的叢書</string>
-    <string name="pref_library_update_manga_restriction">書櫃更新限制</string>
-    <string name="only_update_restrictions">僅更新：%s</string>
-    <string name="library_errors_help">欲瞭解如何修復書櫃更新錯誤，請參閱 %1$s</string>
+    <string name="pref_update_only_completely_read">有未讀的章節</string>
+    <string name="pref_library_update_manga_restriction">略過更新</string>
+    <string name="library_errors_help">如欲瞭解如何修復書櫃更新錯誤，請參閱 %1$s</string>
     <string name="save_chapter_as_cbz">以 CBZ 封存檔格式儲存</string>
     <string name="on_hiatus">休刊中</string>
     <string name="cancelled">已取消</string>
@@ -689,4 +685,21 @@
     <string name="action_faq_and_guides">常見問題與指南</string>
     <string name="backup_restore_invalid_uri">錯誤：URI 空白</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">顯示漫畫</string>
+    <string name="pref_landscape_zoom">縮放橫向圖片</string>
+    <string name="pref_navigate_pan">平移圖片而後翻頁</string>
+    <string name="action_display_cover_only_grid">純封面格狀</string>
+    <string name="confirm_manga_add_duplicate">書櫃中已有一個來自不同來源 (%1$s) 的同名項目。
+\n
+\n你仍欲繼續嗎？</string>
+    <string name="action_filter_started">已開始閱讀</string>
+    <string name="pref_update_only_started">無已讀的章節</string>
+    <string name="skipped_reason_completed">由於叢書連載已完結，因此略過</string>
+    <string name="skipped_reason_not_caught_up">由於尚有未讀的章節，因此略過</string>
+    <string name="skipped_reason_not_started">由於尚無已讀的章節，因此略過</string>
+    <string name="rotation_reverse_portrait">顛倒直向</string>
+    <string name="learn_more">瞭解詳情</string>
+    <string name="notification_update_error">%1$d 項更新失敗</string>
+    <string name="notification_update_skipped">已略過 %1$d 項更新</string>
+    <string name="channel_skipped">略過</string>
 </resources>

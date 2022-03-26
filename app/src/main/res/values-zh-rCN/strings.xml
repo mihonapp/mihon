@@ -87,7 +87,7 @@
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">设备自动更新限制</string>
     <string name="charging">正在充电</string>
-    <string name="pref_update_only_non_completed">连载中</string>
+    <string name="pref_update_only_non_completed">已完结连载</string>
     <string name="pref_auto_update_manga_sync">阅读后更新进度</string>
     <string name="pref_start_screen">起始页面</string>
     <string name="default_category">默认分类</string>
@@ -449,9 +449,6 @@
     <string name="action_display_unread_badge">未读章节</string>
     <string name="pref_refresh_library_covers">刷新书架漫画封面</string>
     <string name="tracking_info">将章节进度单向同步到追踪服务。点击「追踪」按钮以设置漫画的追踪源。</string>
-    <plurals name="notification_update_error">
-        <item quantity="other">%1$d 本漫画更新失败</item>
-    </plurals>
     <string name="unofficial_extension_message">此扩展插件不是由官方 Tachiyomi 所提供。</string>
     <string name="ext_unofficial">非官方</string>
     <string name="sort_by_upload_date">按上传日期</string>
@@ -575,7 +572,7 @@
     <string name="pref_library_update_categories_details">应用不会更新位于排除分类的漫画，即使它们同样位于包含分类。</string>
     <string name="pref_download_new_categories_details">应用不会下载位于排除分类的漫画，即使它们同样位于包含分类。</string>
     <string name="pref_category_auto_download">自动下载</string>
-    <string name="action_show_errors">轻按查看错误详情</string>
+    <string name="action_show_errors">轻按查看详情</string>
     <string name="update_check_eol">应用不再支持此 Android 版本</string>
     <string name="clipboard_copy_error">无法复制到剪贴板</string>
     <string name="rotation_landscape">横屏</string>
@@ -678,9 +675,8 @@
     <string name="clear_database_source_item_count">数据库有 %1$d 本漫画不在书架中</string>
     <string name="extension_api_error">无法获取扩展插件列表</string>
     <string name="privacy_policy">隐私政策</string>
-    <string name="pref_update_only_completely_read">全读完的连载</string>
-    <string name="pref_library_update_manga_restriction">漫画库更新限制</string>
-    <string name="only_update_restrictions">仅更新：%s</string>
+    <string name="pref_update_only_completely_read">有未读完的章节</string>
+    <string name="pref_library_update_manga_restriction">跳过更新</string>
     <string name="library_errors_help">有关如何修复库更新错误的帮助，请参阅 %1$s</string>
     <string name="save_chapter_as_cbz">保存为 CBZ 存档</string>
     <string name="publishing_finished">发布完成</string>
@@ -689,4 +685,21 @@
     <string name="action_faq_and_guides">常见问题和指南</string>
     <string name="backup_restore_invalid_uri">错误：空 URI</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">显示漫画</string>
+    <string name="action_display_cover_only_grid">封面网格</string>
+    <string name="pref_landscape_zoom">缩放竖屏图片</string>
+    <string name="pref_navigate_pan">平移图片而非翻页</string>
+    <string name="confirm_manga_add_duplicate">库中有一个名称相同但图源不同（%1$s）的条目。
+\n
+\n你仍希望继续吗？</string>
+    <string name="action_filter_started">已开始</string>
+    <string name="pref_update_only_started">无已读章节</string>
+    <string name="skipped_reason_completed">跳过，因连载完结</string>
+    <string name="skipped_reason_not_caught_up">跳过，因有未读章节</string>
+    <string name="skipped_reason_not_started">跳过，因无已读章节</string>
+    <string name="learn_more">了解更多</string>
+    <string name="notification_update_error">%1$d 个更新失败了</string>
+    <string name="notification_update_skipped">已跳过 %1$d 个更新</string>
+    <string name="channel_skipped">已跳过</string>
+    <string name="rotation_reverse_portrait">反转竖屏</string>
 </resources>

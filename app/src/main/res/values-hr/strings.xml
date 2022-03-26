@@ -37,7 +37,7 @@
     </plurals>
     <string name="default_category_summary">Uvijek pitaj</string>
     <string name="default_category">Standardna kategorija</string>
-    <string name="pref_update_only_non_completed">Nastavljajuće serije</string>
+    <string name="pref_update_only_non_completed">Je kompletna serija</string>
     <string name="charging">Punjenje</string>
     <string name="pref_library_update_restriction">Ograničenja uređaja za automatska ažuriranja</string>
     <string name="update_weekly">Tjedno</string>
@@ -53,7 +53,7 @@
     <string name="pref_library_columns">Broj elemenata po retku</string>
     <string name="pref_category_display">Prikaz</string>
     <string name="hide_notification_content">Sakrij sadržaj obavijesti</string>
-    <string name="secure_screen_summary">Sakrij sadržaj programa prilikom prebacivanja između programa i blokiraj snimke ekrana</string>
+    <string name="secure_screen_summary">Siguran ekran skriva sadržaj programa prilikom prebacivanja između programa i blokira snimke ekrana</string>
     <string name="secure_screen">Siguran ekran</string>
     <string name="lock_when_idle">Zaključaj prilikom mirovanja</string>
     <string name="lock_with_biometrics">Zatraži otključavanje</string>
@@ -198,7 +198,7 @@
     <string name="webtoon_side_padding_20">20 %</string>
     <string name="webtoon_side_padding_15">15 %</string>
     <string name="webtoon_side_padding_10">10 %</string>
-    <string name="webtoon_side_padding_0">Ništa</string>
+    <string name="webtoon_side_padding_0">Bez</string>
     <string name="pref_webtoon_side_padding">Odmak od ruba</string>
     <string name="pref_category_reading">Čitanje</string>
     <string name="pref_always_show_chapter_transition">Uvijek prikaži prijelaze između poglavlja</string>
@@ -478,11 +478,6 @@
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
     <string name="action_display_unread_badge">Nepročitana poglavlja</string>
     <string name="action_migrate">Migriraj</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">%1$d neuspjelo ažuriranje</item>
-        <item quantity="few">%1$d neuspjela ažuriranja</item>
-        <item quantity="other">%1$d neuspjelih ažuriranja</item>
-    </plurals>
     <string name="action_disable_all">Deaktiviraj sve</string>
     <string name="action_enable_all">Aktiviraj sve</string>
     <string name="page_list_empty_error">Nema stranica</string>
@@ -599,7 +594,7 @@
     <string name="include">Uključi: %s</string>
     <string name="pref_library_update_categories_details">Manga u isključenim kategorijama neće se ažurirati čak niti ako se također nalaze u uključenim kategorijama.</string>
     <string name="action_sort_chapter_fetch_date">Datum preuzimanja</string>
-    <string name="action_show_errors">Dodirni za prikaz detalja greške</string>
+    <string name="action_show_errors">Dodirni za prikaz detalja</string>
     <string name="update_check_eol">Ove verzija androida više nije podržana</string>
     <string name="clipboard_copy_error">Kopiranje nije uspješno</string>
     <string name="rotation_landscape">Ležeće</string>
@@ -686,7 +681,6 @@
     <string name="backup_info">Preporučuje se izrada automatskih sigurnosnih kopija. Čuvaj kopije i na drugim mjestima.</string>
     <string name="pref_tablet_ui_mode">Korisničko sučelje tableta</string>
     <string name="notification_size_warning">Upozorenje: velika ažuriranja štete izvorima i mogu usporiti ažuriranja i povećati potrošnju baterije</string>
-    <string name="only_update_restrictions">Ažuriraj samo: %s</string>
     <string name="pref_library_update_show_tab_badge">Prikaži broj nepročitanih na ikoni Ažuriranja</string>
     <string name="pref_low">Niska</string>
     <string name="label_background_activity">Aktivnost u pozadini</string>
@@ -694,12 +688,12 @@
     <string name="pref_auto_clear_chapter_cache">Izbriši predmemoriju poglavlja tijekom zatvaranja aplikacije</string>
     <string name="channel_app_updates">Ažuriranja aplikacije</string>
     <string name="database_clean">Čišćenje baze podataka</string>
-    <string name="pref_update_only_completely_read">Potpuno pročitane serije</string>
+    <string name="pref_update_only_completely_read">Sadrži nepročitana poglavlja</string>
     <string name="enhanced_services">Poboljšane usluge</string>
     <string name="enhanced_tracking_info">Usluge koje pružaju poboljšane funkcije za određene izvore. Manga se automatski prati kad se doda u tvoju biblioteku.</string>
     <string name="action_track">Prati</string>
     <string name="privacy_policy">Politika privatnosti</string>
-    <string name="pref_library_update_manga_restriction">Ograničenja za ažuriranje biblioteke</string>
+    <string name="pref_library_update_manga_restriction">Preskoči aktualiziranje</string>
     <string name="extension_api_error">Neuspjelo preuzimanje popisa proširenja</string>
     <string name="ext_installer_pref">Instaler</string>
     <string name="ext_installer_legacy">Stari način</string>
@@ -712,5 +706,24 @@
     <string name="on_hiatus">Prekid</string>
     <string name="library_errors_help">Za pomoć o tome kako popraviti greške aktualiziranja biblioteke, pogledaj %1$s</string>
     <string name="save_chapter_as_cbz">Spremi kao CBZ arhivu</string>
-    <string name="action_faq_and_guides">Često pitana pitanja i vodiči</string>
+    <string name="action_faq_and_guides">ČPP i vodiči</string>
+    <string name="action_show_manga">Prikaži manga</string>
+    <string name="action_display_cover_only_grid">Samo naslovnice</string>
+    <string name="backup_restore_invalid_uri">Greška: prazan URL</string>
+    <string name="webtoon_side_padding_5">5 %</string>
+    <string name="confirm_manga_add_duplicate">U biblioteci imaš unos s istim imenom ali iz drugog izvora (%1$s).
+\n
+\nŽeliš li svejedno nastaviti\?</string>
+    <string name="pref_navigate_pan">Navigiraj pomicanjem slike</string>
+    <string name="pref_landscape_zoom">Promijeni uvećanje slike u ležećem formatu</string>
+    <string name="action_filter_started">Započeto</string>
+    <string name="pref_update_only_started">Bez pročitanih poglavlja</string>
+    <string name="skipped_reason_completed">Preskočeno, jer je serija kompletna</string>
+    <string name="skipped_reason_not_started">Preskočeno, jer nijedno poglavlje nije pročitano</string>
+    <string name="skipped_reason_not_caught_up">Preskočeno, jer postoje nepročitana poglavlja</string>
+    <string name="notification_update_error">Nauspjela aktualiziranja: %1$d</string>
+    <string name="learn_more">Saznaj više</string>
+    <string name="channel_skipped">Preskočeno</string>
+    <string name="notification_update_skipped">Preskočena aktualiziranja: %1$d</string>
+    <string name="rotation_reverse_portrait">Preokrenuto uspravno</string>
 </resources>

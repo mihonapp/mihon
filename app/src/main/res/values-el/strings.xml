@@ -87,7 +87,7 @@
     <string name="all">Όλα</string>
     <string name="pref_library_update_restriction">Περιορισμοί αυτόματων ενημερώσεων συσκευής</string>
     <string name="charging">Φορτίζει</string>
-    <string name="pref_update_only_non_completed">Σειρές σε εξέλιξη</string>
+    <string name="pref_update_only_non_completed">Ολοκληρωμένη σειρά</string>
     <string name="pref_auto_update_manga_sync">Ενημέρωση προόδου μετά την ανάγνωση</string>
     <string name="pref_start_screen">Οθόνη εκκίνησης</string>
     <string name="default_category">Προεπιλεγμένη κατηγορία</string>
@@ -457,10 +457,6 @@
     <string name="action_display_unread_badge">Μη αναγνωσμένα κεφάλαια</string>
     <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις manga από το κουμπί παρακολούθησης τους.</string>
     <string name="pref_refresh_library_covers">Ανανέωση εξώφυλλων manga της βιβλιοθήκης</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 ενημέρωση απέτυχε</item>
-        <item quantity="other">%1$d ενημερώσεις απέτυχαν</item>
-    </plurals>
     <string name="unofficial_extension_message">Αυτή η επέκταση δεν προέρχεται από την επίσημη λίστα επεκτάσεων Tachiyomi.</string>
     <string name="ext_unofficial">Ανεπίσημη</string>
     <string name="sort_by_upload_date">Από ημερομηνία μεταφόρτωσης</string>
@@ -587,7 +583,7 @@
     <string name="pref_download_new_categories_details">Τα Manga σε εξαιρούμενες κατηγορίες δεν θα ληφθούν ακόμα κι αν ανήκουν και σε κατηγορίες που περιλαμβάνονται.</string>
     <string name="pref_category_auto_download">Αυτόματη λήψη</string>
     <string name="pref_library_update_categories_details">Τα manga στις αποκλεισμένες κατηγορίες δεν θα ενημερώνονται ακόμη και αν βρίσκονται επίσης στις συμπεριλαμβανόμενες κατηγορίες.</string>
-    <string name="action_show_errors">Πατήστε για να δείτε τις λεπτομέρειες σφάλματος</string>
+    <string name="action_show_errors">Πατήστε για να δείτε λεπτομέρειες</string>
     <string name="update_check_eol">Αυτή η έκδοση Android δεν υποστηρίζεται πλέον</string>
     <string name="clipboard_copy_error">Απέτυχε η αντιγραφή στο πρόχειρο</string>
     <string name="rotation_landscape">Οριζόντια</string>
@@ -691,9 +687,8 @@
     <string name="database_clean">Καθαρισμός βάσης δεδομένων</string>
     <string name="extension_api_error">Απέτυχε η λήψη λίστας επεκτάσεων</string>
     <string name="privacy_policy">Πολιτική απορρήτου</string>
-    <string name="pref_library_update_manga_restriction">Περιορισμοί ενημέρωσης βιβλιοθήκης</string>
-    <string name="pref_update_only_completely_read">Πλήρως διαβασμένη σειρά</string>
-    <string name="only_update_restrictions">Μόνο ενημέρωση: %s</string>
+    <string name="pref_library_update_manga_restriction">Παράλειψη ενημέρωσης</string>
+    <string name="pref_update_only_completely_read">Έχει αδιάβαστα κεφάλαια</string>
     <string name="library_errors_help">Για βοήθεια σχετικά με τον τρόπο διόρθωσης σφαλμάτων ενημέρωσης βιβλιοθήκης, ανατρέξτε στο %1$s</string>
     <string name="save_chapter_as_cbz">Αποθήκευση ως αρχείο CBZ</string>
     <string name="cancelled">Ακυρώθηκε</string>
@@ -702,4 +697,21 @@
     <string name="action_faq_and_guides">Συχνές ερωτήσεις και οδηγοί</string>
     <string name="backup_restore_invalid_uri">Σφάλμα: κενό URI</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">Εμφάνιση manga</string>
+    <string name="pref_landscape_zoom">Ζουμ οριζόντιας εικόνας</string>
+    <string name="confirm_manga_add_duplicate">Έχετε μια καταχώρηση στη βιβλιοθήκη σας με το ίδιο όνομα αλλά από διαφορετική πηγή (%1$s).
+\n
+\nΘέλετε ακόμα να συνεχίσετε;</string>
+    <string name="action_display_cover_only_grid">Πλέγμα μόνο με εξώφυλλα</string>
+    <string name="action_filter_started">Ξεκίνησε</string>
+    <string name="pref_update_only_started">Δεν έχει διαβασμένα κεφάλαια</string>
+    <string name="pref_navigate_pan">Πλοήγηση για οριζόντια μετακίνηση</string>
+    <string name="skipped_reason_completed">Παραλείφθηκε επειδή η σειρά ολοκληρώθηκε</string>
+    <string name="skipped_reason_not_caught_up">Παραβλέφθηκε επειδή υπάρχουν μη αναγνωσμένα κεφάλαια</string>
+    <string name="skipped_reason_not_started">Παραλείπεται επειδή δεν έχουν διαβαστεί κεφάλαια</string>
+    <string name="notification_update_error">%1$d ενημέρωση(ες) απέτυχε(-αν)</string>
+    <string name="learn_more">Μάθετε περισσότερα</string>
+    <string name="channel_skipped">Παραλήφθηκαν</string>
+    <string name="notification_update_skipped">%1$d ενημέρωση(εις) παραλείφθηκε(-αν)</string>
+    <string name="rotation_reverse_portrait">Αντίστροφο πορτρέτο</string>
 </resources>

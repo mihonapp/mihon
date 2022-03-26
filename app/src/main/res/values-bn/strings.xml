@@ -464,10 +464,6 @@
         <item quantity="one">এক্সটেনশন হালনাগাদ উপলব্ধ</item>
         <item quantity="other">%d এক্সটেনশন হালনাগাদ উপলব্ধ</item>
     </plurals>
-    <plurals name="notification_update_error">
-        <item quantity="one">১টি হালনাগাদ ব্যর্থ হয়েছে</item>
-        <item quantity="other">%1$dটি হালনাগাদ ব্যর্থ হয়েছে</item>
-    </plurals>
     <string name="notification_chapters_multiple">অধ্যায়গুলি %1$s</string>
     <string name="notification_chapters_single_and_more">অধ্যায় %1$s এবং %2$d আরও</string>
     <string name="notification_chapters_single">অধ্যায় %1$s</string>

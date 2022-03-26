@@ -323,10 +323,6 @@
     <string name="file_select_cover">Хуплашка суйла</string>
     <string name="notification_first_add_to_library">Ҫакна тӑвас умӗн манкка санӑн вулавӑша хуш-ха</string>
     <string name="notification_cover_update_failed">Хуплашкана ҫӗнетеймерӗ</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 ҫӗнетӳ йӑнӑшӗ</item>
-        <item quantity="other">%1$d ҫӗнетӳ йӑнӑшӗ</item>
-    </plurals>
     <string name="notification_chapters_single_and_more">%1$s сыпӑкӗ тата ытти %2$d</string>
     <string name="notification_chapters_multiple">%1$s сыпӑкӗсем</string>
     <plurals name="notification_chapters_multiple_and_more">

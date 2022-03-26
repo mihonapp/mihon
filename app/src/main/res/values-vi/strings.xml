@@ -77,7 +77,7 @@
     <string name="all">Tất cả</string>
     <string name="pref_library_update_restriction">Những hạn chế cập nhật thiết bị tự động</string>
     <string name="charging">Đang sạc</string>
-    <string name="pref_update_only_non_completed">Bộ truyện đang tiến hành</string>
+    <string name="pref_update_only_non_completed">Là bộ truyện hoàn thành</string>
     <string name="pref_auto_update_manga_sync">Cập nhật tiến triển sau khi đọc</string>
     <string name="pref_start_screen">Màn hình khởi động</string>
     <!-- Reader section -->
@@ -390,7 +390,7 @@
     <string name="pref_category_library_update">Cập nhật toàn bộ</string>
     <string name="pref_category_display">Hiển thị</string>
     <string name="hide_notification_content">Ẩn nội dung thông báo</string>
-    <string name="secure_screen_summary">Ẩn nội dung khi chuyển đổi ứng dụng và chặn chụp ảnh màn hình</string>
+    <string name="secure_screen_summary">Bảo vệ màn hình sẽ ẩn nội dung khi chuyển đổi ứng dụng và chặn chụp ảnh màn hình</string>
     <string name="secure_screen">Bảo vệ màn hình</string>
     <plurals name="lock_after_mins">
         <item quantity="other">Sau %1$s phút</item>
@@ -505,9 +505,6 @@
     <string name="information_webview_required">Tachiyomi yêu cầu phải có WebView</string>
     <string name="download_notifier_download_finish">Tải xuống hoàn tất</string>
     <string name="update_check_eol">Phiên bản Android này không còn được hỗ trợ</string>
-    <plurals name="notification_update_error">
-        <item quantity="other">Cập nhật %1$d thất bại</item>
-    </plurals>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="other">Chương %1$s và %2$d</item>
     </plurals>
@@ -614,7 +611,7 @@
     <string name="pref_category_nsfw_content">Nguồn NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Hiển thị trong các danh sách nguồn và tiện ích mở rộng</string>
     <string name="pref_hide_bottom_bar_on_scroll">Ẩn thanh dưới cùng khi kéo cuộn</string>
-    <string name="action_show_errors">Chạm để hiện toàn bộ chi tiết lỗi</string>
+    <string name="action_show_errors">Chạm để xem toàn bộ chi tiết</string>
     <string name="action_desc">Giảm dần</string>
     <string name="action_asc">Tăng dần</string>
     <string name="action_order_by_chapter_number">Theo số chương</string>
@@ -712,9 +709,8 @@
     <string name="database_clean">Dọn cơ sở dữ liệu</string>
     <string name="extension_api_error">Không tải được danh sách tiện ích mở rộng</string>
     <string name="privacy_policy">Chính sách quyền riêng tư</string>
-    <string name="pref_library_update_manga_restriction">Những hạn chế về cập nhật thư viện</string>
-    <string name="pref_update_only_completely_read">Bộ truyện được đọc toàn bộ</string>
-    <string name="only_update_restrictions">Chỉ cập nhật: %s</string>
+    <string name="pref_library_update_manga_restriction">Bỏ qua cập nhật</string>
+    <string name="pref_update_only_completely_read">Có chương chưa đọc</string>
     <string name="publishing_finished">Xuất bản đã hoàn thành</string>
     <string name="cancelled">Đã hủy</string>
     <string name="on_hiatus">Bị gián đoạn</string>
@@ -722,4 +718,22 @@
     <string name="save_chapter_as_cbz">Lưu dưới dạng lưu trữ CBZ</string>
     <string name="backup_restore_invalid_uri">Lỗi: trống URI</string>
     <string name="action_faq_and_guides">Câu Hỏi Thờng Gặp và Hướng Dẫn</string>
+    <string name="pref_update_only_started">Không có chương đã đọc</string>
+    <string name="notification_update_skipped">%1$d cập nhật được bỏ qua</string>
+    <string name="learn_more">Tìm hiểu thêm</string>
+    <string name="pref_landscape_zoom">Phóng ảnh phong cảnh</string>
+    <string name="action_show_manga">Hiện truyện manga</string>
+    <string name="webtoon_side_padding_5">5%</string>
+    <string name="confirm_manga_add_duplicate">Bạn đang có một tiếp nhận ở trong thư viện với cùng một tên nhưng lại đến từ một nguồn khác (%1$s).
+\n
+\nBạn vẫn muốn tiếp tục chứ\?</string>
+    <string name="action_filter_started">Đã bắt đầu</string>
+    <string name="pref_navigate_pan">Điều hướng tới quay chiều</string>
+    <string name="action_display_cover_only_grid">Lưới chỉ mỗi bìa</string>
+    <string name="rotation_reverse_portrait">Đảo ngược chân dung</string>
+    <string name="notification_update_error">%1$d cập nhật thất bại</string>
+    <string name="skipped_reason_completed">Đã bỏ qua vì bộ truyện đã hoàn thành</string>
+    <string name="skipped_reason_not_caught_up">Đã bỏ qua vì vẫn còn chương chưa đọc</string>
+    <string name="skipped_reason_not_started">Đã bỏ qua vì không có chương được đọc</string>
+    <string name="channel_skipped">Bỏ qua</string>
 </resources>

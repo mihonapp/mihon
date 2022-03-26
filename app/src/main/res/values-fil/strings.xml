@@ -234,7 +234,7 @@
     <string name="default_category">Panimulang kategorya</string>
     <string name="pref_library_update_refresh_metadata_summary">Maghanap ng mga bagong cover at detalye kapag nag-a-update ng Aklatan</string>
     <string name="pref_library_update_refresh_metadata">Kusang sariwain ang metadata</string>
-    <string name="pref_update_only_non_completed">Patuloy na serye</string>
+    <string name="pref_update_only_non_completed">Tapos na serye</string>
     <string name="charging">Naka-charge</string>
     <string name="pref_library_update_restriction">Kondisyon sa kusang pag-update</string>
     <string name="update_weekly">Linggo-linggo</string>
@@ -315,10 +315,6 @@
     <string name="file_select_cover">Pumili ng cover</string>
     <string name="notification_first_add_to_library">Mangyaring idagdag muna ang manga sa Aklatan bago gawin ito</string>
     <string name="notification_cover_update_failed">Bigong mapalitan ang cover</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">Bigo ang isang update</item>
-        <item quantity="other">Bigo ang %1$d (na) update</item>
-    </plurals>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Mga kabanata %1$s at isa pa</item>
         <item quantity="other">Mga kabanata %1$s at %2$d pa</item>
@@ -587,7 +583,7 @@
     <string name="none">Wala</string>
     <string name="pref_library_update_categories_details">Di ia-update ang mga manga na nasa mga kategoryang di-kasama kahit na nasa kasamang kategorya rin ito.</string>
     <string name="action_sort_chapter_fetch_date">Petsa kinuha</string>
-    <string name="action_show_errors">I-tap para makita ang detalye ng error</string>
+    <string name="action_show_errors">Pindutin para makita ang detalye</string>
     <string name="update_check_eol">Di na suportado ang bersyong ito ng Android</string>
     <string name="clipboard_copy_error">Bigong makopya sa clipboard</string>
     <string name="rotation_landscape">Pahiga</string>
@@ -691,10 +687,9 @@
     <string name="database_clean">Linisin ang database</string>
     <string name="extension_api_error">Bigong makuha ang mga dugtong</string>
     <string name="privacy_policy">Patakaran sa Pagkapribado</string>
-    <string name="only_update_restrictions">I-update lang: %s</string>
     <string name="library_errors_help">Para makahingi ng tulong sa pag-ayos sa mga error sa pag-update ng Aklatan, tingnan ang %1$s</string>
-    <string name="pref_update_only_completely_read">Natapos nang basahin na serye</string>
-    <string name="pref_library_update_manga_restriction">Kondisyon sa pag-update ng Aklatan</string>
+    <string name="pref_update_only_completely_read">May hindi pa nabasang kabanata</string>
+    <string name="pref_library_update_manga_restriction">Lakdawan ang pag-update</string>
     <string name="save_chapter_as_cbz">I-save bilang CBZ archive</string>
     <string name="publishing_finished">Tapos na\'ng mailathala</string>
     <string name="on_hiatus">Naka-hiatus</string>
@@ -702,4 +697,21 @@
     <string name="backup_restore_invalid_uri">Error: walang URI</string>
     <string name="action_faq_and_guides">Mga Madalas Itanong at Gabay</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">Ipakita ang manga</string>
+    <string name="action_filter_started">Nasimulan</string>
+    <string name="action_display_cover_only_grid">Pabalat lang</string>
+    <string name="skipped_reason_completed">Nilaktawan dahil tapos na ang serye</string>
+    <string name="pref_update_only_started">Wala pang nababasang kabanata</string>
+    <string name="skipped_reason_not_caught_up">Nilaktawan dahil may hindi pa nababasang kabanata</string>
+    <string name="skipped_reason_not_started">Nilaktawan dahil wala pang nababasang kabanata</string>
+    <string name="confirm_manga_add_duplicate">May entry ka sa Aklatan na may kaparehong pangalan pero galing sa ibang source (%1$s).
+\n
+\nGusto mo pa rin bang magpatuloy\?</string>
+    <string name="pref_landscape_zoom">Mag-zoom sa pahigang larawan</string>
+    <string name="pref_navigate_pan">Gumalaw para mag-pan</string>
+    <string name="learn_more">Matuto pa</string>
+    <string name="channel_skipped">Nilaktawan</string>
+    <string name="notification_update_error">Pumalya ang %1$d (na) update</string>
+    <string name="rotation_reverse_portrait">Baligtad na patayo</string>
+    <string name="notification_update_skipped">Nilaktawan ang %1$d (na) update</string>
 </resources>

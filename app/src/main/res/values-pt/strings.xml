@@ -490,10 +490,6 @@
     <string name="unofficial_extension_message">Esta extensão não vem da lista oficial de extensões do Tachiyomi.</string>
     <string name="pref_show_reading_mode_summary">Mostra brevemente o modo atual quando o leitor é aberto</string>
     <string name="page_list_empty_error">Nenhuma página encontrada</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 atualização falhou</item>
-        <item quantity="other">%1$d atualizações falharam</item>
-    </plurals>
     <string name="sort_by_upload_date">Por data de envio</string>
     <string name="tabs_header">Abas</string>
     <string name="badges_header">Distintivos</string>
@@ -689,7 +685,6 @@
     <string name="pref_category_appearance">Aparência</string>
     <string name="connected_to_wifi">Só com Wi-Fi</string>
     <string name="update_72hour">A cada 3 dias</string>
-    <string name="only_update_restrictions">Apenas atualizar: %s</string>
     <string name="ext_update_all">Atualizar tudo</string>
     <string name="ext_app_info">Informações da app</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Instale e inicie o Shizuku para utilizá-lo como o instalador de extensões.</string>

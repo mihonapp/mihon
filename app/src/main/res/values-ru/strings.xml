@@ -157,7 +157,7 @@
     <string name="pref_rotation_type">Ориентация по умолчанию</string>
     <string name="pref_show_page_number">Номер страницы</string>
     <string name="pref_start_screen">Начальный экран</string>
-    <string name="pref_update_only_non_completed">Онгоинг</string>
+    <string name="pref_update_only_non_completed">Завершенная серия</string>
     <string name="pref_viewer_type">Режим чтения</string>
     <string name="pref_zoom_start">Стартовая позиция увеличения</string>
     <string name="reading">Читаю</string>
@@ -342,7 +342,7 @@
     <string name="theme_light">Выключен</string>
     <string name="theme_dark">Включён</string>
     <string name="theme_system">Система</string>
-    <string name="pref_manage_notifications">Управлять уведомлениями</string>
+    <string name="pref_manage_notifications">Управление уведомлениями</string>
     <string name="pref_category_security">Безопасность</string>
     <string name="lock_with_biometrics">Блокировка биометрией</string>
     <string name="lock_when_idle">Блокировать при бездействии</string>
@@ -472,12 +472,6 @@
     </plurals>
     <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сервисах отслеживания. Настройте отслеживание, при помощи кнопки «Отслеживание».</string>
     <string name="action_display_unread_badge">Непрочитанные главы</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">%1$d неудачное обновление</item>
-        <item quantity="few">%1$d неудачных обновления</item>
-        <item quantity="many">%1$d неудачных обновлений</item>
-        <item quantity="other">%1$d неудачных обновлений</item>
-    </plurals>
     <string name="unofficial_extension_message">Это расширение не входит в официальный список расширений Tachiyomi.</string>
     <string name="ext_unofficial">Неофициальное</string>
     <string name="sort_by_upload_date">Дата загрузки</string>
@@ -610,7 +604,7 @@
     <string name="pref_download_new_categories_details">Серия не будет загружаться в исключённых категориях, даже если находится во включённых категориях.</string>
     <string name="pref_library_update_categories_details">Серия не будет обновляться в исключённых категориях, даже если находится во включённых категориях.</string>
     <string name="pref_category_auto_download">Автозагрузка</string>
-    <string name="action_show_errors">Нажать для просмотра деталей ошибки</string>
+    <string name="action_show_errors">Нажмите, чтобы увидеть подробности</string>
     <string name="update_check_eol">Эта версия Android больше не поддерживается</string>
     <string name="clipboard_copy_error">Не удалось скопировать в буфер обмена</string>
     <string name="rotation_landscape">Альбомная</string>
@@ -716,9 +710,8 @@
     <string name="database_clean">Очистка базы данных</string>
     <string name="extension_api_error">Не удалось получить список расширений</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
-    <string name="pref_update_only_completely_read">Прочитано</string>
-    <string name="pref_library_update_manga_restriction">Ограничения обновлений для библиотеки</string>
-    <string name="only_update_restrictions">Обновлять только: %s</string>
+    <string name="pref_update_only_completely_read">Имеет непрочитанные главы</string>
+    <string name="pref_library_update_manga_restriction">Пропускать обновление</string>
     <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки, нажать %1$s</string>
     <string name="save_chapter_as_cbz">Сохранить как архив CBZ</string>
     <string name="cancelled">Отменено</string>
@@ -727,4 +720,21 @@
     <string name="action_faq_and_guides">Руководства и FAQ</string>
     <string name="backup_restore_invalid_uri">Ошибка: Пустой URI</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">Показать серию</string>
+    <string name="confirm_manga_add_duplicate">В вашей библиотеке есть серия с таким же названием, но из другого источника (%1$s).
+\n
+\nВы по-прежнему хотите продолжить\?</string>
+    <string name="action_display_cover_only_grid">Сетка без названий</string>
+    <string name="pref_navigate_pan">Перейти к панораме</string>
+    <string name="pref_landscape_zoom">Увеличивать изображение по горизонтали</string>
+    <string name="action_filter_started">Начато</string>
+    <string name="pref_update_only_started">Серия не начата</string>
+    <string name="skipped_reason_completed">Пропущено, так как серия завершена</string>
+    <string name="skipped_reason_not_caught_up">Пропущено, потому что есть непрочитанные главы</string>
+    <string name="skipped_reason_not_started">Пропущено, потому что серия не начата</string>
+    <string name="learn_more">Подробнее</string>
+    <string name="channel_skipped">Пропущено</string>
+    <string name="notification_update_error">%1$d обновление(ий) не удалось</string>
+    <string name="notification_update_skipped">%1$d обновление(ий) пропущено</string>
+    <string name="rotation_reverse_portrait">Портретная наоборот</string>
 </resources>

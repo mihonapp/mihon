@@ -87,7 +87,7 @@
     <string name="all">Totus</string>
     <string name="pref_library_update_restriction">Restritziones de su dispositivu a s\'agiornamentu automàticu</string>
     <string name="charging">Carrighende</string>
-    <string name="pref_update_only_non_completed">Sèries in cursu</string>
+    <string name="pref_update_only_non_completed">Est una sèrie acabada</string>
     <string name="pref_auto_update_manga_sync">Agiorna su progressu a pustis de sa leghidura</string>
     <string name="pref_start_screen">Ischermada de incumintzu</string>
     <string name="default_category">Categoria predefinida</string>
@@ -360,7 +360,7 @@
     <string name="information_webview_outdated">Agiorna s\'aplicatzione de WebView pro otènnere una cumpatibilidade prus manna</string>
     <string name="channel_new_chapters">Agiornamentos de sos capìtulos</string>
     <string name="unlock_app">Isbloca Tachiyomi</string>
-    <string name="secure_screen_summary">Cua sos cuntenutos de s\'aplicatzione cando mudas de aplicatzione e bloca sas ischermadas</string>
+    <string name="secure_screen_summary">S\'ischermu seguru cuat sos cuntenutos de s\'aplicatzione cando mudas de aplicatzione e blocat sas ischermadas</string>
     <string name="pref_category_display">Visualizatzione</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">1 capìtulu nou</item>
@@ -457,10 +457,6 @@
     <string name="tracking_info">Sincronizatzione a una diretzione ebbia pro agiornare su progressu in sos capìtulos in su servìtziu de arrastamentu. Imposta s\'arrastamentu pro sos elementos de sos manga dae su butone de arrastamentu issoro.</string>
     <string name="action_display_unread_badge">Capìtulos non lèghidos</string>
     <string name="pref_refresh_library_covers">Annoa sas coberteddas de sos manga de sa biblioteca</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 agiornamentu fallidu</item>
-        <item quantity="other">%1$d agiornamentos fallidos</item>
-    </plurals>
     <string name="unofficial_extension_message">Custa estensione non benit dae sa lista de estensiones ufitziales de Tachiyomi.</string>
     <string name="ext_unofficial">No ufitziale</string>
     <string name="sort_by_upload_date">Pro data de carrigamentu</string>
@@ -587,7 +583,7 @@
     <string name="pref_download_new_categories_details">Sos manga in sas categorias esclùdidas non s\'ant a iscarrigare nemmancu si sunt fintzas in categorias inclùdidas.</string>
     <string name="pref_category_auto_download">Iscarrigamentu automàticu</string>
     <string name="pref_library_update_categories_details">Sos manga in sas categorias esclùdidas non s\'ant a agiornare nemmancu si sunt fintzas in categorias inclùdidas.</string>
-    <string name="action_show_errors">Toca pro bìdere s\'errore a sa minuda</string>
+    <string name="action_show_errors">Toca pro bìdere sos detàllios</string>
     <string name="clipboard_copy_error">Còpia in punta de billete fallida</string>
     <string name="update_check_eol">Custa versione de Android no est prus suportada</string>
     <string name="rotation_landscape">Orizontale</string>
@@ -691,15 +687,31 @@
     <string name="pref_auto_clear_chapter_cache">Isbòida sa memòria temporànea de sos capìtulos cando serras s\'aplicatzione</string>
     <string name="database_clean">Base de datos neta</string>
     <string name="privacy_policy">Polìtica de riservadesa</string>
-    <string name="only_update_restrictions">Agiorna petzi: %s</string>
     <string name="save_chapter_as_cbz">Sarva comente archìviu CBZ</string>
     <string name="library_errors_help">Pro tènnere un\'agiudu pro acontzare sos errores de agiornamentu de sa biblioteca pòmpia·ti %1$s</string>
-    <string name="pref_library_update_manga_restriction">Restritziones a sos agiornamentos de sa biblioteca</string>
-    <string name="pref_update_only_completely_read">Sèries lèghidas de su totu</string>
+    <string name="pref_library_update_manga_restriction">Brinca sos agiornamentos</string>
+    <string name="pref_update_only_completely_read">Tenet capìtulos non lèghidos</string>
     <string name="action_faq_and_guides">PF e ghias</string>
     <string name="publishing_finished">Publicatzione acabada</string>
     <string name="on_hiatus">In pàusa</string>
     <string name="cancelled">Annullada</string>
     <string name="backup_restore_invalid_uri">Errore: URI bòidu</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">Ammustra su manga</string>
+    <string name="pref_landscape_zoom">Ismànnia s\'immàgine in orizontale</string>
+    <string name="action_filter_started">Incumintzadu</string>
+    <string name="action_display_cover_only_grid">Grìllia cun coberteddas ebbia</string>
+    <string name="pref_update_only_started">Perunu capìtulu lèghidu</string>
+    <string name="confirm_manga_add_duplicate">Tenes un\'elementu in sa biblioteca tua cun su matessi nùmene ma dae una fonte diferente (%1$s).
+\n
+\nBoles sighire su matessi\?</string>
+    <string name="pref_navigate_pan">Nàviga pro iscùrrere a intro de sa pàgina ismanniada</string>
+    <string name="skipped_reason_completed">Brincadu ca sa sèrie est acabada</string>
+    <string name="skipped_reason_not_caught_up">Brincadu ca bi sunt capìtulos non lèghidos</string>
+    <string name="skipped_reason_not_started">Brincadu ca non bi sunt capìtulos lèghidos</string>
+    <string name="learn_more">Àteras informatziones</string>
+    <string name="channel_skipped">Brincadu</string>
+    <string name="notification_update_error">%1$d agiornamentu(os) fallidu(os)</string>
+    <string name="notification_update_skipped">%1$d agiornamentu(os) brincadu(os)</string>
+    <string name="rotation_reverse_portrait">Verticale a s\'imbesse</string>
 </resources>

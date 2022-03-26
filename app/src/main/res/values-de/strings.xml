@@ -80,7 +80,7 @@
     <string name="all">Alle</string>
     <string name="pref_library_update_restriction">Geräteeinschränkungen für automatische Aktualisierungen</string>
     <string name="charging">Am Laden</string>
-    <string name="pref_update_only_non_completed">Fortlaufende Serien</string>
+    <string name="pref_update_only_non_completed">Ist abgeschlossene Serie</string>
     <string name="pref_auto_update_manga_sync">Fortschritt nach dem Lesen aktualisieren</string>
     <string name="pref_start_screen">Startbildschirm</string>
     <string name="default_category">Standardkategorie</string>
@@ -457,10 +457,6 @@
     <string name="action_display_unread_badge">Ungelesene Kapitel</string>
     <string name="tracking_info">Einweg-Synchronisation zum Aktualisieren der Kapitelfortschritte in den Trackingdiensten. Richte Tracking für einzelne Manga über deren jeweiligen Tracking-Button ein.</string>
     <string name="pref_refresh_library_covers">Bibliotheksmangacover aktualisieren</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">Eine Aktualisierung fehlgeschlagen</item>
-        <item quantity="other">%1$d Aktualisierungen fehlgeschlagen</item>
-    </plurals>
     <string name="unofficial_extension_message">Diese Erweiterung stammt nicht von der offiziellen Tachiyomi-Erweiterungsliste.</string>
     <string name="ext_unofficial">Inoffiziell</string>
     <string name="sort_by_upload_date">Nach Uploaddatum</string>
@@ -587,7 +583,7 @@
     <string name="pref_download_new_categories_details">Manga in ausgeschlossenen Kategorien werden nicht heruntergeladen, auch wenn sie in eingeschlossenen Kategorien vorhanden sind.</string>
     <string name="pref_category_auto_download">Automatisches Herunterladen</string>
     <string name="pref_library_update_categories_details">Manga in ausgeschlossenen Kategorien werden nicht aktualisiert, auch wenn sie in eingeschlossenen Kategorien vorhanden sind.</string>
-    <string name="action_show_errors">Tippe, um Fehlerdetails anzuzeigen</string>
+    <string name="action_show_errors">Tippe, um Details anzuzeigen</string>
     <string name="update_check_eol">Diese Android-Version wird nicht mehr unterstützt</string>
     <string name="clipboard_copy_error">Kopieren in die Zwischenablage fehlgeschlagen</string>
     <string name="rotation_landscape">Querformat</string>
@@ -691,9 +687,8 @@
     <string name="database_clean">Datenbank bereinigt</string>
     <string name="extension_api_error">Herunterladen der Erweiterungsliste ist fehlgeschlagen</string>
     <string name="privacy_policy">Datenschutzbestimmungen</string>
-    <string name="pref_update_only_completely_read">Vollständig gelesene Serien</string>
-    <string name="pref_library_update_manga_restriction">Bibliotheksaktualisierungsbeschränkungen</string>
-    <string name="only_update_restrictions">Nur aktualisieren: %s</string>
+    <string name="pref_update_only_completely_read">Hat ungelesene Kapitel</string>
+    <string name="pref_library_update_manga_restriction">Aktualisierung überspringen</string>
     <string name="library_errors_help">Für Hilfe zum Beheben von Fehlern bei Bibliotheksaktualisierungen, siehe %1$s</string>
     <string name="save_chapter_as_cbz">Als CBZ-Archiv speichern</string>
     <string name="cancelled">Abgebrochen</string>
@@ -703,7 +698,20 @@
     <string name="backup_restore_invalid_uri">Fehler: leerer URI</string>
     <string name="webtoon_side_padding_5">5 %</string>
     <string name="action_show_manga">Manga anzeigen</string>
-    <string name="confirm_manga_add_duplicate">In deiner Bibliothek existiert ein Eintrag mit dem selben Namen, aber aus einer anderen Quelle (%1$s).
+    <string name="confirm_manga_add_duplicate">In deiner Bibliothek existiert ein Eintrag mit dem gleichen Namen, aber aus einer anderen Quelle (%1$s).
 \n
 \nMöchtest du trotzdem fortfahren\?</string>
+    <string name="action_display_cover_only_grid">Nur-Cover-Kacheln</string>
+    <string name="pref_landscape_zoom">Bild im Querformat vergrößern</string>
+    <string name="pref_navigate_pan">Innerhalb der Seite navigieren</string>
+    <string name="action_filter_started">Angefangen</string>
+    <string name="pref_update_only_started">Keine gelesenen Kapitel</string>
+    <string name="skipped_reason_completed">Übersprungen, da die Serie abgeschlossen ist</string>
+    <string name="skipped_reason_not_caught_up">Übersprungen, weil es ungelesene Kapitel gibt</string>
+    <string name="skipped_reason_not_started">Übersprungen, weil keine Kapitel gelesen wurden</string>
+    <string name="notification_update_error">%1$d Aktualisierung(en) fehlgeschlagen</string>
+    <string name="notification_update_skipped">%1$d Aktualisierung(en) übersprungen</string>
+    <string name="channel_skipped">Übersprungen</string>
+    <string name="learn_more">Mehr erfahren</string>
+    <string name="rotation_reverse_portrait">Umgekehrtes Hochformat</string>
 </resources>

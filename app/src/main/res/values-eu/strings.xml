@@ -106,7 +106,6 @@
     <string name="logout">Saioa itxi</string>
     <string name="invalid_login">Ezin izan da saioa hasi</string>
     <string name="logout_success">Saioa itxi da</string>
-    <string name="only_update_restrictions">Bakarrik eguneratu: %s</string>
     <string name="exclude">Baztertu: %s</string>
     <string name="ext_update_all">Eguneratu guztiak</string>
     <string name="ext_install">Instalatu</string>
@@ -416,7 +415,7 @@
     <string name="file_select_backup">Hautatu babeskopia fitxategia</string>
     <string name="notification_cover_update_failed">Ezin izan da azala eguneratu</string>
     <string name="download_notifier_download_finish">Deskarga bukatua</string>
-    <string name="pref_library_update_manga_restriction">Liburutegia eguneratzeko mugaketak</string>
+    <string name="pref_library_update_manga_restriction">Saltatu eguneraketak</string>
     <string name="action_sort_date_added">Gehiketa data</string>
     <string name="action_search">Bilatu</string>
     <string name="action_search_settings">Bilatu ezarpenak</string>
@@ -489,7 +488,7 @@
     <string name="pref_jump_to_chapters">Joan kapituluetara irekitzean</string>
     <string name="pref_category_library_update">Eguneraketa globalak</string>
     <string name="pref_library_update_interval">Eguneratze automatikoak</string>
-    <string name="pref_update_only_completely_read">Guztiz irakurritako argitalpenak</string>
+    <string name="pref_update_only_completely_read">Irakurri gabeko kapituluak ditu</string>
     <string name="include">Sartu: %s</string>
     <string name="color_filter_r_value">G</string>
     <string name="http_error_hint">Ikusi webgunea WebView-n</string>
@@ -606,12 +605,12 @@
     <string name="password">Pasahitza</string>
     <string name="login">Hasi saioa</string>
     <string name="action_global_search_query">Bilatu \"%1$s\" toki guztietan</string>
-    <string name="action_show_errors">Klik egin erroreen xehetasun guztiak ikusteko</string>
+    <string name="action_show_errors">Sakatu xehetasunak ikusteko</string>
     <string name="update_72hour">3 egunean behin</string>
     <string name="update_weekly">Astero</string>
     <string name="connected_to_wifi">Wi-Fi bidez bakarrik</string>
     <string name="restrictions">Mugaketak: %s</string>
-    <string name="pref_update_only_non_completed">Argitaratzen ari diren argitalpenak</string>
+    <string name="pref_update_only_non_completed">Argitalpen bukatua al da</string>
     <string name="pref_library_update_refresh_metadata">Freskatu metadatuak automatikoki</string>
     <string name="pref_library_update_refresh_trackers">Freskatu jarraitzaileak automatikoki</string>
     <string name="pref_library_update_refresh_trackers_summary">Eguneratu jarraitzaileak liburutegia eguneratzean</string>
@@ -686,10 +685,6 @@
     </plurals>
     <string name="notification_chapters_single_and_more">%1$s kapitulua eta %2$d gehiago</string>
     <string name="tracking_info">Norabide bakarreko sinkronizazioa jarraipen-zerbitzuetan kapituluaren aurrerapena eguneratzeko. Konfiguratu manga bakoitzaren jarraipena haien jarraipen botoia erabilita.</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">Eguneraketa batek huts egin du</item>
-        <item quantity="other">%1$d eguneraketek huts egin dute</item>
-    </plurals>
     <string name="pref_show_navigation_mode">Nabigazio-diseinuaren geruza erakutsi</string>
     <string name="pref_show_navigation_mode_summary">Erakutsi ukipen-zonak irakurgailua irekitzen denean</string>
     <string name="enhanced_tracking_info">Iturri zehatzetarako ezaugarri hobetuak eskaintzen dituzten zerbitzuak. Mangen jarraipena automatikoki egiten da zure liburutegira gehitzen direnean.</string>
@@ -702,4 +697,13 @@
     <string name="action_faq_and_guides">Ohiko galderak eta gidak</string>
     <string name="webtoon_side_padding_5">%5</string>
     <string name="backup_restore_invalid_uri">Errorea: URI-a hutsik</string>
+    <string name="action_show_manga">Manga erakutsi</string>
+    <string name="skipped_reason_not_caught_up">Saltatu egin da irakurri gabeko kapituluak daudelako</string>
+    <string name="pref_update_only_started">Kapitulurik irakurri gabe</string>
+    <string name="skipped_reason_completed">Saltatu egin da seriea bukatua dagoelako</string>
+    <string name="skipped_reason_not_started">Saltatua ez daudelako irakurritako kapitulurik</string>
+    <string name="confirm_manga_add_duplicate">Zure liburutegian izen bereko sarrera bat duzu, baina beste iturri batekoa (%1$s).
+\n
+\nJarraitu nahi duzu\?</string>
+    <string name="action_filter_started">Hasia</string>
 </resources>

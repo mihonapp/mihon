@@ -15,7 +15,7 @@
     <string name="action_menu">მენიუ</string>
     <string name="action_filter">ფილტრი</string>
     <string name="action_filter_downloaded">გადმოწერილი</string>
-    <string name="action_filter_bookmarked">მონიშნული</string>
+    <string name="action_filter_bookmarked">ჩანიშნული</string>
     <string name="action_filter_unread">წაუკითხავი</string>
     <string name="action_filter_empty">ფილტრის წაშლა</string>
     <string name="action_sort_alpha">ანბანის მიხედვით</string>
@@ -81,7 +81,7 @@
     <string name="app_not_available">აპლიკაცია არ არის ხელმისაწვდომი</string>
     <string name="pref_category_general">ზოგადი</string>
     <string name="pref_category_library">ბიბლიოთეკა</string>
-    <string name="pref_category_reader">მკითხველი</string>
+    <string name="pref_category_reader">წამკითხველი</string>
     <string name="pref_category_downloads">გადმოწერები</string>
     <string name="pref_category_tracking">თვალყურის დევნება</string>
     <string name="pref_category_advanced">დამატებით</string>
@@ -89,7 +89,7 @@
     <string name="pref_theme_mode">ბნელი რეჟიმი</string>
     <string name="theme_system">სისტემური</string>
     <string name="theme_light">მსუბუქი</string>
-    <string name="theme_dark">ბნელი</string>
+    <string name="theme_dark">ჩართული</string>
     <string name="pref_date_format">თარიღის ფორმატი</string>
     <string name="pref_confirm_exit">გამოსვლის დადასტურება</string>
     <string name="pref_manage_notifications">შეტყობინებების მართვა</string>
@@ -390,7 +390,7 @@
     <string name="label_extensions">გავრცობები</string>
     <string name="label_extension_info">გავრცობის შესახებ</string>
     <string name="unlock_app">Tachiyomi-ს განბლოკვა</string>
-    <string name="confirm_exit">დააჭირე ისებ ღილაკს \"უკან\" გამოსასვლელად</string>
+    <string name="confirm_exit">გასასვლელად დააჭირეთ ისევ უკან</string>
     <string name="action_global_search">გლობალური ძებნა</string>
     <string name="action_move_category">კატეგორიების მინიჭება</string>
     <string name="action_edit_cover">ყდის რედაქტირება</string>
@@ -456,10 +456,6 @@
         <item quantity="one">ნაპოვნია გაფართოების განახლება</item>
         <item quantity="other">ნაპოვნია %d გაფართოების განახლება</item>
     </plurals>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 განახლების შეცდომა</item>
-        <item quantity="other">%1$d განახლების შეცდომა</item>
-    </plurals>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">თავები %1$s და კიდევ 1</item>
         <item quantity="other">თავები %1$s და კიდევ %2$d</item>
@@ -517,4 +513,16 @@
     <string name="parental_controls_info">ეს არ აღმოფხვრავს პროგრამაში NSFW (18+) შიგთავსის არაოფიციალურ, ან შესაძლო არასწორად მონიშნული გაფართოებებოიდან გამოჩენას.</string>
     <string name="action_display_show_number_of_items">საგნების რაოდენობის ჩვენება</string>
     <string name="action_search_settings">პარამეტრების ძიება</string>
+    <string name="action_start_downloading_now">დაიწყე ჩამოტვირთვა</string>
+    <string name="theme_greenapple">მწვანე ვაშლი</string>
+    <string name="action_filter_started">დაწყებული</string>
+    <string name="theme_monet">დინამიური</string>
+    <string name="pref_app_theme">აპლიკაციის თემა</string>
+    <string name="label_warning">გაფრთხილება</string>
+    <string name="confirm_lock_change">აუთენტიკაცია ცვლილების დასადასტურებლად</string>
+    <string name="action_faq_and_guides">ხდკ და სახელმძღვანელოები</string>
+    <string name="pref_category_appearance">გარეგნობა</string>
+    <string name="label_default">ნაგულისხმევი</string>
+    <string name="pref_category_navigation">ნავიგაცია</string>
+    <string name="action_show_errors">დააჭირე დეტალების სანახავად</string>
 </resources>

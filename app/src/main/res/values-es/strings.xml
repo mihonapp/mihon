@@ -63,7 +63,7 @@
     <string name="update_48hour">Cada 2 días</string>
     <string name="pref_library_update_restriction">Restricciones de actualización automática del dispositivo</string>
     <string name="charging">Mientras se carga la batería</string>
-    <string name="pref_update_only_non_completed">Manga en curso</string>
+    <string name="pref_update_only_non_completed">Serie completada</string>
     <string name="pref_auto_update_manga_sync">Actualizar progreso al terminar un capítulo</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Pantalla completa</string>
@@ -377,7 +377,7 @@
     <string name="theme_system">Según ajustes del sistema</string>
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_category_security">Seguridad</string>
-    <string name="lock_with_biometrics">Confirmar identidad al iniciar</string>
+    <string name="lock_with_biometrics">Bloquear con huella dactilar</string>
     <string name="lock_when_idle">Bloquear por inactividad</string>
     <string name="lock_always">Siempre</string>
     <string name="lock_never">Nunca</string>
@@ -489,10 +489,6 @@
     </plurals>
     <string name="tracking_info">La sincronización de estos servicios solo funciona en un solo sentido. Cada manga en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
     <string name="action_display_unread_badge">Capítulos no leídos</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 actualización fallida</item>
-        <item quantity="other">%1$d actualizaciones fallidas</item>
-    </plurals>
     <string name="unofficial_extension_message">Esta extensión no es de la lista oficial de extensiones de Tachiyomi.</string>
     <string name="ext_unofficial">No oficial</string>
     <string name="label_data">Datos</string>
@@ -722,9 +718,8 @@
     <string name="clear_database_source_item_count">Hay %1$d manga que no pertenece a la biblioteca en la base de datos</string>
     <string name="extension_api_error">No se pudo descargar el listado de extensiones</string>
     <string name="privacy_policy">Política de privacidad</string>
-    <string name="pref_update_only_completely_read">Manga ya leído</string>
-    <string name="pref_library_update_manga_restriction">Restricciones al actualizar la biblioteca</string>
-    <string name="only_update_restrictions">Actualizar solo: %s</string>
+    <string name="pref_update_only_completely_read">Capítulos sin leer</string>
+    <string name="pref_library_update_manga_restriction">Omitir la actualización</string>
     <string name="library_errors_help">Si necesitas ayuda para resolver los errores de actualización de la biblioteca mira en %1$s</string>
     <string name="save_chapter_as_cbz">Guardar como archivo CBZ</string>
     <string name="on_hiatus">En pausa</string>
@@ -733,4 +728,21 @@
     <string name="action_faq_and_guides">Guías y soluciones</string>
     <string name="backup_restore_invalid_uri">Error: dirección URI vacía</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">Mostrar manga</string>
+    <string name="pref_navigate_pan">Desplazarse por el resto de la página antes de cambiar</string>
+    <string name="action_display_cover_only_grid">Cuadrícula sólo de portadas</string>
+    <string name="pref_landscape_zoom">Acercar la vista en horizontal</string>
+    <string name="confirm_manga_add_duplicate">Tienes un elemento en tu biblioteca con el mismo nombre pero de distinto origen (%1$s).
+\n
+\n¿Quieres seguir\?</string>
+    <string name="action_filter_started">Empezados</string>
+    <string name="pref_update_only_started">Sin capítulos leídos</string>
+    <string name="skipped_reason_completed">Omitido porque la serie está completa</string>
+    <string name="skipped_reason_not_caught_up">Omitido porque hay capítulos sin leer</string>
+    <string name="skipped_reason_not_started">Omitido porque no hay capítulos leídos</string>
+    <string name="learn_more">Más información</string>
+    <string name="channel_skipped">Omitidas</string>
+    <string name="notification_update_error">Actualizaciones fallidas: %1$d</string>
+    <string name="notification_update_skipped">Actualizaciones omitidas: %1$d</string>
+    <string name="rotation_reverse_portrait">En vertical, al revés</string>
 </resources>

@@ -457,10 +457,6 @@
     <string name="battery_optimization_setting_activity_not_found">Laiteasetuksia ei voitu avata</string>
     <string name="tracking_info">Yksisuuntainen synkronointi lukujen seurantapalveluiden päivittämiseksi. Määritä yksittäisten mangamerkintöjen seuranta seurantapainikkeesta.</string>
     <string name="pref_refresh_library_covers">Päivitä kirjaston manga-kannet</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 päivitys epäonnistui</item>
-        <item quantity="other">%1$d päivitystä epäonnistui</item>
-    </plurals>
     <string name="unofficial_extension_message">Tämä laajennus ei ole virallisesta Tachiyomi-laajennusluettelosta.</string>
     <string name="ext_unofficial">Epävirallinen</string>
     <string name="sort_by_upload_date">Latauspäivämäärän mukaan</string>

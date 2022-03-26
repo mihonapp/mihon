@@ -87,7 +87,7 @@
     <string name="all">Tot</string>
     <string name="pref_library_update_restriction">Restriccions del dispositiu per a les actualitzacions automàtiques</string>
     <string name="charging">Carregant</string>
-    <string name="pref_update_only_non_completed">Sèries en curs</string>
+    <string name="pref_update_only_non_completed">És una sèrie completada</string>
     <string name="pref_auto_update_manga_sync">Actualitza el progrés després de llegir</string>
     <string name="pref_start_screen">Pantalla d\'inici</string>
     <string name="default_category">Categoria per defecte</string>
@@ -457,10 +457,6 @@
     <string name="action_display_unread_badge">Capítols no llegits</string>
     <string name="tracking_info">Sincronització unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment. Configureu el seguiment d\'entrades individuals de manga al seu botó de seguiment.</string>
     <string name="pref_refresh_library_covers">Refresca les portades del manga de la biblioteca</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">Ha fallat 1 actualització</item>
-        <item quantity="other">Han fallat %1$d actualitzacions</item>
-    </plurals>
     <string name="unofficial_extension_message">Aquesta extensió no pertany a la llista d\'extensions oficials del Tachiyomi.</string>
     <string name="ext_unofficial">No oficial</string>
     <string name="sort_by_upload_date">Per data de pujada</string>
@@ -600,7 +596,7 @@
     <string name="include">Inclou: %s</string>
     <string name="exclude">Exclou: %s</string>
     <string name="none">Cap</string>
-    <string name="action_show_errors">Premeu per a veure els detalls de l\'error</string>
+    <string name="action_show_errors">Premeu per a veure\'n els detalls</string>
     <string name="cancel_all_for_series">Cancel·la-ho tot per a aquesta sèrie</string>
     <string name="action_sort_chapter_fetch_date">Data d\'obtenció</string>
     <string name="date">Data</string>
@@ -661,7 +657,6 @@
     <string name="connected_to_wifi">Només amb Wi-Fi</string>
     <string name="pref_relative_time_short">Curtes (Avui, Ahir)</string>
     <string name="pref_relative_time_long">Llargues (Curtes+, fa N dies)</string>
-    <string name="only_update_restrictions">Actualitza només: %s</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Instal·leu i inicieu el Shizuku per a utilitzar-lo com a instal·lador d\'extensions.</string>
     <string name="pref_hide_threshold">Sensibilitat a l\'hora d\'amagar el menú en desplaçar</string>
     <string name="pref_verbose_logging">Registre detallat</string>
@@ -685,8 +680,8 @@
     <string name="library_errors_help">Per a obtenir ajuda per a resoldre errors d\'actualització de la biblioteca, vegeu %1$s</string>
     <string name="extension_api_error">No s\'ha pogut obtenir la llista d\'extensions</string>
     <string name="action_faq_and_guides">PMF i guies</string>
-    <string name="pref_library_update_manga_restriction">Restriccions d\'actualització de la biblioteca</string>
-    <string name="pref_update_only_completely_read">Sèries llegides completament</string>
+    <string name="pref_library_update_manga_restriction">Omet les actualitzacions</string>
+    <string name="pref_update_only_completely_read">Té capítols no llegits</string>
     <string name="pref_library_update_show_tab_badge">Mostra el comptador de no llegits a la icona d\'actualitzacions</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="save_chapter_as_cbz">Desa com a arxiu CBZ</string>
@@ -708,4 +703,15 @@
 \n
 \nVoleu continuar igualment\?</string>
     <string name="pref_navigate_pan">Navega per a desplaçar</string>
+    <string name="action_display_cover_only_grid">Graella només a la portada</string>
+    <string name="action_filter_started">Començats</string>
+    <string name="pref_update_only_started">No té capítols llegits</string>
+    <string name="skipped_reason_completed">S\'ha omès perquè la sèrie està completada</string>
+    <string name="skipped_reason_not_started">S\'ha omès perquè no hi ha cap capítol llegit</string>
+    <string name="skipped_reason_not_caught_up">S\'ha omès perquè hi ha capítols no llegits</string>
+    <string name="learn_more">Més informació</string>
+    <string name="channel_skipped">Omesa</string>
+    <string name="notification_update_error">Han fallat %1$d actualitzacions</string>
+    <string name="notification_update_skipped">S\'han omès %1$d actualitzacions</string>
+    <string name="rotation_reverse_portrait">Vertical inversa</string>
 </resources>

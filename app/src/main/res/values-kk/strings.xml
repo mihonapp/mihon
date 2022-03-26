@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_settings">Parametrler</string>
+    <string name="label_download_queue">Jüktewler kezegi</string>
+    <string name="label_library">Kitaphana</string>
+    <string name="label_recent_updates">Jańartuwlar</string>
+    <string name="label_sources">Derekközder</string>
+    <string name="label_backup">Saqtyq köcirmesi</string>
+    <string name="label_extensions">Keńeytuwler</string>
+    <string name="label_extension_info">Keńeytuwler aqparatı</string>
+    <string name="label_help">Kömek</string>
+    <string name="categories">Sanattar</string>
+    <string name="manga">Manga</string>
+    <string name="chapters">Tarawlar</string>
+    <string name="track">Küzettew</string>
+    <string name="label_migration">Köcuw</string>
+    <string name="label_default">Birinci qalpı</string>
+    <string name="label_warning">Eskertuw</string>
+    <string name="unlock_app">Tachiyomini acuw</string>
+    <string name="confirm_lock_change">Özgertuwdı bekituw uwcin, autentifikatsiyanı orındańız</string>
+    <string name="confirm_exit">Cığuw uwcin, qaytadan basıńız</string>
+    <string name="action_menu">Menu</string>
+    <string name="action_filter">Süzuw</string>
+    <string name="action_filter_bookmarked">Saqtalğan</string>
+    <string name="right_to_left_viewer">Ońnan solğa</string>
+    <string name="vertical_viewer">Vertikal</string>
+    <string name="webtoon_viewer">Webtoon</string>
+    <string name="scale_type_fit_screen">Ekranğa sıyğızdıruw</string>
+    <string name="scale_type_stretch">Tartuw</string>
+    <string name="information_no_downloads">Jüktelgender joq</string>
+    <string name="information_no_recent">Jańartılğan nusqalar joq</string>
+    <string name="information_no_recent_manga">Äzirce ecteńe oqılmağan</string>
+    <string name="information_empty_library">Bos kitaphana</string>
+    <string name="name">Atawı</string>
+    <string name="label_more">Köbirek</string>
+    <string name="label_recent_manga">Tarih</string>
+    <string name="history">Tarih</string>
+    <string name="action_settings">Parametrler</string>
+    <string name="action_filter_downloaded">Jüktelingen</string>
+    <string name="nav_zone_left">Sol</string>
+    <string name="nav_zone_right">Oń</string>
+    <string name="left_to_right_viewer">Ońnan solğa</string>
+    <string name="information_empty_category">Sanat jog. Sanattardı kitaphanada uyımdastıruw uwin \"Qosuw\" batırmasına basıńız.</string>
+    <string name="nav_zone_next">Kelesi</string>
+</resources>

@@ -266,10 +266,6 @@
         <item quantity="one">1 új fejezet</item>
         <item quantity="other">%1$d új fejezet</item>
     </plurals>
-    <plurals name="notification_update_error">
-        <item quantity="one">%1$d frissítés sikertelen</item>
-        <item quantity="other">%1$d frissítés sikertelen</item>
-    </plurals>
     <string name="cover_updated">Borító frissítve</string>
     <string name="set_as_cover">Beállítás borítóként</string>
     <string name="custom_filter">Egyedi szűrő</string>

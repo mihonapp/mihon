@@ -457,10 +457,6 @@
     <string name="backup_restore_content">ಗ್ರಂಥಾಲಯವನ್ನು ಮರುಸ್ಥಾಪಿಸುವಾಗ ವಿಸ್ತರಣೆಯಿಂದ ಡೇಟಾವನ್ನು ಪಡೆದುಕೊಳ್ಳಲಾಗುತ್ತದೆ ಅದಕ್ಕೆ ಹೆಚ್ಚಿನ ಇಂಟರ್ನೆಟ್ ಶುಲ್ಕ ತಗಲಬಹುದು.
 \n
 \nನೀವು ಅಗತ್ಯವಿರುವ ಎಲ್ಲಾ ವಿಸ್ತರಣೆಗಳನ್ನು ಸ್ಥಾಪಿಸಿದ್ದೀರಿ ಮತ್ತು ಮರುಸ್ಥಾಪಿಸುವ ಮೊದಲು ಮೂಲಗಳು ಮತ್ತು ಟ್ರ್ಯಾಕಿಂಗ್ ಸೇವೆಗಳಿಗೆ ಲಾಗ್ ಇನ್ ಆಗಿದ್ದೀರಿ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 ನವೀಕರಣ ವಿಫಲವಾಗಿದೆ</item>
-        <item quantity="other">%1$d ನವೀಕರಣಗಳು ವಿಫಲವಾಗಿವೆ</item>
-    </plurals>
     <string name="unofficial_extension_message">ಈ ವಿಸ್ತರಣೆಯು ಅಧಿಕೃತ ತಚಿಯೋಮಿ ವಿಸ್ತರಣೆಗಳ ಪಟ್ಟಿಯಿಂದಲ್ಲ.</string>
     <string name="ext_unofficial">ಅನಧಿಕೃತ</string>
     <string name="sort_by_upload_date">ಅಪ್‌ಲೋಡ್ ದಿನಾಂಕದ ಮೂಲಕ</string>

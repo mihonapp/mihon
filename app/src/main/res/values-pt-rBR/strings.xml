@@ -82,7 +82,7 @@
     <string name="all">Todas</string>
     <string name="pref_library_update_restriction">Restrições do dispositivo para atualizações automáticas</string>
     <string name="charging">Carregando</string>
-    <string name="pref_update_only_non_completed">Séries em andamento</string>
+    <string name="pref_update_only_non_completed">É uma série finalizada</string>
     <string name="pref_auto_update_manga_sync">Atualizar o progresso após a leitura</string>
     <string name="pref_start_screen">Tela inicial</string>
     <string name="default_category">Categoria padrão</string>
@@ -457,10 +457,6 @@
     <string name="action_display_unread_badge">Capítulos não lidos</string>
     <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços de monitoramento. Configure o monitoramento para entradas individuais dos mangás a partir de seus botões de monitoramento.</string>
     <string name="pref_refresh_library_covers">Atualizar as capas dos mangás da biblioteca</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 atualização falhou</item>
-        <item quantity="other">%1$d atualizações falharam</item>
-    </plurals>
     <string name="unofficial_extension_message">Esta extensão não é da lista oficial de extensões do Tachiyomi.</string>
     <string name="ext_unofficial">Não oficial</string>
     <string name="sort_by_upload_date">Pela data de envio</string>
@@ -587,7 +583,7 @@
     <string name="pref_library_update_categories_details">Os mangás nas categorias excluídas não serão atualizados mesmo que eles também estejam nas categorias incluídas.</string>
     <string name="pref_download_new_categories_details">Os mangás nas categorias excluídas não serão disponibilizados offline mesmo que eles também estejam nas categorias incluídas.</string>
     <string name="pref_category_auto_download">Download automático</string>
-    <string name="action_show_errors">Toque para ver os detalhes dos erros</string>
+    <string name="action_show_errors">Toque para ver os detalhes</string>
     <string name="update_check_eol">Esta versão do Android não é mais suportada</string>
     <string name="clipboard_copy_error">Erro ao copiar para a área de transferência</string>
     <string name="rotation_landscape">Paisagem</string>
@@ -691,9 +687,8 @@
     <string name="database_clean">Banco de dados limpo</string>
     <string name="extension_api_error">Erro ao obter a lista de extensões</string>
     <string name="privacy_policy">Política de privacidade</string>
-    <string name="pref_update_only_completely_read">Séries lidas completamente</string>
-    <string name="pref_library_update_manga_restriction">Restrições de atualização da biblioteca</string>
-    <string name="only_update_restrictions">Somente atualizar: %s</string>
+    <string name="pref_update_only_completely_read">Possui capítulos não lidos</string>
+    <string name="pref_library_update_manga_restriction">Pular a atualização</string>
     <string name="library_errors_help">Para obter ajuda sobre como corrigir erros de atualização da biblioteca, veja %1$s</string>
     <string name="save_chapter_as_cbz">Salvar como arquivo CBZ</string>
     <string name="publishing_finished">Publicação finalizada</string>
@@ -708,4 +703,15 @@
 \nVocê deseja continuar mesmo assim\?</string>
     <string name="pref_navigate_pan">Navegar para o painel</string>
     <string name="pref_landscape_zoom">Dar zoom em imagens horizontais</string>
+    <string name="action_display_cover_only_grid">Grade somente com capas</string>
+    <string name="action_filter_started">Iniciado</string>
+    <string name="pref_update_only_started">Sem capítulos lidos</string>
+    <string name="skipped_reason_completed">Pulado porque a série está finalizada</string>
+    <string name="skipped_reason_not_caught_up">Pulado porque há capítulos não lidos</string>
+    <string name="skipped_reason_not_started">Pulado porque nenhum capítulo foi lido</string>
+    <string name="notification_update_skipped">%1$d atualização(ões) pulada(s)</string>
+    <string name="channel_skipped">Puladas</string>
+    <string name="notification_update_error">%1$d atualização(ões) falhou(aram)</string>
+    <string name="learn_more">Saiba mais</string>
+    <string name="rotation_reverse_portrait">Retrato invertido</string>
 </resources>

@@ -634,11 +634,6 @@
     <string name="recently">Skoro</string>
     <string name="relative_time_today">Danas</string>
     <string name="nav_zone_left">Лево</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">%1$d неуспело ажурирање</item>
-        <item quantity="few">%1$d неуспела ажурирања</item>
-        <item quantity="other">%1$d неуспелих ажурирања</item>
-    </plurals>
     <string name="information_empty_category_dialog">Још немате категорија.</string>
     <string name="ext_app_info">Информације о апликацији</string>
     <string name="update_72hour">Svaka 3 dana</string>
@@ -706,5 +701,4 @@
     <string name="pref_library_update_manga_restriction">Ograničenja ažuriranje biblioteka</string>
     <string name="pref_update_only_completely_read">Kompletno pročitane serije</string>
     <string name="privacy_policy">Политика приватности</string>
-    <string name="only_update_restrictions">Samo ažuriranja: %s</string>
 </resources>

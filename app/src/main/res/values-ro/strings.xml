@@ -472,11 +472,6 @@
     <string name="pref_library_update_refresh_metadata">Actualizează metadata-ul automat</string>
     <string name="action_display_comfortable_grid">Grilă confortabilă</string>
     <string name="action_migrate">Migrează</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 actualizare a eșuat</item>
-        <item quantity="few">%1$d actualizări au eșuat</item>
-        <item quantity="other">%1$d actualizări au eșuat</item>
-    </plurals>
     <string name="label_data">Date</string>
     <string name="invalid_backup_file_missing_data">Lipsesc date din fișier.</string>
     <string name="invalid_backup_file">Fișierul de rezerva este invalid</string>

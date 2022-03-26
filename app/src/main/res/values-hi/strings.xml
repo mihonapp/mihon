@@ -84,7 +84,7 @@
     <string name="all">समस्त</string>
     <string name="pref_library_update_restriction">स्वचालित अपडेट डिवाइस प्रतिबंध</string>
     <string name="charging">चार्ज होते समय</string>
-    <string name="pref_update_only_non_completed">चल रही श्रृंखला</string>
+    <string name="pref_update_only_non_completed">पूरी की गई श्रृंखला</string>
     <string name="pref_auto_update_manga_sync">पढ़ने के बाद प्रगति अपडेट करें</string>
     <string name="pref_start_screen">प्रथम प्रदर्शनी</string>
     <string name="default_category">डिफ़ॉल्ट श्रेणी</string>
@@ -457,10 +457,6 @@
     <string name="action_display_unread_badge">अपठित अध्याय</string>
     <string name="tracking_info">ट्रैकिंग सेवाओं में अध्याय की प्रगति को अद्यतन करने के लिए एकतरफा सिंक। अपने ट्रैकिंग बटन से व्यक्तिगत मंगा प्रविष्टियों के लिए ट्रैकिंग सेट अप करें।</string>
     <string name="pref_refresh_library_covers">रिफ्रेश पुस्तकालय मंगा कवर</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 अद्यतन विफल हुआ</item>
-        <item quantity="other">%1$d अपडेट विफल रहे</item>
-    </plurals>
     <string name="unofficial_extension_message">यह एक्सटेंशन आधिकारिक तचियोमी एक्सटेंशन सूची से नहीं है।</string>
     <string name="ext_unofficial">अनौपचारिक</string>
     <string name="sort_by_upload_date">अपलोड तिथि द्वारा</string>
@@ -578,7 +574,7 @@
     <string name="alignment_top">ऊपर</string>
     <string name="pref_side_nav_icon_alignment">साइड नेविगेशन आइकन अलाइनमेंट</string>
     <string name="action_start_downloading_now">अभी डाउनलोड करना शुरू करें</string>
-    <string name="action_show_errors">त्रुटि विवरण देखने के लिए टैप करें</string>
+    <string name="action_show_errors">विवरण देखने के लिए टैप करें</string>
     <string name="cancel_all_for_series">इस श्रृंखला के लिए सभी रद्द करें</string>
     <string name="action_display_local_badge">स्थानीय पुस्तक</string>
     <string name="pref_dark_theme_pure_black">पूरा काला मोड़</string>
@@ -665,7 +661,7 @@
     <string name="pref_download_new_categories_details">बहिष्कृत श्रेणियों की पुस्तकें डाउनलोड नहीं की जाएंगी, भले ही वे शामिल श्रेणियों में भी हों।</string>
     <string name="pref_verbose_logging_summary">सिस्टम लॉग में वर्बोज़ लॉग प्रिंट करें (ऐप प्रदर्शन को कम करता है)</string>
     <string name="enhanced_tracking_info">ऐसी सेवाएँ जो विशिष्ट स्रोतों के लिए उन्नत सुविधाएँ प्रदान करती हैं। आपकी पुस्तकालय में जोड़े जाने पर पुस्तकें स्वचालित रूप से ट्रैक की जाती हैं।</string>
-    <string name="pref_dns_over_https">HTTP उपर DNS</string>
+    <string name="pref_dns_over_https">HTTPS उपर DNS (DoH)</string>
     <string name="pref_verbose_logging">वर्बोज़ लॉगिंग</string>
     <string name="notification_incognito_text">गुप्त मोड अक्षम करें</string>
     <string name="chapter_not_found">अध्याय नहीं मिला</string>
@@ -689,9 +685,8 @@
     <string name="clear_database_source_item_count">डेटाबेस में %1$d मंगा हैं जो पुस्तकालय में नहीं है</string>
     <string name="pref_auto_clear_chapter_cache">ऐप बंद करते समय चैप्टर कैशे साफ़ करें</string>
     <string name="database_clean">डेटाबेस साफ़ करें</string>
-    <string name="only_update_restrictions">केवल अद्यतन: %s</string>
-    <string name="pref_update_only_completely_read">पूरी तरह से पढ़ें श्रृंखला</string>
-    <string name="pref_library_update_manga_restriction">पुस्तकालय अद्यतन प्रतिबंध</string>
+    <string name="pref_update_only_completely_read">अपठित अध्याय हैं</string>
+    <string name="pref_library_update_manga_restriction">अद्यतन न करें</string>
     <string name="save_chapter_as_cbz">CBZ आर्कैव के रूप में सहेजें</string>
     <string name="privacy_policy">गोपनीयता नीति</string>
     <string name="library_errors_help">लाइब्रेरी अपडेट त्रुटियों को ठीक करने के तरीके पर सहायता के लिए, %1$s देखें</string>
@@ -702,4 +697,11 @@
     <string name="on_hiatus">अंतराल पर है</string>
     <string name="publishing_finished">प्रकाशन समाप्त</string>
     <string name="webtoon_side_padding_5">५%</string>
+    <string name="channel_skipped">छोड़े गए</string>
+    <string name="learn_more">अधिक जानकारी</string>
+    <string name="skipped_reason_completed">छोड़े गए क्योंकि श्रृंखला पूरी हो गई है</string>
+    <string name="skipped_reason_not_caught_up">छोड़ दिया गया क्योंकि वहाँ अपठित अध्याय हैं</string>
+    <string name="skipped_reason_not_started">छोड़ दिया गया क्योंकि कोई अध्याय पढ़ा नहीं गया</string>
+    <string name="pref_update_only_started">कोई अध्याय नहीं पढ़ा</string>
+    <string name="action_show_manga">मंगा दिखाएँ</string>
 </resources>

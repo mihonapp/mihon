@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="name">الاسم</string>
+    <string name="name">الإسم</string>
     <string name="categories">الفئات</string>
     <string name="manga">مانجا</string>
     <string name="chapters">الفصول</string>
@@ -82,7 +82,7 @@
     <string name="all">الكل</string>
     <string name="pref_library_update_restriction">تقييد التحديث التلقائي للجهاز</string>
     <string name="charging">جاري الشحن</string>
-    <string name="pref_update_only_non_completed">سلسلة جارية</string>
+    <string name="pref_update_only_non_completed">سلسلة منتهية</string>
     <string name="pref_auto_update_manga_sync">تحديث تقدّم الفصول بعد القراءة</string>
     <string name="pref_start_screen">شاشة البداية</string>
     <string name="default_category">الفئة الافتراضية</string>
@@ -300,7 +300,7 @@
     <string name="migration_dialog_what_to_include">اختر بيانات لتضمينها</string>
     <string name="migrate">ترحيل</string>
     <string name="copy">نسخ</string>
-    <string name="information_empty_category">ليس لديك أيّة فئات، اضغط زر اﻹضافة لإنشاء واحد، لتنظيم مكتبتك.</string>
+    <string name="information_empty_category">ليس لديك أيّة فئات، اضغط زر اﻹضافة لإنشاء واحده لتنظيم مكتبتك.</string>
     <string name="transition_finished">تمَّ الانتهاء من:</string>
     <string name="transition_current">الحالي:</string>
     <string name="transition_next">التّالي:</string>
@@ -502,14 +502,6 @@
     </plurals>
     <string name="sort_by_upload_date">حسب تاريخ الرفع</string>
     <string name="pref_refresh_library_covers">حدّث صور أغلفة المانجا في المكتبة</string>
-    <plurals name="notification_update_error">
-        <item quantity="zero">تم التحديث بنجاح</item>
-        <item quantity="one">فشل تحديث واحد</item>
-        <item quantity="two">فشل تحديثين</item>
-        <item quantity="few">فشل %1$d تحديثات</item>
-        <item quantity="many">فشل %1$d تحديثات</item>
-        <item quantity="other">فشل %1$d تحديثات</item>
-    </plurals>
     <string name="action_display_comfortable_grid">شبكة مريحة</string>
     <string name="tabs_header">قوائم</string>
     <string name="badges_header">شارات</string>
@@ -641,7 +633,7 @@
     <string name="include">تضمين: %s</string>
     <string name="none">لا شيء</string>
     <string name="pref_library_update_categories_details">المانجا في الفئات المستبعدة لن يتم تحديثها حتى و ان كانت أيضا في الفئات المضمنة.</string>
-    <string name="action_show_errors">اضغط لإظهار كافة تفاصيل الخطأ</string>
+    <string name="action_show_errors">اضغط لإظهار التفاصيل</string>
     <string name="pref_category_auto_download">التنزيل التلقائي</string>
     <string name="pref_download_new_categories_details">المانجا في الفئات المستبعدة لن يتم تنزيلها حتى و ان كانت أيضا في الفئات المضمنة.</string>
     <string name="notification_incognito_text">إلغاء تفعيل الوضع الخفي</string>
@@ -734,7 +726,6 @@
     <string name="ext_update_all">تحديث الكل</string>
     <string name="update_72hour">كل ثلاثة ايام</string>
     <string name="connected_to_wifi">فقط على شبكة WI-FI</string>
-    <string name="only_update_restrictions">التحديث فقط: %s</string>
     <string name="ext_installer_shizuku_stopped">\"Shizuku\" لا يعمل</string>
     <string name="publishing_finished">تم النشر</string>
     <string name="cancelled">ملغي</string>
@@ -743,7 +734,7 @@
     <string name="save_chapter_as_cbz">احفظ كأرشيف CBZ</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="pref_library_update_manga_restriction">تقييد تحديث المكتبة</string>
-    <string name="pref_update_only_completely_read">سلسلة تم قراءتها</string>
+    <string name="pref_update_only_completely_read">يحتوي على فصول لم يتم قراءتها</string>
     <string name="ext_installer_legacy">قياسي</string>
     <string name="pref_auto_clear_chapter_cache">امسح ملفات التخزين المؤقت عند إغلاق التطبيق</string>
     <string name="database_clean">تنظيف قاعدة البيانات</string>
@@ -754,4 +745,16 @@
     <string name="backup_restore_invalid_uri">خطأ: URI فارغ</string>
     <string name="action_faq_and_guides">الاسئله الشائعه والأدلة</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">أظهر المانجا</string>
+    <string name="action_filter_started">بدأت</string>
+    <string name="action_display_cover_only_grid">شبكة بالاغلفة</string>
+    <string name="skipped_reason_not_started">تم التخطي لعدم وجود فصول مقروءه</string>
+    <string name="skipped_reason_not_caught_up">تم التخطي لوجود فصول غير مقروءه</string>
+    <string name="confirm_manga_add_duplicate">لديك إدخال في مكتبتك بنفس الإسم و لكن من مصدر مختلف (%1$s).
+\n
+\nهل مازلت تريد أن تكمل؟</string>
+    <string name="pref_update_only_started">لم تقرأ أي فصول</string>
+    <string name="skipped_reason_completed">تم تخطيها لإنتهاء السلسلة</string>
+    <string name="pref_navigate_pan">قود للتحرك</string>
+    <string name="pref_landscape_zoom">كبر الصوره الأفقية</string>
 </resources>

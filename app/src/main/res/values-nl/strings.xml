@@ -457,10 +457,6 @@
     <string name="action_display_unread_badge">Ongelezen hoofdstukken</string>
     <string name="pref_refresh_library_covers">Omslagen van manga in bibliotheek bijwerken</string>
     <string name="tracking_info">Eenzijdige synchronisatie om voortang van hoofdstukken bij te werken bij trackingdiensten. Stel tracking in bij individuele manga via de \"Tracking\"-knop.</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 update mislukt</item>
-        <item quantity="other">%1$d updates mislukt</item>
-    </plurals>
     <string name="unofficial_extension_message">Deze extensie behoort niet tot de officiële Tachiyomi extensielijst.</string>
     <string name="ext_unofficial">Niet officieel</string>
     <string name="pref_library_update_refresh_metadata_summary">Controleer bij het bijwerken van de bibliotheek op nieuwe omslag en details</string>
@@ -690,7 +686,6 @@
     <string name="database_clean">Database leeg</string>
     <string name="privacy_policy">Privacybeleid</string>
     <string name="clear_database_source_item_count">%1$d niet-bibliotheek manga in database</string>
-    <string name="only_update_restrictions">Update alleen: %s</string>
     <string name="save_chapter_as_cbz">Opslaan als CBZ archief</string>
     <string name="pref_auto_clear_chapter_cache">Hoofdstuk cache leegmaken na het sluiten van de app</string>
     <string name="pref_library_update_manga_restriction">Beperkingen voor bibliotheek updates</string>

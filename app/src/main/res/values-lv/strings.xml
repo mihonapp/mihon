@@ -2,7 +2,6 @@
 <resources>
     <string name="name">Nosaukums</string>
     <string name="categories">Kategorijas</string>
-    <string name="manga"/>
     <string name="chapters">Nodaļas</string>
     <string name="track">Sekošana</string>
     <string name="history">Vēsture</string>

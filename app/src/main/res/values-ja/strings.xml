@@ -76,7 +76,7 @@
     <string name="all">全て</string>
     <string name="pref_library_update_restriction">自動更新の条件</string>
     <string name="charging">充電中</string>
-    <string name="pref_update_only_non_completed">連載中のシリーズ</string>
+    <string name="pref_update_only_non_completed">完結済みのシリーズ</string>
     <string name="pref_auto_update_manga_sync">読んだ後に読書進捗を更新</string>
     <string name="pref_start_screen">スタート画面</string>
     <string name="default_category">デフォルトカテゴリー</string>
@@ -454,9 +454,6 @@
         <item quantity="other">第%1$s章とその他%2$d章</item>
     </plurals>
     <string name="notification_chapters_single_and_more">第%1$s章とその他%2$d章</string>
-    <plurals name="notification_update_error">
-        <item quantity="other">%1$dのアップデートに失敗しました</item>
-    </plurals>
     <string name="notification_chapters_multiple">第%1$s章</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="other">%d件のタイトル</item>
@@ -574,7 +571,7 @@
     <string name="include">下記を含む：%s</string>
     <string name="none">なし</string>
     <string name="pref_library_update_categories_details">含まれているカテゴリーに入っていても、除外対象カテゴリーにあるマンガは更新されません。</string>
-    <string name="action_show_errors">タップでエラーの詳細を見る</string>
+    <string name="action_show_errors">タップで詳細を表示</string>
     <string name="action_sort_chapter_fetch_date">章の取得された日付順</string>
     <string name="information_empty_category_dialog">まだカテゴリを登録していません。</string>
     <string name="update_check_eol">このAndroidはもうサポートされていません</string>
@@ -678,9 +675,8 @@
     <string name="database_clean">データベースクリーンアップ</string>
     <string name="extension_api_error">拡張機能リストを取得できませんでした</string>
     <string name="privacy_policy">プライバシーポリシー</string>
-    <string name="pref_library_update_manga_restriction">マンガ更新制限</string>
-    <string name="pref_update_only_completely_read">読了済みのシリーズ</string>
-    <string name="only_update_restrictions">下記のみ更新：%s</string>
+    <string name="pref_library_update_manga_restriction">更新のスキップ</string>
+    <string name="pref_update_only_completely_read">未読の章あり</string>
     <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください</string>
     <string name="save_chapter_as_cbz">CBZアーカイブとして保存</string>
     <string name="publishing_finished">完結済み</string>
@@ -689,4 +685,21 @@
     <string name="action_faq_and_guides">よくあるご質問とガイド</string>
     <string name="backup_restore_invalid_uri">エラー：URIは空です</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_show_manga">マンガを表示</string>
+    <string name="action_display_cover_only_grid">表紙グリッド</string>
+    <string name="action_filter_started">開始済み</string>
+    <string name="pref_update_only_started">読了した章なし</string>
+    <string name="skipped_reason_not_caught_up">未読の章がある為スキップしました</string>
+    <string name="confirm_manga_add_duplicate">同じ名前で異なるソース（%1$s）の項目はすでにライブラリに存在します。
+\n
+\n続行しますか？</string>
+    <string name="pref_landscape_zoom">横長の画像をズーム</string>
+    <string name="skipped_reason_completed">完結済みの為スキップしました</string>
+    <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
+    <string name="pref_navigate_pan">ページ内で移動</string>
+    <string name="notification_update_skipped">%1$d件の更新がスキップされました</string>
+    <string name="learn_more">もっと詳しく</string>
+    <string name="channel_skipped">スキップ済み</string>
+    <string name="notification_update_error">%1$d件の更新に失敗しました</string>
+    <string name="rotation_reverse_portrait">縦向き（反転）</string>
 </resources>

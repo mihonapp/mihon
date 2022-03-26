@@ -133,7 +133,7 @@
     <string name="all">Wszystko</string>
     <string name="pref_library_update_restriction">Ograniczenia sprzętowe dla automatycznych aktualizacji</string>
     <string name="charging">Ładowanie</string>
-    <string name="pref_update_only_non_completed">Nieukończone serie</string>
+    <string name="pref_update_only_non_completed">Ukończone serie</string>
     <string name="pref_auto_update_manga_sync">Aktualizuj postęp po przeczytaniu rozdziału</string>
     <string name="pref_start_screen">Ekran startowy</string>
     <string name="default_category">Domyślna kategoria</string>
@@ -351,7 +351,7 @@
     <string name="information_webview_outdated">Zaktualizuj aplikację WebView dla lepszej kompatybilności</string>
     <string name="information_cloudflare_bypass_failure">Nie udało się obejść Cloudflare</string>
     <string name="label_more">Więcej</string>
-    <string name="secure_screen_summary">Ukryj zawartość ekranu przy przełączaniu między aplikacjami i blokuj zrzuty ekranu</string>
+    <string name="secure_screen_summary">Ukrywa zawartość ekranu przy przełączaniu między aplikacjami i blokuj zrzuty ekranu</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Po 1 minucie</item>
         <item quantity="few">Po %1$s minutach</item>
@@ -472,12 +472,6 @@
         <item quantity="other">Wykonano w %1$s z %2$s błędami</item>
     </plurals>
     <string name="pref_category_reading">Czytane</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 aktualizacja zakończona niepowodzeniem</item>
-        <item quantity="few">%1$d aktualizacji zakończonych niepowodzeniem</item>
-        <item quantity="many">%1$d aktualizacji zakończonych niepowodzeniem</item>
-        <item quantity="other">%1$d aktualizacji zakończonych niepowodzeniem</item>
-    </plurals>
     <string name="unofficial_extension_message">Te rozszerzenie nie jest na liście oficjalnych rozszerzeń Tachiyomi.</string>
     <string name="ext_unofficial">Nieoficjalne</string>
     <string name="sort_by_upload_date">Po dacie dodania</string>
@@ -613,7 +607,7 @@
     <string name="pref_category_auto_download">Automatyczne pobieranie</string>
     <string name="rotation_landscape">Poziomo</string>
     <string name="rotation_portrait">Pionowo</string>
-    <string name="action_show_errors">Kliknij, by wyświetlić pełny log błędów</string>
+    <string name="action_show_errors">Kliknij, by wyświetlić detale</string>
     <string name="notification_incognito_text">Wyłącz tryb incognito</string>
     <string name="action_sort_chapter_fetch_date">Data pobrania</string>
     <string name="error_no_match">Nie znaleziono pasującego wyniku</string>
@@ -714,7 +708,6 @@
     <string name="pref_auto_clear_chapter_cache">Wyczyść cache rozdziałów przy wychodzeniu z aplikacji</string>
     <string name="extension_api_error">Nie można uzyskać listy rozszerzeń</string>
     <string name="publishing_finished">Opublikowane w całości</string>
-    <string name="only_update_restrictions">Aktualizuj tylko: %s</string>
     <string name="database_clean">Baza danych wyczyszczona</string>
     <string name="cancelled">Anulowane</string>
     <string name="on_hiatus">Przerwa wydawnicza</string>
@@ -722,7 +715,22 @@
     <string name="save_chapter_as_cbz">Zapisz jako archiwum CBZ</string>
     <string name="privacy_policy">Polityka prywatności</string>
     <string name="clear_database_source_item_count">%1$d mang spoza biblioteki w bazie danych</string>
-    <string name="pref_library_update_manga_restriction">Ograniczenia aktualizacji biblioteki</string>
-    <string name="pref_update_only_completely_read">Całkowicie przeczytane serie</string>
+    <string name="pref_library_update_manga_restriction">Pomiń aktualizacje</string>
+    <string name="pref_update_only_completely_read">Posiada nieprzeczytane rozdziały</string>
     <string name="action_faq_and_guides">FAQ i poradniki</string>
+    <string name="backup_restore_invalid_uri">Błąd: pusty URI</string>
+    <string name="pref_update_only_started">Brak przeczytanych rozdziałów</string>
+    <string name="webtoon_side_padding_5">5%</string>
+    <string name="pref_landscape_zoom">Przybliżaj poziome obrazy</string>
+    <string name="action_show_manga">Pokaż mangę</string>
+    <string name="pref_navigate_pan">Dotknij aby przesunąć</string>
+    <string name="action_display_cover_only_grid">Siatka z samych okładek</string>
+    <string name="skipped_reason_not_started">Pominięto - brak przeczytanych rozdziałów</string>
+    <string name="skipped_reason_completed">Pominięto ponieważ seria została ukończona</string>
+    <string name="skipped_reason_not_caught_up">Pominięto ponieważ istnieją nieprzeczytane rozdziały</string>
+    <string name="action_filter_started">Rozpoczęto</string>
+    <string name="confirm_manga_add_duplicate">W swojej bibliotece posiadasz wpis o tej samej nazwie lecz z innego źródła(%1$s).
+\n
+\nCzy nadal chcesz kontynuować\?</string>
+    <string name="channel_skipped">Pominięty</string>
 </resources>

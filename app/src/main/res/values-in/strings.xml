@@ -6,7 +6,7 @@
     <string name="track">Pelacakan</string>
     <string name="history">Riwayat</string>
     <string name="label_settings">Pengaturan</string>
-    <string name="label_download_queue">Antrian unduhan</string>
+    <string name="label_download_queue">Antrean unduhan</string>
     <string name="label_library">Pustaka</string>
     <string name="label_recent_manga">Riwayat</string>
     <string name="label_recent_updates">Pembaruan</string>
@@ -14,7 +14,7 @@
     <string name="action_settings">Pengaturan</string>
     <string name="action_filter">Filter</string>
     <string name="action_filter_downloaded">Terunduh</string>
-    <string name="action_filter_bookmarked">Tertandai</string>
+    <string name="action_filter_bookmarked">Ditandai</string>
     <string name="action_filter_unread">Belum dibaca</string>
     <string name="action_filter_empty">Hapus filter</string>
     <string name="action_sort_alpha">Menurut abjad</string>
@@ -42,7 +42,7 @@
     <string name="action_pause">Hentikan sementara</string>
     <string name="action_previous_chapter">Bab sebelumnya</string>
     <string name="action_next_chapter">Bab selanjutnya</string>
-    <string name="action_retry">Lanjut</string>
+    <string name="action_retry">Coba lagi</string>
     <string name="action_remove">Hapus</string>
     <string name="action_resume">Lanjut</string>
     <string name="action_open_in_browser">Buka di peramban</string>
@@ -69,7 +69,7 @@
     <string name="pref_category_tracking">Sinkronisasi</string>
     <string name="pref_category_advanced">Lanjutan</string>
     <string name="pref_category_about">Tentang</string>
-    <string name="pref_library_columns">Item yang ditampilkan per baris</string>
+    <string name="pref_library_columns">Item per baris</string>
     <string name="portrait">Layar tegak</string>
     <string name="landscape">Layar mendatar</string>
     <string name="pref_library_update_interval">Pembaruan otomatis</string>
@@ -81,10 +81,10 @@
     <string name="update_weekly">Tiap minggu</string>
     <string name="all">Semua</string>
     <string name="pref_library_update_restriction">Pembatasan pembaruan otomatis</string>
-    <string name="charging">Sedang mengisi daya</string>
-    <string name="pref_update_only_non_completed">Seri yang masih berlangsung</string>
-    <string name="pref_auto_update_manga_sync">Perbarui progres setelah dibaca</string>
-    <string name="pref_start_screen">Layar mulai</string>
+    <string name="charging">Mengisi daya</string>
+    <string name="pref_update_only_non_completed">Seri yang selesai</string>
+    <string name="pref_auto_update_manga_sync">Perbarui kemajuan setelah membaca</string>
+    <string name="pref_start_screen">Layar awal</string>
     <string name="default_category">Kategori default</string>
     <string name="default_category_summary">Selalu tanya</string>
     <string name="pref_fullscreen">Layar penuh</string>
@@ -137,7 +137,7 @@
     <string name="pref_download_new">Unduh bab baru</string>
     <string name="services">Layanan</string>
     <string name="pref_create_backup">Buat cadangan</string>
-    <string name="pref_create_backup_summ">Bisa digunakan untuk memulihkan isi pustaka saat ini</string>
+    <string name="pref_create_backup_summ">Dapat digunakan untuk memulihkan isi pustaka saat ini</string>
     <string name="pref_restore_backup">Pulihkan cadangan</string>
     <string name="pref_restore_backup_summ">Pulihkan isi pustaka dari berkas cadangan</string>
     <string name="pref_backup_directory">Tempat pencadangan</string>
@@ -231,7 +231,7 @@
     <string name="file_select_backup">Pilih berkas cadangan</string>
     <string name="update_check_confirm">Unduh</string>
     <string name="update_check_ignore">Abaikan</string>
-    <string name="update_check_no_new_updates">Anda telah memiliki versi yang terbaru</string>
+    <string name="update_check_no_new_updates">Pembaruan tidak tersedia</string>
     <string name="update_check_look_for_updates">Mencari pembaruan…</string>
     <string name="update_check_notification_download_in_progress">Mengunduh…</string>
     <string name="update_check_notification_download_complete">Mengunduh selesai</string>
@@ -446,10 +446,7 @@
     <plurals name="restore_completed_message">
         <item quantity="other">Selesai dalam %1$s dengan %2$s kesalahan</item>
     </plurals>
-    <string name="tracking_info">Sinkronisasi satu arah untuk memperbarui jejak bab dalam pelacakan. Siapkan pelacakan untuk entri manga individual dari tombol pelacakan.</string>
-    <plurals name="notification_update_error">
-        <item quantity="other">%1$d pembaruan gagal</item>
-    </plurals>
+    <string name="tracking_info">Sinkronisasi satu arah untuk memperbarui kemajuan bab dalam layanan pelacakan. Siapkan pelacakan untuk entri manga individual dari tombol pelacakan.</string>
     <string name="unofficial_extension_message">Ekstensi ini bukan dari daftar ekstensi resmi Tachiyomi.</string>
     <string name="ext_unofficial">Tidak resmi</string>
     <string name="pref_library_update_refresh_metadata_summary">Periksa sampul dan detail baru saat memperbarui pustaka</string>
@@ -553,7 +550,7 @@
     <string name="right_and_left_nav">Kanan dan Kiri</string>
     <string name="action_display_show_number_of_items">Tampilkan jumlah item</string>
     <string name="none">Kosong</string>
-    <string name="action_show_errors">Ketuk untuk melihat detail error</string>
+    <string name="action_show_errors">Ketuk untuk melihat detail</string>
     <string name="action_sort_chapter_fetch_date">Tanggal diambil</string>
     <string name="pref_reader_actions">Aksi</string>
     <string name="nav_zone_right">Kanan</string>
@@ -616,7 +613,7 @@
     <string name="tracker_komga_warning">Pelacak ini hanya kompatibel dengan sumber Komga.</string>
     <string name="restore_miui_warning">Pencadangan/pemulihan mungkin tidak berfungsi jika Optimisasi MIUI dimatikan.</string>
     <string name="enhanced_tracking_info">Layanan yang menyediakan fitur yang ditingkatan untuk sumber tertentu. Manga dilacak secara otomatis ketika ditambahkan ke pustaka Anda.</string>
-    <string name="enhanced_services">Servis yang ditingkatkan</string>
+    <string name="enhanced_services">Layanan yang ditingkatkan</string>
     <string name="pref_dark_theme_pure_black">Mode gelap hitam pekat</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin dan Yang</string>
@@ -677,14 +674,32 @@
     <string name="database_clean">Bersihkan database</string>
     <string name="clear_database_source_item_count">%1$d manga diluar kategori pustaka pada database</string>
     <string name="extension_api_error">Gagal mendapatkan daftar ekstensi</string>
-    <string name="pref_library_update_manga_restriction">Pembatasan pembaruan pustaka</string>
-    <string name="pref_update_only_completely_read">Seri selesai dibaca</string>
+    <string name="pref_library_update_manga_restriction">Lewati pembaruan</string>
+    <string name="pref_update_only_completely_read">Memiliki bab yang belum dibaca</string>
     <string name="privacy_policy">Kebijakan privasi</string>
     <string name="publishing_finished">Penerbitan selesai</string>
     <string name="cancelled">Dibatalkan</string>
     <string name="on_hiatus">Sedang Hiatus</string>
-    <string name="only_update_restrictions">Hanya perbarui: %s</string>
     <string name="library_errors_help">Untuk bantuan cara memperbaiki kesalahan pembaruan pustaka, lihat %1$s</string>
     <string name="save_chapter_as_cbz">Simpan sebagai arsip CBZ</string>
     <string name="action_faq_and_guides">Tanya Jawab dan Panduan</string>
+    <string name="backup_restore_invalid_uri">Kesalahan: URI kosong</string>
+    <string name="action_show_manga">Lihat Manga</string>
+    <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_display_cover_only_grid">Grid sampul saja</string>
+    <string name="pref_update_only_started">Tidak ada bab yang dibaca</string>
+    <string name="confirm_manga_add_duplicate">Anda memiliki sebuah entri di pustaka anda dengan nama yang sama tapi dari sumber yang berbeda (%1$s).
+\n
+\nApakah Anda yakin untuk melanjutkan\?</string>
+    <string name="action_filter_started">Dimulai</string>
+    <string name="skipped_reason_completed">Dilewati karena seri telah selesai</string>
+    <string name="skipped_reason_not_caught_up">Dilewati karena ada bab yang belum dibaca</string>
+    <string name="skipped_reason_not_started">Dilewati karena tidak ada bab yang dibaca</string>
+    <string name="pref_landscape_zoom">Perbesar gambar lanskap</string>
+    <string name="pref_navigate_pan">Navigasikan ke panorama</string>
+    <string name="notification_update_skipped">%1$d pembaruan terlewat</string>
+    <string name="learn_more">Pelajari lebih banyak</string>
+    <string name="channel_skipped">Terlewat</string>
+    <string name="rotation_reverse_portrait">Layar tegak terbalik</string>
+    <string name="notification_update_error">%1$d pembaruan gagal</string>
 </resources>

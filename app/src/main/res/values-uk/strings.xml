@@ -468,8 +468,8 @@
     <plurals name="restore_completed_message">
         <item quantity="one">Зроблено за %1$s з %2$s помилкою</item>
         <item quantity="few">Зроблено за %1$s з %2$s помилками</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="restore_duration">%02d хв, %02d сек</string>
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
@@ -482,12 +482,6 @@
     <string name="tracking_info">Одностороння синхронізація для оновлення прогресу глави в службах відстеження. Налаштуйте відстеження для окремих записів манги з їх кнопками відстеження.</string>
     <string name="action_display_show_tabs">Показувати вкладки категорій</string>
     <string name="action_display_comfortable_grid">Зручна сітка</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 оновлення схалепилось</item>
-        <item quantity="few">%1$d оновлень схалепилось</item>
-        <item quantity="many">%1$d оновлень схалепилось</item>
-        <item quantity="other">%1$d оновлень схалепилось</item>
-    </plurals>
     <string name="recent_manga_time">Гл. %1$s - %2$s</string>
     <string name="viewer">Режим читання</string>
     <string name="pref_category_for_this_series">Для цієї серії</string>
@@ -715,7 +709,6 @@
     <string name="privacy_policy">Політика конфіденційності</string>
     <string name="pref_library_update_manga_restriction">Обмеження оновлення бібліотеки</string>
     <string name="pref_update_only_completely_read">Повністю прочитані серії</string>
-    <string name="only_update_restrictions">Оновлювати тільки: %s</string>
     <string name="save_chapter_as_cbz">Зберегти архів як CBZ</string>
     <string name="library_errors_help">Для допомоги в виправленні помилок оновлення бібліотеки, дивіться %1$s</string>
     <string name="publishing_finished">Публікація завершена</string>

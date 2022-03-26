@@ -17,10 +17,6 @@
     <string name="file_select_cover">عکس روی جلد را انتخاب کنید</string>
     <string name="notification_first_add_to_library">لطفا قبل این کار مانگای موردنظر را به کتابخانه اضافه کنید</string>
     <string name="notification_cover_update_failed">آپدیت عکس روی جلد با خطا مواجه شد</string>
-    <plurals name="notification_update_error">
-        <item quantity="one">۱ آپدیت با خطا مواجه شد</item>
-        <item quantity="other">%1$d آپدیت با خطا مواجه شد</item>
-    </plurals>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">قسمت های %1$s و 1 قسمت دیگر</item>
         <item quantity="other">‬قسمت های %1$s و %2$d قسمت دیگر‬</item>
@@ -126,7 +122,7 @@
     <string name="label_extension_info">اطلاعات افزونه</string>
     <string name="label_extensions">افزونه‌ها</string>
     <string name="label_migration">تغییر منبع</string>
-    <string name="label_backup">پشتیبان گیری</string>
+    <string name="label_backup">پشتیبان گیری و بازیابی</string>
     <string name="label_sources">منابع</string>
     <string name="label_recent_manga">سابقه</string>
     <string name="label_recent_updates">آپدیت ها</string>
@@ -307,7 +303,7 @@
     <string name="update_48hour">هر ۴۸ ساعت یکبار</string>
     <string name="update_24hour">هر ۲۴ ساعت یکبار</string>
     <string name="update_6hour">هر ۶ ساعت یکبار</string>
-    <string name="update_never">فقط دستی</string>
+    <string name="update_never">خاموش</string>
     <string name="pref_library_update_interval">زمان بروزرسانی کتابخانه</string>
     <string name="pref_category_library_update">آپدیت‌ها</string>
     <string name="landscape">افقی</string>
@@ -550,4 +546,23 @@
     <string name="migration_help_guide">راهنمای تعویض منبع</string>
     <string name="pref_clear_history">پاک کردن سابقه</string>
     <string name="pref_show_nsfw_source">نمایش در لیست منابع</string>
+    <string name="nav_zone_left">چپ</string>
+    <string name="nav_zone_right">راست</string>
+    <string name="ext_installer_legacy">قدیمی</string>
+    <string name="ext_installer_pref">نصب کننده</string>
+    <string name="pref_create_folder_per_manga_summary">ساخت پوشه بر اساس نام مانگا</string>
+    <string name="action_filter_started">شروع شده</string>
+    <string name="ext_update_all">آپدیت همگی</string>
+    <string name="label_background_activity">فعالیت در پس زمینه</string>
+    <string name="action_sort_count">کل مانگاها</string>
+    <string name="label_default">پیش فرض</string>
+    <string name="action_filter_tracked">دنبال شده</string>
+    <string name="pref_create_folder_per_manga">ذخیره صفحات در پوشه های جداگانه</string>
+    <string name="error_no_match">هیچ مورد مشابهی پیدا نشد</string>
+    <string name="ext_install_service_notif">در حال نصب کردن افزونه …</string>
+    <string name="extension_api_error">دریافت لیست افزونه ها ناموفق بود</string>
+    <string name="label_warning">اخطار</string>
+    <string name="confirm_lock_change">احراز هویت جهت تایید تغییرات</string>
+    <string name="enhanced_services">سرویس های بهینه شده</string>
+    <string name="unread">خوانده نشده</string>
 </resources>

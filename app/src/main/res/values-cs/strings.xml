@@ -407,7 +407,7 @@
     <string name="pref_refresh_library_covers">Obnovit přebaly mang v knihovně</string>
     <string name="label_data">Data</string>
     <string name="requires_app_restart">Pro projevení je nutný restart aplikace</string>
-    <string name="pref_dns_over_https">DNS přes HTTPS</string>
+    <string name="pref_dns_over_https">DNS přes HTTPS (DoH)</string>
     <string name="label_network">Síť</string>
     <string name="restoring_backup_canceled">Obnova zrušena</string>
     <string name="restoring_backup_error">Obnova ze zálohy selhala</string>
@@ -497,11 +497,6 @@
         <item quantity="few">Jsou dostupné %d aktualizace rozšíření</item>
         <item quantity="other">Je dostupných %d aktualizací rozšíření</item>
     </plurals>
-    <plurals name="notification_update_error">
-        <item quantity="one">1 aktualizace selhala</item>
-        <item quantity="few">%1$d aktualizace selhaly</item>
-        <item quantity="other">%1$d aktualizací selhalo</item>
-    </plurals>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Kapitoly %1$s a 1 další</item>
         <item quantity="few">Kapitoly %1$s a %2$d další</item>
@@ -529,9 +524,9 @@
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
     <string name="updating_library">Aktualizuji knihovnu</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Přeskočena 1 kapitola, buď chybí ve zdroji nebo byla vyfiltrována.</item>
-        <item quantity="few">Přeskočeny %d kapitoly, buď chybí ve zdroji nebo byly vyfiltrovány.</item>
-        <item quantity="other">Přeskočeno %d kapitol, buď chybí ve zdroji nebo byly vyfiltrovány.</item>
+        <item quantity="one">Přeskočena 1 kapitola, buď chybí ve zdroji nebo byla vyfiltrována</item>
+        <item quantity="few">Přeskočeny %d kapitoly, buď chybí ve zdroji nebo byly vyfiltrovány</item>
+        <item quantity="other">Přeskočeno %d kapitol, buď chybí ve zdroji nebo byly vyfiltrovány</item>
     </plurals>
     <string name="loader_not_implemented_error">Zdroj nenalezen</string>
     <string name="page_list_empty_error">Žádné stránky nenalezeny</string>
@@ -701,7 +696,6 @@
     <string name="pref_auto_clear_chapter_cache">Vymazat cache kapitol při zavření aplikace</string>
     <string name="extension_api_error">Chyba v získání seznamu rozšíření</string>
     <string name="privacy_policy">Zásady ochrany osobních údajů</string>
-    <string name="only_update_restrictions">Pouze aktualizuj: %s</string>
     <string name="clear_database_source_item_count">v databázi je manga %1$d mimo knihovnu</string>
     <string name="pref_true_color_summary">Snižuje proužkování, ale ovlivňuje výkon</string>
     <string name="pref_library_update_manga_restriction">Omezení aktualizace knihovny</string>
@@ -713,4 +707,10 @@
     <string name="action_faq_and_guides">FAQ a Návody</string>
     <string name="publishing_finished">Zveřejnění dokončeno</string>
     <string name="cancelled">Zrušeno</string>
+    <string name="action_show_manga">Zobrazit mangu</string>
+    <string name="action_display_cover_only_grid">Mřížka jen s přebaly</string>
+    <string name="webtoon_side_padding_5">5 %</string>
+    <string name="confirm_manga_add_duplicate">Ve své knihovně máte položku se stejným názvem, ale z jiného zdroje (%1$s).
+\n
+\nPřejete si přesto pokračovat\?</string>
 </resources>
