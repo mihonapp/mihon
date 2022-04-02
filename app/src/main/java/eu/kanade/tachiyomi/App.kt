@@ -32,6 +32,7 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.preference.asImmediateFlow
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
+import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notification
@@ -146,6 +147,23 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         if (!AuthenticatorUtil.isAuthenticating && preferences.lockAppAfter().get() >= 0) {
             SecureActivityDelegate.locked = true
         }
+    }
+
+    override fun getPackageName(): String {
+        try {
+            // Override the value passed as X-Requested-With in WebView requests
+            val stackTrace = Thread.currentThread().stackTrace
+            for (element in stackTrace) {
+                if ("org.chromium.base.BuildInfo".equals(element.className, ignoreCase = true)) {
+                    if ("getAll".equals(element.methodName, ignoreCase = true)) {
+                        return WebViewUtil.SPOOF_PACKAGE_NAME
+                    }
+                    break
+                }
+            }
+        } catch (e: Exception) {
+        }
+        return super.getPackageName()
     }
 
     protected open fun setupAcra() {

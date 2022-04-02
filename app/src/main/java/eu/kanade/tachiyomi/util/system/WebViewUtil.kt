@@ -9,7 +9,7 @@ import android.webkit.WebView
 import logcat.LogPriority
 
 object WebViewUtil {
-    const val REQUESTED_WITH = "com.android.browser"
+    const val SPOOF_PACKAGE_NAME = "com.android.chrome"
 
     const val MINIMUM_WEBVIEW_VERSION = 95
 

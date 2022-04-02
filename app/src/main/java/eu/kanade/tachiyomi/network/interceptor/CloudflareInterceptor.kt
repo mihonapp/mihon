@@ -101,7 +101,6 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
 
         val origRequestUrl = request.url.toString()
         val headers = request.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }.toMutableMap()
-        headers["X-Requested-With"] = WebViewUtil.REQUESTED_WITH
 
         executor.execute {
             val webview = WebView(context)
