@@ -80,6 +80,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
+        android:clipToPadding="false"
         tools:listitem="@layout/global_search_controller_card_item" />
 
 </LinearLayout>
