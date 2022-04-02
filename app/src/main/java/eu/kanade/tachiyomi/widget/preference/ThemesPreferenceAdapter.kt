@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.PrefThemeItemBinding
-import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity
+import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import uy.kohesive.injekt.injectLazy
 
@@ -23,7 +23,7 @@ class ThemesPreferenceAdapter(private val clickListener: OnItemClickListener) :
     private lateinit var binding: PrefThemeItemBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeViewHolder {
-        val themeResIds = BaseThemedActivity.getThemeResIds(themes[viewType], preferences.themeDarkAmoled().get())
+        val themeResIds = ThemingDelegate.getThemeResIds(themes[viewType], preferences.themeDarkAmoled().get())
         val themedContext = themeResIds.fold(parent.context) {
             context, themeResId ->
             ContextThemeWrapper(context, themeResId)

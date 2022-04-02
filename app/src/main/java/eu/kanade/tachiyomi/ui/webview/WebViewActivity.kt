@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.WebviewActivityBinding
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.base.activity.BaseViewBindingActivity
+import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.getResourceColor
@@ -32,7 +32,9 @@ import reactivecircus.flowbinding.appcompat.navigationClicks
 import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import uy.kohesive.injekt.injectLazy
 
-class WebViewActivity : BaseViewBindingActivity<WebviewActivityBinding>() {
+class WebViewActivity : BaseActivity() {
+
+    private lateinit var binding: WebviewActivityBinding
 
     private val sourceManager: SourceManager by injectLazy()
 
@@ -201,6 +203,10 @@ class WebViewActivity : BaseViewBindingActivity<WebviewActivityBinding>() {
 
     private fun openInBrowser() {
         openInBrowser(binding.webview.url!!, forceDefaultBrowser = true)
+    }
+
+    init {
+        registerSecureActivity(this)
     }
 
     companion object {

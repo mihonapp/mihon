@@ -2,18 +2,17 @@ package eu.kanade.tachiyomi.ui.base.activity
 
 import android.content.Context
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegateImpl
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegateImpl
-import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.system.prepareTabletUiContext
-import nucleus.view.NucleusAppCompatActivity
 import uy.kohesive.injekt.injectLazy
 
-open class BaseRxActivity<P : BasePresenter<*>> :
-    NucleusAppCompatActivity<P>(),
+open class BaseActivity :
+    AppCompatActivity(),
     SecureActivityDelegate by SecureActivityDelegateImpl(),
     ThemingDelegate by ThemingDelegateImpl() {
 

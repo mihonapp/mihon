@@ -50,10 +50,8 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
-import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity.Companion.applyAppTheme
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter.SetAsCoverResult.AddToLibraryFirst
@@ -88,7 +86,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
 import logcat.LogPriority
 import nucleus.factory.RequiresPresenter
-import uy.kohesive.injekt.injectLazy
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -97,7 +94,7 @@ import kotlin.math.max
  * viewers, to which calls from the presenter or UI events are delegated.
  */
 @RequiresPresenter(ReaderPresenter::class)
-class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() {
+class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     companion object {
         fun newIntent(context: Context, manga: Manga, chapter: Chapter): Intent {
@@ -115,7 +112,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         const val SHARED_ELEMENT_NAME = "reader_shared_element_root"
     }
 
-    private val preferences: PreferencesHelper by injectLazy()
+    lateinit var binding: ReaderActivityBinding
 
     val hasCutout by lazy { hasDisplayCutout() }
 
@@ -157,7 +154,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
      * Called when the activity is created. Initializes the presenter and configuration.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        applyAppTheme(preferences)
+        registerSecureActivity(this)
 
         // Setup shared element transitions
         if (intent.extras?.getBoolean(EXTRA_IS_TRANSITION) == true) {

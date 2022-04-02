@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import eu.kanade.tachiyomi.data.track.TrackManager
-import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity
+import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import uy.kohesive.injekt.injectLazy
 
-abstract class BaseOAuthLoginActivity : BaseThemedActivity() {
+abstract class BaseOAuthLoginActivity : BaseActivity() {
 
     internal val trackManager: TrackManager by injectLazy()
 

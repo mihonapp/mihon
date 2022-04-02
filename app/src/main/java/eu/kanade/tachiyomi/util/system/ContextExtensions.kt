@@ -41,7 +41,7 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.ui.base.activity.BaseThemedActivity
+import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.util.lang.truncateCenter
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
@@ -325,7 +325,7 @@ fun Context.createReaderThemeContext(): Context {
 
         val wrappedContext = ContextThemeWrapper(this, R.style.Theme_Tachiyomi)
         wrappedContext.applyOverrideConfiguration(overrideConf)
-        BaseThemedActivity.getThemeResIds(prefs.appTheme().get(), prefs.themeDarkAmoled().get())
+        ThemingDelegate.getThemeResIds(prefs.appTheme().get(), prefs.themeDarkAmoled().get())
             .forEach { wrappedContext.theme.applyStyle(it, true) }
         return wrappedContext
     }

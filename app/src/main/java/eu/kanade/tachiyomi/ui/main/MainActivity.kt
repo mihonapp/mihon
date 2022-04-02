@@ -40,7 +40,7 @@ import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
 import eu.kanade.tachiyomi.databinding.MainActivityBinding
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
-import eu.kanade.tachiyomi.ui.base.activity.BaseViewBindingActivity
+import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.NoAppBarElevationController
@@ -77,7 +77,9 @@ import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
 import uy.kohesive.injekt.injectLazy
 
-class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
+class MainActivity : BaseActivity() {
+
+    lateinit var binding: MainActivityBinding
 
     private lateinit var router: Router
 
@@ -626,6 +628,10 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
     private val nav: NavigationBarView
         get() = binding.bottomNav ?: binding.sideNav!!
+
+    init {
+        registerSecureActivity(this)
+    }
 
     companion object {
         // Splash screen

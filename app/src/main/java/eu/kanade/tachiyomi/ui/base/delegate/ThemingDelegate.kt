@@ -1,33 +1,16 @@
-package eu.kanade.tachiyomi.ui.base.activity
+package eu.kanade.tachiyomi.ui.base.delegate
 
-import android.content.Context
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.util.system.prepareTabletUiContext
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
-abstract class BaseThemedActivity : AppCompatActivity() {
-
-    val preferences: PreferencesHelper by injectLazy()
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(newBase.prepareTabletUiContext())
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        applyAppTheme(preferences)
-        super.onCreate(savedInstanceState)
-    }
+interface ThemingDelegate {
+    fun applyAppTheme(activity: Activity)
 
     companion object {
-        fun AppCompatActivity.applyAppTheme(preferences: PreferencesHelper) {
-            getThemeResIds(preferences.appTheme().get(), preferences.themeDarkAmoled().get())
-                .forEach { setTheme(it) }
-        }
-
         fun getThemeResIds(appTheme: PreferenceValues.AppTheme, isAmoled: Boolean): List<Int> {
             val resIds = mutableListOf<Int>()
             when (appTheme) {
@@ -66,5 +49,13 @@ abstract class BaseThemedActivity : AppCompatActivity() {
 
             return resIds
         }
+    }
+}
+
+class ThemingDelegateImpl : ThemingDelegate {
+    override fun applyAppTheme(activity: Activity) {
+        val preferences = Injekt.get<PreferencesHelper>()
+        ThemingDelegate.getThemeResIds(preferences.appTheme().get(), preferences.themeDarkAmoled().get())
+            .forEach { activity.setTheme(it) }
     }
 }
