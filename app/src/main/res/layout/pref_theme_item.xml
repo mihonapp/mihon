@@ -144,6 +144,7 @@
         android:layout_marginTop="4dp"
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+        android:scrollbars="none"
         tools:text="Theme Name" />
 
 </LinearLayout>
