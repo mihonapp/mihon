@@ -186,7 +186,7 @@
     <string name="lock_always">Always</string>
     <string name="lock_never">Never</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">After 1 minute</item>
+        <item quantity="one">After %1$s minute</item>
         <item quantity="other">After %1$s minutes</item>
     </plurals>
     <string name="hide_notification_content">Hide notification content</string>
@@ -514,7 +514,7 @@
     <string name="notification_incognito_text">Disable incognito mode</string>
     <string name="downloaded_only_summary">Filters all manga in your library</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">1 remaining</item>
+        <item quantity="one">%1$s remaining</item>
         <item quantity="other">%1$s remaining</item>
     </plurals>
 
@@ -583,7 +583,7 @@
     <string name="manga_info_expand">More</string>
     <string name="manga_info_collapse">Less</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 chapter</item>
+        <item quantity="one">%1$s chapter</item>
         <item quantity="other">%1$s chapters</item>
     </plurals>
     <string name="delete_downloads_for_manga">Delete downloaded chapters?</string>
@@ -633,7 +633,7 @@
     <string name="tracker_shikimori" translatable="false">Shikimori</string>
     <string name="manga_tracking_tab">Tracking</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 tracker</item>
+        <item quantity="one">%d tracker</item>
         <item quantity="other">%d trackers</item>
     </plurals>
     <string name="add_tracking">Add tracking</string>
@@ -693,7 +693,7 @@
     <string name="page_list_empty_error">No pages found</string>
     <string name="loader_not_implemented_error">Source not found</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Skipping 1 chapter, either the source is missing it or it has been filtered out</item>
+        <item quantity="one">Skipping %d chapter, either the source is missing it or it has been filtered out</item>
         <item quantity="other">Skipping %d chapters, either the source is missing them or they have been filtered out</item>
     </plurals>
 
@@ -724,11 +724,11 @@
     <string name="notification_size_warning">Warning: large updates harm sources and may lead to slower updates and also increased battery usage</string>
     <string name="notification_new_chapters">New chapters found</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">For 1 title</item>
+        <item quantity="one">For %d title</item>
         <item quantity="other">For %d titles</item>
     </plurals>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 new chapter</item>
+        <item quantity="one">%1$d new chapter</item>
         <item quantity="other">%1$d new chapters</item>
     </plurals>
     <string name="notification_chapters_single">Chapter %1$s</string>
