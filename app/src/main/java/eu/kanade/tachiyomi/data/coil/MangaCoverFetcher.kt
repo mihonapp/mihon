@@ -119,8 +119,6 @@ class MangaCoverFetcher(
             } catch (e: Exception) {
                 responseBody.closeQuietly()
                 throw e
-            } finally {
-                response.close()
             }
         } catch (e: Exception) {
             snapshot?.closeQuietly()
