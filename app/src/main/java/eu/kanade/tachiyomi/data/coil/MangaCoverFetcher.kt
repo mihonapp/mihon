@@ -22,6 +22,8 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.internal.closeQuietly
 import okio.Path.Companion.toOkioPath
+import okio.buffer
+import okio.sink
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.net.HttpURLConnection
@@ -101,6 +103,11 @@ class MangaCoverFetcher(
             val responseBody = checkNotNull(response.body) { "Null response source" }
             try {
                 snapshot = writeToDiskCache(snapshot, response)
+
+                if (coverCacheFile != null) {
+                    writeToCoverCache(coverCacheFile, response)
+                }
+
                 // Read from disk cache
                 if (snapshot != null) {
                     return SourceResult(
@@ -124,6 +131,21 @@ class MangaCoverFetcher(
             snapshot?.closeQuietly()
             throw e
         }
+    }
+
+    private fun writeToCoverCache(cacheFile: File, response: Response) {
+        if (!options.diskCachePolicy.writeEnabled) return
+        try {
+            response.body!!.source().use { input ->
+                cacheFile.parentFile?.mkdirs()
+                if (cacheFile.exists()) {
+                    cacheFile.delete()
+                }
+                cacheFile.sink().buffer().use { output ->
+                    output.writeAll(input)
+                }
+            }
+        } catch (_: Exception) {}
     }
 
     private suspend fun executeNetworkRequest(): Response {
@@ -167,7 +189,10 @@ class MangaCoverFetcher(
         return if (options.diskCachePolicy.readEnabled) diskCacheLazy.value[diskCacheKey!!] else null
     }
 
-    private fun writeToDiskCache(snapshot: DiskCache.Snapshot?, response: Response): DiskCache.Snapshot? {
+    private fun writeToDiskCache(
+        snapshot: DiskCache.Snapshot?,
+        response: Response,
+    ): DiskCache.Snapshot? {
         if (!options.diskCachePolicy.writeEnabled) {
             snapshot?.closeQuietly()
             return null
