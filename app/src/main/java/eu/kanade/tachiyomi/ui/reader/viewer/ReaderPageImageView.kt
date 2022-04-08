@@ -102,7 +102,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                         override fun onImageLoadError(e: Exception) {
                             onImageLoadError()
                         }
-                    }
+                    },
                 )
             }
         }
@@ -123,7 +123,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     .withEasing(EASE_IN_OUT_QUAD)
                     .withInterruptible(true)
                     .start()
-            }, 500)
+            }, 500,)
         }
     }
 
@@ -233,7 +233,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                     override fun onCenterChanged(newCenter: PointF?, origin: Int) {
                         // Not used
                     }
-                }
+                },
             )
             setOnClickListener { this@ReaderPageImageView.onViewClicked() }
         }
@@ -271,7 +271,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 override fun onImageLoadError(e: Exception) {
                     this@ReaderPageImageView.onImageLoadError()
                 }
-            }
+            },
         )
 
         when (image) {
@@ -314,7 +314,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                             this@ReaderPageImageView.onViewClicked()
                             return super.onSingleTapConfirmed(e)
                         }
-                    }
+                    },
                 )
                 setOnScaleChangeListener { _, _, _ ->
                     this@ReaderPageImageView.onScaleChanged(scale)
@@ -350,7 +350,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 },
                 onError = {
                     this@ReaderPageImageView.onImageLoadError()
-                }
+                },
             )
             .crossfade(false)
             .build()

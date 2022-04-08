@@ -49,7 +49,7 @@ data class BackupChapter(
                 lastPageRead = chapter.last_page_read,
                 dateFetch = chapter.date_fetch,
                 dateUpload = chapter.date_upload,
-                sourceOrder = chapter.source_order
+                sourceOrder = chapter.source_order,
             )
         }
     }

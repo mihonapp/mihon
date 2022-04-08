@@ -37,8 +37,8 @@ class SourceFilterController : SettingsController() {
         val orderedLangs = sourcesByLang.keys.sortedWith(
             compareBy(
                 { it !in activeLangsCodes },
-                { LocaleHelper.getSourceDisplayName(it, context) }
-            )
+                { LocaleHelper.getSourceDisplayName(it, context) },
+            ),
         )
 
         orderedLangs.forEach { lang ->

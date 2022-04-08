@@ -14,8 +14,8 @@ class ExtensionTrustDialog<T>(bundle: Bundle? = null) : DialogController(bundle)
     constructor(target: T, signatureHash: String, pkgName: String) : this(
         bundleOf(
             SIGNATURE_KEY to signatureHash,
-            PKGNAME_KEY to pkgName
-        )
+            PKGNAME_KEY to pkgName,
+        ),
     ) {
         targetController = target
     }

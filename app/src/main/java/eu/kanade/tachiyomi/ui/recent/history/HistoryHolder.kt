@@ -58,7 +58,7 @@ class HistoryHolder(
             binding.mangaSubtitle.text = itemView.context.getString(
                 R.string.recent_manga_time,
                 formattedNumber,
-                Date(history.last_read).toTimestampString()
+                Date(history.last_read).toTimestampString(),
             )
         } else {
             binding.mangaSubtitle.text = Date(history.last_read).toTimestampString()

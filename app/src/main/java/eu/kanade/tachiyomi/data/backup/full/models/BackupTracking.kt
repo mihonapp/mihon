@@ -56,7 +56,7 @@ data class BackupTracking(
                 status = track.status,
                 startedReadingDate = track.started_reading_date,
                 finishedReadingDate = track.finished_reading_date,
-                trackingUrl = track.tracking_url
+                trackingUrl = track.tracking_url,
             )
         }
     }

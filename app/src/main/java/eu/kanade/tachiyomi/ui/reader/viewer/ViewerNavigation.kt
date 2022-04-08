@@ -24,7 +24,7 @@ abstract class ViewerNavigation {
         fun invert(invertMode: PreferenceValues.TappingInvertMode): Region {
             if (invertMode == PreferenceValues.TappingInvertMode.NONE) return this
             return this.copy(
-                rectF = this.rectF.invert(invertMode)
+                rectF = this.rectF.invert(invertMode),
             )
         }
     }

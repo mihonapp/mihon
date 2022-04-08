@@ -26,7 +26,7 @@ object HistoryTypeSerializer : KSerializer<DHistory> {
             buildJsonArray {
                 add(value.url)
                 add(value.lastRead)
-            }
+            },
         )
     }
 
@@ -35,7 +35,7 @@ object HistoryTypeSerializer : KSerializer<DHistory> {
         val array = decoder.decodeJsonElement().jsonArray
         return DHistory(
             url = array[0].jsonPrimitive.content,
-            lastRead = array[1].jsonPrimitive.long
+            lastRead = array[1].jsonPrimitive.long,
         )
     }
 }

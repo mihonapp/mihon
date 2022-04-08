@@ -64,7 +64,7 @@ abstract class WebViewClientCompat : WebViewClient() {
             error.errorCode,
             error.description?.toString(),
             request.url.toString(),
-            request.isForMainFrame
+            request.isForMainFrame,
         )
     }
 
@@ -88,7 +88,7 @@ abstract class WebViewClientCompat : WebViewClient() {
             error.reasonPhrase,
             request.url
                 .toString(),
-            request.isForMainFrame
+            request.isForMainFrame,
         )
     }
 }

@@ -42,7 +42,7 @@ class UnlockActivity : BaseActivity() {
                     preferences.lastAppUnlock().set(Date().time)
                     finish()
                 }
-            }
+            },
         )
     }
 }

@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundle) {
 
     constructor(update: AppUpdateResult.NewUpdate) : this(
-        bundleOf(BODY_KEY to update.release.info, URL_KEY to update.release.getDownloadLink())
+        bundleOf(BODY_KEY to update.release.info, URL_KEY to update.release.getDownloadLink()),
     )
 
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {

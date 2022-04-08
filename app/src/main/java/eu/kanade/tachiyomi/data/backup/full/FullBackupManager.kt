@@ -56,7 +56,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
                 backupManga(databaseManga, flags),
                 backupCategories(),
                 emptyList(),
-                backupExtensionInfo(databaseManga)
+                backupExtensionInfo(databaseManga),
             )
         }
 

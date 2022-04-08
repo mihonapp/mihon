@@ -41,21 +41,21 @@ class SettingsAppearanceController : SettingsController() {
                     entriesRes = arrayOf(
                         R.string.theme_system,
                         R.string.theme_light,
-                        R.string.theme_dark
+                        R.string.theme_dark,
                     )
                     entryValues = arrayOf(
                         Values.ThemeMode.system.name,
                         Values.ThemeMode.light.name,
-                        Values.ThemeMode.dark.name
+                        Values.ThemeMode.dark.name,
                     )
                 } else {
                     entriesRes = arrayOf(
                         R.string.theme_light,
-                        R.string.theme_dark
+                        R.string.theme_dark,
                     )
                     entryValues = arrayOf(
                         Values.ThemeMode.light.name,
-                        Values.ThemeMode.dark.name
+                        Values.ThemeMode.dark.name,
                     )
                 }
 
@@ -103,7 +103,7 @@ class SettingsAppearanceController : SettingsController() {
                     entriesRes = arrayOf(
                         R.string.alignment_top,
                         R.string.alignment_center,
-                        R.string.alignment_bottom
+                        R.string.alignment_bottom,
                     )
                     entryValues = arrayOf("0", "1", "2")
                     summary = "%s"

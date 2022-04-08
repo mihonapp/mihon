@@ -47,7 +47,7 @@ class SaveImageNotifier(private val context: Context) {
                 },
                 onError = {
                     onError(null)
-                }
+                },
             )
             .build()
         context.imageLoader.enqueue(request)
@@ -69,13 +69,13 @@ class SaveImageNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_share_24dp,
                 context.getString(R.string.action_share),
-                NotificationReceiver.shareImagePendingBroadcast(context, uri.path!!, notificationId)
+                NotificationReceiver.shareImagePendingBroadcast(context, uri.path!!, notificationId),
             )
             // Delete action
             addAction(
                 R.drawable.ic_delete_24dp,
                 context.getString(R.string.action_delete),
-                NotificationReceiver.deleteImagePendingBroadcast(context, uri.path!!, notificationId)
+                NotificationReceiver.deleteImagePendingBroadcast(context, uri.path!!, notificationId),
             )
 
             updateNotification()

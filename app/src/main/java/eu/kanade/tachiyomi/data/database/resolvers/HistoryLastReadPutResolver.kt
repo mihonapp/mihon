@@ -24,7 +24,7 @@ class HistoryLastReadPutResolver : HistoryPutResolver() {
                 .table(updateQuery.table())
                 .where(updateQuery.where())
                 .whereArgs(updateQuery.whereArgs())
-                .build()
+                .build(),
         )
 
         cursor.use { putCursor ->
@@ -47,6 +47,6 @@ class HistoryLastReadPutResolver : HistoryPutResolver() {
 
     private fun mapToUpdateContentValues(history: History) =
         contentValuesOf(
-            HistoryTable.COL_LAST_READ to history.last_read
+            HistoryTable.COL_LAST_READ to history.last_read,
         )
 }

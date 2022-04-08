@@ -104,7 +104,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                         }
                     }
                 }
-            }
+            },
         )
         recycler.tapListener = f@{ event ->
             val pos = PointF(event.rawX / recycler.width, event.rawY / recycler.height)
@@ -344,7 +344,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         adapter.refresh()
         adapter.notifyItemRangeChanged(
             max(0, position - 3),
-            min(position + 3, adapter.itemCount - 1)
+            min(position + 3, adapter.itemCount - 1),
         )
     }
 }

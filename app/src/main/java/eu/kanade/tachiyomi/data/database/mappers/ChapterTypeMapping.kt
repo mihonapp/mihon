@@ -28,7 +28,7 @@ import eu.kanade.tachiyomi.data.database.tables.ChapterTable.TABLE
 class ChapterTypeMapping : SQLiteTypeMapping<Chapter>(
     ChapterPutResolver(),
     ChapterGetResolver(),
-    ChapterDeleteResolver()
+    ChapterDeleteResolver(),
 )
 
 class ChapterPutResolver : DefaultPutResolver<Chapter>() {
@@ -56,7 +56,7 @@ class ChapterPutResolver : DefaultPutResolver<Chapter>() {
             COL_DATE_UPLOAD to obj.date_upload,
             COL_LAST_PAGE_READ to obj.last_page_read,
             COL_CHAPTER_NUMBER to obj.chapter_number,
-            COL_SOURCE_ORDER to obj.source_order
+            COL_SOURCE_ORDER to obj.source_order,
         )
 }
 

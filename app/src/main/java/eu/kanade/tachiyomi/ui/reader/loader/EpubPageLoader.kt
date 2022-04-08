@@ -49,7 +49,7 @@ class EpubPageLoader(file: File) : PageLoader() {
                 Page.ERROR
             } else {
                 Page.READY
-            }
+            },
         )
     }
 }

@@ -50,8 +50,8 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
                         context.resources.getQuantityString(
                             R.plurals.update_check_notification_ext_updates,
                             names.size,
-                            names.size
-                        )
+                            names.size,
+                        ),
                     )
                     val extNames = names.joinToString(", ")
                     setContentText(extNames)
@@ -59,7 +59,7 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
                     setSmallIcon(R.drawable.ic_extension_24dp)
                     setContentIntent(NotificationReceiver.openExtensionsPendingActivity(context))
                     setAutoCancel(true)
-                }
+                },
             )
         }
     }
@@ -79,7 +79,7 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
                     2,
                     TimeUnit.DAYS,
                     3,
-                    TimeUnit.HOURS
+                    TimeUnit.HOURS,
                 )
                     .addTag(TAG)
                     .setConstraints(constraints)

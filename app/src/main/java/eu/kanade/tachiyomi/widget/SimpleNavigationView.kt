@@ -40,7 +40,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
             attrs,
             R.styleable.NavigationView,
             defStyleAttr,
-            R.style.Widget_Design_NavigationView
+            R.style.Widget_Design_NavigationView,
         )
 
         a.recycle()

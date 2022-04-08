@@ -32,7 +32,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
 
         return DecodeResult(
             drawable = bitmap.toDrawable(options.context.resources),
-            isSampled = false
+            isSampled = false,
         )
     }
 

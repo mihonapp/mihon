@@ -34,7 +34,7 @@ class BangumiInterceptor(val bangumi: Bangumi) : Interceptor {
             .header("User-Agent", "Tachiyomi")
             .url(
                 originalRequest.url.newBuilder()
-                    .addQueryParameter("access_token", currAuth.access_token).build()
+                    .addQueryParameter("access_token", currAuth.access_token).build(),
             )
             .build() else originalRequest.newBuilder()
             .post(addToken(currAuth.access_token, originalRequest.body as FormBody))
@@ -51,7 +51,7 @@ class BangumiInterceptor(val bangumi: Bangumi) : Interceptor {
             System.currentTimeMillis() / 1000,
             oauth.expires_in,
             oauth.refresh_token,
-            this.oauth?.user_id
+            this.oauth?.user_id,
         )
 
         bangumi.saveToken(oauth)

@@ -47,7 +47,7 @@ class HistoryPresenter : BasePresenter<HistoryController>() {
                 { view, mangas ->
                     view.onNextManga(mangas)
                 },
-                HistoryController::onAddPageError
+                HistoryController::onAddPageError,
             )
     }
 
@@ -96,7 +96,7 @@ class HistoryPresenter : BasePresenter<HistoryController>() {
                 { view, mangas ->
                     view.onNextManga(mangas, true)
                 },
-                HistoryController::onAddPageError
+                HistoryController::onAddPageError,
             )
     }
 

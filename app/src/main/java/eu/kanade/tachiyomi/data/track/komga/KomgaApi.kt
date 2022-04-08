@@ -72,7 +72,7 @@ class KomgaApi(private val client: OkHttpClient) {
             Request.Builder()
                 .url("${track.tracking_url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi")
                 .put(payload.toRequestBody("application/json".toMediaType()))
-                .build()
+                .build(),
         )
             .await()
         return getTrackSearch(track.tracking_url)

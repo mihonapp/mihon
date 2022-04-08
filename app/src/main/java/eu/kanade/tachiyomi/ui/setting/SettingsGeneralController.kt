@@ -27,7 +27,7 @@ class SettingsGeneralController : SettingsController() {
                 R.string.label_library,
                 R.string.label_recent_updates,
                 R.string.label_recent_manga,
-                R.string.browse
+                R.string.browse,
             )
             entryValues = arrayOf("1", "3", "2", "4")
             defaultValue = "1"

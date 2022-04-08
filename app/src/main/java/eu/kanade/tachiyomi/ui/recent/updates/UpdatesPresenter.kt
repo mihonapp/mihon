@@ -55,7 +55,7 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
                 },
                 { _, error ->
                     logcat(LogPriority.ERROR, error)
-                }
+                },
             )
 
         downloadManager.queue.getProgressObservable()
@@ -180,7 +180,7 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
                 { view, _ ->
                     view.onChaptersDeleted()
                 },
-                UpdatesController::onChaptersDeletedError
+                UpdatesController::onChaptersDeletedError,
             )
     }
 

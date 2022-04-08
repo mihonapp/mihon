@@ -75,7 +75,7 @@ class MangaCoverFetcher(
         return SourceResult(
             source = ImageSource(file = file.toOkioPath(), diskCacheKey = diskCacheKey),
             mimeType = "image/*",
-            dataSource = DataSource.DISK
+            dataSource = DataSource.DISK,
         )
     }
 
@@ -104,7 +104,7 @@ class MangaCoverFetcher(
                 return SourceResult(
                     source = snapshot.toImageSource(),
                     mimeType = "image/*",
-                    dataSource = DataSource.DISK
+                    dataSource = DataSource.DISK,
                 )
             }
 
@@ -124,7 +124,7 @@ class MangaCoverFetcher(
                     return SourceResult(
                         source = snapshot.toImageSource(),
                         mimeType = "image/*",
-                        dataSource = DataSource.NETWORK
+                        dataSource = DataSource.NETWORK,
                     )
                 }
 
@@ -132,7 +132,7 @@ class MangaCoverFetcher(
                 return SourceResult(
                     source = ImageSource(source = responseBody.source(), context = options.context),
                     mimeType = "image/*",
-                    dataSource = if (response.cacheResponse != null) DataSource.DISK else DataSource.NETWORK
+                    dataSource = if (response.cacheResponse != null) DataSource.DISK else DataSource.NETWORK,
                 )
             } catch (e: Exception) {
                 responseBody.closeQuietly()

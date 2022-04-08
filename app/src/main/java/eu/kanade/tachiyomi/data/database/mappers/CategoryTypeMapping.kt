@@ -20,7 +20,7 @@ import eu.kanade.tachiyomi.data.database.tables.CategoryTable.TABLE
 class CategoryTypeMapping : SQLiteTypeMapping<Category>(
     CategoryPutResolver(),
     CategoryGetResolver(),
-    CategoryDeleteResolver()
+    CategoryDeleteResolver(),
 )
 
 class CategoryPutResolver : DefaultPutResolver<Category>() {
@@ -40,7 +40,7 @@ class CategoryPutResolver : DefaultPutResolver<Category>() {
             COL_ID to obj.id,
             COL_NAME to obj.name,
             COL_ORDER to obj.order,
-            COL_FLAGS to obj.flags
+            COL_FLAGS to obj.flags,
         )
 }
 

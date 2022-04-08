@@ -124,7 +124,7 @@ class SourceController :
         val isPinned = item.header?.code?.equals(SourcePresenter.PINNED_KEY) ?: false
 
         val items = mutableListOf(
-            activity.getString(if (isPinned) R.string.action_unpin else R.string.action_pin) to { toggleSourcePin(item.source) }
+            activity.getString(if (isPinned) R.string.action_unpin else R.string.action_pin) to { toggleSourcePin(item.source) },
         )
         if (item.source !is LocalSource) {
             items.add(activity.getString(R.string.action_disable) to { disableSource(item.source) })
@@ -195,7 +195,7 @@ class SourceController :
             R.id.action_settings -> {
                 parentController!!.router.pushController(
                     SourceFilterController()
-                        .withFadeTransaction()
+                        .withFadeTransaction(),
                 )
             }
         }
@@ -248,13 +248,13 @@ class SourceController :
             R.menu.browse_sources,
             R.id.action_search,
             R.string.action_global_search_hint,
-            false // GlobalSearch handles the searching here
+            false, // GlobalSearch handles the searching here
         )
     }
 
     override fun onSearchViewQueryTextSubmit(query: String?) {
         parentController!!.router.pushController(
-            GlobalSearchController(query).withFadeTransaction()
+            GlobalSearchController(query).withFadeTransaction(),
         )
     }
 }

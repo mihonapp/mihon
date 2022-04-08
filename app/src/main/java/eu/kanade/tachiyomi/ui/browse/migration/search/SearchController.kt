@@ -27,7 +27,7 @@ class SearchController(
     override fun createPresenter(): GlobalSearchPresenter {
         return SearchPresenter(
             initialQuery,
-            manga!!
+            manga!!,
         )
     }
 

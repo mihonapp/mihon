@@ -260,8 +260,8 @@ class WebtoonPageHolder(
                     ReaderPageImageView.Config(
                         zoomDuration = viewer.config.doubleTapAnimDuration,
                         minimumScaleType = SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
-                        cropBorders = viewer.config.imageCropBorders
-                    )
+                        cropBorders = viewer.config.imageCropBorders,
+                    ),
                 )
             }
             // Keep the Rx stream alive to close the input stream only when unsubscribed

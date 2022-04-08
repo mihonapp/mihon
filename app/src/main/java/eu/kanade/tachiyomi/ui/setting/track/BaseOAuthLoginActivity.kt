@@ -27,8 +27,8 @@ abstract class BaseOAuthLoginActivity : BaseActivity() {
             FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-                Gravity.CENTER
-            )
+                Gravity.CENTER,
+            ),
         )
 
         handleResult(intent.data)

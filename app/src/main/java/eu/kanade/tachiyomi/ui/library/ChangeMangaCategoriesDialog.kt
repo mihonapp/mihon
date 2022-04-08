@@ -43,7 +43,7 @@ class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
                     setQuadStateMultiChoiceItems(
                         items = categories.map { it.name },
                         isActionList = false,
-                        initialSelected = preselected.toIntArray()
+                        initialSelected = preselected.toIntArray(),
                     ) { selections ->
                         selected = selections
                     }

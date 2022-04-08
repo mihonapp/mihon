@@ -85,7 +85,7 @@ internal class QuadStateMultiChoiceDialogAdapter(
         return QuadStateMultiChoiceViewHolder(
             itemBinding = DialogQuadstatemultichoiceItemBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false),
-            adapter = this
+            adapter = this,
         )
     }
 

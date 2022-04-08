@@ -211,7 +211,7 @@ class HistoryController :
 
         // Fixes problem with the overflow icon showing up in lieu of search
         searchItem.fixExpand(
-            onExpand = { invalidateMenuOnExpand() }
+            onExpand = { invalidateMenuOnExpand() },
         )
     }
 

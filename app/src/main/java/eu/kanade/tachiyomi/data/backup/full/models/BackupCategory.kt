@@ -26,7 +26,7 @@ class BackupCategory(
             return BackupCategory(
                 name = category.name,
                 order = category.order,
-                flags = category.flags
+                flags = category.flags,
             )
         }
     }

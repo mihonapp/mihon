@@ -31,7 +31,7 @@ open class MangaBaseSerializer<T : Manga> : KSerializer<T> {
                 add(value.source)
                 add(value.viewer_flags)
                 add(value.chapter_flags)
-            }
+            },
         )
     }
 

@@ -121,8 +121,8 @@ class MangaController :
     constructor(manga: Manga?, fromSource: Boolean = false) : super(
         bundleOf(
             MANGA_EXTRA to (manga?.id ?: 0),
-            FROM_SOURCE_EXTRA to fromSource
-        )
+            FROM_SOURCE_EXTRA to fromSource,
+        ),
     ) {
         this.manga = manga
         if (manga != null) {
@@ -131,7 +131,7 @@ class MangaController :
     }
 
     constructor(mangaId: Long) : this(
-        Injekt.get<DatabaseHelper>().getManga(mangaId).executeAsBlocking()
+        Injekt.get<DatabaseHelper>().getManga(mangaId).executeAsBlocking(),
     )
 
     @Suppress("unused")
@@ -222,7 +222,7 @@ class MangaController :
     override fun createPresenter(): MangaPresenter {
         return MangaPresenter(
             manga!!,
-            source!!
+            source!!,
         )
     }
 
@@ -268,7 +268,7 @@ class MangaController :
                     val mainActivityAppBar = (activity as? MainActivity)?.binding?.appbar
                     (it.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
                         1,
-                        mainActivityAppBar?.height ?: 0
+                        mainActivityAppBar?.height ?: 0,
                     )
                     mainActivityAppBar?.isLifted = true
                 }
@@ -532,7 +532,7 @@ class MangaController :
             if (duplicateManga != null) {
                 showAddDuplicateDialog(
                     manga,
-                    duplicateManga
+                    duplicateManga,
                 )
             } else {
                 addToLibrary(manga)
@@ -661,7 +661,7 @@ class MangaController :
                     super.postDestroy(controller)
                     dialog = null
                 }
-            }
+            },
         )
         dialog?.showDialog(router)
     }
@@ -770,7 +770,7 @@ class MangaController :
                     super.postDestroy(controller)
                     dialog = null
                 }
-            }
+            },
         )
         dialog?.showDialog(router)
     }
@@ -785,8 +785,8 @@ class MangaController :
                         image = Image.Cover(
                             bitmap = coverBitmap,
                             name = manga.title,
-                            location = Location.Cache
-                        )
+                            location = Location.Cache,
+                        ),
                     )
                     launchUI {
                         startActivity(uri.toShareIntent(activity))
@@ -809,8 +809,8 @@ class MangaController :
                         image = Image.Cover(
                             bitmap = coverBitmap,
                             name = manga.title,
-                            location = Location.Pictures.create()
-                        )
+                            location = Location.Pictures.create(),
+                        ),
                     )
                     launchUI {
                         activity.toast(R.string.cover_saved)
@@ -840,9 +840,9 @@ class MangaController :
             startActivityForResult(
                 Intent.createChooser(
                     intent,
-                    resources?.getString(R.string.file_select_cover)
+                    resources?.getString(R.string.file_select_cover),
                 ),
-                REQUEST_IMAGE_OPEN
+                REQUEST_IMAGE_OPEN,
             )
         } else {
             activity?.toast(R.string.notification_first_add_to_library)
@@ -954,13 +954,13 @@ class MangaController :
                 val activityOptions = ActivityOptions.makeSceneTransitionAnimation(
                     activity,
                     sharedElement,
-                    ReaderActivity.SHARED_ELEMENT_NAME
+                    ReaderActivity.SHARED_ELEMENT_NAME,
                 )
                 startActivity(
                     intent.apply {
                         putExtra(ReaderActivity.EXTRA_IS_TRANSITION, true)
                     },
-                    activityOptions.toBundle()
+                    activityOptions.toBundle(),
                 )
             } else {
                 startActivity(intent)
@@ -1259,7 +1259,7 @@ class MangaController :
     private fun showCustomDownloadDialog() {
         DownloadCustomChaptersDialog(
             this,
-            presenter.allChapters.size
+            presenter.allChapters.size,
         ).showDialog(router)
     }
 

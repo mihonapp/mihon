@@ -93,7 +93,7 @@ open class ExtensionController :
             R.id.action_search -> expandActionViewFromInteraction = true
             R.id.action_settings -> {
                 parentController!!.router.pushController(
-                    ExtensionFilterController().withFadeTransaction()
+                    ExtensionFilterController().withFadeTransaction(),
                 )
             }
         }
@@ -215,7 +215,7 @@ open class ExtensionController :
                             is Extension.Untrusted -> it.extension.name.contains(query, ignoreCase = true)
                         }
                     }
-                }
+                },
             )
         } else {
             adapter?.updateDataSet(extensions)

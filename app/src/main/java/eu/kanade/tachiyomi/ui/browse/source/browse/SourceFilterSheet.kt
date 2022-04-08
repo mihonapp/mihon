@@ -49,7 +49,7 @@ class SourceFilterSheet(
         private val binding = SourceFilterSheetBinding.inflate(
             LayoutInflater.from(context),
             null,
-            false
+            false,
         )
 
         init {

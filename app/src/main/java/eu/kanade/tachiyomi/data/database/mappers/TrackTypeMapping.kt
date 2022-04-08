@@ -29,7 +29,7 @@ import eu.kanade.tachiyomi.data.database.tables.TrackTable.TABLE
 class TrackTypeMapping : SQLiteTypeMapping<Track>(
     TrackPutResolver(),
     TrackGetResolver(),
-    TrackDeleteResolver()
+    TrackDeleteResolver(),
 )
 
 class TrackPutResolver : DefaultPutResolver<Track>() {
@@ -58,7 +58,7 @@ class TrackPutResolver : DefaultPutResolver<Track>() {
             COL_TRACKING_URL to obj.tracking_url,
             COL_SCORE to obj.score,
             COL_START_DATE to obj.started_reading_date,
-            COL_FINISH_DATE to obj.finished_reading_date
+            COL_FINISH_DATE to obj.finished_reading_date,
         )
 }
 

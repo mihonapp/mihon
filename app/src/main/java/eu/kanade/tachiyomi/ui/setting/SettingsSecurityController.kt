@@ -34,7 +34,7 @@ class SettingsSecurityController : SettingsController() {
                 requireAuthentication(
                     activity as? FragmentActivity,
                     context.getString(R.string.lock_with_biometrics),
-                    context.getString(R.string.confirm_lock_change)
+                    context.getString(R.string.confirm_lock_change),
                 )
             }
 
@@ -74,7 +74,7 @@ class SettingsSecurityController : SettingsController() {
                                 super.onAuthenticationError(activity, errorCode, errString)
                                 activity?.toast(errString.toString())
                             }
-                        }
+                        },
                     )
                     false
                 }

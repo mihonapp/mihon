@@ -54,7 +54,7 @@ class HttpPageLoader(
                     if (error !is InterruptedException) {
                         logcat(LogPriority.ERROR, error)
                     }
-                }
+                },
             )
     }
 

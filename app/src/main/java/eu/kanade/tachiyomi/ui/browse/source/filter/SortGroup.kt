@@ -36,7 +36,7 @@ class SortGroup(val filter: Filter.Sort) : AbstractExpandableHeaderItem<SortGrou
                 R.drawable.ic_expand_less_24dp
             } else {
                 R.drawable.ic_expand_more_24dp
-            }
+            },
         )
 
         holder.itemView.setOnClickListener(holder)

@@ -86,7 +86,7 @@ class LibraryUpdateNotifier(private val context: Context) {
             Notifications.ID_LIBRARY_PROGRESS,
             progressNotificationBuilder
                 .setProgress(total, current, false)
-                .build()
+                .build(),
         )
     }
 
@@ -110,7 +110,7 @@ class LibraryUpdateNotifier(private val context: Context) {
 
                 setContentIntent(NotificationReceiver.openErrorLogPendingActivity(context, uri))
             }
-                .build()
+                .build(),
         )
     }
 
@@ -131,7 +131,7 @@ class LibraryUpdateNotifier(private val context: Context) {
                 setSmallIcon(R.drawable.ic_tachi)
                 addAction(R.drawable.ic_help_24dp, context.getString(R.string.learn_more), NotificationHandler.openUrl(context, HELP_SKIPPED_URL))
             }
-                .build()
+                .build(),
         )
     }
 
@@ -161,8 +161,8 @@ class LibraryUpdateNotifier(private val context: Context) {
                                 NotificationCompat.BigTextStyle().bigText(
                                     updates.joinToString("\n") {
                                         it.first.title.chop(NOTIF_TITLE_MAX_LEN)
-                                    }
-                                )
+                                    },
+                                ),
                             )
                         }
                     }
@@ -177,7 +177,7 @@ class LibraryUpdateNotifier(private val context: Context) {
 
                     setContentIntent(getNotificationIntent())
                     setAutoCancel(true)
-                }
+                },
             )
 
             // Per-manga notification
@@ -222,8 +222,8 @@ class LibraryUpdateNotifier(private val context: Context) {
                     context,
                     manga,
                     chapters,
-                    Notifications.ID_NEW_CHAPTERS
-                )
+                    Notifications.ID_NEW_CHAPTERS,
+                ),
             )
             // View chapters action
             addAction(
@@ -232,8 +232,8 @@ class LibraryUpdateNotifier(private val context: Context) {
                 NotificationReceiver.openChapterPendingActivity(
                     context,
                     manga,
-                    Notifications.ID_NEW_CHAPTERS
-                )
+                    Notifications.ID_NEW_CHAPTERS,
+                ),
             )
             // Download chapters action
             // Only add the action when chapters is within threshold
@@ -245,8 +245,8 @@ class LibraryUpdateNotifier(private val context: Context) {
                         context,
                         manga,
                         chapters,
-                        Notifications.ID_NEW_CHAPTERS
-                    )
+                        Notifications.ID_NEW_CHAPTERS,
+                    ),
                 )
             }
         }
@@ -273,7 +273,7 @@ class LibraryUpdateNotifier(private val context: Context) {
         val formatter = DecimalFormat(
             "#.###",
             DecimalFormatSymbols()
-                .apply { decimalSeparator = '.' }
+                .apply { decimalSeparator = '.' },
         )
 
         val displayableChapterNumbers = chapters

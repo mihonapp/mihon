@@ -78,7 +78,7 @@ class ActionModeWithToolbar @JvmOverloads constructor(context: Context, attrs: A
                             callback = null
                             actionMode = null
                         }
-                    }
+                    },
                 )
             }
             binding.root.startAnimation(bottomAnimation)

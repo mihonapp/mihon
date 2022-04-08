@@ -56,8 +56,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             authClient.newCall(
                 POST(
                     apiUrl,
-                    body = payload.toString().toRequestBody(jsonMime)
-                )
+                    body = payload.toString().toRequestBody(jsonMime),
+                ),
             )
                 .await()
                 .parseAs<JsonObject>()
@@ -140,8 +140,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             authClient.newCall(
                 POST(
                     apiUrl,
-                    body = payload.toString().toRequestBody(jsonMime)
-                )
+                    body = payload.toString().toRequestBody(jsonMime),
+                ),
             )
                 .await()
                 .parseAs<JsonObject>()
@@ -208,8 +208,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             authClient.newCall(
                 POST(
                     apiUrl,
-                    body = payload.toString().toRequestBody(jsonMime)
-                )
+                    body = payload.toString().toRequestBody(jsonMime),
+                ),
             )
                 .await()
                 .parseAs<JsonObject>()
@@ -250,8 +250,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             authClient.newCall(
                 POST(
                     apiUrl,
-                    body = payload.toString().toRequestBody(jsonMime)
-                )
+                    body = payload.toString().toRequestBody(jsonMime),
+                ),
             )
                 .await()
                 .parseAs<JsonObject>()
@@ -260,7 +260,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     val viewer = data["Viewer"]!!.jsonObject
                     Pair(
                         viewer["id"]!!.jsonPrimitive.int,
-                        viewer["mediaListOptions"]!!.jsonObject["scoreFormat"]!!.jsonPrimitive.content
+                        viewer["mediaListOptions"]!!.jsonObject["scoreFormat"]!!.jsonPrimitive.content,
                     )
                 }
         }
@@ -275,7 +275,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             struct["format"]!!.jsonPrimitive.content.replace("_", "-"),
             struct["status"]!!.jsonPrimitive.contentOrNull ?: "",
             parseDate(struct, "startDate"),
-            struct["chapters"]!!.jsonPrimitive.intOrNull ?: 0
+            struct["chapters"]!!.jsonPrimitive.intOrNull ?: 0,
         )
     }
 
@@ -287,7 +287,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             struct["progress"]!!.jsonPrimitive.int,
             parseDate(struct, "startedAt"),
             parseDate(struct, "completedAt"),
-            jsonToALManga(struct["media"]!!.jsonObject)
+            jsonToALManga(struct["media"]!!.jsonObject),
         )
     }
 
@@ -297,7 +297,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             date.set(
                 struct[dateKey]!!.jsonObject["year"]!!.jsonPrimitive.int,
                 struct[dateKey]!!.jsonObject["month"]!!.jsonPrimitive.int - 1,
-                struct[dateKey]!!.jsonObject["day"]!!.jsonPrimitive.int
+                struct[dateKey]!!.jsonObject["day"]!!.jsonPrimitive.int,
             )
             date.timeInMillis
         } catch (_: Exception) {

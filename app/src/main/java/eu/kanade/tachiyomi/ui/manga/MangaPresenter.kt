@@ -137,7 +137,7 @@ class MangaPresenter(
                     filteredAndSortedChapters = chapters
                     view?.onNextChapters(chapters)
                 },
-                { _, error -> logcat(LogPriority.ERROR, error) }
+                { _, error -> logcat(LogPriority.ERROR, error) },
             )
 
         // Manga info - end
@@ -162,7 +162,7 @@ class MangaPresenter(
                     // Listen for download status changes
                     observeDownloads()
                 }
-                .subscribe { chaptersRelay.call(it) }
+                .subscribe { chaptersRelay.call(it) },
         )
 
         // Chapters list - end
@@ -328,7 +328,7 @@ class MangaPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeFirst(
                 { view, _ -> view.onSetCoverSuccess() },
-                { view, e -> view.onSetCoverError(e) }
+                { view, e -> view.onSetCoverError(e) },
             )
     }
 
@@ -343,7 +343,7 @@ class MangaPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeFirst(
                 { view, _ -> view.onSetCoverSuccess() },
-                { view, e -> view.onSetCoverError(e) }
+                { view, e -> view.onSetCoverError(e) },
             )
     }
 
@@ -365,7 +365,7 @@ class MangaPresenter(
                 },
                 { _, error ->
                     logcat(LogPriority.ERROR, error)
-                }
+                },
             )
 
         observeDownloadsPageSubscription?.let { remove(it) }

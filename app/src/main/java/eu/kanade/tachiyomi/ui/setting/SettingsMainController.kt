@@ -111,7 +111,7 @@ class SettingsMainController : SettingsController() {
                 override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
                     return true
                 }
-            }
+            },
         )
     }
 }

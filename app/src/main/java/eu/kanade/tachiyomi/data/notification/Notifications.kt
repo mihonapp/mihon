@@ -87,7 +87,7 @@ object Notifications {
         "backup_restore_complete_channel",
         "library_channel",
         "library_progress_channel",
-        "updates_ext_channel"
+        "updates_ext_channel",
     )
 
     /**
@@ -115,8 +115,8 @@ object Notifications {
                 },
                 buildNotificationChannelGroup(GROUP_APK_UPDATES) {
                     setName(context.getString(R.string.label_recent_updates))
-                }
-            )
+                },
+            ),
         )
 
         notificationService.createNotificationChannelsCompat(
@@ -181,8 +181,8 @@ object Notifications {
                 buildNotificationChannel(CHANNEL_EXTENSIONS_UPDATE, IMPORTANCE_DEFAULT) {
                     setGroup(GROUP_APK_UPDATES)
                     setName(context.getString(R.string.channel_ext_updates))
-                }
-            )
+                },
+            ),
         )
     }
 }

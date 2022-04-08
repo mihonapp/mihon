@@ -29,7 +29,7 @@ interface MangaQueries : DbProvider {
             RawQuery.builder()
                 .query(libraryQuery)
                 .observesTables(MangaTable.TABLE, ChapterTable.TABLE, MangaCategoryTable.TABLE, CategoryTable.TABLE)
-                .build()
+                .build(),
         )
         .withGetResolver(LibraryMangaGetResolver.INSTANCE)
         .prepare()
@@ -42,10 +42,10 @@ interface MangaQueries : DbProvider {
                 .where("${MangaTable.COL_FAVORITE} = 1 AND LOWER(${MangaTable.COL_TITLE}) = ? AND ${MangaTable.COL_SOURCE} != ?")
                 .whereArgs(
                     manga.title.lowercase(),
-                    manga.source
+                    manga.source,
                 )
                 .limit(1)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -72,7 +72,7 @@ interface MangaQueries : DbProvider {
                 .table(MangaTable.TABLE)
                 .where("${MangaTable.COL_URL} = ? AND ${MangaTable.COL_SOURCE} = ?")
                 .whereArgs(url, sourceId)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -83,7 +83,7 @@ interface MangaQueries : DbProvider {
                 .table(MangaTable.TABLE)
                 .where("${MangaTable.COL_ID} = ?")
                 .whereArgs(id)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -93,7 +93,7 @@ interface MangaQueries : DbProvider {
             RawQuery.builder()
                 .query(getSourceIdsWithNonLibraryMangaQuery())
                 .observesTables(MangaTable.TABLE)
-                .build()
+                .build(),
         )
         .withGetResolver(SourceIdMangaCountGetResolver.INSTANCE)
         .prepare()
@@ -152,7 +152,7 @@ interface MangaQueries : DbProvider {
                 .table(MangaTable.TABLE)
                 .where("${MangaTable.COL_FAVORITE} = ? AND ${MangaTable.COL_SOURCE} IN (${Queries.placeholders(sourceIds.size)})")
                 .whereArgs(0, *sourceIds.toTypedArray())
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -160,7 +160,7 @@ interface MangaQueries : DbProvider {
         .byQuery(
             DeleteQuery.builder()
                 .table(MangaTable.TABLE)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -170,7 +170,7 @@ interface MangaQueries : DbProvider {
             RawQuery.builder()
                 .query(getLastReadMangaQuery())
                 .observesTables(MangaTable.TABLE)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -180,7 +180,7 @@ interface MangaQueries : DbProvider {
             RawQuery.builder()
                 .query(getTotalChapterMangaQuery())
                 .observesTables(MangaTable.TABLE)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -190,7 +190,7 @@ interface MangaQueries : DbProvider {
             RawQuery.builder()
                 .query(getLatestChapterMangaQuery())
                 .observesTables(MangaTable.TABLE)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -200,7 +200,7 @@ interface MangaQueries : DbProvider {
             RawQuery.builder()
                 .query(getChapterFetchDateMangaQuery())
                 .observesTables(MangaTable.TABLE)
-                .build()
+                .build(),
         )
         .prepare()
 }

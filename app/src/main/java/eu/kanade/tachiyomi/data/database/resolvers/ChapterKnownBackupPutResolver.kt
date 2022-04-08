@@ -29,6 +29,6 @@ class ChapterKnownBackupPutResolver : PutResolver<Chapter>() {
         contentValuesOf(
             ChapterTable.COL_READ to chapter.read,
             ChapterTable.COL_BOOKMARK to chapter.bookmark,
-            ChapterTable.COL_LAST_PAGE_READ to chapter.last_page_read
+            ChapterTable.COL_LAST_PAGE_READ to chapter.last_page_read,
         )
 }

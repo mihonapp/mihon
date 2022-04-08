@@ -157,7 +157,7 @@ open class BrowseSourcePresenter(
                 },
                 { _, error ->
                     logcat(LogPriority.ERROR, error)
-                }
+                },
             )
 
         // Request first page.

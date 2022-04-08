@@ -107,7 +107,7 @@ class LibraryPresenter(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeLatestCache({ view, (categories, mangaMap) ->
                     view.onNextLibraryUpdate(categories, mangaMap)
-                })
+                },)
         }
     }
 
@@ -381,7 +381,7 @@ class LibraryPresenter(
                     LibraryItem(
                         libraryManga,
                         shouldSetFromCategory,
-                        defaultLibraryDisplayMode
+                        defaultLibraryDisplayMode,
                     )
                 }.groupBy { it.manga.category }
             }

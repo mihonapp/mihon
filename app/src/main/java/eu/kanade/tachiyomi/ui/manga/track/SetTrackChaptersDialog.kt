@@ -22,7 +22,7 @@ class SetTrackChaptersDialog<T> : DialogController
     private lateinit var listener: Listener
 
     constructor(target: T, listener: Listener, item: TrackItem) : super(
-        bundleOf(KEY_ITEM_TRACK to item.track)
+        bundleOf(KEY_ITEM_TRACK to item.track),
     ) {
         targetController = target
         this.listener = listener

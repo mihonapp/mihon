@@ -57,13 +57,13 @@ class LibrarySettingsSheet(
     override fun getTabViews(): List<View> = listOf(
         filters,
         sort,
-        display
+        display,
     )
 
     override fun getTabTitles(): List<Int> = listOf(
         R.string.action_filter,
         R.string.action_sort,
-        R.string.action_display
+        R.string.action_display,
     )
 
     /**

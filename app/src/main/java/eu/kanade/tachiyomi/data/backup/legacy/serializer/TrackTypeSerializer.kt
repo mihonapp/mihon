@@ -33,7 +33,7 @@ open class TrackBaseSerializer<T : Track> : KSerializer<T> {
                 put(LIBRARY, value.library_id)
                 put(LAST_READ, value.last_chapter_read)
                 put(TRACKING_URL, value.tracking_url)
-            }
+            },
         )
     }
 

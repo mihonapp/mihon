@@ -21,7 +21,7 @@ class LegacyBackupRestoreValidator : AbstractBackupRestoreValidator() {
 
         val backup = try {
             backupManager.parser.decodeFromStream<Backup>(
-                context.contentResolver.openInputStream(uri)!!
+                context.contentResolver.openInputStream(uri)!!,
             )
         } catch (e: Exception) {
             throw ValidatorParseException(e)

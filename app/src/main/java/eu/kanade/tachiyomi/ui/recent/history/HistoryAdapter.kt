@@ -30,7 +30,7 @@ class HistoryAdapter(controller: HistoryController) :
     val decimalFormat = DecimalFormat(
         "#.###",
         DecimalFormatSymbols()
-            .apply { decimalSeparator = '.' }
+            .apply { decimalSeparator = '.' },
     )
 
     init {

@@ -93,7 +93,7 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
                             this@App,
                             0,
                             Intent(ACTION_DISABLE_INCOGNITO_MODE),
-                            PendingIntent.FLAG_ONE_SHOT
+                            PendingIntent.FLAG_ONE_SHOT,
                         )
                         setContentIntent(pendingIntent)
                     }
@@ -112,7 +112,7 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
                         PreferenceValues.ThemeMode.light -> AppCompatDelegate.MODE_NIGHT_NO
                         PreferenceValues.ThemeMode.dark -> AppCompatDelegate.MODE_NIGHT_YES
                         PreferenceValues.ThemeMode.system -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                    }
+                    },
                 )
             }.launchIn(ProcessLifecycleOwner.get().lifecycleScope)
 

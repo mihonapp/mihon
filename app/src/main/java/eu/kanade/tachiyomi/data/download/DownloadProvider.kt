@@ -138,7 +138,7 @@ class DownloadProvider(private val context: Context) {
             when {
                 chapter.scanlator != null -> "${chapter.scanlator}_${chapter.name}"
                 else -> chapter.name
-            }
+            },
         )
     }
 
@@ -157,7 +157,7 @@ class DownloadProvider(private val context: Context) {
             "$chapterName.cbz",
 
             // Legacy chapter directory name used in v0.9.2 and before
-            DiskUtil.buildValidFilename(chapter.name)
+            DiskUtil.buildValidFilename(chapter.name),
         )
     }
 }

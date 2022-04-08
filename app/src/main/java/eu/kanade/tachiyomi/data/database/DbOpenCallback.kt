@@ -46,7 +46,7 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
             // Fix kissmanga covers after supporting cloudflare
             db.execSQL(
                 """UPDATE mangas SET thumbnail_url =
-                    REPLACE(thumbnail_url, '93.174.95.110', 'kissmanga.com') WHERE source = 4"""
+                    REPLACE(thumbnail_url, '93.174.95.110', 'kissmanga.com') WHERE source = 4""",
             )
         }
         if (oldVersion < 3) {

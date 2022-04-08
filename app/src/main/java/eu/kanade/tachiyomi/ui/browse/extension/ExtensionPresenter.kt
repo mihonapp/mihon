@@ -69,7 +69,7 @@ open class ExtensionPresenter(
         val installedSorted = installed.filter { !it.hasUpdate && (showNsfwSources || !it.isNsfw) }
             .sortedWith(
                 compareBy<Extension.Installed> { !it.isObsolete }
-                    .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name }
+                    .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name },
             )
 
         val untrustedSorted = untrusted.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
@@ -163,7 +163,7 @@ open class ExtensionPresenter(
                 if (item != null) {
                     view.downloadUpdate(item)
                 }
-            })
+            },)
     }
 
     fun uninstallExtension(pkgName: String) {

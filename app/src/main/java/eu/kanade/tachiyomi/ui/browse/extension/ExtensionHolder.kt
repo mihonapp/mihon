@@ -73,7 +73,7 @@ class ExtensionHolder(view: View, val adapter: ExtensionAdapter) :
                         is Extension.Available -> R.string.ext_install
                     }
                 }
-            }
+            },
         )
 
         val isIdle = installStep == InstallStep.Idle || installStep == InstallStep.Error

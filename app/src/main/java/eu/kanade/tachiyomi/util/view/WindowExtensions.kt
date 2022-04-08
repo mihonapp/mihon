@@ -22,7 +22,7 @@ fun Window.setNavigationBarTransparentCompat(context: Context, elevation: Float 
         // Set navbar scrim 70% of navigationBarColor
         ElevationOverlayProvider(context).compositeOverlayIfNeeded(
             context.getResourceColor(android.R.attr.navigationBarColor, 0.7F),
-            elevation
+            elevation,
         )
     }
 }

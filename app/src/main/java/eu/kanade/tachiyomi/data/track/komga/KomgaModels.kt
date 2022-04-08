@@ -92,7 +92,7 @@ data class ReadProgressDto(
         booksUnreadCount,
         booksInProgressCount,
         lastReadContinuousIndex.toFloat(),
-        booksCount.toFloat()
+        booksCount.toFloat(),
     )
 }
 

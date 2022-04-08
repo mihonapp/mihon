@@ -92,7 +92,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
                 override fun onPageScrollStateChanged(state: Int) {
                     isIdle = state == ViewPager.SCROLL_STATE_IDLE
                 }
-            }
+            },
         )
         pager.tapListener = f@{ event ->
             val pos = PointF(event.rawX / pager.width, event.rawY / pager.height)

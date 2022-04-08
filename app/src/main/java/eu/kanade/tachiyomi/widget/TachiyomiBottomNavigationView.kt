@@ -90,7 +90,7 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
         animateTranslation(
             0F,
             SLIDE_UP_ANIMATION_DURATION,
-            LinearOutSlowInInterpolator()
+            LinearOutSlowInInterpolator(),
         )
     }
 
@@ -105,7 +105,7 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
         animateTranslation(
             height.toFloat(),
             SLIDE_DOWN_ANIMATION_DURATION,
-            FastOutLinearInInterpolator()
+            FastOutLinearInInterpolator(),
         )
     }
 
@@ -120,7 +120,7 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
                     currentAnimator = null
                     postInvalidate()
                 }
-            })
+            },)
     }
 
     internal class SavedState : AbsSavedState {

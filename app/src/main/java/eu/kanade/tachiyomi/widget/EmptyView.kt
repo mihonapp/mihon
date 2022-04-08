@@ -48,12 +48,12 @@ class EmptyView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             val button = MaterialButton(
                 buttonContext,
                 null,
-                R.attr.borderlessButtonStyle
+                R.attr.borderlessButtonStyle,
             ).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     0,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1f / actions.size
+                    1f / actions.size,
                 )
 
                 setTextColor(buttonColor)
@@ -78,7 +78,7 @@ class EmptyView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             "ಥ_ಥ",
             "(˘･_･˘)",
             "(；￣Д￣)",
-            "(･Д･。"
+            "(･Д･。",
         )
 
         fun getRandomErrorFace(): String {

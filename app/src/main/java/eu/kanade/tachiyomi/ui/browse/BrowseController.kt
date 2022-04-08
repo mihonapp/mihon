@@ -31,7 +31,7 @@ class BrowseController :
     TabbedController {
 
     constructor(toExtensions: Boolean = false) : super(
-        bundleOf(TO_EXTENSIONS_EXTRA to toExtensions)
+        bundleOf(TO_EXTENSIONS_EXTRA to toExtensions),
     )
 
     @Suppress("unused")
@@ -114,7 +114,7 @@ class BrowseController :
         private val tabTitles = listOf(
             R.string.label_sources,
             R.string.label_extensions,
-            R.string.label_migration
+            R.string.label_migration,
         )
             .map { resources!!.getString(it) }
 

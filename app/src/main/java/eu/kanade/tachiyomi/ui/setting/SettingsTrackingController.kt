@@ -117,7 +117,7 @@ class SettingsTrackingController :
                         login()
                     }
                 }
-            }
+            },
         )
     }
 

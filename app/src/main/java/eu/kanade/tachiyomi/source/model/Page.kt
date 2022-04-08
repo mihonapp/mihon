@@ -68,13 +68,13 @@ open class Page(
 
 fun Page.toPageUrl(): PageUrl {
     return PageUrl(
-        url = this.imageUrl ?: this.url
+        url = this.imageUrl ?: this.url,
     )
 }
 
 fun PageUrl.toPage(index: Int): Page {
     return Page(
         index = index,
-        imageUrl = this.url
+        imageUrl = this.url,
     )
 }

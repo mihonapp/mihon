@@ -47,13 +47,13 @@ class ImageSaver(
             put(
                 MediaStore.Images.Media.RELATIVE_PATH,
                 "${Environment.DIRECTORY_PICTURES}/${context.getString(R.string.app_name)}/" +
-                    (image.location as Location.Pictures).relativePath
+                    (image.location as Location.Pictures).relativePath,
             )
         }
 
         val picture = context.contentResolver.insert(
             pictureDir,
-            contentValues
+            contentValues,
         ) ?: throw IOException("Couldn't create file")
 
         data().use { input ->
@@ -133,12 +133,12 @@ sealed class Location {
             is Pictures -> {
                 val file = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                    context.getString(R.string.app_name)
+                    context.getString(R.string.app_name),
                 )
                 if (relativePath.isNotEmpty()) {
                     return File(
                         file,
-                        relativePath
+                        relativePath,
                     )
                 }
                 file

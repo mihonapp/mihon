@@ -52,7 +52,7 @@ fun MaterialAlertDialogBuilder.setQuadStateMultiChoiceItems(
         disabledItems = disabledIndices,
         initialSelected = initialSelected,
         isActionList = isActionList,
-        listener = selection
+        listener = selection,
     )
     val updateScrollIndicators = {
         binding.scrollIndicatorUp.isVisible = binding.list.canScrollVertically(-1)

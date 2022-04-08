@@ -27,7 +27,7 @@ class SelectionHeader : AbstractHeaderItem<SelectionHeader.Holder>() {
     override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): Holder {
         return Holder(
             view,
-            adapter
+            adapter,
         )
     }
 

@@ -89,7 +89,7 @@ class SettingsDownloadController : SettingsController() {
                     R.string.second_to_last,
                     R.string.third_to_last,
                     R.string.fourth_to_last,
-                    R.string.fifth_to_last
+                    R.string.fifth_to_last,
                 )
                 entryValues = arrayOf("-1", "0", "1", "2", "3", "4")
                 defaultValue = "-1"
@@ -266,7 +266,7 @@ class SettingsDownloadController : SettingsController() {
                 .setQuadStateMultiChoiceItems(
                     message = R.string.pref_download_new_categories_details,
                     items = items,
-                    initialSelected = selected
+                    initialSelected = selected,
                 ) { selections ->
                     selected = selections
                 }

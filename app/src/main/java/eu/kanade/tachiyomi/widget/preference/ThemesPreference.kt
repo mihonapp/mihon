@@ -42,7 +42,7 @@ class ThemesPreference @JvmOverloads constructor(context: Context, attrs: Attrib
                 super.onScrolled(recyclerView, dx, dy)
                 lastScrollPosition = recyclerView.computeHorizontalScrollOffset()
             }
-        })
+        },)
         lastScrollPosition?.let { scrollToOffset(it) }
     }
 
@@ -65,7 +65,7 @@ class ThemesPreference @JvmOverloads constructor(context: Context, attrs: Attrib
                 scrollToPositionWithOffset(
                     // 114dp is the width of the pref_theme_item layout
                     lX / 114.dpToPx,
-                    -lX % 114.dpToPx
+                    -lX % 114.dpToPx,
                 )
             }
             lastScrollPosition = it.computeHorizontalScrollOffset()

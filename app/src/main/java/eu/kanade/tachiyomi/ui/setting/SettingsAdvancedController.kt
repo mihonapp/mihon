@@ -169,14 +169,14 @@ class SettingsAdvancedController : SettingsController() {
                     "Cloudflare",
                     "Google",
                     "AdGuard",
-                    "Quad9"
+                    "Quad9",
                 )
                 entryValues = arrayOf(
                     "-1",
                     PREF_DOH_CLOUDFLARE.toString(),
                     PREF_DOH_GOOGLE.toString(),
                     PREF_DOH_ADGUARD.toString(),
-                    PREF_DOH_QUAD9.toString()
+                    PREF_DOH_QUAD9.toString(),
                 )
                 defaultValue = "-1"
                 summary = "%s"

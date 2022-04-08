@@ -24,7 +24,7 @@ class DeleteLibraryMangasDialog<T>(bundle: Bundle? = null) :
         val items = when (canDeleteChapters) {
             true -> listOf(
                 R.string.manga_from_library,
-                R.string.downloaded_chapters
+                R.string.downloaded_chapters,
             )
             false -> listOf(R.string.manga_from_library)
         }

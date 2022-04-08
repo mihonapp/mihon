@@ -39,7 +39,7 @@ object AuthenticatorUtil {
             subtitle = subtitle,
             confirmationRequired = confirmationRequired,
             executor = ContextCompat.getMainExecutor(this),
-            callback = callback
+            callback = callback,
         )
     }
 

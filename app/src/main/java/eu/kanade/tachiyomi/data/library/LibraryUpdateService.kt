@@ -310,7 +310,7 @@ class LibraryUpdateService(
                                 withUpdateNotification(
                                     currentlyUpdatingManga,
                                     progressCount,
-                                    manga
+                                    manga,
                                 ) { manga ->
                                     try {
                                         when {
@@ -336,7 +336,7 @@ class LibraryUpdateService(
                                                     // Convert to the manga that contains new chapters
                                                     newUpdates.add(
                                                         manga to newChapters.sortedByDescending { ch -> ch.source_order }
-                                                            .toTypedArray()
+                                                            .toTypedArray(),
                                                     )
                                                 }
                                             }
@@ -383,7 +383,7 @@ class LibraryUpdateService(
             val errorFile = writeErrorFile(failedUpdates)
             notifier.showUpdateErrorNotification(
                 failedUpdates.size,
-                errorFile.getUriCompat(this)
+                errorFile.getUriCompat(this),
             )
         }
         if (skippedUpdates.isNotEmpty()) {
@@ -446,7 +446,7 @@ class LibraryUpdateService(
                                 withUpdateNotification(
                                     currentlyUpdatingManga,
                                     progressCount,
-                                    manga
+                                    manga,
                                 ) { manga ->
                                     sourceManager.get(manga.source)?.let { source ->
                                         try {
@@ -536,7 +536,7 @@ class LibraryUpdateService(
         notifier.showProgressNotification(
             updatingManga,
             completed.get(),
-            mangaToUpdate.size
+            mangaToUpdate.size,
         )
 
         block(manga)
@@ -550,7 +550,7 @@ class LibraryUpdateService(
         notifier.showProgressNotification(
             updatingManga,
             completed.get(),
-            mangaToUpdate.size
+            mangaToUpdate.size,
         )
     }
 

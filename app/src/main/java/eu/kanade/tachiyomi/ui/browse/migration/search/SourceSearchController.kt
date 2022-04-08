@@ -18,7 +18,7 @@ class SourceSearchController(
             if (searchQuery != null) {
                 putString(SEARCH_QUERY_KEY, searchQuery)
             }
-        }
+        },
     )
     private var oldManga: Manga? = args.getSerializable(MANGA_KEY) as Manga?
     private var newManga: Manga? = null

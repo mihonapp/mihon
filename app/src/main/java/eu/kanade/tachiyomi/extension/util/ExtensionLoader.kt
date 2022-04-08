@@ -120,7 +120,7 @@ internal object ExtensionLoader {
         if (libVersion < LIB_VERSION_MIN || libVersion > LIB_VERSION_MAX) {
             val exception = Exception(
                 "Lib version is $libVersion, while only versions " +
-                    "$LIB_VERSION_MIN to $LIB_VERSION_MAX are allowed"
+                    "$LIB_VERSION_MIN to $LIB_VERSION_MAX are allowed",
             )
             logcat(LogPriority.WARN, exception)
             return LoadResult.Error(exception)
@@ -190,7 +190,7 @@ internal object ExtensionLoader {
             sources = sources,
             pkgFactory = appInfo.metaData.getString(METADATA_SOURCE_FACTORY),
             isUnofficial = signatureHash != officialSignature,
-            icon = context.getApplicationIcon(pkgName)
+            icon = context.getApplicationIcon(pkgName),
         )
         return LoadResult.Success(extension)
     }

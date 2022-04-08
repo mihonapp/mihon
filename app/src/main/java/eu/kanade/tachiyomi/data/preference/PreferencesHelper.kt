@@ -34,13 +34,13 @@ class PreferencesHelper(val context: Context) {
     private val defaultDownloadsDir = File(
         Environment.getExternalStorageDirectory().absolutePath + File.separator +
             context.getString(R.string.app_name),
-        "downloads"
+        "downloads",
     ).toUri()
 
     private val defaultBackupDir = File(
         Environment.getExternalStorageDirectory().absolutePath + File.separator +
             context.getString(R.string.app_name),
-        "backup"
+        "backup",
     ).toUri()
 
     fun startScreen() = prefs.getInt(Keys.startScreen, 1)
@@ -67,12 +67,12 @@ class PreferencesHelper(val context: Context) {
 
     fun themeMode() = flowPrefs.getEnum(
         "pref_theme_mode_key",
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { Values.ThemeMode.system } else { Values.ThemeMode.light }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { Values.ThemeMode.system } else { Values.ThemeMode.light },
     )
 
     fun appTheme() = flowPrefs.getEnum(
         "pref_app_theme",
-        if (DeviceUtil.isDynamicColorAvailable) { Values.AppTheme.MONET } else { Values.AppTheme.DEFAULT }
+        if (DeviceUtil.isDynamicColorAvailable) { Values.AppTheme.MONET } else { Values.AppTheme.DEFAULT },
     )
 
     fun themeDarkAmoled() = flowPrefs.getBoolean("pref_theme_dark_amoled_key", false)
@@ -136,8 +136,6 @@ class PreferencesHelper(val context: Context) {
     fun cropBordersWebtoon() = flowPrefs.getBoolean("crop_borders_webtoon", false)
 
     fun webtoonSidePadding() = flowPrefs.getInt("webtoon_side_padding", 0)
-
-    fun readWithTapping() = flowPrefs.getBoolean("reader_tap", true)
 
     fun pagerNavInverted() = flowPrefs.getEnum("reader_tapping_inverted", Values.TappingInvertMode.NONE)
 
@@ -318,7 +316,7 @@ class PreferencesHelper(val context: Context) {
 
     fun extensionInstaller() = flowPrefs.getEnum(
         "extension_installer",
-        if (DeviceUtil.isMiui) Values.ExtensionInstaller.LEGACY else Values.ExtensionInstaller.PACKAGEINSTALLER
+        if (DeviceUtil.isMiui) Values.ExtensionInstaller.LEGACY else Values.ExtensionInstaller.PACKAGEINSTALLER,
     )
 
     fun verboseLogging() = prefs.getBoolean(Keys.verboseLogging, false)

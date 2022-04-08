@@ -29,7 +29,7 @@ class ChaptersAdapter(
     val decimalFormat = DecimalFormat(
         "#.###",
         DecimalFormatSymbols()
-            .apply { decimalSeparator = '.' }
+            .apply { decimalSeparator = '.' },
     )
 
     val relativeTime: Int = preferences.relativeTime().get()

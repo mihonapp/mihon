@@ -18,7 +18,7 @@ import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable.TABLE
 class MangaCategoryTypeMapping : SQLiteTypeMapping<MangaCategory>(
     MangaCategoryPutResolver(),
     MangaCategoryGetResolver(),
-    MangaCategoryDeleteResolver()
+    MangaCategoryDeleteResolver(),
 )
 
 class MangaCategoryPutResolver : DefaultPutResolver<MangaCategory>() {
@@ -37,7 +37,7 @@ class MangaCategoryPutResolver : DefaultPutResolver<MangaCategory>() {
         contentValuesOf(
             COL_ID to obj.id,
             COL_MANGA_ID to obj.manga_id,
-            COL_CATEGORY_ID to obj.category_id
+            COL_CATEGORY_ID to obj.category_id,
         )
 }
 

@@ -95,7 +95,7 @@ class DownloadHolder(private val view: View, val adapter: DownloadAdapter) :
             },
             onMenuItemClick = {
                 adapter.downloadItemListener.onMenuItemClick(bindingAdapterPosition, this)
-            }
+            },
         )
     }
 }

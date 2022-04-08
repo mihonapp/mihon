@@ -63,7 +63,7 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
                     interval.toLong(),
                     TimeUnit.HOURS,
                     10,
-                    TimeUnit.MINUTES
+                    TimeUnit.MINUTES,
                 )
                     .addTag(TAG_AUTO)
                     .setInputData(workDataOf(IS_AUTO_BACKUP_KEY to true))
@@ -79,7 +79,7 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
             val inputData = workDataOf(
                 IS_AUTO_BACKUP_KEY to false,
                 LOCATION_URI_KEY to uri.toString(),
-                BACKUP_FLAGS_KEY to flags
+                BACKUP_FLAGS_KEY to flags,
             )
             val request = OneTimeWorkRequestBuilder<BackupCreatorJob>()
                 .addTag(TAG_MANUAL)

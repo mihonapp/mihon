@@ -40,7 +40,7 @@ class SearchPresenter(
         replacingMangaRelay.subscribeLatestCache(
             { controller, (isReplacingManga, newManga) ->
                 (controller as? SearchController)?.renderIsReplacingManga(isReplacingManga, newManga)
-            }
+            },
         )
     }
 
@@ -93,15 +93,15 @@ class SearchPresenter(
         val flags = preferences.migrateFlags().get()
         val migrateChapters =
             MigrationFlags.hasChapters(
-                flags
+                flags,
             )
         val migrateCategories =
             MigrationFlags.hasCategories(
-                flags
+                flags,
             )
         val migrateTracks =
             MigrationFlags.hasTracks(
-                flags
+                flags,
             )
 
         db.inTransaction {

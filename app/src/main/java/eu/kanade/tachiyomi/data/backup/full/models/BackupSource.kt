@@ -19,7 +19,7 @@ data class BackupSource(
         fun copyFrom(source: Source): BackupSource {
             return BackupSource(
                 name = source.name,
-                sourceId = source.id
+                sourceId = source.id,
             )
         }
     }

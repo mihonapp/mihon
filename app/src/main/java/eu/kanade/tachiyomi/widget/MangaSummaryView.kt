@@ -85,7 +85,7 @@ class MangaSummaryView @JvmOverloads constructor(
 
         val toggleDrawable = ContextCompat.getDrawable(
             context,
-            if (expanded) R.drawable.anim_caret_up else R.drawable.anim_caret_down
+            if (expanded) R.drawable.anim_caret_up else R.drawable.anim_caret_down,
         )
         toggleMore.setImageDrawable(toggleDrawable)
 
@@ -172,7 +172,7 @@ class MangaSummaryView @JvmOverloads constructor(
                 description?.let {
                     context.copyToClipboard(
                         context.getString(R.string.description),
-                        it.toString()
+                        it.toString(),
                     )
                 }
                 true
@@ -183,7 +183,7 @@ class MangaSummaryView @JvmOverloads constructor(
             binding.descriptionText,
             binding.descriptionScrim,
             binding.toggleMoreScrim,
-            binding.toggleMore
+            binding.toggleMore,
         ).forEach {
             it.setOnClickListener { expanded = !expanded }
         }

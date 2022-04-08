@@ -125,6 +125,6 @@ fun Manga.toMangaInfo(): MangaInfo {
         genres = this.getGenres() ?: emptyList(),
         key = this.url,
         status = this.status,
-        title = this.title
+        title = this.title,
     )
 }

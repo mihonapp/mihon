@@ -82,7 +82,7 @@ class SettingsSearchController :
                     router.popCurrentController()
                     return false
                 }
-            }
+            },
         )
 
         searchView.setOnQueryTextListener(
@@ -96,7 +96,7 @@ class SettingsSearchController :
                     setItems(getResultSet(newText))
                     return false
                 }
-            }
+            },
         )
 
         searchView.setQuery(presenter.preferences.lastSearchQuerySearchSettings().get(), true)

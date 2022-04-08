@@ -23,14 +23,14 @@ class MigrationMangaController :
     constructor(sourceId: Long, sourceName: String?) : super(
         bundleOf(
             SOURCE_ID_EXTRA to sourceId,
-            SOURCE_NAME_EXTRA to sourceName
-        )
+            SOURCE_NAME_EXTRA to sourceName,
+        ),
     )
 
     @Suppress("unused")
     constructor(bundle: Bundle) : this(
         bundle.getLong(SOURCE_ID_EXTRA),
-        bundle.getString(SOURCE_NAME_EXTRA)
+        bundle.getString(SOURCE_NAME_EXTRA),
     )
 
     private val sourceId: Long = args.getLong(SOURCE_ID_EXTRA)

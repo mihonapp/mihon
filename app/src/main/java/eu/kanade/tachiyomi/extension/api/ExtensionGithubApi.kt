@@ -85,7 +85,7 @@ internal class ExtensionGithubApi {
                     hasChangelog = it.hasChangelog == 1,
                     sources = it.sources?.toExtensionSources() ?: emptyList(),
                     apkName = it.apk,
-                    iconUrl = "${REPO_URL_PREFIX}icon/${it.apk.replace(".apk", ".png")}"
+                    iconUrl = "${REPO_URL_PREFIX}icon/${it.apk.replace(".apk", ".png")}",
                 )
             }
     }
@@ -95,7 +95,7 @@ internal class ExtensionGithubApi {
             AvailableExtensionSources(
                 name = it.name,
                 id = it.id,
-                baseUrl = it.baseUrl
+                baseUrl = it.baseUrl,
             )
         }
     }

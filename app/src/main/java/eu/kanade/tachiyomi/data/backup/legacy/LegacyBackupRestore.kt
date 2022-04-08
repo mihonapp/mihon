@@ -28,7 +28,7 @@ class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : Abstract
         // Read the json and create a Json Object,
         // cannot use the backupManager json deserializer one because its not initialized yet
         val backupObject = Json.decodeFromStream<JsonObject>(
-            context.contentResolver.openInputStream(uri)!!
+            context.contentResolver.openInputStream(uri)!!,
         )
 
         // Get parser version

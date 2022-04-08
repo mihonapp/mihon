@@ -39,7 +39,7 @@ object SettingsSearchHelper {
         SettingsLibraryController::class,
         SettingsReaderController::class,
         SettingsSecurityController::class,
-        SettingsTrackingController::class
+        SettingsTrackingController::class,
     )
 
     /**
@@ -113,8 +113,8 @@ object SettingsSearchHelper {
                         title = title,
                         summary = summary,
                         breadcrumb = breadcrumbsStr,
-                        searchController = ctrl
-                    )
+                        searchController = ctrl,
+                    ),
                 )
             }
         }

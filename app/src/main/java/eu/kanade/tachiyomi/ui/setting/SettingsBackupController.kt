@@ -114,7 +114,7 @@ class SettingsBackupController : SettingsController() {
                     R.string.update_12hour,
                     R.string.update_24hour,
                     R.string.update_48hour,
-                    R.string.update_weekly
+                    R.string.update_weekly,
                 )
                 entryValues = arrayOf("0", "6", "12", "24", "48", "168")
                 summary = "%s"
@@ -228,7 +228,7 @@ class SettingsBackupController : SettingsController() {
                 R.string.categories,
                 R.string.chapters,
                 R.string.track,
-                R.string.history
+                R.string.history,
             )
                 .map { activity.getString(it) }
             val selected = options.map { true }.toBooleanArray()
@@ -264,7 +264,7 @@ class SettingsBackupController : SettingsController() {
 
     class RestoreBackupDialog(bundle: Bundle? = null) : DialogController(bundle) {
         constructor(uri: Uri) : this(
-            bundleOf(KEY_URI to uri)
+            bundleOf(KEY_URI to uri),
         )
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {

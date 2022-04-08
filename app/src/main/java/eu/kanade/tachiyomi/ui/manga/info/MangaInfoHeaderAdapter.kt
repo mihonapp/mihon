@@ -115,7 +115,7 @@ class MangaInfoHeaderAdapter(
                         text = view.context.resources.getQuantityString(
                             R.plurals.num_trackers,
                             trackCount,
-                            trackCount
+                            trackCount,
                         )
                         isActivated = true
                     } else {
@@ -143,7 +143,7 @@ class MangaInfoHeaderAdapter(
                 .onEach {
                     controller.activity?.copyToClipboard(
                         view.context.getString(R.string.title),
-                        binding.mangaFullTitle.text.toString()
+                        binding.mangaFullTitle.text.toString(),
                     )
                 }
                 .launchIn(controller.viewScope)
@@ -158,7 +158,7 @@ class MangaInfoHeaderAdapter(
                 .onEach {
                     controller.activity?.copyToClipboard(
                         binding.mangaAuthor.text.toString(),
-                        binding.mangaAuthor.text.toString()
+                        binding.mangaAuthor.text.toString(),
                     )
                 }
                 .launchIn(controller.viewScope)
@@ -173,7 +173,7 @@ class MangaInfoHeaderAdapter(
                 .onEach {
                     controller.activity?.copyToClipboard(
                         binding.mangaArtist.text.toString(),
-                        binding.mangaArtist.text.toString()
+                        binding.mangaArtist.text.toString(),
                     )
                 }
                 .launchIn(controller.viewScope)
@@ -204,7 +204,7 @@ class MangaInfoHeaderAdapter(
                 R.string.action_share,
                 R.string.action_save,
                 // Can only edit cover for library manga
-                if (manga.favorite) R.string.action_edit else null
+                if (manga.favorite) R.string.action_edit else null,
             ).map(controller.activity!!::getString).toTypedArray()
 
             MaterialAlertDialogBuilder(controller.activity!!)

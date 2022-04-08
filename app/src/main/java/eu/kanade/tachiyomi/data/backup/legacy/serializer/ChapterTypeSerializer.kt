@@ -35,7 +35,7 @@ open class ChapterBaseSerializer<T : Chapter> : KSerializer<T> {
                 if (value.last_page_read != 0) {
                     put(LAST_READ, value.last_page_read)
                 }
-            }
+            },
         )
     }
 

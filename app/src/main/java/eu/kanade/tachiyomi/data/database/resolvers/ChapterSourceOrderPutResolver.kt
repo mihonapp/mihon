@@ -27,6 +27,6 @@ class ChapterSourceOrderPutResolver : PutResolver<Chapter>() {
 
     fun mapToContentValues(chapter: Chapter) =
         contentValuesOf(
-            ChapterTable.COL_SOURCE_ORDER to chapter.source_order
+            ChapterTable.COL_SOURCE_ORDER to chapter.source_order,
         )
 }

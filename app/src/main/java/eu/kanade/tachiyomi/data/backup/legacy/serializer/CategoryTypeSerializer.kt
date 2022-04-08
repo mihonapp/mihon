@@ -27,7 +27,7 @@ open class CategoryBaseSerializer<T : Category> : KSerializer<T> {
             buildJsonArray {
                 add(value.name)
                 add(value.order)
-            }
+            },
         )
     }
 

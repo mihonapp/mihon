@@ -99,7 +99,7 @@ class HideBottomNavigationOnScrollBehavior @JvmOverloads constructor(
         }
         offsetAnimator?.setFloatValues(
             child.translationY,
-            if (isVisible) 0F else child.height.toFloat()
+            if (isVisible) 0F else child.height.toFloat(),
         )
         offsetAnimator?.start()
     }

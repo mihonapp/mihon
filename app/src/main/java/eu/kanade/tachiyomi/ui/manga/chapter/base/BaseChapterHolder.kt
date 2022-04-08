@@ -36,7 +36,7 @@ open class BaseChapterHolder(
                         } else {
                             adapter.clickListener.deleteChapter(position)
                         }
-                    }
+                    },
                 )
             }
         }

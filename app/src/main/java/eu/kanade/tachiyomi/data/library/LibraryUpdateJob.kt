@@ -49,7 +49,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                     interval.toLong(),
                     TimeUnit.HOURS,
                     10,
-                    TimeUnit.MINUTES
+                    TimeUnit.MINUTES,
                 )
                     .addTag(TAG)
                     .setConstraints(constraints)

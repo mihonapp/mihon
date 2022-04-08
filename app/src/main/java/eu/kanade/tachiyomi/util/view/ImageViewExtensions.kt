@@ -55,7 +55,7 @@ fun ImageView.loadAutoPause(
             },
             onStart = { request -> originalListener?.onStart(request) },
             onCancel = { request -> originalListener?.onCancel(request) },
-            onError = { request, throwable -> originalListener?.onError(request, throwable) }
+            onError = { request, throwable -> originalListener?.onError(request, throwable) },
         )
     }
 }

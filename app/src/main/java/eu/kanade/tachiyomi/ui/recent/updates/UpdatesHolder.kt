@@ -46,7 +46,7 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
         } else {
             binding.mangaTitle.setTextColor(adapter.unreadColor)
             binding.chapterTitle.setTextColor(
-                if (item.bookmark) adapter.bookmarkedColor else adapter.unreadColorSecondary
+                if (item.bookmark) adapter.bookmarkedColor else adapter.unreadColorSecondary,
             )
         }
 

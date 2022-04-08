@@ -76,7 +76,7 @@ open class BrowseSourceController(bundle: Bundle) :
             if (searchQuery != null) {
                 putString(SEARCH_QUERY_KEY, searchQuery)
             }
-        }
+        },
     )
 
     private val preferences: PreferencesHelper by injectLazy()
@@ -155,7 +155,7 @@ open class BrowseSourceController(bundle: Bundle) :
                 val newFilters = presenter.source.getFilterList()
                 presenter.sourceFilters = newFilters
                 filterSheet?.setFilters(presenter.filterItems)
-            }
+            },
         )
         filterSheet?.setFilters(presenter.filterItems)
 
@@ -269,7 +269,7 @@ open class BrowseSourceController(bundle: Bundle) :
                 }
 
                 true
-            }
+            },
         )
 
         val displayItem = when (preferences.sourceDisplayMode().get()) {
@@ -426,13 +426,13 @@ open class BrowseSourceController(bundle: Bundle) :
         if (adapter.isEmpty) {
             val actions = if (presenter.source is LocalSource) {
                 listOf(
-                    EmptyView.Action(R.string.local_source_help_guide, R.drawable.ic_help_24dp) { openLocalSourceHelpGuide() }
+                    EmptyView.Action(R.string.local_source_help_guide, R.drawable.ic_help_24dp) { openLocalSourceHelpGuide() },
                 )
             } else {
                 listOf(
                     EmptyView.Action(R.string.action_retry, R.drawable.ic_refresh_24dp, retryAction),
                     EmptyView.Action(R.string.action_open_in_web_view, R.drawable.ic_public_24dp) { openInWebView() },
-                    EmptyView.Action(R.string.label_help, R.drawable.ic_help_24dp) { activity?.openInBrowser(MoreController.URL_HELP) }
+                    EmptyView.Action(R.string.label_help, R.drawable.ic_help_24dp) { activity?.openInBrowser(MoreController.URL_HELP) },
                 )
             }
 

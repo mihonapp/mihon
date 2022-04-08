@@ -48,5 +48,5 @@ private val strokeColor = Color.rgb(45, 45, 45)
 // A span object with text outlining properties
 private val spanOutline = OutlineSpan(
     strokeColor = strokeColor,
-    strokeWidth = 4f
+    strokeWidth = 4f,
 )

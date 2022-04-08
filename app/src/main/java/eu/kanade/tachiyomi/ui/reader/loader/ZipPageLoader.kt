@@ -58,7 +58,7 @@ class ZipPageLoader(file: File) : PageLoader() {
                 Page.ERROR
             } else {
                 Page.READY
-            }
+            },
         )
     }
 }

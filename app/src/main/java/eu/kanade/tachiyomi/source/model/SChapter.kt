@@ -36,7 +36,7 @@ fun SChapter.toChapterInfo(): ChapterInfo {
         key = this.url,
         name = this.name,
         number = this.chapter_number,
-        scanlator = this.scanlator ?: ""
+        scanlator = this.scanlator ?: "",
     )
 }
 

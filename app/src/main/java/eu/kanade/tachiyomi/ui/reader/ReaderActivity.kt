@@ -349,7 +349,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         action = MainActivity.SHORTCUT_MANGA
                         putExtra(MangaController.MANGA_EXTRA, id)
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    }
+                    },
                 )
             }
         }
@@ -363,7 +363,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             override fun onStopTrackingTouch(slider: Slider) {
                 isScrollingThroughPages = false
             }
-        })
+        },)
         binding.pageSlider.addOnChangeListener { slider, value, fromUser ->
             if (viewer != null && fromUser) {
                 isScrollingThroughPages = true
@@ -406,13 +406,13 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             it.foreground = RippleDrawable(
                 ColorStateList.valueOf(getThemeColor(android.R.attr.colorControlHighlight)),
                 null,
-                it.background
+                it.background,
             )
         }
 
         val toolbarColor = ColorUtils.setAlphaComponent(
             toolbarBackground.resolvedTintColor,
-            toolbarBackground.alpha
+            toolbarBackground.alpha,
         )
         window.statusBarColor = toolbarColor
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -431,7 +431,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             setOnClickListener {
                 popupMenu(
                     items = ReadingModeType.values().map { it.flagValue to it.stringRes },
-                    selectedItemId = presenter.getMangaReadingMode(resolveDefault = false)
+                    selectedItemId = presenter.getMangaReadingMode(resolveDefault = false),
                 ) {
                     val newReadingMode = ReadingModeType.fromPreference(itemId)
 
@@ -465,7 +465,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         R.string.on
                     } else {
                         R.string.off
-                    }
+                    },
                 )
             }
         }
@@ -485,7 +485,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 popupMenu(
                     items = OrientationType.values().map { it.flagValue to it.stringRes },
                     selectedItemId = presenter.manga?.orientationType
-                        ?: preferences.defaultOrientationType()
+                        ?: preferences.defaultOrientationType(),
                 ) {
                     val newOrientation = OrientationType.fromPreference(itemId)
 
@@ -530,7 +530,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 R.drawable.ic_crop_24dp
             } else {
                 R.drawable.ic_crop_off_24dp
-            }
+            },
         )
     }
 
@@ -553,7 +553,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                             // Fix status bar being translucent the first time it's opened.
                             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                         }
-                    }
+                    },
                 )
                 binding.toolbar.startAnimation(toolbarAnimation)
 
@@ -579,7 +579,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         override fun onAnimationEnd(animation: Animation) {
                             binding.readerMenu.isVisible = false
                         }
-                    }
+                    },
                 )
                 binding.toolbar.startAnimation(toolbarAnimation)
 
@@ -610,7 +610,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         if (window.sharedElementEnterTransition is MaterialContainerTransform) {
             // Wait until transition is complete to avoid crash on API 26
             window.sharedElementEnterTransition.addListener(
-                onEnd = { setOrientation(presenter.getMangaOrientationType()) }
+                onEnd = { setOrientation(presenter.getMangaOrientationType()) },
             )
         } else {
             setOrientation(presenter.getMangaOrientationType())
@@ -832,7 +832,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         val intent = uri.toShareIntent(
             context = applicationContext,
-            message = getString(R.string.share_page_info, manga.title, chapter.name, page.number)
+            message = getString(R.string.share_page_info, manga.title, chapter.name, page.number),
         )
         startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
     }
@@ -878,7 +878,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 Success -> R.string.cover_updated
                 AddToLibraryFirst -> R.string.notification_first_add_to_library
                 Error -> R.string.notification_cover_update_failed
-            }
+            },
         )
     }
 
@@ -925,12 +925,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                                         -1f, 0f, 0f, 0f, 255f,
                                         0f, -1f, 0f, 0f, 255f,
                                         0f, 0f, -1f, 0f, 255f,
-                                        0f, 0f, 0f, 1f, 0f
-                                    )
-                                )
+                                        0f, 0f, 0f, 1f, 0f,
+                                    ),
+                                ),
                             )
                         }
-                    }
+                    },
                 )
             }
         }
@@ -947,7 +947,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                             2 -> R.color.reader_background_dark
                             3 -> automaticBackgroundColor()
                             else -> android.R.color.black
-                        }
+                        },
                     )
                 }
                 .launchIn(lifecycleScope)

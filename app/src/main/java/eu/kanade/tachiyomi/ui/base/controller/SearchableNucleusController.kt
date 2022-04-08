@@ -57,7 +57,7 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
 
         // Remove formatting from pasted text
         val searchAutoComplete: SearchView.SearchAutoComplete = searchView.findViewById(
-            R.id.search_src_text
+            R.id.search_src_text,
         )
         searchAutoComplete.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -68,7 +68,7 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
                 editable.getSpans(0, editable.length, CharacterStyle::class.java)
                     .forEach { editable.removeSpan(it) }
             }
-        })
+        },)
 
         searchView.queryTextEvents()
             .onEach {
@@ -149,7 +149,7 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
                     onSearchMenuItemActionCollapse(item)
                     return true
                 }
-            }
+            },
         )
     }
 

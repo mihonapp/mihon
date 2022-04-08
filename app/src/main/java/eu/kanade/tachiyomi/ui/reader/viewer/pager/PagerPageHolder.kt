@@ -227,8 +227,8 @@ class PagerPageHolder(
                             minimumScaleType = viewer.config.imageScaleType,
                             cropBorders = viewer.config.imageCropBorders,
                             zoomStartPosition = viewer.config.imageZoomType,
-                            landscapeZoom = viewer.config.landscapeZoom
-                        )
+                            landscapeZoom = viewer.config.landscapeZoom,
+                        ),
                     )
                     if (!isAnimated) {
                         pageBackground = background

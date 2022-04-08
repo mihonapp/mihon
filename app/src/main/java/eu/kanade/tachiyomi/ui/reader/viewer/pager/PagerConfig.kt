@@ -55,7 +55,7 @@ class PagerConfig(
                     theme = it
                     automaticBackground = it == 3
                 },
-                { imagePropertyChangedListener?.invoke() }
+                { imagePropertyChangedListener?.invoke() },
             )
 
         preferences.imageScaleType()
@@ -89,7 +89,7 @@ class PagerConfig(
                 {
                     imagePropertyChangedListener?.invoke()
                     dualPageSplitChangedListener?.invoke(it)
-                }
+                },
             )
 
         preferences.dualPageInvertPaged()

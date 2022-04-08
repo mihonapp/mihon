@@ -54,7 +54,7 @@ class ReaderSettingsSheet(
                     activity.setMenuVisibility(!isFilterTab)
                 }
             }
-        })
+        },)
 
         if (showColorFilterSettings) {
             binding.tabs.getTabAt(filterTabIndex)?.select()
@@ -64,12 +64,12 @@ class ReaderSettingsSheet(
     override fun getTabViews() = listOf(
         readingModeSettings,
         generalSettings,
-        colorFilterSettings
+        colorFilterSettings,
     )
 
     override fun getTabTitles() = listOf(
         R.string.pref_category_reading_mode,
         R.string.pref_category_general,
-        R.string.custom_filter
+        R.string.custom_filter,
     )
 }

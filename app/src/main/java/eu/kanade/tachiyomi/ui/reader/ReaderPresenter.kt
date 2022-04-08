@@ -225,7 +225,7 @@ class ReaderPresenter(
                 { _, _ ->
                     // Ignore onNext event
                 },
-                ReaderActivity::setInitialChapterError
+                ReaderActivity::setInitialChapterError,
             )
     }
 
@@ -260,7 +260,7 @@ class ReaderPresenter(
                 { _, _ ->
                     // Ignore onNext event
                 },
-                ReaderActivity::setInitialChapterError
+                ReaderActivity::setInitialChapterError,
             )
     }
 
@@ -283,9 +283,9 @@ class ReaderPresenter(
                     ViewerChapters(
                         chapter,
                         chapterList.getOrNull(chapterPos - 1),
-                        chapterList.getOrNull(chapterPos + 1)
+                        chapterList.getOrNull(chapterPos + 1),
                     )
-                }
+                },
             )
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { newChapters ->
@@ -336,7 +336,7 @@ class ReaderPresenter(
                 },
                 { _, _ ->
                     // Ignore onError event, viewers handle that state
-                }
+                },
             )
     }
 
@@ -531,7 +531,7 @@ class ReaderPresenter(
                     view.setManga(manga)
                     view.setChapters(currChapters)
                 }
-            })
+            },)
     }
 
     /**
@@ -562,7 +562,7 @@ class ReaderPresenter(
                 if (currChapters != null) {
                     view.setOrientation(getMangaOrientationType())
                 }
-            })
+            },)
     }
 
     /**
@@ -575,7 +575,7 @@ class ReaderPresenter(
         val chapter = page.chapter.chapter
         val filenameSuffix = " - ${page.number}"
         return DiskUtil.buildValidFilename(
-            "${manga.title} - ${chapter.name}".takeBytes(MAX_FILE_NAME_BYTES - filenameSuffix.byteSize())
+            "${manga.title} - ${chapter.name}".takeBytes(MAX_FILE_NAME_BYTES - filenameSuffix.byteSize()),
         ) + filenameSuffix
     }
 
@@ -603,8 +603,8 @@ class ReaderPresenter(
                     image = Image.Page(
                         inputStream = page.stream!!,
                         name = filename,
-                        location = Location.Pictures.create(relativePath)
-                    )
+                        location = Location.Pictures.create(relativePath),
+                    ),
                 )
                 launchUI {
                     notifier.onComplete(uri)
@@ -640,8 +640,8 @@ class ReaderPresenter(
                     image = Image.Page(
                         inputStream = page.stream!!,
                         name = filename,
-                        location = Location.Cache
-                    )
+                        location = Location.Cache,
+                    ),
                 )
                 launchUI {
                     view!!.onShareImageResult(uri, page)
@@ -683,7 +683,7 @@ class ReaderPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeFirst(
                 { view, result -> view.onSetAsCoverResult(result) },
-                { view, _ -> view.onSetAsCoverResult(SetAsCoverResult.Error) }
+                { view, _ -> view.onSetAsCoverResult(SetAsCoverResult.Error) },
             )
     }
 

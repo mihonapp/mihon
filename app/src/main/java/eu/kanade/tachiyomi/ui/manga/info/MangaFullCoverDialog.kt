@@ -107,8 +107,8 @@ class MangaFullCoverDialog : DialogController {
                 binding?.container?.setImage(
                     it,
                     ReaderPageImageView.Config(
-                        zoomDuration = 500
-                    )
+                        zoomDuration = 500,
+                    ),
                 )
             }
             .build()

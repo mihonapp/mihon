@@ -83,7 +83,7 @@ data class BackupManga(
                 dateAdded = manga.date_added,
                 viewer = manga.readingModeType,
                 viewer_flags = manga.viewer_flags,
-                chapterFlags = manga.chapter_flags
+                chapterFlags = manga.chapter_flags,
             )
         }
     }

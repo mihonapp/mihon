@@ -20,7 +20,7 @@ class SwitchPreferenceCategory @JvmOverloads constructor(
     PreferenceCategory(
         context,
         attrs,
-        R.attr.switchPreferenceCompatStyle
+        R.attr.switchPreferenceCompatStyle,
     ),
     CompoundButton.OnCheckedChangeListener {
 
@@ -120,7 +120,7 @@ class SwitchPreferenceCategory @JvmOverloads constructor(
                 getPersistedBoolean(mChecked)
             } else {
                 defaultValue as Boolean
-            }
+            },
         )
     }
 }

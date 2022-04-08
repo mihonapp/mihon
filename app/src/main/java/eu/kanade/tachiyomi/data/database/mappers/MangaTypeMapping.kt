@@ -33,7 +33,7 @@ import eu.kanade.tachiyomi.data.database.tables.MangaTable.TABLE
 class MangaTypeMapping : SQLiteTypeMapping<Manga>(
     MangaPutResolver(),
     MangaGetResolver(),
-    MangaDeleteResolver()
+    MangaDeleteResolver(),
 )
 
 class MangaPutResolver : DefaultPutResolver<Manga>() {
@@ -66,7 +66,7 @@ class MangaPutResolver : DefaultPutResolver<Manga>() {
             COL_VIEWER to obj.viewer_flags,
             COL_CHAPTER_FLAGS to obj.chapter_flags,
             COL_COVER_LAST_MODIFIED to obj.cover_last_modified,
-            COL_DATE_ADDED to obj.date_added
+            COL_DATE_ADDED to obj.date_added,
         )
 }
 

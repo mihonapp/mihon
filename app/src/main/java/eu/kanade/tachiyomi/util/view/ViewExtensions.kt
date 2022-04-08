@@ -211,7 +211,7 @@ fun RecyclerView.onAnimationsFinished(callback: (RecyclerView) -> Unit) = post(
                 callback(this@onAnimationsFinished)
             }
         }
-    }
+    },
 )
 
 /**

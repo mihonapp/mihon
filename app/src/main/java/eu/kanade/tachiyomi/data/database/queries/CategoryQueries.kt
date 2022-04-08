@@ -15,7 +15,7 @@ interface CategoryQueries : DbProvider {
             Query.builder()
                 .table(CategoryTable.TABLE)
                 .orderBy(CategoryTable.COL_ORDER)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -25,7 +25,7 @@ interface CategoryQueries : DbProvider {
             RawQuery.builder()
                 .query(getCategoriesForMangaQuery())
                 .args(manga.id)
-                .build()
+                .build(),
         )
         .prepare()
 

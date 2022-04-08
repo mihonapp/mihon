@@ -49,7 +49,7 @@ class ChapterCache(private val context: Context) {
         File(context.cacheDir, PARAMETER_CACHE_DIRECTORY),
         PARAMETER_APP_VERSION,
         PARAMETER_VALUE_COUNT,
-        PARAMETER_CACHE_SIZE
+        PARAMETER_CACHE_SIZE,
     )
 
     /**

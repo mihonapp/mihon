@@ -380,7 +380,7 @@ object ImageUtil {
 
         return GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM,
-            gradient
+            gradient,
         )
     }
 

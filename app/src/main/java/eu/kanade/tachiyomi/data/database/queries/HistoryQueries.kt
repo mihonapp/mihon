@@ -32,7 +32,7 @@ interface HistoryQueries : DbProvider {
                 .query(getRecentMangasQuery(search))
                 .args(date.time, limit, offset)
                 .observesTables(HistoryTable.TABLE)
-                .build()
+                .build(),
         )
         .withGetResolver(MangaChapterHistoryGetResolver.INSTANCE)
         .prepare()
@@ -44,7 +44,7 @@ interface HistoryQueries : DbProvider {
                 .query(getHistoryByMangaId())
                 .args(mangaId)
                 .observesTables(HistoryTable.TABLE)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -55,7 +55,7 @@ interface HistoryQueries : DbProvider {
                 .query(getHistoryByChapterUrl())
                 .args(chapterUrl)
                 .observesTables(HistoryTable.TABLE)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -83,7 +83,7 @@ interface HistoryQueries : DbProvider {
         .byQuery(
             DeleteQuery.builder()
                 .table(HistoryTable.TABLE)
-                .build()
+                .build(),
         )
         .prepare()
 
@@ -93,7 +93,7 @@ interface HistoryQueries : DbProvider {
                 .table(HistoryTable.TABLE)
                 .where("${HistoryTable.COL_LAST_READ} = ?")
                 .whereArgs(0)
-                .build()
+                .build(),
         )
         .prepare()
 }

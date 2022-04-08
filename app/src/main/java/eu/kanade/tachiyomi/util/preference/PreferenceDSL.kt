@@ -44,7 +44,7 @@ inline fun PreferenceGroup.infoPreference(@StringRes infoRes: Int): Preference {
             iconTint = context.getResourceColor(android.R.attr.textColorHint)
             summaryRes = infoRes
             isSelectable = false
-        }
+        },
     )
 }
 
@@ -156,7 +156,7 @@ inline fun SwitchPreferenceCompat.requireAuthentication(activity: FragmentActivi
                         super.onAuthenticationError(activity, errorCode, errString)
                         activity?.toast(errString.toString())
                     }
-                }
+                },
             )
         }
 

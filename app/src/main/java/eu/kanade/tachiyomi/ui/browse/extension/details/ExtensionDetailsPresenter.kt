@@ -33,7 +33,7 @@ class ExtensionDetailsPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeFirst({ view, _ ->
                 view.onExtensionUninstalled()
-            })
+            },)
     }
 
     fun uninstallExtension() {
