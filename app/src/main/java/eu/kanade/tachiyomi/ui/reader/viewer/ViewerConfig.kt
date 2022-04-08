@@ -17,7 +17,6 @@ abstract class ViewerConfig(preferences: PreferencesHelper, private val scope: C
 
     var navigationModeChangedListener: (() -> Unit)? = null
 
-    var tappingEnabled = true
     var tappingInverted = TappingInvertMode.NONE
     var longTapEnabled = true
     var usePageTransitions = false
@@ -43,9 +42,6 @@ abstract class ViewerConfig(preferences: PreferencesHelper, private val scope: C
         protected set
 
     init {
-        preferences.readWithTapping()
-            .register({ tappingEnabled = it })
-
         preferences.readWithLongTap()
             .register({ longTapEnabled = it })
 

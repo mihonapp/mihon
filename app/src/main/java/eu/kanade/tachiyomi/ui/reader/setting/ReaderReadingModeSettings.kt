@@ -69,8 +69,6 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         binding.webtoonPrefsGroup.root.isVisible = false
         binding.pagerPrefsGroup.root.isVisible = true
 
-        binding.pagerPrefsGroup.tappingPrefsGroup.isVisible = preferences.readWithTapping().get()
-
         binding.pagerPrefsGroup.tappingInverted.bindToPreference(preferences.pagerNavInverted())
 
         binding.pagerPrefsGroup.pagerNav.bindToPreference(preferences.navigationModePager())
@@ -100,8 +98,6 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
     private fun initWebtoonPreferences() {
         binding.pagerPrefsGroup.root.isVisible = false
         binding.webtoonPrefsGroup.root.isVisible = true
-
-        binding.webtoonPrefsGroup.tappingPrefsGroup.isVisible = preferences.readWithTapping().get()
 
         binding.webtoonPrefsGroup.tappingInverted.bindToPreference(preferences.webtoonNavInverted())
 

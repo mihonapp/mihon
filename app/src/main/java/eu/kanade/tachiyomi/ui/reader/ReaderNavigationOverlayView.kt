@@ -11,6 +11,7 @@ import android.view.ViewPropertyAnimator
 import androidx.core.graphics.withSave
 import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
+import eu.kanade.tachiyomi.ui.reader.viewer.navigation.DisabledNavigation
 import kotlin.math.abs
 
 class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
@@ -19,12 +20,12 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
 
     private var navigation: ViewerNavigation? = null
 
-    fun setNavigation(navigation: ViewerNavigation, tappingEnabled: Boolean, showOnStart: Boolean) {
+    fun setNavigation(navigation: ViewerNavigation, showOnStart: Boolean) {
         val firstLaunch = this.navigation == null
         this.navigation = navigation
         invalidate()
 
-        if (isVisible || (!showOnStart && firstLaunch) || !tappingEnabled) {
+        if (isVisible || (!showOnStart && firstLaunch) || navigation is DisabledNavigation) {
             return
         }
 

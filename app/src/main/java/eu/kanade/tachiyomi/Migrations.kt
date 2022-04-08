@@ -259,6 +259,13 @@ object Migrations {
             if (oldVersion < 76) {
                 BackupCreatorJob.setupTask(context)
             }
+            if (oldVersion < 77) {
+                val oldReaderTap = prefs.getBoolean("reader_tap", false)
+                if (!oldReaderTap) {
+                    preferences.navigationModePager().set(5)
+                    preferences.navigationModeWebtoon().set(5)
+                }
+            }
 
             return true
         }
