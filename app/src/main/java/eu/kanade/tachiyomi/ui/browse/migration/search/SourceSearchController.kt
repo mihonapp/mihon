@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceItem
 
 class SourceSearchController(
-    bundle: Bundle
+    bundle: Bundle,
 ) : BrowseSourceController(bundle) {
 
     constructor(manga: Manga? = null, source: CatalogueSource, searchQuery: String? = null) : this(

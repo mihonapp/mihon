@@ -15,7 +15,7 @@ data class Backup(
     val version: Int? = null,
     var mangas: MutableList<MangaObject> = mutableListOf(),
     var categories: List<@Contextual Category>? = null,
-    var extensions: List<String>? = null
+    var extensions: List<String>? = null,
 ) {
     companion object {
         const val CURRENT_VERSION = 2
@@ -33,5 +33,5 @@ data class MangaObject(
     var chapters: List<@Contextual Chapter>? = null,
     var categories: List<String>? = null,
     var track: List<@Contextual Track>? = null,
-    var history: List<@Contextual DHistory>? = null
+    var history: List<@Contextual DHistory>? = null,
 )

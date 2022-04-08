@@ -13,7 +13,7 @@ import java.text.DecimalFormatSymbols
 
 class ChaptersAdapter(
     controller: MangaController,
-    context: Context
+    context: Context,
 ) : BaseChaptersAdapter<ChapterItem>(controller) {
 
     private val preferences: PreferencesHelper by injectLazy()

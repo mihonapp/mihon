@@ -26,7 +26,7 @@ fun OkHttpClient.Builder.dohCloudflare() = dns(
             InetAddress.getByName("2606:4700:4700::1111"),
             InetAddress.getByName("2606:4700:4700::1001"),
             InetAddress.getByName("2606:4700:4700::0064"),
-            InetAddress.getByName("2606:4700:4700::6400"),
+            InetAddress.getByName("2606:4700:4700::6400")
         )
         .build()
 )
@@ -38,7 +38,7 @@ fun OkHttpClient.Builder.dohGoogle() = dns(
             InetAddress.getByName("8.8.4.4"),
             InetAddress.getByName("8.8.8.8"),
             InetAddress.getByName("2001:4860:4860::8888"),
-            InetAddress.getByName("2001:4860:4860::8844"),
+            InetAddress.getByName("2001:4860:4860::8844")
         )
         .build()
 )
@@ -52,7 +52,7 @@ fun OkHttpClient.Builder.dohAdGuard() = dns(
             InetAddress.getByName("94.140.14.140"),
             InetAddress.getByName("94.140.14.141"),
             InetAddress.getByName("2a10:50c0::1:ff"),
-            InetAddress.getByName("2a10:50c0::2:ff"),
+            InetAddress.getByName("2a10:50c0::2:ff")
         )
         .build()
 )
@@ -64,7 +64,7 @@ fun OkHttpClient.Builder.dohQuad9() = dns(
             InetAddress.getByName("9.9.9.9"),
             InetAddress.getByName("149.112.112.112"),
             InetAddress.getByName("2620:fe::fe"),
-            InetAddress.getByName("2620:fe::9"),
+            InetAddress.getByName("2620:fe::9")
         )
         .build()
 )

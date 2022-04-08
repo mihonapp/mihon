@@ -45,7 +45,7 @@ class TrackSearchDialog : DialogController {
     constructor(
         target: MangaController,
         _service: TrackService,
-        _currentTrackUrl: String?
+        _currentTrackUrl: String?,
     ) : super(bundleOf(KEY_SERVICE to _service.id, KEY_CURRENT_URL to _currentTrackUrl)) {
         targetController = target
         service = _service

@@ -27,7 +27,7 @@ import java.util.Date
 
 class SearchPresenter(
     initialQuery: String? = "",
-    private val manga: Manga
+    private val manga: Manga,
 ) : GlobalSearchPresenter(initialQuery) {
 
     private val replacingMangaRelay = BehaviorRelay.create<Pair<Boolean, Manga?>>()
@@ -88,7 +88,7 @@ class SearchPresenter(
         sourceChapters: List<SChapter>,
         prevManga: Manga,
         manga: Manga,
-        replace: Boolean
+        replace: Boolean,
     ) {
         val flags = preferences.migrateFlags().get()
         val migrateChapters =

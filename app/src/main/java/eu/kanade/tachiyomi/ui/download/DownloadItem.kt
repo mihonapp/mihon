@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 
 class DownloadItem(
     val download: Download,
-    header: DownloadHeaderItem
+    header: DownloadHeaderItem,
 ) : AbstractSectionableItem<DownloadHolder, DownloadHeaderItem>(header) {
 
     override fun getLayoutRes(): Int {
@@ -25,7 +25,7 @@ class DownloadItem(
      */
     override fun createViewHolder(
         view: View,
-        adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
+        adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
     ): DownloadHolder {
         return DownloadHolder(view, adapter as DownloadAdapter)
     }
@@ -42,7 +42,7 @@ class DownloadItem(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: DownloadHolder,
         position: Int,
-        payloads: MutableList<Any>
+        payloads: MutableList<Any>,
     ) {
         holder.bind(download)
     }

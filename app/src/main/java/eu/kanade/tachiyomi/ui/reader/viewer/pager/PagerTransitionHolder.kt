@@ -27,7 +27,7 @@ import rx.android.schedulers.AndroidSchedulers
 class PagerTransitionHolder(
     readerThemedContext: Context,
     val viewer: PagerViewer,
-    val transition: ChapterTransition
+    val transition: ChapterTransition,
 ) : LinearLayout(readerThemedContext), ViewPagerAdapter.PositionableView {
 
     /**

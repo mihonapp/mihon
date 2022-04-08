@@ -10,7 +10,7 @@ import java.util.Locale
 
 class TrackSearchHolder(
     private val binding: TrackSearchItemBinding,
-    private val adapter: TrackSearchAdapter
+    private val adapter: TrackSearchAdapter,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(track: TrackSearch, position: Int) {
         binding.root.isChecked = position == adapter.selectedItemPosition

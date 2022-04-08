@@ -21,7 +21,7 @@ class ChapterLoader(
     private val context: Context,
     private val downloadManager: DownloadManager,
     private val manga: Manga,
-    private val source: Source
+    private val source: Source,
 ) {
 
     /**

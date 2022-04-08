@@ -10,5 +10,5 @@ data class User(
     val sign: String? = "",
     val url: String? = "",
     val usergroup: Int? = 0,
-    val username: String? = ""
+    val username: String? = "",
 )

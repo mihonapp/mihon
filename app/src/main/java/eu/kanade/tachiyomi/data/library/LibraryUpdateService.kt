@@ -77,7 +77,7 @@ class LibraryUpdateService(
     val preferences: PreferencesHelper = Injekt.get(),
     val downloadManager: DownloadManager = Injekt.get(),
     val trackManager: TrackManager = Injekt.get(),
-    val coverCache: CoverCache = Injekt.get()
+    val coverCache: CoverCache = Injekt.get(),
 ) : Service() {
 
     private lateinit var wakeLock: PowerManager.WakeLock
@@ -310,7 +310,7 @@ class LibraryUpdateService(
                                 withUpdateNotification(
                                     currentlyUpdatingManga,
                                     progressCount,
-                                    manga,
+                                    manga
                                 ) { manga ->
                                     try {
                                         when {
@@ -383,7 +383,7 @@ class LibraryUpdateService(
             val errorFile = writeErrorFile(failedUpdates)
             notifier.showUpdateErrorNotification(
                 failedUpdates.size,
-                errorFile.getUriCompat(this),
+                errorFile.getUriCompat(this)
             )
         }
         if (skippedUpdates.isNotEmpty()) {
@@ -446,7 +446,7 @@ class LibraryUpdateService(
                                 withUpdateNotification(
                                     currentlyUpdatingManga,
                                     progressCount,
-                                    manga,
+                                    manga
                                 ) { manga ->
                                     sourceManager.get(manga.source)?.let { source ->
                                         try {

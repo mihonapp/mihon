@@ -21,7 +21,7 @@ import uy.kohesive.injekt.api.get
 class PagerConfig(
     private val viewer: PagerViewer,
     scope: CoroutineScope,
-    preferences: PreferencesHelper = Injekt.get()
+    preferences: PreferencesHelper = Injekt.get(),
 ) : ViewerConfig(preferences, scope) {
 
     var theme = preferences.readerTheme().get()

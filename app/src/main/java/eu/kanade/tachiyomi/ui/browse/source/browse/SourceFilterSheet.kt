@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
 class SourceFilterSheet(
     activity: Activity,
     private val onFilterClicked: () -> Unit,
-    private val onResetClicked: () -> Unit
+    private val onResetClicked: () -> Unit,
 ) : BaseBottomSheetDialog(activity) {
 
     private var filterNavView: FilterNavigationView = FilterNavigationView(activity)
@@ -36,7 +36,7 @@ class SourceFilterSheet(
 
     class FilterNavigationView @JvmOverloads constructor(
         context: Context,
-        attrs: AttributeSet? = null
+        attrs: AttributeSet? = null,
     ) :
         SimpleNavigationView(context, attrs) {
 

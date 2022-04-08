@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.widget.OutlineSpan
  */
 class PageIndicatorTextView(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : AppCompatTextView(context, attrs) {
 
     init {

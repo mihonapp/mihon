@@ -9,7 +9,7 @@ import com.google.android.material.slider.Slider
  */
 class ReaderSlider @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : Slider(context, attrs) {
 
     init {

@@ -21,7 +21,7 @@ import uy.kohesive.injekt.api.get
  */
 class LibraryAdapter(
     private val controller: LibraryController,
-    private val preferences: PreferencesHelper = Injekt.get()
+    private val preferences: PreferencesHelper = Injekt.get(),
 ) : RecyclerViewPagerAdapter() {
 
     /**

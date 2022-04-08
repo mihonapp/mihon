@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.GestureDetectorWithLongTap
  */
 open class Pager(
     context: Context,
-    isHorizontal: Boolean = true
+    isHorizontal: Boolean = true,
 ) : DirectionalViewPager(context, isHorizontal) {
 
     /**

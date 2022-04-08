@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import uy.kohesive.injekt.injectLazy
 
 class SearchController(
-    private var manga: Manga? = null
+    private var manga: Manga? = null,
 ) : GlobalSearchController(manga?.title) {
 
     private var newManga: Manga? = null
@@ -121,7 +121,7 @@ class SearchController(
                     }
                     (targetController as? SearchController)?.migrateManga(manga, newManga)
                 }
-                .setNegativeButton(R.string.copy) { _, _, ->
+                .setNegativeButton(R.string.copy) { _, _ ->
                     if (callingController != null) {
                         if (callingController.javaClass == SourceSearchController::class.java) {
                             router.popController(callingController)

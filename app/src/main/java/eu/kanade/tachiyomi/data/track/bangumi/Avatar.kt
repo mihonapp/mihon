@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class Avatar(
     val large: String? = "",
     val medium: String? = "",
-    val small: String? = ""
+    val small: String? = "",
 )

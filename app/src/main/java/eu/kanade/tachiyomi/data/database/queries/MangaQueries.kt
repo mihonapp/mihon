@@ -42,7 +42,7 @@ interface MangaQueries : DbProvider {
                 .where("${MangaTable.COL_FAVORITE} = 1 AND LOWER(${MangaTable.COL_TITLE}) = ? AND ${MangaTable.COL_SOURCE} != ?")
                 .whereArgs(
                     manga.title.lowercase(),
-                    manga.source,
+                    manga.source
                 )
                 .limit(1)
                 .build()

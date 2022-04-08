@@ -15,7 +15,7 @@ data class SeriesDto(
     val booksUnreadCount: Int,
     val booksInProgressCount: Int,
     val metadata: SeriesMetadataDto,
-    val booksMetadata: BookMetadataAggregationDto
+    val booksMetadata: BookMetadataAggregationDto,
 )
 
 @Serializable
@@ -38,7 +38,7 @@ data class SeriesMetadataDto(
     val genres: Set<String>,
     val genresLock: Boolean,
     val tags: Set<String>,
-    val tagsLock: Boolean
+    val tagsLock: Boolean,
 )
 
 @Serializable
@@ -49,13 +49,13 @@ data class BookMetadataAggregationDto(
     val summaryNumber: String,
 
     val created: String,
-    val lastModified: String
+    val lastModified: String,
 )
 
 @Serializable
 data class AuthorDto(
     val name: String,
-    val role: String
+    val role: String,
 )
 
 @Serializable
@@ -75,7 +75,7 @@ data class ReadListDto(
     val bookIds: List<String>,
     val createdDate: String,
     val lastModifiedDate: String,
-    val filtered: Boolean
+    val filtered: Boolean,
 )
 
 @Serializable
@@ -92,7 +92,7 @@ data class ReadProgressDto(
         booksUnreadCount,
         booksInProgressCount,
         lastReadContinuousIndex.toFloat(),
-        booksCount.toFloat(),
+        booksCount.toFloat()
     )
 }
 

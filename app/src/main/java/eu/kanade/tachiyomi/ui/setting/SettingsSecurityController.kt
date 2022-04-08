@@ -34,7 +34,7 @@ class SettingsSecurityController : SettingsController() {
                 requireAuthentication(
                     activity as? FragmentActivity,
                     context.getString(R.string.lock_with_biometrics),
-                    context.getString(R.string.confirm_lock_change),
+                    context.getString(R.string.confirm_lock_change)
                 )
             }
 
@@ -60,7 +60,7 @@ class SettingsSecurityController : SettingsController() {
                         callback = object : AuthenticatorUtil.AuthenticationCallback() {
                             override fun onAuthenticationSucceeded(
                                 activity: FragmentActivity?,
-                                result: BiometricPrompt.AuthenticationResult
+                                result: BiometricPrompt.AuthenticationResult,
                             ) {
                                 super.onAuthenticationSucceeded(activity, result)
                                 value = newValue as String
@@ -69,7 +69,7 @@ class SettingsSecurityController : SettingsController() {
                             override fun onAuthenticationError(
                                 activity: FragmentActivity?,
                                 errorCode: Int,
-                                errString: CharSequence
+                                errString: CharSequence,
                             ) {
                                 super.onAuthenticationError(activity, errorCode, errString)
                                 activity?.toast(errString.toString())

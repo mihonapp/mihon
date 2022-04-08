@@ -14,7 +14,7 @@ import kotlin.math.abs
  */
 open class GestureDetectorWithLongTap(
     context: Context,
-    listener: Listener
+    listener: Listener,
 ) : GestureDetector(context, listener) {
 
     private val handler = Handler(Looper.getMainLooper())

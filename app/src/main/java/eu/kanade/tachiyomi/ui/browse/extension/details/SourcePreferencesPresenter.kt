@@ -7,7 +7,7 @@ import uy.kohesive.injekt.api.get
 
 class SourcePreferencesPresenter(
     val sourceId: Long,
-    sourceManager: SourceManager = Injekt.get()
+    sourceManager: SourceManager = Injekt.get(),
 ) : BasePresenter<SourcePreferencesController>() {
 
     val source = sourceManager.get(sourceId)

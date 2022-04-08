@@ -11,7 +11,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
  */
 class WebtoonSubsamplingImageView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : SubsamplingScaleImageView(context, attrs) {
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

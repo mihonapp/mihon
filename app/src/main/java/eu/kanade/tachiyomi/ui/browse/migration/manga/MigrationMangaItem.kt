@@ -22,7 +22,7 @@ class MigrationMangaItem(val manga: Manga) : AbstractFlexibleItem<MigrationManga
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: MigrationMangaHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.bind(this)
     }

@@ -31,7 +31,7 @@ class TrackSheet(
     val controller: MangaController,
     val manga: Manga,
     val fragmentManager: FragmentManager,
-    private val sourceManager: SourceManager = Injekt.get()
+    private val sourceManager: SourceManager = Injekt.get(),
 ) : BaseBottomSheetDialog(controller.activity!!),
     TrackAdapter.OnClickListener,
     SetTrackStatusDialog.Listener,

@@ -19,7 +19,7 @@ internal class QuadStateMultiChoiceDialogAdapter(
     disabledItems: IntArray?,
     private var initialSelected: IntArray,
     internal var listener: QuadStateMultiChoiceListener,
-    val isActionList: Boolean = true
+    val isActionList: Boolean = true,
 ) : RecyclerView.Adapter<QuadStateMultiChoiceViewHolder>() {
 
     private val states = QuadStateTextView.State.values()
@@ -80,7 +80,7 @@ internal class QuadStateMultiChoiceDialogAdapter(
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): QuadStateMultiChoiceViewHolder {
         return QuadStateMultiChoiceViewHolder(
             itemBinding = DialogQuadstatemultichoiceItemBinding
@@ -93,7 +93,7 @@ internal class QuadStateMultiChoiceDialogAdapter(
 
     override fun onBindViewHolder(
         holder: QuadStateMultiChoiceViewHolder,
-        position: Int
+        position: Int,
     ) {
         holder.isEnabled = !disabledIndices.contains(position)
         holder.controlView.state = states[currentSelection[position]]
@@ -103,7 +103,7 @@ internal class QuadStateMultiChoiceDialogAdapter(
     override fun onBindViewHolder(
         holder: QuadStateMultiChoiceViewHolder,
         position: Int,
-        payloads: MutableList<Any>
+        payloads: MutableList<Any>,
     ) {
         when (payloads.firstOrNull()) {
             CheckPayload -> {

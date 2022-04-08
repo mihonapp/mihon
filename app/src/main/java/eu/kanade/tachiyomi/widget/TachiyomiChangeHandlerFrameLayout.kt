@@ -11,7 +11,7 @@ import com.bluelinelabs.conductor.ChangeHandlerFrameLayout
  */
 class TachiyomiChangeHandlerFrameLayout(
     context: Context,
-    attrs: AttributeSet
+    attrs: AttributeSet,
 ) : ChangeHandlerFrameLayout(context, attrs), CoordinatorLayout.AttachedBehavior {
 
     /**

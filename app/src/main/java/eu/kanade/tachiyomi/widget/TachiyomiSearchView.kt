@@ -23,7 +23,7 @@ import uy.kohesive.injekt.api.get
 class TachiyomiSearchView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.searchViewStyle
+    defStyleAttr: Int = R.attr.searchViewStyle,
 ) : SearchView(context, attrs, defStyleAttr) {
 
     private var scope: CoroutineScope? = null

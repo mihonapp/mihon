@@ -12,7 +12,7 @@ import androidx.core.app.NotificationChannelGroupCompat
  */
 fun buildNotificationChannelGroup(
     channelId: String,
-    block: (NotificationChannelGroupCompat.Builder.() -> Unit)
+    block: (NotificationChannelGroupCompat.Builder.() -> Unit),
 ): NotificationChannelGroupCompat {
     val builder = NotificationChannelGroupCompat.Builder(channelId)
     builder.block()
@@ -30,7 +30,7 @@ fun buildNotificationChannelGroup(
 fun buildNotificationChannel(
     channelId: String,
     channelImportance: Int,
-    block: (NotificationChannelCompat.Builder.() -> Unit)
+    block: (NotificationChannelCompat.Builder.() -> Unit),
 ): NotificationChannelCompat {
     val builder = NotificationChannelCompat.Builder(channelId, channelImportance)
     builder.block()

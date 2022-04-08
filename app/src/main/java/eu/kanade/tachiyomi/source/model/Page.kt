@@ -12,7 +12,7 @@ open class Page(
     val index: Int,
     val url: String = "",
     var imageUrl: String? = null,
-    @Transient var uri: Uri? = null // Deprecated but can't be deleted due to extensions
+    @Transient var uri: Uri? = null, // Deprecated but can't be deleted due to extensions
 ) : ProgressListener {
 
     val number: Int

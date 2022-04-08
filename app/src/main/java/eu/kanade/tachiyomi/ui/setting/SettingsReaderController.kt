@@ -81,7 +81,7 @@ class SettingsReaderController : SettingsController() {
                     R.string.rotation_reverse_portrait,
                     R.string.rotation_landscape,
                     R.string.rotation_force_portrait,
-                    R.string.rotation_force_landscape,
+                    R.string.rotation_force_landscape
                 )
                 entryValues = OrientationType.values().drop(1)
                     .map { value -> "${value.flagValue}" }.toTypedArray()

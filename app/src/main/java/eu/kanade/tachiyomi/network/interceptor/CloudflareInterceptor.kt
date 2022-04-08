@@ -135,7 +135,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
                     errorCode: Int,
                     description: String?,
                     failingUrl: String,
-                    isMainFrame: Boolean
+                    isMainFrame: Boolean,
                 ) {
                     if (isMainFrame) {
                         if (errorCode in ERROR_CODES) {

@@ -186,7 +186,7 @@ class LocalSource(private val context: Context) : CatalogueSource, UnmeteredSour
                 artist = obj["artist"]?.jsonPrimitive?.contentOrNull ?: manga.artist,
                 description = obj["description"]?.jsonPrimitive?.contentOrNull ?: manga.description,
                 genres = obj["genre"]?.jsonArray?.map { it.jsonPrimitive.content } ?: manga.genres,
-                status = obj["status"]?.jsonPrimitive?.intOrNull ?: manga.status,
+                status = obj["status"]?.jsonPrimitive?.intOrNull ?: manga.status
             )
         } else {
             manga
@@ -353,5 +353,5 @@ private val WHITESPACE_CHARS = arrayOf(
     '\u2029',
     '\u202F',
     '\u205F',
-    '\u3000',
+    '\u3000'
 )

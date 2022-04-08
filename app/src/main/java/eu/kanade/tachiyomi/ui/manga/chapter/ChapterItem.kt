@@ -26,7 +26,7 @@ class ChapterItem(chapter: Chapter, val manga: Manga) :
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: ChapterHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.bind(this, manga)
     }

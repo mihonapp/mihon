@@ -273,7 +273,7 @@ class ReaderPresenter(
      */
     private fun getLoadObservable(
         loader: ChapterLoader,
-        chapter: ReaderChapter
+        chapter: ReaderChapter,
     ): Observable<ViewerChapters> {
         return loader.loadChapter(chapter)
             .andThen(

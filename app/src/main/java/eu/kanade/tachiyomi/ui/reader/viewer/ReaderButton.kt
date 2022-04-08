@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 class ReaderButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.materialButtonStyle
+    defStyleAttr: Int = R.attr.materialButtonStyle,
 ) : MaterialButton(context, attrs, defStyleAttr) {
 
     var viewer: PagerViewer? = null

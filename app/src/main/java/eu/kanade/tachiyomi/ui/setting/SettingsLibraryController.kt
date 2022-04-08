@@ -342,9 +342,11 @@ class SettingsLibraryController : SettingsController() {
                 .map {
                     when (it.id.toString()) {
                         in preferences.libraryUpdateCategories()
-                            .get() -> QuadStateTextView.State.CHECKED.ordinal
+                            .get(),
+                        -> QuadStateTextView.State.CHECKED.ordinal
                         in preferences.libraryUpdateCategoriesExclude()
-                            .get() -> QuadStateTextView.State.INVERSED.ordinal
+                            .get(),
+                        -> QuadStateTextView.State.INVERSED.ordinal
                         else -> QuadStateTextView.State.UNCHECKED.ordinal
                     }
                 }

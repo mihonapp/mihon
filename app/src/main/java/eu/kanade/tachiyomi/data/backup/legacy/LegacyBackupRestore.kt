@@ -109,7 +109,7 @@ class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : Abstract
         chapters: List<Chapter>,
         categories: List<String>,
         history: List<DHistory>,
-        tracks: List<Track>
+        tracks: List<Track>,
     ) {
         val dbManga = backupManager.getMangaFromDatabase(manga)
 
@@ -139,7 +139,7 @@ class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : Abstract
         chapters: List<Chapter>,
         categories: List<String>,
         history: List<DHistory>,
-        tracks: List<Track>
+        tracks: List<Track>,
     ) {
         try {
             val fetchedManga = backupManager.fetchManga(source, manga)
@@ -161,7 +161,7 @@ class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : Abstract
         chapters: List<Chapter>,
         categories: List<String>,
         history: List<DHistory>,
-        tracks: List<Track>
+        tracks: List<Track>,
     ) {
         if (!backupManager.restoreChaptersForManga(backupManga, chapters)) {
             updateChapters(source, backupManga, chapters)

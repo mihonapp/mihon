@@ -20,7 +20,7 @@ import kotlin.math.roundToLong
  */
 class HideBottomNavigationOnScrollBehavior @JvmOverloads constructor(
     context: Context? = null,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : CoordinatorLayout.Behavior<BottomNavigationView>(context, attrs) {
 
     @ViewCompat.NestedScrollType
@@ -37,7 +37,7 @@ class HideBottomNavigationOnScrollBehavior @JvmOverloads constructor(
     override fun onDependentViewChanged(
         parent: CoordinatorLayout,
         child: BottomNavigationView,
-        dependency: View
+        dependency: View,
     ): Boolean {
         val toolbarSize = (dependency as ViewGroup).findChild<Toolbar>()?.height ?: 0
         dyRatio = if (toolbarSize > 0) {
@@ -54,7 +54,7 @@ class HideBottomNavigationOnScrollBehavior @JvmOverloads constructor(
         directTargetChild: View,
         target: View,
         axes: Int,
-        type: Int
+        type: Int,
     ): Boolean {
         if (axes != ViewCompat.SCROLL_AXIS_VERTICAL) {
             return false
@@ -71,7 +71,7 @@ class HideBottomNavigationOnScrollBehavior @JvmOverloads constructor(
         dx: Int,
         dy: Int,
         consumed: IntArray,
-        type: Int
+        type: Int,
     ) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
         child.translationY = (child.translationY + (dy * dyRatio)).coerceIn(0F, child.height.toFloat())
@@ -81,7 +81,7 @@ class HideBottomNavigationOnScrollBehavior @JvmOverloads constructor(
         coordinatorLayout: CoordinatorLayout,
         child: BottomNavigationView,
         target: View,
-        type: Int
+        type: Int,
     ) {
         if (lastStartedType == ViewCompat.TYPE_TOUCH || type == ViewCompat.TYPE_NON_TOUCH) {
             animateBottomNavigationVisibility(child, child.translationY < child.height / 2)

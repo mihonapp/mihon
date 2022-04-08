@@ -15,7 +15,7 @@ import java.util.Date
 
 class ChapterHolder(
     view: View,
-    private val adapter: ChaptersAdapter
+    private val adapter: ChaptersAdapter,
 ) : BaseChapterHolder(view, adapter) {
 
     private val binding = ChaptersItemBinding.bind(view)

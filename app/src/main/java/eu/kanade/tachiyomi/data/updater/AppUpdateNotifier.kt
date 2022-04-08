@@ -47,12 +47,12 @@ internal class AppUpdateNotifier(private val context: Context) {
             addAction(
                 android.R.drawable.stat_sys_download_done,
                 context.getString(R.string.action_download),
-                updateIntent,
+                updateIntent
             )
             addAction(
                 R.drawable.ic_info_24dp,
                 context.getString(R.string.whats_new),
-                releaseInfoIntent,
+                releaseInfoIntent
             )
         }
         notificationBuilder.show()

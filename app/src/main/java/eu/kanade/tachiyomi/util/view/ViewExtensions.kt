@@ -52,7 +52,7 @@ fun View.getCoordinates() = Point((left + right) / 2, (top + bottom) / 2)
 inline fun View.snack(
     message: String,
     length: Int = 10_000,
-    f: Snackbar.() -> Unit = {}
+    f: Snackbar.() -> Unit = {},
 ): Snackbar {
     val snack = Snackbar.make(this, message, length)
     snack.f()
@@ -88,7 +88,7 @@ inline fun View.setTooltip(text: String) {
 inline fun View.popupMenu(
     @MenuRes menuRes: Int,
     noinline initMenu: (Menu.() -> Unit)? = null,
-    noinline onMenuItemClick: MenuItem.() -> Unit
+    noinline onMenuItemClick: MenuItem.() -> Unit,
 ): PopupMenu {
     val popup = PopupMenu(context, this, Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0)
     popup.menuInflater.inflate(menuRes, popup.menu)
@@ -116,7 +116,7 @@ inline fun View.popupMenu(
 inline fun View.popupMenu(
     items: List<Pair<Int, Int>>,
     selectedItemId: Int? = null,
-    noinline onMenuItemClick: MenuItem.() -> Unit
+    noinline onMenuItemClick: MenuItem.() -> Unit,
 ): PopupMenu {
     val popup = PopupMenu(context, this, Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0)
     items.forEach { (id, stringRes) ->
@@ -174,7 +174,7 @@ inline fun ExtendedFloatingActionButton.shrinkOnScroll(recycler: RecyclerView): 
 inline fun ChipGroup.setChips(
     items: List<String>?,
     noinline onClick: ((item: String) -> Unit)? = null,
-    noinline onLongClick: ((item: String) -> Unit)? = null
+    noinline onLongClick: ((item: String) -> Unit)? = null,
 ) {
     removeAllViews()
 

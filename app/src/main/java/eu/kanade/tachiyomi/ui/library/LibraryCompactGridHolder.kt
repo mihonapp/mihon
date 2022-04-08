@@ -18,7 +18,7 @@ import eu.kanade.tachiyomi.util.view.loadAutoPause
 class LibraryCompactGridHolder(
     override val binding: SourceCompactGridItemBinding,
     adapter: FlexibleAdapter<*>,
-    private val coverOnly: Boolean
+    private val coverOnly: Boolean,
 ) : LibraryHolder<SourceCompactGridItemBinding>(binding.root, adapter) {
 
     /**

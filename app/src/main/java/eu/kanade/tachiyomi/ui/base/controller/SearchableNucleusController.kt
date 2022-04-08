@@ -21,8 +21,7 @@ import reactivecircus.flowbinding.appcompat.queryTextEvents
 /**
  * Implementation of the NucleusController that has a built-in ViewSearch
  */
-abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*>>
-(bundle: Bundle? = null) : NucleusController<VB, P>(bundle) {
+abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*>>(bundle: Bundle? = null) : NucleusController<VB, P>(bundle) {
 
     enum class SearchViewState { LOADING, LOADED, COLLAPSING, FOCUSED }
 
@@ -45,7 +44,7 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
         menuId: Int,
         searchItemId: Int,
         @StringRes queryHint: Int? = null,
-        restoreCurrentQuery: Boolean = true
+        restoreCurrentQuery: Boolean = true,
     ) {
         // Inflate menu
         inflater.inflate(menuId, menu)

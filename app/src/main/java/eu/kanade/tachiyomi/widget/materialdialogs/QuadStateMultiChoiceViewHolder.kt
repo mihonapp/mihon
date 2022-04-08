@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.databinding.DialogQuadstatemultichoiceItemBinding
 
 internal class QuadStateMultiChoiceViewHolder(
     itemBinding: DialogQuadstatemultichoiceItemBinding,
-    private val adapter: QuadStateMultiChoiceDialogAdapter
+    private val adapter: QuadStateMultiChoiceDialogAdapter,
 ) : RecyclerView.ViewHolder(itemBinding.root), View.OnClickListener {
     init {
         itemView.setOnClickListener(this)

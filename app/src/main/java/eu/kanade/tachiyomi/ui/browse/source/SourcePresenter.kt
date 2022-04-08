@@ -21,7 +21,7 @@ import java.util.TreeMap
  */
 class SourcePresenter(
     val sourceManager: SourceManager = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get()
+    private val preferences: PreferencesHelper = Injekt.get(),
 ) : BasePresenter<SourceController>() {
 
     var sources = getEnabledSources()

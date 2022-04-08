@@ -19,7 +19,7 @@ import uy.kohesive.injekt.api.get
 class LibraryItem(
     val manga: LibraryManga,
     private val shouldSetFromCategory: Preference<Boolean>,
-    private val defaultLibraryDisplayMode: Preference<DisplayModeSetting>
+    private val defaultLibraryDisplayMode: Preference<DisplayModeSetting>,
 ) :
     AbstractFlexibleItem<LibraryHolder<*>>(), IFilterable<String> {
 
@@ -68,7 +68,7 @@ class LibraryItem(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: LibraryHolder<*>,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.onSetValues(this)
     }

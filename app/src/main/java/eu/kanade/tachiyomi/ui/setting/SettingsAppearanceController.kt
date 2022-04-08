@@ -103,7 +103,7 @@ class SettingsAppearanceController : SettingsController() {
                     entriesRes = arrayOf(
                         R.string.alignment_top,
                         R.string.alignment_center,
-                        R.string.alignment_bottom,
+                        R.string.alignment_bottom
                     )
                     entryValues = arrayOf("0", "1", "2")
                     summary = "%s"

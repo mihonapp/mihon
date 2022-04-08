@@ -10,7 +10,7 @@ import java.lang.reflect.Field
  */
 class BottomSheetViewPager @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : ViewPager(context, attrs) {
 
     private val positionField: Field = LayoutParams::class.java.getDeclaredField("position").also {

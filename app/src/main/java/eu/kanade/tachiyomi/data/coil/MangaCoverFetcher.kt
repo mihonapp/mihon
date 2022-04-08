@@ -47,7 +47,7 @@ class MangaCoverFetcher(
     private val options: Options,
     private val coverCache: CoverCache,
     private val callFactoryLazy: Lazy<Call.Factory>,
-    private val diskCacheLazy: Lazy<DiskCache>
+    private val diskCacheLazy: Lazy<DiskCache>,
 ) : Fetcher {
 
     // For non-custom cover
@@ -273,7 +273,7 @@ class MangaCoverFetcher(
 
     class Factory(
         private val callFactoryLazy: Lazy<Call.Factory>,
-        private val diskCacheLazy: Lazy<DiskCache>
+        private val diskCacheLazy: Lazy<DiskCache>,
     ) : Fetcher.Factory<Manga> {
 
         private val coverCache: CoverCache by injectLazy()

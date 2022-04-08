@@ -13,7 +13,7 @@ import androidx.annotation.Dimension
  */
 class OutlineSpan(
     @ColorInt private val strokeColor: Int,
-    @Dimension private val strokeWidth: Float
+    @Dimension private val strokeWidth: Float,
 ) : ReplacementSpan() {
 
     override fun getSize(
@@ -21,7 +21,7 @@ class OutlineSpan(
         text: CharSequence,
         start: Int,
         end: Int,
-        fm: Paint.FontMetricsInt?
+        fm: Paint.FontMetricsInt?,
     ): Int {
         return paint.measureText(text.toString().substring(start until end)).toInt()
     }
@@ -35,7 +35,7 @@ class OutlineSpan(
         top: Int,
         y: Int,
         bottom: Int,
-        paint: Paint
+        paint: Paint,
     ) {
         val originTextColor = paint.color
 

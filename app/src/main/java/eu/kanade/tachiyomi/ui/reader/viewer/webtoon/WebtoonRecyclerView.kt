@@ -20,7 +20,7 @@ import kotlin.math.abs
 open class WebtoonRecyclerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyle: Int = 0
+    defStyle: Int = 0,
 ) : RecyclerView(context, attrs, defStyle) {
 
     private var isZooming = false
@@ -94,7 +94,7 @@ open class WebtoonRecyclerView @JvmOverloads constructor(
         fromX: Float,
         toX: Float,
         fromY: Float,
-        toY: Float
+        toY: Float,
     ) {
         isZooming = true
         val animatorSet = AnimatorSet()

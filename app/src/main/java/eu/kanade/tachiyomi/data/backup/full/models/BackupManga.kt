@@ -35,7 +35,7 @@ data class BackupManga(
     @ProtoNumber(101) var chapterFlags: Int = 0,
     @ProtoNumber(102) var brokenHistory: List<BrokenBackupHistory> = emptyList(),
     @ProtoNumber(103) var viewer_flags: Int? = null,
-    @ProtoNumber(104) var history: List<BackupHistory> = emptyList()
+    @ProtoNumber(104) var history: List<BackupHistory> = emptyList(),
 ) {
     fun getMangaImpl(): MangaImpl {
         return MangaImpl().apply {

@@ -13,7 +13,7 @@ import uy.kohesive.injekt.api.get
  * Presenter of [CategoryController]. Used to manage the categories of the library.
  */
 class CategoryPresenter(
-    private val db: DatabaseHelper = Injekt.get()
+    private val db: DatabaseHelper = Injekt.get(),
 ) : BasePresenter<CategoryController>() {
 
     /**

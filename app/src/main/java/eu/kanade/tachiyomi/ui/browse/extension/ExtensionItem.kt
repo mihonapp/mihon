@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 data class ExtensionItem(
     val extension: Extension,
     val header: ExtensionGroupItem? = null,
-    val installStep: InstallStep = InstallStep.Idle
+    val installStep: InstallStep = InstallStep.Idle,
 ) :
     AbstractSectionableItem<ExtensionHolder, ExtensionGroupItem>(header) {
 
@@ -44,7 +44,7 @@ data class ExtensionItem(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: ExtensionHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         if (payloads == null || payloads.isEmpty()) {
             holder.bind(this)

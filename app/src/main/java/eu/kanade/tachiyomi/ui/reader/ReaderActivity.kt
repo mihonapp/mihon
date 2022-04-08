@@ -431,7 +431,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             setOnClickListener {
                 popupMenu(
                     items = ReadingModeType.values().map { it.flagValue to it.stringRes },
-                    selectedItemId = presenter.getMangaReadingMode(resolveDefault = false),
+                    selectedItemId = presenter.getMangaReadingMode(resolveDefault = false)
                 ) {
                     val newReadingMode = ReadingModeType.fromPreference(itemId)
 
@@ -485,7 +485,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 popupMenu(
                     items = OrientationType.values().map { it.flagValue to it.stringRes },
                     selectedItemId = presenter.manga?.orientationType
-                        ?: preferences.defaultOrientationType(),
+                        ?: preferences.defaultOrientationType()
                 ) {
                     val newOrientation = OrientationType.fromPreference(itemId)
 

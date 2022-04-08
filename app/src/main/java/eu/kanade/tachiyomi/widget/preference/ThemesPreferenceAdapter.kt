@@ -25,7 +25,7 @@ class ThemesPreferenceAdapter(private val clickListener: OnItemClickListener) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeViewHolder {
         val themeResIds = ThemingDelegate.getThemeResIds(themes[viewType], preferences.themeDarkAmoled().get())
         val themedContext = themeResIds.fold(parent.context) {
-            context, themeResId ->
+                context, themeResId ->
             ContextThemeWrapper(context, themeResId)
         }
 

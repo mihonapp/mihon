@@ -95,7 +95,7 @@ class SettingsTrackingController :
 
     private inline fun PreferenceGroup.trackPreference(
         service: TrackService,
-        crossinline login: () -> Unit
+        crossinline login: () -> Unit,
     ): TrackerPreference {
         return add(
             TrackerPreference(context).apply {

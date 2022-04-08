@@ -9,7 +9,7 @@ data class OAuth(
     val created_at: Long = System.currentTimeMillis() / 1000,
     val expires_in: Long,
     val refresh_token: String?,
-    val user_id: Long?
+    val user_id: Long?,
 ) {
 
     // Access token refresh before expired

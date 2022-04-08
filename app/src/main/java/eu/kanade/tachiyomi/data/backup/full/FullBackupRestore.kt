@@ -93,7 +93,7 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBa
         categories: List<Int>,
         history: List<BackupHistory>,
         tracks: List<Track>,
-        backupCategories: List<BackupCategory>
+        backupCategories: List<BackupCategory>,
     ) {
         db.inTransaction {
             val dbManga = backupManager.getMangaFromDatabase(manga)
@@ -123,7 +123,7 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBa
         categories: List<Int>,
         history: List<BackupHistory>,
         tracks: List<Track>,
-        backupCategories: List<BackupCategory>
+        backupCategories: List<BackupCategory>,
     ) {
         try {
             val fetchedManga = backupManager.restoreManga(manga)
@@ -143,7 +143,7 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBa
         categories: List<Int>,
         history: List<BackupHistory>,
         tracks: List<Track>,
-        backupCategories: List<BackupCategory>
+        backupCategories: List<BackupCategory>,
     ) {
         backupManager.restoreChaptersForManga(backupManga, chapters)
 

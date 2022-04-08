@@ -8,7 +8,7 @@ import rx.Subscription
 
 abstract class WebtoonBaseHolder(
     view: View,
-    protected val viewer: WebtoonViewer
+    protected val viewer: WebtoonViewer,
 ) : RecyclerView.ViewHolder(view) {
 
     /**

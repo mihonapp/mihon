@@ -126,7 +126,7 @@ class DownloadPendingDeleter(context: Context) {
     @Serializable
     private data class Entry(
         val chapters: List<ChapterEntry>,
-        val manga: MangaEntry
+        val manga: MangaEntry,
     )
 
     /**
@@ -137,7 +137,7 @@ class DownloadPendingDeleter(context: Context) {
         val id: Long,
         val url: String,
         val name: String,
-        val scanlator: String? = null
+        val scanlator: String? = null,
     )
 
     /**
@@ -148,7 +148,7 @@ class DownloadPendingDeleter(context: Context) {
         val id: Long,
         val url: String,
         val title: String,
-        val source: Long
+        val source: Long,
     )
 
     /**

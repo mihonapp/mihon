@@ -144,7 +144,7 @@ class BackupNotifier(private val context: Context) {
                 addAction(
                     R.drawable.ic_folder_24dp,
                     context.getString(R.string.action_show_errors),
-                    errorLogIntent,
+                    errorLogIntent
                 )
             }
 

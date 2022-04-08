@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.databinding.SourceListItemBinding
 
 class MigrationMangaHolder(
     view: View,
-    private val adapter: MigrationMangaAdapter
+    private val adapter: MigrationMangaAdapter,
 ) : FlexibleViewHolder(view, adapter) {
 
     private val binding = SourceListItemBinding.bind(view)

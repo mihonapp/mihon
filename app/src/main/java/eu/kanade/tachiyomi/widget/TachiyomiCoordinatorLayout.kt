@@ -29,7 +29,7 @@ import eu.kanade.tachiyomi.util.view.findChild
 class TachiyomiCoordinatorLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.coordinatorLayoutStyle
+    defStyleAttr: Int = R.attr.coordinatorLayoutStyle,
 ) : CoordinatorLayout(context, attrs, defStyleAttr) {
 
     /**
@@ -58,7 +58,7 @@ class TachiyomiCoordinatorLayout @JvmOverloads constructor(
         dxUnconsumed: Int,
         dyUnconsumed: Int,
         type: Int,
-        consumed: IntArray
+        consumed: IntArray,
     ) {
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed)
         // Disable elevation overlay when tabs are visible

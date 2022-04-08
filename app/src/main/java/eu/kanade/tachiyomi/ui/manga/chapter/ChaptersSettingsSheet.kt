@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.widget.sheet.TabbedBottomSheetDialog
 class ChaptersSettingsSheet(
     private val router: Router,
     private val presenter: MangaPresenter,
-    private val onGroupClickListener: (ExtendedNavigationView.Group) -> Unit
+    private val onGroupClickListener: (ExtendedNavigationView.Group) -> Unit,
 ) : TabbedBottomSheetDialog(router.activity!!) {
 
     val filters = Filter(router.activity!!)

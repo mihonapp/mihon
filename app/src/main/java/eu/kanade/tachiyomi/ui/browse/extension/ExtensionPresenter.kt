@@ -26,7 +26,7 @@ private typealias ExtensionTuple =
  */
 open class ExtensionPresenter(
     private val extensionManager: ExtensionManager = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get()
+    private val preferences: PreferencesHelper = Injekt.get(),
 ) : BasePresenter<ExtensionController>() {
 
     private var extensions = emptyList<ExtensionItem>()
@@ -64,7 +64,7 @@ open class ExtensionPresenter(
         val items = mutableListOf<ExtensionItem>()
 
         val updatesSorted = installed.filter { it.hasUpdate && (showNsfwSources || !it.isNsfw) }
-            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
+            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
 
         val installedSorted = installed.filter { !it.hasUpdate && (showNsfwSources || !it.isNsfw) }
             .sortedWith(
@@ -72,7 +72,7 @@ open class ExtensionPresenter(
                     .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name }
             )
 
-        val untrustedSorted = untrusted.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
+        val untrustedSorted = untrusted.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
 
         val availableSorted = available
             // Filter out already installed extensions and disabled languages
@@ -82,7 +82,7 @@ open class ExtensionPresenter(
                     avail.lang in activeLangs &&
                     (showNsfwSources || !avail.isNsfw)
             }
-            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
+            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
 
         if (updatesSorted.isNotEmpty()) {
             val header = ExtensionGroupItem(context.getString(R.string.ext_updates_pending), updatesSorted.size, true)

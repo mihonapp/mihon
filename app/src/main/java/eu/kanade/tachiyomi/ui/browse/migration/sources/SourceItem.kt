@@ -41,7 +41,7 @@ data class SourceItem(val source: Source, val mangaCount: Int, val header: Selec
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: SourceHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.bind(this)
     }

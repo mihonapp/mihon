@@ -20,7 +20,7 @@ class DownloadPageLoader(
     private val chapter: ReaderChapter,
     private val manga: Manga,
     private val source: Source,
-    private val downloadManager: DownloadManager
+    private val downloadManager: DownloadManager,
 ) : PageLoader() {
 
     // Needed to open input streams

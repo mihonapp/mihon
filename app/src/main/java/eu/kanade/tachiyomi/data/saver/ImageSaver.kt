@@ -20,7 +20,7 @@ import java.io.File
 import java.io.InputStream
 
 class ImageSaver(
-    val context: Context
+    val context: Context,
 ) {
 
     @SuppressLint("InlinedApi")
@@ -83,18 +83,18 @@ class ImageSaver(
 
 sealed class Image(
     open val name: String,
-    open val location: Location
+    open val location: Location,
 ) {
     data class Cover(
         val bitmap: Bitmap,
         override val name: String,
-        override val location: Location
+        override val location: Location,
     ) : Image(name, location)
 
     data class Page(
         val inputStream: () -> InputStream,
         override val name: String,
-        override val location: Location
+        override val location: Location,
     ) : Image(name, location)
 
     val data: () -> InputStream

@@ -25,7 +25,7 @@ class OneWayFadeChangeHandler : FadeChangeHandler {
         from: View?,
         to: View?,
         isPush: Boolean,
-        toAddedToContainer: Boolean
+        toAddedToContainer: Boolean,
     ): Animator {
         val animator = AnimatorSet()
         if (to != null) {

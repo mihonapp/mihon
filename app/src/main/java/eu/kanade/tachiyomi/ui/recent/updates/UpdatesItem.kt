@@ -25,7 +25,7 @@ class UpdatesItem(chapter: Chapter, val manga: Manga, header: DateSectionItem) :
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: UpdatesHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.bind(this)
     }

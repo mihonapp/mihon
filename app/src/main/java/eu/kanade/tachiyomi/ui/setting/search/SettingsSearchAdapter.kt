@@ -25,7 +25,7 @@ class SettingsSearchAdapter(val controller: SettingsSearchController) :
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
-        payloads: List<Any?>
+        payloads: List<Any?>,
     ) {
         super.onBindViewHolder(holder, position, payloads)
         restoreHolderState(holder)

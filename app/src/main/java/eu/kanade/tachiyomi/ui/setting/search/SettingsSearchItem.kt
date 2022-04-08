@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.R
  */
 class SettingsSearchItem(
     val settingsSearchResult: SettingsSearchHelper.SettingsSearchResult,
-    val results: List<SettingsSearchItem>?
+    val results: List<SettingsSearchItem>?,
 ) :
     AbstractFlexibleItem<SettingsSearchHolder>() {
 
@@ -30,7 +30,7 @@ class SettingsSearchItem(
      */
     override fun createViewHolder(
         view: View,
-        adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
+        adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
     ): SettingsSearchHolder {
         return SettingsSearchHolder(view, adapter as SettingsSearchAdapter)
     }
@@ -39,7 +39,7 @@ class SettingsSearchItem(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: SettingsSearchHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.bind(this)
     }

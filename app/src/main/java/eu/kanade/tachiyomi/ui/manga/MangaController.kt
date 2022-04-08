@@ -425,7 +425,7 @@ class MangaController :
         when (item.itemId) {
             R.id.action_share -> shareManga()
             R.id.download_next, R.id.download_next_5, R.id.download_next_10,
-            R.id.download_custom, R.id.download_unread, R.id.download_all
+            R.id.download_custom, R.id.download_unread, R.id.download_all,
             -> downloadChapters(item.itemId)
 
             R.id.action_edit_categories -> onCategoriesClick()
@@ -532,7 +532,7 @@ class MangaController :
             if (duplicateManga != null) {
                 showAddDuplicateDialog(
                     manga,
-                    duplicateManga,
+                    duplicateManga
                 )
             } else {
                 addToLibrary(manga)
@@ -545,11 +545,11 @@ class MangaController :
             val source = sourceManager.getOrStub(libraryManga.source)
             MaterialAlertDialogBuilder(it).apply {
                 setMessage(activity?.getString(R.string.confirm_manga_add_duplicate, source.name))
-                setPositiveButton(activity?.getString(R.string.action_add)) { _, _, ->
+                setPositiveButton(activity?.getString(R.string.action_add)) { _, _ ->
                     addToLibrary(newManga)
                 }
-                setNegativeButton(activity?.getString(R.string.action_cancel)) { _, _, -> }
-                setNeutralButton(activity?.getString(R.string.action_show_manga)) { _, _, ->
+                setNegativeButton(activity?.getString(R.string.action_cancel)) { _, _ -> }
+                setNeutralButton(activity?.getString(R.string.action_show_manga)) { _, _ ->
                     router.pushController(MangaController(libraryManga).withFadeTransaction())
                 }
                 setCancelable(true)
@@ -703,7 +703,7 @@ class MangaController :
                 previousController.search(query)
             }
             is UpdatesController,
-            is HistoryController -> {
+            is HistoryController, -> {
                 // Manually navigate to LibraryController
                 router.handleBack()
                 (router.activity as MainActivity).setSelectedNavItem(R.id.nav_library)
@@ -960,7 +960,7 @@ class MangaController :
                     intent.apply {
                         putExtra(ReaderActivity.EXTRA_IS_TRANSITION, true)
                     },
-                    activityOptions.toBundle(),
+                    activityOptions.toBundle()
                 )
             } else {
                 startActivity(intent)

@@ -25,7 +25,7 @@ class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
         target: T,
         mangas: List<Manga>,
         categories: List<Category>,
-        preselected: Array<Int>
+        preselected: Array<Int>,
     ) : this() {
         this.mangas = mangas
         this.categories = categories

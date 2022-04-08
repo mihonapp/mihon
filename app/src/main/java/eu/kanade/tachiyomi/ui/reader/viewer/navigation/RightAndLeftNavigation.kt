@@ -23,6 +23,6 @@ class RightAndLeftNavigation : ViewerNavigation() {
         Region(
             rectF = RectF(0.66f, 0f, 1f, 1f),
             type = NavigationRegion.RIGHT
-        ),
+        )
     )
 }

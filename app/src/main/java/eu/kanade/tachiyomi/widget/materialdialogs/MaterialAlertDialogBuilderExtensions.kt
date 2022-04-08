@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.databinding.DialogStubTextinputBinding
 fun MaterialAlertDialogBuilder.setTextInput(
     hint: String? = null,
     prefill: String? = null,
-    onTextChanged: (String) -> Unit
+    onTextChanged: (String) -> Unit,
 ): MaterialAlertDialogBuilder {
     val binding = DialogStubTextinputBinding.inflate(LayoutInflater.from(context))
     binding.textField.hint = hint
@@ -43,7 +43,7 @@ fun MaterialAlertDialogBuilder.setQuadStateMultiChoiceItems(
     items: List<CharSequence>,
     initialSelected: IntArray,
     disabledIndices: IntArray? = null,
-    selection: QuadStateMultiChoiceListener
+    selection: QuadStateMultiChoiceListener,
 ): MaterialAlertDialogBuilder {
     val binding = DialogStubQuadstatemultichoiceBinding.inflate(LayoutInflater.from(context))
     binding.list.layoutManager = LinearLayoutManager(context)

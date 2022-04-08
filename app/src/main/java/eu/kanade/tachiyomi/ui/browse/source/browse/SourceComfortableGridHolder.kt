@@ -18,7 +18,7 @@ import eu.kanade.tachiyomi.util.view.loadAutoPause
  */
 class SourceComfortableGridHolder(
     override val binding: SourceComfortableGridItemBinding,
-    adapter: FlexibleAdapter<*>
+    adapter: FlexibleAdapter<*>,
 ) : SourceHolder<SourceComfortableGridItemBinding>(binding.root, adapter) {
 
     /**

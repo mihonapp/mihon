@@ -72,7 +72,7 @@ class ExtensionInstallService : Service() {
             context: Context,
             downloadId: Long,
             uri: Uri,
-            installer: PreferenceValues.ExtensionInstaller
+            installer: PreferenceValues.ExtensionInstaller,
         ): Intent {
             return Intent(context, ExtensionInstallService::class.java)
                 .setDataAndType(uri, ExtensionInstaller.APK_MIME)

@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
  */
 class ReaderPageSheet(
     private val activity: ReaderActivity,
-    private val page: ReaderPage
+    private val page: ReaderPage,
 ) : BaseBottomSheetDialog(activity) {
 
     private lateinit var binding: ReaderPageSheetBinding

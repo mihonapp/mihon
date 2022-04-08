@@ -107,5 +107,5 @@ shizuku = ["shizuku-api","shizuku-provider"]
 robolectric = ["robolectric-core","robolectric-playservices"]
 
 [plugins]
-kotlinter = { id = "org.jmailen.kotlinter", version = "3.6.0"}
+kotlinter = { id = "org.jmailen.kotlinter", version = "3.10.0"}
 versionsx = { id = "com.github.ben-manes.versions", version = "0.42.0"}

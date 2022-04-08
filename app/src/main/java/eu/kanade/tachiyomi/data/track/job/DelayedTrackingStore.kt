@@ -39,7 +39,7 @@ class DelayedTrackingStore(context: Context) {
                 DelayedTrackingItem(
                     trackId = it.key.toLong(),
                     mangaId = mangaId.toLong(),
-                    lastChapterRead = lastChapterRead.toFloat(),
+                    lastChapterRead = lastChapterRead.toFloat()
                 )
             }
     }

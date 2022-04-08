@@ -26,7 +26,7 @@ class UnlockActivity : BaseActivity() {
                 override fun onAuthenticationError(
                     activity: FragmentActivity?,
                     errorCode: Int,
-                    errString: CharSequence
+                    errString: CharSequence,
                 ) {
                     super.onAuthenticationError(activity, errorCode, errString)
                     logcat(LogPriority.ERROR) { errString.toString() }
@@ -35,7 +35,7 @@ class UnlockActivity : BaseActivity() {
 
                 override fun onAuthenticationSucceeded(
                     activity: FragmentActivity?,
-                    result: BiometricPrompt.AuthenticationResult
+                    result: BiometricPrompt.AuthenticationResult,
                 ) {
                     super.onAuthenticationSucceeded(activity, result)
                     SecureActivityDelegate.locked = false

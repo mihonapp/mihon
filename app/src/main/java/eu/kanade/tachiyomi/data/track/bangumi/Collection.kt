@@ -12,5 +12,5 @@ data class Collection(
     val status: Status? = Status(),
     val tag: List<String?>? = listOf(),
     val user: User? = User(),
-    val vol_status: Int? = 0
+    val vol_status: Int? = 0,
 )

@@ -18,7 +18,7 @@ import eu.kanade.tachiyomi.databinding.SourceListItemBinding
  */
 class LibraryListHolder(
     private val view: View,
-    private val adapter: FlexibleAdapter<*>
+    private val adapter: FlexibleAdapter<*>,
 ) : LibraryHolder<SourceListItemBinding>(view, adapter) {
 
     override val binding = SourceListItemBinding.bind(view)

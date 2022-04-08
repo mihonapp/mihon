@@ -53,7 +53,7 @@ class LibraryPresenter(
     private val coverCache: CoverCache = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
-    private val trackManager: TrackManager = Injekt.get()
+    private val trackManager: TrackManager = Injekt.get(),
 ) : BasePresenter<LibraryController>() {
 
     private val context = preferences.context

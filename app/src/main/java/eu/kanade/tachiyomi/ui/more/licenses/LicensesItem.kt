@@ -22,7 +22,7 @@ class LicensesItem(val library: Library) : AbstractFlexibleItem<LicensesHolder>(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: LicensesHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.bind(library)
     }

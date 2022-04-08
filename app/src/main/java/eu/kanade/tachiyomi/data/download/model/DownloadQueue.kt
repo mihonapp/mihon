@@ -11,7 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class DownloadQueue(
     private val store: DownloadStore,
-    private val queue: MutableList<Download> = CopyOnWriteArrayList()
+    private val queue: MutableList<Download> = CopyOnWriteArrayList(),
 ) : List<Download> by queue {
 
     private val statusSubject = PublishSubject.create<Download>()

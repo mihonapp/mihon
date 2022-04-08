@@ -41,11 +41,11 @@ private suspend fun <T> Observable<T>.awaitOne(): T = suspendCancellableCoroutin
                 }
 
                 override fun onError(e: Throwable) {
-/*
-                       * Rx1 observable throws NoSuchElementException if cancellation happened before
-                       * element emission. To mitigate this we try to atomically resume continuation with exception:
-                       * if resume failed, then we know that continuation successfully cancelled itself
-                       */
+                    /*
+                     * Rx1 observable throws NoSuchElementException if cancellation happened before
+                     * element emission. To mitigate this we try to atomically resume continuation with exception:
+                     * if resume failed, then we know that continuation successfully cancelled itself
+                     */
                     val token = cont.tryResumeWithException(e)
                     if (token != null) {
                         cont.completeResume(token)

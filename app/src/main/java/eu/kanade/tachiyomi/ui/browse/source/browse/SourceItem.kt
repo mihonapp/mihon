@@ -25,7 +25,7 @@ class SourceItem(val manga: Manga, private val displayMode: Preference<DisplayMo
 
     override fun createViewHolder(
         view: View,
-        adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
+        adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
     ): SourceHolder<*> {
         return when (displayMode.get()) {
             DisplayModeSetting.COMPACT_GRID, DisplayModeSetting.COVER_ONLY_GRID -> {
@@ -44,7 +44,7 @@ class SourceItem(val manga: Manga, private val displayMode: Preference<DisplayMo
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: SourceHolder<*>,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.onSetValues(manga)
     }

@@ -10,7 +10,7 @@ import androidx.core.graphics.toXfermode
 
 class ReaderColorFilterView(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : View(context, attrs) {
 
     private val colorFilterPaint: Paint = Paint()

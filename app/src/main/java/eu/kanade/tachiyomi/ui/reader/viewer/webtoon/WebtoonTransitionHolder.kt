@@ -22,7 +22,7 @@ import rx.android.schedulers.AndroidSchedulers
  */
 class WebtoonTransitionHolder(
     val layout: LinearLayout,
-    viewer: WebtoonViewer
+    viewer: WebtoonViewer,
 ) : WebtoonBaseHolder(layout, viewer) {
 
     /**

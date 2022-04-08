@@ -43,7 +43,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 |   status 
                 |} 
             |}
-            |""".trimMargin()
+            |
+            """.trimMargin()
             val payload = buildJsonObject {
                 put("query", query)
                 putJsonObject("variables") {
@@ -84,7 +85,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     |progress
                 |}
             |}
-            |""".trimMargin()
+            |
+            """.trimMargin()
             val payload = buildJsonObject {
                 put("query", query)
                 putJsonObject("variables") {
@@ -127,7 +129,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     |}
                 |}
             |}
-            |""".trimMargin()
+            |
+            """.trimMargin()
             val payload = buildJsonObject {
                 put("query", query)
                 putJsonObject("variables") {
@@ -193,7 +196,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     |}
                 |}
             |}
-            |""".trimMargin()
+            |
+            """.trimMargin()
             val payload = buildJsonObject {
                 put("query", query)
                 putJsonObject("variables") {
@@ -238,7 +242,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     |}
                 |}
             |}
-            |""".trimMargin()
+            |
+            """.trimMargin()
             val payload = buildJsonObject {
                 put("query", query)
             }

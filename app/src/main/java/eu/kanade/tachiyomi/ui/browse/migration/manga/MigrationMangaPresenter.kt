@@ -10,7 +10,7 @@ import uy.kohesive.injekt.api.get
 
 class MigrationMangaPresenter(
     private val sourceId: Long,
-    private val db: DatabaseHelper = Injekt.get()
+    private val db: DatabaseHelper = Injekt.get(),
 ) : BasePresenter<MigrationMangaController>() {
 
     override fun onCreate(savedState: Bundle?) {

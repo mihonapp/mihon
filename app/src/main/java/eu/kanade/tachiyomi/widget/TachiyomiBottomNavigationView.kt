@@ -29,7 +29,7 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.bottomNavigationStyle,
-    defStyleRes: Int = R.style.Widget_Design_BottomNavigationView
+    defStyleRes: Int = R.style.Widget_Design_BottomNavigationView,
 ) : BottomNavigationView(context, attrs, defStyleAttr, defStyleRes) {
 
     private var currentAnimator: ViewPropertyAnimator? = null

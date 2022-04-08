@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 data class SourceItem(
     val source: CatalogueSource,
     val header: LangItem? = null,
-    val isPinned: Boolean = false
+    val isPinned: Boolean = false,
 ) :
     AbstractSectionableItem<SourceHolder, LangItem>(header) {
 
@@ -33,7 +33,7 @@ data class SourceItem(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: SourceHolder,
         position: Int,
-        payloads: MutableList<Any>
+        payloads: MutableList<Any>,
     ) {
         holder.bind(this)
     }

@@ -89,6 +89,6 @@ class EmptyView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     data class Action(
         @StringRes val stringResId: Int,
         @DrawableRes val iconResId: Int,
-        val listener: OnClickListener
+        val listener: OnClickListener,
     )
 }

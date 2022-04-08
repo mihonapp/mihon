@@ -30,7 +30,7 @@ import reactivecircus.flowbinding.android.view.hierarchyChangeEvents
  */
 class TachiyomiAppBarLayout @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : AppBarLayout(context, attrs) {
 
     private var lifted = true

@@ -30,7 +30,7 @@ import uy.kohesive.injekt.injectLazy
  */
 class DownloadManager(
     private val context: Context,
-    private val db: DatabaseHelper = Injekt.get()
+    private val db: DatabaseHelper = Injekt.get(),
 ) {
 
     private val sourceManager: SourceManager by injectLazy()

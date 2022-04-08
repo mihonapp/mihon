@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit
  */
 class WebtoonPageHolder(
     private val frame: ReaderPageImageView,
-    viewer: WebtoonViewer
+    viewer: WebtoonViewer,
 ) : WebtoonBaseHolder(frame, viewer) {
 
     /**

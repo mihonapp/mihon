@@ -35,7 +35,7 @@ data class LangItem(val code: String) : AbstractHeaderItem<LangHolder>() {
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: LangHolder,
         position: Int,
-        payloads: MutableList<Any>
+        payloads: MutableList<Any>,
     ) {
         holder.bind(this)
     }

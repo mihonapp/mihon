@@ -21,7 +21,7 @@ import java.util.Date
  */
 class HistoryHolder(
     view: View,
-    val adapter: HistoryAdapter
+    val adapter: HistoryAdapter,
 ) : FlexibleViewHolder(view, adapter) {
 
     private val binding = HistoryItemBinding.bind(view)

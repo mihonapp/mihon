@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.R
 data class ExtensionGroupItem(
     val name: String,
     val size: Int,
-    val showSize: Boolean = false
+    val showSize: Boolean = false,
 ) : AbstractHeaderItem<ExtensionGroupHolder>() {
 
     var actionLabel: String? = null
@@ -43,7 +43,7 @@ data class ExtensionGroupItem(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: ExtensionGroupHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.bind(this)
     }

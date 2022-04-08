@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.clicks
 
 class MangaChaptersHeaderAdapter(
-    private val controller: MangaController
+    private val controller: MangaController,
 ) :
     RecyclerView.Adapter<MangaChaptersHeaderAdapter.HeaderViewHolder>() {
 

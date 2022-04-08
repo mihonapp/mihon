@@ -27,7 +27,7 @@ class MangaSummaryView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
-    @StyleRes defStyleRes: Int = 0
+    @StyleRes defStyleRes: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private val binding = MangaSummaryBinding.inflate(LayoutInflater.from(context), this, true)

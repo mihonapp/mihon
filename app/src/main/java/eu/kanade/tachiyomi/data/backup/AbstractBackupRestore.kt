@@ -112,7 +112,7 @@ abstract class AbstractBackupRestore<T : AbstractBackupManager>(protected val co
     internal fun showRestoreProgress(
         progress: Int,
         amount: Int,
-        title: String
+        title: String,
     ) {
         notifier.showRestoreProgress(title, progress, amount)
     }

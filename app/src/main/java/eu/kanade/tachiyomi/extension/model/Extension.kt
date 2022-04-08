@@ -28,7 +28,7 @@ sealed class Extension {
         val icon: Drawable?,
         val hasUpdate: Boolean = false,
         val isObsolete: Boolean = false,
-        val isUnofficial: Boolean = false
+        val isUnofficial: Boolean = false,
     ) : Extension()
 
     data class Available(
@@ -42,7 +42,7 @@ sealed class Extension {
         override val hasChangelog: Boolean,
         val sources: List<AvailableExtensionSources>,
         val apkName: String,
-        val iconUrl: String
+        val iconUrl: String,
     ) : Extension()
 
     data class Untrusted(
@@ -61,5 +61,5 @@ sealed class Extension {
 data class AvailableExtensionSources(
     val name: String,
     val id: Long,
-    val baseUrl: String
+    val baseUrl: String,
 )

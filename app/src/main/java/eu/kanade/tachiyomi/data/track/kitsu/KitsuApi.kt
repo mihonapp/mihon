@@ -137,7 +137,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                         "X-Algolia-Application-Id",
                         algoliaAppId,
                         "X-Algolia-API-Key",
-                        key,
+                        key
                     ),
                     body = jsonObject.toString().toRequestBody(jsonMime)
                 )

@@ -204,7 +204,7 @@ class MainActivity : BaseActivity() {
                     from: Controller?,
                     isPush: Boolean,
                     container: ViewGroup,
-                    handler: ControllerChangeHandler
+                    handler: ControllerChangeHandler,
                 ) {
                     syncActivityViewWithController(to, from, isPush)
                 }
@@ -214,7 +214,7 @@ class MainActivity : BaseActivity() {
                     from: Controller?,
                     isPush: Boolean,
                     container: ViewGroup,
-                    handler: ControllerChangeHandler
+                    handler: ControllerChangeHandler,
                 ) {
                 }
             }

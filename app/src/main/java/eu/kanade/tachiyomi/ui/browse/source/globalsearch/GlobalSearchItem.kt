@@ -43,7 +43,7 @@ class GlobalSearchItem(val source: CatalogueSource, val results: List<GlobalSear
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: GlobalSearchHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.bind(this)
     }

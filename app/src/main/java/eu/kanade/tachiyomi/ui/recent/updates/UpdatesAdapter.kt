@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.util.system.getResourceColor
 class UpdatesAdapter(
     val controller: UpdatesController,
     context: Context,
-    val items: List<IFlexible<*>>?
+    val items: List<IFlexible<*>>?,
 ) : BaseChaptersAdapter<IFlexible<*>>(controller, items) {
 
     var readColor = context.getResourceColor(R.attr.colorOnSurface, 0.38f)

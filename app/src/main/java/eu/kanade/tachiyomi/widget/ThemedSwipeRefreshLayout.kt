@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.util.system.getThemeColor
 
 class ThemedSwipeRefreshLayout @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : SwipeRefreshLayout(context, attrs) {
     init {
         // Background

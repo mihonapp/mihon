@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class Status(
     val id: Int? = 0,
     val name: String? = "",
-    val type: String? = ""
+    val type: String? = "",
 )

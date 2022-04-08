@@ -24,7 +24,7 @@ class HistoryItem(val mch: MangaChapterHistory, header: DateSectionItem) :
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: HistoryHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: List<Any?>?,
     ) {
         holder.bind(mch)
     }
