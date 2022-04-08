@@ -335,6 +335,7 @@
     <string name="kindlish_nav">Kindle-ish</string>
     <string name="edge_nav">Edge</string>
     <string name="right_and_left_nav">Right and Left</string>
+    <string name="disabled_nav">Disabled</string>
     <string name="nav_zone_prev">Prev</string>
     <string name="nav_zone_next">Next</string>
     <string name="nav_zone_left">Left</string>

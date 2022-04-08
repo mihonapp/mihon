@@ -4,6 +4,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
+import eu.kanade.tachiyomi.ui.reader.viewer.navigation.DisabledNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.EdgeNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.KindlishNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.LNavigation
@@ -131,6 +132,7 @@ class PagerConfig(
             2 -> KindlishNavigation()
             3 -> EdgeNavigation()
             4 -> RightAndLeftNavigation()
+            5 -> DisabledNavigation()
             else -> defaultNavigation()
         }
         navigationModeChangedListener?.invoke()
