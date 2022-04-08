@@ -36,7 +36,7 @@ disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:17bec43"
 junrar = "com.github.junrar:junrar:7.4.0"
 
-sqlitektx = "androidx.sqlite:sqlite-ktx:2.2.0"
+sqlitektx = "androidx.sqlite:sqlite-ktx:2.3.0-alpha02"
 sqlite-android = "com.github.requery:sqlite-android:3.36.0"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.0"

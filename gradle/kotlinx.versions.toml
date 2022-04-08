@@ -1,6 +1,6 @@
 [versions]
-kotlin_version = "1.6.10"
-coroutines_version = "1.6.0"
+kotlin_version = "1.6.20"
+coroutines_version = "1.6.1"
 serialization_version = "1.3.2"
 
 [libraries]
