@@ -24,7 +24,7 @@ class ImageSaver(
 ) {
 
     @SuppressLint("InlinedApi")
-    suspend fun save(image: Image): Uri {
+    fun save(image: Image): Uri {
         val data = image.data
 
         val type = ImageUtil.findImageType(data) ?: throw Exception("Not an image")
@@ -63,6 +63,8 @@ class ImageSaver(
             }
         }
 
+        DiskUtil.scanMedia(context, picture)
+
         return picture
     }
 
@@ -76,6 +78,8 @@ class ImageSaver(
                 input.copyTo(output)
             }
         }
+
+        DiskUtil.scanMedia(context, destFile)
 
         return destFile.getUriCompat(context)
     }

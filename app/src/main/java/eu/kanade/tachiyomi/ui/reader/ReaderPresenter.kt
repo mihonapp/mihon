@@ -597,7 +597,6 @@ class ReaderPresenter(
         val relativePath = if (preferences.folderPerManga()) DiskUtil.buildValidFilename(manga.title) else ""
 
         // Copy file in background.
-
         try {
             presenterScope.launchIO {
                 val uri = imageSaver.save(
@@ -608,7 +607,6 @@ class ReaderPresenter(
                     )
                 )
                 launchUI {
-                    DiskUtil.scanMedia(context, uri)
                     notifier.onComplete(uri)
                     view!!.onSaveImageResult(SaveImageResult.Success(uri))
                 }

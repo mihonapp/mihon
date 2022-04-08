@@ -343,7 +343,7 @@ class MangaPresenter(
      * @param image the image with specified location
      * @return flow Flow which emits the Uri which specifies where the image is saved when
      */
-    suspend fun saveImage(image: Image): Uri {
+    fun saveImage(image: Image): Uri {
         return imageSaver.save(image)
     }
 
