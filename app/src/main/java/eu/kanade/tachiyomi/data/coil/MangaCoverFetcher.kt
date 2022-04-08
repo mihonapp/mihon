@@ -16,12 +16,15 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 import okhttp3.CacheControl
 import okhttp3.Call
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.internal.closeQuietly
 import okio.Path.Companion.toOkioPath
+import okio.Source
 import okio.buffer
 import okio.sink
 import uy.kohesive.injekt.injectLazy
@@ -78,19 +81,26 @@ class MangaCoverFetcher(
 
     private suspend fun httpLoader(): FetchResult {
         // Only cache separately if it's a library item
-        val coverCacheFile = if (manga.favorite) {
+        val libraryCoverCacheFile = if (manga.favorite) {
             coverCache.getCoverFile(manga) ?: error("No cover specified")
         } else {
             null
         }
-        if (coverCacheFile?.exists() == true && options.diskCachePolicy.readEnabled) {
-            return fileLoader(coverCacheFile)
+        if (libraryCoverCacheFile?.exists() == true && options.diskCachePolicy.readEnabled) {
+            return fileLoader(libraryCoverCacheFile)
         }
 
         var snapshot = readFromDiskCache()
         try {
             // Fetch from disk cache
             if (snapshot != null) {
+                val snapshotCoverCache = moveSnapshotToCoverCache(snapshot, libraryCoverCacheFile)
+                if (snapshotCoverCache != null) {
+                    // Read from cover cache after added to library
+                    return fileLoader(snapshotCoverCache)
+                }
+
+                // Read from snapshot
                 return SourceResult(
                     source = snapshot.toImageSource(),
                     mimeType = "image/*",
@@ -102,13 +112,14 @@ class MangaCoverFetcher(
             val response = executeNetworkRequest()
             val responseBody = checkNotNull(response.body) { "Null response source" }
             try {
-                snapshot = writeToDiskCache(snapshot, response)
-
-                if (coverCacheFile != null) {
-                    writeToCoverCache(coverCacheFile, response)
+                // Read from cover cache after library manga cover updated
+                val responseCoverCache = writeResponseToCoverCache(response, libraryCoverCacheFile)
+                if (responseCoverCache != null) {
+                    return fileLoader(responseCoverCache)
                 }
 
                 // Read from disk cache
+                snapshot = writeToDiskCache(snapshot, response)
                 if (snapshot != null) {
                     return SourceResult(
                         source = snapshot.toImageSource(),
@@ -131,21 +142,6 @@ class MangaCoverFetcher(
             snapshot?.closeQuietly()
             throw e
         }
-    }
-
-    private fun writeToCoverCache(cacheFile: File, response: Response) {
-        if (!options.diskCachePolicy.writeEnabled) return
-        try {
-            response.body!!.source().use { input ->
-                cacheFile.parentFile?.mkdirs()
-                if (cacheFile.exists()) {
-                    cacheFile.delete()
-                }
-                cacheFile.sink().buffer().use { output ->
-                    output.writeAll(input)
-                }
-            }
-        } catch (_: Exception) {}
     }
 
     private suspend fun executeNetworkRequest(): Response {
@@ -183,6 +179,48 @@ class MangaCoverFetcher(
         }
 
         return request.build()
+    }
+
+    private fun moveSnapshotToCoverCache(snapshot: DiskCache.Snapshot, cacheFile: File?): File? {
+        if (cacheFile == null) return null
+        return try {
+            diskCacheLazy.value.run {
+                fileSystem.source(snapshot.data).use { input ->
+                    writeSourceToCoverCache(input, cacheFile)
+                }
+                remove(diskCacheKey!!)
+            }
+            cacheFile.takeIf { it.exists() }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to write snapshot data to cover cache ${cacheFile.name}" }
+            null
+        }
+    }
+
+    private fun writeResponseToCoverCache(response: Response, cacheFile: File?): File? {
+        if (cacheFile == null || !options.diskCachePolicy.writeEnabled) return null
+        return try {
+            response.peekBody(Long.MAX_VALUE).source().use { input ->
+                writeSourceToCoverCache(input, cacheFile)
+            }
+            cacheFile.takeIf { it.exists() }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to write response data to cover cache ${cacheFile.name}" }
+            null
+        }
+    }
+
+    private fun writeSourceToCoverCache(input: Source, cacheFile: File) {
+        cacheFile.parentFile?.mkdirs()
+        cacheFile.delete()
+        try {
+            cacheFile.sink().buffer().use { output ->
+                output.writeAll(input)
+            }
+        } catch (e: Exception) {
+            cacheFile.delete()
+            throw e
+        }
     }
 
     private fun readFromDiskCache(): DiskCache.Snapshot? {
