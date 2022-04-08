@@ -1,12 +1,8 @@
 package eu.kanade.tachiyomi.ui.manga
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import coil.imageLoader
-import coil.memory.MemoryCache
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -293,48 +289,6 @@ class MangaPresenter(
      */
     fun moveMangaToCategory(manga: Manga, category: Category?) {
         moveMangaToCategories(manga, listOfNotNull(category))
-    }
-
-    /**
-     * Get the manga cover as a Bitmap, either from the CoverCache (only works for library manga)
-     * or from the Coil ImageLoader cache.
-     *
-     * @param context the context used to get the Coil ImageLoader
-     * @param memoryCacheKey Coil MemoryCache.Key that points to the cover Bitmap cache location
-     * @return manga cover as Bitmap
-     */
-    fun getCoverBitmap(context: Context, memoryCacheKey: MemoryCache.Key?): Bitmap {
-        var resultBitmap = coverBitmapFromCoverCache()
-        if (resultBitmap == null && memoryCacheKey != null) {
-            resultBitmap = coverBitmapFromImageLoader(context, memoryCacheKey)
-        }
-
-        return resultBitmap ?: throw Exception("Cover not in cache")
-    }
-
-    /**
-     * Attempt manga cover retrieval from the CoverCache.
-     *
-     * @return cover as Bitmap or null if CoverCache does not contain cover for manga
-     */
-    private fun coverBitmapFromCoverCache(): Bitmap? {
-        val cover = coverCache.getCoverFile(manga)
-        return if (cover != null) {
-            BitmapFactory.decodeFile(cover.path)
-        } else {
-            null
-        }
-    }
-
-    /**
-     * Attempt manga cover retrieval from the Coil ImageLoader memoryCache.
-     *
-     * @param context the context used to get the Coil ImageLoader
-     * @param memoryCacheKey Coil MemoryCache.Key that points to the cover Bitmap cache location
-     * @return cover as Bitmap or null if there is no thumbnail cached with the memoryCacheKey
-     */
-    private fun coverBitmapFromImageLoader(context: Context, memoryCacheKey: MemoryCache.Key): Bitmap? {
-        return context.imageLoader.memoryCache?.get(memoryCacheKey)?.bitmap
     }
 
     /**

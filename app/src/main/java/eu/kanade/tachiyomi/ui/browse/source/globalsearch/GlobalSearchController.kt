@@ -28,7 +28,7 @@ import uy.kohesive.injekt.injectLazy
  */
 open class GlobalSearchController(
     protected val initialQuery: String? = null,
-    protected val extensionFilter: String? = null,
+    private val extensionFilter: String? = null,
 ) : SearchableNucleusController<GlobalSearchControllerBinding, GlobalSearchPresenter>(),
     GlobalSearchCardAdapter.OnMangaClickListener,
     GlobalSearchAdapter.OnTitleClickListener {
@@ -55,11 +55,6 @@ open class GlobalSearchController(
         return presenter.query
     }
 
-    /**
-     * Create the [GlobalSearchPresenter] used in controller.
-     *
-     * @return instance of [GlobalSearchPresenter]
-     */
     override fun createPresenter(): GlobalSearchPresenter {
         return GlobalSearchPresenter(initialQuery, extensionFilter)
     }

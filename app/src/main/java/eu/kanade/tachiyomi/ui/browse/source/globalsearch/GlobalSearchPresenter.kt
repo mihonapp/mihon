@@ -35,8 +35,8 @@ import uy.kohesive.injekt.injectLazy
  * @param preferences manages the preference calls.
  */
 open class GlobalSearchPresenter(
-    val initialQuery: String? = "",
-    val initialExtensionFilter: String? = null,
+    private val initialQuery: String? = "",
+    private val initialExtensionFilter: String? = null,
     val sourceManager: SourceManager = Injekt.get(),
     val db: DatabaseHelper = Injekt.get(),
     val preferences: PreferencesHelper = Injekt.get(),
