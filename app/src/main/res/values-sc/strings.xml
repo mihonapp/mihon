@@ -121,7 +121,6 @@
     <string name="pref_reader_navigation">Navigatzione</string>
     <string name="pref_read_with_volume_keys">Teclas de su volume</string>
     <string name="pref_read_with_volume_keys_inverted">Fùrria sas teclas de su volume</string>
-    <string name="pref_read_with_tapping">Tocu sìngulu</string>
     <string name="pref_read_with_long_tap">Ammustra cun su tocu longu</string>
     <string name="pref_reader_theme">Colore de isfundu</string>
     <string name="white_background">Arbu/biancu</string>
@@ -350,7 +349,7 @@
     <string name="lock_always">Semper</string>
     <string name="lock_never">Mai</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">A pustis de 1 minutu</item>
+        <item quantity="one">A pustis de %1$s minutu</item>
         <item quantity="other">A pustis de %1$s minutos</item>
     </plurals>
     <string name="secure_screen">Ischermu seguru</string>
@@ -363,7 +362,7 @@
     <string name="secure_screen_summary">S\'ischermu seguru cuat sos cuntenutos de s\'aplicatzione cando mudas de aplicatzione e blocat sas ischermadas</string>
     <string name="pref_category_display">Visualizatzione</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 capìtulu nou</item>
+        <item quantity="one">%1$d capìtulu nou</item>
         <item quantity="other">%1$d capìtulos noos</item>
     </plurals>
     <string name="notification_chapters_single">Capìtulu %1$s</string>
@@ -381,7 +380,7 @@
     <string name="email">Indiritzu de posta eletrònica</string>
     <string name="pref_always_show_chapter_transition">Ammustra semper sa transitzione de capìtulu</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Pro 1 tìtulu</item>
+        <item quantity="one">Pro %d tìtulu</item>
         <item quantity="other">Pro %d tìtulos</item>
     </plurals>
     <string name="action_menu">Menù</string>
@@ -438,7 +437,7 @@
     <string name="downloaded_only_summary">Filtrat totu sos manga in sa biblioteca tua</string>
     <string name="pref_search_pinned_sources_only">Inclue petzi sas mitzas apicadas</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">Nd\'abarrat 1</item>
+        <item quantity="one">Nd\'abarrat %1$s</item>
         <item quantity="other">Nd\'abarrant %1$s</item>
     </plurals>
     <string name="pref_category_for_this_series">Pro custa sèrie</string>
@@ -483,7 +482,7 @@
     <string name="loader_not_implemented_error">Mitza no agatada</string>
     <string name="action_disable">Disabìlita</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 capìtulu</item>
+        <item quantity="one">%1$s capìtulu</item>
         <item quantity="other">%1$s capìtulos</item>
     </plurals>
     <string name="requires_app_restart">Tenet bisòngiu chi torres a allùghere s\'aplicatzione pro tènnere efetu</string>
@@ -505,7 +504,7 @@
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Data de annanghidura</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 arrastadore</item>
+        <item quantity="one">%d arrastadore</item>
         <item quantity="other">%d arrastadores</item>
     </plurals>
     <string name="no_pinned_sources">Non tenes mitzas apicadas</string>
@@ -520,7 +519,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Custu no impedit a estensiones no ufitziales o potentzialmente non curretas de ammustrare cuntenutos NSFW (18+) in s\'aplicatzione.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Brinchende 1 capìtulu, sa fonte non lu tenet o est istadu bogadu cun unu filtru</item>
+        <item quantity="one">Brinchende %d capìtulu, sa fonte non lu tenet o est istadu bogadu cun unu filtru</item>
         <item quantity="other">Brinchende %d capìtulos, sa fonte non los tenet o sunt istados bogados cun unu filtru</item>
     </plurals>
     <string name="no_chapters_error">Perunu capìtulu agatadu</string>
@@ -714,4 +713,5 @@
     <string name="notification_update_error">%1$d agiornamentu(os) fallidu(os)</string>
     <string name="notification_update_skipped">%1$d agiornamentu(os) brincadu(os)</string>
     <string name="rotation_reverse_portrait">Verticale a s\'imbesse</string>
+    <string name="action_move_to_top_all_for_series">Move sa sèrie cara a pitzos</string>
 </resources>

@@ -178,7 +178,6 @@
     <string name="pref_reader_navigation">導覽</string>
     <string name="pref_read_with_volume_keys">音量按鈕</string>
     <string name="pref_read_with_volume_keys_inverted">反轉音量按鈕</string>
-    <string name="pref_read_with_tapping">輕觸翻頁</string>
     <string name="pref_read_with_long_tap">長按顯示</string>
     <string name="pref_reader_theme">背景顏色</string>
     <string name="white_background">白色</string>

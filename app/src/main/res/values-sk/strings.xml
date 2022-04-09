@@ -131,7 +131,6 @@
     <string name="pref_reader_navigation">Navigácia</string>
     <string name="pref_read_with_volume_keys">Tlačidlá hlasitosti</string>
     <string name="pref_read_with_volume_keys_inverted">Invertovať tlačidlá hlasitosti</string>
-    <string name="pref_read_with_tapping">Ťukanie</string>
     <string name="pref_read_with_long_tap">Rozšírene možnosti po dlhšiom podržaní</string>
     <string name="pref_reader_theme">Farba pozadia</string>
     <string name="white_background">Biela</string>

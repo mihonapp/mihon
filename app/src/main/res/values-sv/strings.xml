@@ -121,7 +121,6 @@
     <string name="pref_reader_navigation">Navigering</string>
     <string name="pref_read_with_volume_keys">Volymknapparna</string>
     <string name="pref_read_with_volume_keys_inverted">Invertera volymknapparna</string>
-    <string name="pref_read_with_tapping">Skärmtryck</string>
     <string name="pref_reader_theme">Bakgrundsfärg</string>
     <string name="white_background">Vit</string>
     <string name="black_background">Svart</string>
@@ -350,7 +349,7 @@
     <string name="lock_always">Alltid</string>
     <string name="lock_never">Aldrig</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Efter 1 minut</item>
+        <item quantity="one">Efter %1$s minut</item>
         <item quantity="other">Efter %1$s minuter</item>
     </plurals>
     <string name="secure_screen">Säker skärm</string>
@@ -363,7 +362,7 @@
     <string name="secure_screen_summary">Säker skärm döljer appinnehållet när du byter app och blockerar skärmdumpar</string>
     <string name="pref_category_display">Skärmvisning</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 nytt kapitel</item>
+        <item quantity="one">%1$d nytt kapitel</item>
         <item quantity="other">%1$d nya kapitel</item>
     </plurals>
     <string name="notification_chapters_single">Kapitel %1$s</string>
@@ -381,7 +380,7 @@
     <string name="email">E-postadress</string>
     <string name="pref_always_show_chapter_transition">Visa alltid kapitelövergång</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">För 1 titel</item>
+        <item quantity="one">För %d titel</item>
         <item quantity="other">För %d titlar</item>
     </plurals>
     <string name="action_menu">Meny</string>
@@ -437,7 +436,7 @@
     <string name="label_downloaded_only">Endast nedladdat</string>
     <string name="downloaded_only_summary">Filtrerar all manga i ditt bibliotek</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">1 återstående</item>
+        <item quantity="one">%1$s återstående</item>
         <item quantity="other">%1$s återstående</item>
     </plurals>
     <string name="pref_search_pinned_sources_only">Inkludera endast fästa källor</string>
@@ -487,7 +486,7 @@
     <string name="pref_read_with_tapping_inverted">Invertera tryck</string>
     <string name="loader_not_implemented_error">Källan hittades inte</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 kapitel</item>
+        <item quantity="one">%1$s kapitel</item>
         <item quantity="other">%1$s kapitel</item>
     </plurals>
     <string name="unknown_status">Okänd status</string>
@@ -508,7 +507,7 @@
     <string name="channel_progress">Förlopp</string>
     <string name="download_notifier_download_finish">Nedladdningen slutförd</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 spårare</item>
+        <item quantity="one">%d spårare</item>
         <item quantity="other">%d spårare</item>
     </plurals>
     <string name="no_pinned_sources">Du har inga fästa källor</string>
@@ -522,8 +521,8 @@
     <string name="chapter_settings_updated">Uppdaterade standardinställningar för kapitel</string>
     <string name="confirm_set_chapter_settings">Vill du spara de här inställningarna som standard\?</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Hoppar över ett kapitel, antingen saknar källan det eller så har det filtrerats bort</item>
-        <item quantity="other">Hoppar över %d kapitel, antingen saknar källan det eller så har det filtrerats bort</item>
+        <item quantity="one">Hoppar över %d kapitel, antingen saknar källan det eller så har det filtrerats bort</item>
+        <item quantity="other">Hoppar över %d kapitel, antingen saknar källan dem eller så har de filtrerats bort</item>
     </plurals>
     <string name="share_page_info">%1$s: %2$s, sida %3$d</string>
     <string name="no_chapters_error">Inga kapitel hittades</string>
@@ -714,4 +713,5 @@
     <string name="notification_update_skipped">%1$d uppdatering(ar) hoppades över</string>
     <string name="channel_skipped">Hoppat över</string>
     <string name="rotation_reverse_portrait">Omvänt porträtt</string>
+    <string name="action_move_to_top_all_for_series">Flytta serien till toppen</string>
 </resources>

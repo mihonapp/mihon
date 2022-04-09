@@ -103,7 +103,6 @@
     <string name="pref_reader_navigation">ナビゲーション</string>
     <string name="pref_read_with_volume_keys">音量キー</string>
     <string name="pref_read_with_volume_keys_inverted">音量キーを反転</string>
-    <string name="pref_read_with_tapping">タップでページをめくる</string>
     <string name="pref_reader_theme">背景色</string>
     <string name="white_background">白</string>
     <string name="black_background">ブラック</string>
@@ -345,7 +344,7 @@
     <string name="lock_always">常時</string>
     <string name="lock_never">しない</string>
     <plurals name="lock_after_mins">
-        <item quantity="other">後%1$s分</item>
+        <item quantity="other">%1$s分後</item>
     </plurals>
     <string name="secure_screen">セキュア画面</string>
     <string name="unlock_app">Tachiyomiのロックを解除する</string>
@@ -496,7 +495,7 @@
     <string name="download_notifier_download_finish">ダウンロード完了</string>
     <string name="download_insufficient_space">空き領域不足のため、章をダウンロードできませんでした</string>
     <plurals name="num_trackers">
-        <item quantity="other">%dトラッカー</item>
+        <item quantity="other">%d個のトラッカー</item>
     </plurals>
     <string name="no_pinned_sources">ピンソースがありません</string>
     <string name="action_global_search_query">グローバルで「%1$s」を探す</string>
@@ -510,7 +509,7 @@
     <string name="ext_nsfw_short">成人向け</string>
     <string name="parental_controls_info">非公式や誤ってフラグ付けされた可能性のある拡張機能の成人向けのコンテンツはこれからも表示される恐れがあります。</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">ソースにないか、フィルターによって排除されたため、%d章がスキップされました</item>
+        <item quantity="other">ソースには存在しないか、フィルターによって排除されたため、%d章がスキップされました</item>
     </plurals>
     <string name="no_chapters_error">章が見つかりません</string>
     <string name="chapter_settings_updated">デフォルトの章設定を更新しました</string>
@@ -677,7 +676,7 @@
     <string name="privacy_policy">プライバシーポリシー</string>
     <string name="pref_library_update_manga_restriction">更新のスキップ</string>
     <string name="pref_update_only_completely_read">未読の章あり</string>
-    <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください</string>
+    <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください。</string>
     <string name="save_chapter_as_cbz">CBZアーカイブとして保存</string>
     <string name="publishing_finished">完結済み</string>
     <string name="cancelled">キャンセル済み</string>
@@ -702,4 +701,5 @@
     <string name="channel_skipped">スキップ済み</string>
     <string name="notification_update_error">%1$d件の更新に失敗しました</string>
     <string name="rotation_reverse_portrait">縦向き（反転）</string>
+    <string name="action_move_to_top_all_for_series">シリーズをトップに移動</string>
 </resources>

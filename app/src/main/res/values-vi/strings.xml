@@ -4,9 +4,9 @@
     <!-- Activities and fragments labels (toolbar title) -->
     <string name="label_settings">Cài đặt</string>
     <string name="label_download_queue">Hàng chờ tải xuống</string>
-    <string name="label_library">Thư Viện</string>
+    <string name="label_library">Thư viện</string>
     <string name="label_recent_manga">Lịch sử</string>
-    <string name="label_recent_updates">Cập nhật mới</string>
+    <string name="label_recent_updates">Cập nhật</string>
     <string name="label_backup">Sao lưu và khôi phục</string>
     <!-- Actions -->
     <string name="action_settings">Cài đặt</string>
@@ -89,7 +89,6 @@
     <string name="pref_keep_screen_on">Giữ màn hình bật</string>
     <string name="pref_reader_navigation">Điều hướng</string>
     <string name="pref_read_with_volume_keys">Phím âm lượng</string>
-    <string name="pref_read_with_tapping">Nhấn</string>
     <string name="pref_reader_theme">Màu nền</string>
     <string name="white_background">Trắng</string>
     <string name="black_background">Đen</string>
@@ -239,7 +238,7 @@
     <!--Content Description-->
     <string name="description_cover">Ảnh bìa của truyện</string>
     <!-- Information Text -->
-    <string name="information_no_downloads">Không có tải xuống</string>
+    <string name="information_no_downloads">Không có</string>
     <string name="information_no_recent">Không có cập nhật mới</string>
     <string name="information_no_recent_manga">Không có truyện đã đọc gần đây</string>
     <string name="information_empty_library">Thư viện trống</string>
@@ -251,7 +250,7 @@
     <string name="download_notifier_no_network">Không có kết nối mạng</string>
     <string name="download_notifier_download_paused">Tải xuống đã tạm dừng</string>
     <string name="categories">Hạng mục</string>
-    <string name="manga">Truyện Manga</string>
+    <string name="manga">Manga</string>
     <string name="track">Theo dõi</string>
     <string name="history">Lịch sử</string>
     <string name="label_migration">Di chuyển</string>
@@ -423,7 +422,7 @@
     <string name="action_menu">Mục chính</string>
     <string name="unlock_app">Mở Khoá Tachiyomi</string>
     <string name="label_sources">Nguồn</string>
-    <string name="label_more">Thêm</string>
+    <string name="label_more">Thêm nữa</string>
     <string name="tracker_not_logged_in">Chưa đăng nhập: %1$s</string>
     <string name="source_not_found_name">Nguồn không tồn tại: %1$s</string>
     <string name="pref_search_pinned_sources_only">Chỉ bao gồm các nguồn được ghim</string>
@@ -513,7 +512,7 @@
     <string name="download_insufficient_space">Không thể tãi chương vì dung lượng bộ nhớ xuống thấp</string>
     <string name="recent_manga_time">Ch.%1$s-%2$s</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Đã bỏ qua %d chương, vì nguồn đang bị thiếu hoặc chúng đã bị lọc ra</item>
+        <item quantity="other">Đã bỏ qua %d chương, vì nguồn đang bị thiếu chúng hoặc chúng đã bị lọc ra</item>
     </plurals>
     <string name="loader_not_implemented_error">Nguồn không tìm thấy</string>
     <string name="page_list_empty_error">Trang không tìm thấy</string>
@@ -664,7 +663,7 @@
     <string name="pref_category_navigation">Thanh điều hướng</string>
     <string name="theme_tealturquoise">Chủ đề: Xanh lam &amp; Xanh ngọc</string>
     <string name="pref_category_appearance">Giao diện</string>
-    <string name="confirm_lock_change">Xác thực để xác nhận thay đổi</string>
+    <string name="confirm_lock_change">Xác nhận thay đổi</string>
     <string name="label_default">Mặc định</string>
     <string name="action_track">Theo dõi</string>
     <string name="pref_remove_exclude_categories">Các thể loại bị loại trừ</string>
@@ -736,4 +735,5 @@
     <string name="skipped_reason_not_caught_up">Đã bỏ qua vì vẫn còn chương chưa đọc</string>
     <string name="skipped_reason_not_started">Đã bỏ qua vì không có chương được đọc</string>
     <string name="channel_skipped">Bỏ qua</string>
+    <string name="action_move_to_top_all_for_series">Di chuyển bộ truyện lên đầu</string>
 </resources>

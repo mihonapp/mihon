@@ -99,7 +99,6 @@
     <string name="pref_reader_navigation">ন্যাভিগেশন</string>
     <string name="pref_read_with_volume_keys">ভলিউম বোতামগুলো</string>
     <string name="pref_read_with_volume_keys_inverted">ভলিউম বোতামগুলো ওল্টান</string>
-    <string name="pref_read_with_tapping">টোকা</string>
     <string name="pref_reader_theme">ব্যাকগ্রাউন্ড রঙ</string>
     <string name="white_background">সাদা</string>
     <string name="black_background">কালো</string>

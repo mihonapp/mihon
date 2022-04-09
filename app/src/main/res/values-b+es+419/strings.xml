@@ -149,7 +149,6 @@
     <string name="white_background">Blanco</string>
     <string name="pref_reader_theme">Color de fondo</string>
     <string name="pref_read_with_long_tap">Mostrar toque largo</string>
-    <string name="pref_read_with_tapping">Tocar pantalla</string>
     <string name="pref_read_with_volume_keys_inverted">Invertir teclas de volumen</string>
     <string name="pref_read_with_volume_keys">Teclas de volumen</string>
     <string name="pref_reader_navigation">Navegación</string>
@@ -714,4 +713,5 @@
     <string name="notification_update_error">%1$d actualización(es) fallida(s)</string>
     <string name="notification_update_skipped">%1$d actualización(es) omitida(s)</string>
     <string name="rotation_reverse_portrait">Retrato inverso</string>
+    <string name="action_move_to_top_all_for_series">Mover la serie al principio</string>
 </resources>

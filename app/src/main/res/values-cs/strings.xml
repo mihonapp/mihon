@@ -51,7 +51,7 @@
     <string name="update_24hour">Denně</string>
     <string name="update_48hour">Každé 2 dny</string>
     <string name="update_weekly">Týdně</string>
-    <string name="pref_update_only_non_completed">Nadcházející série</string>
+    <string name="pref_update_only_non_completed">Je dokončená série</string>
     <string name="pref_auto_update_manga_sync">Aktualizovat počet kapitol po přečtení</string>
     <string name="pref_start_screen">Úvodní obrazovka</string>
     <string name="all_lang">Vše</string>
@@ -126,7 +126,7 @@
     <string name="download_unread">Stáhnout nepřečtené</string>
     <string name="confirm_delete_chapters">Opravdu chcete smazat vybrané kapitoly\?</string>
     <string name="reading">Rozečtené</string>
-    <string name="completed">Kompletní</string>
+    <string name="completed">Dokončeno</string>
     <string name="plan_to_read">Plánuji číst</string>
     <string name="repeating">Znovu čtu</string>
     <string name="score">Skóre</string>
@@ -207,7 +207,6 @@
     <string name="pref_crop_borders">Oříznout okraje</string>
     <string name="pref_custom_brightness">Vlastní jas</string>
     <string name="pref_custom_color_filter">Vlastní barevný filtr</string>
-    <string name="pref_read_with_tapping">Klepnutím</string>
     <string name="pref_viewer_type">Výchozí režim čtení</string>
     <string name="vertical_viewer">Vertikální</string>
     <string name="webtoon_viewer">Webtoon</string>
@@ -233,7 +232,7 @@
     <string name="pref_backup_service_category">Automatické zálohy</string>
     <string name="pref_backup_interval">Frekvence zálohy</string>
     <string name="backup_created">Záloha vytvořena</string>
-    <string name="restore_completed">Obnova kompletní</string>
+    <string name="restore_completed">Obnova dokončena</string>
     <string name="backup_choice">Co chcete zálohovat\?</string>
     <string name="restoring_backup">Obnovování zálohy</string>
     <string name="creating_backup">Vytváření zálohy</string>
@@ -342,7 +341,7 @@
     <string name="spen_next_page">Následující stránka</string>
     <string name="hide_notification_content">Skrýt obsah oznámení</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Po 1 minutě</item>
+        <item quantity="one">Po %1$s minutě</item>
         <item quantity="few">Po %1$s minutách</item>
         <item quantity="other">Po %1$s minutách</item>
     </plurals>
@@ -364,7 +363,7 @@
     <string name="chapter_settings">Nastavení kapitoly</string>
     <string name="sort_by_upload_date">Podle data nahrání</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 kapitola</item>
+        <item quantity="one">%1$s kapitola</item>
         <item quantity="few">%1$s kapitoly</item>
         <item quantity="other">%1$s kapitol</item>
     </plurals>
@@ -385,7 +384,7 @@
     <string name="manga_from_library">Manga z knihovny</string>
     <string name="email">Emailová adresa</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">1 zbývá</item>
+        <item quantity="one">%1$s zbývá</item>
         <item quantity="few">%1$s zbývají</item>
         <item quantity="other">%1$s zbývá</item>
     </plurals>
@@ -462,7 +461,7 @@
     <string name="parental_controls_info">Toto nastavení nemůže zamezit neoficiálním nebo špatně označeným rozšířením v zobrazování NSFW (18+) obsahu v aplikaci.</string>
     <string name="pref_show_nsfw_source">Zobrazovat v seznamu zdrojů a rozšíření</string>
     <string name="pref_category_nsfw_content">NSFW (18+) zdroje</string>
-    <string name="secure_screen_summary">Skrýt obsah aplikace při přepínání aplikací a blokovat tvorbu snímků obrazovky</string>
+    <string name="secure_screen_summary">Secure screen skryje obsah aplikace při přepínání aplikací a blokuje tvorbu snímků obrazovky</string>
     <string name="secure_screen">Chráněná obrazovka</string>
     <string name="lock_with_biometrics">Vyžaduje odemknutí</string>
     <string name="pref_confirm_exit">Potvrdit opuštění</string>
@@ -506,12 +505,12 @@
     <string name="notification_chapters_single_and_more">Kapitola %1$s a %2$d dalších</string>
     <string name="notification_chapters_single">Kapitola %1$s</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 nová kapitola</item>
+        <item quantity="one">%1$d nová kapitola</item>
         <item quantity="few">%1$d nové kapitoly</item>
         <item quantity="other">%1$d nových kapitol</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Pro 1 titul</item>
+        <item quantity="one">Pro %d titul</item>
         <item quantity="few">Pro %d tituly</item>
         <item quantity="other">Pro %d titulů</item>
     </plurals>
@@ -524,9 +523,9 @@
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
     <string name="updating_library">Aktualizuji knihovnu</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Přeskočena 1 kapitola, buď chybí ve zdroji nebo byla vyfiltrována</item>
-        <item quantity="few">Přeskočeny %d kapitoly, buď chybí ve zdroji nebo byly vyfiltrovány</item>
-        <item quantity="other">Přeskočeno %d kapitol, buď chybí ve zdroji nebo byly vyfiltrovány</item>
+        <item quantity="one">Přeskakuji %d kapitolu, buď chybí ve zdroji nebo byla vyfiltrována</item>
+        <item quantity="few">Přeskakuji %d kapitoly, buď chybí ve zdroji nebo byly vyfiltrovány</item>
+        <item quantity="other">Přeskakuji %d kapitol, buď chybí ve zdroji nebo byly vyfiltrovány</item>
     </plurals>
     <string name="loader_not_implemented_error">Zdroj nenalezen</string>
     <string name="page_list_empty_error">Žádné stránky nenalezeny</string>
@@ -554,7 +553,7 @@
     <string name="share_page_info">%1$s: %2$s, strana %3$d</string>
     <string name="error_invalid_date_supplied">Zadáno neplatné datum</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 sledovač</item>
+        <item quantity="one">%d sledovač</item>
         <item quantity="few">%d sledovače</item>
         <item quantity="other">%d sledovačů</item>
     </plurals>
@@ -590,7 +589,7 @@
     <string name="pref_dual_page_split">Rozdělení na dvě stránky</string>
     <string name="pref_show_navigation_mode_summary">Ukázat oblast klepnutí když je čtečka otevřená</string>
     <string name="theme_system">Sledování systému</string>
-    <string name="action_show_errors">Klepněte pro zobrazení podrobností o chybě</string>
+    <string name="action_show_errors">Klepněte pro zobrazení podrobností</string>
     <string name="action_sort_chapter_fetch_date">Datum načtení</string>
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
@@ -698,8 +697,8 @@
     <string name="privacy_policy">Zásady ochrany osobních údajů</string>
     <string name="clear_database_source_item_count">v databázi je manga %1$d mimo knihovnu</string>
     <string name="pref_true_color_summary">Snižuje proužkování, ale ovlivňuje výkon</string>
-    <string name="pref_library_update_manga_restriction">Omezení aktualizace knihovny</string>
-    <string name="pref_update_only_completely_read">Plně přečtené série</string>
+    <string name="pref_library_update_manga_restriction">Přeskočit aktualizaci</string>
+    <string name="pref_update_only_completely_read">Má nepřečtené kapitoly</string>
     <string name="database_clean">vyčištění databáze</string>
     <string name="save_chapter_as_cbz">Uložit jako CBZ archiv</string>
     <string name="backup_restore_invalid_uri">Chyba: prázdná URI</string>
@@ -713,4 +712,15 @@
     <string name="confirm_manga_add_duplicate">Ve své knihovně máte položku se stejným názvem, ale z jiného zdroje (%1$s).
 \n
 \nPřejete si přesto pokračovat\?</string>
+    <string name="pref_update_only_started">Žádné přečtené kapitoly</string>
+    <string name="notification_update_error">%1$d aktualizace(í) selhalo</string>
+    <string name="notification_update_skipped">%1$d aktualizace(í) přeskočena(y)</string>
+    <string name="on_hiatus">Má pauzu</string>
+    <string name="skipped_reason_not_caught_up">Přeskočeno, protože obsahuje nepřečtené kapitoly</string>
+    <string name="action_filter_started">Zahájeno</string>
+    <string name="channel_skipped">Přeskočeno</string>
+    <string name="action_move_to_top_all_for_series">Přesunout sérii na začátek</string>
+    <string name="learn_more">Zjistit více</string>
+    <string name="skipped_reason_not_started">Přeskočeno, protože nebyly přečteny žádné kapitoly</string>
+    <string name="skipped_reason_completed">Přeskočeno, protože série je dokončena</string>
 </resources>

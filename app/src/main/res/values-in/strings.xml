@@ -95,7 +95,6 @@
     <string name="pref_reader_navigation">Navigasi</string>
     <string name="pref_read_with_volume_keys">Tombol volume</string>
     <string name="pref_read_with_volume_keys_inverted">Balikkan tombol volume</string>
-    <string name="pref_read_with_tapping">Ketukan</string>
     <string name="pref_reader_theme">Warna latar</string>
     <string name="white_background">Putih</string>
     <string name="black_background">Hitam</string>
@@ -698,8 +697,9 @@
     <string name="pref_landscape_zoom">Perbesar gambar lanskap</string>
     <string name="pref_navigate_pan">Navigasikan ke panorama</string>
     <string name="notification_update_skipped">%1$d pembaruan terlewat</string>
-    <string name="learn_more">Pelajari lebih banyak</string>
+    <string name="learn_more">Pelajari lebih lanjut</string>
     <string name="channel_skipped">Terlewat</string>
     <string name="rotation_reverse_portrait">Layar tegak terbalik</string>
     <string name="notification_update_error">%1$d pembaruan gagal</string>
+    <string name="action_move_to_top_all_for_series">Pindahkan seri ke Atas</string>
 </resources>

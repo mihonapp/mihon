@@ -53,7 +53,7 @@
     <string name="action_open_in_browser">Otvori u pretraživaču</string>
     <string name="action_display_mode">Vrsta displeja</string>
     <string name="action_display">Ekran</string>
-    <string name="action_display_grid">Zbijene ploče</string>
+    <string name="action_display_grid">Збијена мрежа</string>
     <string name="action_display_list">Lista</string>
     <string name="action_display_download_badge">Preuzeta poglavlja</string>
     <string name="action_cancel">Prekini</string>
@@ -71,7 +71,7 @@
     <string name="pref_category_general">Opšte</string>
     <string name="pref_category_reader">Čitač</string>
     <string name="pref_category_downloads">Preuzimanja</string>
-    <string name="pref_category_tracking">Trekovanje</string>
+    <string name="pref_category_tracking">Praćenje</string>
     <string name="pref_category_advanced">Napredno</string>
     <string name="pref_category_about">O</string>
     <string name="pref_library_columns">Broj stavki po redu</string>
@@ -87,7 +87,7 @@
     <string name="all">Све</string>
     <string name="pref_library_update_restriction">Ограничења уређаја за аутоматска ажурирања</string>
     <string name="charging">Пуњење</string>
-    <string name="pref_update_only_non_completed">Tekuća serija</string>
+    <string name="pref_update_only_non_completed">Završeni serijal</string>
     <string name="pref_auto_update_manga_sync">Ажурирај пратиоца након читања</string>
     <string name="pref_start_screen">Почетни екран</string>
     <string name="default_category">Podrazumevana kategorija</string>
@@ -121,11 +121,10 @@
     <string name="pref_reader_navigation">Навигација</string>
     <string name="pref_read_with_volume_keys">Дугмићима за звук</string>
     <string name="pref_read_with_volume_keys_inverted">Обрни дугмиће за звук</string>
-    <string name="pref_read_with_tapping">Додиривањем</string>
     <string name="pref_reader_theme">Боја позадине</string>
     <string name="white_background">Бела</string>
     <string name="black_background">Црна</string>
-    <string name="pref_viewer_type">Подразумевани модус читања</string>
+    <string name="pref_viewer_type">Подразумевани начин читања</string>
     <string name="left_to_right_viewer">Слева надесно</string>
     <string name="right_to_left_viewer">Здесна налево</string>
     <string name="vertical_viewer">Вертикално</string>
@@ -192,8 +191,8 @@
     <string name="pref_clear_database_summary">Избриши историју манги које нису сачуване у колекцији</string>
     <string name="clear_database_confirmation">Да ли сте сигурни\? Изгубићете прочитана поглавља и статус манги које нису у колекцији</string>
     <string name="clear_database_completed">Unosi izbrisani</string>
-    <string name="pref_refresh_library_tracking">Osveži trekovanje</string>
-    <string name="pref_refresh_library_tracking_summary">Ažuriraj status, ocenu i poslednje pročitano poglavlje iz trekera</string>
+    <string name="pref_refresh_library_tracking">Osveži praćenje</string>
+    <string name="pref_refresh_library_tracking_summary">Ažuriraj status, ocenu i poslednje pročitano poglavlje iz servisa za praćenje</string>
     <string name="version">Verzija</string>
     <string name="pref_enable_acra">Pošalji izveštaje grešaka</string>
     <string name="pref_acra_summary">Pomozi u popravljanju bugova. Nijedan sensitivan podatak neće biti poslat</string>
@@ -281,13 +280,13 @@
     </plurals>
     <string name="secure_screen">Безбедносни екран</string>
     <string name="ext_updates_pending">Ажурирања на чекању</string>
-    <string name="unlock_app">Октључај Tachiyomi</string>
+    <string name="unlock_app">Откључај Tachiyomi</string>
     <string name="pref_category_display">Prikaži</string>
     <string name="hide_notification_content">Сакриј обавештења</string>
     <string name="pref_disable_battery_optimization">Isključi optimizaciju korišćenja baterije</string>
     <string name="battery_optimization_disabled">Optimizacija potročnje baterije je već isključena</string>
     <string name="email">Imejl adresa</string>
-    <string name="information_empty_library">Ваша библиотека је празна</string>
+    <string name="information_empty_library">Ваша колекција је празна</string>
     <string name="information_no_recent_manga">Ништа није недавно читано</string>
     <string name="information_no_recent">Нема недавних ажурирања</string>
     <string name="information_no_downloads">Нема преузимања</string>
@@ -295,7 +294,7 @@
     <string name="pref_enable_automatic_extension_updates">Провери да ли има ажурирања за додатке</string>
     <string name="ext_obsolete">Застарело</string>
     <string name="secure_screen_summary">Сакриј приказ апликације приликом пребацивања између апликација и онемогући снимке екрана</string>
-    <string name="lock_with_biometrics">Захтевај откључавање</string>
+    <string name="lock_with_biometrics">Zahtevaj otključavanje</string>
     <string name="pref_confirm_exit">Потврди затварање програма</string>
     <string name="action_move_to_bottom">Premesti na dno</string>
     <string name="action_move_to_top">Premesti na vrh</string>
@@ -372,20 +371,20 @@
     <string name="snack_add_to_library">Додај мангу у колекцију\?</string>
     <string name="manga_info_collapse">Manje</string>
     <string name="manga_info_expand">Više</string>
-    <string name="in_library">U biblioteci</string>
+    <string name="in_library">U kolekciji</string>
     <string name="add_to_library">Додај у колекцију</string>
     <string name="local_source_help_guide">Vodič za lokalni izvor</string>
     <string name="pinned_sources">Zakačeno</string>
     <string name="last_used_source">Zadnje korišćeno</string>
     <string name="http_error_hint">Proveri vebsajt u WebView</string>
-    <string name="downloaded_only_summary">Filtrira sve mange u biblioteci</string>
+    <string name="downloaded_only_summary">Filtrira sve mange u kolekciji</string>
     <string name="check_for_updates">Proveri ažuriranja</string>
     <string name="website">Sajt</string>
     <string name="restoring_backup_canceled">Враћање је отказано</string>
     <string name="restoring_backup_error">Враћање на резервну копију није успело</string>
     <string name="restore_in_progress">Враћање је већ у току</string>
     <string name="creating_backup_error">Прављење резервне копије није успело</string>
-    <string name="backup_in_progress">Прављење резервне копије је већ у току</string>
+    <string name="backup_in_progress">Pravljenje rezervne kopije je već u toku</string>
     <string name="restore_duration">%02d мин, %02d сек</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_20">20%</string>
@@ -415,7 +414,7 @@
     <string name="update_check_notification_download_error">Грешка током преузимања</string>
     <string name="update_check_notification_download_complete">Преузимање је завршено</string>
     <string name="update_check_notification_download_in_progress">Преузимање…</string>
-    <string name="update_check_look_for_updates">Тражење ажирирања…</string>
+    <string name="update_check_look_for_updates">Тражење ажурирања…</string>
     <string name="update_check_no_new_updates">Нема нових ажурирања</string>
     <string name="update_check_ignore">Игнориши</string>
     <string name="update_check_confirm">Преузми</string>
@@ -423,12 +422,12 @@
     <string name="file_select_cover">Изаберите слику за омот</string>
     <string name="notification_first_add_to_library">Морате прво додати мангу у колекцију</string>
     <string name="notification_cover_update_failed">Ажурирање омота није успјело</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Sakrij donji bar</string>
+    <string name="pref_hide_bottom_bar_on_scroll">Сакриј доњу траку</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_disable">Onemogući</string>
     <string name="action_display_show_tabs">Prikaži naslove umetaka</string>
     <string name="action_display_unread_badge">Poglavlja koja nisu pročitana</string>
-    <string name="action_display_comfortable_grid">Šira mreža</string>
+    <string name="action_display_comfortable_grid">Шира мрежа</string>
     <string name="action_migrate">Migriraj</string>
     <string name="action_start">Počni</string>
     <string name="action_disable_all">Onemogući sve</string>
@@ -436,7 +435,7 @@
     <string name="action_download_unread">Preuzmi nepročitana poglavlja</string>
     <string name="action_search_settings">Podešavanja pretrage</string>
     <string name="action_sort_date_added">Datum dodavanja</string>
-    <string name="pref_show_reading_mode">Прикажи модус читања</string>
+    <string name="pref_show_reading_mode">Прикажи начин читања</string>
     <string name="ext_nsfw_warning">Може садржати садржај за одрасле (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="unofficial_extension_message">Овај додатак није са званичне листе Tachiyomi додатака.</string>
@@ -450,7 +449,7 @@
     <string name="pref_library_update_refresh_metadata">Аутоматски освежи метаподатке</string>
     <string name="pref_jump_to_chapters">Idi na poglevlje sa otvaranjem</string>
     <string name="parental_controls_info">Ovo ne sprečava nezvanične ili potencijalno pogrešno označene dodatke da prikažu sadržaj za odrasle (18+) unutar aplikacije.</string>
-    <string name="action_filter_tracked">Trekovano</string>
+    <string name="action_filter_tracked">Zapraćeno</string>
     <string name="alignment_bottom">Dole</string>
     <string name="pref_category_timestamps">Oznake za vreme</string>
     <string name="pref_relative_format">Relativne oznake za vreme</string>
@@ -465,7 +464,7 @@
     <string name="action_order_by_chapter_number">Po broju poglavlja</string>
     <string name="pref_app_theme">Tema aplikacije</string>
     <string name="theme_greenapple">Zelena Jabuka</string>
-    <string name="theme_yotsuba">Yotsuba</string>
+    <string name="theme_yotsuba">Jocuba</string>
     <string name="action_asc">Rastuće</string>
     <string name="pref_side_nav_icon_alignment">Poravnanje ikone bočne navigacije</string>
     <string name="label_default">Подразумевано</string>
@@ -475,7 +474,7 @@
     <string name="action_display_show_number_of_items">Prikaži broj stavki</string>
     <string name="cancel_all_for_series">Prekini sve za ovaj serijal</string>
     <string name="action_desc">Opadajuće</string>
-    <string name="action_show_errors">Prikaz detalja greške</string>
+    <string name="action_show_errors">Prikaži detalje</string>
     <string name="pref_category_appearance">Izgled</string>
     <string name="theme_monet">Dinamički</string>
     <string name="theme_midnightdusk">Ponoćni Sumrak</string>
@@ -493,7 +492,7 @@
         <item quantity="few">Pre %1$d dana</item>
         <item quantity="other">Pre %1$d dana</item>
     </plurals>
-    <string name="pref_category_reading_mode">Модус читања</string>
+    <string name="pref_category_reading_mode">Начин читања</string>
     <string name="ext_installer_pref">Instaler</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Прескаче се %d поглавље, или не постоји у извору или је филтером издвојено</item>
@@ -510,12 +509,12 @@
     </plurals>
     <string name="restore_miui_warning">Резервна копија/враћање можда неће радити исправно ако није омогућена MIUI оптимизација.</string>
     <string name="backup_info">Препоручује се аутоматско прављење резервне копије. Чувајте копије и на другим местима.</string>
-    <string name="pref_dns_over_https">DNS преко HTTPS-а</string>
+    <string name="pref_dns_over_https">DNS преко HTTPS-а (DoH)</string>
     <string name="pref_tablet_ui_mode">Izgled za tablet</string>
     <string name="requires_app_restart">Захтева поновно покретање апликације</string>
-    <string name="pref_dump_crash_logs_summary">Čuva logove grešaka u fajl za dalji uvid developerima</string>
+    <string name="pref_dump_crash_logs_summary">Чува евиденцију грешака у датотеку за дељење са програмерима</string>
     <string name="label_background_activity">Aktivnost u pozadini</string>
-    <string name="pref_color_filter_mode">Модус стапања за филтер боја</string>
+    <string name="pref_color_filter_mode">Режим мешања филтера боја</string>
     <string name="gray_background">Сива</string>
     <string name="nav_zone_prev">Прет.</string>
     <string name="about_dont_kill_my_app">Neki proizvođači imaju dodatna ograničenja za aplikacije koja gase servise koji su u pozadini. Ovaj sajt sadrži više informacija o mogućim rešenjima.</string>
@@ -524,7 +523,7 @@
     <string name="right_and_left_nav">Десно и лево</string>
     <string name="nav_zone_right">Десно</string>
     <string name="nav_zone_next">След.</string>
-    <string name="pref_verbose_logging">Detaljno logovanje</string>
+    <string name="pref_verbose_logging">Detaljno izveštavanje</string>
     <string name="pref_incognito_mode_summary">Zaustavlja praćenje istorije čitanja</string>
     <string name="tabs_header">Kartice</string>
     <string name="unknown_status">Nepoznat status</string>
@@ -546,10 +545,10 @@
 \nЗа даљу употребу података је потребно инсталирати све додатке који недостају и пријавити се на трекере.</string>
     <string name="enhanced_tracking_info">Сервиси који пружају побољшане услуге за одређене изворе. Манга се аутоматски прати када је додате у колекцију.</string>
     <string name="help_translate">Pomozite u prevođenju</string>
-    <string name="pref_dump_crash_logs">Dampuj logove krešova</string>
-    <string name="pref_verbose_logging_summary">Štampaj detaljne logove u sistemski log (smanjuje performanse aplikacije)</string>
+    <string name="pref_dump_crash_logs">Избаци извештаје о паду</string>
+    <string name="pref_verbose_logging_summary">Ispisuj detaljne izveštaje u sistemski dnevnik (smanjuje performanse aplikacije)</string>
     <string name="battery_optimization_setting_activity_not_found">Nije moguće otvoriti podešavanja uređaja</string>
-    <string name="pref_refresh_library_covers">Osveži omote u biblioteci</string>
+    <string name="pref_refresh_library_covers">Osveži omote u kolekciji</string>
     <string name="whats_new">Šta je novo</string>
     <string name="notification_incognito_text">Deaktiviraj inkognito mod</string>
     <string name="manga_from_library">Манга из колекције</string>
@@ -599,7 +598,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Инсталирајте и покрените Shizuku како бисте га користили као инсталатора додатака.</string>
     <string name="filter_mode_lighten">Посветли (Dodge)</string>
     <string name="tracking_guide">Водич за праћење</string>
-    <string name="pref_hide_threshold">Осетљивост за сакривање менија при скроловању</string>
+    <string name="pref_hide_threshold">Осетљивост за сакривање менија при померању</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Поглавља %1$s и још %2$d</item>
         <item quantity="few">Поглавља %1$s и још %2$d</item>
@@ -610,7 +609,7 @@
     <string name="pref_show_navigation_mode">Прикажи начин навигације</string>
     <string name="track_finished_reading_date">Датум завршетка</string>
     <string name="automatic_background">Аутоматски</string>
-    <string name="licenses">Open source licence</string>
+    <string name="licenses">Лиценце отвореног кода</string>
     <string name="updated_version">Ažurirano na v%1$s</string>
     <string name="error_no_match">Ништа није пронађено</string>
     <string name="pref_dual_page_split">Подели дупле странице на пола</string>
@@ -648,7 +647,7 @@
     <string name="pref_show_navigation_mode_summary">Прикажи зоне додира када се читач отвори</string>
     <string name="pref_dual_page_invert">Замени места подељених страница</string>
     <string name="pref_dual_page_invert_summary">Ако се подељене странице не подударају са смером читања</string>
-    <string name="pref_show_reading_mode_summary">На тренутак прикажи тренутни модус читања када се читач отвори</string>
+    <string name="pref_show_reading_mode_summary">На тренутак прикажи тренутни начин читања када се читач отвори</string>
     <string name="on">Укључено</string>
     <string name="off">Искључено</string>
     <string name="pref_grayscale">Црно-бело</string>
@@ -681,7 +680,7 @@
     <string name="cover_updated">Омот је ажуриран</string>
     <string name="share_page_info">%1$s: %2$s, %3$d. страница</string>
     <string name="pref_category_for_this_series">За овај серијал</string>
-    <string name="viewer">Модус читања</string>
+    <string name="viewer">Начин читања</string>
     <string name="page_list_empty_error">Нема страница</string>
     <string name="loader_not_implemented_error">Извор није пронађен</string>
     <string name="pref_clear_history">Избриши историју</string>
@@ -698,7 +697,33 @@
     <string name="extension_api_error">Преузимање листе додатака није успело</string>
     <string name="pref_auto_clear_chapter_cache">Испразни кеш меморију при изласку из апликације</string>
     <string name="database_clean">Čišćenje baze podataka</string>
-    <string name="pref_library_update_manga_restriction">Ograničenja ažuriranje biblioteka</string>
-    <string name="pref_update_only_completely_read">Kompletno pročitane serije</string>
+    <string name="pref_library_update_manga_restriction">Preskoči ažuriranja</string>
+    <string name="pref_update_only_completely_read">Ima pročitana poglavlja</string>
     <string name="privacy_policy">Политика приватности</string>
+    <string name="cancelled">Otkazano</string>
+    <string name="on_hiatus">Na pauzi</string>
+    <string name="pref_update_only_started">Nema pročitanih poglavlja</string>
+    <string name="action_show_manga">Prikaži mange</string>
+    <string name="webtoon_side_padding_5">5%</string>
+    <string name="action_filter_started">Započeto</string>
+    <string name="action_move_to_top_all_for_series">Pomakni serijal na vrh</string>
+    <string name="confirm_manga_add_duplicate">Imate unos u kolekciji sa istim imenom, ali iz drugog izvora (%1$s).
+\n
+\nDa li i dalje želite da nastavite\?</string>
+    <string name="notification_update_error">%1$d ažuriranje nije uspelo</string>
+    <string name="learn_more">Saznajte više</string>
+    <string name="library_errors_help">Za pomoć o tome kako da popravite greške u ažuriranju kolekcije, pogledajte %1$s</string>
+    <string name="skipped_reason_not_started">Preskočeno jer nijedno poglavlje nije pročitano</string>
+    <string name="channel_skipped">Preskočeno</string>
+    <string name="action_display_cover_only_grid">Мрежа насловница</string>
+    <string name="pref_navigate_pan">Управљај померањем слике</string>
+    <string name="pref_landscape_zoom">Približite pejzažnu sliku</string>
+    <string name="action_faq_and_guides">Pitanja i vodiči</string>
+    <string name="save_chapter_as_cbz">Sačuvaj kao CBZ arhivu</string>
+    <string name="rotation_reverse_portrait">Obrnuti portret</string>
+    <string name="backup_restore_invalid_uri">Greška: prazan URI</string>
+    <string name="publishing_finished">Izdavanje završeno</string>
+    <string name="notification_update_skipped">%1$d ažuriranje je preskočeno</string>
+    <string name="skipped_reason_completed">Preskočeno jer je serijal završen</string>
+    <string name="skipped_reason_not_caught_up">Preskočeno jer ima nepročitanih poglavlja</string>
 </resources>

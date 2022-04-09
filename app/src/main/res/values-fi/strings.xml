@@ -171,7 +171,6 @@
     <string name="pref_reader_navigation">Navigointi</string>
     <string name="pref_read_with_volume_keys">Äänenvoimakkuus näppäimet</string>
     <string name="pref_read_with_volume_keys_inverted">Käännä äänenvoimakkuus näppäimet</string>
-    <string name="pref_read_with_tapping">Näpäyttäminen</string>
     <string name="pref_read_with_long_tap">Näytä pitkällä napautuksella</string>
     <string name="pref_reader_theme">Taustan väri</string>
     <string name="white_background">Valkoinen</string>

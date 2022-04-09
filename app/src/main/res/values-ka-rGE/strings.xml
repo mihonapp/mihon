@@ -149,7 +149,6 @@
     <string name="pref_reader_navigation">ნავიგაცია</string>
     <string name="pref_read_with_volume_keys">ხმის კლავიშები</string>
     <string name="pref_read_with_volume_keys_inverted">ხმის კლავიშების ფუნქციების გაცვლა</string>
-    <string name="pref_read_with_tapping">შეხება</string>
     <string name="pref_reader_theme">ფონის ფერი</string>
     <string name="white_background">თეთრი</string>
     <string name="gray_background">ნაცრისფერი</string>

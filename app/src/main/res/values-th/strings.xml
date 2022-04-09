@@ -125,7 +125,6 @@
     <string name="pref_keep_screen_on">เปิดหน้าจอไว้ตลอด</string>
     <string name="pref_read_with_volume_keys">ปุ่มปรับระดับเสียง</string>
     <string name="pref_read_with_volume_keys_inverted">สลับด้านปุ่มปรับระดับเสียง</string>
-    <string name="pref_read_with_tapping">การแตะ</string>
     <string name="pref_viewer_type">โหมดการอ่านเริ่มต้น</string>
     <string name="left_to_right_viewer">จากซ้ายไปขวา</string>
     <string name="right_to_left_viewer">จากขวาไปซ้าย</string>
@@ -202,7 +201,7 @@
     <string name="login_success">ลงชื่อเข้าใช้แล้ว</string>
     <string name="invalid_login">ไม่สามารถเข้าสู่ระบบได้</string>
     <string name="unknown_error">ข้อผิดพลาดที่ไม่รู้จัก</string>
-    <string name="updating_category">กำลังอัปเดตคลัง</string>
+    <string name="updating_category">กำลังอัปเดตหมวดหมู่</string>
     <string name="local_source_badge">ภายในเครื่อง</string>
     <string name="no_more_results">ไม่มีผลลัพธ์เพิ่มเติม</string>
     <string name="local_source">แหล่งที่มาภายในเครื่อง</string>
@@ -242,7 +241,7 @@
     <string name="download_unread">ที่ยังไม่ได้อ่าน</string>
     <string name="confirm_delete_chapters">แน่ใจหรือไม่ว่าต้องการลบตอนที่เลือก\?</string>
     <string name="manga_tracking_tab">การติดตาม</string>
-    <string name="reading">การอ่าน</string>
+    <string name="reading">กำลังอ่าน</string>
     <string name="completed">จบแล้ว</string>
     <string name="dropped">ดรอป</string>
     <string name="on_hold">พักไว้</string>
@@ -702,4 +701,5 @@
     <string name="notification_update_error">อัปเดตผิดพลาด %1$d รายการ</string>
     <string name="channel_skipped">ข้ามแล้ว</string>
     <string name="rotation_reverse_portrait">แนวตั้งแบบกลับด้าน</string>
+    <string name="action_move_to_top_all_for_series">ย้ายเรื่องไปด้านบน</string>
 </resources>

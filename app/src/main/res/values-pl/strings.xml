@@ -147,7 +147,6 @@
     <string name="pref_custom_color_filter">Niestandardowy filtr kolorów</string>
     <string name="pref_read_with_volume_keys">Przyciski głośności</string>
     <string name="pref_read_with_volume_keys_inverted">Odwróć przyciski głośności</string>
-    <string name="pref_read_with_tapping">Stukanie</string>
     <string name="pref_reader_theme">Kolor tła</string>
     <string name="white_background">Biały</string>
     <string name="black_background">Czarny</string>

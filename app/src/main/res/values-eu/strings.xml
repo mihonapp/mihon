@@ -517,7 +517,6 @@
     <string name="pref_true_color_summary">Kolore-marraketak murrizten ditu, baina errendimenduan eragina dauka</string>
     <string name="pref_crop_borders">Moztu ertzak</string>
     <string name="pref_read_with_volume_keys_inverted">Alderantzikatu bolumen-teklak</string>
-    <string name="pref_read_with_tapping">Sakatzea</string>
     <string name="pref_read_with_tapping_inverted">Sakatzea alderantzikatu</string>
     <string name="tapping_inverted_none">Ezer ez</string>
     <string name="tapping_inverted_horizontal">Horizontala</string>

@@ -28,7 +28,6 @@
     <string name="black_background">Хура</string>
     <string name="white_background">Шурӑ</string>
     <string name="pref_reader_theme">Ӳкерчĕк хыҫӑн тӗсӗ</string>
-    <string name="pref_read_with_tapping">Пусни</string>
     <string name="filter_mode_screen">Экран</string>
     <string name="filter_mode_multiply">Хутлани</string>
     <string name="ext_language_info">Чӗлхе: %1$s</string>
@@ -140,7 +139,7 @@
     <string name="history">Кун-ҫул</string>
     <string name="chapters">Сыпӑксем</string>
     <string name="categories">Пухмӑшсем</string>
-    <string name="information_empty_library">Санӑн вулавӑш пушӑ. Шыравран вулавӑша кӗнекесем хуш.</string>
+    <string name="information_empty_library">Санӑн вулавӑш пушӑ</string>
     <string name="label_recent_manga">Кун-ҫул</string>
     <string name="label_download_queue">Тиев черечӗ</string>
     <string name="name">Ят</string>

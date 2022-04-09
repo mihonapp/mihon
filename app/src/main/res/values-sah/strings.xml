@@ -200,7 +200,6 @@
     <string name="white_background">Маҥан</string>
     <string name="pref_reader_theme">Кэнники өҥ</string>
     <string name="pref_read_with_long_tap">Уһун баттааһыҥҥа - кэпсэтии</string>
-    <string name="pref_read_with_tapping">Баттааһын</string>
     <string name="pref_read_with_volume_keys_inverted">Тыас талкыйдарын миэстэлэрин уларыт</string>
     <string name="pref_read_with_volume_keys">Тыас талкыйдара</string>
     <string name="pref_reader_navigation">Хамсыы</string>

@@ -121,7 +121,6 @@
     <string name="pref_reader_navigation">Navigare</string>
     <string name="pref_read_with_volume_keys">Butoane de volum</string>
     <string name="pref_read_with_volume_keys_inverted">Inversează butoanele de volum</string>
-    <string name="pref_read_with_tapping">Apăsare</string>
     <string name="pref_reader_theme">Culoare de fundal</string>
     <string name="white_background">Alb</string>
     <string name="black_background">Negru</string>

@@ -253,7 +253,6 @@
     <string name="pref_cutout_short">Prikaži sadržaj u izrezanom području</string>
     <string name="pref_reader_theme">Boja pozadine</string>
     <string name="pref_read_with_long_tap">Prikaži pri dugom dodiru</string>
-    <string name="pref_read_with_tapping">Dodir</string>
     <string name="pref_read_with_volume_keys_inverted">Preokreni tipke za glasnoću</string>
     <string name="pref_read_with_volume_keys">Tipke za glasnoću</string>
     <string name="pref_reader_navigation">Navigacija</string>
@@ -395,9 +394,9 @@
     <string name="username">Korisničko ime</string>
     <string name="login_title">Prijavi se na %1$s</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">Još %1$s</item>
-        <item quantity="few">Još %1$s</item>
-        <item quantity="other">Još %1$s</item>
+        <item quantity="one">%1$s preostalo</item>
+        <item quantity="few">%1$s preostala</item>
+        <item quantity="other">%1$s preostalih</item>
     </plurals>
     <string name="downloaded_only_summary">Filtrira sve mange u tvojoj biblioteci</string>
     <string name="label_downloaded_only">Samo preuzeto</string>
@@ -444,7 +443,7 @@
     <string name="information_webview_required">Za Tachiyomi je potreban WebView</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d novo poglavlje</item>
-        <item quantity="few">%1$d novih poglavlja</item>
+        <item quantity="few">%1$d nova poglavlja</item>
         <item quantity="other">%1$d novih poglavlja</item>
     </plurals>
     <string name="channel_ext_updates">Ažuriranja proširenja</string>
@@ -514,9 +513,9 @@
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Datum dodavanja</string>
     <plurals name="num_trackers">
-        <item quantity="one">%d pratilac</item>
-        <item quantity="few">%d pratioca</item>
-        <item quantity="other">%d pratilaca</item>
+        <item quantity="one">%d praćenje</item>
+        <item quantity="few">%d praćenja</item>
+        <item quantity="other">%d praćenja</item>
     </plurals>
     <string name="no_pinned_sources">Nemaš označenih izvora</string>
     <string name="channel_complete">Gotovo</string>
@@ -530,9 +529,9 @@
     <string name="backup_restore_missing_trackers">Praćenja bez prijave:</string>
     <string name="parental_controls_info">To ne sprečava neslužbene ili potencijalno krivo označena proširenja prikazati neprikladan sadržaj (18+) unutar aplikacije.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Preskače se %d poglavlje. Izvor ga nema ili je izdvojen filtrom</item>
-        <item quantity="few">Preskaču se %d poglavlja. Izvor ih nema ili su izdvojeni filtrom</item>
-        <item quantity="other">Preskaču se %d poglavlja. Izvor ih nema ili su izdvojeni filtrom</item>
+        <item quantity="one">Preskače se %d poglavlje. Izvoru nedostaje poglavlje ili je izdvojeno filtrom</item>
+        <item quantity="few">Preskaču se %d poglavlja. Izvoru nedostaju poglavlja ili su izdvojena filtrom</item>
+        <item quantity="other">Preskaču se %d poglavlja. Izvoru nedostaju poglavlja ili su izdvojena filtrom</item>
     </plurals>
     <string name="no_chapters_error">Nema poglavlja</string>
     <string name="chapter_settings_updated">Standardne postavke poglavlja su aktualizirane</string>
@@ -726,4 +725,5 @@
     <string name="channel_skipped">Preskočeno</string>
     <string name="notification_update_skipped">Preskočena aktualiziranja: %1$d</string>
     <string name="rotation_reverse_portrait">Preokrenuto uspravno</string>
+    <string name="action_move_to_top_all_for_series">Pomakni serijal na vrh</string>
 </resources>

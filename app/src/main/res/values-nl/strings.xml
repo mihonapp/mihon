@@ -83,7 +83,6 @@
     <string name="pref_custom_brightness">Aangepaste helderheid</string>
     <string name="pref_custom_color_filter">Aangepast kleurfilter</string>
     <string name="pref_read_with_volume_keys">Volumeknoppen</string>
-    <string name="pref_read_with_tapping">Tikken</string>
     <string name="pref_reader_theme">Achtergrondkleur</string>
     <string name="white_background">Wit</string>
     <string name="black_background">Zwart</string>
@@ -226,7 +225,7 @@
     <string name="information_no_recent_manga">Niks recent gelezen</string>
     <string name="download_notifier_unknown_error">Kon dit hoofdstuk niet downloaden door een onverwachte fout</string>
     <string name="pref_library_update_restriction">Toestel beperkingen voor automatisch bijwerken</string>
-    <string name="pref_update_only_non_completed">Lopende series</string>
+    <string name="pref_update_only_non_completed">Gelezen series</string>
     <string name="pref_auto_update_manga_sync">Voortgang bijwerken na lezen</string>
     <string name="pref_keep_screen_on">Scherm aanhouden</string>
     <string name="clear_database_confirmation">Weet je het zeker\? Gelezen hoofdstukken en voortgang voor manga die niet in de bibliotheek zitten zullen verloren gaan</string>
@@ -350,7 +349,7 @@
     <string name="lock_always">Altijd</string>
     <string name="lock_never">Nooit</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Na 1 minuut</item>
+        <item quantity="one">Na %1$s minuut</item>
         <item quantity="other">Na %1$s minuten</item>
     </plurals>
     <string name="secure_screen">Scherm beveiligen</string>
@@ -388,11 +387,11 @@
     <string name="notification_chapters_single_and_more">Hoofdstuk %1$s en %2$d meer</string>
     <string name="notification_chapters_single">Hoofdstuk %1$s</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 nieuw hoofdstuk</item>
+        <item quantity="one">%1$d nieuw hoofdstuk</item>
         <item quantity="other">%1$d nieuwe hoofdstukken</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Voor 1 titel</item>
+        <item quantity="one">Voor %d titel</item>
         <item quantity="other">Voor %d titels</item>
     </plurals>
     <string name="notification_check_updates">Zoeken naar nieuwe hoofdstukken</string>
@@ -410,8 +409,8 @@
     <string name="http_error_hint">Bekijk website in WebView</string>
     <string name="email">E-mailadres</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">1 resterend</item>
-        <item quantity="other">%1$s resterend</item>
+        <item quantity="one">%1$s resterend</item>
+        <item quantity="other">%1$s resterende</item>
     </plurals>
     <string name="downloaded_only_summary">Filtert alle manga in de bibliotheek</string>
     <string name="label_downloaded_only">Alleen gedownloade</string>
@@ -483,7 +482,7 @@
     <string name="action_disable_all">Alles uitzetten</string>
     <string name="action_enable_all">Alles aanzetten</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 hoofdstuk</item>
+        <item quantity="one">%1$s hoofdstuk</item>
         <item quantity="other">%1$s hoofdstukken</item>
     </plurals>
     <string name="requires_app_restart">Herstart van de app nodig om van kracht te worden</string>
@@ -505,7 +504,7 @@
     <string name="action_download_unread">Ongelezen hoofdstukken downloaden</string>
     <string name="action_sort_date_added">Datum toegevoegd</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 tracker</item>
+        <item quantity="one">%d tracker</item>
         <item quantity="other">%d trackers</item>
     </plurals>
     <string name="no_pinned_sources">Je hebt geen vastgepinde bronnen</string>
@@ -520,8 +519,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Dit voorkomt niet dat onofficiële of mogelijk incorrect gemarkeerde extensies NSFW-inhoud (18+) kunnen laten zien in de app.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">1 hoofdstuk is overgeslagen, of de bron mist 1 hoofdstuk of het is uitgefilterd</item>
-        <item quantity="other">%d hoofdstukken zijn overgeslagen, de bron mist ze of ze zijn uitgefilterd</item>
+        <item quantity="one">%d hoofdstuk is overgeslagen, de bron mist het hoofdstuk of is eruit gefilterd</item>
+        <item quantity="other">%d hoofdstukken zijn overgeslagen, de bron mist ze of ze zijn eruit gefilterd</item>
     </plurals>
     <string name="no_chapters_error">Geen hoofdstukken gevonden</string>
     <string name="chapter_settings_updated">Standaard hoofdstukinstellingen bijgewerkt</string>
@@ -583,7 +582,7 @@
     <string name="pref_library_update_categories_details">Manga in uitgesloten categorieën worden niet bijgewerkt, zelfs niet als ze onder opgenomen categorieën vallen.</string>
     <string name="action_sort_chapter_fetch_date">Datum opgehaald</string>
     <string name="none">Geen</string>
-    <string name="action_show_errors">Foutmeldingen weergeven</string>
+    <string name="action_show_errors">Klik om details te weergeven</string>
     <string name="update_check_eol">Deze Android versie wordt niet meer ondersteund</string>
     <string name="clipboard_copy_error">Mislukt om naar het klemboord te kopiëren</string>
     <string name="notification_incognito_text">Incognitomodus uitschakelen</string>
@@ -688,8 +687,8 @@
     <string name="clear_database_source_item_count">%1$d niet-bibliotheek manga in database</string>
     <string name="save_chapter_as_cbz">Opslaan als CBZ archief</string>
     <string name="pref_auto_clear_chapter_cache">Hoofdstuk cache leegmaken na het sluiten van de app</string>
-    <string name="pref_library_update_manga_restriction">Beperkingen voor bibliotheek updates</string>
-    <string name="pref_update_only_completely_read">Serie volledig gelezen</string>
+    <string name="pref_library_update_manga_restriction">Updaten overslaan</string>
+    <string name="pref_update_only_completely_read">Heeft ongelezen hoofdstukken</string>
     <string name="extension_api_error">Lijst met extensies ophalen mislukt</string>
     <string name="publishing_finished">Uitgave voltooid</string>
     <string name="cancelled">Geannuleerd</string>
@@ -697,4 +696,22 @@
     <string name="backup_restore_invalid_uri">Fout: lege URI</string>
     <string name="action_faq_and_guides">Veelgestelde vragen en handleidingen</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="confirm_manga_add_duplicate">Je hebt een manga in je bibliotheek met dezelfde naam maar van een andere bron (%1$s).
+\n
+\nWil je nog steeds doorgaan\?</string>
+    <string name="notification_update_skipped">%1$d update(s) overgeslagen</string>
+    <string name="notification_update_error">%1$d update(s) mislukt</string>
+    <string name="learn_more">Kom meer te weten</string>
+    <string name="skipped_reason_not_caught_up">Overgeslagen want er zijn geen ongelezen hoofdstukken</string>
+    <string name="skipped_reason_not_started">Overgeslagen want er zijn geen gelezen hoofdstukken</string>
+    <string name="channel_skipped">Overgeslagen</string>
+    <string name="pref_landscape_zoom">Zoom liggende afbeelding</string>
+    <string name="pref_navigate_pan">Navigeer binnen de afbeelding</string>
+    <string name="action_show_manga">Laat manga zien</string>
+    <string name="action_display_cover_only_grid">Alleen-cover rooster</string>
+    <string name="rotation_reverse_portrait">Omgedraaid portret-modus</string>
+    <string name="action_filter_started">Begonnen</string>
+    <string name="action_move_to_top_all_for_series">Breng serie naar boven</string>
+    <string name="pref_update_only_started">Geen gelezen hoofdstukken</string>
+    <string name="skipped_reason_completed">Overgeslagen want de serie is af</string>
 </resources>

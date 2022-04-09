@@ -121,7 +121,6 @@
     <string name="pref_reader_navigation">Gezinme</string>
     <string name="pref_read_with_volume_keys">Ses tuşları</string>
     <string name="pref_read_with_volume_keys_inverted">Ters ses tuşları</string>
-    <string name="pref_read_with_tapping">Dokunarak</string>
     <string name="pref_reader_theme">Arka plan rengi</string>
     <string name="white_background">Beyaz</string>
     <string name="black_background">Siyah</string>
@@ -350,7 +349,7 @@
     <string name="lock_always">Her zaman</string>
     <string name="lock_never">Asla</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">1 dakika sonra</item>
+        <item quantity="one">%1$s dakika sonra</item>
         <item quantity="other">%1$s dakika sonra</item>
     </plurals>
     <string name="secure_screen">Güvenli ekran</string>
@@ -363,7 +362,7 @@
     <string name="secure_screen_summary">Güvenli ekran, uygulamalar arasında geçiş yaparken uygulama içeriğini gizler ve ekran görüntüsü alınmasını engeller</string>
     <string name="pref_category_display">Ekran</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 yeni bölüm</item>
+        <item quantity="one">%1$d yeni bölüm</item>
         <item quantity="other">%1$d yeni bölüm</item>
     </plurals>
     <string name="notification_chapters_single">Bölüm %1$s</string>
@@ -381,7 +380,7 @@
     <string name="email">Eposta adresi</string>
     <string name="pref_always_show_chapter_transition">Bölüm geçişini her zaman göster</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">1 başlık için</item>
+        <item quantity="one">%d başlık için</item>
         <item quantity="other">%d başlık için</item>
     </plurals>
     <string name="action_menu">Menü</string>
@@ -437,7 +436,7 @@
     <string name="restore_duration">%02d dk, %02d sn</string>
     <string name="downloaded_only_summary">Kitaplığınızdaki tüm mangaları filtreler</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">1 kaldı</item>
+        <item quantity="one">%1$s kaldı</item>
         <item quantity="other">%1$s kaldı</item>
     </plurals>
     <string name="pref_search_pinned_sources_only">Yalnızca sabitlenmiş kaynakları içer</string>
@@ -483,7 +482,7 @@
     <string name="loader_not_implemented_error">Kaynak bulunamadı</string>
     <string name="action_disable">Devre dışı bırak</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 bölüm</item>
+        <item quantity="one">%1$s bölüm</item>
         <item quantity="other">%1$s bölüm</item>
     </plurals>
     <string name="requires_app_restart">Etkili olması için uygulamanın yeniden başlatılmasını gerektirir</string>
@@ -505,7 +504,7 @@
     <string name="pref_category_reading_mode">Okuma kipi</string>
     <string name="pref_category_theme">Tema</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 izleyici</item>
+        <item quantity="one">%d izleyici</item>
         <item quantity="other">%d izleyici</item>
     </plurals>
     <string name="no_pinned_sources">Sabitlenmiş kaynağınız yok</string>
@@ -520,7 +519,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Bu, resmi olmayan veya yanlış işaretlenmiş uzantıların, uygulama içinde yetişkin (18+) içeriği göstermesini engellemez.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">1 bölüm atlanıyor, ya kaynakta yok ya da filtrelenmiş</item>
+        <item quantity="one">%d bölüm atlanıyor, ya kaynakta yok ya da filtrelenmiş</item>
         <item quantity="other">%d bölüm atlanıyor, ya kaynakta yok ya da filtrelenmiş</item>
     </plurals>
     <string name="no_chapters_error">Bölüm bulunamadı</string>
@@ -714,4 +713,6 @@
     <string name="learn_more">Daha fazla bilgi edin</string>
     <string name="channel_skipped">Atlandı</string>
     <string name="rotation_reverse_portrait">Ters dikey</string>
+    <string name="action_move_to_top_all_for_series">Seriyi en üste taşı</string>
+    <string name="disabled_nav">Devre dışı</string>
 </resources>

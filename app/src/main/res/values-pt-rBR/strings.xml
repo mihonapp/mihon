@@ -97,7 +97,6 @@
     <string name="pref_reader_navigation">Navegação</string>
     <string name="pref_read_with_volume_keys">Botões de volume</string>
     <string name="pref_read_with_volume_keys_inverted">Inverter os botões de volume</string>
-    <string name="pref_read_with_tapping">Toque</string>
     <string name="pref_reader_theme">Cor de fundo</string>
     <string name="white_background">Branco</string>
     <string name="black_background">Preto</string>
@@ -350,7 +349,7 @@
     <string name="lock_always">Sempre</string>
     <string name="lock_never">Nunca</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Por 1 minuto</item>
+        <item quantity="one">Por %1$s minuto</item>
         <item quantity="other">Por %1$s minutos</item>
     </plurals>
     <string name="secure_screen">Tela segura</string>
@@ -363,7 +362,7 @@
     <string name="secure_screen_summary">A tela segura oculta os conteúdos do aplicativo durante a troca de aplicativos e impede capturas de tela</string>
     <string name="pref_category_display">Visualização</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 capítulo novo</item>
+        <item quantity="one">%1$d capítulo novo</item>
         <item quantity="other">%1$d capítulos novos</item>
     </plurals>
     <string name="notification_chapters_single">Capítulo %1$s</string>
@@ -381,7 +380,7 @@
     <string name="email">Endereço de email</string>
     <string name="pref_always_show_chapter_transition">Sempre mostrar a transição entre capítulos</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Para 1 título</item>
+        <item quantity="one">Para %d título</item>
         <item quantity="other">Para %d títulos</item>
     </plurals>
     <string name="action_menu">Menu</string>
@@ -437,7 +436,7 @@
     <string name="restore_duration">%02d min e %02d seg</string>
     <string name="downloaded_only_summary">Filtra todos os mangás em sua biblioteca</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">1 restante</item>
+        <item quantity="one">%1$s restante</item>
         <item quantity="other">%1$s restantes</item>
     </plurals>
     <string name="pref_search_pinned_sources_only">Incluir somente as fontes fixadas</string>
@@ -472,7 +471,7 @@
     <string name="action_migrate">Migrar</string>
     <string name="action_display_comfortable_grid">Grade confortável</string>
     <string name="badges_header">Selos</string>
-    <string name="action_display_show_tabs">Mostrar abas de categoria</string>
+    <string name="action_display_show_tabs">Mostrar as abas de categoria</string>
     <string name="tabs_header">Abas</string>
     <string name="page_list_empty_error">Nenhuma página encontrada</string>
     <string name="action_disable_all">Desativar todas</string>
@@ -483,7 +482,7 @@
     <string name="loader_not_implemented_error">Fonte não encontrada</string>
     <string name="action_disable">Desativar</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 capítulo</item>
+        <item quantity="one">%1$s capítulo</item>
         <item quantity="other">%1$s capítulos</item>
     </plurals>
     <string name="requires_app_restart">Requer o reinício do aplicativo para ter efeito</string>
@@ -505,7 +504,7 @@
     <string name="pref_category_reading_mode">Modo de leitura</string>
     <string name="pref_category_theme">Tema</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 monitorador</item>
+        <item quantity="one">%d monitorador</item>
         <item quantity="other">%d monitoradores</item>
     </plurals>
     <string name="no_pinned_sources">Você não tem fontes fixadas</string>
@@ -663,7 +662,7 @@
     <string name="pref_tablet_ui_mode">Interface de tablet</string>
     <string name="pref_remove_exclude_categories">Categorias ignoradas</string>
     <string name="help_translate">Ajudar a traduzir</string>
-    <string name="ext_app_info">Informações do app</string>
+    <string name="ext_app_info">Informações</string>
     <string name="ext_installer_shizuku_stopped">O Shizuku não está em execução</string>
     <string name="ext_installer_legacy">Legado</string>
     <string name="ext_installer_pref">Instalador</string>
@@ -714,4 +713,6 @@
     <string name="notification_update_error">%1$d atualização(ões) falhou(aram)</string>
     <string name="learn_more">Saiba mais</string>
     <string name="rotation_reverse_portrait">Retrato invertido</string>
+    <string name="action_move_to_top_all_for_series">Mover série para o topo</string>
+    <string name="disabled_nav">Desativado</string>
 </resources>

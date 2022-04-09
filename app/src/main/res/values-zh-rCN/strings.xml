@@ -121,7 +121,6 @@
     <string name="pref_reader_navigation">操作</string>
     <string name="pref_read_with_volume_keys">音量键翻页</string>
     <string name="pref_read_with_volume_keys_inverted">反转音量键</string>
-    <string name="pref_read_with_tapping">轻触翻页</string>
     <string name="pref_reader_theme">背景颜色</string>
     <string name="white_background">白色</string>
     <string name="black_background">黑色</string>
@@ -378,7 +377,7 @@
     <string name="email">电子邮件地址</string>
     <string name="pref_always_show_chapter_transition">始终显示章节间的过渡页面</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="other">共 %d 本漫画</item>
+        <item quantity="other">%d 本漫画</item>
     </plurals>
     <string name="action_menu">菜单</string>
     <string name="action_reorganize_by">重新排序</string>
@@ -510,7 +509,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">这并不能防止非官方或可能被错误标记的扩展插件在应用中显示 NSFW (18+) 内容。</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">跳过 %d 个章节，要么是缺少来源，要么是被过滤掉了</item>
+        <item quantity="other">跳过 %d 个章节，要么是图源缺少这些章节，要么是被过滤掉了</item>
     </plurals>
     <string name="no_chapters_error">未找到章节</string>
     <string name="chapter_settings_updated">已更新默认章节设置</string>
@@ -702,4 +701,6 @@
     <string name="notification_update_skipped">已跳过 %1$d 个更新</string>
     <string name="channel_skipped">已跳过</string>
     <string name="rotation_reverse_portrait">反转竖屏</string>
+    <string name="action_move_to_top_all_for_series">将连载移动到顶部</string>
+    <string name="disabled_nav">已禁用</string>
 </resources>

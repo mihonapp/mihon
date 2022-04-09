@@ -201,7 +201,6 @@
     <string name="white_background">ಬಿಳಿ</string>
     <string name="pref_reader_theme">ಹಿನ್ನೆಲೆ ಬಣ್ಣ</string>
     <string name="pref_read_with_long_tap">ಲಾಂಗ್ ಟ್ಯಾಪ್‌ನಲ್ಲಿ ತೋರಿಸಿ</string>
-    <string name="pref_read_with_tapping">ಟ್ಯಾಪಿಂಗ್</string>
     <string name="pref_read_with_volume_keys_inverted">ಧ್ವನಿ ಕೀಲಿಗಳನ್ನು ಬದಲಿಮಾಡಿ</string>
     <string name="pref_read_with_volume_keys">ಧ್ವನಿ ಕೀಲಿಗಳು</string>
     <string name="pref_reader_navigation">ನ್ಯಾವಿಗೇಷನ್</string>

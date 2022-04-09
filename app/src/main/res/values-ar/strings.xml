@@ -97,7 +97,6 @@
     <string name="pref_reader_navigation">التنقل</string>
     <string name="pref_read_with_volume_keys">أزرار الصوت</string>
     <string name="pref_read_with_volume_keys_inverted">أزرار الصوت المعكوسة</string>
-    <string name="pref_read_with_tapping">بالنقر</string>
     <string name="pref_reader_theme">لون الخلفية</string>
     <string name="white_background">أبيض</string>
     <string name="black_background">أسود</string>

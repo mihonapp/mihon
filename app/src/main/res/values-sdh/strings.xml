@@ -198,7 +198,6 @@
     <string name="webtoon_side_padding_10">10%</string>
     <string name="webtoon_side_padding_0">هیچ</string>
     <string name="notification_updating">نوێکردنەوەی تۆماری ڕابردوو…( (%2$d) / (%1$d) )</string>
-    <string name="pref_read_with_tapping">نەرمە لێدان</string>
     <string name="pref_read_with_tapping_inverted">نەرمە لێدانی پێچەوانە</string>
     <string name="tapping_inverted_none">هیچ</string>
     <string name="tapping_inverted_vertical">ستوونی</string>

@@ -98,7 +98,6 @@
     <string name="pref_reader_navigation">Navigasi</string>
     <string name="pref_read_with_volume_keys">Butang volum</string>
     <string name="pref_read_with_volume_keys_inverted">Songsangkan butang volum</string>
-    <string name="pref_read_with_tapping">Tekan skrin</string>
     <string name="pref_reader_theme">Warna latar</string>
     <string name="white_background">Putih</string>
     <string name="black_background">Hitam</string>
@@ -702,4 +701,5 @@
     <string name="channel_skipped">Dilangkau</string>
     <string name="learn_more">Ketahui selebihnya</string>
     <string name="rotation_reverse_portrait">Potret terbalik</string>
+    <string name="action_move_to_top_all_for_series">Alih siri ke atas</string>
 </resources>

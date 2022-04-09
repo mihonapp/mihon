@@ -251,7 +251,6 @@
     <string name="white_background">سفید</string>
     <string name="pref_reader_theme">رنگ پس زمینه</string>
     <string name="pref_read_with_long_tap">منوی ضربه طولانی</string>
-    <string name="pref_read_with_tapping">ضربه زدن</string>
     <string name="pref_read_with_volume_keys">دکمه‌های صدا</string>
     <string name="pref_read_with_volume_keys_inverted">معکوس کردن دکمه‌های صدا</string>
     <string name="pref_reader_navigation">نوار ناوبری Navigation</string>

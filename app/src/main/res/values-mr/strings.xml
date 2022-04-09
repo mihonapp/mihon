@@ -184,7 +184,6 @@
     <string name="white_background">पांढरा</string>
     <string name="pref_reader_theme">बॅकग्राऊंड रंग</string>
     <string name="pref_read_with_long_tap">दीर्घ टॅप संवाद</string>
-    <string name="pref_read_with_tapping">टप करत राहतांना</string>
     <string name="pref_read_with_volume_keys_inverted">व्हॉल्यूम की उलटा करा</string>
     <string name="pref_read_with_volume_keys">व्हॉल्यूम की</string>
     <string name="pref_reader_navigation">नॅव्हिगेशन</string>

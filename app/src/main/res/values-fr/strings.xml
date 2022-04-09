@@ -88,7 +88,6 @@
     <string name="pref_keep_screen_on">Garder l\'écran allumé</string>
     <string name="pref_reader_navigation">Navigation</string>
     <string name="pref_read_with_volume_keys">Boutons de volume</string>
-    <string name="pref_read_with_tapping">Appui</string>
     <string name="pref_reader_theme">Couleur de fond</string>
     <string name="white_background">Blanc</string>
     <string name="black_background">Noir</string>
@@ -384,7 +383,7 @@
     <string name="lock_always">Toujours</string>
     <string name="lock_never">Jamais</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Après 1 minute</item>
+        <item quantity="one">Après %1$s minute</item>
         <item quantity="other">Après %1$s minutes</item>
     </plurals>
     <string name="secure_screen">Mode discret</string>
@@ -397,7 +396,7 @@
     <string name="secure_screen_summary">L\'écran sécurisé cache le contenu lors du changement d\'application et bloque les captures d\'écran</string>
     <string name="pref_category_display">Affichage</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 nouveau chapitre</item>
+        <item quantity="one">%1$d nouveau chapitre</item>
         <item quantity="other">%1$d nouveaux chapitres</item>
     </plurals>
     <string name="notification_chapters_single">Chapitre %1$s</string>
@@ -415,7 +414,7 @@
     <string name="email">Adresse courriel</string>
     <string name="pref_always_show_chapter_transition">Toujours afficher la transition entre les chapitres</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Pour 1 titre</item>
+        <item quantity="one">Pour %d titre</item>
         <item quantity="other">Pour %d titres</item>
     </plurals>
     <string name="action_menu">Menu</string>
@@ -470,7 +469,7 @@
     <string name="information_webview_required">WebView est requis par Tachiyomi</string>
     <string name="local_source_help_guide">Guide des sources locales</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">1 restant</item>
+        <item quantity="one">%1$s restant</item>
         <item quantity="other">%1$s restants</item>
     </plurals>
     <string name="downloaded_only_summary">Filtrer tous les mangas dans la bibliothèque</string>
@@ -516,7 +515,7 @@
     <string name="action_start">Commencer</string>
     <string name="loader_not_implemented_error">Source non trouvée</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 chapitre</item>
+        <item quantity="one">%1$s chapitre</item>
         <item quantity="other">%1$s chapitres</item>
     </plurals>
     <string name="action_disable">Désactiver</string>
@@ -539,7 +538,7 @@
     <string name="pref_category_reading_mode">Mode de lecture</string>
     <string name="pref_category_theme">Thème</string>
     <plurals name="num_trackers">
-        <item quantity="one">Suivi par 1 service</item>
+        <item quantity="one">Suivi par %d service</item>
         <item quantity="other">Suivi par %d services</item>
     </plurals>
     <string name="no_pinned_sources">Vous n\'avez aucune source épinglée</string>
@@ -554,7 +553,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Cela n\'empêche pas les extensions non officielles ou potentiellement mal signalées de diffuser du contenu +18 dans l\'application.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Un chapitre a été sauté, soit la source ne l\'a pas, soit il a été filtré</item>
+        <item quantity="one">%d chapitre a été sauté, soit la source ne l\'a pas, soit il a été filtré</item>
         <item quantity="other">%d chapitres ont été sautés, soit la source ne l\'a pas, soit il ont été filtrés</item>
     </plurals>
     <string name="no_chapters_error">Aucun chapitre trouvé</string>
@@ -748,4 +747,5 @@
     <string name="notification_update_error">Échec de %1$d mise(s) à jour</string>
     <string name="channel_skipped">Ignoré</string>
     <string name="rotation_reverse_portrait">Portrait inversé</string>
+    <string name="action_move_to_top_all_for_series">Déplacer la série vers le haut</string>
 </resources>

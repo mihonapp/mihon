@@ -60,7 +60,6 @@
     <string name="white_background">Branco</string>
     <string name="pref_reader_theme">Cor de fondo</string>
     <string name="pref_read_with_long_tap">Diálogo de toque longo</string>
-    <string name="pref_read_with_tapping">Toques</string>
     <string name="pref_read_with_volume_keys_inverted">Invertir teclas de volume</string>
     <string name="pref_read_with_volume_keys">Teclas de volume</string>
     <string name="pref_reader_navigation">Navegación</string>

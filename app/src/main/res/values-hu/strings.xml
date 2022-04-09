@@ -50,7 +50,6 @@
     <string name="pref_reader_navigation">Lapozás</string>
     <string name="pref_read_with_volume_keys">Hangerőszabályzó gombokkal</string>
     <string name="pref_read_with_volume_keys_inverted">Gombok felcserélése</string>
-    <string name="pref_read_with_tapping">Koppintással</string>
     <string name="pref_reader_theme">Háttérszín</string>
     <string name="pref_download_directory">Letöltések helye</string>
     <string name="version">Verzió</string>

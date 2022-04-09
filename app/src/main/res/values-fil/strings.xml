@@ -102,7 +102,7 @@
     <string name="label_more">Karagdagan</string>
     <string name="name">Pangalan</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Pagkatapos ng isang minuto</item>
+        <item quantity="one">Pagkatapos ng %1$s minuto</item>
         <item quantity="other">Pagkatapos ng %1$s (na) minuto</item>
     </plurals>
     <string name="lock_never">Hindi</string>
@@ -177,7 +177,6 @@
     <string name="white_background">Puti</string>
     <string name="pref_reader_theme">Likurang kulay</string>
     <string name="pref_read_with_long_tap">Ipakita kapag mahabang pindot</string>
-    <string name="pref_read_with_tapping">Pagpindot</string>
     <string name="pref_read_with_volume_keys_inverted">Baligtarin ang pindutan ng volume</string>
     <string name="pref_read_with_volume_keys">Pindutan ng volume</string>
     <string name="pref_reader_navigation">Nabigasyon</string>
@@ -323,11 +322,11 @@
     <string name="notification_chapters_single_and_more">Kabanata %1$s at karagdagang %2$d pa</string>
     <string name="notification_chapters_single">Kabanata %1$s</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">Isang bagong kabanata</item>
-        <item quantity="other">%1$d (na) bagong kabanata</item>
+        <item quantity="one">%1$d bagong kabanata</item>
+        <item quantity="other">%1$d na bagong kabanata</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Para sa isang serye</item>
+        <item quantity="one">Para sa %d serye</item>
         <item quantity="other">Para sa $d (na) serye</item>
     </plurals>
     <string name="notification_new_chapters">May mga bagong kabanata</string>
@@ -408,7 +407,7 @@
 \n%1$s</string>
     <string name="delete_downloads_for_manga">Burahin ang mga na-download na kabanata\?</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">Isang kabanata</item>
+        <item quantity="one">%1$s kabanata</item>
         <item quantity="other">%1$s (na) kabanata</item>
     </plurals>
     <string name="manga_info_expand">Palawakin</string>
@@ -454,7 +453,7 @@
     <string name="username">Sagisag (username)</string>
     <string name="login_title">Mag-login sa %1$s</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">1 na lang</item>
+        <item quantity="one">%1$s na lang</item>
         <item quantity="other">%1$s na lang</item>
     </plurals>
     <string name="downloaded_only_summary">Isalâ ang Aklatan</string>
@@ -505,7 +504,7 @@
     <string name="backup_in_progress">Bina-backup na</string>
     <string name="restore_duration">%02d (na) min, %02d (na) seg</string>
     <plurals name="num_trackers">
-        <item quantity="one">Isang tracker</item>
+        <item quantity="one">%d tracker</item>
         <item quantity="other">%d (na) tracker</item>
     </plurals>
     <string name="no_pinned_sources">Wala kang naka-pin na pinagkukunan</string>
@@ -520,7 +519,7 @@
     <string name="ext_nsfw_warning">Maaaring may NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Lalaktawan ang isang kabanata, siguro baka wala sa source ito, o baka nasala ito</item>
+        <item quantity="one">Lalaktawan ang %d kabanata, siguro baka wala sa source ito, o baka nasala ito</item>
         <item quantity="other">Lalaktawan ang %d (na) kabanata, siguro baka wala sa source sila, o baka nasala sila</item>
     </plurals>
     <string name="no_chapters_error">Walang nakitang kabanata</string>
@@ -714,4 +713,5 @@
     <string name="notification_update_error">Pumalya ang %1$d (na) update</string>
     <string name="rotation_reverse_portrait">Baligtad na patayo</string>
     <string name="notification_update_skipped">Nilaktawan ang %1$d (na) update</string>
+    <string name="action_move_to_top_all_for_series">Ilagay sa taas ang serye</string>
 </resources>

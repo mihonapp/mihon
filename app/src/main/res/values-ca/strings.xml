@@ -120,7 +120,6 @@
     <string name="pref_reader_navigation">Navegació</string>
     <string name="pref_read_with_volume_keys">Tecles de volum</string>
     <string name="pref_read_with_volume_keys_inverted">Inverteix les tecles de volum</string>
-    <string name="pref_read_with_tapping">En prémer</string>
     <string name="pref_reader_theme">Color de fons</string>
     <string name="white_background">Blanc</string>
     <string name="black_background">Negre</string>
@@ -350,7 +349,7 @@
     <string name="lock_always">Sempre</string>
     <string name="lock_never">Mai</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Després d\'1 minut</item>
+        <item quantity="one">Després d\'%1$s minut</item>
         <item quantity="other">Després de %1$s minuts</item>
     </plurals>
     <string name="secure_screen">Mode discret</string>
@@ -363,7 +362,7 @@
     <string name="secure_screen_summary">El mode discret amaga el contingut de l\'aplicació en canviar entre aplicacions i bloca les captures de pantalla</string>
     <string name="pref_category_display">Visualització</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 capítol nou</item>
+        <item quantity="one">%1$d capítol nou</item>
         <item quantity="other">%1$d capítols nous</item>
     </plurals>
     <string name="notification_chapters_single">Capítol %1$s</string>
@@ -381,7 +380,7 @@
     <string name="email">Adreça electrònica</string>
     <string name="pref_always_show_chapter_transition">Mostra sempre la transició de capítol</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Per a 1 títol</item>
+        <item quantity="one">Per a %d títol</item>
         <item quantity="other">Per a %d títols</item>
     </plurals>
     <string name="action_menu">Menú</string>
@@ -437,7 +436,7 @@
     <string name="restore_duration">%02d min i %02d s</string>
     <string name="downloaded_only_summary">Filtra tot el manga de la vostra biblioteca</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">En resta 1</item>
+        <item quantity="one">En resta %1$s</item>
         <item quantity="other">En resten %1$s</item>
     </plurals>
     <string name="pref_search_pinned_sources_only">Inclou només les fonts fixades</string>
@@ -485,7 +484,7 @@
     <string name="download_insufficient_space">No s\'han pogut baixar els capítols perquè hi ha poc espai d\'emmagatzematge</string>
     <string name="loader_not_implemented_error">No s\'ha trobat la font</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 capítol</item>
+        <item quantity="one">%1$s capítol</item>
         <item quantity="other">%1$s capítols</item>
     </plurals>
     <string name="unknown_status">Estat desconegut</string>
@@ -505,7 +504,7 @@
     <string name="action_download_unread">Baixa els capítols no llegits</string>
     <string name="action_sort_date_added">Data d\'incorporació</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 seguidor</item>
+        <item quantity="one">%d seguidor</item>
         <item quantity="other">%d seguidors</item>
     </plurals>
     <string name="no_pinned_sources">No teniu cap origen fixat</string>
@@ -520,7 +519,7 @@
     <string name="ext_nsfw_short">+18</string>
     <string name="parental_controls_info">Això no evita que les extensions no oficials o possiblement mal etiquetades puguin mostrar contingut NSFW (+18) a l\'aplicació.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">S\'ha omès 1 capítol. És possible que manqui a la font o que hagi estat filtrat</item>
+        <item quantity="one">S\'ha omès %d capítol. És possible que manqui a la font o que hagi estat filtrat</item>
         <item quantity="other">S\'han omès %d capítols. És possible que manquin a la font o que hagin estat filtrats</item>
     </plurals>
     <string name="no_chapters_error">No s\'ha trobat cap capítol</string>
@@ -714,4 +713,5 @@
     <string name="notification_update_error">Han fallat %1$d actualitzacions</string>
     <string name="notification_update_skipped">S\'han omès %1$d actualitzacions</string>
     <string name="rotation_reverse_portrait">Vertical inversa</string>
+    <string name="action_move_to_top_all_for_series">Mou la sèrie a dalt de tot</string>
 </resources>

@@ -259,7 +259,6 @@
     <string name="tapping_inverted_horizontal">Гарызантальна</string>
     <string name="tapping_inverted_none">Не</string>
     <string name="pref_read_with_tapping_inverted">Націск наадварот</string>
-    <string name="pref_read_with_tapping">Націск</string>
     <string name="pref_read_with_volume_keys_inverted">Інвертаваць клавішы рэгулявання гучнасці</string>
     <string name="pref_read_with_volume_keys">Клавішы рэгулявання гучнасці</string>
     <string name="pref_reader_navigation">Навігацыя</string>

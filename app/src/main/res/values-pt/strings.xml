@@ -73,7 +73,6 @@
     <string name="pref_keep_screen_on">Manter o ecrã ligado</string>
     <string name="pref_reader_navigation">Navegação</string>
     <string name="pref_read_with_volume_keys">Teclas de volume</string>
-    <string name="pref_read_with_tapping">Toque</string>
     <string name="pref_reader_theme">Cor de fundo</string>
     <string name="white_background">Branco</string>
     <string name="black_background">Preto</string>
@@ -725,4 +724,6 @@
     <string name="publishing_finished">Publicação concluída</string>
     <string name="cancelled">Cancelado</string>
     <string name="action_faq_and_guides">Perguntas frequentes e Guias</string>
+    <string name="action_show_manga">Mostrar mangá</string>
+    <string name="action_filter_started">Iniciado</string>
 </resources>

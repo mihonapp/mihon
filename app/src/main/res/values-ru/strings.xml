@@ -148,7 +148,6 @@
     <string name="pref_library_columns">Количество серий</string>
     <string name="pref_library_update_interval">Автоматические обновления</string>
     <string name="pref_library_update_restriction">Ограничения обновлений для устройства</string>
-    <string name="pref_read_with_tapping">Нажатие</string>
     <string name="pref_read_with_volume_keys">Клавиши громкости</string>
     <string name="pref_reader_navigation">Навигация</string>
     <string name="pref_reader_theme">Цвет фона</string>
@@ -387,7 +386,7 @@
     <string name="http_error_hint">Проверить сайт в WebView</string>
     <string name="battery_optimization_disabled">Оптимизация батареи уже выключена</string>
     <string name="pref_disable_battery_optimization_summary">Помогает с обновлением библиотеки и резервной копией в фоне</string>
-    <string name="pref_disable_battery_optimization">Выключить оптимизацию батареи</string>
+    <string name="pref_disable_battery_optimization">Отключить оптимизацию батареи</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Доступно обновление для %d расширения</item>
         <item quantity="few">Доступны обновления для %d расширений</item>
@@ -491,7 +490,7 @@
     <string name="action_display_show_tabs">Вкладки категорий</string>
     <string name="page_list_empty_error">Страницы не найдены</string>
     <string name="action_enable_all">Включить всё</string>
-    <string name="action_disable_all">Выключить всё</string>
+    <string name="action_disable_all">Отключить всё</string>
     <string name="pref_show_reading_mode_summary">Ненадолго показать режим чтения после открытия читалки</string>
     <string name="pref_show_reading_mode">Показать режим чтения</string>
     <string name="action_start">Начать</string>
@@ -737,4 +736,6 @@
     <string name="notification_update_error">%1$d обновление(ий) не удалось</string>
     <string name="notification_update_skipped">%1$d обновление(ий) пропущено</string>
     <string name="rotation_reverse_portrait">Портретная наоборот</string>
+    <string name="action_move_to_top_all_for_series">Переместить серию в начало</string>
+    <string name="disabled_nav">Отключено</string>
 </resources>

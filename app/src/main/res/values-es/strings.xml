@@ -73,7 +73,6 @@
     <string name="pref_keep_screen_on">Mantener la pantalla encendida</string>
     <string name="pref_reader_navigation">Navegación</string>
     <string name="pref_read_with_volume_keys">Con las teclas de volumen</string>
-    <string name="pref_read_with_tapping">Tocando la pantalla</string>
     <string name="pref_reader_theme">Color de fondo</string>
     <string name="white_background">Blanco</string>
     <string name="black_background">Negro</string>
@@ -382,7 +381,7 @@
     <string name="lock_always">Siempre</string>
     <string name="lock_never">Nunca</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Tras 1 minuto</item>
+        <item quantity="one">Tras %1$s minuto</item>
         <item quantity="other">Tras %1$s minutos</item>
     </plurals>
     <string name="secure_screen">Pantalla segura</string>
@@ -395,7 +394,7 @@
     <string name="secure_screen_summary">Pantalla segura oculta el contenido al cambiar de aplicación y bloquea las capturas de pantalla</string>
     <string name="pref_category_display">Visualización</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 nuevo capítulo</item>
+        <item quantity="one">%1$d nuevo capítulo</item>
         <item quantity="other">%1$d nuevos capítulos</item>
     </plurals>
     <string name="notification_chapters_single">Capítulo %1$s</string>
@@ -413,7 +412,7 @@
     <string name="battery_optimization_disabled">La optimización de la batería ya está desactivada</string>
     <string name="pref_always_show_chapter_transition">Hacer transición entre capítulos</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Para 1 título</item>
+        <item quantity="one">Para %d título</item>
         <item quantity="other">Para %d títulos</item>
     </plurals>
     <string name="action_menu">Menú</string>
@@ -468,7 +467,7 @@
     <string name="check_for_updates">Buscar actualizaciones</string>
     <string name="local_source_help_guide">Guía de fuente local</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">Queda 1</item>
+        <item quantity="one">Queda %1$s</item>
         <item quantity="other">Quedan %1$s</item>
     </plurals>
     <string name="downloaded_only_summary">Filtra todo el manga de tu biblioteca para ver solo el que esté disponible sin conexión</string>
@@ -513,7 +512,7 @@
     <string name="action_start">Empezar</string>
     <string name="loader_not_implemented_error">No se ha encontrado la fuente</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 capítulo</item>
+        <item quantity="one">%1$s capítulo</item>
         <item quantity="other">%1$s capítulos</item>
     </plurals>
     <string name="action_disable">Desactivar</string>
@@ -536,7 +535,7 @@
     <string name="pref_category_theme">Tema de colores</string>
     <string name="action_sort_date_added">Por fecha en la biblioteca</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 servicio de seguimiento</item>
+        <item quantity="one">%d servicio de seguimiento</item>
         <item quantity="other">%d servicios de seguimiento</item>
     </plurals>
     <string name="no_pinned_sources">Todavía no has anclado ninguna fuente</string>
@@ -745,4 +744,6 @@
     <string name="notification_update_error">Actualizaciones fallidas: %1$d</string>
     <string name="notification_update_skipped">Actualizaciones omitidas: %1$d</string>
     <string name="rotation_reverse_portrait">En vertical, al revés</string>
+    <string name="action_move_to_top_all_for_series">Mover al primer puesto</string>
+    <string name="disabled_nav">Desactivado</string>
 </resources>

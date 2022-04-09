@@ -99,7 +99,6 @@
     <string name="pref_reader_navigation">पथ प्रदर्शन</string>
     <string name="pref_read_with_volume_keys">ध्वनि कुंजी</string>
     <string name="pref_read_with_volume_keys_inverted">ध्वनि कुंजी पलटे</string>
-    <string name="pref_read_with_tapping">थपथपाना</string>
     <string name="pref_reader_theme">पीछे का रंग</string>
     <string name="white_background">सफेद</string>
     <string name="black_background">काला</string>
@@ -363,7 +362,7 @@
     <string name="secure_screen_summary">सुरक्षित स्क्रीन एप्लिकेशन स्विच करते समय एप्लिकेशन सामग्री छिपाता हैं और स्क्रीनशॉट ब्लॉक करता हैं</string>
     <string name="pref_category_display">प्रदर्शन</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 नया अध्याय</item>
+        <item quantity="one">%1$d नया अध्याय</item>
         <item quantity="other">%1$d नए अध्याय</item>
     </plurals>
     <string name="notification_chapters_single">अध्याय %1$s</string>
@@ -429,7 +428,7 @@
     <string name="creating_backup_error">बैकअप फेल</string>
     <string name="restoring_backup_canceled">पुनर्स्थापना रद्द की गई</string>
     <string name="restore_in_progress">पुनर्स्थापना पहले से ही प्रगति पर है</string>
-    <string name="backup_in_progress">बैकप पहले से ही प्रगति पर है</string>
+    <string name="backup_in_progress">बैकप पहले से ही प्रगति में है</string>
     <string name="error_invalid_date_supplied">अमान्य दिनांक को आपूर्ति की गई</string>
     <string name="last_used_source">आखरी इस्त्तमाल किया गया</string>
     <string name="check_for_updates">अद्यतन के लिए जाँच</string>
@@ -704,4 +703,6 @@
     <string name="skipped_reason_not_started">छोड़ दिया गया क्योंकि कोई अध्याय पढ़ा नहीं गया</string>
     <string name="pref_update_only_started">कोई अध्याय नहीं पढ़ा</string>
     <string name="action_show_manga">मंगा दिखाएँ</string>
+    <string name="action_filter_started">शुरू किया</string>
+    <string name="action_display_cover_only_grid">केवल कवर ग्रिड</string>
 </resources>

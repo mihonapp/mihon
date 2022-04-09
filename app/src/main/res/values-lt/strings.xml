@@ -300,7 +300,6 @@
     <string name="filter_mode_overlay">Perdanga</string>
     <string name="pref_reader_navigation">Navigacija</string>
     <string name="pref_read_with_volume_keys_inverted">Apkeisti garso mygtukus</string>
-    <string name="pref_read_with_tapping">Paspaudžiant</string>
     <string name="pref_read_with_tapping_inverted">Atvirkštinis spaudinėjimas</string>
     <string name="black_background">Juoda</string>
     <string name="automatic_background">Automatinis</string>

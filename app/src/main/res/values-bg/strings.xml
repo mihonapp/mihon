@@ -89,7 +89,6 @@
     <string name="pref_keep_screen_on">Не изключвай екрана</string>
     <string name="pref_reader_navigation">Навигация</string>
     <string name="pref_read_with_volume_keys">Бутони за звука</string>
-    <string name="pref_read_with_tapping">Докосване</string>
     <string name="pref_reader_theme">Цвят на фона</string>
     <string name="white_background">Бял</string>
     <string name="black_background">Черен</string>

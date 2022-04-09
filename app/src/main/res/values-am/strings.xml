@@ -226,7 +226,6 @@
     <string name="white_background">ነጭ</string>
     <string name="pref_reader_theme">የጀርባ ቀለም</string>
     <string name="pref_read_with_long_tap">ረጅም መታ መገናኛ</string>
-    <string name="pref_read_with_tapping">መታ ማድረግ</string>
     <string name="pref_read_with_volume_keys_inverted">የድምጽ ቁልፎችን ገልብጥ</string>
     <string name="pref_read_with_volume_keys">የድምፅ ቁልፎች</string>
     <string name="pref_reader_navigation">አሰሳ</string>
