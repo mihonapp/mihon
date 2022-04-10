@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -278,7 +279,8 @@ class Downloader(
                     .groupBy { it.source }
                     .filterKeys { it !is UnmeteredSource }
                     .maxOf { it.value.size }
-                if (maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
+                // TODO: show warnings in stable
+                if (maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD && BuildConfig.FLAVOR != "stable") {
                     withUIContext {
                         context.toast(R.string.download_queue_size_warning, Toast.LENGTH_LONG)
                     }

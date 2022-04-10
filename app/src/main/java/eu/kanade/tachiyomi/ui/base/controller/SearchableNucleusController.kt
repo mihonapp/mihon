@@ -68,7 +68,8 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
                 editable.getSpans(0, editable.length, CharacterStyle::class.java)
                     .forEach { editable.removeSpan(it) }
             }
-        },)
+        },
+        )
 
         searchView.queryTextEvents()
             .onEach {

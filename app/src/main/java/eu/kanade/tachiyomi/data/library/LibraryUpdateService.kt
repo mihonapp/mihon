@@ -7,6 +7,7 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -270,7 +271,8 @@ class LibraryUpdateService(
             .groupBy { it.source }
             .filterKeys { sourceManager.get(it) !is UnmeteredSource }
             .maxOfOrNull { it.value.size } ?: 0
-        if (maxUpdatesFromSource > MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
+        // TODO: show warnings in stable
+        if (maxUpdatesFromSource > MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD && BuildConfig.FLAVOR != "stable") {
             toast(R.string.notification_size_warning, Toast.LENGTH_LONG)
         }
     }
