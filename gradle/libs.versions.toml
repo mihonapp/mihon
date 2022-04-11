@@ -76,7 +76,7 @@ flowbinding-viewpager = { module = "io.github.reactivecircus.flowbinding:flowbin
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-acra-http = "ch.acra:acra-http:5.8.4"
+acra-http = "ch.acra:acra-http:5.9.0"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:20.0.2"
 
 aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlib_version" }

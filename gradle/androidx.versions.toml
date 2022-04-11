@@ -19,9 +19,11 @@ lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.r
 lifecycle-runtimektx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle_version" }
 
 work-runtime = "androidx.work:work-runtime-ktx:2.6.0"
+guava = "com.google.guava:guava:31.1-android"
 
 [bundles]
-lifecycle = ["lifecycle-common","lifecycle-process","lifecycle-runtimektx"]
+lifecycle = ["lifecycle-common", "lifecycle-process", "lifecycle-runtimektx"]
+workmanager = ["work-runtime", "guava"]
 
 [plugins]
 application = { id = "com.android.application", version.ref="agp_version"}

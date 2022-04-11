@@ -170,7 +170,7 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         if (BuildConfig.FLAVOR != "dev") {
             initAcra {
                 buildConfigClass = BuildConfig::class.java
-                excludeMatchingSharedPreferencesKeys = arrayOf(".*username.*", ".*password.*", ".*token.*")
+                excludeMatchingSharedPreferencesKeys = listOf(".*username.*", ".*password.*", ".*token.*")
 
                 httpSender {
                     uri = BuildConfig.ACRA_URI
