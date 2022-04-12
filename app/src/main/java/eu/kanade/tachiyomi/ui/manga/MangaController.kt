@@ -795,7 +795,7 @@ class MangaController :
             }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
-            activity?.toast(R.string.error_saving_cover)
+            activity?.toast(R.string.error_sharing_cover)
         }
     }
 
