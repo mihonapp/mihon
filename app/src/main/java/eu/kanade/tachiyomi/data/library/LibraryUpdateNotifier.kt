@@ -128,8 +128,9 @@ class LibraryUpdateNotifier(private val context: Context) {
             Notifications.ID_LIBRARY_SKIPPED,
             context.notificationBuilder(Notifications.CHANNEL_LIBRARY_SKIPPED) {
                 setContentTitle(context.resources.getString(R.string.notification_update_skipped, skipped))
+                setContentText(context.getString(R.string.learn_more))
                 setSmallIcon(R.drawable.ic_tachi)
-                addAction(R.drawable.ic_help_24dp, context.getString(R.string.learn_more), NotificationHandler.openUrl(context, HELP_SKIPPED_URL))
+                setContentIntent(NotificationHandler.openUrl(context, HELP_SKIPPED_URL))
             }
                 .build(),
         )

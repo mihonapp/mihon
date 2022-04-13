@@ -740,7 +740,7 @@
     </plurals>
     <string name="notification_update_error">%1$d update(s) failed</string>
     <string name="notification_update_skipped">%1$d update(s) skipped</string>
-    <string name="learn_more">Learn more</string>
+    <string name="learn_more">Tap to learn more</string>
     <string name="notification_cover_update_failed">Failed to update cover</string>
     <string name="notification_first_add_to_library">Please add the manga to your library before doing this</string>
     <string name="library_errors_help">For help on how to fix library update errors, see %1$s</string>
