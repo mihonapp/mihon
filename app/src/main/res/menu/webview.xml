@@ -31,4 +31,9 @@
         android:title="@string/action_open_in_browser"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_clear_cookies"
+        android:title="@string/pref_clear_cookies"
+        app:showAsAction="never" />
+
 </menu>

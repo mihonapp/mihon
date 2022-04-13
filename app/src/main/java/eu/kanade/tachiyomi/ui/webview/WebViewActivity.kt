@@ -17,17 +17,20 @@ import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.WebviewActivityBinding
+import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import reactivecircus.flowbinding.appcompat.navigationClicks
 import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import uy.kohesive.injekt.injectLazy
@@ -37,10 +40,15 @@ class WebViewActivity : BaseActivity() {
     private lateinit var binding: WebviewActivityBinding
 
     private val sourceManager: SourceManager by injectLazy()
+    private val network: NetworkHelper by injectLazy()
 
     private var bundle: Bundle? = null
 
     private var isRefreshing: Boolean = false
+
+    init {
+        registerSecureActivity(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -176,6 +184,7 @@ class WebViewActivity : BaseActivity() {
             R.id.action_web_refresh -> refreshPage()
             R.id.action_web_share -> shareWebpage()
             R.id.action_web_browser -> openInBrowser()
+            R.id.action_clear_cookies -> clearCookies()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -207,8 +216,10 @@ class WebViewActivity : BaseActivity() {
         openInBrowser(binding.webview.url!!, forceDefaultBrowser = true)
     }
 
-    init {
-        registerSecureActivity(this)
+    private fun clearCookies() {
+        val url = binding.webview.url!!
+        val cleared = network.cookieManager.remove(url.toHttpUrl())
+        logcat { "Cleared $cleared cookies for: $url" }
     }
 
     companion object {

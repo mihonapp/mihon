@@ -29,9 +29,9 @@ class AndroidCookieJar : CookieJar {
         }
     }
 
-    fun remove(url: HttpUrl, cookieNames: List<String>? = null, maxAge: Int = -1) {
+    fun remove(url: HttpUrl, cookieNames: List<String>? = null, maxAge: Int = -1): Int {
         val urlString = url.toString()
-        val cookies = manager.getCookie(urlString) ?: return
+        val cookies = manager.getCookie(urlString) ?: return 0
 
         fun List<String>.filterNames(): List<String> {
             return if (cookieNames != null) {
@@ -41,10 +41,11 @@ class AndroidCookieJar : CookieJar {
             }
         }
 
-        cookies.split(";")
+        return cookies.split(";")
             .map { it.substringBefore("=") }
             .filterNames()
             .onEach { manager.setCookie(urlString, "$it=;Max-Age=$maxAge") }
+            .count()
     }
 
     fun removeAll() {

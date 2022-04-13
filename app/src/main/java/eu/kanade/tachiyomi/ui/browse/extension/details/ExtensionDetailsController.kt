@@ -259,11 +259,11 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
             ?.map { it.baseUrl }
             ?.distinct() ?: emptyList()
 
-        urls.forEach {
+        val cleared = urls.sumOf {
             network.cookieManager.remove(it.toHttpUrl())
         }
 
-        logcat { "Cleared cookies for: ${urls.joinToString()}" }
+        logcat { "Cleared $cleared cookies for: ${urls.joinToString()}" }
     }
 
     private fun Source.isEnabled(): Boolean {
