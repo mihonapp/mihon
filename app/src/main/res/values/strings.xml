@@ -669,6 +669,7 @@
 
     <!-- Image notifier -->
     <string name="picture_saved">Picture saved</string>
+    <string name="error_saving_picture">Error saving picture</string>
 
     <!-- Reader activity -->
     <string name="custom_filter">Custom filter</string>

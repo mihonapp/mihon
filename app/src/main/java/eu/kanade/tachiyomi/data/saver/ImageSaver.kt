@@ -13,6 +13,8 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.ImageUtil
+import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 import okio.IOException
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -30,11 +32,7 @@ class ImageSaver(
         val type = ImageUtil.findImageType(data) ?: throw Exception("Not an image")
         val filename = DiskUtil.buildValidFilename("${image.name}.${type.extension}")
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            return save(data(), image.location.directory(context), filename)
-        }
-
-        if (image.location !is Location.Pictures) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || image.location !is Location.Pictures) {
             return save(data(), image.location.directory(context), filename)
         }
 
@@ -54,13 +52,18 @@ class ImageSaver(
         val picture = context.contentResolver.insert(
             pictureDir,
             contentValues,
-        ) ?: throw IOException("Couldn't create file")
+        ) ?: throw IOException(context.getString(R.string.error_saving_picture))
 
-        data().use { input ->
-            @Suppress("BlockingMethodInNonBlockingContext")
-            context.contentResolver.openOutputStream(picture, "w").use { output ->
-                input.copyTo(output!!)
+        try {
+            data().use { input ->
+                @Suppress("BlockingMethodInNonBlockingContext")
+                context.contentResolver.openOutputStream(picture, "w").use { output ->
+                    input.copyTo(output!!)
+                }
             }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            throw IOException(context.getString(R.string.error_saving_picture))
         }
 
         DiskUtil.scanMedia(context, picture)
