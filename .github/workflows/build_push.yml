@@ -6,9 +6,6 @@ on:
     tags:
       - v*
 
-permissions:
-  contents: read
-
 jobs:
   build:
     name: Build app
@@ -26,9 +23,6 @@ jobs:
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
-
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v1
 
       - name: Set up JDK 11
         uses: actions/setup-java@v1
