@@ -59,6 +59,22 @@ internal class AppUpdateNotifier(private val context: Context) {
     }
 
     /**
+     * Some people are still installing the app from F-Droid, so we avoid prompting GitHub-based
+     * updates.
+     *
+     * We can prompt them to migrate to the GitHub version though.
+     */
+    fun promptFdroidUpdate() {
+        with(notificationBuilder) {
+            setContentTitle(context.getString(R.string.update_check_notification_update_available))
+            setContentText(context.getString(R.string.update_check_fdroid_migration_info))
+            setSmallIcon(R.drawable.ic_tachi)
+            setContentIntent(NotificationHandler.openUrl(context, "https://tachiyomi.org/help/guides/troubleshooting/#unable-to-install-the-app-or-extensions"))
+        }
+        notificationBuilder.show()
+    }
+
+    /**
      * Call when apk download starts.
      *
      * @param title tile of notification.

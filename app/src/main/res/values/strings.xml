@@ -765,6 +765,7 @@
     <string name="update_check_notification_download_complete">Download complete</string>
     <string name="update_check_notification_download_error">Download error</string>
     <string name="update_check_notification_update_available">New version available!</string>
+    <string name="update_check_fdroid_migration_info">A new version is available from the official releases. Tap to learn how to migrate from unofficial F-Droid releases.</string>
 
     <!--Extension Updates Notifications-->
     <plurals name="update_check_notification_ext_updates">

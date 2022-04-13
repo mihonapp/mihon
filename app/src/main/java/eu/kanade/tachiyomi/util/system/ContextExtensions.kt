@@ -382,6 +382,19 @@ fun Context.isPackageInstalled(packageName: String): Boolean {
     }
 }
 
+fun Context.getInstallerPackageName(): String? {
+    return try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            packageManager.getInstallSourceInfo(packageName).installingPackageName
+        } else {
+            @Suppress("DEPRECATION")
+            packageManager.getInstallerPackageName(packageName)
+        }
+    } catch (e: Exception) {
+        null
+    }
+}
+
 fun Context.getApplicationIcon(pkgName: String): Drawable? {
     return try {
         packageManager.getApplicationIcon(pkgName)
