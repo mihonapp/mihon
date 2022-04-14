@@ -244,11 +244,6 @@ class ExtensionManager(
         installer.updateInstallStep(downloadId, InstallStep.Installing)
     }
 
-    fun setInstallationResult(downloadId: Long, result: Boolean) {
-        val step = if (result) InstallStep.Installed else InstallStep.Error
-        installer.updateInstallStep(downloadId, step)
-    }
-
     fun updateInstallStep(downloadId: Long, step: InstallStep) {
         installer.updateInstallStep(downloadId, step)
     }

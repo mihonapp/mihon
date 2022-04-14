@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.os.Looper
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationManagerCompat
@@ -152,14 +153,10 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
     override fun getPackageName(): String {
         try {
             // Override the value passed as X-Requested-With in WebView requests
-            val stackTrace = Thread.currentThread().stackTrace
-            for (element in stackTrace) {
-                if ("org.chromium.base.BuildInfo".equals(element.className, ignoreCase = true)) {
-                    if ("getAll".equals(element.methodName, ignoreCase = true)) {
-                        return WebViewUtil.SPOOF_PACKAGE_NAME
-                    }
-                    break
-                }
+            val stackTrace = Looper.getMainLooper().thread.stackTrace
+            val chromiumElement = stackTrace.find { it.className.equals("org.chromium.base.BuildInfo", ignoreCase = true) }
+            if (chromiumElement?.methodName.equals("getAll", ignoreCase = true)) {
+                return WebViewUtil.SPOOF_PACKAGE_NAME
             }
         } catch (e: Exception) {
         }
