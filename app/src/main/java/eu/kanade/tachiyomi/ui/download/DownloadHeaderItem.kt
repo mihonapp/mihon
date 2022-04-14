@@ -36,7 +36,7 @@ data class DownloadHeaderItem(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other is DownloadHeaderItem) {
-            return name == other.name
+            return id == other.id && name == other.name
         }
         return false
     }
