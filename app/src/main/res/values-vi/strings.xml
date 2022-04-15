@@ -629,7 +629,7 @@
     <string name="date">Ngày</string>
     <string name="local_filter_order_by">Xếp theo</string>
     <string name="local_invalid_format">Định dạng chương không đúng</string>
-    <string name="chapter_not_found">Chương không tìm thấy</string>
+    <string name="chapter_not_found">Không tìm thấy chương</string>
     <string name="on">Bật</string>
     <string name="off">Tắt</string>
     <string name="pref_library_update_refresh_trackers_summary">Cập nhật theo dõi khi cập nhật thư viện</string>
@@ -736,4 +736,5 @@
     <string name="skipped_reason_not_started">Đã bỏ qua vì không có chương được đọc</string>
     <string name="channel_skipped">Bỏ qua</string>
     <string name="action_move_to_top_all_for_series">Di chuyển bộ truyện lên đầu</string>
+    <string name="disabled_nav">Vô hiệu hóa</string>
 </resources>

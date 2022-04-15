@@ -620,4 +620,7 @@
     <string name="theme_tako">Tako</string>
     <string name="theme_yinyang">Yin și Yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
+    <string name="publishing_finished">Editare finalizată</string>
+    <string name="cancelled">Anulat</string>
+    <string name="on_hiatus">În pauză</string>
 </resources>

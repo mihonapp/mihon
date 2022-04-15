@@ -506,7 +506,7 @@
     <string name="pref_category_delete_chapters">刪除章節</string>
     <string name="chapter_settings_updated">已更新章節設定預設值</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">略過了 %d 章，也許是來源沒有這些章節，或其已被你的篩選規則排除</item>
+        <item quantity="other">略過了 %d 章，也許是來源沒有這些章節，或其已被篩選規則排除</item>
     </plurals>
     <string name="action_search_settings">搜尋設定</string>
     <string name="chapter_settings">章節設定</string>
@@ -701,4 +701,6 @@
     <string name="notification_update_error">%1$d 項更新失敗</string>
     <string name="notification_update_skipped">已略過 %1$d 項更新</string>
     <string name="channel_skipped">略過</string>
+    <string name="action_move_to_top_all_for_series">置頂此叢書</string>
+    <string name="disabled_nav">已停用</string>
 </resources>

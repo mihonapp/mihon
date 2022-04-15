@@ -271,7 +271,7 @@
     <string name="notification_first_add_to_library">Prije toga, dodaj manga u biblioteku</string>
     <string name="notification_cover_update_failed">Neuspjelo ažuriranje naslovnice</string>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">Poglavlja %1$s i još %2$s</item>
+        <item quantity="one">Poglavlja %1$s i još jedno</item>
         <item quantity="few">Poglavlja %1$s i još %2$s</item>
         <item quantity="other">Poglavlja %1$s i još %2$s</item>
     </plurals>
@@ -726,4 +726,5 @@
     <string name="notification_update_skipped">Preskočena aktualiziranja: %1$d</string>
     <string name="rotation_reverse_portrait">Preokrenuto uspravno</string>
     <string name="action_move_to_top_all_for_series">Pomakni serijal na vrh</string>
+    <string name="disabled_nav">Deaktivirano</string>
 </resources>

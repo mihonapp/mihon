@@ -711,7 +711,8 @@
     <string name="pref_auto_clear_chapter_cache">Tøm kapittelbufferen ved lukking av appen</string>
     <string name="notification_update_error">%1$d oppdatering(er) mislyktes</string>
     <string name="notification_update_skipped">%1$d oppdatering(er) hoppet over</string>
-    <string name="learn_more">Lær mer</string>
+    <string name="learn_more">Trykk for å finne ut mer</string>
     <string name="skipped_reason_not_started">Hoppet over fordi ingen kapitler er lest</string>
     <string name="channel_skipped">Hoppet over</string>
+    <string name="disabled_nav">Deaktivert</string>
 </resources>

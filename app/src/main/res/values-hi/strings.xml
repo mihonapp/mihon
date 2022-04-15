@@ -349,7 +349,7 @@
     <string name="lock_always">हमेशा</string>
     <string name="lock_never">कभी नहीँ</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">1 मिनट के बाद</item>
+        <item quantity="one">%1$s मिनट के बाद</item>
         <item quantity="other">%1$s मिनट के बाद</item>
     </plurals>
     <string name="secure_screen">स्क्रीन सुरक्षित करें</string>
@@ -380,8 +380,8 @@
     <string name="email">ईमेल पता</string>
     <string name="pref_always_show_chapter_transition">हमेशा अध्याय संक्रमण दिखाएं</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">1 शीर्षक के लिए</item>
-        <item quantity="other">%d शीर्षक के लिए</item>
+        <item quantity="one">%d शीर्षक के लिए</item>
+        <item quantity="other">%d शीर्षकों के लिए</item>
     </plurals>
     <string name="action_menu">मेन्यू</string>
     <string name="action_reorganize_by">पुनःक्रमित</string>
@@ -436,8 +436,8 @@
     <string name="restore_duration">%02d मिनट,%02d सेकंड</string>
     <string name="downloaded_only_summary">अपने पुस्तकालय में सभी मंगा फ़िल्टर करे</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">1 शेष</item>
-        <item quantity="other">%1$s शेष</item>
+        <item quantity="one">%1$s बचा हुआ</item>
+        <item quantity="other">%1$s बचा हुआ</item>
     </plurals>
     <string name="pref_search_pinned_sources_only">केवल पिन किए गए स्रोत शामिल हैं</string>
     <string name="viewer">पढ़न मोड</string>
@@ -482,7 +482,7 @@
     <string name="action_disable">बंद करें</string>
     <string name="action_start">प्रारंभ</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 अध्याय</item>
+        <item quantity="one">%1$s अध्याय</item>
         <item quantity="other">%1$s अध्याय</item>
     </plurals>
     <string name="label_network">नेटवर्क</string>
@@ -504,7 +504,7 @@
     <string name="pref_category_theme">थीम</string>
     <string name="action_sort_date_added">तारीख को जोड़ा गया</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 ट्रैकर</item>
+        <item quantity="one">%d ट्रैकर</item>
         <item quantity="other">%d ट्रैकरस</item>
     </plurals>
     <string name="no_pinned_sources">कोई पिन किया हुआ सोर्स नही है</string>
@@ -519,8 +519,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">यह अनौपचारिक या संभावित रूप से फ़्लैग किए गए एक्सटेंशन को ऐप के भीतर NSFW (18+) सामग्री के सामने आने से नहीं रोकता है।</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">1 अध्याय छोड़ा जा रहा है, या तो स्रोत में यह अनुपलब्ध है या इसे फ़िल्टर कर दिया गया है</item>
-        <item quantity="other">%d अध्याय छोड़े जा रहा है, या तो स्रोत में यह अनुपलब्ध है या इसे फ़िल्टर कर दिया गया है</item>
+        <item quantity="one">%d अध्याय को छोड़कर, या तो स्रोत में यह अनुपलब्ध है या इसे फ़िल्टर कर दिया गया है</item>
+        <item quantity="other">%d अध्यायों को छोड़कर, या तो स्रोत में वे नहीं हैं या उन्हें फ़िल्टर कर दिया गया है</item>
     </plurals>
     <string name="chapter_settings_updated">अपडेट किए गए डिफ़ॉल्ट अध्याय सेटिंग्स</string>
     <string name="no_chapters_error">कोई अध्याय नहीं मिला</string>
@@ -703,6 +703,16 @@
     <string name="skipped_reason_not_started">छोड़ दिया गया क्योंकि कोई अध्याय पढ़ा नहीं गया</string>
     <string name="pref_update_only_started">कोई अध्याय नहीं पढ़ा</string>
     <string name="action_show_manga">मंगा दिखाएँ</string>
-    <string name="action_filter_started">शुरू किया</string>
+    <string name="action_filter_started">शुरू किया गया</string>
     <string name="action_display_cover_only_grid">केवल कवर ग्रिड</string>
+    <string name="disabled_nav">अक्षम</string>
+    <string name="rotation_reverse_portrait">रिवर्स पोर्ट्रेट</string>
+    <string name="notification_update_error">%1$d अपडेट विफल</string>
+    <string name="confirm_manga_add_duplicate">आपकी लाइब्रेरी में एक ही नाम के साथ लेकिन एक अलग स्रोत (%1$s) से एक प्रविष्टि है।
+\n
+\nक्या आप अभी भी जारी रखना चाहते हैं\?</string>
+    <string name="notification_update_skipped">%1$d अपडेट छोड़े गए</string>
+    <string name="pref_navigate_pan">पैन पर नेविगेट करें</string>
+    <string name="pref_landscape_zoom">ज़ूम लैंडस्केप इमेज</string>
+    <string name="action_move_to_top_all_for_series">श्रृंखला को शीर्ष पर ले जाएं</string>
 </resources>

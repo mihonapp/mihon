@@ -156,7 +156,7 @@
     <string name="pref_rotation_type">Ориентация по умолчанию</string>
     <string name="pref_show_page_number">Номер страницы</string>
     <string name="pref_start_screen">Начальный экран</string>
-    <string name="pref_update_only_non_completed">Завершенная серия</string>
+    <string name="pref_update_only_non_completed">Серия завершена</string>
     <string name="pref_viewer_type">Режим чтения</string>
     <string name="pref_zoom_start">Стартовая позиция увеличения</string>
     <string name="reading">Читаю</string>
@@ -696,7 +696,7 @@
     <string name="pref_verbose_logging_summary">Записывать подробный журнал в системный журнал (снижает производительность приложения)</string>
     <string name="action_display_language_badge">Язык</string>
     <string name="label_warning">Предупреждение</string>
-    <string name="notification_size_warning">Предупреждение: большое количество обновлений серий могут привести к замедлению работы источников и увеличению расхода батареи</string>
+    <string name="notification_size_warning">Большое количество обновлений серий могут привести к замедлению работы источников и увеличению расхода батареи</string>
     <string name="backup_info">Настоятельно рекомендуется использовать автоматические резервные копии. Вы также должны хранить копии в разных папках.</string>
     <string name="connected_to_wifi">Только по Wi-Fi</string>
     <string name="update_72hour">Каждые 3 дня</string>
@@ -709,8 +709,8 @@
     <string name="database_clean">Очистка базы данных</string>
     <string name="extension_api_error">Не удалось получить список расширений</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
-    <string name="pref_update_only_completely_read">Имеет непрочитанные главы</string>
-    <string name="pref_library_update_manga_restriction">Пропускать обновление</string>
+    <string name="pref_update_only_completely_read">Есть непрочитанные главы</string>
+    <string name="pref_library_update_manga_restriction">Пропускать обновления</string>
     <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки, нажать %1$s</string>
     <string name="save_chapter_as_cbz">Сохранить как архив CBZ</string>
     <string name="cancelled">Отменено</string>
@@ -731,11 +731,13 @@
     <string name="skipped_reason_completed">Пропущено, так как серия завершена</string>
     <string name="skipped_reason_not_caught_up">Пропущено, потому что есть непрочитанные главы</string>
     <string name="skipped_reason_not_started">Пропущено, потому что серия не начата</string>
-    <string name="learn_more">Подробнее</string>
+    <string name="learn_more">Нажать для подробностей</string>
     <string name="channel_skipped">Пропущено</string>
     <string name="notification_update_error">%1$d обновление(ий) не удалось</string>
     <string name="notification_update_skipped">%1$d обновление(ий) пропущено</string>
     <string name="rotation_reverse_portrait">Портретная наоборот</string>
     <string name="action_move_to_top_all_for_series">Переместить серию в начало</string>
     <string name="disabled_nav">Отключено</string>
+    <string name="update_check_fdroid_migration_info">Новая версия доступна на оф. странице Tachiyomi. Нажмите, чтобы узнать как мигрировать с неофициальной версии из F-Droid.</string>
+    <string name="error_saving_picture">Не удалось сохранить изображение</string>
 </resources>

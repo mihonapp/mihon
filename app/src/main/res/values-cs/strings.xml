@@ -723,4 +723,5 @@
     <string name="learn_more">Zjistit více</string>
     <string name="skipped_reason_not_started">Přeskočeno, protože nebyly přečteny žádné kapitoly</string>
     <string name="skipped_reason_completed">Přeskočeno, protože série je dokončena</string>
+    <string name="disabled_nav">Zakázáno</string>
 </resources>

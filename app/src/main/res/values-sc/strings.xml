@@ -689,7 +689,7 @@
     <string name="save_chapter_as_cbz">Sarva comente archìviu CBZ</string>
     <string name="library_errors_help">Pro tènnere un\'agiudu pro acontzare sos errores de agiornamentu de sa biblioteca pòmpia·ti %1$s</string>
     <string name="pref_library_update_manga_restriction">Brinca sos agiornamentos</string>
-    <string name="pref_update_only_completely_read">Tenet capìtulos non lèghidos</string>
+    <string name="pref_update_only_completely_read">Cun capìtulos non lèghidos</string>
     <string name="action_faq_and_guides">PF e ghias</string>
     <string name="publishing_finished">Publicatzione acabada</string>
     <string name="on_hiatus">In pàusa</string>
@@ -700,7 +700,7 @@
     <string name="pref_landscape_zoom">Ismànnia s\'immàgine in orizontale</string>
     <string name="action_filter_started">Incumintzadu</string>
     <string name="action_display_cover_only_grid">Grìllia cun coberteddas ebbia</string>
-    <string name="pref_update_only_started">Perunu capìtulu lèghidu</string>
+    <string name="pref_update_only_started">No incumintzadas</string>
     <string name="confirm_manga_add_duplicate">Tenes un\'elementu in sa biblioteca tua cun su matessi nùmene ma dae una fonte diferente (%1$s).
 \n
 \nBoles sighire su matessi\?</string>
@@ -708,10 +708,13 @@
     <string name="skipped_reason_completed">Brincadu ca sa sèrie est acabada</string>
     <string name="skipped_reason_not_caught_up">Brincadu ca bi sunt capìtulos non lèghidos</string>
     <string name="skipped_reason_not_started">Brincadu ca non bi sunt capìtulos lèghidos</string>
-    <string name="learn_more">Àteras informatziones</string>
+    <string name="learn_more">Toca pro àteras informatziones</string>
     <string name="channel_skipped">Brincadu</string>
     <string name="notification_update_error">%1$d agiornamentu(os) fallidu(os)</string>
     <string name="notification_update_skipped">%1$d agiornamentu(os) brincadu(os)</string>
     <string name="rotation_reverse_portrait">Verticale a s\'imbesse</string>
     <string name="action_move_to_top_all_for_series">Move sa sèrie cara a pitzos</string>
+    <string name="disabled_nav">Disabilitadu</string>
+    <string name="error_saving_picture">Errore in su sarvamentu de s\'immàgine</string>
+    <string name="update_check_fdroid_migration_info">B\'est una versione noa ufitziale a disponimentu. Toca pro imparare comente tramudare dae sas versiones no ufitziales de F-Droid.</string>
 </resources>

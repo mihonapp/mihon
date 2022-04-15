@@ -87,7 +87,7 @@
     <string name="all">Όλα</string>
     <string name="pref_library_update_restriction">Περιορισμοί αυτόματων ενημερώσεων συσκευής</string>
     <string name="charging">Φορτίζει</string>
-    <string name="pref_update_only_non_completed">Ολοκληρωμένη σειρά</string>
+    <string name="pref_update_only_non_completed">Με κατάσταση \"Ολοκληρωμένο\"</string>
     <string name="pref_auto_update_manga_sync">Ενημέρωση προόδου μετά την ανάγνωση</string>
     <string name="pref_start_screen">Οθόνη εκκίνησης</string>
     <string name="default_category">Προεπιλεγμένη κατηγορία</string>
@@ -686,8 +686,8 @@
     <string name="database_clean">Καθαρισμός βάσης δεδομένων</string>
     <string name="extension_api_error">Απέτυχε η λήψη λίστας επεκτάσεων</string>
     <string name="privacy_policy">Πολιτική απορρήτου</string>
-    <string name="pref_library_update_manga_restriction">Παράλειψη ενημέρωσης</string>
-    <string name="pref_update_only_completely_read">Έχει αδιάβαστα κεφάλαια</string>
+    <string name="pref_library_update_manga_restriction">Παράλειψη ενημέρωσης τίτλων</string>
+    <string name="pref_update_only_completely_read">Με αδιάβαστο(α) κεφάλαιο(α)</string>
     <string name="library_errors_help">Για βοήθεια σχετικά με τον τρόπο διόρθωσης σφαλμάτων ενημέρωσης βιβλιοθήκης, ανατρέξτε στο %1$s</string>
     <string name="save_chapter_as_cbz">Αποθήκευση ως αρχείο CBZ</string>
     <string name="cancelled">Ακυρώθηκε</string>
@@ -703,16 +703,18 @@
 \nΘέλετε ακόμα να συνεχίσετε;</string>
     <string name="action_display_cover_only_grid">Πλέγμα μόνο με εξώφυλλα</string>
     <string name="action_filter_started">Ξεκίνησε</string>
-    <string name="pref_update_only_started">Δεν έχει διαβασμένα κεφάλαια</string>
+    <string name="pref_update_only_started">Που δεν έχουν ξεκινήσει</string>
     <string name="pref_navigate_pan">Πλοήγηση για οριζόντια μετακίνηση</string>
     <string name="skipped_reason_completed">Παραλείφθηκε επειδή η σειρά ολοκληρώθηκε</string>
     <string name="skipped_reason_not_caught_up">Παραβλέφθηκε επειδή υπάρχουν μη αναγνωσμένα κεφάλαια</string>
     <string name="skipped_reason_not_started">Παραλείπεται επειδή δεν έχουν διαβαστεί κεφάλαια</string>
     <string name="notification_update_error">%1$d ενημέρωση(ες) απέτυχε(-αν)</string>
-    <string name="learn_more">Μάθετε περισσότερα</string>
+    <string name="learn_more">Πατήστε για να μάθετε περισσότερα</string>
     <string name="channel_skipped">Παραλήφθηκαν</string>
     <string name="notification_update_skipped">%1$d ενημέρωση(εις) παραλείφθηκε(-αν)</string>
     <string name="rotation_reverse_portrait">Αντίστροφο πορτρέτο</string>
     <string name="action_move_to_top_all_for_series">Μετακίνηση σειράς στην κορυφή</string>
     <string name="disabled_nav">Απενεργοποιημένο</string>
+    <string name="update_check_fdroid_migration_info">Μια νέα έκδοση είναι διαθέσιμη από τις επίσημες κυκλοφορίες. Πατήστε για να μάθετε πώς να μεταβείτε από ανεπίσημες κυκλοφορίες του F-Droid.</string>
+    <string name="error_saving_picture">Σφάλμα κατά την αποθήκευση της εικόνας</string>
 </resources>

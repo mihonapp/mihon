@@ -274,7 +274,7 @@
     <string name="lock_always">Увек</string>
     <string name="lock_never">Никада</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Након %1$s минут</item>
+        <item quantity="one">After 1%1$s minutes</item>
         <item quantity="few">Након %1$s минута</item>
         <item quantity="other">Након %1$s минута</item>
     </plurals>
@@ -495,9 +495,9 @@
     <string name="pref_category_reading_mode">Начин читања</string>
     <string name="ext_installer_pref">Instaler</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Прескаче се %d поглавље, или не постоји у извору или је филтером издвојено</item>
-        <item quantity="few">Прескаче се %d поглавља, или не постоји у извору или је филтером издвојено</item>
-        <item quantity="other">Прескаче се %d поглавља, или не постоји у извору или је филтером издвојено</item>
+        <item quantity="one">Preskače se %d poglavlje,ili ne postoji u izvori ili su izdvojeni filterom</item>
+        <item quantity="few">Preskače se %d poglavlje,ili ne postoji u izvori ili su izdvojeni filterom</item>
+        <item quantity="other">Preskače se %d poglavlje,ili ne postoji u izvori ili su izdvojeni filterom</item>
     </plurals>
     <string name="pref_category_auto_download">Аутоматско преузимање</string>
     <string name="action_track">Прати</string>
@@ -529,9 +529,9 @@
     <string name="unknown_status">Nepoznat status</string>
     <string name="local_filter_order_by">Poređaj po</string>
     <plurals name="num_trackers">
-        <item quantity="one">%d трекер</item>
-        <item quantity="few">%d трекера</item>
-        <item quantity="other">%d трекера</item>
+        <item quantity="one">%d tragač</item>
+        <item quantity="few">%d tragača</item>
+        <item quantity="other">%d tragač</item>
     </plurals>
     <string name="enhanced_services">Побољшани сервиси</string>
     <string name="tracker_not_logged_in">Нисте пријаљени у: %1$s</string>
@@ -711,7 +711,7 @@
 \n
 \nDa li i dalje želite da nastavite\?</string>
     <string name="notification_update_error">%1$d ažuriranje nije uspelo</string>
-    <string name="learn_more">Saznajte više</string>
+    <string name="learn_more">Pritisnite za više</string>
     <string name="library_errors_help">Za pomoć o tome kako da popravite greške u ažuriranju kolekcije, pogledajte %1$s</string>
     <string name="skipped_reason_not_started">Preskočeno jer nijedno poglavlje nije pročitano</string>
     <string name="channel_skipped">Preskočeno</string>
@@ -726,4 +726,5 @@
     <string name="notification_update_skipped">%1$d ažuriranje je preskočeno</string>
     <string name="skipped_reason_completed">Preskočeno jer je serijal završen</string>
     <string name="skipped_reason_not_caught_up">Preskočeno jer ima nepročitanih poglavlja</string>
+    <string name="disabled_nav">Onesposobljen</string>
 </resources>

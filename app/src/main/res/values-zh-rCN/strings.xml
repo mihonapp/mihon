@@ -87,7 +87,7 @@
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">设备自动更新限制</string>
     <string name="charging">正在充电</string>
-    <string name="pref_update_only_non_completed">已完结连载</string>
+    <string name="pref_update_only_non_completed">状态为“已完结”</string>
     <string name="pref_auto_update_manga_sync">阅读后更新进度</string>
     <string name="pref_start_screen">起始页面</string>
     <string name="default_category">默认分类</string>
@@ -662,7 +662,7 @@
     <string name="label_warning">警告</string>
     <string name="action_display_language_badge">语言</string>
     <string name="backup_info">强烈建议启用自动备份，你也应该在其他地方保存副本。</string>
-    <string name="notification_size_warning">警告：大型更新会损害图源，并可能导致更新速度变慢以及电池用量增加</string>
+    <string name="notification_size_warning">大型更新会损害图源，并可能导致更新速度变慢以及电池用量增加</string>
     <string name="connected_to_wifi">仅连接至 Wi-Fi 时</string>
     <string name="update_72hour">每 3 天</string>
     <string name="download_queue_size_warning">警告：批量下载可能会导致图源变慢和/或图源封锁 Tachiyomi</string>
@@ -674,8 +674,8 @@
     <string name="clear_database_source_item_count">数据库有 %1$d 本漫画不在书架中</string>
     <string name="extension_api_error">无法获取扩展插件列表</string>
     <string name="privacy_policy">隐私政策</string>
-    <string name="pref_update_only_completely_read">有未读完的章节</string>
-    <string name="pref_library_update_manga_restriction">跳过更新</string>
+    <string name="pref_update_only_completely_read">有未读章节</string>
+    <string name="pref_library_update_manga_restriction">跳过更新标题</string>
     <string name="library_errors_help">有关如何修复库更新错误的帮助，请参阅 %1$s</string>
     <string name="save_chapter_as_cbz">保存为 CBZ 存档</string>
     <string name="publishing_finished">发布完成</string>
@@ -692,15 +692,17 @@
 \n
 \n你仍希望继续吗？</string>
     <string name="action_filter_started">已开始</string>
-    <string name="pref_update_only_started">无已读章节</string>
+    <string name="pref_update_only_started">尚未开始</string>
     <string name="skipped_reason_completed">跳过，因连载完结</string>
     <string name="skipped_reason_not_caught_up">跳过，因有未读章节</string>
     <string name="skipped_reason_not_started">跳过，因无已读章节</string>
-    <string name="learn_more">了解更多</string>
+    <string name="learn_more">轻按了解更多</string>
     <string name="notification_update_error">%1$d 个更新失败了</string>
     <string name="notification_update_skipped">已跳过 %1$d 个更新</string>
     <string name="channel_skipped">已跳过</string>
     <string name="rotation_reverse_portrait">反转竖屏</string>
-    <string name="action_move_to_top_all_for_series">将连载移动到顶部</string>
+    <string name="action_move_to_top_all_for_series">将连载置顶</string>
     <string name="disabled_nav">已禁用</string>
+    <string name="error_saving_picture">保存图片出错</string>
+    <string name="update_check_fdroid_migration_info">新版本可从官方版本中获得。 轻按以了解如何从非官方 F-Droid 版本迁移。</string>
 </resources>

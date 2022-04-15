@@ -14,7 +14,7 @@
     <string name="action_filter_downloaded">Téléchargés</string>
     <string name="action_filter_bookmarked">Signets</string>
     <string name="action_filter_unread">Non lus</string>
-    <string name="action_filter_empty">Enlever le filtre</string>
+    <string name="action_filter_empty">Retirer le filtre</string>
     <string name="action_sort_alpha">Alphabétiquement</string>
     <string name="action_sort_last_read">Dernier lu</string>
     <string name="action_search">Rechercher</string>
@@ -748,4 +748,5 @@
     <string name="channel_skipped">Ignoré</string>
     <string name="rotation_reverse_portrait">Portrait inversé</string>
     <string name="action_move_to_top_all_for_series">Déplacer la série vers le haut</string>
+    <string name="disabled_nav">Désactivé</string>
 </resources>

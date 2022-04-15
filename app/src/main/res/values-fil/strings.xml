@@ -520,7 +520,7 @@
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Lalaktawan ang %d kabanata, siguro baka wala sa source ito, o baka nasala ito</item>
-        <item quantity="other">Lalaktawan ang %d (na) kabanata, siguro baka wala sa source sila, o baka nasala sila</item>
+        <item quantity="other">Lalaktawan ang %d (na) kabanata, siguro baka sa source ang mga ito, o baka nasala sila</item>
     </plurals>
     <string name="no_chapters_error">Walang nakitang kabanata</string>
     <string name="confirm_set_chapter_settings">Gusto mo bang i-save at ipagpaubaya ang pagsasaayos na ito\?</string>
@@ -604,7 +604,7 @@
     <string name="local_invalid_format">Walang bisa ang ayos ng kabanata</string>
     <string name="chapter_not_found">Hindi makita ang kabanata</string>
     <string name="source_unsupported">Di suportado ang source</string>
-    <string name="unread">Hindi basahin</string>
+    <string name="unread">Hindi nababasa</string>
     <string name="alignment_center">Gitna</string>
     <string name="pref_side_nav_icon_alignment">Hilera ng nabigasyon sa gilid</string>
     <string name="error_sharing_cover">Di maibahagi ang cover</string>
@@ -690,7 +690,7 @@
     <string name="pref_update_only_completely_read">May hindi pa nabasang kabanata</string>
     <string name="pref_library_update_manga_restriction">Lakdawan ang pag-update</string>
     <string name="save_chapter_as_cbz">I-save bilang CBZ archive</string>
-    <string name="publishing_finished">Tapos na\'ng mailathala</string>
+    <string name="publishing_finished">Tapos nang mailathala</string>
     <string name="on_hiatus">Naka-hiatus</string>
     <string name="cancelled">Kinansela</string>
     <string name="backup_restore_invalid_uri">Error: walang URI</string>
@@ -714,4 +714,5 @@
     <string name="rotation_reverse_portrait">Baligtad na patayo</string>
     <string name="notification_update_skipped">Nilaktawan ang %1$d (na) update</string>
     <string name="action_move_to_top_all_for_series">Ilagay sa taas ang serye</string>
+    <string name="disabled_nav">Nakasara</string>
 </resources>

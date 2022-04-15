@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="name">Nombre</string>
+    <string name="name">Español</string>
     <!-- Activities and fragments labels (toolbar title) -->
     <string name="label_settings">Ajustes</string>
     <string name="label_download_queue">Cola de descargas</string>
@@ -63,7 +63,7 @@
     <string name="update_48hour">Cada 2 días</string>
     <string name="pref_library_update_restriction">Restricciones de actualización automática del dispositivo</string>
     <string name="charging">Mientras se carga la batería</string>
-    <string name="pref_update_only_non_completed">Serie completada</string>
+    <string name="pref_update_only_non_completed">Series completadas</string>
     <string name="pref_auto_update_manga_sync">Actualizar progreso al terminar un capítulo</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Pantalla completa</string>
@@ -644,7 +644,7 @@
     <string name="information_empty_category_dialog">Todavía no existen categorías.</string>
     <string name="notification_updating">Actualizando biblioteca… (%1$d/%2$d)</string>
     <string name="error_no_match">No se han encontrado coincidencias</string>
-    <string name="source_unsupported">No se admite el origen</string>
+    <string name="source_unsupported">Fuente no soportada</string>
     <string name="unread">No leídos</string>
     <string name="tracker_komga_warning">Este servicio de seguimiento sólo es compatible con la fuente Komga.</string>
     <string name="error_sharing_cover">Error al compartir portada</string>
@@ -703,7 +703,7 @@
     <string name="pref_verbose_logging">Registro detallado</string>
     <string name="pref_verbose_logging_summary">Mostrar registros detallados en el registro del sistema (reduce el rendimiento de la aplicación)</string>
     <string name="label_warning">Advertencia</string>
-    <string name="notification_size_warning">Cuidado: las actualizaciones grandes pueden implicar un mayor uso de la batería y que los distintos servicios bloqueen o ralenticen el acceso a tu dispositivo</string>
+    <string name="notification_size_warning">Las actualizaciones grandes pueden implicar un mayor uso de la batería y que los distintos servicios bloqueen o ralenticen el acceso a tu dispositivo</string>
     <string name="action_display_language_badge">Idioma</string>
     <string name="backup_info">Es una buena idea tener copias de respaldo automáticas, así como respaldarlas fuera de tu dispositivo.</string>
     <string name="connected_to_wifi">Solo con Wi-Fi</string>
@@ -717,8 +717,8 @@
     <string name="clear_database_source_item_count">Hay %1$d manga que no pertenece a la biblioteca en la base de datos</string>
     <string name="extension_api_error">No se pudo descargar el listado de extensiones</string>
     <string name="privacy_policy">Política de privacidad</string>
-    <string name="pref_update_only_completely_read">Capítulos sin leer</string>
-    <string name="pref_library_update_manga_restriction">Omitir la actualización</string>
+    <string name="pref_update_only_completely_read">Con capítulos sin leer</string>
+    <string name="pref_library_update_manga_restriction">Omitir actualizaciones</string>
     <string name="library_errors_help">Si necesitas ayuda para resolver los errores de actualización de la biblioteca mira en %1$s</string>
     <string name="save_chapter_as_cbz">Guardar como archivo CBZ</string>
     <string name="on_hiatus">En pausa</string>
@@ -735,15 +735,17 @@
 \n
 \n¿Quieres seguir\?</string>
     <string name="action_filter_started">Empezados</string>
-    <string name="pref_update_only_started">Sin capítulos leídos</string>
+    <string name="pref_update_only_started">Series sin empezar</string>
     <string name="skipped_reason_completed">Omitido porque la serie está completa</string>
     <string name="skipped_reason_not_caught_up">Omitido porque hay capítulos sin leer</string>
     <string name="skipped_reason_not_started">Omitido porque no hay capítulos leídos</string>
-    <string name="learn_more">Más información</string>
+    <string name="learn_more">Ver más detalles</string>
     <string name="channel_skipped">Omitidas</string>
     <string name="notification_update_error">Actualizaciones fallidas: %1$d</string>
     <string name="notification_update_skipped">Actualizaciones omitidas: %1$d</string>
     <string name="rotation_reverse_portrait">En vertical, al revés</string>
     <string name="action_move_to_top_all_for_series">Mover al primer puesto</string>
     <string name="disabled_nav">Desactivado</string>
+    <string name="update_check_fdroid_migration_info">Hay una actualización disponible en la página oficial. Toca para aprender a migrar desde una versión no oficial de F-Droid.</string>
+    <string name="error_saving_picture">No se ha podido guardar la imagen</string>
 </resources>

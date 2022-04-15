@@ -82,7 +82,7 @@
     <string name="all">Todas</string>
     <string name="pref_library_update_restriction">Restrições do dispositivo para atualizações automáticas</string>
     <string name="charging">Carregando</string>
-    <string name="pref_update_only_non_completed">É uma série finalizada</string>
+    <string name="pref_update_only_non_completed">Com o estado \"Completo\"</string>
     <string name="pref_auto_update_manga_sync">Atualizar o progresso após a leitura</string>
     <string name="pref_start_screen">Tela inicial</string>
     <string name="default_category">Categoria padrão</string>
@@ -672,7 +672,7 @@
     <string name="pref_verbose_logging_summary">Imprime registros detalhados no registro de eventos do sistema (reduz o desempenho do aplicativo)</string>
     <string name="pref_verbose_logging">Registro de eventos verboso</string>
     <string name="action_display_language_badge">Idioma</string>
-    <string name="notification_size_warning">Aviso: atualizações com muitos itens prejudicam as fontes e podem deixar as atualizações lentas e aumentar o uso da bateria</string>
+    <string name="notification_size_warning">Atualizações com muitos itens prejudicam as fontes e podem deixar as atualizações lentas e aumentar o uso da bateria</string>
     <string name="label_warning">Aviso</string>
     <string name="backup_info">Backups automáticos são altamente recomendados. Você deve manter cópias em outros locais também.</string>
     <string name="connected_to_wifi">Somente no Wi-Fi</string>
@@ -686,8 +686,8 @@
     <string name="database_clean">Banco de dados limpo</string>
     <string name="extension_api_error">Erro ao obter a lista de extensões</string>
     <string name="privacy_policy">Política de privacidade</string>
-    <string name="pref_update_only_completely_read">Possui capítulos não lidos</string>
-    <string name="pref_library_update_manga_restriction">Pular a atualização</string>
+    <string name="pref_update_only_completely_read">Com capítulos não lidos</string>
+    <string name="pref_library_update_manga_restriction">Pular a atualização de títulos</string>
     <string name="library_errors_help">Para obter ajuda sobre como corrigir erros de atualização da biblioteca, veja %1$s</string>
     <string name="save_chapter_as_cbz">Salvar como arquivo CBZ</string>
     <string name="publishing_finished">Publicação finalizada</string>
@@ -704,15 +704,17 @@
     <string name="pref_landscape_zoom">Dar zoom em imagens horizontais</string>
     <string name="action_display_cover_only_grid">Grade somente com capas</string>
     <string name="action_filter_started">Iniciado</string>
-    <string name="pref_update_only_started">Sem capítulos lidos</string>
+    <string name="pref_update_only_started">Que não tiveram a leitura iniciada</string>
     <string name="skipped_reason_completed">Pulado porque a série está finalizada</string>
     <string name="skipped_reason_not_caught_up">Pulado porque há capítulos não lidos</string>
     <string name="skipped_reason_not_started">Pulado porque nenhum capítulo foi lido</string>
     <string name="notification_update_skipped">%1$d atualização(ões) pulada(s)</string>
     <string name="channel_skipped">Puladas</string>
     <string name="notification_update_error">%1$d atualização(ões) falhou(aram)</string>
-    <string name="learn_more">Saiba mais</string>
+    <string name="learn_more">Toque para saber mais</string>
     <string name="rotation_reverse_portrait">Retrato invertido</string>
     <string name="action_move_to_top_all_for_series">Mover série para o topo</string>
     <string name="disabled_nav">Desativado</string>
+    <string name="update_check_fdroid_migration_info">Uma nova versão está disponível nos releases oficiais. Toque para saber como migrar dos releases não oficiais do F-Droid.</string>
+    <string name="error_saving_picture">Erro ao salvar a imagem</string>
 </resources>

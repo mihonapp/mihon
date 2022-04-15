@@ -702,4 +702,5 @@
     <string name="notification_update_error">%1$d件の更新に失敗しました</string>
     <string name="rotation_reverse_portrait">縦向き（反転）</string>
     <string name="action_move_to_top_all_for_series">シリーズをトップに移動</string>
+    <string name="disabled_nav">無効</string>
 </resources>

@@ -702,4 +702,5 @@
     <string name="channel_skipped">ข้ามแล้ว</string>
     <string name="rotation_reverse_portrait">แนวตั้งแบบกลับด้าน</string>
     <string name="action_move_to_top_all_for_series">ย้ายเรื่องไปด้านบน</string>
+    <string name="disabled_nav">ปิดใช้งาน</string>
 </resources>

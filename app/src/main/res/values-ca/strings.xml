@@ -708,10 +708,11 @@
     <string name="skipped_reason_completed">S\'ha omès perquè la sèrie està completada</string>
     <string name="skipped_reason_not_started">S\'ha omès perquè no hi ha cap capítol llegit</string>
     <string name="skipped_reason_not_caught_up">S\'ha omès perquè hi ha capítols no llegits</string>
-    <string name="learn_more">Més informació</string>
+    <string name="learn_more">Premeu per a obtenir més informació</string>
     <string name="channel_skipped">Omesa</string>
     <string name="notification_update_error">Han fallat %1$d actualitzacions</string>
     <string name="notification_update_skipped">S\'han omès %1$d actualitzacions</string>
     <string name="rotation_reverse_portrait">Vertical inversa</string>
     <string name="action_move_to_top_all_for_series">Mou la sèrie a dalt de tot</string>
+    <string name="disabled_nav">Desactivat</string>
 </resources>

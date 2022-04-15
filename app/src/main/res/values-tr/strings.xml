@@ -87,7 +87,7 @@
     <string name="all">Tümü</string>
     <string name="pref_library_update_restriction">Otomatik güncellemeler aygıt kısıtlamaları</string>
     <string name="charging">Şarj oluyor</string>
-    <string name="pref_update_only_non_completed">Tamamlanan seriler</string>
+    <string name="pref_update_only_non_completed">\"Tamamlanan\" durumda olan</string>
     <string name="pref_auto_update_manga_sync">Okuyunca ilerlemeyi güncelle</string>
     <string name="pref_start_screen">Başlangıç ekranı</string>
     <string name="default_category">Varsayılan kategori</string>
@@ -672,7 +672,7 @@
     <string name="label_warning">Uyarı</string>
     <string name="action_display_language_badge">Dil</string>
     <string name="backup_info">Otomatik yedeklemeler şiddetle tavsiye edilir. Kopyaları başka yerlerde de tutmalısınız.</string>
-    <string name="notification_size_warning">Uyarı: büyük güncellemeler kaynaklara zarar verir ve daha yavaş güncellemelere ve de pil kullanımının artmasına neden olabilir</string>
+    <string name="notification_size_warning">Büyük güncellemeler kaynaklara zarar verir ve daha yavaş güncellemelere ve ayrıca pil kullanımının artmasına neden olabilir</string>
     <string name="pref_verbose_logging">Ayrıntılı günlük kaydı</string>
     <string name="pref_verbose_logging_summary">Ayrıntılı günlükleri sistem günlüğüne yaz (uygulama performansını düşürür)</string>
     <string name="connected_to_wifi">Yalnızca Wi-Fi\'de</string>
@@ -685,7 +685,7 @@
     <string name="clear_database_source_item_count">Veri tabanında %1$d kitaplık dışı manga</string>
     <string name="database_clean">Veri tabanı temiz</string>
     <string name="extension_api_error">Uzantı listesi alınamadı</string>
-    <string name="pref_library_update_manga_restriction">Güncellemeyi atla</string>
+    <string name="pref_library_update_manga_restriction">Başlıkları güncellemeyi atla</string>
     <string name="save_chapter_as_cbz">CBZ arşivi olarak kaydet</string>
     <string name="publishing_finished">Yayımı tamamlandı</string>
     <string name="privacy_policy">Gizlilik politikası</string>
@@ -701,8 +701,8 @@
     <string name="action_display_cover_only_grid">Sadece-kapak ızgara</string>
     <string name="backup_restore_invalid_uri">Hata: boş URI</string>
     <string name="action_faq_and_guides">SSS ve Kılavuzlar</string>
-    <string name="pref_update_only_completely_read">Okunmayan bölümleri olan</string>
-    <string name="pref_update_only_started">Yalnızca okumaya başlanan mangaları güncelleme</string>
+    <string name="pref_update_only_completely_read">Okunmayan bölüm(ler)i olan</string>
+    <string name="pref_update_only_started">Bu başlamadı</string>
     <string name="skipped_reason_completed">Manga tamamlandığı için atlandı</string>
     <string name="skipped_reason_not_caught_up">Okunmamış bölümler olduğu için atlandı</string>
     <string name="skipped_reason_not_started">Hiçbir bölüm okunmadığı için atlandı</string>
@@ -710,9 +710,11 @@
     <string name="pref_landscape_zoom">Yatay görseli yakınlaştır</string>
     <string name="notification_update_error">%1$d güncelleme başarısız oldu</string>
     <string name="notification_update_skipped">%1$d güncelleme atlandı</string>
-    <string name="learn_more">Daha fazla bilgi edin</string>
+    <string name="learn_more">Daha fazla bilgi edinmek için dokunun</string>
     <string name="channel_skipped">Atlandı</string>
     <string name="rotation_reverse_portrait">Ters dikey</string>
     <string name="action_move_to_top_all_for_series">Seriyi en üste taşı</string>
     <string name="disabled_nav">Devre dışı</string>
+    <string name="update_check_fdroid_migration_info">Resmi yayınlardan yeni bir sürüm var. Resmi olmayan F-Droid sürümlerinden nasıl geçiş yapacağınızı öğrenmek için dokunun.</string>
+    <string name="error_saving_picture">Resim kaydedilirken hata oluştu</string>
 </resources>
