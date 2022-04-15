@@ -90,6 +90,20 @@ class LibraryUpdateNotifier(private val context: Context) {
         )
     }
 
+    fun showQueueSizeWarningNotification() {
+        val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_LIBRARY_PROGRESS) {
+            setContentTitle(context.getString(R.string.label_warning))
+            setContentText(context.getString(R.string.notification_size_warning))
+            setSmallIcon(R.drawable.ic_warning_white_24dp)
+            setTimeoutAfter(Downloader.WARNING_NOTIF_TIMEOUT_MS)
+        }
+
+        context.notificationManager.notify(
+            Notifications.ID_LIBRARY_SIZE_WARNING,
+            notificationBuilder.build(),
+        )
+    }
+
     /**
      * Shows notification containing update entries that failed with action to open full log.
      *

@@ -722,7 +722,7 @@
     <!-- Library update service notifications -->
     <string name="notification_check_updates">Checking for new chapters</string>
     <string name="notification_updating">Updating library… (%1$d/%2$d)</string>
-    <string name="notification_size_warning">Warning: large updates harm sources and may lead to slower updates and also increased battery usage</string>
+    <string name="notification_size_warning">Large updates harm sources and may lead to slower updates and also increased battery usage</string>
     <string name="notification_new_chapters">New chapters found</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">For %d title</item>
