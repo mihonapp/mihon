@@ -27,6 +27,7 @@ class NetworkHelper(context: Context) {
                 .cookieJar(cookieManager)
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
+                .callTimeout(90, TimeUnit.SECONDS)
                 // .fastFallback(true) // TODO: re-enable when OkHttp 5 is stabler
                 .addInterceptor(UserAgentInterceptor())
 
