@@ -901,7 +901,7 @@ class MangaController :
         chaptersHeader.setNumChapters(chapters.size)
 
         val adapter = chaptersAdapter ?: return
-        adapter.updateDataSet(chapters)
+        adapter.updateDataSet(presenter.cleanChapterNames(chapters))
 
         if (selectedChapters.isNotEmpty()) {
             adapter.clearSelection() // we need to start from a clean state, index may have changed

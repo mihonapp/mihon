@@ -159,8 +159,10 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
                 // Override the value passed as X-Requested-With in WebView requests
                 val stackTrace = Looper.getMainLooper().thread.stackTrace
                 val chromiumElement = stackTrace.find {
-                    it.className.equals("org.chromium.base.BuildInfo",
-                        ignoreCase = true)
+                    it.className.equals(
+                        "org.chromium.base.BuildInfo",
+                        ignoreCase = true,
+                    )
                 }
                 if (chromiumElement?.methodName.equals("getAll", ignoreCase = true)) {
                     return WebViewUtil.SPOOF_PACKAGE_NAME
