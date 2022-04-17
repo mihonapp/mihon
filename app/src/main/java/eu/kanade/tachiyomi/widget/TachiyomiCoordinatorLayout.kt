@@ -5,8 +5,10 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
+import androidx.compose.ui.platform.ComposeView
 import androidx.coordinatorlayout.R
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.customview.view.AbsSavedState
@@ -63,7 +65,16 @@ class TachiyomiCoordinatorLayout @JvmOverloads constructor(
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed)
         // Disable elevation overlay when tabs are visible
         if (canLiftAppBarOnScroll) {
-            appBarLayout?.isLifted = (dyConsumed != 0 || dyUnconsumed >= 0) && tabLayout?.isVisible == false
+            if (target is ComposeView) {
+                val scrollCondition = if (type == ViewCompat.TYPE_NON_TOUCH) {
+                    dyUnconsumed >= 0
+                } else {
+                    dyConsumed != 0 || dyUnconsumed >= 0
+                }
+                appBarLayout?.isLifted = scrollCondition && tabLayout?.isVisible == false
+            } else {
+                appBarLayout?.isLifted = (dyConsumed != 0 || dyUnconsumed >= 0) && tabLayout?.isVisible == false
+            }
         }
     }
 
