@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.backup.full
 import android.content.Context
 import android.net.Uri
 import com.hippo.unifile.UniFile
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.AbstractBackupManager
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_CATEGORY
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_CATEGORY_MASK
@@ -90,6 +91,10 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
             }
 
             val byteArray = parser.encodeToByteArray(BackupSerializer, backup!!)
+            if (byteArray.isEmpty()) {
+                throw IllegalStateException(context.getString(R.string.empty_backup_error))
+            }
+
             file.openOutputStream().also {
                 // Force overwrite old file
                 (it as? FileOutputStream)?.channel?.truncate(0)
