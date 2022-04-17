@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
 import eu.kanade.tachiyomi.data.updater.AppUpdateService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import io.noties.markwon.Markwon
 
 class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundle) {
 
@@ -16,15 +17,18 @@ class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundl
     )
 
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {
+        val releaseBody = (args.getString(BODY_KEY) ?: "")
+            .replace("""---(\R|.)*Checksums(\R|.)*""".toRegex(), "")
+        val info = Markwon.create(activity!!).toMarkdown(releaseBody)
+
         return MaterialAlertDialogBuilder(activity!!)
             .setTitle(R.string.update_check_notification_update_available)
-            .setMessage(args.getString(BODY_KEY) ?: "")
+            .setMessage(info)
             .setPositiveButton(R.string.update_check_confirm) { _, _ ->
-                val appContext = applicationContext
-                if (appContext != null) {
+                applicationContext?.let { context ->
                     // Start download
                     val url = args.getString(URL_KEY) ?: ""
-                    AppUpdateService.start(appContext, url)
+                    AppUpdateService.start(context, url)
                 }
             }
             .setNegativeButton(R.string.update_check_ignore, null)
