@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/side_nav"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -35,7 +35,7 @@
             android:background="?attr/colorTertiary"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/side_nav"
             app:layout_constraintTop_toBottomOf="@+id/appbar"
             tools:visibility="visible">
 
@@ -56,7 +56,7 @@
             android:background="?attr/colorPrimary"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/side_nav"
             app:layout_constraintTop_toBottomOf="@+id/downloaded_only"
             tools:visibility="visible">
 
@@ -73,11 +73,10 @@
         <com.google.android.material.navigationrail.NavigationRailView
             android:id="@+id/side_nav"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            app:elevation="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="match_parent"
+            android:paddingTop="?attr/actionBarSize"
+            app:elevation="1dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/incognito_mode"
             app:menu="@menu/main_nav" />
 
         <com.google.android.material.tabs.TabLayout
