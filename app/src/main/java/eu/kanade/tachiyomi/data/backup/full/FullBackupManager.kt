@@ -294,7 +294,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
                 }
             }
         }
-        databaseHelper.updateHistoryLastRead(historyToBeUpdated).executeAsBlocking()
+        databaseHelper.upsertHistoryLastRead(historyToBeUpdated).executeAsBlocking()
     }
 
     /**

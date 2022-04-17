@@ -49,6 +49,7 @@ injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
 
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil_version" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil_version" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil_version" }
 
 subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:846abe0"
 image-decoder = "com.github.tachiyomiorg:image-decoder:7481a4a"
@@ -100,12 +101,12 @@ okhttp = ["okhttp-core","okhttp-logging","okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android", "duktape-android"]
 sqlite = ["sqlitektx", "sqlite-android"]
 nucleus = ["nucleus-core","nucleus-supportv7"]
-coil = ["coil-core","coil-gif",]
+coil = ["coil-core","coil-gif","coil-compose"]
 flowbinding = ["flowbinding-android","flowbinding-appcompat","flowbinding-recyclerview","flowbinding-swiperefreshlayout","flowbinding-viewpager"]
 conductor = ["conductor-core","conductor-viewpager","conductor-support-preference"]
 shizuku = ["shizuku-api","shizuku-provider"]
 robolectric = ["robolectric-core","robolectric-playservices"]
 
 [plugins]
-kotlinter = { id = "org.jmailen.kotlinter", version = "3.10.0"}
+kotlinter = { id = "org.jmailen.kotlinter", version = "3.6.0"}
 versionsx = { id = "com.github.ben-manes.versions", version = "0.42.0"}

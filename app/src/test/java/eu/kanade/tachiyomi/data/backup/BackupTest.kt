@@ -344,7 +344,7 @@ class BackupTest {
 
     private fun clearDatabase() {
         db.deleteMangas().executeAsBlocking()
-        db.deleteHistory().executeAsBlocking()
+        db.dropHistoryTable().executeAsBlocking()
     }
 
     private fun getSingleHistory(chapter: Chapter): DHistory {
