@@ -8,16 +8,21 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
 import eu.kanade.tachiyomi.data.updater.AppUpdateService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import io.noties.markwon.Markwon
 
 class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundle) {
 
     constructor(update: AppUpdateResult.NewUpdate) : this(
-        bundleOf(BODY_KEY to update.release.info, URL_KEY to update.release.getDownloadLink()),
+        bundleOf(
+            BODY_KEY to update.release.info,
+            RELEASE_URL_KEY to update.release.releaseLink,
+            DOWNLOAD_URL_KEY to update.release.getDownloadLink(),
+        ),
     )
 
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-        val releaseBody = (args.getString(BODY_KEY) ?: "")
+        val releaseBody = args.getString(BODY_KEY)!!
             .replace("""---(\R|.)*Checksums(\R|.)*""".toRegex(), "")
         val info = Markwon.create(activity!!).toMarkdown(releaseBody)
 
@@ -27,14 +32,17 @@ class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundl
             .setPositiveButton(R.string.update_check_confirm) { _, _ ->
                 applicationContext?.let { context ->
                     // Start download
-                    val url = args.getString(URL_KEY) ?: ""
+                    val url = args.getString(DOWNLOAD_URL_KEY)!!
                     AppUpdateService.start(context, url)
                 }
             }
-            .setNegativeButton(R.string.update_check_ignore, null)
+            .setNeutralButton(R.string.update_check_open) { _, _ ->
+                openInBrowser(args.getString(RELEASE_URL_KEY)!!)
+            }
             .create()
     }
 }
 
 private const val BODY_KEY = "NewUpdateDialogController.body"
-private const val URL_KEY = "NewUpdateDialogController.key"
+private const val RELEASE_URL_KEY = "NewUpdateDialogController.release_url"
+private const val DOWNLOAD_URL_KEY = "NewUpdateDialogController.download_url"
