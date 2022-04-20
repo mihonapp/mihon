@@ -2,6 +2,9 @@ package eu.kanade.tachiyomi.ui.more
 
 import android.app.Dialog
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
+import android.view.View
+import android.widget.TextView
 import androidx.core.os.bundleOf
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.tachiyomi.R
@@ -40,6 +43,14 @@ class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundl
                 openInBrowser(args.getString(RELEASE_URL_KEY)!!)
             }
             .create()
+    }
+
+    override fun onAttach(view: View) {
+        super.onAttach(view)
+
+        // Make links in Markdown text clickable
+        (dialog?.findViewById(android.R.id.message) as? TextView)?.movementMethod =
+            LinkMovementMethod.getInstance()
     }
 }
 
