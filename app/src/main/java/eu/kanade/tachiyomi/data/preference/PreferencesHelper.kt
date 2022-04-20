@@ -207,7 +207,7 @@ class PreferencesHelper(val context: Context) {
 
     fun folderPerManga() = prefs.getBoolean(Keys.folderPerManga, false)
 
-    fun numberOfBackups() = flowPrefs.getInt("backup_slots", 1)
+    fun numberOfBackups() = flowPrefs.getInt("backup_slots", 2)
 
     fun backupInterval() = flowPrefs.getInt("backup_interval", 0)
 
