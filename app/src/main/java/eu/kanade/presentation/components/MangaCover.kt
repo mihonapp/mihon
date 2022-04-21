@@ -5,7 +5,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -25,6 +27,7 @@ fun MangaCover(
 ) {
     AsyncImage(
         model = data,
+        placeholder = ColorPainter(CoverPlaceholderColor),
         contentDescription = contentDescription,
         modifier = modifier
             .aspectRatio(aspect.ratio)
@@ -32,3 +35,5 @@ fun MangaCover(
         contentScale = ContentScale.Crop
     )
 }
+
+private val CoverPlaceholderColor = Color(0x1F888888)

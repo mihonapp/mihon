@@ -76,7 +76,7 @@ fun HistoryScreen(
     onClickResume: (HistoryWithRelations) -> Unit,
     onClickDelete: (HistoryWithRelations, Boolean) -> Unit,
 ) {
-    val nestedSrollInterop = rememberNestedScrollInteropConnection(composeView)
+    val nestedScrollInterop = rememberNestedScrollInteropConnection(composeView)
     TachiyomiTheme {
         val state by presenter.state.collectAsState()
         val history = state.list?.collectAsLazyPagingItems()
@@ -91,7 +91,7 @@ fun HistoryScreen(
             }
             else -> {
                 HistoryContent(
-                    nestedScroll = nestedSrollInterop,
+                    nestedScroll = nestedScrollInterop,
                     history = history,
                     onClickItem = onClickItem,
                     onClickResume = onClickResume,
