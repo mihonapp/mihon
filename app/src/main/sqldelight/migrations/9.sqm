@@ -1,0 +1,2 @@
+ALTER TABLE mangas
+ADD COLUMN cover_last_modified INTEGER NOT NULL DEFAULT 0;

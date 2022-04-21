@@ -26,24 +26,4 @@ object HistoryTable {
      * Time read column name
      */
     const val COL_TIME_READ = "${TABLE}_time_read"
-
-    /**
-     * query to create history table
-     */
-    val createTableQuery: String
-        get() =
-            """CREATE TABLE $TABLE(
-            $COL_ID INTEGER NOT NULL PRIMARY KEY,
-            $COL_CHAPTER_ID INTEGER NOT NULL UNIQUE,
-            $COL_LAST_READ LONG,
-            $COL_TIME_READ LONG,
-            FOREIGN KEY($COL_CHAPTER_ID) REFERENCES ${ChapterTable.TABLE} (${ChapterTable.COL_ID})
-            ON DELETE CASCADE
-            )"""
-
-    /**
-     * query to index history chapter id
-     */
-    val createChapterIdIndexQuery: String
-        get() = "CREATE INDEX ${TABLE}_${COL_CHAPTER_ID}_index ON $TABLE($COL_CHAPTER_ID)"
 }

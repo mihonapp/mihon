@@ -166,7 +166,7 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param chapterId id of chapter
      */
     private fun openChapter(context: Context, mangaId: Long, chapterId: Long) {
-        val db = DatabaseHelper(context)
+        val db = Injekt.get<DatabaseHelper>()
         val manga = db.getManga(mangaId).executeAsBlocking()
         val chapter = db.getChapter(chapterId).executeAsBlocking()
         if (manga != null && chapter != null) {

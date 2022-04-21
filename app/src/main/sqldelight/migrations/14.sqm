@@ -1,0 +1,149 @@
+DROP INDEX IF EXISTS chapters_manga_id_index;
+DROP INDEX IF EXISTS chapters_unread_by_manga_index;
+DROP INDEX IF EXISTS history_history_chapter_id_index;
+DROP INDEX IF EXISTS library_favorite_index;
+DROP INDEX IF EXISTS mangas_url_index;
+
+ALTER TABLE mangas RENAME TO manga_temp;
+CREATE TABLE mangas(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    source INTEGER NOT NULL,
+    url TEXT NOT NULL,
+    artist TEXT,
+    author TEXT,
+    description TEXT,
+    genre TEXT,
+    title TEXT NOT NULL,
+    status INTEGER NOT NULL,
+    thumbnail_url TEXT,
+    favorite INTEGER NOT NULL,
+    last_update INTEGER AS Long,
+    next_update INTEGER AS Long,
+    initialized INTEGER AS Boolean NOT NULL,
+    viewer INTEGER NOT NULL,
+    chapter_flags INTEGER NOT NULL,
+    cover_last_modified INTEGER AS Long NOT NULL,
+    date_added INTEGER AS Long NOT NULL
+);
+INSERT INTO mangas
+SELECT _id,source,url,artist,author,description,genre,title,status,thumbnail_url,favorite,last_update,next_update,initialized,viewer,chapter_flags,cover_last_modified,date_added
+FROM manga_temp;
+
+ALTER TABLE categories RENAME TO categories_temp;
+CREATE TABLE categories(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    sort INTEGER NOT NULL,
+    flags INTEGER NOT NULL
+);
+INSERT INTO categories
+SELECT _id,name,sort,flags
+FROM categories_temp;
+
+ALTER TABLE chapters RENAME TO chapters_temp;
+CREATE TABLE chapters(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    url TEXT NOT NULL,
+    name TEXT NOT NULL,
+    scanlator TEXT,
+    read INTEGER AS Boolean NOT NULL,
+    bookmark INTEGER AS Boolean NOT NULL,
+    last_page_read INTEGER NOT NULL,
+    chapter_number REAL AS Float NOT NULL,
+    source_order INTEGER NOT NULL,
+    date_fetch INTEGER AS Long NOT NULL,
+    date_upload INTEGER AS Long NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+INSERT INTO chapters
+SELECT _id,manga_id,url,name,scanlator,read,bookmark,last_page_read,chapter_number,source_order,date_fetch,date_upload
+FROM chapters_temp;
+
+ALTER TABLE history RENAME TO history_temp;
+CREATE TABLE history(
+    history_id INTEGER NOT NULL PRIMARY KEY,
+    history_chapter_id INTEGER NOT NULL UNIQUE,
+    history_last_read INTEGER AS Long,
+    history_time_read INTEGER AS Long,
+    FOREIGN KEY(history_chapter_id) REFERENCES chapters (_id)
+    ON DELETE CASCADE
+);
+INSERT INTO history
+SELECT history_id, history_chapter_id, history_last_read, history_time_read
+FROM history_temp;
+
+ALTER TABLE mangas_categories RENAME TO mangas_categories_temp;
+CREATE TABLE mangas_categories(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    FOREIGN KEY(category_id) REFERENCES categories (_id)
+    ON DELETE CASCADE,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+INSERT INTO mangas_categories
+SELECT _id, manga_id, category_id
+FROM mangas_categories_temp;
+
+ALTER TABLE manga_sync RENAME TO manga_sync_temp;
+CREATE TABLE manga_sync(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    sync_id INTEGER NOT NULL,
+    remote_id INTEGER NOT NULL,
+    library_id INTEGER,
+    title TEXT NOT NULL,
+    last_chapter_read REAL NOT NULL,
+    total_chapters INTEGER NOT NULL,
+    status INTEGER NOT NULL,
+    score REAL AS Float NOT NULL,
+    remote_url TEXT NOT NULL,
+    start_date INTEGER AS Long NOT NULL,
+    finish_date INTEGER AS Long NOT NULL,
+    UNIQUE (manga_id, sync_id) ON CONFLICT REPLACE,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+INSERT INTO manga_sync
+SELECT _id, manga_id, sync_id, remote_id, library_id, title, last_chapter_read, total_chapters, status, score, remote_url, start_date, finish_date
+FROM manga_sync_temp;
+
+CREATE INDEX chapters_manga_id_index ON chapters(manga_id);
+CREATE INDEX chapters_unread_by_manga_index ON chapters(manga_id, read) WHERE read = 0;
+CREATE INDEX history_history_chapter_id_index ON history(history_chapter_id);
+CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
+CREATE INDEX mangas_url_index ON mangas(url);
+
+CREATE VIEW IF NOT EXISTS historyView AS
+SELECT
+history.history_id AS id,
+mangas._id AS mangaId,
+chapters._id AS chapterId,
+mangas.title,
+mangas.thumbnail_url AS thumnailUrl,
+chapters.chapter_number AS chapterNumber,
+history.history_last_read AS readAt,
+max_last_read.history_last_read AS maxReadAt,
+max_last_read.history_chapter_id AS maxReadAtChapterId
+FROM mangas
+JOIN chapters
+ON mangas._id = chapters.manga_id
+JOIN history
+ON chapters._id = history.history_chapter_id
+JOIN (
+SELECT chapters.manga_id,chapters._id AS history_chapter_id, MAX(history.history_last_read) AS history_last_read
+FROM chapters JOIN history
+ON chapters._id = history.history_chapter_id
+GROUP BY chapters.manga_id
+) AS max_last_read
+ON chapters.manga_id = max_last_read.manga_id;
+
+DROP TABLE IF EXISTS manga_sync_temp;
+DROP TABLE IF EXISTS mangas_categories_temp;
+DROP TABLE IF EXISTS history_temp;
+DROP TABLE IF EXISTS chapters_temp;
+DROP TABLE IF EXISTS categories_temp;
+DROP TABLE IF EXISTS manga_temp;

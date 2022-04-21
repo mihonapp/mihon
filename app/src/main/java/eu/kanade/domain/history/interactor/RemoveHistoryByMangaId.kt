@@ -6,7 +6,7 @@ class RemoveHistoryByMangaId(
     private val repository: HistoryRepository
 ) {
 
-    suspend fun await(mangaId: Long): Boolean {
-        return repository.resetHistoryByMangaId(mangaId)
+    suspend fun await(mangaId: Long) {
+        repository.resetHistoryByMangaId(mangaId)
     }
 }

@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting.database
 
 import android.os.Bundle
+import eu.kanade.tachiyomi.Database
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
@@ -13,6 +14,7 @@ import uy.kohesive.injekt.api.get
 class ClearDatabasePresenter : BasePresenter<ClearDatabaseController>() {
 
     private val db = Injekt.get<DatabaseHelper>()
+    private val database = Injekt.get<Database>()
 
     private val sourceManager = Injekt.get<SourceManager>()
 
@@ -26,7 +28,7 @@ class ClearDatabasePresenter : BasePresenter<ClearDatabaseController>() {
 
     fun clearDatabaseForSourceIds(sources: List<Long>) {
         db.deleteMangasNotInLibraryBySourceIds(sources).executeAsBlocking()
-        db.deleteHistoryNoLastRead().executeAsBlocking()
+        database.historyQueries.removeResettedHistory()
     }
 
     private fun getDatabaseSourcesObservable(): Observable<List<ClearDatabaseSourceItem>> {

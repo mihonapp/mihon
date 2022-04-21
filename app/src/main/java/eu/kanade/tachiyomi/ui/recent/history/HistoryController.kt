@@ -6,9 +6,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.databinding.ComposeControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
@@ -44,16 +44,16 @@ class HistoryController :
             HistoryScreen(
                 composeView = binding.root,
                 presenter = presenter,
-                onClickItem = { (manga, _, _) ->
-                    router.pushController(MangaController(manga).withFadeTransaction())
+                onClickItem = { history ->
+                    router.pushController(MangaController(history).withFadeTransaction())
                 },
-                onClickResume = { (manga, chapter, _) ->
-                    presenter.getNextChapterForManga(manga, chapter)
+                onClickResume = { history ->
+                    presenter.getNextChapterForManga(history.mangaId, history.chapterId)
                 },
-                onClickDelete = { (manga, _, history), all ->
+                onClickDelete = { history, all ->
                     if (all) {
                         // Reset last read of chapter to 0L
-                        presenter.removeAllFromHistory(manga.id!!)
+                        presenter.removeAllFromHistory(history.mangaId)
                     } else {
                         // Remove all chapters belonging to manga from library
                         presenter.removeFromHistory(history)
@@ -97,7 +97,7 @@ class HistoryController :
     fun openChapter(chapter: Chapter?) {
         val activity = activity ?: return
         if (chapter != null) {
-            val intent = ReaderActivity.newIntent(activity, chapter.manga_id, chapter.id)
+            val intent = ReaderActivity.newIntent(activity, chapter.mangaId, chapter.id)
             startActivity(intent)
         } else {
             activity.toast(R.string.no_next_chapter)

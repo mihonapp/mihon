@@ -1,6 +1,6 @@
 package eu.kanade.domain
 
-import eu.kanade.data.history.repository.HistoryRepositoryImpl
+import eu.kanade.data.history.HistoryRepositoryImpl
 import eu.kanade.domain.history.interactor.DeleteHistoryTable
 import eu.kanade.domain.history.interactor.GetHistory
 import eu.kanade.domain.history.interactor.GetNextChapterForManga

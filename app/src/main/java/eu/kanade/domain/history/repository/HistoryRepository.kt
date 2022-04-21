@@ -1,22 +1,18 @@
 package eu.kanade.domain.history.repository
 
-import eu.kanade.data.history.local.HistoryPagingSource
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.History
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
+import androidx.paging.PagingSource
+import eu.kanade.domain.chapter.model.Chapter
+import eu.kanade.domain.history.model.HistoryWithRelations
 
 interface HistoryRepository {
 
-    fun getHistory(query: String): HistoryPagingSource
+    fun getHistory(query: String): PagingSource<Long, HistoryWithRelations>
 
-    suspend fun getHistory(limit: Int, page: Int, query: String): List<MangaChapterHistory>
+    suspend fun getNextChapterForManga(mangaId: Long, chapterId: Long): Chapter?
 
-    suspend fun getNextChapterForManga(manga: Manga, chapter: Chapter): Chapter?
+    suspend fun resetHistory(historyId: Long)
 
-    suspend fun resetHistory(history: History): Boolean
-
-    suspend fun resetHistoryByMangaId(mangaId: Long): Boolean
+    suspend fun resetHistoryByMangaId(mangaId: Long)
 
     suspend fun deleteAllHistory(): Boolean
 }

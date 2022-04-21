@@ -1,0 +1,9 @@
+ALTER TABLE manga_sync
+RENAME TO manga_sync_tmp;
+
+INSERT INTO manga_sync(_id, manga_id, sync_id, remote_id, library_id, title, last_chapter_read, total_chapters, status, score, remote_url, start_date, finish_date)
+SELECT _id, manga_id, sync_id, remote_id, library_id, title, last_chapter_read, total_chapters, status, score, remote_url, start_date, finish_date
+FROM manga_sync_tmp;
+
+
+DROP TABLE manga_sync_tmp;

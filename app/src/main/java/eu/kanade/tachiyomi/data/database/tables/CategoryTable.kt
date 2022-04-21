@@ -11,13 +11,4 @@ object CategoryTable {
     const val COL_ORDER = "sort"
 
     const val COL_FLAGS = "flags"
-
-    val createTableQuery: String
-        get() =
-            """CREATE TABLE $TABLE(
-            $COL_ID INTEGER NOT NULL PRIMARY KEY,
-            $COL_NAME TEXT NOT NULL,
-            $COL_ORDER INTEGER NOT NULL,
-            $COL_FLAGS INTEGER NOT NULL
-            )"""
 }

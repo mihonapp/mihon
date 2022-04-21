@@ -10,11 +10,8 @@ import eu.kanade.domain.history.interactor.GetHistory
 import eu.kanade.domain.history.interactor.GetNextChapterForManga
 import eu.kanade.domain.history.interactor.RemoveHistoryById
 import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
+import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.History
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
@@ -58,20 +55,13 @@ class HistoryPresenter(
                             .map { pagingData ->
                                 pagingData
                                     .map {
-                                        UiModel.History(it)
+                                        UiModel.Item(it)
                                     }
                                     .insertSeparators { before, after ->
-                                        val beforeDate =
-                                            before?.item?.history?.last_read?.toDateKey()
-                                        val afterDate =
-                                            after?.item?.history?.last_read?.toDateKey()
+                                        val beforeDate = before?.item?.readAt?.time?.toDateKey() ?: Date(0)
+                                        val afterDate = after?.item?.readAt?.time?.toDateKey() ?: Date(0)
                                         when {
-                                            beforeDate == null && afterDate != null -> UiModel.Header(
-                                                afterDate,
-                                            )
-                                            beforeDate != null && afterDate != null -> UiModel.Header(
-                                                afterDate,
-                                            )
+                                            beforeDate.time != afterDate.time && afterDate.time != 0L -> UiModel.Header(afterDate)
                                             // Return null to avoid adding a separator between two items.
                                             else -> null
                                         }
@@ -90,7 +80,7 @@ class HistoryPresenter(
         }
     }
 
-    fun removeFromHistory(history: History) {
+    fun removeFromHistory(history: HistoryWithRelations) {
         presenterScope.launchIO {
             removeHistoryById.await(history)
         }
@@ -102,9 +92,9 @@ class HistoryPresenter(
         }
     }
 
-    fun getNextChapterForManga(manga: Manga, chapter: Chapter) {
+    fun getNextChapterForManga(mangaId: Long, chapterId: Long) {
         presenterScope.launchIO {
-            val chapter = getNextChapterForManga.await(manga, chapter)
+            val chapter = getNextChapterForManga.await(mangaId, chapterId)
             view?.openChapter(chapter)
         }
     }
@@ -121,7 +111,7 @@ class HistoryPresenter(
 }
 
 sealed class UiModel {
-    data class History(val item: MangaChapterHistory) : UiModel()
+    data class Item(val item: HistoryWithRelations) : UiModel()
     data class Header(val date: Date) : UiModel()
 }
 

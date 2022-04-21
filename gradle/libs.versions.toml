@@ -7,6 +7,7 @@ conductor_version = "3.1.2"
 flowbinding_version = "1.2.0"
 shizuku_version = "12.1.0"
 robolectric_version = "3.1.4"
+sqldelight = "1.5.3"
 
 [libraries]
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
@@ -96,6 +97,10 @@ robolectric-core = { module = "org.robolectric:robolectric", version.ref = "robo
 robolectric-playservices = { module = "org.robolectric:shadows-play-services", version.ref = "robolectric_version" }
 
 leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.7"
+
+sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref ="sqldelight" }
+sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref ="sqldelight" }
+sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-extensions", version.ref ="sqldelight" }
 
 [bundles]
 reactivex = ["rxandroid","rxjava","rxrelay"]
