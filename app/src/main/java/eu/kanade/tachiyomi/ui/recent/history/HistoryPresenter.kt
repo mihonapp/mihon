@@ -95,7 +95,9 @@ class HistoryPresenter(
     fun getNextChapterForManga(mangaId: Long, chapterId: Long) {
         presenterScope.launchIO {
             val chapter = getNextChapterForManga.await(mangaId, chapterId)
-            view?.openChapter(chapter)
+            launchUI {
+                view?.openChapter(chapter)
+            }
         }
     }
 
