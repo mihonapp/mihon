@@ -35,7 +35,9 @@ class ChapterHolder(
                 val number = adapter.decimalFormat.format(chapter.chapter_number.toDouble())
                 itemView.context.getString(R.string.display_mode_chapter, number)
             }
-            else -> cleanChapterName(chapter, manga)
+            else -> chapter.name
+            // TODO: show cleaned name consistently around the app
+            // else -> cleanChapterName(chapter, manga)
         }
 
         // Set correct text color
