@@ -9,7 +9,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.core.view.forEach
-import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +36,6 @@ class ClearDatabaseController :
     private var menu: Menu? = null
 
     private var actionFab: ExtendedFloatingActionButton? = null
-    private var actionFabScrollListener: RecyclerView.OnScrollListener? = null
 
     init {
         setHasOptionsMenu(true)
@@ -143,7 +141,6 @@ class ClearDatabaseController :
 
     override fun cleanupFab(fab: ExtendedFloatingActionButton) {
         actionFab?.setOnClickListener(null)
-        actionFabScrollListener?.let { recycler?.removeOnScrollListener(it) }
         actionFab = null
     }
 

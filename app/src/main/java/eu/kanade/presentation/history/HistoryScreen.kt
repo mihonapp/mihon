@@ -39,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.text.buildSpannedString
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -60,7 +59,7 @@ import uy.kohesive.injekt.api.get
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.util.*
+import java.util.Date
 
 val chapterFormatter = DecimalFormat(
     "#.###",
@@ -223,18 +222,16 @@ fun HistoryItem(
             )
             Row {
                 Text(
-                    text = buildSpannedString {
-                        if (history.chapterNumber > -1) {
-                            append(
-                                stringResource(
-                                    R.string.history_prefix,
-                                    chapterFormatter.format(history.chapterNumber)
-                                )
-                            )
-                        }
-                        append(history.readAt?.toTimestampString())
-                    }.toString(),
-                    modifier = Modifier.padding(top = 2.dp),
+                    text = if (history.chapterNumber > -1) {
+                        stringResource(
+                            R.string.recent_manga_time,
+                            chapterFormatter.format(history.chapterNumber),
+                            history.readAt?.toTimestampString() ?: "",
+                        )
+                    } else {
+                        history.readAt?.toTimestampString() ?: ""
+                    },
+                    modifier = Modifier.padding(top = 4.dp),
                     style = textStyle
                 )
             }
