@@ -1,16 +1,14 @@
 package eu.kanade.tachiyomi.ui.recent.history
 
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.compose.runtime.Composable
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.databinding.ComposeControllerBinding
-import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.ComposeController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -21,46 +19,35 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.appcompat.queryTextChanges
 
-/**
- * Fragment that shows recently read manga.
- */
-class HistoryController :
-    NucleusController<ComposeControllerBinding, HistoryPresenter>(),
-    RootController {
+class HistoryController : ComposeController<HistoryPresenter>(), RootController {
 
     private var query = ""
 
-    override fun getTitle(): String? = resources?.getString(R.string.label_recent_manga)
+    override fun getTitle() = resources?.getString(R.string.label_recent_manga)
 
-    override fun createPresenter(): HistoryPresenter = HistoryPresenter()
+    override fun createPresenter() = HistoryPresenter()
 
-    override fun createBinding(inflater: LayoutInflater): ComposeControllerBinding =
-        ComposeControllerBinding.inflate(inflater)
-
-    override fun onViewCreated(view: View) {
-        super.onViewCreated(view)
-
-        binding.root.setContent {
-            HistoryScreen(
-                composeView = binding.root,
-                presenter = presenter,
-                onClickItem = { history ->
-                    router.pushController(MangaController(history).withFadeTransaction())
-                },
-                onClickResume = { history ->
-                    presenter.getNextChapterForManga(history.mangaId, history.chapterId)
-                },
-                onClickDelete = { history, all ->
-                    if (all) {
-                        // Reset last read of chapter to 0L
-                        presenter.removeAllFromHistory(history.mangaId)
-                    } else {
-                        // Remove all chapters belonging to manga from library
-                        presenter.removeFromHistory(history)
-                    }
-                },
-            )
-        }
+    @Composable
+    override fun ComposeContent() {
+        HistoryScreen(
+            composeView = binding.root,
+            presenter = presenter,
+            onClickItem = { history ->
+                router.pushController(MangaController(history).withFadeTransaction())
+            },
+            onClickResume = { history ->
+                presenter.getNextChapterForManga(history.mangaId, history.chapterId)
+            },
+            onClickDelete = { history, all ->
+                if (all) {
+                    // Reset last read of chapter to 0L
+                    presenter.removeAllFromHistory(history.mangaId)
+                } else {
+                    // Remove all chapters belonging to manga from library
+                    presenter.removeFromHistory(history)
+                }
+            },
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
