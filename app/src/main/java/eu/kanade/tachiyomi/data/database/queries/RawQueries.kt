@@ -70,8 +70,7 @@ fun getRecentMangasQuery(search: String = "") =
     SELECT ${Chapter.TABLE}.${Chapter.COL_MANGA_ID},${Chapter.TABLE}.${Chapter.COL_ID} as ${History.COL_CHAPTER_ID}, MAX(${History.TABLE}.${History.COL_LAST_READ}) as ${History.COL_LAST_READ}
     FROM ${Chapter.TABLE} JOIN ${History.TABLE}
     ON ${Chapter.TABLE}.${Chapter.COL_ID} = ${History.TABLE}.${History.COL_CHAPTER_ID}
-    GROUP BY ${Chapter.TABLE}.${Chapter.COL_MANGA_ID}
-    ) AS max_last_read
+    GROUP BY ${Chapter.TABLE}.${Chapter.COL_MANGA_ID}) AS max_last_read
     ON ${Chapter.TABLE}.${Chapter.COL_MANGA_ID} = max_last_read.${Chapter.COL_MANGA_ID}
     WHERE ${History.TABLE}.${History.COL_LAST_READ} > ?
     AND max_last_read.${History.COL_CHAPTER_ID} = ${History.TABLE}.${History.COL_CHAPTER_ID}

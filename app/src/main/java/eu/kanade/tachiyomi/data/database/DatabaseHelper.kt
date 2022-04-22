@@ -26,15 +26,12 @@ import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 /**
  * This class provides operations to manage the database through its interfaces.
  */
-open class DatabaseHelper(
-    context: Context,
-    callback: DbOpenCallback
-) :
+open class DatabaseHelper(context: Context) :
     MangaQueries, ChapterQueries, TrackQueries, CategoryQueries, MangaCategoryQueries, HistoryQueries {
 
     private val configuration = SupportSQLiteOpenHelper.Configuration.builder(context)
         .name(DbOpenCallback.DATABASE_NAME)
-        .callback(callback)
+        .callback(DbOpenCallback())
         .build()
 
     override val db = DefaultStorIOSQLite.builder()

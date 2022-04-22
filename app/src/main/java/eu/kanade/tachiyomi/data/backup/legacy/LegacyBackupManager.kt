@@ -168,7 +168,7 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
                 }
             }
         }
-        databaseHelper.upsertHistoryLastRead(historyToBeUpdated).executeAsBlocking()
+        databaseHelper.updateHistoryLastRead(historyToBeUpdated).executeAsBlocking()
     }
 
     /**

@@ -449,7 +449,7 @@ class ReaderPresenter(
     private fun saveChapterHistory(chapter: ReaderChapter) {
         if (!incognitoMode) {
             val history = History.create(chapter.chapter).apply { last_read = Date().time }
-            db.upsertHistoryLastRead(history).asRxCompletable()
+            db.updateHistoryLastRead(history).asRxCompletable()
                 .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe()

@@ -1,9 +1,0 @@
-[versions]
-compose = "1.2.0-alpha07"
-
-[libraries]
-foundation = { module = "androidx.compose.foundation:foundation", version.ref="compose" }
-material3-core = "androidx.compose.material3:material3:1.0.0-alpha09"
-material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.6"
-animation = { module = "androidx.compose.animation:animation", version.ref="compose" }
-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref="compose" }
