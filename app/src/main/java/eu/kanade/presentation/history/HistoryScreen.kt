@@ -46,7 +46,6 @@ import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.components.MangaCoverAspect
-import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -61,12 +60,6 @@ import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Date
 
-val chapterFormatter = DecimalFormat(
-    "#.###",
-    DecimalFormatSymbols()
-        .apply { decimalSeparator = '.' },
-)
-
 @Composable
 fun HistoryScreen(
     composeView: ComposeView,
@@ -76,27 +69,25 @@ fun HistoryScreen(
     onClickDelete: (HistoryWithRelations, Boolean) -> Unit,
 ) {
     val nestedScrollInterop = rememberNestedScrollInteropConnection(composeView)
-    TachiyomiTheme {
-        val state by presenter.state.collectAsState()
-        val history = state.list?.collectAsLazyPagingItems()
-        when {
-            history == null -> {
-                CircularProgressIndicator()
-            }
-            history.itemCount == 0 -> {
-                EmptyScreen(
-                    textResource = R.string.information_no_recent_manga
-                )
-            }
-            else -> {
-                HistoryContent(
-                    nestedScroll = nestedScrollInterop,
-                    history = history,
-                    onClickItem = onClickItem,
-                    onClickResume = onClickResume,
-                    onClickDelete = onClickDelete,
-                )
-            }
+    val state by presenter.state.collectAsState()
+    val history = state.list?.collectAsLazyPagingItems()
+    when {
+        history == null -> {
+            CircularProgressIndicator()
+        }
+        history.itemCount == 0 -> {
+            EmptyScreen(
+                textResource = R.string.information_no_recent_manga
+            )
+        }
+        else -> {
+            HistoryContent(
+                nestedScroll = nestedScrollInterop,
+                history = history,
+                onClickItem = onClickItem,
+                onClickResume = onClickResume,
+                onClickDelete = onClickDelete,
+            )
         }
     }
 }
@@ -146,10 +137,7 @@ fun HistoryContent(
             }
         }
         item {
-            Spacer(
-                modifier = Modifier
-                    .navigationBarsPadding()
-            )
+            Spacer(Modifier.navigationBarsPadding())
         }
     }
 
@@ -302,3 +290,8 @@ fun RemoveHistoryDialog(
         },
     )
 }
+
+private val chapterFormatter = DecimalFormat(
+    "#.###",
+    DecimalFormatSymbols().apply { decimalSeparator = '.' },
+)
