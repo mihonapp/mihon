@@ -2,9 +2,18 @@ package eu.kanade.tachiyomi
 
 import android.app.Application
 import androidx.core.content.ContextCompat
+import com.squareup.sqldelight.android.AndroidSqliteDriver
+import com.squareup.sqldelight.db.SqlDriver
+import data.History
+import data.Mangas
+import eu.kanade.data.AndroidDatabaseHandler
+import eu.kanade.data.DatabaseHandler
+import eu.kanade.data.dateAdapter
+import eu.kanade.data.listOfStringsAdapter
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.database.DbOpenCallback
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.saver.ImageSaver
@@ -25,11 +34,37 @@ class AppModule(val app: Application) : InjektModule {
     override fun InjektRegistrar.registerInjectables() {
         addSingleton(app)
 
+        addSingletonFactory { DbOpenCallback() }
+
+        addSingletonFactory<SqlDriver> {
+            AndroidSqliteDriver(
+                schema = Database.Schema,
+                context = app,
+                name = DbOpenCallback.DATABASE_NAME,
+                callback = get<DbOpenCallback>()
+            )
+        }
+
+        addSingletonFactory {
+            Database(
+                driver = get(),
+                historyAdapter = History.Adapter(
+                    history_last_readAdapter = dateAdapter,
+                    history_time_readAdapter = dateAdapter
+                ),
+                mangasAdapter = Mangas.Adapter(
+                    genreAdapter = listOfStringsAdapter
+                )
+            )
+        }
+
+        addSingletonFactory<DatabaseHandler> { AndroidDatabaseHandler(get(), get()) }
+
         addSingletonFactory { Json { ignoreUnknownKeys = true } }
 
         addSingletonFactory { PreferencesHelper(app) }
 
-        addSingletonFactory { DatabaseHelper(app) }
+        addSingletonFactory { DatabaseHelper(app, get()) }
 
         addSingletonFactory { ChapterCache(app) }
 
@@ -56,6 +91,8 @@ class AppModule(val app: Application) : InjektModule {
             get<NetworkHelper>()
 
             get<SourceManager>()
+
+            get<Database>()
 
             get<DatabaseHelper>()
 

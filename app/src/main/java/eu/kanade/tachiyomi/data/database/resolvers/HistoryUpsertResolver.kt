@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.data.database.mappers.HistoryPutResolver
 import eu.kanade.tachiyomi.data.database.models.History
 import eu.kanade.tachiyomi.data.database.tables.HistoryTable
 
-class HistoryLastReadPutResolver : HistoryPutResolver() {
+class HistoryUpsertResolver : HistoryPutResolver() {
 
     /**
      * Updates last_read time of chapter

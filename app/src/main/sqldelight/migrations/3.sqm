@@ -1,0 +1,2 @@
+ALTER TABLE chapters
+ADD COLUMN bookmark INTEGER DEFAULT 0;
