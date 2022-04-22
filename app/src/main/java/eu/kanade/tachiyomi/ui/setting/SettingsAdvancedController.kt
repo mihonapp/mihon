@@ -44,6 +44,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import rikka.sui.Sui
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import eu.kanade.tachiyomi.util.system.isDevFlavor
 
 class SettingsAdvancedController : SettingsController() {
 
@@ -55,7 +56,7 @@ class SettingsAdvancedController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_advanced
 
-        if (BuildConfig.FLAVOR != "dev") {
+        if (isDevFlavor.not()) {
             switchPreference {
                 key = "acra.enable"
                 titleRes = R.string.pref_enable_acra
@@ -78,7 +79,7 @@ class SettingsAdvancedController : SettingsController() {
             key = Keys.verboseLogging
             titleRes = R.string.pref_verbose_logging
             summaryRes = R.string.pref_verbose_logging_summary
-            defaultValue = false
+            defaultValue = isDevFlavor
 
             onChange {
                 activity?.toast(R.string.requires_app_restart)

@@ -7,6 +7,7 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -25,6 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
+import eu.kanade.tachiyomi.util.system.isDevFlavor
 
 class PreferencesHelper(val context: Context) {
 
@@ -319,7 +321,7 @@ class PreferencesHelper(val context: Context) {
         if (DeviceUtil.isMiui) Values.ExtensionInstaller.LEGACY else Values.ExtensionInstaller.PACKAGEINSTALLER,
     )
 
-    fun verboseLogging() = prefs.getBoolean(Keys.verboseLogging, false)
+    fun verboseLogging() = prefs.getBoolean(Keys.verboseLogging, isDevFlavor)
 
     fun autoClearChapterCache() = prefs.getBoolean(Keys.autoClearChapterCache, false)
 
