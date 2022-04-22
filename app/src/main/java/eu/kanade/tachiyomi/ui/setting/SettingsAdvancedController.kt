@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.provider.Settings
+import android.webkit.WebStorage
+import android.webkit.WebView
 import androidx.core.net.toUri
 import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -39,8 +41,11 @@ import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.powerManager
+import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
+import logcat.LogPriority
 import rikka.sui.Sui
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
@@ -138,6 +143,12 @@ class SettingsAdvancedController : SettingsController() {
                 key = Keys.autoClearChapterCache
                 titleRes = R.string.pref_auto_clear_chapter_cache
                 defaultValue = false
+            }
+            preference {
+                key = "pref_clear_webview_data"
+                titleRes = R.string.pref_clear_webview_data
+
+                onClick { clearWebViewData() }
             }
             preference {
                 key = "pref_clear_database"
@@ -275,8 +286,26 @@ class SettingsAdvancedController : SettingsController() {
                         resources?.getString(R.string.used_cache, chapterCache.readableSize)
                 }
             } catch (e: Throwable) {
+                logcat(LogPriority.ERROR, e)
                 withUIContext { activity?.toast(R.string.cache_delete_error) }
             }
+        }
+    }
+
+    private fun clearWebViewData() {
+        if (activity == null) return
+        try {
+            val webview = WebView(activity!!)
+            webview.setDefaultSettings()
+            webview.clearCache(true)
+            webview.clearFormData()
+            webview.clearHistory()
+            webview.clearSslPreferences()
+            WebStorage.getInstance().deleteAllData()
+            activity?.toast(R.string.webview_data_deleted)
+        } catch (e: Throwable) {
+            logcat(LogPriority.ERROR, e)
+            activity?.toast(R.string.cache_delete_error)
         }
     }
 }

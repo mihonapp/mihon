@@ -469,7 +469,7 @@
     <string name="pref_clear_chapter_cache">Clear chapter cache</string>
     <string name="used_cache">Used: %1$s</string>
     <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
-    <string name="cache_delete_error">An error occurred while clearing cache</string>
+    <string name="cache_delete_error">Error occurred while clearing</string>
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app close</string>
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for manga that are not saved in your library</string>
@@ -477,6 +477,8 @@
     <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library manga will be lost</string>
     <string name="clear_database_completed">Entries deleted</string>
     <string name="database_clean">Database clean</string>
+    <string name="pref_clear_webview_data">Clear WebView data</string>
+    <string name="webview_data_deleted">WebView data cleared</string>
     <string name="pref_refresh_library_covers">Refresh library manga covers</string>
     <string name="pref_refresh_library_tracking">Refresh tracking</string>
     <string name="pref_refresh_library_tracking_summary">Updates status, score and last chapter read from the tracking services</string>
