@@ -15,6 +15,9 @@ CREATE TABLE chapters(
     ON DELETE CASCADE
 );
 
+CREATE INDEX chapters_manga_id_index ON chapters(manga_id);
+CREATE INDEX chapters_unread_by_manga_index ON chapters(manga_id, read) WHERE read = 0;
+
 getChapterById:
 SELECT *
 FROM chapters

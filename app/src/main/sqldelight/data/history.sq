@@ -9,6 +9,8 @@ CREATE TABLE history(
     ON DELETE CASCADE
 );
 
+CREATE INDEX history_history_chapter_id_index ON history(history_chapter_id);
+
 resetHistoryById:
 UPDATE history
 SET history_last_read = 0
