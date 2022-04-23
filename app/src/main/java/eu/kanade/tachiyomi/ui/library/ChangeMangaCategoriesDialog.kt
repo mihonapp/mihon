@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
 import eu.kanade.tachiyomi.widget.materialdialogs.setQuadStateMultiChoiceItems
@@ -71,7 +71,7 @@ class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
             libController.clearSelection()
         }
         router.popCurrentController()
-        router.pushController(CategoryController().withFadeTransaction())
+        router.pushController(CategoryController())
     }
 
     interface Listener {

@@ -9,7 +9,7 @@ import dev.chrisbanes.insetter.applyInsetter
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.databinding.MigrationMangaControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.migration.search.SearchController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 
@@ -73,13 +73,13 @@ class MigrationMangaController :
     override fun onItemClick(view: View, position: Int): Boolean {
         val item = adapter?.getItem(position) as? MigrationMangaItem ?: return false
         val controller = SearchController(item.manga)
-        router.pushController(controller.withFadeTransaction())
+        router.pushController(controller)
         return false
     }
 
     override fun onCoverClick(position: Int) {
         val mangaItem = adapter?.getItem(position) as? MigrationMangaItem ?: return
-        router.pushController(MangaController(mangaItem.manga).withFadeTransaction())
+        router.pushController(MangaController(mangaItem.manga))
     }
 
     companion object {

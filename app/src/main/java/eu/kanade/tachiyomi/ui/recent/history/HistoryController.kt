@@ -11,7 +11,7 @@ import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.ComposeController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.toast
@@ -34,7 +34,7 @@ class HistoryController : ComposeController<HistoryPresenter>(), RootController 
             nestedScrollInterop = nestedScrollInterop,
             presenter = presenter,
             onClickCover = { history ->
-                router.pushController(MangaController(history).withFadeTransaction())
+                router.pushController(MangaController(history))
             },
             onClickResume = { history ->
                 presenter.getNextChapterForManga(history.mangaId, history.chapterId)

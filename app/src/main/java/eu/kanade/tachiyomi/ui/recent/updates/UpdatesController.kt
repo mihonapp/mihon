@@ -20,7 +20,7 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.databinding.UpdatesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.manga.chapter.base.BaseChaptersAdapter
@@ -282,7 +282,7 @@ class UpdatesController :
     }
 
     private fun openManga(chapter: UpdatesItem) {
-        router.pushController(MangaController(chapter.manga).withFadeTransaction())
+        router.pushController(MangaController(chapter.manga))
     }
 
     /**

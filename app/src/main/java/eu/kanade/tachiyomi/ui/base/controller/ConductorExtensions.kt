@@ -22,6 +22,10 @@ fun Router.popControllerWithTag(tag: String): Boolean {
     return false
 }
 
+fun Router.pushController(controller: Controller) {
+    pushController(controller.withFadeTransaction())
+}
+
 fun Controller.requestPermissionsSafe(permissions: Array<String>, requestCode: Int) {
     val activity = activity ?: return
     permissions.forEach { permission ->

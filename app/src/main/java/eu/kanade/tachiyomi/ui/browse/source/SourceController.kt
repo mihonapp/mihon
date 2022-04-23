@@ -23,8 +23,8 @@ import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.SearchableNucleusController
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
@@ -180,7 +180,7 @@ class SourceController :
         if (!preferences.incognitoMode().get()) {
             preferences.lastUsedSource().set(source.id)
         }
-        parentController!!.router.pushController(controller.withFadeTransaction())
+        parentController!!.router.pushController(controller)
     }
 
     /**
@@ -193,10 +193,7 @@ class SourceController :
         when (item.itemId) {
             // Initialize option to open catalogue settings.
             R.id.action_settings -> {
-                parentController!!.router.pushController(
-                    SourceFilterController()
-                        .withFadeTransaction(),
-                )
+                parentController!!.router.pushController(SourceFilterController())
             }
         }
         return super.onOptionsItemSelected(item)
@@ -253,8 +250,6 @@ class SourceController :
     }
 
     override fun onSearchViewQueryTextSubmit(query: String?) {
-        parentController!!.router.pushController(
-            GlobalSearchController(query).withFadeTransaction(),
-        )
+        parentController!!.router.pushController(GlobalSearchController(query))
     }
 }

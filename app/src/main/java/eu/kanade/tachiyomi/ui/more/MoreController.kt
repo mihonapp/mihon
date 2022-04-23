@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.ui.base.controller.NoAppBarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.download.DownloadController
 import eu.kanade.tachiyomi.ui.setting.SettingsBackupController
@@ -87,7 +87,7 @@ class MoreController :
                 iconRes = R.drawable.ic_get_app_24dp
                 iconTint = tintColor
                 onClick {
-                    router.pushController(DownloadController().withFadeTransaction())
+                    router.pushController(DownloadController())
                 }
             }
             preference {
@@ -95,7 +95,7 @@ class MoreController :
                 iconRes = R.drawable.ic_label_24dp
                 iconTint = tintColor
                 onClick {
-                    router.pushController(CategoryController().withFadeTransaction())
+                    router.pushController(CategoryController())
                 }
             }
             preference {
@@ -103,7 +103,7 @@ class MoreController :
                 iconRes = R.drawable.ic_settings_backup_restore_24dp
                 iconTint = tintColor
                 onClick {
-                    router.pushController(SettingsBackupController().withFadeTransaction())
+                    router.pushController(SettingsBackupController())
                 }
             }
         }
@@ -114,7 +114,7 @@ class MoreController :
                 iconRes = R.drawable.ic_settings_24dp
                 iconTint = tintColor
                 onClick {
-                    router.pushController(SettingsMainController().withFadeTransaction())
+                    router.pushController(SettingsMainController())
                 }
             }
             preference {
@@ -122,7 +122,7 @@ class MoreController :
                 iconTint = tintColor
                 titleRes = R.string.pref_category_about
                 onClick {
-                    router.pushController(AboutController().withFadeTransaction())
+                    router.pushController(AboutController())
                 }
             }
             preference {

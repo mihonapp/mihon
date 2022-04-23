@@ -31,7 +31,7 @@ import eu.kanade.tachiyomi.source.getPreferenceKey
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.util.preference.DSL
 import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.onChange
@@ -165,9 +165,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
             switchSettingsPreference {
                 block()
                 onSettingsClick = View.OnClickListener {
-                    router.pushController(
-                        SourcePreferencesController(source.id).withFadeTransaction(),
-                    )
+                    router.pushController(SourcePreferencesController(source.id))
                 }
             }
         } else {

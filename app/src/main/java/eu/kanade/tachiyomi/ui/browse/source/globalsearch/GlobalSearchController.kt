@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.GlobalSearchControllerBinding
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.base.controller.SearchableNucleusController
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import uy.kohesive.injekt.injectLazy
@@ -65,7 +65,7 @@ open class GlobalSearchController(
      * @param manga clicked item containing manga information.
      */
     override fun onMangaClick(manga: Manga) {
-        router.pushController(MangaController(manga, true).withFadeTransaction())
+        router.pushController(MangaController(manga, true))
     }
 
     /**
@@ -207,6 +207,6 @@ open class GlobalSearchController(
         if (!preferences.incognitoMode().get()) {
             preferences.lastUsedSource().set(source.id)
         }
-        router.pushController(BrowseSourceController(source, presenter.query).withFadeTransaction())
+        router.pushController(BrowseSourceController(source, presenter.query))
     }
 }

@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.databinding.ExtensionControllerBinding
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsController
 import kotlinx.coroutines.flow.drop
@@ -92,9 +92,7 @@ open class ExtensionController :
         when (item.itemId) {
             R.id.action_search -> expandActionViewFromInteraction = true
             R.id.action_settings -> {
-                parentController!!.router.pushController(
-                    ExtensionFilterController().withFadeTransaction(),
-                )
+                parentController!!.router.pushController(ExtensionFilterController())
             }
         }
         return super.onOptionsItemSelected(item)
@@ -172,7 +170,7 @@ open class ExtensionController :
 
     private fun openDetails(extension: Extension.Installed) {
         val controller = ExtensionDetailsController(extension.pkgName)
-        parentController!!.router.pushController(controller.withFadeTransaction())
+        parentController!!.router.pushController(controller)
     }
 
     private fun openTrustDialog(extension: Extension.Untrusted) {

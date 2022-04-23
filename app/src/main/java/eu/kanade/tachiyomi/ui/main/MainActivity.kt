@@ -46,8 +46,8 @@ import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.NoAppBarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.base.controller.setRoot
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
@@ -182,12 +182,12 @@ class MainActivity : BaseActivity() {
                     }
                     R.id.nav_updates -> {
                         if (router.backstackSize == 1) {
-                            router.pushController(DownloadController().withFadeTransaction())
+                            router.pushController(DownloadController())
                         }
                     }
                     R.id.nav_more -> {
                         if (router.backstackSize == 1) {
-                            router.pushController(SettingsMainController().withFadeTransaction())
+                            router.pushController(SettingsMainController())
                         }
                     }
                 }
@@ -408,7 +408,7 @@ class MainActivity : BaseActivity() {
                     router.popToRoot()
                 }
                 setSelectedNavItem(R.id.nav_browse)
-                router.pushController(BrowseController(toExtensions = true).withFadeTransaction())
+                router.pushController(BrowseController(toExtensions = true))
             }
             SHORTCUT_MANGA -> {
                 val extras = intent.extras ?: return false
@@ -424,7 +424,7 @@ class MainActivity : BaseActivity() {
                     router.popToRoot()
                 }
                 setSelectedNavItem(R.id.nav_more)
-                router.pushController(DownloadController().withFadeTransaction())
+                router.pushController(DownloadController())
             }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {
                 // If the intent match the "standard" Android search intent
@@ -436,7 +436,7 @@ class MainActivity : BaseActivity() {
                     if (router.backstackSize > 1) {
                         router.popToRoot()
                     }
-                    router.pushController(GlobalSearchController(query).withFadeTransaction())
+                    router.pushController(GlobalSearchController(query))
                 }
             }
             INTENT_SEARCH -> {
@@ -446,7 +446,7 @@ class MainActivity : BaseActivity() {
                     if (router.backstackSize > 1) {
                         router.popToRoot()
                     }
-                    router.pushController(GlobalSearchController(query, filter).withFadeTransaction())
+                    router.pushController(GlobalSearchController(query, filter))
                 }
             }
             else -> {

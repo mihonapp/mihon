@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
 import eu.kanade.tachiyomi.ui.base.controller.BasicComposeController
 import eu.kanade.tachiyomi.ui.base.controller.NoAppBarElevationController
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.lang.toDateTimestampString
 import eu.kanade.tachiyomi.util.system.logcat
@@ -36,7 +36,7 @@ class AboutController : BasicComposeController(), NoAppBarElevationController {
             checkVersion = this::checkVersion,
             getFormattedBuildTime = this::getFormattedBuildTime,
             onClickLicenses = {
-                router.pushController(LicensesController().withFadeTransaction())
+                router.pushController(LicensesController())
             },
         )
     }
