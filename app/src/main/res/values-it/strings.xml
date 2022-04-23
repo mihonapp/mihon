@@ -73,7 +73,7 @@
     <string name="all">Tutte</string>
     <string name="pref_library_update_restriction">Restrizioni del dispositivo agli aggiornamenti automatici</string>
     <string name="charging">In carica</string>
-    <string name="pref_update_only_non_completed">Con stato \"completa\"</string>
+    <string name="pref_update_only_non_completed">Con stato «completa»</string>
     <string name="pref_auto_update_manga_sync">Aggiorna il tracking dopo la lettura</string>
     <string name="pref_start_screen">Schermata iniziale</string>
     <!-- Reader section -->
@@ -131,7 +131,7 @@
     <string name="pref_clear_chapter_cache">Cancella cache capitoli</string>
     <string name="used_cache">Usati: %1$s</string>
     <string name="cache_deleted">Cache cancellata. %1$d file sono stati cancellati</string>
-    <string name="cache_delete_error">Si è verificato un errore durante la cancellazione della cache</string>
+    <string name="cache_delete_error">Errore durante la cancellazione</string>
     <string name="pref_clear_cookies">Cancella cookie</string>
     <string name="cookies_cleared">Cookie cancellati</string>
     <string name="pref_clear_database">Pulisci database</string>
@@ -217,7 +217,6 @@
     <string name="file_select_backup">Seleziona file di backup</string>
     <!--UpdateCheck-->
     <string name="update_check_confirm">Scarica</string>
-    <string name="update_check_ignore">Ignora</string>
     <string name="update_check_no_new_updates">Non ci sono nuovi aggiornamenti disponibili</string>
     <string name="update_check_look_for_updates">Ricerca aggiornamenti…</string>
     <!--UpdateCheck Notifications-->
@@ -531,7 +530,7 @@
     <string name="action_disable">Disabilita</string>
     <string name="action_start">Inizia</string>
     <string name="action_download_unread">Scarica capitoli non letti</string>
-    <string name="action_global_search_query">Ricerca \"%1$s\" globalmente</string>
+    <string name="action_global_search_query">Ricerca «%1$s» globalmente</string>
     <string name="download_insufficient_space">Impossibile scaricare i capitoli a causa dello spazio di archiviazione insufficiente</string>
     <string name="pref_category_reading_mode">Modalità di lettura</string>
     <string name="pref_category_theme">Tema</string>
@@ -750,4 +749,8 @@
     <string name="disabled_nav">Disattivato</string>
     <string name="update_check_fdroid_migration_info">C\'è una nuova versione ufficiale disponibile. Tocca per imparare a migrare dalle release non ufficiali di F-droid.</string>
     <string name="error_saving_picture">Errore durante il salvataggio dell\'immagine</string>
+    <string name="empty_backup_error">Nessuna voce in libreria di cui eseguire il backup</string>
+    <string name="update_check_open">Apri su GitHub</string>
+    <string name="pref_clear_webview_data">Cancella dati WebView</string>
+    <string name="webview_data_deleted">Dati WebView cancellati</string>
 </resources>

@@ -87,7 +87,7 @@
     <string name="all">Tot</string>
     <string name="pref_library_update_restriction">Restriccions del dispositiu per a les actualitzacions automàtiques</string>
     <string name="charging">Carregant</string>
-    <string name="pref_update_only_non_completed">És una sèrie completada</string>
+    <string name="pref_update_only_non_completed">Amb l\'estat «Completada»</string>
     <string name="pref_auto_update_manga_sync">Actualitza el progrés després de llegir</string>
     <string name="pref_start_screen">Pantalla d\'inici</string>
     <string name="default_category">Categoria per defecte</string>
@@ -184,7 +184,7 @@
     <string name="pref_clear_chapter_cache">Buida la memòria cau de capítols</string>
     <string name="used_cache">Ús: %1$s</string>
     <string name="cache_deleted">S\'ha buidat la memòria cau. S\'han suprimit %1$d fitxers</string>
-    <string name="cache_delete_error">S\'ha produït un error en buidar la memòria cau</string>
+    <string name="cache_delete_error">S\'ha produït un error en netejar</string>
     <string name="pref_clear_cookies">Esborra les galetes</string>
     <string name="cookies_cleared">S\'han esborrat les galetes</string>
     <string name="pref_clear_database">Buida la base de dades</string>
@@ -288,7 +288,6 @@
     <string name="file_select_cover">Seleccioneu la imatge de portada</string>
     <string name="file_select_backup">Seleccioneu el fitxer de còpia de seguretat</string>
     <string name="update_check_confirm">Baixa</string>
-    <string name="update_check_ignore">Ignora</string>
     <string name="update_check_no_new_updates">No hi ha cap nova actualització disponible</string>
     <string name="update_check_look_for_updates">S\'estan cercant actualitzacions…</string>
     <string name="update_check_notification_download_in_progress">S\'està baixant…</string>
@@ -679,8 +678,8 @@
     <string name="library_errors_help">Per a obtenir ajuda per a resoldre errors d\'actualització de la biblioteca, vegeu %1$s</string>
     <string name="extension_api_error">No s\'ha pogut obtenir la llista d\'extensions</string>
     <string name="action_faq_and_guides">PMF i guies</string>
-    <string name="pref_library_update_manga_restriction">Omet les actualitzacions</string>
-    <string name="pref_update_only_completely_read">Té capítols no llegits</string>
+    <string name="pref_library_update_manga_restriction">Omet les actualitzacions dels títols</string>
+    <string name="pref_update_only_completely_read">Amb capítols no llegits</string>
     <string name="pref_library_update_show_tab_badge">Mostra el comptador de no llegits a la icona d\'actualitzacions</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="save_chapter_as_cbz">Desa com a arxiu CBZ</string>
@@ -695,7 +694,7 @@
     <string name="action_track">Segueix</string>
     <string name="ext_app_info">Informació de l\'aplicació</string>
     <string name="download_queue_size_warning">Advertència: Les baixades massa grosses poden fer que les fonts es tornin més lentes i/o bloquin el Tachiyomi</string>
-    <string name="notification_size_warning">Advertència: Les actualitzacions grosses perjudiquen les fonts i poden implicar actualitzacions més lentes i un augment en l\'ús de bateria</string>
+    <string name="notification_size_warning">Les actualitzacions grosses perjudiquen les fonts i poden implicar actualitzacions més lentes i un augment en l\'ús de bateria</string>
     <string name="pref_landscape_zoom">Amplia la imatge en horitzontal</string>
     <string name="action_show_manga">Mostra el manga</string>
     <string name="confirm_manga_add_duplicate">Teniu un element a la vostra biblioteca amb el mateix nom però d\'una font diferent (%1$s).
@@ -704,7 +703,7 @@
     <string name="pref_navigate_pan">Navega per a desplaçar</string>
     <string name="action_display_cover_only_grid">Graella només a la portada</string>
     <string name="action_filter_started">Començats</string>
-    <string name="pref_update_only_started">No té capítols llegits</string>
+    <string name="pref_update_only_started">Que no s\'hagin començat</string>
     <string name="skipped_reason_completed">S\'ha omès perquè la sèrie està completada</string>
     <string name="skipped_reason_not_started">S\'ha omès perquè no hi ha cap capítol llegit</string>
     <string name="skipped_reason_not_caught_up">S\'ha omès perquè hi ha capítols no llegits</string>
@@ -715,4 +714,10 @@
     <string name="rotation_reverse_portrait">Vertical inversa</string>
     <string name="action_move_to_top_all_for_series">Mou la sèrie a dalt de tot</string>
     <string name="disabled_nav">Desactivat</string>
+    <string name="update_check_open">Obre al GitHub</string>
+    <string name="error_saving_picture">S\'ha produït un error en desar la imatge</string>
+    <string name="empty_backup_error">No hi ha cap element a la biblioteca del qual fer còpia de seguretat</string>
+    <string name="update_check_fdroid_migration_info">Hi ha una nova versió disponible als llançaments oficials. Premeu per a obtenir informació de com migrar a partir dels llançaments no oficials d\'F-Droid.</string>
+    <string name="pref_clear_webview_data">Neteja les dades del WebView</string>
+    <string name="webview_data_deleted">S\'han netejat les dades del WebView</string>
 </resources>

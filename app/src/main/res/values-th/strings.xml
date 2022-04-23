@@ -100,7 +100,7 @@
     <string name="pref_library_update_interval">การอัปเดตอัตโนมัติ</string>
     <string name="update_never">ปิด</string>
     <string name="pref_library_update_restriction">อัปเดตข้อจำกัดของอุปกรณ์โดยอัตโนมัติ</string>
-    <string name="pref_update_only_non_completed">เรื่องที่จบแล้ว</string>
+    <string name="pref_update_only_non_completed">มีเรื่องที่มีสถานะ \"จบแล้ว\"</string>
     <string name="pref_auto_update_manga_sync">อัปเดตความคืบหน้าหลังอ่าน</string>
     <string name="pref_start_screen">หน้าเริ่มต้น</string>
     <string name="default_category">หมวดหมู่เริ่มต้น</string>
@@ -298,7 +298,6 @@
     <string name="file_select_cover">เลือกภาพหน้าปก</string>
     <string name="file_select_backup">เลือกแฟ้มข้อมูลสำรอง</string>
     <string name="update_check_confirm">ดาวน์โหลด</string>
-    <string name="update_check_ignore">ละเว้น</string>
     <string name="update_check_no_new_updates">ไม่มีการอัปเดตใหม่</string>
     <string name="update_check_look_for_updates">กำลังค้นหาอัปเดต…</string>
     <string name="update_check_notification_download_in_progress">กำลังดาวน์โหลด…</string>
@@ -383,7 +382,7 @@
     <string name="lock_never">ไม่เลย</string>
     <string name="lock_always">ตลอด</string>
     <string name="lock_when_idle">ล็อกเมื่อไม่ได้ใช้งาน</string>
-    <string name="lock_with_biometrics">ต้องปลดล็อก</string>
+    <string name="lock_with_biometrics">จำเป็นต้องปลดล็อก</string>
     <string name="pref_category_security">ความปลอดภัย</string>
     <string name="pref_manage_notifications">จัดการการแจ้งเตือน</string>
     <string name="pref_hide_bottom_bar_on_scroll">ซ่อนแถบด้านล่างเมื่อเลื่อน</string>
@@ -486,7 +485,7 @@
     <string name="manga_info_collapse">น้อยลง</string>
     <string name="manga_info_expand">เพิ่มเติม</string>
     <string name="in_library">อยู่ในคลัง</string>
-    <string name="add_to_library">เพิ่มลงในคลัง</string>
+    <string name="add_to_library">เพิ่มไปยังคลัง</string>
     <string name="unknown_status">ไม่ระบุสถานะ</string>
     <string name="unknown_author">ไม่ทราบผู้แต่ง</string>
     <string name="no_pinned_sources">ไม่มีแหล่งที่มาที่ปักหมุดไว้</string>
@@ -677,7 +676,7 @@
     <string name="connected_to_wifi">เฉพาะขณะเชื่อมต่อ Wi-Fi</string>
     <string name="download_queue_size_warning">คำเตือน: การดาวน์โหลดจำนวนมากอาจทำให้แหล่งข้อมูลทำงานช้าลงและ/หรือปิดกั้น Tachiyomi</string>
     <string name="notification_updating">กำลังอัปเดตคลัง… (%1$d/%2$d)</string>
-    <string name="notification_size_warning">คำเตือน: การอัปเดตจำนวนมากเป็นอันตรายต่อแหล่งที่มาและอาจทำให้การอัปเดตช้าลงและใช้งานแบตเตอรี่เพิ่มขึ้น</string>
+    <string name="notification_size_warning">การอัปเดตจำนวนมากเป็นอันตรายต่อแหล่งที่มาและอาจทำให้การอัปเดตช้าลงและใช้งานแบตเตอรี่เพิ่มขึ้น</string>
     <string name="publishing_finished">เผยแพร่จบแล้ว</string>
     <string name="cancelled">ถูกยกเลิก</string>
     <string name="on_hiatus">อยู่ระหว่างพัก</string>
@@ -694,13 +693,17 @@
 \n
 \nยังต้องการดำเนินการต่อหรือไม่\?</string>
     <string name="action_filter_started">เริ่มอ่านแล้ว</string>
-    <string name="pref_update_only_started">ไม่มีตอนที่ยังไม่ได้อ่าน</string>
+    <string name="pref_update_only_started">ที่ยังไม่ได้เริ่มอ่าน</string>
     <string name="skipped_reason_completed">ถูกข้ามเนื่องจากเรื่องนี้จบแล้ว</string>
     <string name="notification_update_skipped">อัปเดตข้ามแล้ว %1$d รายการ</string>
-    <string name="learn_more">เรียนรู้เพิ่มเติม</string>
+    <string name="learn_more">แตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="notification_update_error">อัปเดตผิดพลาด %1$d รายการ</string>
     <string name="channel_skipped">ข้ามแล้ว</string>
     <string name="rotation_reverse_portrait">แนวตั้งแบบกลับด้าน</string>
     <string name="action_move_to_top_all_for_series">ย้ายเรื่องไปด้านบน</string>
     <string name="disabled_nav">ปิดใช้งาน</string>
+    <string name="error_saving_picture">ผิดพลาดในการบันทึกรูปภาพ</string>
+    <string name="update_check_fdroid_migration_info">มีเวอร์ชันใหม่พร้อมใช้งานจากรีลีสทางการ แตะเพื่อเรียนรู้วีธีการย้ายข้อมูลจากรีลีสไม่เป็นทางการ F-Droid</string>
+    <string name="update_check_open">เปิดใน GithHub</string>
+    <string name="empty_backup_error">ไม่มีรายการคลังถูกสำรองข้อมูลไว้</string>
 </resources>

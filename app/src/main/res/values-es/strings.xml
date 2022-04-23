@@ -109,7 +109,7 @@
     <string name="pref_clear_chapter_cache">Vaciar la caché de capítulos</string>
     <string name="used_cache">Usado: %1$s</string>
     <string name="cache_deleted">Se vació la caché. Se han eliminado %1$d archivos</string>
-    <string name="cache_delete_error">Se produjo un error al limpiar la caché</string>
+    <string name="cache_delete_error">Se produjo un error al limpiar</string>
     <string name="pref_clear_cookies">Borrar cookies</string>
     <string name="cookies_cleared">Cookies borradas</string>
     <string name="pref_clear_database">Borrar la base de datos</string>
@@ -185,7 +185,6 @@
     <string name="file_select_backup">Elige una copia de respaldo</string>
     <!--UpdateCheck-->
     <string name="update_check_confirm">Descargar</string>
-    <string name="update_check_ignore">Ignorar</string>
     <string name="update_check_no_new_updates">No hay nuevas actualizaciones disponibles</string>
     <string name="update_check_look_for_updates">Buscando actualizaciones…</string>
     <!--UpdateCheck Notifications-->
@@ -748,4 +747,8 @@
     <string name="disabled_nav">Desactivado</string>
     <string name="update_check_fdroid_migration_info">Hay una actualización disponible en la página oficial. Toca para aprender a migrar desde una versión no oficial de F-Droid.</string>
     <string name="error_saving_picture">No se ha podido guardar la imagen</string>
+    <string name="empty_backup_error">No hay ningún elemento en la biblioteca que respaldar</string>
+    <string name="update_check_open">Abrir en GitHub</string>
+    <string name="webview_data_deleted">Se han limpiado los datos del WebView</string>
+    <string name="pref_clear_webview_data">Limpiar datos del WebView</string>
 </resources>

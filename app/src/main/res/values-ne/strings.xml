@@ -703,7 +703,6 @@
     <string name="skipped_reason_not_caught_up">नपढिएका अध्यायहरू भएकाले छोडियो</string>
     <string name="file_select_cover">कभर छवि चयन गर्नुहोस्</string>
     <string name="file_select_backup">ब्याकअप फाइल चयन गर्नुहोस्</string>
-    <string name="update_check_ignore">बेवास्ता गर्नुहोस्</string>
     <string name="channel_common">सामान्य</string>
     <string name="spen_previous_page">अघिल्लो पृष्ठ</string>
     <string name="update_check_eol">यो एन्ड्रोइड संस्करण अब समर्थित छैन</string>

@@ -84,7 +84,7 @@
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">自動更新的裝置限制</string>
     <string name="charging">充電時</string>
-    <string name="pref_update_only_non_completed">已完結的叢書</string>
+    <string name="pref_update_only_non_completed">已完結的作品</string>
     <string name="pref_start_screen">起始畫面</string>
     <string name="default_category">預設分類</string>
     <string name="default_category_summary">總是詢問</string>
@@ -154,7 +154,6 @@
     <string name="cover_updated">已更新封面</string>
     <string name="copy">副本</string>
     <string name="update_check_confirm">下載</string>
-    <string name="update_check_ignore">忽略</string>
     <string name="update_check_no_new_updates">沒有可用的更新</string>
     <string name="update_check_look_for_updates">正在檢查更新…</string>
     <string name="update_check_notification_download_in_progress">正在下載更新…</string>
@@ -203,7 +202,7 @@
     <string name="pref_restore_backup_summ">由備份檔案還原書櫃內容</string>
     <string name="used_cache">已使用：%1$s</string>
     <string name="cache_deleted">已清除快取，%1$d 個檔案已被刪除</string>
-    <string name="cache_delete_error">清除快取時發生錯誤</string>
+    <string name="cache_delete_error">清除時發生錯誤</string>
     <string name="cookies_cleared">已清除 Cookies</string>
     <string name="pref_acra_summary">協助我們修復錯誤，傳送的資料將不包含個人敏感訊息</string>
     <string name="login_title">登入 %1$s</string>
@@ -659,7 +658,7 @@
     <string name="action_sort_count">漫畫總數</string>
     <string name="action_display_language_badge">語言</string>
     <string name="label_warning">警告</string>
-    <string name="notification_size_warning">警告：大量更新會損害來源，並可能導致更新速度緩慢、電池用量增加</string>
+    <string name="notification_size_warning">大量更新會損害來源，並可能導致更新速度緩慢、電池用量增加</string>
     <string name="pref_verbose_logging">錄製詳細記錄</string>
     <string name="backup_info">強烈建議啟用自動備份，並在他處保留副本。</string>
     <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
@@ -675,7 +674,7 @@
     <string name="extension_api_error">擴充套件清單取得失敗</string>
     <string name="privacy_policy">隱私權政策</string>
     <string name="pref_update_only_completely_read">有未讀的章節</string>
-    <string name="pref_library_update_manga_restriction">略過更新</string>
+    <string name="pref_library_update_manga_restriction">欲略過更新的作品</string>
     <string name="library_errors_help">如欲瞭解如何修復書櫃更新錯誤，請參閱 %1$s</string>
     <string name="save_chapter_as_cbz">以 CBZ 封存檔格式儲存</string>
     <string name="on_hiatus">休刊中</string>
@@ -702,5 +701,11 @@
     <string name="notification_update_skipped">已略過 %1$d 項更新</string>
     <string name="channel_skipped">略過</string>
     <string name="action_move_to_top_all_for_series">置頂此叢書</string>
-    <string name="disabled_nav">已停用</string>
+    <string name="disabled_nav">停用</string>
+    <string name="empty_backup_error">書櫃中尚無項目可供備份</string>
+    <string name="update_check_open">在 GitHub 上檢視</string>
+    <string name="error_saving_picture">儲存圖片錯誤</string>
+    <string name="update_check_fdroid_migration_info">新版本已正式推出。輕觸以瞭解如何從非官方的 F-Droid 版遷移至官方發行版。</string>
+    <string name="pref_clear_webview_data">清除 WebView 資料</string>
+    <string name="webview_data_deleted">已清除 WebView 資料</string>
 </resources>

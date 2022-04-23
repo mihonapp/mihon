@@ -441,7 +441,6 @@
     <string name="transition_pages_error">Nepavyko įkelti puslapių: %1$s</string>
     <string name="transition_previous">Ankstesnis:</string>
     <string name="update_check_confirm">Atsisiųsti</string>
-    <string name="update_check_ignore">Ignoruoti</string>
     <string name="update_check_notification_download_complete">Atsisiuntimas baigtas</string>
     <string name="update_check_eol">Ši \"Android\" versija nebepalaikoma</string>
     <string name="update_check_no_new_updates">Naujų atnaujinimų nėra</string>

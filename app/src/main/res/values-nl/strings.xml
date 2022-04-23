@@ -181,7 +181,6 @@
     <string name="file_select_cover">Selecteer omslagfoto</string>
     <string name="file_select_backup">Selecteer back-upbestand</string>
     <string name="update_check_confirm">Download</string>
-    <string name="update_check_ignore">Negeren</string>
     <string name="update_check_no_new_updates">Geen nieuwe updates beschikbaar</string>
     <string name="update_check_notification_download_complete">Download voltooid</string>
     <string name="update_check_notification_update_available">Nieuwe versie beschikbaar!</string>

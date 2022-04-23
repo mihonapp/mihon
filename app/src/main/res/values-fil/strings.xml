@@ -99,7 +99,7 @@
     <string name="label_library">Aklatan</string>
     <string name="label_download_queue">Mga Dina-download</string>
     <string name="label_settings">Pagsasaayos</string>
-    <string name="label_more">Karagdagan</string>
+    <string name="label_more">Higit pa</string>
     <string name="name">Pangalan</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Pagkatapos ng %1$s minuto</item>
@@ -233,7 +233,7 @@
     <string name="default_category">Panimulang kategorya</string>
     <string name="pref_library_update_refresh_metadata_summary">Maghanap ng mga bagong cover at detalye kapag nag-a-update ng Aklatan</string>
     <string name="pref_library_update_refresh_metadata">Kusang sariwain ang metadata</string>
-    <string name="pref_update_only_non_completed">Tapos na serye</string>
+    <string name="pref_update_only_non_completed">Nasa \"Kumpleto\" na estado</string>
     <string name="charging">Naka-charge</string>
     <string name="pref_library_update_restriction">Kondisyon sa kusang pag-update</string>
     <string name="update_weekly">Linggo-linggo</string>
@@ -308,7 +308,6 @@
     <string name="update_check_notification_download_in_progress">Dina-download…</string>
     <string name="update_check_look_for_updates">Naghahanap ng mga update…</string>
     <string name="update_check_no_new_updates">Walang bagong update</string>
-    <string name="update_check_ignore">Balewalain</string>
     <string name="update_check_confirm">I-download</string>
     <string name="file_select_backup">Pumili ng backup</string>
     <string name="file_select_cover">Pumili ng cover</string>
@@ -671,7 +670,7 @@
     <string name="action_sort_count">Bilang ng manga</string>
     <string name="pref_verbose_logging">Verbose na pagla-log</string>
     <string name="pref_verbose_logging_summary">Mag-print ng mga verbose na log sa log ng sistema (dagdag-pasanin sa app)</string>
-    <string name="notification_size_warning">Babala: nakasasama sa source at maaaring humantong sa mabagal na update at pagtaas ng paggamit sa baterya kung maraming ia-update nang sabay</string>
+    <string name="notification_size_warning">Babala: Nakasasama sa source at maaaring humantong sa mabagal na update at pagtaas ng paggamit sa baterya kung maraming ia-update nang sabay</string>
     <string name="action_display_language_badge">Wika</string>
     <string name="label_warning">Babala</string>
     <string name="backup_info">Rinerekomenda po namin ang kusang pag-backup. Kailangan mo ring magtabi ng mga kopya sa ibang lugar.</string>
@@ -687,10 +686,10 @@
     <string name="extension_api_error">Bigong makuha ang mga dugtong</string>
     <string name="privacy_policy">Patakaran sa Pagkapribado</string>
     <string name="library_errors_help">Para makahingi ng tulong sa pag-ayos sa mga error sa pag-update ng Aklatan, tingnan ang %1$s</string>
-    <string name="pref_update_only_completely_read">May hindi pa nabasang kabanata</string>
-    <string name="pref_library_update_manga_restriction">Lakdawan ang pag-update</string>
+    <string name="pref_update_only_completely_read">May hindi nababasang kabanata</string>
+    <string name="pref_library_update_manga_restriction">Laktawan ang pag-update</string>
     <string name="save_chapter_as_cbz">I-save bilang CBZ archive</string>
-    <string name="publishing_finished">Tapos nang mailathala</string>
+    <string name="publishing_finished">Tapos na\'ng mailathala</string>
     <string name="on_hiatus">Naka-hiatus</string>
     <string name="cancelled">Kinansela</string>
     <string name="backup_restore_invalid_uri">Error: walang URI</string>
@@ -700,7 +699,7 @@
     <string name="action_filter_started">Nasimulan</string>
     <string name="action_display_cover_only_grid">Pabalat lang</string>
     <string name="skipped_reason_completed">Nilaktawan dahil tapos na ang serye</string>
-    <string name="pref_update_only_started">Wala pang nababasang kabanata</string>
+    <string name="pref_update_only_started">Hindi pa nasisimulan</string>
     <string name="skipped_reason_not_caught_up">Nilaktawan dahil may hindi pa nababasang kabanata</string>
     <string name="skipped_reason_not_started">Nilaktawan dahil wala pang nababasang kabanata</string>
     <string name="confirm_manga_add_duplicate">May entry ka sa Aklatan na may kaparehong pangalan pero galing sa ibang source (%1$s).
@@ -715,4 +714,8 @@
     <string name="notification_update_skipped">Nilaktawan ang %1$d (na) update</string>
     <string name="action_move_to_top_all_for_series">Ilagay sa taas ang serye</string>
     <string name="disabled_nav">Nakasara</string>
+    <string name="empty_backup_error">Walang entry sa Aklatan na maiba-backup</string>
+    <string name="update_check_open">Buksan sa Github</string>
+    <string name="error_saving_picture">Error sa pag-save sa larawan</string>
+    <string name="update_check_fdroid_migration_info">May available na bagong bersyon sa mga opisyal na release. Pindutin para matuto pa kung paano lumipat mula sa mga di-opisyal na F-Droid release.</string>
 </resources>

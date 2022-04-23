@@ -294,7 +294,6 @@
     <string name="pref_acra_summary">Кирек мӗнле йӑнӑшсене тӳрлетме пулӑшать. Нимӗнле харкам пӗлӗм те ярӑнмасть</string>
     <string name="invalid_download_dir">Йӑнӑшлӑ тиев вырӑнӗ</string>
     <string name="label_downloaded_only">Тиенӗсене ҫеҫ</string>
-    <string name="update_check_ignore">Курмӑш пул</string>
     <string name="file_select_backup">Янтӑв файла суйла</string>
     <string name="dialog_with_checkbox_reset">Ҫак манкӑн пур сыпӑка тасат</string>
     <string name="pref_cutout_short">Каснӑ тӑрӑхра шалашне кӑтарт</string>

@@ -360,7 +360,6 @@
     <string name="download_10">Hurrengo 10 kapituluak</string>
     <string name="download_all">Denak</string>
     <string name="confirm_set_chapter_settings">Ziur ezarpen hauek lehenetsi gisa gorde nahi dituzula\?</string>
-    <string name="update_check_ignore">Kasurik ez egin</string>
     <string name="information_webview_outdated">Mesedez, eguneratu WebView aplikazioa bateragarritasun hobea izateko</string>
     <string name="channel_complete">Bukatua</string>
     <string name="error_category_exists">Izen hori daukan kategoria bat badago dagoeneko!</string>

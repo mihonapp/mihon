@@ -236,7 +236,6 @@
     <string name="file_select_cover">اختر صورة الغلاف</string>
     <string name="file_select_backup">اختر ملف النسخة الاحتياطية</string>
     <string name="update_check_confirm">تنزيل</string>
-    <string name="update_check_ignore">تجاهل</string>
     <string name="update_check_no_new_updates">لا تتوفر تحديثات جديدة</string>
     <string name="update_check_look_for_updates">البحث عن التحديثات…</string>
     <string name="update_check_notification_download_in_progress">جار التنزيل…</string>
@@ -411,9 +410,9 @@
     <string name="notification_chapters_single_and_more">الفصل %1$s و%2$d فصول أخرى</string>
     <string name="notification_chapters_single">الفصل %1$s</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="zero">لا يوجد فصول جديدة</item>
+        <item quantity="zero">لا توجد فصول جديدة</item>
         <item quantity="one">فصل جديد</item>
-        <item quantity="two">فصلين جديدين</item>
+        <item quantity="two">فصلان جديدان</item>
         <item quantity="few">%1$d فصول جديدة</item>
         <item quantity="many">%1$d فصول جديدة</item>
         <item quantity="other">%1$d فصول جديدة</item>
@@ -447,12 +446,12 @@
     <string name="logout_title">تسجيل الخروج من %1$s؟</string>
     <string name="email">البريد الإلكتروني</string>
     <plurals name="download_queue_summary">
-        <item quantity="zero">متبقي %1$s</item>
-        <item quantity="one">متبقي عنصر واحد</item>
-        <item quantity="two">متبقي عنصرين</item>
-        <item quantity="few">متبقي %1$s عنصر</item>
-        <item quantity="many">متبقي %1$s عناصر</item>
-        <item quantity="other">متبقي %1$s عناصر</item>
+        <item quantity="zero">"%1$s عنصر  متبقي"</item>
+        <item quantity="one">عنصر واحد متبقي</item>
+        <item quantity="two">عنصران متبقيان</item>
+        <item quantity="few">%1$s عناصر متبقية</item>
+        <item quantity="many">%1$s عناصر متبقية</item>
+        <item quantity="other">%1$s عناصر متبقية</item>
     </plurals>
     <string name="downloaded_only_summary">يقوم بترشيح المانجا ضمن مكتبتك</string>
     <string name="pref_search_pinned_sources_only">تضمين المصادر المثبتة فقط</string>
@@ -463,7 +462,7 @@
     <plurals name="lock_after_mins">
         <item quantity="zero">بعد أقل من دقيقة</item>
         <item quantity="one">بعد دقيقة</item>
-        <item quantity="two">بعد دقيقتان</item>
+        <item quantity="two">بعد دقيقتين</item>
         <item quantity="few">بعد %1$s دقائق</item>
         <item quantity="many">بعد %1$s دقائق</item>
         <item quantity="other">بعد %1$s دقائق</item>
@@ -540,9 +539,9 @@
     <plurals name="num_trackers">
         <item quantity="zero">لا متتبّع</item>
         <item quantity="one">متتبّع واحد</item>
-        <item quantity="two">متتبعين</item>
-        <item quantity="few">بضعة متتبّعات (%d)</item>
-        <item quantity="many">عدّة متتبّعات (%d)</item>
+        <item quantity="two">متتبعان</item>
+        <item quantity="few">بضعة متتبّعين (%d)</item>
+        <item quantity="many">عدّة متتبّعين (%d)</item>
         <item quantity="other">%d متتبّعاً</item>
     </plurals>
     <plurals name="manga_num_chapters">
@@ -559,12 +558,12 @@
     <string name="action_global_search_query">إبحث عن \"%1$s\" بشكلٍ شامل</string>
     <string name="updated_version">حُدِّث إلى الإصدار v%1$s</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="zero">لا يوجد فصول مفقودة</item>
-        <item quantity="one">تخطي فصل واحد ، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="two">تخطي فصلان، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="few">تخطي بعض الفصول، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="many">تخطي الكثير من الفصول ، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="other">تخطي %d فصل، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="zero">لا توجد فصول مفقودة</item>
+        <item quantity="one">تم تخطي فصل واحد ، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="two">تم تخطي فصلين، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="few">تم تخطي بعض الفصول، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="many">تم تخطي الكثير من الفصول ، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="other">تم تخطي %d فصل، إما أن المصدر مفقود أو تمت تصفيته</item>
     </plurals>
     <string name="no_chapters_error">لم يتم العثور على الفصول</string>
     <string name="share_page_info">%1$s: %2$s, صفحة %3$d</string>
@@ -715,7 +714,7 @@
     <string name="label_warning">تحذير</string>
     <string name="action_display_language_badge">اللغة</string>
     <string name="backup_info">يوصى بشدة بالنسخ الاحتياطي التلقائي. يجب عليك الإحتفاظ بنُسخ في أماكن أخرى أيضًا.</string>
-    <string name="notification_size_warning">قد تؤدي التحديثات الكبيرة إلى زيادة استهلاك البطارية وتصبح المصادر أبطأ</string>
+    <string name="notification_size_warning">التحديثات الكبيرة تضر بالمصادر , تؤدي لتحديثات أبطأ , و أيضا زيادة في استهلاك البطارية</string>
     <string name="pref_verbose_logging">التسجيل المطول</string>
     <string name="ext_app_info">معلومات التطبيق</string>
     <string name="ext_install_service_notif">جارٍ تثبيت الإضافة …</string>
@@ -732,8 +731,8 @@
     <string name="library_errors_help">للحصول على المساعده في إصلاح أخطاء تحديث المكتبة، أنظر هنا%1$s</string>
     <string name="save_chapter_as_cbz">احفظ كأرشيف CBZ</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
-    <string name="pref_library_update_manga_restriction">تقييد تحديث المكتبة</string>
-    <string name="pref_update_only_completely_read">يحتوي على فصول لم يتم قراءتها</string>
+    <string name="pref_library_update_manga_restriction">تخطي تحديث العناوين</string>
+    <string name="pref_update_only_completely_read">مع الفصل (الفصول) الغيرالمقروءة</string>
     <string name="ext_installer_legacy">قياسي</string>
     <string name="pref_auto_clear_chapter_cache">امسح ملفات التخزين المؤقت عند إغلاق التطبيق</string>
     <string name="database_clean">تنظيف قاعدة البيانات</string>
@@ -756,4 +755,14 @@
     <string name="skipped_reason_completed">تم تخطيها لإنتهاء السلسلة</string>
     <string name="pref_navigate_pan">قود للتحرك</string>
     <string name="pref_landscape_zoom">كبر الصوره الأفقية</string>
+    <string name="channel_skipped">متجاوز</string>
+    <string name="error_saving_picture">خطأ أثناء حفظ الصورة</string>
+    <string name="disabled_nav">معطل</string>
+    <string name="rotation_reverse_portrait">عكس الغلاف</string>
+    <string name="notification_update_error">فشل التحديث(ات)</string>
+    <string name="notification_update_skipped">تم تخطي %1$d تحديث(تحديثات)</string>
+    <string name="learn_more">أنقر للمزيد</string>
+    <string name="update_check_fdroid_migration_info">نسخة جديدة متاحة من الإصدارات الرسمية. انقر لمعرفة كيفية الهجرة من إصدارات F-Droid غير الرسمية.</string>
+    <string name="action_move_to_top_all_for_series">حرك السلسلة للأعلى</string>
+    <string name="empty_backup_error">المكتبة فارغة ولايمكن عمل نسخة احتياطية منها</string>
 </resources>

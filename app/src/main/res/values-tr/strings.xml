@@ -184,7 +184,7 @@
     <string name="pref_clear_chapter_cache">Bölüm önbelleğini temizle</string>
     <string name="used_cache">Kullanılan: %1$s</string>
     <string name="cache_deleted">Önbellek temizlendi. %1$d dosya silindi</string>
-    <string name="cache_delete_error">Önbellek temizlenirken bir hata oluştu</string>
+    <string name="cache_delete_error">Temizlenirken hata oluştu</string>
     <string name="pref_clear_cookies">Çerezleri temizle</string>
     <string name="cookies_cleared">Çerezler temizlendi</string>
     <string name="pref_clear_database">Veritabanını temizle</string>
@@ -280,7 +280,6 @@
     <string name="file_select_cover">Kapak görselini seç</string>
     <string name="file_select_backup">Yedek dosyasını seç</string>
     <string name="update_check_confirm">İndir</string>
-    <string name="update_check_ignore">Yok say</string>
     <string name="update_check_no_new_updates">Yeni güncelleme yok</string>
     <string name="update_check_look_for_updates">Güncellemeler aranıyor…</string>
     <string name="update_check_notification_download_in_progress">İndiriliyor…</string>
@@ -691,12 +690,12 @@
     <string name="privacy_policy">Gizlilik politikası</string>
     <string name="cancelled">İptal edildi</string>
     <string name="on_hiatus">Molada</string>
-    <string name="confirm_manga_add_duplicate">Kütüphanenizde aynı adda ama farklı bir kaynaktan olan bir öğe var (%1$s).
+    <string name="confirm_manga_add_duplicate">Kitaplığınızda aynı ada sahip ama farklı bir kaynaktan olan bir öge var (%1$s).
 \n
 \nHâlâ devam etmek istiyor musunuz\?</string>
     <string name="action_show_manga">Manga göster</string>
     <string name="webtoon_side_padding_5">%5</string>
-    <string name="library_errors_help">Kütüphane güncellemesi hatalarını düzeltmede destek için bkz. %1$s</string>
+    <string name="library_errors_help">Kitaplık güncelleme hatalarının nasıl düzeltileceği konusunda yardım için bkz. %1$s</string>
     <string name="action_filter_started">Başlanılan</string>
     <string name="action_display_cover_only_grid">Sadece-kapak ızgara</string>
     <string name="backup_restore_invalid_uri">Hata: boş URI</string>
@@ -717,4 +716,8 @@
     <string name="disabled_nav">Devre dışı</string>
     <string name="update_check_fdroid_migration_info">Resmi yayınlardan yeni bir sürüm var. Resmi olmayan F-Droid sürümlerinden nasıl geçiş yapacağınızı öğrenmek için dokunun.</string>
     <string name="error_saving_picture">Resim kaydedilirken hata oluştu</string>
+    <string name="empty_backup_error">Yedeklenecek kitaplık girdisi yok</string>
+    <string name="update_check_open">GitHub\'da aç</string>
+    <string name="webview_data_deleted">WebView verileri temizlendi</string>
+    <string name="pref_clear_webview_data">WebView verilerini temizle</string>
 </resources>

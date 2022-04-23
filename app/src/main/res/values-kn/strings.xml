@@ -285,7 +285,6 @@
     <string name="update_check_notification_download_in_progress">ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ…</string>
     <string name="update_check_look_for_updates">ನವೀಕರಣಗಳಿಗಾಗಿ ಹುಡುಕಲಾಗುತ್ತಿದೆ…</string>
     <string name="update_check_no_new_updates">ಹೊಸ ನವೀಕರಣಗಳು ಲಭ್ಯವಿಲ್ಲ</string>
-    <string name="update_check_ignore">ನಿರ್ಲಕ್ಷಿಸಿ</string>
     <string name="update_check_confirm">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
     <string name="file_select_backup">ಬ್ಯಾಕಪ್ ಫೈಲ್ ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="file_select_cover">ಕವರ್ ಇಮೇಜ್ ಆಯ್ಕೆಮಾಡಿ</string>

@@ -184,7 +184,7 @@
     <string name="pref_clear_chapter_cache">清除章节缓存</string>
     <string name="used_cache">已使用空间：%1$s</string>
     <string name="cache_deleted">缓存已清除。%1$d 个文件已被删除</string>
-    <string name="cache_delete_error">清除缓存时出现错误</string>
+    <string name="cache_delete_error">清除时出现错误</string>
     <string name="pref_clear_cookies">清除 Cookies</string>
     <string name="cookies_cleared">Cookies 已清除</string>
     <string name="pref_clear_database">清除数据库</string>
@@ -288,7 +288,6 @@
     <string name="file_select_cover">选择封面图片</string>
     <string name="file_select_backup">选择备份文件</string>
     <string name="update_check_confirm">下载</string>
-    <string name="update_check_ignore">忽略</string>
     <string name="update_check_no_new_updates">没有可用的更新</string>
     <string name="update_check_look_for_updates">正在检查更新…</string>
     <string name="update_check_notification_download_in_progress">正在下载…</string>
@@ -705,4 +704,8 @@
     <string name="disabled_nav">已禁用</string>
     <string name="error_saving_picture">保存图片出错</string>
     <string name="update_check_fdroid_migration_info">新版本可从官方版本中获得。 轻按以了解如何从非官方 F-Droid 版本迁移。</string>
+    <string name="empty_backup_error">没有要备份的库条目</string>
+    <string name="update_check_open">打开 Github</string>
+    <string name="webview_data_deleted">已清除 Webview 数据</string>
+    <string name="pref_clear_webview_data">清除 Webview 数据</string>
 </resources>

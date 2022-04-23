@@ -76,7 +76,7 @@
     <string name="all">Tout</string>
     <string name="pref_library_update_restriction">Restrictions matérielles pour les mises à jour automatiques</string>
     <string name="charging">Appareil en charge</string>
-    <string name="pref_update_only_non_completed">Est une série complète</string>
+    <string name="pref_update_only_non_completed">Avec le statut « achevé »</string>
     <string name="pref_auto_update_manga_sync">Synchroniser la progression après lecture</string>
     <string name="pref_start_screen">Page d\'accueil</string>
     <!-- Reader section -->
@@ -213,7 +213,6 @@
     <string name="file_select_backup">Sélectionner fichier de sauvegarde</string>
     <!--UpdateCheck-->
     <string name="update_check_confirm">Télécharger</string>
-    <string name="update_check_ignore">Ignorer</string>
     <string name="update_check_no_new_updates">Aucune mise à jour disponible</string>
     <string name="update_check_look_for_updates">Vérification des mises à jour…</string>
     <!--UpdateCheck Notifications-->
@@ -707,7 +706,7 @@
     <string name="pref_verbose_logging_summary">Imprimer les journaux détaillés dans le journal du système (réduit les performances de l\'application)</string>
     <string name="action_display_language_badge">Langue</string>
     <string name="label_warning">Attention</string>
-    <string name="notification_size_warning">Avertissement : les mises à jour importantes nuisent aux sources et peuvent entraîner un ralentissement des mises à jour ainsi qu\'une augmentation de l\'utilisation de la batterie</string>
+    <string name="notification_size_warning">Les mises à jour importantes nuisent aux sources et peuvent entraîner un ralentissement des mises à jour ainsi qu\'une augmentation de l\'utilisation de la batterie</string>
     <string name="backup_info">Les sauvegardes automatiques sont fortement conseillées. Nous vous recommandons aussi de conserver des copies ailleurs.</string>
     <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
     <string name="update_72hour">Tous les 3 jours</string>
@@ -721,7 +720,7 @@
     <string name="extension_api_error">Échec de la récupération de la liste des extensions</string>
     <string name="privacy_policy">Politique de confidentialité</string>
     <string name="pref_library_update_manga_restriction">Ignorer la mise à jour</string>
-    <string name="pref_update_only_completely_read">A des chapitres non lus</string>
+    <string name="pref_update_only_completely_read">Avec des chapitres non lus</string>
     <string name="save_chapter_as_cbz">Enregistrer comme archive CBZ</string>
     <string name="library_errors_help">Pour savoir comment corriger les erreurs de mise à jour de la bibliothèque, voir %1$s</string>
     <string name="on_hiatus">En attente</string>
@@ -737,16 +736,20 @@
 \nSouhaitez-vous toujours continuer \?</string>
     <string name="pref_navigate_pan">Naviguer jusqu\'au panoramique</string>
     <string name="pref_landscape_zoom">Agrandir les images en paysage</string>
-    <string name="pref_update_only_started">Aucun chapitre lu</string>
+    <string name="pref_update_only_started">Qui n\'ont pas encore commencé</string>
     <string name="action_filter_started">Commencé</string>
     <string name="skipped_reason_completed">Sauté car la série est complète</string>
     <string name="skipped_reason_not_started">Sauté car aucun chapitre n\'est lu</string>
     <string name="skipped_reason_not_caught_up">Sauté car il y a des chapitres non lus</string>
-    <string name="learn_more">En savoir plus</string>
+    <string name="learn_more">Appuyez pour en savoir plus</string>
     <string name="notification_update_skipped">%1$d mise à jour(s) ignorée(s)</string>
     <string name="notification_update_error">Échec de %1$d mise(s) à jour</string>
     <string name="channel_skipped">Ignoré</string>
     <string name="rotation_reverse_portrait">Portrait inversé</string>
     <string name="action_move_to_top_all_for_series">Déplacer la série vers le haut</string>
     <string name="disabled_nav">Désactivé</string>
+    <string name="error_saving_picture">Erreur d\'enregistrement de l\'image</string>
+    <string name="update_check_fdroid_migration_info">Une nouvelle version est disponible à partir des versions officielles. Appuyez pour apprendre comment migrer depuis les versions non officielles de F-Droid.</string>
+    <string name="empty_backup_error">Aucune entrée de bibliothèque à sauvegarder</string>
+    <string name="update_check_open">Ouvrir sur GitHub</string>
 </resources>

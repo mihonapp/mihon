@@ -139,7 +139,6 @@
     <string name="action_display_show_tabs">Rādīt kategoriju cilnes</string>
     <string name="update_check_look_for_updates">Notiek jaunu nodaļu meklēšana…</string>
     <string name="update_check_no_new_updates">Nav pieejamas jaunas nodaļas</string>
-    <string name="update_check_ignore">Ignorēt</string>
     <string name="update_check_confirm">Lejuplādēt</string>
     <string name="pref_jump_to_chapters">Pārlēkt uz nodaļām, atverot</string>
     <string name="landscape">Ainava</string>

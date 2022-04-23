@@ -34,7 +34,7 @@
     <string name="action_edit">Ubah</string>
     <string name="action_add">Tambah</string>
     <string name="action_add_category">Tambah kategori</string>
-    <string name="action_edit_categories">Ubah urutan kategori</string>
+    <string name="action_edit_categories">Ubah kategori</string>
     <string name="action_rename_category">Ubah nama kategori</string>
     <string name="action_move_category">Masukkan ke kategori</string>
     <string name="action_edit_cover">Ubah gambar sampul</string>
@@ -62,7 +62,7 @@
     <string name="action_display_grid">Grid kompak</string>
     <string name="action_restore">Pulihkan</string>
     <string name="loading">Memuat…</string>
-    <string name="app_not_available">App tidak tersedia</string>
+    <string name="app_not_available">Aplikasi tidak tersedia</string>
     <string name="pref_category_general">Umum</string>
     <string name="pref_category_reader">Pembaca</string>
     <string name="pref_category_downloads">Unduhan</string>
@@ -82,10 +82,10 @@
     <string name="all">Semua</string>
     <string name="pref_library_update_restriction">Pembatasan pembaruan otomatis</string>
     <string name="charging">Mengisi daya</string>
-    <string name="pref_update_only_non_completed">Seri yang selesai</string>
+    <string name="pref_update_only_non_completed">Dengan status \"Selesai\"</string>
     <string name="pref_auto_update_manga_sync">Perbarui kemajuan setelah membaca</string>
     <string name="pref_start_screen">Layar awal</string>
-    <string name="default_category">Kategori default</string>
+    <string name="default_category">Kategori bawaan</string>
     <string name="default_category_summary">Selalu tanya</string>
     <string name="pref_fullscreen">Layar penuh</string>
     <string name="pref_page_transitions">Animasikan transisi halaman</string>
@@ -98,7 +98,7 @@
     <string name="pref_reader_theme">Warna latar</string>
     <string name="white_background">Putih</string>
     <string name="black_background">Hitam</string>
-    <string name="pref_viewer_type">Mode baca default</string>
+    <string name="pref_viewer_type">Mode baca bawaan</string>
     <string name="left_to_right_viewer">Kiri ke kanan</string>
     <string name="right_to_left_viewer">Kanan ke kiri</string>
     <string name="vertical_viewer">Tegak</string>
@@ -115,7 +115,7 @@
     <string name="zoom_start_left">Kiri</string>
     <string name="zoom_start_right">Kanan</string>
     <string name="zoom_start_center">Tengah</string>
-    <string name="pref_rotation_type">Tipe rotasi default</string>
+    <string name="pref_rotation_type">Tipe rotasi bawaan</string>
     <string name="rotation_free">Bebas</string>
     <string name="rotation_force_portrait">Terkunci tegak</string>
     <string name="rotation_force_landscape">Terkunci mendatar</string>
@@ -154,7 +154,7 @@
     <string name="pref_clear_chapter_cache">Hapus cache bab</string>
     <string name="used_cache">Terpakai: %1$s</string>
     <string name="cache_deleted">Cache dibersihkan %1$d berkas telah dihapus</string>
-    <string name="cache_delete_error">Terjadi kesalahan saat membersihkan cache</string>
+    <string name="cache_delete_error">Terjadi kesalahan saat membersihkan</string>
     <string name="pref_clear_cookies">Hapus cookies</string>
     <string name="cookies_cleared">Cookies dihapus</string>
     <string name="pref_clear_database">Hapus database</string>
@@ -229,7 +229,6 @@
     <string name="file_select_cover">Pilih gambar sampul</string>
     <string name="file_select_backup">Pilih berkas cadangan</string>
     <string name="update_check_confirm">Unduh</string>
-    <string name="update_check_ignore">Abaikan</string>
     <string name="update_check_no_new_updates">Pembaruan tidak tersedia</string>
     <string name="update_check_look_for_updates">Mencari pembaruan…</string>
     <string name="update_check_notification_download_in_progress">Mengunduh…</string>
@@ -507,13 +506,13 @@
     <string name="pref_category_delete_chapters">Hapus bab</string>
     <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau salah dilabeli untuk menampilkan konten NSFW (18+) dalam aplikasi.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Melewati %d bab, entah sumber kehilangan mereka atau mungkin karena sudah difilter</item>
+        <item quantity="other">Melewati %d bab, entah sumber kehilangan mereka atau karena sudah difilter</item>
     </plurals>
     <string name="no_chapters_error">Tidak ada bab yang ditemukan</string>
-    <string name="chapter_settings_updated">Pengaturan bab default diperbarui</string>
-    <string name="set_chapter_settings_as_default">Tetapkan sebagai default</string>
+    <string name="chapter_settings_updated">Pengaturan bab bawaan diperbarui</string>
+    <string name="set_chapter_settings_as_default">Tetapkan sebagai bawaan</string>
     <string name="also_set_chapter_settings_for_library">Juga terapkan untuk semua manga di pustaka saya</string>
-    <string name="confirm_set_chapter_settings">Apakah anda yakin ingin menyimpan pengaturan ini sebagai default\?</string>
+    <string name="confirm_set_chapter_settings">Apakah anda yakin ingin menyimpan pengaturan ini sebagai bawaan\?</string>
     <string name="chapter_settings">Pengaturan bab</string>
     <string name="share_page_info">%1$s: %2$s, halaman %3$d</string>
     <string name="action_search_settings">Cari pengaturan</string>
@@ -644,7 +643,7 @@
     <string name="theme_tealturquoise">Teal &amp; Pirus</string>
     <string name="pref_category_appearance">Penampilan</string>
     <string name="confirm_lock_change">Otentikasi untuk konfirmasi pengubahan</string>
-    <string name="label_default">Default</string>
+    <string name="label_default">Bawaan</string>
     <string name="pref_remove_exclude_categories">Kategori yang dikecualikan</string>
     <string name="help_translate">Bantu terjemahkan</string>
     <string name="pref_tablet_ui_mode">UI tablet</string>
@@ -655,7 +654,7 @@
     <string name="ext_installer_legacy">Warisan</string>
     <string name="ext_installer_pref">Pemasang</string>
     <string name="action_sort_count">Total manga</string>
-    <string name="notification_size_warning">Pembaruan berskala besar membahayakan sumber, dapat membuat pembaruan lambat dan dapat meningkatkan penggunaan baterai</string>
+    <string name="notification_size_warning">Pembaruan berskala besar membahayakan sumber, dapat membuat pembaruan lambat dan meningkatkan penggunaan baterai</string>
     <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Tachiyomi</string>
     <string name="label_warning">Peringatan</string>
     <string name="pref_verbose_logging_summary">Cetak catatan berlebih ke catatan sistem (mengurangi kinerja aplikasi)</string>
@@ -673,8 +672,8 @@
     <string name="database_clean">Bersihkan database</string>
     <string name="clear_database_source_item_count">%1$d manga diluar kategori pustaka pada database</string>
     <string name="extension_api_error">Gagal mendapatkan daftar ekstensi</string>
-    <string name="pref_library_update_manga_restriction">Lewati pembaruan</string>
-    <string name="pref_update_only_completely_read">Memiliki bab yang belum dibaca</string>
+    <string name="pref_library_update_manga_restriction">Lewati pembaruan judul</string>
+    <string name="pref_update_only_completely_read">Dengan bab yang belum dibaca</string>
     <string name="privacy_policy">Kebijakan privasi</string>
     <string name="publishing_finished">Penerbitan selesai</string>
     <string name="cancelled">Dibatalkan</string>
@@ -686,7 +685,7 @@
     <string name="action_show_manga">Lihat Manga</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_display_cover_only_grid">Grid sampul saja</string>
-    <string name="pref_update_only_started">Tidak ada bab yang dibaca</string>
+    <string name="pref_update_only_started">Yang belum dibaca</string>
     <string name="confirm_manga_add_duplicate">Anda memiliki sebuah entri di pustaka anda dengan nama yang sama tapi dari sumber yang berbeda (%1$s).
 \n
 \nApakah Anda yakin untuk melanjutkan\?</string>
@@ -701,5 +700,12 @@
     <string name="channel_skipped">Terlewat</string>
     <string name="rotation_reverse_portrait">Layar tegak terbalik</string>
     <string name="notification_update_error">%1$d pembaruan gagal</string>
-    <string name="action_move_to_top_all_for_series">Pindahkan seri ke Atas</string>
+    <string name="action_move_to_top_all_for_series">Pindahkan seri ke atas</string>
+    <string name="update_check_fdroid_migration_info">Versi baru tersedia dari perilisan resmi. Ketuk untuk mempelajari migrasi dari perilisan non-resmi dari F-Droid.</string>
+    <string name="disabled_nav">Dinonaktifkan</string>
+    <string name="error_saving_picture">Error menyimpan gambar</string>
+    <string name="empty_backup_error">Tidak ada entri perpustakaan untuk dicadangkan</string>
+    <string name="update_check_open">Buka di Github</string>
+    <string name="pref_clear_webview_data">Membersihkan data WebView</string>
+    <string name="webview_data_deleted">Data WebView telah dibersihkan</string>
 </resources>

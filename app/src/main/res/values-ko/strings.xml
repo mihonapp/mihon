@@ -234,7 +234,6 @@
     <string name="file_select_cover">표지 이미지 선택</string>
     <string name="file_select_backup">백업 파일 선택</string>
     <string name="update_check_confirm">다운로드</string>
-    <string name="update_check_ignore">무시</string>
     <string name="update_check_no_new_updates">새로운 업데이트 없음</string>
     <string name="update_check_look_for_updates">업데이트를 찾는중…</string>
     <string name="update_check_notification_download_in_progress">다운로드 중…</string>
@@ -444,7 +443,7 @@
         <item quantity="other">소요 시간: %1$s, 발생한 오류: %2$s</item>
     </plurals>
     <string name="notification_updating">서재 업데이트 중… (%1$d/%2$d)</string>
-    <string name="pref_library_update_manga_restriction">업데이트 건너뛰기</string>
+    <string name="pref_library_update_manga_restriction">만화 업데이트 건너뛰기</string>
     <string name="secure_screen_summary">스크린 보안이 활성화될 경우 스크린샷이 비활성화되며 화면 전환 시 내용이 숨겨집니다</string>
     <string name="in_library">서재에 추가됨</string>
     <string name="action_migrate">데이터 이전</string>
@@ -557,7 +556,7 @@
     <string name="download_insufficient_space">저장 공간이 부족하여 회차를 다운로드 할 수 없습니다</string>
     <string name="download_queue_size_warning">경고: 한꺼번에 많은 양을 다운로드 할 경우 소스가 느려지거나 Tachiyomi를 차단할 수 있습니다</string>
     <string name="notification_check_updates">새로운 회차 확인 중</string>
-    <string name="notification_size_warning">경고: 대량의 업데이트는 소스에 과도한 부하를 줄 수 있고 배터리 사용량을 증가시킵니다</string>
+    <string name="notification_size_warning">대량의 업데이트는 소스에 과도한 부하를 줄 수 있고 배터리 사용량을 증가시킵니다</string>
     <string name="notification_chapters_single">%1$s화</string>
     <string name="notification_update_error">%1$d개의 업데이트가 실패했습니다</string>
     <string name="notification_update_skipped">%1$d개의 업데이트를 건너 뛰었습니다</string>
@@ -677,7 +676,7 @@
     <string name="action_webview_forward">앞으로가기</string>
     <string name="pref_create_folder_per_manga">각각의 폴더에 페이지 저장</string>
     <string name="action_faq_and_guides">FAQ와 설명서</string>
-    <string name="pref_update_only_started">읽은 회차 없음</string>
+    <string name="pref_update_only_started">읽지 않음</string>
     <string name="action_move_to_top_all_for_series">만화 전체를 맨 위로 이동</string>
     <string name="action_webview_refresh">새로고침</string>
     <string name="theme_greenapple">초록 사과</string>
@@ -703,4 +702,8 @@
         <item quantity="other">%1$s화와 그 이후 %2$d화</item>
     </plurals>
     <string name="file_picker_error">파일 선택 어플리케이션이 없습니다</string>
+    <string name="empty_backup_error">백업할 서재 항목이 없습니다</string>
+    <string name="update_check_fdroid_migration_info">새로운 공식 업데이트가 있습니다. F-Droid의 비공식 버젼에서 이전을 원하시면 터치해서 방법을 확인하세요.</string>
+    <string name="update_check_open">GitHub에서 열기</string>
+    <string name="error_saving_picture">이미지 저장 오류</string>
 </resources>

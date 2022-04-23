@@ -154,7 +154,7 @@
     <string name="pref_clear_chapter_cache">Kapitel-Zwischenspeicher leeren</string>
     <string name="used_cache">Belegt: %1$s</string>
     <string name="cache_deleted">Zwischenspeicher geleert. %1$d Dateien wurden gelöscht</string>
-    <string name="cache_delete_error">Ein Fehler ist während dem Leeren des Zwischenspeichers aufgetreten</string>
+    <string name="cache_delete_error">Fehler während dem Leeren aufgetreten</string>
     <string name="pref_clear_cookies">Cookies löschen</string>
     <string name="cookies_cleared">Cookies gelöscht</string>
     <string name="pref_clear_database">Datenbank leeren</string>
@@ -229,7 +229,6 @@
     <string name="file_select_cover">Wähle ein Vorschaubild</string>
     <string name="file_select_backup">Wähle eine Sicherungsdatei</string>
     <string name="update_check_confirm">Herunterladen</string>
-    <string name="update_check_ignore">Ignorieren</string>
     <string name="update_check_no_new_updates">Keine neue Aktualisierung verfügbar</string>
     <string name="update_check_look_for_updates">Suche nach Aktualisierungen…</string>
     <string name="update_check_notification_download_in_progress">Herunterladen…</string>
@@ -717,4 +716,8 @@
     <string name="disabled_nav">Deaktiviert</string>
     <string name="error_saving_picture">Fehler beim Speichern des Bildes</string>
     <string name="update_check_fdroid_migration_info">Eine neue Version ist aus dem offiziellen Repository verfügbar. Tippe, um zu erfahren, wie man aus inoffiziellen F-Droid-Versionen migriert.</string>
+    <string name="empty_backup_error">Keine zu sichernden Bibliothekseinträge</string>
+    <string name="update_check_open">Auf GitHub öffnen</string>
+    <string name="pref_clear_webview_data">WebView-Daten löschen</string>
+    <string name="webview_data_deleted">WebView-Daten gelöscht</string>
 </resources>

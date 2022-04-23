@@ -156,7 +156,7 @@
     <string name="pref_clear_chapter_cache">Limpar o cache de capítulos</string>
     <string name="used_cache">Utilizado: %1$s</string>
     <string name="cache_deleted">Cache limpo. %1$d arquivos foram excluídos</string>
-    <string name="cache_delete_error">Ocorreu um erro ao limpar o cache</string>
+    <string name="cache_delete_error">Ocorreu um erro ao limpar</string>
     <string name="pref_clear_cookies">Limpar os cookies</string>
     <string name="cookies_cleared">Cookies limpos</string>
     <string name="pref_clear_database">Limpar o banco de dados</string>
@@ -231,7 +231,6 @@
     <string name="file_select_cover">Selecionar imagem de capa</string>
     <string name="file_select_backup">Selecionar arquivo de backup</string>
     <string name="update_check_confirm">Fazer download</string>
-    <string name="update_check_ignore">Ignorar</string>
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
     <string name="update_check_look_for_updates">Procurando por atualizações…</string>
     <string name="update_check_notification_download_in_progress">Fazendo download…</string>
@@ -717,4 +716,8 @@
     <string name="disabled_nav">Desativado</string>
     <string name="update_check_fdroid_migration_info">Uma nova versão está disponível nos releases oficiais. Toque para saber como migrar dos releases não oficiais do F-Droid.</string>
     <string name="error_saving_picture">Erro ao salvar a imagem</string>
+    <string name="empty_backup_error">Nenhuma entrada na biblioteca para fazer backup</string>
+    <string name="update_check_open">Abrir no GitHub</string>
+    <string name="pref_clear_webview_data">Limpar os dados da WebView</string>
+    <string name="webview_data_deleted">Dados da WebView limpos</string>
 </resources>

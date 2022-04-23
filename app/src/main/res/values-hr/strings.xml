@@ -264,7 +264,6 @@
     <string name="update_check_notification_download_in_progress">Preuzimanje …</string>
     <string name="update_check_look_for_updates">Traženje novih verzija …</string>
     <string name="update_check_no_new_updates">Nema novih verzija</string>
-    <string name="update_check_ignore">Zanemari</string>
     <string name="update_check_confirm">Preuzmi</string>
     <string name="file_select_backup">Odaberi datoteku sigurnosne kopije</string>
     <string name="file_select_cover">Odaberi sliku naslovnice</string>

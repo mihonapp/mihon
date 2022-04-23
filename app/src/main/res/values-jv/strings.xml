@@ -185,4 +185,7 @@
     <string name="action_sort_count">Total manga</string>
     <string name="confirm_lock_change">Otentikasi kanggo konfirmasi perubahan</string>
     <string name="label_default">Default</string>
+    <string name="action_show_manga">Nampilno manga</string>
+    <string name="action_filter_started">Mulai</string>
+    <string name="label_warning">Awas</string>
 </resources>

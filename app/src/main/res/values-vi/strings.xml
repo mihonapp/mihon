@@ -77,7 +77,7 @@
     <string name="all">Tất cả</string>
     <string name="pref_library_update_restriction">Những hạn chế cập nhật thiết bị tự động</string>
     <string name="charging">Đang sạc</string>
-    <string name="pref_update_only_non_completed">Là bộ truyện hoàn thành</string>
+    <string name="pref_update_only_non_completed">Với trạng thái \"Hoàn Thành\"</string>
     <string name="pref_auto_update_manga_sync">Cập nhật tiến triển sau khi đọc</string>
     <string name="pref_start_screen">Màn hình khởi động</string>
     <!-- Reader section -->
@@ -227,7 +227,6 @@
     <string name="file_select_backup">Chọn file sao lưu</string>
     <!--UpdateCheck-->
     <string name="update_check_confirm">Tải xuống</string>
-    <string name="update_check_ignore">Bỏ qua</string>
     <string name="update_check_no_new_updates">Không có cập nhật mới</string>
     <string name="update_check_look_for_updates">Đang tìm cập nhật mới…</string>
     <!--UpdateCheck Notifications-->
@@ -360,7 +359,7 @@
     </plurals>
     <string name="notification_chapters_single">Chương %1$s</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="other">%1$d chương mới</item>
+        <item quantity="other">%1$d chương mới có</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
         <item quantity="other">Cho %d tiêu đề</item>
@@ -512,7 +511,7 @@
     <string name="download_insufficient_space">Không thể tãi chương vì dung lượng bộ nhớ xuống thấp</string>
     <string name="recent_manga_time">Ch.%1$s-%2$s</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Đã bỏ qua %d chương, vì nguồn đang bị thiếu chúng hoặc chúng đã bị lọc ra</item>
+        <item quantity="other">Đã bỏ qua %d chương, vì nguồn đang bị thiếu hoặc chúng đã bị lọc ra</item>
     </plurals>
     <string name="loader_not_implemented_error">Nguồn không tìm thấy</string>
     <string name="page_list_empty_error">Trang không tìm thấy</string>
@@ -522,7 +521,7 @@
     <string name="error_invalid_date_supplied">Ngày tháng không hợp lệ</string>
     <string name="add_tracking">Thêm theo dõi</string>
     <plurals name="num_trackers">
-        <item quantity="other">%d theo dõi</item>
+        <item quantity="other">%d bộ theo dõi</item>
     </plurals>
     <string name="no_chapters_error">Không tìm thấy chương</string>
     <string name="set_chapter_settings_as_default">Đặt mặc định</string>
@@ -570,7 +569,7 @@
     <string name="backup_restore_content_full">Dữ liệu từ tệp sao lưu sẽ được khôi phục.
 \n
 \nBạn sẽ cần cài đặt bất kỳ tiện ích mở rộng nào bị thiếu và đăng nhập vào các dịch vụ theo dõi sau đó để sử dụng chúng.</string>
-    <string name="backup_restore_missing_trackers">Tracker chưa đăng nhập:</string>
+    <string name="backup_restore_missing_trackers">Bộ theo dõi chưa được đăng nhập vào :</string>
     <string name="backup_restore_missing_sources">Nguồn không tìm thấy :</string>
     <string name="pref_download_new_categories_details">Manga trong các danh mục bị loại trừ sẽ không được tải xuống.</string>
     <string name="pref_category_auto_download">Tự động tải xuống</string>
@@ -695,7 +694,7 @@
     <string name="action_display_language_badge">Ngôn ngữ</string>
     <string name="backup_info">Tự động sao lưu là phương án an toàn nhất. Bạn cũng nên giữ lại các bản sao chép ở những nơi khác nữa.</string>
     <string name="pref_verbose_logging_summary">In các ghi chép tường tận đến cả ghi chép hệ thống ( giảm hiệu suất ứng dụng )</string>
-    <string name="notification_size_warning">Cảnh báo: các bản cập nhật lớn sẽ gây hại cho các nguồn và có thể dẫn đến các bản cập nhật chậm hơn và cũng làm tăng mức sử dụng pin</string>
+    <string name="notification_size_warning">Các bản cập nhật lớn sẽ gây hại cho các nguồn và có thể dẫn đến các bản cập nhật chậm hơn và cũng làm tăng mức sử dụng pin</string>
     <string name="ext_install_service_notif">Đang cài đặt tiện ích mở rộng…</string>
     <string name="update_72hour">3 ngày một lần</string>
     <string name="connected_to_wifi">Chỉ qua Wi-Fi</string>
@@ -708,8 +707,8 @@
     <string name="database_clean">Dọn cơ sở dữ liệu</string>
     <string name="extension_api_error">Không tải được danh sách tiện ích mở rộng</string>
     <string name="privacy_policy">Chính sách quyền riêng tư</string>
-    <string name="pref_library_update_manga_restriction">Bỏ qua cập nhật</string>
-    <string name="pref_update_only_completely_read">Có chương chưa đọc</string>
+    <string name="pref_library_update_manga_restriction">Bỏ qua cập nhật tiêu đề</string>
+    <string name="pref_update_only_completely_read">Với chương chưa đọc</string>
     <string name="publishing_finished">Xuất bản đã hoàn thành</string>
     <string name="cancelled">Đã hủy</string>
     <string name="on_hiatus">Bị gián đoạn</string>
@@ -717,9 +716,9 @@
     <string name="save_chapter_as_cbz">Lưu dưới dạng lưu trữ CBZ</string>
     <string name="backup_restore_invalid_uri">Lỗi: trống URI</string>
     <string name="action_faq_and_guides">Câu Hỏi Thờng Gặp và Hướng Dẫn</string>
-    <string name="pref_update_only_started">Không có chương đã đọc</string>
+    <string name="pref_update_only_started">Mà chưa được bắt đầu</string>
     <string name="notification_update_skipped">%1$d cập nhật được bỏ qua</string>
-    <string name="learn_more">Tìm hiểu thêm</string>
+    <string name="learn_more">Nhấn để tìm hiểu thêm</string>
     <string name="pref_landscape_zoom">Phóng ảnh phong cảnh</string>
     <string name="action_show_manga">Hiện truyện manga</string>
     <string name="webtoon_side_padding_5">5%</string>
@@ -736,5 +735,7 @@
     <string name="skipped_reason_not_started">Đã bỏ qua vì không có chương được đọc</string>
     <string name="channel_skipped">Bỏ qua</string>
     <string name="action_move_to_top_all_for_series">Di chuyển bộ truyện lên đầu</string>
-    <string name="disabled_nav">Vô hiệu hóa</string>
+    <string name="disabled_nav">Tắt</string>
+    <string name="update_check_fdroid_migration_info">Một phiên bản mới sẵn sàng từ mục phát hành chính thức. Nhấn để học cách kết hợp các mục phát hành không chính thức từ F-Droid.</string>
+    <string name="error_saving_picture">Lỗi khi lưu ảnh</string>
 </resources>

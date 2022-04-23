@@ -76,7 +76,7 @@
     <string name="all">全て</string>
     <string name="pref_library_update_restriction">自動更新の条件</string>
     <string name="charging">充電中</string>
-    <string name="pref_update_only_non_completed">完結済みのシリーズ</string>
+    <string name="pref_update_only_non_completed">ステータスが「完結済み」</string>
     <string name="pref_auto_update_manga_sync">読んだ後に読書進捗を更新</string>
     <string name="pref_start_screen">スタート画面</string>
     <string name="default_category">デフォルトカテゴリー</string>
@@ -277,7 +277,6 @@
     <string name="file_select_cover">カバー画像を選択</string>
     <string name="file_select_backup">バックアップファイルを選択</string>
     <string name="update_check_confirm">ダウンロード</string>
-    <string name="update_check_ignore">無視</string>
     <string name="update_check_no_new_updates">新しいバージョンがありません</string>
     <string name="update_check_look_for_updates">アップデートを確認中…</string>
     <string name="update_check_notification_download_in_progress">ダウンロード中…</string>
@@ -287,7 +286,7 @@
     <string name="description_cover">マンガカバー</string>
     <string name="information_no_downloads">ダウンロードがありません</string>
     <string name="information_no_recent">最近の更新はありません</string>
-    <string name="information_no_recent_manga">最近に読んだマンガがありません</string>
+    <string name="information_no_recent_manga">最近に読んだ漫画がありません</string>
     <string name="information_empty_library">ライブラリは空です</string>
     <string name="information_empty_category">カテゴリーがありません。「+」をタップしてカテゴリーを追加し、ライブラリを整理できます。</string>
     <string name="download_notifier_downloader_title">ダウンロード</string>
@@ -659,7 +658,7 @@
     <string name="enhanced_tracking_info">特定ソース専用の高度な機能を提供するサービスです。漫画はライブラリに追加される時、自動で追跡され始めます。</string>
     <string name="backup_info">バックアップの自動作成は強く推奨されます。ほかの場所にもコピーを保管してください。</string>
     <string name="pref_verbose_logging_summary">システムログにverboseログを出力（アプリのパフォーマンスが低下します）</string>
-    <string name="notification_size_warning">警告：大規模のアップデートはソースに有害で、ソースを遅くし、電池の消耗を増加する可能性があります</string>
+    <string name="notification_size_warning">大規模のアップデートはソースに有害で、ソースを遅くし、電池の消耗を増加する可能性があります</string>
     <string name="action_display_language_badge">言語</string>
     <string name="label_warning">警告</string>
     <string name="pref_verbose_logging">Verboseログ出力</string>
@@ -674,7 +673,7 @@
     <string name="database_clean">データベースクリーンアップ</string>
     <string name="extension_api_error">拡張機能リストを取得できませんでした</string>
     <string name="privacy_policy">プライバシーポリシー</string>
-    <string name="pref_library_update_manga_restriction">更新のスキップ</string>
+    <string name="pref_library_update_manga_restriction">タイトル更新のスキップ</string>
     <string name="pref_update_only_completely_read">未読の章あり</string>
     <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください。</string>
     <string name="save_chapter_as_cbz">CBZアーカイブとして保存</string>
@@ -687,7 +686,7 @@
     <string name="action_show_manga">マンガを表示</string>
     <string name="action_display_cover_only_grid">表紙グリッド</string>
     <string name="action_filter_started">開始済み</string>
-    <string name="pref_update_only_started">読了した章なし</string>
+    <string name="pref_update_only_started">読み始めていない</string>
     <string name="skipped_reason_not_caught_up">未読の章がある為スキップしました</string>
     <string name="confirm_manga_add_duplicate">同じ名前で異なるソース（%1$s）の項目はすでにライブラリに存在します。
 \n
@@ -697,10 +696,14 @@
     <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
     <string name="pref_navigate_pan">ページ内で移動</string>
     <string name="notification_update_skipped">%1$d件の更新がスキップされました</string>
-    <string name="learn_more">もっと詳しく</string>
+    <string name="learn_more">タップでもっと詳しく</string>
     <string name="channel_skipped">スキップ済み</string>
     <string name="notification_update_error">%1$d件の更新に失敗しました</string>
     <string name="rotation_reverse_portrait">縦向き（反転）</string>
     <string name="action_move_to_top_all_for_series">シリーズをトップに移動</string>
     <string name="disabled_nav">無効</string>
+    <string name="empty_backup_error">バックアップできるライブラリ項目はありません</string>
+    <string name="update_check_open">GitHubに移動</string>
+    <string name="update_check_fdroid_migration_info">公式リリースで新しいバージョンが取得可能です。非公式のF-Droidリリースからの移行については、タップで手順をご覧ください。</string>
+    <string name="error_saving_picture">画像の保存時にエラー発生</string>
 </resources>

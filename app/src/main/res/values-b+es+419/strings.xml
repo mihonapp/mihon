@@ -434,7 +434,6 @@
     <string name="ongoing">En curso</string>
     <string name="description">Descripción</string>
     <string name="update_check_no_new_updates">No hay nuevas actualizaciones disponibles</string>
-    <string name="update_check_ignore">Ignorar</string>
     <string name="update_check_confirm">Descargar</string>
     <string name="file_select_backup">Seleccione el archivo de copia de seguridad</string>
     <string name="file_select_cover">Seleccione la imagen de portada</string>

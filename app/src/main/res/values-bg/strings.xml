@@ -226,7 +226,6 @@
     <string name="file_select_backup">Изберете резервно копие</string>
     <!--UpdateCheck-->
     <string name="update_check_confirm">Изтегли</string>
-    <string name="update_check_ignore">Игнорирай</string>
     <string name="update_check_no_new_updates">Няма налични актуализации</string>
     <string name="update_check_look_for_updates">Търсене на актуализации…</string>
     <!--UpdateCheck Notifications-->

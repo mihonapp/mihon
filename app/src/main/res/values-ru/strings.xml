@@ -46,7 +46,7 @@
     <string name="action_update_library">Обновить библиотеку</string>
     <string name="all">Все</string>
     <string name="black_background">Чёрный</string>
-    <string name="cache_delete_error">Возникла ошибка при удалении кэша</string>
+    <string name="cache_delete_error">Возникла ошибка при очистке</string>
     <string name="cache_deleted">Кэш очищен. %1$d файлов было удалено</string>
     <string name="chapter_downloading_progress">Загружается (%1$d/%2$d)</string>
     <string name="chapter_error">Ошибка</string>
@@ -191,7 +191,6 @@
     <string name="update_48hour">Каждые 2 дня</string>
     <string name="update_6hour">Каждые 6 часов</string>
     <string name="update_check_confirm">Загрузить</string>
-    <string name="update_check_ignore">Игнорировать</string>
     <string name="update_check_look_for_updates">Поиск обновлений…</string>
     <string name="update_check_no_new_updates">Обновлений не найдено</string>
     <string name="update_check_notification_download_complete">Загрузка завершена</string>
@@ -723,7 +722,7 @@
     <string name="confirm_manga_add_duplicate">В вашей библиотеке есть серия с таким же названием, но из другого источника (%1$s).
 \n
 \nВы по-прежнему хотите продолжить\?</string>
-    <string name="action_display_cover_only_grid">Сетка без названий</string>
+    <string name="action_display_cover_only_grid">Сетка без названия</string>
     <string name="pref_navigate_pan">Перейти к панораме</string>
     <string name="pref_landscape_zoom">Увеличивать изображение по горизонтали</string>
     <string name="action_filter_started">Начато</string>
@@ -740,4 +739,8 @@
     <string name="disabled_nav">Отключено</string>
     <string name="update_check_fdroid_migration_info">Новая версия доступна на оф. странице Tachiyomi. Нажмите, чтобы узнать как мигрировать с неофициальной версии из F-Droid.</string>
     <string name="error_saving_picture">Не удалось сохранить изображение</string>
+    <string name="empty_backup_error">Нет элементов в библиотеке для резервирования</string>
+    <string name="update_check_open">Открыть в GitHub</string>
+    <string name="webview_data_deleted">Данные WebView очищены</string>
+    <string name="pref_clear_webview_data">Очистить данные WebView</string>
 </resources>
