@@ -142,6 +142,7 @@ dependencies {
     implementation(compose.foundation)
     implementation(compose.material3.core)
     implementation(compose.material3.adapter)
+    implementation(compose.material.icons)
     implementation(compose.animation)
     implementation(compose.ui.tooling)
 
