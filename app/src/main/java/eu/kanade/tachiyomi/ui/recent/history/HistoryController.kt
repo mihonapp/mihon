@@ -5,6 +5,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.tachiyomi.R
@@ -28,9 +29,9 @@ class HistoryController : ComposeController<HistoryPresenter>(), RootController 
     override fun createPresenter() = HistoryPresenter()
 
     @Composable
-    override fun ComposeContent() {
+    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
         HistoryScreen(
-            composeView = binding.root,
+            nestedScrollInterop = nestedScrollInterop,
             presenter = presenter,
             onClickItem = { history ->
                 router.pushController(MangaController(history).withFadeTransaction())

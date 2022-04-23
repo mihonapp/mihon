@@ -5,8 +5,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults.libraryColors
 import eu.kanade.tachiyomi.R
@@ -17,9 +17,7 @@ class LicensesController : BasicComposeController() {
     override fun getTitle() = resources?.getString(R.string.licenses)
 
     @Composable
-    override fun ComposeContent() {
-        val nestedScrollInterop = rememberNestedScrollInteropConnection(binding.root)
-
+    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
         LibrariesContainer(
             modifier = Modifier
                 .fillMaxSize()

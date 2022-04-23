@@ -32,9 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -62,13 +60,12 @@ import java.util.Date
 
 @Composable
 fun HistoryScreen(
-    composeView: ComposeView,
+    nestedScrollInterop: NestedScrollConnection,
     presenter: HistoryPresenter,
     onClickItem: (HistoryWithRelations) -> Unit,
     onClickResume: (HistoryWithRelations) -> Unit,
     onClickDelete: (HistoryWithRelations, Boolean) -> Unit,
 ) {
-    val nestedScrollInterop = rememberNestedScrollInteropConnection(composeView)
     val state by presenter.state.collectAsState()
     val history = state.list?.collectAsLazyPagingItems()
     when {

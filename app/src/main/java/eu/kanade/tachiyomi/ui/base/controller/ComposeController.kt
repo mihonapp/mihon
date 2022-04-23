@@ -3,6 +3,8 @@ package eu.kanade.tachiyomi.ui.base.controller
 import android.view.LayoutInflater
 import android.view.View
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.databinding.ComposeControllerBinding
 import nucleus.presenter.Presenter
@@ -19,13 +21,14 @@ abstract class ComposeController<P : Presenter<*>> : NucleusController<ComposeCo
         super.onViewCreated(view)
 
         binding.root.setContent {
+            val nestedScrollInterop = rememberNestedScrollInteropConnection(binding.root)
             TachiyomiTheme {
-                ComposeContent()
+                ComposeContent(nestedScrollInterop)
             }
         }
     }
 
-    @Composable abstract fun ComposeContent()
+    @Composable abstract fun ComposeContent(nestedScrollInterop: NestedScrollConnection)
 }
 
 /**
@@ -40,11 +43,12 @@ abstract class BasicComposeController : BaseController<ComposeControllerBinding>
         super.onViewCreated(view)
 
         binding.root.setContent {
+            val nestedScrollInterop = rememberNestedScrollInteropConnection(binding.root)
             TachiyomiTheme {
-                ComposeContent()
+                ComposeContent(nestedScrollInterop)
             }
         }
     }
 
-    @Composable abstract fun ComposeContent()
+    @Composable abstract fun ComposeContent(nestedScrollInterop: NestedScrollConnection)
 }
