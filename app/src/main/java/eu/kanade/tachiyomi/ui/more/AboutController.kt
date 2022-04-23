@@ -35,9 +35,7 @@ class AboutController : BasicComposeController(), NoAppBarElevationController {
             nestedScrollInterop = nestedScrollInterop,
             checkVersion = this::checkVersion,
             getFormattedBuildTime = this::getFormattedBuildTime,
-            onClickLicenses = {
-                router.pushController(LicensesController())
-            },
+            onClickLicenses = { router.pushController(LicensesController()) },
         )
     }
 
