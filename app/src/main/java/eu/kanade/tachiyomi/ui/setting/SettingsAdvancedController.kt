@@ -144,12 +144,6 @@ class SettingsAdvancedController : SettingsController() {
                 defaultValue = false
             }
             preference {
-                key = "pref_clear_webview_data"
-                titleRes = R.string.pref_clear_webview_data
-
-                onClick { clearWebViewData() }
-            }
-            preference {
                 key = "pref_clear_database"
                 titleRes = R.string.pref_clear_database
                 summaryRes = R.string.pref_clear_database_summary
@@ -171,6 +165,12 @@ class SettingsAdvancedController : SettingsController() {
                     network.cookieManager.removeAll()
                     activity?.toast(R.string.cookies_cleared)
                 }
+            }
+            preference {
+                key = "pref_clear_webview_data"
+                titleRes = R.string.pref_clear_webview_data
+
+                onClick { clearWebViewData() }
             }
             intListPreference {
                 key = Keys.dohProvider
