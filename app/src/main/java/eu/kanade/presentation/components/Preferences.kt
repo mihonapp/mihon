@@ -5,22 +5,26 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.util.horizontalPadding
+
+@Composable
+fun Divider() {
+    androidx.compose.material3.Divider(
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+    )
+}
 
 @Composable
 fun PreferenceRow(
@@ -33,15 +37,17 @@ fun PreferenceRow(
 ) {
     val height = if (subtitle != null) 72.dp else 56.dp
 
-    // TODO: adjust text styles, especially subtitles
-    val textStyle = MaterialTheme.typography.titleMedium.copy(
-        color = contentColorFor(MaterialTheme.colorScheme.background),
+    val titleTextStyle = MaterialTheme.typography.bodyLarge.copy(
+        color = MaterialTheme.colorScheme.onSurface,
+    )
+    val subtitleTextStyle = MaterialTheme.typography.bodyMedium.copy(
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f),
     )
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .requiredHeight(height)
+            .heightIn(min = height)
             .combinedClickable(
                 onLongClick = onLongClick,
                 onClick = onClick
@@ -65,18 +71,13 @@ fun PreferenceRow(
         ) {
             Text(
                 text = title,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = textStyle,
+                style = titleTextStyle,
             )
             if (subtitle != null) {
                 Text(
+                    modifier = Modifier.padding(top = 4.dp),
                     text = subtitle,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    style = textStyle.copy(
-                        fontWeight = FontWeight.Normal,
-                    ),
+                    style = subtitleTextStyle,
                 )
             }
         }
