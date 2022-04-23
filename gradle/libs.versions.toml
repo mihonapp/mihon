@@ -1,5 +1,5 @@
 [versions]
-aboutlib_version = "8.9.4"
+aboutlib_version = "10.1.0"
 okhttp_version = "4.9.3"
 nucleus_version = "3.0.0"
 coil_version = "2.0.0-rc03"
@@ -83,8 +83,8 @@ logcat = "com.squareup.logcat:logcat:0.1"
 acra-http = "ch.acra:acra-http:5.9.1"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:20.0.2"
 
-aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlib_version" }
-aboutlibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
+aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
+aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref ="aboutlib_version" }
 
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku_version" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku_version" }

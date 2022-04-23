@@ -239,6 +239,7 @@ dependencies {
     }
     implementation(libs.insetter)
     implementation(libs.markwon)
+    implementation(libs.aboutLibraries.compose)
 
     // Conductor
     implementation(libs.bundles.conductor)
@@ -252,9 +253,6 @@ dependencies {
     // Crash reports/analytics
     implementation(libs.acra.http)
     "standardImplementation"(libs.firebase.analytics)
-
-    // Licenses
-    implementation(libs.aboutlibraries.core)
 
     // Shizuku
     implementation(libs.bundles.shizuku)
