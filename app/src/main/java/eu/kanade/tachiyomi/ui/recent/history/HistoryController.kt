@@ -33,7 +33,7 @@ class HistoryController : ComposeController<HistoryPresenter>(), RootController 
         HistoryScreen(
             nestedScrollInterop = nestedScrollInterop,
             presenter = presenter,
-            onClickItem = { history ->
+            onClickCover = { history ->
                 router.pushController(MangaController(history).withFadeTransaction())
             },
             onClickResume = { history ->
