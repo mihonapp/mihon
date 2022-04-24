@@ -12,14 +12,6 @@
         tools:ignore="AlwaysShowAction" />
 
     <item
-        android:id="@+id/action_download_unread"
-        android:icon="@drawable/ic_get_app_24dp"
-        android:title="@string/action_download_unread"
-        app:iconTint="?attr/colorOnSurface"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
-
-    <item
         android:id="@+id/action_mark_as_read"
         android:icon="@drawable/ic_done_24dp"
         android:title="@string/action_mark_as_read"
@@ -31,6 +23,14 @@
         android:id="@+id/action_mark_as_unread"
         android:icon="@drawable/ic_done_outline_24dp"
         android:title="@string/action_mark_as_unread"
+        app:iconTint="?attr/colorOnSurface"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/action_download_unread"
+        android:icon="@drawable/ic_get_app_24dp"
+        android:title="@string/action_download_unread"
         app:iconTint="?attr/colorOnSurface"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
