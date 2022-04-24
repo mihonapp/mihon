@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.preference.DEVICE_BATTERY_NOT_LOW
 import eu.kanade.tachiyomi.data.preference.DEVICE_CHARGING
 import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
 import eu.kanade.tachiyomi.data.preference.MANGA_HAS_UNREAD
@@ -159,8 +160,8 @@ class SettingsLibraryController : SettingsController() {
             multiSelectListPreference {
                 bindTo(preferences.libraryUpdateDeviceRestriction())
                 titleRes = R.string.pref_library_update_restriction
-                entriesRes = arrayOf(R.string.connected_to_wifi, R.string.charging)
-                entryValues = arrayOf(DEVICE_ONLY_ON_WIFI, DEVICE_CHARGING)
+                entriesRes = arrayOf(R.string.connected_to_wifi, R.string.charging, R.string.battery_not_low)
+                entryValues = arrayOf(DEVICE_ONLY_ON_WIFI, DEVICE_CHARGING, DEVICE_BATTERY_NOT_LOW)
 
                 visibleIf(preferences.libraryUpdateInterval()) { it > 0 }
 
@@ -177,6 +178,7 @@ class SettingsLibraryController : SettingsController() {
                             when (it) {
                                 DEVICE_ONLY_ON_WIFI -> context.getString(R.string.connected_to_wifi)
                                 DEVICE_CHARGING -> context.getString(R.string.charging)
+                                DEVICE_BATTERY_NOT_LOW -> context.getString(R.string.battery_not_low)
                                 else -> it
                             }
                         }
