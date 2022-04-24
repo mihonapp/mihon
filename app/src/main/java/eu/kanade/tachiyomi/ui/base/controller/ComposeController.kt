@@ -7,6 +7,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.databinding.ComposeControllerBinding
+import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import nucleus.presenter.Presenter
 
 /**
@@ -35,6 +36,25 @@ abstract class ComposeController<P : Presenter<*>> : NucleusController<ComposeCo
  * Basic Compose controller without a presenter.
  */
 abstract class BasicComposeController : BaseController<ComposeControllerBinding>() {
+
+    override fun createBinding(inflater: LayoutInflater): ComposeControllerBinding =
+        ComposeControllerBinding.inflate(inflater)
+
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
+
+        binding.root.setContent {
+            val nestedScrollInterop = rememberNestedScrollInteropConnection(binding.root)
+            TachiyomiTheme {
+                ComposeContent(nestedScrollInterop)
+            }
+        }
+    }
+
+    @Composable abstract fun ComposeContent(nestedScrollInterop: NestedScrollConnection)
+}
+
+abstract class SearchableComposeController<P : BasePresenter<*>> : SearchableNucleusController<ComposeControllerBinding, P>() {
 
     override fun createBinding(inflater: LayoutInflater): ComposeControllerBinding =
         ComposeControllerBinding.inflate(inflater)

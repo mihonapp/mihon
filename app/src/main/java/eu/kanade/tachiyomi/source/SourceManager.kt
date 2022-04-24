@@ -6,12 +6,18 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import rx.Observable
 
 open class SourceManager(private val context: Context) {
 
     private val sourcesMap = mutableMapOf<Long, Source>()
     private val stubSourcesMap = mutableMapOf<Long, StubSource>()
+
+    private val _catalogueSources: MutableStateFlow<List<CatalogueSource>> = MutableStateFlow(listOf())
+    val catalogueSources: Flow<List<CatalogueSource>> = _catalogueSources
 
     init {
         createInternalSources().forEach { registerSource(it) }
@@ -38,10 +44,18 @@ open class SourceManager(private val context: Context) {
         if (!stubSourcesMap.containsKey(source.id)) {
             stubSourcesMap[source.id] = StubSource(source.id)
         }
+        triggerCatalogueSources()
     }
 
     internal fun unregisterSource(source: Source) {
         sourcesMap.remove(source.id)
+        triggerCatalogueSources()
+    }
+
+    private fun triggerCatalogueSources() {
+        _catalogueSources.update {
+            sourcesMap.values.filterIsInstance<CatalogueSource>()
+        }
     }
 
     private fun createInternalSources(): List<Source> = listOf(

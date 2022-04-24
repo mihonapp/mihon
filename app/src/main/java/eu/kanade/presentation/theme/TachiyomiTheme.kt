@@ -9,7 +9,8 @@ import com.google.android.material.composethemeadapter3.createMdc3Theme
 fun TachiyomiTheme(content: @Composable () -> Unit) {
     val context = LocalContext.current
     val (colorScheme, typography) = createMdc3Theme(
-        context = context
+        context = context,
+        setTextColors = true
     )
 
     MaterialTheme(

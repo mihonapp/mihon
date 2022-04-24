@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import dev.chrisbanes.insetter.applyInsetter
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
+import eu.kanade.domain.source.model.Source
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -69,15 +70,18 @@ open class BrowseSourceController(bundle: Bundle) :
     FlexibleAdapter.EndlessScrollListener,
     ChangeMangaCategoriesDialog.Listener {
 
-    constructor(source: CatalogueSource, searchQuery: String? = null) : this(
+    constructor(sourceId: Long, query: String? = null) : this(
         Bundle().apply {
-            putLong(SOURCE_ID_KEY, source.id)
-
-            if (searchQuery != null) {
-                putString(SEARCH_QUERY_KEY, searchQuery)
+            putLong(SOURCE_ID_KEY, sourceId)
+            query?.let { query ->
+                putString(SEARCH_QUERY_KEY, query)
             }
         },
     )
+
+    constructor(source: CatalogueSource, query: String? = null) : this(source.id, query)
+
+    constructor(source: Source, query: String? = null) : this(source.id, query)
 
     private val preferences: PreferencesHelper by injectLazy()
 

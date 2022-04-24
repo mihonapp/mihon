@@ -324,6 +324,8 @@ class PreferencesHelper(val context: Context) {
 
     fun autoClearChapterCache() = prefs.getBoolean(Keys.autoClearChapterCache, false)
 
+    fun pinsOnTop() = flowPrefs.getBoolean("pins_on_top", true)
+
     fun setChapterSettingsDefault(manga: Manga) {
         prefs.edit {
             putInt(Keys.defaultChapterFilterByRead, manga.readFilter)

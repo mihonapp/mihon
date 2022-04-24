@@ -22,6 +22,17 @@ class SettingsBrowseController : SettingsController() {
         titleRes = R.string.browse
 
         preferenceCategory {
+            titleRes = R.string.pref_category_general
+
+            switchPreference {
+                bindTo(preferences.pinsOnTop())
+                titleRes = R.string.pref_move_on_top
+                summaryRes = R.string.pref_move_on_top_summary
+                defaultValue = true
+            }
+        }
+
+        preferenceCategory {
             titleRes = R.string.label_extensions
 
             switchPreference {
