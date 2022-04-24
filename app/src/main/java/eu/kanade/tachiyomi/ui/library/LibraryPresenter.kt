@@ -284,12 +284,13 @@ class LibraryPresenter(
                     collator.compare(i1.manga.title.lowercase(locale), i2.manga.title.lowercase(locale))
                 }
                 SortModeSetting.LAST_READ -> {
-                    // Get index of manga, set equal to list if size unknown.
-                    val manga1LastRead = lastReadManga[i1.manga.id!!] ?: lastReadManga.size
-                    val manga2LastRead = lastReadManga[i2.manga.id!!] ?: lastReadManga.size
+                    val manga1LastRead = lastReadManga[i1.manga.id!!] ?: 0
+                    val manga2LastRead = lastReadManga[i2.manga.id!!] ?: 0
                     manga1LastRead.compareTo(manga2LastRead)
                 }
-                SortModeSetting.LAST_CHECKED -> i2.manga.last_update.compareTo(i1.manga.last_update)
+                SortModeSetting.LAST_CHECKED -> {
+                    i1.manga.last_update.compareTo(i2.manga.last_update)
+                }
                 SortModeSetting.UNREAD -> when {
                     // Ensure unread content comes first
                     i1.manga.unreadCount == i2.manga.unreadCount -> 0
@@ -308,13 +309,13 @@ class LibraryPresenter(
                     manga1latestChapter.compareTo(manga2latestChapter)
                 }
                 SortModeSetting.DATE_FETCHED -> {
-                    val manga1chapterFetchDate = chapterFetchDateManga[i1.manga.id!!]
-                        ?: chapterFetchDateManga.size
-                    val manga2chapterFetchDate = chapterFetchDateManga[i2.manga.id!!]
-                        ?: chapterFetchDateManga.size
+                    val manga1chapterFetchDate = chapterFetchDateManga[i1.manga.id!!] ?: 0
+                    val manga2chapterFetchDate = chapterFetchDateManga[i2.manga.id!!] ?: 0
                     manga1chapterFetchDate.compareTo(manga2chapterFetchDate)
                 }
-                SortModeSetting.DATE_ADDED -> i2.manga.date_added.compareTo(i1.manga.date_added)
+                SortModeSetting.DATE_ADDED -> {
+                    i1.manga.date_added.compareTo(i2.manga.date_added)
+                }
             }
         }
 
