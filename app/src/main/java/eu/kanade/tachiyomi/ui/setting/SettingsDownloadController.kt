@@ -125,20 +125,20 @@ class SettingsDownloadController : SettingsController() {
             titleRes = R.string.pref_category_auto_download
 
             switchPreference {
-                bindTo(preferences.downloadNew())
+                bindTo(preferences.downloadNewChapter())
                 titleRes = R.string.pref_download_new
             }
             preference {
-                bindTo(preferences.downloadNewCategories())
+                bindTo(preferences.downloadNewChapterCategories())
                 titleRes = R.string.categories
                 onClick {
                     DownloadCategoriesDialog().showDialog(router)
                 }
 
-                visibleIf(preferences.downloadNew()) { it }
+                visibleIf(preferences.downloadNewChapter()) { it }
 
                 fun updateSummary() {
-                    val selectedCategories = preferences.downloadNewCategories().get()
+                    val selectedCategories = preferences.downloadNewChapterCategories().get()
                         .mapNotNull { id -> categories.find { it.id == id.toInt() } }
                         .sortedBy { it.order }
                     val includedItemsText = if (selectedCategories.isEmpty()) {
@@ -147,7 +147,7 @@ class SettingsDownloadController : SettingsController() {
                         selectedCategories.joinToString { it.name }
                     }
 
-                    val excludedCategories = preferences.downloadNewCategoriesExclude().get()
+                    val excludedCategories = preferences.downloadNewChapterCategoriesExclude().get()
                         .mapNotNull { id -> categories.find { it.id == id.toInt() } }
                         .sortedBy { it.order }
                     val excludedItemsText = if (excludedCategories.isEmpty()) {
@@ -163,10 +163,10 @@ class SettingsDownloadController : SettingsController() {
                     }
                 }
 
-                preferences.downloadNewCategories().asFlow()
+                preferences.downloadNewChapterCategories().asFlow()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
-                preferences.downloadNewCategoriesExclude().asFlow()
+                preferences.downloadNewChapterCategoriesExclude().asFlow()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
             }
@@ -254,8 +254,8 @@ class SettingsDownloadController : SettingsController() {
             var selected = categories
                 .map {
                     when (it.id.toString()) {
-                        in preferences.downloadNewCategories().get() -> QuadStateTextView.State.CHECKED.ordinal
-                        in preferences.downloadNewCategoriesExclude().get() -> QuadStateTextView.State.INVERSED.ordinal
+                        in preferences.downloadNewChapterCategories().get() -> QuadStateTextView.State.CHECKED.ordinal
+                        in preferences.downloadNewChapterCategoriesExclude().get() -> QuadStateTextView.State.INVERSED.ordinal
                         else -> QuadStateTextView.State.UNCHECKED.ordinal
                     }
                 }
@@ -282,8 +282,8 @@ class SettingsDownloadController : SettingsController() {
                         .map { categories[it].id.toString() }
                         .toSet()
 
-                    preferences.downloadNewCategories().set(included)
-                    preferences.downloadNewCategoriesExclude().set(excluded)
+                    preferences.downloadNewChapterCategories().set(included)
+                    preferences.downloadNewChapterCategoriesExclude().set(excluded)
                 }
                 .setNegativeButton(android.R.string.cancel, null)
                 .create()
