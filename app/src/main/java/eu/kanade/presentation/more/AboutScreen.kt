@@ -65,9 +65,7 @@ fun AboutScreen(
             item {
                 PreferenceRow(
                     title = stringResource(R.string.check_for_updates),
-                    onClick = {
-                        checkVersion()
-                    },
+                    onClick = checkVersion,
                 )
             }
         }
@@ -75,9 +73,7 @@ fun AboutScreen(
             item {
                 PreferenceRow(
                     title = stringResource(R.string.whats_new),
-                    onClick = {
-                        uriHandler.openUri(RELEASE_URL)
-                    },
+                    onClick = { uriHandler.openUri(RELEASE_URL) },
                 )
             }
         }

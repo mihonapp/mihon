@@ -86,21 +86,21 @@ fun MoreScreen(
                     }
                 },
                 painter = rememberVectorPainter(Icons.Outlined.GetApp),
-                onClick = { onClickDownloadQueue() },
+                onClick = onClickDownloadQueue,
             )
         }
         item {
             PreferenceRow(
                 title = stringResource(R.string.categories),
                 painter = rememberVectorPainter(Icons.Outlined.Label),
-                onClick = { onClickCategories() },
+                onClick = onClickCategories,
             )
         }
         item {
             PreferenceRow(
                 title = stringResource(R.string.label_backup),
                 painter = rememberVectorPainter(Icons.Outlined.SettingsBackupRestore),
-                onClick = { onClickBackupAndRestore() },
+                onClick = onClickBackupAndRestore,
             )
         }
 
@@ -110,14 +110,14 @@ fun MoreScreen(
             PreferenceRow(
                 title = stringResource(R.string.label_settings),
                 painter = rememberVectorPainter(Icons.Outlined.Settings),
-                onClick = { onClickSettings() },
+                onClick = onClickSettings,
             )
         }
         item {
             PreferenceRow(
                 title = stringResource(R.string.pref_category_about),
                 painter = rememberVectorPainter(Icons.Outlined.Info),
-                onClick = { onClickAbout() },
+                onClick = onClickAbout,
             )
         }
         item {

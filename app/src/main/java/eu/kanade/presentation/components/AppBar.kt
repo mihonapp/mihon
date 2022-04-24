@@ -24,8 +24,6 @@ fun AppBarTitle(
     title: String?,
     subtitle: String? = null,
 ) {
-    val subtitleTextStyle = MaterialTheme.typography.bodyMedium
-
     Column {
         title?.let {
             Text(
@@ -37,7 +35,7 @@ fun AppBarTitle(
         subtitle?.let {
             Text(
                 text = it,
-                style = subtitleTextStyle,
+                style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -54,7 +52,7 @@ fun AppBarActions(
     actions.filterIsInstance<AppBar.Action>().map {
         IconButton(
             onClick = it.onClick,
-            enabled = it.isEnabled,
+            enabled = it.enabled,
         ) {
             Icon(
                 imageVector = it.icon,
@@ -71,7 +69,7 @@ fun AppBarActions(
 
         DropdownMenu(
             expanded = showMenu,
-            onDismissRequest = { showMenu = false }
+            onDismissRequest = { showMenu = false },
         ) {
             overflowActions.map {
                 DropdownMenuItem(
@@ -93,7 +91,7 @@ object AppBar {
         val title: String,
         val icon: ImageVector,
         val onClick: () -> Unit,
-        val isEnabled: Boolean = true,
+        val enabled: Boolean = true,
     ) : AppBarAction
 
     data class OverflowAction(

@@ -73,7 +73,7 @@ fun WebViewScreen(
                                     navigator.navigateBack()
                                 }
                             },
-                            isEnabled = navigator.canGoBack,
+                            enabled = navigator.canGoBack,
                         ),
                         AppBar.Action(
                             title = stringResource(R.string.action_webview_forward),
@@ -83,7 +83,7 @@ fun WebViewScreen(
                                     navigator.navigateForward()
                                 }
                             },
-                            isEnabled = navigator.canGoForward,
+                            enabled = navigator.canGoForward,
                         ),
                         AppBar.OverflowAction(
                             title = stringResource(R.string.action_webview_refresh),
