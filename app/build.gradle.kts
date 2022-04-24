@@ -139,12 +139,15 @@ android {
 }
 
 dependencies {
+    // Compose
+    implementation(compose.activity)
     implementation(compose.foundation)
     implementation(compose.material3.core)
     implementation(compose.material3.adapter)
     implementation(compose.material.icons)
     implementation(compose.animation)
     implementation(compose.ui.tooling)
+    implementation(compose.accompanist.webview)
 
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)
@@ -154,7 +157,6 @@ dependencies {
     implementation(libs.sqldelight.android.paging)
 
     implementation(kotlinx.reflect)
-
     implementation(kotlinx.bundles.coroutines)
 
     // Source models and interfaces from Tachiyomi 1.x
