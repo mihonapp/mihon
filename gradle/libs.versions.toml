@@ -7,6 +7,7 @@ conductor_version = "3.1.2"
 flowbinding_version = "1.2.0"
 shizuku_version = "12.1.0"
 sqldelight = "1.5.3"
+leakcanary = "2.9.1"
 
 [libraries]
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
@@ -88,7 +89,8 @@ aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", versi
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku_version" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku_version" }
 
-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.7"
+leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref ="leakcanary" }
+leakcanary-plumber = { module = "com.squareup.leakcanary:plumber-android", version.ref ="leakcanary" }
 
 sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref ="sqldelight" }
 sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref ="sqldelight" }
