@@ -66,9 +66,14 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
         set(value) {
             field = value
             if (value) {
-                awaitingIdleViewerChapters?.let {
-                    setChaptersInternal(it)
+                awaitingIdleViewerChapters?.let { viewerChapters ->
+                    setChaptersInternal(viewerChapters)
                     awaitingIdleViewerChapters = null
+                    if (viewerChapters.currChapter.pages?.size == 1) {
+                        adapter.nextTransition?.to?.let {
+                            activity.requestPreloadChapter(it)
+                        }
+                    }
                 }
             }
         }
