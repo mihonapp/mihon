@@ -10,8 +10,6 @@ import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable
 
 interface MangaCategoryQueries : DbProvider {
 
-    fun insertMangaCategory(mangaCategory: MangaCategory) = db.put().`object`(mangaCategory).prepare()
-
     fun insertMangasCategories(mangasCategories: List<MangaCategory>) = db.put().objects(mangasCategories).prepare()
 
     fun deleteOldMangasCategories(mangas: List<Manga>) = db.delete()

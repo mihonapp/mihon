@@ -51,14 +51,6 @@ interface HistoryQueries : DbProvider {
         .withPutResolver(HistoryUpsertResolver())
         .prepare()
 
-    fun dropHistoryTable() = db.delete()
-        .byQuery(
-            DeleteQuery.builder()
-                .table(HistoryTable.TABLE)
-                .build(),
-        )
-        .prepare()
-
     fun deleteHistoryNoLastRead() = db.delete()
         .byQuery(
             DeleteQuery.builder()

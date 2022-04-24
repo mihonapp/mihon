@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.data.database.resolvers.MangaCoverLastModifiedPutReso
 import eu.kanade.tachiyomi.data.database.resolvers.MangaFavoritePutResolver
 import eu.kanade.tachiyomi.data.database.resolvers.MangaFlagsPutResolver
 import eu.kanade.tachiyomi.data.database.resolvers.MangaLastUpdatedPutResolver
-import eu.kanade.tachiyomi.data.database.resolvers.MangaTitlePutResolver
 import eu.kanade.tachiyomi.data.database.resolvers.SourceIdMangaCountGetResolver
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable
@@ -117,11 +116,6 @@ interface MangaQueries : DbProvider {
         .withPutResolver(MangaFlagsPutResolver(MangaTable.COL_VIEWER, Manga::viewer_flags))
         .prepare()
 
-    fun updateViewerFlags(manga: List<Manga>) = db.put()
-        .objects(manga)
-        .withPutResolver(MangaFlagsPutResolver(MangaTable.COL_VIEWER, Manga::viewer_flags))
-        .prepare()
-
     fun updateLastUpdated(manga: Manga) = db.put()
         .`object`(manga)
         .withPutResolver(MangaLastUpdatedPutResolver())
@@ -130,11 +124,6 @@ interface MangaQueries : DbProvider {
     fun updateMangaFavorite(manga: Manga) = db.put()
         .`object`(manga)
         .withPutResolver(MangaFavoritePutResolver())
-        .prepare()
-
-    fun updateMangaTitle(manga: Manga) = db.put()
-        .`object`(manga)
-        .withPutResolver(MangaTitlePutResolver())
         .prepare()
 
     fun updateMangaCoverLastModified(manga: Manga) = db.put()
@@ -169,16 +158,6 @@ interface MangaQueries : DbProvider {
         .withQuery(
             RawQuery.builder()
                 .query(getLastReadMangaQuery())
-                .observesTables(MangaTable.TABLE)
-                .build(),
-        )
-        .prepare()
-
-    fun getTotalChapterManga() = db.get()
-        .listOfObjects(Manga::class.java)
-        .withQuery(
-            RawQuery.builder()
-                .query(getTotalChapterMangaQuery())
                 .observesTables(MangaTable.TABLE)
                 .build(),
         )
