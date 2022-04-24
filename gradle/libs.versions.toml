@@ -6,7 +6,6 @@ coil_version = "2.0.0-rc03"
 conductor_version = "3.1.2"
 flowbinding_version = "1.2.0"
 shizuku_version = "12.1.0"
-robolectric_version = "3.1.4"
 sqldelight = "1.5.3"
 
 [libraries]
@@ -89,18 +88,13 @@ aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", versi
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku_version" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku_version" }
 
-junit = "junit:junit:4.13.2"
-assertj-core = "org.assertj:assertj-core:3.16.1"
-mockito-core = "org.mockito:mockito-core:1.10.19"
-
-robolectric-core = { module = "org.robolectric:robolectric", version.ref = "robolectric_version" }
-robolectric-playservices = { module = "org.robolectric:shadows-play-services", version.ref = "robolectric_version" }
-
 leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.7"
 
 sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref ="sqldelight" }
 sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref ="sqldelight" }
 sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-extensions", version.ref ="sqldelight" }
+
+junit = "org.junit.jupiter:junit-jupiter:5.8.2"
 
 [bundles]
 reactivex = ["rxandroid","rxjava","rxrelay"]
@@ -112,7 +106,6 @@ coil = ["coil-core","coil-gif","coil-compose"]
 flowbinding = ["flowbinding-android","flowbinding-appcompat","flowbinding-recyclerview","flowbinding-swiperefreshlayout","flowbinding-viewpager"]
 conductor = ["conductor-core","conductor-viewpager","conductor-support-preference"]
 shizuku = ["shizuku-api","shizuku-provider"]
-robolectric = ["robolectric-core","robolectric-playservices"]
 
 [plugins]
 kotlinter = { id = "org.jmailen.kotlinter", version = "3.6.0"}

@@ -3,46 +3,27 @@ package eu.kanade.tachiyomi.data.database
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.chapter.ChapterRecognition
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class ChapterRecognitionTest {
-    /**
-     * The manga containing manga title
-     */
-    lateinit var manga: Manga
 
-    /**
-     * The chapter containing chapter name
-     */
-    lateinit var chapter: Chapter
+    private lateinit var manga: Manga
+    private lateinit var chapter: Chapter
 
-    /**
-     * Set chapter title
-     * @param name name of chapter
-     * @return chapter object
-     */
     private fun createChapter(name: String): Chapter {
         chapter = Chapter.create()
         chapter.name = name
         return chapter
     }
 
-    /**
-     * Set manga title
-     * @param title title of manga
-     * @return manga object
-     */
     private fun createManga(title: String): Manga {
         manga.title = title
         return manga
     }
 
-    /**
-     * Called before test
-     */
-    @Before
+    @BeforeEach
     fun setup() {
         manga = Manga.create(0).apply { title = "random" }
         chapter = Chapter.create()
@@ -52,12 +33,12 @@ class ChapterRecognitionTest {
      * Ch.xx base case
      */
     @Test
-    fun ChCaseBase() {
+    fun `ChCaseBase`() {
         createManga("Mokushiroku Alice")
 
         createChapter("Mokushiroku Alice Vol.1 Ch.4: Misrepresentation")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(4f)
+        assertEquals(4f, chapter.chapter_number)
     }
 
     /**
@@ -69,7 +50,7 @@ class ChapterRecognitionTest {
 
         createChapter("Mokushiroku Alice Vol. 1 Ch. 4: Misrepresentation")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(4f)
+        assertEquals(4f, chapter.chapter_number)
     }
 
     /**
@@ -81,11 +62,11 @@ class ChapterRecognitionTest {
 
         createChapter("Mokushiroku Alice Vol.1 Ch.4.1: Misrepresentation")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(4.1f)
+        assertEquals(4.1f, chapter.chapter_number)
 
         createChapter("Mokushiroku Alice Vol.1 Ch.4.4: Misrepresentation")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(4.4f)
+        assertEquals(4.4f, chapter.chapter_number)
     }
 
     /**
@@ -97,15 +78,15 @@ class ChapterRecognitionTest {
 
         createChapter("Mokushiroku Alice Vol.1 Ch.4.a: Misrepresentation")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(4.1f)
+        assertEquals(4.1f, chapter.chapter_number)
 
         createChapter("Mokushiroku Alice Vol.1 Ch.4.b: Misrepresentation")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(4.2f)
+        assertEquals(4.2f, chapter.chapter_number)
 
         createChapter("Mokushiroku Alice Vol.1 Ch.4.extra: Misrepresentation")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(4.99f)
+        assertEquals(4.99f, chapter.chapter_number)
     }
 
     /**
@@ -117,7 +98,7 @@ class ChapterRecognitionTest {
 
         createChapter("Bleach 567 Down With Snowwhite")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(567f)
+        assertEquals(567f, chapter.chapter_number)
     }
 
     /**
@@ -129,11 +110,11 @@ class ChapterRecognitionTest {
 
         createChapter("Bleach 567.1 Down With Snowwhite")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(567.1f)
+        assertEquals(567.1f, chapter.chapter_number)
 
         createChapter("Bleach 567.4 Down With Snowwhite")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(567.4f)
+        assertEquals(567.4f, chapter.chapter_number)
     }
 
     /**
@@ -145,15 +126,15 @@ class ChapterRecognitionTest {
 
         createChapter("Bleach 567.a Down With Snowwhite")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(567.1f)
+        assertEquals(567.1f, chapter.chapter_number)
 
         createChapter("Bleach 567.b Down With Snowwhite")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(567.2f)
+        assertEquals(567.2f, chapter.chapter_number)
 
         createChapter("Bleach 567.extra Down With Snowwhite")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(567.99f)
+        assertEquals(567.99f, chapter.chapter_number)
     }
 
     /**
@@ -165,7 +146,7 @@ class ChapterRecognitionTest {
 
         createChapter("Solanin 028 Vol. 2")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28f)
+        assertEquals(28f, chapter.chapter_number)
     }
 
     /**
@@ -177,11 +158,11 @@ class ChapterRecognitionTest {
 
         createChapter("Solanin 028.1 Vol. 2")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.1f)
+        assertEquals(28.1f, chapter.chapter_number)
 
         createChapter("Solanin 028.4 Vol. 2")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.4f)
+        assertEquals(28.4f, chapter.chapter_number)
     }
 
     /**
@@ -193,15 +174,15 @@ class ChapterRecognitionTest {
 
         createChapter("Solanin 028.a Vol. 2")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.1f)
+        assertEquals(28.1f, chapter.chapter_number)
 
         createChapter("Solanin 028.b Vol. 2")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.2f)
+        assertEquals(28.2f, chapter.chapter_number)
 
         createChapter("Solanin 028.extra Vol. 2")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.99f)
+        assertEquals(28.99f, chapter.chapter_number)
     }
 
     /**
@@ -213,7 +194,7 @@ class ChapterRecognitionTest {
 
         createChapter("Onepunch-Man Punch Ver002 028")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28f)
+        assertEquals(28f, chapter.chapter_number)
     }
 
     /**
@@ -225,11 +206,11 @@ class ChapterRecognitionTest {
 
         createChapter("Onepunch-Man Punch Ver002 028.1")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.1f)
+        assertEquals(28.1f, chapter.chapter_number)
 
         createChapter("Onepunch-Man Punch Ver002 028.4")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.4f)
+        assertEquals(28.4f, chapter.chapter_number)
     }
 
     /**
@@ -241,15 +222,15 @@ class ChapterRecognitionTest {
 
         createChapter("Onepunch-Man Punch Ver002 028.a")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.1f)
+        assertEquals(28.1f, chapter.chapter_number)
 
         createChapter("Onepunch-Man Punch Ver002 028.b")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.2f)
+        assertEquals(28.2f, chapter.chapter_number)
 
         createChapter("Onepunch-Man Punch Ver002 028.extra")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(28.99f)
+        assertEquals(28.99f, chapter.chapter_number)
     }
 
     /**
@@ -259,7 +240,7 @@ class ChapterRecognitionTest {
     fun dotV2Case() {
         createChapter("Vol.1 Ch.5v.2: Alones")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(5f)
+        assertEquals(5f, chapter.chapter_number)
     }
 
     /**
@@ -270,7 +251,7 @@ class ChapterRecognitionTest {
         createManga("Ayame 14")
         createChapter("Ayame 14 1 - The summer of 14")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(1f)
+        assertEquals(1f, chapter.chapter_number)
     }
 
     /**
@@ -281,7 +262,7 @@ class ChapterRecognitionTest {
         createManga("Mokushiroku Alice")
         createChapter("Mokushiroku Alice Vol.1 Ch. 4: Misrepresentation")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(4f)
+        assertEquals(4f, chapter.chapter_number)
     }
 
     /**
@@ -292,7 +273,7 @@ class ChapterRecognitionTest {
         createManga("Ayame 14")
         createChapter("Vol.1 Ch.1: March 25 (First Day Cohabiting)")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(1f)
+        assertEquals(1f, chapter.chapter_number)
     }
 
     /**
@@ -302,7 +283,7 @@ class ChapterRecognitionTest {
     fun rangeInChapterCase() {
         createChapter("Ch.191-200 Read Online")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(191f)
+        assertEquals(191f, chapter.chapter_number)
     }
 
     /**
@@ -312,7 +293,7 @@ class ChapterRecognitionTest {
     fun multipleZerosCase() {
         createChapter("Vol.001 Ch.003: Kaguya Doesn't Know Much")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(3f)
+        assertEquals(3f, chapter.chapter_number)
     }
 
     /**
@@ -323,7 +304,7 @@ class ChapterRecognitionTest {
         createManga("Onepunch-Man")
         createChapter("Onepunch-Man Punch Ver002 086 : Creeping Darkness [3]")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(86f)
+        assertEquals(86f, chapter.chapter_number)
     }
 
     /**
@@ -334,7 +315,7 @@ class ChapterRecognitionTest {
         createManga("Ansatsu Kyoushitsu")
         createChapter("Ansatsu Kyoushitsu 011v002: Assembly Time")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(11f)
+        assertEquals(11f, chapter.chapter_number)
     }
 
     /**
@@ -346,7 +327,7 @@ class ChapterRecognitionTest {
         createChapter("Tokyo ESP 027: Part 002: Chapter 001")
         createManga("Tokyo ESP")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(027f)
+        assertEquals(027f, chapter.chapter_number)
     }
 
     /**
@@ -356,7 +337,7 @@ class ChapterRecognitionTest {
     fun unParsableCase() {
         createChapter("Foo")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(-1f)
+        assertEquals(-1f, chapter.chapter_number)
     }
 
     /**
@@ -366,7 +347,7 @@ class ChapterRecognitionTest {
     fun timeChapterCase() {
         createChapter("Fairy Tail 404: 00:00")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404f)
+        assertEquals(404f, chapter.chapter_number)
     }
 
     /**
@@ -376,7 +357,7 @@ class ChapterRecognitionTest {
     fun alphaWithoutDotCase() {
         createChapter("Asu No Yoichi 19a")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(19.1f)
+        assertEquals(19.1f, chapter.chapter_number)
     }
 
     /**
@@ -388,15 +369,15 @@ class ChapterRecognitionTest {
 
         createChapter("Fairy Tail 404.extravol002")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404.99f)
+        assertEquals(404.99f, chapter.chapter_number)
 
         createChapter("Fairy Tail 404 extravol002")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404.99f)
+        assertEquals(404.99f, chapter.chapter_number)
 
         createChapter("Fairy Tail 404.evol002")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404.5f)
+        assertEquals(404.5f, chapter.chapter_number)
     }
 
     /**
@@ -408,15 +389,15 @@ class ChapterRecognitionTest {
 
         createChapter("Fairy Tail 404.omakevol002")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404.98f)
+        assertEquals(404.98f, chapter.chapter_number)
 
         createChapter("Fairy Tail 404 omakevol002")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404.98f)
+        assertEquals(404.98f, chapter.chapter_number)
 
         createChapter("Fairy Tail 404.ovol002")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404.15f)
+        assertEquals(404.15f, chapter.chapter_number)
     }
 
     /**
@@ -428,15 +409,15 @@ class ChapterRecognitionTest {
 
         createChapter("Fairy Tail 404.specialvol002")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404.97f)
+        assertEquals(404.97f, chapter.chapter_number)
 
         createChapter("Fairy Tail 404 specialvol002")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404.97f)
+        assertEquals(404.97f, chapter.chapter_number)
 
         createChapter("Fairy Tail 404.svol002")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(404.19f)
+        assertEquals(404.19f, chapter.chapter_number)
     }
 
     /**
@@ -448,15 +429,15 @@ class ChapterRecognitionTest {
 
         createChapter("One Piece 300,a")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(300.1f)
+        assertEquals(300.1f, chapter.chapter_number)
 
         createChapter("One Piece Ch,123,extra")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(123.99f)
+        assertEquals(123.99f, chapter.chapter_number)
 
         createChapter("One Piece the sunny, goes swimming 024,005")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(24.005f)
+        assertEquals(24.005f, chapter.chapter_number)
     }
 
     /**
@@ -468,7 +449,7 @@ class ChapterRecognitionTest {
 
         createChapter("D.I.C.E[Season 001] Ep. 007")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(7f)
+        assertEquals(7f, chapter.chapter_number)
     }
 
     /**
@@ -480,7 +461,7 @@ class ChapterRecognitionTest {
 
         createChapter("S3 - Chapter 20")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(20f)
+        assertEquals(20f, chapter.chapter_number)
     }
 
     /**
@@ -492,6 +473,6 @@ class ChapterRecognitionTest {
 
         createChapter("One Outs 001")
         ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertThat(chapter.chapter_number).isEqualTo(1f)
+        assertEquals(1f, chapter.chapter_number)
     }
 }

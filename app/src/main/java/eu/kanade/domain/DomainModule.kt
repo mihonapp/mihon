@@ -21,12 +21,14 @@ import uy.kohesive.injekt.api.get
 class DomainModule : InjektModule {
 
     override fun InjektRegistrar.registerInjectables() {
+        addFactory { GetNextChapterForManga(get()) }
+
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }
         addFactory { DeleteHistoryTable(get()) }
         addFactory { GetHistory(get()) }
-        addFactory { GetNextChapterForManga(get()) }
         addFactory { RemoveHistoryById(get()) }
         addFactory { RemoveHistoryByMangaId(get()) }
+
         addSingletonFactory<SourceRepository> { SourceRepositoryImpl(get()) }
         addFactory { GetEnabledSources(get(), get()) }
         addFactory { DisableSource(get()) }
