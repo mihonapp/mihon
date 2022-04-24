@@ -190,7 +190,7 @@ internal class DownloadNotifier(private val context: Context) {
     fun onWarning(reason: String, timeout: Long? = null) {
         with(errorNotificationBuilder) {
             setContentTitle(context.getString(R.string.download_notifier_downloader_title))
-            setContentText(reason)
+            setStyle(NotificationCompat.BigTextStyle().bigText(reason))
             setSmallIcon(R.drawable.ic_warning_white_24dp)
             setAutoCancel(true)
             clearActions()
