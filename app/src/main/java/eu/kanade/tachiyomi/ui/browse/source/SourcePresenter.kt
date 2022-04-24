@@ -44,7 +44,7 @@ class SourcePresenter(
         }
     }
 
-    private suspend fun collectLatestSources(sources: List<Source>) {
+    private fun collectLatestSources(sources: List<Source>) {
         val map = TreeMap<String, MutableList<Source>> { d1, d2 ->
             // Catalogues without a lang defined will be placed at the end
             when {

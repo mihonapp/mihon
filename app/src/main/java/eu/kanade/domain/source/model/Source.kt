@@ -26,11 +26,11 @@ data class Source(
                 ?.asImageBitmap()
         }
 
-    val key: () -> Long = {
+    val key: () -> String = {
         when {
-            isUsedLast -> id shr 16
-            Pin.Forced in pin -> id shr 32
-            else -> id
+            isUsedLast -> "$id-lastused"
+            Pin.Forced in pin -> "$id-forced"
+            else -> "$id"
         }
     }
 }

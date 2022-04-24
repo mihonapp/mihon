@@ -419,10 +419,10 @@
     <string name="action_track">Track</string>
 
       <!-- Browse section -->
+    <string name="pref_duplicate_pinned_sources">Show duplicated pinned sources</string>
+    <string name="pref_duplicate_pinned_sources_summary">Repeat pinned sources in their respective language groups</string>
     <string name="pref_enable_automatic_extension_updates">Check for extension updates</string>
     <string name="pref_search_pinned_sources_only">Only include pinned sources</string>
-    <string name="pref_move_on_top">Move pins on top</string>
-    <string name="pref_move_on_top_summary">Move up pins to top of the source list</string>
 
       <!-- Backup section -->
     <string name="pref_create_backup">Create backup</string>

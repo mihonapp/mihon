@@ -22,13 +22,12 @@ class SettingsBrowseController : SettingsController() {
         titleRes = R.string.browse
 
         preferenceCategory {
-            titleRes = R.string.pref_category_general
+            titleRes = R.string.label_sources
 
             switchPreference {
-                bindTo(preferences.pinsOnTop())
-                titleRes = R.string.pref_move_on_top
-                summaryRes = R.string.pref_move_on_top_summary
-                defaultValue = true
+                bindTo(preferences.duplicatePinnedSources())
+                titleRes = R.string.pref_duplicate_pinned_sources
+                summaryRes = R.string.pref_duplicate_pinned_sources_summary
             }
         }
 
