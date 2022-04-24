@@ -48,6 +48,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import logcat.LogPriority
 import rikka.sui.Sui
 import uy.kohesive.injekt.injectLazy
+import java.io.File
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsAdvancedController : SettingsController() {
@@ -301,6 +302,7 @@ class SettingsAdvancedController : SettingsController() {
             webview.clearHistory()
             webview.clearSslPreferences()
             WebStorage.getInstance().deleteAllData()
+            activity?.applicationInfo?.dataDir?.let { File("$it/app_webview/").deleteRecursively() }
             activity?.toast(R.string.webview_data_deleted)
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
