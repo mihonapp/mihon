@@ -170,14 +170,12 @@
     <string name="alignment_top">Top</string>
     <string name="alignment_center">Center</string>
     <string name="alignment_bottom">Bottom</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Hide bottom bar on scroll</string>
     <string name="pref_category_timestamps">Timestamps</string>
     <string name="pref_relative_format">Relative timestamps</string>
     <string name="pref_relative_time_short">Short (Today, Yesterday)</string>
     <string name="pref_relative_time_long">Long (Short+, n days ago)</string>
     <string name="pref_date_format">Date format</string>
 
-    <string name="pref_start_screen">Start screen</string>
     <string name="pref_confirm_exit">Confirm exit</string>
     <string name="pref_manage_notifications">Manage notifications</string>
 
@@ -210,7 +208,6 @@
     <string name="pref_library_columns">Items per row</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
-    <string name="pref_jump_to_chapters">Jump to chapters on open</string>
 
     <string name="pref_category_library_update">Global update</string>
     <string name="pref_library_update_interval">Automatic updates</string>

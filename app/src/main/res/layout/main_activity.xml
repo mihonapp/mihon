@@ -86,6 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:clickable="true"
+        app:layout_behavior="eu.kanade.tachiyomi.widget.HideBottomNavigationOnScrollBehavior"
         app:layout_insetEdge="bottom"
         app:menu="@menu/main_nav"
         tools:ignore="KeyboardInaccessibleWidget" />

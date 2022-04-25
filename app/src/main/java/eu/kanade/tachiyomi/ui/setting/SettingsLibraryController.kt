@@ -35,7 +35,6 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
-import eu.kanade.tachiyomi.util.system.isTablet
 import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
 import eu.kanade.tachiyomi.widget.materialdialogs.setQuadStateMultiChoiceItems
 import kotlinx.coroutines.flow.combine
@@ -83,13 +82,6 @@ class SettingsLibraryController : SettingsController() {
                             "${context.getString(R.string.landscape)}: $landscape"
                     }
                     .launchIn(viewScope)
-            }
-            if (!context.isTablet()) {
-                switchPreference {
-                    key = Keys.jumpToChapters
-                    titleRes = R.string.pref_jump_to_chapters
-                    defaultValue = false
-                }
             }
         }
 

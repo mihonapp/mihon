@@ -7,8 +7,6 @@ import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
-import eu.kanade.tachiyomi.util.preference.entriesRes
-import eu.kanade.tachiyomi.util.preference.intListPreference
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.switchPreference
@@ -20,19 +18,6 @@ class SettingsGeneralController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_general
 
-        intListPreference {
-            key = Keys.startScreen
-            titleRes = R.string.pref_start_screen
-            entriesRes = arrayOf(
-                R.string.label_library,
-                R.string.label_recent_updates,
-                R.string.label_recent_manga,
-                R.string.browse,
-            )
-            entryValues = arrayOf("1", "3", "2", "4")
-            defaultValue = "1"
-            summary = "%s"
-        }
         switchPreference {
             bindTo(preferences.showUpdatesNavBadge())
             titleRes = R.string.pref_library_update_show_tab_badge

@@ -44,11 +44,7 @@ class PreferencesHelper(val context: Context) {
         "backup",
     ).toUri()
 
-    fun startScreen() = prefs.getInt(Keys.startScreen, 1)
-
     fun confirmExit() = prefs.getBoolean(Keys.confirmExit, false)
-
-    fun hideBottomBarOnScroll() = flowPrefs.getBoolean("pref_hide_bottom_bar_on_scroll", true)
 
     fun sideNavIconAlignment() = flowPrefs.getInt("pref_side_nav_icon_alignment", 0)
 
@@ -161,8 +157,6 @@ class PreferencesHelper(val context: Context) {
     fun portraitColumns() = flowPrefs.getInt("pref_library_columns_portrait_key", 0)
 
     fun landscapeColumns() = flowPrefs.getInt("pref_library_columns_landscape_key", 0)
-
-    fun jumpToChapters() = prefs.getBoolean(Keys.jumpToChapters, false)
 
     fun autoUpdateTrack() = prefs.getBoolean(Keys.autoUpdateTrack, true)
 

@@ -265,18 +265,6 @@ class MangaController :
                 .build()
             it.adapter = ConcatAdapter(config, mangaInfoAdapter, chaptersHeaderAdapter, chaptersAdapter)
 
-            // Skips directly to chapters list if navigated to from the library
-            it.post {
-                if (!fromSource && preferences.jumpToChapters()) {
-                    val mainActivityAppBar = (activity as? MainActivity)?.binding?.appbar
-                    (it.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
-                        1,
-                        mainActivityAppBar?.height ?: 0,
-                    )
-                    mainActivityAppBar?.isLifted = true
-                }
-            }
-
             it.scrollStateChanges()
                 .onEach { _ ->
                     // Disable swipe refresh when view is not at the top

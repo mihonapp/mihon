@@ -8,22 +8,12 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.ViewPropertyAnimator
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.doOnLayout
-import androidx.core.view.updateLayoutParams
 import androidx.customview.view.AbsSavedState
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.util.preference.asImmediateFlow
 import eu.kanade.tachiyomi.util.system.applySystemAnimatorScale
-import kotlinx.coroutines.flow.launchIn
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class TachiyomiBottomNavigationView @JvmOverloads constructor(
     context: Context,
@@ -35,25 +25,6 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
     private var currentAnimator: ViewPropertyAnimator? = null
 
     private var currentState = STATE_UP
-
-    init {
-        // Hide on scroll
-        doOnLayout {
-            findViewTreeLifecycleOwner()?.lifecycleScope?.let { scope ->
-                Injekt.get<PreferencesHelper>().hideBottomBarOnScroll()
-                    .asImmediateFlow {
-                        updateLayoutParams<CoordinatorLayout.LayoutParams> {
-                            behavior = if (it) {
-                                HideBottomNavigationOnScrollBehavior()
-                            } else {
-                                null
-                            }
-                        }
-                    }
-                    .launchIn(scope)
-            }
-        }
-    }
 
     override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()
@@ -120,8 +91,7 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
                     currentAnimator = null
                     postInvalidate()
                 }
-            },
-            )
+            })
     }
 
     internal class SavedState : AbsSavedState {

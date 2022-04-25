@@ -83,15 +83,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var router: Router
 
-    private val startScreenId by lazy {
-        when (preferences.startScreen()) {
-            2 -> R.id.nav_history
-            3 -> R.id.nav_updates
-            4 -> R.id.nav_browse
-            else -> R.id.nav_library
-        }
-    }
-
+    private val startScreenId = R.id.nav_library
     private var isConfirmingExit: Boolean = false
     private var isHandlingShortcut: Boolean = false
 
