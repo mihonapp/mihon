@@ -50,7 +50,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="4dp"
-                android:src="@drawable/rounded_rectangle"
                 app:layout_constraintTop_toBottomOf="@+id/top_nav"
                 app:layout_constraintDimensionRatio="2:2.7"
                 app:layout_constraintStart_toStartOf="@id/top_nav_text"
@@ -116,7 +115,6 @@
                         android:id="@+id/bottom_nav_unselected_item"
                         android:layout_width="match_parent"
                         android:layout_height="17dp"
-                        android:src="@drawable/oval"
                         android:alpha="0.6"
                         app:cardBackgroundColor="?attr/colorOnSurface"
                         app:cardCornerRadius="4dp"/>
