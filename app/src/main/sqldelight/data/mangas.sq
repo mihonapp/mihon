@@ -29,3 +29,11 @@ getMangaById:
 SELECT *
 FROM mangas
 WHERE _id = :id;
+
+getSourceIdWithFavoriteCount:
+SELECT
+source,
+count(*)
+FROM mangas
+WHERE favorite = 1
+GROUP BY source;

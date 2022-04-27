@@ -1,0 +1,117 @@
+package eu.kanade.presentation.source
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import eu.kanade.domain.source.model.Source
+import eu.kanade.presentation.components.EmptyScreen
+import eu.kanade.presentation.components.LoadingScreen
+import eu.kanade.presentation.source.components.BaseSourceItem
+import eu.kanade.presentation.theme.header
+import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrationSourcesPresenter
+
+@Composable
+fun MigrateSourceScreen(
+    nestedScrollInterop: NestedScrollConnection,
+    presenter: MigrationSourcesPresenter,
+    onClickItem: (Source) -> Unit,
+    onLongClickItem: (Source) -> Unit,
+) {
+    val state by presenter.state.collectAsState()
+    when {
+        state.isLoading -> LoadingScreen()
+        state.isEmpty -> EmptyScreen(textResource = R.string.information_empty_library)
+        else -> {
+            MigrateSourceList(
+                nestedScrollInterop = nestedScrollInterop,
+                list = state.sources!!,
+                onClickItem = onClickItem,
+                onLongClickItem = onLongClickItem,
+            )
+        }
+    }
+}
+
+@Composable
+fun MigrateSourceList(
+    nestedScrollInterop: NestedScrollConnection,
+    list: List<Pair<Source, Long>>,
+    onClickItem: (Source) -> Unit,
+    onLongClickItem: (Source) -> Unit,
+) {
+    LazyColumn(
+        modifier = Modifier.nestedScroll(nestedScrollInterop),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+    ) {
+        item(key = "title") {
+            Text(
+                text = stringResource(id = R.string.migration_selection_prompt),
+                modifier = Modifier
+                    .animateItemPlacement()
+                    .padding(horizontal = horizontalPadding, vertical = 8.dp),
+                style = MaterialTheme.typography.header
+            )
+        }
+
+        items(
+            items = list,
+            key = { (source, _) ->
+                source.id
+            }
+        ) { (source, count) ->
+            MigrateSourceItem(
+                modifier = Modifier.animateItemPlacement(),
+                source = source,
+                count = count,
+                onClickItem = { onClickItem(source) },
+                onLongClickItem = { onLongClickItem(source) }
+            )
+        }
+    }
+}
+
+@Composable
+fun MigrateSourceItem(
+    modifier: Modifier = Modifier,
+    source: Source,
+    count: Long,
+    onClickItem: () -> Unit,
+    onLongClickItem: () -> Unit,
+) {
+    BaseSourceItem(
+        modifier = modifier,
+        source = source,
+        onClickItem = onClickItem,
+        onLongClickItem = onLongClickItem,
+        action = {
+            Text(
+                text = "$count",
+                modifier = Modifier
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(MaterialTheme.colorScheme.primary)
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            )
+        }
+    )
+}

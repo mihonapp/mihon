@@ -1,124 +1,68 @@
 package eu.kanade.tachiyomi.ui.browse.migration.sources
 
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
-import dev.chrisbanes.insetter.applyInsetter
-import eu.davidea.flexibleadapter.FlexibleAdapter
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import eu.kanade.presentation.source.MigrateSourceScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.databinding.MigrationSourcesControllerBinding
-import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.ComposeController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaController
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
-import uy.kohesive.injekt.injectLazy
 
-class MigrationSourcesController :
-    NucleusController<MigrationSourcesControllerBinding, MigrationSourcesPresenter>(),
-    FlexibleAdapter.OnItemClickListener,
-    FlexibleAdapter.OnItemLongClickListener {
-
-    private val preferences: PreferencesHelper by injectLazy()
-
-    private var adapter: SourceAdapter? = null
+class MigrationSourcesController : ComposeController<MigrationSourcesPresenter>() {
 
     init {
         setHasOptionsMenu(true)
     }
 
-    override fun createPresenter(): MigrationSourcesPresenter {
-        return MigrationSourcesPresenter()
-    }
+    override fun createPresenter(): MigrationSourcesPresenter =
+        MigrationSourcesPresenter()
 
-    override fun createBinding(inflater: LayoutInflater) = MigrationSourcesControllerBinding.inflate(inflater)
-
-    override fun onViewCreated(view: View) {
-        super.onViewCreated(view)
-
-        binding.recycler.applyInsetter {
-            type(navigationBars = true) {
-                padding()
+    @Composable
+    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+        MigrateSourceScreen(
+            nestedScrollInterop = nestedScrollInterop,
+            presenter = presenter,
+            onClickItem = { source ->
+                parentController!!.router.pushController(
+                    MigrationMangaController(
+                        source.id,
+                        source.name
+                    )
+                )
+            },
+            onLongClickItem = { source ->
+                val sourceId = source.id.toString()
+                activity?.copyToClipboard(sourceId, sourceId)
             }
-        }
-
-        adapter = SourceAdapter(this)
-        binding.recycler.layoutManager = LinearLayoutManager(view.context)
-        binding.recycler.adapter = adapter
-        adapter?.fastScroller = binding.fastScroller
+        )
     }
 
-    override fun onDestroyView(view: View) {
-        adapter = null
-        super.onDestroyView(view)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) =
         inflater.inflate(R.menu.browse_migrate, menu)
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (val itemId = item.itemId) {
-            R.id.action_source_migration_help -> activity?.openInBrowser(HELP_URL)
-            R.id.asc_alphabetical, R.id.desc_alphabetical -> {
-                setSortingDirection(SortSetting.ALPHABETICAL, itemId == R.id.asc_alphabetical)
+        return when (val itemId = item.itemId) {
+            R.id.action_source_migration_help -> {
+                activity?.openInBrowser(HELP_URL)
+                true
             }
-            R.id.asc_count, R.id.desc_count -> {
-                setSortingDirection(SortSetting.TOTAL, itemId == R.id.asc_count)
+            R.id.asc_alphabetical,
+            R.id.desc_alphabetical -> {
+                presenter.setAlphabeticalSorting(itemId == R.id.asc_alphabetical)
+                true
             }
+            R.id.asc_count,
+            R.id.desc_count -> {
+                presenter.setTotalSorting(itemId == R.id.asc_count)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun setSortingDirection(sortSetting: SortSetting, isAscending: Boolean) {
-        val direction = if (isAscending) {
-            DirectionSetting.ASCENDING
-        } else {
-            DirectionSetting.DESCENDING
-        }
-
-        preferences.migrationSortingDirection().set(direction)
-        preferences.migrationSortingMode().set(sortSetting)
-
-        presenter.requestSortUpdate()
-    }
-
-    fun setSources(sourcesWithManga: List<SourceItem>) {
-        // Show empty view if needed
-        if (sourcesWithManga.isNotEmpty()) {
-            binding.emptyView.hide()
-        } else {
-            binding.emptyView.show(R.string.information_empty_library)
-        }
-
-        adapter?.updateDataSet(sourcesWithManga)
-    }
-
-    override fun onItemClick(view: View, position: Int): Boolean {
-        val item = adapter?.getItem(position) as? SourceItem ?: return false
-        val controller = MigrationMangaController(item.source.id, item.source.name)
-        parentController!!.router.pushController(controller)
-        return false
-    }
-
-    override fun onItemLongClick(position: Int) {
-        val item = adapter?.getItem(position) as? SourceItem ?: return
-        val sourceId = item.source.id.toString()
-        activity?.copyToClipboard(sourceId, sourceId)
-    }
-
-    enum class DirectionSetting {
-        ASCENDING,
-        DESCENDING;
-    }
-
-    enum class SortSetting {
-        ALPHABETICAL,
-        TOTAL;
     }
 }
 

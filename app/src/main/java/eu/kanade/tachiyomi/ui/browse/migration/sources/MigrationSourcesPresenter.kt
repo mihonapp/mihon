@@ -1,82 +1,60 @@
 package eu.kanade.tachiyomi.ui.browse.migration.sources
 
 import android.os.Bundle
-import com.jakewharton.rxrelay.BehaviorRelay
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.source.LocalSource
-import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
+import eu.kanade.domain.source.interactor.SetMigrateSorting
+import eu.kanade.domain.source.model.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.util.lang.combineLatest
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import eu.kanade.tachiyomi.util.lang.launchIO
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
-import java.text.Collator
-import java.util.Collections
-import java.util.Locale
 
 class MigrationSourcesPresenter(
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val db: DatabaseHelper = Injekt.get(),
+    private val getSourcesWithFavoriteCount: GetSourcesWithFavoriteCount = Injekt.get(),
+    private val setMigrateSorting: SetMigrateSorting = Injekt.get()
 ) : BasePresenter<MigrationSourcesController>() {
 
-    private val preferences: PreferencesHelper by injectLazy()
-
-    private val sortRelay = BehaviorRelay.create(Unit)
+    private val _state: MutableStateFlow<MigrateSourceState> = MutableStateFlow(MigrateSourceState.EMPTY)
+    val state: StateFlow<MigrateSourceState> = _state.asStateFlow()
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        db.getFavoriteMangas()
-            .asRxObservable()
-            .combineLatest(sortRelay.observeOn(Schedulers.io())) { sources, _ -> sources }
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { findSourcesWithManga(it) }
-            .subscribeLatestCache(MigrationSourcesController::setSources)
+        presenterScope.launchIO {
+            getSourcesWithFavoriteCount.subscribe()
+                .collectLatest { sources ->
+                    _state.update { state ->
+                        state.copy(sources = sources)
+                    }
+                }
+        }
     }
 
-    fun requestSortUpdate() {
-        sortRelay.call(Unit)
+    fun setAlphabeticalSorting(isAscending: Boolean) {
+        setMigrateSorting.await(SetMigrateSorting.Mode.ALPHABETICAL, isAscending)
     }
 
-    private fun findSourcesWithManga(library: List<Manga>): List<SourceItem> {
-        val header = SelectionHeader()
-        return library
-            .groupBy { it.source }
-            .filterKeys { it != LocalSource.ID }
-            .map {
-                val source = sourceManager.getOrStub(it.key)
-                SourceItem(source, it.value.size, header)
-            }
-            .sortedWith(sortFn())
-            .toList()
+    fun setTotalSorting(isAscending: Boolean) {
+        setMigrateSorting.await(SetMigrateSorting.Mode.TOTAL, isAscending)
     }
+}
 
-    private fun sortFn(): java.util.Comparator<SourceItem> {
-        val sort by lazy {
-            preferences.migrationSortingMode().get()
-        }
-        val direction by lazy {
-            preferences.migrationSortingDirection().get()
-        }
+data class MigrateSourceState(
+    val sources: List<Pair<Source, Long>>?
+) {
 
-        val locale = Locale.getDefault()
-        val collator = Collator.getInstance(locale).apply {
-            strength = Collator.PRIMARY
-        }
-        val sortFn: (SourceItem, SourceItem) -> Int = { a, b ->
-            when (sort) {
-                MigrationSourcesController.SortSetting.ALPHABETICAL -> collator.compare(a.source.name.lowercase(locale), b.source.name.lowercase(locale))
-                MigrationSourcesController.SortSetting.TOTAL -> a.mangaCount.compareTo(b.mangaCount)
-            }
-        }
+    val isLoading: Boolean
+        get() = sources == null
 
-        return when (direction) {
-            MigrationSourcesController.DirectionSetting.ASCENDING -> Comparator(sortFn)
-            MigrationSourcesController.DirectionSetting.DESCENDING -> Collections.reverseOrder(sortFn)
-        }
+    val isEmpty: Boolean
+        get() = sources.isNullOrEmpty()
+
+    companion object {
+        val EMPTY = MigrateSourceState(null)
     }
 }

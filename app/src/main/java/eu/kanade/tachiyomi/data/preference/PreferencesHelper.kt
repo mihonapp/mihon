@@ -7,11 +7,11 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
+import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
-import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrationSourcesController
 import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
@@ -254,8 +254,8 @@ class PreferencesHelper(val context: Context) {
     fun librarySortingMode() = flowPrefs.getEnum(Keys.librarySortingMode, SortModeSetting.ALPHABETICAL)
     fun librarySortingAscending() = flowPrefs.getEnum(Keys.librarySortingDirection, SortDirectionSetting.ASCENDING)
 
-    fun migrationSortingMode() = flowPrefs.getEnum(Keys.migrationSortingMode, MigrationSourcesController.SortSetting.ALPHABETICAL)
-    fun migrationSortingDirection() = flowPrefs.getEnum(Keys.migrationSortingDirection, MigrationSourcesController.DirectionSetting.ASCENDING)
+    fun migrationSortingMode() = flowPrefs.getEnum(Keys.migrationSortingMode, SetMigrateSorting.Mode.ALPHABETICAL)
+    fun migrationSortingDirection() = flowPrefs.getEnum(Keys.migrationSortingDirection, SetMigrateSorting.Direction.ASCENDING)
 
     fun automaticExtUpdates() = flowPrefs.getBoolean("automatic_ext_updates", true)
 
