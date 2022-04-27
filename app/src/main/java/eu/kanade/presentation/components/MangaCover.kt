@@ -11,29 +11,31 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import eu.kanade.presentation.util.bitmapPainterResource
+import eu.kanade.tachiyomi.R
 
-enum class MangaCoverAspect(val ratio: Float) {
-    SQUARE(1f / 1f),
-    COVER(2f / 3f)
-}
+enum class MangaCover(private val ratio: Float) {
+    Square(1f / 1f),
+    Book(2f / 3f);
 
-@Composable
-fun MangaCover(
-    modifier: Modifier = Modifier,
-    data: String?,
-    aspect: MangaCoverAspect,
-    contentDescription: String = "",
-    shape: Shape = RoundedCornerShape(4.dp)
-) {
-    AsyncImage(
-        model = data,
-        placeholder = ColorPainter(CoverPlaceholderColor),
-        contentDescription = contentDescription,
-        modifier = modifier
-            .aspectRatio(aspect.ratio)
-            .clip(shape),
-        contentScale = ContentScale.Crop
-    )
+    @Composable
+    operator fun invoke(
+        modifier: Modifier = Modifier,
+        data: String?,
+        contentDescription: String? = null,
+        shape: Shape? = null
+    ) {
+        AsyncImage(
+            model = data,
+            placeholder = ColorPainter(CoverPlaceholderColor),
+            error = bitmapPainterResource(id = R.drawable.cover_error),
+            contentDescription = contentDescription,
+            modifier = modifier
+                .aspectRatio(ratio)
+                .clip(shape ?: RoundedCornerShape(4.dp)),
+            contentScale = ContentScale.Crop,
+        )
+    }
 }
 
 private val CoverPlaceholderColor = Color(0x1F888888)
