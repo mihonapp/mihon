@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.more
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import eu.kanade.presentation.more.AboutScreen
+import eu.kanade.presentation.more.about.AboutScreen
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper

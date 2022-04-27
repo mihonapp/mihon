@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.more
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import eu.kanade.presentation.more.LicensesScreen
+import eu.kanade.presentation.more.about.LicensesScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.BasicComposeController
 

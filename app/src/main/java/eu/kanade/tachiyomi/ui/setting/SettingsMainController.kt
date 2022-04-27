@@ -4,88 +4,96 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
-import androidx.preference.PreferenceScreen
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ChromeReaderMode
+import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.outlined.GetApp
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Security
+import androidx.compose.material.icons.outlined.SettingsBackupRestore
+import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material.icons.outlined.Tune
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.res.painterResource
+import eu.kanade.presentation.more.settings.SettingsMainScreen
+import eu.kanade.presentation.more.settings.SettingsSection
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.base.controller.BasicComposeController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.setting.search.SettingsSearchController
-import eu.kanade.tachiyomi.util.preference.iconRes
-import eu.kanade.tachiyomi.util.preference.iconTint
-import eu.kanade.tachiyomi.util.preference.onClick
-import eu.kanade.tachiyomi.util.preference.preference
-import eu.kanade.tachiyomi.util.preference.titleRes
-import eu.kanade.tachiyomi.util.system.getResourceColor
+import uy.kohesive.injekt.injectLazy
 
-class SettingsMainController : SettingsController() {
+class SettingsMainController : BasicComposeController() {
 
-    override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
-        titleRes = R.string.label_settings
+    private val preferences: PreferencesHelper by injectLazy()
 
-        val tintColor = context.getResourceColor(R.attr.colorAccent)
+    override fun getTitle() = resources?.getString(R.string.label_settings)
 
-        preference {
-            iconRes = R.drawable.ic_tune_24dp
-            iconTint = tintColor
-            titleRes = R.string.pref_category_general
-            onClick { router.pushController(SettingsGeneralController()) }
-        }
-        preference {
-            iconRes = R.drawable.ic_palette_24dp
-            iconTint = tintColor
-            titleRes = R.string.pref_category_appearance
-            onClick { router.pushController(SettingsAppearanceController()) }
-        }
-        preference {
-            iconRes = R.drawable.ic_library_outline_24dp
-            iconTint = tintColor
-            titleRes = R.string.pref_category_library
-            onClick { router.pushController(SettingsLibraryController()) }
-        }
-        preference {
-            iconRes = R.drawable.ic_chrome_reader_mode_24dp
-            iconTint = tintColor
-            titleRes = R.string.pref_category_reader
-            onClick { router.pushController(SettingsReaderController()) }
-        }
-        preference {
-            iconRes = R.drawable.ic_get_app_24dp
-            iconTint = tintColor
-            titleRes = R.string.pref_category_downloads
-            onClick { router.pushController(SettingsDownloadController()) }
-        }
-        preference {
-            iconRes = R.drawable.ic_sync_24dp
-            iconTint = tintColor
-            titleRes = R.string.pref_category_tracking
-            onClick { router.pushController(SettingsTrackingController()) }
-        }
-        preference {
-            iconRes = R.drawable.ic_browse_outline_24dp
-            iconTint = tintColor
-            titleRes = R.string.browse
-            onClick { router.pushController(SettingsBrowseController()) }
-        }
-        preference {
-            iconRes = R.drawable.ic_settings_backup_restore_24dp
-            iconTint = tintColor
-            titleRes = R.string.label_backup
-            onClick { router.pushController(SettingsBackupController()) }
-        }
-        preference {
-            iconRes = R.drawable.ic_security_24dp
-            iconTint = tintColor
-            titleRes = R.string.pref_category_security
-            onClick { router.pushController(SettingsSecurityController()) }
-        }
-        preference {
-            iconRes = R.drawable.ic_code_24dp
-            iconTint = tintColor
-            titleRes = R.string.pref_category_advanced
-            onClick { router.pushController(SettingsAdvancedController()) }
-        }
+    @Composable
+    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+        val settingsSections = listOf(
+            SettingsSection(
+                titleRes = R.string.pref_category_general,
+                painter = rememberVectorPainter(Icons.Outlined.Tune),
+                onClick = { router.pushController(SettingsGeneralController()) },
+            ),
+            SettingsSection(
+                titleRes = R.string.pref_category_appearance,
+                painter = rememberVectorPainter(Icons.Outlined.Palette),
+                onClick = { router.pushController(SettingsAppearanceController()) },
+            ),
+            SettingsSection(
+                titleRes = R.string.pref_category_library,
+                painter = painterResource(R.drawable.ic_library_outline_24dp),
+                onClick = { router.pushController(SettingsLibraryController()) },
+            ),
+            SettingsSection(
+                titleRes = R.string.pref_category_reader,
+                painter = rememberVectorPainter(Icons.Outlined.ChromeReaderMode),
+                onClick = { router.pushController(SettingsReaderController()) },
+            ),
+            SettingsSection(
+                titleRes = R.string.pref_category_downloads,
+                painter = rememberVectorPainter(Icons.Outlined.GetApp),
+                onClick = { router.pushController(SettingsDownloadController()) },
+            ),
+            SettingsSection(
+                titleRes = R.string.pref_category_tracking,
+                painter = rememberVectorPainter(Icons.Outlined.Sync),
+                onClick = { router.pushController(SettingsTrackingController()) },
+            ),
+            SettingsSection(
+                titleRes = R.string.browse,
+                painter = painterResource(R.drawable.ic_browse_outline_24dp),
+                onClick = { router.pushController(SettingsBrowseController()) },
+            ),
+            SettingsSection(
+                titleRes = R.string.label_backup,
+                painter = rememberVectorPainter(Icons.Outlined.SettingsBackupRestore),
+                onClick = { router.pushController(SettingsBackupController()) },
+            ),
+            SettingsSection(
+                titleRes = R.string.pref_category_security,
+                painter = rememberVectorPainter(Icons.Outlined.Security),
+                onClick = { router.pushController(SettingsSecurityController()) },
+            ),
+            SettingsSection(
+                titleRes = R.string.pref_category_advanced,
+                painter = rememberVectorPainter(Icons.Outlined.Code),
+                onClick = { router.pushController(SettingsAdvancedController()) },
+            ),
+        )
+
+        SettingsMainScreen(
+            nestedScrollInterop = nestedScrollInterop,
+            sections = settingsSections,
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        // Inflate menu
         inflater.inflate(R.menu.settings_main, menu)
 
         // Initialize search option.

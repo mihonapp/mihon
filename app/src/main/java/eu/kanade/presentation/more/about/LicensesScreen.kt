@@ -1,4 +1,4 @@
-package eu.kanade.presentation.more
+package eu.kanade.presentation.more.about
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
