@@ -3,7 +3,7 @@ compose = "1.2.0-alpha08"
 accompanist = "0.24.7-alpha"
 
 [libraries]
-activity = "androidx.activity:activity-compose:1.6.0-alpha01"
+activity = "androidx.activity:activity-compose:1.6.0-alpha03"
 foundation = { module = "androidx.compose.foundation:foundation", version.ref="compose" }
 animation = { module = "androidx.compose.animation:animation", version.ref="compose" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref="compose" }
