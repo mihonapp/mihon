@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.download
 
+import android.app.PendingIntent
 import android.content.Context
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
@@ -187,7 +188,7 @@ internal class DownloadNotifier(private val context: Context) {
      * @param timeout duration after which to automatically dismiss the notification.
      * Only works on Android 8+.
      */
-    fun onWarning(reason: String, timeout: Long? = null) {
+    fun onWarning(reason: String, timeout: Long? = null, contentIntent: PendingIntent? = null) {
         with(errorNotificationBuilder) {
             setContentTitle(context.getString(R.string.download_notifier_downloader_title))
             setStyle(NotificationCompat.BigTextStyle().bigText(reason))
@@ -197,6 +198,7 @@ internal class DownloadNotifier(private val context: Context) {
             setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
             setProgress(0, 0, false)
             timeout?.let { setTimeoutAfter(it) }
+            contentIntent?.let { setContentIntent(it) }
 
             show(Notifications.ID_DOWNLOAD_CHAPTER_ERROR)
         }
