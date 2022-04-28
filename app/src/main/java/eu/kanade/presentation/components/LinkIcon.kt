@@ -28,9 +28,11 @@ fun LinkIcon(
     painter: Painter,
     onClick: () -> Unit,
 ) {
-    IconButton(onClick = onClick) {
+    IconButton(
+        modifier = modifier.padding(4.dp),
+        onClick = onClick,
+    ) {
         Icon(
-            modifier = modifier.padding(16.dp),
             painter = painter,
             tint = MaterialTheme.colorScheme.primary,
             contentDescription = label,
