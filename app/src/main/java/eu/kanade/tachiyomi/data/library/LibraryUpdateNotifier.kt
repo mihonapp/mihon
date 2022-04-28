@@ -96,6 +96,7 @@ class LibraryUpdateNotifier(private val context: Context) {
             setStyle(NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notification_size_warning)))
             setSmallIcon(R.drawable.ic_warning_white_24dp)
             setTimeoutAfter(Downloader.WARNING_NOTIF_TIMEOUT_MS)
+            setContentIntent(NotificationHandler.openUrl(context, HELP_WARNING_URL))
         }
 
         context.notificationManager.notify(
@@ -339,6 +340,10 @@ class LibraryUpdateNotifier(private val context: Context) {
             action = MainActivity.SHORTCUT_RECENTLY_UPDATED
         }
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    companion object {
+        const val HELP_WARNING_URL = "https://tachiyomi.org/help/faq/#why-does-the-app-warn-about-large-bulk-updates-and-downloads"
     }
 }
 
