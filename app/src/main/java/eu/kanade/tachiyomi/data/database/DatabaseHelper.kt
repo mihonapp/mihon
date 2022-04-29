@@ -21,24 +21,18 @@ import eu.kanade.tachiyomi.data.database.queries.HistoryQueries
 import eu.kanade.tachiyomi.data.database.queries.MangaCategoryQueries
 import eu.kanade.tachiyomi.data.database.queries.MangaQueries
 import eu.kanade.tachiyomi.data.database.queries.TrackQueries
-import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 
 /**
  * This class provides operations to manage the database through its interfaces.
  */
 open class DatabaseHelper(
     context: Context,
-    callback: DbOpenCallback
+    openHelper: SupportSQLiteOpenHelper,
 ) :
     MangaQueries, ChapterQueries, TrackQueries, CategoryQueries, MangaCategoryQueries, HistoryQueries {
 
-    private val configuration = SupportSQLiteOpenHelper.Configuration.builder(context)
-        .name(DbOpenCallback.DATABASE_NAME)
-        .callback(callback)
-        .build()
-
     override val db = DefaultStorIOSQLite.builder()
-        .sqliteOpenHelper(RequerySQLiteOpenHelperFactory().create(configuration))
+        .sqliteOpenHelper(openHelper)
         .addTypeMapping(Manga::class.java, MangaTypeMapping())
         .addTypeMapping(Chapter::class.java, ChapterTypeMapping())
         .addTypeMapping(Track::class.java, TrackTypeMapping())

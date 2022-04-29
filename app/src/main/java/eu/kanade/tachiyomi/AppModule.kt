@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi
 
 import android.app.Application
 import androidx.core.content.ContextCompat
+import androidx.sqlite.db.SupportSQLiteOpenHelper
+import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import data.History
@@ -34,15 +36,19 @@ class AppModule(val app: Application) : InjektModule {
     override fun InjektRegistrar.registerInjectables() {
         addSingleton(app)
 
-        addSingletonFactory { DbOpenCallback() }
+        // This is used to allow incremental migration from Storio
+        addSingletonFactory<SupportSQLiteOpenHelper> {
+            FrameworkSQLiteOpenHelperFactory().create(
+                SupportSQLiteOpenHelper.Configuration.builder(app)
+                    .callback(DbOpenCallback())
+                    .name(DbOpenCallback.DATABASE_NAME)
+                    .noBackupDirectory(false)
+                    .build()
+            )
+        }
 
         addSingletonFactory<SqlDriver> {
-            AndroidSqliteDriver(
-                schema = Database.Schema,
-                context = app,
-                name = DbOpenCallback.DATABASE_NAME,
-                callback = get<DbOpenCallback>()
-            )
+            AndroidSqliteDriver(openHelper = get())
         }
 
         addSingletonFactory {
