@@ -1,6 +1,7 @@
 package eu.kanade.domain
 
 import eu.kanade.data.history.HistoryRepositoryImpl
+import eu.kanade.data.manga.MangaRepositoryImpl
 import eu.kanade.data.source.SourceRepositoryImpl
 import eu.kanade.domain.history.interactor.DeleteHistoryTable
 import eu.kanade.domain.history.interactor.GetHistory
@@ -8,6 +9,8 @@ import eu.kanade.domain.history.interactor.GetNextChapterForManga
 import eu.kanade.domain.history.interactor.RemoveHistoryById
 import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.repository.HistoryRepository
+import eu.kanade.domain.manga.interactor.GetFavoritesBySourceId
+import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.domain.source.interactor.DisableSource
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
@@ -23,6 +26,8 @@ import uy.kohesive.injekt.api.get
 class DomainModule : InjektModule {
 
     override fun InjektRegistrar.registerInjectables() {
+        addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
+        addFactory { GetFavoritesBySourceId(get()) }
         addFactory { GetNextChapterForManga(get()) }
 
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }

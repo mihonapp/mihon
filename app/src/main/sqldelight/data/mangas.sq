@@ -37,3 +37,9 @@ count(*)
 FROM mangas
 WHERE favorite = 1
 GROUP BY source;
+
+getFavoriteBySourceId:
+SELECT *
+FROM mangas
+WHERE favorite = 1
+AND source = :sourceId;

@@ -1,24 +1,16 @@
 package eu.kanade.tachiyomi.ui.browse.migration.manga
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.core.os.bundleOf
-import androidx.recyclerview.widget.LinearLayoutManager
-import dev.chrisbanes.insetter.applyInsetter
-import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.kanade.tachiyomi.databinding.MigrationMangaControllerBinding
-import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.presentation.source.MigrateMangaScreen
+import eu.kanade.tachiyomi.ui.base.controller.ComposeController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.migration.search.SearchController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 
-class MigrationMangaController :
-    NucleusController<MigrationMangaControllerBinding, MigrationMangaPresenter>,
-    FlexibleAdapter.OnItemClickListener,
-    MigrationMangaAdapter.OnCoverClickListener {
-
-    private var adapter: MigrationMangaAdapter? = null
+class MigrationMangaController : ComposeController<MigrationMangaPresenter> {
 
     constructor(sourceId: Long, sourceName: String?) : super(
         bundleOf(
@@ -36,50 +28,22 @@ class MigrationMangaController :
     private val sourceId: Long = args.getLong(SOURCE_ID_EXTRA)
     private val sourceName: String? = args.getString(SOURCE_NAME_EXTRA)
 
-    override fun getTitle(): String? {
-        return sourceName
-    }
+    override fun getTitle(): String? = sourceName
 
-    override fun createPresenter(): MigrationMangaPresenter {
-        return MigrationMangaPresenter(sourceId)
-    }
+    override fun createPresenter(): MigrationMangaPresenter = MigrationMangaPresenter(sourceId)
 
-    override fun createBinding(inflater: LayoutInflater) = MigrationMangaControllerBinding.inflate(inflater)
-
-    override fun onViewCreated(view: View) {
-        super.onViewCreated(view)
-
-        binding.recycler.applyInsetter {
-            type(navigationBars = true) {
-                padding()
+    @Composable
+    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+        MigrateMangaScreen(
+            nestedScrollInterop = nestedScrollInterop,
+            presenter = presenter,
+            onClickItem = {
+                router.pushController(SearchController(it.id))
+            },
+            onClickCover = {
+                router.pushController(MangaController(it.id))
             }
-        }
-
-        adapter = MigrationMangaAdapter(this)
-        binding.recycler.layoutManager = LinearLayoutManager(view.context)
-        binding.recycler.adapter = adapter
-        adapter?.fastScroller = binding.fastScroller
-    }
-
-    override fun onDestroyView(view: View) {
-        adapter = null
-        super.onDestroyView(view)
-    }
-
-    fun setManga(manga: List<MigrationMangaItem>) {
-        adapter?.updateDataSet(manga)
-    }
-
-    override fun onItemClick(view: View, position: Int): Boolean {
-        val item = adapter?.getItem(position) as? MigrationMangaItem ?: return false
-        val controller = SearchController(item.manga)
-        router.pushController(controller)
-        return false
-    }
-
-    override fun onCoverClick(position: Int) {
-        val mangaItem = adapter?.getItem(position) as? MigrationMangaItem ?: return
-        router.pushController(MangaController(mangaItem.manga))
+        )
     }
 
     companion object {

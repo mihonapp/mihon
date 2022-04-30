@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.base.controller
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.compose.runtime.Composable
@@ -13,7 +14,7 @@ import nucleus.presenter.Presenter
 /**
  * Compose controller with a Nucleus presenter.
  */
-abstract class ComposeController<P : Presenter<*>> : NucleusController<ComposeControllerBinding, P>() {
+abstract class ComposeController<P : Presenter<*>>(bundle: Bundle? = null) : NucleusController<ComposeControllerBinding, P>(bundle) {
 
     override fun createBinding(inflater: LayoutInflater): ComposeControllerBinding =
         ComposeControllerBinding.inflate(inflater)
@@ -54,7 +55,7 @@ abstract class BasicComposeController : BaseController<ComposeControllerBinding>
     @Composable abstract fun ComposeContent(nestedScrollInterop: NestedScrollConnection)
 }
 
-abstract class SearchableComposeController<P : BasePresenter<*>> : SearchableNucleusController<ComposeControllerBinding, P>() {
+abstract class SearchableComposeController<P : BasePresenter<*>>(bundle: Bundle? = null) : SearchableNucleusController<ComposeControllerBinding, P>(bundle) {
 
     override fun createBinding(inflater: LayoutInflater): ComposeControllerBinding =
         ComposeControllerBinding.inflate(inflater)
