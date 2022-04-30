@@ -99,6 +99,7 @@ fun MigrateSourceItem(
     BaseSourceItem(
         modifier = modifier,
         source = source,
+        showLanguageInContent = source.lang != "",
         onClickItem = onClickItem,
         onLongClickItem = onLongClickItem,
         action = {

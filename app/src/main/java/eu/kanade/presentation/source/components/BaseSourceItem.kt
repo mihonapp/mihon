@@ -21,11 +21,12 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 fun BaseSourceItem(
     modifier: Modifier = Modifier,
     source: Source,
+    showLanguageInContent: Boolean = true,
     onClickItem: () -> Unit = {},
     onLongClickItem: () -> Unit = {},
     icon: @Composable RowScope.(Source) -> Unit = defaultIcon,
     action: @Composable RowScope.(Source) -> Unit = {},
-    content: @Composable RowScope.(Source) -> Unit = defaultContent,
+    content: @Composable RowScope.(Source, Boolean) -> Unit = defaultContent,
 ) {
     Row(
         modifier = modifier
@@ -37,7 +38,7 @@ fun BaseSourceItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         icon.invoke(this, source)
-        content.invoke(this, source)
+        content.invoke(this, source, showLanguageInContent)
         action.invoke(this, source)
     }
 }
@@ -46,7 +47,7 @@ private val defaultIcon: @Composable RowScope.(Source) -> Unit = { source ->
     SourceIcon(source = source)
 }
 
-private val defaultContent: @Composable RowScope.(Source) -> Unit = { source ->
+private val defaultContent: @Composable RowScope.(Source, Boolean) -> Unit = { source, showLanguageInContent ->
     Column(
         modifier = Modifier
             .padding(horizontal = horizontalPadding)
@@ -58,11 +59,13 @@ private val defaultContent: @Composable RowScope.(Source) -> Unit = { source ->
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium
         )
-        Text(
-            text = LocaleHelper.getDisplayName(source.lang),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodySmall
-        )
+        if (showLanguageInContent) {
+            Text(
+                text = LocaleHelper.getDisplayName(source.lang),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
     }
 }
