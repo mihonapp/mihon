@@ -6,8 +6,8 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import java.text.Collator
-import java.util.*
-import kotlin.Comparator
+import java.util.Collections
+import java.util.Locale
 
 class GetSourcesWithFavoriteCount(
     private val repository: SourceRepository,

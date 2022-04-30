@@ -1,5 +1,8 @@
 package eu.kanade.presentation.source
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
@@ -57,7 +60,8 @@ fun SourceFilterContent(
         return
     }
     LazyColumn(
-        modifier = Modifier.nestedScroll(nestedScrollInterop)
+        modifier = Modifier.nestedScroll(nestedScrollInterop),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
     ) {
         items(
             items = items,

@@ -17,6 +17,7 @@ import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.ActionToolbarBinding
 import eu.kanade.tachiyomi.util.system.applySystemAnimatorScale
+import eu.kanade.tachiyomi.widget.ActionModeWithToolbar.Callback
 import eu.kanade.tachiyomi.widget.listener.SimpleAnimationListener
 
 /**

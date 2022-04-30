@@ -1,6 +1,9 @@
 package eu.kanade.presentation.more.about
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +20,7 @@ fun LicensesScreen(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(nestedScrollInterop),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
         colors = LibraryDefaults.libraryColors(
             backgroundColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onBackground,

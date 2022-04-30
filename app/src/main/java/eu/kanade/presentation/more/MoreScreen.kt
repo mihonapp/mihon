@@ -1,5 +1,8 @@
 package eu.kanade.presentation.more
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudOff
@@ -43,6 +46,7 @@ fun MoreScreen(
 
     LazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
     ) {
         item {
             LogoHeader()

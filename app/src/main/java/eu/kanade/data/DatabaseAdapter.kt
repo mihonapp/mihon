@@ -1,7 +1,7 @@
 package eu.kanade.data
 
 import com.squareup.sqldelight.ColumnAdapter
-import java.util.*
+import java.util.Date
 
 val dateAdapter = object : ColumnAdapter<Date, Long> {
     override fun decode(databaseValue: Long): Date = Date(databaseValue)

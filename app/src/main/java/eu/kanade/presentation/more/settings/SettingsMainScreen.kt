@@ -1,6 +1,9 @@
 package eu.kanade.presentation.more.settings
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +20,7 @@ fun SettingsMainScreen(
 ) {
     LazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
     ) {
         sections.map {
             item {
