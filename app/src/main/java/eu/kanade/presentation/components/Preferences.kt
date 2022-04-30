@@ -22,14 +22,18 @@ import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.presentation.util.horizontalPadding
 
 @Composable
-fun Divider() {
+fun Divider(
+    modifier: Modifier = Modifier,
+) {
     androidx.compose.material3.Divider(
+        modifier = modifier,
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
     )
 }
 
 @Composable
 fun PreferenceRow(
+    modifier: Modifier = Modifier,
     title: String,
     painter: Painter? = null,
     onClick: () -> Unit = {},
@@ -45,7 +49,7 @@ fun PreferenceRow(
     )
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .heightIn(min = height)
             .combinedClickable(
@@ -91,12 +95,14 @@ fun PreferenceRow(
 
 @Composable
 fun SwitchPreference(
+    modifier: Modifier = Modifier,
     preference: PreferenceMutableState<Boolean>,
     title: String,
     subtitle: String? = null,
     painter: Painter? = null,
 ) {
     PreferenceRow(
+        modifier = modifier,
         title = title,
         subtitle = subtitle,
         painter = painter,
