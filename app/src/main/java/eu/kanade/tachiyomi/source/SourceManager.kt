@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import rx.Observable
 
@@ -18,6 +19,8 @@ open class SourceManager(private val context: Context) {
 
     private val _catalogueSources: MutableStateFlow<List<CatalogueSource>> = MutableStateFlow(listOf())
     val catalogueSources: Flow<List<CatalogueSource>> = _catalogueSources
+    val onlineSources: Flow<List<HttpSource>> =
+        _catalogueSources.map { sources -> sources.filterIsInstance<HttpSource>() }
 
     init {
         createInternalSources().forEach { registerSource(it) }

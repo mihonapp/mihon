@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.ui.browse.source
 
 import android.os.Bundle
-import eu.kanade.domain.source.interactor.DisableSource
 import eu.kanade.domain.source.interactor.GetEnabledSources
+import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
 import eu.kanade.domain.source.model.Pin
 import eu.kanade.domain.source.model.Source
@@ -24,7 +24,7 @@ import java.util.TreeMap
  */
 class SourcePresenter(
     private val getEnabledSources: GetEnabledSources = Injekt.get(),
-    private val disableSource: DisableSource = Injekt.get(),
+    private val toggleSource: ToggleSource = Injekt.get(),
     private val toggleSourcePin: ToggleSourcePin = Injekt.get()
 ) : BasePresenter<SourceController>() {
 
@@ -79,8 +79,8 @@ class SourcePresenter(
         }
     }
 
-    fun disableSource(source: Source) {
-        disableSource.await(source)
+    fun toggleSource(source: Source) {
+        toggleSource.await(source)
     }
 
     fun togglePin(source: Source) {

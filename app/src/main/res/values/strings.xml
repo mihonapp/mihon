@@ -711,6 +711,9 @@
     <string name="clear_history_completed">History deleted</string>
     <string name="clear_history_confirmation">Are you sure? All history will be lost.</string>
 
+    <!-- Source Filter Screen -->
+    <string name="source_filter_empty_screen">No installed source found</string>
+
     <!-- Source migration screen -->
     <string name="migration_help_guide">Source migration guide</string>
     <string name="migration_dialog_what_to_include">Select data to include</string>

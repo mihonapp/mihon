@@ -19,6 +19,12 @@ class SourceRepositoryImpl(
         }
     }
 
+    override fun getOnlineSources(): Flow<List<Source>> {
+        return sourceManager.onlineSources.map { sources ->
+            sources.map(sourceMapper)
+        }
+    }
+
     override fun getSourcesWithFavoriteCount(): Flow<List<Pair<Source, Long>>> {
         val sourceIdWithFavoriteCount = handler.subscribeToList { mangasQueries.getSourceIdWithFavoriteCount() }
         return sourceIdWithFavoriteCount.map { sourceIdsWithCount ->
