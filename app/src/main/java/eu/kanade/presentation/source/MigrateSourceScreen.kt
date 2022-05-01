@@ -1,26 +1,24 @@
 package eu.kanade.presentation.source
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.components.EmptyScreen
+import eu.kanade.presentation.components.ItemBadges
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.source.components.BaseSourceItem
 import eu.kanade.presentation.theme.header
@@ -107,17 +105,6 @@ fun MigrateSourceItem(
         showLanguageInContent = source.lang != "",
         onClickItem = onClickItem,
         onLongClickItem = onLongClickItem,
-        action = {
-            Text(
-                text = "$count",
-                modifier = Modifier
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(MaterialTheme.colorScheme.primary)
-                    .padding(horizontal = 8.dp, vertical = 2.dp),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            )
-        }
+        action = { ItemBadges(primaryText = "$count") },
     )
 }
