@@ -282,7 +282,7 @@ class LibraryUpdateService(
      * @param mangaToUpdate the list to update
      * @return an observable delivering the progress of each update.
      */
-    suspend fun updateChapterList() {
+    private suspend fun updateChapterList() {
         val semaphore = Semaphore(5)
         val progressCount = AtomicInteger(0)
         val currentlyUpdatingManga = CopyOnWriteArrayList<LibraryManga>()
@@ -401,7 +401,7 @@ class LibraryUpdateService(
      * @param manga the manga to update.
      * @return a pair of the inserted and removed chapters.
      */
-    suspend fun updateManga(manga: Manga): Pair<List<Chapter>, List<Chapter>> {
+    private suspend fun updateManga(manga: Manga): Pair<List<Chapter>, List<Chapter>> {
         val source = sourceManager.getOrStub(manga.source)
 
         // Update manga details metadata
