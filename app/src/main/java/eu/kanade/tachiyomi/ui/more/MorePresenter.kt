@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -24,7 +25,7 @@ class MorePresenter(
     val incognitoMode = preferencesHelper.incognitoMode().asState()
 
     private var _state: MutableStateFlow<DownloadQueueState> = MutableStateFlow(DownloadQueueState.Stopped)
-    val downloadQueueState: StateFlow<DownloadQueueState> = _state
+    val downloadQueueState: StateFlow<DownloadQueueState> = _state.asStateFlow()
 
     private var isDownloading: Boolean = false
     private var downloadQueueSize: Int = 0
@@ -66,14 +67,12 @@ class MorePresenter(
     private fun updateDownloadQueueState() {
         presenterScope.launchIO {
             val pendingDownloadExists = downloadQueueSize != 0
-            _state.emit(
-                when {
-                    !pendingDownloadExists -> DownloadQueueState.Stopped
-                    !isDownloading && !pendingDownloadExists -> DownloadQueueState.Paused(0)
-                    !isDownloading && pendingDownloadExists -> DownloadQueueState.Paused(downloadQueueSize)
-                    else -> DownloadQueueState.Downloading(downloadQueueSize)
-                }
-            )
+            _state.value = when {
+                !pendingDownloadExists -> DownloadQueueState.Stopped
+                !isDownloading && !pendingDownloadExists -> DownloadQueueState.Paused(0)
+                !isDownloading && pendingDownloadExists -> DownloadQueueState.Paused(downloadQueueSize)
+                else -> DownloadQueueState.Downloading(downloadQueueSize)
+            }
         }
     }
 

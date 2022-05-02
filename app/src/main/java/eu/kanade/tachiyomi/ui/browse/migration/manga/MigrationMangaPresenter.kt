@@ -27,10 +27,10 @@ class MigrationMangaPresenter(
             getFavoritesBySourceId
                 .subscribe(sourceId)
                 .catch { exception ->
-                    _state.emit(MigrateMangaState.Error(exception))
+                    _state.value = MigrateMangaState.Error(exception)
                 }
                 .collectLatest { list ->
-                    _state.emit(MigrateMangaState.Success(list))
+                    _state.value = MigrateMangaState.Success(list)
                 }
         }
     }

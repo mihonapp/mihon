@@ -28,10 +28,10 @@ class MigrationSourcesPresenter(
         presenterScope.launchIO {
             getSourcesWithFavoriteCount.subscribe()
                 .catch { exception ->
-                    _state.emit(MigrateSourceState.Error(exception))
+                    _state.value = MigrateSourceState.Error(exception)
                 }
                 .collectLatest { sources ->
-                    _state.emit(MigrateSourceState.Success(sources))
+                    _state.value = MigrateSourceState.Success(sources)
                 }
         }
     }

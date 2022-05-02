@@ -31,11 +31,11 @@ class SourceFilterPresenter(
         presenterScope.launchIO {
             getLanguagesWithSources.subscribe()
                 .catch { exception ->
-                    _state.emit(SourceFilterState.Error(exception))
+                    _state.value = SourceFilterState.Error(exception)
                 }
                 .collectLatest { sourceLangMap ->
                     val uiModels = sourceLangMap.toFilterUiModels()
-                    _state.emit(SourceFilterState.Success(uiModels))
+                    _state.value = SourceFilterState.Success(uiModels)
                 }
         }
     }

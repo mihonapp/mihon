@@ -53,14 +53,14 @@ class HistoryPresenter(
             _query.collectLatest { query ->
                 getHistory.subscribe(query)
                     .catch { exception ->
-                        _state.emit(HistoryState.Error(exception))
+                        _state.value = HistoryState.Error(exception)
                     }
                     .map { pagingData ->
                         pagingData.toHistoryUiModels()
                     }
                     .cachedIn(presenterScope)
                     .let { uiModelsPagingDataFlow ->
-                        _state.emit(HistoryState.Success(uiModelsPagingDataFlow))
+                        _state.value = HistoryState.Success(uiModelsPagingDataFlow)
                     }
             }
         }

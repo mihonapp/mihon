@@ -36,7 +36,7 @@ class SourcePresenter(
         presenterScope.launchIO {
             getEnabledSources.subscribe()
                 .catch { exception ->
-                    _state.emit(SourceState.Error(exception))
+                    _state.value = SourceState.Error(exception)
                 }
                 .collectLatest(::collectLatestSources)
         }
@@ -71,7 +71,7 @@ class SourcePresenter(
                 }.toTypedArray(),
             )
         }
-        _state.emit(SourceState.Success(uiModels))
+        _state.value = SourceState.Success(uiModels)
     }
 
     fun toggleSource(source: Source) {
