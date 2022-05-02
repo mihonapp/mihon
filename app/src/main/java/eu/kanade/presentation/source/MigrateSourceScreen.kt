@@ -26,6 +26,7 @@ import eu.kanade.presentation.source.components.BaseSourceItem
 import eu.kanade.presentation.theme.header
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrateSourceState
 import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrationSourcesPresenter
 
 @Composable
@@ -36,17 +37,16 @@ fun MigrateSourceScreen(
     onLongClickItem: (Source) -> Unit,
 ) {
     val state by presenter.state.collectAsState()
-    when {
-        state.isLoading -> LoadingScreen()
-        state.isEmpty -> EmptyScreen(textResource = R.string.information_empty_library)
-        else -> {
+    when (state) {
+        is MigrateSourceState.Loading -> LoadingScreen()
+        is MigrateSourceState.Error -> Text(text = (state as MigrateSourceState.Error).error.message!!)
+        is MigrateSourceState.Success ->
             MigrateSourceList(
                 nestedScrollInterop = nestedScrollInterop,
-                list = state.sources!!,
+                list = (state as MigrateSourceState.Success).sources,
                 onClickItem = onClickItem,
                 onLongClickItem = onLongClickItem,
             )
-        }
     }
 }
 
@@ -57,6 +57,11 @@ fun MigrateSourceList(
     onClickItem: (Source) -> Unit,
     onLongClickItem: (Source) -> Unit,
 ) {
+    if (list.isEmpty()) {
+        EmptyScreen(textResource = R.string.information_empty_library)
+        return
+    }
+
     LazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
         contentPadding = WindowInsets.navigationBars.asPaddingValues(),

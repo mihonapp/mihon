@@ -9,8 +9,8 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -19,7 +19,7 @@ class MigrationSourcesPresenter(
     private val setMigrateSorting: SetMigrateSorting = Injekt.get()
 ) : BasePresenter<MigrationSourcesController>() {
 
-    private val _state: MutableStateFlow<MigrateSourceState> = MutableStateFlow(MigrateSourceState.EMPTY)
+    private val _state: MutableStateFlow<MigrateSourceState> = MutableStateFlow(MigrateSourceState.Loading)
     val state: StateFlow<MigrateSourceState> = _state.asStateFlow()
 
     override fun onCreate(savedState: Bundle?) {
@@ -27,10 +27,11 @@ class MigrationSourcesPresenter(
 
         presenterScope.launchIO {
             getSourcesWithFavoriteCount.subscribe()
+                .catch { exception ->
+                    _state.emit(MigrateSourceState.Error(exception))
+                }
                 .collectLatest { sources ->
-                    _state.update { state ->
-                        state.copy(sources = sources)
-                    }
+                    _state.emit(MigrateSourceState.Success(sources))
                 }
         }
     }
@@ -44,17 +45,8 @@ class MigrationSourcesPresenter(
     }
 }
 
-data class MigrateSourceState(
-    val sources: List<Pair<Source, Long>>?
-) {
-
-    val isLoading: Boolean
-        get() = sources == null
-
-    val isEmpty: Boolean
-        get() = sources.isNullOrEmpty()
-
-    companion object {
-        val EMPTY = MigrateSourceState(null)
-    }
+sealed class MigrateSourceState {
+    object Loading : MigrateSourceState()
+    data class Error(val error: Throwable) : MigrateSourceState()
+    data class Success(val sources: List<Pair<Source, Long>>) : MigrateSourceState()
 }
