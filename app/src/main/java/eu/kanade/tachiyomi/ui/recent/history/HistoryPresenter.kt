@@ -11,6 +11,7 @@ import eu.kanade.domain.history.interactor.GetNextChapterForManga
 import eu.kanade.domain.history.interactor.RemoveHistoryById
 import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.model.HistoryWithRelations
+import eu.kanade.presentation.history.HistoryUiModel
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
@@ -20,9 +21,10 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
@@ -40,38 +42,43 @@ class HistoryPresenter(
     private val removeHistoryByMangaId: RemoveHistoryByMangaId = Injekt.get(),
 ) : BasePresenter<HistoryController>() {
 
-    private var _query: MutableStateFlow<String> = MutableStateFlow("")
-    private var _state: MutableStateFlow<HistoryState> = MutableStateFlow(HistoryState.EMPTY)
-    val state: StateFlow<HistoryState> = _state
+    private val _query: MutableStateFlow<String> = MutableStateFlow("")
+    private val _state: MutableStateFlow<HistoryState> = MutableStateFlow(HistoryState.Loading)
+    val state: StateFlow<HistoryState> = _state.asStateFlow()
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
         presenterScope.launchIO {
-            _state.update { state ->
-                state.copy(
-                    list = _query.flatMapLatest { query ->
-                        getHistory.subscribe(query)
-                            .map { pagingData ->
-                                pagingData
-                                    .map {
-                                        UiModel.Item(it)
-                                    }
-                                    .insertSeparators { before, after ->
-                                        val beforeDate = before?.item?.readAt?.time?.toDateKey() ?: Date(0)
-                                        val afterDate = after?.item?.readAt?.time?.toDateKey() ?: Date(0)
-                                        when {
-                                            beforeDate.time != afterDate.time && afterDate.time != 0L -> UiModel.Header(afterDate)
-                                            // Return null to avoid adding a separator between two items.
-                                            else -> null
-                                        }
-                                    }
-                            }
+            _query.collectLatest { query ->
+                getHistory.subscribe(query)
+                    .catch { exception ->
+                        _state.emit(HistoryState.Error(exception))
                     }
-                        .cachedIn(presenterScope),
-                )
+                    .map { pagingData ->
+                        pagingData.toHistoryUiModels()
+                    }
+                    .cachedIn(presenterScope)
+                    .let { uiModelsPagingDataFlow ->
+                        _state.emit(HistoryState.Success(uiModelsPagingDataFlow))
+                    }
             }
         }
+    }
+
+    private fun PagingData<HistoryWithRelations>.toHistoryUiModels(): PagingData<HistoryUiModel> {
+        return this.map {
+            HistoryUiModel.Item(it)
+        }
+            .insertSeparators { before, after ->
+                val beforeDate = before?.item?.readAt?.time?.toDateKey() ?: Date(0)
+                val afterDate = after?.item?.readAt?.time?.toDateKey() ?: Date(0)
+                when {
+                    beforeDate.time != afterDate.time && afterDate.time != 0L -> HistoryUiModel.Header(afterDate)
+                    // Return null to avoid adding a separator between two items.
+                    else -> null
+                }
+            }
     }
 
     fun search(query: String) {
@@ -112,16 +119,8 @@ class HistoryPresenter(
     }
 }
 
-sealed class UiModel {
-    data class Item(val item: HistoryWithRelations) : UiModel()
-    data class Header(val date: Date) : UiModel()
-}
-
-data class HistoryState(
-    val list: Flow<PagingData<UiModel>>? = null,
-) {
-
-    companion object {
-        val EMPTY = HistoryState(null)
-    }
+sealed class HistoryState {
+    object Loading : HistoryState()
+    data class Error(val error: Throwable) : HistoryState()
+    data class Success(val uiModels: Flow<PagingData<HistoryUiModel>>) : HistoryState()
 }
