@@ -711,6 +711,9 @@
     <string name="clear_history_completed">History deleted</string>
     <string name="clear_history_confirmation">Are you sure? All history will be lost.</string>
 
+    <!-- Source Screen -->
+    <string name="source_empty_screen">No source found</string>
+
     <!-- Source Filter Screen -->
     <string name="source_filter_empty_screen">No installed source found</string>
 

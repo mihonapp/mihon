@@ -6,6 +6,7 @@ import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
 import eu.kanade.domain.source.model.Pin
 import eu.kanade.domain.source.model.Source
+import eu.kanade.presentation.source.SourceUiModel
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.TreeMap
@@ -28,7 +28,7 @@ class SourcePresenter(
     private val toggleSourcePin: ToggleSourcePin = Injekt.get()
 ) : BasePresenter<SourceController>() {
 
-    private val _state: MutableStateFlow<SourceState> = MutableStateFlow(SourceState.EMPTY)
+    private val _state: MutableStateFlow<SourceState> = MutableStateFlow(SourceState.Loading)
     val state: StateFlow<SourceState> = _state.asStateFlow()
 
     override fun onCreate(savedState: Bundle?) {
@@ -36,15 +36,13 @@ class SourcePresenter(
         presenterScope.launchIO {
             getEnabledSources.subscribe()
                 .catch { exception ->
-                    _state.update { state ->
-                        state.copy(sources = listOf(), error = exception)
-                    }
+                    _state.emit(SourceState.Error(exception))
                 }
                 .collectLatest(::collectLatestSources)
         }
     }
 
-    private fun collectLatestSources(sources: List<Source>) {
+    private suspend fun collectLatestSources(sources: List<Source>) {
         val map = TreeMap<String, MutableList<Source>> { d1, d2 ->
             // Catalogues without a lang defined will be placed at the end
             when {
@@ -64,19 +62,16 @@ class SourcePresenter(
                 else -> it.lang
             }
         }
-        _state.update { state ->
-            state.copy(
-                sources = byLang.flatMap {
-                    listOf(
-                        UiModel.Header(it.key),
-                        *it.value.map { source ->
-                            UiModel.Item(source)
-                        }.toTypedArray()
-                    )
-                },
-                error = null
+
+        val uiModels = byLang.flatMap {
+            listOf(
+                SourceUiModel.Header(it.key),
+                *it.value.map { source ->
+                    SourceUiModel.Item(source)
+                }.toTypedArray(),
             )
         }
+        _state.emit(SourceState.Success(uiModels))
     }
 
     fun toggleSource(source: Source) {
@@ -93,26 +88,8 @@ class SourcePresenter(
     }
 }
 
-sealed class UiModel {
-    data class Item(val source: Source) : UiModel()
-    data class Header(val language: String) : UiModel()
-}
-
-data class SourceState(
-    val sources: List<UiModel>,
-    val error: Throwable?
-) {
-
-    val isLoading: Boolean
-        get() = sources.isEmpty() && error == null
-
-    val hasError: Boolean
-        get() = error != null
-
-    val isEmpty: Boolean
-        get() = sources.isEmpty()
-
-    companion object {
-        val EMPTY = SourceState(listOf(), null)
-    }
+sealed class SourceState {
+    object Loading : SourceState()
+    data class Error(val error: Throwable) : SourceState()
+    data class Success(val uiModels: List<SourceUiModel>) : SourceState()
 }
