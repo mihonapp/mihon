@@ -182,8 +182,8 @@ class LibrarySettingsSheet(
             private val alphabetically = Item.MultiSort(R.string.action_sort_alpha, this)
             private val total = Item.MultiSort(R.string.action_sort_total, this)
             private val lastRead = Item.MultiSort(R.string.action_sort_last_read, this)
-            private val lastChecked = Item.MultiSort(R.string.action_sort_last_checked, this)
-            private val unread = Item.MultiSort(R.string.action_filter_unread, this)
+            private val lastChecked = Item.MultiSort(R.string.action_sort_last_manga_update, this)
+            private val unread = Item.MultiSort(R.string.action_sort_unread_count, this)
             private val latestChapter = Item.MultiSort(R.string.action_sort_latest_chapter, this)
             private val chapterFetchDate = Item.MultiSort(R.string.action_sort_chapter_fetch_date, this)
             private val dateAdded = Item.MultiSort(R.string.action_sort_date_added, this)
@@ -206,15 +206,15 @@ class LibrarySettingsSheet(
                 lastRead.state =
                     if (sorting == SortModeSetting.LAST_READ) order else Item.MultiSort.SORT_NONE
                 lastChecked.state =
-                    if (sorting == SortModeSetting.LAST_CHECKED) order else Item.MultiSort.SORT_NONE
+                    if (sorting == SortModeSetting.LAST_MANGA_UPDATE) order else Item.MultiSort.SORT_NONE
                 unread.state =
-                    if (sorting == SortModeSetting.UNREAD) order else Item.MultiSort.SORT_NONE
+                    if (sorting == SortModeSetting.UNREAD_COUNT) order else Item.MultiSort.SORT_NONE
                 total.state =
                     if (sorting == SortModeSetting.TOTAL_CHAPTERS) order else Item.MultiSort.SORT_NONE
                 latestChapter.state =
                     if (sorting == SortModeSetting.LATEST_CHAPTER) order else Item.MultiSort.SORT_NONE
                 chapterFetchDate.state =
-                    if (sorting == SortModeSetting.DATE_FETCHED) order else Item.MultiSort.SORT_NONE
+                    if (sorting == SortModeSetting.CHAPTER_FETCH_DATE) order else Item.MultiSort.SORT_NONE
                 dateAdded.state =
                     if (sorting == SortModeSetting.DATE_ADDED) order else Item.MultiSort.SORT_NONE
             }
@@ -261,11 +261,11 @@ class LibrarySettingsSheet(
                 val flag = when (item) {
                     alphabetically -> SortModeSetting.ALPHABETICAL
                     lastRead -> SortModeSetting.LAST_READ
-                    lastChecked -> SortModeSetting.LAST_CHECKED
-                    unread -> SortModeSetting.UNREAD
+                    lastChecked -> SortModeSetting.LAST_MANGA_UPDATE
+                    unread -> SortModeSetting.UNREAD_COUNT
                     total -> SortModeSetting.TOTAL_CHAPTERS
                     latestChapter -> SortModeSetting.LATEST_CHAPTER
-                    chapterFetchDate -> SortModeSetting.DATE_FETCHED
+                    chapterFetchDate -> SortModeSetting.CHAPTER_FETCH_DATE
                     dateAdded -> SortModeSetting.DATE_ADDED
                     else -> throw NotImplementedError("Unknown display mode")
                 }

@@ -44,9 +44,10 @@
     <string name="action_sort_count">Total manga</string>
     <string name="action_sort_total">Total chapters</string>
     <string name="action_sort_last_read">Last read</string>
-    <string name="action_sort_last_checked">Last checked</string>
+    <string name="action_sort_last_manga_update">Last manga update</string>
+    <string name="action_sort_unread_count">Unread count</string>
     <string name="action_sort_latest_chapter">Latest chapter</string>
-    <string name="action_sort_chapter_fetch_date">Date fetched</string>
+    <string name="action_sort_chapter_fetch_date">Chapter fetch date</string>
     <string name="action_sort_date_added">Date added</string>
     <string name="action_search">Search</string>
     <string name="action_search_settings">Search settings</string>
