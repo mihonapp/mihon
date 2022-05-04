@@ -99,38 +99,24 @@ object ImageUtil {
     }
 
     /**
-     * Check whether the image is a double-page spread
+     * Check whether the image is wide (which we consider a double-page spread).
+     *
      * @return true if the width is greater than the height
      */
-    fun isDoublePage(imageStream: InputStream): Boolean {
-        imageStream.mark(imageStream.available() + 1)
-
-        val imageBytes = imageStream.readBytes()
-
-        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
-
+    fun isWideImage(imageStream: InputStream): Boolean {
+        val options = extractImageOptions(imageStream)
         imageStream.reset()
-
         return options.outWidth > options.outHeight
     }
 
     /**
-     * Check whether the image is considered a tall image
-     * @return true if the height:width ratio is greater than the 3:!
+     * Check whether the image is considered a tall image.
+     *
+     * @return true if the height:width ratio is greater than 3.
      */
     fun isTallImage(imageStream: InputStream): Boolean {
-        imageStream.mark(imageStream.available() + 1)
-
-        val imageBytes = imageStream.readBytes()
-        // Checking the image dimensions without loading it in the memory.
-        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
-        val width = options.outWidth
-        val height = options.outHeight
-        val ratio = height / width
-
-        return ratio > 3
+        val options = extractImageOptions(imageStream)
+        return (options.outHeight / options.outWidth) > 3
     }
 
     /**
@@ -410,4 +396,16 @@ object ImageUtil {
 
     private fun Int.isWhite(): Boolean =
         red + blue + green > 740
+
+    /**
+     * Used to check an image's dimensions without loading it in the memory.
+     */
+    private fun extractImageOptions(imageStream: InputStream): BitmapFactory.Options {
+        imageStream.mark(imageStream.available() + 1)
+
+        val imageBytes = imageStream.readBytes()
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
+        return options
+    }
 }

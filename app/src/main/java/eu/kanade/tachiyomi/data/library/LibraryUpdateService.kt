@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.model.toMangaInfo
 import eu.kanade.tachiyomi.source.model.toSChapter
 import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.util.chapter.NoChaptersException
@@ -80,7 +81,7 @@ class LibraryUpdateService(
 
     private lateinit var wakeLock: PowerManager.WakeLock
     private lateinit var notifier: LibraryUpdateNotifier
-    private lateinit var ioScope: CoroutineScope
+    private var ioScope: CoroutineScope? = null
 
     private var mangaToUpdate: List<LibraryManga> = mutableListOf()
     private var updateJob: Job? = null
@@ -90,10 +91,8 @@ class LibraryUpdateService(
      */
     enum class Target {
         CHAPTERS, // Manga chapters
-
         COVERS, // Manga covers
-
-        TRACKING // Tracking metadata
+        TRACKING, // Tracking metadata
     }
 
     companion object {
@@ -161,7 +160,6 @@ class LibraryUpdateService(
     override fun onCreate() {
         super.onCreate()
 
-        ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         notifier = LibraryUpdateNotifier(this)
         wakeLock = acquireWakeLock(javaClass.name)
 
@@ -174,8 +172,6 @@ class LibraryUpdateService(
      */
     override fun onDestroy() {
         updateJob?.cancel()
-        // Despite what Android Studio
-        // states this can be null
         ioScope?.cancel()
         if (wakeLock.isHeld) {
             wakeLock.release()
@@ -189,9 +185,7 @@ class LibraryUpdateService(
     /**
      * This method needs to be implemented, but it's not used/needed.
      */
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent): IBinder? = null
 
     /**
      * Method called when the service receives an intent.
@@ -210,6 +204,7 @@ class LibraryUpdateService(
 
         // Unsubscribe from any previous subscription if needed
         updateJob?.cancel()
+        ioScope?.cancel()
 
         // Update favorite manga
         val categoryId = intent.getIntExtra(KEY_CATEGORY, -1)
@@ -220,7 +215,8 @@ class LibraryUpdateService(
             logcat(LogPriority.ERROR, exception)
             stopSelf(startId)
         }
-        updateJob = ioScope.launch(handler) {
+        ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        updateJob = ioScope?.launch(handler) {
             when (target) {
                 Target.CHAPTERS -> updateChapterList()
                 Target.COVERS -> updateCovers()
@@ -344,16 +340,10 @@ class LibraryUpdateService(
                                         }
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
-                                            is NoChaptersException -> {
-                                                getString(R.string.no_chapters_error)
-                                            }
-                                            is SourceManager.SourceNotInstalledException -> {
-                                                // failedUpdates will already have the source, don't need to copy it into the message
-                                                getString(R.string.loader_not_implemented_error)
-                                            }
-                                            else -> {
-                                                e.message
-                                            }
+                                            is NoChaptersException -> getString(R.string.no_chapters_error)
+                                            // failedUpdates will already have the source, don't need to copy it into the message
+                                            is SourceManager.SourceNotInstalledException -> getString(R.string.loader_not_implemented_error)
+                                            else -> e.message
                                         }
                                         failedUpdates.add(mangaWithNotif to errorMessage)
                                     }
@@ -407,11 +397,12 @@ class LibraryUpdateService(
     private suspend fun updateManga(manga: Manga): Pair<List<Chapter>, List<Chapter>> {
         val source = sourceManager.getOrStub(manga.source)
 
-        var networkSManga: SManga? = null
+        var updatedManga: SManga = manga
+
         // Update manga details metadata
         if (preferences.autoUpdateMetadata()) {
-            val updatedManga = source.getMangaDetails(manga.toMangaInfo())
-            val sManga = updatedManga.toSManga()
+            val updatedMangaDetails = source.getMangaDetails(manga.toMangaInfo())
+            val sManga = updatedMangaDetails.toSManga()
             // Avoid "losing" existing cover
             if (!sManga.thumbnail_url.isNullOrEmpty()) {
                 manga.prepUpdateCover(coverCache, sManga, false)
@@ -419,25 +410,22 @@ class LibraryUpdateService(
                 sManga.thumbnail_url = manga.thumbnail_url
             }
 
-            networkSManga = sManga
+            updatedManga = sManga
         }
 
-        val chapters = source.getChapterList(manga.toMangaInfo())
+        val chapters = source.getChapterList(updatedManga.toMangaInfo())
             .map { it.toSChapter() }
 
-        // Get manga from database to account for if it was removed
-        // from library or database
+        // Get manga from database to account for if it was removed during the update
         val dbManga = db.getManga(manga.id!!).executeAsBlocking()
             ?: return Pair(emptyList(), emptyList())
 
         // Copy into [dbManga] to retain favourite value
-        networkSManga?.let {
-            dbManga.copyFrom(it)
-            db.insertManga(dbManga).executeAsBlocking()
-        }
+        dbManga.copyFrom(updatedManga)
+        db.insertManga(dbManga).executeAsBlocking()
 
         // [dbmanga] was used so that manga data doesn't get overwritten
-        // incase manga gets new chapter
+        // in case manga gets new chapter
         return syncChaptersWithSource(db, chapters, dbManga, source)
     }
 

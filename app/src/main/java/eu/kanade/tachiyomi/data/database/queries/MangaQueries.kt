@@ -131,24 +131,12 @@ interface MangaQueries : DbProvider {
         .withPutResolver(MangaCoverLastModifiedPutResolver())
         .prepare()
 
-    fun deleteManga(manga: Manga) = db.delete().`object`(manga).prepare()
-
-    fun deleteMangas(mangas: List<Manga>) = db.delete().objects(mangas).prepare()
-
     fun deleteMangasNotInLibraryBySourceIds(sourceIds: List<Long>) = db.delete()
         .byQuery(
             DeleteQuery.builder()
                 .table(MangaTable.TABLE)
                 .where("${MangaTable.COL_FAVORITE} = ? AND ${MangaTable.COL_SOURCE} IN (${Queries.placeholders(sourceIds.size)})")
                 .whereArgs(0, *sourceIds.toTypedArray())
-                .build(),
-        )
-        .prepare()
-
-    fun deleteMangas() = db.delete()
-        .byQuery(
-            DeleteQuery.builder()
-                .table(MangaTable.TABLE)
                 .build(),
         )
         .prepare()

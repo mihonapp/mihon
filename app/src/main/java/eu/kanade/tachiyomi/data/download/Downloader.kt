@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.webkit.MimeTypeMap
-import androidx.core.graphics.BitmapCompat
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
@@ -44,7 +43,6 @@ import uy.kohesive.injekt.injectLazy
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.io.OutputStream
 import java.util.zip.CRC32
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -354,7 +352,7 @@ class Downloader(
             // Do when page is downloaded.
             .doOnNext { page ->
                 if (preferences.splitTallImages().get()) {
-                    splitTallImage(page, download, tmpDir)
+                    splitTallImage(page, tmpDir)
                 }
                 notifier.onProgressChange(download)
             }
@@ -560,51 +558,39 @@ class Downloader(
     /**
      * Splits tall images to improve performance of reader
      */
-    private fun splitTallImage(page: Page, download: Download, tmpDir: UniFile) {
+    private fun splitTallImage(page: Page, tmpDir: UniFile) {
         val filename = String.format("%03d", page.number)
-        val imageFile = tmpDir.listFiles()!!.find { it.name!!.startsWith("$filename.") }
-        if (imageFile == null) {
-            notifier.onError("Error: imageFile was not found", download.chapter.name, download.manga.title)
+        val imageFile = tmpDir.listFiles()?.find { it.name!!.startsWith("$filename.") }
+            ?: throw Error(context.getString(R.string.download_notifier_split_page_not_found, page.number))
+
+        if (isAnimatedAndSupported(imageFile.openInputStream()) || !isTallImage(imageFile.openInputStream())) {
             return
         }
 
-        if (!isAnimatedAndSupported(imageFile.openInputStream()) && isTallImage(imageFile.openInputStream())) {
-            // Getting the scaled bitmap of the source image
-            val bitmap = BitmapFactory.decodeFile(imageFile.filePath)
-            val scaledBitmap: Bitmap =
-                BitmapCompat.createScaledBitmap(bitmap, bitmap.width, bitmap.height, null, true)
+        val bitmap = BitmapFactory.decodeFile(imageFile.filePath)
+        val splitsCount = bitmap.height / context.resources.displayMetrics.heightPixels + 1
+        val heightPerSplit = bitmap.height / splitsCount
 
-            val splitsCount: Int = bitmap.height / context.resources.displayMetrics.heightPixels + 1
-            val splitHeight = bitmap.height / splitsCount
-
-            // xCoord and yCoord are the pixel positions of the image splits
-            val xCoord = 0
-            var yCoord = 0
-            try {
-                for (i in 0 until splitsCount) {
-                    val splitPath = imageFile.filePath!!.substringBeforeLast(".") + "__${"%03d".format(i + 1)}.jpg"
-                    // Compress the bitmap and save in jpg format
-                    val stream: OutputStream = FileOutputStream(splitPath)
-                    stream.use {
-                        Bitmap.createBitmap(
-                            scaledBitmap,
-                            xCoord,
-                            yCoord,
-                            bitmap.width,
-                            splitHeight,
-                        ).compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                    }
-                    yCoord += splitHeight
+        try {
+            (0..splitsCount).forEach { split ->
+                val splitPath = imageFile.filePath!!.substringBeforeLast(".") + "__${"%03d".format(split + 1)}.jpg"
+                FileOutputStream(splitPath).use { stream ->
+                    Bitmap.createBitmap(
+                        bitmap,
+                        0,
+                        split * heightPerSplit,
+                        bitmap.width,
+                        heightPerSplit,
+                    ).compress(Bitmap.CompressFormat.JPEG, 100, stream)
                 }
-                imageFile.delete()
-            } catch (e: Exception) {
-                // Image splits were not successfully saved so delete them and keep the original image
-                for (i in 0 until splitsCount) {
-                    val splitPath = imageFile.filePath!!.substringBeforeLast(".") + "__${"%03d".format(i + 1)}.jpg"
-                    File(splitPath).delete()
-                }
-                throw e
             }
+            imageFile.delete()
+        } catch (e: Exception) {
+            // Image splits were not successfully saved so delete them and keep the original image
+            (0..splitsCount)
+                .map { imageFile.filePath!!.substringBeforeLast(".") + "__${"%03d".format(it + 1)}.jpg" }
+                .forEach { File(it).delete() }
+            throw e
         }
     }
 

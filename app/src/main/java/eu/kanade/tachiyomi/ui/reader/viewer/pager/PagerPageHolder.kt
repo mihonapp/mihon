@@ -247,7 +247,7 @@ class PagerPageHolder(
             return splitInHalf(imageStream)
         }
 
-        val isDoublePage = ImageUtil.isDoublePage(imageStream)
+        val isDoublePage = ImageUtil.isWideImage(imageStream)
         if (!isDoublePage) {
             return imageStream
         }
