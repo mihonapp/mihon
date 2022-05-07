@@ -174,6 +174,8 @@ class LibraryUpdateService(
      */
     override fun onDestroy() {
         updateJob?.cancel()
+        // Despite what Android Studio
+        // states this can be null
         ioScope?.cancel()
         if (wakeLock.isHeld) {
             wakeLock.release()
@@ -233,8 +235,7 @@ class LibraryUpdateService(
     /**
      * Adds list of manga to be updated.
      *
-     * @param category the ID of the category to update, or -1 if no category specified.
-     * @param target the target to update.
+     * @param categoryId the ID of the category to update, or -1 if no category specified.
      */
     fun addMangaToQueue(categoryId: Int) {
         val libraryManga = db.getLibraryMangas().executeAsBlocking()
@@ -274,12 +275,11 @@ class LibraryUpdateService(
     }
 
     /**
-     * Method that updates the given list of manga. It's called in a background thread, so it's safe
+     * Method that updates manga in [mangaToUpdate]. It's called in a background thread, so it's safe
      * to do heavy operations or network calls here.
      * For each manga it calls [updateManga] and updates the notification showing the current
      * progress.
      *
-     * @param mangaToUpdate the list to update
      * @return an observable delivering the progress of each update.
      */
     suspend fun updateChapterList() {
@@ -305,35 +305,38 @@ class LibraryUpdateService(
                                     return@async
                                 }
 
+                                // Don't continue to update if manga not in library
+                                db.getManga(manga.id!!).executeAsBlocking() ?: return@forEach
+
                                 withUpdateNotification(
                                     currentlyUpdatingManga,
                                     progressCount,
                                     manga,
-                                ) { manga ->
+                                ) { mangaWithNotif ->
                                     try {
                                         when {
-                                            MANGA_NON_COMPLETED in restrictions && manga.status == SManga.COMPLETED -> {
-                                                skippedUpdates.add(manga to getString(R.string.skipped_reason_completed))
-                                            }
-                                            MANGA_HAS_UNREAD in restrictions && manga.unreadCount != 0 -> {
-                                                skippedUpdates.add(manga to getString(R.string.skipped_reason_not_caught_up))
-                                            }
-                                            MANGA_NON_READ in restrictions && manga.totalChapters > 0 && !manga.hasStarted -> {
-                                                skippedUpdates.add(manga to getString(R.string.skipped_reason_not_started))
-                                            }
+                                            MANGA_NON_COMPLETED in restrictions && mangaWithNotif.status == SManga.COMPLETED ->
+                                                skippedUpdates.add(mangaWithNotif to getString(R.string.skipped_reason_completed))
+
+                                            MANGA_HAS_UNREAD in restrictions && mangaWithNotif.unreadCount != 0 ->
+                                                skippedUpdates.add(mangaWithNotif to getString(R.string.skipped_reason_not_caught_up))
+
+                                            MANGA_NON_READ in restrictions && mangaWithNotif.totalChapters > 0 && !mangaWithNotif.hasStarted ->
+                                                skippedUpdates.add(mangaWithNotif to getString(R.string.skipped_reason_not_started))
+
                                             else -> {
                                                 // Convert to the manga that contains new chapters
-                                                val (newChapters, _) = updateManga(manga)
+                                                val (newChapters, _) = updateManga(mangaWithNotif)
 
                                                 if (newChapters.isNotEmpty()) {
-                                                    if (manga.shouldDownloadNewChapters(db, preferences)) {
-                                                        downloadChapters(manga, newChapters)
+                                                    if (mangaWithNotif.shouldDownloadNewChapters(db, preferences)) {
+                                                        downloadChapters(mangaWithNotif, newChapters)
                                                         hasDownloads.set(true)
                                                     }
 
                                                     // Convert to the manga that contains new chapters
                                                     newUpdates.add(
-                                                        manga to newChapters.sortedByDescending { ch -> ch.source_order }
+                                                        mangaWithNotif to newChapters.sortedByDescending { ch -> ch.source_order }
                                                             .toTypedArray(),
                                                     )
                                                 }
@@ -352,11 +355,11 @@ class LibraryUpdateService(
                                                 e.message
                                             }
                                         }
-                                        failedUpdates.add(manga to errorMessage)
+                                        failedUpdates.add(mangaWithNotif to errorMessage)
                                     }
 
                                     if (preferences.autoUpdateTrackers()) {
-                                        updateTrackings(manga, loggedServices)
+                                        updateTrackings(mangaWithNotif, loggedServices)
                                     }
                                 }
                             }
@@ -404,6 +407,7 @@ class LibraryUpdateService(
     suspend fun updateManga(manga: Manga): Pair<List<Chapter>, List<Chapter>> {
         val source = sourceManager.getOrStub(manga.source)
 
+        var networkSManga: SManga? = null
         // Update manga details metadata
         if (preferences.autoUpdateMetadata()) {
             val updatedManga = source.getMangaDetails(manga.toMangaInfo())
@@ -415,14 +419,26 @@ class LibraryUpdateService(
                 sManga.thumbnail_url = manga.thumbnail_url
             }
 
-            manga.copyFrom(sManga)
-            db.insertManga(manga).executeAsBlocking()
+            networkSManga = sManga
         }
 
         val chapters = source.getChapterList(manga.toMangaInfo())
             .map { it.toSChapter() }
 
-        return syncChaptersWithSource(db, chapters, manga, source)
+        // Get manga from database to account for if it was removed
+        // from library or database
+        val dbManga = db.getManga(manga.id!!).executeAsBlocking()
+            ?: return Pair(emptyList(), emptyList())
+
+        // Copy into [dbManga] to retain favourite value
+        networkSManga?.let {
+            dbManga.copyFrom(it)
+            db.insertManga(dbManga).executeAsBlocking()
+        }
+
+        // [dbmanga] was used so that manga data doesn't get overwritten
+        // incase manga gets new chapter
+        return syncChaptersWithSource(db, chapters, dbManga, source)
     }
 
     private suspend fun updateCovers() {
@@ -445,16 +461,16 @@ class LibraryUpdateService(
                                     currentlyUpdatingManga,
                                     progressCount,
                                     manga,
-                                ) { manga ->
-                                    sourceManager.get(manga.source)?.let { source ->
+                                ) { mangaWithNotif ->
+                                    sourceManager.get(mangaWithNotif.source)?.let { source ->
                                         try {
                                             val networkManga =
-                                                source.getMangaDetails(manga.toMangaInfo())
+                                                source.getMangaDetails(mangaWithNotif.toMangaInfo())
                                             val sManga = networkManga.toSManga()
-                                            manga.prepUpdateCover(coverCache, sManga, true)
+                                            mangaWithNotif.prepUpdateCover(coverCache, sManga, true)
                                             sManga.thumbnail_url?.let {
-                                                manga.thumbnail_url = it
-                                                db.insertManga(manga).executeAsBlocking()
+                                                mangaWithNotif.thumbnail_url = it
+                                                db.insertManga(mangaWithNotif).executeAsBlocking()
                                             }
                                         } catch (e: Throwable) {
                                             // Ignore errors and continue
