@@ -147,7 +147,7 @@ class AppUpdateService : Service() {
          * @param context the application context.
          * @param url the url to the new update.
          */
-        fun start(context: Context, url: String, title: String = context.getString(R.string.app_name)) {
+        fun start(context: Context, url: String, title: String? = context.getString(R.string.app_name)) {
             if (!isRunning(context)) {
                 val intent = Intent(context, AppUpdateService::class.java).apply {
                     putExtra(EXTRA_DOWNLOAD_TITLE, title)

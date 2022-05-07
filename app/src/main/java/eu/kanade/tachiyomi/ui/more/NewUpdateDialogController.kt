@@ -19,6 +19,7 @@ class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundl
     constructor(update: AppUpdateResult.NewUpdate) : this(
         bundleOf(
             BODY_KEY to update.release.info,
+            VERSION_KEY to update.release.version,
             RELEASE_URL_KEY to update.release.releaseLink,
             DOWNLOAD_URL_KEY to update.release.getDownloadLink(),
         ),
@@ -36,7 +37,8 @@ class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundl
                 applicationContext?.let { context ->
                     // Start download
                     val url = args.getString(DOWNLOAD_URL_KEY)!!
-                    AppUpdateService.start(context, url)
+                    val version = args.getString(VERSION_KEY)
+                    AppUpdateService.start(context, url, version)
                 }
             }
             .setNeutralButton(R.string.update_check_open) { _, _ ->
@@ -55,5 +57,6 @@ class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundl
 }
 
 private const val BODY_KEY = "NewUpdateDialogController.body"
+private const val VERSION_KEY = "NewUpdateDialogController.version"
 private const val RELEASE_URL_KEY = "NewUpdateDialogController.release_url"
 private const val DOWNLOAD_URL_KEY = "NewUpdateDialogController.download_url"

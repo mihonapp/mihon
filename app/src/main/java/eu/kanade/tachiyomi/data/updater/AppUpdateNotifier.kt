@@ -29,6 +29,7 @@ internal class AppUpdateNotifier(private val context: Context) {
     fun promptUpdate(release: GithubRelease) {
         val intent = Intent(context, AppUpdateService::class.java).apply {
             putExtra(AppUpdateService.EXTRA_DOWNLOAD_URL, release.getDownloadLink())
+            putExtra(AppUpdateService.EXTRA_DOWNLOAD_TITLE, release.version)
         }
         val updateIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
@@ -116,6 +117,7 @@ internal class AppUpdateNotifier(private val context: Context) {
             setOnlyAlertOnce(false)
             setProgress(0, 0, false)
             setContentIntent(installIntent)
+            setOngoing(true)
 
             clearActions()
             addAction(
