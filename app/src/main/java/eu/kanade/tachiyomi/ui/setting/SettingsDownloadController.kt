@@ -24,6 +24,7 @@ import eu.kanade.tachiyomi.util.preference.multiSelectListPreference
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
+import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.toast
@@ -72,6 +73,12 @@ class SettingsDownloadController : SettingsController() {
             bindTo(preferences.saveChaptersAsCBZ())
             titleRes = R.string.save_chapter_as_cbz
         }
+        switchPreference {
+            bindTo(preferences.splitTallImages())
+            titleRes = R.string.split_tall_images
+            summaryRes = R.string.split_tall_images_summary
+        }
+
         preferenceCategory {
             titleRes = R.string.pref_category_delete_chapters
 

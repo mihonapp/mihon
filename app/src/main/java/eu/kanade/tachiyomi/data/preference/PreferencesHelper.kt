@@ -200,6 +200,8 @@ class PreferencesHelper(val context: Context) {
 
     fun saveChaptersAsCBZ() = flowPrefs.getBoolean("save_chapter_as_cbz", true)
 
+    fun splitTallImages() = flowPrefs.getBoolean("split_tall_images", false)
+
     fun folderPerManga() = prefs.getBoolean(Keys.folderPerManga, false)
 
     fun numberOfBackups() = flowPrefs.getInt("backup_slots", 2)

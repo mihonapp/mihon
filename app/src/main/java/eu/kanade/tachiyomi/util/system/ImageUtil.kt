@@ -116,6 +116,24 @@ object ImageUtil {
     }
 
     /**
+     * Check whether the image is considered a tall image
+     * @return true if the height:width ratio is greater than the 3:!
+     */
+    fun isTallImage(imageStream: InputStream): Boolean {
+        imageStream.mark(imageStream.available() + 1)
+
+        val imageBytes = imageStream.readBytes()
+        // Checking the image dimensions without loading it in the memory.
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
+        val width = options.outWidth
+        val height = options.outHeight
+        val ratio = height / width
+
+        return ratio > 3
+    }
+
+    /**
      * Extract the 'side' part from imageStream and return it as InputStream.
      */
     fun splitInHalf(imageStream: InputStream, side: Side): InputStream {
