@@ -52,9 +52,9 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
                 val size = service.getUriSize(entry.uri) ?: throw IllegalStateException()
                 service.contentResolver.openInputStream(entry.uri)!!.use {
                     val createCommand = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        "pm install-create --user current -i ${service.packageName} -S $size"
+                        "pm install-create --user current -r -i ${service.packageName} -S $size"
                     } else {
-                        "pm install-create -i ${service.packageName} -S $size"
+                        "pm install-create -r -i ${service.packageName} -S $size"
                     }
                     val createResult = exec(createCommand)
                     sessionId = SESSION_ID_REGEX.find(createResult.out)?.value
