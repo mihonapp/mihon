@@ -18,6 +18,7 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import tachiyomi.decoder.Format
 import tachiyomi.decoder.ImageDecoder
+import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -103,7 +104,7 @@ object ImageUtil {
      *
      * @return true if the width is greater than the height
      */
-    fun isWideImage(imageStream: InputStream): Boolean {
+    fun isWideImage(imageStream: BufferedInputStream): Boolean {
         val options = extractImageOptions(imageStream)
         imageStream.reset()
         return options.outWidth > options.outHeight

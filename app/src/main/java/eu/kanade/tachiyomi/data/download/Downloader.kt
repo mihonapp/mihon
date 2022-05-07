@@ -46,6 +46,8 @@ import java.io.FileOutputStream
 import java.util.zip.CRC32
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import kotlin.math.ceil
+import kotlin.math.min
 
 /**
  * This class is the one in charge of downloading chapters.
@@ -569,25 +571,28 @@ class Downloader(
 
         val bitmap = BitmapFactory.decodeFile(imageFile.filePath)
         val splitsCount = bitmap.height / context.resources.displayMetrics.heightPixels + 1
-        val heightPerSplit = bitmap.height / splitsCount
+        val heightPerSplit = ceil(bitmap.height / splitsCount.toDouble()).toInt()
+        logcat { "Splitting height ${bitmap.height} by $splitsCount * $heightPerSplit" }
 
         try {
-            (0..splitsCount).forEach { split ->
+            (0 until splitsCount).forEach { split ->
+                logcat { "Split #$split at y=${split * heightPerSplit}" }
                 val splitPath = imageFile.filePath!!.substringBeforeLast(".") + "__${"%03d".format(split + 1)}.jpg"
+                val splitHeight = split * heightPerSplit
                 FileOutputStream(splitPath).use { stream ->
                     Bitmap.createBitmap(
                         bitmap,
                         0,
-                        split * heightPerSplit,
+                        splitHeight,
                         bitmap.width,
-                        heightPerSplit,
+                        min(heightPerSplit, bitmap.height - splitHeight),
                     ).compress(Bitmap.CompressFormat.JPEG, 100, stream)
                 }
             }
             imageFile.delete()
         } catch (e: Exception) {
             // Image splits were not successfully saved so delete them and keep the original image
-            (0..splitsCount)
+            (0 until splitsCount)
                 .map { imageFile.filePath!!.substringBeforeLast(".") + "__${"%03d".format(it + 1)}.jpg" }
                 .forEach { File(it).delete() }
             throw e

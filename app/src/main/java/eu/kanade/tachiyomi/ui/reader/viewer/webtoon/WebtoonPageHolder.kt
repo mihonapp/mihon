@@ -23,6 +23,7 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import java.io.BufferedInputStream
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 
@@ -272,7 +273,7 @@ class WebtoonPageHolder(
         addSubscription(readImageHeaderSubscription)
     }
 
-    private fun process(imageStream: InputStream): InputStream {
+    private fun process(imageStream: BufferedInputStream): InputStream {
         if (!viewer.config.dualPageSplit) {
             return imageStream
         }
