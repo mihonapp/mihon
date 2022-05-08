@@ -204,11 +204,11 @@ object Migrations {
                 val newSortingMode = when (oldSortingMode) {
                     LibrarySort.ALPHA -> SortModeSetting.ALPHABETICAL
                     LibrarySort.LAST_READ -> SortModeSetting.LAST_READ
-                    LibrarySort.LAST_CHECKED -> SortModeSetting.LAST_MANGA_UPDATE
-                    LibrarySort.UNREAD -> SortModeSetting.UNREAD_COUNT
+                    LibrarySort.LAST_CHECKED -> SortModeSetting.LAST_CHECKED
+                    LibrarySort.UNREAD -> SortModeSetting.UNREAD
                     LibrarySort.TOTAL -> SortModeSetting.TOTAL_CHAPTERS
                     LibrarySort.LATEST_CHAPTER -> SortModeSetting.LATEST_CHAPTER
-                    LibrarySort.CHAPTER_FETCH_DATE -> SortModeSetting.CHAPTER_FETCH_DATE
+                    LibrarySort.CHAPTER_FETCH_DATE -> SortModeSetting.DATE_FETCHED
                     LibrarySort.DATE_ADDED -> SortModeSetting.DATE_ADDED
                     else -> SortModeSetting.ALPHABETICAL
                 }
@@ -265,6 +265,17 @@ object Migrations {
                     preferences.navigationModePager().set(5)
                     preferences.navigationModeWebtoon().set(5)
                 }
+            }
+            if (oldVersion < 81) {
+                // Handle renamed enum values
+                @Suppress("DEPRECATION")
+                val newSortingMode = when (val oldSortingMode = preferences.librarySortingMode().get()) {
+                    SortModeSetting.LAST_CHECKED -> SortModeSetting.LAST_MANGA_UPDATE
+                    SortModeSetting.UNREAD -> SortModeSetting.UNREAD_COUNT
+                    SortModeSetting.DATE_FETCHED -> SortModeSetting.CHAPTER_FETCH_DATE
+                    else -> oldSortingMode
+                }
+                preferences.librarySortingMode().set(newSortingMode)
             }
 
             return true
