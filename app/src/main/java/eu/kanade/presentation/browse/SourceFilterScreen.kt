@@ -1,4 +1,4 @@
-package eu.kanade.presentation.source
+package eu.kanade.presentation.browse
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -16,10 +16,10 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import eu.kanade.domain.source.model.Source
+import eu.kanade.presentation.browse.components.BaseSourceItem
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.PreferenceRow
-import eu.kanade.presentation.source.components.BaseSourceItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.source.FilterUiModel
 import eu.kanade.tachiyomi.ui.browse.source.SourceFilterPresenter
@@ -59,6 +59,7 @@ fun SourceFilterContent(
         EmptyScreen(textResource = R.string.source_filter_empty_screen)
         return
     }
+
     LazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
         contentPadding = WindowInsets.navigationBars.asPaddingValues(),

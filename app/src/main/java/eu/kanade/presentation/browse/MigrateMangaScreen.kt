@@ -1,4 +1,4 @@
-package eu.kanade.presentation.source
+package eu.kanade.presentation.browse
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -51,7 +51,7 @@ fun MigrateMangaContent(
     onClickCover: (Manga) -> Unit,
 ) {
     if (list.isEmpty()) {
-        EmptyScreen(textResource = R.string.migrate_empty_screen)
+        EmptyScreen(textResource = R.string.empty_screen)
         return
     }
     LazyColumn(

@@ -1,4 +1,4 @@
-package eu.kanade.presentation.source
+package eu.kanade.presentation.browse
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -32,9 +32,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.source.model.Pin
 import eu.kanade.domain.source.model.Source
+import eu.kanade.presentation.browse.components.BaseSourceItem
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.source.components.BaseSourceItem
 import eu.kanade.presentation.theme.header
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.presentation.util.plus

@@ -28,6 +28,7 @@ class SourceFilterPresenter(
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
+
         presenterScope.launchIO {
             getLanguagesWithSources.subscribe()
                 .catch { exception ->

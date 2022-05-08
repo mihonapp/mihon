@@ -1,4 +1,4 @@
-package eu.kanade.presentation.source.components
+package eu.kanade.presentation.browse.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
@@ -9,8 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import eu.kanade.domain.source.model.Source
-import eu.kanade.presentation.browse.components.BaseBrowseItem
-import eu.kanade.presentation.browse.components.SourceIcon
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 

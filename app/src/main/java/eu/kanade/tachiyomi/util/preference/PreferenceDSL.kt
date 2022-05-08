@@ -23,7 +23,6 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.preference.AdaptiveTitlePreferenceCategory
 import eu.kanade.tachiyomi.widget.preference.IntListPreference
 import eu.kanade.tachiyomi.widget.preference.SwitchPreferenceCategory
-import eu.kanade.tachiyomi.widget.preference.SwitchSettingsPreference
 
 @DslMarker
 @Target(AnnotationTarget.TYPE)
@@ -54,10 +53,6 @@ inline fun PreferenceGroup.switchPreference(block: (@DSL SwitchPreferenceCompat)
 
 inline fun PreferenceGroup.switchPreferenceCategory(block: (@DSL SwitchPreferenceCategory).() -> Unit): SwitchPreferenceCategory {
     return initThenAdd(SwitchPreferenceCategory(context), block)
-}
-
-inline fun PreferenceGroup.switchSettingsPreference(block: (@DSL SwitchSettingsPreference).() -> Unit): SwitchSettingsPreference {
-    return initThenAdd(SwitchSettingsPreference(context), block)
 }
 
 inline fun PreferenceGroup.checkBoxPreference(block: (@DSL CheckBoxPreference).() -> Unit): CheckBoxPreference {

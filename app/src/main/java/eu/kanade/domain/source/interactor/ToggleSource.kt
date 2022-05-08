@@ -9,12 +9,15 @@ class ToggleSource(
     private val preferences: PreferencesHelper,
 ) {
 
-    fun await(source: Source) {
-        val isEnabled = source.id.toString() !in preferences.disabledSources().get()
-        if (isEnabled) {
-            preferences.disabledSources() += source.id.toString()
+    fun await(source: Source, enable: Boolean = source.id.toString() in preferences.disabledSources().get()) {
+        await(source.id, enable)
+    }
+
+    fun await(sourceId: Long, enable: Boolean = sourceId.toString() in preferences.disabledSources().get()) {
+        if (enable) {
+            preferences.disabledSources() -= sourceId.toString()
         } else {
-            preferences.disabledSources() -= source.id.toString()
+            preferences.disabledSources() += sourceId.toString()
         }
     }
 }

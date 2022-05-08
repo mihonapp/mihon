@@ -6,7 +6,7 @@ import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
 import eu.kanade.domain.source.model.Pin
 import eu.kanade.domain.source.model.Source
-import eu.kanade.presentation.source.SourceUiModel
+import eu.kanade.presentation.browse.SourceUiModel
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import kotlinx.coroutines.flow.MutableStateFlow
