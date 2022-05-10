@@ -56,6 +56,7 @@ class AppUpdateChecker {
     private fun isNewVersion(versionTag: String): Boolean {
         // Removes prefixes like "r" or "v"
         val newVersion = versionTag.replace("[^\\d.]".toRegex(), "")
+        val oldVersion = BuildConfig.VERSION_NAME.replace("[^\\d.]".toRegex(), "")
 
         return if (BuildConfig.PREVIEW) {
             // Preview builds: based on releases in "tachiyomiorg/tachiyomi-preview" repo
@@ -64,7 +65,15 @@ class AppUpdateChecker {
         } else {
             // Release builds: based on releases in "tachiyomiorg/tachiyomi" repo
             // tagged as something like "v0.1.2"
-            newVersion != BuildConfig.VERSION_NAME
+            val newSemVer = newVersion.split(".").map { it.toInt() }
+            val oldSemVer = oldVersion.split(".").map { it.toInt() }
+
+            oldSemVer.mapIndexed { index, i ->
+                if (newSemVer[index] > i) {
+                    return true
+                }
+            }
+            false
         }
     }
 }
