@@ -9,7 +9,7 @@ animation = { module = "androidx.compose.animation:animation", version.ref="comp
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref="compose" }
 
 material3-core = "androidx.compose.material3:material3:1.0.0-alpha10"
-material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.7"
+material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.8"
 material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref="compose" }
 
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref="accompanist" }

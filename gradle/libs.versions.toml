@@ -23,7 +23,7 @@ flowreactivenetwork = "ru.beryukhov:flowreactivenetwork:1.0.4"
 okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_version" }
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
 okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
-okio = "com.squareup.okio:okio:3.0.0"
+okio = "com.squareup.okio:okio:3.1.0"
 
 conscrypt-android = "org.conscrypt:conscrypt-android:2.5.2"
 
@@ -35,7 +35,7 @@ jsoup = "org.jsoup:jsoup:1.14.3"
 
 disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:17bec43"
-junrar = "com.github.junrar:junrar:7.5.0"
+junrar = "com.github.junrar:junrar:7.5.1"
 
 sqlitektx = "androidx.sqlite:sqlite-ktx:2.3.0-alpha02"
 sqlite-android = "com.github.requery:sqlite-android:3.36.0"
@@ -81,7 +81,7 @@ flowbinding-viewpager = { module = "io.github.reactivecircus.flowbinding:flowbin
 logcat = "com.squareup.logcat:logcat:0.1"
 
 acra-http = "ch.acra:acra-http:5.9.1"
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:20.0.2"
+firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.0.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref ="aboutlib_version" }
