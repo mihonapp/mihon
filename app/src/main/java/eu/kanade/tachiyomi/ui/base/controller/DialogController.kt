@@ -97,7 +97,7 @@ abstract class DialogController : Controller {
     /**
      * Dismiss the dialog and pop this controller
      */
-    private fun dismissDialog() {
+    fun dismissDialog() {
         if (dismissed) {
             return
         }
