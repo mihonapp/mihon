@@ -17,13 +17,17 @@ class AddDuplicateMangaDialog<T>(bundle: Bundle? = null) : DialogController(bund
     private val sourceManager: SourceManager by injectLazy()
 
     private lateinit var libraryManga: Manga
-    private lateinit var newManga: Manga
+    private lateinit var onAddToLibrary: () -> Unit
 
-    constructor(target: T, libraryManga: Manga, newManga: Manga) : this() {
+    constructor(
+        target: T,
+        libraryManga: Manga,
+        onAddToLibrary: () -> Unit,
+    ) : this() {
         targetController = target
 
         this.libraryManga = libraryManga
-        this.newManga = newManga
+        this.onAddToLibrary = onAddToLibrary
     }
 
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {
@@ -32,7 +36,7 @@ class AddDuplicateMangaDialog<T>(bundle: Bundle? = null) : DialogController(bund
         return MaterialAlertDialogBuilder(activity!!)
             .setMessage(activity?.getString(R.string.confirm_manga_add_duplicate, source.name))
             .setPositiveButton(activity?.getString(R.string.action_add)) { _, _ ->
-                (targetController as? Listener)?.addToLibrary(newManga)
+                onAddToLibrary()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .setNeutralButton(activity?.getString(R.string.action_show_manga)) { _, _ ->

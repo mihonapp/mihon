@@ -521,7 +521,8 @@ class MangaController :
         } else {
             val duplicateManga = presenter.getDuplicateLibraryManga(manga)
             if (duplicateManga != null) {
-                AddDuplicateMangaDialog(this, duplicateManga, manga).showDialog(router)
+                AddDuplicateMangaDialog(this, duplicateManga) { addToLibrary(manga) }
+                    .showDialog(router)
             } else {
                 addToLibrary(manga)
             }

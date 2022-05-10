@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.updater
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -26,12 +27,13 @@ internal class AppUpdateNotifier(private val context: Context) {
         context.notificationManager.notify(id, build())
     }
 
+    @SuppressLint("LaunchActivityFromNotification")
     fun promptUpdate(release: GithubRelease) {
         val intent = Intent(context, AppUpdateService::class.java).apply {
             putExtra(AppUpdateService.EXTRA_DOWNLOAD_URL, release.getDownloadLink())
             putExtra(AppUpdateService.EXTRA_DOWNLOAD_TITLE, release.version)
         }
-        val updateIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val updateIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val releaseIntent = Intent(Intent.ACTION_VIEW, release.releaseLink.toUri()).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP

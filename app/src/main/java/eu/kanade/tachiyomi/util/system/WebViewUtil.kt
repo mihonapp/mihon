@@ -11,7 +11,7 @@ import logcat.LogPriority
 object WebViewUtil {
     const val SPOOF_PACKAGE_NAME = "org.chromium.chrome"
 
-    const val MINIMUM_WEBVIEW_VERSION = 98
+    const val MINIMUM_WEBVIEW_VERSION = 99
 
     fun supportsWebView(context: Context): Boolean {
         try {
