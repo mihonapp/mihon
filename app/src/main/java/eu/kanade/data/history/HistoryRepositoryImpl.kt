@@ -11,7 +11,7 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.util.system.logcat
 
 class HistoryRepositoryImpl(
-    private val handler: DatabaseHandler
+    private val handler: DatabaseHandler,
 ) : HistoryRepository {
 
     override fun getHistory(query: String): PagingSource<Long, HistoryWithRelations> {
@@ -20,7 +20,7 @@ class HistoryRepositoryImpl(
             transacter = { historyViewQueries },
             queryProvider = { limit, offset ->
                 historyViewQueries.history(query, limit, offset, historyWithRelationsMapper)
-            }
+            },
         )
     }
 

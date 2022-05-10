@@ -28,7 +28,7 @@ class SearchController(
     constructor(mangaId: Long) : this(
         Injekt.get<DatabaseHelper>()
             .getManga(mangaId)
-            .executeAsBlocking()
+            .executeAsBlocking(),
     )
 
     private var newManga: Manga? = null

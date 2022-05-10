@@ -13,7 +13,7 @@ data class Source(
     val name: String,
     val supportsLatest: Boolean,
     val pin: Pins = Pins.unpinned,
-    val isUsedLast: Boolean = false
+    val isUsedLast: Boolean = false,
 ) {
 
     val nameWithLanguage: String

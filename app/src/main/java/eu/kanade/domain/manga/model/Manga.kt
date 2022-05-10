@@ -17,7 +17,7 @@ data class Manga(
     val genre: List<String>?,
     val status: Long,
     val thumbnailUrl: String?,
-    val initialized: Boolean
+    val initialized: Boolean,
 ) {
 
     val sorting: Long

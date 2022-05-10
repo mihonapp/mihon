@@ -30,8 +30,8 @@ class MigrationSourcesController : ComposeController<MigrationSourcesPresenter>(
                 parentController!!.router.pushController(
                     MigrationMangaController(
                         source.id,
-                        source.name
-                    )
+                        source.name,
+                    ),
                 )
             },
             onLongClickItem = { source ->
@@ -51,12 +51,14 @@ class MigrationSourcesController : ComposeController<MigrationSourcesPresenter>(
                 true
             }
             R.id.asc_alphabetical,
-            R.id.desc_alphabetical -> {
+            R.id.desc_alphabetical,
+-> {
                 presenter.setAlphabeticalSorting(itemId == R.id.asc_alphabetical)
                 true
             }
             R.id.asc_count,
-            R.id.desc_count -> {
+            R.id.desc_count,
+-> {
                 presenter.setTotalSorting(itemId == R.id.asc_count)
                 true
             }

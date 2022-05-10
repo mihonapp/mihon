@@ -8,12 +8,12 @@ import eu.kanade.domain.history.repository.HistoryRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetHistory(
-    private val repository: HistoryRepository
+    private val repository: HistoryRepository,
 ) {
 
     fun subscribe(query: String): Flow<PagingData<HistoryWithRelations>> {
         return Pager(
-            PagingConfig(pageSize = 25)
+            PagingConfig(pageSize = 25),
         ) {
             repository.getHistory(query)
         }.flow

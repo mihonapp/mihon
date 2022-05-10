@@ -20,7 +20,7 @@ class SourceFilterPresenter(
     private val getLanguagesWithSources: GetLanguagesWithSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
     private val toggleLanguage: ToggleLanguage = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get()
+    private val preferences: PreferencesHelper = Injekt.get(),
 ) : BasePresenter<SourceFilterController>() {
 
     private val _state: MutableStateFlow<SourceFilterState> = MutableStateFlow(SourceFilterState.Loading)
@@ -49,7 +49,7 @@ class SourceFilterPresenter(
             header + it.value.map { source ->
                 FilterUiModel.Item(
                     source,
-                    source.id.toString() !in preferences.disabledSources().get()
+                    source.id.toString() !in preferences.disabledSources().get(),
                 )
             }
         }

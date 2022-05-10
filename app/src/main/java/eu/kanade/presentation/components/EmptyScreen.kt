@@ -29,7 +29,7 @@ fun EmptyScreen(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         AndroidView(
             factory = { context ->

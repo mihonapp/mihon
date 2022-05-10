@@ -5,5 +5,5 @@ import java.util.Date
 data class History(
     val id: Long?,
     val chapterId: Long,
-    val readAt: Date?
+    val readAt: Date?,
 )

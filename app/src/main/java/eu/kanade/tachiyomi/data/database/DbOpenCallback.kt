@@ -26,7 +26,7 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(Database.Schema.version)
             Database.Schema.migrate(
                 driver = AndroidSqliteDriver(database = db, cacheSize = 1),
                 oldVersion = oldVersion,
-                newVersion = newVersion
+                newVersion = newVersion,
             )
         }
     }

@@ -8,7 +8,7 @@ val sourceMapper: (eu.kanade.tachiyomi.source.Source) -> Source = { source ->
         source.id,
         source.lang,
         source.name,
-        false
+        false,
     )
 }
 

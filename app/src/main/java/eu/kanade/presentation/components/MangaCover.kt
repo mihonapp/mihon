@@ -23,7 +23,7 @@ enum class MangaCover(private val ratio: Float) {
         modifier: Modifier = Modifier,
         data: String?,
         contentDescription: String? = null,
-        shape: Shape? = null
+        shape: Shape? = null,
     ) {
         AsyncImage(
             model = data,

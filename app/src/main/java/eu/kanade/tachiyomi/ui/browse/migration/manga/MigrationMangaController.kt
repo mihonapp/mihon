@@ -42,7 +42,7 @@ class MigrationMangaController : ComposeController<MigrationMangaPresenter> {
             },
             onClickCover = {
                 router.pushController(MangaController(it.id))
-            }
+            },
         )
     }
 

@@ -31,7 +31,7 @@ fun SourceFilterScreen(
     nestedScrollInterop: NestedScrollConnection,
     presenter: SourceFilterPresenter,
     onClickLang: (String) -> Unit,
-    onClickSource: (Source) -> Unit
+    onClickSource: (Source) -> Unit,
 ) {
     val state by presenter.state.collectAsState()
 
@@ -53,7 +53,7 @@ fun SourceFilterContent(
     nestedScrollInterop: NestedScrollConnection,
     items: List<FilterUiModel>,
     onClickLang: (String) -> Unit,
-    onClickSource: (Source) -> Unit
+    onClickSource: (Source) -> Unit,
 ) {
     if (items.isEmpty()) {
         EmptyScreen(textResource = R.string.source_filter_empty_screen)
@@ -76,7 +76,7 @@ fun SourceFilterContent(
                     is FilterUiModel.Header -> it.hashCode()
                     is FilterUiModel.Item -> it.source.key()
                 }
-            }
+            },
         ) { model ->
             when (model) {
                 is FilterUiModel.Header -> {
@@ -84,14 +84,14 @@ fun SourceFilterContent(
                         modifier = Modifier.animateItemPlacement(),
                         language = model.language,
                         isEnabled = model.isEnabled,
-                        onClickItem = onClickLang
+                        onClickItem = onClickLang,
                     )
                 }
                 is FilterUiModel.Item -> SourceFilterItem(
                     modifier = Modifier.animateItemPlacement(),
                     source = model.source,
                     isEnabled = model.isEnabled,
-                    onClickItem = onClickSource
+                    onClickItem = onClickSource,
                 )
             }
         }
@@ -103,7 +103,7 @@ fun SourceFilterHeader(
     modifier: Modifier,
     language: String,
     isEnabled: Boolean,
-    onClickItem: (String) -> Unit
+    onClickItem: (String) -> Unit,
 ) {
     PreferenceRow(
         modifier = modifier,
@@ -120,7 +120,7 @@ fun SourceFilterItem(
     modifier: Modifier,
     source: Source,
     isEnabled: Boolean,
-    onClickItem: (Source) -> Unit
+    onClickItem: (Source) -> Unit,
 ) {
     BaseSourceItem(
         modifier = modifier,
@@ -129,6 +129,6 @@ fun SourceFilterItem(
         onClickItem = { onClickItem(source) },
         action = {
             Checkbox(checked = isEnabled, onCheckedChange = null)
-        }
+        },
     )
 }

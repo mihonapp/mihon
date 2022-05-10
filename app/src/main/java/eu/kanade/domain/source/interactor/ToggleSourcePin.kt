@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
 
 class ToggleSourcePin(
-    private val preferences: PreferencesHelper
+    private val preferences: PreferencesHelper,
 ) {
 
     fun await(source: Source) {

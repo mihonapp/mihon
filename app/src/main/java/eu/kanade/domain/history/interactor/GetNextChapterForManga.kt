@@ -4,7 +4,7 @@ import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.history.repository.HistoryRepository
 
 class GetNextChapterForManga(
-    private val repository: HistoryRepository
+    private val repository: HistoryRepository,
 ) {
 
     suspend fun await(mangaId: Long, chapterId: Long): Chapter? {

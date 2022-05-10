@@ -16,7 +16,7 @@ import uy.kohesive.injekt.api.get
 
 class MigrationSourcesPresenter(
     private val getSourcesWithFavoriteCount: GetSourcesWithFavoriteCount = Injekt.get(),
-    private val setMigrateSorting: SetMigrateSorting = Injekt.get()
+    private val setMigrateSorting: SetMigrateSorting = Injekt.get(),
 ) : BasePresenter<MigrationSourcesController>() {
 
     private val _state: MutableStateFlow<MigrateSourceState> = MutableStateFlow(MigrateSourceState.Loading)

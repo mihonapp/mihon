@@ -32,10 +32,10 @@ fun BaseSourceItem(
         modifier = modifier
             .combinedClickable(
                 onClick = onClickItem,
-                onLongClick = onLongClickItem
+                onLongClick = onLongClickItem,
             )
             .padding(horizontal = horizontalPadding, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         icon.invoke(this, source)
         content.invoke(this, source, showLanguageInContent)
@@ -51,20 +51,20 @@ private val defaultContent: @Composable RowScope.(Source, Boolean) -> Unit = { s
     Column(
         modifier = Modifier
             .padding(horizontal = horizontalPadding)
-            .weight(1f)
+            .weight(1f),
     ) {
         Text(
             text = source.name,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
         if (showLanguageInContent) {
             Text(
                 text = LocaleHelper.getDisplayName(source.lang),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
             )
         }
     }

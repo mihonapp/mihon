@@ -25,7 +25,7 @@ fun MigrateMangaScreen(
     nestedScrollInterop: NestedScrollConnection,
     presenter: MigrationMangaPresenter,
     onClickItem: (Manga) -> Unit,
-    onClickCover: (Manga) -> Unit
+    onClickCover: (Manga) -> Unit,
 ) {
     val state by presenter.state.collectAsState()
 
@@ -48,7 +48,7 @@ fun MigrateMangaContent(
     nestedScrollInterop: NestedScrollConnection,
     list: List<Manga>,
     onClickItem: (Manga) -> Unit,
-    onClickCover: (Manga) -> Unit
+    onClickCover: (Manga) -> Unit,
 ) {
     if (list.isEmpty()) {
         EmptyScreen(textResource = R.string.migrate_empty_screen)
@@ -62,7 +62,7 @@ fun MigrateMangaContent(
             MigrateMangaItem(
                 manga = manga,
                 onClickItem = onClickItem,
-                onClickCover = onClickCover
+                onClickCover = onClickCover,
             )
         }
     }
@@ -73,12 +73,12 @@ fun MigrateMangaItem(
     modifier: Modifier = Modifier,
     manga: Manga,
     onClickItem: (Manga) -> Unit,
-    onClickCover: (Manga) -> Unit
+    onClickCover: (Manga) -> Unit,
 ) {
     BaseMangaListItem(
         modifier = modifier,
         manga = manga,
         onClickItem = { onClickItem(manga) },
-        onClickCover = { onClickCover(manga) }
+        onClickCover = { onClickCover(manga) },
     )
 }

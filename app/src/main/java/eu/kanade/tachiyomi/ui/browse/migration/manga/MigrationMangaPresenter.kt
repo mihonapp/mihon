@@ -15,7 +15,7 @@ import uy.kohesive.injekt.api.get
 
 class MigrationMangaPresenter(
     private val sourceId: Long,
-    private val getFavoritesBySourceId: GetFavoritesBySourceId = Injekt.get()
+    private val getFavoritesBySourceId: GetFavoritesBySourceId = Injekt.get(),
 ) : BasePresenter<MigrationMangaController>() {
 
     private val _state: MutableStateFlow<MigrateMangaState> = MutableStateFlow(MigrateMangaState.Loading)

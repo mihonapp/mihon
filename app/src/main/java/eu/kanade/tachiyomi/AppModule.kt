@@ -43,7 +43,7 @@ class AppModule(val app: Application) : InjektModule {
                     .callback(DbOpenCallback())
                     .name(DbOpenCallback.DATABASE_NAME)
                     .noBackupDirectory(false)
-                    .build()
+                    .build(),
             )
         }
 
@@ -56,11 +56,11 @@ class AppModule(val app: Application) : InjektModule {
                 driver = get(),
                 historyAdapter = History.Adapter(
                     history_last_readAdapter = dateAdapter,
-                    history_time_readAdapter = dateAdapter
+                    history_time_readAdapter = dateAdapter,
                 ),
                 mangasAdapter = Mangas.Adapter(
-                    genreAdapter = listOfStringsAdapter
-                )
+                    genreAdapter = listOfStringsAdapter,
+                ),
             )
         }
 

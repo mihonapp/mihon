@@ -5,7 +5,7 @@ import eu.kanade.domain.manga.repository.MangaRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetFavoritesBySourceId(
-    private val mangaRepository: MangaRepository
+    private val mangaRepository: MangaRepository,
 ) {
 
     fun subscribe(sourceId: Long): Flow<List<Manga>> {

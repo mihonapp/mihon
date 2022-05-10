@@ -12,5 +12,5 @@ data class Chapter(
     val name: String,
     val dateUpload: Long,
     val chapterNumber: Float,
-    val scanlator: String?
+    val scanlator: String?,
 )

@@ -6,7 +6,7 @@ import eu.kanade.domain.manga.repository.MangaRepository
 import kotlinx.coroutines.flow.Flow
 
 class MangaRepositoryImpl(
-    private val databaseHandler: DatabaseHandler
+    private val databaseHandler: DatabaseHandler,
 ) : MangaRepository {
 
     override fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>> {

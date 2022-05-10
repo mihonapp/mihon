@@ -12,17 +12,17 @@ interface DatabaseHandler {
 
     suspend fun <T : Any> awaitList(
         inTransaction: Boolean = false,
-        block: suspend Database.() -> Query<T>
+        block: suspend Database.() -> Query<T>,
     ): List<T>
 
     suspend fun <T : Any> awaitOne(
         inTransaction: Boolean = false,
-        block: suspend Database.() -> Query<T>
+        block: suspend Database.() -> Query<T>,
     ): T
 
     suspend fun <T : Any> awaitOneOrNull(
         inTransaction: Boolean = false,
-        block: suspend Database.() -> Query<T>
+        block: suspend Database.() -> Query<T>,
     ): T?
 
     fun <T : Any> subscribeToList(block: Database.() -> Query<T>): Flow<List<T>>
@@ -34,6 +34,6 @@ interface DatabaseHandler {
     fun <T : Any> subscribeToPagingSource(
         countQuery: Database.() -> Query<Long>,
         transacter: Database.() -> Transacter,
-        queryProvider: Database.(Long, Long) -> Query<T>
+        queryProvider: Database.(Long, Long) -> Query<T>,
     ): PagingSource<Long, T>
 }

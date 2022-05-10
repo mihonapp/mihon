@@ -56,7 +56,7 @@ fun PreferenceRow(
                 onLongClick = onLongClick,
                 onClick = onClick,
             ),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (painter != null) {
             Icon(
@@ -71,7 +71,7 @@ fun PreferenceRow(
         Column(
             Modifier
                 .padding(horizontal = horizontalPadding)
-                .weight(1f)
+                .weight(1f),
         ) {
             Text(
                 text = title,

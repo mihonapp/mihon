@@ -105,13 +105,13 @@ fun SourceList(
                     is SourceUiModel.Header -> it.hashCode()
                     is SourceUiModel.Item -> it.source.key()
                 }
-            }
+            },
         ) { model ->
             when (model) {
                 is SourceUiModel.Header -> {
                     SourceHeader(
                         modifier = Modifier.animateItemPlacement(),
-                        language = model.language
+                        language = model.language,
                     )
                 }
                 is SourceUiModel.Item -> SourceItem(
@@ -139,7 +139,7 @@ fun SourceList(
                 onClickDisable(sourceState)
                 setSourceState(null)
             },
-            onDismiss = { setSourceState(null) }
+            onDismiss = { setSourceState(null) },
         )
     }
 }
@@ -147,14 +147,14 @@ fun SourceList(
 @Composable
 fun SourceHeader(
     modifier: Modifier = Modifier,
-    language: String
+    language: String,
 ) {
     val context = LocalContext.current
     Text(
         text = LocaleHelper.getSourceDisplayName(language, context),
         modifier = modifier
             .padding(horizontal = horizontalPadding, vertical = 8.dp),
-        style = MaterialTheme.typography.header
+        style = MaterialTheme.typography.header,
     )
 }
 
@@ -165,7 +165,7 @@ fun SourceItem(
     onClickItem: (Source) -> Unit,
     onLongClickItem: (Source) -> Unit,
     onClickLatest: (Source) -> Unit,
-    onClickPin: (Source) -> Unit
+    onClickPin: (Source) -> Unit,
 ) {
     BaseSourceItem(
         modifier = modifier,
@@ -178,14 +178,14 @@ fun SourceItem(
                     Text(
                         text = stringResource(id = R.string.latest),
                         style = LocalTextStyle.current.copy(
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                            color = MaterialTheme.colorScheme.primary,
+                        ),
                     )
                 }
             }
             SourcePinButton(
                 isPinned = Pin.Pinned in source.pin,
-                onClick = { onClickPin(source) }
+                onClick = { onClickPin(source) },
             )
         },
     )
@@ -193,7 +193,7 @@ fun SourceItem(
 
 @Composable
 fun SourceIcon(
-    source: Source
+    source: Source,
 ) {
     val icon = source.icon
     val modifier = Modifier
@@ -217,7 +217,7 @@ fun SourceIcon(
 @Composable
 fun SourcePinButton(
     isPinned: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val icon = if (isPinned) Icons.Filled.PushPin else Icons.Outlined.PushPin
     val tint = if (isPinned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
@@ -225,7 +225,7 @@ fun SourcePinButton(
         Icon(
             imageVector = icon,
             contentDescription = "",
-            tint = tint
+            tint = tint,
         )
     }
 }
@@ -249,7 +249,7 @@ fun SourceOptionsDialog(
                     modifier = Modifier
                         .clickable(onClick = onClickPin)
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp)
+                        .padding(vertical = 16.dp),
                 )
                 if (source.id != LocalSource.ID) {
                     Text(
@@ -257,7 +257,7 @@ fun SourceOptionsDialog(
                         modifier = Modifier
                             .clickable(onClick = onClickDisable)
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp)
+                            .padding(vertical = 16.dp),
                     )
                 }
             }

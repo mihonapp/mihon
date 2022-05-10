@@ -25,7 +25,7 @@ import java.util.TreeMap
 class SourcePresenter(
     private val getEnabledSources: GetEnabledSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
-    private val toggleSourcePin: ToggleSourcePin = Injekt.get()
+    private val toggleSourcePin: ToggleSourcePin = Injekt.get(),
 ) : BasePresenter<SourceController>() {
 
     private val _state: MutableStateFlow<SourceState> = MutableStateFlow(SourceState.Loading)

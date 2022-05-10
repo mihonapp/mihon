@@ -70,7 +70,7 @@ fun MigrateSourceList(
                 modifier = Modifier
                     .animateItemPlacement()
                     .padding(horizontal = horizontalPadding, vertical = 8.dp),
-                style = MaterialTheme.typography.header
+                style = MaterialTheme.typography.header,
             )
         }
 
@@ -78,14 +78,14 @@ fun MigrateSourceList(
             items = list,
             key = { (source, _) ->
                 source.id
-            }
+            },
         ) { (source, count) ->
             MigrateSourceItem(
                 modifier = Modifier.animateItemPlacement(),
                 source = source,
                 count = count,
                 onClickItem = { onClickItem(source) },
-                onLongClickItem = { onLongClickItem(source) }
+                onLongClickItem = { onLongClickItem(source) },
             )
         }
     }

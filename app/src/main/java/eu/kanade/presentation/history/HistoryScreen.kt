@@ -88,7 +88,7 @@ fun HistoryContent(
     onClickResume: (HistoryWithRelations) -> Unit,
     onClickDelete: (HistoryWithRelations, Boolean) -> Unit,
     preferences: PreferencesHelper = Injekt.get(),
-    nestedScroll: NestedScrollConnection
+    nestedScroll: NestedScrollConnection,
 ) {
     if (history.loadState.refresh is LoadState.Loading) {
         LoadingScreen()
@@ -118,7 +118,7 @@ fun HistoryContent(
                             .animateItemPlacement(),
                         date = item.date,
                         relativeTime = relativeTime,
-                        dateFormat = dateFormat
+                        dateFormat = dateFormat,
                     )
                 }
                 is HistoryUiModel.Item -> {
@@ -142,7 +142,7 @@ fun HistoryContent(
                 onClickDelete(removeState, all)
                 setRemoveState(null)
             },
-            onNegative = { setRemoveState(null) }
+            onNegative = { setRemoveState(null) },
         )
     }
 }
@@ -160,12 +160,12 @@ fun HistoryHeader(
         text = date.toRelativeString(
             LocalContext.current,
             relativeTime,
-            dateFormat
+            dateFormat,
         ),
         style = MaterialTheme.typography.bodyMedium.copy(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.SemiBold,
-        )
+        ),
     )
 }
 
@@ -200,7 +200,7 @@ fun HistoryItem(
                 text = history.title,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                style = textStyle.copy(fontWeight = FontWeight.SemiBold)
+                style = textStyle.copy(fontWeight = FontWeight.SemiBold),
             )
             Row {
                 Text(
@@ -232,7 +232,7 @@ fun HistoryItem(
 @Composable
 fun RemoveHistoryDialog(
     onPositive: (Boolean) -> Unit,
-    onNegative: () -> Unit
+    onNegative: () -> Unit,
 ) {
     val (removeEverything, removeEverythingState) = remember { mutableStateOf(false) }
 
@@ -250,9 +250,9 @@ fun RemoveHistoryDialog(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
                             value = removeEverything,
-                            onValueChange = removeEverythingState
+                            onValueChange = removeEverythingState,
                         ),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Checkbox(
                         checked = removeEverything,
@@ -260,7 +260,7 @@ fun RemoveHistoryDialog(
                     )
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
-                        text = stringResource(id = R.string.dialog_with_checkbox_reset)
+                        text = stringResource(id = R.string.dialog_with_checkbox_reset),
                     )
                 }
             }

@@ -33,7 +33,7 @@ fun BaseMangaListItem(
             .clickable(onClick = onClickItem)
             .height(56.dp)
             .padding(horizontal = horizontalPadding),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         cover()
         content()
@@ -47,7 +47,7 @@ private val defaultCover: @Composable RowScope.(Manga, () -> Unit) -> Unit = { m
             .padding(vertical = 8.dp)
             .clickable(onClick = onClick)
             .fillMaxHeight(),
-        data = manga.thumbnailUrl
+        data = manga.thumbnailUrl,
     )
 }
 
@@ -59,7 +59,7 @@ private val defaultContent: @Composable RowScope.(Manga) -> Unit = {
                 .padding(start = horizontalPadding),
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
