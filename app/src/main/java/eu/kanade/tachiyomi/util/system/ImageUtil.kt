@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.BitmapRegionDecoder
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -16,14 +17,18 @@ import androidx.core.graphics.blue
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import com.hippo.unifile.UniFile
 import tachiyomi.decoder.Format
 import tachiyomi.decoder.ImageDecoder
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.URLConnection
 import kotlin.math.abs
+import kotlin.math.min
 
 object ImageUtil {
 
@@ -67,8 +72,7 @@ object ImageUtil {
                 Format.Webp -> type.isAnimated && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                 else -> false
             }
-        } catch (e: Exception) {
-        }
+        } catch (e: Exception) { /* Do Nothing */ }
         return false
     }
 
@@ -106,18 +110,7 @@ object ImageUtil {
      */
     fun isWideImage(imageStream: BufferedInputStream): Boolean {
         val options = extractImageOptions(imageStream)
-        imageStream.reset()
         return options.outWidth > options.outHeight
-    }
-
-    /**
-     * Check whether the image is considered a tall image.
-     *
-     * @return true if the height:width ratio is greater than 3.
-     */
-    fun isTallImage(imageStream: InputStream): Boolean {
-        val options = extractImageOptions(imageStream)
-        return (options.outHeight / options.outWidth) > 3
     }
 
     /**
@@ -181,6 +174,70 @@ object ImageUtil {
 
     enum class Side {
         RIGHT, LEFT
+    }
+
+    /**
+     * Check whether the image is considered a tall image.
+     *
+     * @return true if the height:width ratio is greater than 3.
+     */
+    fun isTallImage(imageStream: InputStream): Boolean {
+        val options = extractImageOptions(imageStream, false)
+        return (options.outHeight / options.outWidth) > 3
+    }
+
+    /**
+     * Splits tall images to improve performance of reader
+     */
+    fun splitTallImage(imageFile: UniFile, imageFilePath: String) {
+        if (isAnimatedAndSupported(imageFile.openInputStream()) || !isTallImage(imageFile.openInputStream())) {
+            return
+        }
+
+        val options = extractImageOptions(imageFile.openInputStream(), false).apply { inJustDecodeBounds = false }
+        // Values are stored as they get modified during split loop
+        val imageHeight = options.outHeight
+        val imageWidth = options.outWidth
+
+        val splitHeight = getDisplayHeightInPx
+        // -1 so it doesn't try to split when imageHeight = getDisplayHeightInPx
+        val partCount = (imageHeight - 1) / getDisplayHeightInPx + 1
+
+        logcat { "Splitting ${imageHeight}px height image into $partCount part with estimated ${splitHeight}px per height" }
+
+        val bitmapRegionDecoder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            BitmapRegionDecoder.newInstance(imageFile.openInputStream())
+        } else {
+            @Suppress("DEPRECATION")
+            BitmapRegionDecoder.newInstance(imageFile.openInputStream(), false)
+        }
+
+        try {
+            (0 until partCount).forEach { splitIndex ->
+                val splitPath = imageFilePath.substringBeforeLast(".") + "__${"%03d".format(splitIndex + 1)}.jpg"
+
+                val topOffset = splitIndex * splitHeight
+                val outputImageHeight = min(splitHeight, imageHeight - topOffset)
+                val bottomOffset = topOffset + outputImageHeight
+                logcat { "Split #$splitIndex with topOffset=$topOffset height=$outputImageHeight bottomOffset=$bottomOffset" }
+
+                val region = Rect(0, topOffset, imageWidth, bottomOffset)
+
+                FileOutputStream(splitPath).use { outputStream ->
+                    val splitBitmap = bitmapRegionDecoder!!.decodeRegion(region, options)
+                    splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                }
+            }
+            imageFile.delete()
+        } catch (e: Exception) {
+            // Image splits were not successfully saved so delete them and keep the original image
+            (0 until partCount)
+                .map { imageFile.filePath!!.substringBeforeLast(".") + "__${"%03d".format(it + 1)}.jpg" }
+                .forEach { File(it).delete() }
+            throw e
+        } finally {
+            bitmapRegionDecoder?.recycle()
+        }
     }
 
     /**
@@ -401,12 +458,13 @@ object ImageUtil {
     /**
      * Used to check an image's dimensions without loading it in the memory.
      */
-    private fun extractImageOptions(imageStream: InputStream): BitmapFactory.Options {
+    private fun extractImageOptions(imageStream: InputStream, resetAfterExtraction: Boolean = true): BitmapFactory.Options {
         imageStream.mark(imageStream.available() + 1)
 
         val imageBytes = imageStream.readBytes()
         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
+        if (resetAfterExtraction) imageStream.reset()
         return options
     }
 }

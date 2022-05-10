@@ -162,6 +162,9 @@ fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermissio
     }
 }
 
+val getDisplayHeightInPx: Int
+    get() = Resources.getSystem().displayMetrics.heightPixels
+
 /**
  * Converts to dp.
  */
