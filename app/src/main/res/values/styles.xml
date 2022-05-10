@@ -192,6 +192,8 @@
     <style name="Widget.Tachiyomi.Slider" parent="Widget.Material3.Slider">
         <item name="labelBehavior">gone</item>
         <item name="tickVisible">false</item>
+        <item name="trackColorInactive">@color/slider_inactive_track</item>
+        <item name="trackColorActive">@color/slider_active_track</item>
     </style>
 
 
