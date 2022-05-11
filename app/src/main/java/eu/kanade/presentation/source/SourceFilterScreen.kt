@@ -37,7 +37,7 @@ fun SourceFilterScreen(
 
     when (state) {
         is SourceFilterState.Loading -> LoadingScreen()
-        is SourceFilterState.Error -> Text(text = (state as SourceFilterState.Error).error!!.message!!)
+        is SourceFilterState.Error -> Text(text = (state as SourceFilterState.Error).error.message!!)
         is SourceFilterState.Success ->
             SourceFilterContent(
                 nestedScrollInterop = nestedScrollInterop,

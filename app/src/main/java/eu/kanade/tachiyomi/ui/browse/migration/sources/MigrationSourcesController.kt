@@ -52,13 +52,13 @@ class MigrationSourcesController : ComposeController<MigrationSourcesPresenter>(
             }
             R.id.asc_alphabetical,
             R.id.desc_alphabetical,
--> {
+            -> {
                 presenter.setAlphabeticalSorting(itemId == R.id.asc_alphabetical)
                 true
             }
             R.id.asc_count,
             R.id.desc_count,
--> {
+            -> {
                 presenter.setTotalSorting(itemId == R.id.asc_count)
                 true
             }

@@ -91,7 +91,8 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
                     currentAnimator = null
                     postInvalidate()
                 }
-            },)
+            },
+            )
     }
 
     internal class SavedState : AbsSavedState {

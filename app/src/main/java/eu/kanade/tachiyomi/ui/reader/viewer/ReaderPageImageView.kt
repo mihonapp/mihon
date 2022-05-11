@@ -249,6 +249,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             ZoomStartPosition.LEFT -> setScaleAndCenter(scale, PointF(0F, 0F))
             ZoomStartPosition.RIGHT -> setScaleAndCenter(scale, PointF(sWidth.toFloat(), 0F))
             ZoomStartPosition.CENTER -> setScaleAndCenter(scale, center.also { it?.y = 0F })
+            null -> {}
         }
     }
 
