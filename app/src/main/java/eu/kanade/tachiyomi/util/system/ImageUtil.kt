@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import androidx.annotation.ColorInt
 import androidx.core.graphics.alpha
 import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.blue
@@ -446,19 +447,22 @@ object ImageUtil {
         )
     }
 
-    private fun Int.isDark(): Boolean =
+    private fun @receiver:ColorInt Int.isDark(): Boolean =
         red < 40 && blue < 40 && green < 40 && alpha > 200
 
-    private fun Int.isCloseTo(other: Int): Boolean =
+    private fun @receiver:ColorInt Int.isCloseTo(other: Int): Boolean =
         abs(red - other.red) < 30 && abs(green - other.green) < 30 && abs(blue - other.blue) < 30
 
-    private fun Int.isWhite(): Boolean =
+    private fun @receiver:ColorInt Int.isWhite(): Boolean =
         red + blue + green > 740
 
     /**
      * Used to check an image's dimensions without loading it in the memory.
      */
-    private fun extractImageOptions(imageStream: InputStream, resetAfterExtraction: Boolean = true): BitmapFactory.Options {
+    private fun extractImageOptions(
+        imageStream: InputStream,
+        resetAfterExtraction: Boolean = true,
+    ): BitmapFactory.Options {
         imageStream.mark(imageStream.available() + 1)
 
         val imageBytes = imageStream.readBytes()

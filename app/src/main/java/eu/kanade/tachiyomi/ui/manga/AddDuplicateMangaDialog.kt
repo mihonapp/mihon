@@ -11,8 +11,7 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import uy.kohesive.injekt.injectLazy
 
-class AddDuplicateMangaDialog<T>(bundle: Bundle? = null) : DialogController(bundle)
-    where T : Controller, T : AddDuplicateMangaDialog.Listener {
+class AddDuplicateMangaDialog(bundle: Bundle? = null) : DialogController(bundle) {
 
     private val sourceManager: SourceManager by injectLazy()
 
@@ -20,7 +19,7 @@ class AddDuplicateMangaDialog<T>(bundle: Bundle? = null) : DialogController(bund
     private lateinit var onAddToLibrary: () -> Unit
 
     constructor(
-        target: T,
+        target: Controller,
         libraryManga: Manga,
         onAddToLibrary: () -> Unit,
     ) : this() {
@@ -45,9 +44,5 @@ class AddDuplicateMangaDialog<T>(bundle: Bundle? = null) : DialogController(bund
             }
             .setCancelable(true)
             .create()
-    }
-
-    interface Listener {
-        fun addToLibrary(newManga: Manga)
     }
 }

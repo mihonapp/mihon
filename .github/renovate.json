@@ -7,6 +7,7 @@
     "androidx.core:core-splashscreen",
     "androidx.work:work-runtime-ktx",
     "info.android15.nucleus:nucleus-support-v7",
-    "info.android15.nucleus:nucleus"
+    "info.android15.nucleus:nucleus",
+    "com.google.guava:guava"
   ]
 }
