@@ -89,7 +89,7 @@ class DownloadHolder(private val view: View, val adapter: DownloadAdapter) :
         view.popupMenu(
             menuRes = R.menu.download_single,
             initMenu = {
-                findItem(R.id.move_to_top).isVisible = bindingAdapterPosition != 0
+                findItem(R.id.move_to_top).isVisible = bindingAdapterPosition > 1
                 findItem(R.id.move_to_bottom).isVisible =
                     bindingAdapterPosition != adapter.itemCount - 1
             },
