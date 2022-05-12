@@ -1,5 +1,5 @@
 [versions]
-kotlin_version = "1.6.20"
+kotlin_version = "1.6.21"
 coroutines_version = "1.6.1"
 serialization_version = "1.3.2"
 
@@ -16,8 +16,7 @@ serialization-gradle = { module = "org.jetbrains.kotlin:kotlin-serialization", v
 
 [bundles]
 coroutines = ["coroutines-core", "coroutines-android"]
-serialization = ["serialization-json","serialization-protobuf"]
+serialization = ["serialization-json", "serialization-protobuf"]
 
 [plugins]
-
 android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version"}

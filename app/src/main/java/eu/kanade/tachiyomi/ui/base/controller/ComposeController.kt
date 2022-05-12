@@ -30,7 +30,7 @@ abstract class ComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
             consumeWindowInsets = false
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val nestedScrollInterop = rememberNestedScrollInteropConnection(binding.root)
+                val nestedScrollInterop = rememberNestedScrollInteropConnection()
                 TachiyomiTheme {
                     ComposeContent(nestedScrollInterop)
                 }
@@ -56,7 +56,7 @@ abstract class BasicComposeController :
             consumeWindowInsets = false
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val nestedScrollInterop = rememberNestedScrollInteropConnection(binding.root)
+                val nestedScrollInterop = rememberNestedScrollInteropConnection()
                 TachiyomiTheme {
                     ComposeContent(nestedScrollInterop)
                 }
@@ -79,7 +79,7 @@ abstract class SearchableComposeController<P : BasePresenter<*>>(bundle: Bundle?
             consumeWindowInsets = false
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val nestedScrollInterop = rememberNestedScrollInteropConnection(binding.root)
+                val nestedScrollInterop = rememberNestedScrollInteropConnection()
                 TachiyomiTheme {
                     ComposeContent(nestedScrollInterop)
                 }
