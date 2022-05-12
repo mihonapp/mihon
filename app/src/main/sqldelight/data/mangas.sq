@@ -43,3 +43,7 @@ SELECT *
 FROM mangas
 WHERE favorite = 1
 AND source = :sourceId;
+
+resetViewerFlags:
+UPDATE mangas
+SET viewer = 0;

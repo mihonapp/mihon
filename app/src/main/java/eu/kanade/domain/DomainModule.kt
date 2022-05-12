@@ -10,6 +10,7 @@ import eu.kanade.domain.history.interactor.RemoveHistoryById
 import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.interactor.GetFavoritesBySourceId
+import eu.kanade.domain.manga.interactor.ResetViewerFlags
 import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.GetLanguagesWithSources
@@ -31,6 +32,7 @@ class DomainModule : InjektModule {
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
         addFactory { GetFavoritesBySourceId(get()) }
         addFactory { GetNextChapterForManga(get()) }
+        addFactory { ResetViewerFlags(get()) }
 
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }
         addFactory { DeleteHistoryTable(get()) }

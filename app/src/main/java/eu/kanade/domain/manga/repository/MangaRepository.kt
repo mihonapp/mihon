@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface MangaRepository {
 
     fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>>
+
+    suspend fun resetViewerFlags(): Boolean
 }
