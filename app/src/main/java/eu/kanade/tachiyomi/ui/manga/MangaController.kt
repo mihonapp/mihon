@@ -29,7 +29,6 @@ import coil.request.ImageRequest
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import dev.chrisbanes.insetter.applyInsetter
@@ -542,18 +541,8 @@ class MangaController :
 
     private fun showAddDuplicateDialog(newManga: Manga, libraryManga: Manga) {
         activity?.let {
-            val source = sourceManager.getOrStub(libraryManga.source)
-            MaterialAlertDialogBuilder(it).apply {
-                setMessage(activity?.getString(R.string.confirm_manga_add_duplicate, source.name))
-                setPositiveButton(activity?.getString(R.string.action_add)) { _, _ ->
-                    addToLibrary(newManga)
-                }
-                setNegativeButton(activity?.getString(R.string.action_cancel)) { _, _ -> }
-                setNeutralButton(activity?.getString(R.string.action_show_manga)) { _, _ ->
-                    router.pushController(MangaController(libraryManga).withFadeTransaction())
-                }
-                setCancelable(true)
-            }.create().show()
+            AddDuplicateMangaDialog(this, libraryManga) { addToLibrary(newManga) }
+                .showDialog(router)
         }
     }
 
