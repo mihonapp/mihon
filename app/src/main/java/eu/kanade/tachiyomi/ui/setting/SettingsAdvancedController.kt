@@ -25,7 +25,6 @@ import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.setting.database.ClearDatabaseController
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
@@ -46,7 +45,6 @@ import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import rikka.sui.Sui
 import uy.kohesive.injekt.Injekt
@@ -56,7 +54,7 @@ import java.io.File
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsAdvancedController(
-    private val mangaRepository: MangaRepository = Injekt.get()
+    private val mangaRepository: MangaRepository = Injekt.get(),
 ) : SettingsController() {
 
     private val network: NetworkHelper by injectLazy()
@@ -325,14 +323,14 @@ class SettingsAdvancedController(
     private fun resetViewerFlags() {
         val activity = activity ?: return
         launchIO {
-            val isSuccesful = mangaRepository.resetViewerFlags()
+            val success = mangaRepository.resetViewerFlags()
             withUIContext {
-                val resouurceString = if (isSuccesful) {
-                    R.string.pref_reset_viewer_flags_succesful
+                val message = if (success) {
+                    R.string.pref_reset_viewer_flags_success
                 } else {
-                    R.string.pref_reset_viewer_flags_unsuccesful
+                    R.string.pref_reset_viewer_flags_error
                 }
-                activity.toast(resouurceString)
+                activity.toast(message)
             }
         }
     }

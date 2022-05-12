@@ -486,10 +486,10 @@
     <string name="pref_refresh_library_covers">Refresh library manga covers</string>
     <string name="pref_refresh_library_tracking">Refresh tracking</string>
     <string name="pref_refresh_library_tracking_summary">Updates status, score and last chapter read from the tracking services</string>
-    <string name="pref_reset_viewer_flags">Reset Viewer Flags</string>
+    <string name="pref_reset_viewer_flags">Reset viewer flags</string>
     <string name="pref_reset_viewer_flags_summary">Resets reading mode and orientation of all series</string>
-    <string name="pref_reset_viewer_flags_succesful">Viewer flags reset was succesful</string>
-    <string name="pref_reset_viewer_flags_unsuccesful">Couldn\'t reset viewer flags</string>
+    <string name="pref_reset_viewer_flags_success">Viewer flags reset</string>
+    <string name="pref_reset_viewer_flags_error">Couldn\'t reset viewer flags</string>
     <string name="pref_dump_crash_logs">Dump crash logs</string>
     <string name="pref_dump_crash_logs_summary">Saves error logs to a file for sharing with the developers</string>
     <string name="crash_log_saved">Crash logs saved</string>
