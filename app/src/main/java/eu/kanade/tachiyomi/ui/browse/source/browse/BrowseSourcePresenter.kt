@@ -351,6 +351,10 @@ open class BrowseSourcePresenter(
         return db.getCategories().executeAsBlocking()
     }
 
+    fun getDuplicateLibraryManga(manga: Manga): Manga? {
+        return db.getDuplicateLibraryManga(manga).executeAsBlocking()
+    }
+
     /**
      * Gets the category id's the manga is in, if the manga is not in a category, returns the default id.
      *
