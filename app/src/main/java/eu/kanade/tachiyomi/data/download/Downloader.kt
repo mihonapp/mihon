@@ -274,7 +274,7 @@ class Downloader(
 
             // Start downloader if needed
             if (autoStart && wasEmpty) {
-                val queuedDownloads = queue.filter { it.source !is UnmeteredSource }.count()
+                val queuedDownloads = queue.count { it.source !is UnmeteredSource }
                 val maxDownloadsFromSource = queue
                     .groupBy { it.source }
                     .filterKeys { it !is UnmeteredSource }
@@ -345,10 +345,7 @@ class Downloader(
             .flatMap({ page -> getOrDownloadImage(page, download, tmpDir) }, 5)
             .onBackpressureLatest()
             // Do when page is downloaded.
-            .doOnNext { page ->
-                splitTallImageIfNeeded(page, tmpDir)
-                notifier.onProgressChange(download)
-            }
+            .doOnNext { notifier.onProgressChange(download) }
             .toList()
             .map { download }
             // Do after download completes
@@ -393,8 +390,9 @@ class Downloader(
         }
 
         return pageObservable
-            // When the image is ready, set image path, progress (just in case) and status
+            // When the page is ready, set page path, progress (just in case) and status
             .doOnNext { file ->
+                splitTallImageIfNeeded(page, tmpDir)
                 page.uri = file.uri
                 page.progress = 100
                 download.downloadedImages++
@@ -483,11 +481,13 @@ class Downloader(
         if (!preferences.splitTallImages().get()) return
 
         val filename = String.format("%03d", page.number)
-        val imageFile = tmpDir.listFiles()?.find { it.name!!.startsWith("$filename.") }
+        val imageFile = tmpDir.listFiles()?.find { it.name!!.startsWith(filename) }
             ?: throw Error(context.getString(R.string.download_notifier_split_page_not_found, page.number))
         val imageFilePath = imageFile.filePath
             ?: throw Error(context.getString(R.string.download_notifier_split_page_path_not_found, page.number))
 
+        // check if the original page was previously splitted before then skip.
+        if (imageFile.name!!.contains("__")) return
         ImageUtil.splitTallImage(imageFile, imageFilePath)
     }
 
@@ -509,13 +509,7 @@ class Downloader(
         val downloadedImages = tmpDir.listFiles().orEmpty().filterNot { it.name!!.endsWith(".tmp") || (it.name!!.contains("__") && !it.name!!.contains("__001.jpg")) }
 
         download.status = if (downloadedImages.size == download.pages!!.size) {
-            Download.State.DOWNLOADED
-        } else {
-            Download.State.ERROR
-        }
-
-        // Only rename the directory if it's downloaded.
-        if (download.status == Download.State.DOWNLOADED) {
+            // Only rename the directory if it's downloaded.
             if (preferences.saveChaptersAsCBZ().get()) {
                 archiveChapter(mangaDir, dirname, tmpDir)
             } else {
@@ -524,6 +518,10 @@ class Downloader(
             cache.addChapter(dirname, mangaDir, download.manga)
 
             DiskUtil.createNoMediaFile(tmpDir, context)
+
+            Download.State.DOWNLOADED
+        } else {
+            Download.State.ERROR
         }
     }
 
