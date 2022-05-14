@@ -19,6 +19,7 @@ import androidx.core.graphics.createBitmap
 import androidx.core.graphics.green
 import androidx.core.graphics.red
 import com.hippo.unifile.UniFile
+import logcat.LogPriority
 import tachiyomi.decoder.Format
 import tachiyomi.decoder.ImageDecoder
 import java.io.BufferedInputStream
@@ -182,7 +183,7 @@ object ImageUtil {
      *
      * @return true if the height:width ratio is greater than 3.
      */
-    fun isTallImage(imageStream: InputStream): Boolean {
+    private fun isTallImage(imageStream: InputStream): Boolean {
         val options = extractImageOptions(imageStream, false)
         return (options.outHeight / options.outWidth) > 3
     }
@@ -190,9 +191,9 @@ object ImageUtil {
     /**
      * Splits tall images to improve performance of reader
      */
-    fun splitTallImage(imageFile: UniFile, imageFilePath: String) {
+    fun splitTallImage(imageFile: UniFile, imageFilePath: String): Boolean {
         if (isAnimatedAndSupported(imageFile.openInputStream()) || !isTallImage(imageFile.openInputStream())) {
-            return
+            return true
         }
 
         val options = extractImageOptions(imageFile.openInputStream(), false).apply { inJustDecodeBounds = false }
@@ -213,6 +214,11 @@ object ImageUtil {
             BitmapRegionDecoder.newInstance(imageFile.openInputStream(), false)
         }
 
+        if (bitmapRegionDecoder == null) {
+            logcat { "Failed to create new instance of BitmapRegionDecoder" }
+            return false
+        }
+
         try {
             (0 until partCount).forEach { splitIndex ->
                 val splitPath = imageFilePath.substringBeforeLast(".") + "__${"%03d".format(splitIndex + 1)}.jpg"
@@ -225,19 +231,21 @@ object ImageUtil {
                 val region = Rect(0, topOffset, imageWidth, bottomOffset)
 
                 FileOutputStream(splitPath).use { outputStream ->
-                    val splitBitmap = bitmapRegionDecoder!!.decodeRegion(region, options)
+                    val splitBitmap = bitmapRegionDecoder.decodeRegion(region, options)
                     splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
                 }
             }
             imageFile.delete()
+            return true
         } catch (e: Exception) {
             // Image splits were not successfully saved so delete them and keep the original image
             (0 until partCount)
-                .map { imageFile.filePath!!.substringBeforeLast(".") + "__${"%03d".format(it + 1)}.jpg" }
+                .map { imageFilePath.substringBeforeLast(".") + "__${"%03d".format(it + 1)}.jpg" }
                 .forEach { File(it).delete() }
-            throw e
+            logcat(LogPriority.ERROR, e)
+            return false
         } finally {
-            bitmapRegionDecoder?.recycle()
+            bitmapRegionDecoder.recycle()
         }
     }
 

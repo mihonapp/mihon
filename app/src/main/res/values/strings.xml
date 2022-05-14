@@ -820,6 +820,7 @@
     <string name="download_notifier_download_finish">Download completed</string>
     <string name="download_notifier_split_page_not_found">Page %d not found while splitting</string>
     <string name="download_notifier_split_page_path_not_found">Couldn\'t find file path of page %d</string>
+    <string name="download_notifier_split_failed">Couldn\'t split downloaded image</string>
 
     <!-- Notification channels -->
     <string name="channel_common">Common</string>

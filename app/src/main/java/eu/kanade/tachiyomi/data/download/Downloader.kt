@@ -392,7 +392,10 @@ class Downloader(
         return pageObservable
             // When the page is ready, set page path, progress (just in case) and status
             .doOnNext { file ->
-                splitTallImageIfNeeded(page, tmpDir)
+                val success = splitTallImageIfNeeded(page, tmpDir)
+                if (success.not()) {
+                    notifier.onError(context.getString(R.string.download_notifier_split_failed), download.chapter.name, download.manga.title)
+                }
                 page.uri = file.uri
                 page.progress = 100
                 download.downloadedImages++
@@ -477,8 +480,8 @@ class Downloader(
         return MimeTypeMap.getSingleton().getExtensionFromMimeType(mime) ?: "jpg"
     }
 
-    private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile) {
-        if (!preferences.splitTallImages().get()) return
+    private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile): Boolean {
+        if (!preferences.splitTallImages().get()) return true
 
         val filename = String.format("%03d", page.number)
         val imageFile = tmpDir.listFiles()?.find { it.name!!.startsWith(filename) }
@@ -487,8 +490,9 @@ class Downloader(
             ?: throw Error(context.getString(R.string.download_notifier_split_page_path_not_found, page.number))
 
         // check if the original page was previously splitted before then skip.
-        if (imageFile.name!!.contains("__")) return
-        ImageUtil.splitTallImage(imageFile, imageFilePath)
+        if (imageFile.name!!.contains("__")) return true
+
+        return ImageUtil.splitTallImage(imageFile, imageFilePath)
     }
 
     /**
