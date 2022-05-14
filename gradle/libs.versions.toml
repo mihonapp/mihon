@@ -92,7 +92,6 @@ shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizu
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref ="leakcanary" }
 leakcanary-plumber = { module = "com.squareup.leakcanary:plumber-android", version.ref ="leakcanary" }
 
-sqldelight-sqlite = { module = "androidx.sqlite:sqlite-framework", version.ref ="sqldelight" }
 sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref ="sqldelight" }
 sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref ="sqldelight" }
 sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-extensions", version.ref ="sqldelight" }

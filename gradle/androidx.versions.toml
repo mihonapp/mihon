@@ -24,6 +24,8 @@ guava = "com.google.guava:guava:31.1-android"
 paging-runtime = "androidx.paging:paging-runtime:3.1.1"
 paging-compose = "androidx.paging:paging-compose:1.0.0-alpha14"
 
+sqlite = "androidx.sqlite:sqlite-framework:2.2.0"
+
 [bundles]
 lifecycle = ["lifecycle-common", "lifecycle-process", "lifecycle-runtimektx"]
 workmanager = ["work-runtime", "guava"]
