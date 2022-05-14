@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.reader.loader.ChapterLoader
+import eu.kanade.tachiyomi.ui.reader.loader.HttpPageLoader
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -345,6 +346,14 @@ class ReaderPresenter(
      * that the user doesn't have to wait too long to continue reading.
      */
     private fun preload(chapter: ReaderChapter) {
+        if (chapter.pageLoader is HttpPageLoader) {
+            val manga = manga ?: return
+            val isDownloaded = downloadManager.isChapterDownloaded(chapter.chapter, manga)
+            if (isDownloaded) {
+                chapter.state = ReaderChapter.State.Wait
+            }
+        }
+
         if (chapter.state != ReaderChapter.State.Wait && chapter.state !is ReaderChapter.State.Error) {
             return
         }
