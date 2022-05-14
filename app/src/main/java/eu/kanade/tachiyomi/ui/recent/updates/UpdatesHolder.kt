@@ -30,6 +30,10 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
         binding.download.setOnClickListener {
             onDownloadClick(it, bindingAdapterPosition)
         }
+        binding.download.setOnLongClickListener {
+            onDownloadLongClick(bindingAdapterPosition)
+            true
+        }
     }
 
     fun bind(item: UpdatesItem) {

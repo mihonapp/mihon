@@ -41,4 +41,20 @@ open class BaseChapterHolder(
             }
         }
     }
+
+    fun onDownloadLongClick(position: Int) {
+        val item = adapter.getItem(position) as? BaseChapterItem<*, *> ?: return
+        when (item.status) {
+            Download.State.NOT_DOWNLOADED, Download.State.ERROR -> {
+                adapter.clickListener.downloadChapter(position)
+            }
+            Download.State.DOWNLOADED, Download.State.DOWNLOADING -> {
+                adapter.clickListener.deleteChapter(position)
+            }
+            // Download.State.QUEUE
+            else -> {
+                adapter.clickListener.startDownloadNow(position)
+            }
+        }
+    }
 }
