@@ -89,7 +89,6 @@
     <string name="charging">Φορτίζει</string>
     <string name="pref_update_only_non_completed">Με κατάσταση \"Ολοκληρωμένο\"</string>
     <string name="pref_auto_update_manga_sync">Ενημέρωση προόδου μετά την ανάγνωση</string>
-    <string name="pref_start_screen">Οθόνη εκκίνησης</string>
     <string name="default_category">Προεπιλεγμένη κατηγορία</string>
     <string name="default_category_summary">Ερώτηση πάντα</string>
     <string name="all_lang">Όλα</string>
@@ -291,7 +290,7 @@
     <string name="update_check_no_new_updates">Δεν υπάρχουν διαθέσιμες νέες ενημερώσεις</string>
     <string name="update_check_look_for_updates">Αναζήτηση για ενημερώσεις…</string>
     <string name="update_check_notification_download_in_progress">Γίνεται λήψη…</string>
-    <string name="update_check_notification_download_complete">Η λήψη ολοκληρώθηκε</string>
+    <string name="update_check_notification_download_complete">Πατήστε για εγκατάσταση</string>
     <string name="update_check_notification_download_error">Σφάλμα λήψης</string>
     <string name="update_check_notification_update_available">Υπάρχει διαθέσιμη ενημέρωση!</string>
     <string name="description_cover">Εξώφυλλο manga</string>
@@ -421,7 +420,6 @@
     <string name="action_pin">Καρφίτσωμα</string>
     <string name="action_view_chapters">Προβολή κεφαλαίων</string>
     <string name="action_sort_latest_chapter">Νεότερο κεφάλαιο</string>
-    <string name="action_sort_last_checked">Ελέγχθηκε τελευταία φορά</string>
     <string name="action_menu">Μενού</string>
     <string name="unlock_app">Ξεκλειδώστε το Tachiyomi</string>
     <string name="label_downloaded_only">Ληφθέντα μόνο</string>
@@ -440,7 +438,7 @@
         <item quantity="other">%1$s που απομένουν</item>
     </plurals>
     <string name="gray_background">Γκρι</string>
-    <string name="pref_true_color_summary">Μειώνει το banding, αλλά επηρεάζει την απόδοση</string>
+    <string name="pref_true_color_summary">Μειώνει το banding, αλλά μπορεί να επηρεάσει την απόδοση</string>
     <string name="viewer">Λειτουργία ανάγνωσης</string>
     <string name="pref_category_for_this_series">Για αυτήν τη σειρά</string>
     <plurals name="num_categories">
@@ -486,12 +484,11 @@
     </plurals>
     <string name="requires_app_restart">Απαιτείται επανεκκίνηση της εφαρμογής για να τεθεί σε ισχύ</string>
     <string name="label_network">Δίκτυο</string>
-    <string name="pref_jump_to_chapters">Μετάβαση στα κεφάλαια κατά το άνοιγμα</string>
     <string name="tapping_inverted_both">Και τα δυο</string>
     <string name="tapping_inverted_vertical">Κάθετα</string>
     <string name="tapping_inverted_horizontal">Οριζόντια</string>
     <string name="tapping_inverted_none">Κανένα</string>
-    <string name="pref_read_with_tapping_inverted">Αντιστροφή πατήματος</string>
+    <string name="pref_read_with_tapping_inverted">Αντιστροφή ζωνών πατήματος</string>
     <string name="unknown_status">Άγνωστη κατάσταση</string>
     <string name="unknown_author">Άγνωστος συγγραφέας</string>
     <string name="updated_version">Ενημερώθηκε σε v%1$s</string>
@@ -531,7 +528,6 @@
     <string name="action_search_settings">Αναζήτηση ρυθμίσεων</string>
     <string name="downloaded_chapters">Κεφάλαια που έχουν ληφθεί</string>
     <string name="manga_from_library">Manga από τη βιβλιοθήκη</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Απόκρυψη της κάτω μπάρας κατά την κύλιση</string>
     <string name="pref_incognito_mode_summary">Παύει το ιστορικό ανάγνωσης</string>
     <string name="pref_incognito_mode">Λειτουργία ανώνυμης περιήγησης</string>
     <string name="pref_clear_history">Διαγραφή ιστορικού</string>
@@ -544,7 +540,7 @@
     <string name="pref_show_nsfw_source">Εμφάνιση στις λίστες πηγών και επεκτάσεων</string>
     <string name="file_picker_error">Δεν βρέθηκε εφαρμογή επιλογής αρχείων</string>
     <string name="myanimelist_relogin">Συνδεθείτε ξανά στο MAL</string>
-    <string name="pref_viewer_nav">Διάταξη πλοήγησης</string>
+    <string name="pref_viewer_nav">Ζώνες πατήματος</string>
     <string name="edge_nav">Άκρη</string>
     <string name="kindlish_nav">Σαν Kindle</string>
     <string name="l_nav">Σχήματος L</string>
@@ -558,7 +554,7 @@
     <string name="action_asc">Αύξουσα</string>
     <string name="action_order_by_chapter_number">Κατά αριθμό κεφαλαίου</string>
     <string name="action_order_by_upload_date">Κατά ημερομηνία μεταφόρτωσης</string>
-    <string name="action_filter_tracked">Tracked</string>
+    <string name="action_filter_tracked">Παρακολουθούνται</string>
     <string name="action_display_show_number_of_items">Εμφάνιση αριθμού στοιχείων</string>
     <string name="right_and_left_nav">Δεξιά και Aριστερά</string>
     <string name="pref_dual_page_split">Διπλή διαίρεση σελίδας</string>
@@ -567,8 +563,8 @@
     <string name="backup_restore_content_full">Τα δεδομένα από το αντίγραφο ασφαλείας θα αποκατασταθούν
 \n
 \nΘα χρειαστεί να εγκαταστήσετε τυχόν επεκτάσεις που λείπουν και στη συνέχεια να συνδεθείτε στις υπηρεσίες παρακολούθησης για να τις χρησιμοποιήσετε.</string>
-    <string name="pref_show_navigation_mode_summary">Εμφάνιση ζωνών πατήματος όταν ανοίγει ο αναγνώστης</string>
-    <string name="pref_show_navigation_mode">Εμφάνιση επικάλυψης διάταξης πλοήγησης</string>
+    <string name="pref_show_navigation_mode_summary">Εμφάνιση εν συντομία κατά το άνοιγμα του προγράμματος ανάγνωσης</string>
+    <string name="pref_show_navigation_mode">Εμφάνιση επικάλυψης ζωνών πατήματος</string>
     <string name="nav_zone_right">Δεξιά</string>
     <string name="nav_zone_left">Αριστερά</string>
     <string name="nav_zone_next">Επόμενο</string>
@@ -577,7 +573,7 @@
     <string name="exclude">Εξαίρεση: %s</string>
     <string name="include">Συμπερίληψη: %s</string>
     <string name="none">Κανένα</string>
-    <string name="action_sort_chapter_fetch_date">Ημερομηνία ανάκτησης</string>
+    <string name="action_sort_chapter_fetch_date">Ημερομηνία ανάκτησης κεφαλαίου</string>
     <string name="pref_download_new_categories_details">Τα Manga σε εξαιρούμενες κατηγορίες δεν θα ληφθούν ακόμα κι αν ανήκουν και σε κατηγορίες που περιλαμβάνονται.</string>
     <string name="pref_category_auto_download">Αυτόματη λήψη</string>
     <string name="pref_library_update_categories_details">Τα manga στις αποκλεισμένες κατηγορίες δεν θα ενημερώνονται ακόμη και αν βρίσκονται επίσης στις συμπεριλαμβανόμενες κατηγορίες.</string>
@@ -673,10 +669,10 @@
     <string name="action_display_language_badge">Γλώσσα</string>
     <string name="label_warning">Προειδοποίηση</string>
     <string name="backup_info">Συνιστάται ιδιαίτερα η δημιουργία αυτόματων αντιγράφων ασφαλείας. Θα πρέπει να διατηρείτε αντίγραφα και σε άλλα μέρη.</string>
-    <string name="notification_size_warning">Οι μεγάλες ενημερώσεις βλάπτουν τις πηγές και μπορεί να οδηγήσουν σε πιο αργές ενημερώσεις και σε αυξημένη χρήση της μπαταρίας</string>
+    <string name="notification_size_warning">Οι μεγάλες ενημερώσεις βλάπτουν τις πηγές και μπορεί να οδηγήσουν σε πιο αργές ενημερώσεις και σε αυξημένη χρήση της μπαταρίας. Πατήστε για να μάθετε περισσότερα.</string>
     <string name="connected_to_wifi">Μόνο σε Wi-Fi</string>
     <string name="update_72hour">Κάθε 3 ημέρες</string>
-    <string name="download_queue_size_warning">Προειδοποίηση: οι μαζικές λήψεις ενδέχεται να οδηγήσουν σε επιβράδυνση των πηγών ή/και αποκλεισμό του Tachiyomi</string>
+    <string name="download_queue_size_warning">Προειδοποίηση: οι μαζικές λήψεις ενδέχεται να οδηγήσουν σε επιβράδυνση των πηγών ή/και αποκλεισμό του Tachiyomi. Πατήστε για να μάθετε περισσότερα.</string>
     <string name="pref_library_update_show_tab_badge">Εμφάνιση του αριθμού των μη αναγνωσμένων στο εικονίδιο Ενημερώσεις</string>
     <string name="ext_update_all">Ενημέρωση όλων</string>
     <string name="channel_app_updates">Ενημερώσεις εφαρμογής</string>
@@ -720,4 +716,22 @@
     <string name="update_check_open">Άνοιγμα στο GitHub</string>
     <string name="webview_data_deleted">Τα δεδομένα WebView διαγράφηκαν</string>
     <string name="pref_clear_webview_data">Διαγραφή δεδομένων WebView</string>
+    <string name="action_close">Κλείσιμο</string>
+    <string name="pref_duplicate_pinned_sources">Εμφάνιση διπλότυπων καρφιτσωμένων πηγών</string>
+    <string name="pref_duplicate_pinned_sources_summary">Επανάληψη των καρφιτσωμένων πηγών στις αντίστοιχες γλωσσικές ομάδες τους</string>
+    <string name="battery_not_low">Η μπαταρία δεν είναι χαμηλή</string>
+    <string name="migrate_empty_screen">Λοιπόν, αυτό είναι άβολο</string>
+    <string name="source_filter_empty_screen">Δε βρέθηκε εγκατεστημένη πηγή</string>
+    <string name="action_sort_unread_count">Αριθμός μη αναγνωσμένων</string>
+    <string name="action_sort_last_manga_update">Τελευταία ενημέρωση manga</string>
+    <string name="source_empty_screen">Δε βρέθηκε πηγή</string>
+    <string name="split_tall_images">Αυτόματη διάσπαση ψηλών εικόνων</string>
+    <string name="split_tall_images_summary">Βελτιώνει την απόδοση του αναγνώστη με τη διάσπαση ψηλών εικόνων που έχουν ληφθεί.</string>
+    <string name="download_notifier_split_page_not_found">Η σελίδα %d δε βρέθηκε κατά τη διάσπαση</string>
+    <string name="download_notifier_split_page_path_not_found">Δεν ήταν δυνατή η εύρεση της διαδρομής αρχείου της σελίδας %d</string>
+    <string name="pref_reset_viewer_flags_summary">Επαναφέρει τη λειτουργία ανάγνωσης και τον προσανατολισμό όλων των σειρών</string>
+    <string name="pref_reset_viewer_flags">Επαναφορά σημαιών προβολής</string>
+    <string name="pref_reset_viewer_flags_error">Δεν ήταν δυνατή η επαναφορά των σημαιών προβολής</string>
+    <string name="pref_reset_viewer_flags_success">Έγινε επαναφορά σημαιών προβολής</string>
+    <string name="download_notifier_split_failed">Δεν ήταν δυνατή η διαίρεση της εικόνας που έχει ληφθεί</string>
 </resources>

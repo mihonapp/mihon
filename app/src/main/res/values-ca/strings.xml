@@ -89,7 +89,6 @@
     <string name="charging">Carregant</string>
     <string name="pref_update_only_non_completed">Amb l\'estat «Completada»</string>
     <string name="pref_auto_update_manga_sync">Actualitza el progrés després de llegir</string>
-    <string name="pref_start_screen">Pantalla d\'inici</string>
     <string name="default_category">Categoria per defecte</string>
     <string name="default_category_summary">Demana-ho sempre</string>
     <string name="all_lang">Tot</string>
@@ -291,7 +290,7 @@
     <string name="update_check_no_new_updates">No hi ha cap nova actualització disponible</string>
     <string name="update_check_look_for_updates">S\'estan cercant actualitzacions…</string>
     <string name="update_check_notification_download_in_progress">S\'està baixant…</string>
-    <string name="update_check_notification_download_complete">Baixada completada</string>
+    <string name="update_check_notification_download_complete">Premeu per a instal·lar</string>
     <string name="update_check_notification_download_error">Error de baixada</string>
     <string name="update_check_notification_update_available">Nova versió disponible!</string>
     <string name="description_cover">Portada del manga</string>
@@ -388,7 +387,6 @@
     <string name="action_oldest">Els més antics</string>
     <string name="action_move_to_top">Mou a dalt de tot</string>
     <string name="action_move_to_bottom">Mou a sota de tot</string>
-    <string name="action_sort_last_checked">Darrera comprovació</string>
     <string name="pref_enable_automatic_extension_updates">Comprova si hi ha actualitzacions de les extensions</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Hi ha una actualització d\'una extensió</item>
@@ -447,7 +445,7 @@
         <item quantity="one">Fet en %1$s amb %2$s error</item>
         <item quantity="other">Fet en %1$s amb %2$s errors</item>
     </plurals>
-    <string name="pref_true_color_summary">Redueix les bandes de colors, però afecta el rendiment</string>
+    <string name="pref_true_color_summary">Redueix les bandes de colors, però pot afectar el rendiment</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoria</item>
         <item quantity="other">%d categories</item>
@@ -479,7 +477,7 @@
     <string name="tapping_inverted_vertical">En vertical</string>
     <string name="tapping_inverted_horizontal">En horitzontal</string>
     <string name="tapping_inverted_none">Cap</string>
-    <string name="pref_read_with_tapping_inverted">Inverteix els tocs</string>
+    <string name="pref_read_with_tapping_inverted">Inverteix les zones de toc</string>
     <string name="download_insufficient_space">No s\'han pogut baixar els capítols perquè hi ha poc espai d\'emmagatzematge</string>
     <string name="loader_not_implemented_error">No s\'ha trobat la font</string>
     <plurals name="manga_num_chapters">
@@ -488,7 +486,7 @@
     </plurals>
     <string name="unknown_status">Estat desconegut</string>
     <string name="unknown_author">Autor desconegut</string>
-    <string name="action_global_search_query">Cerca \"%1$s\" globalment</string>
+    <string name="action_global_search_query">Cerca «%1$s» globalment</string>
     <string name="updated_version">S\'ha actualitzat a la v%1$s</string>
     <string name="whats_new">Novetats</string>
     <string name="requires_app_restart">Cal reiniciar l\'aplicació perquè tingui efecte</string>
@@ -496,7 +494,6 @@
     <string name="pref_category_reading_mode">Mode de lectura</string>
     <string name="pref_show_reading_mode_summary">Mostra breument el mode actual en obrir el lector</string>
     <string name="pref_show_reading_mode">Mostra el mode de lectura</string>
-    <string name="pref_jump_to_chapters">Salta als capítols en obrir</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_disable">Desactiva</string>
     <string name="action_start">Inicia</string>
@@ -531,7 +528,6 @@
     <string name="action_search_settings">Configuració de la cerca</string>
     <string name="downloaded_chapters">Capítols baixats</string>
     <string name="manga_from_library">Manga de la biblioteca</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Amaga la barra inferior en desplaçar</string>
     <string name="clear_history_confirmation">N’esteu segur\? Es perdrà tot l’historial.</string>
     <string name="pref_incognito_mode_summary">Pausa l\'historial de lectura</string>
     <string name="pref_incognito_mode">Mode d\'incògnit</string>
@@ -550,7 +546,7 @@
     <string name="crash_log_saved">S\'han desat els registres de fallades</string>
     <string name="pref_dump_crash_logs_summary">Desa els registres d\'errors en un fitxer perquè el pugueu compartir amb els desenvolupadors</string>
     <string name="pref_dump_crash_logs">Bolca els registres de fallades</string>
-    <string name="pref_viewer_nav">Disseny de navegació</string>
+    <string name="pref_viewer_nav">Zones de toc</string>
     <string name="edge_nav">Vora</string>
     <string name="kindlish_nav">Semblant al Kindle</string>
     <string name="l_nav">En forma d\'L</string>
@@ -589,14 +585,14 @@
     <string name="pref_create_folder_per_manga">Desa les pàgines en carpetes separades</string>
     <string name="pref_reader_actions">Accions</string>
     <string name="pref_grayscale">Escala de grisos</string>
-    <string name="pref_show_navigation_mode_summary">Mostra les zones de toc en obrir el lector</string>
-    <string name="pref_show_navigation_mode">Mostra la superposició de la navegació</string>
+    <string name="pref_show_navigation_mode_summary">Mostra breument les zones de toc en obrir el lector</string>
+    <string name="pref_show_navigation_mode">Mostra la superposició de les zones de toc</string>
     <string name="include">Inclou: %s</string>
     <string name="exclude">Exclou: %s</string>
     <string name="none">Cap</string>
     <string name="action_show_errors">Premeu per a veure\'n els detalls</string>
     <string name="cancel_all_for_series">Cancel·la-ho tot per a aquesta sèrie</string>
-    <string name="action_sort_chapter_fetch_date">Data d\'obtenció</string>
+    <string name="action_sort_chapter_fetch_date">Data d\'obtenció del capítol</string>
     <string name="date">Data</string>
     <string name="local_filter_order_by">Ordena per</string>
     <string name="local_invalid_format">El format del capítol no és vàlid</string>
@@ -693,8 +689,8 @@
     <string name="channel_app_updates">Actualitzacions de l\'aplicació</string>
     <string name="action_track">Segueix</string>
     <string name="ext_app_info">Informació de l\'aplicació</string>
-    <string name="download_queue_size_warning">Advertència: Les baixades massa grosses poden fer que les fonts es tornin més lentes i/o bloquin el Tachiyomi</string>
-    <string name="notification_size_warning">Les actualitzacions grosses perjudiquen les fonts i poden implicar actualitzacions més lentes i un augment en l\'ús de bateria</string>
+    <string name="download_queue_size_warning">Advertència: Les baixades massa grosses poden fer que les fonts es tornin més lentes i/o bloquin el Tachiyomi. Premeu per a obtenir-ne més informació.</string>
+    <string name="notification_size_warning">Les actualitzacions grosses perjudiquen les fonts i poden implicar actualitzacions més lentes i un augment en l\'ús de bateria. Premeu per a obtenir-ne més informació.</string>
     <string name="pref_landscape_zoom">Amplia la imatge en horitzontal</string>
     <string name="action_show_manga">Mostra el manga</string>
     <string name="confirm_manga_add_duplicate">Teniu un element a la vostra biblioteca amb el mateix nom però d\'una font diferent (%1$s).
@@ -720,4 +716,22 @@
     <string name="update_check_fdroid_migration_info">Hi ha una nova versió disponible als llançaments oficials. Premeu per a obtenir informació de com migrar a partir dels llançaments no oficials d\'F-Droid.</string>
     <string name="pref_clear_webview_data">Neteja les dades del WebView</string>
     <string name="webview_data_deleted">S\'han netejat les dades del WebView</string>
+    <string name="action_close">Tanca</string>
+    <string name="pref_duplicate_pinned_sources">Mostra les fonts fixades duplicades</string>
+    <string name="pref_duplicate_pinned_sources_summary">Repeteix les fonts fixades a llurs grups de llengua</string>
+    <string name="battery_not_low">Bateria no baixa</string>
+    <string name="source_filter_empty_screen">No s\'ha trobat cap font instal·lada</string>
+    <string name="migrate_empty_screen">Ostres, que estrany...</string>
+    <string name="source_empty_screen">No s\'ha trobat cap font</string>
+    <string name="action_sort_unread_count">Nombre de no llegits</string>
+    <string name="action_sort_last_manga_update">Darrera actualització de manga</string>
+    <string name="split_tall_images">Divideix automàticament les imatges altes</string>
+    <string name="split_tall_images_summary">Millora el rendiment del lector dividint les imatges baixades massa altes.</string>
+    <string name="download_notifier_split_page_not_found">No s\'ha trobat la pàgina %d en dividir</string>
+    <string name="download_notifier_split_page_path_not_found">No s\'ha trobat el camí del fitxer de la pàgina %d</string>
+    <string name="pref_reset_viewer_flags">Restableix les opcions del lector</string>
+    <string name="pref_reset_viewer_flags_summary">Restableix el mode de lectura i l\'orientació de totes les sèries</string>
+    <string name="pref_reset_viewer_flags_success">S\'han restablert les opcions del lector</string>
+    <string name="pref_reset_viewer_flags_error">No s\'han pogut restablir les opcions del lector</string>
+    <string name="download_notifier_split_failed">No s\'ha pogut dividir la imatge baixada</string>
 </resources>

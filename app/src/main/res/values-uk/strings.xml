@@ -89,7 +89,6 @@
     <string name="charging">Заряджається</string>
     <string name="pref_update_only_non_completed">Завершена серія</string>
     <string name="pref_auto_update_manga_sync">Оновлювати прогрес після прочитання</string>
-    <string name="pref_start_screen">Стартовий екран</string>
     <string name="default_category">Категорія за замовчуванням</string>
     <string name="default_category_summary">Завжди запитувати</string>
     <string name="all_lang">Всі</string>
@@ -393,7 +392,6 @@
     <string name="action_oldest">Найстаріші</string>
     <string name="action_move_to_top">Перемістити догори</string>
     <string name="action_move_to_bottom">Перемістити додолу</string>
-    <string name="action_sort_last_checked">Востаннє перевірено</string>
     <string name="pref_enable_automatic_extension_updates">Перевірити оновлення розширень</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Наявне оновлення для розширення</item>
@@ -507,7 +505,6 @@
     <string name="unknown_author">Невідомий автор</string>
     <string name="requires_app_restart">Потрібен перезапуск додатку, щоб зміни вступили в дію</string>
     <string name="label_network">Мережа</string>
-    <string name="pref_jump_to_chapters">Перейти до глав при відкритті</string>
     <string name="updated_version">Оновлено до v%1$s</string>
     <string name="whats_new">Що новенького</string>
     <string name="action_download_unread">Завантажити непрочитані глави</string>
@@ -548,7 +545,6 @@
     <string name="chapter_settings">Налаштування глави</string>
     <string name="downloaded_chapters">Завантажені глави</string>
     <string name="manga_from_library">Манга з бібліотеки</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Приховати нижню панель при прокручуванні</string>
     <string name="action_search_settings">Налаштування пошуку</string>
     <string name="pref_incognito_mode_summary">Призупиняє історію читання</string>
     <string name="pref_incognito_mode">Режим інкогніто</string>

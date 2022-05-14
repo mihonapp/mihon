@@ -70,7 +70,6 @@
     <string name="action_search">ရှာဖွေရန်</string>
     <string name="action_sort_date_added">ထည့်ခဲ့သောရက်စွဲအရ</string>
     <string name="action_sort_latest_chapter">နောက်ဆုံးထွက်အခန်းအရ</string>
-    <string name="action_sort_last_checked">နောက်ဆုံးစစ်ဆေးပြီးသော</string>
     <string name="action_sort_last_read">နောက်ဆုံးဖတ်ခဲ့သော</string>
     <string name="action_sort_total">အခန်းစုစုပေါင်း</string>
     <string name="action_sort_alpha">အက္ခရာစဉ်အလိုက်</string>

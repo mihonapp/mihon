@@ -68,7 +68,6 @@
     <string name="pref_category_security">Sekureco</string>
     <string name="pref_manage_notifications">Administri sciigojn</string>
     <string name="pref_date_format">Data formato</string>
-    <string name="pref_start_screen">Hejmekrano</string>
     <string name="theme_dark">Ŝalti</string>
     <string name="theme_light">Malŝalti</string>
     <string name="theme_system">Laŭ operaciumo</string>
@@ -443,7 +442,6 @@
     <string name="action_order_by_chapter_number">Laŭ nombro da ĉapitroj</string>
     <string name="action_order_by_upload_date">Laŭ elŝuta dato</string>
     <string name="action_select_inverse">Elekti inverse</string>
-    <string name="action_sort_last_checked">Laste kontrolitaj</string>
     <string name="label_default">Defaŭlte</string>
     <string name="information_empty_category">Vi havas neniun kategorion. Tuŝeti la butonon kun plus por krei unu por organizi vian bibliotekon.</string>
     <string name="channel_ext_updates">Kromaĵaj ĝisdatigoj</string>
@@ -518,7 +516,6 @@
     <string name="pref_library_update_refresh_trackers">Aŭtomate aktualigi ŝanĝspurilojn</string>
     <string name="pref_update_only_non_completed">Nur ĝisdatigi okazantaj mangaojn</string>
     <string name="restrictions">Limigoj: %s</string>
-    <string name="pref_jump_to_chapters">Salti al ĉapitroj je malfermo</string>
     <string name="pref_relative_time_long">Longa (Mallonga+, antaŭ n tagoj)</string>
     <string name="pref_relative_time_short">Mallonga (Hodiaŭ, Hieraŭ)</string>
     <string name="theme_yotsuba">Jotsuba</string>
@@ -567,5 +564,4 @@
     <string name="pref_show_navigation_mode_summary">Montri tuŝetzonojn kiam malfermas legilon</string>
     <string name="pref_library_update_refresh_metadata">Aŭtomate aktualigi metadatumoj</string>
     <string name="secure_screen_summary">Kaŝi aplikaĵan enhavon kiam ŝaltumas aplikaĵojn kaj malebligi ekrankopion</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Kaŝi malsupran breton je rulumi</string>
 </resources>

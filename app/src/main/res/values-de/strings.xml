@@ -59,7 +59,7 @@
     <string name="action_open_log">Protokoll öffnen</string>
     <string name="action_create">Erstellen</string>
     <string name="action_restore">Wiederherstellen</string>
-    <string name="loading">Wird geladen…</string>
+    <string name="loading">Wird geladen …</string>
     <string name="app_not_available">App nicht verfügbar</string>
     <string name="pref_category_general">Allgemein</string>
     <string name="pref_category_reader">Lese-Einstellungen</string>
@@ -82,7 +82,6 @@
     <string name="charging">Am Laden</string>
     <string name="pref_update_only_non_completed">Mit dem Status „Abgeschlossen“</string>
     <string name="pref_auto_update_manga_sync">Fortschritt nach dem Lesen aktualisieren</string>
-    <string name="pref_start_screen">Startbildschirm</string>
     <string name="default_category">Standardkategorie</string>
     <string name="default_category_summary">Immer fragen</string>
     <string name="pref_fullscreen">Vollbild</string>
@@ -232,7 +231,7 @@
     <string name="update_check_no_new_updates">Keine neue Aktualisierung verfügbar</string>
     <string name="update_check_look_for_updates">Suche nach Aktualisierungen…</string>
     <string name="update_check_notification_download_in_progress">Herunterladen…</string>
-    <string name="update_check_notification_download_complete">Download abgeschlossen</string>
+    <string name="update_check_notification_download_complete">Tippe zum Installieren</string>
     <string name="update_check_notification_download_error">Fehler beim Herunterladen</string>
     <string name="update_check_notification_update_available">Neue Version verfügbar!</string>
     <string name="description_cover">Manga-Cover</string>
@@ -388,7 +387,6 @@
     <string name="action_oldest">Älteste</string>
     <string name="action_move_to_top">Nach oben verschieben</string>
     <string name="action_move_to_bottom">Nach unten verschieben</string>
-    <string name="action_sort_last_checked">Zuletzt überprüft</string>
     <string name="pref_enable_automatic_extension_updates">Nach Erweiterungsaktualisierungen suchen</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Erweiterungsaktualisierung verfügbar</item>
@@ -442,7 +440,7 @@
     <string name="gray_background">Grau</string>
     <string name="viewer">Lesemodus</string>
     <string name="pref_category_for_this_series">Für diese Serie</string>
-    <string name="pref_true_color_summary">Reduziert Streifenbildung, beeinflusst aber die Performance</string>
+    <string name="pref_true_color_summary">Reduziert Streifenbildung, könnte aber die Leistung beeinflussen</string>
     <plurals name="num_categories">
         <item quantity="one">%d Kategorie</item>
         <item quantity="other">%d Kategorien</item>
@@ -486,8 +484,7 @@
     </plurals>
     <string name="requires_app_restart">Erfordert einen Neustart der Anwendung, um wirksam zu werden</string>
     <string name="label_network">Netzwerk</string>
-    <string name="pref_jump_to_chapters">Beim Öffnen zu den Kapiteln springen</string>
-    <string name="pref_read_with_tapping_inverted">Tippen invertieren</string>
+    <string name="pref_read_with_tapping_inverted">Tippzonen invertieren</string>
     <string name="tapping_inverted_both">Beide</string>
     <string name="tapping_inverted_vertical">Vertikal</string>
     <string name="tapping_inverted_horizontal">Horizontal</string>
@@ -499,7 +496,7 @@
     <string name="whats_new">Was ist neu</string>
     <string name="download_insufficient_space">Herunterladen von Kapiteln aufgrund von zu wenig Speicherplatz nicht möglich</string>
     <string name="action_global_search_query">Nach „%1$s“ überall suchen</string>
-    <string name="action_sort_date_added">Datum hinzugefügt</string>
+    <string name="action_sort_date_added">Hinzufügedatum</string>
     <string name="pref_category_reading_mode">Lesemodus</string>
     <string name="pref_category_theme">Thema</string>
     <plurals name="num_trackers">
@@ -531,7 +528,6 @@
     <string name="action_search_settings">Einstellungen durchsuchen</string>
     <string name="downloaded_chapters">Heruntergeladene Kapitel</string>
     <string name="manga_from_library">Manga aus der Bibliothek</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Untere Leiste beim Scrollen ausblenden</string>
     <string name="pref_incognito_mode_summary">Leseverlauf pausieren</string>
     <string name="pref_incognito_mode">Inkognito-Modus</string>
     <string name="pref_clear_history">Verlauf löschen</string>
@@ -545,7 +541,7 @@
     <string name="file_picker_error">Keine Dateiauswahl-App gefunden</string>
     <string name="myanimelist_relogin">Bitte logge dich erneut in MAL ein</string>
     <string name="edge_nav">Rand</string>
-    <string name="pref_viewer_nav">Navigationslayout</string>
+    <string name="pref_viewer_nav">Tippzonen</string>
     <string name="kindlish_nav">Kindle-Stil</string>
     <string name="l_nav">L-förmig</string>
     <string name="channel_crash_logs">Absturzprotokolle</string>
@@ -567,8 +563,8 @@
     <string name="backup_restore_content_full">Die Daten der Sicherungsdatei werden wiederhergestellt.
 \n
 \nDu musst jegliche fehlende Erweiterungen installieren und dich anschließend bei den Tracking-Anbietern einloggen, um sie zu benutzen.</string>
-    <string name="pref_show_navigation_mode_summary">Tipp-Zonen anzeigen, wenn der Leser geöffnet wird</string>
-    <string name="pref_show_navigation_mode">Navigationslayout-Overlay anzeigen</string>
+    <string name="pref_show_navigation_mode_summary">Kurz anzeigen, wenn der Leser geöffnet wird</string>
+    <string name="pref_show_navigation_mode">Tippzonen-Overlay anzeigen</string>
     <string name="nav_zone_right">Rechts</string>
     <string name="nav_zone_left">Links</string>
     <string name="nav_zone_next">Weiter</string>
@@ -577,7 +573,7 @@
     <string name="exclude">Ausschließen: %s</string>
     <string name="include">Einschließen: %s</string>
     <string name="none">Nichts</string>
-    <string name="action_sort_chapter_fetch_date">Datum abgerufen</string>
+    <string name="action_sort_chapter_fetch_date">Abrufdatum des Kapitels</string>
     <string name="pref_download_new_categories_details">Manga in ausgeschlossenen Kategorien werden nicht heruntergeladen, auch wenn sie in eingeschlossenen Kategorien vorhanden sind.</string>
     <string name="pref_category_auto_download">Automatisches Herunterladen</string>
     <string name="pref_library_update_categories_details">Manga in ausgeschlossenen Kategorien werden nicht aktualisiert, auch wenn sie in eingeschlossenen Kategorien vorhanden sind.</string>
@@ -672,12 +668,12 @@
     <string name="pref_verbose_logging_summary">Ausführliche Protokolle im Systemprotokoll ausgeben (verringert die Anwendungsleistung)</string>
     <string name="action_display_language_badge">Sprache</string>
     <string name="label_warning">Warnung</string>
-    <string name="notification_size_warning">Große Aktualisierungen schaden Quellen und könnten zu langsameren Aktualisierungen sowie höherem Akkuverbrauch führen</string>
+    <string name="notification_size_warning">Große Aktualisierungen schaden Quellen und könnten zu langsameren Aktualisierungen sowie höherem Akkuverbrauch führen. Tippe, um mehr zu erfahren.</string>
     <string name="backup_info">Automatische Sicherungen sind sehr zu empfehlen. Du solltest auch Kopien an anderen Orten aufbewahren.</string>
     <string name="connected_to_wifi">Nur über WLAN</string>
     <string name="update_72hour">Alle 3 Tage</string>
-    <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Tachiyomi blockieren</string>
-    <string name="pref_library_update_show_tab_badge">Ungelesenenanzahl auf dem Aktualisierungssymbol anzeigen</string>
+    <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Tachiyomi blockieren. Tippe, um mehr zu erfahren.</string>
+    <string name="pref_library_update_show_tab_badge">Ungelesenenanzahl auf dem „Neu“-Symbol anzeigen</string>
     <string name="ext_update_all">Alle aktualisieren</string>
     <string name="channel_app_updates">Anwendungsaktualisierungen</string>
     <string name="pref_auto_clear_chapter_cache">Kapitel-Zwischenspeicher beim Schließen der App löschen</string>
@@ -720,4 +716,22 @@
     <string name="update_check_open">Auf GitHub öffnen</string>
     <string name="pref_clear_webview_data">WebView-Daten löschen</string>
     <string name="webview_data_deleted">WebView-Daten gelöscht</string>
+    <string name="action_close">Schließen</string>
+    <string name="battery_not_low">Akkuladung nicht niedrig</string>
+    <string name="pref_duplicate_pinned_sources_summary">Angeheftete Quellen in ihren jeweiligen Sprachgruppen wiederholen</string>
+    <string name="pref_duplicate_pinned_sources">Doppelte angeheftete Quellen anzeigen</string>
+    <string name="migrate_empty_screen">Tja, das ist jetzt etwas peinlich</string>
+    <string name="source_filter_empty_screen">Keine installierte Quelle gefunden</string>
+    <string name="source_empty_screen">Keine Quelle gefunden</string>
+    <string name="action_sort_unread_count">Ungelesenenanzahl</string>
+    <string name="action_sort_last_manga_update">Zuletzt aktualisierter Manga</string>
+    <string name="split_tall_images">Hohe Bilder automatisch teilen</string>
+    <string name="split_tall_images_summary">Verbessert die Leseleistung durch Aufteilung hoher heruntergeladener Bilder.</string>
+    <string name="download_notifier_split_page_not_found">Seite %d während dem Aufteilen nicht gefunden</string>
+    <string name="download_notifier_split_page_path_not_found">Dateipfad der Seite %d konnte nicht gefunden werden</string>
+    <string name="pref_reset_viewer_flags_summary">Setzt den Lesemodus und die Ausrichtung aller Serien zurück</string>
+    <string name="pref_reset_viewer_flags">Lesereinstellungen zurücksetzen</string>
+    <string name="pref_reset_viewer_flags_success">Lesereinstellungen zurückgesetzt</string>
+    <string name="pref_reset_viewer_flags_error">Lesereinstellungen konnten nicht zurückgesetzt werden</string>
+    <string name="download_notifier_split_failed">Heruntergeladenes Bild konnte nicht aufgeteilt werden</string>
 </resources>

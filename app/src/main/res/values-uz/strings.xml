@@ -29,7 +29,6 @@
     <string name="action_search">Qidirish</string>
     <string name="action_sort_date_added">Qõshilgan sana</string>
     <string name="action_sort_latest_chapter">Eng oxirgi bõlim</string>
-    <string name="action_sort_last_checked">Oxirgi tekshirish</string>
     <string name="action_sort_last_read">Oxirgi õqilgan</string>
     <string name="action_sort_total">Umumiy bõlimlar</string>
     <string name="action_sort_alpha">Alifbo kõrinishida</string>

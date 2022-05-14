@@ -6,7 +6,7 @@
     <string name="track">Pelacakan</string>
     <string name="history">Riwayat</string>
     <string name="label_settings">Pengaturan</string>
-    <string name="label_download_queue">Antrean unduhan</string>
+    <string name="label_download_queue">Antrian unduhan</string>
     <string name="label_library">Pustaka</string>
     <string name="label_recent_manga">Riwayat</string>
     <string name="label_recent_updates">Pembaruan</string>
@@ -84,7 +84,6 @@
     <string name="charging">Mengisi daya</string>
     <string name="pref_update_only_non_completed">Dengan status \"Selesai\"</string>
     <string name="pref_auto_update_manga_sync">Perbarui kemajuan setelah membaca</string>
-    <string name="pref_start_screen">Layar awal</string>
     <string name="default_category">Kategori bawaan</string>
     <string name="default_category_summary">Selalu tanya</string>
     <string name="pref_fullscreen">Layar penuh</string>
@@ -232,7 +231,7 @@
     <string name="update_check_no_new_updates">Pembaruan tidak tersedia</string>
     <string name="update_check_look_for_updates">Mencari pembaruan…</string>
     <string name="update_check_notification_download_in_progress">Mengunduh…</string>
-    <string name="update_check_notification_download_complete">Mengunduh selesai</string>
+    <string name="update_check_notification_download_complete">Ketuk untuk menginstal</string>
     <string name="update_check_notification_download_error">Terjadi kesalahan saat mengunduh</string>
     <string name="update_check_notification_update_available">Versi baru tersedia!</string>
     <string name="description_cover">Sampul manga</string>
@@ -386,7 +385,6 @@
     <string name="channel_ext_updates">Pembaruan ekstensi</string>
     <string name="pref_enable_automatic_extension_updates">Periksa pembaruan ekstensi</string>
     <string name="pref_category_reading">Membaca</string>
-    <string name="action_sort_last_checked">Terakhir diperiksa</string>
     <string name="information_webview_required">WebView dibutuhkan untuk Tachiyomi</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">Terdapat %d perbaruan ekstensi</item>
@@ -432,7 +430,7 @@
     <string name="restore_duration">%02d menit, %02d detik</string>
     <string name="pref_search_pinned_sources_only">Hanya sertakan sumber yang ditandai</string>
     <string name="viewer">Mode membaca</string>
-    <string name="pref_true_color_summary">Mengurangi banding, namun mengurangi performa</string>
+    <string name="pref_true_color_summary">Mengurangi banding, namun berdampak pada performa</string>
     <plurals name="num_categories">
         <item quantity="other">%d kategori</item>
     </plurals>
@@ -474,13 +472,12 @@
     </plurals>
     <string name="requires_app_restart">Mulai ulang aplikasi untuk menerapkan pengaturan</string>
     <string name="label_network">Jaringan</string>
-    <string name="pref_jump_to_chapters">Lompat ke bab saat dibuka</string>
     <string name="action_disable">Matikan</string>
     <string name="tapping_inverted_both">Keduanya</string>
     <string name="tapping_inverted_vertical">Tegak</string>
     <string name="tapping_inverted_horizontal">Mendatar</string>
     <string name="tapping_inverted_none">Tidak</string>
-    <string name="pref_read_with_tapping_inverted">Ketukan terbalik</string>
+    <string name="pref_read_with_tapping_inverted">Balikkan zona ketuk</string>
     <string name="unknown_status">Status tidak diketahui</string>
     <string name="unknown_author">Penulis tidak diketahui</string>
     <string name="updated_version">Diperbarui ke v%1$s</string>
@@ -523,7 +520,6 @@
     <string name="pref_clear_history">Hapus riwayat</string>
     <string name="clear_history_confirmation">Apakah anda yakin\? Semua riwayat akan terhapus.</string>
     <string name="clear_history_completed">Riwayat telah dihapus</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Sembunyikan bilah bawah saat scroll halaman</string>
     <string name="pref_category_nsfw_content">Sumber NSFW (18+)</string>
     <string name="spen_next_page">Halaman selanjutnya</string>
     <string name="spen_previous_page">Halaman sebelumnya</string>
@@ -544,12 +540,12 @@
     <string name="track_started_reading_date">Tanggal mulai</string>
     <string name="crash_log_saved">Log kerusakan disimpan</string>
     <string name="pref_dump_crash_logs_summary">Simpan log kerusakan ke sebuah berkas untuk dibagikan dengan pengembang aplikasi</string>
-    <string name="pref_viewer_nav">Tata letak navigasi</string>
+    <string name="pref_viewer_nav">Zona ketuk</string>
     <string name="right_and_left_nav">Kanan dan Kiri</string>
     <string name="action_display_show_number_of_items">Tampilkan jumlah item</string>
     <string name="none">Kosong</string>
     <string name="action_show_errors">Ketuk untuk melihat detail</string>
-    <string name="action_sort_chapter_fetch_date">Tanggal diambil</string>
+    <string name="action_sort_chapter_fetch_date">Tanggal pengambilan bab</string>
     <string name="pref_reader_actions">Aksi</string>
     <string name="nav_zone_right">Kanan</string>
     <string name="nav_zone_left">Kiri</string>
@@ -579,7 +575,7 @@
     <string name="pref_download_new_categories_details">Manga dalam kategori yang dikecualikan tidak akan diunduh meskipun termasuk dalam kategori yang disertakan.</string>
     <string name="rotation_type">Jenis rotasi</string>
     <string name="pref_grayscale">Skala abu-abu</string>
-    <string name="pref_show_navigation_mode">Tampilkan tata letak navigasi</string>
+    <string name="pref_show_navigation_mode">Tampilkan zona ketukan</string>
     <string name="pref_library_update_categories_details">Manga dalam kategori yang dikecualikan tidak akan diperbarui meskipun masuk dalam kategori yang disertakan.</string>
     <string name="date">Tanggal</string>
     <string name="local_filter_order_by">Urutkan menurut</string>
@@ -587,7 +583,7 @@
     <string name="chapter_not_found">Bab tak ditemukan</string>
     <string name="pref_dual_page_invert_summary">Jika penempatan dari pemisah halaman ganda tidak cocok dengan arah membaca</string>
     <string name="pref_dual_page_invert">Balikkan penempatan pemisah halaman ganda</string>
-    <string name="pref_show_navigation_mode_summary">Tampilkan zona ketuk ketika pembaca dibuka</string>
+    <string name="pref_show_navigation_mode_summary">Tunjukkan secara singkat saat pembaca dibuka</string>
     <string name="pref_library_update_refresh_trackers_summary">Perbarui pelacak ketika memperbarui pustaka</string>
     <string name="pref_library_update_refresh_trackers">Segarkan pelacak secara otomatis</string>
     <string name="restrictions">Batasan: %s</string>
@@ -654,8 +650,8 @@
     <string name="ext_installer_legacy">Warisan</string>
     <string name="ext_installer_pref">Pemasang</string>
     <string name="action_sort_count">Total manga</string>
-    <string name="notification_size_warning">Pembaruan berskala besar membahayakan sumber, dapat membuat pembaruan lambat dan meningkatkan penggunaan baterai</string>
-    <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Tachiyomi</string>
+    <string name="notification_size_warning">Pembaruan berskala besar membahayakan sumber, dapat membuat pembaruan lambat dan meningkatkan penggunaan baterai. Ketuk untuk mempelajari lebih lanjut.</string>
+    <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Tachiyomi. Ketuk untuk mempelajari lebih lanjut.</string>
     <string name="label_warning">Peringatan</string>
     <string name="pref_verbose_logging_summary">Cetak catatan berlebih ke catatan sistem (mengurangi kinerja aplikasi)</string>
     <string name="backup_info">Pencadangan otomatis sangat disarankan. Anda juga harus menyimpan duplikat di tempat lain.</string>
@@ -708,4 +704,17 @@
     <string name="update_check_open">Buka di Github</string>
     <string name="pref_clear_webview_data">Membersihkan data WebView</string>
     <string name="webview_data_deleted">Data WebView telah dibersihkan</string>
+    <string name="action_close">Tutup</string>
+    <string name="battery_not_low">Baterai tidak lemah</string>
+    <string name="pref_duplicate_pinned_sources">Tampilkan duplikasi sumber yang ditandai</string>
+    <string name="pref_duplicate_pinned_sources_summary">Ulang sumber ditandai pada kelompok bahasa masing-masing</string>
+    <string name="source_filter_empty_screen">Sumber yang diinstal tidak ditemukan</string>
+    <string name="migrate_empty_screen">Hadeh, ini aneh</string>
+    <string name="source_empty_screen">Tidak ada sumber yang ditemukan</string>
+    <string name="action_sort_last_manga_update">Pembaruan manga terakhir</string>
+    <string name="action_sort_unread_count">Jumlah yang belum dibaca</string>
+    <string name="split_tall_images">Membagi gambar panjang secara otomatis</string>
+    <string name="split_tall_images_summary">Meningkatkan kinerja pembaca dengan memisahkan gambar panjang yang diunduh.</string>
+    <string name="download_notifier_split_page_not_found">Halaman %d tidak ditemukan saat dipisah</string>
+    <string name="download_notifier_split_page_path_not_found">Tidak dapat menemukan jalur file halaman %d</string>
 </resources>

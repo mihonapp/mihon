@@ -84,7 +84,6 @@
     <string name="charging">Carregando</string>
     <string name="pref_update_only_non_completed">Com o estado \"Completo\"</string>
     <string name="pref_auto_update_manga_sync">Atualizar o progresso após a leitura</string>
-    <string name="pref_start_screen">Tela inicial</string>
     <string name="default_category">Categoria padrão</string>
     <string name="default_category_summary">Sempre perguntar</string>
     <string name="pref_fullscreen">Tela cheia</string>
@@ -234,7 +233,7 @@
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
     <string name="update_check_look_for_updates">Procurando por atualizações…</string>
     <string name="update_check_notification_download_in_progress">Fazendo download…</string>
-    <string name="update_check_notification_download_complete">Download concluído</string>
+    <string name="update_check_notification_download_complete">Toque para instalar</string>
     <string name="update_check_notification_download_error">Erro ao fazer download</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
     <string name="description_cover">Capa do mangá</string>
@@ -388,7 +387,6 @@
     <string name="action_oldest">Mais antigos</string>
     <string name="action_move_to_top">Mover para o topo</string>
     <string name="action_move_to_bottom">Mover para o final</string>
-    <string name="action_sort_last_checked">Última verificação</string>
     <string name="pref_enable_automatic_extension_updates">Procurar por atualizações de extensão</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Atualização de extensão disponível</item>
@@ -442,7 +440,7 @@
     <string name="gray_background">Cinza</string>
     <string name="viewer">Modo de leitura</string>
     <string name="pref_category_for_this_series">Para esta série</string>
-    <string name="pref_true_color_summary">Reduz as faixas, mas afeta o desempenho</string>
+    <string name="pref_true_color_summary">Reduz as faixas, mas pode afetar o desempenho</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoria</item>
         <item quantity="other">%d categorias</item>
@@ -486,12 +484,11 @@
     </plurals>
     <string name="requires_app_restart">Requer o reinício do aplicativo para ter efeito</string>
     <string name="label_network">Rede</string>
-    <string name="pref_jump_to_chapters">Pular para os capítulos ao abrir</string>
     <string name="tapping_inverted_none">Nenhum</string>
     <string name="tapping_inverted_both">Ambos</string>
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_horizontal">Horizontal</string>
-    <string name="pref_read_with_tapping_inverted">Inverter o toque</string>
+    <string name="pref_read_with_tapping_inverted">Inverter as zonas de toque</string>
     <string name="unknown_status">Estado desconhecido</string>
     <string name="unknown_author">Autor desconhecido</string>
     <string name="action_download_unread">Fazer download de capítulos não lidos</string>
@@ -531,7 +528,6 @@
     <string name="action_search_settings">Pesquisar nas configurações</string>
     <string name="manga_from_library">Mangás da biblioteca</string>
     <string name="downloaded_chapters">Capítulos disponíveis offline</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Ocultar a barra inferior durante a rolagem</string>
     <string name="pref_incognito_mode_summary">Pausa o histórico de leitura</string>
     <string name="pref_incognito_mode">Modo anônimo</string>
     <string name="pref_clear_history">Limpar o histórico</string>
@@ -547,7 +543,7 @@
     <string name="edge_nav">Borda</string>
     <string name="kindlish_nav">Kindle</string>
     <string name="l_nav">Em forma de L</string>
-    <string name="pref_viewer_nav">Layout de navegação</string>
+    <string name="pref_viewer_nav">Zonas de toque</string>
     <string name="channel_crash_logs">Registros de travamentos</string>
     <string name="track_finished_reading_date">Data de término</string>
     <string name="track_started_reading_date">Data de início</string>
@@ -567,8 +563,8 @@
     <string name="backup_restore_content_full">Os dados do arquivo de backup serão restaurados.
 \n
 \nVocê precisará instalar quaisquer extensões que estejam faltando e depois realizar o login nos serviços de monitoramento para utilizá-los.</string>
-    <string name="pref_show_navigation_mode_summary">Mostrar as zonas de toque quando o leitor está aberto</string>
-    <string name="pref_show_navigation_mode">Mostrar a sobreposição do layout de navegação</string>
+    <string name="pref_show_navigation_mode_summary">Mostra rapidamente quando o leitor for aberto</string>
+    <string name="pref_show_navigation_mode">Mostrar a sobreposição das zonas de toque</string>
     <string name="nav_zone_right">Direita</string>
     <string name="nav_zone_left">Esquerda</string>
     <string name="nav_zone_next">Próxima</string>
@@ -577,7 +573,7 @@
     <string name="none">Nenhuma</string>
     <string name="exclude">Excluir: %s</string>
     <string name="include">Incluir: %s</string>
-    <string name="action_sort_chapter_fetch_date">Data de busca</string>
+    <string name="action_sort_chapter_fetch_date">Data de busca do capítulo</string>
     <string name="pref_library_update_categories_details">Os mangás nas categorias excluídas não serão atualizados mesmo que eles também estejam nas categorias incluídas.</string>
     <string name="pref_download_new_categories_details">Os mangás nas categorias excluídas não serão disponibilizados offline mesmo que eles também estejam nas categorias incluídas.</string>
     <string name="pref_category_auto_download">Download automático</string>
@@ -671,12 +667,12 @@
     <string name="pref_verbose_logging_summary">Imprime registros detalhados no registro de eventos do sistema (reduz o desempenho do aplicativo)</string>
     <string name="pref_verbose_logging">Registro de eventos verboso</string>
     <string name="action_display_language_badge">Idioma</string>
-    <string name="notification_size_warning">Atualizações com muitos itens prejudicam as fontes e podem deixar as atualizações lentas e aumentar o uso da bateria</string>
+    <string name="notification_size_warning">Atualizações com muitos itens prejudicam as fontes e podem deixar as atualizações lentas e aumentar o uso da bateria. Toque para saber mais.</string>
     <string name="label_warning">Aviso</string>
     <string name="backup_info">Backups automáticos são altamente recomendados. Você deve manter cópias em outros locais também.</string>
     <string name="connected_to_wifi">Somente no Wi-Fi</string>
     <string name="update_72hour">A cada 3 dias</string>
-    <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi</string>
+    <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi. Toque para saber mais.</string>
     <string name="pref_library_update_show_tab_badge">Mostrar a contagem de não lidos no ícone de Atualizações</string>
     <string name="ext_update_all">Atualizar tudo</string>
     <string name="channel_app_updates">Atualizações do aplicativo</string>
@@ -720,4 +716,22 @@
     <string name="update_check_open">Abrir no GitHub</string>
     <string name="pref_clear_webview_data">Limpar os dados da WebView</string>
     <string name="webview_data_deleted">Dados da WebView limpos</string>
+    <string name="action_close">Fechar</string>
+    <string name="pref_duplicate_pinned_sources">Mostrar fontes fixadas duplicadas</string>
+    <string name="pref_duplicate_pinned_sources_summary">Repete as fontes fixadas em seus respectivos grupos de idioma</string>
+    <string name="battery_not_low">Bateria não fraca</string>
+    <string name="migrate_empty_screen">Bem, isso é esquisito</string>
+    <string name="source_filter_empty_screen">Nenhuma fonte instalada foi encontrada</string>
+    <string name="source_empty_screen">Nenhuma fonte encontrada</string>
+    <string name="action_sort_unread_count">Contagem de não lidos</string>
+    <string name="action_sort_last_manga_update">Ultima atualização do mangá</string>
+    <string name="split_tall_images">Dividir automaticamente imagens compridas</string>
+    <string name="split_tall_images_summary">Melhora o desempenho do leitor através da divisão de imagens compridas disponíveis offline.</string>
+    <string name="download_notifier_split_page_not_found">Página %d não encontrada durante a divisão</string>
+    <string name="download_notifier_split_page_path_not_found">Não foi possível encontrar o caminho do arquivo da página %d</string>
+    <string name="pref_reset_viewer_flags_summary">Redefine o modo de leitura e orientação de todas as séries</string>
+    <string name="pref_reset_viewer_flags_success">Preferências do leitor redefinidas</string>
+    <string name="pref_reset_viewer_flags_error">Não foi possível redefinir as preferências do leitor</string>
+    <string name="pref_reset_viewer_flags">Redefinir as preferências do leitor</string>
+    <string name="download_notifier_split_failed">Não foi possível dividir a imagem transferida</string>
 </resources>

@@ -62,7 +62,6 @@
     <string name="label_help">یارمەتی</string>
     <string name="notification_check_updates">گەڕان بە دوای چاپتەری نوێدا</string>
     <string name="information_empty_library">تۆماری ڕابردووەکەت بەتاڵە</string>
-    <string name="action_sort_last_checked">کۆتا پشکنین</string>
     <string name="action_search_settings">گەڕان لە ناو سازکارییەکان</string>
     <string name="action_mark_as_unread">وەک نەخوێندراوێک ئاماژەی پێبکە</string>
     <string name="action_remove_bookmark">نیشان نەکردنی چاپتەر</string>
@@ -173,13 +172,11 @@
     <string name="alignment_top">سەرەوە</string>
     <string name="alignment_center">ناوەڕاست</string>
     <string name="alignment_bottom">خوارەوە</string>
-    <string name="pref_hide_bottom_bar_on_scroll">شاردنەوەی دوگمەی شریتەکە لە کاتی جوڵان</string>
     <string name="pref_category_timestamps">تۆماری کات</string>
     <string name="pref_relative_format">تۆماری کاتی ڕێژەیی</string>
     <string name="pref_relative_time_short">کورت (ئەمڕۆ، دوێنێ)</string>
     <string name="pref_relative_time_long">درێژ (کورت، + چەند ڕۆژ پێش ئێستا)</string>
     <string name="pref_date_format">ڕێکخستنی بەروار</string>
-    <string name="pref_start_screen">شاشەی سەرەتا</string>
     <string name="pref_confirm_exit">دڵنیابوون لە دەرچوون</string>
     <string name="pref_manage_notifications">بەڕێوەبردنی ئاگانامەکان</string>
     <string name="pref_category_security">سازکاری پارێزراوی</string>

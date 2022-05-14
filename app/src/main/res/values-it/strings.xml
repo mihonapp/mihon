@@ -73,9 +73,8 @@
     <string name="all">Tutte</string>
     <string name="pref_library_update_restriction">Restrizioni del dispositivo agli aggiornamenti automatici</string>
     <string name="charging">In carica</string>
-    <string name="pref_update_only_non_completed">Con stato «completa»</string>
+    <string name="pref_update_only_non_completed">Con stato «Completata»</string>
     <string name="pref_auto_update_manga_sync">Aggiorna il tracking dopo la lettura</string>
-    <string name="pref_start_screen">Schermata iniziale</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Schermo Intero</string>
     <string name="pref_page_transitions">Animare le transizioni di pagina</string>
@@ -221,8 +220,8 @@
     <string name="update_check_look_for_updates">Ricerca aggiornamenti…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Download in corso…</string>
-    <string name="update_check_notification_download_complete">Download completato</string>
-    <string name="update_check_notification_download_error">Errore di download</string>
+    <string name="update_check_notification_download_complete">Tocca per installare</string>
+    <string name="update_check_notification_download_error">Errore di scaricamento</string>
     <string name="update_check_notification_update_available">Nuova versione disponibile!</string>
     <!--Content Description-->
     <string name="description_cover">Copertina del manga</string>
@@ -427,7 +426,6 @@
     <string name="action_move_to_top">Sposta in cima</string>
     <string name="action_oldest">Più vecchi</string>
     <string name="action_newest">Più recenti</string>
-    <string name="action_sort_last_checked">Ultimo controllo</string>
     <string name="action_menu">Menù</string>
     <string name="label_sources">Fonti</string>
     <string name="updating_library">Libreria in aggiornamento</string>
@@ -481,7 +479,7 @@
     <string name="restore_duration">%02d min, %02d sec</string>
     <string name="pref_search_pinned_sources_only">Includi solo le fonti fissate</string>
     <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento del capitolo sui servizi di tracking. Imposta il tracking per i singoli manga dai loro pulsanti di tracking.</string>
-    <string name="pref_true_color_summary">Riduce il banding, ma influisce sulle prestazioni</string>
+    <string name="pref_true_color_summary">Riduce il banding, ma potrebbe influire sulle prestazioni</string>
     <plurals name="num_categories">
         <item quantity="one">Una categoria</item>
         <item quantity="other">%d categorie</item>
@@ -512,7 +510,7 @@
     <string name="tapping_inverted_vertical">Verticale</string>
     <string name="tapping_inverted_horizontal">Orizzontale</string>
     <string name="tapping_inverted_none">Nessuno</string>
-    <string name="pref_read_with_tapping_inverted">Inverti il tocco</string>
+    <string name="pref_read_with_tapping_inverted">Inverti le zone di tocco</string>
     <string name="loader_not_implemented_error">Fonte non trovata</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s capitolo</item>
@@ -526,7 +524,6 @@
     <string name="label_network">Rete</string>
     <string name="pref_show_reading_mode_summary">Mostra brevemente la modalità corrente all\'apertura del lettore</string>
     <string name="pref_show_reading_mode">Mostra modalità di lettura</string>
-    <string name="pref_jump_to_chapters">Vai ai capitoli all\'apertura</string>
     <string name="action_disable">Disabilita</string>
     <string name="action_start">Inizia</string>
     <string name="action_download_unread">Scarica capitoli non letti</string>
@@ -550,7 +547,7 @@
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d capitolo saltato, la fonte non ce l\'ha o è stato filtrato</item>
-        <item quantity="other">%d capitoli saltati, la fonte non ce li ha o sono stati filtrati</item>
+        <item quantity="other">%d capitoli saltati, la fonte non li ha o sono stati filtrati</item>
     </plurals>
     <string name="backup_restore_missing_trackers">Tracker non collegati:</string>
     <string name="no_chapters_error">Nessun capitolo trovato</string>
@@ -564,7 +561,6 @@
     <string name="action_search_settings">Ricerca impostazioni</string>
     <string name="downloaded_chapters">Capitoli scaricati</string>
     <string name="manga_from_library">Manga dalla libreria</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Nascondi la barra inferiore allo scorrere</string>
     <string name="pref_incognito_mode_summary">Sospendi cronologia di lettura</string>
     <string name="pref_incognito_mode">Modalità incognito</string>
     <string name="pref_clear_history">Svuota cronologia</string>
@@ -577,7 +573,7 @@
     <string name="pref_show_nsfw_source">Mostra nelle liste delle fonti e delle estensioni</string>
     <string name="myanimelist_relogin">Per favore accedi di nuovo a MAL</string>
     <string name="file_picker_error">Nessuna app per la selezione dei file trovata</string>
-    <string name="pref_viewer_nav">Layout della navigazione</string>
+    <string name="pref_viewer_nav">Zone di tocco</string>
     <string name="edge_nav">Bordo</string>
     <string name="kindlish_nav">Stile Kindle</string>
     <string name="l_nav">A forma di L</string>
@@ -603,7 +599,7 @@
     <string name="exclude">Escludi: %s</string>
     <string name="include">Includi: %s</string>
     <string name="none">Nessuna</string>
-    <string name="action_sort_chapter_fetch_date">Data di recupero</string>
+    <string name="action_sort_chapter_fetch_date">Data di recupero capitolo</string>
     <string name="pref_category_auto_download">Download automatico</string>
     <string name="nav_zone_next">Successivo</string>
     <string name="nav_zone_prev">Precedente</string>
@@ -612,8 +608,8 @@
     <string name="nav_zone_left">Sinistra</string>
     <string name="pref_library_update_categories_details">I manga in categorie escluse non saranno aggiornati nonostante si trovino anche in categorie incluse.</string>
     <string name="pref_dns_over_https">DNS su HTTPS (DoH)</string>
-    <string name="pref_show_navigation_mode">Mostra schema di navigazione</string>
-    <string name="pref_show_navigation_mode_summary">Mostra zone di tocco quando il lettore viene aperto</string>
+    <string name="pref_show_navigation_mode">Mostra sovrapposizione con zone di tocco</string>
+    <string name="pref_show_navigation_mode_summary">Mostra brevemente quando il lettore viene aperto</string>
     <string name="action_show_errors">Tocca per vedere i dettagli</string>
     <string name="update_check_eol">Questa versione di Android non è più supportata</string>
     <string name="clipboard_copy_error">Impossibile copiare negli appunti</string>
@@ -706,10 +702,10 @@
     <string name="action_display_language_badge">Lingua</string>
     <string name="label_warning">Attenzione</string>
     <string name="backup_info">I backup automatici sono altamente consigliati. Dovresti tenere delle copie anche in altri posti.</string>
-    <string name="notification_size_warning">Grossi aggiornamenti danneggiano le fonti, possono rallentare gli aggiornamenti e aumentare il consumo di batteria</string>
+    <string name="notification_size_warning">Grossi aggiornamenti danneggiano le fonti, possono rallentare gli aggiornamenti e aumentare il consumo di batteria. Tocca per saperne di più.</string>
     <string name="connected_to_wifi">Solo su Wi-Fi</string>
     <string name="update_72hour">Ogni 3 giorni</string>
-    <string name="download_queue_size_warning">Attenzione: grossi download di massa possono rallentare le fonti e/o bloccare tachiyomi</string>
+    <string name="download_queue_size_warning">Attenzione: grossi download di massa possono rallentare le fonti e/o bloccare tachiyomi. Tocca per saperne di più.</string>
     <string name="pref_library_update_show_tab_badge">Mostra numero di capitoli non letti nell\'icona degli aggiornamenti</string>
     <string name="ext_update_all">Aggiorna tutto</string>
     <string name="channel_app_updates">Aggiornamenti dell\'applicazione</string>
@@ -753,4 +749,22 @@
     <string name="update_check_open">Apri su GitHub</string>
     <string name="pref_clear_webview_data">Cancella dati WebView</string>
     <string name="webview_data_deleted">Dati WebView cancellati</string>
+    <string name="action_close">Chiudi</string>
+    <string name="pref_duplicate_pinned_sources">Mostra fonti duplicate appuntate</string>
+    <string name="pref_duplicate_pinned_sources_summary">Ripetere le fonti appuntate nei rispettivi gruppi di lingue</string>
+    <string name="battery_not_low">Batteria non scarica</string>
+    <string name="migrate_empty_screen">Beh, questo è imbarazzante</string>
+    <string name="source_filter_empty_screen">Nessuna fonte installata trovata</string>
+    <string name="source_empty_screen">Nessuna fonte trovata</string>
+    <string name="action_sort_unread_count">Conteggio non letti</string>
+    <string name="action_sort_last_manga_update">Ultimo aggiornamento dei manga</string>
+    <string name="split_tall_images_summary">Migliora le prestazioni del lettore dividendo le immagini scaricate troppo alte.</string>
+    <string name="split_tall_images">Dividi automaticamente le immagini troppo alte</string>
+    <string name="download_notifier_split_page_not_found">Pagina %d non trovata durante la divisione</string>
+    <string name="download_notifier_split_page_path_not_found">Impossibile trovare il percorso della pagina %d</string>
+    <string name="pref_reset_viewer_flags_summary">Reimposta la modalità di lettura e l\'orientamento per tutte le serie</string>
+    <string name="pref_reset_viewer_flags">Reimposta le opzioni del visualizzatore</string>
+    <string name="pref_reset_viewer_flags_success">Opzioni del visualizzatore ripristinate</string>
+    <string name="pref_reset_viewer_flags_error">Impossibile ripristinare le opzioni del visualizzatore</string>
+    <string name="download_notifier_split_failed">Impossibile separare le immagini scaricate</string>
 </resources>

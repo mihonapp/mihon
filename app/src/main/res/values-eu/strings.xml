@@ -471,7 +471,6 @@
     <string name="pref_relative_time_short">Laburra (Gaur, Atzo)</string>
     <string name="pref_relative_time_long">Luzea (Laburra+, duela n egun)</string>
     <string name="pref_date_format">Dataren formatua</string>
-    <string name="pref_start_screen">Hasierako pantaila</string>
     <string name="pref_confirm_exit">Berretsi irteera</string>
     <string name="pref_manage_notifications">Kudeatu jakinarazpenak</string>
     <string name="pref_category_security">Segurtasuna</string>
@@ -484,7 +483,6 @@
     <string name="relative_time_today">Gaur</string>
     <string name="pref_category_display">Bistaratu</string>
     <string name="pref_library_columns">Errenkada bakoitzeko elementu kopurua</string>
-    <string name="pref_jump_to_chapters">Joan kapituluetara irekitzean</string>
     <string name="pref_category_library_update">Eguneraketa globalak</string>
     <string name="pref_library_update_interval">Eguneratze automatikoak</string>
     <string name="pref_update_only_completely_read">Irakurri gabeko kapituluak ditu</string>
@@ -547,7 +545,6 @@
     <string name="action_sort_count">Mangak guztira</string>
     <string name="action_sort_total">Kapituluak guztira</string>
     <string name="action_sort_last_read">Azken aldiz irakurria</string>
-    <string name="action_sort_last_checked">Azken aldiz egiaztatua</string>
     <string name="action_sort_latest_chapter">Azken kapitulua</string>
     <string name="action_sort_chapter_fetch_date">Eskuratze data</string>
     <string name="action_move_to_top">Mugitu gora</string>
@@ -585,7 +582,6 @@
     <string name="alignment_top">Goian</string>
     <string name="alignment_center">Erdian</string>
     <string name="alignment_bottom">Behean</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Ezkutatu beheko barra mugitzean</string>
     <string name="pref_category_timestamps">Denbora-zigiluak</string>
     <string name="pref_relative_format">Denbora-zigilu erlatiboak</string>
     <string name="update_never">Itzali</string>

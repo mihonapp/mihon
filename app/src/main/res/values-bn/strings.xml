@@ -86,7 +86,6 @@
     <string name="charging">চার্জ হচ্ছে</string>
     <string name="pref_update_only_non_completed">কেবল চলমান মাংগা হালনাগাদ করুন</string>
     <string name="pref_auto_update_manga_sync">পড়ার পরে অগ্রগতি আপডেট করুন</string>
-    <string name="pref_start_screen">শুরুর পর্দা</string>
     <string name="default_category">সাধারণ বিভাগ</string>
     <string name="default_category_summary">সর্বদা জিজ্ঞাসা করুন</string>
     <string name="pref_fullscreen">সম্পূর্ণ পর্দা</string>
@@ -335,7 +334,6 @@
     <string name="action_select_inverse">উল্টো নির্বাচন করুন</string>
     <string name="action_sort_date_added">তারিখে যোগকৃত</string>
     <string name="action_sort_latest_chapter">সর্বশেষ অধ্যায়</string>
-    <string name="action_sort_last_checked">সর্বশেষ পরিক্ষিত</string>
     <string name="action_menu">তালিকা</string>
     <string name="confirm_exit">প্রস্থান করতে আবার ব্যাক চাপুন</string>
     <string name="unlock_app">তাচিওমি খুলুন</string>
@@ -380,7 +378,6 @@
     <string name="secure_screen_summary">অ্যাপ পাল্টানোর সময় অ্যাপের কন্টেন্ট লুকান ও স্ক্রিনসট ব্লক করুন</string>
     <string name="action_search_settings">সেটিংসে খুঁজুন</string>
     <string name="lock_when_idle">কর্মহীন হলে লক করুন</string>
-    <string name="pref_hide_bottom_bar_on_scroll">স্ক্রোলের সময় নিচের বার লুকান</string>
     <string name="chapter_settings_updated">হালনাগাদকৃত প্রকৃত শ্রেণির সেটিংস</string>
     <string name="set_chapter_settings_as_default">প্রকৃত হিসেবে সংরক্ষণ করুন</string>
     <string name="confirm_set_chapter_settings">আপনি কি নিশ্চিত সেটিংসগুলো প্রকৃত হিসেবে সংরক্ষণ করবেন\?</string>
@@ -424,7 +421,6 @@
     <string name="ext_unofficial">অনুমোদনহীন</string>
     <string name="ext_updates_pending">অনিষ্পন্ন হালনাগাদ</string>
     <string name="pref_library_update_refresh_metadata_summary">সংগ্রহশালা হালনাগেদের সময় নতুন মোড়ক এবং বর্ণনা খুঁজুন</string>
-    <string name="pref_jump_to_chapters">খোলার পর অধ্যায়ে যান</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">%1$s অধ্যায়সমূহ এবং ১টি আরও</item>
         <item quantity="other">%1$s অধ্যায়সমূহ এবং %2$dটি আরও</item>

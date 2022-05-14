@@ -79,7 +79,6 @@
     <string name="charging">Đang sạc</string>
     <string name="pref_update_only_non_completed">Với trạng thái \"Hoàn Thành\"</string>
     <string name="pref_auto_update_manga_sync">Cập nhật tiến triển sau khi đọc</string>
-    <string name="pref_start_screen">Màn hình khởi động</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Toàn màn hình</string>
     <string name="pref_page_transitions">Hoạt ảnh chuyển trang</string>
@@ -135,7 +134,7 @@
     <string name="pref_clear_chapter_cache">Dọn dẹp bộ nhớ đệm</string>
     <string name="used_cache">Đã sử dụng: %1$s</string>
     <string name="cache_deleted">Bộ nhớ đệm đã được dọn dẹp. %1$d tập tin đã bị xóa</string>
-    <string name="cache_delete_error">Xảy ra lỗi khi xóa bộ nhớ đệm</string>
+    <string name="cache_delete_error">Lỗi xảy ra trong khi xóa</string>
     <string name="pref_clear_cookies">Dọn dẹp thông tin lưu trữ</string>
     <string name="cookies_cleared">Thông tin lưu trữ đã được xóa</string>
     <string name="pref_clear_database">Dọn dẹp cơ sở dữ liệu</string>
@@ -417,7 +416,6 @@
     <string name="action_view_chapters">Xem các chương</string>
     <string name="action_select_inverse">Đảo ngược lựa chọn</string>
     <string name="action_sort_latest_chapter">Chương mới nhất</string>
-    <string name="action_sort_last_checked">Lần kiểm tra gần nhất</string>
     <string name="action_menu">Mục chính</string>
     <string name="unlock_app">Mở Khoá Tachiyomi</string>
     <string name="label_sources">Nguồn</string>
@@ -461,7 +459,6 @@
     <string name="ext_nsfw_warning">Có thể chứa nội dung NSFW 18+</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="pref_library_update_refresh_metadata">Tự động làm mới bộ siêu dữ liệu</string>
-    <string name="pref_jump_to_chapters">Chuyển đến các chương khi mở</string>
     <string name="parental_controls_info">Điều này không ngăn các tiện ích mở rộng không chính thức hoặc có khả năng bị gắn cờ không chính xác hiển thị nội dung NSFW (18+) trong ứng dụng.</string>
     <string name="label_downloaded_only">Chỉ hiện truyện đã tải</string>
     <string name="migration_help_guide">Hướng dẫn di chuyển nguồn</string>
@@ -608,7 +605,6 @@
     <string name="action_display_show_number_of_items">Hiện số truyện</string>
     <string name="pref_category_nsfw_content">Nguồn NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Hiển thị trong các danh sách nguồn và tiện ích mở rộng</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Ẩn thanh dưới cùng khi kéo cuộn</string>
     <string name="action_show_errors">Chạm để xem toàn bộ chi tiết</string>
     <string name="action_desc">Giảm dần</string>
     <string name="action_asc">Tăng dần</string>
@@ -694,11 +690,11 @@
     <string name="action_display_language_badge">Ngôn ngữ</string>
     <string name="backup_info">Tự động sao lưu là phương án an toàn nhất. Bạn cũng nên giữ lại các bản sao chép ở những nơi khác nữa.</string>
     <string name="pref_verbose_logging_summary">In các ghi chép tường tận đến cả ghi chép hệ thống ( giảm hiệu suất ứng dụng )</string>
-    <string name="notification_size_warning">Các bản cập nhật lớn sẽ gây hại cho các nguồn và có thể dẫn đến các bản cập nhật chậm hơn và cũng làm tăng mức sử dụng pin</string>
+    <string name="notification_size_warning">Các bản cập nhật lớn sẽ gây hại cho các nguồn và có thể dẫn đến các bản cập nhật chậm hơn và cũng làm tăng mức sử dụng pin. Nhấn vào để tìm hiểu thêm.</string>
     <string name="ext_install_service_notif">Đang cài đặt tiện ích mở rộng…</string>
     <string name="update_72hour">3 ngày một lần</string>
     <string name="connected_to_wifi">Chỉ qua Wi-Fi</string>
-    <string name="download_queue_size_warning">Cảnh báo: các tải xuống hàng loạt lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn Tachiyomi</string>
+    <string name="download_queue_size_warning">Cảnh báo: các tải xuống hàng loạt lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn Tachiyomi. Nhấn vào để tìm hiểu thêm.</string>
     <string name="pref_library_update_show_tab_badge">Hiển thị số lượng chưa đọc ở phần biểu tượng Cập nhật</string>
     <string name="channel_app_updates">Cập nhật ứng dụng</string>
     <string name="ext_update_all">Cập nhật tất cả</string>
@@ -738,4 +734,15 @@
     <string name="disabled_nav">Tắt</string>
     <string name="update_check_fdroid_migration_info">Một phiên bản mới sẵn sàng từ mục phát hành chính thức. Nhấn để học cách kết hợp các mục phát hành không chính thức từ F-Droid.</string>
     <string name="error_saving_picture">Lỗi khi lưu ảnh</string>
+    <string name="action_close">Đóng</string>
+    <string name="pref_duplicate_pinned_sources">Hiện các nguồn bản sao được đính</string>
+    <string name="battery_not_low">Pin không quá ít</string>
+    <string name="pref_duplicate_pinned_sources_summary">Các nguồn được đính sẽ lặp lại trong các nhóm ngôn ngữ tương ướng của chúng</string>
+    <string name="source_filter_empty_screen">Không có nguồn đã cài tìm thấy</string>
+    <string name="source_empty_screen">Không có nguồn nào được tìm thấy</string>
+    <string name="migrate_empty_screen">Ôi, thật là lạ thật đấy</string>
+    <string name="update_check_open">Mở trên GitHub</string>
+    <string name="empty_backup_error">Không có mục thư viện nào để sao lưu</string>
+    <string name="webview_data_deleted">Dữ liệu WebView đã được xóa</string>
+    <string name="pref_clear_webview_data">Xóa dữ liệu WebView</string>
 </resources>

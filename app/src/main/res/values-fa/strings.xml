@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description_cover">عکس روی جلد مانگا</string>
+    <string name="description_cover">کاور مانگا</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">آپدیت برای یک افرونه موجود است</item>
         <item quantity="other">آپدیت برای %d افرونه موجود است</item>
     </plurals>
     <string name="update_check_notification_update_available">نسخه جدید موجود است!</string>
     <string name="update_check_notification_download_error">خطا در دانلود</string>
-    <string name="update_check_notification_download_complete">دانلود تکمیل شد</string>
+    <string name="update_check_notification_download_complete">دانلود کامل شد</string>
     <string name="update_check_notification_download_in_progress">در حال دانلود…</string>
     <string name="update_check_look_for_updates">در حال جستجوی آپدیت‌ها …</string>
-    <string name="update_check_no_new_updates">هیچ آپدیت جدیدی موجود نیست</string>
+    <string name="update_check_no_new_updates">آپدیت جدیدی موجود نیست</string>
     <string name="update_check_confirm">دانلود</string>
     <string name="file_select_backup">فایل پشتیبان را انتخاب کنید</string>
     <string name="file_select_cover">عکس روی جلد را انتخاب کنید</string>
@@ -206,17 +206,17 @@
     </plurals>
     <string name="action_bookmark">بوک مارک</string>
     <string name="channel_ext_updates">آپدیت افزونه‌ها</string>
-    <string name="channel_new_chapters">آپدیت قسمت‌ها</string>
+    <string name="channel_new_chapters">به روزرسانی قسمت‌ها</string>
     <string name="channel_common">عمومی</string>
     <string name="download_notifier_download_paused">دانلود متوقف شد</string>
-    <string name="download_notifier_no_network">هیچ اتصال به شبکه در دسترس نیست</string>
-    <string name="download_notifier_text_only_wifi">اتصال Wi-Fi در دسترس نیست</string>
-    <string name="download_notifier_unknown_error">به دلیل خطای غیرمنتظره قسمت دانلود نشد</string>
+    <string name="download_notifier_no_network">اتصال شبکه در دسترس نیست</string>
+    <string name="download_notifier_text_only_wifi">اتصال وای فای در دسترس نیست</string>
+    <string name="download_notifier_unknown_error">به علت خطای غیرمنتظره بارگیری این چپتر، ممکن نیست</string>
     <string name="download_notifier_title_error">خطا</string>
-    <string name="download_notifier_downloader_title">سیستم دانلود</string>
-    <string name="information_webview_outdated">لطفا برنامه WebView را برای سازگاری بهتر آپدیت کنید</string>
-    <string name="information_webview_required">WebView برای Tachiyomi مورد نیاز است</string>
-    <string name="information_cloudflare_bypass_failure">عدم موفقیت در دور زدن Cloudflare</string>
+    <string name="download_notifier_downloader_title">سیستم دانلود کننده</string>
+    <string name="information_webview_outdated">لطفا برنامه وب نما را برای سازگاری بهتر آپدیت کنید</string>
+    <string name="information_webview_required">وب نما برای تاچیومی مورد نیاز است</string>
+    <string name="information_cloudflare_bypass_failure">عدم موفقیت در دور زدن کولدفیر</string>
     <string name="color_filter_a_value">opacity</string>
     <string name="color_filter_b_value">آبی</string>
     <string name="color_filter_g_value">سبز</string>
@@ -323,7 +323,6 @@
     <string name="pref_manage_notifications">مدیریت اعلان‌ها</string>
     <string name="pref_confirm_exit">هنگام خروج از برنامه تایید گرفته شود</string>
     <string name="pref_date_format">فرمت تاریخ</string>
-    <string name="pref_start_screen">صفحه اغازین</string>
     <string name="theme_dark">روشن</string>
     <string name="theme_light">خاموش</string>
     <string name="theme_system">تم پیش‌فرض سیستم</string>
@@ -462,7 +461,6 @@
     <string name="action_global_search">جست و جوی کامل</string>
     <string name="action_search">جست و جو</string>
     <string name="action_sort_latest_chapter">اخرین قسمت</string>
-    <string name="action_sort_last_checked">اخیرا دیده شده</string>
     <string name="action_sort_last_read">آخرین خوانده ‌شده</string>
     <string name="action_sort_total">کل قسمت‌ها</string>
     <string name="action_sort_alpha">الفبا</string>
@@ -501,13 +499,11 @@
     <string name="label_network">شبکه</string>
     <string name="backup_restore_missing_trackers">ردیابی هایی که به سیستم وارد نشده اند:</string>
     <string name="pref_category_reading_mode">حالت خواندن</string>
-    <string name="pref_jump_to_chapters">برنامه در تب \"قسمت ها\" باز شود</string>
     <string name="pref_category_theme">تم</string>
     <string name="action_disable">غیرفعال کردن</string>
     <string name="action_download_unread">دانلود قسمت‌های خوانده‌نشده</string>
     <string name="action_sort_date_added">تاریخ اضافه شدن</string>
     <string name="updated_version">به نسخه v%1$s آپدیت شد</string>
-    <string name="pref_hide_bottom_bar_on_scroll">نوار پایین هنگام اسکرول کردن پنهان شود</string>
     <string name="action_search_settings">جست و جوی تنضیمات</string>
     <string name="downloaded_chapters">قسمت های دانلود شده</string>
     <string name="manga_from_library">مانگاهای کتابخانه</string>
@@ -532,7 +528,7 @@
     <string name="tapping_inverted_horizontal">افقی</string>
     <string name="tapping_inverted_none">هیچ کدام</string>
     <string name="pref_read_with_tapping_inverted">ضربه زدن معکوس</string>
-    <string name="chapter_settings_updated">تنظیمات قسمت پیش فرض به روز شد</string>
+    <string name="chapter_settings_updated">تنظیمات پیش فرض چپتر به روز شد</string>
     <string name="share_page_info">%1$s: %2$s, صفحه %3$d</string>
     <string name="myanimelist_relogin">لطفا دوباره به MAL وارد شوید</string>
     <string name="chapter_settings">تنظیمات قسمت ها</string>
@@ -563,4 +559,13 @@
     <string name="confirm_lock_change">احراز هویت جهت تایید تغییرات</string>
     <string name="enhanced_services">سرویس های بهینه شده</string>
     <string name="unread">خوانده نشده</string>
+    <string name="update_check_eol">این نسخه آندروید دیگر پشتیبانی نمی‌شود</string>
+    <string name="update_check_open">بازکردن در گیت هاب</string>
+    <string name="getting_started_guide">راهنمای شروع</string>
+    <string name="information_empty_category_dialog">شما هنوز هیچ دسته‌بندی ندارید.</string>
+    <string name="channel_app_updates">بروزرسانی برنامه</string>
+    <string name="pref_navigate_pan">هدایت به پن</string>
+    <string name="pref_landscape_zoom">بزرگنمایی تصویر چشم انداز</string>
+    <string name="update_check_fdroid_migration_info">نسخه جدیدی از نسخه‌های رسمی موجود است. برای یادگیری نحوه انتقال از نسخه‌های غیررسمی اف دروید، ضربه بزنید.</string>
+    <string name="channel_skipped">رد شده</string>
 </resources>

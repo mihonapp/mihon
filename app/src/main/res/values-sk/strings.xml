@@ -91,7 +91,6 @@
     <string name="charging">Nabíjanie</string>
     <string name="pref_update_only_non_completed">Prebiehajúca séria</string>
     <string name="pref_auto_update_manga_sync">Synchronizovať kapitoly po prečítaní</string>
-    <string name="pref_start_screen">Úvodná obrazovka</string>
     <string name="default_category">Predvolená kategória</string>
     <string name="default_category_summary">Vždy sa opýtať</string>
     <string name="all_lang">Všetky</string>
@@ -354,7 +353,6 @@
     <string name="action_search_settings">Hľadať v nastaveniach</string>
     <string name="action_sort_date_added">Dátum pridaný</string>
     <string name="action_sort_chapter_fetch_date">Dátum načítaný</string>
-    <string name="action_sort_last_checked">Naposledy skontrolované</string>
     <string name="confirm_exit">Stlačte tlačidlo späť znova pre ukončenie</string>
     <string name="confirm_lock_change">Prihlásiť sa pre potvrdenie zmien</string>
     <string name="label_default">Predvolené</string>
@@ -425,7 +423,6 @@
     <string name="alignment_top">Vrchol</string>
     <string name="alignment_center">Stred</string>
     <string name="alignment_bottom">Dole</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Skryť spodnú lištu pri posúvaní</string>
     <string name="theme_strawberrydaiquiri">Jahodové Daiquiri</string>
     <string name="theme_tealturquoise">Modrozelená a tyrkysová</string>
     <string name="pref_category_timestamps">Časová značka</string>
@@ -461,6 +458,5 @@
     <string name="pref_library_update_refresh_trackers">Automaticky obnovovať sledovače</string>
     <string name="pref_library_update_refresh_trackers_summary">Aktualizujte sledovače pri aktualizácii knižnice</string>
     <string name="pref_category_display">Zobraziť</string>
-    <string name="pref_jump_to_chapters">Pri otvorení prejsť na kapitoly</string>
     <string name="update_72hour">Každé 3 dni</string>
 </resources>

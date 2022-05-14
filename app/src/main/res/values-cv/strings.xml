@@ -53,7 +53,6 @@
     <string name="update_6hour">Кашни 6 сехет</string>
     <string name="pref_library_update_interval">Ҫӗнетни тӑтӑшлӑхӗ</string>
     <string name="pref_category_library_update">Пӗтӗм ҫӗнетӳ</string>
-    <string name="pref_jump_to_chapters">Уҫӑ сыпӑксем патне куҫ</string>
     <string name="pref_category_display">Кӑтарт</string>
     <string name="secure_screen">Сыхлав ыкранӗ</string>
     <plurals name="lock_after_mins">
@@ -64,7 +63,6 @@
     <string name="pref_manage_notifications">Систерӳсене ӗнерле</string>
     <string name="pref_confirm_exit">Тухнине ҫирӗплет</string>
     <string name="pref_date_format">Вӑхӑт формачӗ</string>
-    <string name="pref_start_screen">Пуҫламӑш экран</string>
     <string name="theme_dark">Ҫутнӑ</string>
     <string name="theme_light">Сӳнтернӗ</string>
     <string name="pref_category_advanced">Тата</string>
@@ -125,7 +123,6 @@
     <string name="action_global_search">Пур ҫӗрте шыра</string>
     <string name="action_search">Шырав</string>
     <string name="action_sort_latest_chapter">Юлашки сыпӑкпа</string>
-    <string name="action_sort_last_checked">Юлашки тӗрӗсленипе</string>
     <string name="action_sort_last_read">Юлашки вуланипе</string>
     <string name="action_sort_total">Сыпӑксен шучӗпе</string>
     <string name="action_sort_alpha">Алфавитпа</string>
@@ -529,7 +526,6 @@
     <string name="share_page_info">%1$s: %2$s, %3$d эл</string>
     <string name="chapter_settings">Сыпӑк ӗнерлеве</string>
     <string name="action_search_settings">Шырав ӗнерлевӗ</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Ҫаврӑнтару чух аялти хӑмине пытармалла</string>
     <string name="downloaded_chapters">Тиесе илнӗ сыпӑксем</string>
     <string name="manga_from_library">Вулавӑшран манкӑ</string>
     <string name="pref_incognito_mode_summary">Вулани кун-ҫула чарса лартать</string>

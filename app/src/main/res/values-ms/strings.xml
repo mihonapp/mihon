@@ -85,7 +85,6 @@
     <string name="charging">Ketika mengecas</string>
     <string name="pref_update_only_non_completed">Dengan status \"Sudah selesai\"</string>
     <string name="pref_auto_update_manga_sync">Kemas kini selepas dibaca</string>
-    <string name="pref_start_screen">Skrin permulaan</string>
     <string name="default_category">Kategori lalai</string>
     <string name="default_category_summary">Sentiasa tanya</string>
     <string name="pref_fullscreen">Skrin penuh</string>
@@ -241,7 +240,7 @@
     <string name="update_check_no_new_updates">Tiada versi baharu tersedia</string>
     <string name="update_check_look_for_updates">Mencari versi baharu…</string>
     <string name="update_check_notification_download_in_progress">Memuat turun…</string>
-    <string name="update_check_notification_download_complete">Muat turun selesai</string>
+    <string name="update_check_notification_download_complete">Ketik untuk memasang</string>
     <string name="update_check_notification_download_error">Ralat muat turun</string>
     <string name="update_check_notification_update_available">Versi baharu boleh didapati!</string>
     <string name="description_cover">Muka hadapan manga</string>
@@ -384,7 +383,6 @@
     <string name="action_oldest">Terlama</string>
     <string name="action_move_to_top">Naik ke atas</string>
     <string name="action_move_to_bottom">Turun ke bawah</string>
-    <string name="action_sort_last_checked">Akhir disemak</string>
     <string name="pref_enable_automatic_extension_updates">Menyemak kemas kini sambungan</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">%d kemas kini sambungan tersedia</item>
@@ -444,7 +442,7 @@
     <plurals name="restore_completed_message">
         <item quantity="other">Selesai dalam %1$s dengan %2$s ralat</item>
     </plurals>
-    <string name="action_display_unread_badge">Bab tidak dibaca</string>
+    <string name="action_display_unread_badge">Bab belum dibaca</string>
     <string name="tracking_info">Sinkron satu hala untuk kemas kini bab kemajuan dalam sistem penjejakan. Sediakan penjejakan untuk penyertaan manga persendirian dari butang penjejakan mereka.</string>
     <string name="pref_refresh_library_covers">Segar semula muka hadapan manga pustaka</string>
     <string name="sort_by_upload_date">Mengikut tarikh muat naik</string>
@@ -477,12 +475,11 @@
     <string name="action_disable">Matikan</string>
     <string name="requires_app_restart">Mula semula diperlukan untuk berkesan</string>
     <string name="label_network">Rangkaian</string>
-    <string name="pref_jump_to_chapters">Terus ke bab bila buka</string>
     <string name="tapping_inverted_both">Kedua-dua</string>
     <string name="tapping_inverted_vertical">Mod atas bawah</string>
     <string name="tapping_inverted_horizontal">Mod kanan kiri</string>
     <string name="tapping_inverted_none">Tidak aktif</string>
-    <string name="pref_read_with_tapping_inverted">Songsangkan tekan skrin</string>
+    <string name="pref_read_with_tapping_inverted">Songsangkan zon ketik</string>
     <string name="unknown_status">Status tidak diketahui</string>
     <string name="unknown_author">Pengarang tidak diketahui</string>
     <string name="action_download_unread">Muat turun bab belum dibaca</string>
@@ -520,7 +517,6 @@
     <string name="action_search_settings">Carian tetapan</string>
     <string name="downloaded_chapters">Bab dimuat turun</string>
     <string name="manga_from_library">Manga dari pustaka</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Sembunyi bar bawah bila skrol</string>
     <string name="pref_incognito_mode_summary">Menjeda sejarah membaca</string>
     <string name="pref_incognito_mode">Mod inkognito</string>
     <string name="pref_clear_history">Padamkan sejarah</string>
@@ -533,7 +529,7 @@
     <string name="pref_show_nsfw_source">Tunjuk dalam senarai sumber dan sambungan</string>
     <string name="file_picker_error">Tiada aplikasi memilih fail</string>
     <string name="myanimelist_relogin">Sila log masuk ke MAL sekali lagi</string>
-    <string name="pref_viewer_nav">Tataletak navigasi</string>
+    <string name="pref_viewer_nav">Zon ketik</string>
     <string name="edge_nav">Sisi</string>
     <string name="kindlish_nav">Serupa Kindle</string>
     <string name="l_nav">Bentuk L</string>
@@ -557,13 +553,13 @@
 \n
 \nAnda perlu memasang sambungan yang hilang dan log masuk ke penjejakan untuk menggunakannya.</string>
     <string name="nav_zone_prev">Sebelumnya</string>
-    <string name="pref_show_navigation_mode_summary">Tunjukkan zon ketik apabila pembaca dibuka</string>
+    <string name="pref_show_navigation_mode_summary">Tunjukkan seketika apabila pembaca dibuka</string>
     <string name="nav_zone_right">Kanan</string>
     <string name="nav_zone_left">Kiri</string>
-    <string name="pref_show_navigation_mode">Tunjuk tindanan susun atur navigasi</string>
+    <string name="pref_show_navigation_mode">Tunjuk tindanan zon ketik</string>
     <string name="nav_zone_next">Seterusnya</string>
     <string name="pref_dns_over_https">DNS melalui HTTPS (DoH)</string>
-    <string name="action_sort_chapter_fetch_date">Tarikh diambil</string>
+    <string name="action_sort_chapter_fetch_date">Tarikh bab diambil</string>
     <string name="exclude">Kecuali: %s</string>
     <string name="include">Hanya: %s</string>
     <string name="none">Tiada</string>
@@ -577,7 +573,7 @@
     <string name="rotation_portrait">Potret</string>
     <string name="pref_reader_actions">Tindakan</string>
     <string name="pref_create_folder_per_manga_summary">Mencipta folder mengikut tajuk manga</string>
-    <string name="pref_create_folder_per_manga">Simpan halaman ke folder berasingan</string>
+    <string name="pref_create_folder_per_manga">Simpan muka surat ke folder berasingan</string>
     <string name="rotation_type">Jenis putaran skrin</string>
     <string name="pref_grayscale">Skala kelabu</string>
     <string name="notification_incognito_text">Nyahdaya mod inkognito</string>
@@ -661,10 +657,10 @@
     <string name="label_warning">Amaran</string>
     <string name="action_display_language_badge">Bahasa</string>
     <string name="backup_info">Sandaran automatik sangat disyorkan. Anda patut simpan salinan di tempat lain juga.</string>
-    <string name="notification_size_warning">Kemas kini yang besar membahayakan sumber dan mengakibatkan sumber menjadi perlahan dan juga peningkatan penggunaan bateri</string>
+    <string name="notification_size_warning">Kemas kini yang besar membahayakan sumber dan mengakibatkan sumber menjadi perlahan dan juga peningkatan penggunaan bateri. Ketik untuk ketahui selebihnya.</string>
     <string name="connected_to_wifi">Hanya menggunakan Wi-Fi</string>
     <string name="update_72hour">Setiap 3 hari</string>
-    <string name="download_queue_size_warning">Amaran: muat turun secara pukal besar boleh menyebabkan sumber menjadi lebih perlahan dan/atau menyekat Tachiyomi</string>
+    <string name="download_queue_size_warning">Amaran: muat turun secara pukal besar boleh menyebabkan sumber menjadi lebih perlahan dan/atau menyekat Tachiyomi. Ketik untuk ketahui selebihnya.</string>
     <string name="pref_library_update_show_tab_badge">Tunjuk bilangan belum dibaca pada ikon Kemas kini</string>
     <string name="ext_update_all">Kemas kini semua</string>
     <string name="channel_app_updates">Kemas kini aplikasi</string>
@@ -708,4 +704,20 @@
     <string name="update_check_open">Buka di GitHub</string>
     <string name="pref_clear_webview_data">Hapus data WebView</string>
     <string name="webview_data_deleted">Data WebView dihapuskan</string>
+    <string name="action_close">Tutup</string>
+    <string name="pref_duplicate_pinned_sources_summary">Ulang sumber yang disematkan dalam kumpulan bahasa masing-masing</string>
+    <string name="battery_not_low">Bateri tidak lemah</string>
+    <string name="pref_duplicate_pinned_sources">Tunjuk pendua sumber yang disematkan</string>
+    <string name="migrate_empty_screen">Hmm, ini agak mejanggalkan</string>
+    <string name="source_filter_empty_screen">Tiada sumber dipasang ditemui</string>
+    <string name="source_empty_screen">Tiada sumber ditemui</string>
+    <string name="action_sort_unread_count">Kiraan belum dibaca</string>
+    <string name="action_sort_last_manga_update">Kemas kini manga terakhir</string>
+    <string name="split_tall_images">Auto memisah imej yang tinggi</string>
+    <string name="split_tall_images_summary">Meninggkatkan prestasi pembaca dengan memisah imej yang tinggi yang telah dimuat turun.</string>
+    <string name="download_notifier_split_page_not_found">Muka surat %d tidak dijumpai ketika memisah</string>
+    <string name="download_notifier_split_page_path_not_found">Lokasi fail muka surat %d tidak ditemui</string>
+    <string name="pref_reset_viewer_flags_summary">Menetapkan semula mod bacaan dan orientasi semua siri</string>
+    <string name="pref_reset_viewer_flags_success">Tetapan pemaparan diset semula</string>
+    <string name="pref_reset_viewer_flags">Set semula tetapan pemaparan</string>
 </resources>

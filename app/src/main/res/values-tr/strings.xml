@@ -89,7 +89,6 @@
     <string name="charging">Şarj oluyor</string>
     <string name="pref_update_only_non_completed">\"Tamamlanan\" durumda olan</string>
     <string name="pref_auto_update_manga_sync">Okuyunca ilerlemeyi güncelle</string>
-    <string name="pref_start_screen">Başlangıç ekranı</string>
     <string name="default_category">Varsayılan kategori</string>
     <string name="default_category_summary">Her zaman sor</string>
     <string name="all_lang">Tümü</string>
@@ -283,7 +282,7 @@
     <string name="update_check_no_new_updates">Yeni güncelleme yok</string>
     <string name="update_check_look_for_updates">Güncellemeler aranıyor…</string>
     <string name="update_check_notification_download_in_progress">İndiriliyor…</string>
-    <string name="update_check_notification_download_complete">İndirme tamamlandı</string>
+    <string name="update_check_notification_download_complete">Kurmak için dokunun</string>
     <string name="update_check_notification_download_error">İndirme hatası</string>
     <string name="update_check_notification_update_available">Yeni sürüm var!</string>
     <string name="description_cover">Manganın kapağı</string>
@@ -388,7 +387,6 @@
     <string name="action_oldest">En eski</string>
     <string name="action_move_to_top">En üste taşı</string>
     <string name="action_move_to_bottom">En alta taşı</string>
-    <string name="action_sort_last_checked">Son denetleme</string>
     <string name="pref_enable_automatic_extension_updates">Uzantı güncellemelerini denetle</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Uzantı güncellemesi var</item>
@@ -440,7 +438,7 @@
     </plurals>
     <string name="pref_search_pinned_sources_only">Yalnızca sabitlenmiş kaynakları içer</string>
     <string name="gray_background">Gri</string>
-    <string name="pref_true_color_summary">Renk şeritlerini azaltır, ancak performansı etkiler</string>
+    <string name="pref_true_color_summary">Renk şeritlerini azaltır, ancak performansı etkileyebilir</string>
     <string name="viewer">Okuma kipi</string>
     <string name="pref_category_for_this_series">Bu seri için</string>
     <plurals name="num_categories">
@@ -486,9 +484,8 @@
     </plurals>
     <string name="requires_app_restart">Etkili olması için uygulamanın yeniden başlatılmasını gerektirir</string>
     <string name="label_network">Ağ</string>
-    <string name="pref_jump_to_chapters">Açınca bölümlere git</string>
     <string name="tapping_inverted_none">Yok</string>
-    <string name="pref_read_with_tapping_inverted">Dokunmayı ters çevir</string>
+    <string name="pref_read_with_tapping_inverted">Dokunma bölgelerini ters çevir</string>
     <string name="tapping_inverted_both">Her ikisi de</string>
     <string name="tapping_inverted_vertical">Dikey</string>
     <string name="tapping_inverted_horizontal">Yatay</string>
@@ -531,7 +528,6 @@
     <string name="action_search_settings">Arama ayarları</string>
     <string name="downloaded_chapters">İndirilen bölümler</string>
     <string name="manga_from_library">Kitaplıktan manga</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Kaydırmada alt çubuğu gizle</string>
     <string name="pref_incognito_mode_summary">Okuma geçmişini duraklatır</string>
     <string name="pref_incognito_mode">Gizli kip</string>
     <string name="pref_clear_history">Geçmişi temizle</string>
@@ -544,7 +540,7 @@
     <string name="pref_show_nsfw_source">Kaynaklar ve uzantılar listesinde göster</string>
     <string name="file_picker_error">Dosya seçme uygulaması bulunamadı</string>
     <string name="myanimelist_relogin">Lütfen MAL\'ye tekrar giriş yapın</string>
-    <string name="pref_viewer_nav">Gezinme düzeni</string>
+    <string name="pref_viewer_nav">Dokunma bölgeleri</string>
     <string name="edge_nav">Kenar</string>
     <string name="kindlish_nav">Kindle gibi</string>
     <string name="l_nav">L şeklinde</string>
@@ -571,13 +567,13 @@
     <string name="nav_zone_left">Sol</string>
     <string name="nav_zone_next">Sonraki</string>
     <string name="nav_zone_prev">Önceki</string>
-    <string name="pref_show_navigation_mode_summary">Okuyucu açıldığında dokunma bölgelerini göster</string>
-    <string name="pref_show_navigation_mode">Gezinme düzeni kaplamasını göster</string>
+    <string name="pref_show_navigation_mode_summary">Okuyucu açıldığında kısaca göster</string>
+    <string name="pref_show_navigation_mode">Dokunma bölgeleri kaplamasını göster</string>
     <string name="pref_dns_over_https">HTTPS üzerinden DNS (DoH)</string>
     <string name="exclude">Hariç tut: %s</string>
     <string name="include">Dahil et: %s</string>
     <string name="none">Yok</string>
-    <string name="action_sort_chapter_fetch_date">Alındığı tarih</string>
+    <string name="action_sort_chapter_fetch_date">Bölümün alındığı tarih</string>
     <string name="pref_download_new_categories_details">Hariç tutulan kategorilerdeki manga, dahil edilen kategorilerde olsa bile indirilmeyecektir.</string>
     <string name="pref_category_auto_download">Otomatik indir</string>
     <string name="pref_library_update_categories_details">Hariç tutulan kategorilerdeki manga, dahil edilen kategorilerde olsa bile güncellenmeyecektir.</string>
@@ -671,11 +667,11 @@
     <string name="label_warning">Uyarı</string>
     <string name="action_display_language_badge">Dil</string>
     <string name="backup_info">Otomatik yedeklemeler şiddetle tavsiye edilir. Kopyaları başka yerlerde de tutmalısınız.</string>
-    <string name="notification_size_warning">Büyük güncellemeler kaynaklara zarar verir ve daha yavaş güncellemelere ve ayrıca pil kullanımının artmasına neden olabilir</string>
+    <string name="notification_size_warning">Büyük güncellemeler kaynaklara zarar verir ve daha yavaş güncellemelere ve ayrıca pil kullanımının artmasına neden olabilir. Daha fazlasını öğrenmek için dokunun.</string>
     <string name="pref_verbose_logging">Ayrıntılı günlük kaydı</string>
     <string name="pref_verbose_logging_summary">Ayrıntılı günlükleri sistem günlüğüne yaz (uygulama performansını düşürür)</string>
     <string name="connected_to_wifi">Yalnızca Wi-Fi\'de</string>
-    <string name="download_queue_size_warning">Uyarı: büyük toplu indirmeler kaynakların yavaşlamasına ve/veya Tachiyomi\'yi engellemesine neden olabilir</string>
+    <string name="download_queue_size_warning">Uyarı: büyük toplu indirmeler kaynakların yavaşlamasına ve/veya Tachiyomi\'yi engellemesine neden olabilir. Daha fazlasını öğrenmek için dokunun.</string>
     <string name="update_72hour">Her 3 günde</string>
     <string name="pref_library_update_show_tab_badge">Güncellemeler simgesinde okunmayan sayısını göster</string>
     <string name="ext_update_all">Tümünü güncelle</string>
@@ -720,4 +716,22 @@
     <string name="update_check_open">GitHub\'da aç</string>
     <string name="webview_data_deleted">WebView verileri temizlendi</string>
     <string name="pref_clear_webview_data">WebView verilerini temizle</string>
+    <string name="action_close">Kapat</string>
+    <string name="pref_duplicate_pinned_sources">Yinelenen sabitlenmiş kaynakları göster</string>
+    <string name="pref_duplicate_pinned_sources_summary">Sabitlenen kaynakları ilgili dil gruplarında tekrarla</string>
+    <string name="battery_not_low">Pil düşük değil</string>
+    <string name="migrate_empty_screen">Bu çok garip</string>
+    <string name="source_filter_empty_screen">Kurulu kaynak bulunamadı</string>
+    <string name="source_empty_screen">Kaynak bulunamadı</string>
+    <string name="action_sort_last_manga_update">Son manga güncellemesi</string>
+    <string name="action_sort_unread_count">Okunmayan sayısı</string>
+    <string name="split_tall_images">Uzun görselleri otomatik böl</string>
+    <string name="split_tall_images_summary">İndirilen uzun görselleri bölerek okuyucu performansını artırır.</string>
+    <string name="download_notifier_split_page_not_found">Bölünürken sayfa %d bulunamadı</string>
+    <string name="download_notifier_split_page_path_not_found">Sayfa %d dosya yolu bulunamadı</string>
+    <string name="pref_reset_viewer_flags">Görüntüleyici seçeneklerini sıfırla</string>
+    <string name="pref_reset_viewer_flags_summary">Tüm serilerin okuma kipini ve yönünü sıfırlar</string>
+    <string name="pref_reset_viewer_flags_success">Görüntüleyici seçenekleri sıfırlandı</string>
+    <string name="pref_reset_viewer_flags_error">Görüntüleyici seçenekleri sıfırlanamadı</string>
+    <string name="download_notifier_split_failed">İndirilen görsel bölünemedi</string>
 </resources>

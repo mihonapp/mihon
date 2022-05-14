@@ -44,7 +44,7 @@
     <string name="action_install">설치</string>
     <string name="label_settings">설정</string>
     <string name="action_display">디스플레이</string>
-    <string name="history">기록</string>
+    <string name="history">역사</string>
     <string name="label_download_queue">다운로드 대기열</string>
     <string name="label_library">서재</string>
     <string name="label_recent_manga">기록</string>
@@ -86,7 +86,6 @@
     <string name="all">전부</string>
     <string name="pref_library_update_restriction">자동 업데이트 조건</string>
     <string name="charging">충전중</string>
-    <string name="pref_start_screen">시작 화면</string>
     <string name="default_category">기본 카테고리</string>
     <string name="all_lang">모든 언어</string>
     <string name="ext_update">업데이트</string>
@@ -156,7 +155,7 @@
     <string name="pref_clear_chapter_cache">회차별 캐시 삭제</string>
     <string name="used_cache">%1$s 사용중</string>
     <string name="cache_deleted">캐시 삭제됨. %1$d개의 파일이 삭제됨</string>
-    <string name="cache_delete_error">캐시 삭제중 오류가 발생하였습니다</string>
+    <string name="cache_delete_error">지우는 동안 오류가 발생했습니다</string>
     <string name="pref_clear_cookies">쿠키 삭제</string>
     <string name="cookies_cleared">쿠키 삭제됨</string>
     <string name="pref_clear_database">데이터베이스 삭제</string>
@@ -237,7 +236,7 @@
     <string name="update_check_no_new_updates">새로운 업데이트 없음</string>
     <string name="update_check_look_for_updates">업데이트를 찾는중…</string>
     <string name="update_check_notification_download_in_progress">다운로드 중…</string>
-    <string name="update_check_notification_download_complete">다운로드 완료됨</string>
+    <string name="update_check_notification_download_complete">탭하여 설치</string>
     <string name="update_check_notification_download_error">다운로드 오류</string>
     <string name="update_check_notification_update_available">업데이트 이용 가능!</string>
     <string name="description_cover">만화 표지</string>
@@ -394,7 +393,7 @@
     <string name="action_sort_date_added">서재에 추가된 시간 순</string>
     <string name="action_sort_latest_chapter">최신 화 업로드 순</string>
     <string name="l_nav">L자 모양</string>
-    <string name="pref_read_with_tapping_inverted">터치 반전</string>
+    <string name="pref_read_with_tapping_inverted">탭 영역 반전</string>
     <string name="tapping_inverted_none">없음</string>
     <string name="automatic_background">자동</string>
     <string name="kindlish_nav">Kindle식</string>
@@ -412,7 +411,7 @@
     <string name="edge_nav">양쪽 가장자리</string>
     <string name="action_view_chapters">회차 목록 보기</string>
     <string name="action_display_unread_badge">읽지 않은 회차</string>
-    <string name="pref_viewer_nav">터치 영역 설정</string>
+    <string name="pref_viewer_nav">탭 존</string>
     <string name="label_warning">경고</string>
     <string name="help_translate">번역에 참여하기</string>
     <string name="rotation_type">회전 설정</string>
@@ -454,7 +453,6 @@
     <string name="pref_category_appearance">모양</string>
     <string name="relative_time_today">오늘</string>
     <string name="pref_category_navigation">네비게이션</string>
-    <string name="pref_hide_bottom_bar_on_scroll">스크롤 시 하단 바 숨기기</string>
     <string name="pref_category_timestamps">시간 표시 형식</string>
     <string name="pref_relative_time_short">오늘, 어제</string>
     <string name="pref_category_library_update">전체 업데이트 설정</string>
@@ -484,9 +482,9 @@
     <string name="pref_reader_actions">행동</string>
     <string name="action_display_language_badge">언어</string>
     <string name="pref_show_reading_mode_summary">뷰어가 켜질 때 현재 읽기 모드를 표시합니다</string>
-    <string name="pref_show_navigation_mode">네비게이션 레이아웃 표시</string>
-    <string name="pref_show_navigation_mode_summary">뷰어가 켜질 때 화면 구성을 표시합니다</string>
-    <string name="pref_true_color_summary">밴딩 효과가 감소하지만 성능이 낮아질 수 있습니다</string>
+    <string name="pref_show_navigation_mode">탭 영역 오버레이 표시</string>
+    <string name="pref_show_navigation_mode_summary">리더가 열렸을 때 간략히 표시</string>
+    <string name="pref_true_color_summary">밴딩을 줄이지만 성능에 영향을 줄 수 있음</string>
     <string name="pref_category_display">디스플레이</string>
     <string name="pref_skip_filtered_chapters">필터링된 회차 건너뛰기</string>
     <string name="pref_highest">매우 높음</string>
@@ -504,7 +502,6 @@
     <string name="chapter_settings_updated">기본 회차 설정을 업데이트 했습니다</string>
     <string name="channel_skipped">건너뜀</string>
     <string name="channel_new_chapters">회차 업데이트</string>
-    <string name="pref_jump_to_chapters">시작 시 회차 표시</string>
     <string name="include">포함: %s</string>
     <string name="label_background_activity">백그라운드 활동</string>
     <string name="pref_update_only_completely_read">안 읽은 회차가 있음</string>
@@ -554,9 +551,9 @@
     <string name="pref_clear_history">내역 삭제</string>
     <string name="clear_history_completed">기록이 삭제되었습니다</string>
     <string name="download_insufficient_space">저장 공간이 부족하여 회차를 다운로드 할 수 없습니다</string>
-    <string name="download_queue_size_warning">경고: 한꺼번에 많은 양을 다운로드 할 경우 소스가 느려지거나 Tachiyomi를 차단할 수 있습니다</string>
+    <string name="download_queue_size_warning">경고: 대량 다운로드는 소스가 느려지거나 Tachiyomi를 차단할 수 있습니다. 탭하여 자세히 알아보기</string>
     <string name="notification_check_updates">새로운 회차 확인 중</string>
-    <string name="notification_size_warning">대량의 업데이트는 소스에 과도한 부하를 줄 수 있고 배터리 사용량을 증가시킵니다</string>
+    <string name="notification_size_warning">대규모 업데이트는 소스에 피해를 입히고 업데이트가 느려지고 배터리 사용량이 증가할 수 있습니다. 탭하여 자세히 알아보기</string>
     <string name="notification_chapters_single">%1$s화</string>
     <string name="notification_update_error">%1$d개의 업데이트가 실패했습니다</string>
     <string name="notification_update_skipped">%1$d개의 업데이트를 건너 뛰었습니다</string>
@@ -615,13 +612,12 @@
     <string name="ext_nsfw_short">19금</string>
     <string name="action_filter_started">읽는 중</string>
     <string name="action_display_show_tabs">카테고리 탭 보이기</string>
-    <string name="action_sort_chapter_fetch_date">정보가 갱신된 시간 순</string>
+    <string name="action_sort_chapter_fetch_date">장 가져오기 날짜</string>
     <string name="action_sort_count">만화의 총 개수</string>
     <string name="action_webview_back">뒤로가기</string>
     <string name="battery_optimization_disabled">배터리 최적화가 이미 꺼져 있습니다</string>
     <string name="action_order_by_chapter_number">회차 번호 순</string>
     <string name="action_move_to_top">맨 위로 이동</string>
-    <string name="action_sort_last_checked">마지막으로 확인한 순</string>
     <string name="action_order_by_upload_date">업로드 날짜 순</string>
     <string name="action_move_to_bottom">맨 아래로 이동</string>
     <string name="action_asc">오름차순</string>
@@ -706,4 +702,17 @@
     <string name="update_check_fdroid_migration_info">새로운 공식 업데이트가 있습니다. F-Droid의 비공식 버젼에서 이전을 원하시면 터치해서 방법을 확인하세요.</string>
     <string name="update_check_open">GitHub에서 열기</string>
     <string name="error_saving_picture">이미지 저장 오류</string>
+    <string name="source_empty_screen">출처를 찾을 수 없습니다</string>
+    <string name="source_filter_empty_screen">설치된 소스를 찾을 수 없습니다</string>
+    <string name="action_sort_last_manga_update">마지막 만화 업데이트</string>
+    <string name="action_sort_unread_count">읽지 않은 수</string>
+    <string name="pref_duplicate_pinned_sources">중복된 고정 소스 표시</string>
+    <string name="pref_duplicate_pinned_sources_summary">해당 언어 그룹에서 고정된 소스 반복</string>
+    <string name="migrate_empty_screen">글쎄, 이것은 어색하다</string>
+    <string name="action_close">닫다</string>
+    <string name="battery_not_low">배터리가 부족하지 않음</string>
+    <string name="pref_clear_webview_data">웹뷰 데이터 지우기</string>
+    <string name="webview_data_deleted">웹뷰 데이터 삭제됨</string>
+    <string name="split_tall_images">긴 이미지 자동 분할</string>
+    <string name="split_tall_images_summary">긴 다운로드 이미지를 분할하여 리더 성능을 향상시킵니다.</string>
 </resources>

@@ -21,7 +21,6 @@
     <string name="action_sort_alpha">ანბანის მიხედვით</string>
     <string name="action_sort_total">თავების რაოდენობა</string>
     <string name="action_sort_last_read">ბოლოს წაკითხული</string>
-    <string name="action_sort_last_checked">ბოლოს ნანახი</string>
     <string name="action_sort_latest_chapter">ბოლო თავი</string>
     <string name="action_search">ძებნა</string>
     <string name="action_select_all">ყველას მონიშვნა</string>
@@ -395,7 +394,6 @@
     <string name="action_migrate">მიგრაცია</string>
     <string name="action_pin">მიმაგრება</string>
     <string name="action_unpin">მიმაგრების მოხსნა</string>
-    <string name="pref_start_screen">საწყისი გვერდი</string>
     <string name="pref_library_update_refresh_metadata_summary">ბიბლიოთეკის განახლებისას მოძებნე ახალი ყდები და დეტალები</string>
     <string name="ext_updates_pending">განახლებები მოლოდინის რეჟიმშია</string>
     <string name="ext_obsolete">მოძველებული</string>
@@ -492,7 +490,6 @@
         <item quantity="one">%d კატეგორია</item>
         <item quantity="other">%d კატეგორიები</item>
     </plurals>
-    <string name="pref_jump_to_chapters">გახსნილ თავებთან გადასვლა</string>
     <plurals name="lock_after_mins">
         <item quantity="one">1 წუთის შემდეგ</item>
         <item quantity="other">%1$s წუთის შემდეგ</item>

@@ -59,7 +59,6 @@
     <string name="label_sources">Fuentes</string>
     <string name="action_remove_bookmark">Quitar capítulo de favoritos</string>
     <string name="action_bookmark">Agregar capítulo a favoritos</string>
-    <string name="action_sort_last_checked">Último verificado</string>
     <string name="action_filter_unread">No leído</string>
     <string name="action_filter_bookmarked">Marcado</string>
     <string name="label_download_queue">Lista de descargas</string>
@@ -205,7 +204,7 @@
     <string name="default_category">Categoría por defecto</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprobar nueva portada y los detalles cuando actualizes la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Actualizar metadatos automáticamente</string>
-    <string name="pref_update_only_non_completed">Series completadas</string>
+    <string name="pref_update_only_non_completed">Que ya están completadas</string>
     <string name="charging">Cargando</string>
     <string name="pref_library_update_restriction">Restricciones de actualización automática</string>
     <string name="update_weekly">Semanal</string>
@@ -216,7 +215,6 @@
     <string name="update_never">Desactivado</string>
     <string name="pref_library_update_interval">Actualizaciones automáticas</string>
     <string name="pref_category_library_update">Actualizaciones</string>
-    <string name="pref_jump_to_chapters">Saltar a los capítulos abiertos</string>
     <string name="landscape">Horizontal</string>
     <string name="tapping_inverted_both">Ambos</string>
     <string name="tapping_inverted_vertical">Vertical</string>
@@ -261,7 +259,6 @@
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_confirm_exit">Confirmar salir</string>
     <string name="pref_date_format">Formato de fecha</string>
-    <string name="pref_start_screen">Pantalla inicial</string>
     <string name="theme_dark">Encendido</string>
     <string name="theme_light">Apagado</string>
     <string name="theme_system">Usar el del sistema</string>
@@ -339,7 +336,7 @@
     <string name="clear_database_confirmation">¿Estas seguro\? Los capítulos leídos y el progreso de los mangas que no estén en la biblioteca se perderán</string>
     <string name="pref_clear_database_summary">Borrar el historial de mangas que no están guardados en la biblioteca</string>
     <string name="pref_clear_database">Borrar base de datos</string>
-    <string name="cache_delete_error">Se ha producido un error al borrar el caché</string>
+    <string name="cache_delete_error">Se ha producido un error mientras se limpiaba</string>
     <string name="battery_optimization_setting_activity_not_found">No se pudo abrir la configuración del dispositivo</string>
     <string name="pinned_sources">Fijadas</string>
     <string name="last_used_source">Última usada</string>
@@ -530,7 +527,6 @@
     <string name="chapter_settings">Ajustes del capítulo</string>
     <string name="downloaded_chapters">Capítulos descargardos</string>
     <string name="manga_from_library">Manga de la biblioteca</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Ocultar la barra inferior al desplazar</string>
     <string name="action_search_settings">Opciones de búsqueda</string>
     <string name="pref_incognito_mode_summary">Pausar historial de lectura</string>
     <string name="pref_incognito_mode">Modo incógnito</string>
@@ -651,7 +647,7 @@
     <string name="pref_side_nav_icon_alignment">Alineación del icono de navegación lateral</string>
     <string name="pref_category_navigation">Navegación</string>
     <string name="pref_dark_theme_pure_black">Modo oscuro con negro puro</string>
-    <string name="theme_yotsuba">Yotsuba</string>
+    <string name="theme_yotsuba">Tema Yotsuba</string>
     <string name="theme_yinyang">Yin y Yang</string>
     <string name="theme_tealturquoise">Turquesa</string>
     <string name="theme_tako">Tako</string>
@@ -660,7 +656,7 @@
     <string name="theme_monet">Dinámico</string>
     <string name="pref_app_theme">Tema de la app</string>
     <string name="pref_category_appearance">Apariencia</string>
-    <string name="action_sort_chapter_fetch_date">Fecha obtenida</string>
+    <string name="action_sort_chapter_fetch_date">Fecha de obtención del capítulo</string>
     <string name="ext_app_info">Información de la aplicación</string>
     <string name="ext_installer_pref">Instalador</string>
     <string name="ext_installer_shizuku_stopped">Shizuku no se está ejecutando</string>
@@ -686,11 +682,11 @@
     <string name="on_hiatus">En hiatus</string>
     <string name="library_errors_help">Si necesitas ayuda arreglando errores en la actualización de la biblioteca, ve a %1$s</string>
     <string name="save_chapter_as_cbz">Guardar como archivo CBZ</string>
-    <string name="pref_update_only_completely_read">Hay capítulos no leídos</string>
-    <string name="pref_library_update_manga_restriction">Saltar actualización</string>
+    <string name="pref_update_only_completely_read">Con capitulo(s) sin leer</string>
+    <string name="pref_library_update_manga_restriction">Omitir actualización de los títulos</string>
     <string name="extension_api_error">Error al obtener la lista de extensiones</string>
-    <string name="download_queue_size_warning">Advertencia: las descargas en masa pueden causar lentitud en las fuentes y/o bloquear Tachiyomi</string>
-    <string name="notification_size_warning">Advertencia: las actualizaciones grandes afectan las fuentes y pueden causar actualizaciones más lentas, además de un mayor uso de batería</string>
+    <string name="download_queue_size_warning">Advertencia: las descargas en masa pueden causar lentitud en las fuentes y/o bloquear Tachiyomi. Toca para conocer más.</string>
+    <string name="notification_size_warning">Advertencia: las actualizaciones grandes afectan las fuentes y podría hacerlas más lentas, además de un mayor uso de batería. Toca para conocer más.</string>
     <string name="action_show_manga">Mostrar manga</string>
     <string name="action_filter_started">Empezado</string>
     <string name="action_display_cover_only_grid">Portada-única de la cuadrícula</string>
@@ -702,16 +698,31 @@
     <string name="pref_navigate_pan">Navegar a la panorámica</string>
     <string name="pref_landscape_zoom">Ampliar imagen horizontal</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="pref_update_only_started">No hay capítulos leídos</string>
+    <string name="pref_update_only_started">Que no han sido iniciados</string>
     <string name="backup_restore_invalid_uri">Error: URI vacío</string>
     <string name="skipped_reason_completed">Omitido porque la serie está completa</string>
     <string name="skipped_reason_not_caught_up">Omitido porque hay capítulos sin leer</string>
     <string name="skipped_reason_not_started">Omitido porque no hay capítulos leídos</string>
-    <string name="learn_more">Más información</string>
+    <string name="learn_more">Toca para conocer más</string>
     <string name="channel_skipped">Omitido</string>
     <string name="notification_update_error">%1$d actualización(es) fallida(s)</string>
     <string name="notification_update_skipped">%1$d actualización(es) omitida(s)</string>
     <string name="rotation_reverse_portrait">Retrato inverso</string>
     <string name="action_move_to_top_all_for_series">Mover la serie al principio</string>
     <string name="disabled_nav">Desactivado</string>
+    <string name="pref_duplicate_pinned_sources_summary">Repetir fuentes ancladas en sus grupos de lenguaje respectivos</string>
+    <string name="pref_duplicate_pinned_sources">Mostrar fuentes duplicadas ancladas</string>
+    <string name="empty_backup_error">No hay entradas para respaldar en la biblioteca</string>
+    <string name="webview_data_deleted">Datos de la vista web eliminados</string>
+    <string name="pref_clear_webview_data">Limpiar datos de la vista web</string>
+    <string name="update_check_fdroid_migration_info">Una nueva versión esta disponible desde los lanzamientos oficiales, Toca para aprender a emigrar de lanzamientos F-droid no oficiales.</string>
+    <string name="error_saving_picture">Error al guardar imagen</string>
+    <string name="action_close">Cerrar</string>
+    <string name="battery_not_low">La bateria no está baja</string>
+    <string name="update_check_open">Abrir en GitHub</string>
+    <string name="source_empty_screen">Ninguna fuente encontrada</string>
+    <string name="source_filter_empty_screen">No se encontró ninguna fuente instalada</string>
+    <string name="migrate_empty_screen">Bueno, esto es incomodo</string>
+    <string name="action_sort_unread_count">Recuento no leído</string>
+    <string name="action_sort_last_manga_update">Última actualización de manga</string>
 </resources>

@@ -41,7 +41,6 @@
     <string name="update_never">መመሪያ</string>
     <string name="pref_library_update_interval">የቤተ-መጽሐፍት ማዘመኛ ድግግሞሽ</string>
     <string name="pref_category_library_update">ዝመናዎች</string>
-    <string name="pref_jump_to_chapters">ክፍት ወደ ምዕራፎች ይዝለሉ</string>
     <string name="landscape">የመሬት ገጽታ</string>
     <string name="portrait">የቁም ስዕል</string>
     <string name="pref_library_columns">ዕቃዎች በአንድ ረድፍ</string>
@@ -62,7 +61,6 @@
     <string name="pref_manage_notifications">ማሳወቂያዎችን ያቀናብሩ</string>
     <string name="pref_confirm_exit">መውጫውን ያረጋግጡ</string>
     <string name="pref_date_format">የቀን ቅርጸት</string>
-    <string name="pref_start_screen">ማያ ገጹን ይጀምሩ</string>
     <string name="theme_dark">በርቷል</string>
     <string name="theme_light">ጠፍቷል</string>
     <string name="theme_system">ስርዓት ይከተሉ</string>
@@ -145,7 +143,6 @@
     <string name="action_search">ፈልግ</string>
     <string name="action_sort_date_added">ቀን ታክሏል</string>
     <string name="action_sort_latest_chapter">የቅርብ ጊዜ ምዕራፍ</string>
-    <string name="action_sort_last_checked">ለመጨረሻ ጊዜ የተፈተሸ</string>
     <string name="action_sort_last_read">ለመጨረሻ ጊዜ የተነበበው</string>
     <string name="action_sort_total">ጠቅላላ ምዕራፎች</string>
     <string name="action_filter_empty">ማጣሪያውን ያስወግዱ</string>
@@ -274,7 +271,6 @@
     <string name="color_filter_r_value">ቀ</string>
     <string name="color_filter_b_value">ቢ</string>
     <string name="color_filter_g_value">ኣ</string>
-    <string name="pref_hide_bottom_bar_on_scroll">በማሸብለል ላይ የታች አሞሌን ደብቅ</string>
     <string name="invalid_backup_file_missing_data">ፋይል እየጎደለ ነው።</string>
     <string name="invalid_backup_file">ልክ ያልሆነ የመጠባበቂያ ፋይል</string>
     <string name="backup_created">ምትኬ ተፈጥሯል</string>

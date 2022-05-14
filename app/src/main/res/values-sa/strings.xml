@@ -29,7 +29,6 @@
     <string name="action_filter_empty">शोधकं निष्करोतु</string>
     <string name="action_sort_alpha">वर्णक्रमानुसारिणि</string>
     <string name="action_sort_count">समस्ताः माङ्गाः</string>
-    <string name="action_sort_last_checked">अन्तिमपरिशीलितम्</string>
     <string name="action_sort_latest_chapter">नूतनः अध्यायः</string>
     <string name="action_sort_date_added">योजितदिनाङ्कः</string>
     <string name="action_search">अन्वेषणम्</string>
@@ -151,12 +150,10 @@
     <string name="alignment_top">उपरि</string>
     <string name="alignment_center">मध्यः</string>
     <string name="alignment_bottom">अधः</string>
-    <string name="pref_hide_bottom_bar_on_scroll">अधस्थां शलाकां सारयति सति वृणोतु</string>
     <string name="pref_category_timestamps">समयमुद्राः</string>
     <string name="pref_relative_format">सम्बन्धकसमयमुद्राः</string>
     <string name="pref_relative_time_short">लघु (अद्य श्वः च)</string>
     <string name="pref_relative_time_long">दीर्घम् (लघु+, n दिनपूर्वम्)</string>
-    <string name="pref_start_screen">आरम्भकपटलम्</string>
     <string name="pref_manage_notifications">आवेदनानि निर्वहतु</string>
     <string name="pref_category_security">संरक्षणम्</string>
     <string name="lock_with_biometrics">उद्घाटनम् आवश्यकम्</string>
@@ -192,7 +189,6 @@
     <string name="update_72hour">प्रतिदिनत्रयम्</string>
     <string name="charging">पारणसमये</string>
     <string name="restrictions">निर्बन्धाः - %s</string>
-    <string name="pref_jump_to_chapters">उद्घाटने अध्यायान् दर्शयतु</string>
     <string name="pref_category_library_update">सार्वत्रिकनवीकरणम्</string>
     <string name="update_12hour">प्रतिद्वादशघण्टा</string>
     <string name="update_weekly">प्रतिसप्ताहिकम्</string>

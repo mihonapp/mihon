@@ -47,7 +47,6 @@
     <string name="update_never">Išjungti</string>
     <string name="pref_library_update_interval">Automatiniai atnaujinimai</string>
     <string name="pref_category_library_update">Globalus naujinimas</string>
-    <string name="pref_jump_to_chapters">Atidarius peršokti į skyrius</string>
     <string name="landscape">Horizontalus</string>
     <string name="portrait">Portretas</string>
     <string name="pref_library_columns">Elementai eilutėje</string>
@@ -77,13 +76,11 @@
     <string name="pref_category_security">Sauga</string>
     <string name="pref_manage_notifications">Tvarkyti pranešimus</string>
     <string name="pref_confirm_exit">Patvirtinti išėjimą</string>
-    <string name="pref_start_screen">Pradžios ekranas</string>
     <string name="pref_date_format">Datos formatas</string>
     <string name="pref_relative_time_long">Ilgi (Trumpi+, prieš n dienų)</string>
     <string name="pref_relative_time_short">Trumpi(Šiandien,Vakar)</string>
     <string name="pref_relative_format">Reliatyvūs laiko štampai</string>
     <string name="pref_category_timestamps">Laiko štampai</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Slėpti apatinę juostą slenkant</string>
     <string name="alignment_bottom">Apačioje</string>
     <string name="alignment_center">Viduryje</string>
     <string name="alignment_top">Viršuje</string>
@@ -192,7 +189,6 @@
     <string name="action_sort_date_added">Pridėtas</string>
     <string name="action_sort_chapter_fetch_date">Tikrinimo datą</string>
     <string name="action_sort_latest_chapter">Naujausiais skyrius</string>
-    <string name="action_sort_last_checked">Paskiausiai žiūrėtas</string>
     <string name="action_sort_last_read">Paskutinis skaitytas</string>
     <string name="action_sort_total">Skyrių skaičius</string>
     <string name="action_sort_alpha">Abėcėlės tvarka</string>

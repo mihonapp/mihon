@@ -123,7 +123,6 @@
     <string name="action_global_search">Globālā meklēšana</string>
     <string name="action_sort_date_added">Pievienošanas datums</string>
     <string name="action_sort_latest_chapter">Jaunākā nodaļa</string>
-    <string name="action_sort_last_checked">Pēdējo reizi pārbaudīts</string>
     <string name="action_menu">Izvēlne</string>
     <string name="confirm_exit">Vēlreiz nospiediet atpakaļ, lai izietu</string>
     <string name="information_empty_category">Jums nav nevienas kategorijas. Pieskarieties plus pogu, lai izveidotu vienu savas bibliotēkas organizēšanai.</string>
@@ -140,7 +139,6 @@
     <string name="update_check_look_for_updates">Notiek jaunu nodaļu meklēšana…</string>
     <string name="update_check_no_new_updates">Nav pieejamas jaunas nodaļas</string>
     <string name="update_check_confirm">Lejuplādēt</string>
-    <string name="pref_jump_to_chapters">Pārlēkt uz nodaļām, atverot</string>
     <string name="landscape">Ainava</string>
     <string name="portrait">Portrets</string>
     <string name="pref_library_columns">Vienumi rindā</string>
@@ -161,7 +159,6 @@
     <string name="pref_manage_notifications">Pārvaldiet paziņojumus</string>
     <string name="pref_confirm_exit">Apstipriniet izeju</string>
     <string name="pref_date_format">Datuma formāts</string>
-    <string name="pref_start_screen">Sākuma ekrāns</string>
     <string name="theme_dark">Ieslēgts</string>
     <string name="theme_light">Izslēgts</string>
     <string name="theme_system">Sekot sistēmu</string>

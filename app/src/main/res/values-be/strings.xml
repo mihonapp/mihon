@@ -64,7 +64,6 @@
     <string name="action_sort_date_added">Дата дадання</string>
     <string name="action_sort_chapter_fetch_date">Дата атрымання</string>
     <string name="action_sort_latest_chapter">Апошняя частка</string>
-    <string name="action_sort_last_checked">Апошняя праверка</string>
     <string name="action_sort_last_read">Апошняе чытанне</string>
     <string name="action_sort_total">Усяго частак</string>
     <string name="action_sort_alpha">У алфавітным парадку</string>
@@ -139,7 +138,6 @@
     <string name="update_never">Уручную</string>
     <string name="pref_library_update_interval">Частата абнаўлення</string>
     <string name="pref_category_library_update">Глабальнае абнаўленне</string>
-    <string name="pref_jump_to_chapters">Перайсці да частак пры запуску</string>
     <string name="landscape">Гарызантальная</string>
     <string name="portrait">Партрэтная</string>
     <string name="pref_library_columns">Элементы ў радку</string>
@@ -166,10 +164,8 @@
     <string name="alignment_center">Пасярэдзіне</string>
     <string name="alignment_top">Паверсе</string>
     <string name="pref_side_nav_icon_alignment">Выраўноўванне значкоў бакавой навігацыі</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Схаваць ніжнюю паласу пры прагортцы</string>
     <string name="pref_confirm_exit">Пацвярджаць выхад</string>
     <string name="pref_date_format">Фармат даты</string>
-    <string name="pref_start_screen">Пачатковы экран</string>
     <string name="pref_dark_theme_pure_black">Чысты чорны цёмны рэжым</string>
     <string name="theme_yotsuba">Ёцуба</string>
     <string name="theme_yinyang">Інь і Ян</string>

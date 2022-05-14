@@ -78,7 +78,6 @@
     <string name="charging">充電中</string>
     <string name="pref_update_only_non_completed">ステータスが「完結済み」</string>
     <string name="pref_auto_update_manga_sync">読んだ後に読書進捗を更新</string>
-    <string name="pref_start_screen">スタート画面</string>
     <string name="default_category">デフォルトカテゴリー</string>
     <string name="default_category_summary">毎回尋ねる</string>
     <string name="all_lang">すべて</string>
@@ -149,7 +148,7 @@
     <string name="pref_backup_slots">最大バックアップ数</string>
     <string name="backup_created">バックアップが作成されました</string>
     <string name="pref_clear_chapter_cache">チャプタキャッシュをクリア</string>
-    <string name="cache_delete_error">キャッシュの消去中にエラーが発生しました</string>
+    <string name="cache_delete_error">消去中にエラーが発生しました</string>
     <string name="pref_clear_database">データベースをクリア</string>
     <string name="pref_clear_database_summary">ライブラリにないマンガの履歴を削除</string>
     <string name="version">バージョン</string>
@@ -245,7 +244,7 @@
     <string name="completed">完結済み</string>
     <string name="dropped">放棄済み</string>
     <string name="on_hold">保留中</string>
-    <string name="plan_to_read">読むつもり</string>
+    <string name="plan_to_read">読む予定</string>
     <string name="score">評価</string>
     <string name="title">タイトル</string>
     <string name="status">ステータス</string>
@@ -280,7 +279,7 @@
     <string name="update_check_no_new_updates">新しいバージョンがありません</string>
     <string name="update_check_look_for_updates">アップデートを確認中…</string>
     <string name="update_check_notification_download_in_progress">ダウンロード中…</string>
-    <string name="update_check_notification_download_complete">ダウンロード完了</string>
+    <string name="update_check_notification_download_complete">タップでインストール</string>
     <string name="update_check_notification_download_error">ダウンロード中にエラー発生</string>
     <string name="update_check_notification_update_available">アップデート利用可能！</string>
     <string name="description_cover">マンガカバー</string>
@@ -296,7 +295,7 @@
     <string name="download_notifier_no_network">ネットワーク接続が利用できません</string>
     <string name="download_notifier_download_paused">ダウンロード一時停止済み</string>
     <string name="channel_common">一般設定</string>
-    <string name="repeating">読み直している</string>
+    <string name="repeating">読み返し中</string>
     <string name="source_not_installed">未インストールのソース：%1$s</string>
     <string name="transition_finished">読み終わりました：</string>
     <string name="transition_current">読んでいます：</string>
@@ -404,7 +403,7 @@
     <string name="filter_mode_darken">焼き込み/比較（暗）</string>
     <string name="filter_mode_lighten">覆い焼き/比較（明）</string>
     <string name="filter_mode_multiply">乗算</string>
-    <string name="pref_true_color_summary">バンディングを軽減しますが、パフォーマンスを影響します</string>
+    <string name="pref_true_color_summary">バンディングを軽減しますが、パフォーマンスを影響するかもしれません</string>
     <string name="pref_cutout_short">画面の切り抜きエリアにも内容を表示</string>
     <string name="unofficial_extension_message">この拡張機能はTachiyomiの公式拡張機能リストに含まれていません。</string>
     <string name="ext_unofficial">非公式</string>
@@ -432,7 +431,6 @@
     <string name="action_disable_all">全て無効にする</string>
     <string name="action_enable_all">全て有効にする</string>
     <string name="action_select_inverse">選択を反転</string>
-    <string name="action_sort_last_checked">最近のアクセス順</string>
     <string name="action_menu">メニュー</string>
     <string name="confirm_exit">もう一度押して終了します</string>
     <string name="channel_new_chapters">章の更新</string>
@@ -483,7 +481,6 @@
     <string name="unknown_author">作者不明</string>
     <string name="requires_app_restart">変更を適用するには再起動してください</string>
     <string name="label_network">ネットワーク</string>
-    <string name="pref_jump_to_chapters">起動時にチャプターを表示</string>
     <string name="pref_read_with_tapping_inverted">タップでのページめくりを反転</string>
     <string name="updated_version">v%1$sに更新しました</string>
     <string name="whats_new">更新情報</string>
@@ -520,7 +517,6 @@
     <string name="action_search_settings">検索設定</string>
     <string name="downloaded_chapters">ダウンロードした章</string>
     <string name="manga_from_library">ライブラリからのマンガ</string>
-    <string name="pref_hide_bottom_bar_on_scroll">スクロール時ボトムバーを非表示</string>
     <string name="pref_incognito_mode_summary">閲覧履歴の記録を一時停止します</string>
     <string name="pref_incognito_mode">シークレット モード</string>
     <string name="pref_clear_history">履歴を全消去</string>
@@ -544,7 +540,7 @@
     <string name="action_filter_tracked">登録済み</string>
     <string name="pref_dump_crash_logs_summary">開発者に渡すよう、エラー ログを保存します</string>
     <string name="pref_dump_crash_logs">クラッシュ ログをダンプ</string>
-    <string name="pref_viewer_nav">ナビゲーションレイアウト</string>
+    <string name="pref_viewer_nav">タップ可能なゾーン</string>
     <string name="right_and_left_nav">右と左</string>
     <string name="kindlish_nav">Kindleスタイル</string>
     <string name="l_nav">L形</string>
@@ -560,8 +556,8 @@
     <string name="nav_zone_left">左</string>
     <string name="nav_zone_next">次へ</string>
     <string name="nav_zone_prev">前へ</string>
-    <string name="pref_show_navigation_mode_summary">ビューアが立ち上がるとタップゾーンを表示します</string>
-    <string name="pref_show_navigation_mode">ﾅﾋﾞｹﾞｰｼｮﾝﾚｲｱｳﾄｵｰﾊﾞｰﾚｲを表示</string>
+    <string name="pref_show_navigation_mode_summary">ビューアが立ち上がるとしばらく表示します</string>
+    <string name="pref_show_navigation_mode">タップ可能なゾーンを表示</string>
     <string name="pref_dns_over_https">DNS over HTTPS（DoH）</string>
     <string name="pref_download_new_categories_details">含まれているカテゴリーに入っていても、除外対象カテゴリーにあるマンガは更新されません。</string>
     <string name="pref_category_auto_download">自動ダウンロード</string>
@@ -658,11 +654,11 @@
     <string name="enhanced_tracking_info">特定ソース専用の高度な機能を提供するサービスです。漫画はライブラリに追加される時、自動で追跡され始めます。</string>
     <string name="backup_info">バックアップの自動作成は強く推奨されます。ほかの場所にもコピーを保管してください。</string>
     <string name="pref_verbose_logging_summary">システムログにverboseログを出力（アプリのパフォーマンスが低下します）</string>
-    <string name="notification_size_warning">大規模のアップデートはソースに有害で、ソースを遅くし、電池の消耗を増加する可能性があります</string>
+    <string name="notification_size_warning">大規模のアップデートはソースに有害で、ソースを遅くし、電池の消耗を増加する可能性があります。詳しくはタップでご覧ください。</string>
     <string name="action_display_language_badge">言語</string>
     <string name="label_warning">警告</string>
     <string name="pref_verbose_logging">Verboseログ出力</string>
-    <string name="download_queue_size_warning">警告：大量の一括ダウンロードにより、ソースは遅くなったり、Tachiyomiを接続禁止したりする恐れがあります</string>
+    <string name="download_queue_size_warning">警告：大量の一括ダウンロードにより、ソースは遅くなったり、Tachiyomiを接続禁止したりする恐れがあります。詳しくはタップでご覧ください。</string>
     <string name="update_72hour">3日ごと</string>
     <string name="connected_to_wifi">Wi-Fi接続時のみ</string>
     <string name="pref_library_update_show_tab_badge">更新アイコンで未読カウンターを表示</string>
@@ -675,7 +671,7 @@
     <string name="privacy_policy">プライバシーポリシー</string>
     <string name="pref_library_update_manga_restriction">タイトル更新のスキップ</string>
     <string name="pref_update_only_completely_read">未読の章あり</string>
-    <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください。</string>
+    <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください</string>
     <string name="save_chapter_as_cbz">CBZアーカイブとして保存</string>
     <string name="publishing_finished">完結済み</string>
     <string name="cancelled">キャンセル済み</string>
@@ -706,4 +702,23 @@
     <string name="update_check_open">GitHubに移動</string>
     <string name="update_check_fdroid_migration_info">公式リリースで新しいバージョンが取得可能です。非公式のF-Droidリリースからの移行については、タップで手順をご覧ください。</string>
     <string name="error_saving_picture">画像の保存時にエラー発生</string>
+    <string name="action_close">閉じる</string>
+    <string name="pref_duplicate_pinned_sources">重複するピン留め中のソース</string>
+    <string name="pref_clear_webview_data">WebViewデータを消去</string>
+    <string name="webview_data_deleted">WebViewデータを消去しました</string>
+    <string name="battery_not_low">バッテリー残量が低くない</string>
+    <string name="pref_duplicate_pinned_sources_summary">各言語グループでピン留め済みのソースを繰り返す</string>
+    <string name="source_empty_screen">ソースが見つかりません</string>
+    <string name="source_filter_empty_screen">インストール済みのソースが見つかりません</string>
+    <string name="migrate_empty_screen">えっと、これはちょっと気まずいですね</string>
+    <string name="action_sort_last_manga_update">前回の漫画更新</string>
+    <string name="action_sort_unread_count">未読の章数</string>
+    <string name="split_tall_images">長い画像を自動で分割</string>
+    <string name="split_tall_images_summary">ダウンロードした長い画像を自動で分割してビューアのパフォーマンスを改善します。</string>
+    <string name="download_notifier_split_page_not_found">分割時にページ%dが見つかりませんでした</string>
+    <string name="pref_reset_viewer_flags">ビューアフラグをリセット</string>
+    <string name="pref_reset_viewer_flags_summary">全てのシリーズのビューアモードと画面向きをリセットします</string>
+    <string name="download_notifier_split_page_path_not_found">ページ%dのファイルパスが見つかりませんでした</string>
+    <string name="pref_reset_viewer_flags_success">ビューアフラグをリセットしました</string>
+    <string name="pref_reset_viewer_flags_error">ビューアフラグをリセットできませんでした</string>
 </resources>

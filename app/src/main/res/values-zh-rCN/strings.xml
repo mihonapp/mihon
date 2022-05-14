@@ -89,7 +89,6 @@
     <string name="charging">正在充电</string>
     <string name="pref_update_only_non_completed">状态为“已完结”</string>
     <string name="pref_auto_update_manga_sync">阅读后更新进度</string>
-    <string name="pref_start_screen">起始页面</string>
     <string name="default_category">默认分类</string>
     <string name="default_category_summary">始终询问</string>
     <string name="all_lang">全部</string>
@@ -173,7 +172,7 @@
     <string name="pref_backup_service_category">自动备份</string>
     <string name="pref_backup_interval">备份频率</string>
     <string name="pref_backup_slots">最大备份数</string>
-    <string name="backup_created">备份已创建</string>
+    <string name="backup_created">已创建备份</string>
     <string name="restore_completed">还原完毕</string>
     <string name="backup_restore_content">还原备份时需连接网络来抓取图源数据。
 \n
@@ -291,7 +290,7 @@
     <string name="update_check_no_new_updates">没有可用的更新</string>
     <string name="update_check_look_for_updates">正在检查更新…</string>
     <string name="update_check_notification_download_in_progress">正在下载…</string>
-    <string name="update_check_notification_download_complete">下载完毕</string>
+    <string name="update_check_notification_download_complete">轻按安装</string>
     <string name="update_check_notification_download_error">下载失败</string>
     <string name="update_check_notification_update_available">有可用的新版本！</string>
     <string name="description_cover">漫画封面</string>
@@ -384,7 +383,6 @@
     <string name="action_oldest">最旧</string>
     <string name="action_move_to_top">移至顶部</string>
     <string name="action_move_to_bottom">移至底部</string>
-    <string name="action_sort_last_checked">最近检查</string>
     <string name="pref_enable_automatic_extension_updates">自动检查扩展插件更新</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">%d 个扩展插件可更新</item>
@@ -443,7 +441,7 @@
         <item quantity="other">耗时 %1$s，出现 %2$s 个错误</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">无法打开设备设置</string>
-    <string name="pref_true_color_summary">减少色带，但会降低性能</string>
+    <string name="pref_true_color_summary">减少色带，但也许会影响性能</string>
     <string name="action_display_unread_badge">未读章节</string>
     <string name="pref_refresh_library_covers">刷新书架漫画封面</string>
     <string name="tracking_info">将章节进度单向同步到追踪服务。点击「追踪」按钮以设置漫画的追踪源。</string>
@@ -477,7 +475,6 @@
     </plurals>
     <string name="requires_app_restart">需要重启应用才能生效</string>
     <string name="label_network">网络</string>
-    <string name="pref_jump_to_chapters">打开时跳转到阅读章节</string>
     <string name="tapping_inverted_both">水平 + 垂直</string>
     <string name="tapping_inverted_vertical">垂直</string>
     <string name="tapping_inverted_horizontal">水平</string>
@@ -495,7 +492,7 @@
     <plurals name="num_trackers">
         <item quantity="other">%d 个追踪源</item>
     </plurals>
-    <string name="pref_read_with_tapping_inverted">反转轻触方向</string>
+    <string name="pref_read_with_tapping_inverted">反转点按区域</string>
     <string name="no_pinned_sources">你尚未置顶任意图源</string>
     <string name="channel_complete">完成</string>
     <string name="channel_progress">进度</string>
@@ -520,7 +517,6 @@
     <string name="action_search_settings">搜索设置</string>
     <string name="downloaded_chapters">已下载的章节</string>
     <string name="manga_from_library">书架里的漫画</string>
-    <string name="pref_hide_bottom_bar_on_scroll">滚动时隐藏底栏</string>
     <string name="pref_incognito_mode_summary">暂停记录阅读历史</string>
     <string name="pref_incognito_mode">无痕模式</string>
     <string name="pref_clear_history">清除历史</string>
@@ -533,7 +529,7 @@
     <string name="file_picker_error">未找到文件选择应用</string>
     <string name="myanimelist_relogin">请重新登录 MyAnimeList</string>
     <string name="pref_show_nsfw_source">在图源和扩展插件列表中显示</string>
-    <string name="pref_viewer_nav">导航布局</string>
+    <string name="pref_viewer_nav">点按区域</string>
     <string name="edge_nav">边缘样式</string>
     <string name="kindlish_nav">Kindle 样式</string>
     <string name="l_nav">L 样式</string>
@@ -560,13 +556,13 @@
     <string name="nav_zone_left">左</string>
     <string name="nav_zone_next">下页</string>
     <string name="nav_zone_prev">上页</string>
-    <string name="pref_show_navigation_mode_summary">开始阅读时，显示点按区域</string>
-    <string name="pref_show_navigation_mode">显示导航布局覆盖层</string>
+    <string name="pref_show_navigation_mode_summary">打开阅读器时短暂显示</string>
+    <string name="pref_show_navigation_mode">显示点按区域覆盖</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="none">无</string>
     <string name="exclude">排除：%s</string>
     <string name="include">包含：%s</string>
-    <string name="action_sort_chapter_fetch_date">获取日期</string>
+    <string name="action_sort_chapter_fetch_date">章节获取日期</string>
     <string name="pref_library_update_categories_details">应用不会更新位于排除分类的漫画，即使它们同样位于包含分类。</string>
     <string name="pref_download_new_categories_details">应用不会下载位于排除分类的漫画，即使它们同样位于包含分类。</string>
     <string name="pref_category_auto_download">自动下载</string>
@@ -661,10 +657,10 @@
     <string name="label_warning">警告</string>
     <string name="action_display_language_badge">语言</string>
     <string name="backup_info">强烈建议启用自动备份，你也应该在其他地方保存副本。</string>
-    <string name="notification_size_warning">大型更新会损害图源，并可能导致更新速度变慢以及电池用量增加</string>
+    <string name="notification_size_warning">大型更新会损害图源，并可能导致更新速度变慢以及电池用量增加。轻按了解更多。</string>
     <string name="connected_to_wifi">仅连接至 Wi-Fi 时</string>
     <string name="update_72hour">每 3 天</string>
-    <string name="download_queue_size_warning">警告：批量下载可能会导致图源变慢和/或图源封锁 Tachiyomi</string>
+    <string name="download_queue_size_warning">警告：批量下载可能会导致图源变慢和/或图源封锁 Tachiyomi。轻按了解更多。</string>
     <string name="pref_library_update_show_tab_badge">在更新图标上显示未读计数</string>
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">应用更新</string>
@@ -708,4 +704,21 @@
     <string name="update_check_open">打开 Github</string>
     <string name="webview_data_deleted">已清除 Webview 数据</string>
     <string name="pref_clear_webview_data">清除 Webview 数据</string>
+    <string name="battery_not_low">非低电量</string>
+    <string name="pref_duplicate_pinned_sources_summary">在各自的语言组中重复固定图源</string>
+    <string name="pref_duplicate_pinned_sources">显示重复的固定图源</string>
+    <string name="action_close">关闭</string>
+    <string name="migrate_empty_screen">额，好尴尬</string>
+    <string name="source_filter_empty_screen">未找到已安装的图源</string>
+    <string name="source_empty_screen">未找到图源</string>
+    <string name="action_sort_last_manga_update">上次漫画更新</string>
+    <string name="action_sort_unread_count">未读数</string>
+    <string name="split_tall_images">自动拆分高图像</string>
+    <string name="split_tall_images_summary">通过拆分下载的高图像来提高阅读器的性能。</string>
+    <string name="download_notifier_split_page_not_found">拆分时未找到页 %d</string>
+    <string name="download_notifier_split_page_path_not_found">找不到页面 %d 的文件路径</string>
+    <string name="pref_reset_viewer_flags">重置查看器标志</string>
+    <string name="pref_reset_viewer_flags_summary">重置所有连载的阅读模式和方向</string>
+    <string name="pref_reset_viewer_flags_success">已重置查看器标志</string>
+    <string name="pref_reset_viewer_flags_error">无法重置阅读器标志</string>
 </resources>

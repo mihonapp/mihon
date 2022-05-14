@@ -89,7 +89,6 @@
     <string name="charging">Laddning</string>
     <string name="pref_update_only_non_completed">Med status \"Avslutat\"</string>
     <string name="pref_auto_update_manga_sync">Uppdatera förlopp efter läsning</string>
-    <string name="pref_start_screen">Startskärm</string>
     <string name="default_category">Standardkategori</string>
     <string name="default_category_summary">Fråga alltid</string>
     <string name="all_lang">Alla</string>
@@ -184,7 +183,7 @@
     <string name="pref_clear_chapter_cache">Rensa kapitelcache</string>
     <string name="used_cache">Används: %1$s</string>
     <string name="cache_deleted">Cache rensad. %1$d filer har tagits bort</string>
-    <string name="cache_delete_error">Ett fel uppstod medan cache rensades</string>
+    <string name="cache_delete_error">Fel inträffade vid rensning</string>
     <string name="pref_clear_cookies">Radera cookies</string>
     <string name="cookies_cleared">Cookies rensade</string>
     <string name="pref_clear_database">Rensa databas</string>
@@ -291,7 +290,7 @@
     <string name="update_check_no_new_updates">Inga nya uppdateringar tillgängliga</string>
     <string name="update_check_look_for_updates">Söker efter uppdateringar…</string>
     <string name="update_check_notification_download_in_progress">Laddar ner…</string>
-    <string name="update_check_notification_download_complete">Nedladdning färdig</string>
+    <string name="update_check_notification_download_complete">Tryck på för att installera</string>
     <string name="update_check_notification_download_error">Nedladdningsfel</string>
     <string name="update_check_notification_update_available">Ny version tillgänglig!</string>
     <string name="description_cover">Omslag av mangan</string>
@@ -396,7 +395,6 @@
     <string name="updating_library">Uppdaterar biblioteket</string>
     <string name="http_error_hint">Kontrollera webbplatsen i WebView</string>
     <string name="pref_enable_automatic_extension_updates">Sök efter tilläggsuppdateringar</string>
-    <string name="action_sort_last_checked">Senast kontrollerad</string>
     <string name="pref_category_reading">Läser</string>
     <string name="pref_skip_filtered_chapters">Hoppa över filtrerade kapitel</string>
     <string name="label_sources">Källor</string>
@@ -442,7 +440,7 @@
     <string name="viewer">Läsläge</string>
     <string name="pref_category_for_this_series">För denna serie</string>
     <string name="gray_background">Grå</string>
-    <string name="pref_true_color_summary">Minskar färgbandning men kräver mer prestanda</string>
+    <string name="pref_true_color_summary">Minskar bandning, men kan påverka prestandan</string>
     <plurals name="num_categories">
         <item quantity="one">%d kategori</item>
         <item quantity="other">%d kategorier</item>
@@ -453,7 +451,7 @@
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Det gick inte att öppna enhetsinställningarna</string>
     <string name="action_display_unread_badge">Olästa kapitel</string>
-    <string name="pref_refresh_library_covers">Uppdatera bibliotekets manga omslag</string>
+    <string name="pref_refresh_library_covers">Uppdatera bibliotekets mangaomslag</string>
     <string name="tracking_info">Envägssynkronisering för att uppdatera kapitelförloppet i spårningstjänster. Ställ in spårning för enskilda manga från spårningsknappen under manga info.</string>
     <string name="sort_by_upload_date">Efter uppladdningsdatum</string>
     <string name="label_data">Data</string>
@@ -482,7 +480,7 @@
     <string name="tapping_inverted_vertical">Vertikal</string>
     <string name="tapping_inverted_horizontal">Horisontell</string>
     <string name="tapping_inverted_none">Ingen</string>
-    <string name="pref_read_with_tapping_inverted">Invertera tryck</string>
+    <string name="pref_read_with_tapping_inverted">Invertera tryckzoner</string>
     <string name="loader_not_implemented_error">Källan hittades inte</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s kapitel</item>
@@ -492,7 +490,6 @@
     <string name="unknown_author">Okänd författare</string>
     <string name="requires_app_restart">Kräver omstart av appen för att börja gälla</string>
     <string name="label_network">Nätverk</string>
-    <string name="pref_jump_to_chapters">Hoppa till kapitel vid öppning</string>
     <string name="action_disable">Inaktivera</string>
     <string name="download_insufficient_space">Det gick inte att ladda ner kapitelt på grund av lågt lagringsutrymme</string>
     <string name="action_global_search_query">Sök efter \"%1$s\" globalt</string>
@@ -535,7 +532,6 @@
     <string name="pref_clear_history">Rensa historik</string>
     <string name="clear_history_confirmation">Är du säker\? All historik kommer att försvinna.</string>
     <string name="clear_history_completed">Historiken har tagits bort</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Dölj navigationsfältet vid skrollning</string>
     <string name="action_search_settings">Sök inställningar</string>
     <string name="spen_next_page">Nästa sida</string>
     <string name="spen_previous_page">Föregående sida</string>
@@ -554,7 +550,7 @@
     <string name="action_asc">Stigande</string>
     <string name="track_finished_reading_date">Slutdatum</string>
     <string name="track_started_reading_date">Start datum</string>
-    <string name="pref_viewer_nav">Navigationslayout</string>
+    <string name="pref_viewer_nav">Tryckzoner</string>
     <string name="edge_nav">Kant</string>
     <string name="kindlish_nav">Kindle-ish</string>
     <string name="l_nav">L-formad</string>
@@ -571,13 +567,13 @@
     <string name="nav_zone_prev">Föregående</string>
     <string name="pref_dual_page_invert_summary">Om placeringen av dubbelsidesdelningen inte matchar läsriktningen</string>
     <string name="pref_dual_page_invert">Invertera dubbelsidig delad placering</string>
-    <string name="pref_show_navigation_mode_summary">Visa tryckzoner kort när läsaren öppnas</string>
-    <string name="pref_show_navigation_mode">Visa överlägg för navigeringslayout</string>
+    <string name="pref_show_navigation_mode_summary">Visa kort när läsaren öppnas</string>
+    <string name="pref_show_navigation_mode">Visa överlägg för tryckzoner</string>
     <string name="pref_dns_over_https">DNS över HTTPS (DoH)</string>
     <string name="exclude">Exkludera: %s</string>
     <string name="include">Inkludera: %s</string>
     <string name="none">Ingen</string>
-    <string name="action_sort_chapter_fetch_date">Datum hämtat</string>
+    <string name="action_sort_chapter_fetch_date">Datum för hämtning av kapitel</string>
     <string name="pref_download_new_categories_details">Manga i uteslutna kategorier laddas inte ner även om de också ingår i inkluderade kategorier.</string>
     <string name="pref_category_auto_download">Ladda ned automatiskt</string>
     <string name="pref_library_update_categories_details">Manga i uteslutna kategorier uppdateras inte även om de också ingår i inkluderade kategorier.</string>
@@ -674,8 +670,8 @@
     <string name="label_warning">Varning</string>
     <string name="action_display_language_badge">Språk</string>
     <string name="connected_to_wifi">Bara över Wi-Fi</string>
-    <string name="notification_size_warning">Stora uppdateringar skadar källor och kan leda till långsammare uppdateringar samt en ökad batterianvändning</string>
-    <string name="download_queue_size_warning">Varning: stora massnerladdningar kan leda till att källor blir långsamma och/eller blockerar Tachiyomi</string>
+    <string name="notification_size_warning">Stora uppdateringar skadar källor och kan leda till långsammare uppdateringar samt en ökad batterianvändning. Tryck för att få veta mer.</string>
+    <string name="download_queue_size_warning">Varning: stora massnerladdningar kan leda till att källor blir långsamma och/eller blockerar Tachiyomi. Tryck för att få veta mer.</string>
     <string name="update_72hour">Var 3:e dag</string>
     <string name="pref_library_update_show_tab_badge">Visa antalet olästa på ikonen Uppdateringar</string>
     <string name="ext_update_all">Uppdatera alla</string>
@@ -718,4 +714,23 @@
     <string name="update_check_fdroid_migration_info">En ny version finns tillgänglig i de officiella utgåvorna. Tryck på för att lära dig hur du flyttar från inofficiella F-Droid-versioner.</string>
     <string name="empty_backup_error">Inga biblioteksposter att säkerhetskopiera</string>
     <string name="update_check_open">Öppna på GitHub</string>
+    <string name="battery_not_low">Batteriet är inte lågt</string>
+    <string name="pref_duplicate_pinned_sources">Visa duplicerade källor med pinned-markeringar</string>
+    <string name="pref_clear_webview_data">Rensa data från WebView</string>
+    <string name="webview_data_deleted">WebView-data rensas</string>
+    <string name="action_close">Stäng</string>
+    <string name="pref_duplicate_pinned_sources_summary">Upprepa källor som är upptagna i sina respektive språkgrupper</string>
+    <string name="source_filter_empty_screen">Ingen installerad källa hittades</string>
+    <string name="migrate_empty_screen">Ja, det här var ju pinsamt</string>
+    <string name="action_sort_last_manga_update">Sista manga-uppdateringen</string>
+    <string name="action_sort_unread_count">Antal olästa</string>
+    <string name="split_tall_images">Automatisk delning av höga bilder</string>
+    <string name="split_tall_images_summary">Förbättrar läsarens prestanda genom att dela upp långa nedladdade bilder.</string>
+    <string name="download_notifier_split_page_not_found">Sida %d hittades inte under delning</string>
+    <string name="source_empty_screen">Ingen källa hittad</string>
+    <string name="pref_reset_viewer_flags_error">Kunde inte återställa visningsflaggorna</string>
+    <string name="pref_reset_viewer_flags">Återställer visningsflaggor</string>
+    <string name="pref_reset_viewer_flags_summary">Återställer läsläge och orientering för alla serier</string>
+    <string name="download_notifier_split_page_path_not_found">Kunde inte hitta filsökvägen för sida %d</string>
+    <string name="pref_reset_viewer_flags_success">Återställning av visningsflaggor</string>
 </resources>

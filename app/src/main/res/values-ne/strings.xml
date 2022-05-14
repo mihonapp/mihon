@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_start_screen">सुरूवात स्क्रिन</string>
     <string name="theme_dark">अन</string>
     <string name="theme_light">अफ</string>
     <string name="pref_theme_mode">अँध्यारो मोड</string>
@@ -81,7 +80,6 @@
     <string name="action_global_search">ग्लोबल खोजी</string>
     <string name="action_search_settings">सेटिङमा खोज्नुहोस्</string>
     <string name="action_search">खोज्नुहोस्</string>
-    <string name="action_sort_last_checked">अन्तिम जाँच गरियो</string>
     <string name="action_sort_last_read">अन्तिम पढिएको</string>
     <string name="action_sort_total">कुल अध्यायहरू</string>
     <string name="action_sort_alpha">वर्णानुक्रम अनुसार</string>
@@ -140,7 +138,6 @@
     <string name="update_never">अफ</string>
     <string name="pref_library_update_interval">स्वचालित अपडेटहरु</string>
     <string name="pref_category_library_update">ग्लोबल अपडेट</string>
-    <string name="pref_jump_to_chapters">खोलिएको अध्यायहरूमा जानुहोस्</string>
     <string name="landscape">ल्याण्डस्केप</string>
     <string name="pref_library_columns">पङ्क्ति प्रति आइटम को संख्या</string>
     <string name="pref_category_display">प्रदर्शन</string>
@@ -171,7 +168,6 @@
     <string name="pref_relative_time_short">छोटो (आज, हिजो)</string>
     <string name="pref_relative_format">सापेक्ष टाइमस्ट्याम्प</string>
     <string name="pref_category_timestamps">टाइमस्ट्याम्प</string>
-    <string name="pref_hide_bottom_bar_on_scroll">स्क्रोल गर्दा तल पट्टीको बार लुकाउनुहोस्</string>
     <string name="alignment_bottom">तल्लो</string>
     <string name="alignment_center">मध्य</string>
     <string name="alignment_top">टुप्पो</string>

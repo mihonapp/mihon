@@ -134,7 +134,6 @@
     <string name="charging">Ładowanie</string>
     <string name="pref_update_only_non_completed">Ukończone serie</string>
     <string name="pref_auto_update_manga_sync">Aktualizuj postęp po przeczytaniu rozdziału</string>
-    <string name="pref_start_screen">Ekran startowy</string>
     <string name="default_category">Domyślna kategoria</string>
     <string name="default_category_summary">Zawsze pytaj</string>
     <string name="pref_fullscreen">Pełny ekran</string>
@@ -351,9 +350,10 @@
     <string name="label_more">Więcej</string>
     <string name="secure_screen_summary">Ukrywa zawartość ekranu przy przełączaniu między aplikacjami i blokuj zrzuty ekranu</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Po 1 minucie</item>
+        <item quantity="one">Po %1$s minucie</item>
         <item quantity="few">Po %1$s minutach</item>
         <item quantity="many">Po %1$s minutach</item>
+        <item quantity="other">Po %1$s minutach</item>
     </plurals>
     <string name="lock_never">Nigdy</string>
     <string name="lock_always">Zawsze</string>
@@ -372,7 +372,6 @@
     <string name="action_cancel_all">Anuluj wszystko</string>
     <string name="action_select_inverse">Odwróć zaznaczenie</string>
     <string name="action_sort_latest_chapter">Ostatni rozdział</string>
-    <string name="action_sort_last_checked">Ostatnio sprawdzane</string>
     <string name="action_menu">Menu</string>
     <string name="unlock_app">Odblokuj Tachiyomi</string>
     <string name="label_sources">Źródła</string>
@@ -497,7 +496,6 @@
     <string name="action_start">Start</string>
     <string name="requires_app_restart">Wymaga ponownego uruchomienia aplikacji</string>
     <string name="label_network">Sieć</string>
-    <string name="pref_jump_to_chapters">Przeskocz do rozdziałów przy otwarciu</string>
     <string name="tapping_inverted_both">Obydwa</string>
     <string name="tapping_inverted_vertical">Wertykalnie</string>
     <string name="tapping_inverted_horizontal">Horyzontalnie</string>
@@ -556,7 +554,6 @@
     <string name="clear_history_completed">Historia usunięta</string>
     <string name="backup_restore_missing_trackers">Serwisy, do których nie zalogowono:</string>
     <string name="pref_remove_bookmarked_chapters">Usuwaj rozdziały dodane do zakładek</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Ukryj dolny pasek podczas przewijania</string>
     <string name="pref_category_delete_chapters">Usuń rozdziały</string>
     <string name="ext_nsfw_warning">Może zawierać treści NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
@@ -693,7 +690,7 @@
     <string name="action_sort_count">Ilość mang</string>
     <string name="action_display_language_badge">Język</string>
     <string name="label_warning">Ostrzeżenie</string>
-    <string name="download_queue_size_warning">Ostrzeżenie: duża ilość zakolejkowanych pobrań może doprowadzić do spowolnienia źródeł i/lub zablokowania Tachiyomi</string>
+    <string name="download_queue_size_warning">Ostrzeżenie: Duże aktualizacje biblioteki mogą prowadzić do zwiększonego zużycia baterii oraz spowolnienia działania źródeł.</string>
     <string name="update_72hour">Co 3 dni</string>
     <string name="connected_to_wifi">Tylko przez Wi-Fi</string>
     <string name="enhanced_tracking_info">Usługi dostarczania ulepszonych funkcji dla niektórych źródeł. Mangi po dodaniu do biblioteki są automatycznie śledzone.</string>
@@ -713,7 +710,7 @@
     <string name="save_chapter_as_cbz">Zapisz jako archiwum CBZ</string>
     <string name="privacy_policy">Polityka prywatności</string>
     <string name="clear_database_source_item_count">%1$d mang spoza biblioteki w bazie danych</string>
-    <string name="pref_library_update_manga_restriction">Pomiń aktualizacje</string>
+    <string name="pref_library_update_manga_restriction">Pomiń aktualizowanie tytułów</string>
     <string name="pref_update_only_completely_read">Posiada nieprzeczytane rozdziały</string>
     <string name="action_faq_and_guides">FAQ i poradniki</string>
     <string name="backup_restore_invalid_uri">Błąd: pusty URI</string>
@@ -731,4 +728,8 @@
 \n
 \nCzy nadal chcesz kontynuować\?</string>
     <string name="channel_skipped">Pominięty</string>
+    <string name="notification_update_skipped">%1$d pominięto aktualizację(-e)</string>
+    <string name="notification_update_error">%1$d aktualizacja (aktualizacje) nie powiodła się</string>
+    <string name="action_close">Zamknij</string>
+    <string name="action_move_to_top_all_for_series">Przenieś serię na górę</string>
 </resources>

@@ -84,7 +84,6 @@
     <string name="charging">جاري الشحن</string>
     <string name="pref_update_only_non_completed">سلسلة منتهية</string>
     <string name="pref_auto_update_manga_sync">تحديث تقدّم الفصول بعد القراءة</string>
-    <string name="pref_start_screen">شاشة البداية</string>
     <string name="default_category">الفئة الافتراضية</string>
     <string name="default_category_summary">السؤال دائماً</string>
     <string name="pref_fullscreen">وضع الشاشة الكاملة</string>
@@ -239,7 +238,7 @@
     <string name="update_check_no_new_updates">لا تتوفر تحديثات جديدة</string>
     <string name="update_check_look_for_updates">البحث عن التحديثات…</string>
     <string name="update_check_notification_download_in_progress">جار التنزيل…</string>
-    <string name="update_check_notification_download_complete">اكتمل التنزيل</string>
+    <string name="update_check_notification_download_complete">اضغط للتنزيل</string>
     <string name="update_check_notification_download_error">حدث خطأ في التنزيل</string>
     <string name="update_check_notification_update_available">نسخة جديدة متوفرة!</string>
     <string name="description_cover">غلاف المانجا</string>
@@ -334,7 +333,6 @@
     <string name="action_cancel_all">إلغاء الكل</string>
     <string name="action_view_chapters">عرض الفصول</string>
     <string name="action_sort_latest_chapter">أحدث فصل</string>
-    <string name="action_sort_last_checked">آخِر تصفح</string>
     <string name="action_menu">القائمة</string>
     <string name="label_sources">المصادر</string>
     <string name="action_move_to_bottom">نقل إلى الأسفل</string>
@@ -446,7 +444,7 @@
     <string name="logout_title">تسجيل الخروج من %1$s؟</string>
     <string name="email">البريد الإلكتروني</string>
     <plurals name="download_queue_summary">
-        <item quantity="zero">"%1$s عنصر  متبقي"</item>
+        <item quantity="zero">%1$s عنصر متبقي</item>
         <item quantity="one">عنصر واحد متبقي</item>
         <item quantity="two">عنصران متبقيان</item>
         <item quantity="few">%1$s عناصر متبقية</item>
@@ -458,7 +456,7 @@
     <string name="pref_webtoon_side_padding">المساحة الجانبية</string>
     <string name="vertical_plus_viewer">عمودي مستمر</string>
     <string name="gray_background">رمادي</string>
-    <string name="pref_true_color_summary">يقلل النطاقات ولكن يؤثر على الأداء</string>
+    <string name="pref_true_color_summary">يزيد من سلاسة تدرج الالوان بالصور، ولكن قد يؤثر على الأداء</string>
     <plurals name="lock_after_mins">
         <item quantity="zero">بعد أقل من دقيقة</item>
         <item quantity="one">بعد دقيقة</item>
@@ -522,14 +520,13 @@
     <string name="pref_category_reading_mode">وضع القراءة</string>
     <string name="ext_nsfw_warning">قد يحتوى على محتوى للبالغين</string>
     <string name="ext_nsfw_short">محتوى غير لائق</string>
-    <string name="pref_jump_to_chapters">الذهاب إلى الفصول المفتوحة</string>
     <string name="parental_controls_info">هذا لا يمنع الإضافات غير الرسمية أو التي تم وضع علامة عليها بشكل غير صحيح من إظهار محتوى غير لائق داخل التطبيق.</string>
     <string name="action_download_unread">تنزيل الفصول غير المقروءة</string>
     <string name="tapping_inverted_both">كليهما</string>
     <string name="tapping_inverted_vertical">عمودي</string>
     <string name="tapping_inverted_horizontal">أفقي</string>
     <string name="tapping_inverted_none">لا شيء</string>
-    <string name="pref_read_with_tapping_inverted">عكس جهة النقر</string>
+    <string name="pref_read_with_tapping_inverted">عكس مناطق اللمس</string>
     <string name="channel_errors">أخطاء</string>
     <string name="channel_complete">مُكتمل</string>
     <string name="channel_progress">التقدّم</string>
@@ -548,9 +545,9 @@
         <item quantity="zero">لا فصول</item>
         <item quantity="one">فصل واحد</item>
         <item quantity="two">فصلين</item>
-        <item quantity="few">بضعة فصول (%1$s)</item>
-        <item quantity="many">عدّة فصول (%1$s)</item>
-        <item quantity="other">%1$s فصلاً</item>
+        <item quantity="few">%1$s فصول</item>
+        <item quantity="many">%1$s فصول</item>
+        <item quantity="other">%1$s فصول</item>
     </plurals>
     <string name="unknown_status">حالة غير معروفة</string>
     <string name="unknown_author">مؤلّف غير معروف</string>
@@ -558,7 +555,7 @@
     <string name="action_global_search_query">إبحث عن \"%1$s\" بشكلٍ شامل</string>
     <string name="updated_version">حُدِّث إلى الإصدار v%1$s</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="zero">لا توجد فصول مفقودة</item>
+        <item quantity="zero">جميع الفصول تم تحديثها بنجاح</item>
         <item quantity="one">تم تخطي فصل واحد ، إما أن المصدر مفقود أو تمت تصفيته</item>
         <item quantity="two">تم تخطي فصلين، إما أن المصدر مفقود أو تمت تصفيته</item>
         <item quantity="few">تم تخطي بعض الفصول، إما أن المصدر مفقود أو تمت تصفيته</item>
@@ -575,8 +572,7 @@
     <string name="action_search_settings">إعدادات البحث</string>
     <string name="downloaded_chapters">الفصول المنزّلة</string>
     <string name="manga_from_library">مانغا من المكتبة</string>
-    <string name="pref_hide_bottom_bar_on_scroll">إخفاء الشريط السفلي عند التمرير</string>
-    <string name="clear_history_confirmation">هل أنت متأكد؟ سيضيع كل السجل.</string>
+    <string name="clear_history_confirmation">هل أنت متأكد؟ سيتم حذف السجل.</string>
     <string name="clear_history_completed">تم حذف السجل</string>
     <string name="pref_incognito_mode_summary">إيقاف سجل القراءة</string>
     <string name="pref_incognito_mode">الوضع المخفي</string>
@@ -588,7 +584,7 @@
     <string name="pref_show_nsfw_source">اعرض في قوائم المصادر والامتدادات</string>
     <string name="myanimelist_relogin">رجاء سجل دخولك في MAL مجدداً</string>
     <string name="file_picker_error">لم يتم العثور على تطبيق منتقي الملفات</string>
-    <string name="pref_viewer_nav">تخطيط التنقل</string>
+    <string name="pref_viewer_nav">مناطق اللمس</string>
     <string name="l_nav">على شكل حرف L</string>
     <string name="edge_nav">حافة</string>
     <string name="kindlish_nav">كيندل العش</string>
@@ -616,8 +612,8 @@
     <string name="nav_zone_left">يسار</string>
     <string name="nav_zone_next">التالي</string>
     <string name="nav_zone_prev">السابق</string>
-    <string name="pref_show_navigation_mode_summary">عرض مناطق اللمس للتنقل عند فتح القارئ</string>
-    <string name="pref_show_navigation_mode">إظهار حدود التنقل</string>
+    <string name="pref_show_navigation_mode_summary">عرض مناطق اللمس للتنقل عند فتح القارئ لفترة وجيزة</string>
+    <string name="pref_show_navigation_mode">إظهار مناطق اللمس</string>
     <string name="action_sort_chapter_fetch_date">تاريخ الرفع</string>
     <string name="rotation_landscape">افقي</string>
     <string name="rotation_portrait">رأسي</string>
@@ -678,7 +674,7 @@
     <string name="theme_tako">تاكو</string>
     <string name="theme_monet">ديناميك</string>
     <string name="notification_updating">جار تحديث المكتبة…( (%2$d) / (%1$d) )</string>
-    <string name="tracker_komga_warning">هذا المتتبّع متوافق فقط مع المصدر (‌Komga)</string>
+    <string name="tracker_komga_warning">هذا المتتبّع متوافق فقط مع المصدر (‌Komga)۔</string>
     <string name="about_dont_kill_my_app">تقوم بعض الشركات المصنعة بوضع قيود إضافية على التطبيقات التي قد تقضي على الخدمات التي تعمل في الخلفية. يحتوي هذا الموقع على مزيد من المعلومات حول كيفية إصلاحه.</string>
     <string name="restore_miui_warning">النسخ الاحتياطي/الإستعادة ربما لا يعمل بطريقه صحيحة عندما يكون خيار MIUI Optimization غير مفعل.</string>
     <string name="enhanced_tracking_info">الخدمات التي تقدم ميزات محسنة لأجل مصادر معينه. المانجات سوف يتم تتبعها عندما يتم إضافتها الي المكتبة.</string>
@@ -714,7 +710,7 @@
     <string name="label_warning">تحذير</string>
     <string name="action_display_language_badge">اللغة</string>
     <string name="backup_info">يوصى بشدة بالنسخ الاحتياطي التلقائي. يجب عليك الإحتفاظ بنُسخ في أماكن أخرى أيضًا.</string>
-    <string name="notification_size_warning">التحديثات الكبيرة تضر بالمصادر , تؤدي لتحديثات أبطأ , و أيضا زيادة في استهلاك البطارية</string>
+    <string name="notification_size_warning">التحديثات الكبيرة تضر بالمصادر، وتؤدي لتحديثات أبطأ، وقد تسبب زيادة في استهلاك البطارية۔ اضغط لمعرفة المزيد۔</string>
     <string name="pref_verbose_logging">التسجيل المطول</string>
     <string name="ext_app_info">معلومات التطبيق</string>
     <string name="ext_install_service_notif">جارٍ تثبيت الإضافة …</string>
@@ -739,7 +735,7 @@
     <string name="clear_database_source_item_count">عدد المانغا غير المتواجدة بقاعدة بيانات المكتبة %1$d</string>
     <string name="extension_api_error">فشل الحصول على قائمة الملحقات</string>
     <string name="ext_installer_shizuku_unavailable_dialog">قم بتثبيت \"Shizuku\" لاستخدامه كمثبت ملحق.</string>
-    <string name="download_queue_size_warning">تحذير: التحميلات كبيرة الحجم والعدد يمكن أن تؤدي إلى تباطؤ المصادر و/أو تقم بحظر \"Tachiyomi\"</string>
+    <string name="download_queue_size_warning">تحذير: التحميلات كبيرة الحجم والعدد يمكن أن تؤدي إلى تباطؤ المصادر و/أو ان تقوم المصادر بحظر Tachiyomi۔ اضغط لمعرفة المزيد۔</string>
     <string name="backup_restore_invalid_uri">خطأ: URI فارغ</string>
     <string name="action_faq_and_guides">الاسئله الشائعه والأدلة</string>
     <string name="webtoon_side_padding_5">5%</string>
@@ -748,7 +744,7 @@
     <string name="action_display_cover_only_grid">شبكة بالاغلفة</string>
     <string name="skipped_reason_not_started">تم التخطي لعدم وجود فصول مقروءه</string>
     <string name="skipped_reason_not_caught_up">تم التخطي لوجود فصول غير مقروءه</string>
-    <string name="confirm_manga_add_duplicate">لديك إدخال في مكتبتك بنفس الإسم و لكن من مصدر مختلف (%1$s).
+    <string name="confirm_manga_add_duplicate">لديك محتوى في مكتبتك بنفس الإسم و لكن من مصدر مختلف (%1$s).
 \n
 \nهل مازلت تريد أن تكمل؟</string>
     <string name="pref_update_only_started">لم تقرأ أي فصول</string>
@@ -758,11 +754,27 @@
     <string name="channel_skipped">متجاوز</string>
     <string name="error_saving_picture">خطأ أثناء حفظ الصورة</string>
     <string name="disabled_nav">معطل</string>
-    <string name="rotation_reverse_portrait">عكس الغلاف</string>
-    <string name="notification_update_error">فشل التحديث(ات)</string>
-    <string name="notification_update_skipped">تم تخطي %1$d تحديث(تحديثات)</string>
-    <string name="learn_more">أنقر للمزيد</string>
+    <string name="rotation_reverse_portrait">رأسي بالعكس</string>
+    <string name="notification_update_error">فشل تحديث %1$d عناصر</string>
+    <string name="notification_update_skipped">تم تخطي تحديث %1$d عناصر</string>
+    <string name="learn_more">اضغط لقراءة المزيد</string>
     <string name="update_check_fdroid_migration_info">نسخة جديدة متاحة من الإصدارات الرسمية. انقر لمعرفة كيفية الهجرة من إصدارات F-Droid غير الرسمية.</string>
-    <string name="action_move_to_top_all_for_series">حرك السلسلة للأعلى</string>
-    <string name="empty_backup_error">المكتبة فارغة ولايمكن عمل نسخة احتياطية منها</string>
+    <string name="action_move_to_top_all_for_series">نقل سلسلة الفصول للأعلى</string>
+    <string name="empty_backup_error">لا توجد مدخلات في المكتبة لإجراء نسخة احتياطي‮‮ة</string>
+    <string name="action_close">اغلاق</string>
+    <string name="update_check_open">فتح في GitHub</string>
+    <string name="pref_clear_webview_data">حذف بيانات التصفح المؤقتة</string>
+    <string name="pref_duplicate_pinned_sources">عرض المصادر المثبتة المتكررة</string>
+    <string name="webview_data_deleted">تم حذف بيانات التصفح المؤقتة</string>
+    <string name="battery_not_low">البطارية ليست منخفضة</string>
+    <string name="pref_duplicate_pinned_sources_summary">تكرار المصادر المثبتة في مجموعات اللغة الخاصة بها</string>
+    <string name="source_filter_empty_screen">لا يوجد مصادر مثبته</string>
+    <string name="migrate_empty_screen">حسنا،هذا غريب</string>
+    <string name="source_empty_screen">لا يوجد مصدر</string>
+    <string name="action_sort_unread_count">المانغا الغير مقروءة</string>
+    <string name="action_sort_last_manga_update">آخر مانجا محملة</string>
+    <string name="split_tall_images_summary">يحسن أداء القارئ عن طريق تقسيم الصور الطويلة التي تم تنزيلها.</string>
+    <string name="split_tall_images">تقسيم تلقائي للصور الطويلة</string>
+    <string name="download_notifier_split_page_not_found">لم يتم العثور على الصفحة %d أثناء التقسيم</string>
+    <string name="download_notifier_split_page_path_not_found">لم يتم العثور على مسار الصفخة %d</string>
 </resources>

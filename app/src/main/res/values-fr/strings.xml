@@ -78,7 +78,6 @@
     <string name="charging">Appareil en charge</string>
     <string name="pref_update_only_non_completed">Avec le statut « achevé »</string>
     <string name="pref_auto_update_manga_sync">Synchroniser la progression après lecture</string>
-    <string name="pref_start_screen">Page d\'accueil</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Plein écran</string>
     <string name="pref_page_transitions">Activer les transitions</string>
@@ -217,7 +216,7 @@
     <string name="update_check_look_for_updates">Vérification des mises à jour…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Téléchargement en cours…</string>
-    <string name="update_check_notification_download_complete">Téléchargement terminé</string>
+    <string name="update_check_notification_download_complete">Appuyer pour installer</string>
     <string name="update_check_notification_download_error">Erreur lors du téléchargement</string>
     <string name="update_check_notification_update_available">Mise à jour disponible !</string>
     <!--Content Description-->
@@ -429,7 +428,6 @@
     </plurals>
     <string name="http_error_hint">Consultez le site Web de WebView</string>
     <string name="pref_enable_automatic_extension_updates">Vérifier les mises à jour d’extensions</string>
-    <string name="action_sort_last_checked">Dernière vérification</string>
     <string name="updating_library">Mise à jour de la bibliothèque</string>
     <string name="label_sources">Sources</string>
     <string name="webtoon_side_padding_25">25 %</string>
@@ -475,7 +473,7 @@
     <string name="pref_search_pinned_sources_only">N\'inclure que les sources épinglées</string>
     <string name="gray_background">Gris</string>
     <string name="pref_category_for_this_series">Pour cette série</string>
-    <string name="pref_true_color_summary">Réduit les bandes de couleur mais affecte les performances</string>
+    <string name="pref_true_color_summary">Réduit les bandes de couleur, mais peut impacter les performances</string>
     <plurals name="num_categories">
         <item quantity="one">%d catégorie</item>
         <item quantity="other">%d catégories</item>
@@ -524,10 +522,9 @@
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_horizontal">Horizontal</string>
     <string name="tapping_inverted_none">Non</string>
-    <string name="pref_read_with_tapping_inverted">Inverser les touches</string>
+    <string name="pref_read_with_tapping_inverted">Inverser les zones tactiles</string>
     <string name="unknown_status">Statut inconnu</string>
     <string name="unknown_author">Auteur inconnu</string>
-    <string name="pref_jump_to_chapters">Aller aux chapitres à l\'ouverture</string>
     <string name="whats_new">Quoi de neuf</string>
     <string name="updated_version">Mise à jour de v%1$s</string>
     <string name="action_download_unread">Télécharger les chapitres non lus</string>
@@ -550,7 +547,7 @@
     <string name="pref_category_delete_chapters">Supprimer des chapitres</string>
     <string name="ext_nsfw_warning">Peut contenir du contenu +18</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Cela n\'empêche pas les extensions non officielles ou potentiellement mal signalées de diffuser du contenu +18 dans l\'application.</string>
+    <string name="parental_controls_info">Ceci n\'empêche pas les extensions non officielles ou potentiellement mal signalées de diffuser du contenu +18 dans l\'application.</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d chapitre a été sauté, soit la source ne l\'a pas, soit il a été filtré</item>
         <item quantity="other">%d chapitres ont été sautés, soit la source ne l\'a pas, soit il ont été filtrés</item>
@@ -558,7 +555,6 @@
     <string name="no_chapters_error">Aucun chapitre trouvé</string>
     <string name="confirm_set_chapter_settings">Appliquer ce paramétrage par défaut \?</string>
     <string name="chapter_settings">Paramètres du chapitre</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Cacher la barre inférieure lors du défilement</string>
     <string name="also_set_chapter_settings_for_library">Appliquer à ma librairie</string>
     <string name="set_chapter_settings_as_default">Appliquer par défaut</string>
     <string name="share_page_info">%1$s : %2$s, page %3$d</string>
@@ -581,11 +577,11 @@
     <string name="channel_crash_logs">Registres d\'incident</string>
     <string name="track_finished_reading_date">Date de fin</string>
     <string name="track_started_reading_date">Date de début</string>
-    <string name="kindlish_nav">Plutôt provoquant</string>
+    <string name="kindlish_nav">Style Kindle</string>
     <string name="crash_log_saved">Registre d\'incident sauvegardé</string>
     <string name="pref_dump_crash_logs">Archivage des registres d\'incident</string>
     <string name="pref_dump_crash_logs_summary">Enregistre les traces d\'incident dans un fichier pour les partager avec les développeurs</string>
-    <string name="pref_viewer_nav">Plan de navigation</string>
+    <string name="pref_viewer_nav">Zones tactiles</string>
     <string name="edge_nav">Bord</string>
     <string name="l_nav">En forme de L</string>
     <string name="action_desc">Décroissant</string>
@@ -606,12 +602,12 @@
     <string name="nav_zone_right">Droite</string>
     <string name="nav_zone_left">Gauche</string>
     <string name="nav_zone_next">Suivant</string>
-    <string name="pref_show_navigation_mode_summary">Afficher les zones tactiles quand le lecteur est ouvert</string>
-    <string name="pref_show_navigation_mode">Afficher la superposition de la disposition de la navigation</string>
+    <string name="pref_show_navigation_mode_summary">Afficher brièvement lorsque le lecteur est ouvert</string>
+    <string name="pref_show_navigation_mode">Afficher les zones tactiles (superposition)</string>
     <string name="exclude">Exclure : %s</string>
     <string name="include">Inclure : %s</string>
     <string name="none">Aucun</string>
-    <string name="action_sort_chapter_fetch_date">Date récupérée</string>
+    <string name="action_sort_chapter_fetch_date">Date de récupération du chapitre</string>
     <string name="pref_library_update_categories_details">Les mangas dans les catégories exclues ne seront pas mis à jour même s\'ils sont aussi dans les catégories inclues.</string>
     <string name="pref_download_new_categories_details">Les mangas des catégories exclues ne seront pas mis à jour même s\'ils appartiennent aussi à des catégories incluses.</string>
     <string name="pref_category_auto_download">Téléchargement automatique</string>
@@ -706,11 +702,11 @@
     <string name="pref_verbose_logging_summary">Imprimer les journaux détaillés dans le journal du système (réduit les performances de l\'application)</string>
     <string name="action_display_language_badge">Langue</string>
     <string name="label_warning">Attention</string>
-    <string name="notification_size_warning">Les mises à jour importantes nuisent aux sources et peuvent entraîner un ralentissement des mises à jour ainsi qu\'une augmentation de l\'utilisation de la batterie</string>
+    <string name="notification_size_warning">Les mises à jour importantes nuisent aux sources et peuvent entraîner un ralentissement des mises à jour ainsi qu\'une augmentation de l\'utilisation de la batterie. Appuyez pour en savoir plus.</string>
     <string name="backup_info">Les sauvegardes automatiques sont fortement conseillées. Nous vous recommandons aussi de conserver des copies ailleurs.</string>
     <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
     <string name="update_72hour">Tous les 3 jours</string>
-    <string name="download_queue_size_warning">Avertissement : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Tachiyomi</string>
+    <string name="download_queue_size_warning">Avertissement : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Tachiyomi. Appuyez pour en savoir plus.</string>
     <string name="pref_library_update_show_tab_badge">Afficher le nombre de messages non lus sur l\'icône des mises à jour</string>
     <string name="ext_update_all">Tout mettre à jour</string>
     <string name="channel_app_updates">Mises à jour de l\'application</string>
@@ -752,4 +748,23 @@
     <string name="update_check_fdroid_migration_info">Une nouvelle version est disponible à partir des versions officielles. Appuyez pour apprendre comment migrer depuis les versions non officielles de F-Droid.</string>
     <string name="empty_backup_error">Aucune entrée de bibliothèque à sauvegarder</string>
     <string name="update_check_open">Ouvrir sur GitHub</string>
+    <string name="pref_clear_webview_data">Effacer les données WebView</string>
+    <string name="webview_data_deleted">Données WebView effacées</string>
+    <string name="action_close">Fermer</string>
+    <string name="battery_not_low">Batterie non faible</string>
+    <string name="pref_duplicate_pinned_sources_summary">Répéter les sources épinglées dans leurs groupes linguistiques respectifs</string>
+    <string name="pref_duplicate_pinned_sources">Afficher les sources épinglées en double</string>
+    <string name="source_filter_empty_screen">Aucune source installée trouvée</string>
+    <string name="migrate_empty_screen">Eh bien, c\'est gênant</string>
+    <string name="action_sort_last_manga_update">Dernière mise à jour du manga</string>
+    <string name="action_sort_unread_count">Nombre de non-lus</string>
+    <string name="source_empty_screen">Aucune source trouvée</string>
+    <string name="split_tall_images">Division automatique des grandes images</string>
+    <string name="split_tall_images_summary">Améliore les performances du lecteur en fractionnant les grandes images téléchargées.</string>
+    <string name="download_notifier_split_page_not_found">Page %d introuvable lors du fractionnement</string>
+    <string name="download_notifier_split_page_path_not_found">Impossible de trouver le chemin du fichier de la page %d</string>
+    <string name="pref_reset_viewer_flags">Réinitialiser les paramètres du lecteur</string>
+    <string name="pref_reset_viewer_flags_summary">Réinitialise le mode de lecture et l\'orientation de toutes les séries</string>
+    <string name="pref_reset_viewer_flags_success">Paramètres du lecteur réinitialisés</string>
+    <string name="pref_reset_viewer_flags_error">Impossible de réinitialiser les paramètres du lecteur</string>
 </resources>

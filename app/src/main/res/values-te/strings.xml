@@ -38,7 +38,6 @@
     <string name="action_search">వెతకండి</string>
     <string name="action_sort_date_added">జోడించబడిన తేదీ</string>
     <string name="action_sort_latest_chapter">నూతన అధ్యాయము</string>
-    <string name="action_sort_last_checked">చివరిగా తనిఖీ చేయబడినది</string>
     <string name="action_sort_last_read">చివరిగా చదివినది</string>
     <string name="action_sort_total">సమస్త అధ్యాయములు</string>
     <string name="action_sort_alpha">అక్షరక్రమములో</string>
@@ -141,7 +140,6 @@
     <string name="pref_category_navigation">మార్గదర్శనము</string>
     <string name="theme_greenapple">ఆకుపచ్చ సేవఫలము</string>
     <string name="theme_yinyang">యిన్ మరియు యాంగ్</string>
-    <string name="pref_start_screen">ప్రథమ ప్రదర్శనము</string>
     <string name="lock_never">ఎప్పుడూ వద్దు</string>
     <string name="theme_midnightdusk">సందెచీకటి</string>
     <plurals name="lock_after_mins">
@@ -162,7 +160,6 @@
     <string name="alignment_top">పైన</string>
     <string name="alignment_center">మధ్య</string>
     <string name="alignment_bottom">క్రింద</string>
-    <string name="pref_hide_bottom_bar_on_scroll">సారణమును చేయునపుడు క్రిందటి కడ్డీని దాయుము</string>
     <string name="pref_category_timestamps">సమయ ముద్రణలు</string>
     <string name="pref_relative_format">సంబంధిత సమయ ముద్రణలు</string>
     <string name="pref_confirm_exit">నిష్రమణమును నిర్ధారించుము</string>

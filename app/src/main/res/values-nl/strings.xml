@@ -73,7 +73,6 @@
     <string name="update_48hour">Iedere 2 dagen</string>
     <string name="update_weekly">Wekelijks</string>
     <string name="all">Alles</string>
-    <string name="pref_start_screen">Beginscherm</string>
     <string name="default_category">Standaard categorie</string>
     <string name="default_category_summary">Altijd vragen</string>
     <string name="pref_fullscreen">Volledig scherm</string>
@@ -363,7 +362,6 @@
     <string name="action_oldest">Oudste</string>
     <string name="action_newest">Nieuwste</string>
     <string name="action_reorganize_by">Opnieuw organiseren</string>
-    <string name="action_sort_last_checked">Laatst gecontroleerd</string>
     <string name="action_menu">Menu</string>
     <string name="action_pin">Vastpinnen</string>
     <string name="label_sources">Bronnen</string>
@@ -486,7 +484,6 @@
     </plurals>
     <string name="requires_app_restart">Herstart van de app nodig om van kracht te worden</string>
     <string name="label_network">Netwerk</string>
-    <string name="pref_jump_to_chapters">Ga naar de hoofdstukken bij openen</string>
     <string name="tapping_inverted_both">Beiden</string>
     <string name="tapping_inverted_vertical">Verticaal</string>
     <string name="tapping_inverted_horizontal">Horizontaal</string>
@@ -536,7 +533,6 @@
     <string name="pref_clear_history">Geschiedenis wissen</string>
     <string name="clear_history_confirmation">Weet je dit zeker\? Alle geschiedenis zal verloren gaan.</string>
     <string name="clear_history_completed">Geschiedenis verwijderd</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Navigatiebalk verbergen bij het scrollen</string>
     <string name="spen_next_page">Volgende pagina</string>
     <string name="spen_previous_page">Vorige pagina</string>
     <string name="migration_help_guide">Bronmigratiegids</string>

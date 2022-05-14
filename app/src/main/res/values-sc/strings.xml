@@ -89,7 +89,6 @@
     <string name="charging">Carrighende</string>
     <string name="pref_update_only_non_completed">Cun s\'istadu \"acabbada\"</string>
     <string name="pref_auto_update_manga_sync">Agiorna su progressu a pustis de sa leghidura</string>
-    <string name="pref_start_screen">Ischermada de incumintzu</string>
     <string name="default_category">Categoria predefinida</string>
     <string name="default_category_summary">Pedi semper</string>
     <string name="all_lang">Totus</string>
@@ -185,7 +184,7 @@
     <string name="pref_clear_chapter_cache">Isbòida sa memòria temporànea de sos capìtulos</string>
     <string name="used_cache">Impreados: %1$s</string>
     <string name="cache_deleted">Memòria temporànea isbodiada. %1$d documentos sunt istados iscantzellados</string>
-    <string name="cache_delete_error">B\'at àpidu un\'errore durante s\'isbodiamentu de sa memòria temporànea</string>
+    <string name="cache_delete_error">Errore durante s\'isboidamentu</string>
     <string name="pref_clear_cookies">Iscantzella sos cookies</string>
     <string name="cookies_cleared">Cookies iscantzellados</string>
     <string name="pref_clear_database">Isbòida sa base de datos</string>
@@ -292,7 +291,7 @@
     <string name="update_check_no_new_updates">Non bi sunt agiornamentos disponìbiles noos</string>
     <string name="update_check_look_for_updates">Chirchende agiornamentos…</string>
     <string name="update_check_notification_download_in_progress">Iscarrighende…</string>
-    <string name="update_check_notification_download_complete">Iscarrigamentu acabadu</string>
+    <string name="update_check_notification_download_complete">Toca pro installare</string>
     <string name="update_check_notification_download_error">Errore de iscarrigamentu</string>
     <string name="update_check_notification_update_available">Versione noa a disponimentu!</string>
     <string name="description_cover">Cobertedda de su manga</string>
@@ -388,7 +387,6 @@
     <string name="action_oldest">Prus betzos</string>
     <string name="action_move_to_top">Manda a pitzus</string>
     <string name="action_move_to_bottom">Manda a fundu</string>
-    <string name="action_sort_last_checked">Ùrtima chirca</string>
     <string name="pref_enable_automatic_extension_updates">Chirca agiornamentos de sas estensiones</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">B\'at un\'agiornamentu disponìbile pro un\'estensione</item>
@@ -486,7 +484,6 @@
     </plurals>
     <string name="requires_app_restart">Tenet bisòngiu chi torres a allùghere s\'aplicatzione pro tènnere efetu</string>
     <string name="label_network">Retza</string>
-    <string name="pref_jump_to_chapters">Brinca a sos capìtulos a s\'abertura</string>
     <string name="tapping_inverted_both">Ambos</string>
     <string name="tapping_inverted_vertical">Verticale</string>
     <string name="tapping_inverted_horizontal">Orizontale</string>
@@ -531,7 +528,6 @@
     <string name="action_search_settings">Impostatziones de chirca</string>
     <string name="downloaded_chapters">Capìtulos iscarrigados</string>
     <string name="manga_from_library">Manga dae sa biblioteca</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Cua sa barra inferiore in s\'iscurridura</string>
     <string name="pref_incognito_mode_summary">Ponet in pàusa sa registratzione de sa cronologia de leghidura</string>
     <string name="pref_incognito_mode">Modalidade anònima</string>
     <string name="pref_clear_history">Isbòida sa cronologia</string>
@@ -577,7 +573,7 @@
     <string name="exclude">Esclude: %s</string>
     <string name="include">Include: %s</string>
     <string name="none">Perunu</string>
-    <string name="action_sort_chapter_fetch_date">Data recuperada</string>
+    <string name="action_sort_chapter_fetch_date">Data de recùperu de su capìtulu</string>
     <string name="pref_download_new_categories_details">Sos manga in sas categorias esclùdidas non s\'ant a iscarrigare nemmancu si sunt fintzas in categorias inclùdidas.</string>
     <string name="pref_category_auto_download">Iscarrigamentu automàticu</string>
     <string name="pref_library_update_categories_details">Sos manga in sas categorias esclùdidas non s\'ant a agiornare nemmancu si sunt fintzas in categorias inclùdidas.</string>
@@ -673,10 +669,10 @@
     <string name="label_warning">Dae cara</string>
     <string name="action_display_language_badge">Limba</string>
     <string name="backup_info">Sas còpias de seguresa automàticas sunt racumandadas meda. Dias dèpere tènnere còpias fintzas in àteros logos.</string>
-    <string name="notification_size_warning">Sos agiornamentos mannos diant pòdere fàghere dannu a sas fontes e causare agiornamentos prus lentos e fintzas un\'impreu de sa bateria prus mannu</string>
+    <string name="notification_size_warning">Sos agiornamentos mannos diant pòdere fàghere dannu a sas fontes e causare agiornamentos prus lentos e fintzas un\'impreu de sa bateria prus mannu. Toca pro nde ischire de prus.</string>
     <string name="update_72hour">Cada 3 dies</string>
     <string name="connected_to_wifi">Petzi cun su Wi-Fi</string>
-    <string name="download_queue_size_warning">Dae cara: sos iscarrigamentos de massa mannos diant pòdere rallentare sas fontes e/o blocare Tachiyomi</string>
+    <string name="download_queue_size_warning">Dae cara: sos iscarrigamentos de massa mannos diant pòdere rallentare sas fontes e/o blocare Tachiyomi. Toca pro nde ischire de prus.</string>
     <string name="pref_library_update_show_tab_badge">Ammustra su nùmeru de capìtulos non lèghidos in s\'icona de sos agiornamentos</string>
     <string name="ext_update_all">Agiorna totu</string>
     <string name="channel_app_updates">Agiornamentos de s\'aplicatzione</string>
@@ -718,4 +714,18 @@
     <string name="update_check_fdroid_migration_info">B\'est una versione noa ufitziale a disponimentu. Toca pro imparare comente tramudare dae sas versiones no ufitziales de F-Droid.</string>
     <string name="update_check_open">Aberi in GitHub</string>
     <string name="empty_backup_error">Perunu elementu in biblioteca de pònnere in sa còpia de seguresa</string>
+    <string name="pref_clear_webview_data">Isbòida sos datos de WebView</string>
+    <string name="webview_data_deleted">Datos de WebView isboidados</string>
+    <string name="action_close">Serra</string>
+    <string name="battery_not_low">Bateria non bassa</string>
+    <string name="pref_duplicate_pinned_sources">Ammustra sas fontes apicadas dòpias</string>
+    <string name="pref_duplicate_pinned_sources_summary">Repite sas fontes apicadas in sos grupos de limbas rispetivos</string>
+    <string name="action_sort_last_manga_update">Ùrtimu agiornamentu de sos manga</string>
+    <string name="action_sort_unread_count">Contu de non lèghidos</string>
+    <string name="source_empty_screen">Peruna fonte agatada</string>
+    <string name="source_filter_empty_screen">Peruna fonte installada agatada</string>
+    <string name="migrate_empty_screen">Oja, custu est impitzosu</string>
+    <string name="split_tall_images">Partzi in automàticu sas immàgines artas</string>
+    <string name="split_tall_images_summary">Megiorat su rendimentu de su leghidore partzende sas immàgines artas iscarrigadas.</string>
+    <string name="download_notifier_split_page_not_found">Pàgina %d no agatada partzende</string>
 </resources>

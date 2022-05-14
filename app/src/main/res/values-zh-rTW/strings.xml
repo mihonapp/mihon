@@ -85,7 +85,6 @@
     <string name="pref_library_update_restriction">自動更新的裝置限制</string>
     <string name="charging">充電時</string>
     <string name="pref_update_only_non_completed">已完結的作品</string>
-    <string name="pref_start_screen">起始畫面</string>
     <string name="default_category">預設分類</string>
     <string name="default_category_summary">總是詢問</string>
     <string name="ext_update">更新</string>
@@ -157,7 +156,7 @@
     <string name="update_check_no_new_updates">沒有可用的更新</string>
     <string name="update_check_look_for_updates">正在檢查更新…</string>
     <string name="update_check_notification_download_in_progress">正在下載更新…</string>
-    <string name="update_check_notification_download_complete">更新下載完成</string>
+    <string name="update_check_notification_download_complete">輕觸即可安裝</string>
     <string name="update_check_notification_download_error">更新下載失敗</string>
     <string name="update_check_notification_update_available">有可用的更新！</string>
     <string name="information_no_downloads">沒有下載</string>
@@ -403,7 +402,7 @@
     <string name="pref_cutout_short">使用螢幕凹口區域</string>
     <string name="email">電子郵件地址</string>
     <string name="pref_skip_filtered_chapters">略過已篩選的章節</string>
-    <string name="pref_true_color_summary">減緩色調分離，但拖累效能</string>
+    <string name="pref_true_color_summary">減緩色調分離，但可能拖累效能</string>
     <string name="pref_show_reading_mode_summary">開始閱讀時，快顯闡明目前的模式</string>
     <string name="pref_show_reading_mode">閱讀模式提示</string>
     <string name="pref_search_pinned_sources_only">僅在釘選的來源中搜尋</string>
@@ -424,7 +423,6 @@
     <string name="action_reorganize_by">重新排序</string>
     <string name="sort_by_upload_date">上傳日期</string>
     <string name="action_sort_latest_chapter">最新章節</string>
-    <string name="action_sort_last_checked">最近檢查</string>
     <string name="invalid_backup_file">無效的備份檔</string>
     <string name="backup_in_progress">備份已在進行</string>
     <string name="restore_in_progress">還原已在進行</string>
@@ -450,10 +448,9 @@
     <string name="tapping_inverted_both">全部</string>
     <string name="tapping_inverted_vertical">垂直</string>
     <string name="tapping_inverted_horizontal">水平</string>
-    <string name="pref_read_with_tapping_inverted">反轉輕觸方向</string>
+    <string name="pref_read_with_tapping_inverted">反轉輕觸區域</string>
     <string name="notification_check_updates">正在檢查是否有新章節</string>
     <string name="vertical_plus_viewer">垂直連貫</string>
-    <string name="pref_jump_to_chapters">開啟書籍時直接捲動至章節列表</string>
     <string name="tapping_inverted_none">無</string>
     <plurals name="restore_completed_message">
         <item quantity="other">歷時 %1$s，出現 %2$s 個錯誤</item>
@@ -514,9 +511,8 @@
     <string name="no_chapters_error">沒有章節</string>
     <string name="set_chapter_settings_as_default">保存為預設值</string>
     <string name="clear_history_completed">已刪除記錄</string>
-    <string name="clear_history_confirmation">所有的閱讀記錄將會遺失，你確定嗎？</string>
+    <string name="clear_history_confirmation">你確定嗎？所有的閱讀記錄將會遺失。</string>
     <string name="pref_clear_history">清除閱讀記錄</string>
-    <string name="pref_hide_bottom_bar_on_scroll">捲動時隱藏底部功能表</string>
     <string name="pref_incognito_mode_summary">暫停閱讀記錄</string>
     <string name="pref_incognito_mode">無痕模式</string>
     <string name="http_error_hint">在 WebView 中檢查網站</string>
@@ -541,7 +537,7 @@
     <string name="crash_log_saved">已產生當機記錄</string>
     <string name="pref_dump_crash_logs_summary">產生錯誤記錄檔以便分享予開發人員</string>
     <string name="pref_dump_crash_logs">傾印當機記錄</string>
-    <string name="pref_viewer_nav">輕觸翻頁模式</string>
+    <string name="pref_viewer_nav">輕觸區域</string>
     <string name="right_and_left_nav">左右式</string>
     <string name="action_order_by_upload_date">依上傳日期</string>
     <string name="action_desc">遞減</string>
@@ -560,7 +556,7 @@
     <string name="nav_zone_left">左邊</string>
     <string name="nav_zone_prev">上一頁</string>
     <string name="nav_zone_next">下一頁</string>
-    <string name="action_sort_chapter_fetch_date">擷取日期</string>
+    <string name="action_sort_chapter_fetch_date">章節獲取日期</string>
     <string name="nav_zone_right">右邊</string>
     <string name="rotation_landscape">橫向</string>
     <string name="pref_reader_actions">操作</string>
@@ -576,8 +572,8 @@
     <string name="pref_download_new_categories_details">分類同時屬於「排除」及「包含」的漫畫，將不會自動下載。</string>
     <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
     <string name="pref_create_folder_per_manga_summary">根據漫畫標題建立資料夾</string>
-    <string name="pref_show_navigation_mode_summary">開始閱讀時，浮現輕觸翻頁的點擊區域</string>
-    <string name="pref_show_navigation_mode">翻頁方式提示</string>
+    <string name="pref_show_navigation_mode_summary">開始閱讀時，短暫浮現輕觸區域</string>
+    <string name="pref_show_navigation_mode">輕觸區域提示</string>
     <string name="pref_library_update_categories_details">分類同時屬於「排除」及「包含」的漫畫，將不會自動更新。</string>
     <string name="cancel_all_for_series">取消此叢書</string>
     <string name="automatic_background">自動</string>
@@ -658,13 +654,13 @@
     <string name="action_sort_count">漫畫總數</string>
     <string name="action_display_language_badge">語言</string>
     <string name="label_warning">警告</string>
-    <string name="notification_size_warning">大量更新會損害來源，並可能導致更新速度緩慢、電池用量增加</string>
+    <string name="notification_size_warning">大量更新會損害來源，並可能導致更新速度緩慢、電池用量增加。輕觸以瞭解詳情。</string>
     <string name="pref_verbose_logging">錄製詳細記錄</string>
     <string name="backup_info">強烈建議啟用自動備份，並在他處保留副本。</string>
     <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
     <string name="connected_to_wifi">僅透過 Wi-Fi</string>
     <string name="update_72hour">每 3 日</string>
-    <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源並 (或) 使其封鎖 Tachiyomi</string>
+    <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源並 (或) 使其封鎖 Tachiyomi。輕觸以瞭解詳情。</string>
     <string name="ext_update_all">全部更新</string>
     <string name="pref_library_update_show_tab_badge">在「新刊」導覽圖示上標記未讀章數</string>
     <string name="channel_app_updates">應用程式更新</string>
@@ -708,4 +704,21 @@
     <string name="update_check_fdroid_migration_info">新版本已正式推出。輕觸以瞭解如何從非官方的 F-Droid 版遷移至官方發行版。</string>
     <string name="pref_clear_webview_data">清除 WebView 資料</string>
     <string name="webview_data_deleted">已清除 WebView 資料</string>
+    <string name="action_close">關閉</string>
+    <string name="battery_not_low">電量充足時</string>
+    <string name="pref_duplicate_pinned_sources">重複顯示釘選來源</string>
+    <string name="pref_duplicate_pinned_sources_summary">將來源同時釘選於「已釘選」及其所屬的語言分組</string>
+    <string name="source_empty_screen">找不到來源</string>
+    <string name="source_filter_empty_screen">找不到已安裝的來源</string>
+    <string name="migrate_empty_screen">呃…尷尬了</string>
+    <string name="action_sort_last_manga_update">最後一次漫畫更新</string>
+    <string name="action_sort_unread_count">未讀章數</string>
+    <string name="download_notifier_split_page_not_found">分割時找不到第 %d 頁</string>
+    <string name="split_tall_images">自動分割過高圖片</string>
+    <string name="split_tall_images_summary">將下載的圖片中尺寸較高者分割，以改善閱讀器效能。</string>
+    <string name="download_notifier_split_page_path_not_found">找不到第 %d 頁的檔案路徑</string>
+    <string name="pref_reset_viewer_flags">重設閱讀器旗標</string>
+    <string name="pref_reset_viewer_flags_summary">將所有叢書的閱讀模式和螢幕方向重設為預設值</string>
+    <string name="pref_reset_viewer_flags_success">已重設閱讀器旗標</string>
+    <string name="pref_reset_viewer_flags_error">無法重設閱讀器旗標</string>
 </resources>

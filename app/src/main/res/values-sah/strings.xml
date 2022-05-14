@@ -20,7 +20,6 @@
     <string name="action_search">Көрдөөһүн</string>
     <string name="action_sort_date_added">Киирбит кэмэ</string>
     <string name="action_sort_latest_chapter">Бүтэһик түһүмэх</string>
-    <string name="action_sort_last_checked">Бүтэһигинэн көрүллүбүт</string>
     <string name="action_sort_last_read">Бүтэһигинэн ааҕыллыбыт</string>
     <string name="action_sort_total">Түһүмэх ахсаанынан</string>
     <string name="action_sort_alpha">Алпаабыт бэрээдэгинэн</string>
@@ -74,7 +73,6 @@
     <string name="update_never">Илиинэн</string>
     <string name="pref_library_update_interval">Саҥардыы түргэнэ</string>
     <string name="pref_category_library_update">Улахан саҥардыы</string>
-    <string name="pref_jump_to_chapters">Аһаҕас түһүмэххэ көһүү</string>
     <string name="landscape">Сытыары</string>
     <string name="portrait">Туруору</string>
     <string name="pref_library_columns">Маллары кэккэ туруор</string>
@@ -93,7 +91,6 @@
     <string name="pref_manage_notifications">Биллэриилэри салай</string>
     <string name="pref_confirm_exit">Тахсыыны бигэргэт</string>
     <string name="pref_date_format">Даататын формаата</string>
-    <string name="pref_start_screen">Сүрүн экран</string>
     <string name="theme_dark">Холбоммут</string>
     <string name="theme_light">Араарыллыбыт</string>
     <string name="theme_system">Системнайы тутуһуҥ</string>
@@ -469,7 +466,6 @@
     <string name="pref_clear_history">Остуоруйаны сотторуу</string>
     <string name="clear_history_confirmation">Эрэллээххин дуо\? Остуоруйа барыта сотторуллуоҕа.</string>
     <string name="clear_history_completed">Остуоруйа сотторулунна</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Эргитэн түһэргэ алларааҥы хонууну сабыы</string>
     <string name="action_search_settings">Көрдөөһүн түстэлэ</string>
     <string name="migration_dialog_what_to_include">Киллэрэр дааннайдары талыы</string>
     <string name="spen_next_page">Аныгыскы сирэй</string>

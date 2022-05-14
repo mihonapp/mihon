@@ -87,9 +87,8 @@
     <string name="all">Све</string>
     <string name="pref_library_update_restriction">Ограничења уређаја за аутоматска ажурирања</string>
     <string name="charging">Пуњење</string>
-    <string name="pref_update_only_non_completed">Završeni serijal</string>
+    <string name="pref_update_only_non_completed">Sa završenim \"Statusom\"</string>
     <string name="pref_auto_update_manga_sync">Ажурирај пратиоца након читања</string>
-    <string name="pref_start_screen">Почетни екран</string>
     <string name="default_category">Podrazumevana kategorija</string>
     <string name="default_category_summary">Увек питај</string>
     <string name="all_lang">Све</string>
@@ -184,7 +183,7 @@
     <string name="pref_clear_chapter_cache">Испразни кеш меморију поглавља</string>
     <string name="used_cache">Искоришћено: %1$s</string>
     <string name="cache_deleted">Кеш је испражњен. Уклоњених фајлова: %1$d</string>
-    <string name="cache_delete_error">Дошло је до грешке током пражњења кеша</string>
+    <string name="cache_delete_error">Došlo je do greške prilikom brisanja</string>
     <string name="pref_clear_cookies">Избриши колачиће</string>
     <string name="cookies_cleared">Колачићи су избрисани</string>
     <string name="pref_clear_database">Избриши базу података</string>
@@ -304,7 +303,6 @@
     <string name="action_unpin">Ukolni oznaku</string>
     <string name="action_pin">Označi</string>
     <string name="action_select_inverse">Izaberi obrnuto</string>
-    <string name="action_sort_last_checked">Zadnje pregledano</string>
     <string name="action_menu">Meni</string>
     <string name="confirm_exit">Притисните поново назад да бисте изашли</string>
     <string name="label_downloaded_only">Samo preuzeto</string>
@@ -421,7 +419,6 @@
     <string name="file_select_cover">Изаберите слику за омот</string>
     <string name="notification_first_add_to_library">Морате прво додати мангу у колекцију</string>
     <string name="notification_cover_update_failed">Ажурирање омота није успјело</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Сакриј доњу траку</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_disable">Onemogući</string>
     <string name="action_display_show_tabs">Prikaži naslove umetaka</string>
@@ -446,7 +443,6 @@
     </plurals>
     <string name="pref_library_update_refresh_metadata_summary">Провери да ли постоје нови омоти при ажурирању колекције</string>
     <string name="pref_library_update_refresh_metadata">Аутоматски освежи метаподатке</string>
-    <string name="pref_jump_to_chapters">Idi na poglevlje sa otvaranjem</string>
     <string name="parental_controls_info">Ovo ne sprečava nezvanične ili potencijalno pogrešno označene dodatke da prikažu sadržaj za odrasle (18+) unutar aplikacije.</string>
     <string name="action_filter_tracked">Zapraćeno</string>
     <string name="alignment_bottom">Dole</string>
@@ -688,7 +684,7 @@
     <string name="migration_help_guide">Водич за миграцију извора</string>
     <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања Tachiyomi-ја</string>
     <string name="notification_updating">Ажурирање колекције... (%1$d/%2$d)</string>
-    <string name="notification_size_warning">Упозорење: велики број ажурирања штети изворе и може довести до споријих ажурирања и повећане потрошње батерије</string>
+    <string name="notification_size_warning">Velika ažuriranja štete izvorima i mogu dovesti do sporijeg ažuriranja i povećane potrošnje baterije</string>
     <string name="pref_library_update_show_tab_badge">Прикажи број непрочитаних на икони \"Ново\"</string>
     <string name="ext_update_all">Ажурирај све</string>
     <string name="channel_app_updates">Ажурирања апликације</string>
@@ -696,12 +692,12 @@
     <string name="extension_api_error">Преузимање листе додатака није успело</string>
     <string name="pref_auto_clear_chapter_cache">Испразни кеш меморију при изласку из апликације</string>
     <string name="database_clean">Čišćenje baze podataka</string>
-    <string name="pref_library_update_manga_restriction">Preskoči ažuriranja</string>
-    <string name="pref_update_only_completely_read">Ima pročitana poglavlja</string>
+    <string name="pref_library_update_manga_restriction">Preskočite ažuriranje naslova</string>
+    <string name="pref_update_only_completely_read">Sa neporcitanim poglavljem(ima)</string>
     <string name="privacy_policy">Политика приватности</string>
     <string name="cancelled">Otkazano</string>
     <string name="on_hiatus">Na pauzi</string>
-    <string name="pref_update_only_started">Nema pročitanih poglavlja</string>
+    <string name="pref_update_only_started">To nije započeto</string>
     <string name="action_show_manga">Prikaži mange</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_filter_started">Započeto</string>
@@ -726,4 +722,14 @@
     <string name="skipped_reason_completed">Preskočeno jer je serijal završen</string>
     <string name="skipped_reason_not_caught_up">Preskočeno jer ima nepročitanih poglavlja</string>
     <string name="disabled_nav">Onesposobljen</string>
+    <string name="update_check_fdroid_migration_info">Nova verzija je dostupna u zvaničnim izdanjima.Dodirnite da naučite kako da predjete sa nezvaničnih izdanja F-Droid-a.</string>
+    <string name="empty_backup_error">Nema unosa u biblioteku za pravljenje rezervnih kopija</string>
+    <string name="update_check_open">Otvorite na GitHub-u</string>
+    <string name="error_saving_picture">Greška pri čuvanju slike</string>
+    <string name="action_close">Zatvoriti</string>
+    <string name="battery_not_low">Baterija nije prazna</string>
+    <string name="pref_duplicate_pinned_sources_summary">Ponovite zakačene izvore u njihovim jezičkim grupama</string>
+    <string name="pref_clear_webview_data">Obrišite podatke WebView-a</string>
+    <string name="webview_data_deleted">Podaci WebView-a su obrisani</string>
+    <string name="pref_duplicate_pinned_sources">Prikaži duplirane zakačene izvore</string>
 </resources>

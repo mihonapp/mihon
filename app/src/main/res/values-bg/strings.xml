@@ -79,7 +79,6 @@
     <string name="charging">На зарядно устройство</string>
     <string name="pref_update_only_non_completed">Излизащи серии</string>
     <string name="pref_auto_update_manga_sync">Обнови прогреса след прочитане</string>
-    <string name="pref_start_screen">Начален екран</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Цял екран</string>
     <string name="pref_page_transitions">Анимирани преходи</string>
@@ -467,7 +466,6 @@
     <string name="action_view_chapters">Преглед на глави</string>
     <string name="action_select_inverse">Избери обратно</string>
     <string name="action_sort_latest_chapter">Последна глава</string>
-    <string name="action_sort_last_checked">Последна проверка</string>
     <string name="action_menu">Меню</string>
     <string name="confirm_exit">Натиснете назад още веднъж, за да излезете</string>
     <string name="unlock_app">Отключете Тачийоми</string>
@@ -545,7 +543,6 @@
     <string name="pref_category_reading_mode">Режим на четене</string>
     <string name="ext_nsfw_warning">Може да съдържа неприлично (18+) съдържание</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="pref_jump_to_chapters">Отиди до глави при отваряне</string>
     <string name="parental_controls_info">Тази настройка няма да спре неофициални или потенциално неправилно маркирани разширения да позволяват достъп до съдържание за възрастни (18+) в апликацията.</string>
     <string name="pref_category_theme">Тема</string>
     <string name="action_download_unread">Изтегли непрочетените глави</string>
@@ -594,7 +591,6 @@
     <string name="pref_relative_time_short">Къси (Днес, Вчера)</string>
     <string name="pref_relative_time_long">Дълги (Къси+, преди х дни)</string>
     <string name="pref_category_appearance">Облик</string>
-    <string name="pref_hide_bottom_bar_on_scroll">Скрий долната лента при плъзгане</string>
     <string name="pref_relative_format">Относителни времеотметки</string>
     <string name="on">Да</string>
     <string name="l_nav">L-образно</string>

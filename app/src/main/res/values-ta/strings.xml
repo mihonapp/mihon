@@ -26,7 +26,6 @@
     <string name="action_settings">அமைப்புகள்</string>
     <string name="track">கண்காணிப்பு</string>
     <string name="action_menu">பட்டியல்</string>
-    <string name="action_sort_last_checked">சமீபத்தில் பார்த்தவை</string>
     <string name="action_sort_latest_chapter">சமீப அலகுகள்</string>
     <string name="action_sort_date_added">சேர்க்கப்பட்ட தேதி</string>
     <string name="action_search">தேடுதல்</string>

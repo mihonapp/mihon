@@ -84,7 +84,6 @@
     <string name="confirm_exit">ថយម្ដងទៀតដើម្បីចេញ</string>
     <string name="action_settings">ការកំណត់</string>
     <string name="action_menu">កន្លែងកំណត់</string>
-    <string name="action_sort_last_checked">បានចូលមើលចុងក្រោយបង្អស់</string>
     <string name="action_mark_previous_as_read">បញ្ចាក់ភាគមុនថាបានអាន</string>
     <string name="action_delete">លុប</string>
     <string name="action_update">ធ្វើបច្ចុប្បន្នភាព</string>
@@ -148,11 +147,9 @@
     <string name="alignment_top">លើ</string>
     <string name="alignment_center">កណ្ដាល</string>
     <string name="alignment_bottom">ចុង</string>
-    <string name="pref_hide_bottom_bar_on_scroll">លាក់ចុងនៅពេលអូសបា</string>
     <string name="pref_category_timestamps">timestamps</string>
     <string name="pref_relative_format">relative timestamps</string>
     <string name="pref_date_format">ទម្រង់ថ្ងៃខែ</string>
-    <string name="pref_start_screen">អេក្រង់ពេលចូលមកដល់</string>
     <string name="pref_confirm_exit">បញ្ចាក់ការចាកចេញ</string>
     <string name="pref_manage_notifications">កំណត់ការជូនដំណឹង</string>
     <string name="pref_category_security">សន្តិសុខ</string>
@@ -171,7 +168,6 @@
     <string name="pref_library_columns">ធាតុក្នុងមួយជួ</string>
     <string name="portrait">បញ្ឈរ</string>
     <string name="landscape">ផ្ដេក</string>
-    <string name="pref_jump_to_chapters">ចូលទៅtabភាគតែម្ដងនៅពេលបើកកម្មវិធី</string>
     <string name="pref_library_update_interval">ការធ្វើប្ចុប្បន្នភាពដោយស្វ័យប្រវត្ត</string>
     <string name="update_never">បិទ</string>
     <string name="update_6hour">រាល់៦ម៉ោងម្ដង</string>

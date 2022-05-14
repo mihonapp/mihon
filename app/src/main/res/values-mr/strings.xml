@@ -93,13 +93,11 @@
     <string name="action_mark_previous_as_read">मागील वाचलेले म्हणून चिन्हांकित करा</string>
     <string name="action_select_inverse">व्यस्त निवडा</string>
     <string name="action_global_search">जागतिक शोध</string>
-    <string name="action_sort_last_checked">शेवटून चेक केलेले</string>
     <string name="secure_screen_summary">अ‍ॅप्स स्विच करताना अॅप मधील सामग्री लपवा व स्क्रीनशॉट अवरोधित करा</string>
     <plurals name="num_categories">
         <item quantity="one">%d श्रेणी</item>
         <item quantity="other">%d श्रेण्या</item>
     </plurals>
-    <string name="pref_start_screen">प्रारंभाची पृष्ट</string>
     <string name="secure_screen">स्क्रीन सुरक्षित करा</string>
     <plurals name="lock_after_mins">
         <item quantity="one">1 मिनीटानंतर</item>

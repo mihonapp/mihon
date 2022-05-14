@@ -155,7 +155,6 @@
     <string name="pref_remove_after_read">Удалять после прочтения</string>
     <string name="pref_rotation_type">Ориентация по умолчанию</string>
     <string name="pref_show_page_number">Номер страницы</string>
-    <string name="pref_start_screen">Начальный экран</string>
     <string name="pref_update_only_non_completed">Серия завершена</string>
     <string name="pref_viewer_type">Режим чтения</string>
     <string name="pref_zoom_start">Стартовая позиция увеличения</string>
@@ -193,7 +192,7 @@
     <string name="update_check_confirm">Загрузить</string>
     <string name="update_check_look_for_updates">Поиск обновлений…</string>
     <string name="update_check_no_new_updates">Обновлений не найдено</string>
-    <string name="update_check_notification_download_complete">Загрузка завершена</string>
+    <string name="update_check_notification_download_complete">Нажмите, для установки</string>
     <string name="update_check_notification_download_error">Ошибка загрузки</string>
     <string name="update_check_notification_download_in_progress">Загрузка…</string>
     <string name="update_check_notification_update_available">Доступна новая версия!</string>
@@ -402,7 +401,6 @@
     <string name="action_move_to_top">В начало</string>
     <string name="action_move_to_bottom">В конец</string>
     <string name="action_reorganize_by">Переупорядочить</string>
-    <string name="action_sort_last_checked">Проверенная серия</string>
     <string name="channel_ext_updates">Обновления расширений</string>
     <string name="unlock_app">Разблокировать Tachiyomi</string>
     <string name="action_menu">Меню</string>
@@ -453,7 +451,7 @@
     <string name="viewer">Режим чтения</string>
     <string name="pref_category_for_this_series">Для этой серии</string>
     <string name="gray_background">Серый</string>
-    <string name="pref_true_color_summary">Уменьшает полосатость, но влияет на производительность</string>
+    <string name="pref_true_color_summary">Уменьшает полосатость, но может влиять на производительность</string>
     <plurals name="num_categories">
         <item quantity="one">%d категория</item>
         <item quantity="few">%d категории</item>
@@ -490,8 +488,8 @@
     <string name="page_list_empty_error">Страницы не найдены</string>
     <string name="action_enable_all">Включить всё</string>
     <string name="action_disable_all">Отключить всё</string>
-    <string name="pref_show_reading_mode_summary">Ненадолго показать режим чтения после открытия читалки</string>
-    <string name="pref_show_reading_mode">Показать режим чтения</string>
+    <string name="pref_show_reading_mode_summary">Ненадолго отобразить режим чтения после открытия читалки</string>
+    <string name="pref_show_reading_mode">Отобразить режим чтения</string>
     <string name="action_start">Начать</string>
     <string name="loader_not_implemented_error">Источник не найден</string>
     <string name="action_disable">Отключить</string>
@@ -503,12 +501,11 @@
     </plurals>
     <string name="requires_app_restart">Для вступления в силу, требуется перезапуск приложения</string>
     <string name="label_network">Сеть</string>
-    <string name="pref_jump_to_chapters">При открытии серии переходить к главам</string>
     <string name="tapping_inverted_both">Обе оси</string>
     <string name="tapping_inverted_vertical">Вертикально</string>
     <string name="tapping_inverted_horizontal">Горизонтально</string>
     <string name="tapping_inverted_none">Нет</string>
-    <string name="pref_read_with_tapping_inverted">Нажатие наоборот</string>
+    <string name="pref_read_with_tapping_inverted">Зоны касания наоборот</string>
     <string name="unknown_status">Неизвестный статус</string>
     <string name="unknown_author">Неизвестный автор</string>
     <string name="action_download_unread">Загрузить непрочитанные главы</string>
@@ -552,7 +549,6 @@
     <string name="action_search_settings">Поиск настроек</string>
     <string name="downloaded_chapters">Загруженные главы</string>
     <string name="manga_from_library">Серия из библиотеки</string>
-    <string name="pref_hide_bottom_bar_on_scroll">При прокрутке скрывать панель навигации</string>
     <string name="pref_incognito_mode_summary">Приостанавливает историю чтения</string>
     <string name="pref_incognito_mode">Режим инкогнито</string>
     <string name="pref_clear_history">Очистить историю</string>
@@ -562,10 +558,10 @@
     <string name="spen_previous_page">Предыдущая страница</string>
     <string name="migration_help_guide">Руководство по миграции источников</string>
     <string name="pref_category_nsfw_content">Источники NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Показать в списке источников и расширений</string>
+    <string name="pref_show_nsfw_source">Отобразить в списке источников и расширений</string>
     <string name="file_picker_error">Приложение для выбора файлов не найдено</string>
     <string name="myanimelist_relogin">Пожалуйста, авторизуйтесь в MyAnimeList снова</string>
-    <string name="pref_viewer_nav">Схема навигации</string>
+    <string name="pref_viewer_nav">Зоны касания</string>
     <string name="edge_nav">По краям</string>
     <string name="kindlish_nav">Kindle-подобная</string>
     <string name="l_nav">L-образная</string>
@@ -592,17 +588,17 @@
     <string name="nav_zone_right">Справа</string>
     <string name="nav_zone_next">Следующая</string>
     <string name="nav_zone_prev">Предыдущая</string>
-    <string name="pref_show_navigation_mode_summary">Ненадолго показать зоны касания при чтении</string>
-    <string name="pref_show_navigation_mode">Наложение схемы навигации</string>
+    <string name="pref_show_navigation_mode_summary">Ненадолго отобразить при чтении</string>
+    <string name="pref_show_navigation_mode">Наложение зон касания</string>
     <string name="pref_dns_over_https">DNS по HTTPS (DoH)</string>
     <string name="none">Нет</string>
     <string name="exclude">Исключать: %s</string>
     <string name="include">Включать: %s</string>
-    <string name="action_sort_chapter_fetch_date">Дата получения</string>
+    <string name="action_sort_chapter_fetch_date">Дата получения главы</string>
     <string name="pref_download_new_categories_details">Серия не будет загружаться в исключённых категориях, даже если находится во включённых категориях.</string>
     <string name="pref_library_update_categories_details">Серия не будет обновляться в исключённых категориях, даже если находится во включённых категориях.</string>
     <string name="pref_category_auto_download">Автозагрузка</string>
-    <string name="action_show_errors">Нажмите, чтобы увидеть подробности</string>
+    <string name="action_show_errors">Нажать, чтобы увидеть подробности</string>
     <string name="update_check_eol">Эта версия Android больше не поддерживается</string>
     <string name="clipboard_copy_error">Не удалось скопировать в буфер обмена</string>
     <string name="rotation_landscape">Альбомная</string>
@@ -695,11 +691,11 @@
     <string name="pref_verbose_logging_summary">Записывать подробный журнал в системный журнал (снижает производительность приложения)</string>
     <string name="action_display_language_badge">Язык</string>
     <string name="label_warning">Предупреждение</string>
-    <string name="notification_size_warning">Большое количество обновлений серий могут привести к замедлению работы источников и увеличению расхода батареи</string>
+    <string name="notification_size_warning">Большое количество обновлений серий могут привести к замедлению работы источников и увеличению расхода батареи. Нажать, для подробностей.</string>
     <string name="backup_info">Настоятельно рекомендуется использовать автоматические резервные копии. Вы также должны хранить копии в разных папках.</string>
     <string name="connected_to_wifi">Только по Wi-Fi</string>
     <string name="update_72hour">Каждые 3 дня</string>
-    <string name="download_queue_size_warning">Предупреждение: большие объемы загрузок глав могут привести к замедлению работы источников и/или блокировке Tachiyomi</string>
+    <string name="download_queue_size_warning">Предупреждение: большие объемы загрузок глав могут привести к замедлению работы источников и/или блокировке Tachiyomi. Нажмите, для подробностей.</string>
     <string name="pref_library_update_show_tab_badge">Непрочитанные главы на иконке «Обновления»</string>
     <string name="ext_update_all">Обновить все</string>
     <string name="channel_app_updates">Обновления приложения</string>
@@ -718,7 +714,7 @@
     <string name="action_faq_and_guides">Руководства и FAQ</string>
     <string name="backup_restore_invalid_uri">Ошибка: Пустой URI</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="action_show_manga">Показать серию</string>
+    <string name="action_show_manga">Отобразить серию</string>
     <string name="confirm_manga_add_duplicate">В вашей библиотеке есть серия с таким же названием, но из другого источника (%1$s).
 \n
 \nВы по-прежнему хотите продолжить\?</string>
@@ -743,4 +739,21 @@
     <string name="update_check_open">Открыть в GitHub</string>
     <string name="webview_data_deleted">Данные WebView очищены</string>
     <string name="pref_clear_webview_data">Очистить данные WebView</string>
+    <string name="action_close">Закрыть</string>
+    <string name="pref_duplicate_pinned_sources_summary">Повторять прикреплённые источники, в соответствии с их языковыми группами</string>
+    <string name="pref_duplicate_pinned_sources">Отображать дублированные приклеплённые источники</string>
+    <string name="battery_not_low">Батарея заряжена</string>
+    <string name="source_filter_empty_screen">Не найдено установленных источников</string>
+    <string name="migrate_empty_screen">Упс, ошибочка вышла</string>
+    <string name="source_empty_screen">Не найдено источников</string>
+    <string name="action_sort_last_manga_update">Последнее обновление серий</string>
+    <string name="action_sort_unread_count">Количество непрочитанных глав</string>
+    <string name="split_tall_images">Разделять длинные изображения</string>
+    <string name="download_notifier_split_page_not_found">Страница %d не найдена, при разделении</string>
+    <string name="split_tall_images_summary">Улучшает производительность читалки, разделяя длинные загруженные изображения.</string>
+    <string name="download_notifier_split_page_path_not_found">Путь к файлам страницы %d не найден</string>
+    <string name="pref_reset_viewer_flags">Сбросить флажки просмотра</string>
+    <string name="pref_reset_viewer_flags_summary">Сбрасывает режим чтения и ориентацию для всех серий</string>
+    <string name="pref_reset_viewer_flags_success">Флажки просмотра сброшены</string>
+    <string name="pref_reset_viewer_flags_error">Не удалось сбросить флажки просмотра</string>
 </resources>
