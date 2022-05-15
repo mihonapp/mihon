@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Target
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
+import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.PREF_DOH_ADGUARD
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
@@ -59,6 +60,7 @@ class SettingsAdvancedController(
 
     private val network: NetworkHelper by injectLazy()
     private val chapterCache: ChapterCache by injectLazy()
+    private val trackManager: TrackManager by injectLazy()
 
     @SuppressLint("BatteryLife")
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
@@ -212,12 +214,14 @@ class SettingsAdvancedController(
 
                 onClick { LibraryUpdateService.start(context, target = Target.COVERS) }
             }
-            preference {
-                key = "pref_refresh_library_tracking"
-                titleRes = R.string.pref_refresh_library_tracking
-                summaryRes = R.string.pref_refresh_library_tracking_summary
+            if (trackManager.hasLoggedServices()) {
+                preference {
+                    key = "pref_refresh_library_tracking"
+                    titleRes = R.string.pref_refresh_library_tracking
+                    summaryRes = R.string.pref_refresh_library_tracking_summary
 
-                onClick { LibraryUpdateService.start(context, target = Target.TRACKING) }
+                    onClick { LibraryUpdateService.start(context, target = Target.TRACKING) }
+                }
             }
             preference {
                 key = "pref_reset_viewer_flags"

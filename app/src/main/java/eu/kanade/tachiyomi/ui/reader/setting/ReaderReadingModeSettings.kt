@@ -72,7 +72,9 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         binding.pagerPrefsGroup.tappingInverted.bindToPreference(preferences.pagerNavInverted())
 
         binding.pagerPrefsGroup.pagerNav.bindToPreference(preferences.navigationModePager())
-
+        preferences.navigationModePager()
+            .asImmediateFlow { binding.pagerPrefsGroup.tappingInverted.isVisible = it != 5 }
+            .launchIn((context as ReaderActivity).lifecycleScope)
         // Makes so that landscape zoom gets hidden away when image scale type is not fit screen
         binding.pagerPrefsGroup.scaleType.bindToPreference(preferences.imageScaleType(), 1)
         preferences.imageScaleType()
@@ -102,6 +104,9 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         binding.webtoonPrefsGroup.tappingInverted.bindToPreference(preferences.webtoonNavInverted())
 
         binding.webtoonPrefsGroup.webtoonNav.bindToPreference(preferences.navigationModeWebtoon())
+        preferences.navigationModeWebtoon()
+            .asImmediateFlow { binding.webtoonPrefsGroup.tappingInverted.isVisible = it != 5 }
+            .launchIn((context as ReaderActivity).lifecycleScope)
         binding.webtoonPrefsGroup.cropBordersWebtoon.bindToPreference(preferences.cropBordersWebtoon())
         binding.webtoonPrefsGroup.webtoonSidePadding.bindToIntPreference(preferences.webtoonSidePadding(), R.array.webtoon_side_padding_values)
 

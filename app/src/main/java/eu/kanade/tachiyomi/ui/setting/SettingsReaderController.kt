@@ -165,6 +165,7 @@ class SettingsReaderController : SettingsController() {
                     TappingInvertMode.BOTH.name,
                 )
                 summary = "%s"
+                visibleIf(preferences.navigationModePager()) { it != 5 }
             }
             intListPreference {
                 bindTo(preferences.imageScaleType())
@@ -244,6 +245,7 @@ class SettingsReaderController : SettingsController() {
                     TappingInvertMode.BOTH.name,
                 )
                 summary = "%s"
+                visibleIf(preferences.navigationModeWebtoon()) { it != 5 }
             }
             intListPreference {
                 bindTo(preferences.webtoonSidePadding())
