@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import eu.kanade.domain.source.model.Source
-import eu.kanade.presentation.browse.SourceScreen
+import eu.kanade.presentation.browse.SourcesScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.SearchableComposeController
@@ -21,11 +21,7 @@ import eu.kanade.tachiyomi.ui.browse.source.latest.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import uy.kohesive.injekt.injectLazy
 
-/**
- * This controller shows and manages the different catalogues enabled by the user.
- * This controller should only handle UI actions, IO actions should be done by [SourcePresenter]
- */
-class SourceController : SearchableComposeController<SourcePresenter>() {
+class SourcesController : SearchableComposeController<SourcesPresenter>() {
 
     private val preferences: PreferencesHelper by injectLazy()
 
@@ -33,15 +29,13 @@ class SourceController : SearchableComposeController<SourcePresenter>() {
         setHasOptionsMenu(true)
     }
 
-    override fun getTitle(): String? =
-        resources?.getString(R.string.label_sources)
+    override fun getTitle() = resources?.getString(R.string.label_sources)
 
-    override fun createPresenter(): SourcePresenter =
-        SourcePresenter()
+    override fun createPresenter() = SourcesPresenter()
 
     @Composable
     override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
-        SourceScreen(
+        SourcesScreen(
             nestedScrollInterop = nestedScrollInterop,
             presenter = presenter,
             onClickItem = { source ->
@@ -57,6 +51,7 @@ class SourceController : SearchableComposeController<SourcePresenter>() {
                 presenter.togglePin(source)
             },
         )
+
         LaunchedEffect(Unit) {
             (activity as? MainActivity)?.ready = true
         }

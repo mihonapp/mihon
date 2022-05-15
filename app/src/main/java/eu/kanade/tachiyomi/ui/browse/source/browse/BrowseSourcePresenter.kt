@@ -53,9 +53,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
 
-/**
- * Presenter of [BrowseSourceController].
- */
 open class BrowseSourcePresenter(
     private val sourceId: Long,
     searchQuery: String? = null,

@@ -1,4 +1,4 @@
-package eu.kanade.presentation.extension
+package eu.kanade.presentation.browse
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.combinedClickable
@@ -47,15 +47,15 @@ import eu.kanade.presentation.util.topPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
-import eu.kanade.tachiyomi.ui.browse.extension.ExtensionPresenter
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionState
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionUiModel
+import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsPresenter
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 @Composable
 fun ExtensionScreen(
     nestedScrollInterop: NestedScrollConnection,
-    presenter: ExtensionPresenter,
+    presenter: ExtensionsPresenter,
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
     onInstallExtension: (Extension.Available) -> Unit,
@@ -112,6 +112,7 @@ fun ExtensionContent(
 ) {
     val (trustState, setTrustState) = remember { mutableStateOf<Extension.Untrusted?>(null) }
     LazyColumn(
+        modifier = Modifier.nestedScroll(nestedScrollInterop),
         contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
     ) {
         items(

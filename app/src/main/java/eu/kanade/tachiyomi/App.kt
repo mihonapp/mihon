@@ -54,7 +54,7 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.security.Security
 
-open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
+class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
     private val preferences: PreferencesHelper by injectLazy()
 

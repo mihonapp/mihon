@@ -92,7 +92,7 @@ open class GlobalSearchPresenter(
     }
 
     /**
-     * Returns a list of enabled sources ordered by language and name, with pinned catalogues
+     * Returns a list of enabled sources ordered by language and name, with pinned sources
      * prioritized.
      *
      * @return list containing enabled sources.

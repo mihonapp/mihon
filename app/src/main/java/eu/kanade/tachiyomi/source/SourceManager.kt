@@ -14,7 +14,7 @@ import rx.Observable
 import tachiyomi.source.model.ChapterInfo
 import tachiyomi.source.model.MangaInfo
 
-open class SourceManager(private val context: Context) {
+class SourceManager(private val context: Context) {
 
     private val sourcesMap = mutableMapOf<Long, Source>()
     private val stubSourcesMap = mutableMapOf<Long, StubSource>()
@@ -28,7 +28,7 @@ open class SourceManager(private val context: Context) {
         createInternalSources().forEach { registerSource(it) }
     }
 
-    open fun get(sourceKey: Long): Source? {
+    fun get(sourceKey: Long): Source? {
         return sourcesMap[sourceKey]
     }
 

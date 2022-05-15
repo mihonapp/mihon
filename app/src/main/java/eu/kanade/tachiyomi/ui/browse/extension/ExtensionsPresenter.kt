@@ -26,14 +26,11 @@ import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-/**
- * Presenter of [ExtensionController].
- */
-open class ExtensionPresenter(
+class ExtensionsPresenter(
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensionUpdates: GetExtensionUpdates = Injekt.get(),
     private val getExtensions: GetExtensions = Injekt.get(),
-) : BasePresenter<ExtensionController>() {
+) : BasePresenter<ExtensionsController>() {
 
     private val _query: MutableStateFlow<String> = MutableStateFlow("")
 

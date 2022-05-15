@@ -4,7 +4,7 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.lang.awaitSingle
 
-open class SourcePager(val source: CatalogueSource, val query: String, val filters: FilterList) : Pager() {
+class SourcePager(val source: CatalogueSource, val query: String, val filters: FilterList) : Pager() {
 
     override suspend fun requestNextPage() {
         val page = currentPage

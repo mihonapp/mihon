@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
-import eu.kanade.presentation.extension.ExtensionScreen
+import eu.kanade.presentation.browse.ExtensionScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.base.controller.ComposeController
@@ -20,11 +20,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.appcompat.queryTextChanges
 
-/**
- * Controller to manage the catalogues available in the app.
- */
-open class ExtensionController :
-    ComposeController<ExtensionPresenter>() {
+class ExtensionsController : ComposeController<ExtensionsPresenter>() {
 
     private var query = ""
 
@@ -32,11 +28,9 @@ open class ExtensionController :
         setHasOptionsMenu(true)
     }
 
-    override fun getTitle(): String? =
-        applicationContext?.getString(R.string.label_extensions)
+    override fun getTitle() = applicationContext?.getString(R.string.label_extensions)
 
-    override fun createPresenter(): ExtensionPresenter =
-        ExtensionPresenter()
+    override fun createPresenter() = ExtensionsPresenter()
 
     @Composable
     override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {

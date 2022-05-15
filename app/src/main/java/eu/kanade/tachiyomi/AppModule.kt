@@ -70,7 +70,7 @@ class AppModule(val app: Application) : InjektModule {
 
         addSingletonFactory { PreferencesHelper(app) }
 
-        addSingletonFactory { DatabaseHelper(app, get()) }
+        addSingletonFactory { DatabaseHelper(get()) }
 
         addSingletonFactory { ChapterCache(app) }
 

@@ -60,9 +60,6 @@ import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
 import uy.kohesive.injekt.injectLazy
 
-/**
- * Controller to manage the catalogues available in the app.
- */
 open class BrowseSourceController(bundle: Bundle) :
     SearchableNucleusController<SourceControllerBinding, BrowseSourcePresenter>(bundle),
     FabController,

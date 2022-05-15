@@ -6,11 +6,7 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-/**
- * Presenter of [SettingsSearchController]
- * Function calls should be done from here. UI calls should be done from the controller.
- */
-open class SettingsSearchPresenter : BasePresenter<SettingsSearchController>() {
+class SettingsSearchPresenter : BasePresenter<SettingsSearchController>() {
 
     val preferences: PreferencesHelper = Injekt.get()
 
