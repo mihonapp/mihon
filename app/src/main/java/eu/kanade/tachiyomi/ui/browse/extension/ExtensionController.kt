@@ -1,48 +1,30 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
-import dev.chrisbanes.insetter.applyInsetter
-import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.davidea.flexibleadapter.items.IFlexible
+import eu.kanade.presentation.extension.ExtensionScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.databinding.ExtensionControllerBinding
 import eu.kanade.tachiyomi.extension.model.Extension
-import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.ComposeController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsController
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.appcompat.queryTextChanges
-import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 
 /**
  * Controller to manage the catalogues available in the app.
  */
 open class ExtensionController :
-    NucleusController<ExtensionControllerBinding, ExtensionPresenter>(),
-    ExtensionAdapter.OnButtonClickListener,
-    FlexibleAdapter.OnItemClickListener,
-    FlexibleAdapter.OnItemLongClickListener,
-    ExtensionTrustDialog.Listener {
-
-    /**
-     * Adapter containing the list of manga from the catalogue.
-     */
-    private var adapter: FlexibleAdapter<IFlexible<*>>? = null
-
-    private var extensions: List<ExtensionItem> = emptyList()
+    ComposeController<ExtensionPresenter>() {
 
     private var query = ""
 
@@ -50,42 +32,54 @@ open class ExtensionController :
         setHasOptionsMenu(true)
     }
 
-    override fun getTitle(): String? {
-        return applicationContext?.getString(R.string.label_extensions)
-    }
+    override fun getTitle(): String? =
+        applicationContext?.getString(R.string.label_extensions)
 
-    override fun createPresenter(): ExtensionPresenter {
-        return ExtensionPresenter()
-    }
+    override fun createPresenter(): ExtensionPresenter =
+        ExtensionPresenter()
 
-    override fun createBinding(inflater: LayoutInflater) =
-        ExtensionControllerBinding.inflate(inflater)
-
-    override fun onViewCreated(view: View) {
-        super.onViewCreated(view)
-
-        binding.recycler.applyInsetter {
-            type(navigationBars = true) {
-                padding()
-            }
-        }
-
-        binding.swipeRefresh.isRefreshing = true
-        binding.swipeRefresh.refreshes()
-            .onEach { presenter.findAvailableExtensions() }
-            .launchIn(viewScope)
-
-        // Initialize adapter, scroll listener and recycler views
-        adapter = ExtensionAdapter(this)
-        // Create recycler and set adapter.
-        binding.recycler.layoutManager = LinearLayoutManager(view.context)
-        binding.recycler.adapter = adapter
-        adapter?.fastScroller = binding.fastScroller
-    }
-
-    override fun onDestroyView(view: View) {
-        adapter = null
-        super.onDestroyView(view)
+    @Composable
+    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+        ExtensionScreen(
+            nestedScrollInterop = nestedScrollInterop,
+            presenter = presenter,
+            onLongClickItem = { extension ->
+                when (extension) {
+                    is Extension.Available -> presenter.installExtension(extension)
+                    else -> presenter.uninstallExtension(extension.pkgName)
+                }
+            },
+            onClickItemCancel = { extension ->
+                presenter.cancelInstallUpdateExtension(extension)
+            },
+            onClickUpdateAll = {
+                presenter.updateAllExtensions()
+            },
+            onLaunched = {
+                val ctrl = parentController as BrowseController
+                ctrl.setExtensionUpdateBadge()
+                ctrl.extensionListUpdateRelay.call(true)
+            },
+            onInstallExtension = {
+                presenter.installExtension(it)
+            },
+            onOpenExtension = {
+                val controller = ExtensionDetailsController(it.pkgName)
+                parentController!!.router.pushController(controller)
+            },
+            onTrustExtension = {
+                presenter.trustSignature(it.signatureHash)
+            },
+            onUninstallExtension = {
+                presenter.uninstallExtension(it.pkgName)
+            },
+            onUpdateExtension = {
+                presenter.updateExtension(it)
+            },
+            onRefresh = {
+                presenter.findAvailableExtensions()
+            },
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -105,26 +99,6 @@ open class ExtensionController :
         }
     }
 
-    override fun onButtonClick(position: Int) {
-        val extension = (adapter?.getItem(position) as? ExtensionItem)?.extension ?: return
-        when (extension) {
-            is Extension.Available -> presenter.installExtension(extension)
-            is Extension.Untrusted -> openTrustDialog(extension)
-            is Extension.Installed -> {
-                if (!extension.hasUpdate) {
-                    openDetails(extension)
-                } else {
-                    presenter.updateExtension(extension)
-                }
-            }
-        }
-    }
-
-    override fun onCancelButtonClick(position: Int) {
-        val extension = (adapter?.getItem(position) as? ExtensionItem)?.extension ?: return
-        presenter.cancelInstallUpdateExtension(extension)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.browse_extensions, menu)
 
@@ -142,93 +116,11 @@ open class ExtensionController :
         }
 
         searchView.queryTextChanges()
-            .drop(1) // Drop first event after subscribed
             .filter { router.backstack.lastOrNull()?.controller == this }
             .onEach {
                 query = it.toString()
-                updateExtensionsList()
+                presenter.search(query)
             }
             .launchIn(viewScope)
-    }
-
-    override fun onItemClick(view: View, position: Int): Boolean {
-        val extension = (adapter?.getItem(position) as? ExtensionItem)?.extension ?: return false
-        when (extension) {
-            is Extension.Available -> presenter.installExtension(extension)
-            is Extension.Untrusted -> openTrustDialog(extension)
-            is Extension.Installed -> openDetails(extension)
-        }
-        return false
-    }
-
-    override fun onItemLongClick(position: Int) {
-        val extension = (adapter?.getItem(position) as? ExtensionItem)?.extension ?: return
-        if (extension is Extension.Installed || extension is Extension.Untrusted) {
-            uninstallExtension(extension.pkgName)
-        }
-    }
-
-    private fun openDetails(extension: Extension.Installed) {
-        val controller = ExtensionDetailsController(extension.pkgName)
-        parentController!!.router.pushController(controller)
-    }
-
-    private fun openTrustDialog(extension: Extension.Untrusted) {
-        ExtensionTrustDialog(this, extension.signatureHash, extension.pkgName)
-            .showDialog(router)
-    }
-
-    fun setExtensions(extensions: List<ExtensionItem>) {
-        binding.swipeRefresh.isRefreshing = false
-        this.extensions = extensions
-        updateExtensionsList()
-
-        // Update badge on parent controller tab
-        val ctrl = parentController as BrowseController
-        ctrl.setExtensionUpdateBadge()
-        ctrl.extensionListUpdateRelay.call(true)
-    }
-
-    private fun updateExtensionsList() {
-        if (query.isNotBlank()) {
-            val queries = query.split(",")
-            adapter?.updateDataSet(
-                extensions.filter {
-                    queries.any { query ->
-                        when (it.extension) {
-                            is Extension.Available -> {
-                                it.extension.sources.any {
-                                    it.name.contains(query, ignoreCase = true) ||
-                                        it.baseUrl.contains(query, ignoreCase = true) ||
-                                        it.id == query.toLongOrNull()
-                                } || it.extension.name.contains(query, ignoreCase = true)
-                            }
-                            is Extension.Installed -> {
-                                it.extension.sources.any {
-                                    it.name.contains(query, ignoreCase = true) ||
-                                        it.id == query.toLongOrNull() ||
-                                        if (it is HttpSource) { it.baseUrl.contains(query, ignoreCase = true) } else false
-                                } || it.extension.name.contains(query, ignoreCase = true)
-                            }
-                            is Extension.Untrusted -> it.extension.name.contains(query, ignoreCase = true)
-                        }
-                    }
-                },
-            )
-        } else {
-            adapter?.updateDataSet(extensions)
-        }
-    }
-
-    fun downloadUpdate(item: ExtensionItem) {
-        adapter?.updateItem(item, item.installStep)
-    }
-
-    override fun trustSignature(signatureHash: String) {
-        presenter.trustSignature(signatureHash)
-    }
-
-    override fun uninstallExtension(pkgName: String) {
-        presenter.uninstallExtension(pkgName)
     }
 }

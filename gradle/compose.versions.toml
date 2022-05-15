@@ -13,3 +13,4 @@ material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.9"
 material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref="compose" }
 
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref="accompanist" }
+accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref="accompanist" }

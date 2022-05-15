@@ -148,6 +148,7 @@ dependencies {
     implementation(compose.animation)
     implementation(compose.ui.tooling)
     implementation(compose.accompanist.webview)
+    implementation(compose.accompanist.swiperefresh)
 
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)

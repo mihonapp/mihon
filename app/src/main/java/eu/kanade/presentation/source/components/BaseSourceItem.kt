@@ -1,19 +1,16 @@
 package eu.kanade.presentation.source.components
 
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import eu.kanade.domain.source.model.Source
-import eu.kanade.presentation.source.SourceIcon
+import eu.kanade.presentation.browse.components.BaseBrowseItem
+import eu.kanade.presentation.browse.components.SourceIcon
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
@@ -28,19 +25,14 @@ fun BaseSourceItem(
     action: @Composable RowScope.(Source) -> Unit = {},
     content: @Composable RowScope.(Source, Boolean) -> Unit = defaultContent,
 ) {
-    Row(
-        modifier = modifier
-            .combinedClickable(
-                onClick = onClickItem,
-                onLongClick = onLongClickItem,
-            )
-            .padding(horizontal = horizontalPadding, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        icon.invoke(this, source)
-        content.invoke(this, source, showLanguageInContent)
-        action.invoke(this, source)
-    }
+    BaseBrowseItem(
+        modifier = modifier,
+        onClickItem = onClickItem,
+        onLongClickItem = onLongClickItem,
+        icon = { icon.invoke(this, source) },
+        action = { action.invoke(this, source) },
+        content = { content.invoke(this, source, showLanguageInContent) },
+    )
 }
 
 private val defaultIcon: @Composable RowScope.(Source) -> Unit = { source ->
