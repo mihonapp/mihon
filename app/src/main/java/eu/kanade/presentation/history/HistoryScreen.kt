@@ -44,7 +44,9 @@ import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.MangaCover
+import eu.kanade.presentation.util.topPaddingValues
 import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.recent.history.HistoryPresenter
@@ -107,7 +109,7 @@ fun HistoryContent(
     LazyColumn(
         modifier = Modifier
             .nestedScroll(nestedScroll),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
         state = scrollState,
     ) {
         items(history) { item ->

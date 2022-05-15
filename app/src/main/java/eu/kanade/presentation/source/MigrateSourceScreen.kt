@@ -22,7 +22,9 @@ import eu.kanade.presentation.components.ItemBadges
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.source.components.BaseSourceItem
 import eu.kanade.presentation.theme.header
+import eu.kanade.presentation.util.topPaddingValues
 import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrateSourceState
 import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrationSourcesPresenter
@@ -62,7 +64,7 @@ fun MigrateSourceList(
 
     LazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
     ) {
         item(key = "title") {
             Text(
