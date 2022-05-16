@@ -68,16 +68,15 @@ fun ExtensionDetailsScreen(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
         contentPadding = WindowInsets.navigationBars.asPaddingValues(),
     ) {
-        if (extension.isObsolete) {
-            item {
-                WarningBanner(R.string.obsolete_extension_message)
-            }
-        }
-
-        if (extension.isUnofficial) {
-            item {
-                WarningBanner(R.string.unofficial_extension_message)
-            }
+        when {
+            extension.isUnofficial ->
+                item {
+                    WarningBanner(R.string.unofficial_extension_message)
+                }
+            extension.isObsolete ->
+                item {
+                    WarningBanner(R.string.obsolete_extension_message)
+                }
         }
 
         item {
