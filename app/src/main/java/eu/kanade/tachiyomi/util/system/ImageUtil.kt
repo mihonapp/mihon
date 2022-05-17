@@ -201,9 +201,9 @@ object ImageUtil {
         val imageHeight = options.outHeight
         val imageWidth = options.outWidth
 
-        val splitHeight = getDisplayHeightInPx
+        val splitHeight = getDisplayMaxHeightInPx
         // -1 so it doesn't try to split when imageHeight = getDisplayHeightInPx
-        val partCount = (imageHeight - 1) / getDisplayHeightInPx + 1
+        val partCount = (imageHeight - 1) / getDisplayMaxHeightInPx + 1
 
         logcat { "Splitting ${imageHeight}px height image into $partCount part with estimated ${splitHeight}px per height" }
 
