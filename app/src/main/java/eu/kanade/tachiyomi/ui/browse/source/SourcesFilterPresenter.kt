@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.collectLatest
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class SourceFilterPresenter(
+class SourcesFilterPresenter(
     private val getLanguagesWithSources: GetLanguagesWithSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
     private val toggleLanguage: ToggleLanguage = Injekt.get(),

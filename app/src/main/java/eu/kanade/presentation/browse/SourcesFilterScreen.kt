@@ -22,14 +22,14 @@ import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.source.FilterUiModel
-import eu.kanade.tachiyomi.ui.browse.source.SourceFilterPresenter
 import eu.kanade.tachiyomi.ui.browse.source.SourceFilterState
+import eu.kanade.tachiyomi.ui.browse.source.SourcesFilterPresenter
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 @Composable
-fun SourceFilterScreen(
+fun SourcesFilterScreen(
     nestedScrollInterop: NestedScrollConnection,
-    presenter: SourceFilterPresenter,
+    presenter: SourcesFilterPresenter,
     onClickLang: (String) -> Unit,
     onClickSource: (Source) -> Unit,
 ) {
@@ -39,7 +39,7 @@ fun SourceFilterScreen(
         is SourceFilterState.Loading -> LoadingScreen()
         is SourceFilterState.Error -> Text(text = (state as SourceFilterState.Error).error.message!!)
         is SourceFilterState.Success ->
-            SourceFilterContent(
+            SourcesFilterContent(
                 nestedScrollInterop = nestedScrollInterop,
                 items = (state as SourceFilterState.Success).models,
                 onClickLang = onClickLang,
@@ -49,7 +49,7 @@ fun SourceFilterScreen(
 }
 
 @Composable
-fun SourceFilterContent(
+fun SourcesFilterContent(
     nestedScrollInterop: NestedScrollConnection,
     items: List<FilterUiModel>,
     onClickLang: (String) -> Unit,
@@ -81,14 +81,14 @@ fun SourceFilterContent(
         ) { model ->
             when (model) {
                 is FilterUiModel.Header -> {
-                    SourceFilterHeader(
+                    SourcesFilterHeader(
                         modifier = Modifier.animateItemPlacement(),
                         language = model.language,
                         isEnabled = model.isEnabled,
                         onClickItem = onClickLang,
                     )
                 }
-                is FilterUiModel.Item -> SourceFilterItem(
+                is FilterUiModel.Item -> SourcesFilterItem(
                     modifier = Modifier.animateItemPlacement(),
                     source = model.source,
                     isEnabled = model.isEnabled,
@@ -100,7 +100,7 @@ fun SourceFilterContent(
 }
 
 @Composable
-fun SourceFilterHeader(
+fun SourcesFilterHeader(
     modifier: Modifier,
     language: String,
     isEnabled: Boolean,
@@ -117,7 +117,7 @@ fun SourceFilterHeader(
 }
 
 @Composable
-fun SourceFilterItem(
+fun SourcesFilterItem(
     modifier: Modifier,
     source: Source,
     isEnabled: Boolean,

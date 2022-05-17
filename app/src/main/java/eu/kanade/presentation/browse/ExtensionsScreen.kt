@@ -40,6 +40,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.presentation.browse.components.BaseBrowseItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
+import eu.kanade.presentation.components.SwipeRefreshIndicator
 import eu.kanade.presentation.theme.header
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.presentation.util.plus
@@ -73,12 +74,12 @@ fun ExtensionScreen(
     SwipeRefresh(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
         state = rememberSwipeRefreshState(isRefreshing),
+        indicator = { s, trigger -> SwipeRefreshIndicator(s, trigger) },
         onRefresh = onRefresh,
     ) {
         when (state) {
             is ExtensionState.Initialized -> {
                 ExtensionContent(
-                    nestedScrollInterop = nestedScrollInterop,
                     items = (state as ExtensionState.Initialized).list,
                     onLongClickItem = onLongClickItem,
                     onClickItemCancel = onClickItemCancel,
@@ -98,7 +99,6 @@ fun ExtensionScreen(
 
 @Composable
 fun ExtensionContent(
-    nestedScrollInterop: NestedScrollConnection,
     items: List<ExtensionUiModel>,
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
@@ -112,7 +112,6 @@ fun ExtensionContent(
 ) {
     val (trustState, setTrustState) = remember { mutableStateOf<Extension.Untrusted?>(null) }
     LazyColumn(
-        modifier = Modifier.nestedScroll(nestedScrollInterop),
         contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
     ) {
         items(
