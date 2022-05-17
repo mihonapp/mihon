@@ -129,7 +129,7 @@ internal class ExtensionGithubApi {
 }
 
 private const val REPO_URL_PREFIX = "https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/"
-private const val FALLBACK_REPO_URL_PREFIX = "https://cdn.jsdelivr.net/gh/tachiyomiorg/tachiyomi-extensions@repo/"
+private const val FALLBACK_REPO_URL_PREFIX = "https://fastly.jsdelivr.net/gh/tachiyomiorg/tachiyomi-extensions@repo/"
 
 @Serializable
 private data class ExtensionJsonObject(
