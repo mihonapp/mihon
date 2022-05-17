@@ -351,7 +351,11 @@ fun ExtensionItemActions(
         }
         if (isIdle.not()) {
             IconButton(onClick = { onClickItemCancel(extension) }) {
-                Icon(Icons.Default.Close, "")
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                )
             }
         }
     }
