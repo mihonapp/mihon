@@ -35,15 +35,10 @@ jobs:
           mkdir -p ~/.gradle
           cp .github/runner-files/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - name: Build app
+      - name: Build app and run unit tests
         uses: gradle/gradle-command-action@v2
         with:
-          arguments: assembleStandardRelease
-
-      - name: Run unit tests
-        uses: gradle/gradle-command-action@v2
-        with:
-          arguments: test
+          arguments: assembleStandardRelease testStandardReleaseUnitTest
 
       # Sign APK and create release for tags
 
