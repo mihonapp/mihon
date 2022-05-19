@@ -15,14 +15,14 @@ class GetExtensions(
 ) {
 
     fun subscribe(): Flow<ExtensionSegregation> {
-        val activeLanguages = preferences.enabledLanguages().get()
         val showNsfwSources = preferences.showNsfwSource().get()
 
         return combine(
+            preferences.enabledLanguages().asFlow(),
             extensionManager.getInstalledExtensionsObservable().asFlow(),
             extensionManager.getUntrustedExtensionsObservable().asFlow(),
             extensionManager.getAvailableExtensionsObservable().asFlow(),
-        ) { _installed, _untrusted, _available ->
+        ) { _activeLanguages, _installed, _untrusted, _available ->
 
             val installed = _installed
                 .filter { it.hasUpdate.not() && (showNsfwSources || it.isNsfw.not()) }
@@ -38,7 +38,7 @@ class GetExtensions(
                 .filter { extension ->
                     _installed.none { it.pkgName == extension.pkgName } &&
                         _untrusted.none { it.pkgName == extension.pkgName } &&
-                        extension.lang in activeLanguages &&
+                        extension.lang in _activeLanguages &&
                         (showNsfwSources || extension.isNsfw.not())
                 }
 
