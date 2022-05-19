@@ -38,3 +38,8 @@ jobs:
         uses: gradle/gradle-command-action@v2
         with:
           arguments: assembleStandardRelease
+
+      - name: Run unit tests
+        uses: gradle/gradle-command-action@v2
+        with:
+          arguments: test
