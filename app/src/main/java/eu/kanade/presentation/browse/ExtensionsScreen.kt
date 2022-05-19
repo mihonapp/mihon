@@ -28,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -110,7 +111,8 @@ fun ExtensionContent(
     onClickUpdateAll: () -> Unit,
     onLaunched: () -> Unit,
 ) {
-    val (trustState, setTrustState) = remember { mutableStateOf<Extension.Untrusted?>(null) }
+    var trustState by remember { mutableStateOf<Extension.Untrusted?>(null) }
+
     LazyColumn(
         contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
     ) {
@@ -137,7 +139,7 @@ fun ExtensionContent(
                             {
                                 Button(onClick = { onClickUpdateAll() }) {
                                     Text(
-                                        text = stringResource(id = R.string.ext_update_all),
+                                        text = stringResource(R.string.ext_update_all),
                                         style = LocalTextStyle.current.copy(
                                             color = MaterialTheme.colorScheme.onPrimary,
                                         ),
@@ -173,7 +175,7 @@ fun ExtensionContent(
                                         onOpenExtension(it)
                                     }
                                 }
-                                is Extension.Untrusted -> setTrustState(it)
+                                is Extension.Untrusted -> { trustState = it }
                             }
                         },
                         onLongClickItem = onLongClickItem,
@@ -188,7 +190,7 @@ fun ExtensionContent(
                                         onOpenExtension(it)
                                     }
                                 }
-                                is Extension.Untrusted -> setTrustState(it)
+                                is Extension.Untrusted -> { trustState = it }
                             }
                         },
                     )
@@ -202,15 +204,15 @@ fun ExtensionContent(
     if (trustState != null) {
         ExtensionTrustDialog(
             onClickConfirm = {
-                onTrustExtension(trustState)
-                setTrustState(null)
+                onTrustExtension(trustState!!)
+                trustState = null
             },
             onClickDismiss = {
-                onUninstallExtension(trustState)
-                setTrustState(null)
+                onUninstallExtension(trustState!!)
+                trustState = null
             },
             onDismissRequest = {
-                setTrustState(null)
+                trustState = null
             },
         )
     }
@@ -403,19 +405,19 @@ fun ExtensionTrustDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = stringResource(id = R.string.untrusted_extension))
+            Text(text = stringResource(R.string.untrusted_extension))
         },
         text = {
-            Text(text = stringResource(id = R.string.untrusted_extension_message))
+            Text(text = stringResource(R.string.untrusted_extension_message))
         },
         confirmButton = {
             TextButton(onClick = onClickConfirm) {
-                Text(text = stringResource(id = R.string.ext_trust))
+                Text(text = stringResource(R.string.ext_trust))
             }
         },
         dismissButton = {
             TextButton(onClick = onClickDismiss) {
-                Text(text = stringResource(id = R.string.ext_uninstall))
+                Text(text = stringResource(R.string.ext_uninstall))
             }
         },
         onDismissRequest = onDismissRequest,

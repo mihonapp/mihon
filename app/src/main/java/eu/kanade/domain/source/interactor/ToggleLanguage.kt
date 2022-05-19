@@ -9,8 +9,8 @@ class ToggleLanguage(
 ) {
 
     fun await(language: String) {
-        val isEnabled = language in preferences.enabledLanguages().get()
-        if (isEnabled) {
+        val enabled = language in preferences.enabledLanguages().get()
+        if (enabled) {
             preferences.enabledLanguages() -= language
         } else {
             preferences.enabledLanguages() += language

@@ -29,6 +29,6 @@ class SourceFilterController : ComposeController<SourcesFilterPresenter>() {
 }
 
 sealed class FilterUiModel {
-    data class Header(val language: String, val isEnabled: Boolean) : FilterUiModel()
-    data class Item(val source: Source, val isEnabled: Boolean) : FilterUiModel()
+    data class Header(val language: String, val enabled: Boolean) : FilterUiModel()
+    data class Item(val source: Source, val enabled: Boolean) : FilterUiModel()
 }

@@ -68,7 +68,7 @@ fun MigrateSourceList(
     ) {
         item(key = "title") {
             Text(
-                text = stringResource(id = R.string.migration_selection_prompt),
+                text = stringResource(R.string.migration_selection_prompt),
                 modifier = Modifier
                     .animateItemPlacement()
                     .padding(horizontal = horizontalPadding, vertical = 8.dp),

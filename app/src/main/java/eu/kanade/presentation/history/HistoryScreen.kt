@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -103,7 +104,7 @@ fun HistoryContent(
     val relativeTime: Int = remember { preferences.relativeTime().get() }
     val dateFormat: DateFormat = remember { preferences.dateFormat() }
 
-    val (removeState, setRemoveState) = remember { mutableStateOf<HistoryWithRelations?>(null) }
+    var removeState by remember { mutableStateOf<HistoryWithRelations?>(null) }
 
     val scrollState = rememberLazyListState()
     LazyColumn(
@@ -130,7 +131,7 @@ fun HistoryContent(
                         history = value,
                         onClickCover = { onClickCover(value) },
                         onClickResume = { onClickResume(value) },
-                        onClickDelete = { setRemoveState(value) },
+                        onClickDelete = { removeState = value },
                     )
                 }
                 null -> {}
@@ -141,10 +142,10 @@ fun HistoryContent(
     if (removeState != null) {
         RemoveHistoryDialog(
             onPositive = { all ->
-                onClickDelete(removeState, all)
-                setRemoveState(null)
+                onClickDelete(removeState!!, all)
+                removeState = null
             },
-            onNegative = { setRemoveState(null) },
+            onNegative = { removeState = null },
         )
     }
 }
@@ -224,7 +225,7 @@ fun HistoryItem(
         IconButton(onClick = onClickDelete) {
             Icon(
                 imageVector = Icons.Outlined.Delete,
-                contentDescription = stringResource(id = R.string.action_delete),
+                contentDescription = stringResource(R.string.action_delete),
                 tint = MaterialTheme.colorScheme.onSurface,
             )
         }
@@ -236,15 +237,15 @@ fun RemoveHistoryDialog(
     onPositive: (Boolean) -> Unit,
     onNegative: () -> Unit,
 ) {
-    val (removeEverything, removeEverythingState) = remember { mutableStateOf(false) }
+    var removeEverything by remember { mutableStateOf(false) }
 
     AlertDialog(
         title = {
-            Text(text = stringResource(id = R.string.action_remove))
+            Text(text = stringResource(R.string.action_remove))
         },
         text = {
             Column {
-                Text(text = stringResource(id = R.string.dialog_with_checkbox_remove_description))
+                Text(text = stringResource(R.string.dialog_with_checkbox_remove_description))
                 Row(
                     modifier = Modifier
                         .padding(top = 16.dp)
@@ -252,7 +253,7 @@ fun RemoveHistoryDialog(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
                             value = removeEverything,
-                            onValueChange = removeEverythingState,
+                            onValueChange = { removeEverything = it },
                         ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -262,7 +263,7 @@ fun RemoveHistoryDialog(
                     )
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
-                        text = stringResource(id = R.string.dialog_with_checkbox_reset),
+                        text = stringResource(R.string.dialog_with_checkbox_reset),
                     )
                 }
             }
@@ -270,12 +271,12 @@ fun RemoveHistoryDialog(
         onDismissRequest = onNegative,
         confirmButton = {
             TextButton(onClick = { onPositive(removeEverything) }) {
-                Text(text = stringResource(id = R.string.action_remove))
+                Text(text = stringResource(R.string.action_remove))
             }
         },
         dismissButton = {
             TextButton(onClick = onNegative) {
-                Text(text = stringResource(id = R.string.action_cancel))
+                Text(text = stringResource(R.string.action_cancel))
             }
         },
     )

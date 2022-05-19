@@ -24,4 +24,4 @@ class ExtensionFilterController : ComposeController<ExtensionFilterPresenter>() 
     }
 }
 
-data class FilterUiModel(val lang: String, val isEnabled: Boolean)
+data class FilterUiModel(val lang: String, val enabled: Boolean)

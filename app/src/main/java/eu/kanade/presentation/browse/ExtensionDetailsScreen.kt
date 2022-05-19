@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -47,6 +48,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.browse.components.ExtensionIcon
+import eu.kanade.presentation.components.DIVIDER_ALPHA
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.PreferenceRow
@@ -76,7 +78,7 @@ fun ExtensionDetailsScreen(
 
     val sources by presenter.sourcesState.collectAsState()
 
-    val (showNsfwWarning, setShowNsfwWarning) = remember { mutableStateOf(false) }
+    var showNsfwWarning by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
@@ -99,7 +101,7 @@ fun ExtensionDetailsScreen(
                 onClickUninstall = onClickUninstall,
                 onClickAppInfo = onClickAppInfo,
                 onClickAgeRating = {
-                    setShowNsfwWarning(true)
+                    showNsfwWarning = true
                 },
             )
         }
@@ -119,7 +121,7 @@ fun ExtensionDetailsScreen(
     if (showNsfwWarning) {
         NsfwWarningDialog(
             onClickConfirm = {
-                setShowNsfwWarning(false)
+                showNsfwWarning = false
             },
         )
     }
@@ -214,7 +216,7 @@ private fun DetailsHeader(
                         fontWeight = FontWeight.Medium,
                     ),
                     secondaryText = stringResource(R.string.ext_info_age_rating),
-                    onCLick = onClickAgeRating,
+                    onClick = onClickAgeRating,
                 )
             }
         }
@@ -256,12 +258,12 @@ private fun InfoText(
     primaryText: String,
     primaryTextStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     secondaryText: String,
-    onCLick: (() -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    val modifier = if (onCLick != null) {
-        Modifier.clickable(interactionSource, indication = null) { onCLick() }
+    val modifier = if (onClick != null) {
+        Modifier.clickable(interactionSource, indication = null) { onClick() }
     } else Modifier
 
     Column(
@@ -275,9 +277,9 @@ private fun InfoText(
         )
 
         Text(
-            text = secondaryText + if (onCLick != null) " ⓘ" else "",
+            text = secondaryText + if (onClick != null) " ⓘ" else "",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5F),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
         )
     }
 }
@@ -288,7 +290,7 @@ private fun InfoDivider() {
         modifier = Modifier
             .height(20.dp)
             .width(1.dp),
-        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5F),
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = DIVIDER_ALPHA),
     )
 }
 
@@ -335,11 +337,11 @@ fun NsfwWarningDialog(
 ) {
     AlertDialog(
         text = {
-            Text(text = stringResource(id = R.string.ext_nsfw_warning))
+            Text(text = stringResource(R.string.ext_nsfw_warning))
         },
         confirmButton = {
             TextButton(onClick = onClickConfirm) {
-                Text(text = stringResource(id = R.string.ext_nsfw_warning_dismiss))
+                Text(text = stringResource(android.R.string.ok))
             }
         },
         onDismissRequest = onClickConfirm,

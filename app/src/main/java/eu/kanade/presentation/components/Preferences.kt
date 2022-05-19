@@ -21,13 +21,15 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.presentation.util.horizontalPadding
 
+const val DIVIDER_ALPHA = 0.2f
+
 @Composable
 fun Divider(
     modifier: Modifier = Modifier,
 ) {
     androidx.compose.material3.Divider(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = DIVIDER_ALPHA),
     )
 }
 

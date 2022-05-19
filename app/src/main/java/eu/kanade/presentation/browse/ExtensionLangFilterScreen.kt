@@ -1,7 +1,5 @@
 package eu.kanade.presentation.browse
 
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
@@ -64,9 +62,9 @@ fun SourceFilterContent(
             items = items,
         ) { model ->
             ExtensionFilterItem(
-                modifier = Modifier.animateItemPlacement(tween(1000, easing = LinearOutSlowInEasing)),
+                modifier = Modifier.animateItemPlacement(),
                 lang = model.lang,
-                isEnabled = model.isEnabled,
+                enabled = model.enabled,
                 onClickItem = onClickLang,
             )
         }
@@ -77,14 +75,14 @@ fun SourceFilterContent(
 fun ExtensionFilterItem(
     modifier: Modifier,
     lang: String,
-    isEnabled: Boolean,
+    enabled: Boolean,
     onClickItem: (String) -> Unit,
 ) {
     PreferenceRow(
         modifier = modifier,
         title = LocaleHelper.getSourceDisplayName(lang, LocalContext.current),
         action = {
-            Switch(checked = isEnabled, onCheckedChange = null)
+            Switch(checked = enabled, onCheckedChange = null)
         },
         onClick = { onClickItem(lang) },
     )

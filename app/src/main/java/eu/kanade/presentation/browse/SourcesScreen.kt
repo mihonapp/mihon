@@ -24,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -84,7 +85,8 @@ fun SourceList(
         return
     }
 
-    val (sourceState, setSourceState) = remember { mutableStateOf<Source?>(null) }
+    var sourceState by remember { mutableStateOf<Source?>(null) }
+
     LazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollConnection),
         contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
@@ -115,9 +117,7 @@ fun SourceList(
                     modifier = Modifier.animateItemPlacement(),
                     source = model.source,
                     onClickItem = onClickItem,
-                    onLongClickItem = {
-                        setSourceState(it)
-                    },
+                    onLongClickItem = { sourceState = it },
                     onClickLatest = onClickLatest,
                     onClickPin = onClickPin,
                 )
@@ -127,16 +127,16 @@ fun SourceList(
 
     if (sourceState != null) {
         SourceOptionsDialog(
-            source = sourceState,
+            source = sourceState!!,
             onClickPin = {
-                onClickPin(sourceState)
-                setSourceState(null)
+                onClickPin(sourceState!!)
+                sourceState = null
             },
             onClickDisable = {
-                onClickDisable(sourceState)
-                setSourceState(null)
+                onClickDisable(sourceState!!)
+                sourceState = null
             },
-            onDismiss = { setSourceState(null) },
+            onDismiss = { sourceState = null },
         )
     }
 }
@@ -173,7 +173,7 @@ fun SourceItem(
             if (source.supportsLatest) {
                 TextButton(onClick = { onClickLatest(source) }) {
                     Text(
-                        text = stringResource(id = R.string.latest),
+                        text = stringResource(R.string.latest),
                         style = LocalTextStyle.current.copy(
                             color = MaterialTheme.colorScheme.primary,
                         ),
@@ -227,7 +227,7 @@ fun SourceOptionsDialog(
                 )
                 if (source.id != LocalSource.ID) {
                     Text(
-                        text = stringResource(id = R.string.action_disable),
+                        text = stringResource(R.string.action_disable),
                         modifier = Modifier
                             .clickable(onClick = onClickDisable)
                             .fillMaxWidth()
