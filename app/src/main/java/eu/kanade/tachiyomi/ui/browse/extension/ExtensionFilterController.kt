@@ -1,45 +1,27 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
-import androidx.preference.PreferenceScreen
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import eu.kanade.presentation.browse.ExtensionFilterScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.extension.ExtensionManager
-import eu.kanade.tachiyomi.ui.setting.SettingsController
-import eu.kanade.tachiyomi.util.preference.minusAssign
-import eu.kanade.tachiyomi.util.preference.onChange
-import eu.kanade.tachiyomi.util.preference.plusAssign
-import eu.kanade.tachiyomi.util.preference.switchPreference
-import eu.kanade.tachiyomi.util.preference.titleRes
-import eu.kanade.tachiyomi.util.system.LocaleHelper
-import uy.kohesive.injekt.injectLazy
+import eu.kanade.tachiyomi.ui.base.controller.ComposeController
 
-class ExtensionFilterController : SettingsController() {
+class ExtensionFilterController : ComposeController<ExtensionFilterPresenter>() {
 
-    private val extensionManager: ExtensionManager by injectLazy()
+    override fun getTitle() = resources?.getString(R.string.label_extensions)
 
-    override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
-        titleRes = R.string.label_extensions
+    override fun createPresenter(): ExtensionFilterPresenter = ExtensionFilterPresenter()
 
-        val activeLangs = preferences.enabledLanguages().get()
-
-        val availableLangs = extensionManager.availableExtensions.groupBy { it.lang }.keys
-            .sortedWith(compareBy({ it !in activeLangs }, { LocaleHelper.getSourceDisplayName(it, context) }))
-
-        availableLangs.forEach {
-            switchPreference {
-                preferenceScreen.addPreference(this)
-                title = LocaleHelper.getSourceDisplayName(it, context)
-                isPersistent = false
-                isChecked = it in activeLangs
-
-                onChange { newValue ->
-                    if (newValue as Boolean) {
-                        preferences.enabledLanguages() += it
-                    } else {
-                        preferences.enabledLanguages() -= it
-                    }
-                    true
-                }
-            }
-        }
+    @Composable
+    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+        ExtensionFilterScreen(
+            nestedScrollInterop = nestedScrollInterop,
+            presenter = presenter,
+            onClickLang = { language ->
+                presenter.toggleLanguage(language)
+            },
+        )
     }
 }
+
+data class FilterUiModel(val lang: String, val isEnabled: Boolean)

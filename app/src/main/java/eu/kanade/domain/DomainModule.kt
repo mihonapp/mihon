@@ -3,6 +3,7 @@ package eu.kanade.domain
 import eu.kanade.data.history.HistoryRepositoryImpl
 import eu.kanade.data.manga.MangaRepositoryImpl
 import eu.kanade.data.source.SourceRepositoryImpl
+import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionUpdates
 import eu.kanade.domain.extension.interactor.GetExtensions
@@ -46,6 +47,7 @@ class DomainModule : InjektModule {
         addFactory { GetExtensions(get(), get()) }
         addFactory { GetExtensionSources(get()) }
         addFactory { GetExtensionUpdates(get(), get()) }
+        addFactory { GetExtensionLanguages(get(), get()) }
 
         addSingletonFactory<SourceRepository> { SourceRepositoryImpl(get(), get()) }
         addFactory { GetLanguagesWithSources(get(), get()) }
