@@ -1,5 +1,7 @@
 package eu.kanade.presentation.browse.components
 
+import android.content.pm.PackageManager
+import android.util.DisplayMetrics
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -57,6 +59,7 @@ fun SourceIcon(
 fun ExtensionIcon(
     extension: Extension,
     modifier: Modifier = Modifier,
+    density: Int = DisplayMetrics.DENSITY_DEFAULT,
 ) {
     when (extension) {
         is Extension.Available -> {
@@ -71,7 +74,7 @@ fun ExtensionIcon(
             )
         }
         is Extension.Installed -> {
-            val icon by extension.getIcon()
+            val icon by extension.getIcon(density)
             when (icon) {
                 Result.Error -> Image(
                     bitmap = ImageBitmap.imageResource(id = R.mipmap.ic_local_source),
@@ -95,13 +98,15 @@ fun ExtensionIcon(
 }
 
 @Composable
-private fun Extension.getIcon(): State<Result<ImageBitmap>> {
+private fun Extension.getIcon(density: Int = DisplayMetrics.DENSITY_DEFAULT): State<Result<ImageBitmap>> {
     val context = LocalContext.current
     return produceState<Result<ImageBitmap>>(initialValue = Result.Loading, this) {
         withIOContext {
             value = try {
+                val appInfo = context.packageManager.getApplicationInfo(pkgName, PackageManager.GET_META_DATA)
+                val appResources = context.packageManager.getResourcesForApplication(appInfo)
                 Result.Success(
-                    context.packageManager.getApplicationIcon(pkgName)
+                    appResources.getDrawableForDensity(appInfo.icon, density, null)!!
                         .toBitmap()
                         .asImageBitmap(),
                 )

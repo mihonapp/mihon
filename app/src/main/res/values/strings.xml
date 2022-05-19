@@ -269,10 +269,12 @@
     <string name="obsolete_extension_message">This extension is no longer available.</string>
     <string name="unofficial_extension_message">This extension is not from the official Tachiyomi extensions list.</string>
     <string name="extension_api_error">Failed to get extensions list</string>
-    <string name="ext_version_info">Version: %1$s</string>
-    <string name="ext_language_info">Language: %1$s</string>
+    <string name="ext_info_version">Version</string>
+    <string name="ext_info_language">Language</string>
+    <string name="ext_info_age_rating">Age rating</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="ext_nsfw_warning">May contain NSFW (18+) content</string>
+    <string name="ext_nsfw_warning_dismiss">Got it</string>
     <string name="ext_install_service_notif">Installing extension…</string>
     <string name="ext_installer_pref">Installer</string>
     <string name="ext_installer_legacy">Legacy</string>
