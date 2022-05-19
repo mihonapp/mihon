@@ -2,7 +2,7 @@
 aboutlib_version = "10.2.0"
 okhttp_version = "4.9.3"
 nucleus_version = "3.0.0"
-coil_version = "2.0.0"
+coil_version = "2.1.0"
 conductor_version = "3.1.4"
 flowbinding_version = "1.2.0"
 shizuku_version = "12.1.0"
@@ -99,15 +99,15 @@ sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-
 junit = "org.junit.jupiter:junit-jupiter:5.8.2"
 
 [bundles]
-reactivex = ["rxandroid","rxjava","rxrelay"]
-okhttp = ["okhttp-core","okhttp-logging","okhttp-dnsoverhttps"]
+reactivex = ["rxandroid", "rxjava", "rxrelay"]
+okhttp = ["okhttp-core", "okhttp-logging", "okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android", "duktape-android"]
 sqlite = ["sqlitektx", "sqlite-android"]
-nucleus = ["nucleus-core","nucleus-supportv7"]
-coil = ["coil-core","coil-gif","coil-compose"]
-flowbinding = ["flowbinding-android","flowbinding-appcompat","flowbinding-recyclerview","flowbinding-swiperefreshlayout","flowbinding-viewpager"]
-conductor = ["conductor-core","conductor-viewpager","conductor-support-preference"]
-shizuku = ["shizuku-api","shizuku-provider"]
+nucleus = ["nucleus-core", "nucleus-supportv7"]
+coil = ["coil-core", "coil-gif", "coil-compose"]
+flowbinding = ["flowbinding-android", "flowbinding-appcompat", "flowbinding-recyclerview", "flowbinding-swiperefreshlayout", "flowbinding-viewpager"]
+conductor = ["conductor-core", "conductor-viewpager", "conductor-support-preference"]
+shizuku = ["shizuku-api", "shizuku-provider"]
 
 [plugins]
 kotlinter = { id = "org.jmailen.kotlinter", version = "3.10.0"}
