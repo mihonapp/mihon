@@ -9,6 +9,7 @@ import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.util.system.logcat
+import logcat.LogPriority
 
 class HistoryRepositoryImpl(
     private val handler: DatabaseHandler,
@@ -67,7 +68,7 @@ class HistoryRepositoryImpl(
         try {
             handler.await { historyQueries.resetHistoryById(historyId) }
         } catch (e: Exception) {
-            logcat(throwable = e)
+            logcat(LogPriority.ERROR, throwable = e)
         }
     }
 
@@ -75,7 +76,7 @@ class HistoryRepositoryImpl(
         try {
             handler.await { historyQueries.resetHistoryByMangaId(mangaId) }
         } catch (e: Exception) {
-            logcat(throwable = e)
+            logcat(LogPriority.ERROR, throwable = e)
         }
     }
 
@@ -84,7 +85,7 @@ class HistoryRepositoryImpl(
             handler.await { historyQueries.removeAllHistory() }
             true
         } catch (e: Exception) {
-            logcat(throwable = e)
+            logcat(LogPriority.ERROR, throwable = e)
             false
         }
     }
