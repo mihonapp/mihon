@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
@@ -52,6 +51,7 @@ import eu.kanade.presentation.components.DIVIDER_ALPHA
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.PreferenceRow
+import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -80,7 +80,7 @@ fun ExtensionDetailsScreen(
 
     var showNsfwWarning by remember { mutableStateOf(false) }
 
-    LazyColumn(
+    ScrollbarLazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
         contentPadding = WindowInsets.navigationBars.asPaddingValues(),
     ) {

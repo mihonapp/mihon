@@ -147,6 +147,7 @@ dependencies {
     implementation(compose.material.icons)
     implementation(compose.animation)
     implementation(compose.ui.tooling)
+    implementation(compose.ui.util)
     implementation(compose.accompanist.webview)
     implementation(compose.accompanist.swiperefresh)
 

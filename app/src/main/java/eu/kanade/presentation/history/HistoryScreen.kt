@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
@@ -45,6 +44,7 @@ import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.MangaCover
+import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.topPaddingValues
@@ -107,7 +107,7 @@ fun HistoryContent(
     var removeState by remember { mutableStateOf<HistoryWithRelations?>(null) }
 
     val scrollState = rememberLazyListState()
-    LazyColumn(
+    ScrollbarLazyColumn(
         modifier = Modifier
             .nestedScroll(nestedScroll),
         contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
