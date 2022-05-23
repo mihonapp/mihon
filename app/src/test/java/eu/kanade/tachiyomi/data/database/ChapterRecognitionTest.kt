@@ -2,310 +2,165 @@ package eu.kanade.tachiyomi.data.database
 
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.util.chapter.ChapterRecognition
+import eu.kanade.tachiyomi.util.chapter.ChapterRecognition.parseChapterNumber
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 
+@Execution(ExecutionMode.CONCURRENT)
 class ChapterRecognitionTest {
 
-    private lateinit var manga: Manga
-    private lateinit var chapter: Chapter
-
-    private fun createChapter(name: String): Chapter {
-        chapter = Chapter.create()
-        chapter.name = name
-        return chapter
-    }
-
-    private fun createManga(title: String): Manga {
-        manga.title = title
-        return manga
-    }
-
-    @BeforeEach
-    fun setup() {
-        manga = Manga.create(0).apply { title = "random" }
-        chapter = Chapter.create()
-    }
-
-    /**
-     * Ch.xx base case
-     */
     @Test
-    fun `ChCaseBase`() {
-        createManga("Mokushiroku Alice")
+    fun `Basic Ch prefix`() {
+        val manga = createManga("Mokushiroku Alice")
 
-        createChapter("Mokushiroku Alice Vol.1 Ch.4: Misrepresentation")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(4f, chapter.chapter_number)
+        assertChapter(manga, "Mokushiroku Alice Vol.1 Ch.4: Misrepresentation", 4f)
     }
 
-    /**
-     * Ch. xx base case but space after period
-     */
     @Test
-    fun ChCaseBase2() {
-        createManga("Mokushiroku Alice")
+    fun `Basic Ch prefix with space after period`() {
+        val manga = createManga("Mokushiroku Alice")
 
-        createChapter("Mokushiroku Alice Vol. 1 Ch. 4: Misrepresentation")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(4f, chapter.chapter_number)
+        assertChapter(manga, "Mokushiroku Alice Vol. 1 Ch. 4: Misrepresentation", 4f)
     }
 
-    /**
-     * Ch.xx.x base case
-     */
     @Test
-    fun ChCaseDecimal() {
-        createManga("Mokushiroku Alice")
+    fun `Basic Ch prefix with decimal`() {
+        val manga = createManga("Mokushiroku Alice")
 
-        createChapter("Mokushiroku Alice Vol.1 Ch.4.1: Misrepresentation")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(4.1f, chapter.chapter_number)
-
-        createChapter("Mokushiroku Alice Vol.1 Ch.4.4: Misrepresentation")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(4.4f, chapter.chapter_number)
+        assertChapter(manga, "Mokushiroku Alice Vol.1 Ch.4.1: Misrepresentation", 4.1f)
+        assertChapter(manga, "Mokushiroku Alice Vol.1 Ch.4.4: Misrepresentation", 4.4f)
     }
 
-    /**
-     * Ch.xx.a base case
-     */
     @Test
-    fun ChCaseAlpha() {
-        createManga("Mokushiroku Alice")
+    fun `Basic Ch prefix with alpha postfix`() {
+        val manga = createManga("Mokushiroku Alice")
 
-        createChapter("Mokushiroku Alice Vol.1 Ch.4.a: Misrepresentation")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(4.1f, chapter.chapter_number)
-
-        createChapter("Mokushiroku Alice Vol.1 Ch.4.b: Misrepresentation")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(4.2f, chapter.chapter_number)
-
-        createChapter("Mokushiroku Alice Vol.1 Ch.4.extra: Misrepresentation")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(4.99f, chapter.chapter_number)
+        assertChapter(manga, "Mokushiroku Alice Vol.1 Ch.4.a: Misrepresentation", 4.1f)
+        assertChapter(manga, "Mokushiroku Alice Vol.1 Ch.4.b: Misrepresentation", 4.2f)
+        assertChapter(manga, "Mokushiroku Alice Vol.1 Ch.4.extra: Misrepresentation", 4.99f)
     }
 
-    /**
-     * Name containing one number base case
-     */
     @Test
-    fun OneNumberCaseBase() {
-        createManga("Bleach")
+    fun `Name containing one number`() {
+        val manga = createManga("Bleach")
 
-        createChapter("Bleach 567 Down With Snowwhite")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(567f, chapter.chapter_number)
+        assertChapter(manga, "Bleach 567 Down With Snowwhite", 567f)
     }
 
-    /**
-     * Name containing one number and decimal case
-     */
     @Test
-    fun OneNumberCaseDecimal() {
-        createManga("Bleach")
+    fun `Name containing one number and decimal`() {
+        val manga = createManga("Bleach")
 
-        createChapter("Bleach 567.1 Down With Snowwhite")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(567.1f, chapter.chapter_number)
-
-        createChapter("Bleach 567.4 Down With Snowwhite")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(567.4f, chapter.chapter_number)
+        assertChapter(manga, "Bleach 567.1 Down With Snowwhite", 567.1f)
+        assertChapter(manga, "Bleach 567.4 Down With Snowwhite", 567.4f)
     }
 
-    /**
-     * Name containing one number and alpha case
-     */
     @Test
-    fun OneNumberCaseAlpha() {
-        createManga("Bleach")
+    fun `Name containing one number and alpha`() {
+        val manga = createManga("Bleach")
 
-        createChapter("Bleach 567.a Down With Snowwhite")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(567.1f, chapter.chapter_number)
-
-        createChapter("Bleach 567.b Down With Snowwhite")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(567.2f, chapter.chapter_number)
-
-        createChapter("Bleach 567.extra Down With Snowwhite")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(567.99f, chapter.chapter_number)
+        assertChapter(manga, "Bleach 567.a Down With Snowwhite", 567.1f)
+        assertChapter(manga, "Bleach 567.b Down With Snowwhite", 567.2f)
+        assertChapter(manga, "Bleach 567.extra Down With Snowwhite", 567.99f)
     }
 
-    /**
-     * Chapter containing manga title and number base case
-     */
     @Test
-    fun MangaTitleCaseBase() {
-        createManga("Solanin")
+    fun `Chapter containing manga title and number`() {
+        val manga = createManga("Solanin")
 
-        createChapter("Solanin 028 Vol. 2")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28f, chapter.chapter_number)
+        assertChapter(manga, "Solanin 028 Vol. 2", 28f)
     }
 
-    /**
-     * Chapter containing manga title and number decimal case
-     */
     @Test
-    fun MangaTitleCaseDecimal() {
-        createManga("Solanin")
+    fun `Chapter containing manga title and number decimal`() {
+        val manga = createManga("Solanin")
 
-        createChapter("Solanin 028.1 Vol. 2")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.1f, chapter.chapter_number)
-
-        createChapter("Solanin 028.4 Vol. 2")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.4f, chapter.chapter_number)
+        assertChapter(manga, "Solanin 028.1 Vol. 2", 28.1f)
+        assertChapter(manga, "Solanin 028.4 Vol. 2", 28.4f)
     }
 
-    /**
-     * Chapter containing manga title and number alpha case
-     */
     @Test
-    fun MangaTitleCaseAlpha() {
-        createManga("Solanin")
+    fun `Chapter containing manga title and number alpha`() {
+        val manga = createManga("Solanin")
 
-        createChapter("Solanin 028.a Vol. 2")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.1f, chapter.chapter_number)
-
-        createChapter("Solanin 028.b Vol. 2")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.2f, chapter.chapter_number)
-
-        createChapter("Solanin 028.extra Vol. 2")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.99f, chapter.chapter_number)
+        assertChapter(manga, "Solanin 028.a Vol. 2", 28.1f)
+        assertChapter(manga, "Solanin 028.b Vol. 2", 28.2f)
+        assertChapter(manga, "Solanin 028.extra Vol. 2", 28.99f)
     }
 
-    /**
-     * Extreme base case
-     */
     @Test
-    fun ExtremeCaseBase() {
-        createManga("Onepunch-Man")
+    fun `Extreme case`() {
+        val manga = createManga("Onepunch-Man")
 
-        createChapter("Onepunch-Man Punch Ver002 028")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28f, chapter.chapter_number)
+        assertChapter(manga, "Onepunch-Man Punch Ver002 028", 28f)
     }
 
-    /**
-     * Extreme base case decimal
-     */
     @Test
-    fun ExtremeCaseDecimal() {
-        createManga("Onepunch-Man")
+    fun `Extreme case with decimal`() {
+        val manga = createManga("Onepunch-Man")
 
-        createChapter("Onepunch-Man Punch Ver002 028.1")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.1f, chapter.chapter_number)
-
-        createChapter("Onepunch-Man Punch Ver002 028.4")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.4f, chapter.chapter_number)
+        assertChapter(manga, "Onepunch-Man Punch Ver002 028.1", 28.1f)
+        assertChapter(manga, "Onepunch-Man Punch Ver002 028.4", 28.4f)
     }
 
-    /**
-     * Extreme base case alpha
-     */
     @Test
-    fun ExtremeCaseAlpha() {
-        createManga("Onepunch-Man")
+    fun `Extreme case with alpha`() {
+        val manga = createManga("Onepunch-Man")
 
-        createChapter("Onepunch-Man Punch Ver002 028.a")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.1f, chapter.chapter_number)
-
-        createChapter("Onepunch-Man Punch Ver002 028.b")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.2f, chapter.chapter_number)
-
-        createChapter("Onepunch-Man Punch Ver002 028.extra")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(28.99f, chapter.chapter_number)
+        assertChapter(manga, "Onepunch-Man Punch Ver002 028.a", 28.1f)
+        assertChapter(manga, "Onepunch-Man Punch Ver002 028.b", 28.2f)
+        assertChapter(manga, "Onepunch-Man Punch Ver002 028.extra", 28.99f)
     }
 
-    /**
-     * Chapter containing .v2
-     */
     @Test
-    fun dotV2Case() {
-        createChapter("Vol.1 Ch.5v.2: Alones")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(5f, chapter.chapter_number)
+    fun `Chapter containing dot v2`() {
+        val manga = createManga("random")
+
+        assertChapter(manga, "Vol.1 Ch.5v.2: Alones", 5f)
     }
 
-    /**
-     * Check for case with number in manga title
-     */
     @Test
-    fun numberInMangaTitleCase() {
-        createManga("Ayame 14")
-        createChapter("Ayame 14 1 - The summer of 14")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(1f, chapter.chapter_number)
+    fun `Number in manga title`() {
+        val manga = createManga("Ayame 14")
+
+        assertChapter(manga, "Ayame 14 1 - The summer of 14", 1f)
     }
 
-    /**
-     * Case with space between ch. x
-     */
     @Test
-    fun spaceAfterChapterCase() {
-        createManga("Mokushiroku Alice")
-        createChapter("Mokushiroku Alice Vol.1 Ch. 4: Misrepresentation")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(4f, chapter.chapter_number)
+    fun `Space between ch x`() {
+        val manga = createManga("Mokushiroku Alice")
+
+        assertChapter(manga, "Mokushiroku Alice Vol.1 Ch. 4: Misrepresentation", 4f)
     }
 
-    /**
-     * Chapter containing mar(ch)
-     */
     @Test
-    fun marchInChapterCase() {
-        createManga("Ayame 14")
-        createChapter("Vol.1 Ch.1: March 25 (First Day Cohabiting)")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(1f, chapter.chapter_number)
+    fun `Chapter title with ch substring`() {
+        val manga = createManga("Ayame 14")
+
+        assertChapter(manga, "Vol.1 Ch.1: March 25 (First Day Cohabiting)", 1f)
     }
 
-    /**
-     * Chapter containing multiple zeros
-     */
     @Test
-    fun multipleZerosCase() {
-        createChapter("Vol.001 Ch.003: Kaguya Doesn't Know Much")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(3f, chapter.chapter_number)
+    fun `Chapter containing multiple zeros`() {
+        val manga = createManga("random")
+
+        assertChapter(manga, "Vol.001 Ch.003: Kaguya Doesn't Know Much", 3f)
     }
 
-    /**
-     * Chapter with version before number
-     */
     @Test
-    fun chapterBeforeNumberCase() {
-        createManga("Onepunch-Man")
-        createChapter("Onepunch-Man Punch Ver002 086 : Creeping Darkness [3]")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(86f, chapter.chapter_number)
+    fun `Chapter with version before number`() {
+        val manga = createManga("Onepunch-Man")
+
+        assertChapter(manga, "Onepunch-Man Punch Ver002 086 : Creeping Darkness [3]", 86f)
     }
 
-    /**
-     * Case with version attached to chapter number
-     */
     @Test
-    fun vAttachedToChapterCase() {
-        createManga("Ansatsu Kyoushitsu")
-        createChapter("Ansatsu Kyoushitsu 011v002: Assembly Time")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(11f, chapter.chapter_number)
+    fun `Version attached to chapter number`() {
+        val manga = createManga("Ansatsu Kyoushitsu")
+
+        assertChapter(manga, "Ansatsu Kyoushitsu 011v002: Assembly Time", 11f)
     }
 
     /**
@@ -313,176 +168,111 @@ class ChapterRecognitionTest {
      * But wait it's not actual the chapter number.
      */
     @Test
-    fun NumberAfterMangaTitleWithChapterInChapterTitleCase() {
-        createChapter("Tokyo ESP 027: Part 002: Chapter 001")
-        createManga("Tokyo ESP")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(027f, chapter.chapter_number)
+    fun `Number after manga title with chapter in chapter title case`() {
+        val manga = createManga("Tokyo ESP")
+
+        assertChapter(manga, "Tokyo ESP 027: Part 002: Chapter 001", 027f)
     }
 
-    /**
-     * unParsable chapter
-     */
     @Test
-    fun unParsableCase() {
-        createChapter("Foo")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(-1f, chapter.chapter_number)
+    fun `Unparseable chapter`() {
+        val manga = createManga("random")
+
+        assertChapter(manga, "Foo", -1f)
     }
 
-    /**
-     * chapter with time in title
-     */
     @Test
-    fun timeChapterCase() {
-        createChapter("Fairy Tail 404: 00:00")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404f, chapter.chapter_number)
+    fun `Chapter with time in title`() {
+        val manga = createManga("random")
+
+        assertChapter(manga, "Fairy Tail 404: 00:00", 404f)
     }
 
-    /**
-     * chapter with alpha without dot
-     */
     @Test
-    fun alphaWithoutDotCase() {
-        createChapter("Asu No Yoichi 19a")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(19.1f, chapter.chapter_number)
+    fun `Chapter with alpha without dot`() {
+        val manga = createManga("random")
+
+        assertChapter(manga, "Asu No Yoichi 19a", 19.1f)
     }
 
-    /**
-     * Chapter title containing extra and vol
-     */
     @Test
-    fun chapterContainingExtraCase() {
-        createManga("Fairy Tail")
+    fun `Chapter title containing extra and vol`() {
+        val manga = createManga("Fairy Tail")
 
-        createChapter("Fairy Tail 404.extravol002")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404.99f, chapter.chapter_number)
-
-        createChapter("Fairy Tail 404 extravol002")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404.99f, chapter.chapter_number)
-
-        createChapter("Fairy Tail 404.evol002")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404.5f, chapter.chapter_number)
+        assertChapter(manga, "Fairy Tail 404.extravol002", 404.99f)
+        assertChapter(manga, "Fairy Tail 404 extravol002", 404.99f)
+        assertChapter(manga, "Fairy Tail 404.evol002", 404.5f)
     }
 
-    /**
-     * Chapter title containing omake (japanese extra) and vol
-     */
     @Test
-    fun chapterContainingOmakeCase() {
-        createManga("Fairy Tail")
+    fun `Chapter title containing omake (japanese extra) and vol`() {
+        val manga = createManga("Fairy Tail")
 
-        createChapter("Fairy Tail 404.omakevol002")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404.98f, chapter.chapter_number)
-
-        createChapter("Fairy Tail 404 omakevol002")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404.98f, chapter.chapter_number)
-
-        createChapter("Fairy Tail 404.ovol002")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404.15f, chapter.chapter_number)
+        assertChapter(manga, "Fairy Tail 404.omakevol002", 404.98f)
+        assertChapter(manga, "Fairy Tail 404 omakevol002", 404.98f)
+        assertChapter(manga, "Fairy Tail 404.ovol002", 404.15f)
     }
 
-    /**
-     * Chapter title containing special and vol
-     */
     @Test
-    fun chapterContainingSpecialCase() {
-        createManga("Fairy Tail")
+    fun `Chapter title containing special and vol`() {
+        val manga = createManga("Fairy Tail")
 
-        createChapter("Fairy Tail 404.specialvol002")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404.97f, chapter.chapter_number)
-
-        createChapter("Fairy Tail 404 specialvol002")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404.97f, chapter.chapter_number)
-
-        createChapter("Fairy Tail 404.svol002")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(404.19f, chapter.chapter_number)
+        assertChapter(manga, "Fairy Tail 404.specialvol002", 404.97f)
+        assertChapter(manga, "Fairy Tail 404 specialvol002", 404.97f)
+        assertChapter(manga, "Fairy Tail 404.svol002", 404.19f)
     }
 
-    /**
-     * Chapter title containing comma's
-     */
     @Test
-    fun chapterContainingCommasCase() {
-        createManga("One Piece")
+    fun `Chapter title containing commas`() {
+        val manga = createManga("One Piece")
 
-        createChapter("One Piece 300,a")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(300.1f, chapter.chapter_number)
-
-        createChapter("One Piece Ch,123,extra")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(123.99f, chapter.chapter_number)
-
-        createChapter("One Piece the sunny, goes swimming 024,005")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(24.005f, chapter.chapter_number)
+        assertChapter(manga, "One Piece 300,a", 300.1f)
+        assertChapter(manga, "One Piece Ch,123,extra", 123.99f)
+        assertChapter(manga, "One Piece the sunny, goes swimming 024,005", 24.005f)
     }
 
-	/**
-	 * Chapter title containing hyphen's
-	 */
-	@Test
-	fun chapterContainingHyphensCase() {
-		createManga("Solo Leveling")
-
-		createChapter("ch 122-a")
-		ChapterRecognition.parseChapterNumber(chapter, manga)
-		assertEquals(122.1f, chapter.chapter_number)
-
-		createChapter("Solo Leveling Ch.123-extra")
-		ChapterRecognition.parseChapterNumber(chapter, manga)
-		assertEquals(123.99f, chapter.chapter_number)
-
-		createChapter("Solo Leveling, 024-005")
-		ChapterRecognition.parseChapterNumber(chapter, manga)
-		assertEquals(24.005f, chapter.chapter_number)
-	}
-
-	/**
-     * Test for chapters containing season
-     */
     @Test
-    fun chapterContainingSeasonCase() {
-        createManga("D.I.C.E")
+    fun `Chapter title containing hyphens`() {
+        val manga = createManga("Solo Leveling")
 
-        createChapter("D.I.C.E[Season 001] Ep. 007")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(7f, chapter.chapter_number)
+        assertChapter(manga, "ch 122-a", 122.1f)
+        assertChapter(manga, "Solo Leveling Ch.123-extra", 123.99f)
+        assertChapter(manga, "Solo Leveling, 024-005", 24.005f)
+        assertChapter(manga, "Ch.191-200 Read Online", 191.200f)
     }
 
-    /**
-     * Test for chapters in format sx - chapter xx
-     */
     @Test
-    fun chapterContainingSeasonCase2() {
-        createManga("The Gamer")
+    fun `Chapters containing season`() {
+        val manga = createManga("D.I.C.E")
 
-        createChapter("S3 - Chapter 20")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(20f, chapter.chapter_number)
+        assertChapter(manga, "D.I.C.E[Season 001] Ep. 007", 7f)
     }
 
-    /**
-     * Test for chapters ending with s
-     */
     @Test
-    fun chaptersEndingWithS() {
-        createManga("One Outs")
+    fun `Chapters in format sx - chapter xx`() {
+        val manga = createManga("The Gamer")
 
-        createChapter("One Outs 001")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(1f, chapter.chapter_number)
+        assertChapter(manga, "S3 - Chapter 20", 20f)
+    }
+
+    @Test
+    fun `Chapters ending with s`() {
+        val manga = createManga("One Outs")
+
+        assertChapter(manga, "One Outs 001", 1f)
+    }
+
+    private fun assertChapter(manga: Manga, name: String, expected: Float) {
+        val chapter = Chapter.create()
+        chapter.name = name
+
+        parseChapterNumber(chapter, manga)
+        assertEquals(expected, chapter.chapter_number)
+    }
+
+    private fun createManga(title: String): Manga {
+        val manga = Manga.create(0)
+        manga.title = title
+        return manga
     }
 }
