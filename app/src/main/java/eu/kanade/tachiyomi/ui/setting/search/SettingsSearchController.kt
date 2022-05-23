@@ -1,67 +1,44 @@
 package eu.kanade.tachiyomi.ui.setting.search
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.LinearLayoutManager
-import dev.chrisbanes.insetter.applyInsetter
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import eu.kanade.presentation.more.settings.SettingsSearchScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.databinding.SettingsSearchControllerBinding
-import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.ComposeController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.setting.SettingsController
 
-/**
- * This controller shows and manages the different search result in settings search.
- * [SettingsSearchAdapter.OnTitleClickListener] called when preference is clicked in settings search
- */
-class SettingsSearchController :
-    NucleusController<SettingsSearchControllerBinding, SettingsSearchPresenter>(),
-    SettingsSearchAdapter.OnTitleClickListener {
+class SettingsSearchController : ComposeController<SettingsSearchPresenter>() {
 
-    /**
-     * Adapter containing search results grouped by lang.
-     */
-    private var adapter: SettingsSearchAdapter? = null
     private lateinit var searchView: SearchView
 
     init {
         setHasOptionsMenu(true)
     }
 
-    override fun createBinding(inflater: LayoutInflater) = SettingsSearchControllerBinding.inflate(inflater)
+    override fun getTitle() = presenter.query
 
-    override fun getTitle(): String? {
-        return presenter.query
+    override fun createPresenter() = SettingsSearchPresenter()
+
+    @Composable
+    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+        SettingsSearchScreen(
+            nestedScroll = nestedScrollInterop,
+            presenter = presenter,
+            onClickResult = { controller ->
+                searchView.query.let {
+                    presenter.setLastSearchQuerySearchSettings(it.toString())
+                }
+                router.pushController(controller)
+            },
+        )
     }
 
-    /**
-     * Create the [SettingsSearchPresenter] used in controller.
-     *
-     * @return instance of [SettingsSearchPresenter]
-     */
-    override fun createPresenter(): SettingsSearchPresenter {
-        return SettingsSearchPresenter()
-    }
-
-    /**
-     * Adds items to the options menu.
-     *
-     * @param menu menu containing options.
-     * @param inflater used to load the menu xml.
-     */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.settings_main, menu)
-
-        binding.recycler.applyInsetter {
-            type(navigationBars = true) {
-                padding()
-            }
-        }
 
         // Initialize search menu
         val searchItem = menu.findItem(R.id.action_search)
@@ -70,7 +47,6 @@ class SettingsSearchController :
         searchView.queryHint = applicationContext?.getString(R.string.action_search_settings)
 
         searchItem.expandActionView()
-        setItems(getResultSet())
 
         searchItem.setOnActionExpandListener(
             object : MenuItem.OnActionExpandListener {
@@ -88,76 +64,17 @@ class SettingsSearchController :
         searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    setItems(getResultSet(query))
+                    presenter.searchSettings(query)
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    setItems(getResultSet(newText))
+                    presenter.searchSettings(newText)
                     return false
                 }
             },
         )
 
-        searchView.setQuery(presenter.preferences.lastSearchQuerySearchSettings().get(), true)
-    }
-
-    override fun onViewCreated(view: View) {
-        super.onViewCreated(view)
-
-        adapter = SettingsSearchAdapter(this)
-        binding.recycler.layoutManager = LinearLayoutManager(view.context)
-        binding.recycler.adapter = adapter
-
-        // load all search results
-        SettingsSearchHelper.initPreferenceSearchResultCollection(presenter.preferences.context)
-    }
-
-    override fun onDestroyView(view: View) {
-        adapter = null
-        super.onDestroyView(view)
-    }
-
-    override fun onSaveViewState(view: View, outState: Bundle) {
-        super.onSaveViewState(view, outState)
-        adapter?.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreViewState(view: View, savedViewState: Bundle) {
-        super.onRestoreViewState(view, savedViewState)
-        adapter?.onRestoreInstanceState(savedViewState)
-    }
-
-    /**
-     * returns a list of `SettingsSearchItem` to be shown as search results
-     * Future update: should we add a minimum length to the query before displaying results? Consider other languages.
-     */
-    fun getResultSet(query: String? = null): List<SettingsSearchItem> {
-        if (!query.isNullOrBlank()) {
-            return SettingsSearchHelper.getFilteredResults(query)
-                .map { SettingsSearchItem(it, null) }
-        }
-
-        return mutableListOf()
-    }
-
-    /**
-     * Add search result to adapter.
-     *
-     * @param searchResult result of search.
-     */
-    fun setItems(searchResult: List<SettingsSearchItem>) {
-        adapter?.updateDataSet(searchResult)
-    }
-
-    /**
-     * Opens a catalogue with the given search.
-     */
-    override fun onTitleClick(ctrl: SettingsController) {
-        searchView.query.let {
-            presenter.preferences.lastSearchQuerySearchSettings().set(it.toString())
-        }
-
-        router.pushController(ctrl)
+        searchView.setQuery(presenter.getLastSearchQuerySearchSettings(), true)
     }
 }

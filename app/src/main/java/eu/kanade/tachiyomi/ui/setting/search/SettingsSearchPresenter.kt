@@ -3,20 +3,39 @@ package eu.kanade.tachiyomi.ui.setting.search
 import android.os.Bundle
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class SettingsSearchPresenter : BasePresenter<SettingsSearchController>() {
+class SettingsSearchPresenter(
+    private val preferences: PreferencesHelper = Injekt.get(),
+) : BasePresenter<SettingsSearchController>() {
 
-    val preferences: PreferencesHelper = Injekt.get()
+    private val _state: MutableStateFlow<List<SettingsSearchHelper.SettingsSearchResult>> =
+        MutableStateFlow(emptyList())
+    val state: StateFlow<List<SettingsSearchHelper.SettingsSearchResult>> = _state.asStateFlow()
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        query = savedState?.getString(SettingsSearchPresenter::query.name) ?: "" // TODO - Some way to restore previous query?
+
+        SettingsSearchHelper.initPreferenceSearchResults(preferences.context)
     }
 
-    override fun onSave(state: Bundle) {
-        state.putString(SettingsSearchPresenter::query.name, query)
-        super.onSave(state)
+    fun getLastSearchQuerySearchSettings(): String {
+        return preferences.lastSearchQuerySearchSettings().get()
+    }
+
+    fun setLastSearchQuerySearchSettings(query: String) {
+        preferences.lastSearchQuerySearchSettings().set(query)
+    }
+
+    fun searchSettings(query: String?) {
+        _state.value = if (!query.isNullOrBlank()) {
+            SettingsSearchHelper.getFilteredResults(query)
+        } else {
+            emptyList()
+        }
     }
 }
