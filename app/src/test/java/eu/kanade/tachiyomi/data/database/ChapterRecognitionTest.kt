@@ -277,16 +277,6 @@ class ChapterRecognitionTest {
     }
 
     /**
-     * Chapter containing range
-     */
-    @Test
-    fun rangeInChapterCase() {
-        createChapter("Ch.191-200 Read Online")
-        ChapterRecognition.parseChapterNumber(chapter, manga)
-        assertEquals(191f, chapter.chapter_number)
-    }
-
-    /**
      * Chapter containing multiple zeros
      */
     @Test
@@ -440,7 +430,27 @@ class ChapterRecognitionTest {
         assertEquals(24.005f, chapter.chapter_number)
     }
 
-    /**
+	/**
+	 * Chapter title containing hyphen's
+	 */
+	@Test
+	fun chapterContainingHyphensCase() {
+		createManga("Solo Leveling")
+
+		createChapter("ch 122-a")
+		ChapterRecognition.parseChapterNumber(chapter, manga)
+		assertEquals(122.1f, chapter.chapter_number)
+
+		createChapter("Solo Leveling Ch.123-extra")
+		ChapterRecognition.parseChapterNumber(chapter, manga)
+		assertEquals(123.99f, chapter.chapter_number)
+
+		createChapter("Solo Leveling, 024-005")
+		ChapterRecognition.parseChapterNumber(chapter, manga)
+		assertEquals(24.005f, chapter.chapter_number)
+	}
+
+	/**
      * Test for chapters containing season
      */
     @Test
