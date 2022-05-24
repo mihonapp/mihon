@@ -1,8 +1,11 @@
 package eu.kanade.tachiyomi.source
 
 import android.content.Context
+import androidx.core.net.toUri
 import com.github.junrar.Archive
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
@@ -30,6 +33,8 @@ import logcat.LogPriority
 import rx.Observable
 import tachiyomi.source.model.ChapterInfo
 import tachiyomi.source.model.MangaInfo
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.FileInputStream
@@ -37,129 +42,103 @@ import java.io.InputStream
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipFile
 
-class LocalSource(private val context: Context) : CatalogueSource, UnmeteredSource {
-
-    companion object {
-        const val ID = 0L
-        const val HELP_URL = "https://tachiyomi.org/help/guides/local-manga/"
-
-        private const val COVER_NAME = "cover.jpg"
-        private val LATEST_THRESHOLD = TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)
-
-        fun updateCover(context: Context, manga: SManga, input: InputStream): File? {
-            val dir = getBaseDirectories(context).firstOrNull()
-            if (dir == null) {
-                input.close()
-                return null
-            }
-            var cover = getCoverFile(File("${dir.absolutePath}/${manga.url}"))
-            if (cover == null) {
-                cover = File("${dir.absolutePath}/${manga.url}", COVER_NAME)
-            }
-            // It might not exist if using the external SD card
-            cover.parentFile?.mkdirs()
-            input.use {
-                cover.outputStream().use {
-                    input.copyTo(it)
-                }
-            }
-            manga.thumbnail_url = cover.absolutePath
-            return cover
-        }
-
-        /**
-         * Returns valid cover file inside [parent] directory.
-         */
-        private fun getCoverFile(parent: File): File? {
-            return parent.listFiles()?.find { it.nameWithoutExtension == "cover" }?.takeIf {
-                it.isFile && ImageUtil.isImage(it.name) { it.inputStream() }
-            }
-        }
-
-        private fun getBaseDirectories(context: Context): List<File> {
-            val c = context.getString(R.string.app_name) + File.separator + "local"
-            return DiskUtil.getExternalStorages(context).map { File(it.absolutePath, c) }
-        }
-    }
+class LocalSource(
+    private val context: Context,
+    private val coverCache: CoverCache = Injekt.get(),
+) : CatalogueSource, UnmeteredSource {
 
     private val json: Json by injectLazy()
 
-    override val id = ID
-    override val name = context.getString(R.string.local_source)
-    override val lang = "other"
-    override val supportsLatest = true
+    override val name: String = context.getString(R.string.local_source)
+
+    override val id: Long = ID
+
+    override val lang: String = "other"
 
     override fun toString() = name
 
+    override val supportsLatest: Boolean = true
+
+    // Browse related
     override fun fetchPopularManga(page: Int) = fetchSearchManga(page, "", POPULAR_FILTERS)
 
-    override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
-        val baseDirs = getBaseDirectories(context)
+    override fun fetchLatestUpdates(page: Int) = fetchSearchManga(page, "", LATEST_FILTERS)
 
-        val time = if (filters === LATEST_FILTERS) System.currentTimeMillis() - LATEST_THRESHOLD else 0L
-        var mangaDirs = baseDirs
-            .asSequence()
-            .mapNotNull { it.listFiles()?.toList() }
-            .flatten()
-            .filter { it.isDirectory }
-            .filterNot { it.name.startsWith('.') }
-            .filter { if (time == 0L) it.name.contains(query, ignoreCase = true) else it.lastModified() >= time }
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
+        val baseDirsFiles = getBaseDirectoriesFiles(context)
+
+        var mangaDirs = baseDirsFiles
+            // Filter out files that are hidden and is not a folder
+            .filter { it.isDirectory && !it.name.startsWith('.') }
             .distinctBy { it.name }
 
-        val state = ((if (filters.isEmpty()) POPULAR_FILTERS else filters)[0] as OrderBy).state
-        when (state?.index) {
-            0 -> {
-                mangaDirs = if (state.ascending) {
-                    mangaDirs.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
-                } else {
-                    mangaDirs.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER, { it.name }))
-                }
-            }
-            1 -> {
-                mangaDirs = if (state.ascending) {
-                    mangaDirs.sortedBy(File::lastModified)
-                } else {
-                    mangaDirs.sortedByDescending(File::lastModified)
-                }
+        val lastModifiedLimit = if (filters === LATEST_FILTERS) System.currentTimeMillis() - LATEST_THRESHOLD else 0L
+        // Filter by query or last modified
+        mangaDirs = mangaDirs.filter {
+            if (lastModifiedLimit == 0L) {
+                it.name.contains(query, ignoreCase = true)
+            } else {
+                it.lastModified() >= lastModifiedLimit
             }
         }
 
+        filters.forEach { filter ->
+            when (filter) {
+                is OrderBy -> {
+                    when (filter.state!!.index) {
+                        0 -> {
+                            mangaDirs = if (filter.state!!.ascending) {
+                                mangaDirs.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                            } else {
+                                mangaDirs.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER) { it.name })
+                            }
+                        }
+                        1 -> {
+                            mangaDirs = if (filter.state!!.ascending) {
+                                mangaDirs.sortedBy(File::lastModified)
+                            } else {
+                                mangaDirs.sortedByDescending(File::lastModified)
+                            }
+                        }
+                    }
+                }
+
+                else -> { /* Do nothing */ }
+            }
+        }
+
+        // Transform mangaDirs to list of SManga
         val mangas = mangaDirs.map { mangaDir ->
             SManga.create().apply {
                 title = mangaDir.name
                 url = mangaDir.name
 
                 // Try to find the cover
-                for (dir in baseDirs) {
-                    val cover = getCoverFile(File("${dir.absolutePath}/$url"))
-                    if (cover != null && cover.exists()) {
-                        thumbnail_url = cover.absolutePath
-                        break
-                    }
+                val cover = getCoverFile(mangaDir.name, baseDirsFiles)
+                if (cover != null && cover.exists()) {
+                    thumbnail_url = cover.absolutePath
                 }
+            }
+        }
 
-                val sManga = this
-                val mangaInfo = this.toMangaInfo()
-                runBlocking {
-                    val chapters = getChapterList(mangaInfo)
-                    if (chapters.isNotEmpty()) {
-                        val chapter = chapters.last().toSChapter()
-                        val format = getFormat(chapter)
-                        if (format is Format.Epub) {
-                            EpubFile(format.file).use { epub ->
-                                epub.fillMangaMetadata(sManga)
-                            }
-                        }
+        // Fetch chapters of all the manga
+        mangas.forEach { manga ->
+            val mangaInfo = manga.toMangaInfo()
+            runBlocking {
+                val chapters = getChapterList(mangaInfo)
+                if (chapters.isNotEmpty()) {
+                    val chapter = chapters.last().toSChapter()
+                    val format = getFormat(chapter)
 
-                        // Copy the cover from the first chapter found.
-                        if (thumbnail_url == null) {
-                            try {
-                                val dest = updateCover(chapter, sManga)
-                                thumbnail_url = dest?.absolutePath
-                            } catch (e: Exception) {
-                                logcat(LogPriority.ERROR, e)
-                            }
+                    if (format is Format.Epub) {
+                        EpubFile(format.file).use { epub ->
+                            epub.fillMangaMetadata(manga)
                         }
+                    }
+
+                    // Copy the cover from the first chapter found if not available
+                    if (manga.thumbnail_url == null) {
+                        updateCover(chapter, manga)
                     }
                 }
             }
@@ -168,38 +147,44 @@ class LocalSource(private val context: Context) : CatalogueSource, UnmeteredSour
         return Observable.just(MangasPage(mangas.toList(), false))
     }
 
-    override fun fetchLatestUpdates(page: Int) = fetchSearchManga(page, "", LATEST_FILTERS)
-
+    // Manga details related
     override suspend fun getMangaDetails(manga: MangaInfo): MangaInfo {
-        val localDetails = getBaseDirectories(context)
-            .asSequence()
-            .mapNotNull { File(it, manga.key).listFiles()?.toList() }
-            .flatten()
+        var mangaInfo = manga
+
+        val baseDirsFile = getBaseDirectoriesFiles(context)
+
+        val coverFile = getCoverFile(manga.key, baseDirsFile)
+
+        coverFile?.let {
+            mangaInfo = mangaInfo.copy(cover = it.absolutePath)
+        }
+
+        val localDetails = getMangaDirsFiles(manga.key, baseDirsFile)
             .firstOrNull { it.extension.equals("json", ignoreCase = true) }
 
-        return if (localDetails != null) {
+        if (localDetails != null) {
             val obj = json.decodeFromStream<JsonObject>(localDetails.inputStream())
 
-            manga.copy(
-                title = obj["title"]?.jsonPrimitive?.contentOrNull ?: manga.title,
-                author = obj["author"]?.jsonPrimitive?.contentOrNull ?: manga.author,
-                artist = obj["artist"]?.jsonPrimitive?.contentOrNull ?: manga.artist,
-                description = obj["description"]?.jsonPrimitive?.contentOrNull ?: manga.description,
-                genres = obj["genre"]?.jsonArray?.map { it.jsonPrimitive.content } ?: manga.genres,
-                status = obj["status"]?.jsonPrimitive?.intOrNull ?: manga.status,
+            mangaInfo = mangaInfo.copy(
+                title = obj["title"]?.jsonPrimitive?.contentOrNull ?: mangaInfo.title,
+                author = obj["author"]?.jsonPrimitive?.contentOrNull ?: mangaInfo.author,
+                artist = obj["artist"]?.jsonPrimitive?.contentOrNull ?: mangaInfo.artist,
+                description = obj["description"]?.jsonPrimitive?.contentOrNull ?: mangaInfo.description,
+                genres = obj["genre"]?.jsonArray?.map { it.jsonPrimitive.content } ?: mangaInfo.genres,
+                status = obj["status"]?.jsonPrimitive?.intOrNull ?: mangaInfo.status,
             )
-        } else {
-            manga
         }
+
+        return mangaInfo
     }
 
+    // Chapters
     override suspend fun getChapterList(manga: MangaInfo): List<ChapterInfo> {
         val sManga = manga.toSManga()
 
-        val chapters = getBaseDirectories(context)
-            .asSequence()
-            .mapNotNull { File(it, manga.key).listFiles()?.toList() }
-            .flatten()
+        val baseDirsFile = getBaseDirectoriesFiles(context)
+        return getMangaDirsFiles(manga.key, baseDirsFile)
+            // Only keep supported formats
             .filter { it.isDirectory || isSupportedFile(it.extension) }
             .map { chapterFile ->
                 SChapter.create().apply {
@@ -211,14 +196,14 @@ class LocalSource(private val context: Context) : CatalogueSource, UnmeteredSour
                     }
                     date_upload = chapterFile.lastModified()
 
+                    ChapterRecognition.parseChapterNumber(this, sManga)
+
                     val format = getFormat(chapterFile)
                     if (format is Format.Epub) {
                         EpubFile(format.file).use { epub ->
                             epub.fillChapterMetadata(this)
                         }
                     }
-
-                    ChapterRecognition.parseChapterNumber(this, sManga)
                 }
             }
             .map { it.toChapterInfo() }
@@ -227,12 +212,24 @@ class LocalSource(private val context: Context) : CatalogueSource, UnmeteredSour
                 if (c == 0) c2.name.compareToCaseInsensitiveNaturalOrder(c1.name) else c
             }
             .toList()
-
-        return chapters
     }
 
-    override suspend fun getPageList(chapter: ChapterInfo) = throw Exception("Unused")
+    // Filters
+    override fun getFilterList() = FilterList(OrderBy(context))
 
+    private val POPULAR_FILTERS = FilterList(OrderBy(context))
+    private val LATEST_FILTERS = FilterList(OrderBy(context).apply { state = Filter.Sort.Selection(1, false) })
+
+    private class OrderBy(context: Context) : Filter.Sort(
+        context.getString(R.string.local_filter_order_by),
+        arrayOf(context.getString(R.string.title), context.getString(R.string.date)),
+        Selection(0, true),
+    )
+
+    // Unused stuff
+    override suspend fun getPageList(chapter: ChapterInfo) = throw UnsupportedOperationException("Unused")
+
+    // Miscellaneous
     private fun isSupportedFile(extension: String): Boolean {
         return extension.lowercase() in SUPPORTED_ARCHIVE_TYPES
     }
@@ -296,24 +293,89 @@ class LocalSource(private val context: Context) : CatalogueSource, UnmeteredSour
                 }
             }
         }
+            .also { coverCache.clearMemoryCache() }
     }
-
-    override fun getFilterList() = POPULAR_FILTERS
-
-    private val POPULAR_FILTERS = FilterList(OrderBy(context))
-    private val LATEST_FILTERS = FilterList(OrderBy(context).apply { state = Filter.Sort.Selection(1, false) })
-
-    private class OrderBy(context: Context) : Filter.Sort(
-        context.getString(R.string.local_filter_order_by),
-        arrayOf(context.getString(R.string.title), context.getString(R.string.date)),
-        Selection(0, true),
-    )
 
     sealed class Format {
         data class Directory(val file: File) : Format()
         data class Zip(val file: File) : Format()
         data class Rar(val file: File) : Format()
         data class Epub(val file: File) : Format()
+    }
+
+    companion object {
+        const val ID = 0L
+        const val HELP_URL = "https://tachiyomi.org/help/guides/local-manga/"
+
+        private const val DEFAULT_COVER_NAME = "cover.jpg"
+        private val LATEST_THRESHOLD = TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)
+
+        private fun getBaseDirectories(context: Context): Sequence<File> {
+            val localFolder = context.getString(R.string.app_name) + File.separator + "local"
+            return DiskUtil.getExternalStorages(context)
+                .map { File(it.absolutePath, localFolder) }
+                .asSequence()
+        }
+
+        private fun getBaseDirectoriesFiles(context: Context): Sequence<File> {
+            return getBaseDirectories(context)
+                // Get all the files inside all baseDir
+                .flatMap { it.listFiles().orEmpty().toList() }
+        }
+
+        private fun getMangaDir(mangaUrl: String, baseDirsFile: Sequence<File>): File? {
+            return baseDirsFile
+                // Get the first mangaDir or null
+                .firstOrNull { it.isDirectory && it.name == mangaUrl }
+        }
+
+        private fun getMangaDirsFiles(mangaUrl: String, baseDirsFile: Sequence<File>): Sequence<File> {
+            return baseDirsFile
+                // Filter out ones that are not related to the manga and is not a directory
+                .filter { it.isDirectory && it.name == mangaUrl }
+                // Get all the files inside the filtered folders
+                .flatMap { it.listFiles().orEmpty().toList() }
+        }
+
+        private fun getCoverFile(mangaUrl: String, baseDirsFile: Sequence<File>): File? {
+            return getMangaDirsFiles(mangaUrl, baseDirsFile)
+                // Get all file whose names start with 'cover'
+                .filter { it.isFile && it.nameWithoutExtension.equals("cover", ignoreCase = true) }
+                // Get the first actual image
+                .firstOrNull {
+                    ImageUtil.isImage(it.name) { it.inputStream() }
+                }
+        }
+
+        fun updateCover(context: Context, manga: SManga, inputStream: InputStream): File? {
+            val baseDirsFiles = getBaseDirectoriesFiles(context)
+
+            val mangaDir = getMangaDir(manga.url, baseDirsFiles)
+            if (mangaDir == null) {
+                inputStream.close()
+                return null
+            }
+
+            var coverFile = getCoverFile(manga.url, baseDirsFiles)
+            if (coverFile == null) {
+                coverFile = File(mangaDir.absolutePath, DEFAULT_COVER_NAME)
+
+            }
+
+            // It might not exist at this point
+            coverFile.parentFile?.mkdirs()
+            inputStream.use { input ->
+                coverFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            // Create a .nomedia file
+            DiskUtil.createNoMediaFile(UniFile.fromFile(mangaDir), context)
+
+            manga.thumbnail_url = coverFile.absolutePath
+            return coverFile
+        }
     }
 }
 
