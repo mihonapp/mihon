@@ -68,7 +68,7 @@ class TrackGetResolver : DefaultGetResolver<Track>() {
         id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_ID))
         manga_id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_MANGA_ID))
         sync_id = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SYNC_ID))
-        media_id = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MEDIA_ID))
+        media_id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_MEDIA_ID))
         library_id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_LIBRARY_ID))
         title = cursor.getString(cursor.getColumnIndexOrThrow(COL_TITLE))
         last_chapter_read = cursor.getFloat(cursor.getColumnIndexOrThrow(COL_LAST_CHAPTER_READ))

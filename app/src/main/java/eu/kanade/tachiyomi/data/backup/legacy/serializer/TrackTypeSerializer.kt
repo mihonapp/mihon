@@ -45,7 +45,7 @@ open class TrackBaseSerializer<T : Track> : KSerializer<T> {
             val jsonObject = decoder.decodeJsonElement().jsonObject
             title = jsonObject[TITLE]!!.jsonPrimitive.content
             sync_id = jsonObject[SYNC]!!.jsonPrimitive.int
-            media_id = jsonObject[MEDIA]!!.jsonPrimitive.int
+            media_id = jsonObject[MEDIA]!!.jsonPrimitive.long
             library_id = jsonObject[LIBRARY]!!.jsonPrimitive.long
             last_chapter_read = jsonObject[LAST_READ]!!.jsonPrimitive.float
             tracking_url = jsonObject[TRACKING_URL]!!.jsonPrimitive.content

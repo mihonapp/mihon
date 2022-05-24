@@ -11,10 +11,10 @@ import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.long
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 import okhttp3.FormBody
@@ -70,7 +70,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                 .await()
                 .parseAs<JsonObject>()
                 .let {
-                    track.media_id = it["data"]!!.jsonObject["id"]!!.jsonPrimitive.int
+                    track.media_id = it["data"]!!.jsonObject["id"]!!.jsonPrimitive.long
                     track
                 }
         }
@@ -241,7 +241,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         private const val algoliaFilter =
             "&facetFilters=%5B%22kind%3Amanga%22%5D&attributesToRetrieve=%5B%22synopsis%22%2C%22canonicalTitle%22%2C%22chapterCount%22%2C%22posterImage%22%2C%22startDate%22%2C%22subtype%22%2C%22endDate%22%2C%20%22id%22%5D"
 
-        fun mangaUrl(remoteId: Int): String {
+        fun mangaUrl(remoteId: Long): String {
             return baseMangaUrl + remoteId
         }
 

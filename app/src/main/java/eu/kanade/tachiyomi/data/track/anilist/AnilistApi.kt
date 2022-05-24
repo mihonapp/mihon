@@ -268,7 +268,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
 
     private fun jsonToALManga(struct: JsonObject): ALManga {
         return ALManga(
-            struct["id"]!!.jsonPrimitive.int,
+            struct["id"]!!.jsonPrimitive.long,
             struct["title"]!!.jsonObject["userPreferred"]!!.jsonPrimitive.content,
             struct["coverImage"]!!.jsonObject["large"]!!.jsonPrimitive.content,
             struct["description"]!!.jsonPrimitive.contentOrNull,
@@ -329,7 +329,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
         private const val baseUrl = "https://anilist.co/api/v2/"
         private const val baseMangaUrl = "https://anilist.co/manga/"
 
-        fun mangaUrl(mediaId: Int): String {
+        fun mangaUrl(mediaId: Long): String {
             return baseMangaUrl + mediaId
         }
 

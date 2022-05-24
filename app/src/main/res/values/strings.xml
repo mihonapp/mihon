@@ -643,6 +643,7 @@
     <string name="tracker_komga_warning">This tracker is only compatible with the Komga source.</string>
     <string name="tracker_bangumi" translatable="false">Bangumi</string>
     <string name="tracker_shikimori" translatable="false">Shikimori</string>
+    <string name="tracker_manga_updates" translatable="false">MangaUpdates</string>
     <string name="manga_tracking_tab">Tracking</string>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
@@ -657,6 +658,11 @@
     <string name="paused">Paused</string>
     <string name="plan_to_read">Plan to read</string>
     <string name="repeating">Rereading</string>
+    <string name="reading_list">Reading List</string>
+    <string name="wish_list">Wish List</string>
+    <string name="complete_list">Complete List</string>
+    <string name="on_hold_list">On Hold List</string>
+    <string name="unfinished_list">Unfinished List</string>
     <string name="score">Score</string>
     <string name="title">Title</string>
     <string name="status">Status</string>

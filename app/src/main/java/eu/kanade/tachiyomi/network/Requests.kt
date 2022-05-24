@@ -36,3 +36,31 @@ fun POST(
         .cacheControl(cache)
         .build()
 }
+
+fun PUT(
+    url: String,
+    headers: Headers = DEFAULT_HEADERS,
+    body: RequestBody = DEFAULT_BODY,
+    cache: CacheControl = DEFAULT_CACHE_CONTROL,
+): Request {
+    return Request.Builder()
+        .url(url)
+        .put(body)
+        .headers(headers)
+        .cacheControl(cache)
+        .build()
+}
+
+fun DELETE(
+    url: String,
+    headers: Headers = DEFAULT_HEADERS,
+    body: RequestBody = DEFAULT_BODY,
+    cache: CacheControl = DEFAULT_CACHE_CONTROL,
+): Request {
+    return Request.Builder()
+        .url(url)
+        .delete(body)
+        .headers(headers)
+        .cacheControl(cache)
+        .build()
+}

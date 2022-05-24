@@ -63,13 +63,17 @@ class SettingsTrackingController :
                 dialog.targetController = this@SettingsTrackingController
                 dialog.showDialog(router)
             }
+            trackPreference(trackManager.mangaUpdates) {
+                val dialog = TrackLoginDialog(trackManager.mangaUpdates, R.string.username)
+                dialog.targetController = this@SettingsTrackingController
+                dialog.showDialog(router)
+            }
             trackPreference(trackManager.shikimori) {
                 activity?.openInBrowser(ShikimoriApi.authUrl(), forceDefaultBrowser = true)
             }
             trackPreference(trackManager.bangumi) {
                 activity?.openInBrowser(BangumiApi.authUrl(), forceDefaultBrowser = true)
             }
-
             infoPreference(R.string.tracking_info)
         }
 
