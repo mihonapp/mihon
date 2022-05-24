@@ -34,10 +34,10 @@ class MangaUpdatesApi(
     interceptor: MangaUpdatesInterceptor,
     private val client: OkHttpClient,
 ) {
+    private val json: Json by injectLazy()
+
     private val baseUrl = "https://api.mangaupdates.com"
     private val contentType = "application/vnd.api+json".toMediaType()
-
-    private val json by injectLazy<Json>()
 
     private val authClient by lazy {
         client.newBuilder()

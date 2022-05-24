@@ -30,19 +30,21 @@ class TrackImpl : Track {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
+        if (javaClass != other?.javaClass) return false
 
-        other as Track
+        other as TrackImpl
 
         if (manga_id != other.manga_id) return false
         if (sync_id != other.sync_id) return false
-        return media_id == other.media_id
+        if (media_id != other.media_id) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
-        var result = (manga_id xor manga_id.ushr(32)).toInt()
+        var result = manga_id.hashCode()
         result = 31 * result + sync_id
-        result = 31 * result + media_id.toInt()
+        result = 31 * result + media_id.hashCode()
         return result
     }
 }

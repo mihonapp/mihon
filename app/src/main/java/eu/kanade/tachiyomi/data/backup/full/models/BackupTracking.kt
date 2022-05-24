@@ -12,7 +12,8 @@ data class BackupTracking(
     @ProtoNumber(1) var syncId: Int,
     // LibraryId is not null in 1.x
     @ProtoNumber(2) var libraryId: Long,
-    @Deprecated("Use mediaId instead", level = DeprecationLevel.WARNING) @ProtoNumber(3) var mediaIdInt: Int = 0,
+    @Deprecated("Use mediaId instead", level = DeprecationLevel.WARNING) @ProtoNumber(3)
+    var mediaIdInt: Int = 0,
     // trackingUrl is called mediaUrl in 1.x
     @ProtoNumber(4) var trackingUrl: String = "",
     @ProtoNumber(5) var title: String = "",

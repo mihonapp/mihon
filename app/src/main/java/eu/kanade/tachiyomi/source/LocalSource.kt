@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.source
 
 import android.content.Context
-import androidx.core.net.toUri
 import com.github.junrar.Archive
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
@@ -20,7 +19,6 @@ import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.EpubFile
 import eu.kanade.tachiyomi.util.system.ImageUtil
-import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -29,7 +27,6 @@ import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
-import logcat.LogPriority
 import rx.Observable
 import tachiyomi.source.model.ChapterInfo
 import tachiyomi.source.model.MangaInfo
@@ -359,7 +356,6 @@ class LocalSource(
             var coverFile = getCoverFile(manga.url, baseDirsFiles)
             if (coverFile == null) {
                 coverFile = File(mangaDir.absolutePath, DEFAULT_COVER_NAME)
-
             }
 
             // It might not exist at this point
