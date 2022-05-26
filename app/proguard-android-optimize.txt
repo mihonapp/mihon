@@ -1,4 +1,3 @@
--allowaccessmodification
 -dontusemixedcaseclassnames
 -verbose
 
