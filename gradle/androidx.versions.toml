@@ -1,5 +1,5 @@
 [versions]
-agp_version = "7.2.0"
+agp_version = "7.2.1"
 lifecycle_version = "2.5.0-rc01"
 
 [libraries]
