@@ -95,6 +95,7 @@ leakcanary-plumber = { module = "com.squareup.leakcanary:plumber-android", versi
 sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref ="sqldelight" }
 sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref ="sqldelight" }
 sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-extensions", version.ref ="sqldelight" }
+sqldelight-gradle = { module="com.squareup.sqldelight:gradle-plugin", version.ref ="sqldelight" }
 
 junit = "org.junit.jupiter:junit-jupiter:5.8.2"
 

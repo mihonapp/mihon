@@ -4,7 +4,7 @@ buildscript {
         classpath(libs.google.services.gradle)
         classpath(libs.aboutLibraries.gradle)
         classpath(kotlinx.serialization.gradle)
-        classpath("com.squareup.sqldelight:gradle-plugin:1.5.3")
+        classpath(libs.sqldelight.gradle)
     }
 }
 
