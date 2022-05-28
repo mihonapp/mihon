@@ -8,7 +8,11 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import eu.kanade.tachiyomi.data.preference.*
+import eu.kanade.tachiyomi.data.preference.DEVICE_BATTERY_NOT_LOW
+import eu.kanade.tachiyomi.data.preference.DEVICE_CHARGING
+import eu.kanade.tachiyomi.data.preference.DEVICE_NETWORK_NOT_METERED
+import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.system.isConnectedToWifi
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
