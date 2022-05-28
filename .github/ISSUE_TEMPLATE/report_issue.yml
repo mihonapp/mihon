@@ -45,7 +45,7 @@ body:
       description: |
         If you're experiencing crashes, share the crash logs from **More → Settings → Advanced** then press **Dump crash logs**.
       placeholder: |
-        You can paste the crash logs in pure text or upload it as an attachment.
+        You can paste the crash logs in plain text or upload it as an attachment.
 
   - type: input
     id: tachiyomi-version
