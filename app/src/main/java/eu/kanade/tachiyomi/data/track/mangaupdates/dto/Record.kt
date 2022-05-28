@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.track.mangaupdates.dto
 
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.util.lang.htmlDecode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,10 +26,10 @@ data class Record(
 fun Record.toTrackSearch(id: Int): TrackSearch {
     return TrackSearch.create(id).apply {
         media_id = this@toTrackSearch.seriesId ?: 0L
-        title = this@toTrackSearch.title ?: ""
+        title = this@toTrackSearch.title?.htmlDecode() ?: ""
         total_chapters = 0
         cover_url = this@toTrackSearch.image?.url?.original ?: ""
-        summary = this@toTrackSearch.description ?: ""
+        summary = this@toTrackSearch.description?.htmlDecode() ?: ""
         tracking_url = this@toTrackSearch.url ?: ""
         publishing_status = ""
         publishing_type = this@toTrackSearch.type.toString()
