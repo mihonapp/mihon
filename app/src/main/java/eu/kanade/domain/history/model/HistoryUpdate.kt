@@ -2,9 +2,8 @@ package eu.kanade.domain.history.model
 
 import java.util.Date
 
-data class History(
-    val id: Long,
+data class HistoryUpdate(
     val chapterId: Long,
-    val readAt: Date?,
-    val readDuration: Long,
+    val readAt: Date,
+    val sessionReadDuration: Long,
 )

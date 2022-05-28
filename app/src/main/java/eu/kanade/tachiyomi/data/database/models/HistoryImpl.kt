@@ -21,7 +21,7 @@ class HistoryImpl : History {
     override var last_read: Long = 0
 
     /**
-     * Total time chapter was read - todo not yet implemented
+     * Total time chapter was read
      */
     override var time_read: Long = 0
 }

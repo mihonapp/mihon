@@ -5,6 +5,7 @@ import eu.kanade.data.DatabaseHandler
 import eu.kanade.data.chapter.chapterMapper
 import eu.kanade.data.manga.mangaMapper
 import eu.kanade.domain.chapter.model.Chapter
+import eu.kanade.domain.history.model.HistoryUpdate
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.model.Manga
@@ -87,6 +88,30 @@ class HistoryRepositoryImpl(
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)
             false
+        }
+    }
+
+    override suspend fun upsertHistory(historyUpdate: HistoryUpdate) {
+        try {
+            try {
+                handler.await {
+                    historyQueries.insert(
+                        historyUpdate.chapterId,
+                        historyUpdate.readAt,
+                        historyUpdate.sessionReadDuration,
+                    )
+                }
+            } catch (e: Exception) {
+                handler.await {
+                    historyQueries.update(
+                        historyUpdate.readAt,
+                        historyUpdate.sessionReadDuration,
+                        historyUpdate.chapterId,
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, throwable = e)
         }
     }
 }

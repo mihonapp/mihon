@@ -1,8 +1,11 @@
 package eu.kanade.domain
 
+import eu.kanade.data.chapter.ChapterRepositoryImpl
 import eu.kanade.data.history.HistoryRepositoryImpl
 import eu.kanade.data.manga.MangaRepositoryImpl
 import eu.kanade.data.source.SourceRepositoryImpl
+import eu.kanade.domain.chapter.interactor.UpdateChapter
+import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionUpdates
@@ -12,6 +15,7 @@ import eu.kanade.domain.history.interactor.GetHistory
 import eu.kanade.domain.history.interactor.GetNextChapterForManga
 import eu.kanade.domain.history.interactor.RemoveHistoryById
 import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
+import eu.kanade.domain.history.interactor.UpsertHistory
 import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.interactor.GetFavoritesBySourceId
 import eu.kanade.domain.manga.interactor.ResetViewerFlags
@@ -38,9 +42,13 @@ class DomainModule : InjektModule {
         addFactory { GetNextChapterForManga(get()) }
         addFactory { ResetViewerFlags(get()) }
 
+        addSingletonFactory<ChapterRepository> { ChapterRepositoryImpl(get()) }
+        addFactory { UpdateChapter(get()) }
+
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }
         addFactory { DeleteHistoryTable(get()) }
         addFactory { GetHistory(get()) }
+        addFactory { UpsertHistory(get()) }
         addFactory { RemoveHistoryById(get()) }
         addFactory { RemoveHistoryByMangaId(get()) }
 

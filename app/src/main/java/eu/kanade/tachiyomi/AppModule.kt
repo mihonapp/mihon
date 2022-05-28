@@ -55,8 +55,7 @@ class AppModule(val app: Application) : InjektModule {
             Database(
                 driver = get(),
                 historyAdapter = History.Adapter(
-                    history_last_readAdapter = dateAdapter,
-                    history_time_readAdapter = dateAdapter,
+                    last_readAdapter = dateAdapter,
                 ),
                 mangasAdapter = Mangas.Adapter(
                     genreAdapter = listOfStringsAdapter,

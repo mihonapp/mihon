@@ -27,3 +27,18 @@ getChapterByMangaId:
 SELECT *
 FROM chapters
 WHERE manga_id = :mangaId;
+
+update:
+UPDATE chapters
+SET manga_id = coalesce(:mangaId, manga_id),
+    url = coalesce(:url, url),
+    name = coalesce(:name, name),
+    scanlator = coalesce(:scanlator, scanlator),
+    read = coalesce(:read, read),
+    bookmark = coalesce(:bookmark, bookmark),
+    last_page_read = coalesce(:lastPageRead, last_page_read),
+    chapter_number = coalesce(:chapterNumber, chapter_number),
+    source_order = coalesce(:sourceOrder, source_order),
+    date_fetch = coalesce(:dateFetch, date_fetch),
+    date_upload = coalesce(:dateUpload, date_upload)
+WHERE _id = :chapterId;

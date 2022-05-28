@@ -1,0 +1,52 @@
+import java.util.Date;
+
+DROP INDEX IF EXISTS history_history_chapter_id_index;
+DROP VIEW IF EXISTS historyView;
+
+/**
+ *  [last_read] was made not-null
+ *  [time_read] was kept as long and made non-null
+ *  `history` prefix was removed from table name
+ */
+ALTER TABLE history RENAME TO history_temp;
+CREATE TABLE history(
+    _id INTEGER NOT NULL PRIMARY KEY,
+    chapter_id INTEGER NOT NULL UNIQUE,
+    last_read INTEGER AS Date NOT NULL,
+    time_read INTEGER NOT NULL,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id)
+    ON DELETE CASCADE
+);
+INSERT INTO history
+SELECT history_id, history_chapter_id, coalesce(history_last_read, 0), coalesce(history_time_read, 0)
+FROM history_temp;
+
+/**
+ *  [history.time_read] was added as a column in [historyView]
+ */
+CREATE VIEW historyView AS
+SELECT
+    history._id AS id,
+    mangas._id AS mangaId,
+    chapters._id AS chapterId,
+    mangas.title,
+    mangas.thumbnail_url AS thumbnailUrl,
+    chapters.chapter_number AS chapterNumber,
+    history.last_read AS readAt,
+    history.time_read AS readDuration,
+    max_last_read.last_read AS maxReadAt,
+    max_last_read.chapter_id AS maxReadAtChapterId
+FROM mangas
+JOIN chapters
+ON mangas._id = chapters.manga_id
+JOIN history
+ON chapters._id = history.chapter_id
+JOIN (
+    SELECT chapters.manga_id,chapters._id AS chapter_id, MAX(history.last_read) AS last_read
+    FROM chapters JOIN history
+    ON chapters._id = history.chapter_id
+    GROUP BY chapters.manga_id
+) AS max_last_read
+ON chapters.manga_id = max_last_read.manga_id;
+
+CREATE INDEX history_history_chapter_id_index ON history(chapter_id);

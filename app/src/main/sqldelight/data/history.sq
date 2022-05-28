@@ -1,31 +1,31 @@
 import java.util.Date;
 
 CREATE TABLE history(
-    history_id INTEGER NOT NULL PRIMARY KEY,
-    history_chapter_id INTEGER NOT NULL UNIQUE,
-    history_last_read INTEGER AS Date,
-    history_time_read INTEGER AS Date,
-    FOREIGN KEY(history_chapter_id) REFERENCES chapters (_id)
+    _id INTEGER NOT NULL PRIMARY KEY,
+    chapter_id INTEGER NOT NULL UNIQUE,
+    last_read INTEGER AS Date,
+    time_read INTEGER NOT NULL,
+    FOREIGN KEY(chapter_id) REFERENCES chapters (_id)
     ON DELETE CASCADE
 );
 
-CREATE INDEX history_history_chapter_id_index ON history(history_chapter_id);
+CREATE INDEX history_history_chapter_id_index ON history(chapter_id);
 
 resetHistoryById:
 UPDATE history
-SET history_last_read = 0
-WHERE history_id = :historyId;
+SET last_read = 0
+WHERE _id = :historyId;
 
 resetHistoryByMangaId:
 UPDATE history
-SET history_last_read = 0
-WHERE history_id IN (
-    SELECT H.history_id
+SET last_read = 0
+WHERE _id IN (
+    SELECT H._id
     FROM mangas M
     INNER JOIN chapters C
     ON M._id = C.manga_id
     INNER JOIN history H
-    ON C._id = H.history_chapter_id
+    ON C._id = H.chapter_id
     WHERE M._id = :mangaId
 );
 
@@ -34,4 +34,14 @@ DELETE FROM history;
 
 removeResettedHistory:
 DELETE FROM history
-WHERE history_last_read = 0;
+WHERE last_read = 0;
+
+insert:
+INSERT INTO history(chapter_id, last_read, time_read)
+VALUES (:chapterId, :readAt, :readDuration);
+
+update:
+UPDATE history
+SET last_read = :readAt,
+    time_read = time_read + :sessionReadDuration
+WHERE chapter_id = :chapterId;

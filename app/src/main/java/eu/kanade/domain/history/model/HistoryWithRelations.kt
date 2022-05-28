@@ -10,4 +10,5 @@ data class HistoryWithRelations(
     val thumbnailUrl: String,
     val chapterNumber: Float,
     val readAt: Date?,
+    val readDuration: Long,
 )

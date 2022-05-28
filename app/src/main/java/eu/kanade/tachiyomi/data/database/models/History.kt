@@ -23,7 +23,7 @@ interface History : Serializable {
     var last_read: Long
 
     /**
-     * Total time chapter was read - todo not yet implemented
+     * Total time chapter was read
      */
     var time_read: Long
 
