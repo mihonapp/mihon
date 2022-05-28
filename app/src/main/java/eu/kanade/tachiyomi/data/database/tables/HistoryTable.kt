@@ -10,20 +10,20 @@ object HistoryTable {
     /**
      * Id column name
      */
-    const val COL_ID = "${TABLE}_id"
+    const val COL_ID = "_id"
 
     /**
      * Chapter id column name
      */
-    const val COL_CHAPTER_ID = "${TABLE}_chapter_id"
+    const val COL_CHAPTER_ID = "chapter_id"
 
     /**
      * Last read column name
      */
-    const val COL_LAST_READ = "${TABLE}_last_read"
+    const val COL_LAST_READ = "last_read"
 
     /**
      * Time read column name
      */
-    const val COL_TIME_READ = "${TABLE}_time_read"
+    const val COL_TIME_READ = "time_read"
 }
