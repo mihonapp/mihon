@@ -221,6 +221,7 @@
     <string name="update_weekly">Weekly</string>
     <string name="pref_library_update_restriction">Automatic updates device restrictions</string>
     <string name="connected_to_wifi">Only on Wi-Fi</string>
+    <string name="network_not_metered">Only on unmetered Network</string>
     <string name="charging">Charging</string>
     <string name="battery_not_low">Battery not low</string>
     <string name="restrictions">Restrictions: %s</string>
