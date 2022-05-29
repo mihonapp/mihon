@@ -93,22 +93,12 @@ class HistoryRepositoryImpl(
 
     override suspend fun upsertHistory(historyUpdate: HistoryUpdate) {
         try {
-            try {
-                handler.await {
-                    historyQueries.insert(
-                        historyUpdate.chapterId,
-                        historyUpdate.readAt,
-                        historyUpdate.sessionReadDuration,
-                    )
-                }
-            } catch (e: Exception) {
-                handler.await {
-                    historyQueries.update(
-                        historyUpdate.readAt,
-                        historyUpdate.sessionReadDuration,
-                        historyUpdate.chapterId,
-                    )
-                }
+            handler.await {
+                historyQueries.upsert(
+                    historyUpdate.chapterId,
+                    historyUpdate.readAt,
+                    historyUpdate.sessionReadDuration,
+                )
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)

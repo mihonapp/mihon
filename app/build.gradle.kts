@@ -136,6 +136,13 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+
+    sqldelight {
+        database("Database") {
+            packageName = "eu.kanade.tachiyomi"
+            dialect = "sqlite:3.24"
+        }
+    }
 }
 
 dependencies {
