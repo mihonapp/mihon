@@ -1,5 +1,5 @@
 [versions]
-aboutlib_version = "10.2.0"
+aboutlib_version = "10.3.0"
 okhttp_version = "4.9.3"
 nucleus_version = "3.0.0"
 coil_version = "2.1.0"
