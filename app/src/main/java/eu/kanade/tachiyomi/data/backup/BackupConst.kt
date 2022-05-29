@@ -6,11 +6,6 @@ object BackupConst {
 
     private const val NAME = "BackupRestoreServices"
     const val EXTRA_URI = "$ID.$NAME.EXTRA_URI"
-    const val EXTRA_FLAGS = "$ID.$NAME.EXTRA_FLAGS"
-    const val EXTRA_MODE = "$ID.$NAME.EXTRA_MODE"
-
-    const val BACKUP_TYPE_LEGACY = 0
-    const val BACKUP_TYPE_FULL = 1
 
     // Filter options
     internal const val BACKUP_CATEGORY = 0x1

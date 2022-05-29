@@ -22,10 +22,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.backup.BackupRestoreService
-import eu.kanade.tachiyomi.data.backup.ValidatorParseException
 import eu.kanade.tachiyomi.data.backup.full.FullBackupRestoreValidator
 import eu.kanade.tachiyomi.data.backup.full.models.BackupFull
-import eu.kanade.tachiyomi.data.backup.legacy.LegacyBackupRestoreValidator
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.util.preference.bindTo
@@ -272,19 +270,9 @@ class SettingsBackupController : SettingsController() {
             val uri: Uri = args.getParcelable(KEY_URI)!!
 
             return try {
-                var type = BackupConst.BACKUP_TYPE_FULL
-                val results = try {
-                    FullBackupRestoreValidator().validate(activity, uri)
-                } catch (_: ValidatorParseException) {
-                    type = BackupConst.BACKUP_TYPE_LEGACY
-                    LegacyBackupRestoreValidator().validate(activity, uri)
-                }
+                val results = FullBackupRestoreValidator().validate(activity, uri)
 
-                var message = if (type == BackupConst.BACKUP_TYPE_FULL) {
-                    activity.getString(R.string.backup_restore_content_full)
-                } else {
-                    activity.getString(R.string.backup_restore_content)
-                }
+                var message = activity.getString(R.string.backup_restore_content_full)
                 if (results.missingSources.isNotEmpty()) {
                     message += "\n\n${activity.getString(R.string.backup_restore_missing_sources)}\n${results.missingSources.joinToString("\n") { "- $it" }}"
                 }
@@ -296,7 +284,7 @@ class SettingsBackupController : SettingsController() {
                     .setTitle(R.string.pref_restore_backup)
                     .setMessage(message)
                     .setPositiveButton(R.string.action_restore) { _, _ ->
-                        BackupRestoreService.start(activity, uri, type)
+                        BackupRestoreService.start(activity, uri)
                     }
                     .create()
             } catch (e: Exception) {
