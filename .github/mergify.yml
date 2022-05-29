@@ -1,0 +1,9 @@
+pull_request_rules:
+  - name: Automatically merge translations
+    conditions:
+      - "author=weblate"
+      - "-conflict"
+      - "current-day-of-week=Sat"
+    actions:
+      merge:
+        method: squash
