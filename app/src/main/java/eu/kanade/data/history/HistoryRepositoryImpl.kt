@@ -26,7 +26,13 @@ class HistoryRepositoryImpl(
         )
     }
 
-    override suspend fun getNextChapterForManga(mangaId: Long, chapterId: Long): Chapter? {
+    override suspend fun getLastHistory(): HistoryWithRelations? {
+        return handler.awaitOneOrNull {
+            historyViewQueries.getLatestHistory(historyWithRelationsMapper)
+        }
+    }
+
+    override suspend fun getNextChapter(mangaId: Long, chapterId: Long): Chapter? {
         val chapter = handler.awaitOne { chaptersQueries.getChapterById(chapterId, chapterMapper) }
         val manga = handler.awaitOne { mangasQueries.getMangaById(mangaId, mangaMapper) }
 

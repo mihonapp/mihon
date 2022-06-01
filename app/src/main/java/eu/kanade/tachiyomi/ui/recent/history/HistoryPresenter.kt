@@ -7,7 +7,7 @@ import androidx.paging.insertSeparators
 import androidx.paging.map
 import eu.kanade.domain.history.interactor.DeleteHistoryTable
 import eu.kanade.domain.history.interactor.GetHistory
-import eu.kanade.domain.history.interactor.GetNextChapterForManga
+import eu.kanade.domain.history.interactor.GetNextChapter
 import eu.kanade.domain.history.interactor.RemoveHistoryById
 import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.model.HistoryWithRelations
@@ -36,7 +36,7 @@ import java.util.Date
  */
 class HistoryPresenter(
     private val getHistory: GetHistory = Injekt.get(),
-    private val getNextChapterForManga: GetNextChapterForManga = Injekt.get(),
+    private val getNextChapter: GetNextChapter = Injekt.get(),
     private val deleteHistoryTable: DeleteHistoryTable = Injekt.get(),
     private val removeHistoryById: RemoveHistoryById = Injekt.get(),
     private val removeHistoryByMangaId: RemoveHistoryByMangaId = Injekt.get(),
@@ -101,7 +101,7 @@ class HistoryPresenter(
 
     fun getNextChapterForManga(mangaId: Long, chapterId: Long) {
         presenterScope.launchIO {
-            val chapter = getNextChapterForManga.await(mangaId, chapterId)
+            val chapter = getNextChapter.await(mangaId, chapterId)
             launchUI {
                 view?.openChapter(chapter)
             }
@@ -114,6 +114,15 @@ class HistoryPresenter(
             if (!result) return@launchIO
             launchUI {
                 view?.activity?.toast(R.string.clear_history_completed)
+            }
+        }
+    }
+
+    fun resumeLastChapterRead() {
+        presenterScope.launchIO {
+            val chapter = getNextChapter.await()
+            launchUI {
+                view?.openChapter(chapter)
             }
         }
     }

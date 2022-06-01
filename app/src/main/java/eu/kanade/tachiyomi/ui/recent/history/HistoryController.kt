@@ -91,4 +91,8 @@ class HistoryController : ComposeController<HistoryPresenter>(), RootController 
             activity.toast(R.string.no_next_chapter)
         }
     }
+
+    fun resumeLastChapterRead() {
+        presenter.resumeLastChapterRead()
+    }
 }

@@ -12,7 +12,7 @@ import eu.kanade.domain.extension.interactor.GetExtensionUpdates
 import eu.kanade.domain.extension.interactor.GetExtensions
 import eu.kanade.domain.history.interactor.DeleteHistoryTable
 import eu.kanade.domain.history.interactor.GetHistory
-import eu.kanade.domain.history.interactor.GetNextChapterForManga
+import eu.kanade.domain.history.interactor.GetNextChapter
 import eu.kanade.domain.history.interactor.RemoveHistoryById
 import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.interactor.UpsertHistory
@@ -39,7 +39,7 @@ class DomainModule : InjektModule {
     override fun InjektRegistrar.registerInjectables() {
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
         addFactory { GetFavoritesBySourceId(get()) }
-        addFactory { GetNextChapterForManga(get()) }
+        addFactory { GetNextChapter(get()) }
         addFactory { ResetViewerFlags(get()) }
 
         addSingletonFactory<ChapterRepository> { ChapterRepositoryImpl(get()) }
