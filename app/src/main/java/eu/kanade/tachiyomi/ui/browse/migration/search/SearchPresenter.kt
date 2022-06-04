@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.browse.migration.search
 
 import android.os.Bundle
 import com.jakewharton.rxrelay.BehaviorRelay
+import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
@@ -17,12 +18,14 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchCardItem
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchItem
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchPresenter
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.toast
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
 import java.util.Date
 
 class SearchPresenter(
@@ -31,7 +34,7 @@ class SearchPresenter(
 ) : GlobalSearchPresenter(initialQuery) {
 
     private val replacingMangaRelay = BehaviorRelay.create<Pair<Boolean, Manga?>>()
-
+    private val coverCache: CoverCache by injectLazy()
     private val enhancedServices by lazy { Injekt.get<TrackManager>().services.filterIsInstance<EnhancedTrackService>() }
 
     override fun onCreate(savedState: Bundle?) {
@@ -103,6 +106,10 @@ class SearchPresenter(
             MigrationFlags.hasTracks(
                 flags,
             )
+        val migrateCustomCover =
+            MigrationFlags.hasCustomCover(
+                flags,
+            )
 
         db.inTransaction {
             // Update chapters read
@@ -172,6 +179,11 @@ class SearchPresenter(
                 prevManga.date_added = 0
             } else {
                 manga.date_added = Date().time
+            }
+
+            // Update custom cover
+            if (migrateCustomCover) {
+                coverCache.setCustomCoverToCache(manga, coverCache.getCustomCoverFile(prevManga).inputStream())
             }
 
             // SearchPresenter#networkToLocalManga may have updated the manga title,
