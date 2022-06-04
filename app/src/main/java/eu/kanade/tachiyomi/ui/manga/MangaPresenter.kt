@@ -185,7 +185,7 @@ class MangaPresenter(
             return Observable.just(0)
         }
 
-        return db.getTracks(manga).asRxObservable()
+        return db.getTracks(manga.id).asRxObservable()
             .map { tracks ->
                 val loggedServices = trackManager.services.filter { it.isLogged }.map { it.id }
                 tracks.filter { it.sync_id in loggedServices }
@@ -335,7 +335,7 @@ class MangaPresenter(
     fun deleteCustomCover(manga: Manga) {
         Observable
             .fromCallable {
-                coverCache.deleteCustomCover(manga)
+                coverCache.deleteCustomCover(manga.id)
                 manga.updateCoverLastModified(db)
                 coverCache.clearMemoryCache()
             }
@@ -514,7 +514,7 @@ class MangaPresenter(
     }
 
     fun startDownloadingNow(chapter: Chapter) {
-        downloadManager.startDownloadNow(chapter)
+        downloadManager.startDownloadNow(chapter.id)
     }
 
     /**
@@ -720,7 +720,7 @@ class MangaPresenter(
 
     private fun fetchTrackers() {
         trackSubscription?.let { remove(it) }
-        trackSubscription = db.getTracks(manga)
+        trackSubscription = db.getTracks(manga.id)
             .asRxObservable()
             .map { tracks ->
                 loggedServices.map { service ->

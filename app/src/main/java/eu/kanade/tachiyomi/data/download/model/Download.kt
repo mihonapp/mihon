@@ -6,9 +6,12 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import rx.subjects.PublishSubject
 
-class Download(val source: HttpSource, val manga: Manga, val chapter: Chapter) {
-
-    var pages: List<Page>? = null
+data class Download(
+    val source: HttpSource,
+    val manga: Manga,
+    val chapter: Chapter,
+    var pages: List<Page>? = null,
+) {
 
     @Volatile
     @Transient

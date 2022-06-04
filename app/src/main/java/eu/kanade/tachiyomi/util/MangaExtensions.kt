@@ -37,7 +37,7 @@ fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSa
 }
 
 fun Manga.hasCustomCover(coverCache: CoverCache): Boolean {
-    return coverCache.getCustomCoverFile(this).exists()
+    return coverCache.getCustomCoverFile(id).exists()
 }
 
 fun Manga.removeCovers(coverCache: CoverCache) {

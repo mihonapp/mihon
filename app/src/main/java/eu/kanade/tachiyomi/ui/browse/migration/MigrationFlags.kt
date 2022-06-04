@@ -16,12 +16,8 @@ object MigrationFlags {
     private const val TRACK = 0b0100
     private const val CUSTOM_COVER = 0b1000
 
-    private const val CHAPTERS2 = 0x1
-    private const val CATEGORIES2 = 0x2
-    private const val TRACK2 = 0x4
-
-	private val coverCache: CoverCache by injectLazy()
-	private val db: DatabaseHelper = Injekt.get()
+    private val coverCache: CoverCache by injectLazy()
+    private val db: DatabaseHelper = Injekt.get()
 
     val flags get() = arrayOf(CHAPTERS, CATEGORIES, TRACK, CUSTOM_COVER)
 
@@ -49,19 +45,19 @@ object MigrationFlags {
         return positions.fold(0) { accumulated, position -> accumulated or (1 shl position) }
     }
 
-	fun titles(manga: Manga?): Array<Int> {
-		val titles = arrayOf(R.string.chapters, R.string.categories).toMutableList()
-		if (manga != null) {
-			db.inTransaction {
-				if (db.getTracks(manga).executeAsBlocking().isNotEmpty()) {
-					titles.add(R.string.track)
-				}
+    fun titles(manga: Manga?): Array<Int> {
+        val titles = arrayOf(R.string.chapters, R.string.categories).toMutableList()
+        if (manga != null) {
+            db.inTransaction {
+                if (db.getTracks(manga.id).executeAsBlocking().isNotEmpty()) {
+                    titles.add(R.string.track)
+                }
 
-				if (manga.hasCustomCover(coverCache)) {
-					titles.add(R.string.custom_cover)
-				}
-			}
-		}
-			return titles.toTypedArray()
-	}
+                if (manga.hasCustomCover(coverCache)) {
+                    titles.add(R.string.custom_cover)
+                }
+            }
+        }
+        return titles.toTypedArray()
+    }
 }

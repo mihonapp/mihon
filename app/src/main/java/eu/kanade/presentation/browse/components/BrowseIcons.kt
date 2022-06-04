@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
 import eu.kanade.domain.source.model.Source
-import eu.kanade.presentation.util.bitmapPainterResource
+import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.util.lang.withIOContext
@@ -67,7 +67,7 @@ fun ExtensionIcon(
                 model = extension.iconUrl,
                 contentDescription = "",
                 placeholder = ColorPainter(Color(0x1F888888)),
-                error = bitmapPainterResource(id = R.drawable.cover_error),
+                error = rememberResourceBitmapPainter(id = R.drawable.cover_error),
                 modifier = modifier
                     .clip(RoundedCornerShape(4.dp))
                     .then(defaultModifier),

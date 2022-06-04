@@ -150,7 +150,7 @@ class SearchPresenter(
 
             // Update track
             if (migrateTracks) {
-                val tracksToUpdate = db.getTracks(prevManga).executeAsBlocking().mapNotNull { track ->
+                val tracksToUpdate = db.getTracks(prevManga.id).executeAsBlocking().mapNotNull { track ->
                     track.id = null
                     track.manga_id = manga.id!!
 
@@ -183,7 +183,7 @@ class SearchPresenter(
 
             // Update custom cover
             if (migrateCustomCover) {
-                coverCache.setCustomCoverToCache(manga, coverCache.getCustomCoverFile(prevManga).inputStream())
+                coverCache.setCustomCoverToCache(manga, coverCache.getCustomCoverFile(prevManga.id).inputStream())
             }
 
             // SearchPresenter#networkToLocalManga may have updated the manga title,

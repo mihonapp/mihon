@@ -143,7 +143,7 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
     }
 
     fun startDownloadingNow(chapter: Chapter) {
-        downloadManager.startDownloadNow(chapter)
+        downloadManager.startDownloadNow(chapter.id)
     }
 
     /**

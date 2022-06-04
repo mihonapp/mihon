@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.util.chapter
 
+import eu.kanade.data.chapter.NoChaptersException
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -171,5 +172,3 @@ private fun shouldUpdateDbChapter(dbChapter: Chapter, sourceChapter: Chapter): B
         dbChapter.chapter_number != sourceChapter.chapter_number ||
         dbChapter.source_order != sourceChapter.source_order
 }
-
-class NoChaptersException : Exception()

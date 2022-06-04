@@ -57,7 +57,7 @@ class MangaCoverFetcher(
     override suspend fun fetch(): FetchResult {
         // Use custom cover if exists
         val useCustomCover = options.parameters.value(USE_CUSTOM_COVER) ?: true
-        val customCoverFile = coverCache.getCustomCoverFile(manga)
+        val customCoverFile = coverCache.getCustomCoverFile(manga.id)
         if (useCustomCover && customCoverFile.exists()) {
             return fileLoader(customCoverFile)
         }
@@ -82,7 +82,7 @@ class MangaCoverFetcher(
     private suspend fun httpLoader(): FetchResult {
         // Only cache separately if it's a library item
         val libraryCoverCacheFile = if (manga.favorite) {
-            coverCache.getCoverFile(manga) ?: error("No cover specified")
+            coverCache.getCoverFile(manga.thumbnail_url) ?: error("No cover specified")
         } else {
             null
         }

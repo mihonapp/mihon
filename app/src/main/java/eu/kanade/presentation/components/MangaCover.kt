@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import eu.kanade.presentation.util.bitmapPainterResource
+import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
 
 enum class MangaCover(private val ratio: Float) {
@@ -28,7 +28,7 @@ enum class MangaCover(private val ratio: Float) {
         AsyncImage(
             model = data,
             placeholder = ColorPainter(CoverPlaceholderColor),
-            error = bitmapPainterResource(id = R.drawable.cover_error),
+            error = rememberResourceBitmapPainter(id = R.drawable.cover_error),
             contentDescription = contentDescription,
             modifier = modifier
                 .aspectRatio(ratio)

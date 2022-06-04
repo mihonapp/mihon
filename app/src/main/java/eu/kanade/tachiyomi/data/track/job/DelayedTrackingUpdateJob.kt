@@ -30,7 +30,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
         withContext(Dispatchers.IO) {
             val tracks = delayedTrackingStore.getItems().mapNotNull {
                 val manga = db.getManga(it.mangaId).executeAsBlocking() ?: return@withContext
-                db.getTracks(manga).executeAsBlocking()
+                db.getTracks(manga.id).executeAsBlocking()
                     .find { track -> track.id == it.trackId }
                     ?.also { track ->
                         track.last_chapter_read = it.lastChapterRead

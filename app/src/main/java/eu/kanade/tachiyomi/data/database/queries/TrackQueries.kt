@@ -19,13 +19,13 @@ interface TrackQueries : DbProvider {
         )
         .prepare()
 
-    fun getTracks(manga: Manga) = db.get()
+    fun getTracks(mangaId: Long?) = db.get()
         .listOfObjects(Track::class.java)
         .withQuery(
             Query.builder()
                 .table(TrackTable.TABLE)
                 .where("${TrackTable.COL_MANGA_ID} = ?")
-                .whereArgs(manga.id)
+                .whereArgs(mangaId)
                 .build(),
         )
         .prepare()

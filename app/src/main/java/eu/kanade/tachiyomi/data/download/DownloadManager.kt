@@ -102,8 +102,9 @@ class DownloadManager(
         downloader.clearQueue(isNotification)
     }
 
-    fun startDownloadNow(chapter: Chapter) {
-        val download = downloader.queue.find { it.chapter.id == chapter.id } ?: return
+    fun startDownloadNow(chapterId: Long?) {
+        if (chapterId == null) return
+        val download = downloader.queue.find { it.chapter.id == chapterId } ?: return
         val queue = downloader.queue.toMutableList()
         queue.remove(download)
         queue.add(0, download)

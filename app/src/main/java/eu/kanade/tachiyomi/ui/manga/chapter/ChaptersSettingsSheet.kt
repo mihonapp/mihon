@@ -85,9 +85,9 @@ class ChaptersSettingsSheet(
             private val unread = Item.TriStateGroup(R.string.action_filter_unread, this)
             private val bookmarked = Item.TriStateGroup(R.string.action_filter_bookmarked, this)
 
-            override val header = null
+            override val header: Item? = null
             override val items = listOf(downloaded, unread, bookmarked)
-            override val footer = null
+            override val footer: Item? = null
 
             override fun initModels() {
                 if (presenter.forceDownloaded()) {
@@ -138,9 +138,9 @@ class ChaptersSettingsSheet(
             private val chapterNum = Item.MultiSort(R.string.sort_by_number, this)
             private val uploadDate = Item.MultiSort(R.string.sort_by_upload_date, this)
 
-            override val header = null
+            override val header: Item? = null
             override val items = listOf(source, uploadDate, chapterNum)
-            override val footer = null
+            override val footer: Item? = null
 
             override fun initModels() {
                 val sorting = presenter.manga.sorting
@@ -200,9 +200,9 @@ class ChaptersSettingsSheet(
             private val displayTitle = Item.Radio(R.string.show_title, this)
             private val displayChapterNum = Item.Radio(R.string.show_chapter_number, this)
 
-            override val header = null
+            override val header: Item? = null
             override val items = listOf(displayTitle, displayChapterNum)
-            override val footer = null
+            override val footer: Item? = null
 
             override fun initModels() {
                 val mode = presenter.manga.displayMode
