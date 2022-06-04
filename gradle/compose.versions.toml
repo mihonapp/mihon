@@ -1,6 +1,6 @@
 [versions]
-compose = "1.2.0-beta02"
-accompanist = "0.24.9-beta"
+compose = "1.2.0-beta03"
+accompanist = "0.24.10-beta"
 
 [libraries]
 activity = "androidx.activity:activity-compose:1.6.0-alpha03"
@@ -9,7 +9,7 @@ animation = { module = "androidx.compose.animation:animation", version.ref="comp
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref="compose" }
 ui-util = { module = "androidx.compose.ui:ui-util", version.ref="compose" }
 
-material3-core = "androidx.compose.material3:material3:1.0.0-alpha12"
+material3-core = "androidx.compose.material3:material3:1.0.0-alpha13"
 material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.10"
 material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref="compose" }
 
