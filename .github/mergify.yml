@@ -4,7 +4,7 @@ pull_request_rules:
       - "author = weblate"
       - "-conflict"
       - "current-day-of-week = Sat"
-      - "created-at >= 1 day ago"
+      - "created-at < 1 day ago"
     actions:
       merge:
         method: squash
