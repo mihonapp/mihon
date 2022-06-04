@@ -90,9 +90,6 @@
     </plurals>
     <string name="restore_duration">%02d min, %02d sec</string>
     <string name="restore_completed">Atjaunināšana pabeigta</string>
-    <string name="backup_restore_content">Atjaunojot, datu iegūšanai tiek izmantoti avoti, var tikt piemērota maksa par mobilā tīkla operatoru.
-\n
-\nPirms atjaunošanas pārliecinieties, vai esat instalējis visus nepieciešamos paplašinājumus un esat pieteicies avotos un izsekošanas pakalpojumos.</string>
     <string name="backup_restore_missing_sources">Trūkst avotu:</string>
     <string name="invalid_backup_file_missing_manga">Dublējums nesatur nekādu mangu.</string>
     <string name="label_extension_info">Paplašinājumu informācija</string>

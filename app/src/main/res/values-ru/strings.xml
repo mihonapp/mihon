@@ -52,7 +52,7 @@
     <string name="chapter_error">Ошибка</string>
     <string name="chapter_progress">Страница: %1$d</string>
     <string name="chapters">Главы</string>
-    <string name="charging">На зарядке</string>
+    <string name="charging">Когда заряжается</string>
     <string name="clear_database_completed">Записи удалены</string>
     <string name="clear_database_confirmation">Вы уверены\? Прочитанные главы и прогресс не-библиотечных серий, будет потерян</string>
     <string name="color_filter_a_value">А</string>
@@ -213,9 +213,6 @@
     <string name="action_undo">Отменить</string>
     <string name="backup_choice">Что добавить в резервную копию\?</string>
     <string name="backup_created">Резервная копия создана</string>
-    <string name="backup_restore_content">При восстановлении используются данные из источников, что может вызвать большой расход трафика.
-\n
-\nУбедитесь, что установили и авторизовались во все нужные расширениях и сервисах отслеживания перед восстановлением.</string>
     <string name="categories">Категории</string>
     <string name="chapter_paused">Пауза</string>
     <string name="creating_backup">Создание резервной копии</string>
@@ -274,8 +271,6 @@
 \nВредоносное расширение может считывать любые учетные данные для входа, хранящиеся в Tachiyomi или выполнять произвольный код.
 \n
 \nДоверяя этому сертификату, вы принимаете эти риски.</string>
-    <string name="ext_version_info">Версия: %1$s</string>
-    <string name="ext_language_info">Язык: %1$s</string>
     <string name="pref_double_tap_anim_speed">Скорость анимации при двойном нажатии</string>
     <string name="double_tap_anim_speed_0">Без анимации</string>
     <string name="double_tap_anim_speed_normal">Нормальная</string>
@@ -474,10 +469,8 @@
     <string name="label_data">Данные</string>
     <string name="backup_restore_missing_sources">Отсутствующие источники:</string>
     <string name="invalid_backup_file_missing_manga">Резервная копия не содержит серий.</string>
-    <string name="invalid_backup_file_missing_data">В файле отсутствуют данные.</string>
     <string name="invalid_backup_file">Неверный файл резервной копии</string>
     <string name="tracker_not_logged_in">Не выполнен вход: %1$s</string>
-    <string name="source_not_found_name">Источник не найден: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">При обновлении библиотеки, проверять наличие новой обложки и сведений</string>
     <string name="pref_library_update_refresh_metadata">Обновлять метаданные</string>
     <string name="action_display_comfortable_grid">Удобная сетка</string>
@@ -530,7 +523,7 @@
     <string name="backup_restore_missing_trackers">Сервисы отслеживания в которые не выполнен вход:</string>
     <string name="pref_remove_bookmarked_chapters">Удалять главы с закладками</string>
     <string name="pref_category_delete_chapters">Удаление глав</string>
-    <string name="ext_nsfw_warning">Может содержать контент NSFW (18+)</string>
+    <string name="ext_nsfw_warning">Источики из этого расширения, могут содержать контент NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Это не предотвращает, появление внутри приложения контента NSFW (18+) из неофициальных или потенциально неправильно помеченных расширений.</string>
     <plurals name="missing_chapters_warning">
@@ -742,9 +735,8 @@
     <string name="action_close">Закрыть</string>
     <string name="pref_duplicate_pinned_sources_summary">Повторять прикреплённые источники, в соответствии с их языковыми группами</string>
     <string name="pref_duplicate_pinned_sources">Отображать дублированные приклеплённые источники</string>
-    <string name="battery_not_low">Батарея заряжена</string>
+    <string name="battery_not_low">Когда батарея заряжена</string>
     <string name="source_filter_empty_screen">Не найдено установленных источников</string>
-    <string name="migrate_empty_screen">Упс, ошибочка вышла</string>
     <string name="source_empty_screen">Не найдено источников</string>
     <string name="action_sort_last_manga_update">Последнее обновление серий</string>
     <string name="action_sort_unread_count">Количество непрочитанных глав</string>
@@ -752,8 +744,20 @@
     <string name="download_notifier_split_page_not_found">Страница %d не найдена, при разделении</string>
     <string name="split_tall_images_summary">Улучшает производительность читалки, разделяя длинные загруженные изображения.</string>
     <string name="download_notifier_split_page_path_not_found">Путь к файлам страницы %d не найден</string>
-    <string name="pref_reset_viewer_flags">Сбросить флажки просмотра</string>
+    <string name="pref_reset_viewer_flags">Сбросить настройки читалки для каждой серии</string>
     <string name="pref_reset_viewer_flags_summary">Сбрасывает режим чтения и ориентацию для всех серий</string>
-    <string name="pref_reset_viewer_flags_success">Флажки просмотра сброшены</string>
-    <string name="pref_reset_viewer_flags_error">Не удалось сбросить флажки просмотра</string>
+    <string name="pref_reset_viewer_flags_success">Все настройки читалки сброшены</string>
+    <string name="pref_reset_viewer_flags_error">Не удалось сбросить настройки читалки</string>
+    <string name="download_notifier_split_failed">Не удалось разделить загруженное изображение</string>
+    <string name="empty_screen">Упс, ошибочка вышла</string>
+    <string name="ext_info_age_rating">Возрастное ограничение</string>
+    <string name="ext_info_version">Версия</string>
+    <string name="ext_info_language">Язык</string>
+    <string name="complete_list">Прочитано</string>
+    <string name="on_hold_list">Отложено</string>
+    <string name="reading_list">Читаю</string>
+    <string name="wish_list">Запланировано</string>
+    <string name="unfinished_list">Не закончено</string>
+    <string name="network_not_metered">Только в безлимитной сети</string>
+    <string name="cant_open_last_read_chapter">Не удаётся открыть последнюю прочитанную главу</string>
 </resources>

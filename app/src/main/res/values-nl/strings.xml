@@ -241,9 +241,6 @@
     <string name="update_check_notification_download_in_progress">Downloaden…</string>
     <string name="update_check_notification_download_error">Fout bij het downloaden</string>
     <string name="action_filter_bookmarked">Met bladwijzer</string>
-    <string name="backup_restore_content">Herstellen gebruikt bronnen om data op te halen, mogelijk zijn extra mobiele-abonnementskosten van toepassing.
-\n
-\nZorg ervoor dat je de nodige extensies hebt geinstalleerd en bent ingelogd voor bronnen en trackingdiensten voordat je het herstellen start.</string>
     <string name="login_success">Ingelogd</string>
     <string name="invalid_login">Kon niet inloggen</string>
     <string name="licensed">Gelicenseerd</string>
@@ -275,8 +272,6 @@
 \nEen kwaadaardige extensie zou alle log-in gegevens kunnen uitlezen in Tachiyomi of arbitraire code uit kunnen voeren.
 \n
 \nDoor dit certificaat te vertrouwen accepteer je deze risico\'s.</string>
-    <string name="ext_version_info">Versie: %1$s</string>
-    <string name="ext_language_info">Taal: %1$s</string>
     <string name="pref_double_tap_anim_speed">Dubbeltik animatiesnelheid</string>
     <string name="pref_read_with_long_tap">Weergeven bij lang tikken</string>
     <string name="pager_viewer">Gepagineerd</string>
@@ -464,10 +459,8 @@
     <string name="label_data">Data</string>
     <string name="backup_restore_missing_sources">Missende bronnen:</string>
     <string name="invalid_backup_file_missing_manga">Back-up bevat geen manga.</string>
-    <string name="invalid_backup_file_missing_data">Bestand mist data.</string>
     <string name="invalid_backup_file">Ongeldig backupbestand</string>
     <string name="tracker_not_logged_in">Niet ingelogd: %1$s</string>
-    <string name="source_not_found_name">Bron niet gevonden: %1$s</string>
     <string name="pref_show_reading_mode_summary">Laat huidige modus kort zien als lezer geopend wordt</string>
     <string name="pref_show_reading_mode">Toon leesmodus</string>
     <string name="pref_library_update_refresh_metadata">Metadata automatisch bijwerken</string>

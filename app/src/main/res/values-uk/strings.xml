@@ -87,7 +87,7 @@
     <string name="all">Всі</string>
     <string name="pref_library_update_restriction">Обмеження пристрою для автоматичних оновлень</string>
     <string name="charging">Заряджається</string>
-    <string name="pref_update_only_non_completed">Завершена серія</string>
+    <string name="pref_update_only_non_completed">З статусом \"Завершено\"</string>
     <string name="pref_auto_update_manga_sync">Оновлювати прогрес після прочитання</string>
     <string name="default_category">Категорія за замовчуванням</string>
     <string name="default_category_summary">Завжди запитувати</string>
@@ -107,8 +107,6 @@
 \nЗловмисне розширення может зчитувати будь-які облікові дані для входу, що зберігаються в Tachiyomi, або виконувати довільний код.
 \n
 \nДовіряючи цьому сертифікату, ви приймаєте ці ризики.</string>
-    <string name="ext_version_info">Версія:%1$s</string>
-    <string name="ext_language_info">Мова: %1$s</string>
     <string name="pref_fullscreen">Повноекранний режим</string>
     <string name="pref_page_transitions">Анімація переходів сторінки</string>
     <string name="pref_double_tap_anim_speed">Швидкість анімації при подвійному натиснені</string>
@@ -174,9 +172,6 @@
     <string name="pref_backup_slots">Максимальна кількість резервних копій</string>
     <string name="backup_created">Резервна копія створена</string>
     <string name="restore_completed">Відновлення завершено</string>
-    <string name="backup_restore_content">Відновлення використовує джерела для отримання даних, можуть застосовуватися витрати оператора.
-\n
-\nПереконайтеся, що ви встановили всі необхідні розширення та ввійшли до джерел та служб відстеження перед відновленням.</string>
     <string name="backup_choice">Що ви хочете зберегти до резервної копії\?</string>
     <string name="restoring_backup">Відновлення резервної копії</string>
     <string name="creating_backup">Створення резервної копії</string>
@@ -196,7 +191,7 @@
     <string name="pref_enable_acra">Надсилати звіти про падіння</string>
     <string name="pref_acra_summary">Допомагає виправляти будь-які баги. Особисті дані не передаються</string>
     <string name="login_title">Авторизація до %1$s</string>
-    <string name="username">Ім`я користувача</string>
+    <string name="username">Ім\'я користувача</string>
     <string name="password">Пароль</string>
     <string name="login">Логін</string>
     <string name="login_success">Вхід успішний</string>
@@ -212,7 +207,7 @@
     <string name="browse">Переглянути</string>
     <string name="manga_not_in_db">Ця манга була видалена з бази даних.</string>
     <string name="description">Опис</string>
-    <string name="ongoing">Випускається</string>
+    <string name="ongoing">Онгоінг</string>
     <string name="unknown">Невідомо</string>
     <string name="licensed">Ліцензовано</string>
     <string name="remove_from_library">Видалити з бібліотеки</string>
@@ -412,7 +407,7 @@
     <string name="pref_webtoon_side_padding">Бічний відступ</string>
     <string name="vertical_plus_viewer">Безперервний вертикальний</string>
     <string name="action_select_inverse">Інвертувати вибір</string>
-    <string name="add_tracking">Додати відслідковування</string>
+    <string name="add_tracking">Додати відстеження</string>
     <string name="pinned_sources">Прикріплено</string>
     <string name="action_unpin">Відкріпити</string>
     <string name="action_pin">Закріпити</string>
@@ -464,16 +459,14 @@
     <plurals name="restore_completed_message">
         <item quantity="one">Зроблено за %1$s з %2$s помилкою</item>
         <item quantity="few">Зроблено за %1$s з %2$s помилками</item>
-        <item quantity="many"/>
-        <item quantity="other"/>
+        <item quantity="many">Зроблено за %1$s з %2$s помилками</item>
+        <item quantity="other">Зроблено за %1$s з %2$s помилками</item>
     </plurals>
     <string name="restore_duration">%02d хв, %02d сек</string>
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
     <string name="invalid_backup_file_missing_manga">Бекап не містить жодної манги.</string>
-    <string name="invalid_backup_file_missing_data">У файлі відсутні дані.</string>
     <string name="invalid_backup_file">Невірний файл бекапу</string>
     <string name="tracker_not_logged_in">Не зареєстровано в: %1$s</string>
-    <string name="source_not_found_name">Джерело не знайдено %1$s</string>
     <string name="pref_search_pinned_sources_only">Включати тільки закріплені джерела</string>
     <string name="tracking_info">Одностороння синхронізація для оновлення прогресу глави в службах відстеження. Налаштуйте відстеження для окремих записів манги з їх кнопками відстеження.</string>
     <string name="action_display_show_tabs">Показувати вкладки категорій</string>
@@ -688,7 +681,7 @@
     <string name="pref_verbose_logging_summary">Записувати докладні журнали до системного журналу (знижує продуктивність додатку)</string>
     <string name="notification_size_warning">Попередження: великі оновлення можуть призвести до сповільнення джерел або збільшити використання батареї</string>
     <string name="channel_app_updates">Оновлення додатку</string>
-    <string name="download_queue_size_warning">Попередження: великі об`єми завантажень можуть призвести до сповільнення роботи джерел та/або блокуванню Tachiyomi</string>
+    <string name="download_queue_size_warning">Попередження: великий об\'єм завантажень може призвести до сповільнення роботи джерел та/або блокуванню Tachiyomi.</string>
     <string name="pref_library_update_show_tab_badge">Показувати кількість непрочитаних на значку оновлення</string>
     <string name="ext_update_all">Оновити все</string>
     <string name="backup_info">Наполегливо рекомендується використовувати автоматичне резервування. Також ви повинні зберігати копії в інших місцях.</string>
@@ -702,7 +695,7 @@
     <string name="database_clean">Очищення бази даних</string>
     <string name="privacy_policy">Політика конфіденційності</string>
     <string name="pref_library_update_manga_restriction">Пропускати оновлення</string>
-    <string name="pref_update_only_completely_read">Містить непрочитані глави</string>
+    <string name="pref_update_only_completely_read">Є непрочитані глави</string>
     <string name="save_chapter_as_cbz">Зберегти архів як CBZ</string>
     <string name="library_errors_help">Для допомоги в виправленні помилок оновлення бібліотеки, дивіться %1$s</string>
     <string name="publishing_finished">Публікація завершена</string>
@@ -717,4 +710,25 @@
     <string name="action_move_to_top_all_for_series">Перемістити серію на початок</string>
     <string name="rotation_reverse_portrait">Портретна навпаки</string>
     <string name="webtoon_side_padding_5">5%</string>
+    <string name="channel_skipped">Пропущено</string>
+    <string name="notification_update_error">%1$d оновлення(нь) не вдалось</string>
+    <string name="notification_update_skipped">%1$d оновлення(нь) пропущено</string>
+    <string name="skipped_reason_completed">Пропущено, оскільки серія завершена</string>
+    <string name="skipped_reason_not_caught_up">Пропущено через те, що є непрочитані глави</string>
+    <string name="skipped_reason_not_started">Пропущено, оскільки серія не почата</string>
+    <string name="empty_backup_error">Немає елементів у бібліотеці для резервування</string>
+    <string name="confirm_manga_add_duplicate">У вашій бібліотеці є серія з такою самою назвою, але з іншого джерела (%1$s).
+\n
+\nВи хочете продовжити\?</string>
+    <string name="download_notifier_split_page_not_found">Сторінку %d не знайдено, при розділенні</string>
+    <string name="download_notifier_split_failed">Неможливо розділити завантажене зображення</string>
+    <string name="split_tall_images">Розділяти довгі зображення</string>
+    <string name="split_tall_images_summary">Покращує продуктивність читалки, поділяючи довгі завантажені зображення.</string>
+    <string name="webview_data_deleted">Дані WebView очищені</string>
+    <string name="pref_clear_webview_data">Очистити дані WebView</string>
+    <string name="reading_list">Читаю</string>
+    <string name="wish_list">Заплановано</string>
+    <string name="complete_list">Прочитано</string>
+    <string name="on_hold_list">Відкладено</string>
+    <string name="unfinished_list">Не закінчено</string>
 </resources>

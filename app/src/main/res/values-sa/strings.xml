@@ -211,8 +211,6 @@
     <string name="ext_installed">प्रतिष्ठापितम्</string>
     <string name="ext_untrusted">अविश्वस्तम्</string>
     <string name="ext_app_info">अनुप्रयोगविवरणम्</string>
-    <string name="ext_version_info">संस्करणम् - %1$s</string>
-    <string name="ext_language_info">भाषा - %1$s</string>
     <string name="ext_nsfw_short">१८+</string>
     <string name="ext_nsfw_warning">प्रौढानां कृते एव (१८+) वस्तु अन्तः स्यात्</string>
     <string name="ext_install_service_notif">विस्तारं प्रतिष्ठापयति …</string>
@@ -377,7 +375,6 @@
     <string name="pref_backup_interval">प्रतिलेखनस्य आवर्तनता</string>
     <string name="tracker_not_logged_in">न अन्तर्गतम् - %1$s</string>
     <string name="pref_backup_slots">अधिकतमप्रतिलेखनानि</string>
-    <string name="source_not_found_name">मूलं न लभ्यम् - %1$s</string>
     <string name="backup_in_progress">प्रतिलेखनं पूर्वमेव प्रगतौ अस्ति</string>
     <string name="restore_duration">%02d निमेषाः %02d क्षणाः च</string>
     <string name="restoring_backup_error">प्रतिलेखनस्य समादानम् अनुत्तीर्णम्</string>
@@ -396,7 +393,6 @@
     <string name="backup_restore_invalid_uri">दोषः - रिक्तं यू॰आर॰ऐ</string>
     <string name="backup_created">प्रतिलेखनं निर्मितम्</string>
     <string name="invalid_backup_file">अनाप्ता प्रतिलेखनसञ्चिका</string>
-    <string name="invalid_backup_file_missing_data">सञ्चिका दत्तांशविहीना।</string>
     <string name="invalid_backup_file_missing_manga">प्रतिलेखने काऽपि माङ्गा नास्ति।</string>
     <string name="backup_restore_missing_sources">मूलानि विहीनानि -</string>
     <string name="backup_restore_missing_trackers">ट्राकर्तन्त्रांशाः न अन्तर्गताः -</string>

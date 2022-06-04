@@ -197,8 +197,6 @@
     <string name="pref_custom_color_filter">कस्टम रंग फिल्टर वापरा</string>
     <string name="pref_custom_brightness">कस्टम ब्राइटनेस वापरा</string>
     <string name="pref_fullscreen">फुलस्क्रीन</string>
-    <string name="ext_language_info">भाषा: %1$s</string>
-    <string name="ext_version_info">वर्जन: %1$s</string>
     <string name="update_weekly">साप्ताहिक</string>
     <string name="update_48hour">दर २ दिवसांत</string>
     <string name="update_24hour">दररोज</string>

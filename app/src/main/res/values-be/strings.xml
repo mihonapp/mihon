@@ -215,8 +215,6 @@
     <string name="pref_fullscreen">Поўнаэкранны рэжым</string>
     <string name="ext_nsfw_warning">Можа ўтрымліваць кантэнт NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="ext_language_info">Мова: %1$s</string>
-    <string name="ext_version_info">Версія: %1$s</string>
     <string name="unofficial_extension_message">Гэта пашырэнне не ўваходзіць у афіцыйны спіс пашырэньні Tachiyomi.</string>
     <string name="obsolete_extension_message">Гэта пашырэнне больш недаступна.</string>
     <string name="untrusted_extension_message">Гэта пашырэнне было падпісана ненадзейным сертыфікатам і не было актывавана.

@@ -35,8 +35,6 @@
     <string name="white_background">Putih</string>
     <string name="pref_true_color">Werna 32-bit</string>
     <string name="pref_fullscreen">Layar wutuh</string>
-    <string name="ext_language_info">Basa: %1$s</string>
-    <string name="ext_version_info">Versi: %1$s</string>
     <string name="all_lang">Kabeh</string>
     <string name="all">Kabeh</string>
     <string name="charging">Ngisi daya</string>

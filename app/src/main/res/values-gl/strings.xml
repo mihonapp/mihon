@@ -86,8 +86,6 @@
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="ext_nsfw_warning">Pode conter contido non apto para menores de 18 anos</string>
     <string name="ext_nsfw_short">+18</string>
-    <string name="ext_language_info">Idioma: %1$s</string>
-    <string name="ext_version_info">Versión: %1$s</string>
     <string name="unofficial_extension_message">Esta extensión non é da lista de extensións oficiais de Tachiyomi.</string>
     <string name="obsolete_extension_message">Esta extensión xa non está dispoñible.</string>
     <string name="untrusted_extension_message">Esta extensión foi firmada non un certificado non confiable e non foi activada

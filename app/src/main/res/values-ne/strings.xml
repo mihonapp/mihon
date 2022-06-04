@@ -223,7 +223,6 @@
     <string name="ext_trust">भरोसा</string>
     <string name="obsolete_extension_message">यो एक्सटेनशन अब उपलब्ध छैन।</string>
     <string name="unofficial_extension_message">यो एक्सटेनशन आधिकारिक ताचियोमीको विस्तार सूचीबाट होइन।</string>
-    <string name="ext_language_info">भाषा: %1$s</string>
     <string name="ext_nsfw_warning">NSFW (१८+) सामग्री समावेश हुन सक्छ</string>
     <string name="ext_install_service_notif">एक्सटेनशन स्थापना गर्दै…</string>
     <string name="ext_installer_shizuku_stopped">शीजुकु चलिरहेको छैन</string>
@@ -254,7 +253,6 @@
     <string name="ext_installing">स्थापना गर्दै</string>
     <string name="ext_untrusted">अविश्वसनीय</string>
     <string name="ext_unofficial">अनौपचारिक</string>
-    <string name="ext_version_info">संस्करण: %1$s</string>
     <string name="ext_nsfw_short">१८+</string>
     <string name="filter_mode_overlay">ओभरले</string>
     <string name="pref_skip_filtered_chapters">फिल्टर गरिएका अध्यायहरू छोड्नुहोस्</string>
@@ -350,9 +348,6 @@
     <string name="pref_enable_automatic_extension_updates">एक्सटेनशन अपडेटहरुको लागि जाँच गर्नुहोस्</string>
     <string name="pref_search_pinned_sources_only">पिन गरिएका स्रोतहरू मात्र समावेश गर्नुहोस्</string>
     <string name="restore_completed">पुनर्स्थापना सम्पन्न भयो</string>
-    <string name="backup_restore_content">पुनर्स्थापना डाटा ल्याउन स्रोतहरू प्रयोग गर्दछ, वाहक लागत लागू हुन सक्छ।
-\n
-\nसुनिश्चित गर्नुहोस् कि तपाईंले सबै आवश्यक एक्शटेन्शनहरु स्थापना गर्नुभएको छ र पुनर्स्थापना गर्नु अघि स्रोतहरू र ट्र्याकिङ सेवाहरूमा लगइन हुनुहुन्छ।</string>
     <plurals name="restore_completed_message">
         <item quantity="one">%2$s एररको साथ %1$s मा सम्पन्न भयो</item>
         <item quantity="other">%2$s एररहरूसँग %1$s मा सम्पन्न भयो</item>
@@ -435,7 +430,6 @@
     </plurals>
     <string name="pref_create_backup">ब्याकअप सिर्जना गर्नुहोस्</string>
     <string name="pref_create_backup_summ">हालको पुस्तकालय पुनर्स्थापना गर्न प्रयोग गर्न सकिन्छ</string>
-    <string name="invalid_backup_file_missing_data">फाइलमा डाटा छैन।</string>
     <string name="cookies_cleared">कुकीहरू खाली गरियो</string>
     <string name="label_data">डाटा</string>
     <string name="cache_delete_error">क्यास खाली गर्दा एरर भयो</string>
@@ -463,7 +457,6 @@
     <string name="pref_restore_backup">ब्याकअप रिस्टोर गर्नुहोस्</string>
     <string name="pref_restore_backup_summ">ब्याकअप फाइलबाट पुस्तकालय पुनर्स्थापना गर्नुहोस्</string>
     <string name="pref_backup_service_category">स्वचालित ब्याकअपहरू</string>
-    <string name="source_not_found_name">स्रोत फेला परेन: %1$s</string>
     <string name="invalid_backup_file_missing_manga">ब्याकअपमा कुनै माङ्गा समावेश छैन।</string>
     <string name="pref_backup_directory">ब्याकअप स्थान</string>
     <string name="pref_backup_interval">ब्याकअप फ्रिक्वेन्सी</string>

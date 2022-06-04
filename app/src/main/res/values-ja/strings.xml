@@ -91,8 +91,6 @@
     <string name="ext_untrusted">信用できない</string>
     <string name="ext_uninstall">アンインストール</string>
     <string name="untrusted_extension">信頼できない拡張</string>
-    <string name="ext_version_info">バージョン：%1$s</string>
-    <string name="ext_language_info">言語： %1$s</string>
     <string name="pref_fullscreen">フルスクリーン</string>
     <string name="pref_page_transitions">ページ遷移エフェクトを表示</string>
     <string name="pref_double_tap_anim_speed">ダブルタップアニメーション速度</string>
@@ -170,11 +168,11 @@
     <string name="action_open_in_web_view">WebViewで開く</string>
     <string name="pref_category_reader">ビューア</string>
     <string name="pref_category_tracking">同期</string>
-    <string name="untrusted_extension_message">これは信頼できない証明書でサインされている拡張機能であるため、有効にされていません。
+    <string name="untrusted_extension_message">この拡張機能は信頼できない証明書でサインされているため、有効にされていません。
 \n
-\n悪意のある拡張機能はTachiyomiに保存されているすべてのログイン情報を読み取ること、または任意のコードを実行することができます。
+\n悪意のある拡張機能はTachiyomiに保存されているすべてのログイン情報を読み取ることや、任意コード実行をすることができます。
 \n
-\nこれらのリスクを受け入れ、この拡張機能を信頼してもよろしいですか？</string>
+\nこれらのリスクを受け入れ、この証明書を信頼しますか？</string>
     <string name="pref_show_page_number">ページ数を表示</string>
     <string name="pref_keep_screen_on">画面を常にON</string>
     <string name="scale_type_fit_height">高さに合わせる</string>
@@ -186,9 +184,6 @@
     <string name="fifth_to_last">最後に読んだ章の5番目</string>
     <string name="services">サービス</string>
     <string name="restore_completed">復元が完了しました</string>
-    <string name="backup_restore_content">復元するにはソースを用いてデータをダウンロードします。追加の通信料が発生する場合はあります。
-\n
-\n復元する前に、必要な拡張をインストールし、追跡サービスとソースにログインするようにしてください。</string>
     <string name="backup_choice">バックアップしたいのは？</string>
     <string name="restoring_backup">バックアップを復元中</string>
     <string name="creating_backup">バックアップを作成中</string>
@@ -369,7 +364,7 @@
     <string name="battery_optimization_disabled">バッテリー最適化は既に無効です</string>
     <string name="pref_disable_battery_optimization_summary">バックグラウンドでのライブラリ更新とバックアップの役に立ちます</string>
     <string name="pref_disable_battery_optimization">バッテリー最適化を無効にする</string>
-    <string name="pref_refresh_library_covers">ライブラリのマンガ表紙を更新</string>
+    <string name="pref_refresh_library_covers">ライブラリの表紙を更新</string>
     <string name="label_data">データ</string>
     <string name="restoring_backup_canceled">復元をキャンセルしました</string>
     <string name="restoring_backup_error">バックアップを復元できませんでした</string>
@@ -382,10 +377,8 @@
     <string name="restore_duration">%02d分%02d秒</string>
     <string name="backup_restore_missing_sources">ソースがありません：</string>
     <string name="invalid_backup_file_missing_manga">バックアップにはマンガが含まれていません。</string>
-    <string name="invalid_backup_file_missing_data">ファイルは必要なデータを含んでいません。</string>
     <string name="invalid_backup_file">バックアップファイルは無効です</string>
     <string name="tracker_not_logged_in">%1$sにログインしていません</string>
-    <string name="source_not_found_name">ソース%1$sが見つかりません</string>
     <string name="pref_search_pinned_sources_only">ピン留め済みのソースのみで検索</string>
     <string name="pref_enable_automatic_extension_updates">拡張機能の更新を確認</string>
     <string name="tracking_info">一方同期の追跡サービスにある章の読書進捗を更新します。個別のマンガの「同期」ボタンで追跡サービスを設定してください。</string>
@@ -501,7 +494,7 @@
     <string name="backup_restore_missing_trackers">ログインしていないトラッカー：</string>
     <string name="pref_remove_bookmarked_chapters">ブックマークした章の削除を許可</string>
     <string name="pref_category_delete_chapters">章を削除</string>
-    <string name="ext_nsfw_warning">成人向けのコンテンツが含まれる可能性があります</string>
+    <string name="ext_nsfw_warning">この拡張機能のソースには成人向けのコンテンツが含まれる可能性があります</string>
     <string name="ext_nsfw_short">成人向け</string>
     <string name="parental_controls_info">非公式や誤ってフラグ付けされた可能性のある拡張機能の成人向けのコンテンツはこれからも表示される恐れがあります。</string>
     <plurals name="missing_chapters_warning">
@@ -521,7 +514,7 @@
     <string name="pref_incognito_mode">シークレット モード</string>
     <string name="pref_clear_history">履歴を全消去</string>
     <string name="clear_history_confirmation">履歴がすべて失われます。続行しますか？</string>
-    <string name="clear_history_completed">履歴を削除しました</string>
+    <string name="clear_history_completed">履歴が削除されました</string>
     <string name="spen_next_page">次のページ</string>
     <string name="spen_previous_page">前のページ</string>
     <string name="migration_help_guide">ソース移行ガイド</string>
@@ -622,7 +615,7 @@
     <string name="pref_low">低い</string>
     <string name="pref_high">高い</string>
     <string name="pref_highest">最高</string>
-    <string name="pref_inverted_colors">反転</string>
+    <string name="pref_inverted_colors">反転配色</string>
     <string name="pref_relative_time_long">長め（短め、n日前）</string>
     <string name="pref_relative_time_short">短め（今日、昨日）</string>
     <string name="pref_relative_format">相対的なタイムスタンプ</string>
@@ -636,7 +629,7 @@
     <string name="pref_tablet_ui_mode">タブレットUI</string>
     <string name="action_track">追跡</string>
     <string name="pref_remove_exclude_categories">除外されるカテゴリー</string>
-    <string name="pref_hide_threshold">メニューを自動で非表示する時のスクロール感度</string>
+    <string name="pref_hide_threshold">メニューを自動非表示するスクロール量</string>
     <string name="pref_category_timestamps">タイムスタンプ</string>
     <string name="pref_category_navigation">ナビゲーション</string>
     <string name="theme_tealturquoise">青緑&amp;トルコ石</string>
@@ -703,22 +696,33 @@
     <string name="update_check_fdroid_migration_info">公式リリースで新しいバージョンが取得可能です。非公式のF-Droidリリースからの移行については、タップで手順をご覧ください。</string>
     <string name="error_saving_picture">画像の保存時にエラー発生</string>
     <string name="action_close">閉じる</string>
-    <string name="pref_duplicate_pinned_sources">重複するピン留め中のソース</string>
+    <string name="pref_duplicate_pinned_sources">ピン留め中のソースを重複して表示</string>
     <string name="pref_clear_webview_data">WebViewデータを消去</string>
     <string name="webview_data_deleted">WebViewデータを消去しました</string>
-    <string name="battery_not_low">バッテリー残量が低くない</string>
-    <string name="pref_duplicate_pinned_sources_summary">各言語グループでピン留め済みのソースを繰り返す</string>
+    <string name="battery_not_low">バッテリー残量が十分な場合</string>
+    <string name="pref_duplicate_pinned_sources_summary">各言語グループでもピン留め済みのソースを重複して表示します</string>
     <string name="source_empty_screen">ソースが見つかりません</string>
     <string name="source_filter_empty_screen">インストール済みのソースが見つかりません</string>
-    <string name="migrate_empty_screen">えっと、これはちょっと気まずいですね</string>
     <string name="action_sort_last_manga_update">前回の漫画更新</string>
     <string name="action_sort_unread_count">未読の章数</string>
     <string name="split_tall_images">長い画像を自動で分割</string>
     <string name="split_tall_images_summary">ダウンロードした長い画像を自動で分割してビューアのパフォーマンスを改善します。</string>
     <string name="download_notifier_split_page_not_found">分割時にページ%dが見つかりませんでした</string>
-    <string name="pref_reset_viewer_flags">ビューアフラグをリセット</string>
-    <string name="pref_reset_viewer_flags_summary">全てのシリーズのビューアモードと画面向きをリセットします</string>
+    <string name="pref_reset_viewer_flags">シリーズ別のビューア設定をリセット</string>
+    <string name="pref_reset_viewer_flags_summary">各シリーズのビューアモードと画面向きをリセットします</string>
     <string name="download_notifier_split_page_path_not_found">ページ%dのファイルパスが見つかりませんでした</string>
-    <string name="pref_reset_viewer_flags_success">ビューアフラグをリセットしました</string>
-    <string name="pref_reset_viewer_flags_error">ビューアフラグをリセットできませんでした</string>
+    <string name="pref_reset_viewer_flags_success">ビューア設定を全てリセットしました</string>
+    <string name="pref_reset_viewer_flags_error">ビューア設定をリセットできませんでした</string>
+    <string name="download_notifier_split_failed">ダウンロードした画像を分割できませんでした</string>
+    <string name="empty_screen">えっと、こりゃまずいですね</string>
+    <string name="ext_info_version">バージョン</string>
+    <string name="ext_info_language">言語</string>
+    <string name="ext_info_age_rating">レイティング区分</string>
+    <string name="network_not_metered">非従量制課金接続でのみ</string>
+    <string name="reading_list">読書中リスト</string>
+    <string name="wish_list">読みたいリスト</string>
+    <string name="unfinished_list">未読了リスト</string>
+    <string name="complete_list">読了リスト</string>
+    <string name="on_hold_list">後で読むリスト</string>
+    <string name="cant_open_last_read_chapter">最後に読んだ章を開けませんでした</string>
 </resources>

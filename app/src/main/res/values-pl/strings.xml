@@ -210,9 +210,6 @@
     <string name="pref_acra_summary">Pomaga naprawiać błędy. Żadne wrażliwe dane nie będą wysyłane</string>
     <string name="backup_created">Kopia zapasowa utworzona</string>
     <string name="restore_completed">Przywracanie ukończone</string>
-    <string name="backup_restore_content">Przywracanie używa źródeł do pobierania danych, operator może naliczać dodatkowe opłaty.
-\n
-\nPrzed przywróceniem upewnij się, że zainstalowane są odpowiednie rozszerzenia i że zalogowano się do źródeł i usług śledzenia.</string>
     <string name="clear_database_confirmation">Na pewno? Przeczytane rozdziały i postęp w mangach spoza biblioteki zostaną utracone</string>
     <string name="clear_database_completed">Pozycje usunięte</string>
     <string name="pref_refresh_library_tracking">Odśwież dane śledzenia</string>
@@ -264,8 +261,6 @@
     <string name="ext_installing">Instalowanie</string>
     <string name="ext_installed">Zainstalowano</string>
     <string name="ext_uninstall">Odinstaluj</string>
-    <string name="ext_version_info">Wersja: %1$s</string>
-    <string name="ext_language_info">Język: %1$s</string>
     <string name="pref_double_tap_anim_speed">Szybkość animacji podwójnego dotknięcia</string>
     <string name="double_tap_anim_speed_0">Bez animacji</string>
     <string name="double_tap_anim_speed_normal">Normalna</string>
@@ -475,10 +470,8 @@
     <string name="label_data">Dane</string>
     <string name="backup_restore_missing_sources">Brakujące źródła:</string>
     <string name="invalid_backup_file_missing_manga">Kopia zapasowa nie zawiera żadnych mang.</string>
-    <string name="invalid_backup_file_missing_data">W pliku brakuje danych.</string>
     <string name="invalid_backup_file">Nieprawidłowy plik kopii zapasowej</string>
     <string name="tracker_not_logged_in">Nie zalogowano do: %1$s</string>
-    <string name="source_not_found_name">Nie znaleziono źródła: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Sprawdź, czy są nowe okładki i opisy podczas aktualizowania biblioteki</string>
     <string name="pref_library_update_refresh_metadata">Automatycznie odświeżaj metadane</string>
     <string name="action_display_comfortable_grid">Wygodna siatka</string>

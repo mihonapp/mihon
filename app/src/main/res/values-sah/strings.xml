@@ -169,7 +169,6 @@
     <string name="rotation_force_portrait">Туруору</string>
     <string name="rotation_free">Босхо</string>
     <string name="pref_rotation_type">Эргичийии</string>
-    <string name="ext_language_info">Тыл: %1$s</string>
     <string name="double_tap_anim_speed_fast">Түргэнник</string>
     <string name="double_tap_anim_speed_normal">Көннөрү</string>
     <string name="double_tap_anim_speed_0">Хамсааһына суох</string>
@@ -221,7 +220,6 @@
     <string name="pref_page_transitions">Хамсааһыннах, сирэй арыйыыта</string>
     <string name="pref_cutout_short">Быһыллыбыт хонууга баары көрдөр</string>
     <string name="pref_fullscreen">Толору экран</string>
-    <string name="ext_version_info">Биэрсия:%1$s</string>
     <string name="unofficial_extension_message">Бу кэҥэтии официальнай Tachiyomi испииһэгиттэн буолбатах.</string>
     <string name="obsolete_extension_message">Бу кэҥэтии кыаллыбат буолла.</string>
     <string name="untrusted_extension_message">Бу кэҥэтии эрэлэ суох туоһу суругунан бэлиэтэммит уонна холбоммотох.
@@ -259,17 +257,12 @@
     </plurals>
     <string name="restore_duration">%02d мүнүүтэ %02d сөкүүндэ</string>
     <string name="restore_completed">Төнүҥнэри бүттэ</string>
-    <string name="backup_restore_content">Төнүҥнэриигэ төрүттэр дааннайдара тутталлар, элбэх трафик барыан сөп.
-\n
-\nУонна төнүҥнэрии иннигэр, көрүҥ, туох баар наадалах кэтээһин кэҥэтиилэригэр уонна өҥөтүгэр киирдиҥ диэн.</string>
     <string name="backup_restore_missing_trackers">Трэкэрдар киирбэтилэр:</string>
     <string name="backup_restore_missing_sources">Суох төрүттэр:</string>
     <string name="invalid_backup_file_missing_manga">Хаппаас куопуйа маангата суох.</string>
-    <string name="invalid_backup_file_missing_data">Биликкэ дааннайдар суохтар.</string>
     <string name="invalid_backup_file">Хаппаас куопуйа алдьаммыт билэтэ</string>
     <string name="backup_created">Хаппаас куопуйа оҥоһуллунна</string>
     <string name="tracker_not_logged_in">Киирбэтэх: %1$s</string>
-    <string name="source_not_found_name">Төрүт булуллубата: %1$s</string>
     <string name="pref_backup_slots">Муҥутугар дылы хаппаас куопуйалар</string>
     <string name="pref_backup_interval">Хаппаас куопуйа оҥоһуутун түргэнэ</string>
     <string name="pref_backup_service_category">Автоматическай Хаппаас куопуйалар</string>

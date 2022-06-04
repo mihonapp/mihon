@@ -148,9 +148,6 @@
     <string name="pref_backup_slots">अधिकतम बैकअप</string>
     <string name="backup_created">बैकअप बनाया</string>
     <string name="restore_completed">पुनर्स्थापना पूर्ण हुआ</string>
-    <string name="backup_restore_content">डेटा लाने के लिए स्रोतों का उपयोग करें, वाहक लागत लागू हो सकती है।
-\n
-\nसुनिश्चित करें कि आपने सभी आवश्यक एक्सटेंशन स्थापित किए हैं और बहाल करने से पहले स्रोतों और ट्रैकिंग सेवाओं में लॉग इन किया है।</string>
     <string name="backup_choice">आप बैकअप के लिए क्या चाहते हैं?</string>
     <string name="restoring_backup">बैकअप को पुनर्स्थापित करना</string>
     <string name="creating_backup">बैकअप बनाना</string>
@@ -275,8 +272,6 @@
 \nदुर्भावनापूर्ण विस्तार, किसी भी लॉगिन क्रेडेंशियल्स को तचीयोमी में संग्रहीत या मनमाना कोड निष्पादित कर सकता है
 \n
 \nइस प्रमाणपत्र पर विश्वास करके आप इन जोखिमों को स्वीकार करते हैं।</string>
-    <string name="ext_version_info">संस्करण: %1$s</string>
-    <string name="ext_language_info">भाषा: %1$s</string>
     <string name="pref_double_tap_anim_speed">डबल टैप एनीमेशन गति</string>
     <string name="double_tap_anim_speed_0">कोई एनीमेशन नहीं</string>
     <string name="double_tap_anim_speed_normal">साधारण</string>
@@ -459,10 +454,8 @@
     <string name="label_data">डेटा</string>
     <string name="backup_restore_missing_sources">अनुपलब्ध स्रोत:</string>
     <string name="invalid_backup_file_missing_manga">बैकअप में कोई मंगा नहीं होता है।</string>
-    <string name="invalid_backup_file_missing_data">फाइल में डेटा गायब है।</string>
     <string name="invalid_backup_file">अमान्य बैकअप फ़ाइल</string>
     <string name="tracker_not_logged_in">लॉग इन नहीं है: %1$s</string>
-    <string name="source_not_found_name">स्रोत नहीं मिला: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">लाइब्रेरी को अपडेट करते समय नए कवर और विवरण की जांच करें</string>
     <string name="pref_library_update_refresh_metadata">मेटाडेटा को स्वचालित रूप से ताज़ा करें</string>
     <string name="action_migrate">प्रवास</string>
@@ -717,7 +710,6 @@
     <string name="battery_not_low">बैटरी कम नहीं</string>
     <string name="webview_data_deleted">वेब्यु डेटा साफ हो गया</string>
     <string name="update_check_open">गिटहब में खोलें</string>
-    <string name="migrate_empty_screen">खैर, यह अजीब है</string>
     <string name="error_saving_picture">चित्र सहेजने में त्रुटि</string>
     <string name="split_tall_images_summary">लंबी डाउनलोड किए गए चित्रों के हिस्से करके पाठमाला के प्रदर्शन में सुधार लाता है</string>
     <string name="download_notifier_split_page_not_found">पेज %d हिस्से करते वक्त नहीं मिला</string>
@@ -729,4 +721,9 @@
     <string name="empty_backup_error">बैकअप करने के लिए कोई पुस्तकालय प्रविष्टि नहीं</string>
     <string name="update_check_fdroid_migration_info">एक नया संस्करण आधिकारिक रिलीज के द्वारा उपलब्ध है। अनौपचारिक F-Droid रिलीज से माइग्रेट करने का तरीका जानने के लिए टैप करें</string>
     <string name="split_tall_images">लंबे चित्रों की ऑटो हिस्से</string>
+    <string name="ext_info_version">संस्करण</string>
+    <string name="ext_info_language">भाषा</string>
+    <string name="ext_info_age_rating">आयु रेटिंग</string>
+    <string name="reading_list">पठन सूची</string>
+    <string name="wish_list">विश-लिस्ट</string>
 </resources>

@@ -124,7 +124,6 @@
     <string name="invalid_backup_file">Nevalida savkopia dosiero</string>
     <string name="backup_created">Savkopio kreita</string>
     <string name="tracker_not_logged_in">Ne ensalutita en: %1$s</string>
-    <string name="source_not_found_name">Fonto ne trovita: %1$s</string>
     <string name="pref_backup_directory">Savkopiejo</string>
     <string name="pref_create_backup">Krei savkopion</string>
     <string name="pref_download_new">Elŝuti novajn ĉapitrojn</string>
@@ -142,8 +141,6 @@
     <string name="pref_reader_theme">Fona koloro</string>
     <string name="pref_read_with_volume_keys">Laŭtecaj klavoj</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="ext_language_info">Lingvo: %1$s</string>
-    <string name="ext_version_info">Versio: %1$s</string>
     <string name="nav_zone_next">Sekv\'</string>
     <string name="nav_zone_prev">Antaŭ\'</string>
     <string name="browse">Foliumi</string>
@@ -400,7 +397,6 @@
     </plurals>
     <string name="restore_duration">%02d min, %02d sek</string>
     <string name="backup_restore_missing_sources">Mankantaj fontoj:</string>
-    <string name="invalid_backup_file_missing_data">Dosiero mankas datumon.</string>
     <string name="pref_backup_service_category">Aŭtomataj savkopioj</string>
     <string name="pref_category_auto_download">Aŭtomata elŝuto</string>
     <string name="last_read_chapter">Laste legita ĉapitro</string>

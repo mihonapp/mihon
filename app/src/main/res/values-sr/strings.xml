@@ -107,8 +107,6 @@
 \nЗлонамерни додаци могу читати податке о пријави које чува Tachiyomi или извршити произвољни ко̂д.
 \n
 \nВерујући овом сертификату прихватате наведене ризике.</string>
-    <string name="ext_version_info">Верзија: %1$s</string>
-    <string name="ext_language_info">Језик: %1$s</string>
     <string name="pref_fullscreen">Цео екран</string>
     <string name="pref_page_transitions">Анимације при промени странице</string>
     <string name="pref_double_tap_anim_speed">Брзина анимације двоклика</string>
@@ -174,9 +172,6 @@
     <string name="pref_backup_slots">Максималан број резервних копија</string>
     <string name="backup_created">Направљена је резервна копија</string>
     <string name="restore_completed">Враћање је завршено</string>
-    <string name="backup_restore_content">Враћање користи изворе да преузме податке, могу важити трошкови оператера.
-\n
-\nПроверите да ли сте инсталирали све потребне додатке и да ли сте пријављени у изворе и трекере пре враћања.</string>
     <string name="backup_choice">Шта све желите да буде у резервној копији\?</string>
     <string name="restoring_backup">Враћа се на резервну копију</string>
     <string name="creating_backup">Прави се резервна копија</string>
@@ -496,7 +491,6 @@
     </plurals>
     <string name="pref_category_auto_download">Аутоматско преузимање</string>
     <string name="action_track">Прати</string>
-    <string name="source_not_found_name">Извор није пронађен: %1$s</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Завршено у %1$s са %2$s грешком</item>
         <item quantity="few">Завршено у %1$s са %2$s грешке</item>
@@ -614,7 +608,6 @@
     <string name="pref_library_update_refresh_trackers_summary">Ажурирај пратиоце при ажурирању колекције</string>
     <string name="date">Datum</string>
     <string name="pref_viewer_nav">Начин навигације</string>
-    <string name="invalid_backup_file_missing_data">Недостају подаци у датотеци.</string>
     <string name="unknown_author">Nepoznat autor</string>
     <string name="file_picker_error">Није пронађен програм за бирање датотека</string>
     <plurals name="download_queue_summary">

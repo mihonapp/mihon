@@ -94,8 +94,6 @@
     <string name="ext_installing">安裝中</string>
     <string name="ext_installed">已安裝</string>
     <string name="ext_uninstall">解除安裝</string>
-    <string name="ext_version_info">版本：%1$s</string>
-    <string name="ext_language_info">語言：%1$s</string>
     <string name="pref_fullscreen">全螢幕</string>
     <string name="pref_double_tap_anim_speed">輕觸兩下動畫速度</string>
     <string name="pref_show_page_number">顯示頁碼</string>
@@ -214,9 +212,6 @@
     <string name="channel_common">一般</string>
     <string name="all_lang">全球</string>
     <string name="pref_create_backup_summ">可用來保存目前書櫃內容</string>
-    <string name="backup_restore_content">還原時需連線至來源以取得資料，可能要支付數據傳輸費用。
-\n
-\n在進行還原前，請確認你已安裝所需的擴充套件，並已登入至歷程平台及要求身分認證的來源。</string>
     <string name="pref_clear_database_summary">將未收藏於書櫃中的漫畫的記錄刪除</string>
     <string name="clear_database_completed">已刪除項目</string>
     <string name="unknown_error">不明的錯誤</string>
@@ -381,7 +376,7 @@
     <string name="action_select_inverse">反向選擇</string>
     <string name="pref_library_update_refresh_metadata">自動重新整理中繼資料</string>
     <string name="pref_library_update_refresh_metadata_summary">更新書櫃時一併檢查漫畫的封面與簡介是否有更動</string>
-    <string name="pref_refresh_library_covers">重新整理書櫃中的漫畫封面</string>
+    <string name="pref_refresh_library_covers">重新整理書櫃中的封面</string>
     <string name="ext_updates_pending">等待更新中</string>
     <string name="pref_disable_battery_optimization_summary">有助於背景更新書櫃與自動備份</string>
     <string name="webtoon_side_padding_25">25%</string>
@@ -487,8 +482,6 @@
     <string name="no_pinned_sources">你尚未釘選任何來源</string>
     <string name="page_list_empty_error">沒有任何頁面</string>
     <string name="backup_restore_missing_sources">未安裝擴充套件：</string>
-    <string name="invalid_backup_file_missing_data">檔案遺失資料。</string>
-    <string name="source_not_found_name">找不到來源：%1$s</string>
     <string name="backup_restore_missing_trackers">未登入歷程平台：</string>
     <string name="channel_progress">進度</string>
     <string name="channel_errors">錯誤</string>
@@ -496,7 +489,7 @@
     <string name="download_notifier_download_finish">下載完成</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">即使啟用監護限制，還是可能有漏網之魚。使用者仍可藉由非官方或未正確標幟的擴充套件在本應用程式中瀏覽未滿十八歲之人不宜觀賞的內容。</string>
-    <string name="ext_nsfw_warning">可能包含未滿十八歲之人不宜觀賞的內容</string>
+    <string name="ext_nsfw_warning">來自此擴充套件的來源可能包含未滿十八歲之人不宜觀賞的內容</string>
     <string name="invalid_backup_file_missing_manga">備份檔並未包含任何漫畫。</string>
     <string name="pref_remove_bookmarked_chapters">允許刪除有書籤的章節</string>
     <string name="pref_category_delete_chapters">刪除章節</string>
@@ -710,15 +703,26 @@
     <string name="pref_duplicate_pinned_sources_summary">將來源同時釘選於「已釘選」及其所屬的語言分組</string>
     <string name="source_empty_screen">找不到來源</string>
     <string name="source_filter_empty_screen">找不到已安裝的來源</string>
-    <string name="migrate_empty_screen">呃…尷尬了</string>
-    <string name="action_sort_last_manga_update">最後一次漫畫更新</string>
+    <string name="action_sort_last_manga_update">最近更新漫畫日期</string>
     <string name="action_sort_unread_count">未讀章數</string>
     <string name="download_notifier_split_page_not_found">分割時找不到第 %d 頁</string>
     <string name="split_tall_images">自動分割過高圖片</string>
     <string name="split_tall_images_summary">將下載的圖片中尺寸較高者分割，以改善閱讀器效能。</string>
     <string name="download_notifier_split_page_path_not_found">找不到第 %d 頁的檔案路徑</string>
-    <string name="pref_reset_viewer_flags">重設閱讀器旗標</string>
-    <string name="pref_reset_viewer_flags_summary">將所有叢書的閱讀模式和螢幕方向重設為預設值</string>
-    <string name="pref_reset_viewer_flags_success">已重設閱讀器旗標</string>
-    <string name="pref_reset_viewer_flags_error">無法重設閱讀器旗標</string>
+    <string name="pref_reset_viewer_flags">重設個別閱讀器設定</string>
+    <string name="pref_reset_viewer_flags_summary">將所有叢書的閱讀模式和螢幕方向恢復為預設值</string>
+    <string name="pref_reset_viewer_flags_success">已重設所有閱讀器設定</string>
+    <string name="pref_reset_viewer_flags_error">無法重設閱讀器設定</string>
+    <string name="download_notifier_split_failed">無法分割下載的圖片</string>
+    <string name="empty_screen">呃…尷尬了</string>
+    <string name="ext_info_version">版本</string>
+    <string name="ext_info_language">語言</string>
+    <string name="ext_info_age_rating">分級</string>
+    <string name="unfinished_list">未成清單</string>
+    <string name="on_hold_list">擱置清單</string>
+    <string name="complete_list">閱畢清單</string>
+    <string name="wish_list">願望清單</string>
+    <string name="reading_list">閱讀清單</string>
+    <string name="network_not_metered">僅透過非計量付費網路</string>
+    <string name="cant_open_last_read_chapter">無法開啟上次閱讀章節</string>
 </resources>

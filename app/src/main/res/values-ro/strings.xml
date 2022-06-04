@@ -105,8 +105,6 @@
 \nO extensie periculoasă ar putea citi orice date de logare stocate în Tachiyomi sau executa cod periculos.
 \n
 \nPrin acordarea încrederii acestui certificat acceptați riscurile menționate.</string>
-    <string name="ext_version_info">Versiune: %1$s</string>
-    <string name="ext_language_info">Limbă: %1$s</string>
     <string name="pref_fullscreen">Ecran complet</string>
     <string name="pref_page_transitions">Animați tranzițiile de pagini</string>
     <string name="action_display_download_badge">Insigne pentru descărcări</string>
@@ -174,9 +172,6 @@
     <string name="pref_backup_slots">Numărul maxim de copii de rezervă</string>
     <string name="backup_created">Copie de rezervă creată</string>
     <string name="restore_completed">Restaurare completă</string>
-    <string name="backup_restore_content">Restabilirea utilizează surse pentru a prelua date, se pot aplica costuri de operator.
-\n
-\nAsigurați-vă că ați instalat toate extensiile necesare și că sunteți conectat la surse și servicii de urmărire înainte de restaurare.</string>
     <string name="backup_choice">Doriți să creați o copie de rezervă\?</string>
     <string name="restoring_backup">Restaurând copia de rezervă</string>
     <string name="creating_backup">Creând copia de rezervă</string>
@@ -469,10 +464,8 @@
     <string name="action_display_comfortable_grid">Grilă confortabilă</string>
     <string name="action_migrate">Migrează</string>
     <string name="label_data">Date</string>
-    <string name="invalid_backup_file_missing_data">Lipsesc date din fișier.</string>
     <string name="invalid_backup_file">Fișierul de rezerva este invalid</string>
     <string name="tracker_not_logged_in">Nu ești autentificat: %1$s</string>
-    <string name="source_not_found_name">Sursa nu a fost găsita: %1$s</string>
     <string name="unofficial_extension_message">Aceasta extensie nu face parte din lista oficială de extensii Tachiyomi.</string>
     <string name="ext_unofficial">Neoficial</string>
     <string name="page_list_empty_error">Nu s-au găsit pagini</string>

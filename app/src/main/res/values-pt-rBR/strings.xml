@@ -81,7 +81,7 @@
     <string name="update_weekly">Semanalmente</string>
     <string name="all">Todas</string>
     <string name="pref_library_update_restriction">Restrições do dispositivo para atualizações automáticas</string>
-    <string name="charging">Carregando</string>
+    <string name="charging">Quando carregando</string>
     <string name="pref_update_only_non_completed">Com o estado \"Completo\"</string>
     <string name="pref_auto_update_manga_sync">Atualizar o progresso após a leitura</string>
     <string name="default_category">Categoria padrão</string>
@@ -146,9 +146,6 @@
     <string name="pref_backup_slots">Máximo de backups</string>
     <string name="backup_created">Backup criado</string>
     <string name="restore_completed">Restauração concluída</string>
-    <string name="backup_restore_content">A restauração usa as fontes para obter dados, cobranças podem ser efetuadas pela sua operadora.
-\n
-\nVerifique se instalou todas as extensões necessárias e se realizou o login nas fontes e serviços de monitoramento antes de restaurar.</string>
     <string name="backup_choice">Do que você deseja fazer backup\?</string>
     <string name="restoring_backup">Restaurando backup</string>
     <string name="creating_backup">Criando backup</string>
@@ -275,8 +272,6 @@
 \nUma extensão maliciosa poderia ler quaisquer credenciais de login armazenadas no Tachiyomi ou executar códigos arbitrários.
 \n
 \nAo confiar neste certificado, você estará aceitando estes riscos.</string>
-    <string name="ext_version_info">Versão: %1$s</string>
-    <string name="ext_language_info">Idioma: %1$s</string>
     <string name="pref_double_tap_anim_speed">Velocidade da animação do toque duplo</string>
     <string name="double_tap_anim_speed_0">Sem animação</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
@@ -440,7 +435,7 @@
     <string name="gray_background">Cinza</string>
     <string name="viewer">Modo de leitura</string>
     <string name="pref_category_for_this_series">Para esta série</string>
-    <string name="pref_true_color_summary">Reduz as faixas, mas pode afetar o desempenho</string>
+    <string name="pref_true_color_summary">Reduz o efeito de anéis nos degradês, mas pode afetar o desempenho</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoria</item>
         <item quantity="other">%d categorias</item>
@@ -452,17 +447,15 @@
     </plurals>
     <string name="action_display_unread_badge">Capítulos não lidos</string>
     <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços de monitoramento. Configure o monitoramento para entradas individuais dos mangás a partir de seus botões de monitoramento.</string>
-    <string name="pref_refresh_library_covers">Atualizar as capas dos mangás da biblioteca</string>
+    <string name="pref_refresh_library_covers">Atualizar as capas da biblioteca</string>
     <string name="unofficial_extension_message">Esta extensão não é da lista oficial de extensões do Tachiyomi.</string>
     <string name="ext_unofficial">Não oficial</string>
     <string name="sort_by_upload_date">Pela data de envio</string>
     <string name="label_data">Dados</string>
     <string name="backup_restore_missing_sources">Fontes faltando:</string>
     <string name="invalid_backup_file_missing_manga">O backup não possui nenhum mangá.</string>
-    <string name="invalid_backup_file_missing_data">Faltam dados no arquivo.</string>
     <string name="invalid_backup_file">Arquivo de backup inválido</string>
     <string name="tracker_not_logged_in">Login não realizado: %1$s</string>
-    <string name="source_not_found_name">Fonte não encontrada: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Verifica por novas capas e detalhes durante a atualização da biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Atualizar os metadados automaticamente</string>
     <string name="action_migrate">Migrar</string>
@@ -511,7 +504,7 @@
     <string name="backup_restore_missing_trackers">Monitoradores sem login realizado:</string>
     <string name="pref_remove_bookmarked_chapters">Permitir a exclusão de capítulos favoritos</string>
     <string name="pref_category_delete_chapters">Excluir capítulos</string>
-    <string name="ext_nsfw_warning">Pode haver conteúdo NSFW (+18)</string>
+    <string name="ext_nsfw_warning">As fontes desta extensão podem ter conteúdo NSFW (+18)</string>
     <string name="ext_nsfw_short">+18</string>
     <string name="parental_controls_info">Isso não impede que extensões não oficiais ou potencialmente sinalizadas de maneira incorreta apresentem conteúdo NSFW (+18) no aplicativo.</string>
     <plurals name="missing_chapters_warning">
@@ -719,8 +712,7 @@
     <string name="action_close">Fechar</string>
     <string name="pref_duplicate_pinned_sources">Mostrar fontes fixadas duplicadas</string>
     <string name="pref_duplicate_pinned_sources_summary">Repete as fontes fixadas em seus respectivos grupos de idioma</string>
-    <string name="battery_not_low">Bateria não fraca</string>
-    <string name="migrate_empty_screen">Bem, isso é esquisito</string>
+    <string name="battery_not_low">Quando a bateria não está fraca</string>
     <string name="source_filter_empty_screen">Nenhuma fonte instalada foi encontrada</string>
     <string name="source_empty_screen">Nenhuma fonte encontrada</string>
     <string name="action_sort_unread_count">Contagem de não lidos</string>
@@ -730,8 +722,19 @@
     <string name="download_notifier_split_page_not_found">Página %d não encontrada durante a divisão</string>
     <string name="download_notifier_split_page_path_not_found">Não foi possível encontrar o caminho do arquivo da página %d</string>
     <string name="pref_reset_viewer_flags_summary">Redefine o modo de leitura e orientação de todas as séries</string>
-    <string name="pref_reset_viewer_flags_success">Preferências do leitor redefinidas</string>
-    <string name="pref_reset_viewer_flags_error">Não foi possível redefinir as preferências do leitor</string>
-    <string name="pref_reset_viewer_flags">Redefinir as preferências do leitor</string>
+    <string name="pref_reset_viewer_flags_success">Todas as configurações do leitor foram redefinidas</string>
+    <string name="pref_reset_viewer_flags_error">Não foi possível redefinir as configurações do leitor</string>
+    <string name="pref_reset_viewer_flags">Redefinir as configurações do leitor em cada série</string>
     <string name="download_notifier_split_failed">Não foi possível dividir a imagem transferida</string>
+    <string name="empty_screen">Bem, isso é esquisito</string>
+    <string name="ext_info_version">Versão</string>
+    <string name="ext_info_language">Idioma</string>
+    <string name="ext_info_age_rating">Classificação</string>
+    <string name="reading_list">Lista de Leitura</string>
+    <string name="wish_list">Lista de Desejos</string>
+    <string name="complete_list">Lista de Completos</string>
+    <string name="on_hold_list">Lista de Pausados</string>
+    <string name="unfinished_list">Lista de Inacabados</string>
+    <string name="network_not_metered">Somente em redes não limitadas</string>
+    <string name="cant_open_last_read_chapter">Não foi possível abrir o último capítulo lido</string>
 </resources>

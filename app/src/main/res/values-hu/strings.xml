@@ -221,8 +221,6 @@
     <string name="pref_show_reading_mode">Olvasó mód mutatása</string>
     <string name="ext_nsfw_warning">Tartalmazhat felnőtt (18+) tartalmat</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="ext_language_info">Nyelv: %1$s</string>
-    <string name="ext_version_info">Verzió: %1$s</string>
     <string name="unofficial_extension_message">Ez a bővítmény nem a hivatalos Tachiyomi bővítménylistából származik.</string>
     <string name="obsolete_extension_message">Ez a bővítmény nem elérhető többé.</string>
     <string name="add_to_library">Könyvtárhoz adás</string>

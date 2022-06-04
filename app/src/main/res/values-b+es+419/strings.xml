@@ -163,7 +163,7 @@
     <string name="pref_custom_color_filter">Filtro de color personalizado</string>
     <string name="pref_custom_brightness">Brillo personalizado</string>
     <string name="pref_crop_borders">Cortar bordes</string>
-    <string name="pref_true_color_summary">Reduce las bandas, pero afecta el rendimiento</string>
+    <string name="pref_true_color_summary">Reduce las bandas, pero podría afectar el rendimiento</string>
     <string name="pref_true_color">Color 32 bits</string>
     <string name="pref_show_reading_mode_summary">Mostrar brevemente el modo actual cuándo el lector está abierto</string>
     <string name="pref_show_reading_mode">Mostrar modo de lectura</string>
@@ -172,8 +172,6 @@
     <string name="pref_page_transitions">Animar las transiciones de página</string>
     <string name="pref_cutout_short">Mostrar contenido en el área recortada</string>
     <string name="pref_fullscreen">Pantalla completa</string>
-    <string name="ext_language_info">Idioma: %1$s</string>
-    <string name="ext_version_info">Versión: %1$s</string>
     <string name="unofficial_extension_message">Esta extensión no es de la lista oficial de extensiones de Tachiyomi.</string>
     <string name="obsolete_extension_message">Esta extensión ya no está disponible.</string>
     <string name="untrusted_extension_message">Esta extensión fue firmada por una fuente no certificada y no fue activada.
@@ -205,7 +203,7 @@
     <string name="pref_library_update_refresh_metadata_summary">Comprobar nueva portada y los detalles cuando actualizes la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Actualizar metadatos automáticamente</string>
     <string name="pref_update_only_non_completed">Que ya están completadas</string>
-    <string name="charging">Cargando</string>
+    <string name="charging">Cuando carga</string>
     <string name="pref_library_update_restriction">Restricciones de actualización automática</string>
     <string name="update_weekly">Semanal</string>
     <string name="update_48hour">Cada 2 días</string>
@@ -220,7 +218,7 @@
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_horizontal">Horizontal</string>
     <string name="tapping_inverted_none">Ninguno</string>
-    <string name="pref_read_with_tapping_inverted">Tapping invertido</string>
+    <string name="pref_read_with_tapping_inverted">Invertir zonas de toque</string>
     <string name="channel_ext_updates">Actualizaciones de extensión</string>
     <string name="channel_new_chapters">Actualizaciones de capítulos</string>
     <string name="channel_common">Común</string>
@@ -238,7 +236,7 @@
         <item quantity="other">%d actualizaciones de extensiones disponibles</item>
     </plurals>
     <string name="update_check_notification_download_error">Error al descargar</string>
-    <string name="update_check_notification_download_complete">Descarga completa</string>
+    <string name="update_check_notification_download_complete">Toca para instalar</string>
     <string name="update_check_notification_download_in_progress">Descargando…</string>
     <string name="update_check_look_for_updates">Buscando actualizaciones…</string>
     <string name="portrait">Vertical</string>
@@ -305,16 +303,11 @@
     </plurals>
     <string name="restore_duration">%02d min, %02d seg</string>
     <string name="restore_completed">Restauración completada</string>
-    <string name="backup_restore_content">Restaurar utiliza las fuentes para obtener los datos, es posible que se apliquen cargos por el uso de datos.
-\n
-\nAsegúrese de haber instalado todas las extensiones necesarias y de haber iniciado sesión en las fuentes y los servicios de seguimiento antes de restaurar.</string>
     <string name="backup_restore_missing_sources">Fuentes que faltan:</string>
     <string name="invalid_backup_file_missing_manga">La copia de seguridad no contiene ningún manga.</string>
-    <string name="invalid_backup_file_missing_data">En archivo faltan datos.</string>
     <string name="invalid_backup_file">Archivo de copia de seguridad invalido</string>
     <string name="backup_created">Copia de seguridad creada</string>
     <string name="tracker_not_logged_in">No esta registrado en: %1$s</string>
-    <string name="source_not_found_name">Fuente no encontrada: %1$s</string>
     <string name="pref_backup_slots">Máximo de copias de seguridad</string>
     <string name="pref_backup_interval">Frecuencia de respaldo</string>
     <string name="pref_backup_service_category">Copias de seguridad automáticas</string>
@@ -331,7 +324,7 @@
     <string name="pref_disable_battery_optimization">Desactivar optimización de batería</string>
     <string name="pref_refresh_library_tracking_summary">Actualizar estado, puntuación y último capítulo leído en los servicios de seguimiento</string>
     <string name="pref_refresh_library_tracking">Refrescar seguimiento</string>
-    <string name="pref_refresh_library_covers">Actualizar portadas de manga de la biblioteca</string>
+    <string name="pref_refresh_library_covers">Actualizar portadas de la biblioteca</string>
     <string name="clear_database_completed">Entradas eliminadas</string>
     <string name="clear_database_confirmation">¿Estas seguro\? Los capítulos leídos y el progreso de los mangas que no estén en la biblioteca se perderán</string>
     <string name="pref_clear_database_summary">Borrar el historial de mangas que no están guardados en la biblioteca</string>
@@ -511,7 +504,7 @@
     <string name="backup_restore_missing_trackers">Páginas de seguimiento donde no has iniciado sesion:</string>
     <string name="pref_remove_bookmarked_chapters">Eliminar capítulos guardados</string>
     <string name="pref_category_delete_chapters">Eliminar capítulos</string>
-    <string name="ext_nsfw_warning">Puede contener contenido para mayores de 18 años</string>
+    <string name="ext_nsfw_warning">Las fuentes de esta extensión pueden contener contenido NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Esto no evita que las extensiones no oficiales o potencialmente marcadas incorrectamente muestren contenido para mayores de 18 años dentro de la aplicación.</string>
     <plurals name="missing_chapters_warning">
@@ -546,7 +539,7 @@
     <string name="crash_log_saved">Registros de fallos guardados</string>
     <string name="pref_dump_crash_logs_summary">Guarda los registros de errores en un archivo para compartirlos con los desarrolladores</string>
     <string name="pref_dump_crash_logs">Volcar registros de accidentes</string>
-    <string name="pref_viewer_nav">Estructura de navegación</string>
+    <string name="pref_viewer_nav">Zona de toque</string>
     <string name="edge_nav">Borde</string>
     <string name="kindlish_nav">Kindle-ish</string>
     <string name="l_nav">En forma de L</string>
@@ -579,11 +572,11 @@
     <string name="pref_create_folder_per_manga">Guardar páginas en carpetas separadas</string>
     <string name="pref_reader_actions">Acciones</string>
     <string name="pref_dual_page_split">Dividir páginas dobles</string>
-    <string name="pref_show_navigation_mode_summary">Mostrar las zonas de toque cuando se abre el lector</string>
+    <string name="pref_show_navigation_mode_summary">Mostrar brevemente cuando se abre el lector</string>
     <string name="exclude">Excluir: %s</string>
     <string name="include">Incluir: %s</string>
     <string name="pref_dual_page_invert">Invertir la posición de las páginas duales</string>
-    <string name="pref_show_navigation_mode">Mostrar el diseño de navegación</string>
+    <string name="pref_show_navigation_mode">Mostrar el diseño de la zona de toque</string>
     <string name="pref_library_update_categories_details">Los manga en las categorías excluidas no se actualizarán aún cuando estén en las categorías incluidas.</string>
     <string name="unread">No leído</string>
     <string name="source_unsupported">Fuente incompatible</string>
@@ -718,11 +711,29 @@
     <string name="update_check_fdroid_migration_info">Una nueva versión esta disponible desde los lanzamientos oficiales, Toca para aprender a emigrar de lanzamientos F-droid no oficiales.</string>
     <string name="error_saving_picture">Error al guardar imagen</string>
     <string name="action_close">Cerrar</string>
-    <string name="battery_not_low">La bateria no está baja</string>
+    <string name="battery_not_low">Cuando la batería no está baja</string>
     <string name="update_check_open">Abrir en GitHub</string>
     <string name="source_empty_screen">Ninguna fuente encontrada</string>
     <string name="source_filter_empty_screen">No se encontró ninguna fuente instalada</string>
-    <string name="migrate_empty_screen">Bueno, esto es incomodo</string>
     <string name="action_sort_unread_count">Recuento no leído</string>
     <string name="action_sort_last_manga_update">Última actualización de manga</string>
+    <string name="download_notifier_split_failed">No se pudo dividir la imagen descargada</string>
+    <string name="empty_screen">Bueno, esto es incomodo</string>
+    <string name="pref_reset_viewer_flags_success">Todas las configuraciones del lector se restablecen</string>
+    <string name="pref_reset_viewer_flags_error">No se pudo restablecer la configuración del lector</string>
+    <string name="pref_reset_viewer_flags">Restablecer la configuración del lector por serie</string>
+    <string name="split_tall_images_summary">Mejora rendimiento del lector al ajustar imágenes altas descargadas.</string>
+    <string name="split_tall_images">Ajustar automáticamente el alto de las imagenes</string>
+    <string name="download_notifier_split_page_not_found">Página %d no encontrada durante la división</string>
+    <string name="download_notifier_split_page_path_not_found">No se encontró la ruta del archivo de la página %d</string>
+    <string name="pref_reset_viewer_flags_summary">Reinicie el modo de lectura y la orientación de toda serie</string>
+    <string name="ext_info_version">Versión</string>
+    <string name="ext_info_language">Idioma</string>
+    <string name="ext_info_age_rating">Clasificación por edades</string>
+    <string name="wish_list">Lista de deseos</string>
+    <string name="complete_list">Lista completa</string>
+    <string name="unfinished_list">Lista inconclusa</string>
+    <string name="on_hold_list">Lista de espera</string>
+    <string name="reading_list">Lista de lectura</string>
+    <string name="network_not_metered">Solo en red sin medidor</string>
 </resources>

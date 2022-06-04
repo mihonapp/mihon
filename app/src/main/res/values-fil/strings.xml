@@ -199,8 +199,6 @@
     <string name="pref_page_transitions">I-animate ang paglipat-pahina</string>
     <string name="pref_cutout_short">Ipakita ang laman sa cutout area</string>
     <string name="pref_fullscreen">Naka-fullscreen</string>
-    <string name="ext_language_info">Wika: %1$s</string>
-    <string name="ext_version_info">Bersyon: %1$s</string>
     <string name="unofficial_extension_message">Wala sa opisyal na listahan ng mga dugtong ng Tachiyomi ang dugtong na ito.</string>
     <string name="obsolete_extension_message">Wala na\'ng ganitong dugtong.</string>
     <string name="untrusted_extension_message">Pinirmahan ang dugtong na ito gamit ang isang kaduda-dudang certificate at hindi muna pinagana.
@@ -232,7 +230,7 @@
     <string name="pref_library_update_refresh_metadata_summary">Maghanap ng mga bagong cover at detalye kapag nag-a-update ng Aklatan</string>
     <string name="pref_library_update_refresh_metadata">Kusang sariwain ang metadata</string>
     <string name="pref_update_only_non_completed">May \"Kumpleto\" na estado</string>
-    <string name="charging">Naka-charge</string>
+    <string name="charging">Kapag naka-charge</string>
     <string name="pref_library_update_restriction">Kondisyon sa kusang pag-update</string>
     <string name="update_weekly">Linggo-linggo</string>
     <string name="update_48hour">Kada 2 araw</string>
@@ -252,11 +250,9 @@
     <string name="pref_read_with_tapping_inverted">Baligtarin ang mga tap zone</string>
     <string name="backup_restore_missing_sources">Nawawalang (mga) source:</string>
     <string name="invalid_backup_file_missing_manga">Walang manga ang backup.</string>
-    <string name="invalid_backup_file_missing_data">May kulang na data sa file.</string>
     <string name="invalid_backup_file">Invalid na backup</string>
     <string name="backup_created">Nagawa na ang backup</string>
     <string name="tracker_not_logged_in">Di naka-login: %1$s</string>
-    <string name="source_not_found_name">Di makita ang source: %1$s</string>
     <string name="pref_backup_slots">Dami ng backup</string>
     <string name="pref_backup_interval">Dalas ng pag-backup</string>
     <string name="pref_backup_service_category">Kusang mag-backup</string>
@@ -468,7 +464,7 @@
     <string name="pref_disable_battery_optimization_summary">Nakatutulong sa pag-update at pag-backup sa likuran</string>
     <string name="pref_refresh_library_tracking_summary">Inia-update ang estado, iskor, at huling nabasang kabanata mula sa mga tracker</string>
     <string name="pref_refresh_library_tracking">Sariwain ang pagta-track</string>
-    <string name="pref_refresh_library_covers">Sariwain ang mga cover ng manga sa Aklatan</string>
+    <string name="pref_refresh_library_covers">Sariwain ang mga cover sa Aklatan</string>
     <string name="clear_database_completed">Binura na</string>
     <string name="clear_database_confirmation">Sigurado ka ba talaga\? Mawawala ang lahat ng mga nabasang kabanata at bahagdang nabasa ng mga manga na wala sa Aklatan</string>
     <string name="pref_clear_database_summary">Burahin ang nakaraan ng mga manga na hindi nakalagay sa Aklatan mo</string>
@@ -490,9 +486,6 @@
         <item quantity="other">Na-restore sa loob ng %1$s na may %2$s (na) error</item>
     </plurals>
     <string name="restore_completed">Na-restore na</string>
-    <string name="backup_restore_content">Ginagamit ng Pag-restore ang mga source para kunin ang data, at posible gumastos ka dahil rito.
-\n
-\nSiguraduhing na-install mo na ang mga lahat ng mga kailangang dugtong at naka-login ka na sa lahat ng mga source at tracker bago mo simulan ang pag-restore.</string>
     <string name="restoring_backup">Rine-restore ang backup</string>
     <string name="creating_backup_error">Bigong ma-backup</string>
     <string name="creating_backup">Bina-backup</string>
@@ -512,7 +505,7 @@
     <string name="pref_remove_bookmarked_chapters">Burahin din ang may pananda</string>
     <string name="pref_category_delete_chapters">Magbura ng kabanata</string>
     <string name="parental_controls_info">Hindi nito naiiwasan ang pagpakita ng mga NSFW (18+) sa mga di-opisyal o posibleng maling naka-flag na dugtong sa loob ng app.</string>
-    <string name="ext_nsfw_warning">Maaaring may NSFW (18+)</string>
+    <string name="ext_nsfw_warning">Posibleng may NSFW (18+) content ang mga source mula sa extension na ito</string>
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Lalaktawan ang %d kabanata, siguro baka wala sa source ito, o baka na-filter ito</item>
@@ -717,11 +710,10 @@
     <string name="webview_data_deleted">Nalinis na ang WebView data</string>
     <string name="pref_clear_webview_data">Linisin ang WebView data</string>
     <string name="action_close">Isara</string>
-    <string name="battery_not_low">Di pa lowbat</string>
+    <string name="battery_not_low">Kapag di lowbat</string>
     <string name="pref_duplicate_pinned_sources">Ipakita ang mga dinobleng naka-pin na source</string>
     <string name="pref_duplicate_pinned_sources_summary">Ulitin ang pag-pin sa mga source sa kani-kanilang mga wika</string>
     <string name="source_filter_empty_screen">Walang nakitang naka-install na source</string>
-    <string name="migrate_empty_screen">Ano, paano ba \'to</string>
     <string name="source_empty_screen">Walang nakitang source</string>
     <string name="action_sort_last_manga_update">Huling update sa manga</string>
     <string name="action_sort_unread_count">Dami ng di pa nabasa</string>
@@ -729,4 +721,20 @@
     <string name="split_tall_images_summary">Pinapahusay ang performance ng reader sa pamamagitan ng paghati sa mga matatangkad na na-download na larawan.</string>
     <string name="download_notifier_split_page_not_found">Hindi nakita ang pahina %d habang naghahati</string>
     <string name="download_notifier_split_page_path_not_found">Di makita ang file path ng pahina %d</string>
+    <string name="download_notifier_split_failed">Di mahati ang na-download na larawan</string>
+    <string name="empty_screen">Paano ba \'to</string>
+    <string name="pref_reset_viewer_flags_error">Di ma-reset ang pagsasaayos sa reader</string>
+    <string name="pref_reset_viewer_flags_success">Na-reset na ang lahat ng pagsasaayos sa reader</string>
+    <string name="pref_reset_viewer_flags">I-reset ang pagsasaayos sa reader kada serye</string>
+    <string name="pref_reset_viewer_flags_summary">Rine-reset ang paraan ng pagbasa at orientation para sa lahat ng mga serye</string>
+    <string name="ext_info_version">Bersyon</string>
+    <string name="ext_info_language">Wika</string>
+    <string name="ext_info_age_rating">Rating sa edad</string>
+    <string name="on_hold_list">Listahan ng Tinigil</string>
+    <string name="complete_list">Listahan ng Kumpleto</string>
+    <string name="unfinished_list">Listahan ng Di pa Tapos</string>
+    <string name="wish_list">Listahan ng Hiling</string>
+    <string name="reading_list">Listahan ng Binabasa</string>
+    <string name="network_not_metered">Sa di-nakametrong network lang</string>
+    <string name="cant_open_last_read_chapter">Di mabuksan ang huling nabasang kabanata</string>
 </resources>

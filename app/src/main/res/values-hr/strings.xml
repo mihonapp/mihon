@@ -8,8 +8,6 @@
     <string name="lock_never">Nikada</string>
     <string name="lock_always">Uvijek</string>
     <string name="pref_fullscreen">Cjeloekranski prikaz</string>
-    <string name="ext_language_info">Jezik: %1$s</string>
-    <string name="ext_version_info">Verzija: %1$s</string>
     <string name="obsolete_extension_message">Ovo proširenje više nije dostupno.</string>
     <string name="untrusted_extension_message">Ovo proširenje potpisano je nepovjerljivim certifikatom i nije aktivirano.
 \n
@@ -427,9 +425,6 @@
     <string name="creating_backup">Stvaranje sigurnosne kopije</string>
     <string name="backup_choice">Što želiš spremiti kao sigurnosnu kopiju\?</string>
     <string name="backup_in_progress">Spremanje sigurnosne kopije je već u tijeku</string>
-    <string name="backup_restore_content">Obnavljanje koristi izvore za dohvaćanje podataka, može prouzročiti troškove.
-\n
-\nPrije obnavljanja, provjeri jesu li instalirana sva potrebna proširenja i da si prijavljen/a u izvorima i uslugama za praćenje.</string>
     <string name="information_cloudflare_bypass_failure">Neuspjelo zaobilaženje Cloudflare-a</string>
     <string name="description_cover">Naslovnica mange</string>
     <plurals name="update_check_notification_ext_updates">
@@ -463,10 +458,8 @@
     </plurals>
     <string name="backup_restore_missing_sources">Nedostaju izvori:</string>
     <string name="invalid_backup_file_missing_manga">Sigurnosna kopija ne sadrži nijedan manga.</string>
-    <string name="invalid_backup_file_missing_data">Datoteci nedostaju podaci.</string>
     <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije</string>
     <string name="tracker_not_logged_in">Neprijavljeno: %1$s</string>
-    <string name="source_not_found_name">Izvor nije pronađen: %1$s</string>
     <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
     <string name="unofficial_extension_message">Ovo proširenje nije sa službenog popisa Tachiyomi proširenja.</string>
     <string name="ext_unofficial">Neslužbeno</string>

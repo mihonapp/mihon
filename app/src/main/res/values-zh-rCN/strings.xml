@@ -86,7 +86,7 @@
     <string name="update_weekly">每周</string>
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">设备自动更新限制</string>
-    <string name="charging">正在充电</string>
+    <string name="charging">充电时</string>
     <string name="pref_update_only_non_completed">状态为“已完结”</string>
     <string name="pref_auto_update_manga_sync">阅读后更新进度</string>
     <string name="default_category">默认分类</string>
@@ -107,8 +107,6 @@
 \n恶意的扩展插件可能会读取储存在 Tachiyomi 中的任何登录凭据或执行任意代码。
 \n
 \n信任这个证书，即代表你愿意承担上述风险。</string>
-    <string name="ext_version_info">版本：%1$s</string>
-    <string name="ext_language_info">语言：%1$s</string>
     <string name="pref_fullscreen">全屏</string>
     <string name="pref_page_transitions">页面过渡动画</string>
     <string name="pref_double_tap_anim_speed">双击动画速度</string>
@@ -174,9 +172,6 @@
     <string name="pref_backup_slots">最大备份数</string>
     <string name="backup_created">已创建备份</string>
     <string name="restore_completed">还原完毕</string>
-    <string name="backup_restore_content">还原备份时需连接网络来抓取图源数据。
-\n
-\n在还原前，请确认你已安装所需的扩展插件，并且已登录到图源和追踪服务。</string>
     <string name="backup_choice">需要备份什么？</string>
     <string name="restoring_backup">正在还原备份</string>
     <string name="creating_backup">正在创建备份</string>
@@ -443,7 +438,7 @@
     <string name="battery_optimization_setting_activity_not_found">无法打开设备设置</string>
     <string name="pref_true_color_summary">减少色带，但也许会影响性能</string>
     <string name="action_display_unread_badge">未读章节</string>
-    <string name="pref_refresh_library_covers">刷新书架漫画封面</string>
+    <string name="pref_refresh_library_covers">刷新书架封面</string>
     <string name="tracking_info">将章节进度单向同步到追踪服务。点击「追踪」按钮以设置漫画的追踪源。</string>
     <string name="unofficial_extension_message">此扩展插件不是由官方 Tachiyomi 所提供。</string>
     <string name="ext_unofficial">非官方</string>
@@ -451,10 +446,8 @@
     <string name="label_data">数据</string>
     <string name="backup_restore_missing_sources">缺少图源：</string>
     <string name="invalid_backup_file_missing_manga">备份不包含任何漫画。</string>
-    <string name="invalid_backup_file_missing_data">文件丢失数据。</string>
     <string name="invalid_backup_file">无效的备份文件</string>
     <string name="tracker_not_logged_in">尚未登录：%1$s</string>
-    <string name="source_not_found_name">未找到图源：%1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">更新书架时一并检查封面和简介是否有变动</string>
     <string name="pref_library_update_refresh_metadata">自动刷新元数据</string>
     <string name="action_migrate">迁移</string>
@@ -501,7 +494,7 @@
     <string name="backup_restore_missing_trackers">尚未登录的追踪源：</string>
     <string name="pref_remove_bookmarked_chapters">允许删除已添加书签的章节</string>
     <string name="pref_category_delete_chapters">删除章节</string>
-    <string name="ext_nsfw_warning">可能包含 NSFW (18+) 内容</string>
+    <string name="ext_nsfw_warning">来自此扩展的图源可能包含 NSFW (18+) 内容</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">这并不能防止非官方或可能被错误标记的扩展插件在应用中显示 NSFW (18+) 内容。</string>
     <plurals name="missing_chapters_warning">
@@ -704,11 +697,10 @@
     <string name="update_check_open">打开 Github</string>
     <string name="webview_data_deleted">已清除 Webview 数据</string>
     <string name="pref_clear_webview_data">清除 Webview 数据</string>
-    <string name="battery_not_low">非低电量</string>
+    <string name="battery_not_low">非低电量时</string>
     <string name="pref_duplicate_pinned_sources_summary">在各自的语言组中重复固定图源</string>
     <string name="pref_duplicate_pinned_sources">显示重复的固定图源</string>
     <string name="action_close">关闭</string>
-    <string name="migrate_empty_screen">额，好尴尬</string>
     <string name="source_filter_empty_screen">未找到已安装的图源</string>
     <string name="source_empty_screen">未找到图源</string>
     <string name="action_sort_last_manga_update">上次漫画更新</string>
@@ -717,8 +709,20 @@
     <string name="split_tall_images_summary">通过拆分下载的高图像来提高阅读器的性能。</string>
     <string name="download_notifier_split_page_not_found">拆分时未找到页 %d</string>
     <string name="download_notifier_split_page_path_not_found">找不到页面 %d 的文件路径</string>
-    <string name="pref_reset_viewer_flags">重置查看器标志</string>
+    <string name="pref_reset_viewer_flags">重置每一连载阅读器设置</string>
     <string name="pref_reset_viewer_flags_summary">重置所有连载的阅读模式和方向</string>
-    <string name="pref_reset_viewer_flags_success">已重置查看器标志</string>
-    <string name="pref_reset_viewer_flags_error">无法重置阅读器标志</string>
+    <string name="pref_reset_viewer_flags_success">已重置所有阅读器设置</string>
+    <string name="pref_reset_viewer_flags_error">无法重置阅读器设置</string>
+    <string name="download_notifier_split_failed">无法拆分下载的图像</string>
+    <string name="empty_screen">额，尴尬了</string>
+    <string name="ext_info_age_rating">年龄分级</string>
+    <string name="ext_info_version">版本</string>
+    <string name="ext_info_language">语言</string>
+    <string name="reading_list">阅读列表</string>
+    <string name="wish_list">想读列表</string>
+    <string name="complete_list">读完列表</string>
+    <string name="unfinished_list">未读完列表</string>
+    <string name="on_hold_list">稍后读列表</string>
+    <string name="network_not_metered">仅在不按流量计费网络中</string>
+    <string name="cant_open_last_read_chapter">打不开最后阅读章节</string>
 </resources>

@@ -190,4 +190,5 @@
     <string name="pref_category_library_update">ការធ្វើបច្ចុប្បន្នភាពសកល</string>
     <string name="title">ចំណងជើង</string>
     <string name="description">សង្ខេបរឿង</string>
+    <string name="completed">Concluído</string>
 </resources>

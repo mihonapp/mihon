@@ -193,7 +193,7 @@
     <string name="update_check_look_for_updates">À procura de atualizações…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">A transferir…</string>
-    <string name="update_check_notification_download_complete">Transferência completa</string>
+    <string name="update_check_notification_download_complete">Toque para instalar</string>
     <string name="update_check_notification_download_error">Erro na transferência</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
     <!--Content Description-->
@@ -246,8 +246,6 @@
 \nUma extensão maliciosa podia ler qualquer credencial de entrada armazenada no Tachiyomi ou executar código arbitrário.
 \n
 \nAo confiar neste certificado serão aceites estes riscos.</string>
-    <string name="ext_version_info">Versão: %1$s</string>
-    <string name="ext_language_info">Idioma: %1$s</string>
     <string name="pref_crop_borders">Cortar bordas</string>
     <string name="pref_custom_color_filter">Filtro de cor personalizado</string>
     <string name="pref_read_with_volume_keys_inverted">Inverter teclas de volume</string>
@@ -287,9 +285,6 @@
     <string name="action_open_in_web_view">Abrir em WebView</string>
     <string name="pref_true_color">Cores 32-bit</string>
     <string name="pref_skip_read_chapters">Ignorar capítulos marcados como lido</string>
-    <string name="backup_restore_content">A restauração usa as fontes para obter dados, cobranças adicionais podem ser efetuadas pelo operador.
-\n
-\nVerifique se instalou todas as extensões necessárias e tem sessão iniciada nas fontes e serviços de monitorização antes de restaurar.</string>
     <string name="pref_refresh_library_tracking">Atualizar monitorização</string>
     <string name="pref_refresh_library_tracking_summary">Atualiza estado, avaliações e últimos capítulos lidos dos serviços de monitorização</string>
     <string name="local_source_badge">Local</string>
@@ -470,7 +465,7 @@
     <string name="gray_background">Cinzento</string>
     <string name="viewer">Modo de leitura</string>
     <string name="pref_category_for_this_series">Para esta série</string>
-    <string name="pref_true_color_summary">Reduz bandas de cor, mas impacta a performance</string>
+    <string name="pref_true_color_summary">Reduz bandas de cor, mas pode impactar a performance</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoria</item>
         <item quantity="other">%d categorias</item>
@@ -481,7 +476,7 @@
         <item quantity="one">Concluído em %1$s com %2$s erro</item>
         <item quantity="other">Concluído em %1$s com %2$s erros</item>
     </plurals>
-    <string name="pref_refresh_library_covers">Atualizar capas das mangás da biblioteca</string>
+    <string name="pref_refresh_library_covers">Atualizar capas da biblioteca</string>
     <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços de monitorização. Defina a monitorização para entradas individuais das mangás no seu botão de monitorização.</string>
     <string name="unofficial_extension_message">Esta extensão não vem da lista oficial de extensões do Tachiyomi.</string>
     <string name="pref_show_reading_mode_summary">Mostra brevemente o modo atual quando o leitor é aberto</string>
@@ -492,10 +487,8 @@
     <string name="label_data">Dados</string>
     <string name="backup_restore_missing_sources">Fontes em falta:</string>
     <string name="invalid_backup_file_missing_manga">Cópia de segurança não contém qualquer mangá.</string>
-    <string name="invalid_backup_file_missing_data">Faltam dados no ficheiro.</string>
     <string name="invalid_backup_file">Ficheiro de cópia de segurança invalido</string>
     <string name="tracker_not_logged_in">Sessão não iniciada: %1$s</string>
-    <string name="source_not_found_name">Fonte não encontrada: %1$s</string>
     <string name="pref_show_reading_mode">Mostrar modo de leitura</string>
     <string name="ext_unofficial">Não oficial</string>
     <string name="pref_library_update_refresh_metadata_summary">Procurar nova capa e detalhes quando a biblioteca atualizar</string>
@@ -511,7 +504,7 @@
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_horizontal">Horizontal</string>
     <string name="tapping_inverted_none">Nenhum</string>
-    <string name="pref_read_with_tapping_inverted">Inverter toque</string>
+    <string name="pref_read_with_tapping_inverted">Inverter zonas toque</string>
     <string name="loader_not_implemented_error">Fonte não encontrada</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s capítulo</item>
@@ -570,7 +563,7 @@
     <string name="file_picker_error">Não foi encontrada app de selecção de ficheiros</string>
     <string name="myanimelist_relogin">Por favor inicie sessão no MAL novamente</string>
     <string name="pref_show_nsfw_source">Mostrar na lista de fontes e extensões</string>
-    <string name="pref_viewer_nav">Esquema de navegação</string>
+    <string name="pref_viewer_nav">Zonas de toque</string>
     <string name="kindlish_nav">Estilo Kindle</string>
     <string name="l_nav">Em forma de L</string>
     <string name="action_desc">Descendente</string>
@@ -597,8 +590,8 @@
     <string name="nav_zone_left">Esquerda</string>
     <string name="nav_zone_next">Seguinte</string>
     <string name="nav_zone_prev">Anterior</string>
-    <string name="pref_show_navigation_mode_summary">Mostrar zonas de toque quando o leitor é aberto</string>
-    <string name="pref_show_navigation_mode">Mostrar sobreposição da disposição de navegação</string>
+    <string name="pref_show_navigation_mode_summary">Brevemente mostrar quando o leitor é aberto</string>
+    <string name="pref_show_navigation_mode">Mostrar sobreposição das zonas de toque</string>
     <string name="none">Nenhum</string>
     <string name="pref_dns_over_https">DNS por HTTPS (DoH)</string>
     <string name="pref_category_auto_download">Transferir automaticamente</string>
@@ -609,7 +602,7 @@
     <string name="include">Incluir: %s</string>
     <string name="pref_library_update_categories_details">Mangá em categorias excluídas não será atualizada mesmo que também estejam nas categorias incluídas.</string>
     <string name="action_show_errors">Toque para ver detalhes</string>
-    <string name="action_sort_chapter_fetch_date">Data de procura</string>
+    <string name="action_sort_chapter_fetch_date">Data de procura do capítulo</string>
     <string name="rotation_landscape">Horizontal</string>
     <string name="rotation_portrait">Vertical</string>
     <string name="rotation_type">Tipo de rotação</string>
@@ -740,7 +733,6 @@
     <string name="webview_data_deleted">Dados do WebView limpos</string>
     <string name="rotation_reverse_portrait">Vertical invertido</string>
     <string name="source_filter_empty_screen">Nenhuma fonte instalada encontrada</string>
-    <string name="migrate_empty_screen">Bem, isto é embaraçoso</string>
     <string name="notification_update_skipped">%1$d atualização(ões) ignorada(s)</string>
     <string name="notification_update_error">%1$d actualização(ões) falhada(s)</string>
     <string name="learn_more">Toque para saber mais</string>
@@ -752,4 +744,17 @@
     <string name="error_saving_picture">Erro ao guardar a imagem</string>
     <string name="pref_duplicate_pinned_sources">Mostrar fontes fixadas duplicadas</string>
     <string name="pref_duplicate_pinned_sources_summary">Repita as fontes fixadas nos seus respetivos grupos de idiomas</string>
+    <string name="action_sort_last_manga_update">Última mangá atualizada</string>
+    <string name="action_sort_unread_count">Contagem de não lidos</string>
+    <string name="split_tall_images">Dividir automaticamente imagens altas</string>
+    <string name="split_tall_images_summary">Melhora o desempenho do leitor através da divisão de imagens altas transferidas.</string>
+    <string name="download_notifier_split_failed">Não foi possível dividir a imagem transferida</string>
+    <string name="empty_screen">Bem, isto é estranho</string>
+    <string name="pref_reset_viewer_flags_error">Não foi possível repor as definições do leitor</string>
+    <string name="pref_reset_viewer_flags_success">Todas as definições do leitor reiniciadas</string>
+    <string name="source_empty_screen">Nenhuma fonte encontrada</string>
+    <string name="download_notifier_split_page_not_found">Página %d não encontrada durante a divisão</string>
+    <string name="pref_reset_viewer_flags">Repor as definições do leitor por série</string>
+    <string name="pref_reset_viewer_flags_summary">Repõe o modo de leitura e orientação de todas as séries</string>
+    <string name="download_notifier_split_page_path_not_found">Não foi possível encontrar o caminho do ficheiro da página %d</string>
 </resources>

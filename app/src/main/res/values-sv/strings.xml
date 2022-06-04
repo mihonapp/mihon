@@ -107,8 +107,6 @@
 \nEtt skadligt tillägg kan läsa inloggningsuppgifter som är lagrade i Tachiyomi eller utföra godtycklig kod.
 \n
 \nGenom att lita på detta certifikat accepterar du dessa risker.</string>
-    <string name="ext_version_info">Version: %1$s</string>
-    <string name="ext_language_info">Språk: %1$s</string>
     <string name="pref_fullscreen">Fullskärm</string>
     <string name="pref_page_transitions">Animera sidbyten</string>
     <string name="pref_double_tap_anim_speed">Animationshastighet för dubbelklick</string>
@@ -174,9 +172,6 @@
     <string name="pref_backup_slots">Maximala säkerhetskopior</string>
     <string name="backup_created">Säkerhetskopia skapad</string>
     <string name="restore_completed">Återställning slutförd</string>
-    <string name="backup_restore_content">Återställning använder källor för att hämta data, data kostnader kan tillkomma.
-\n
-\nSe till att du har installerat de nödvändiga tilläggen och är inloggad på de källor och spårningstjänsterna som kräver detta innan du återställer.</string>
     <string name="backup_choice">Vad vill du säkerhetskopiera\?</string>
     <string name="restoring_backup">Återställer säkerhetskopia</string>
     <string name="creating_backup">Skapar säkerhetskopia</string>
@@ -451,16 +446,14 @@
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Det gick inte att öppna enhetsinställningarna</string>
     <string name="action_display_unread_badge">Olästa kapitel</string>
-    <string name="pref_refresh_library_covers">Uppdatera bibliotekets mangaomslag</string>
+    <string name="pref_refresh_library_covers">Uppdatera bibliotekets omslag</string>
     <string name="tracking_info">Envägssynkronisering för att uppdatera kapitelförloppet i spårningstjänster. Ställ in spårning för enskilda manga från spårningsknappen under manga info.</string>
     <string name="sort_by_upload_date">Efter uppladdningsdatum</string>
     <string name="label_data">Data</string>
     <string name="backup_restore_missing_sources">Saknade källor:</string>
     <string name="invalid_backup_file_missing_manga">Säkerhetskopian innehåller ingen manga.</string>
-    <string name="invalid_backup_file_missing_data">Filen saknar data.</string>
     <string name="invalid_backup_file">Ogiltig säkerhetskopia</string>
     <string name="tracker_not_logged_in">Inte inloggad: %1$s</string>
-    <string name="source_not_found_name">Källan hittades inte: %1$s</string>
     <string name="unofficial_extension_message">Detta tillägg kommer inte från den officiella Tachiyomi-tilläggslistan.</string>
     <string name="ext_unofficial">Inofficiell</string>
     <string name="pref_library_update_refresh_metadata_summary">Sök efter nytt omslag och detaljer när du uppdaterar biblioteket</string>
@@ -509,7 +502,7 @@
     <string name="no_pinned_sources">Du har inga fästa källor</string>
     <string name="pref_remove_bookmarked_chapters">Tillåt att radera bokmärkta kapitel</string>
     <string name="pref_category_delete_chapters">Ta bort kapitel</string>
-    <string name="ext_nsfw_warning">Kan innehålla NSFW(18+) innehåll</string>
+    <string name="ext_nsfw_warning">Källor från detta tillägg kan innehålla NSFW(18+) innehåll</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="backup_restore_missing_trackers">Spårare som inte har loggats in:</string>
     <string name="parental_controls_info">Detta förhindrar inte inofficiella eller potentiellt felaktigt flaggade tillägg från att visa NSFW(18+) innehåll i appen.</string>
@@ -721,16 +714,26 @@
     <string name="action_close">Stäng</string>
     <string name="pref_duplicate_pinned_sources_summary">Upprepa källor som är upptagna i sina respektive språkgrupper</string>
     <string name="source_filter_empty_screen">Ingen installerad källa hittades</string>
-    <string name="migrate_empty_screen">Ja, det här var ju pinsamt</string>
     <string name="action_sort_last_manga_update">Sista manga-uppdateringen</string>
     <string name="action_sort_unread_count">Antal olästa</string>
     <string name="split_tall_images">Automatisk delning av höga bilder</string>
     <string name="split_tall_images_summary">Förbättrar läsarens prestanda genom att dela upp långa nedladdade bilder.</string>
     <string name="download_notifier_split_page_not_found">Sida %d hittades inte under delning</string>
     <string name="source_empty_screen">Ingen källa hittad</string>
-    <string name="pref_reset_viewer_flags_error">Kunde inte återställa visningsflaggorna</string>
-    <string name="pref_reset_viewer_flags">Återställer visningsflaggor</string>
+    <string name="pref_reset_viewer_flags_error">Kunde inte återställa läsarinställningarna</string>
+    <string name="pref_reset_viewer_flags">Återställ läsinställningarna per serie</string>
     <string name="pref_reset_viewer_flags_summary">Återställer läsläge och orientering för alla serier</string>
     <string name="download_notifier_split_page_path_not_found">Kunde inte hitta filsökvägen för sida %d</string>
-    <string name="pref_reset_viewer_flags_success">Återställning av visningsflaggor</string>
+    <string name="pref_reset_viewer_flags_success">Återställning av läsarens inställningar</string>
+    <string name="network_not_metered">Endast på obegränsat nätverk</string>
+    <string name="reading_list">Läslista</string>
+    <string name="on_hold_list">Väntelista</string>
+    <string name="unfinished_list">Oavslutad lista</string>
+    <string name="empty_screen">Det här är pinsamt</string>
+    <string name="wish_list">Önskelista</string>
+    <string name="complete_list">Klart lista</string>
+    <string name="ext_info_age_rating">Åldersklassificering</string>
+    <string name="download_notifier_split_failed">Kunde inte dela den nedladdade bilden</string>
+    <string name="ext_info_version">Version</string>
+    <string name="ext_info_language">Språk</string>
 </resources>

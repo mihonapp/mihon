@@ -79,7 +79,7 @@
     <string name="update_weekly">Wöchentlich</string>
     <string name="all">Alle</string>
     <string name="pref_library_update_restriction">Geräteeinschränkungen für automatische Aktualisierungen</string>
-    <string name="charging">Am Laden</string>
+    <string name="charging">Beim Laden</string>
     <string name="pref_update_only_non_completed">Mit dem Status „Abgeschlossen“</string>
     <string name="pref_auto_update_manga_sync">Fortschritt nach dem Lesen aktualisieren</string>
     <string name="default_category">Standardkategorie</string>
@@ -144,9 +144,6 @@
     <string name="pref_backup_slots">Maximale Datensicherungen</string>
     <string name="backup_created">Datensicherung erstellt</string>
     <string name="restore_completed">Wiederherstellen abgeschlossen</string>
-    <string name="backup_restore_content">Beim Wiederherstellen einer Datensicherung werden Daten von den Quellen abgerufen, wodurch Mobilfunkkosten enstehen können.
-\n
-\nVergewissere dich zudem, dass du alle benötigten Seitenanmeldungsdaten bereitgestellt hast, bevor du mit dem Wiederherstellen beginnst.</string>
     <string name="backup_choice">Was möchtest du sichern\?</string>
     <string name="restoring_backup">Datensicherung wird wiederhergestellt</string>
     <string name="creating_backup">Datensicherung wird erstellt</string>
@@ -272,8 +269,6 @@
 \nEine bösartige Erweiterung könnte in Tachiyomi gespeicherte Anmeldedaten auslesen oder einen schädlichen Code ausführen.
 \n
 \nDurch das Vertrauen dieses Zertifikats akzeptierst du diese Risiken.</string>
-    <string name="ext_version_info">Version: %1$s</string>
-    <string name="ext_language_info">Sprache: %1$s</string>
     <string name="double_tap_anim_speed_0">Keine Animation</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Schnell</string>
@@ -452,17 +447,15 @@
     </plurals>
     <string name="action_display_unread_badge">Ungelesene Kapitel</string>
     <string name="tracking_info">Einweg-Synchronisation zum Aktualisieren der Kapitelfortschritte in den Trackingdiensten. Richte Tracking für einzelne Manga über deren jeweiligen Tracking-Button ein.</string>
-    <string name="pref_refresh_library_covers">Bibliotheksmangacover aktualisieren</string>
+    <string name="pref_refresh_library_covers">Bibliothekscover aktualisieren</string>
     <string name="unofficial_extension_message">Diese Erweiterung stammt nicht von der offiziellen Tachiyomi-Erweiterungsliste.</string>
     <string name="ext_unofficial">Inoffiziell</string>
     <string name="sort_by_upload_date">Nach Uploaddatum</string>
     <string name="label_data">Daten</string>
     <string name="backup_restore_missing_sources">Fehlende Quellen:</string>
     <string name="invalid_backup_file_missing_manga">Sicherung beinhaltet keinerlei Manga.</string>
-    <string name="invalid_backup_file_missing_data">Der Datei fehlen Daten.</string>
     <string name="invalid_backup_file">Ungültige Sicherungsdatei</string>
     <string name="tracker_not_logged_in">Nicht angemeldet: %1$s</string>
-    <string name="source_not_found_name">Quelle nicht gefunden: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Auf neue Cover und Details überprüfen, wenn die Bibliothek aktualisiert wird</string>
     <string name="pref_library_update_refresh_metadata">Metadaten automatisch aktualisieren</string>
     <string name="action_migrate">Migrieren</string>
@@ -511,7 +504,7 @@
     <string name="backup_restore_missing_trackers">Nicht-angemeldete Tracker:</string>
     <string name="pref_remove_bookmarked_chapters">Erlauben, mit Lesezeichen versehene Kapitel zu löschen</string>
     <string name="pref_category_delete_chapters">Kapitel löschen</string>
-    <string name="ext_nsfw_warning">Kann NSFW/Ü18-Inhalte enthalten</string>
+    <string name="ext_nsfw_warning">Quellen dieser Erweiterung könnten NSFW/Ü18-Inhalte enthalten</string>
     <string name="ext_nsfw_short">Ü18</string>
     <string name="parental_controls_info">Dies verhindert nicht, dass inoffizielle oder möglicherweise falsch gekennzeichnete Erweiterungen NSFW/Ü18-Inhalte in der App anzeigen.</string>
     <plurals name="missing_chapters_warning">
@@ -717,10 +710,9 @@
     <string name="pref_clear_webview_data">WebView-Daten löschen</string>
     <string name="webview_data_deleted">WebView-Daten gelöscht</string>
     <string name="action_close">Schließen</string>
-    <string name="battery_not_low">Akkuladung nicht niedrig</string>
+    <string name="battery_not_low">Wenn der Akkustand nicht niedrig ist</string>
     <string name="pref_duplicate_pinned_sources_summary">Angeheftete Quellen in ihren jeweiligen Sprachgruppen wiederholen</string>
     <string name="pref_duplicate_pinned_sources">Doppelte angeheftete Quellen anzeigen</string>
-    <string name="migrate_empty_screen">Tja, das ist jetzt etwas peinlich</string>
     <string name="source_filter_empty_screen">Keine installierte Quelle gefunden</string>
     <string name="source_empty_screen">Keine Quelle gefunden</string>
     <string name="action_sort_unread_count">Ungelesenenanzahl</string>
@@ -730,8 +722,19 @@
     <string name="download_notifier_split_page_not_found">Seite %d während dem Aufteilen nicht gefunden</string>
     <string name="download_notifier_split_page_path_not_found">Dateipfad der Seite %d konnte nicht gefunden werden</string>
     <string name="pref_reset_viewer_flags_summary">Setzt den Lesemodus und die Ausrichtung aller Serien zurück</string>
-    <string name="pref_reset_viewer_flags">Lesereinstellungen zurücksetzen</string>
-    <string name="pref_reset_viewer_flags_success">Lesereinstellungen zurückgesetzt</string>
+    <string name="pref_reset_viewer_flags">Lesereinstellungen für jede Serie zurücksetzen</string>
+    <string name="pref_reset_viewer_flags_success">Alle Lesereinstellungen zurückgesetzt</string>
     <string name="pref_reset_viewer_flags_error">Lesereinstellungen konnten nicht zurückgesetzt werden</string>
     <string name="download_notifier_split_failed">Heruntergeladenes Bild konnte nicht aufgeteilt werden</string>
+    <string name="empty_screen">Tja, das ist jetzt etwas peinlich</string>
+    <string name="ext_info_version">Version</string>
+    <string name="ext_info_language">Sprache</string>
+    <string name="ext_info_age_rating">Altersfreigabe</string>
+    <string name="wish_list">Wunschliste</string>
+    <string name="complete_list">Abgeschlossen-Liste</string>
+    <string name="on_hold_list">Warteliste</string>
+    <string name="unfinished_list">Unvollendet-Liste</string>
+    <string name="reading_list">Leseliste</string>
+    <string name="network_not_metered">Nur im nicht tarifgebundenen Netz</string>
+    <string name="cant_open_last_read_chapter">Zuletzt gelesenes Kapitel konnte nicht geöffnet werden</string>
 </resources>

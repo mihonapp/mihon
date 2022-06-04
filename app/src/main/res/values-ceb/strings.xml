@@ -235,8 +235,6 @@
     <string name="obsolete_extension_message">Kini nga extension dili na magamit.</string>
     <string name="unofficial_extension_message">Kini nga extension dili gikan sa opisyal nga listahan sa mga extension sa Tachiyomi.</string>
     <string name="extension_api_error">Napakyas sa pagkuha sa listahan sa mga extension</string>
-    <string name="ext_version_info">Bersyon: %1$s</string>
-    <string name="ext_language_info">Pinulongan: %1$s</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="ext_nsfw_warning">Mahimong adunay sulod nga NSFW (18+)</string>
     <string name="ext_install_service_notif">Nag-instalar og extension…</string>

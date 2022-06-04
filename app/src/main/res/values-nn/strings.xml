@@ -158,8 +158,6 @@
     <string name="untrusted_extension">Ikkje-tiltrudd utvidelse</string>
     <string name="unofficial_extension_message">Denne utvidinga kjem ikkje frå den offisielle Tachiyomi-utvidingslista.</string>
     <string name="extension_api_error">Kunne ikkje henta utvidingslista</string>
-    <string name="ext_version_info">Versjon: %1$s</string>
-    <string name="ext_language_info">Språk: %1$s</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="ext_install_service_notif">Installerer utviding…</string>
     <string name="ext_installer_pref">Installatør</string>
@@ -225,12 +223,10 @@
     <string name="pref_create_backup">Lag reservekopi</string>
     <string name="pref_restore_backup">Gjenopprett reservekopi</string>
     <string name="pref_backup_directory">Reservekopifil-mappe</string>
-    <string name="source_not_found_name">Kjelde ikkje funnet: %1$s</string>
     <string name="tracker_not_logged_in">Ikkje logga inn: %1$s</string>
     <string name="backup_restore_invalid_uri">Feil: tom URI</string>
     <string name="backup_created">Reservekopi oppretta</string>
     <string name="invalid_backup_file">Ugyldig reservekopifil</string>
-    <string name="invalid_backup_file_missing_data">Fila manglar data.</string>
     <string name="invalid_backup_file_missing_manga">Reservekopi inneheld ingen manga.</string>
     <string name="pref_restore_backup_summ">Gjenopprett bibliotek frå reservekopifil</string>
     <string name="restore_completed">Gjenoppretting fullført</string>

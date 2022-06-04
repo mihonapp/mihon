@@ -128,8 +128,6 @@
     <string name="ext_pending">მოლოდინში</string>
     <string name="ext_unofficial">არაოფიციცალური</string>
     <string name="ext_uninstall">წაშლა</string>
-    <string name="ext_version_info">ვერსია: %1$s</string>
-    <string name="ext_language_info">ენა: %1$s</string>
     <string name="pref_fullscreen">მთლიან ეკრანზე</string>
     <string name="pref_cutout_short">კონტენტის ჩვენება ჩამოჭრილ ადგილზე</string>
     <string name="pref_page_transitions">გვერდის გადასვლების ანიმირება</string>
@@ -210,11 +208,9 @@
     <string name="pref_backup_service_category">ავტომატურად რეზერვის შექმნა</string>
     <string name="pref_backup_interval">რეზერვის შექმნის სიხშირე</string>
     <string name="pref_backup_slots">მაქსიმალური რეზერვი</string>
-    <string name="source_not_found_name">წყაროს პოვნა ვერ მოხერხდა: %1$s</string>
     <string name="tracker_not_logged_in">არ არის შესული: %1$s</string>
     <string name="backup_created">რეზერვი შექმნილია</string>
     <string name="invalid_backup_file">არასწორი სარეზერვო ფაილი</string>
-    <string name="invalid_backup_file_missing_data">ფაილს აკლია მონაცემები.</string>
     <string name="invalid_backup_file_missing_manga">რეზერვი არ შეიცავს არცერთ მანგას.</string>
     <string name="backup_restore_missing_sources">დაკარგული წყაროები:</string>
     <string name="restore_completed">აღდგენა შესრულებულია</string>
@@ -437,9 +433,6 @@
 \n
 \nამ სერტიფიკატის ნდობით თქვენ თქვენს თავზე იღებთ რისკებს და პასუხისმგებლობას.</string>
     <string name="tracking_info">ცალმხრივი სინქრონიზაცია თვალყურის სადევნებელ სერვისებში თავების პროგრესის განსაახლებლად. მიადევნე თვალყური ინდივიდუალურ მანგებს მათი ჩანართებიდან</string>
-    <string name="backup_restore_content">აღდგენა იყენებს წყაროებს მონაცემების გადმოსაწერად.
-\n
-\nდარწმუნდი რომ გაქვს დაინსტალირებული ყველა საჭირო დამატება და ხარ დალოგინებული წყაროებში და თვალყურის სადევნებელ სერვისებში ააღდგენამდე.</string>
     <string name="pref_refresh_library_tracking_summary">ანახლებს სტატუსს, შეფასებას და ბოლო თავს წაკითხულს თვალყურის სადევნებელ სერვისებიდან</string>
     <string name="filter_mode_overlay">გადაფარება</string>
     <string name="information_cloudflare_bypass_failure">ვერ მოხერხდა CloudFlare-ს შემოვლა</string>

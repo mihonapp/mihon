@@ -86,7 +86,7 @@
     <string name="update_weekly">Cada setmana</string>
     <string name="all">Tot</string>
     <string name="pref_library_update_restriction">Restriccions del dispositiu per a les actualitzacions automàtiques</string>
-    <string name="charging">Carregant</string>
+    <string name="charging">Quan s\'estigui carregant</string>
     <string name="pref_update_only_non_completed">Amb l\'estat «Completada»</string>
     <string name="pref_auto_update_manga_sync">Actualitza el progrés després de llegir</string>
     <string name="default_category">Categoria per defecte</string>
@@ -107,8 +107,6 @@
 \nUna extensió maliciosa podria llegir qualsevol credencial desada al Tachiyomi o executar codi arbitrari.
 \n
 \nSi confieu en aquest certificat, accepteu aquests riscos.</string>
-    <string name="ext_version_info">Versió: %1$s</string>
-    <string name="ext_language_info">Llengua: %1$s</string>
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="pref_page_transitions">Anima les transicions de pàgina</string>
     <string name="pref_show_page_number">Mostra el número de pàgina</string>
@@ -174,9 +172,6 @@
     <string name="pref_backup_slots">Màxim de còpies de seguretat</string>
     <string name="backup_created">S\'ha creat la còpia de seguretat</string>
     <string name="restore_completed">S\'ha completat la restauració</string>
-    <string name="backup_restore_content">La restauració obté dades de les fonts, poden haver-hi despeses de l\'operador.
-\n
-\nAssegureu-vos que heu instal·lat totes les extensions necessàries i que heu iniciat la sessió a les fonts i serveis de seguiment abans de restaurar.</string>
     <string name="backup_choice">De què voleu fer una còpia de seguretat\?</string>
     <string name="restoring_backup">S\'està restaurant la còpia de seguretat</string>
     <string name="creating_backup">S\'està creant la còpia de seguretat</string>
@@ -452,17 +447,15 @@
     </plurals>
     <string name="action_display_unread_badge">Capítols no llegits</string>
     <string name="tracking_info">Sincronització unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment. Configureu el seguiment d\'entrades individuals de manga al seu botó de seguiment.</string>
-    <string name="pref_refresh_library_covers">Refresca les portades del manga de la biblioteca</string>
+    <string name="pref_refresh_library_covers">Refresca les portades de la biblioteca</string>
     <string name="unofficial_extension_message">Aquesta extensió no pertany a la llista d\'extensions oficials del Tachiyomi.</string>
     <string name="ext_unofficial">No oficial</string>
     <string name="sort_by_upload_date">Per data de pujada</string>
     <string name="label_data">Dades</string>
     <string name="backup_restore_missing_sources">Manquen fonts:</string>
     <string name="invalid_backup_file_missing_manga">La còpia de seguretat no conté cap manga.</string>
-    <string name="invalid_backup_file_missing_data">Manquen dades al fitxer.</string>
     <string name="invalid_backup_file">Fitxer de còpia de seguretat invàlid</string>
     <string name="tracker_not_logged_in">Sessió no iniciada: %1$s</string>
-    <string name="source_not_found_name">La font no s\'ha trobat: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprova si hi ha noves portades o detalls en actualitzar la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Refresca les metadades automàticament</string>
     <string name="action_display_comfortable_grid">Graella confortable</string>
@@ -511,7 +504,7 @@
     <string name="backup_restore_missing_trackers">Seguidors sense sessió iniciada:</string>
     <string name="pref_remove_bookmarked_chapters">Permet la supressió dels capítols marcats</string>
     <string name="pref_category_delete_chapters">Suprimeix capítols</string>
-    <string name="ext_nsfw_warning">Pot contenir contingut NSFW (+18)</string>
+    <string name="ext_nsfw_warning">Les fonts d\'aquesta extensió poden contenir contingut NSFW (+18)</string>
     <string name="ext_nsfw_short">+18</string>
     <string name="parental_controls_info">Això no evita que les extensions no oficials o possiblement mal etiquetades puguin mostrar contingut NSFW (+18) a l\'aplicació.</string>
     <plurals name="missing_chapters_warning">
@@ -719,9 +712,8 @@
     <string name="action_close">Tanca</string>
     <string name="pref_duplicate_pinned_sources">Mostra les fonts fixades duplicades</string>
     <string name="pref_duplicate_pinned_sources_summary">Repeteix les fonts fixades a llurs grups de llengua</string>
-    <string name="battery_not_low">Bateria no baixa</string>
+    <string name="battery_not_low">Quan la bateria no sigui baixa</string>
     <string name="source_filter_empty_screen">No s\'ha trobat cap font instal·lada</string>
-    <string name="migrate_empty_screen">Ostres, que estrany...</string>
     <string name="source_empty_screen">No s\'ha trobat cap font</string>
     <string name="action_sort_unread_count">Nombre de no llegits</string>
     <string name="action_sort_last_manga_update">Darrera actualització de manga</string>
@@ -729,9 +721,20 @@
     <string name="split_tall_images_summary">Millora el rendiment del lector dividint les imatges baixades massa altes.</string>
     <string name="download_notifier_split_page_not_found">No s\'ha trobat la pàgina %d en dividir</string>
     <string name="download_notifier_split_page_path_not_found">No s\'ha trobat el camí del fitxer de la pàgina %d</string>
-    <string name="pref_reset_viewer_flags">Restableix les opcions del lector</string>
+    <string name="pref_reset_viewer_flags">Restableix les opcions del lector per sèrie</string>
     <string name="pref_reset_viewer_flags_summary">Restableix el mode de lectura i l\'orientació de totes les sèries</string>
-    <string name="pref_reset_viewer_flags_success">S\'han restablert les opcions del lector</string>
-    <string name="pref_reset_viewer_flags_error">No s\'han pogut restablir les opcions del lector</string>
+    <string name="pref_reset_viewer_flags_success">S\'han restablert tota la configuració del lector</string>
+    <string name="pref_reset_viewer_flags_error">No s\'ha pogut restablir la configuració del lector</string>
     <string name="download_notifier_split_failed">No s\'ha pogut dividir la imatge baixada</string>
+    <string name="empty_screen">Ostres, que estrany...</string>
+    <string name="ext_info_language">Llengua</string>
+    <string name="ext_info_version">Versió</string>
+    <string name="ext_info_age_rating">Valoració d\'edat</string>
+    <string name="reading_list">Llista de lectura</string>
+    <string name="wish_list">Llista de desitjos</string>
+    <string name="complete_list">Llista de completats</string>
+    <string name="on_hold_list">Llista de pausats</string>
+    <string name="unfinished_list">Llista d\'inacabats</string>
+    <string name="network_not_metered">Només en xarxes sense límits de dades</string>
+    <string name="cant_open_last_read_chapter">No s\'ha pogut obrir el darrer capítol llegit</string>
 </resources>

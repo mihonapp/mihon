@@ -72,7 +72,7 @@
     <string name="update_48hour">Ogni 2 giorni</string>
     <string name="all">Tutte</string>
     <string name="pref_library_update_restriction">Restrizioni del dispositivo agli aggiornamenti automatici</string>
-    <string name="charging">In carica</string>
+    <string name="charging">Quando si carica</string>
     <string name="pref_update_only_non_completed">Con stato «Completata»</string>
     <string name="pref_auto_update_manga_sync">Aggiorna il tracking dopo la lettura</string>
     <!-- Reader section -->
@@ -263,9 +263,6 @@
     <string name="backup_created">Backup creato</string>
     <string name="restore_completed">Ripristino completato</string>
     <string name="pref_backup_service_category">Backup automatici</string>
-    <string name="backup_restore_content">Il ripristino utilizza le fonti per recuperare i dati, potrebbero essere applicati costi dal gestore telefonico.
-\n
-\nAssicurati di aver installato tutte le estensioni necessarie e di aver effettuato l\'accesso a fonti e servizi di tracking prima di ripristinare.</string>
     <string name="backup_choice">Di cosa vuoi fare il backup\?</string>
     <string name="restoring_backup">Ripristino backup</string>
     <string name="creating_backup">Creazione backup</string>
@@ -300,8 +297,6 @@
 \nUn\'estensione maliziosa potrebbe leggere credenziali di accesso all\'interno di Tachiyomi, o eseguire codice dannoso.
 \n
 \nFidandoti di questo certificato accetti questi rischi.</string>
-    <string name="ext_version_info">Versione: %1$s</string>
-    <string name="ext_language_info">Lingua: %1$s</string>
     <string name="pref_double_tap_anim_speed">Velocità animazioni doppio tocco</string>
     <string name="pager_viewer">Per pagina</string>
     <string name="double_tap_anim_speed_0">Senza animazione</string>
@@ -471,7 +466,7 @@
     <string name="downloaded_only_summary">Filtra tutti i manga nella tua libreria</string>
     <string name="check_for_updates">Controlla aggiornamenti</string>
     <string name="battery_optimization_setting_activity_not_found">Impossibile aprire le impostazioni del dispositivo</string>
-    <string name="pref_refresh_library_covers">Aggiorna le copertine dei manga della libreria</string>
+    <string name="pref_refresh_library_covers">Aggiorna le copertine della libreria</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Completato in %1$s con %2$s errore</item>
         <item quantity="other">Completato in %1$s con %2$s errori</item>
@@ -493,10 +488,8 @@
     <string name="label_data">Dati</string>
     <string name="backup_restore_missing_sources">Fonti mancanti:</string>
     <string name="invalid_backup_file_missing_manga">Il backup non contiene nessun manga.</string>
-    <string name="invalid_backup_file_missing_data">File corrotto o mancano dati.</string>
     <string name="invalid_backup_file">File di backup invalido</string>
     <string name="tracker_not_logged_in">Non hai effettuato l\'accesso: %1$s</string>
-    <string name="source_not_found_name">Fonte non trovata: %1$s</string>
     <string name="unofficial_extension_message">Questa estensione non è presente nella lista ufficiale delle estensioni di Tachiyomi.</string>
     <string name="ext_unofficial">Non ufficiale</string>
     <string name="pref_library_update_refresh_metadata_summary">Controlla nuove copertine e descrizioni durante l\'aggiornamento della libreria</string>
@@ -543,7 +536,7 @@
     <string name="no_pinned_sources">Non hai fonti fissate</string>
     <string name="pref_remove_bookmarked_chapters">Consenti eliminazione capitoli con segnalibro</string>
     <string name="pref_category_delete_chapters">Elimina capitoli</string>
-    <string name="ext_nsfw_warning">Potrebbe contenere materiale NSFW (18+)</string>
+    <string name="ext_nsfw_warning">Fonti di questa estensione potrebbero contenere materiale NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d capitolo saltato, la fonte non ce l\'ha o è stato filtrato</item>
@@ -752,8 +745,7 @@
     <string name="action_close">Chiudi</string>
     <string name="pref_duplicate_pinned_sources">Mostra fonti duplicate appuntate</string>
     <string name="pref_duplicate_pinned_sources_summary">Ripetere le fonti appuntate nei rispettivi gruppi di lingue</string>
-    <string name="battery_not_low">Batteria non scarica</string>
-    <string name="migrate_empty_screen">Beh, questo è imbarazzante</string>
+    <string name="battery_not_low">Quando la batteria non è scarica</string>
     <string name="source_filter_empty_screen">Nessuna fonte installata trovata</string>
     <string name="source_empty_screen">Nessuna fonte trovata</string>
     <string name="action_sort_unread_count">Conteggio non letti</string>
@@ -763,8 +755,18 @@
     <string name="download_notifier_split_page_not_found">Pagina %d non trovata durante la divisione</string>
     <string name="download_notifier_split_page_path_not_found">Impossibile trovare il percorso della pagina %d</string>
     <string name="pref_reset_viewer_flags_summary">Reimposta la modalità di lettura e l\'orientamento per tutte le serie</string>
-    <string name="pref_reset_viewer_flags">Reimposta le opzioni del visualizzatore</string>
-    <string name="pref_reset_viewer_flags_success">Opzioni del visualizzatore ripristinate</string>
-    <string name="pref_reset_viewer_flags_error">Impossibile ripristinare le opzioni del visualizzatore</string>
+    <string name="pref_reset_viewer_flags">Reimposta le opzioni del lettore per ogni serie</string>
+    <string name="pref_reset_viewer_flags_success">Ripristinate tutte le opzioni del lettore</string>
+    <string name="pref_reset_viewer_flags_error">Impossibile ripristinare le opzioni del lettore</string>
     <string name="download_notifier_split_failed">Impossibile separare le immagini scaricate</string>
+    <string name="empty_screen">Beh, questo è imbarazzante</string>
+    <string name="ext_info_age_rating">Classificazione per età</string>
+    <string name="ext_info_version">Versione</string>
+    <string name="ext_info_language">Lingua</string>
+    <string name="on_hold_list">In Pausa</string>
+    <string name="reading_list">In Lettura</string>
+    <string name="wish_list">Da Leggere</string>
+    <string name="complete_list">Completati</string>
+    <string name="unfinished_list">Non Completati</string>
+    <string name="network_not_metered">Solo su rete non a consumo</string>
 </resources>

@@ -57,7 +57,7 @@
     <string name="update_48hour">ทุก 2 วัน</string>
     <string name="update_weekly">ทุกสัปดาห์</string>
     <string name="all">ทั้งหมด</string>
-    <string name="charging">ขณะชาร์จ</string>
+    <string name="charging">ขณะกำลังชาร์จ</string>
     <string name="default_category_summary">ถามทุกครั้ง</string>
     <string name="ext_update">อัปเดต</string>
     <string name="ext_install">ติดตั้ง</string>
@@ -65,7 +65,6 @@
     <string name="ext_downloading">กำลังดาวน์โหลด</string>
     <string name="ext_installing">กำลังติดตั้ง</string>
     <string name="ext_installed">ติดตั้งแล้ว</string>
-    <string name="ext_language_info">ภาษา: %1$s</string>
     <string name="pref_reader_navigation">การนำทาง</string>
     <string name="pref_reader_theme">สีพื้นหลัง</string>
     <string name="white_background">ขาว</string>
@@ -100,7 +99,7 @@
     <string name="pref_library_update_interval">การอัปเดตอัตโนมัติ</string>
     <string name="update_never">ปิด</string>
     <string name="pref_library_update_restriction">อัปเดตข้อจำกัดของอุปกรณ์โดยอัตโนมัติ</string>
-    <string name="pref_update_only_non_completed">มีเรื่องที่มีสถานะ \"จบแล้ว\"</string>
+    <string name="pref_update_only_non_completed">ที่มีสถานะ \"จบแล้ว\"</string>
     <string name="pref_auto_update_manga_sync">อัปเดตความคืบหน้าหลังอ่าน</string>
     <string name="default_category">หมวดหมู่เริ่มต้น</string>
     <string name="all_lang">ทั้งหมด</string>
@@ -113,7 +112,6 @@
 \nส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ใน Tachiyomi หรือเรียกใช้โค้ดโดยอำเภอใจ
 \n
 \nการเชื่อถือใบรับรองนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
-    <string name="ext_version_info">เวอร์ชัน: %1$s</string>
     <string name="pref_fullscreen">เต็มหน้าจอ</string>
     <string name="pref_page_transitions">แสดงแอนิเมชั่นเมื่อเปลี่ยนหน้า</string>
     <string name="pref_double_tap_anim_speed">ความเร็วแอนิเมชั่นเมื่อแตะ 2 ครั้ง</string>
@@ -256,9 +254,6 @@
     <string name="filter_mode_screen">สกรีน</string>
     <string name="filter_mode_lighten">ดอดจ์ / สว่างขึ้น</string>
     <string name="no_results_found">ไม่พบผลลัพธ์</string>
-    <string name="backup_restore_content">การคืนค่าใช้แหล่งที่มาเพื่อดึงข้อมูล อาจมีค่าบริการของผู้ให้บริการ
-\n
-\nตรวจสอบให้แน่ใจว่าคุณได้ติดตั้งส่วนขยายที่จำเป็นทั้งหมดและลงชื่อเข้าใช้แหล่งที่มาและบริการติดตามก่อนที่จะคืนค่า</string>
     <string name="title">ชื่อเรื่อง</string>
     <string name="status">สถานะ</string>
     <string name="track_status">สถานะ</string>
@@ -350,7 +345,7 @@
     <string name="pref_dual_page_split">แยกหน้าคู่</string>
     <string name="pref_show_navigation_mode_summary">แสดงครู่หนึ่งเมื่อเปิดตัวอ่าน</string>
     <string name="pref_show_navigation_mode">แสดงตำแหน่งโซนการแตะ</string>
-    <string name="ext_nsfw_warning">อาจมีเนื้อหา NSFW (18+)</string>
+    <string name="ext_nsfw_warning">แหล่งที่มาจากส่วนขยายนี้อาจมีเนื้อหา NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="unofficial_extension_message">ส่วนขยายนี้ไม่ได้มาจากรายการส่วนขยายทางการของ Tachiyomi</string>
     <string name="obsolete_extension_message">ส่วนขยายนี้ไม่สามารถใช้ได้อีกต่อไป</string>
@@ -518,7 +513,7 @@
     <string name="crash_log_saved">บันทึกบันทึกข้อขัดข้องแล้ว</string>
     <string name="pref_dump_crash_logs_summary">บันทึกบันทึกข้อผิดพลาดลงในแฟ้มเพื่อแบ่งปันกับผู้พัฒนา</string>
     <string name="pref_dump_crash_logs">ดัมพ์บันทึกข้อขัดข้อง</string>
-    <string name="pref_refresh_library_covers">โหลดปกมังงะในคลังใหม่</string>
+    <string name="pref_refresh_library_covers">โหลดปกในคลังใหม่</string>
     <string name="label_data">ข้อมูล</string>
     <string name="requires_app_restart">ต้องรีสตาร์ทแอปจึงจะมีผล</string>
     <string name="pref_dns_over_https">DNS ผ่าน HTTPS (DoH)</string>
@@ -538,10 +533,8 @@
     <string name="backup_restore_missing_trackers">ตัวติดตามไม่ได้เข้าสู่ระบบ:</string>
     <string name="backup_restore_missing_sources">แหล่งที่มาที่หายไป:</string>
     <string name="invalid_backup_file_missing_manga">แฟ้มสํารองข้อมูลไม่มีมังงะใด ๆ</string>
-    <string name="invalid_backup_file_missing_data">ข้อมูลแฟ้มไม่ครบ</string>
     <string name="invalid_backup_file">ข้อมูลสำรองไม่ถูกต้อง</string>
     <string name="tracker_not_logged_in">ไม่ได้เข้าสู่ระบบ: %1$s</string>
-    <string name="source_not_found_name">ไม่พบแหล่งที่มา: %1$s</string>
     <string name="pref_search_pinned_sources_only">เฉพาะแหล่งที่มาที่ตรึงไว้เท่านั้น</string>
     <string name="pref_enable_automatic_extension_updates">ตรวจสอบการอัปเดตส่วนขยาย</string>
     <string name="tracking_info">ซิงค์ทางเดียวเพื่ออัปเดตความคืบหน้าของตอนกับบริการการติดตาม ตั้งค่าการติดตามรายการมังงะในแต่ละรายการได้จากปุ่มติดตาม</string>
@@ -633,7 +626,7 @@
     <string name="database_clean">ล้างฐานข้อมูลแล้ว</string>
     <string name="about_dont_kill_my_app">ผู้ผลิตบางรายมีข้อจำกัดเพิ่มเติมของแอปที่ปิดบริการพื้นหลัง เว็บไซต์นี้มีข้อมูลเพิ่มเติมเกี่ยวกับวิธีการแก้ไข</string>
     <string name="pref_verbose_logging">การบันทึกอย่างละเอียด</string>
-    <string name="pref_library_update_manga_restriction">ข้ามการอัปเดต</string>
+    <string name="pref_library_update_manga_restriction">เรื่องที่ข้ามการอัปเดต</string>
     <string name="pref_category_appearance">ลักษณะ</string>
     <string name="pref_app_theme">ธีมแอพ</string>
     <string name="theme_monet">ไดนามิก</string>
@@ -683,7 +676,7 @@
     <string name="action_display_cover_only_grid">ตารางแสดงแค่หน้าปก</string>
     <string name="pref_landscape_zoom">ซูมภาพแนวนอน</string>
     <string name="skipped_reason_not_caught_up">ถูกข้ามเนื่องจากมีตอนที่ยังไม่ได้อ่าน</string>
-    <string name="skipped_reason_not_started">ถูกข้ามเนื่องจากไม่มีตอนใด ๆ ถูกอ่าน</string>
+    <string name="skipped_reason_not_started">ถูกข้ามเนื่องจากยังไม่มีตอนใด ๆ ถูกอ่าน</string>
     <string name="action_show_manga">แสดงมังงะ</string>
     <string name="confirm_manga_add_duplicate">มีรายการในคลังที่มีชื่อเดียวกัน แต่มาจากคนละแหล่งที่มา (%1$s)
 \n
@@ -707,9 +700,8 @@
     <string name="action_close">ปิด</string>
     <string name="pref_clear_webview_data">ล้างข้อมูล WebView</string>
     <string name="webview_data_deleted">ล้างข้อมูล WebView แล้ว</string>
-    <string name="battery_not_low">แบตเตอรี่ยังไม่ต่ำ</string>
+    <string name="battery_not_low">ขณะแบตเตอรี่ยังไม่ต่ำ</string>
     <string name="source_filter_empty_screen">ไม่พบแหล่งที่มาที่ติดตั้งแล้ว</string>
-    <string name="migrate_empty_screen">เอ่อ แย่ชะมัด</string>
     <string name="source_empty_screen">ไม่พบแหล่งที่มาใด ๆ</string>
     <string name="action_sort_unread_count">จำนวนตอนที่ยังไม่ได้อ่าน</string>
     <string name="action_sort_last_manga_update">มังงะที่อัปเดตล่าสุด</string>
@@ -717,8 +709,20 @@
     <string name="download_notifier_split_page_not_found">ไม่พบหน้า %d ขณะกำลังแยกหน้า</string>
     <string name="split_tall_images_summary">เพิ่มประสิทธิภาพตัวอ่านด้วยการแยกรูปภาพที่สูงยาวที่ดาวน์โหลดไว้</string>
     <string name="download_notifier_split_page_path_not_found">ไม่พบตำแหน่งไฟล์ของหน้า %d</string>
-    <string name="pref_reset_viewer_flags">รีเซ็ต flag ตัวดู</string>
+    <string name="pref_reset_viewer_flags">รีเซ็ตค่ากำหนดตัวอ่านตามเรื่อง</string>
     <string name="pref_reset_viewer_flags_summary">รีเซ็ตโหมดการอ่านและการจัดวางของทุกเรื่อง</string>
-    <string name="pref_reset_viewer_flags_success">รีเซ็ต flag ตัวดูแล้ว</string>
-    <string name="pref_reset_viewer_flags_error">ไม่สามารถรีเซ็ต flag ตัวดู</string>
+    <string name="pref_reset_viewer_flags_success">รีเซ็ตค่ากำหนดตัวอ่านทั้งหมดแล้ว</string>
+    <string name="pref_reset_viewer_flags_error">ไม่สามารถรีเซ็ตค่ากำหนดตัวอ่าน</string>
+    <string name="download_notifier_split_failed">ไม่สามารถแยกภาพที่ดาวน์โหลดไว้ได้</string>
+    <string name="empty_screen">เอ่อ นี้มันงี่เง่าชะมัด</string>
+    <string name="ext_info_version">เวอร์ชัน</string>
+    <string name="ext_info_language">ภาษา</string>
+    <string name="ext_info_age_rating">ระดับความเหมาะสม</string>
+    <string name="wish_list">รายการที่อยากอ่าน</string>
+    <string name="on_hold_list">รายการที่พักอ่านไว้</string>
+    <string name="unfinished_list">รายการที่ยังไม่จบ</string>
+    <string name="reading_list">รายการที่กำลังอ่าน</string>
+    <string name="complete_list">รายการที่จบแล้ว</string>
+    <string name="network_not_metered">เฉพาะบนเครือข่ายที่ไม่ได้ตรวจสอบ</string>
+    <string name="cant_open_last_read_chapter">ไม่สามารถเปิดตอนที่อ่านล่าสุดได้</string>
 </resources>

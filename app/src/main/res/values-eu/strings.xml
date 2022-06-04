@@ -113,7 +113,6 @@
     <string name="ext_downloading">Deskargatzen</string>
     <string name="ext_installing">Instalatzen</string>
     <string name="ext_unofficial">Ez-ofiziala</string>
-    <string name="ext_version_info">Bertsioa: %1$s</string>
     <string name="ext_nsfw_warning">NSFW (18+) edukia izan dezake</string>
     <string name="ext_installer_pref">Instalatzailea</string>
     <string name="pref_fullscreen">Pantaila osoa</string>
@@ -134,8 +133,6 @@
     <string name="pref_download_directory">Deskarga kokapena</string>
     <string name="pref_category_delete_chapters">Ezabatu kapituluak</string>
     <string name="fourth_to_last">Atzetik hasita laugarren irakurritako kapitulua</string>
-    <string name="source_not_found_name">Iturria ez da aurkitu: %1$s</string>
-    <string name="invalid_backup_file_missing_data">Fitxategiari datuak falta zaizkio.</string>
     <string name="backup_restore_missing_trackers">Saioa hasi gabeko jarraitzaileak:</string>
     <string name="backup_choice">Zeren babeskopia nahi duzu\?</string>
     <string name="restore_in_progress">Berreskuratzea abian da</string>
@@ -277,7 +274,6 @@
     <string name="all_lang">Denak</string>
     <string name="ext_installed">Instalatuak</string>
     <string name="ext_app_info">Aplikazioaren informazioa</string>
-    <string name="ext_language_info">Hizkuntza: %1$s</string>
     <string name="pref_page_transitions">Animatu orrialdeen trantsizioak</string>
     <string name="pref_show_reading_mode">Erakutsi irakurketa modua</string>
     <string name="gray_background">Grisa</string>
@@ -341,9 +337,6 @@
     <string name="pref_download_new">Deskargatu kapitulu berriak</string>
     <string name="update_check_notification_update_available">Bertsio berria eskuragarri!</string>
     <string name="pref_create_backup_summ">Liburutegia berreskuratzeko erabil daiteke</string>
-    <string name="backup_restore_content">Berrezartzeak iturriak erabiltzen ditu datuak lortzeko, baliteke operadoreak kostuak aplikatzea.
-\n
-\nZiurtatu beharrezko luzapen guztiak instalatu dituzula eta iturrietan eta jarraipen-zerbitzuetan saioa hasi duzula berreskuratu aurretik.</string>
     <string name="downloaded_only_summary">Zure liburutegiko manga guztiak iragazten ditu</string>
     <string name="pref_dns_over_https">DNS HTTPS bidez (DoH)</string>
     <string name="pref_enable_acra">Bidali hutsegite-txostenak</string>

@@ -249,8 +249,6 @@
     <string name="pref_fullscreen">ሙሉ ማያ</string>
     <string name="ext_nsfw_warning">18+ ይዘትን ይያዝ</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="ext_language_info">ቋንቋ: %1$s</string>
-    <string name="ext_version_info">ስሪት: %1$s</string>
     <string name="action_sort_alpha">በፊደል ደርድር</string>
     <string name="information_webview_required">ለታቺዮሚ የድር እይታ ያስፈልጋል</string>
     <string name="information_cloudflare_bypass_failure">ክላዉድ ፍሌር ን ማለፍ አልተሳካም</string>
@@ -271,11 +269,9 @@
     <string name="color_filter_r_value">ቀ</string>
     <string name="color_filter_b_value">ቢ</string>
     <string name="color_filter_g_value">ኣ</string>
-    <string name="invalid_backup_file_missing_data">ፋይል እየጎደለ ነው።</string>
     <string name="invalid_backup_file">ልክ ያልሆነ የመጠባበቂያ ፋይል</string>
     <string name="backup_created">ምትኬ ተፈጥሯል</string>
     <string name="tracker_not_logged_in">አልገባም%1$s</string>
-    <string name="source_not_found_name">ምንጭ አልተገኘም%1$s</string>
     <string name="pref_backup_slots">ከፍተኛ መጠባበቂያዎች</string>
     <string name="pref_backup_interval">የመጠባበቂያ ድግግሞሽ</string>
     <string name="pref_backup_service_category">ራስ-ሰር መጠባበቂያዎች</string>
@@ -318,9 +314,6 @@
     </plurals>
     <string name="restore_duration">%02d ደቂቃ ፣ %02d ሰከንድ</string>
     <string name="restore_completed">እነበረበት መልስ ተጠናቅቋል</string>
-    <string name="backup_restore_content">መረጃን ለማምጣት ምንጮችን ይጠቀማል ወደነበረበት ይመልሱ ፣ የአገልግሎት አቅራቢ ወጪዎች ሊተገበሩ ይችላሉ።
-\n
-\nከመመለስዎ በፊት ሁሉንም አስፈላጊ ቅጥያዎች መጫኑን ያረጋግጡ እና ወደ ምንጮች እና መከታተያ አገልግሎቶች እንደገቡ ያረጋግጡ።</string>
     <string name="backup_restore_missing_trackers">መከታተያዎች አልገቡም:</string>
     <string name="backup_restore_missing_sources">የጠፋ ምንጮች:</string>
     <string name="invalid_backup_file_missing_manga">ምትኬ ማንኛውንም ማንጋ አልያዘም ፡፡</string>

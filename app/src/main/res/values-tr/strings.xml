@@ -86,7 +86,7 @@
     <string name="update_weekly">Her hafta</string>
     <string name="all">Tümü</string>
     <string name="pref_library_update_restriction">Otomatik güncellemeler aygıt kısıtlamaları</string>
-    <string name="charging">Şarj oluyor</string>
+    <string name="charging">Şarj olurken</string>
     <string name="pref_update_only_non_completed">\"Tamamlanan\" durumda olan</string>
     <string name="pref_auto_update_manga_sync">Okuyunca ilerlemeyi güncelle</string>
     <string name="default_category">Varsayılan kategori</string>
@@ -107,8 +107,6 @@
 \nKötü niyetli bir uzantı, Tachiyomi\'de saklanan her giriş kimlik bilgisini okuyabilir veya rastgele kod yürütebilir.
 \n
 \nBu sertifikaya güvenerek bu riskleri kabul etmiş oluyorsunuz.</string>
-    <string name="ext_version_info">Sürüm: %1$s</string>
-    <string name="ext_language_info">Dil: %1$s</string>
     <string name="pref_fullscreen">Tam Ekran</string>
     <string name="pref_page_transitions">Sayfa geçişlerini canladır</string>
     <string name="pref_double_tap_anim_speed">Çift dokunma animasyon hızı</string>
@@ -174,9 +172,6 @@
     <string name="pref_backup_slots">Maksimum yedek</string>
     <string name="backup_created">Yedek oluşturuldu</string>
     <string name="restore_completed">Geri yükleme tamamlandı</string>
-    <string name="backup_restore_content">Geri yükleme veriyi almak için kaynakları kullanır, taşıyıcı ücreti uygulanabilir.
-\n
-\nGeri yüklemeden önce, giriş gerektiren kaynaklara ve izleme hizmetlerine giriş yaptığınızdan, ve gerekli tüm uzantıları kurduğunuzdan emin olun.</string>
     <string name="backup_choice">Neyi yedeklemek istiyorsunuz?</string>
     <string name="restoring_backup">Yedek geri yükleniyor</string>
     <string name="creating_backup">Yedek oluşturuluyor</string>
@@ -452,17 +447,15 @@
     </plurals>
     <string name="action_display_unread_badge">Okunmamış bölümler</string>
     <string name="tracking_info">Bölüm ilerlemesini, izleme hizmetlerinde güncellemek için tek yönlü eşitleme. Her manga girdisinin izleme düğmesinden, izlemeyi ayarlayın.</string>
-    <string name="pref_refresh_library_covers">Kitaplık manga kapaklarını yenile</string>
+    <string name="pref_refresh_library_covers">Kitaplık kapaklarını yenile</string>
     <string name="unofficial_extension_message">Bu uzantı resmi Tachiyomi uzantıları listesinden değil.</string>
     <string name="ext_unofficial">Resmi olmayan</string>
     <string name="sort_by_upload_date">Yükleme tarihine göre</string>
     <string name="label_data">Veri</string>
     <string name="backup_restore_missing_sources">Eksik kaynaklar:</string>
     <string name="invalid_backup_file_missing_manga">Yedek bir manga içermiyor.</string>
-    <string name="invalid_backup_file_missing_data">Dosyada veri eksik.</string>
     <string name="invalid_backup_file">Geçersiz yedekleme dosyası</string>
     <string name="tracker_not_logged_in">Giriş yapılmadı: %1$s</string>
-    <string name="source_not_found_name">Kaynak bulunamadı: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Kitaplığı güncellerken yeni kapağı ve ayrıntıları denetle</string>
     <string name="pref_library_update_refresh_metadata">Üst veriyi kendiliğinden yenile</string>
     <string name="action_migrate">Taşın</string>
@@ -511,7 +504,7 @@
     <string name="backup_restore_missing_trackers">İzleyiciler giriş yapmadı:</string>
     <string name="pref_remove_bookmarked_chapters">İşaretli bölümleri silmeye izin ver</string>
     <string name="pref_category_delete_chapters">Bölümleri sil</string>
-    <string name="ext_nsfw_warning">Yetişkin (18+) içerik içerebilir</string>
+    <string name="ext_nsfw_warning">Bu uzantıdaki kaynaklar yetişkin (18+) içerik içerebilir</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Bu, resmi olmayan veya yanlış işaretlenmiş uzantıların, uygulama içinde yetişkin (18+) içeriği göstermesini engellemez.</string>
     <plurals name="missing_chapters_warning">
@@ -719,8 +712,7 @@
     <string name="action_close">Kapat</string>
     <string name="pref_duplicate_pinned_sources">Yinelenen sabitlenmiş kaynakları göster</string>
     <string name="pref_duplicate_pinned_sources_summary">Sabitlenen kaynakları ilgili dil gruplarında tekrarla</string>
-    <string name="battery_not_low">Pil düşük değil</string>
-    <string name="migrate_empty_screen">Bu çok garip</string>
+    <string name="battery_not_low">Pil düşük olmadığında</string>
     <string name="source_filter_empty_screen">Kurulu kaynak bulunamadı</string>
     <string name="source_empty_screen">Kaynak bulunamadı</string>
     <string name="action_sort_last_manga_update">Son manga güncellemesi</string>
@@ -729,9 +721,20 @@
     <string name="split_tall_images_summary">İndirilen uzun görselleri bölerek okuyucu performansını artırır.</string>
     <string name="download_notifier_split_page_not_found">Bölünürken sayfa %d bulunamadı</string>
     <string name="download_notifier_split_page_path_not_found">Sayfa %d dosya yolu bulunamadı</string>
-    <string name="pref_reset_viewer_flags">Görüntüleyici seçeneklerini sıfırla</string>
+    <string name="pref_reset_viewer_flags">Seri başına okuyucu ayarlarını sıfırla</string>
     <string name="pref_reset_viewer_flags_summary">Tüm serilerin okuma kipini ve yönünü sıfırlar</string>
-    <string name="pref_reset_viewer_flags_success">Görüntüleyici seçenekleri sıfırlandı</string>
-    <string name="pref_reset_viewer_flags_error">Görüntüleyici seçenekleri sıfırlanamadı</string>
+    <string name="pref_reset_viewer_flags_success">Tüm okuyucu ayarları sıfırlandı</string>
+    <string name="pref_reset_viewer_flags_error">Okuyucu ayarları sıfırlanamadı</string>
     <string name="download_notifier_split_failed">İndirilen görsel bölünemedi</string>
+    <string name="empty_screen">Peki, bu garip</string>
+    <string name="ext_info_version">Sürüm</string>
+    <string name="ext_info_language">Dil</string>
+    <string name="ext_info_age_rating">Yaş derecelendirmesi</string>
+    <string name="wish_list">İstek Listesi</string>
+    <string name="on_hold_list">Beklemede Listesi</string>
+    <string name="unfinished_list">Tamamlanmayan Listesi</string>
+    <string name="complete_list">Tamamlanan Listesi</string>
+    <string name="reading_list">Okuma Listesi</string>
+    <string name="network_not_metered">Yalnızca kotasız ağda</string>
+    <string name="cant_open_last_read_chapter">Son okunan bölüm açılamıyor</string>
 </resources>

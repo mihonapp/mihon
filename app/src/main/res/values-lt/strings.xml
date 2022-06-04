@@ -218,8 +218,6 @@
     <string name="pref_fullscreen">Pilno ekrano rėžimas</string>
     <string name="ext_nsfw_warning">Gali būti N18 turinio</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="ext_language_info">Kalba: %1$s</string>
-    <string name="ext_version_info">%1$s: Versija</string>
     <string name="unofficial_extension_message">Šis plėtinys nėra iš oficialaus Tachiyomi sąrašo.</string>
     <string name="obsolete_extension_message">Šis plėtinys nebėra prieinamas.</string>
     <string name="untrusted_extension_message">Šis plėtinys buvo pasirašytas nepatikimu sertifikatu ir nebuvo aktyvuotas.
@@ -347,7 +345,6 @@
     <string name="ext_installer_legacy">Pasenusi</string>
     <string name="pref_grayscale">Nespalvotai</string>
     <string name="pref_zoom_start">Priartinimo pradinė padėtis</string>
-    <string name="invalid_backup_file_missing_data">Faile trūksta duomenų.</string>
     <string name="pref_backup_interval">Atsarginių kopijų kūrimo dažnis</string>
     <string name="third_to_last">Trečias skyrius nuo paskutinio skaityto</string>
     <string name="disabled">Išjungtas</string>
@@ -370,7 +367,6 @@
     <string name="backup_restore_invalid_uri">Klaida: tuščias URI</string>
     <string name="pref_backup_service_category">Automatinės atsarginės kopijos</string>
     <string name="pref_backup_slots">Maksimalus atsarginių kopijų skaičius</string>
-    <string name="source_not_found_name">Šaltinis nerastas: %1$s</string>
     <string name="backup_created">Sukurta atsarginė kopija</string>
     <string name="pref_high">aukštas</string>
     <string name="pref_download_directory">Atsisiuntimo vieta</string>

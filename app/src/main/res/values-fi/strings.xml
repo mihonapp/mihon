@@ -154,8 +154,6 @@
 \nHaitallinen laajennus voisi lukea mahdolliset kirjautumistiedot Tachiyomista tai suorittaa luvatonta koodia.
 \n
 \nLuottamalla tähän sertifikaattiin hyväksyt nämä riskit.</string>
-    <string name="ext_version_info">Versio: %1$s</string>
-    <string name="ext_language_info">Kieli: %1$s</string>
     <string name="pref_fullscreen">Koko näyttö</string>
     <string name="pref_page_transitions">Animoi sivusiirtymät</string>
     <string name="pref_double_tap_anim_speed">Tuplanäpäytyksen animaation nopeus</string>
@@ -221,9 +219,6 @@
     <string name="pref_backup_slots">Varmuuskopioiden enimmäismäärä</string>
     <string name="backup_created">Varmuuskopio luotu</string>
     <string name="restore_completed">Palautus valmis</string>
-    <string name="backup_restore_content">Palautus käyttää lähdettä noutaakseen tietoja, tämä voi aiheuttaa kustannuksia.
-\n
-\nVarmista myös että sinulla on kaikki tarvittavat laajennukset ja olet kirjautunut lähteisiin ja seuranta palveluihin ennen palauttamista.</string>
     <string name="backup_choice">Mitä haluat varmuuskopioida\?</string>
     <string name="restoring_backup">Palautetaan varmuuskopiota</string>
     <string name="creating_backup">Luodaan varmuuskopiota</string>
@@ -459,10 +454,8 @@
     <string name="label_data">Tiedot</string>
     <string name="backup_restore_missing_sources">Puuttuvat lähteet:</string>
     <string name="invalid_backup_file_missing_manga">Varmuuskopio ei sisällä mangaa.</string>
-    <string name="invalid_backup_file_missing_data">Tiedostosta puuttuu tietoja.</string>
     <string name="invalid_backup_file">Virheellinen varmuuskopio</string>
     <string name="tracker_not_logged_in">Et ole kirjautunut sisään: %1$s</string>
-    <string name="source_not_found_name">Lähdettä ei löytynyt: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Tarkista uusi kansi ja tiedot päivitettäessä kirjastoa</string>
     <string name="pref_library_update_refresh_metadata">Päivitä metatiedot automaattisesti</string>
     <string name="action_migrate">Siirrä</string>

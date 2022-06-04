@@ -280,8 +280,6 @@
 \nMột tiện ích mở rộng độc hại có thể đọc được bất kỳ thông tin đăng nhập được lưu trữ nào của Tachiyomi hoặc tự ý thay đổi mã nguồn.\t
 \n
 \nBạn sẽ chấp nhận những rủi ro khi tin tưởng chứng chỉ này.</string>
-    <string name="ext_version_info">Phiên bản: %1$s</string>
-    <string name="ext_language_info">Ngôn ngữ: %1$s</string>
     <string name="pref_double_tap_anim_speed">Tốc độ nhấn đúp hình ảnh động</string>
     <string name="pref_crop_borders">Cắt viền</string>
     <string name="pref_read_with_volume_keys_inverted">Đảo ngược phím âm lượng</string>
@@ -299,9 +297,6 @@
     <string name="pref_backup_slots">Số sao lưu tối đa</string>
     <string name="backup_created">Sao lưu đã được tạo</string>
     <string name="restore_completed">Khôi phục hoàn tất</string>
-    <string name="backup_restore_content">Khôi phục yêu cầu sử dụng mạng để truy cập các nguồn truyện và nguồn theo dõi để lấy dữ liệu.
-\n
-\nHãy đảm bảo rằng bạn đã cài đặt các tiện ích mở rộng cần thiết và đăng nhập vào các nguồn truyện và nguồn theo dõi trước khi khôi phục.</string>
     <string name="backup_choice">Bạn có muốn sao lưu không\?</string>
     <string name="restoring_backup">Khôi phục sao lưu</string>
     <string name="creating_backup">Đang tạo bản sao lưu</string>
@@ -421,7 +416,6 @@
     <string name="label_sources">Nguồn</string>
     <string name="label_more">Thêm nữa</string>
     <string name="tracker_not_logged_in">Chưa đăng nhập: %1$s</string>
-    <string name="source_not_found_name">Nguồn không tồn tại: %1$s</string>
     <string name="pref_search_pinned_sources_only">Chỉ bao gồm các nguồn được ghim</string>
     <string name="tracking_info">Đồng bộ một chiều để cập nhật tiến trình chương trong các dịch vụ theo dõi. Thiết lập theo dõi cho các truyện riêng lẻ từ các nút theo dõi.</string>
     <string name="webtoon_side_padding_25">25%</string>
@@ -465,7 +459,6 @@
     <string name="action_search_settings">Cài đặt tìm kiếm</string>
     <string name="backup_in_progress">Sao lưu đã đang trong quá trình thực hiện</string>
     <string name="clear_history_confirmation">Bạn có chắc không\? Tất cả lịch sử sẽ bị xoá.</string>
-    <string name="invalid_backup_file_missing_data">Dữ liệu bị mất.</string>
     <string name="pref_library_update_categories_details">Manga trong danh mục bị loại trừ sẽ không được cập nhật.</string>
     <string name="track_finished_reading_date">Ngày kết thúc</string>
     <string name="filter_mode_lighten">Chế độ làm sáng lên</string>
@@ -740,7 +733,6 @@
     <string name="pref_duplicate_pinned_sources_summary">Các nguồn được đính sẽ lặp lại trong các nhóm ngôn ngữ tương ướng của chúng</string>
     <string name="source_filter_empty_screen">Không có nguồn đã cài tìm thấy</string>
     <string name="source_empty_screen">Không có nguồn nào được tìm thấy</string>
-    <string name="migrate_empty_screen">Ôi, thật là lạ thật đấy</string>
     <string name="update_check_open">Mở trên GitHub</string>
     <string name="empty_backup_error">Không có mục thư viện nào để sao lưu</string>
     <string name="webview_data_deleted">Dữ liệu WebView đã được xóa</string>

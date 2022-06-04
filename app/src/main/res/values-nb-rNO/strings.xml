@@ -91,8 +91,6 @@
     <string name="ext_untrusted">Ubetrodd</string>
     <string name="ext_uninstall">Avinstaller</string>
     <string name="untrusted_extension">Ubetrodd utvidelse</string>
-    <string name="ext_version_info">Versjon: %1$s</string>
-    <string name="ext_language_info">Språk: %1$s</string>
     <string name="pref_fullscreen">Fullskjermsvisning</string>
     <string name="pref_page_transitions">Sideovergangsanimasjoner</string>
     <string name="pref_show_page_number">Vis sidenummer</string>
@@ -286,9 +284,6 @@
 \nVed å godta dette sertifikatet aksepterer du overstående risikoer.</string>
     <string name="pref_double_tap_anim_speed">Animasjonshastighet ved dobbelklikk</string>
     <string name="pager_viewer">Sider</string>
-    <string name="backup_restore_content">Gjenoppretting bruker kilde for å hente data, mobilkostnader kan tilkomme.
-\n
-\nForsikre deg om at du har installert alle nødvendige utvidelser og er logget inn i kilder og sporingstjenester før du gjenoppretter.</string>
     <string name="confirm_set_image_as_cover">Bruk dette bildet som omslag\?</string>
     <string name="download_queue_error">Kunne ikke laste ned kapitler. Du kan prøve igjen i nedlastingsdelen</string>
     <string name="notification_first_add_to_library">Legg til mangaen i biblioteket ditt før du gjør dette</string>
@@ -451,9 +446,7 @@
         <item quantity="one">Gjort på %1$s med %2$s feil</item>
         <item quantity="other">Gjort på %1$s med %2$s feil</item>
     </plurals>
-    <string name="invalid_backup_file_missing_data">Filen mangler data.</string>
     <string name="tracker_not_logged_in">Ikke logget inn: %1$s</string>
-    <string name="source_not_found_name">kilde ikke funnet: %1$s</string>
     <string name="pref_search_pinned_sources_only">Inkluder bare festede kilder</string>
     <string name="pref_show_reading_mode">Vis lesemodus</string>
     <string name="unofficial_extension_message">Denne utvidelsen kommer ikke fra den offisielle Tachiyomi-utvidelseslisten.</string>

@@ -150,7 +150,6 @@
     <string name="tabs_header">تب ها</string>
     <string name="badges_header">تعداد</string>
     <string name="tracker_not_logged_in">وارد سیستم نشده اید: %1$s</string>
-    <string name="source_not_found_name">منبع یافت نشد: %1$s</string>
     <string name="pref_backup_slots">حداکثر تعداد نسخه‌های پشتیبان</string>
     <string name="pref_backup_interval">زمان پشتیبان گیری</string>
     <string name="pref_backup_service_category">پشتیبان گیری خودکار</string>
@@ -267,8 +266,6 @@
     <string name="pref_show_page_number">نمایش شماره صفحه</string>
     <string name="pref_page_transitions">انمیشن‌های تغییر صفحه</string>
     <string name="pref_fullscreen">تمام صفحه</string>
-    <string name="ext_language_info">زبان: %1$s</string>
-    <string name="ext_version_info">نگارش %1$s</string>
     <string name="unofficial_extension_message">این افزونه در لیست افزونه‌های رسمی تاچیومی نیست.</string>
     <string name="obsolete_extension_message">این افزونه دیگر موجود نیست.</string>
     <string name="untrusted_extension_message">این افزونه با یک گواهی نامطمئن امضا شده است و فعال نشده است.
@@ -432,12 +429,8 @@
     </plurals>
     <string name="restore_duration">%02d دقیقه, %02d ثانیه</string>
     <string name="restore_completed">بازیابی کامل شد</string>
-    <string name="backup_restore_content">بازیابی برای واکشی داده ها از منابع نصب شده استفاده می‌کند، ممکن است از حجم اینتنرت مصرف شود.
-\n
-\nاطمینان حاصل کنید که تمام افزونه‌های لازم را نصب کرده اید و قبل از بازگردانی به منابع نصب شده و خدمات ردیابی وارد شده اید.</string>
     <string name="backup_restore_missing_sources">منابع ناموجود:</string>
     <string name="invalid_backup_file_missing_manga">فایل پشتیبان شامل هیچ مانگا ای نیست.</string>
-    <string name="invalid_backup_file_missing_data">فایل شامل اطلاعات ناموجود است.</string>
     <string name="invalid_backup_file">فایل پشتیبان نامعتبر است</string>
     <string name="backup_created">نسخه پشتیبان ایجاد شد</string>
     <string name="action_edit_cover">ویرایش عکس روی جلد</string>

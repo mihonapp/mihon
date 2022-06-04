@@ -103,8 +103,6 @@
 \n일부 악의적인 확장기능은 Tachiyomi에 저장된 로그인 정보를 읽거나 임의의 코드를 실행할 수도 있습니다.
 \n
 \n이 인증서를 신뢰하면 이러한 위험에 노출될 수 있습니다.</string>
-    <string name="ext_version_info">버전: %1$s</string>
-    <string name="ext_language_info">언어: %1$s</string>
     <string name="pref_fullscreen">전체화면</string>
     <string name="pref_double_tap_anim_speed">더블 탭 애니메이션 속도</string>
     <string name="pref_show_page_number">페이지 번호 표시</string>
@@ -271,9 +269,6 @@
     <string name="third_to_last">끝에서 세번째 회차</string>
     <string name="fourth_to_last">끝에서 네번째 회차</string>
     <string name="fifth_to_last">끝에서 다섯번째 회차</string>
-    <string name="backup_restore_content">복원시 소스에서 데이터를 가져오며, 통신 비용이 청구 될 수 있습니다.
-\n
-\n또한 복원 전에 필요한 소스에 제대로 로그인이 되어있는지 확인하십시오.</string>
     <string name="backup_choice">어떤 항목들을 백업하겠습니까\?</string>
     <string name="clear_database_completed">항목 삭제됨</string>
     <string name="local_source_badge">로컬</string>
@@ -516,7 +511,6 @@
     <string name="share_page_info">%1$s: %2$s, %3$d페이지</string>
     <string name="clear_history_confirmation">계속하시겠습니까\? 모든 기록이 삭제됩니다.</string>
     <string name="disabled_nav">비활성화</string>
-    <string name="invalid_backup_file_missing_data">파일에 필요한 데이터가 포함되어있지 않습니다.</string>
     <string name="backup_restore_missing_sources">없어진 소스:</string>
     <string name="backup_restore_missing_trackers">로그인 되지않은 트래커:</string>
     <string name="pref_auto_clear_chapter_cache">앱 종료 시 회차 캐시 삭제</string>
@@ -581,7 +575,6 @@
     <string name="ext_nsfw_warning">19금 콘텐츠가 포함될 수 있습니다</string>
     <string name="action_filter_tracked">트래커 사용</string>
     <string name="action_start">시작</string>
-    <string name="source_not_found_name">소스 %1$s를 찾을 수 없습니다</string>
     <string name="action_start_downloading_now">지금 다운로드 시작</string>
     <string name="ext_installer_pref">인스톨러</string>
     <string name="ext_installer_shizuku_stopped">Shizuku가 실행 중이 아닙니다</string>
@@ -708,7 +701,6 @@
     <string name="action_sort_unread_count">읽지 않은 수</string>
     <string name="pref_duplicate_pinned_sources">중복된 고정 소스 표시</string>
     <string name="pref_duplicate_pinned_sources_summary">해당 언어 그룹에서 고정된 소스 반복</string>
-    <string name="migrate_empty_screen">글쎄, 이것은 어색하다</string>
     <string name="action_close">닫다</string>
     <string name="battery_not_low">배터리가 부족하지 않음</string>
     <string name="pref_clear_webview_data">웹뷰 데이터 지우기</string>

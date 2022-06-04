@@ -147,9 +147,6 @@
     <string name="pref_backup_slots">Sandaran maksimum</string>
     <string name="backup_created">Sandaran dibuat</string>
     <string name="restore_completed">Pemulihan selesai</string>
-    <string name="backup_restore_content">Pemulihan menggunakan Sambungan untuk memperolehi data, caj telco mungkin dikenakan.
-\n
-\nPastikan anda telah memasang semua Sambungan yang perlu dan telah log masuk ke dalam sumber dan Penjejakan sebelum memulakan pemulihan.</string>
     <string name="backup_choice">Apakah yang ingin anda sandarkan?</string>
     <string name="restoring_backup">Dalam proses memulihkan sandaran</string>
     <string name="creating_backup">Dalam proses membuat sandaran</string>
@@ -275,8 +272,6 @@
 \nSambungan yang berniat jahat kemungkinan membaca sebarang kelayakan log masuk yang di simpan dalam Tachiyomi atau melaksanakan kod sesuka hati.
 \n
 \nDengan mempercayai sijil ini, anda menerima risiko tersebut.</string>
-    <string name="ext_version_info">Versi: %1$s</string>
-    <string name="ext_language_info">Bahasa: %1$s</string>
     <string name="pref_double_tap_anim_speed">Kelajuan animasi ketik dua kali</string>
     <string name="pref_true_color">32-bit warna</string>
     <string name="pref_skip_read_chapters">Langkau bab yang sudah dibaca</string>
@@ -444,15 +439,13 @@
     </plurals>
     <string name="action_display_unread_badge">Bab belum dibaca</string>
     <string name="tracking_info">Sinkron satu hala untuk kemas kini bab kemajuan dalam sistem penjejakan. Sediakan penjejakan untuk penyertaan manga persendirian dari butang penjejakan mereka.</string>
-    <string name="pref_refresh_library_covers">Segar semula muka hadapan manga pustaka</string>
+    <string name="pref_refresh_library_covers">Segar semula muka hadapan pustaka</string>
     <string name="sort_by_upload_date">Mengikut tarikh muat naik</string>
     <string name="label_data">Data</string>
     <string name="backup_restore_missing_sources">Tiada sumber:</string>
     <string name="invalid_backup_file_missing_manga">Sandaran tidak mengandungi apa-apa siri.</string>
-    <string name="invalid_backup_file_missing_data">Fail hilang data.</string>
     <string name="invalid_backup_file">Fail sandaran tidak sah</string>
     <string name="tracker_not_logged_in">Tidak log masuk: %1$s</string>
-    <string name="source_not_found_name">Sumber tidak dijumpai: %1$s</string>
     <string name="unofficial_extension_message">Sambungan ini bukan daripada senarai sambungan Tachiyomi yang rasmi.</string>
     <string name="ext_unofficial">Tidak rasmi</string>
     <string name="pref_library_update_refresh_metadata_summary">Semak muka hadapan dan tentang baharu bila mengemaskini pustaka</string>
@@ -501,7 +494,7 @@
     <string name="backup_restore_missing_trackers">Penjejak yang tidak dilog masuk:</string>
     <string name="pref_remove_bookmarked_chapters">Benarkan memadam bab yang ditanda</string>
     <string name="pref_category_delete_chapters">Padam bab</string>
-    <string name="ext_nsfw_warning">Mungkin mengandungi kandungan 18+ tahun keatas</string>
+    <string name="ext_nsfw_warning">Sumber daripada sambungan ini mungkin mengandungi kandungan 18+ tahun keatas</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Ini tidak menghalang sambungan yang tidak rasmi atau berpotensi tidak menggunakan tetapan yang betul daripada menayangkan kandungan 18+ tahun keatas dalam aplikasi.</string>
     <plurals name="missing_chapters_warning">
@@ -706,9 +699,8 @@
     <string name="webview_data_deleted">Data WebView dihapuskan</string>
     <string name="action_close">Tutup</string>
     <string name="pref_duplicate_pinned_sources_summary">Ulang sumber yang disematkan dalam kumpulan bahasa masing-masing</string>
-    <string name="battery_not_low">Bateri tidak lemah</string>
+    <string name="battery_not_low">Apabila bateri tidak lemah</string>
     <string name="pref_duplicate_pinned_sources">Tunjuk pendua sumber yang disematkan</string>
-    <string name="migrate_empty_screen">Hmm, ini agak mejanggalkan</string>
     <string name="source_filter_empty_screen">Tiada sumber dipasang ditemui</string>
     <string name="source_empty_screen">Tiada sumber ditemui</string>
     <string name="action_sort_unread_count">Kiraan belum dibaca</string>
@@ -718,6 +710,19 @@
     <string name="download_notifier_split_page_not_found">Muka surat %d tidak dijumpai ketika memisah</string>
     <string name="download_notifier_split_page_path_not_found">Lokasi fail muka surat %d tidak ditemui</string>
     <string name="pref_reset_viewer_flags_summary">Menetapkan semula mod bacaan dan orientasi semua siri</string>
-    <string name="pref_reset_viewer_flags_success">Tetapan pemaparan diset semula</string>
-    <string name="pref_reset_viewer_flags">Set semula tetapan pemaparan</string>
+    <string name="pref_reset_viewer_flags_success">Tetapan pembaca diset semula</string>
+    <string name="pref_reset_viewer_flags">Set semula tetapan pembaca setiap siri</string>
+    <string name="download_notifier_split_failed">Tidak dapat memisahkan imej yang dimuat turun</string>
+    <string name="empty_screen">Hmm, ini agak menjanggalkan</string>
+    <string name="pref_reset_viewer_flags_error">Tidak dapat set semula tetapan pembaca</string>
+    <string name="ext_info_version">Versi</string>
+    <string name="ext_info_age_rating">Peringkat umur</string>
+    <string name="ext_info_language">Bahasa</string>
+    <string name="wish_list">Senarai Hajat</string>
+    <string name="complete_list">Senarai Selesai</string>
+    <string name="on_hold_list">Senarai Tangguh</string>
+    <string name="unfinished_list">Senarai Belum Selesai</string>
+    <string name="reading_list">Senarai Bacaan</string>
+    <string name="network_not_metered">Hanya pada rangkaian tidak bermeter</string>
+    <string name="cant_open_last_read_chapter">Tidak dapat membuka bab yang terakhir dibaca</string>
 </resources>

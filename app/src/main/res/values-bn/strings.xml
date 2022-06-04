@@ -148,9 +148,6 @@
     <string name="pref_backup_slots">সর্বোচ্চ ব্যাকআপ</string>
     <string name="backup_created">ব্যাকআপ তৈরী হয়েছে</string>
     <string name="restore_completed">পুনরুদ্ধার সম্পন্ন হয়েছে</string>
-    <string name="backup_restore_content">পুনরুদ্ধার উপাত্ত আনতে উৎস ব্যবহার করে, ক্যারিয়ারের খরচগুলি প্রযোজ্য হতে পারে।
-\n
-\nনিশ্চিত করুন যে আপনি পুনরুদ্ধারের আগে প্রয়োজনীয় এক্সটেনশনগুলো ইন্সটল করেছেন আর উৎসগুলো ও ট্র্যাকিং পরিসেবায় লগ-ইন করেছেন।</string>
     <string name="backup_choice">আপনি কি ব্যাকআপ করতে ইচ্ছুক?</string>
     <string name="restoring_backup">ব্যাকআপ পুনরুদ্ধার হচ্ছে</string>
     <string name="creating_backup">ব্যাকআপ তৈরী হচ্ছে</string>
@@ -275,8 +272,6 @@
 \nএকটি দূষিত এক্সটেনশন টাচিওমিতে সংরক্ষিত যেকোন লগইন শংসাপত্র পড়তে পারে বা নির্বিচারে কোড চালাতে পারে।
 \n
 \nএই শংসাপত্রটি বিশ্বাস করে আপনি এই ঝুঁকিগুলি গ্রহণ করেন।</string>
-    <string name="ext_version_info">ভার্সন: %1$s</string>
-    <string name="ext_language_info">ভাষা: %1$s</string>
     <string name="pref_double_tap_anim_speed">দুই টোকার এনিমেশনের গতি</string>
     <string name="double_tap_anim_speed_0">এনিমেশন নেই</string>
     <string name="double_tap_anim_speed_normal">সাধারণ</string>
@@ -392,10 +387,8 @@
     <string name="restore_duration">%02d মিনিট, %02d সেকেন্ড</string>
     <string name="backup_restore_missing_sources">উৎস অনুপলব্ধ:</string>
     <string name="invalid_backup_file_missing_manga">ব্যাকআপে কোনো মাংগা নেই।</string>
-    <string name="invalid_backup_file_missing_data">ফাইলে তথ্য অনুপস্থিত।</string>
     <string name="invalid_backup_file">ব্যাকআপ ফাইল গ্রহণযোগ্য নয়</string>
     <string name="tracker_not_logged_in">লগড ইন নয়: %1$s</string>
-    <string name="source_not_found_name">উৎস পাওয়া যায়নি: %1$s</string>
     <string name="pref_search_pinned_sources_only">শুধু আটকানো উৎস যোগ করুন</string>
     <string name="pref_enable_automatic_extension_updates">এক্সটেনশনের হালনাগাদ সমূহ</string>
     <string name="pref_remove_bookmarked_chapters">বুকমার্ক করা অধ্যায়গুলি মুছে ফেলার অনুমতি দিন</string>
