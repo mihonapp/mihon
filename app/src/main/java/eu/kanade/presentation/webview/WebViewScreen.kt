@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.zIndex
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
@@ -106,12 +107,14 @@ fun WebViewScreen(
             },
         )
 
-        Box(modifier = Modifier.weight(1f)) {
+        Box {
             val loadingState = state.loadingState
             if (loadingState is LoadingState.Loading) {
                 LinearProgressIndicator(
                     progress = loadingState.progress,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .zIndex(1f),
                 )
             }
 
