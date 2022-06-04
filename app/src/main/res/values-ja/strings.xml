@@ -9,7 +9,7 @@
     <string name="label_download_queue">ダウンロードキュー</string>
     <string name="label_library">ライブラリ</string>
     <string name="label_recent_manga">履歴</string>
-    <string name="label_recent_updates">アップデート</string>
+    <string name="label_recent_updates">新着</string>
     <string name="label_backup">バックアップと復元</string>
     <string name="action_settings">設定</string>
     <string name="action_filter">絞り込む</string>
