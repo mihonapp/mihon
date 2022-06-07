@@ -43,6 +43,10 @@ class NetworkHelper(context: Context) {
                 PREF_DOH_GOOGLE -> builder.dohGoogle()
                 PREF_DOH_ADGUARD -> builder.dohAdGuard()
                 PREF_DOH_QUAD9 -> builder.dohQuad9()
+                PREF_DOH_ALIDNS -> builder.dohAliDNS()
+                PREF_DOH_DNSPOD -> builder.dohDNSPod()
+                PREF_DOH_360 -> builder.doh360()
+                PREF_DOH_QUAD101 -> builder.dohQuad101()
             }
 
             return builder
