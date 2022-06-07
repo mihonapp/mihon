@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.components.DIVIDER_ALPHA
@@ -139,6 +140,7 @@ private fun WarningBanner(@StringRes textRes: Int) {
         Text(
             text = stringResource(textRes),
             color = MaterialTheme.colorScheme.onError,
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
@@ -195,6 +197,7 @@ private fun DetailsHeader(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             InfoText(
+                modifier = Modifier.weight(1f),
                 primaryText = extension.versionName,
                 secondaryText = stringResource(R.string.ext_info_version),
             )
@@ -202,6 +205,7 @@ private fun DetailsHeader(
             InfoDivider()
 
             InfoText(
+                modifier = Modifier.weight(if (extension.isNsfw) 1.5f else 1f),
                 primaryText = LocaleHelper.getSourceDisplayName(extension.lang, context),
                 secondaryText = stringResource(R.string.ext_info_language),
             )
@@ -210,6 +214,7 @@ private fun DetailsHeader(
                 InfoDivider()
 
                 InfoText(
+                    modifier = Modifier.weight(1f),
                     primaryText = stringResource(R.string.ext_nsfw_short),
                     primaryTextStyle = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.error,
@@ -255,6 +260,7 @@ private fun DetailsHeader(
 
 @Composable
 private fun InfoText(
+    modifier: Modifier,
     primaryText: String,
     primaryTextStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     secondaryText: String,
@@ -262,22 +268,24 @@ private fun InfoText(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    val modifier = if (onClick != null) {
+    val clickableModifier = if (onClick != null) {
         Modifier.clickable(interactionSource, indication = null) { onClick() }
     } else Modifier
 
     Column(
-        modifier = modifier,
+        modifier = modifier.then(clickableModifier),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
             text = primaryText,
+            textAlign = TextAlign.Center,
             style = primaryTextStyle,
         )
 
         Text(
             text = secondaryText + if (onClick != null) " ⓘ" else "",
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
         )
