@@ -16,9 +16,13 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Target
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.PREF_DOH_360
 import eu.kanade.tachiyomi.network.PREF_DOH_ADGUARD
+import eu.kanade.tachiyomi.network.PREF_DOH_ALIDNS
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
+import eu.kanade.tachiyomi.network.PREF_DOH_DNSPOD
 import eu.kanade.tachiyomi.network.PREF_DOH_GOOGLE
+import eu.kanade.tachiyomi.network.PREF_DOH_QUAD101
 import eu.kanade.tachiyomi.network.PREF_DOH_QUAD9
 import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
@@ -182,6 +186,10 @@ class SettingsAdvancedController : SettingsController() {
                     "Google",
                     "AdGuard",
                     "Quad9",
+                    "AliDNS",
+                    "DNSPod",
+                    "360",
+                    "Quad 101",
                 )
                 entryValues = arrayOf(
                     "-1",
@@ -189,6 +197,10 @@ class SettingsAdvancedController : SettingsController() {
                     PREF_DOH_GOOGLE.toString(),
                     PREF_DOH_ADGUARD.toString(),
                     PREF_DOH_QUAD9.toString(),
+                    PREF_DOH_ALIDNS.toString(),
+                    PREF_DOH_DNSPOD.toString(),
+                    PREF_DOH_360.toString(),
+                    PREF_DOH_QUAD101.toString(),
                 )
                 defaultValue = "-1"
                 summary = "%s"
