@@ -44,7 +44,7 @@ class WebtoonFrame(context: Context) : FrameLayout(context) {
      * Scale listener used to delegate events to the recycler view.
      */
     inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-        override fun onScaleBegin(detector: ScaleGestureDetector?): Boolean {
+        override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
             recycler?.onScaleBegin()
             return true
         }
@@ -63,13 +63,13 @@ class WebtoonFrame(context: Context) : FrameLayout(context) {
      * Fling listener used to delegate events to the recycler view.
      */
     inner class FlingListener : GestureDetector.SimpleOnGestureListener() {
-        override fun onDown(e: MotionEvent?): Boolean {
+        override fun onDown(e: MotionEvent): Boolean {
             return true
         }
 
         override fun onFling(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             velocityX: Float,
             velocityY: Float,
         ): Boolean {

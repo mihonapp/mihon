@@ -134,12 +134,12 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
 
         searchItem.setOnActionExpandListener(
             object : MenuItem.OnActionExpandListener {
-                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                     onSearchMenuItemActionExpand(item)
                     return true
                 }
 
-                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                     val localSearchView = searchItem.actionView as SearchView
 
                     // if it is blank the flow event won't trigger so we would stay in a COLLAPSING state

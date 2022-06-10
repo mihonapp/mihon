@@ -311,7 +311,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                             return true
                         }
 
-                        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                             this@ReaderPageImageView.onViewClicked()
                             return super.onSingleTapConfirmed(e)
                         }
