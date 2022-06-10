@@ -193,7 +193,7 @@ class LocalSource(
                     }
                     date_upload = chapterFile.lastModified()
 
-                    ChapterRecognition.parseChapterNumber(this, sManga)
+                    chapter_number = ChapterRecognition.parseChapterNumber(sManga.title, this.name, this.chapter_number)
 
                     val format = getFormat(chapterFile)
                     if (format is Format.Epub) {

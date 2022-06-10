@@ -1,8 +1,5 @@
 package eu.kanade.tachiyomi.util.chapter
 
-import eu.kanade.tachiyomi.source.model.SChapter
-import eu.kanade.tachiyomi.source.model.SManga
-
 /**
  * -R> = regex conversion.
  */
@@ -37,14 +34,14 @@ object ChapterRecognition {
      */
     private val unwantedWhiteSpace = Regex("""(\s)(extra|special|omake)""")
 
-    fun parseChapterNumber(chapter: SChapter, manga: SManga) {
+    fun parseChapterNumber(mangaTitle: String, chapterName: String, chapterNumber: Float? = null): Float {
         // If chapter number is known return.
-        if (chapter.chapter_number == -2f || chapter.chapter_number > -1f) {
-            return
+        if (chapterNumber != null && (chapterNumber == -2f || chapterNumber > -1f)) {
+            return chapterNumber
         }
 
         // Get chapter title with lower case
-        var name = chapter.name.lowercase()
+        var name = chapterName.lowercase()
 
         // Remove comma's or hyphens.
         name = name.replace(',', '.').replace('-', '.')
@@ -60,9 +57,7 @@ object ChapterRecognition {
         }
 
         // Check base case ch.xx
-        if (updateChapter(basic.find(name), chapter)) {
-            return
-        }
+        getChapterNumberFromMatch(basic.find(name))?.let { return it }
 
         // Check one number occurrence.
         val occurrences: MutableList<MatchResult> = arrayListOf()
@@ -71,41 +66,34 @@ object ChapterRecognition {
         }
 
         if (occurrences.size == 1) {
-            if (updateChapter(occurrences[0], chapter)) {
-                return
-            }
+            getChapterNumberFromMatch(occurrences[0])?.let { return it }
         }
 
         // Remove manga title from chapter title.
-        val nameWithoutManga = name.replace(manga.title.lowercase(), "").trim()
+        val nameWithoutManga = name.replace(mangaTitle.lowercase(), "").trim()
 
         // Check if first value is number after title remove.
-        if (updateChapter(withoutManga.find(nameWithoutManga), chapter)) {
-            return
-        }
+        getChapterNumberFromMatch(withoutManga.find(nameWithoutManga))?.let { return it }
 
         // Take the first number encountered.
-        if (updateChapter(occurrence.find(nameWithoutManga), chapter)) {
-            return
-        }
+        getChapterNumberFromMatch(occurrence.find(nameWithoutManga))?.let { return it }
+
+        return chapterNumber ?: -1f
     }
 
     /**
-     * Check if volume is found and update chapter
+     * Check if chapter number is found and return it
      * @param match result of regex
-     * @param chapter chapter object
-     * @return true if volume is found
+     * @return chapter number if found else null
      */
-    private fun updateChapter(match: MatchResult?, chapter: SChapter): Boolean {
-        match?.let {
+    private fun getChapterNumberFromMatch(match: MatchResult?): Float? {
+        return match?.let {
             val initial = it.groups[1]?.value?.toFloat()!!
             val subChapterDecimal = it.groups[2]?.value
             val subChapterAlpha = it.groups[3]?.value
             val addition = checkForDecimal(subChapterDecimal, subChapterAlpha)
-            chapter.chapter_number = initial.plus(addition)
-            return true
+            initial.plus(addition)
         }
-        return false
     }
 
     /**
