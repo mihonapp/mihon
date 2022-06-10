@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -29,7 +30,7 @@ fun syncChaptersWithSource(
     manga: Manga,
     source: Source,
 ): Pair<List<Chapter>, List<Chapter>> {
-    if (rawSourceChapters.isEmpty()) {
+    if (rawSourceChapters.isEmpty() && source !is LocalSource) {
         throw NoChaptersException()
     }
 
