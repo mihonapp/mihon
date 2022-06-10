@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.cache
 
 import android.content.Context
-import coil.imageLoader
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import java.io.File
@@ -98,13 +97,6 @@ class CoverCache(private val context: Context) {
         return getCustomCoverFile(mangaId).let {
             it.exists() && it.delete()
         }
-    }
-
-    /**
-     * Clear coil's memory cache.
-     */
-    fun clearMemoryCache() {
-        context.imageLoader.memoryCache?.clear()
     }
 
     private fun getCacheDir(dir: String): File {

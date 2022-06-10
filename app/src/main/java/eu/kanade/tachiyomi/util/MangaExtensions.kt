@@ -6,6 +6,8 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.util.Date
 
 fun Manga.isLocal() = source == LocalSource.ID
@@ -36,7 +38,7 @@ fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSa
     }
 }
 
-fun Manga.hasCustomCover(coverCache: CoverCache): Boolean {
+fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {
     return coverCache.getCustomCoverFile(id).exists()
 }
 

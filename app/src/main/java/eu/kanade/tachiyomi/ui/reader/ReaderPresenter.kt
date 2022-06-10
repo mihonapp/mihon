@@ -704,13 +704,11 @@ class ReaderPresenter(
                         val context = Injekt.get<Application>()
                         LocalSource.updateCover(context, manga, it)
                         manga.updateCoverLastModified(db)
-                        coverCache.clearMemoryCache()
                         SetAsCoverResult.Success
                     } else {
                         if (manga.favorite) {
                             coverCache.setCustomCoverToCache(manga, it)
                             manga.updateCoverLastModified(db)
-                            coverCache.clearMemoryCache()
                             SetAsCoverResult.Success
                         } else {
                             SetAsCoverResult.AddToLibraryFirst
