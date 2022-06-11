@@ -9,7 +9,6 @@ import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.database.resolvers.ChapterBackupPutResolver
 import eu.kanade.tachiyomi.data.database.resolvers.ChapterKnownBackupPutResolver
 import eu.kanade.tachiyomi.data.database.resolvers.ChapterProgressPutResolver
-import eu.kanade.tachiyomi.data.database.resolvers.ChapterSourceOrderPutResolver
 import eu.kanade.tachiyomi.data.database.resolvers.MangaChapterGetResolver
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable
 import java.util.Date
@@ -94,10 +93,5 @@ interface ChapterQueries : DbProvider {
     fun updateChaptersProgress(chapters: List<Chapter>) = db.put()
         .objects(chapters)
         .withPutResolver(ChapterProgressPutResolver())
-        .prepare()
-
-    fun fixChaptersSourceOrder(chapters: List<Chapter>) = db.put()
-        .objects(chapters)
-        .withPutResolver(ChapterSourceOrderPutResolver())
         .prepare()
 }
