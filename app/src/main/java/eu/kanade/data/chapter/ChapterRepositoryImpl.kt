@@ -8,12 +8,12 @@ import eu.kanade.tachiyomi.util.system.logcat
 import logcat.LogPriority
 
 class ChapterRepositoryImpl(
-    private val databaseHandler: DatabaseHandler,
+    private val handler: DatabaseHandler,
 ) : ChapterRepository {
 
     override suspend fun update(chapterUpdate: ChapterUpdate) {
         try {
-            databaseHandler.await {
+            handler.await {
                 chaptersQueries.update(
                     chapterUpdate.mangaId,
                     chapterUpdate.url,

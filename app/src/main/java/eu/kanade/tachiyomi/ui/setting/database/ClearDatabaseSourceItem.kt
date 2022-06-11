@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.icon
 
-data class ClearDatabaseSourceItem(val source: Source, private val mangaCount: Int) : AbstractFlexibleItem<ClearDatabaseSourceItem.Holder>() {
+data class ClearDatabaseSourceItem(val source: Source, private val mangaCount: Long) : AbstractFlexibleItem<ClearDatabaseSourceItem.Holder>() {
 
     override fun getLayoutRes(): Int {
         return R.layout.clear_database_source_item
@@ -31,7 +31,7 @@ data class ClearDatabaseSourceItem(val source: Source, private val mangaCount: I
 
         private val binding = ClearDatabaseSourceItemBinding.bind(view)
 
-        fun bind(source: Source, count: Int) {
+        fun bind(source: Source, count: Long) {
             binding.title.text = source.toString()
             binding.description.text = itemView.context.getString(R.string.clear_database_source_item_count, count)
 

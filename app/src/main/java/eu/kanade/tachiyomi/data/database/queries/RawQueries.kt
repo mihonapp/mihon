@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.database.queries
 
-import eu.kanade.tachiyomi.data.database.resolvers.SourceIdMangaCountGetResolver
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable as Category
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable as Chapter
 import eu.kanade.tachiyomi.data.database.tables.HistoryTable as History
@@ -113,14 +112,3 @@ fun getCategoriesForMangaQuery() =
     ${MangaCategory.TABLE}.${MangaCategory.COL_CATEGORY_ID}
     WHERE ${MangaCategory.COL_MANGA_ID} = ?
 """
-
-/** Query to get the list of sources in the database that have
- * non-library manga, and how many
- */
-fun getSourceIdsWithNonLibraryMangaQuery() =
-    """
-    SELECT ${Manga.COL_SOURCE}, COUNT(*) as ${SourceIdMangaCountGetResolver.COL_COUNT}
-    FROM ${Manga.TABLE}
-    WHERE ${Manga.COL_FAVORITE} = 0
-    GROUP BY ${Manga.COL_SOURCE}
-    """

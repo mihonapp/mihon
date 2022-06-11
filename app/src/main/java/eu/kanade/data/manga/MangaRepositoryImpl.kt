@@ -8,16 +8,16 @@ import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
 
 class MangaRepositoryImpl(
-    private val databaseHandler: DatabaseHandler,
+    private val handler: DatabaseHandler,
 ) : MangaRepository {
 
     override fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>> {
-        return databaseHandler.subscribeToList { mangasQueries.getFavoriteBySourceId(sourceId, mangaMapper) }
+        return handler.subscribeToList { mangasQueries.getFavoriteBySourceId(sourceId, mangaMapper) }
     }
 
     override suspend fun resetViewerFlags(): Boolean {
         return try {
-            databaseHandler.await { mangasQueries.resetViewerFlags() }
+            handler.await { mangasQueries.resetViewerFlags() }
             true
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)

@@ -1,43 +1,37 @@
 package eu.kanade.tachiyomi.ui.setting.database
 
 import android.os.Bundle
+import eu.kanade.domain.source.interactor.GetSourcesWithNonLibraryManga
 import eu.kanade.tachiyomi.Database
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.withUIContext
+import kotlinx.coroutines.flow.collectLatest
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class ClearDatabasePresenter : BasePresenter<ClearDatabaseController>() {
-
-    private val db = Injekt.get<DatabaseHelper>()
-    private val database = Injekt.get<Database>()
-
-    private val sourceManager = Injekt.get<SourceManager>()
+class ClearDatabasePresenter(
+    private val database: Database = Injekt.get(),
+    private val getSourcesWithNonLibraryManga: GetSourcesWithNonLibraryManga = Injekt.get(),
+) : BasePresenter<ClearDatabaseController>() {
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        getDatabaseSourcesObservable()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(ClearDatabaseController::setItems)
+
+        presenterScope.launchIO {
+            getSourcesWithNonLibraryManga.subscribe()
+                .collectLatest { list ->
+                    val items = list
+                        .map { (source, count) -> ClearDatabaseSourceItem(source, count) }
+                        .sortedBy { it.source.name }
+
+                    withUIContext { view?.setItems(items) }
+                }
+        }
     }
 
     fun clearDatabaseForSourceIds(sources: List<Long>) {
-        db.deleteMangasNotInLibraryBySourceIds(sources).executeAsBlocking()
+        database.mangasQueries.deleteMangasNotInLibraryBySourceIds(sources)
         database.historyQueries.removeResettedHistory()
-    }
-
-    private fun getDatabaseSourcesObservable(): Observable<List<ClearDatabaseSourceItem>> {
-        return db.getSourceIdsWithNonLibraryManga().asRxObservable()
-            .map { sourceCounts ->
-                sourceCounts.map {
-                    val sourceObj = sourceManager.getOrStub(it.source)
-                    ClearDatabaseSourceItem(sourceObj, it.count)
-                }.sortedBy { it.source.name }
-            }
     }
 }

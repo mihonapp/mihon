@@ -47,3 +47,13 @@ AND source = :sourceId;
 resetViewerFlags:
 UPDATE mangas
 SET viewer = 0;
+
+getSourceIdsWithNonLibraryManga:
+SELECT source, COUNT(*) AS manga_count
+FROM mangas
+WHERE favorite = 0
+GROUP BY source;
+
+deleteMangasNotInLibraryBySourceIds:
+DELETE FROM mangas
+WHERE favorite = 0 AND source IN :sourceIds;
