@@ -426,7 +426,7 @@ class LibraryUpdateService(
 
         // [dbmanga] was used so that manga data doesn't get overwritten
         // in case manga gets new chapter
-        return syncChaptersWithSource(db, chapters, dbManga, source)
+        return syncChaptersWithSource(chapters, dbManga, source)
     }
 
     private suspend fun updateCovers() {

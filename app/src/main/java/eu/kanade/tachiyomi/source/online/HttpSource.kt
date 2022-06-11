@@ -362,8 +362,7 @@ abstract class HttpSource : CatalogueSource {
      * @param chapter the chapter to be added.
      * @param manga the manga of the chapter.
      */
-    open fun prepareNewChapter(chapter: SChapter, manga: SManga) {
-    }
+    open fun prepareNewChapter(chapter: SChapter, manga: SManga) {}
 
     /**
      * Returns the list of filters for the source.

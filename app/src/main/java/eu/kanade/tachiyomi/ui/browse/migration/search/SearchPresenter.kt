@@ -115,7 +115,7 @@ class SearchPresenter(
             // Update chapters read
             if (migrateChapters) {
                 try {
-                    syncChaptersWithSource(db, sourceChapters, manga, source)
+                    syncChaptersWithSource(sourceChapters, manga, source)
                 } catch (e: Exception) {
                     // Worst case, chapters won't be synced
                 }

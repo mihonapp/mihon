@@ -28,6 +28,38 @@ SELECT *
 FROM chapters
 WHERE manga_id = :mangaId;
 
+removeChaptersWithIds:
+DELETE FROM chapters
+WHERE _id IN :chapterIds;
+
+insert:
+INSERT INTO chapters(
+    manga_id,
+    url,
+    name,
+    scanlator,
+    read,
+    bookmark,
+    last_page_read,
+    chapter_number,
+    source_order,
+    date_fetch,
+    date_upload
+)
+VALUES (
+    :mangaId,
+    :url,
+    :name,
+    :scanlator,
+    :read,
+    :bookmark,
+    :lastPageRead,
+    :chapterNumber,
+    :sourceOrder,
+    :dateFetch,
+    :dateUpload
+);
+
 update:
 UPDATE chapters
 SET manga_id = coalesce(:mangaId, manga_id),
@@ -42,3 +74,6 @@ SET manga_id = coalesce(:mangaId, manga_id),
     date_fetch = coalesce(:dateFetch, date_fetch),
     date_upload = coalesce(:dateUpload, date_upload)
 WHERE _id = :chapterId;
+
+selectLastInsertedRowId:
+SELECT last_insert_rowid();

@@ -43,7 +43,7 @@ abstract class AbstractBackupManager(protected val context: Context) {
     internal suspend fun restoreChapters(source: Source, manga: Manga, chapters: List<Chapter>): Pair<List<Chapter>, List<Chapter>> {
         val fetchedChapters = source.getChapterList(manga.toMangaInfo())
             .map { it.toSChapter() }
-        val syncedChapters = syncChaptersWithSource(db, fetchedChapters, manga, source)
+        val syncedChapters = syncChaptersWithSource(fetchedChapters, manga, source)
         if (syncedChapters.first.isNotEmpty()) {
             chapters.forEach { it.manga_id = manga.id }
             updateChapters(chapters)

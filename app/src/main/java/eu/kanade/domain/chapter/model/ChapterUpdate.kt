@@ -14,3 +14,7 @@ data class ChapterUpdate(
     val chapterNumber: Float? = null,
     val scanlator: String? = null,
 )
+
+fun Chapter.toChapterUpdate(): ChapterUpdate {
+    return ChapterUpdate(id, mangaId, read, bookmark, lastPageRead, dateFetch, sourceOrder, url, name, dateUpload, chapterNumber, scanlator)
+}

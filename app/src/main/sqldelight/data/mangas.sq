@@ -57,3 +57,8 @@ GROUP BY source;
 deleteMangasNotInLibraryBySourceIds:
 DELETE FROM mangas
 WHERE favorite = 0 AND source IN :sourceIds;
+
+updateLastUpdate:
+UPDATE mangas
+SET last_update = :lastUpdate
+WHERE _id = :mangaId;

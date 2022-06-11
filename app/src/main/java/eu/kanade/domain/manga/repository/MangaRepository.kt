@@ -8,4 +8,6 @@ interface MangaRepository {
     fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>>
 
     suspend fun resetViewerFlags(): Boolean
+
+    suspend fun updateLastUpdate(mangaId: Long, lastUpdate: Long)
 }

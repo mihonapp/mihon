@@ -24,4 +24,12 @@ class MangaRepositoryImpl(
             false
         }
     }
+
+    override suspend fun updateLastUpdate(mangaId: Long, lastUpdate: Long) {
+        try {
+            handler.await { mangasQueries.updateLastUpdate(lastUpdate, mangaId) }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+        }
+    }
 }
