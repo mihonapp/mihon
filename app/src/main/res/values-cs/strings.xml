@@ -239,7 +239,7 @@
     <string name="pref_clear_cookies">Vymazat cookies</string>
     <string name="cookies_cleared">Cookies vymazány</string>
     <string name="pref_clear_database">Vyčistit databázi</string>
-    <string name="pref_clear_database_summary">Smazat historii pro mangy, které nejsou uloženy v knihovně</string>
+    <string name="pref_clear_database_summary">Smazat historii pro mangu, která není uložena v knihovně</string>
     <string name="clear_database_confirmation">Jsi si jist\? Přečtené kapitoly a postup v mangách mimo knihovnu budou ztraceny</string>
     <string name="clear_database_completed">Položky byly smazány</string>
     <string name="pref_refresh_library_tracking">Obnovit sledování</string>
@@ -304,7 +304,7 @@
     <string name="label_help">Nápověda</string>
     <string name="action_open_in_web_view">Otevřít ve WebView</string>
     <string name="pref_read_with_long_tap">Zobrazit na dlouhém podržení</string>
-    <string name="pref_true_color">32-bitová barva</string>
+    <string name="pref_true_color">32bitová barva</string>
     <string name="pref_skip_read_chapters">Přeskakovat přečtené kapitoly</string>
     <string name="pref_color_filter_mode">Režim mísení filtru barev</string>
     <string name="filter_mode_overlay">Překrytí</string>
@@ -556,7 +556,7 @@
     <string name="pref_download_new_categories_details">Manga ve vynechaných kategoriích nebude stažena, i kdyby byla také v zahrnutých kategoriích.</string>
     <string name="pref_category_auto_download">Automatické stahování</string>
     <string name="pref_webtoon_side_padding">Boční odsazení</string>
-    <string name="pref_skip_filtered_chapters">Přeskočit filtrované kapitoly</string>
+    <string name="pref_skip_filtered_chapters">Přeskakovat filtrované kapitoly</string>
     <string name="pref_cutout_short">Zobrazovat obsah v oblasti výřezu displeje</string>
     <string name="pref_dual_page_invert_summary">Pokud umístění rozdělených stránek nesouhlasí se směrem čtení</string>
     <string name="pref_dual_page_invert">Převrátit umístění rozdělených stránek</string>
@@ -620,7 +620,7 @@
     <string name="tracker_komga_warning">Tento sledovač je kompatibilní pouze se zdrojem Komga.</string>
     <string name="about_dont_kill_my_app">Někteří výrobci používají další omezení aplikací, která vypíná služby na pozadí. Na této webové stránce najdete další informace o tom, jak to opravit.</string>
     <string name="restore_miui_warning">Pokud je MIUI optimalizace vypnutá, zálohování/obnovování nemusí fungovat správně.</string>
-    <string name="enhanced_tracking_info">Služby, které poskytují rozšířené funkce pro konkrétní zdroje. Mangy jsou po přidání do knihovny automaticky sledovány.</string>
+    <string name="enhanced_tracking_info">Služby, které poskytují rozšířené funkce pro konkrétní zdroje. Manga je po přidání do knihovny automaticky sledována.</string>
     <string name="enhanced_services">Rozšířené služby</string>
     <string name="tracking_guide">Návod ke sledování</string>
     <string name="pref_dark_theme_pure_black">Čistě černý tmavý režim</string>
@@ -728,7 +728,7 @@
     <string name="wish_list">Seznam přání</string>
     <string name="network_not_metered">Pouze na neměřené síti</string>
     <string name="pref_reset_viewer_flags_success">Všechna nastavení čtečky byla resetována</string>
-    <string name="pref_reset_viewer_flags_summary">Resetování režimu čtení a orientace všech sérií</string>
+    <string name="pref_reset_viewer_flags_summary">Resetuje režim čtení a orientaci všech sérií</string>
     <string name="pref_reset_viewer_flags">Resetování nastavení čtečky pro jednotlivé série</string>
     <string name="complete_list">Seznam dokončených</string>
     <string name="on_hold_list">Seznam pozastavených</string>
@@ -748,4 +748,6 @@
     <string name="action_sort_unread_count">Počet nepřečtených</string>
     <string name="action_sort_last_manga_update">Poslední aktualizace mangy</string>
     <string name="battery_not_low">Když baterie není vybitá</string>
+    <string name="cant_open_last_read_chapter">Nelze otevřít poslední přečtenou kapitolu</string>
+    <string name="custom_cover">Vlastní obal</string>
 </resources>

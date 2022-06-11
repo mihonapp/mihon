@@ -747,8 +747,8 @@
     <string name="source_filter_empty_screen">No se ha instalado ninguna fuente</string>
     <string name="source_empty_screen">No se ha encontrado ninguna fuente</string>
     <string name="action_sort_last_manga_update">Última actualización de manga</string>
-    <string name="action_sort_unread_count">Recuento no leído</string>
-    <string name="split_tall_images">Dividir automaticamente imágenes demasiado altas</string>
+    <string name="action_sort_unread_count">Capítulos restantes</string>
+    <string name="split_tall_images">Dividir automáticamente imágenes demasiado altas</string>
     <string name="split_tall_images_summary">Mejora el rendimiento del lector dividiendo páginas descargadas mucho más altas que anchas.</string>
     <string name="download_notifier_split_page_not_found">No se ha encontrado la página %d al dividir</string>
     <string name="download_notifier_split_page_path_not_found">La ruta al archivo de la página %d no se encuentra</string>
@@ -768,4 +768,5 @@
     <string name="unfinished_list">Sin terminar</string>
     <string name="network_not_metered">Solo en conexiones no medidas</string>
     <string name="cant_open_last_read_chapter">No se pudo abrir el último capítulo leído</string>
+    <string name="custom_cover">Portada personalizada</string>
 </resources>

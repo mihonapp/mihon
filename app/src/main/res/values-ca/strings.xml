@@ -737,4 +737,5 @@
     <string name="unfinished_list">Llista d\'inacabats</string>
     <string name="network_not_metered">Només en xarxes sense límits de dades</string>
     <string name="cant_open_last_read_chapter">No s\'ha pogut obrir el darrer capítol llegit</string>
+    <string name="custom_cover">Portada personalitzada</string>
 </resources>

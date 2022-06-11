@@ -725,4 +725,5 @@
     <string name="on_hold_list">稍后读列表</string>
     <string name="network_not_metered">仅在不按流量计费网络中</string>
     <string name="cant_open_last_read_chapter">打不开最后阅读章节</string>
+    <string name="custom_cover">自定义封面</string>
 </resources>

@@ -292,12 +292,12 @@
     <string name="information_cloudflare_bypass_failure">Bigong ma-bypass ang Cloudflare</string>
     <string name="description_cover">Cover ng manga</string>
     <plurals name="update_check_notification_ext_updates">
-        <item quantity="one">May update sa dugtong</item>
-        <item quantity="other">May update sa $d (na) dugtong</item>
+        <item quantity="one">Available ang pag-update ng extension</item>
+        <item quantity="other">Available ang %d na mga update sa extension</item>
     </plurals>
     <string name="update_check_notification_update_available">May bagong bersyon!</string>
     <string name="update_check_notification_download_error">Nagka-error sa pag-download</string>
-    <string name="update_check_notification_download_complete">Pindutin para i-install</string>
+    <string name="update_check_notification_download_complete">Pindutin upang mai-install</string>
     <string name="update_check_notification_download_in_progress">Dina-download…</string>
     <string name="update_check_look_for_updates">Naghahanap ng mga update…</string>
     <string name="update_check_no_new_updates">Walang bagong update</string>
@@ -318,8 +318,8 @@
         <item quantity="other">%1$d na bagong kabanata</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Para sa %d serye</item>
-        <item quantity="other">Para sa $d (na) serye</item>
+        <item quantity="one">Para sa %d pamagat</item>
+        <item quantity="other">Para sa %d na mga pamagat</item>
     </plurals>
     <string name="notification_new_chapters">May mga bagong kabanata</string>
     <string name="notification_check_updates">Naghahanap ng mga bagong kabanata</string>
@@ -493,8 +493,8 @@
     <string name="backup_in_progress">Bina-backup na</string>
     <string name="restore_duration">%02d (na) min, %02d (na) seg</string>
     <plurals name="num_trackers">
-        <item quantity="one">%d tracker</item>
-        <item quantity="other">%d (na) tracker</item>
+        <item quantity="one">%d tagasubaybay</item>
+        <item quantity="other">%d na tagasubaybay</item>
     </plurals>
     <string name="no_pinned_sources">Wala kang naka-pin na pinagkukunan</string>
     <string name="channel_complete">Tapos na</string>
@@ -598,7 +598,7 @@
     <string name="error_sharing_cover">Di maibahagi ang cover</string>
     <string name="error_saving_cover">Di ma-save ang cover</string>
     <string name="cover_saved">Na-save na ang cover</string>
-    <string name="manga_cover">Cover</string>
+    <string name="manga_cover">Takip</string>
     <string name="off">Patayin</string>
     <string name="on">Buksan</string>
     <string name="alignment_bottom">Baba</string>
@@ -635,7 +635,7 @@
     <string name="pref_relative_format">Pagpepetsa</string>
     <plurals name="relative_time">
         <item quantity="one">Kahapon</item>
-        <item quantity="other">%1$d (na) araw na nakalipas</item>
+        <item quantity="other">%1$d araw ang makalipas</item>
     </plurals>
     <string name="recently">Kamakailan</string>
     <string name="relative_time_today">Ngayon</string>
@@ -737,4 +737,5 @@
     <string name="reading_list">Listahan ng Binabasa</string>
     <string name="network_not_metered">Sa di-nakametrong network lang</string>
     <string name="cant_open_last_read_chapter">Di mabuksan ang huling nabasang kabanata</string>
+    <string name="custom_cover">Custom na takip</string>
 </resources>

@@ -450,7 +450,7 @@
     <string name="recent_manga_time">第%1$s章 - %2$s</string>
     <string name="page_list_empty_error">ページが見つかりません</string>
     <string name="pref_category_for_this_series">このシリーズでは</string>
-    <string name="add_tracking">追跡サービスを追加</string>
+    <string name="add_tracking">追跡を追加</string>
     <string name="add_to_library">ライブラリに追加</string>
     <string name="sort_by_upload_date">アップロード日付順</string>
     <string name="manga_info_expand">詳細を表示</string>
@@ -725,4 +725,5 @@
     <string name="complete_list">読了リスト</string>
     <string name="on_hold_list">後で読むリスト</string>
     <string name="cant_open_last_read_chapter">最後に読んだ章を開けませんでした</string>
+    <string name="custom_cover">カスタム表紙</string>
 </resources>

@@ -769,4 +769,6 @@
     <string name="complete_list">Completati</string>
     <string name="unfinished_list">Non Completati</string>
     <string name="network_not_metered">Solo su rete non a consumo</string>
+    <string name="custom_cover">Copertina personalizzata</string>
+    <string name="cant_open_last_read_chapter">Impossibile aprire l\'ultimo capitolo letto</string>
 </resources>

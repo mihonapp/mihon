@@ -119,7 +119,7 @@
     <string name="notification_first_add_to_library">Пожалуйста, добавьте серию в библиотеку перед тем, как делать это</string>
     <string name="notification_new_chapters">Найдены новые главы</string>
     <string name="on_hold">Отложено</string>
-    <string name="ongoing">Онгоинг</string>
+    <string name="ongoing">Выпускается</string>
     <string name="password">Пароль</string>
     <string name="picture_saved">Картинка сохранена</string>
     <string name="plan_to_read">Запланировано</string>
@@ -702,7 +702,7 @@
     <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки, нажать %1$s</string>
     <string name="save_chapter_as_cbz">Сохранить как архив CBZ</string>
     <string name="cancelled">Отменено</string>
-    <string name="on_hiatus">На паузе</string>
+    <string name="on_hiatus">Перерыв</string>
     <string name="publishing_finished">Публикация завершена</string>
     <string name="action_faq_and_guides">Руководства и FAQ</string>
     <string name="backup_restore_invalid_uri">Ошибка: Пустой URI</string>
@@ -742,7 +742,7 @@
     <string name="action_sort_unread_count">Количество непрочитанных глав</string>
     <string name="split_tall_images">Разделять длинные изображения</string>
     <string name="download_notifier_split_page_not_found">Страница %d не найдена, при разделении</string>
-    <string name="split_tall_images_summary">Улучшает производительность читалки, разделяя длинные загруженные изображения.</string>
+    <string name="split_tall_images_summary">Улучшает производительность читалки разделяя длинные загруженные изображения.</string>
     <string name="download_notifier_split_page_path_not_found">Путь к файлам страницы %d не найден</string>
     <string name="pref_reset_viewer_flags">Сбросить настройки читалки для каждой серии</string>
     <string name="pref_reset_viewer_flags_summary">Сбрасывает режим чтения и ориентацию для всех серий</string>
@@ -760,4 +760,5 @@
     <string name="unfinished_list">Не закончено</string>
     <string name="network_not_metered">Только в безлимитной сети</string>
     <string name="cant_open_last_read_chapter">Не удаётся открыть последнюю прочитанную главу</string>
+    <string name="custom_cover">Пользовательская обложка</string>
 </resources>

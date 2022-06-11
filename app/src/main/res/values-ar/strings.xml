@@ -81,7 +81,7 @@
     <string name="update_weekly">أسبوعياً</string>
     <string name="all">الكل</string>
     <string name="pref_library_update_restriction">تقييد التحديث التلقائي للجهاز</string>
-    <string name="charging">جاري الشحن</string>
+    <string name="charging">عند الشحن</string>
     <string name="pref_update_only_non_completed">سلسلة منتهية</string>
     <string name="pref_auto_update_manga_sync">تحديث تقدّم الفصول بعد القراءة</string>
     <string name="default_category">الفئة الافتراضية</string>
@@ -759,7 +759,7 @@
     <string name="pref_clear_webview_data">حذف بيانات التصفح المؤقتة</string>
     <string name="pref_duplicate_pinned_sources">عرض المصادر المثبتة المتكررة</string>
     <string name="webview_data_deleted">تم حذف بيانات التصفح المؤقتة</string>
-    <string name="battery_not_low">البطارية ليست منخفضة</string>
+    <string name="battery_not_low">عند ارتفاع نسبة الشحن‌</string>
     <string name="pref_duplicate_pinned_sources_summary">تكرار المصادر المثبتة في مجموعات اللغة الخاصة بها</string>
     <string name="source_filter_empty_screen">لا يوجد مصادر مثبته</string>
     <string name="source_empty_screen">لا يوجد مصدر</string>
@@ -777,4 +777,12 @@
     <string name="pref_reset_viewer_flags_error">لم يمكن إعادة تعيين إعدادات القارئ</string>
     <string name="download_notifier_split_failed">لم يمكن تقسيم الصورة المُنزلَة</string>
     <string name="empty_screen">هذا محرج</string>
+    <string name="unfinished_list">قائمة غير المنتهية</string>
+    <string name="network_not_metered">على الشبكات غير المحدودة فقط</string>
+    <string name="pref_reset_viewer_flags">إعادة ضبط إعدادات قراءة السلسلة</string>
+    <string name="reading_list">قائمة القراءة</string>
+    <string name="wish_list">قائمة الرغبات</string>
+    <string name="complete_list">قائمة الكاملة</string>
+    <string name="on_hold_list">قائمة المعلقة</string>
+    <string name="custom_cover">غلاف مخصص</string>
 </resources>

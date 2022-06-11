@@ -737,4 +737,5 @@
     <string name="reading_list">Λίστα ανάγνωσης</string>
     <string name="network_not_metered">Μόνο σε δίκτυο χωρίς μετρήσεις</string>
     <string name="cant_open_last_read_chapter">Αδυναμία ανοίγματος του τελευταίου κεφαλαίου που διαβάστηκε</string>
+    <string name="custom_cover">Προσαρμοσμένο εξώφυλλο</string>
 </resources>
