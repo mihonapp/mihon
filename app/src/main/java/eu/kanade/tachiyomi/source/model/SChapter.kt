@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.source.model
 
+import data.Chapters
 import tachiyomi.source.model.ChapterInfo
 import java.io.Serializable
 
@@ -16,6 +17,14 @@ interface SChapter : Serializable {
     var scanlator: String?
 
     fun copyFrom(other: SChapter) {
+        name = other.name
+        url = other.url
+        date_upload = other.date_upload
+        chapter_number = other.chapter_number
+        scanlator = other.scanlator
+    }
+
+    fun copyFrom(other: Chapters) {
         name = other.name
         url = other.url
         date_upload = other.date_upload

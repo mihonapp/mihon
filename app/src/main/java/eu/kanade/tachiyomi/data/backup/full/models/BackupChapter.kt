@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.backup.full.models
 
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.ChapterImpl
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
@@ -15,12 +14,12 @@ data class BackupChapter(
     @ProtoNumber(4) var read: Boolean = false,
     @ProtoNumber(5) var bookmark: Boolean = false,
     // lastPageRead is called progress in 1.x
-    @ProtoNumber(6) var lastPageRead: Int = 0,
+    @ProtoNumber(6) var lastPageRead: Long = 0,
     @ProtoNumber(7) var dateFetch: Long = 0,
     @ProtoNumber(8) var dateUpload: Long = 0,
     // chapterNumber is called number is 1.x
     @ProtoNumber(9) var chapterNumber: Float = 0F,
-    @ProtoNumber(10) var sourceOrder: Int = 0,
+    @ProtoNumber(10) var sourceOrder: Long = 0,
 ) {
     fun toChapterImpl(): ChapterImpl {
         return ChapterImpl().apply {
@@ -30,27 +29,37 @@ data class BackupChapter(
             scanlator = this@BackupChapter.scanlator
             read = this@BackupChapter.read
             bookmark = this@BackupChapter.bookmark
-            last_page_read = this@BackupChapter.lastPageRead
+            last_page_read = this@BackupChapter.lastPageRead.toInt()
             date_fetch = this@BackupChapter.dateFetch
             date_upload = this@BackupChapter.dateUpload
-            source_order = this@BackupChapter.sourceOrder
+            source_order = this@BackupChapter.sourceOrder.toInt()
         }
     }
+}
 
-    companion object {
-        fun copyFrom(chapter: Chapter): BackupChapter {
-            return BackupChapter(
-                url = chapter.url,
-                name = chapter.name,
-                chapterNumber = chapter.chapter_number,
-                scanlator = chapter.scanlator,
-                read = chapter.read,
-                bookmark = chapter.bookmark,
-                lastPageRead = chapter.last_page_read,
-                dateFetch = chapter.date_fetch,
-                dateUpload = chapter.date_upload,
-                sourceOrder = chapter.source_order,
-            )
-        }
-    }
+val backupChapterMapper = {
+        _: Long,
+        _: Long,
+        url: String,
+        name: String,
+        scanlator: String?,
+        read: Boolean,
+        bookmark: Boolean,
+        lastPageRead: Long,
+        chapterNumber: Float,
+        source_order: Long,
+        dateFetch: Long,
+        dateUpload: Long, ->
+    BackupChapter(
+        url = url,
+        name = name,
+        chapterNumber = chapterNumber,
+        scanlator = scanlator,
+        read = read,
+        bookmark = bookmark,
+        lastPageRead = lastPageRead,
+        dateFetch = dateFetch,
+        dateUpload = dateUpload,
+        sourceOrder = source_order,
+    )
 }

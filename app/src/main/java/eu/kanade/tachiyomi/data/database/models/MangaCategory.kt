@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.data.database.models
 
+import data.GetCategories
+
 class MangaCategory {
 
     var id: Long? = null
@@ -14,6 +16,13 @@ class MangaCategory {
             val mc = MangaCategory()
             mc.manga_id = manga.id!!
             mc.category_id = category.id!!
+            return mc
+        }
+
+        fun create(manga: Manga, category: GetCategories): MangaCategory {
+            val mc = MangaCategory()
+            mc.manga_id = manga.id!!
+            mc.category_id = category.id.toInt()
             return mc
         }
     }

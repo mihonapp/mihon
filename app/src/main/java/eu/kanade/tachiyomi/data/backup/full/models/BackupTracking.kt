@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.backup.full.models
 
-import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.database.models.TrackImpl
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
@@ -48,23 +47,34 @@ data class BackupTracking(
             tracking_url = this@BackupTracking.trackingUrl
         }
     }
+}
 
-    companion object {
-        fun copyFrom(track: Track): BackupTracking {
-            return BackupTracking(
-                syncId = track.sync_id,
-                mediaId = track.media_id,
-                // forced not null so its compatible with 1.x backup system
-                libraryId = track.library_id!!,
-                title = track.title,
-                lastChapterRead = track.last_chapter_read,
-                totalChapters = track.total_chapters,
-                score = track.score,
-                status = track.status,
-                startedReadingDate = track.started_reading_date,
-                finishedReadingDate = track.finished_reading_date,
-                trackingUrl = track.tracking_url,
-            )
-        }
-    }
+val backupTrackMapper = {
+        _id: Long,
+        manga_id: Long,
+        syncId: Long,
+        mediaId: Long,
+        libraryId: Long?,
+        title: String,
+        lastChapterRead: Double,
+        totalChapters: Long,
+        status: Long,
+        score: Float,
+        remoteUrl: String,
+        startDate: Long,
+        finishDate: Long, ->
+    BackupTracking(
+        syncId = syncId.toInt(),
+        mediaId = mediaId,
+        // forced not null so its compatible with 1.x backup system
+        libraryId = libraryId ?: 0,
+        title = title,
+        lastChapterRead = lastChapterRead.toFloat(),
+        totalChapters = totalChapters.toInt(),
+        score = score,
+        status = status.toInt(),
+        startedReadingDate = startDate,
+        finishedReadingDate = finishDate,
+        trackingUrl = remoteUrl,
+    )
 }

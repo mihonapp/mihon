@@ -25,10 +25,24 @@ CREATE TABLE mangas(
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
 CREATE INDEX mangas_url_index ON mangas(url);
 
+insert:
+INSERT INTO mangas(source,url,artist,author,description,genre,title,status,thumbnail_url,favorite,last_update,next_update,initialized,viewer,chapter_flags,cover_last_modified,date_added)
+VALUES (:source,:url,:artist,:author,:description,:genre,:title,:status,:thumbnail_url,:favorite,:last_update,:next_update,:initialized,:viewer,:chapter_flags,:cover_last_modified,:date_added);
+
 getMangaById:
 SELECT *
 FROM mangas
 WHERE _id = :id;
+
+getMangaByUrlAndSource:
+SELECT *
+FROM mangas
+WHERE url = :url AND source = :source;
+
+getFavorites:
+SELECT *
+FROM mangas
+WHERE favorite = 1;
 
 getSourceIdWithFavoriteCount:
 SELECT
@@ -77,3 +91,6 @@ UPDATE mangas SET
     cover_last_modified = coalesce(:coverLastModified, cover_last_modified),
     date_added = coalesce(:dateAdded, date_added)
 WHERE _id = :mangaId;
+
+selectLastInsertedRowId:
+SELECT last_insert_rowid();

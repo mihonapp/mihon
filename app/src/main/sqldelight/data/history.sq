@@ -11,6 +11,28 @@ CREATE TABLE history(
 
 CREATE INDEX history_history_chapter_id_index ON history(chapter_id);
 
+getHistoryByMangaId:
+SELECT
+H._id,
+H.chapter_id,
+H.last_read,
+H.time_read
+FROM history H
+JOIN chapters C
+ON H.chapter_id = C._id
+WHERE C.manga_id = :mangaId AND C._id = H.chapter_id;
+
+getHistoryByChapterUrl:
+SELECT
+H._id,
+H.chapter_id,
+H.last_read,
+H.time_read
+FROM history H
+JOIN chapters C
+ON H.chapter_id = C._id
+WHERE C.url = :chapterUrl AND C._id = H.chapter_id;
+
 resetHistoryById:
 UPDATE history
 SET last_read = 0

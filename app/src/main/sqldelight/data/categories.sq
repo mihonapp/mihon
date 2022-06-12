@@ -4,3 +4,29 @@ CREATE TABLE categories(
     sort INTEGER NOT NULL,
     flags INTEGER NOT NULL
 );
+
+getCategories:
+SELECT
+_id AS id,
+name,
+sort AS `order`,
+flags
+FROM categories;
+
+getCategoriesByMangaId:
+SELECT
+C._id AS id,
+C.name,
+C.sort AS `order`,
+C.flags
+FROM categories C
+JOIN mangas_categories MC
+ON C._id = MC.category_id
+WHERE MC.manga_id = :mangaId;
+
+insert:
+INSERT INTO categories(name, sort, flags)
+VALUES (:name, :order, :flags);
+
+selectLastInsertedRowId:
+SELECT last_insert_rowid();
