@@ -23,7 +23,7 @@ SELECT *
 FROM chapters
 WHERE _id = :id;
 
-getChapterByMangaId:
+getChaptersByMangaId:
 SELECT *
 FROM chapters
 WHERE manga_id = :mangaId;

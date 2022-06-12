@@ -47,7 +47,7 @@ class HistoryRepositoryImpl(
             else -> throw NotImplementedError("Unknown sorting method")
         }
 
-        val chapters = handler.awaitList { chaptersQueries.getChapterByMangaId(mangaId, chapterMapper) }
+        val chapters = handler.awaitList { chaptersQueries.getChaptersByMangaId(mangaId, chapterMapper) }
             .sortedWith(sortFunction)
 
         val currChapterIndex = chapters.indexOfFirst { chapter.id == it.id }

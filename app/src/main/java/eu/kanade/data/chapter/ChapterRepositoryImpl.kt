@@ -6,6 +6,7 @@ import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
 
 class ChapterRepositoryImpl(
@@ -96,11 +97,10 @@ class ChapterRepositoryImpl(
     }
 
     override suspend fun getChapterByMangaId(mangaId: Long): List<Chapter> {
-        return try {
-            handler.awaitList { chaptersQueries.getChapterByMangaId(mangaId, chapterMapper) }
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-            emptyList()
-        }
+        return handler.awaitList { chaptersQueries.getChaptersByMangaId(mangaId, chapterMapper) }
+    }
+
+    override suspend fun getChapterByMangaIdFlow(mangaId: Long): Flow<List<Chapter>> {
+        return handler.subscribeToList { chaptersQueries.getChaptersByMangaId(mangaId, chapterMapper) }
     }
 }

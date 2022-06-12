@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
+import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -44,6 +46,7 @@ import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.Stat
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
 import rx.Observable
@@ -63,6 +66,7 @@ class MangaPresenter(
     private val trackManager: TrackManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
+    private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
 ) : BasePresenter<MangaController>() {
 
     /**
@@ -78,9 +82,7 @@ class MangaPresenter(
     /**
      * Subject of list of chapters to allow updating the view without going to DB.
      */
-    private val chaptersRelay: PublishRelay<List<ChapterItem>> by lazy {
-        PublishRelay.create<List<ChapterItem>>()
-    }
+    private val chaptersRelay by lazy { PublishRelay.create<List<ChapterItem>>() }
 
     /**
      * Whether the chapter list has been requested to the source.
@@ -144,26 +146,19 @@ class MangaPresenter(
 
         // Chapters list - start
 
-        // Add the subscription that retrieves the chapters from the database, keeps subscribed to
-        // changes, and sends the list of chapters to the relay.
-        add(
-            db.getChapters(manga).asRxObservable()
-                .map { chapters ->
-                    // Convert every chapter to a model.
-                    chapters.map { it.toModel() }
-                }
-                .doOnNext { chapters ->
-                    // Find downloaded chapters
-                    setDownloadedChapters(chapters)
-
-                    // Store the last emission
-                    this.allChapters = chapters
-
-                    // Listen for download status changes
-                    observeDownloads()
-                }
-                .subscribe { chaptersRelay.call(it) },
-        )
+        // Keeps subscribed to changes and sends the list of chapters to the relay.
+        presenterScope.launchIO {
+            manga.id?.let { mangaId ->
+                getChapterByMangaId.subscribe(mangaId)
+                    .collectLatest { domainChapters ->
+                        val chapterItems = domainChapters.map { it.toDbChapter().toModel() }
+                        setDownloadedChapters(chapterItems)
+                        this@MangaPresenter.allChapters = chapterItems
+                        observeDownloads()
+                        chaptersRelay.call(chapterItems)
+                    }
+            }
+        }
 
         // Chapters list - end
 
