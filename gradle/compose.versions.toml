@@ -10,7 +10,7 @@ ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref="compose" 
 ui-util = { module = "androidx.compose.ui:ui-util", version.ref="compose" }
 
 material3-core = "androidx.compose.material3:material3:1.0.0-alpha13"
-material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.10"
+material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.11"
 material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref="compose" }
 
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref="accompanist" }
