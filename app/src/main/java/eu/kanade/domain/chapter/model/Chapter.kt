@@ -71,6 +71,7 @@ fun Chapter.toDbChapter(): DbChapter = DbChapter.create().also {
     it.bookmark = bookmark
     it.last_page_read = lastPageRead.toInt()
     it.date_fetch = dateFetch
+    it.date_upload = dateUpload
     it.chapter_number = chapterNumber
     it.source_order = sourceOrder.toInt()
 }
