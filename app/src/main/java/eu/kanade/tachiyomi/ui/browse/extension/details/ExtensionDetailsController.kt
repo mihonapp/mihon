@@ -114,7 +114,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
                 else -> "$url/multisrc/overrides/$pkgFactory/" + (pkgName.split(".").lastOrNull() ?: "") + path
             }
         } else {
-             url + "/src/" + pkgName.replace(".", "/") + path
+            url + "/src/" + pkgName.replace(".", "/") + path
         }
     }
 
