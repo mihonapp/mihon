@@ -5,7 +5,7 @@ import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.toChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.chapter.repository.ChapterRepository
-import eu.kanade.domain.manga.interactor.UpdateMangaLastUpdate
+import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -24,7 +24,7 @@ class SyncChaptersWithSource(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val chapterRepository: ChapterRepository = Injekt.get(),
     private val shouldUpdateDbChapter: ShouldUpdateDbChapter = Injekt.get(),
-    private val updateMangaLastUpdate: UpdateMangaLastUpdate = Injekt.get(),
+    private val updateManga: UpdateManga = Injekt.get(),
 ) {
 
     suspend fun await(
@@ -171,7 +171,7 @@ class SyncChaptersWithSource(
 
         // Set this manga as updated since chapters were changed
         // Note that last_update actually represents last time the chapter list changed at all
-        updateMangaLastUpdate.await(manga.id, Date().time)
+        updateManga.awaitUpdateLastUpdate(manga.id)
 
         @Suppress("ConvertArgumentToSet") // See tachiyomiorg/tachiyomi#6372.
         return Pair(updatedToAdd.subtract(reAdded).toList(), toDelete.subtract(reAdded).toList())

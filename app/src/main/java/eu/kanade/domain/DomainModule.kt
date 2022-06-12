@@ -20,8 +20,9 @@ import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.interactor.UpsertHistory
 import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.interactor.GetFavoritesBySourceId
+import eu.kanade.domain.manga.interactor.GetMangaById
 import eu.kanade.domain.manga.interactor.ResetViewerFlags
-import eu.kanade.domain.manga.interactor.UpdateMangaLastUpdate
+import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.GetLanguagesWithSources
@@ -43,9 +44,10 @@ class DomainModule : InjektModule {
     override fun InjektRegistrar.registerInjectables() {
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
         addFactory { GetFavoritesBySourceId(get()) }
+        addFactory { GetMangaById(get()) }
         addFactory { GetNextChapter(get()) }
         addFactory { ResetViewerFlags(get()) }
-        addFactory { UpdateMangaLastUpdate(get()) }
+        addFactory { UpdateManga(get()) }
 
         addSingletonFactory<ChapterRepository> { ChapterRepositoryImpl(get()) }
         addFactory { UpdateChapter(get()) }

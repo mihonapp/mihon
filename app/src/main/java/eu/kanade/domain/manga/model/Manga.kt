@@ -1,6 +1,11 @@
 package eu.kanade.domain.manga.model
 
+import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
+import tachiyomi.source.model.MangaInfo
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import eu.kanade.tachiyomi.data.database.models.Manga as DbManga
 
 data class Manga(
@@ -61,4 +66,21 @@ fun Manga.toDbManga(): DbManga = DbManga.create(url, title, source).also {
     it.viewer_flags = viewerFlags.toInt()
     it.chapter_flags = chapterFlags.toInt()
     it.cover_last_modified = coverLastModified
+}
+
+fun Manga.toMangaInfo(): MangaInfo = MangaInfo(
+    artist = artist ?: "",
+    author = author ?: "",
+    cover = thumbnailUrl ?: "",
+    description = description ?: "",
+    genres = genre ?: emptyList(),
+    key = url,
+    status = status.toInt(),
+    title = title,
+)
+
+fun Manga.isLocal(): Boolean = source == LocalSource.ID
+
+fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {
+    return coverCache.getCustomCoverFile(id).exists()
 }

@@ -7,6 +7,11 @@ import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.content.ContextCompat
 import eu.kanade.data.chapter.NoChaptersException
+import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
+import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.toMangaInfo
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -14,6 +19,7 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
@@ -29,10 +35,8 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.source.model.toMangaInfo
 import eu.kanade.tachiyomi.source.model.toSChapter
 import eu.kanade.tachiyomi.source.model.toSManga
-import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithTrackServiceTwoWay
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.prepUpdateCover
@@ -55,12 +59,15 @@ import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
+import tachiyomi.source.model.MangaInfo
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import eu.kanade.domain.chapter.model.Chapter as DomainChapter
+import eu.kanade.domain.manga.model.Manga as DomainManga
 
 /**
  * This class will take care of updating the chapters of the manga from the library. It can be
@@ -77,6 +84,9 @@ class LibraryUpdateService(
     val downloadManager: DownloadManager = Injekt.get(),
     val trackManager: TrackManager = Injekt.get(),
     val coverCache: CoverCache = Injekt.get(),
+    private val getMangaById: GetMangaById = Injekt.get(),
+    private val updateManga: UpdateManga = Injekt.get(),
+    private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
 ) : Service() {
 
     private lateinit var wakeLock: PowerManager.WakeLock
@@ -302,7 +312,7 @@ class LibraryUpdateService(
                                 }
 
                                 // Don't continue to update if manga not in library
-                                db.getManga(manga.id!!).executeAsBlocking() ?: return@forEach
+                                manga.id?.let { getMangaById.await(it) } ?: return@forEach
 
                                 withUpdateNotification(
                                     currentlyUpdatingManga,
@@ -322,19 +332,22 @@ class LibraryUpdateService(
 
                                             else -> {
                                                 // Convert to the manga that contains new chapters
-                                                val (newChapters, _) = updateManga(mangaWithNotif)
+                                                mangaWithNotif.toDomainManga()?.let { domainManga ->
+                                                    val (newChapters, _) = updateManga(domainManga)
+                                                    val newDbChapters = newChapters.map { it.toDbChapter() }
 
-                                                if (newChapters.isNotEmpty()) {
-                                                    if (mangaWithNotif.shouldDownloadNewChapters(db, preferences)) {
-                                                        downloadChapters(mangaWithNotif, newChapters)
-                                                        hasDownloads.set(true)
+                                                    if (newChapters.isNotEmpty()) {
+                                                        if (mangaWithNotif.shouldDownloadNewChapters(db, preferences)) {
+                                                            downloadChapters(mangaWithNotif, newDbChapters)
+                                                            hasDownloads.set(true)
+                                                        }
+
+                                                        // Convert to the manga that contains new chapters
+                                                        newUpdates.add(
+                                                            mangaWithNotif to newDbChapters.sortedByDescending { ch -> ch.source_order }
+                                                                .toTypedArray(),
+                                                        )
                                                     }
-
-                                                    // Convert to the manga that contains new chapters
-                                                    newUpdates.add(
-                                                        mangaWithNotif to newChapters.sortedByDescending { ch -> ch.source_order }
-                                                            .toTypedArray(),
-                                                    )
                                                 }
                                             }
                                         }
@@ -394,39 +407,27 @@ class LibraryUpdateService(
      * @param manga the manga to update.
      * @return a pair of the inserted and removed chapters.
      */
-    private suspend fun updateManga(manga: Manga): Pair<List<Chapter>, List<Chapter>> {
+    private suspend fun updateManga(manga: DomainManga): Pair<List<DomainChapter>, List<DomainChapter>> {
         val source = sourceManager.getOrStub(manga.source)
 
-        var updatedManga: SManga = manga
+        val mangaInfo: MangaInfo = manga.toMangaInfo()
 
-        // Update manga details metadata
+        // Update manga metadata if needed
         if (preferences.autoUpdateMetadata()) {
-            val updatedMangaDetails = source.getMangaDetails(manga.toMangaInfo())
-            val sManga = updatedMangaDetails.toSManga()
-            // Avoid "losing" existing cover
-            if (!sManga.thumbnail_url.isNullOrEmpty()) {
-                manga.prepUpdateCover(coverCache, sManga, false)
-            } else {
-                sManga.thumbnail_url = manga.thumbnail_url
-            }
-
-            updatedManga = sManga
+            val updatedMangaInfo = source.getMangaDetails(manga.toMangaInfo())
+            updateManga.awaitUpdateFromSource(manga, updatedMangaInfo, manualFetch = false, coverCache)
         }
 
-        val chapters = source.getChapterList(updatedManga.toMangaInfo())
+        val chapters = source.getChapterList(mangaInfo)
             .map { it.toSChapter() }
 
         // Get manga from database to account for if it was removed during the update
-        val dbManga = db.getManga(manga.id!!).executeAsBlocking()
+        val dbManga = getMangaById.await(manga.id)
             ?: return Pair(emptyList(), emptyList())
-
-        // Copy into [dbManga] to retain favourite value
-        dbManga.copyFrom(updatedManga)
-        db.insertManga(dbManga).executeAsBlocking()
 
         // [dbmanga] was used so that manga data doesn't get overwritten
         // in case manga gets new chapter
-        return syncChaptersWithSource(chapters, dbManga, source)
+        return syncChaptersWithSource.await(chapters, dbManga, source)
     }
 
     private suspend fun updateCovers() {

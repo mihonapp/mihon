@@ -58,7 +58,22 @@ deleteMangasNotInLibraryBySourceIds:
 DELETE FROM mangas
 WHERE favorite = 0 AND source IN :sourceIds;
 
-updateLastUpdate:
-UPDATE mangas
-SET last_update = :lastUpdate
+update:
+UPDATE mangas SET
+    source = coalesce(:source, source),
+    url = coalesce(:url, url),
+    artist = coalesce(:artist, artist),
+    author = coalesce(:author, author),
+    description = coalesce(:description, description),
+    genre = coalesce(:genre, genre),
+    title = coalesce(:title, title),
+    status = coalesce(:status, status),
+    thumbnail_url = coalesce(:thumbnailUrl, thumbnail_url),
+    favorite = coalesce(:favorite, favorite),
+    last_update = coalesce(:lastUpdate, last_update),
+    initialized = coalesce(:initialized, initialized),
+    viewer = coalesce(:viewer, viewer),
+    chapter_flags = coalesce(:chapterFlags, chapter_flags),
+    cover_last_modified = coalesce(:coverLastModified, cover_last_modified),
+    date_added = coalesce(:dateAdded, date_added)
 WHERE _id = :mangaId;
