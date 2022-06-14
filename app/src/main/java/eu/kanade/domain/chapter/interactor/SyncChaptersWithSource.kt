@@ -85,28 +85,29 @@ class SyncChaptersWithSource(
             val dbChapter = dbChapters.find { it.url == chapter.url }
 
             if (dbChapter == null) {
-                if (chapter.dateUpload == 0L) {
+                val toAddChapter = if (chapter.dateUpload == 0L) {
                     val altDateUpload = if (maxSeenUploadDate == 0L) rightNow else maxSeenUploadDate
-                    chapter = chapter.copy(dateUpload = altDateUpload)
+                    chapter.copy(dateUpload = altDateUpload)
                 } else {
                     maxSeenUploadDate = max(maxSeenUploadDate, sourceChapter.dateUpload)
+                    chapter
                 }
-                toAdd.add(chapter)
+                toAdd.add(toAddChapter)
             } else {
                 if (shouldUpdateDbChapter.await(dbChapter, chapter)) {
                     if (dbChapter.name != chapter.name && downloadManager.isChapterDownloaded(dbChapter.toDbChapter(), manga.toDbManga())) {
                         downloadManager.renameChapter(source, manga.toDbManga(), dbChapter.toDbChapter(), chapter.toDbChapter())
                     }
-                    chapter = dbChapter.copy(
-                        name = sourceChapter.name,
-                        chapterNumber = sourceChapter.chapterNumber,
-                        scanlator = sourceChapter.scanlator,
-                        sourceOrder = sourceChapter.sourceOrder,
+                    var toChangeChapter = dbChapter.copy(
+                        name = chapter.name,
+                        chapterNumber = chapter.chapterNumber,
+                        scanlator = chapter.scanlator,
+                        sourceOrder = chapter.sourceOrder,
                     )
-                    if (sourceChapter.dateUpload != 0L) {
-                        chapter = chapter.copy(dateUpload = sourceChapter.dateUpload)
+                    if (chapter.dateUpload != 0L) {
+                        toChangeChapter = toChangeChapter.copy(dateUpload = chapter.dateUpload)
                     }
-                    toChange.add(chapter)
+                    toChange.add(toChangeChapter)
                 }
             }
         }
@@ -133,11 +134,10 @@ class SyncChaptersWithSource(
 
         // Date fetch is set in such a way that the upper ones will have bigger value than the lower ones
         // Sources MUST return the chapters from most to less recent, which is common.
-        val now = Date().time
 
         var itemCount = toAdd.size
         var updatedToAdd = toAdd.map { toAddItem ->
-            var chapter = toAddItem.copy(dateFetch = now + itemCount--)
+            var chapter = toAddItem.copy(dateFetch = rightNow + itemCount--)
 
             if (chapter.isRecognizedNumber.not() && chapter.chapterNumber !in deletedChapterNumbers) return@map chapter
 
