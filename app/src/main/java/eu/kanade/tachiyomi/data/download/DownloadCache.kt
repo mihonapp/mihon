@@ -71,7 +71,7 @@ class DownloadCache(
      */
     fun isChapterDownloaded(chapter: Chapter, manga: Manga, skipCache: Boolean): Boolean {
         if (skipCache) {
-            val source = sourceManager.get(manga.source) ?: return false
+            val source = sourceManager.getOrStub(manga.source)
             return provider.findChapterDir(chapter, manga, source) != null
         }
 
@@ -124,11 +124,15 @@ class DownloadCache(
     private fun renew() {
         val onlineSources = sourceManager.getOnlineSources()
 
+        val stubSources = sourceManager.getStubSources()
+
+        val allSource = onlineSources + stubSources
+
         val sourceDirs = rootDir.dir.listFiles()
             .orEmpty()
             .associate { it.name to SourceDirectory(it) }
             .mapNotNullKeys { entry ->
-                onlineSources.find { provider.getSourceDirName(it).equals(entry.key, ignoreCase = true) }?.id
+                allSource.find { provider.getSourceDirName(it).equals(entry.key, ignoreCase = true) }?.id
             }
 
         rootDir.files = sourceDirs

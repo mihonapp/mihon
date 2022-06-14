@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.source
 
 import android.graphics.drawable.Drawable
+import eu.kanade.domain.source.model.SourceData
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
@@ -102,3 +103,5 @@ interface Source : tachiyomi.source.Source {
 fun Source.icon(): Drawable? = Injekt.get<ExtensionManager>().getAppIconForSource(this)
 
 fun Source.getPreferenceKey(): String = "source_$id"
+
+fun Source.toSourceData(): SourceData = SourceData(id = id, lang = lang, name = name)

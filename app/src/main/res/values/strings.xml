@@ -737,6 +737,7 @@
     <string name="migrate">Migrate</string>
     <string name="copy">Copy</string>
     <string name="empty_screen">Well, this is awkward</string>
+    <string name="not_installed">Not installed</string>
 
     <!-- Downloads activity and service -->
     <string name="download_queue_error">Couldn\'t download chapters. You can try again in the downloads section</string>

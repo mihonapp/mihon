@@ -44,7 +44,7 @@ private val defaultContent: @Composable RowScope.(Source, Boolean) -> Unit = { s
             .weight(1f),
     ) {
         Text(
-            text = source.name,
+            text = source.name.ifBlank { source.id.toString() },
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium,

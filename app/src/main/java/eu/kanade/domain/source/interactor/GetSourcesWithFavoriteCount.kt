@@ -33,20 +33,18 @@ class GetSourcesWithFavoriteCount(
             strength = Collator.PRIMARY
         }
         val sortFn: (Pair<Source, Long>, Pair<Source, Long>) -> Int = { a, b ->
-            val id1 = a.first.name.toLongOrNull()
-            val id2 = b.first.name.toLongOrNull()
             when (sorting) {
                 SetMigrateSorting.Mode.ALPHABETICAL -> {
                     when {
-                        id1 != null && id2 == null -> -1
-                        id2 != null && id1 == null -> 1
+                        a.first.isStub && b.first.isStub.not() -> -1
+                        b.first.isStub && a.first.isStub.not() -> 1
                         else -> collator.compare(a.first.name.lowercase(locale), b.first.name.lowercase(locale))
                     }
                 }
                 SetMigrateSorting.Mode.TOTAL -> {
                     when {
-                        id1 != null && id2 == null -> -1
-                        id2 != null && id1 == null -> 1
+                        a.first.isStub && b.first.isStub.not() -> -1
+                        b.first.isStub && a.first.isStub.not() -> 1
                         else -> a.second.compareTo(b.second)
                     }
                 }

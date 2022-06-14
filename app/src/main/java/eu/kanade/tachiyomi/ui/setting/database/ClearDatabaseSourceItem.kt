@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.ClearDatabaseSourceItemBinding
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.icon
 
 data class ClearDatabaseSourceItem(val source: Source, private val mangaCount: Long) : AbstractFlexibleItem<ClearDatabaseSourceItem.Holder>() {
@@ -37,9 +36,9 @@ data class ClearDatabaseSourceItem(val source: Source, private val mangaCount: L
 
             itemView.post {
                 when {
-                    source.id == LocalSource.ID -> binding.thumbnail.setImageResource(R.mipmap.ic_local_source)
-                    source is SourceManager.StubSource -> binding.thumbnail.setImageDrawable(null)
-                    source.icon() != null -> binding.thumbnail.setImageDrawable(source.icon())
+                    source.icon() != null && source.id != LocalSource.ID ->
+                        binding.thumbnail.setImageDrawable(source.icon())
+                    else -> binding.thumbnail.setImageResource(R.mipmap.ic_local_source)
                 }
             }
 

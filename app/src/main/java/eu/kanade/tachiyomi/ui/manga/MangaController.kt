@@ -1140,7 +1140,9 @@ class MangaController :
 
     private fun downloadChapters(chapters: List<ChapterItem>) {
         if (source is SourceManager.StubSource) {
-            activity?.toast(R.string.loader_not_implemented_error)
+            activity?.let {
+                it.toast(it.getString(R.string.source_not_installed, source?.toString().orEmpty()))
+            }
             return
         }
 

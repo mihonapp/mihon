@@ -133,6 +133,15 @@
                 android:textIsSelectable="false"
                 tools:ignore="HardcodedText" />
 
+            <ImageView
+                android:id="@+id/manga_missing_source_icon"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
+                app:srcCompat="@drawable/ic_warning_white_24dp"
+                app:tint="@color/error"
+                tools:ignore="ContentDescription" />
+
             <TextView
                 android:id="@+id/manga_source"
                 android:layout_width="wrap_content"

@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.extension.model
 
 import android.graphics.drawable.Drawable
+import eu.kanade.domain.source.model.SourceData
 import eu.kanade.tachiyomi.source.Source
 
 sealed class Extension {
@@ -40,7 +41,7 @@ sealed class Extension {
         override val isNsfw: Boolean,
         override val hasReadme: Boolean,
         override val hasChangelog: Boolean,
-        val sources: List<AvailableExtensionSources>,
+        val sources: List<AvailableSources>,
         val apkName: String,
         val iconUrl: String,
     ) : Extension()
@@ -58,8 +59,17 @@ sealed class Extension {
     ) : Extension()
 }
 
-data class AvailableExtensionSources(
-    val name: String,
+data class AvailableSources(
     val id: Long,
+    val lang: String,
+    val name: String,
     val baseUrl: String,
-)
+) {
+    fun toSourceData(): SourceData {
+        return SourceData(
+            id = this.id,
+            lang = this.lang,
+            name = this.name,
+        )
+    }
+}

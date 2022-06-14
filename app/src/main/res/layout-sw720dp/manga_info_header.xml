@@ -117,6 +117,15 @@
                 android:textIsSelectable="false"
                 tools:text="Status" />
 
+            <ImageView
+                android:id="@+id/manga_missing_source_icon"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
+                app:srcCompat="@drawable/ic_warning_white_24dp"
+                app:tint="@color/error"
+                tools:ignore="ContentDescription" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

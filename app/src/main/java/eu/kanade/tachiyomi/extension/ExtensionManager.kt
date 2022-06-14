@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.extension
 import android.content.Context
 import android.graphics.drawable.Drawable
 import com.jakewharton.rxrelay.BehaviorRelay
+import eu.kanade.domain.source.model.SourceData
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
@@ -90,7 +91,19 @@ class ExtensionManager(
             field = value
             availableExtensionsRelay.call(value)
             updatedInstalledExtensionsStatuses(value)
+            setupAvailableExtensionsSourcesDataMap(value)
         }
+
+    private var availableExtensionsSourcesData: Map<Long, SourceData> = mapOf()
+
+    private fun setupAvailableExtensionsSourcesDataMap(extensions: List<Extension.Available>) {
+        if (extensions.isEmpty()) return
+        availableExtensionsSourcesData = extensions
+            .flatMap { ext -> ext.sources.map { it.toSourceData() } }
+            .associateBy { it.id }
+    }
+
+    fun getSourceData(id: Long) = availableExtensionsSourcesData[id]
 
     /**
      * Relay used to notify the untrusted extensions.
