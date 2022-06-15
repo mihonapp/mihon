@@ -104,6 +104,7 @@ class SourceManager(private val context: Context) {
         }
         return StubSource(SourceData(id, "", ""))
     }
+
     @Suppress("OverridingDeprecatedMember")
     open inner class StubSource(val sourceData: SourceData) : Source {
 

@@ -368,7 +368,7 @@ class MainActivity : BaseActivity() {
             try {
                 ExtensionGithubApi().checkForUpdates(
                     this@MainActivity,
-                    fromAvailableExtensionList = true
+                    fromAvailableExtensionList = true,
                 )?.let { pendingUpdates ->
                     preferences.extensionUpdatesCount().set(pendingUpdates.size)
                 }
