@@ -44,7 +44,7 @@ fun WebViewScreen(
     onClearCookies: (String) -> Unit,
 ) {
     val context = LocalContext.current
-    val state = rememberWebViewState(url = url)
+    val state = rememberWebViewState(url = url, additionalHttpHeaders = headers)
     val navigator = rememberWebViewNavigator()
 
     Column {
@@ -144,7 +144,7 @@ fun WebViewScreen(
                         WebView.setWebContentsDebuggingEnabled(true)
                     }
 
-                    headers["User-Agent"]?.let {
+                    headers["user-agent"]?.let {
                         webView.settings.userAgentString = it
                     }
                 },
