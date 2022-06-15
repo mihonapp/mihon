@@ -1,9 +1,9 @@
 [versions]
 agp_version = "7.2.1"
-lifecycle_version = "2.5.0-rc01"
+lifecycle_version = "2.5.0-rc02"
 
 [libraries]
-annotation = "androidx.annotation:annotation:1.4.0-rc01"
+annotation = "androidx.annotation:annotation:1.4.0"
 appcompat = "androidx.appcompat:appcompat:1.4.2"
 biometricktx = "androidx.biometric:biometric-ktx:1.2.0-alpha04"
 constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
