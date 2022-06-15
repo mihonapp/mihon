@@ -95,9 +95,10 @@
 
                     <TextView
                         android:id="@+id/left_page_text"
-                        android:layout_width="32dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:minWidth="32dp"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         tools:text="1" />
@@ -116,9 +117,10 @@
 
                     <TextView
                         android:id="@+id/right_page_text"
-                        android:layout_width="32dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:minWidth="32dp"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         tools:text="15" />
