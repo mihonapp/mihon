@@ -1,9 +1,15 @@
 package eu.kanade.domain
 
+import eu.kanade.data.category.CategoryRepositoryImpl
 import eu.kanade.data.chapter.ChapterRepositoryImpl
 import eu.kanade.data.history.HistoryRepositoryImpl
 import eu.kanade.data.manga.MangaRepositoryImpl
 import eu.kanade.data.source.SourceRepositoryImpl
+import eu.kanade.domain.category.interactor.DeleteCategory
+import eu.kanade.domain.category.interactor.GetCategories
+import eu.kanade.domain.category.interactor.InsertCategory
+import eu.kanade.domain.category.interactor.UpdateCategory
+import eu.kanade.domain.category.repository.CategoryRepository
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.ShouldUpdateDbChapter
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
@@ -45,6 +51,12 @@ import uy.kohesive.injekt.api.get
 class DomainModule : InjektModule {
 
     override fun InjektRegistrar.registerInjectables() {
+        addSingletonFactory<CategoryRepository> { CategoryRepositoryImpl(get()) }
+        addFactory { GetCategories(get()) }
+        addFactory { InsertCategory(get()) }
+        addFactory { UpdateCategory(get()) }
+        addFactory { DeleteCategory(get()) }
+
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
         addFactory { GetFavoritesBySourceId(get()) }
         addFactory { GetMangaById(get()) }

@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.category
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import eu.davidea.viewholders.FlexibleViewHolder
-import eu.kanade.tachiyomi.data.database.models.Category
+import eu.kanade.domain.category.model.Category
 import eu.kanade.tachiyomi.databinding.CategoriesItemBinding
 
 /**

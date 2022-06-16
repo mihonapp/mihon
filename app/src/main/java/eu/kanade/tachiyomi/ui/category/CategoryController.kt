@@ -14,14 +14,15 @@ import dev.chrisbanes.insetter.applyInsetter
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.davidea.flexibleadapter.helpers.UndoHelper
+import eu.kanade.domain.category.model.Category
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.databinding.CategoriesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
+import kotlinx.coroutines.launch
 
 /**
  * Controller to manage the categories for the users' library.
@@ -91,6 +92,12 @@ class CategoryController :
         adapter?.isPermanentDelete = false
 
         actionFabScrollListener = actionFab?.shrinkOnScroll(binding.recycler)
+
+        viewScope.launch {
+            presenter.categories.collect {
+                setCategories(it.map(::CategoryItem))
+            }
+        }
     }
 
     override fun configureFab(fab: ExtendedFloatingActionButton) {

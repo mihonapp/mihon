@@ -5,8 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
+import eu.kanade.domain.category.model.Category
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Category
 
 /**
  * Category item for a recycler view.
@@ -68,6 +68,6 @@ class CategoryItem(val category: Category) : AbstractFlexibleItem<CategoryHolder
     }
 
     override fun hashCode(): Int {
-        return category.id!!
+        return category.id.hashCode()
     }
 }
