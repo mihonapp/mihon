@@ -14,7 +14,6 @@ fun TachiyomiTheme(content: @Composable () -> Unit) {
     val (colorScheme, typography) = createMdc3Theme(
         context = context,
         layoutDirection = layoutDirection,
-        setTextColors = true,
     )
 
     MaterialTheme(

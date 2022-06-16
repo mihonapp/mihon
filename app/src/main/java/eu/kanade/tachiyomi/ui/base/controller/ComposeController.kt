@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
@@ -32,7 +35,9 @@ abstract class ComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
             setContent {
                 val nestedScrollInterop = rememberNestedScrollInteropConnection()
                 TachiyomiTheme {
-                    ComposeContent(nestedScrollInterop)
+                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
+                        ComposeContent(nestedScrollInterop)
+                    }
                 }
             }
         }
@@ -58,7 +63,9 @@ abstract class BasicComposeController :
             setContent {
                 val nestedScrollInterop = rememberNestedScrollInteropConnection()
                 TachiyomiTheme {
-                    ComposeContent(nestedScrollInterop)
+                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
+                        ComposeContent(nestedScrollInterop)
+                    }
                 }
             }
         }
@@ -81,7 +88,9 @@ abstract class SearchableComposeController<P : BasePresenter<*>>(bundle: Bundle?
             setContent {
                 val nestedScrollInterop = rememberNestedScrollInteropConnection()
                 TachiyomiTheme {
-                    ComposeContent(nestedScrollInterop)
+                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
+                        ComposeContent(nestedScrollInterop)
+                    }
                 }
             }
         }
