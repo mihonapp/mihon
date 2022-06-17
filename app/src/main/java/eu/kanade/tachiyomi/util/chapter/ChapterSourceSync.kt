@@ -5,7 +5,6 @@ import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
-import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import eu.kanade.tachiyomi.data.database.models.Chapter as DbChapter
@@ -19,16 +18,14 @@ import eu.kanade.tachiyomi.data.database.models.Manga as DbManga
  * @param source the source of the chapters.
  * @return a pair of new insertions and deletions.
  */
-fun syncChaptersWithSource(
+suspend fun syncChaptersWithSource(
     rawSourceChapters: List<SChapter>,
     manga: DbManga,
     source: Source,
     syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
 ): Pair<List<DbChapter>, List<DbChapter>> {
     val domainManga = manga.toDomainManga() ?: return Pair(emptyList(), emptyList())
-    val (added, deleted) = runBlocking {
-        syncChaptersWithSource.await(rawSourceChapters, domainManga, source)
-    }
+    val (added, deleted) = syncChaptersWithSource.await(rawSourceChapters, domainManga, source)
 
     val addedDbChapters = added.map { it.toDbChapter() }
     val deletedDbChapters = deleted.map { it.toDbChapter() }
