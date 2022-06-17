@@ -311,10 +311,12 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
                 handler
                     .awaitOneOrNull { chaptersQueries.getChapterByUrl(url) }
                     ?.let {
-                        HistoryUpdate(
-                            chapterId = it._id,
-                            readAt = Date(lastRead),
-                            sessionReadDuration = 0,
+                        toUpdate.add(
+                            HistoryUpdate(
+                                chapterId = it._id,
+                                readAt = Date(lastRead),
+                                sessionReadDuration = 0,
+                            ),
                         )
                     }
             }
