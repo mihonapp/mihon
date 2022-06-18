@@ -21,7 +21,7 @@ enum class MangaCover(private val ratio: Float) {
     @Composable
     operator fun invoke(
         modifier: Modifier = Modifier,
-        data: String?,
+        data: Any?,
         contentDescription: String? = null,
         shape: Shape? = null,
     ) {

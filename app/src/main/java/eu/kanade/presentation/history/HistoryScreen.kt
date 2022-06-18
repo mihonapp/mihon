@@ -191,7 +191,7 @@ fun HistoryItem(
             modifier = Modifier
                 .fillMaxHeight()
                 .clickable(onClick = onClickCover),
-            data = history.thumbnailUrl,
+            data = history.coverData,
         )
         Column(
             modifier = Modifier

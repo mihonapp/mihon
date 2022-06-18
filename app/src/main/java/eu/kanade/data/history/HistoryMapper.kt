@@ -2,6 +2,7 @@ package eu.kanade.data.history
 
 import eu.kanade.domain.history.model.History
 import eu.kanade.domain.history.model.HistoryWithRelations
+import eu.kanade.domain.manga.model.MangaCover
 import java.util.Date
 
 val historyMapper: (Long, Long, Date?, Long) -> History = { id, chapterId, readAt, readDuration ->
@@ -13,16 +14,22 @@ val historyMapper: (Long, Long, Date?, Long) -> History = { id, chapterId, readA
     )
 }
 
-val historyWithRelationsMapper: (Long, Long, Long, String, String?, Float, Date?, Long) -> HistoryWithRelations = {
-        historyId, mangaId, chapterId, title, thumbnailUrl, chapterNumber, readAt, readDuration ->
+val historyWithRelationsMapper: (Long, Long, Long, String, String?, Long, Boolean, Long, Float, Date?, Long) -> HistoryWithRelations = {
+        historyId, mangaId, chapterId, title, thumbnailUrl, sourceId, isFavorite, coverLastModified, chapterNumber, readAt, readDuration ->
     HistoryWithRelations(
         id = historyId,
         chapterId = chapterId,
         mangaId = mangaId,
         title = title,
-        thumbnailUrl = thumbnailUrl ?: "",
         chapterNumber = chapterNumber,
         readAt = readAt,
         readDuration = readDuration,
+        coverData = MangaCover(
+            mangaId = mangaId,
+            sourceId = sourceId,
+            isMangaFavorite = isFavorite,
+            url = thumbnailUrl,
+            lastModified = coverLastModified,
+        ),
     )
 }
