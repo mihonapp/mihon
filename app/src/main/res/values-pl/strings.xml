@@ -597,7 +597,7 @@
     <string name="rotation_portrait">Pionowo</string>
     <string name="action_show_errors">Kliknij, by wyświetlić detale</string>
     <string name="notification_incognito_text">Wyłącz tryb incognito</string>
-    <string name="action_sort_chapter_fetch_date">Data pobrania</string>
+    <string name="action_sort_chapter_fetch_date">Data pobrania rozdziału</string>
     <string name="error_no_match">Nie znaleziono pasującego wyniku</string>
     <string name="source_unsupported">Źródło nie jest wspierane</string>
     <string name="unread">Nieprzeczytane</string>
@@ -725,4 +725,5 @@
     <string name="notification_update_error">%1$d aktualizacja (aktualizacje) nie powiodła się</string>
     <string name="action_close">Zamknij</string>
     <string name="action_move_to_top_all_for_series">Przenieś serię na górę</string>
+    <string name="action_sort_unread_count">Ilość nieprzeczytanych</string>
 </resources>

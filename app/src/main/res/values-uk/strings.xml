@@ -731,4 +731,6 @@
     <string name="complete_list">Прочитано</string>
     <string name="on_hold_list">Відкладено</string>
     <string name="unfinished_list">Не закінчено</string>
+    <string name="action_sort_last_manga_update">Останні оновлення манги</string>
+    <string name="action_sort_unread_count">Кількість непрочитаного</string>
 </resources>

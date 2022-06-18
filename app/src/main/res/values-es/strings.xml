@@ -769,4 +769,5 @@
     <string name="network_not_metered">Solo en conexiones no medidas</string>
     <string name="cant_open_last_read_chapter">No se pudo abrir el último capítulo leído</string>
     <string name="custom_cover">Portada personalizada</string>
+    <string name="not_installed">Sin instalar</string>
 </resources>

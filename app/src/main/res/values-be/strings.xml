@@ -360,4 +360,6 @@
     <string name="rotation_force_portrait">Заблакаваная партрэтная</string>
     <string name="rotation_type">Тып арыентацыі</string>
     <string name="pref_rotation_type">Тып арыентацыі па змаўчанні</string>
+    <string name="action_filter_started">Пачата</string>
+    <string name="label_warning">Папярэджанне</string>
 </resources>

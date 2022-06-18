@@ -725,4 +725,5 @@
     <string name="reading_list">Senarai Bacaan</string>
     <string name="network_not_metered">Hanya pada rangkaian tidak bermeter</string>
     <string name="cant_open_last_read_chapter">Tidak dapat membuka bab yang terakhir dibaca</string>
+    <string name="custom_cover">Muka hadapan tersuai</string>
 </resources>

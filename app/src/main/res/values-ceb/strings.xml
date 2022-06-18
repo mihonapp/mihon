@@ -400,4 +400,41 @@
     <string name="pref_restore_backup">Ibalik ang backup</string>
     <string name="pref_restore_backup_summ">Ibalik ang librarya gikan sa backup file</string>
     <string name="pref_backup_directory">Backup nga lokasyon</string>
+    <string name="pref_backup_slots">Maximum nga backups</string>
+    <string name="backup_created">Gihimo ang backup</string>
+    <string name="pref_backup_interval">Kadaghanon sa pag-backup</string>
+    <string name="backup_restore_invalid_uri">Sayop: walay sulod nga URI</string>
+    <string name="invalid_backup_file">Dili balido nga backup file</string>
+    <string name="invalid_backup_file_missing_manga">Ang backup walay bisan unsang manga.</string>
+    <string name="backup_restore_missing_sources">Nawala nga mga tinubdan:</string>
+    <string name="empty_backup_error">Walay mga entri sa library nga i-back up</string>
+    <string name="restore_miui_warning">Ang pag-backup/pagpasig-uli mahimong dili molihok sa husto kung ang MIUI Optimization gi-disable.</string>
+    <string name="restore_in_progress">Ang pagpasig-uli nagpadayon na</string>
+    <string name="restoring_backup_error">Napakyas ang pag-uli sa backup</string>
+    <string name="restoring_backup_canceled">Gikansela ang pagpasig-uli</string>
+    <string name="backup_info">Ang mga awtomatikong pag-backup girekomendar kaayo. Kinahanglan nimong tipigan ang mga kopya sa ubang mga dapit usab.</string>
+    <string name="label_network">Network</string>
+    <string name="pref_clear_cookies">Tin-aw nga cookies</string>
+    <string name="pref_dns_over_https">DNS sa HTTPS (DoH)</string>
+    <string name="requires_app_restart">Nagkinahanglan nga i-restart ang app aron ma-epekto</string>
+    <string name="backup_in_progress">Ang pag-backup nagpadayon na</string>
+    <string name="restore_duration">%02d minuto , %02d ikaduha</string>
+    <string name="backup_choice">Unsa ang gusto nimo i-backup\?</string>
+    <string name="backup_restore_content_full">Ang datos gikan sa backup file mapasig-uli.
+\n
+\nKinahanglan nimo nga i-install ang bisan unsang nawala nga mga extension ug mag-log in sa mga serbisyo sa pagsubay pagkahuman aron magamit kini.</string>
+    <string name="restore_completed">Nakompleto ang pag-uli</string>
+    <string name="creating_backup">Paghimo og backup</string>
+    <string name="pref_backup_service_category">Awtomatikong pag-backup</string>
+    <string name="tracker_not_logged_in">Wala naka-log in: %1$s</string>
+    <string name="backup_restore_missing_trackers">Ang mga tracker wala naka-log in:</string>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Nabuhat sa %1$s nga adunay %2$s nga sayup</item>
+        <item quantity="other">Nabuhat sa %1$s nga adunay %2$s nga mga sayop</item>
+    </plurals>
+    <string name="restoring_backup">Pag-uli sa backup</string>
+    <string name="cookies_cleared">Gilimpyohan ang mga cookies</string>
+    <string name="label_data">Data</string>
+    <string name="pref_clear_chapter_cache">Hawani ang cache sa kapitulo</string>
+    <string name="creating_backup_error">Napakyas ang pag-backup</string>
 </resources>

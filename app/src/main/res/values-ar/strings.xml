@@ -742,7 +742,7 @@
 \nهل مازلت تريد أن تكمل؟</string>
     <string name="pref_update_only_started">لم تقرأ أي فصول</string>
     <string name="skipped_reason_completed">تم تخطيها لإنتهاء السلسلة</string>
-    <string name="pref_navigate_pan">قود للتحرك</string>
+    <string name="pref_navigate_pan">قُدْ للتحرك</string>
     <string name="pref_landscape_zoom">كبر الصوره الأفقية</string>
     <string name="channel_skipped">متجاوز</string>
     <string name="error_saving_picture">خطأ أثناء حفظ الصورة</string>
@@ -785,4 +785,5 @@
     <string name="complete_list">قائمة الكاملة</string>
     <string name="on_hold_list">قائمة المعلقة</string>
     <string name="custom_cover">غلاف مخصص</string>
+    <string name="cant_open_last_read_chapter">غير قادر على فتح آخر فصل تم قراءته</string>
 </resources>

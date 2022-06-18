@@ -86,7 +86,7 @@
     <string name="update_weekly">Varje vecka</string>
     <string name="all">Alla</string>
     <string name="pref_library_update_restriction">Automatiska uppdateringar av enhetsbegränsningar</string>
-    <string name="charging">Laddning</string>
+    <string name="charging">Vid laddning</string>
     <string name="pref_update_only_non_completed">Med status \"Avslutat\"</string>
     <string name="pref_auto_update_manga_sync">Uppdatera förlopp efter läsning</string>
     <string name="default_category">Standardkategori</string>
@@ -707,7 +707,7 @@
     <string name="update_check_fdroid_migration_info">En ny version finns tillgänglig i de officiella utgåvorna. Tryck på för att lära dig hur du flyttar från inofficiella F-Droid-versioner.</string>
     <string name="empty_backup_error">Inga biblioteksposter att säkerhetskopiera</string>
     <string name="update_check_open">Öppna på GitHub</string>
-    <string name="battery_not_low">Batteriet är inte lågt</string>
+    <string name="battery_not_low">När batteriet inte är lågt</string>
     <string name="pref_duplicate_pinned_sources">Visa duplicerade källor med pinned-markeringar</string>
     <string name="pref_clear_webview_data">Rensa data från WebView</string>
     <string name="webview_data_deleted">WebView-data rensas</string>
@@ -725,7 +725,7 @@
     <string name="pref_reset_viewer_flags_summary">Återställer läsläge och orientering för alla serier</string>
     <string name="download_notifier_split_page_path_not_found">Kunde inte hitta filsökvägen för sida %d</string>
     <string name="pref_reset_viewer_flags_success">Återställning av läsarens inställningar</string>
-    <string name="network_not_metered">Endast på obegränsat nätverk</string>
+    <string name="network_not_metered">Endast på nät utan mätning</string>
     <string name="reading_list">Läslista</string>
     <string name="on_hold_list">Väntelista</string>
     <string name="unfinished_list">Oavslutad lista</string>
@@ -736,4 +736,7 @@
     <string name="download_notifier_split_failed">Kunde inte dela den nedladdade bilden</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Språk</string>
+    <string name="cant_open_last_read_chapter">Det går inte att öppna det senast lästa kapitlet</string>
+    <string name="not_installed">Inte installerad</string>
+    <string name="custom_cover">Anpassat omslag</string>
 </resources>

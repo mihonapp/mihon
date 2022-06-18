@@ -707,4 +707,8 @@
     <string name="webview_data_deleted">웹뷰 데이터 삭제됨</string>
     <string name="split_tall_images">긴 이미지 자동 분할</string>
     <string name="split_tall_images_summary">긴 다운로드 이미지를 분할하여 리더 성능을 향상시킵니다.</string>
+    <string name="ext_info_version">버전</string>
+    <string name="ext_info_language">언어</string>
+    <string name="reading_list">읽을 목록</string>
+    <string name="wish_list">위시리스트</string>
 </resources>

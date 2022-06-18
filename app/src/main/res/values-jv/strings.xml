@@ -126,7 +126,7 @@
     <string name="action_mark_as_unread">Tandai dadi durung diwaca</string>
     <string name="action_mark_as_read">Tandai dadi diwaca</string>
     <string name="action_global_search">Penggolekan global</string>
-    <string name="action_sort_chapter_fetch_date">Tanggal dijupuk</string>
+    <string name="action_sort_chapter_fetch_date">Tanggal njupuk chapter</string>
     <string name="action_sort_last_read">Terakhir di waca</string>
     <string name="action_filter_empty">Ngilangno saringan</string>
     <string name="action_filter_tracked">Kelacak</string>
@@ -150,7 +150,7 @@
     <string name="action_webview_refresh">Segerke</string>
     <string name="action_webview_forward">Maju</string>
     <string name="action_restore">Pulihke</string>
-    <string name="action_show_errors">Tampilke error</string>
+    <string name="action_show_errors">Klik gae Inpo luwih lanjut</string>
     <string name="action_undo">Baleni</string>
     <string name="action_reset">Balekke</string>
     <string name="action_share">Bagi</string>
@@ -170,7 +170,7 @@
     <string name="action_display_show_tabs">Tampilaken tab kategori</string>
     <string name="action_display_local_badge">Lokal manga</string>
     <string name="action_display_unread_badge">Bab durung diwaca</string>
-    <string name="action_display_download_badge">Unduh lencana</string>
+    <string name="action_display_download_badge">Chapter downloadan</string>
     <string name="action_display_comfortable_grid">Kothak penak</string>
     <string name="action_display_grid">Kothak kompak</string>
     <string name="action_display">Tampilan</string>
@@ -282,4 +282,11 @@
     <string name="pref_skip_read_chapters">Lewati bab dithandani kawaca</string>
     <string name="pref_read_with_volume_keys">Tombol volume</string>
     <string name="l_nav">Wangun L</string>
+    <string name="action_sort_last_manga_update">Nganyari manga pungkasan</string>
+    <string name="action_sort_unread_count">Total gak diwoco</string>
+    <string name="pref_relative_format">Stempel wektu sing relatif</string>
+    <string name="pref_category_library_update">Updatean umum</string>
+    <string name="pref_library_update_interval">Updatean otomatis</string>
+    <string name="lock_with_biometrics">Mbutuhake mbukak kunci</string>
+    <string name="pref_side_nav_icon_alignment">Alignment lambang pandhu arah sisih</string>
 </resources>

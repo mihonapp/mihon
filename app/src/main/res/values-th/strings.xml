@@ -726,4 +726,5 @@
     <string name="network_not_metered">เฉพาะบนเครือข่ายที่ไม่ได้ตรวจสอบ</string>
     <string name="cant_open_last_read_chapter">ไม่สามารถเปิดตอนที่อ่านล่าสุดได้</string>
     <string name="custom_cover">กำหนดปกเอง</string>
+    <string name="not_installed">ยังไม่ถูกติดตั้ง</string>
 </resources>

@@ -736,4 +736,6 @@
     <string name="on_hold_list">Lista de espera</string>
     <string name="reading_list">Lista de lectura</string>
     <string name="network_not_metered">Solo en red sin medidor</string>
+    <string name="custom_cover">Portada Personalizada</string>
+    <string name="cant_open_last_read_chapter">Imposible abrir el último capítulo leído</string>
 </resources>

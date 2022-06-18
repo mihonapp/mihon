@@ -725,4 +725,6 @@
     <string name="on_hold_list">Daftar Tertahan</string>
     <string name="network_not_metered">Hanya di jaringan tanpa batasan</string>
     <string name="cant_open_last_read_chapter">Gagal membuka bab terakhir dibaca</string>
+    <string name="custom_cover">Sampul kustom</string>
+    <string name="not_installed">Tidak terinstall</string>
 </resources>
