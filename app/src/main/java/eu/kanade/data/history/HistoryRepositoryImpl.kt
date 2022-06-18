@@ -19,7 +19,6 @@ class HistoryRepositoryImpl(
     override fun getHistory(query: String): PagingSource<Long, HistoryWithRelations> {
         return handler.subscribeToPagingSource(
             countQuery = { historyViewQueries.countHistory(query) },
-            transacter = { historyViewQueries },
             queryProvider = { limit, offset ->
                 historyViewQueries.history(query, limit, offset, historyWithRelationsMapper)
             },

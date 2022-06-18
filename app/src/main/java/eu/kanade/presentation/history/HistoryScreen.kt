@@ -1,24 +1,21 @@
 package eu.kanade.presentation.history
 
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -29,12 +26,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush.Companion.linearGradient
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -43,22 +39,20 @@ import androidx.paging.compose.items
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.components.ScrollbarLazyColumn
-import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.history.components.HistoryHeader
+import eu.kanade.presentation.history.components.HistoryItem
+import eu.kanade.presentation.history.components.HistoryItemShimmer
 import eu.kanade.presentation.util.plus
+import eu.kanade.presentation.util.shimmerGradient
 import eu.kanade.presentation.util.topPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.recent.history.HistoryPresenter
 import eu.kanade.tachiyomi.ui.recent.history.HistoryState
-import eu.kanade.tachiyomi.util.lang.toRelativeString
-import eu.kanade.tachiyomi.util.lang.toTimestampString
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.text.DateFormat
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.util.Date
 
 @Composable
@@ -93,10 +87,7 @@ fun HistoryContent(
     preferences: PreferencesHelper = Injekt.get(),
     nestedScroll: NestedScrollConnection,
 ) {
-    if (history.loadState.refresh is LoadState.Loading) {
-        LoadingScreen()
-        return
-    } else if (history.loadState.refresh is LoadState.NotLoading && history.itemCount == 0) {
+    if (history.loadState.refresh is LoadState.NotLoading && history.itemCount == 0) {
         EmptyScreen(textResource = R.string.information_no_recent_manga)
         return
     }
@@ -107,6 +98,29 @@ fun HistoryContent(
     var removeState by remember { mutableStateOf<HistoryWithRelations?>(null) }
 
     val scrollState = rememberLazyListState()
+
+    val transition = rememberInfiniteTransition()
+
+    val translateAnimation = transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1000f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 1000,
+                easing = LinearEasing,
+            ),
+        ),
+    )
+
+    val brush = linearGradient(
+        colors = shimmerGradient,
+        start = Offset(0f, 0f),
+        end = Offset(
+            x = translateAnimation.value,
+            y = 00f,
+        ),
+    )
+
     ScrollbarLazyColumn(
         modifier = Modifier
             .nestedScroll(nestedScroll),
@@ -134,7 +148,9 @@ fun HistoryContent(
                         onClickDelete = { removeState = value },
                     )
                 }
-                null -> {}
+                null -> {
+                    HistoryItemShimmer(brush = brush)
+                }
             }
         }
     }
@@ -147,88 +163,6 @@ fun HistoryContent(
             },
             onNegative = { removeState = null },
         )
-    }
-}
-
-@Composable
-fun HistoryHeader(
-    modifier: Modifier = Modifier,
-    date: Date,
-    relativeTime: Int,
-    dateFormat: DateFormat,
-) {
-    Text(
-        modifier = modifier
-            .padding(horizontal = horizontalPadding, vertical = 8.dp),
-        text = date.toRelativeString(
-            LocalContext.current,
-            relativeTime,
-            dateFormat,
-        ),
-        style = MaterialTheme.typography.bodyMedium.copy(
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontWeight = FontWeight.SemiBold,
-        ),
-    )
-}
-
-@Composable
-fun HistoryItem(
-    modifier: Modifier = Modifier,
-    history: HistoryWithRelations,
-    onClickCover: () -> Unit,
-    onClickResume: () -> Unit,
-    onClickDelete: () -> Unit,
-) {
-    Row(
-        modifier = modifier
-            .clickable(onClick = onClickResume)
-            .height(96.dp)
-            .padding(horizontal = horizontalPadding, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        MangaCover.Book(
-            modifier = Modifier
-                .fillMaxHeight()
-                .clickable(onClick = onClickCover),
-            data = history.coverData,
-        )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = horizontalPadding, end = 8.dp),
-        ) {
-            val textStyle = MaterialTheme.typography.bodyMedium
-            Text(
-                text = history.title,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                style = textStyle.copy(fontWeight = FontWeight.SemiBold),
-            )
-            Row {
-                Text(
-                    text = if (history.chapterNumber > -1) {
-                        stringResource(
-                            R.string.recent_manga_time,
-                            chapterFormatter.format(history.chapterNumber),
-                            history.readAt?.toTimestampString() ?: "",
-                        )
-                    } else {
-                        history.readAt?.toTimestampString() ?: ""
-                    },
-                    modifier = Modifier.padding(top = 4.dp),
-                    style = textStyle,
-                )
-            }
-        }
-
-        IconButton(onClick = onClickDelete) {
-            Icon(
-                imageVector = Icons.Outlined.Delete,
-                contentDescription = stringResource(R.string.action_delete),
-                tint = MaterialTheme.colorScheme.onSurface,
-            )
-        }
     }
 }
 
@@ -281,11 +215,6 @@ fun RemoveHistoryDialog(
         },
     )
 }
-
-private val chapterFormatter = DecimalFormat(
-    "#.###",
-    DecimalFormatSymbols().apply { decimalSeparator = '.' },
-)
 
 sealed class HistoryUiModel {
     data class Header(val date: Date) : HistoryUiModel()

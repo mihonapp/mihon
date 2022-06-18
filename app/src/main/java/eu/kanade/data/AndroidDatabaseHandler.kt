@@ -2,8 +2,6 @@ package eu.kanade.data
 
 import androidx.paging.PagingSource
 import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.Transacter
-import com.squareup.sqldelight.android.paging3.QueryPagingSource
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
@@ -63,13 +61,11 @@ class AndroidDatabaseHandler(
 
     override fun <T : Any> subscribeToPagingSource(
         countQuery: Database.() -> Query<Long>,
-        transacter: Database.() -> Transacter,
         queryProvider: Database.(Long, Long) -> Query<T>,
     ): PagingSource<Long, T> {
         return QueryPagingSource(
-            countQuery = countQuery(db),
-            transacter = transacter(db),
-            dispatcher = queryDispatcher,
+            handler = this,
+            countQuery = countQuery,
             queryProvider = { limit, offset ->
                 queryProvider.invoke(db, limit, offset)
             },

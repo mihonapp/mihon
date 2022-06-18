@@ -14,7 +14,7 @@ import coil.compose.AsyncImage
 import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
 
-enum class MangaCover(private val ratio: Float) {
+enum class MangaCover(val ratio: Float) {
     Square(1f / 1f),
     Book(2f / 3f);
 
