@@ -6,8 +6,6 @@ import eu.kanade.tachiyomi.data.database.DbProvider
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaChapter
-import eu.kanade.tachiyomi.data.database.resolvers.ChapterBackupPutResolver
-import eu.kanade.tachiyomi.data.database.resolvers.ChapterKnownBackupPutResolver
 import eu.kanade.tachiyomi.data.database.resolvers.ChapterProgressPutResolver
 import eu.kanade.tachiyomi.data.database.resolvers.MangaChapterGetResolver
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable
@@ -49,17 +47,6 @@ interface ChapterQueries : DbProvider {
         )
         .prepare()
 
-    fun getChapter(url: String) = db.get()
-        .`object`(Chapter::class.java)
-        .withQuery(
-            Query.builder()
-                .table(ChapterTable.TABLE)
-                .where("${ChapterTable.COL_URL} = ?")
-                .whereArgs(url)
-                .build(),
-        )
-        .prepare()
-
     fun getChapter(url: String, mangaId: Long) = db.get()
         .`object`(Chapter::class.java)
         .withQuery(
@@ -74,16 +61,6 @@ interface ChapterQueries : DbProvider {
     fun insertChapters(chapters: List<Chapter>) = db.put().objects(chapters).prepare()
 
     fun deleteChapters(chapters: List<Chapter>) = db.delete().objects(chapters).prepare()
-
-    fun updateChaptersBackup(chapters: List<Chapter>) = db.put()
-        .objects(chapters)
-        .withPutResolver(ChapterBackupPutResolver())
-        .prepare()
-
-    fun updateKnownChaptersBackup(chapters: List<Chapter>) = db.put()
-        .objects(chapters)
-        .withPutResolver(ChapterKnownBackupPutResolver())
-        .prepare()
 
     fun updateChapterProgress(chapter: Chapter) = db.put()
         .`object`(chapter)

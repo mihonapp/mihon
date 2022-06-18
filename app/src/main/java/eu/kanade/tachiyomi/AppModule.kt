@@ -42,7 +42,7 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory<SupportSQLiteOpenHelper> {
             val configuration = SupportSQLiteOpenHelper.Configuration.builder(app)
                 .callback(DbOpenCallback())
-                .name(DbOpenCallback.DATABASE_NAME)
+                .name(DbOpenCallback.DATABASE_FILENAME)
                 .noBackupDirectory(false)
                 .build()
 

@@ -9,10 +9,7 @@ import logcat.logcat
 class DbOpenCallback : SupportSQLiteOpenHelper.Callback(Database.Schema.version) {
 
     companion object {
-        /**
-         * Name of the database file.
-         */
-        const val DATABASE_NAME = "tachiyomi.db"
+        const val DATABASE_FILENAME = "tachiyomi.db"
     }
 
     override fun onCreate(db: SupportSQLiteDatabase) {

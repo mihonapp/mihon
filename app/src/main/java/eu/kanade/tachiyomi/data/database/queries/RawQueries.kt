@@ -51,24 +51,6 @@ fun getRecentsQuery() =
     ORDER BY ${Chapter.COL_DATE_UPLOAD} DESC
 """
 
-fun getHistoryByMangaId() =
-    """
-    SELECT ${History.TABLE}.*
-    FROM ${History.TABLE}
-    JOIN ${Chapter.TABLE}
-    ON ${History.TABLE}.${History.COL_CHAPTER_ID} = ${Chapter.TABLE}.${Chapter.COL_ID}
-    WHERE ${Chapter.TABLE}.${Chapter.COL_MANGA_ID} = ? AND ${History.TABLE}.${History.COL_CHAPTER_ID} = ${Chapter.TABLE}.${Chapter.COL_ID}
-"""
-
-fun getHistoryByChapterUrl() =
-    """
-    SELECT ${History.TABLE}.*
-    FROM ${History.TABLE}
-    JOIN ${Chapter.TABLE}
-    ON ${History.TABLE}.${History.COL_CHAPTER_ID} = ${Chapter.TABLE}.${Chapter.COL_ID}
-    WHERE ${Chapter.TABLE}.${Chapter.COL_URL} = ? AND ${History.TABLE}.${History.COL_CHAPTER_ID} = ${Chapter.TABLE}.${Chapter.COL_ID}
-"""
-
 fun getLastReadMangaQuery() =
     """
     SELECT ${Manga.TABLE}.*, MAX(${History.TABLE}.${History.COL_LAST_READ}) AS max
