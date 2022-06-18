@@ -813,7 +813,7 @@ class MangaController :
             val dataUri = data?.data
             if (dataUri == null || resultCode != Activity.RESULT_OK) return
             val activity = activity ?: return
-            presenter.editCover(manga!!, activity, dataUri)
+            presenter.editCover(activity, dataUri)
         }
     }
 

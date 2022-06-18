@@ -58,4 +58,8 @@ class UpdateManga(
     suspend fun awaitUpdateLastUpdate(mangaId: Long): Boolean {
         return mangaRepository.update(MangaUpdate(id = mangaId, lastUpdate = Date().time))
     }
+
+    suspend fun awaitUpdateCoverLastModified(mangaId: Long): Boolean {
+        return mangaRepository.update(MangaUpdate(id = mangaId, coverLastModified = Date().time))
+    }
 }

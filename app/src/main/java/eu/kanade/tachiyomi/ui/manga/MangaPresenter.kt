@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -22,7 +23,6 @@ import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
-import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.toSChapter
 import eu.kanade.tachiyomi.source.model.toSManga
@@ -33,8 +33,10 @@ import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithTrackServiceTwoWay
+import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
@@ -299,31 +301,20 @@ class MangaPresenter(
     /**
      * Update cover with local file.
      *
-     * @param manga the manga edited.
      * @param context Context.
      * @param data uri of the cover resource.
      */
-    fun editCover(manga: Manga, context: Context, data: Uri) {
-        Observable
-            .fromCallable {
-                context.contentResolver.openInputStream(data)?.use {
-                    if (manga.isLocal()) {
-                        LocalSource.updateCover(context, manga, it)
-                        manga.updateCoverLastModified(db)
-                        db.insertManga(manga).executeAsBlocking()
-                    } else if (manga.favorite) {
-                        coverCache.setCustomCoverToCache(manga, it)
-                        manga.updateCoverLastModified(db)
-                    }
-                    true
+    fun editCover(context: Context, data: Uri) {
+        presenterScope.launchIO {
+            context.contentResolver.openInputStream(data)?.use {
+                try {
+                    val result = manga.toDomainManga()!!.editCover(context, it)
+                    launchUI { if (result) view?.onSetCoverSuccess() }
+                } catch (e: Exception) {
+                    launchUI { view?.onSetCoverError(e) }
                 }
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeFirst(
-                { view, _ -> view.onSetCoverSuccess() },
-                { view, e -> view.onSetCoverError(e) },
-            )
+        }
     }
 
     fun deleteCustomCover(manga: Manga) {

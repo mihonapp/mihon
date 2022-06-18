@@ -1,5 +1,9 @@
 package eu.kanade.tachiyomi.util
 
+import android.content.Context
+import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.isLocal
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -8,7 +12,9 @@ import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.io.InputStream
 import java.util.Date
+import eu.kanade.domain.manga.model.Manga as DomainManga
 
 fun Manga.isLocal() = source == LocalSource.ID
 
@@ -81,4 +87,22 @@ fun Manga.shouldDownloadNewChapters(db: DatabaseHelper, prefs: PreferencesHelper
 
     // In included category
     return categoriesForManga.any { it in includedCategories }
+}
+
+suspend fun DomainManga.editCover(
+    context: Context,
+    stream: InputStream,
+    updateManga: UpdateManga = Injekt.get(),
+    coverCache: CoverCache = Injekt.get(),
+): Boolean {
+    return if (isLocal()) {
+        LocalSource.updateCover(context, toDbManga(), stream)
+        updateManga.awaitUpdateCoverLastModified(id)
+    } else if (favorite) {
+        coverCache.setCustomCoverToCache(toDbManga(), stream)
+        updateManga.awaitUpdateCoverLastModified(id)
+    } else {
+        // We should never reach this block
+        false
+    }
 }

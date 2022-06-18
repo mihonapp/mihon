@@ -877,7 +877,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      * cover to the presenter.
      */
     fun setAsCover(page: ReaderPage) {
-        presenter.setAsCover(page)
+        presenter.setAsCover(this, page)
     }
 
     /**
