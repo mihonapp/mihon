@@ -17,8 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.kanade.core.prefs.PreferenceMutableState
+import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.horizontalPadding
 
 const val DIVIDER_ALPHA = 0.2f
@@ -102,7 +104,8 @@ fun PreferenceRow(
 @Composable
 fun SwitchPreference(
     modifier: Modifier = Modifier,
-    preference: PreferenceMutableState<Boolean>,
+    checked: Boolean,
+    onClick: () -> Unit,
     title: String,
     subtitle: String? = null,
     painter: Painter? = null,
@@ -112,7 +115,53 @@ fun SwitchPreference(
         title = title,
         subtitle = subtitle,
         painter = painter,
-        action = { Switch(checked = preference.value, onCheckedChange = null) },
+        action = { Switch(checked = checked, onCheckedChange = null) },
+        onClick = onClick,
+    )
+}
+
+@Composable
+fun SwitchPreference(
+    modifier: Modifier = Modifier,
+    preference: PreferenceMutableState<Boolean>,
+    title: String,
+    subtitle: String? = null,
+    painter: Painter? = null,
+) {
+    SwitchPreference(
+        modifier = modifier,
+        title = title,
+        subtitle = subtitle,
+        painter = painter,
+        checked = preference.value,
         onClick = { preference.value = !preference.value },
     )
+}
+
+@Preview
+@Composable
+private fun PreferencesPreview() {
+    TachiyomiTheme {
+        Column {
+            PreferenceRow(
+                title = "Plain",
+                subtitle = "Subtitle",
+            )
+
+            Divider()
+
+            SwitchPreference(
+                title = "Switch (on)",
+                subtitle = "Subtitle",
+                checked = true,
+                onClick = {},
+            )
+            SwitchPreference(
+                title = "Switch (off)",
+                subtitle = "Subtitle",
+                checked = false,
+                onClick = {},
+            )
+        }
+    }
 }
