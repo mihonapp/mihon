@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import dev.chrisbanes.insetter.applyInsetter
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
+import eu.kanade.domain.category.model.toDbCategory
 import eu.kanade.domain.source.model.Source
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -627,42 +628,46 @@ open class BrowseSourceController(bundle: Bundle) :
 
     private fun addToLibrary(newManga: Manga, position: Int) {
         val activity = activity ?: return
-        val categories = presenter.getCategories()
-        val defaultCategoryId = preferences.defaultCategory()
-        val defaultCategory = categories.find { it.id == defaultCategoryId }
+        launchIO {
+            val categories = presenter.getCategories()
+            val defaultCategoryId = preferences.defaultCategory()
+            val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
 
-        when {
-            // Default category set
-            defaultCategory != null -> {
-                presenter.moveMangaToCategory(newManga, defaultCategory)
+            withUIContext {
+                when {
+                    // Default category set
+                    defaultCategory != null -> {
+                        presenter.moveMangaToCategory(newManga, defaultCategory.toDbCategory())
 
-                presenter.changeMangaFavorite(newManga)
-                adapter?.notifyItemChanged(position)
-                activity.toast(activity.getString(R.string.manga_added_library))
-            }
-
-            // Automatic 'Default' or no categories
-            defaultCategoryId == 0 || categories.isEmpty() -> {
-                presenter.moveMangaToCategory(newManga, null)
-
-                presenter.changeMangaFavorite(newManga)
-                adapter?.notifyItemChanged(position)
-                activity.toast(activity.getString(R.string.manga_added_library))
-            }
-
-            // Choose a category
-            else -> {
-                val ids = presenter.getMangaCategoryIds(newManga)
-                val preselected = categories.map {
-                    if (it.id in ids) {
-                        QuadStateTextView.State.CHECKED.ordinal
-                    } else {
-                        QuadStateTextView.State.UNCHECKED.ordinal
+                        presenter.changeMangaFavorite(newManga)
+                        adapter?.notifyItemChanged(position)
+                        activity.toast(activity.getString(R.string.manga_added_library))
                     }
-                }.toTypedArray()
 
-                ChangeMangaCategoriesDialog(this, listOf(newManga), categories, preselected)
-                    .showDialog(router)
+                    // Automatic 'Default' or no categories
+                    defaultCategoryId == 0 || categories.isEmpty() -> {
+                        presenter.moveMangaToCategory(newManga, null)
+
+                        presenter.changeMangaFavorite(newManga)
+                        adapter?.notifyItemChanged(position)
+                        activity.toast(activity.getString(R.string.manga_added_library))
+                    }
+
+                    // Choose a category
+                    else -> {
+                        val ids = presenter.getMangaCategoryIds(newManga)
+                        val preselected = categories.map {
+                            if (it.id in ids) {
+                                QuadStateTextView.State.CHECKED.ordinal
+                            } else {
+                                QuadStateTextView.State.UNCHECKED.ordinal
+                            }
+                        }.toTypedArray()
+
+                        ChangeMangaCategoriesDialog(this@BrowseSourceController, listOf(newManga), categories.map { it.toDbCategory() }, preselected)
+                            .showDialog(router)
+                    }
+                }
             }
         }
     }

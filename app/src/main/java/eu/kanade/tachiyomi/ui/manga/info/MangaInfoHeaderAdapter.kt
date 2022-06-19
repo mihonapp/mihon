@@ -100,7 +100,7 @@ class MangaInfoHeaderAdapter(
                 .onEach { controller.onFavoriteClick() }
                 .launchIn(controller.viewScope)
 
-            if (controller.presenter.manga.favorite && controller.presenter.getCategories().isNotEmpty()) {
+            if (controller.presenter.manga.favorite) {
                 binding.btnFavorite.longClicks()
                     .onEach { controller.onCategoriesClick() }
                     .launchIn(controller.viewScope)

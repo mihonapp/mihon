@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
@@ -51,6 +52,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
 import rx.Observable
@@ -61,6 +63,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.util.Date
+import eu.kanade.domain.category.model.Category as DomainCategory
 
 class MangaPresenter(
     val manga: Manga,
@@ -72,6 +75,7 @@ class MangaPresenter(
     private val coverCache: CoverCache = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
+    private val getCategories: GetCategories = Injekt.get(),
 ) : BasePresenter<MangaController>() {
 
     /**
@@ -255,8 +259,8 @@ class MangaPresenter(
      *
      * @return List of categories, not including the default category
      */
-    fun getCategories(): List<Category> {
-        return db.getCategories().executeAsBlocking()
+    suspend fun getCategories(): List<DomainCategory> {
+        return getCategories.subscribe().firstOrNull() ?: emptyList()
     }
 
     /**
@@ -265,9 +269,9 @@ class MangaPresenter(
      * @param manga the manga to get categories from.
      * @return Array of category ids the manga is in, if none returns default id
      */
-    fun getMangaCategoryIds(manga: Manga): Array<Int> {
+    fun getMangaCategoryIds(manga: Manga): Array<Long> {
         val categories = db.getCategoriesForManga(manga).executeAsBlocking()
-        return categories.mapNotNull { it.id }.toTypedArray()
+        return categories.mapNotNull { it?.id?.toLong() }.toTypedArray()
     }
 
     /**
@@ -654,14 +658,14 @@ class MangaPresenter(
     /**
      * Whether downloaded only mode is enabled.
      */
-    fun forceDownloaded(): Boolean {
+    private fun forceDownloaded(): Boolean {
         return manga.favorite && preferences.downloadedOnly().get()
     }
 
     /**
      * Whether the display only downloaded filter is enabled.
      */
-    fun onlyDownloaded(): State {
+    private fun onlyDownloaded(): State {
         if (forceDownloaded()) {
             return State.INCLUDE
         }
@@ -675,7 +679,7 @@ class MangaPresenter(
     /**
      * Whether the display only downloaded filter is enabled.
      */
-    fun onlyBookmarked(): State {
+    private fun onlyBookmarked(): State {
         return when (manga.bookmarkedFilter) {
             Manga.CHAPTER_SHOW_BOOKMARKED -> State.INCLUDE
             Manga.CHAPTER_SHOW_NOT_BOOKMARKED -> State.EXCLUDE
@@ -686,7 +690,7 @@ class MangaPresenter(
     /**
      * Whether the display only unread filter is enabled.
      */
-    fun onlyUnread(): State {
+    private fun onlyUnread(): State {
         return when (manga.readFilter) {
             Manga.CHAPTER_SHOW_UNREAD -> State.INCLUDE
             Manga.CHAPTER_SHOW_READ -> State.EXCLUDE
