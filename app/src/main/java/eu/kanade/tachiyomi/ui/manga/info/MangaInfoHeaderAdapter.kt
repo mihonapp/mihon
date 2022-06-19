@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.databinding.MangaInfoHeaderBinding
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.getMainAppBarHeight
@@ -247,20 +248,8 @@ class MangaInfoHeaderAdapter(
             // If manga source is known update source TextView.
             binding.mangaMissingSourceIcon.isVisible = source is SourceManager.StubSource
 
-            val mangaSource = source.toString()
             with(binding.mangaSource) {
-                val enabledLanguages = preferences.enabledLanguages().get()
-                    .filterNot { it in listOf("all", "other") }
-
-                val hasOneActiveLanguages = enabledLanguages.size == 1
-                val isInEnabledLanguages = source.lang in enabledLanguages
-                text = when {
-                    // For edge cases where user disables a source they got manga of in their library.
-                    hasOneActiveLanguages && !isInEnabledLanguages -> mangaSource
-                    // Hide the language tag when only one language is used.
-                    hasOneActiveLanguages && isInEnabledLanguages -> source.name
-                    else -> mangaSource
-                }
+                text = source.getNameForMangaInfo()
 
                 setOnClickListener {
                     controller.performSearch(sourceManager.getOrStub(source.id).name)

@@ -122,21 +122,17 @@ class MangaController :
 
     constructor(history: HistoryWithRelations) : this(history.mangaId)
 
-    constructor(manga: Manga?, fromSource: Boolean = false) : super(
+    constructor(mangaId: Long, fromSource: Boolean = false) : super(
         bundleOf(
-            MANGA_EXTRA to (manga?.id ?: 0),
+            MANGA_EXTRA to mangaId,
             FROM_SOURCE_EXTRA to fromSource,
         ),
     ) {
-        this.manga = manga
-        if (manga != null) {
-            source = Injekt.get<SourceManager>().getOrStub(manga.source)
+        this.manga = Injekt.get<DatabaseHelper>().getManga(mangaId).executeAsBlocking()
+        if (this.manga != null) {
+            source = Injekt.get<SourceManager>().getOrStub(this.manga!!.source)
         }
     }
-
-    constructor(mangaId: Long) : this(
-        Injekt.get<DatabaseHelper>().getManga(mangaId).executeAsBlocking(),
-    )
 
     @Suppress("unused")
     constructor(bundle: Bundle) : this(bundle.getLong(MANGA_EXTRA))
@@ -309,7 +305,7 @@ class MangaController :
 
         settingsSheet = ChaptersSettingsSheet(router, presenter)
 
-        trackSheet = TrackSheet(this, manga!!, (activity as MainActivity).supportFragmentManager)
+        trackSheet = TrackSheet(this, (activity as MainActivity).supportFragmentManager)
 
         updateFilterIconState()
         recyclerViewUpdatesToolbarTitleAlpha(true)

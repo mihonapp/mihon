@@ -40,7 +40,7 @@ class AddDuplicateMangaDialog(bundle: Bundle? = null) : DialogController(bundle)
             .setNegativeButton(android.R.string.cancel, null)
             .setNeutralButton(activity?.getString(R.string.action_show_manga)) { _, _ ->
                 dismissDialog()
-                router.pushController(MangaController(libraryManga))
+                router.pushController(MangaController(libraryManga.id!!))
             }
             .setCancelable(true)
             .create()

@@ -575,7 +575,7 @@ open class BrowseSourceController(bundle: Bundle) :
      */
     override fun onItemClick(view: View, position: Int): Boolean {
         val item = adapter?.getItem(position) as? SourceItem ?: return false
-        router.pushController(MangaController(item.manga, true))
+        router.pushController(MangaController(item.manga.id!!, true))
 
         return false
     }

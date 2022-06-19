@@ -493,7 +493,7 @@ class LibraryController(
         // Notify the presenter a manga is being opened.
         presenter.onOpenManga()
 
-        router.pushController(MangaController(manga))
+        router.pushController(MangaController(manga.id!!))
     }
 
     /**

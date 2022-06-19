@@ -11,10 +11,8 @@ import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.databinding.TrackControllerBinding
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.lang.launchIO
@@ -24,14 +22,10 @@ import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class TrackSheet(
     val controller: MangaController,
-    val manga: Manga,
     val fragmentManager: FragmentManager,
-    private val sourceManager: SourceManager = Injekt.get(),
 ) : BaseBottomSheetDialog(controller.activity!!),
     TrackAdapter.OnClickListener,
     SetTrackStatusDialog.Listener,
@@ -80,6 +74,8 @@ class TrackSheet(
 
     override fun onSetClick(position: Int) {
         val item = adapter.getItem(position) ?: return
+        val manga = controller.presenter.manga
+        val source = controller.presenter.source
 
         if (item.service is EnhancedTrackService) {
             if (item.track != null) {
@@ -87,7 +83,7 @@ class TrackSheet(
                 return
             }
 
-            if (!item.service.accept(sourceManager.getOrStub(manga.source))) {
+            if (!item.service.accept(source)) {
                 controller.presenter.view?.applicationContext?.toast(R.string.source_unsupported)
                 return
             }

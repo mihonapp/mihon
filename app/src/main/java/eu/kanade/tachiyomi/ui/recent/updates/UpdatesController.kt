@@ -282,7 +282,7 @@ class UpdatesController :
     }
 
     private fun openManga(chapter: UpdatesItem) {
-        router.pushController(MangaController(chapter.manga))
+        router.pushController(MangaController(chapter.manga.id!!))
     }
 
     /**
