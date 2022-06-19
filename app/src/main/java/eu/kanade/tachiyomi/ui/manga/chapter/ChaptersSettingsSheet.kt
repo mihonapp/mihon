@@ -6,33 +6,49 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.view.isVisible
 import com.bluelinelabs.conductor.Router
+import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.toTriStateGroupState
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.ui.manga.MangaPresenter
 import eu.kanade.tachiyomi.util.view.popupMenu
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
 import eu.kanade.tachiyomi.widget.sheet.TabbedBottomSheetDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 
 class ChaptersSettingsSheet(
     private val router: Router,
     private val presenter: MangaPresenter,
-    private val onGroupClickListener: (ExtendedNavigationView.Group) -> Unit,
 ) : TabbedBottomSheetDialog(router.activity!!) {
 
-    val filters = Filter(router.activity!!)
-    private val sort = Sort(router.activity!!)
-    private val display = Display(router.activity!!)
+    private lateinit var scope: CoroutineScope
+
+    private var manga: Manga? = null
+
+    val filters = Filter(context)
+    private val sort = Sort(context)
+    private val display = Display(context)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        filters.onGroupClicked = onGroupClickListener
-        sort.onGroupClicked = onGroupClickListener
-        display.onGroupClicked = onGroupClickListener
-
         binding.menu.isVisible = true
         binding.menu.setOnClickListener { it.post { showPopupMenu(it) } }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        scope = MainScope()
+        // TODO: Listen to changes
+        updateManga()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        scope.cancel()
     }
 
     override fun getTabViews(): List<View> = listOf(
@@ -46,6 +62,10 @@ class ChaptersSettingsSheet(
         R.string.action_sort,
         R.string.action_display,
     )
+
+    private fun updateManga() {
+        manga = presenter.manga.toDomainManga()
+    }
 
     private fun showPopupMenu(view: View) {
         view.popupMenu(
@@ -79,6 +99,10 @@ class ChaptersSettingsSheet(
             return filterGroup.items.any { it.state != State.IGNORE.value }
         }
 
+        override fun updateView() {
+            filterGroup.updateModels()
+        }
+
         inner class FilterGroup : Group {
 
             private val downloaded = Item.TriStateGroup(R.string.action_filter_downloaded, this)
@@ -90,14 +114,20 @@ class ChaptersSettingsSheet(
             override val footer: Item? = null
 
             override fun initModels() {
-                if (presenter.forceDownloaded()) {
+                val manga = manga ?: return
+                if (manga.forceDownloaded()) {
                     downloaded.state = State.INCLUDE.value
                     downloaded.enabled = false
                 } else {
-                    downloaded.state = presenter.onlyDownloaded().value
+                    downloaded.state = manga.downloadedFilter.toTriStateGroupState().value
                 }
-                unread.state = presenter.onlyUnread().value
-                bookmarked.state = presenter.onlyBookmarked().value
+                unread.state = manga.unreadFilter.toTriStateGroupState().value
+                bookmarked.state = manga.bookmarkedFilter.toTriStateGroupState().value
+            }
+
+            fun updateModels() {
+                initModels()
+                adapter.notifyItemRangeChanged(0, 3)
             }
 
             override fun onItemClicked(item: Item) {
@@ -108,7 +138,6 @@ class ChaptersSettingsSheet(
                     State.EXCLUDE.value -> State.IGNORE
                     else -> throw Exception("Unknown State")
                 }
-                item.state = newState.value
                 when (item) {
                     downloaded -> presenter.setDownloadedFilter(newState)
                     unread -> presenter.setUnreadFilter(newState)
@@ -116,8 +145,9 @@ class ChaptersSettingsSheet(
                     else -> {}
                 }
 
-                initModels()
-                adapter.notifyItemChanged(items.indexOf(item), item)
+                // TODO: Remove
+                updateManga()
+                updateView()
             }
         }
     }
@@ -128,8 +158,14 @@ class ChaptersSettingsSheet(
     inner class Sort @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
         Settings(context, attrs) {
 
+        private val group = SortGroup()
+
         init {
-            setGroups(listOf(SortGroup()))
+            setGroups(listOf(group))
+        }
+
+        override fun updateView() {
+            group.updateModels()
         }
 
         inner class SortGroup : Group {
@@ -143,8 +179,9 @@ class ChaptersSettingsSheet(
             override val footer: Item? = null
 
             override fun initModels() {
-                val sorting = presenter.manga.sorting
-                val order = if (presenter.manga.sortDescending()) {
+                val manga = manga ?: return
+                val sorting = manga.sorting
+                val order = if (manga.sortDescending()) {
                     Item.MultiSort.SORT_DESC
                 } else {
                     Item.MultiSort.SORT_ASC
@@ -158,29 +195,23 @@ class ChaptersSettingsSheet(
                     if (sorting == Manga.CHAPTER_SORTING_UPLOAD_DATE) order else Item.MultiSort.SORT_NONE
             }
 
-            override fun onItemClicked(item: Item) {
-                items.forEachIndexed { i, multiSort ->
-                    multiSort.state = if (multiSort == item) {
-                        when (item.state) {
-                            Item.MultiSort.SORT_NONE -> Item.MultiSort.SORT_ASC
-                            Item.MultiSort.SORT_ASC -> Item.MultiSort.SORT_DESC
-                            Item.MultiSort.SORT_DESC -> Item.MultiSort.SORT_ASC
-                            else -> throw Exception("Unknown state")
-                        }
-                    } else {
-                        Item.MultiSort.SORT_NONE
-                    }
-                    adapter.notifyItemChanged(i, multiSort)
-                }
+            fun updateModels() {
+                initModels()
+                adapter.notifyItemRangeChanged(0, 3)
+            }
 
+            override fun onItemClicked(item: Item) {
                 when (item) {
-                    source -> presenter.setSorting(Manga.CHAPTER_SORTING_SOURCE)
-                    chapterNum -> presenter.setSorting(Manga.CHAPTER_SORTING_NUMBER)
-                    uploadDate -> presenter.setSorting(Manga.CHAPTER_SORTING_UPLOAD_DATE)
+                    source -> presenter.setSorting(Manga.CHAPTER_SORTING_SOURCE.toInt())
+                    chapterNum -> presenter.setSorting(Manga.CHAPTER_SORTING_NUMBER.toInt())
+                    uploadDate -> presenter.setSorting(Manga.CHAPTER_SORTING_UPLOAD_DATE.toInt())
                     else -> throw Exception("Unknown sorting")
                 }
 
+                // TODO: Remove
                 presenter.reverseSortOrder()
+                updateManga()
+                updateView()
             }
         }
     }
@@ -191,8 +222,14 @@ class ChaptersSettingsSheet(
     inner class Display @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
         Settings(context, attrs) {
 
+        private val group = DisplayGroup()
+
         init {
-            setGroups(listOf(DisplayGroup()))
+            setGroups(listOf(group))
+        }
+
+        override fun updateView() {
+            group.updateModels()
         }
 
         inner class DisplayGroup : Group {
@@ -205,25 +242,29 @@ class ChaptersSettingsSheet(
             override val footer: Item? = null
 
             override fun initModels() {
-                val mode = presenter.manga.displayMode
+                val mode = manga?.displayMode ?: return
                 displayTitle.checked = mode == Manga.CHAPTER_DISPLAY_NAME
                 displayChapterNum.checked = mode == Manga.CHAPTER_DISPLAY_NUMBER
+            }
+
+            fun updateModels() {
+                initModels()
+                adapter.notifyItemRangeChanged(0, 2)
             }
 
             override fun onItemClicked(item: Item) {
                 item as Item.Radio
                 if (item.checked) return
 
-                items.forEachIndexed { index, radio ->
-                    radio.checked = item == radio
-                    adapter.notifyItemChanged(index, radio)
-                }
-
                 when (item) {
-                    displayTitle -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NAME)
-                    displayChapterNum -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NUMBER)
+                    displayTitle -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NAME.toInt())
+                    displayChapterNum -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NUMBER.toInt())
                     else -> throw NotImplementedError("Unknown display mode")
                 }
+
+                // TODO: Remove
+                updateManga()
+                updateView()
             }
         }
     }
@@ -244,6 +285,9 @@ class ChaptersSettingsSheet(
 
             groups.forEach { it.initModels() }
             addView(recycler)
+        }
+
+        open fun updateView() {
         }
 
         /**

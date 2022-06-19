@@ -1,8 +1,10 @@
 package eu.kanade.domain.manga.model
 
 import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import tachiyomi.source.model.MangaInfo
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -45,15 +47,99 @@ data class Manga(
         }
     }
 
-    companion object {
+    val displayMode: Long
+        get() = chapterFlags and CHAPTER_DISPLAY_MASK
 
+    val unreadFilterRaw: Long
+        get() = chapterFlags and CHAPTER_UNREAD_MASK
+
+    val downloadedFilterRaw: Long
+        get() = chapterFlags and CHAPTER_DOWNLOADED_MASK
+
+    val bookmarkedFilterRaw: Long
+        get() = chapterFlags and CHAPTER_BOOKMARKED_MASK
+
+    val unreadFilter: TriStateFilter
+        get() = when (unreadFilterRaw) {
+            CHAPTER_SHOW_UNREAD -> TriStateFilter.ENABLED_IS
+            CHAPTER_SHOW_READ -> TriStateFilter.ENABLED_NOT
+            else -> TriStateFilter.DISABLED
+        }
+
+    val downloadedFilter: TriStateFilter
+        get() {
+            if (forceDownloaded()) return TriStateFilter.ENABLED_IS
+            return when (downloadedFilterRaw) {
+                CHAPTER_SHOW_DOWNLOADED -> TriStateFilter.ENABLED_IS
+                CHAPTER_SHOW_NOT_DOWNLOADED -> TriStateFilter.ENABLED_NOT
+                else -> TriStateFilter.DISABLED
+            }
+        }
+
+    val bookmarkedFilter: TriStateFilter
+        get() = when (bookmarkedFilterRaw) {
+            CHAPTER_SHOW_BOOKMARKED -> TriStateFilter.ENABLED_IS
+            CHAPTER_SHOW_NOT_BOOKMARKED -> TriStateFilter.ENABLED_NOT
+            else -> TriStateFilter.DISABLED
+        }
+
+    fun chaptersFiltered(): Boolean {
+        return unreadFilter != TriStateFilter.DISABLED ||
+            downloadedFilter != TriStateFilter.DISABLED ||
+            bookmarkedFilter != TriStateFilter.DISABLED
+    }
+
+    fun forceDownloaded(): Boolean {
+        return favorite && Injekt.get<PreferencesHelper>().downloadedOnly().get()
+    }
+
+    fun sortDescending(): Boolean {
+        return chapterFlags and CHAPTER_SORT_DIR_MASK == CHAPTER_SORTING_DESC
+    }
+
+    companion object {
         // Generic filter that does not filter anything
         const val SHOW_ALL = 0x00000000L
+
+        const val CHAPTER_SORT_DESC = 0x00000000L
+        const val CHAPTER_SORT_ASC = 0x00000001L
+        const val CHAPTER_SORT_DIR_MASK = 0x00000001L
+
+        const val CHAPTER_SHOW_UNREAD = 0x00000002L
+        const val CHAPTER_SHOW_READ = 0x00000004L
+        const val CHAPTER_UNREAD_MASK = 0x00000006L
+
+        const val CHAPTER_SHOW_DOWNLOADED = 0x00000008L
+        const val CHAPTER_SHOW_NOT_DOWNLOADED = 0x00000010L
+        const val CHAPTER_DOWNLOADED_MASK = 0x00000018L
+
+        const val CHAPTER_SHOW_BOOKMARKED = 0x00000020L
+        const val CHAPTER_SHOW_NOT_BOOKMARKED = 0x00000040L
+        const val CHAPTER_BOOKMARKED_MASK = 0x00000060L
 
         const val CHAPTER_SORTING_SOURCE = 0x00000000L
         const val CHAPTER_SORTING_NUMBER = 0x00000100L
         const val CHAPTER_SORTING_UPLOAD_DATE = 0x00000200L
         const val CHAPTER_SORTING_MASK = 0x00000300L
+        const val CHAPTER_SORTING_DESC = 0x00000000L
+
+        const val CHAPTER_DISPLAY_NAME = 0x00000000L
+        const val CHAPTER_DISPLAY_NUMBER = 0x00100000L
+        const val CHAPTER_DISPLAY_MASK = 0x00100000L
+    }
+}
+
+enum class TriStateFilter {
+    DISABLED, // Disable filter
+    ENABLED_IS, // Enabled with "is" filter
+    ENABLED_NOT, // Enabled with "not" filter
+}
+
+fun TriStateFilter.toTriStateGroupState(): ExtendedNavigationView.Item.TriStateGroup.State {
+    return when (this) {
+        TriStateFilter.DISABLED -> ExtendedNavigationView.Item.TriStateGroup.State.IGNORE
+        TriStateFilter.ENABLED_IS -> ExtendedNavigationView.Item.TriStateGroup.State.INCLUDE
+        TriStateFilter.ENABLED_NOT -> ExtendedNavigationView.Item.TriStateGroup.State.EXCLUDE
     }
 }
 
@@ -66,6 +152,7 @@ fun Manga.toDbManga(): DbManga = DbManga.create(url, title, source).also {
     it.viewer_flags = viewerFlags.toInt()
     it.chapter_flags = chapterFlags.toInt()
     it.cover_last_modified = coverLastModified
+    it.thumbnail_url = thumbnailUrl
 }
 
 fun Manga.toMangaInfo(): MangaInfo = MangaInfo(

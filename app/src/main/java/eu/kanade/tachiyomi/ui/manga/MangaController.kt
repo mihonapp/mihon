@@ -305,11 +305,7 @@ class MangaController :
             }
             .launchIn(viewScope)
 
-        settingsSheet = ChaptersSettingsSheet(router, presenter) { group ->
-            if (group is ChaptersSettingsSheet.Filter.FilterGroup) {
-                updateFilterIconState()
-            }
-        }
+        settingsSheet = ChaptersSettingsSheet(router, presenter)
 
         trackSheet = TrackSheet(this, manga!!, (activity as MainActivity).supportFragmentManager)
 
@@ -873,6 +869,7 @@ class MangaController :
         }
 
         updateFabVisibility()
+        updateFilterIconState()
     }
 
     private fun fetchChaptersFromSource(manualFetch: Boolean = false) {
