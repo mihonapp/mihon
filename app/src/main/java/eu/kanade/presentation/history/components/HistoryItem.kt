@@ -52,10 +52,9 @@ fun HistoryItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         MangaCover.Book(
-            modifier = Modifier
-                .fillMaxHeight()
-                .clickable(onClick = onClickCover),
+            modifier = Modifier.fillMaxHeight(),
             data = history.coverData,
+            onClick = onClickCover,
         )
         Column(
             modifier = Modifier

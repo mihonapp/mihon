@@ -1,10 +1,8 @@
 package eu.kanade.presentation.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,12 +13,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
 
 @Composable
@@ -72,7 +68,6 @@ fun AppBarActions(
         }
 
         DropdownMenu(
-            modifier = Modifier.widthIn(min = 200.dp),
             expanded = showMenu,
             onDismissRequest = { showMenu = false },
         ) {

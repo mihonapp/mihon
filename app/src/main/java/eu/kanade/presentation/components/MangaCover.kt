@@ -1,5 +1,6 @@
 package eu.kanade.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -9,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import eu.kanade.presentation.util.rememberResourceBitmapPainter
@@ -24,6 +26,7 @@ enum class MangaCover(val ratio: Float) {
         data: Any?,
         contentDescription: String? = null,
         shape: Shape? = null,
+        onClick: (() -> Unit)? = null,
     ) {
         AsyncImage(
             model = data,
@@ -32,7 +35,15 @@ enum class MangaCover(val ratio: Float) {
             contentDescription = contentDescription,
             modifier = modifier
                 .aspectRatio(ratio)
-                .clip(shape ?: RoundedCornerShape(4.dp)),
+                .clip(shape ?: RoundedCornerShape(4.dp))
+                .then(
+                    if (onClick != null) {
+                        Modifier.clickable(
+                            role = Role.Button,
+                            onClick = onClick,
+                        )
+                    } else Modifier,
+                ),
             contentScale = ContentScale.Crop,
         )
     }

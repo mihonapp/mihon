@@ -45,9 +45,9 @@ private val defaultCover: @Composable RowScope.(Manga, () -> Unit) -> Unit = { m
     MangaCover.Square(
         modifier = Modifier
             .padding(vertical = 8.dp)
-            .clickable(onClick = onClick)
             .fillMaxHeight(),
         data = manga,
+        onClick = onClick,
     )
 }
 
