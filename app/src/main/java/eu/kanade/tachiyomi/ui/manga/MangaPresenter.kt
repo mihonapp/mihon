@@ -6,6 +6,8 @@ import android.os.Bundle
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -69,6 +71,7 @@ class MangaPresenter(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
+    private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
 ) : BasePresenter<MangaController>() {
 
     /**
@@ -167,8 +170,8 @@ class MangaPresenter(
         fetchTrackers()
     }
 
-    fun getDuplicateLibraryManga(manga: Manga): Manga? {
-        return db.getDuplicateLibraryManga(manga).executeAsBlocking()
+    suspend fun getDuplicateLibraryManga(manga: Manga): Manga? {
+        return getDuplicateLibraryManga.await(manga.title, manga.source)?.toDbManga()
     }
 
     // Manga info - start

@@ -87,6 +87,7 @@ import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
@@ -516,12 +517,17 @@ class MangaController :
             activity?.toast(activity?.getString(R.string.manga_removed_library))
             activity?.invalidateOptionsMenu()
         } else {
-            val duplicateManga = presenter.getDuplicateLibraryManga(manga)
-            if (duplicateManga != null) {
-                AddDuplicateMangaDialog(this, duplicateManga) { addToLibrary(manga) }
-                    .showDialog(router)
-            } else {
-                addToLibrary(manga)
+            launchIO {
+                val duplicateManga = presenter.getDuplicateLibraryManga(manga)
+
+                withUIContext {
+                    if (duplicateManga != null) {
+                        AddDuplicateMangaDialog(this@MangaController, duplicateManga) { addToLibrary(manga) }
+                            .showDialog(router)
+                    } else {
+                        addToLibrary(manga)
+                    }
+                }
             }
         }
     }

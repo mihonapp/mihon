@@ -42,6 +42,8 @@ import eu.kanade.tachiyomi.ui.manga.AddDuplicateMangaDialog
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.preference.asImmediateFlow
 import eu.kanade.tachiyomi.util.system.connectivityManager
 import eu.kanade.tachiyomi.util.system.logcat
@@ -589,27 +591,36 @@ open class BrowseSourceController(bundle: Bundle) :
     override fun onItemLongClick(position: Int) {
         val activity = activity ?: return
         val manga = (adapter?.getItem(position) as? SourceItem?)?.manga ?: return
-        val duplicateManga = presenter.getDuplicateLibraryManga(manga)
+        launchIO {
+            val duplicateManga = presenter.getDuplicateLibraryManga(manga)
 
-        if (manga.favorite) {
-            MaterialAlertDialogBuilder(activity)
-                .setTitle(manga.title)
-                .setItems(arrayOf(activity.getString(R.string.remove_from_library))) { _, which ->
-                    when (which) {
-                        0 -> {
-                            presenter.changeMangaFavorite(manga)
-                            adapter?.notifyItemChanged(position)
-                            activity.toast(activity.getString(R.string.manga_removed_library))
+            withUIContext {
+                if (manga.favorite) {
+                    MaterialAlertDialogBuilder(activity)
+                        .setTitle(manga.title)
+                        .setItems(arrayOf(activity.getString(R.string.remove_from_library))) { _, which ->
+                            when (which) {
+                                0 -> {
+                                    presenter.changeMangaFavorite(manga)
+                                    adapter?.notifyItemChanged(position)
+                                    activity.toast(activity.getString(R.string.manga_removed_library))
+                                }
+                            }
                         }
+                        .show()
+                } else {
+                    if (duplicateManga != null) {
+                        AddDuplicateMangaDialog(this@BrowseSourceController, duplicateManga) {
+                            addToLibrary(
+                                manga,
+                                position,
+                            )
+                        }
+                            .showDialog(router)
+                    } else {
+                        addToLibrary(manga, position)
                     }
                 }
-                .show()
-        } else {
-            if (duplicateManga != null) {
-                AddDuplicateMangaDialog(this, duplicateManga) { addToLibrary(manga, position) }
-                    .showDialog(router)
-            } else {
-                addToLibrary(manga, position)
             }
         }
     }

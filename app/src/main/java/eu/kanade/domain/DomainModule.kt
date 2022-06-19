@@ -26,6 +26,7 @@ import eu.kanade.domain.history.interactor.RemoveHistoryById
 import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.interactor.UpsertHistory
 import eu.kanade.domain.history.repository.HistoryRepository
+import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
 import eu.kanade.domain.manga.interactor.GetFavoritesBySourceId
 import eu.kanade.domain.manga.interactor.GetMangaById
 import eu.kanade.domain.manga.interactor.ResetViewerFlags
@@ -58,6 +59,7 @@ class DomainModule : InjektModule {
         addFactory { DeleteCategory(get()) }
 
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
+        addFactory { GetDuplicateLibraryManga(get()) }
         addFactory { GetFavoritesBySourceId(get()) }
         addFactory { GetMangaById(get()) }
         addFactory { GetNextChapter(get()) }

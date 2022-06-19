@@ -58,6 +58,13 @@ FROM mangas
 WHERE favorite = 1
 AND source = :sourceId;
 
+getDuplicateLibraryManga:
+SELECT *
+FROM mangas
+WHERE favorite = 1
+AND LOWER(title) = :title
+AND source != :source;
+
 resetViewerFlags:
 UPDATE mangas
 SET viewer = 0;

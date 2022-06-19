@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.browse.source.browse
 
 import android.os.Bundle
 import eu.davidea.flexibleadapter.items.IFlexible
+import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -60,6 +62,7 @@ open class BrowseSourcePresenter(
     private val db: DatabaseHelper = Injekt.get(),
     private val prefs: PreferencesHelper = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
+    private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
 ) : BasePresenter<BrowseSourceController>() {
 
     /**
@@ -348,8 +351,8 @@ open class BrowseSourcePresenter(
         return db.getCategories().executeAsBlocking()
     }
 
-    fun getDuplicateLibraryManga(manga: Manga): Manga? {
-        return db.getDuplicateLibraryManga(manga).executeAsBlocking()
+    suspend fun getDuplicateLibraryManga(manga: Manga): Manga? {
+        return getDuplicateLibraryManga.await(manga.title, manga.source)?.toDbManga()
     }
 
     /**
