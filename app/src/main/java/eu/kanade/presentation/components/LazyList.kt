@@ -56,3 +56,38 @@ fun ScrollbarLazyColumn(
         content = content,
     )
 }
+
+/**
+ * LazyColumn with fast scroller.
+ */
+@Composable
+fun FastScrollLazyColumn(
+    modifier: Modifier = Modifier,
+    state: LazyListState = rememberLazyListState(),
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    reverseLayout: Boolean = false,
+    verticalArrangement: Arrangement.Vertical =
+        if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
+    userScrollEnabled: Boolean = true,
+    content: LazyListScope.() -> Unit,
+) {
+    VerticalFastScroller(
+        listState = state,
+        modifier = modifier,
+        topContentPadding = contentPadding.calculateTopPadding(),
+        endContentPadding = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
+    ) {
+        LazyColumn(
+            state = state,
+            contentPadding = contentPadding,
+            reverseLayout = reverseLayout,
+            verticalArrangement = verticalArrangement,
+            horizontalAlignment = horizontalAlignment,
+            flingBehavior = flingBehavior,
+            userScrollEnabled = userScrollEnabled,
+            content = content,
+        )
+    }
+}
