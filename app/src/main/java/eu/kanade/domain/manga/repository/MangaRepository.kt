@@ -8,6 +8,8 @@ interface MangaRepository {
 
     suspend fun getMangaById(id: Long): Manga
 
+    suspend fun subscribeMangaById(id: Long): Flow<Manga>
+
     fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>>
 
     suspend fun getDuplicateLibraryManga(title: String, sourceId: Long): Manga?

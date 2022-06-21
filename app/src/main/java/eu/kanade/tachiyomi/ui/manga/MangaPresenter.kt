@@ -1,7 +1,5 @@
 package eu.kanade.tachiyomi.ui.manga
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.category.interactor.GetCategories
@@ -16,13 +14,10 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.saver.Image
-import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -36,17 +31,14 @@ import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithTrackServiceTwoWay
-import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.util.updateCoverLastModified
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -61,7 +53,6 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 import java.util.Date
 import eu.kanade.domain.category.model.Category as DomainCategory
 
@@ -114,8 +105,6 @@ class MangaPresenter(
     val trackList get() = _trackList
 
     private val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
-
-    private val imageSaver: ImageSaver by injectLazy()
 
     private var trackSubscription: Subscription? = null
     private var searchTrackerJob: Job? = null
@@ -293,49 +282,6 @@ class MangaPresenter(
      */
     fun moveMangaToCategory(manga: Manga, category: Category?) {
         moveMangaToCategories(manga, listOfNotNull(category))
-    }
-
-    /**
-     * Save manga cover Bitmap to picture or temporary share directory.
-     *
-     * @param image the image with specified location
-     * @return flow Flow which emits the Uri which specifies where the image is saved when
-     */
-    fun saveImage(image: Image): Uri {
-        return imageSaver.save(image)
-    }
-
-    /**
-     * Update cover with local file.
-     *
-     * @param context Context.
-     * @param data uri of the cover resource.
-     */
-    fun editCover(context: Context, data: Uri) {
-        presenterScope.launchIO {
-            context.contentResolver.openInputStream(data)?.use {
-                try {
-                    val result = manga.toDomainManga()!!.editCover(context, it)
-                    launchUI { if (result) view?.onSetCoverSuccess() }
-                } catch (e: Exception) {
-                    launchUI { view?.onSetCoverError(e) }
-                }
-            }
-        }
-    }
-
-    fun deleteCustomCover(manga: Manga) {
-        Observable
-            .fromCallable {
-                coverCache.deleteCustomCover(manga.id)
-                manga.updateCoverLastModified(db)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeFirst(
-                { view, _ -> view.onSetCoverSuccess() },
-                { view, e -> view.onSetCoverError(e) },
-            )
     }
 
     // Manga info - end

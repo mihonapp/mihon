@@ -16,6 +16,30 @@ import eu.kanade.tachiyomi.databinding.ComposeControllerBinding
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import nucleus.presenter.Presenter
 
+abstract class FullComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
+    NucleusController<ComposeControllerBinding, P>(bundle),
+    FullComposeContentController {
+
+    override fun createBinding(inflater: LayoutInflater) =
+        ComposeControllerBinding.inflate(inflater)
+
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
+
+        binding.root.apply {
+            consumeWindowInsets = false
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                TachiyomiTheme {
+                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
+                        ComposeContent()
+                    }
+                }
+            }
+        }
+    }
+}
+
 /**
  * Compose controller with a Nucleus presenter.
  */
@@ -95,6 +119,10 @@ abstract class SearchableComposeController<P : BasePresenter<*>>(bundle: Bundle?
             }
         }
     }
+}
+
+interface FullComposeContentController {
+    @Composable fun ComposeContent()
 }
 
 interface ComposeContentController {

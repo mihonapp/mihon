@@ -34,5 +34,18 @@ class TachiyomiChangeHandlerFrameLayout(
             }
         }
 
+    fun enableScrollingBehavior(enable: Boolean) {
+        (layoutParams as? CoordinatorLayout.LayoutParams)?.behavior = if (enable) {
+            behavior.apply {
+                shouldHeaderOverlap = overlapHeader
+            }
+        } else null
+        if (!enable) {
+            // The behavior doesn't reset translationY when shouldHeaderOverlap is false
+            translationY = 0F
+        }
+        forceLayout()
+    }
+
     override fun getBehavior() = TachiyomiScrollingViewBehavior()
 }

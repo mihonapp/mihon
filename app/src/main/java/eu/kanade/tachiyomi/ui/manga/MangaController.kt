@@ -1,11 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga
 
-import android.app.Activity
 import android.app.ActivityOptions
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -24,8 +20,6 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import coil.imageLoader
-import coil.request.ImageRequest
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -45,8 +39,6 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.saver.Image
-import eu.kanade.tachiyomi.data.saver.Location
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
@@ -61,12 +53,12 @@ import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.getMainAppBarHeight
 import eu.kanade.tachiyomi.ui.base.controller.pushController
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.migration.search.SearchController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.browse.source.latest.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
-import eu.kanade.tachiyomi.ui.library.ChangeMangaCoverDialog
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
@@ -85,12 +77,9 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
-import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
-import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.snack
@@ -115,7 +104,6 @@ class MangaController :
     FlexibleAdapter.OnItemClickListener,
     FlexibleAdapter.OnItemLongClickListener,
     BaseChaptersAdapter.OnChapterClickListener,
-    ChangeMangaCoverDialog.Listener,
     ChangeMangaCategoriesDialog.Listener,
     DownloadCustomChaptersDialog.Listener,
     DeleteChaptersDialog.Listener {
@@ -724,128 +712,9 @@ class MangaController :
         }
     }
 
-    /**
-     * Fetches the cover with Coil, turns it into Bitmap and does something with it (asynchronous)
-     * @param context The context for building and executing the ImageRequest
-     * @param coverHandler A function that describes what should be done with the Bitmap
-     */
-    private fun useCoverAsBitmap(context: Context, coverHandler: (Bitmap) -> Unit) {
-        val req = ImageRequest.Builder(context)
-            .data(manga)
-            .target { result ->
-                val coverBitmap = (result as BitmapDrawable).bitmap
-                coverHandler(coverBitmap)
-            }
-            .build()
-        context.imageLoader.enqueue(req)
-    }
-
     fun showFullCoverDialog() {
-        val manga = manga ?: return
-        MangaFullCoverDialog(this, manga)
-            .showDialog(router)
-    }
-
-    fun shareCover() {
-        try {
-            val manga = manga!!
-            val activity = activity!!
-            useCoverAsBitmap(activity) { coverBitmap ->
-                viewScope.launchIO {
-                    val uri = presenter.saveImage(
-                        image = Image.Cover(
-                            bitmap = coverBitmap,
-                            name = manga.title,
-                            location = Location.Cache,
-                        ),
-                    )
-                    launchUI {
-                        startActivity(uri.toShareIntent(activity))
-                    }
-                }
-            }
-        } catch (e: Throwable) {
-            logcat(LogPriority.ERROR, e)
-            activity?.toast(R.string.error_sharing_cover)
-        }
-    }
-
-    fun saveCover() {
-        try {
-            val manga = manga!!
-            val activity = activity!!
-            useCoverAsBitmap(activity) { coverBitmap ->
-                viewScope.launchIO {
-                    presenter.saveImage(
-                        image = Image.Cover(
-                            bitmap = coverBitmap,
-                            name = manga.title,
-                            location = Location.Pictures.create(),
-                        ),
-                    )
-                    launchUI {
-                        activity.toast(R.string.cover_saved)
-                    }
-                }
-            }
-        } catch (e: Throwable) {
-            logcat(LogPriority.ERROR, e)
-            activity?.toast(R.string.error_saving_cover)
-        }
-    }
-
-    fun changeCover() {
-        val manga = manga ?: return
-        if (manga.hasCustomCover(coverCache)) {
-            ChangeMangaCoverDialog(this, manga).showDialog(router)
-        } else {
-            openMangaCoverPicker(manga)
-        }
-    }
-
-    override fun openMangaCoverPicker(manga: Manga) {
-        if (manga.favorite) {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "image/*"
-            }
-            startActivityForResult(
-                Intent.createChooser(
-                    intent,
-                    resources?.getString(R.string.file_select_cover),
-                ),
-                REQUEST_IMAGE_OPEN,
-            )
-        } else {
-            activity?.toast(R.string.notification_first_add_to_library)
-        }
-
-        destroyActionModeIfNeeded()
-    }
-
-    override fun deleteMangaCover(manga: Manga) {
-        presenter.deleteCustomCover(manga)
-        mangaInfoAdapter?.notifyItemChanged(0, manga)
-        destroyActionModeIfNeeded()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_IMAGE_OPEN) {
-            val dataUri = data?.data
-            if (dataUri == null || resultCode != Activity.RESULT_OK) return
-            val activity = activity ?: return
-            presenter.editCover(activity, dataUri)
-        }
-    }
-
-    fun onSetCoverSuccess() {
-        mangaInfoAdapter?.notifyItemChanged(0, this)
-        (router.backstack.lastOrNull()?.controller as? MangaFullCoverDialog)?.setImage(manga)
-        activity?.toast(R.string.cover_updated)
-    }
-
-    fun onSetCoverError(error: Throwable) {
-        activity?.toast(R.string.notification_cover_update_failed)
-        logcat(LogPriority.ERROR, error)
+        val mangaId = manga?.id ?: return
+        router.pushController(MangaFullCoverDialog(mangaId).withFadeTransaction())
     }
 
     /**

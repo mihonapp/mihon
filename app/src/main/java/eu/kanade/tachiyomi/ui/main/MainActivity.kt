@@ -43,6 +43,7 @@ import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.FabController
+import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 import eu.kanade.tachiyomi.ui.base.controller.NoAppBarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
@@ -599,6 +600,7 @@ class MainActivity : BaseActivity() {
             binding.fabLayout.rootFab.hide()
         }
 
+        val isFullComposeController = internalTo is FullComposeController<*>
         if (!isTablet()) {
             // Save lift state
             if (isPush) {
@@ -622,8 +624,16 @@ class MainActivity : BaseActivity() {
 
             binding.root.isLiftAppBarOnScroll = internalTo !is NoAppBarElevationController
 
-            binding.appbar.isTransparentWhenNotLifted = internalTo is MangaController
-            binding.controllerContainer.overlapHeader = internalTo is MangaController
+            binding.appbar.isVisible = !isFullComposeController
+            binding.controllerContainer.enableScrollingBehavior(!isFullComposeController)
+
+            // TODO: Remove when MangaController is full compose
+            if (!isFullComposeController) {
+                binding.appbar.isTransparentWhenNotLifted = internalTo is MangaController
+                binding.controllerContainer.overlapHeader = internalTo is MangaController
+            }
+        } else {
+            binding.appbar.isVisible = !isFullComposeController
         }
     }
 

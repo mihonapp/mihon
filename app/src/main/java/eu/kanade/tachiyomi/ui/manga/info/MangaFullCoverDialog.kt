@@ -1,118 +1,255 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
-import android.app.Dialog
-import android.graphics.drawable.ColorDrawable
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.View
-import androidx.core.graphics.ColorUtils
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.core.os.bundleOf
-import androidx.core.view.WindowCompat
 import coil.imageLoader
-import coil.request.Disposable
 import coil.request.ImageRequest
-import dev.chrisbanes.insetter.applyInsetter
+import coil.size.Size
+import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.hasCustomCover
+import eu.kanade.presentation.manga.EditCoverAction
+import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.databinding.MangaFullCoverDialogBinding
-import eu.kanade.tachiyomi.ui.base.controller.DialogController
-import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
-import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
-import eu.kanade.tachiyomi.widget.TachiyomiFullscreenDialog
+import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.data.saver.Image
+import eu.kanade.tachiyomi.data.saver.ImageSaver
+import eu.kanade.tachiyomi.data.saver.Location
+import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
+import eu.kanade.tachiyomi.util.editCover
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.system.logcat
+import eu.kanade.tachiyomi.util.system.toShareIntent
+import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
 
-class MangaFullCoverDialog : DialogController {
+class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.Presenter> {
 
-    private var manga: Manga? = null
-
-    private var binding: MangaFullCoverDialogBinding? = null
-
-    private var disposable: Disposable? = null
-
-    private val mangaController
-        get() = targetController as MangaController?
-
-    constructor(targetController: MangaController, manga: Manga) : super(bundleOf("mangaId" to manga.id)) {
-        this.targetController = targetController
-        this.manga = manga
-    }
+    private val mangaId: Long
 
     @Suppress("unused")
-    constructor(bundle: Bundle) : super(bundle) {
-        val db = Injekt.get<DatabaseHelper>()
-        manga = db.getManga(bundle.getLong("mangaId")).executeAsBlocking()
+    constructor(bundle: Bundle) : this(bundle.getLong(MANGA_EXTRA))
+
+    constructor(
+        mangaId: Long,
+    ) : super(bundleOf(MANGA_EXTRA to mangaId)) {
+        this.mangaId = mangaId
     }
 
-    override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-        binding = MangaFullCoverDialogBinding.inflate(activity!!.layoutInflater)
+    override fun createPresenter() = Presenter(mangaId)
 
-        binding?.toolbar?.apply {
-            setNavigationOnClickListener { dialog?.dismiss() }
-            setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.action_share_cover -> mangaController?.shareCover()
-                    R.id.action_save_cover -> mangaController?.saveCover()
-                    R.id.action_edit_cover -> mangaController?.changeCover()
+    @Composable
+    override fun ComposeContent() {
+        val manga = presenter.manga.collectAsState().value
+        if (manga != null) {
+            MangaCoverDialog(
+                coverDataProvider = { manga },
+                isCustomCover = remember(manga) { manga.hasCustomCover() },
+                onShareClick = this::shareCover,
+                onSaveClick = this::saveCover,
+                onEditClick = this::changeCover,
+                onDismissRequest = router::popCurrentController,
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+    }
+
+    private fun shareCover() {
+        val activity = activity ?: return
+        viewScope.launchIO {
+            try {
+                val uri = presenter.saveCover(activity, temp = true) ?: return@launchIO
+                launchUI {
+                    startActivity(uri.toShareIntent(activity))
                 }
-                true
+            } catch (e: Throwable) {
+                launchUI {
+                    logcat(LogPriority.ERROR, e)
+                    activity.toast(R.string.error_saving_cover)
+                }
             }
-            menu?.findItem(R.id.action_edit_cover)?.isVisible = manga?.favorite ?: false
-        }
-
-        setImage(manga)
-
-        binding?.appbar?.applyInsetter {
-            type(navigationBars = true, statusBars = true) {
-                padding(left = true, top = true, right = true)
-            }
-        }
-
-        binding?.container?.onViewClicked = { dialog?.dismiss() }
-        binding?.container?.applyInsetter {
-            type(navigationBars = true) {
-                padding(bottom = true)
-            }
-        }
-
-        return TachiyomiFullscreenDialog(activity!!, binding!!.root).apply {
-            val typedValue = TypedValue()
-            val theme = context.theme
-            theme.resolveAttribute(android.R.attr.colorBackground, typedValue, true)
-            window?.setBackgroundDrawable(ColorDrawable(ColorUtils.setAlphaComponent(typedValue.data, 230)))
         }
     }
 
-    override fun onAttach(view: View) {
-        super.onAttach(view)
-        dialog?.window?.let { window ->
-            window.setNavigationBarTransparentCompat(window.context)
-            WindowCompat.setDecorFitsSystemWindows(window, false)
+    private fun saveCover() {
+        val activity = activity ?: return
+        viewScope.launchIO {
+            try {
+                presenter.saveCover(activity, temp = false)
+                launchUI {
+                    activity.toast(R.string.cover_saved)
+                }
+            } catch (e: Throwable) {
+                launchUI {
+                    logcat(LogPriority.ERROR, e)
+                    activity.toast(R.string.error_saving_cover)
+                }
+            }
         }
     }
 
-    override fun onDetach(view: View) {
-        super.onDetach(view)
-        disposable?.dispose()
-        disposable = null
-    }
-
-    fun setImage(manga: Manga?) {
-        if (manga == null) return
-        val request = ImageRequest.Builder(applicationContext!!)
-            .data(manga)
-            .target {
-                binding?.container?.setImage(
-                    it,
-                    ReaderPageImageView.Config(
-                        zoomDuration = 500,
+    private fun changeCover(action: EditCoverAction) {
+        when (action) {
+            EditCoverAction.EDIT -> {
+                val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                    type = "image/*"
+                }
+                startActivityForResult(
+                    Intent.createChooser(
+                        intent,
+                        resources?.getString(R.string.file_select_cover),
                     ),
+                    REQUEST_IMAGE_OPEN,
                 )
             }
-            .build()
+            EditCoverAction.DELETE -> presenter.deleteCustomCover()
+        }
+    }
 
-        disposable = applicationContext?.imageLoader?.enqueue(request)
+    private fun onSetCoverSuccess() {
+        activity?.toast(R.string.cover_updated)
+    }
+
+    private fun onSetCoverError(error: Throwable) {
+        activity?.toast(R.string.notification_cover_update_failed)
+        logcat(LogPriority.ERROR, error)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_OPEN) {
+            val dataUri = data?.data
+            if (dataUri == null || resultCode != Activity.RESULT_OK) return
+            val activity = activity ?: return
+            presenter.editCover(activity, dataUri)
+        }
+    }
+
+    class Presenter(
+        private val mangaId: Long,
+        private val getMangaById: GetMangaById = Injekt.get(),
+    ) : nucleus.presenter.Presenter<MangaFullCoverDialog>() {
+
+        private var presenterScope: CoroutineScope = MainScope()
+
+        private val _mangaFlow = MutableStateFlow<Manga?>(null)
+        val manga = _mangaFlow.asStateFlow()
+
+        private val imageSaver by injectLazy<ImageSaver>()
+        private val coverCache by injectLazy<CoverCache>()
+        private val updateManga by injectLazy<UpdateManga>()
+
+        override fun onCreate(savedState: Bundle?) {
+            super.onCreate(savedState)
+            presenterScope.launchIO {
+                getMangaById.subscribe(mangaId)
+                    .collect { _mangaFlow.value = it }
+            }
+        }
+
+        override fun onDestroy() {
+            super.onDestroy()
+            presenterScope.cancel()
+        }
+
+        /**
+         * Save manga cover Bitmap to picture or temporary share directory.
+         *
+         * @param context The context for building and executing the ImageRequest
+         * @return the uri to saved file
+         */
+        suspend fun saveCover(context: Context, temp: Boolean): Uri? {
+            val manga = manga.value ?: return null
+            val req = ImageRequest.Builder(context)
+                .data(manga)
+                .size(Size.ORIGINAL)
+                .build()
+            val result = context.imageLoader.execute(req).drawable
+
+            // TODO: Handle animated cover
+            val bitmap = (result as? BitmapDrawable)?.bitmap ?: return null
+            return imageSaver.save(
+                Image.Cover(
+                    bitmap = bitmap,
+                    name = manga.title,
+                    location = if (temp) Location.Cache else Location.Pictures.create(),
+                ),
+            )
+        }
+
+        /**
+         * Update cover with local file.
+         *
+         * @param context Context.
+         * @param data uri of the cover resource.
+         */
+        fun editCover(context: Context, data: Uri) {
+            val manga = manga.value ?: return
+            presenterScope.launchIO {
+                context.contentResolver.openInputStream(data)?.use {
+                    val result = try {
+                        manga.editCover(context, it, updateManga, coverCache)
+                    } catch (e: Exception) {
+                        view?.onSetCoverError(e)
+                        false
+                    }
+                    launchUI { if (result) view?.onSetCoverSuccess() }
+                }
+            }
+        }
+
+        fun deleteCustomCover() {
+            val mangaId = manga.value?.id ?: return
+            presenterScope.launchIO {
+                try {
+                    coverCache.deleteCustomCover(mangaId)
+                    updateManga.awaitUpdateCoverLastModified(mangaId)
+                    launchUI { view?.onSetCoverSuccess() }
+                } catch (e: Exception) {
+                    launchUI { view?.onSetCoverError(e) }
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val MANGA_EXTRA = "mangaId"
+
+        /**
+         * Key to change the cover of a manga in [onActivityResult].
+         */
+        private const val REQUEST_IMAGE_OPEN = 101
     }
 }

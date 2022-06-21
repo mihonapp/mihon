@@ -1,0 +1,163 @@
+package eu.kanade.presentation.manga.components
+
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.os.Build
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.updatePadding
+import coil.imageLoader
+import coil.request.ImageRequest
+import coil.size.Size
+import eu.kanade.domain.manga.model.Manga
+import eu.kanade.presentation.components.DropdownMenu
+import eu.kanade.presentation.components.Scaffold
+import eu.kanade.presentation.manga.EditCoverAction
+import eu.kanade.presentation.util.clickableNoIndication
+import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+
+@Composable
+fun MangaCoverDialog(
+    coverDataProvider: () -> Manga,
+    isCustomCover: Boolean,
+    onShareClick: () -> Unit,
+    onSaveClick: () -> Unit,
+    onEditClick: ((EditCoverAction) -> Unit)?,
+    onDismissRequest: () -> Unit,
+) {
+    Scaffold(
+        bottomBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
+                    .padding(horizontal = 4.dp, vertical = 4.dp)
+                    .navigationBarsPadding(),
+            ) {
+                IconButton(onClick = onDismissRequest) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(id = R.string.action_close),
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(onClick = onShareClick) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = stringResource(id = R.string.action_share),
+                    )
+                }
+                IconButton(onClick = onSaveClick) {
+                    Icon(
+                        imageVector = Icons.Default.Save,
+                        contentDescription = stringResource(id = R.string.action_save),
+                    )
+                }
+                if (onEditClick != null) {
+                    Box {
+                        val (expanded, onExpand) = remember { mutableStateOf(false) }
+                        IconButton(
+                            onClick = { if (isCustomCover) onExpand(true) else onEditClick(EditCoverAction.EDIT) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = stringResource(id = R.string.action_edit_cover),
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { onExpand(false) },
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.action_edit)) },
+                                onClick = {
+                                    onEditClick(EditCoverAction.EDIT)
+                                    onExpand(false)
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.action_delete)) },
+                                onClick = {
+                                    onEditClick(EditCoverAction.DELETE)
+                                    onExpand(false)
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+        },
+    ) { contentPadding ->
+        val statusBarPaddingPx = WindowInsets.systemBars.getTop(LocalDensity.current)
+        val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
+                .clickableNoIndication(onClick = onDismissRequest),
+        ) {
+            AndroidView(
+                factory = {
+                    ReaderPageImageView(it).apply {
+                        onViewClicked = onDismissRequest
+                        clipToPadding = false
+                        clipChildren = false
+                    }
+                },
+                update = { view ->
+                    val request = ImageRequest.Builder(view.context)
+                        .data(coverDataProvider())
+                        .size(Size.ORIGINAL)
+                        .target { drawable ->
+                            // Copy bitmap in case it came from memory cache
+                            // Because SSIV needs to thoroughly read the image
+                            val copy = (drawable as? BitmapDrawable)?.let {
+                                val config = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    Bitmap.Config.HARDWARE
+                                } else {
+                                    Bitmap.Config.ARGB_8888
+                                }
+                                BitmapDrawable(
+                                    view.context.resources,
+                                    it.bitmap.copy(config, false),
+                                )
+                            } ?: drawable
+                            view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
+                        }
+                        .build()
+                    view.context.imageLoader.enqueue(request)
+
+                    view.updatePadding(top = statusBarPaddingPx, bottom = bottomPaddingPx)
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+    }
+}

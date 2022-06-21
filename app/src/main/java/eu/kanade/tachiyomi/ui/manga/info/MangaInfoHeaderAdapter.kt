@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -191,34 +190,7 @@ class MangaInfoHeaderAdapter(
                 }
                 .launchIn(controller.viewScope)
 
-            binding.mangaCover.longClicks()
-                .onEach {
-                    showCoverOptionsDialog()
-                }
-                .launchIn(controller.viewScope)
-
             setMangaInfo()
-        }
-
-        private fun showCoverOptionsDialog() {
-            val options = listOfNotNull(
-                R.string.action_share,
-                R.string.action_save,
-                // Can only edit cover for library manga
-                if (manga.favorite) R.string.action_edit else null,
-            ).map(controller.activity!!::getString).toTypedArray()
-
-            MaterialAlertDialogBuilder(controller.activity!!)
-                .setTitle(R.string.manga_cover)
-                .setItems(options) { _, item ->
-                    when (item) {
-                        0 -> controller.shareCover()
-                        1 -> controller.saveCover()
-                        2 -> controller.changeCover()
-                    }
-                }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
         }
 
         /**
