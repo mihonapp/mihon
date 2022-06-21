@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.core.content.withStyledAttributes
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.max
@@ -27,9 +28,9 @@ class AutofitRecyclerView @JvmOverloads constructor(context: Context, attrs: Att
     init {
         if (attrs != null) {
             val attrsArray = intArrayOf(android.R.attr.columnWidth)
-            val array = context.obtainStyledAttributes(attrs, attrsArray)
-            columnWidth = array.getDimensionPixelSize(0, -1)
-            array.recycle()
+            context.withStyledAttributes(attrs, attrsArray) {
+                columnWidth = getDimensionPixelSize(0, -1)
+            }
         }
 
         layoutManager = manager

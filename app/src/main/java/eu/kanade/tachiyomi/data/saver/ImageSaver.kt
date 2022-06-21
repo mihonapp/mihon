@@ -1,13 +1,13 @@
 package eu.kanade.tachiyomi.data.saver
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import androidx.core.content.contentValuesOf
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
@@ -39,15 +39,13 @@ class ImageSaver(
         val pictureDir =
             MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
 
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, image.name)
-            put(MediaStore.Images.Media.MIME_TYPE, type.mime)
-            put(
-                MediaStore.Images.Media.RELATIVE_PATH,
+        val contentValues = contentValuesOf(
+            MediaStore.Images.Media.DISPLAY_NAME to image.name,
+            MediaStore.Images.Media.MIME_TYPE to type.mime,
+            MediaStore.Images.Media.RELATIVE_PATH to
                 "${Environment.DIRECTORY_PICTURES}/${context.getString(R.string.app_name)}/" +
-                    (image.location as Location.Pictures).relativePath,
-            )
-        }
+                (image.location as Location.Pictures).relativePath,
+        )
 
         val picture = context.contentResolver.insert(
             pictureDir,

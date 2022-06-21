@@ -9,6 +9,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.CallSuper
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getResourceColor
@@ -230,7 +231,7 @@ open class ExtendedNavigationView @JvmOverloads constructor(
                 is SeparatorHolder -> {
                     val view = holder.itemView
                     val item = items[position] as Item.Separator
-                    view.setPadding(0, item.paddingTop, 0, item.paddingBottom)
+                    view.updatePadding(top = item.paddingTop, bottom = item.paddingBottom)
                 }
                 is RadioHolder -> {
                     val item = items[position] as Item.Radio

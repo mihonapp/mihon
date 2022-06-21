@@ -29,7 +29,7 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
     override suspend fun doWork(): Result {
         val preferences = Injekt.get<PreferencesHelper>()
         val notifier = BackupNotifier(context)
-        val uri = inputData.getString(LOCATION_URI_KEY)?.let { Uri.parse(it) }
+        val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: preferences.backupsDirectory().get().toUri()
         val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupConst.BACKUP_ALL)
         val isAutoBackup = inputData.getBoolean(IS_AUTO_BACKUP_KEY, true)

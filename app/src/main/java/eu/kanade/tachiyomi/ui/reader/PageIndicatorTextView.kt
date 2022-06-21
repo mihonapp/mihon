@@ -3,11 +3,11 @@ package eu.kanade.tachiyomi.ui.reader
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ScaleXSpan
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.text.set
 import eu.kanade.tachiyomi.widget.OutlineSpan
 
 /**
@@ -31,10 +31,10 @@ class PageIndicatorTextView(
         // Also add a bit of spacing between each character, as the stroke overlaps them
         val finalText = SpannableString(currText.asIterable().joinToString("\u00A0")).apply {
             // Apply text outline
-            setSpan(spanOutline, 1, length - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            set(1, length - 1, spanOutline)
 
             for (i in 1..lastIndex step 2) {
-                setSpan(ScaleXSpan(0.2f), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                set(i, i + 1, ScaleXSpan(0.2f))
             }
         }
 

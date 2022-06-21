@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.ui.main.MainActivity
 
@@ -53,7 +54,7 @@ object NotificationHandler {
     }
 
     fun openUrl(context: Context, url: String): PendingIntent {
-        val notificationIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        val notificationIntent = Intent(Intent.ACTION_VIEW, url.toUri())
         return PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
     }
 }

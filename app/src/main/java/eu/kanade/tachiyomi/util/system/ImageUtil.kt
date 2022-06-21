@@ -16,6 +16,7 @@ import androidx.core.graphics.alpha
 import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.blue
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.get
 import androidx.core.graphics.green
 import androidx.core.graphics.red
 import com.hippo.unifile.UniFile
@@ -273,14 +274,14 @@ object ImageUtil {
         val leftOffsetX = left - offsetX
         val rightOffsetX = right + offsetX
 
-        val topLeftPixel = image.getPixel(left, top)
-        val topRightPixel = image.getPixel(right, top)
-        val midLeftPixel = image.getPixel(left, midY)
-        val midRightPixel = image.getPixel(right, midY)
-        val topCenterPixel = image.getPixel(midX, top)
-        val botLeftPixel = image.getPixel(left, bot)
-        val bottomCenterPixel = image.getPixel(midX, bot)
-        val botRightPixel = image.getPixel(right, bot)
+        val topLeftPixel = image[left, top]
+        val topRightPixel = image[right, top]
+        val midLeftPixel = image[left, midY]
+        val midRightPixel = image[right, midY]
+        val topCenterPixel = image[midX, top]
+        val botLeftPixel = image[left, bot]
+        val bottomCenterPixel = image[midX, bot]
+        val botRightPixel = image[right, bot]
 
         val topLeftIsDark = topLeftPixel.isDark()
         val topRightIsDark = topRightPixel.isDark()
@@ -333,8 +334,8 @@ object ImageUtil {
             var whiteStreak = false
             val notOffset = x == left || x == right
             inner@ for ((index, y) in (0 until image.height step image.height / 25).withIndex()) {
-                val pixel = image.getPixel(x, y)
-                val pixelOff = image.getPixel(x + (if (x < image.width / 2) -offsetX else offsetX), y)
+                val pixel = image[x, y]
+                val pixelOff = image[x + (if (x < image.width / 2) -offsetX else offsetX), y]
                 if (pixel.isWhite()) {
                     whitePixelsStreak++
                     whitePixels++
@@ -425,8 +426,8 @@ object ImageUtil {
         val topCornersIsDark = topLeftIsDark && topRightIsDark
         val botCornersIsDark = botLeftIsDark && botRightIsDark
 
-        val topOffsetCornersIsDark = image.getPixel(leftOffsetX, top).isDark() && image.getPixel(rightOffsetX, top).isDark()
-        val botOffsetCornersIsDark = image.getPixel(leftOffsetX, bot).isDark() && image.getPixel(rightOffsetX, bot).isDark()
+        val topOffsetCornersIsDark = image[leftOffsetX, top].isDark() && image[rightOffsetX, top].isDark()
+        val botOffsetCornersIsDark = image[leftOffsetX, bot].isDark() && image[rightOffsetX, bot].isDark()
 
         val gradient = when {
             darkBG && botCornersIsWhite -> {

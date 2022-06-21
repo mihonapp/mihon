@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.util.lang
 
-import android.os.Build
-import android.text.Html
+import androidx.core.text.parseAsHtml
 import net.greypanther.natsort.CaseInsensitiveSimpleNaturalComparator
 import java.nio.charset.StandardCharsets
 import kotlin.math.floor
@@ -64,9 +63,5 @@ fun String.takeBytes(n: Int): String {
  * HTML-decode the string
  */
 fun String.htmlDecode(): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY).toString()
-    } else {
-        Html.fromHtml(this).toString()
-    }
+    return this.parseAsHtml().toString()
 }

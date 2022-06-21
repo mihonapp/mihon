@@ -7,6 +7,8 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceManager
+import androidx.preference.forEach
+import androidx.preference.get
 import eu.kanade.tachiyomi.ui.setting.SettingsAdvancedController
 import eu.kanade.tachiyomi.ui.setting.SettingsAppearanceController
 import eu.kanade.tachiyomi.ui.setting.SettingsBackupController
@@ -56,7 +58,7 @@ object SettingsSearchHelper {
                 val settingsPrefScreen = ctrl.setupPreferenceScreen(preferenceManager.createPreferenceScreen(context))
                 val prefCount = settingsPrefScreen.preferenceCount
                 for (i in 0 until prefCount) {
-                    val rootPref = settingsPrefScreen.getPreference(i)
+                    val rootPref = settingsPrefScreen[i]
                     if (rootPref.title == null) continue // no title, not a preference. (note: only info notes appear to not have titles)
                     getSettingSearchResult(ctrl, rootPref, "${settingsPrefScreen.title}")
                 }
@@ -86,18 +88,14 @@ object SettingsSearchHelper {
         when {
             pref is PreferenceGroup -> {
                 val breadcrumbsStr = addLocalizedBreadcrumb(breadcrumbs, "${pref.title}")
-
-                for (x in 0 until pref.preferenceCount) {
-                    val subPref = pref.getPreference(x)
-                    getSettingSearchResult(ctrl, subPref, breadcrumbsStr) // recursion
+                pref.forEach {
+                    getSettingSearchResult(ctrl, it, breadcrumbsStr) // recursion
                 }
             }
             pref is PreferenceCategory -> {
                 val breadcrumbsStr = addLocalizedBreadcrumb(breadcrumbs, "${pref.title}")
-
-                for (x in 0 until pref.preferenceCount) {
-                    val subPref = pref.getPreference(x)
-                    getSettingSearchResult(ctrl, subPref, breadcrumbsStr) // recursion
+                pref.forEach {
+                    getSettingSearchResult(ctrl, it, breadcrumbsStr) // recursion
                 }
             }
             (pref.title != null && pref.isVisible) -> {

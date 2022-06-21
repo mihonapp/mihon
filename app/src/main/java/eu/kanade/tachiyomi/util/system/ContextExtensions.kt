@@ -262,7 +262,7 @@ fun Context.openInBrowser(uri: Uri, forceDefaultBrowser: Boolean = false) {
 }
 
 fun Context.defaultBrowserPackageName(): String? {
-    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://"))
+    val browserIntent = Intent(Intent.ACTION_VIEW, "http://".toUri())
     return packageManager.resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY)
         ?.activityInfo?.packageName
         ?.takeUnless { it in DeviceUtil.invalidDefaultBrowsers }

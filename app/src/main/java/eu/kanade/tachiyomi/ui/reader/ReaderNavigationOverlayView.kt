@@ -8,7 +8,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewPropertyAnimator
-import androidx.core.graphics.withSave
+import androidx.core.graphics.withScale
+import androidx.core.graphics.withTranslation
 import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.DisabledNavigation
@@ -63,17 +64,15 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
         navigation?.regions?.forEach { region ->
             val rect = region.rectF
 
-            canvas?.withSave {
-                // Scale rect from 1f,1f to screen width and height
-                scale(width.toFloat(), height.toFloat())
+            // Scale rect from 1f,1f to screen width and height
+            canvas?.withScale(width.toFloat(), height.toFloat()) {
                 regionPaint.color = context.getColor(region.type.colorRes)
                 drawRect(rect, regionPaint)
             }
-            // Don't want scale anymore because it messes with drawText
-            canvas?.withSave {
-                // Translate origin to rect start (left, top)
-                translate((width * rect.left), (height * rect.top))
 
+            // Don't want scale anymore because it messes with drawText
+            // Translate origin to rect start (left, top)
+            canvas?.withTranslation(x = (width * rect.left), y = (height * rect.top)) {
                 // Calculate center of rect width on screen
                 val x = width * (abs(rect.left - rect.right) / 2)
 
