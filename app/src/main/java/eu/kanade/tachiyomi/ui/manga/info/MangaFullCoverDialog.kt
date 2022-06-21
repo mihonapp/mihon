@@ -35,6 +35,7 @@ import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
@@ -44,11 +45,12 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import logcat.LogPriority
+import nucleus.presenter.Presenter
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
-class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.Presenter> {
+class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFullCoverPresenter> {
 
     private val mangaId: Long
 
@@ -61,7 +63,7 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.Presente
         this.mangaId = mangaId
     }
 
-    override fun createPresenter() = Presenter(mangaId)
+    override fun createPresenter() = MangaFullCoverPresenter(mangaId)
 
     @Composable
     override fun ComposeContent() {
@@ -157,10 +159,10 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.Presente
         }
     }
 
-    class Presenter(
+    inner class MangaFullCoverPresenter(
         private val mangaId: Long,
         private val getMangaById: GetMangaById = Injekt.get(),
-    ) : nucleus.presenter.Presenter<MangaFullCoverDialog>() {
+    ) : Presenter<MangaFullCoverDialog>() {
 
         private var presenterScope: CoroutineScope = MainScope()
 
@@ -218,6 +220,7 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.Presente
         fun editCover(context: Context, data: Uri) {
             val manga = manga.value ?: return
             presenterScope.launchIO {
+                @Suppress("BlockingMethodInNonBlockingContext")
                 context.contentResolver.openInputStream(data)?.use {
                     val result = try {
                         manga.editCover(context, it, updateManga, coverCache)
@@ -225,7 +228,7 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.Presente
                         view?.onSetCoverError(e)
                         false
                     }
-                    launchUI { if (result) view?.onSetCoverSuccess() }
+                    withUIContext { if (result) view?.onSetCoverSuccess() }
                 }
             }
         }
@@ -236,14 +239,15 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.Presente
                 try {
                     coverCache.deleteCustomCover(mangaId)
                     updateManga.awaitUpdateCoverLastModified(mangaId)
-                    launchUI { view?.onSetCoverSuccess() }
+                    withUIContext { view?.onSetCoverSuccess() }
                 } catch (e: Exception) {
-                    launchUI { view?.onSetCoverError(e) }
+                    withUIContext { view?.onSetCoverError(e) }
                 }
             }
         }
-    }
 
+    }
+    
     companion object {
         private const val MANGA_EXTRA = "mangaId"
 
@@ -253,3 +257,4 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.Presente
         private const val REQUEST_IMAGE_OPEN = 101
     }
 }
+

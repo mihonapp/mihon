@@ -15,9 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,13 +70,13 @@ fun MangaCoverDialog(
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = onShareClick) {
                     Icon(
-                        imageVector = Icons.Default.Share,
+                        imageVector = Icons.Outlined.Share,
                         contentDescription = stringResource(id = R.string.action_share),
                     )
                 }
                 IconButton(onClick = onSaveClick) {
                     Icon(
-                        imageVector = Icons.Default.Save,
+                        imageVector = Icons.Outlined.Save,
                         contentDescription = stringResource(id = R.string.action_save),
                     )
                 }
@@ -87,7 +87,7 @@ fun MangaCoverDialog(
                             onClick = { if (isCustomCover) onExpand(true) else onEditClick(EditCoverAction.EDIT) },
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Edit,
+                                imageVector = Icons.Outlined.Edit,
                                 contentDescription = stringResource(id = R.string.action_edit_cover),
                             )
                         }

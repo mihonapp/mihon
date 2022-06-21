@@ -94,7 +94,7 @@ data class Manga(
     }
 
     fun sortDescending(): Boolean {
-        return chapterFlags and CHAPTER_SORT_DIR_MASK == CHAPTER_SORTING_DESC
+        return chapterFlags and CHAPTER_SORT_DIR_MASK == CHAPTER_SORT_DESC
     }
 
     companion object {
@@ -121,7 +121,6 @@ data class Manga(
         const val CHAPTER_SORTING_NUMBER = 0x00000100L
         const val CHAPTER_SORTING_UPLOAD_DATE = 0x00000200L
         const val CHAPTER_SORTING_MASK = 0x00000300L
-        const val CHAPTER_SORTING_DESC = 0x00000000L
 
         const val CHAPTER_DISPLAY_NAME = 0x00000000L
         const val CHAPTER_DISPLAY_NUMBER = 0x00100000L

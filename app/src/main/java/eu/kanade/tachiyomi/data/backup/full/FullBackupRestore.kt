@@ -23,6 +23,7 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBa
     override suspend fun performRestore(uri: Uri): Boolean {
         backupManager = FullBackupManager(context)
 
+        @Suppress("BlockingMethodInNonBlockingContext")
         val backupString = context.contentResolver.openInputStream(uri)!!.source().gzip().buffer().use { it.readByteArray() }
         val backup = backupManager.parser.decodeFromByteArray(BackupSerializer, backupString)
 
