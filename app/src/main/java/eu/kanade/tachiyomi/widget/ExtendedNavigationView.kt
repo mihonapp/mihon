@@ -73,7 +73,7 @@ open class ExtendedNavigationView @JvmOverloads constructor(
              * @param context any context.
              * @param resId the vector resource to load and tint
              */
-            fun tintVector(context: Context, resId: Int, @AttrRes colorAttrRes: Int = R.attr.colorAccent): Drawable {
+            fun tintVector(context: Context, resId: Int, @AttrRes colorAttrRes: Int = R.attr.colorPrimary): Drawable {
                 return AppCompatResources.getDrawable(context, resId)!!.apply {
                     setTint(context.getResourceColor(if (enabled) colorAttrRes else R.attr.colorControlNormal))
                 }
