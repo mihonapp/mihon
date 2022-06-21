@@ -14,6 +14,10 @@ class UpdateManga(
     private val mangaRepository: MangaRepository,
 ) {
 
+    suspend fun await(mangaUpdate: MangaUpdate): Boolean {
+        return mangaRepository.update(mangaUpdate)
+    }
+
     suspend fun awaitUpdateFromSource(
         localManga: Manga,
         remoteManga: MangaInfo,

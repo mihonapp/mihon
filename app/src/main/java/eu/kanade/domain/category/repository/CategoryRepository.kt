@@ -16,6 +16,8 @@ interface CategoryRepository {
 
     suspend fun delete(categoryId: Long)
 
+    suspend fun getCategoriesForManga(mangaId: Long): List<Category>
+
     suspend fun checkDuplicateName(name: String): Boolean
 }
 

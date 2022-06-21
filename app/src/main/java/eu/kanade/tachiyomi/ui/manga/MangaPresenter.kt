@@ -3,10 +3,12 @@ package eu.kanade.tachiyomi.ui.manga
 import android.os.Bundle
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.category.interactor.GetCategories
-import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
+import eu.kanade.domain.manga.interactor.GetMangaWithChapters
+import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toDbManga
+import eu.kanade.domain.manga.model.toMangaInfo
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -14,6 +16,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -23,7 +26,6 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.toSChapter
-import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
@@ -34,7 +36,6 @@ import eu.kanade.tachiyomi.util.chapter.syncChaptersWithTrackServiceTwoWay
 import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.withUIContext
-import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
 import eu.kanade.tachiyomi.util.system.logcat
@@ -64,9 +65,10 @@ class MangaPresenter(
     private val trackManager: TrackManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
-    private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
+    private val getMangaWithChapters: GetMangaWithChapters = Injekt.get(),
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
+    private val updateManga: UpdateManga = Injekt.get(),
 ) : BasePresenter<MangaController>() {
 
     /**
@@ -118,7 +120,6 @@ class MangaPresenter(
         }
 
         // Manga info - start
-
         getMangaObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeLatestCache({ view, manga -> view.onNextMangaInfo(manga, source) })
@@ -147,9 +148,9 @@ class MangaPresenter(
         // Keeps subscribed to changes and sends the list of chapters to the relay.
         presenterScope.launchIO {
             manga.id?.let { mangaId ->
-                getChapterByMangaId.subscribe(mangaId)
-                    .collectLatest { domainChapters ->
-                        val chapterItems = domainChapters.map { it.toDbChapter().toModel() }
+                getMangaWithChapters.subscribe(mangaId)
+                    .collectLatest { (_, chapters) ->
+                        val chapterItems = chapters.map { it.toDbChapter().toModel() }
                         setDownloadedChapters(chapterItems)
                         this@MangaPresenter.allChapters = chapterItems
                         observeDownloads()
@@ -168,7 +169,6 @@ class MangaPresenter(
     }
 
     // Manga info - start
-
     private fun getMangaObservable(): Observable<Manga> {
         return db.getManga(manga.url, manga.source).asRxObservable()
     }
@@ -193,16 +193,11 @@ class MangaPresenter(
         if (fetchMangaJob?.isActive == true) return
         fetchMangaJob = presenterScope.launchIO {
             try {
-                val networkManga = source.getMangaDetails(manga.toMangaInfo())
-                val sManga = networkManga.toSManga()
-                manga.prepUpdateCover(coverCache, sManga, manualFetch)
-                manga.copyFrom(sManga)
-                if (!manga.favorite) {
-                    // if the manga isn't a favorite, set its title from source and update in db
-                    manga.title = sManga.title
+                manga.toDomainManga()?.let { domainManga ->
+                    val networkManga = source.getMangaDetails(domainManga.toMangaInfo())
+
+                    updateManga.awaitUpdateFromSource(domainManga, networkManga, manualFetch, coverCache)
                 }
-                manga.initialized = true
-                db.insertManga(manga).executeAsBlocking()
 
                 withUIContext { view?.onFetchMangaInfoDone() }
             } catch (e: Throwable) {

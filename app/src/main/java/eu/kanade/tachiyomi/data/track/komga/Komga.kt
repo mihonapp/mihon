@@ -13,6 +13,8 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
 import okhttp3.Dns
 import okhttp3.OkHttpClient
+import eu.kanade.domain.manga.model.Manga as DomainManga
+import eu.kanade.domain.track.model.Track as DomainTrack
 
 class Komga(private val context: Context, id: Int) : TrackService(id), EnhancedTrackService, NoLoginTrackService {
 
@@ -105,12 +107,12 @@ class Komga(private val context: Context, id: Int) : TrackService(id), EnhancedT
             null
         }
 
-    override fun isTrackFrom(track: Track, manga: Manga, source: Source?): Boolean =
-        track.tracking_url == manga.url && source?.let { accept(it) } == true
+    override fun isTrackFrom(track: DomainTrack, manga: DomainManga, source: Source?): Boolean =
+        track.remoteUrl == manga.url && source?.let { accept(it) } == true
 
-    override fun migrateTrack(track: Track, manga: Manga, newSource: Source): Track? =
+    override fun migrateTrack(track: DomainTrack, manga: DomainManga, newSource: Source): DomainTrack? =
         if (accept(newSource)) {
-            track.also { track.tracking_url = manga.url }
+            track.copy(remoteUrl = manga.url)
         } else {
             null
         }

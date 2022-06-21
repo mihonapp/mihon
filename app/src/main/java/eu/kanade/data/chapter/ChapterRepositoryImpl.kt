@@ -41,8 +41,27 @@ class ChapterRepositoryImpl(
     }
 
     override suspend fun update(chapterUpdate: ChapterUpdate) {
-        try {
-            handler.await {
+        handler.await {
+            chaptersQueries.update(
+                chapterUpdate.mangaId,
+                chapterUpdate.url,
+                chapterUpdate.name,
+                chapterUpdate.scanlator,
+                chapterUpdate.read?.toLong(),
+                chapterUpdate.bookmark?.toLong(),
+                chapterUpdate.lastPageRead,
+                chapterUpdate.chapterNumber?.toDouble(),
+                chapterUpdate.sourceOrder,
+                chapterUpdate.dateFetch,
+                chapterUpdate.dateUpload,
+                chapterId = chapterUpdate.id,
+            )
+        }
+    }
+
+    override suspend fun updateAll(chapterUpdates: List<ChapterUpdate>) {
+        handler.await(inTransaction = true) {
+            chapterUpdates.forEach { chapterUpdate ->
                 chaptersQueries.update(
                     chapterUpdate.mangaId,
                     chapterUpdate.url,
@@ -58,33 +77,6 @@ class ChapterRepositoryImpl(
                     chapterId = chapterUpdate.id,
                 )
             }
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-        }
-    }
-
-    override suspend fun updateAll(chapterUpdates: List<ChapterUpdate>) {
-        try {
-            handler.await(inTransaction = true) {
-                chapterUpdates.forEach { chapterUpdate ->
-                    chaptersQueries.update(
-                        chapterUpdate.mangaId,
-                        chapterUpdate.url,
-                        chapterUpdate.name,
-                        chapterUpdate.scanlator,
-                        chapterUpdate.read?.toLong(),
-                        chapterUpdate.bookmark?.toLong(),
-                        chapterUpdate.lastPageRead,
-                        chapterUpdate.chapterNumber?.toDouble(),
-                        chapterUpdate.sourceOrder,
-                        chapterUpdate.dateFetch,
-                        chapterUpdate.dateUpload,
-                        chapterId = chapterUpdate.id,
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
         }
     }
 

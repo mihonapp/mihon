@@ -42,6 +42,15 @@ class MangaRepositoryImpl(
         }
     }
 
+    override suspend fun moveMangaToCategories(mangaId: Long, categoryIds: List<Long>) {
+        handler.await(inTransaction = true) {
+            mangas_categoriesQueries.deleteMangaCategoryByMangaId(mangaId)
+            categoryIds.map { categoryId ->
+                mangas_categoriesQueries.insert(mangaId, categoryId)
+            }
+        }
+    }
+
     override suspend fun update(update: MangaUpdate): Boolean {
         return try {
             handler.await {

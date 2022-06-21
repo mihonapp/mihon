@@ -48,6 +48,12 @@ class CategoryRepositoryImpl(
         }
     }
 
+    override suspend fun getCategoriesForManga(mangaId: Long): List<Category> {
+        return handler.awaitList {
+            categoriesQueries.getCategoriesByMangaId(mangaId, categoryMapper)
+        }
+    }
+
     override suspend fun checkDuplicateName(name: String): Boolean {
         return handler
             .awaitList { categoriesQueries.getCategories() }
