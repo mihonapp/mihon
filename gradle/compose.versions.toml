@@ -1,6 +1,6 @@
 [versions]
-compose = "1.2.0-rc01"
-accompanist = "0.24.11-rc"
+compose = "1.2.0-rc02"
+accompanist = "0.24.12-rc"
 
 [libraries]
 activity = "androidx.activity:activity-compose:1.6.0-alpha05"
