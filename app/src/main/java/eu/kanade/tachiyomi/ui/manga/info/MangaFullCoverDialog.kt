@@ -245,9 +245,8 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFul
                 }
             }
         }
-
     }
-    
+
     companion object {
         private const val MANGA_EXTRA = "mangaId"
 
@@ -257,4 +256,3 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFul
         private const val REQUEST_IMAGE_OPEN = 101
     }
 }
-

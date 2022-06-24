@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.get
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.databinding.SourceFilterSheetBinding
@@ -56,7 +55,7 @@ class SourceFilterSheet(
         init {
             recycler.adapter = adapter
             recycler.setHasFixedSize(true)
-            (binding.root[1] as ViewGroup).addView(recycler)
+            (binding.root.getChildAt(1) as ViewGroup).addView(recycler)
             addView(binding.root)
             binding.filterBtn.setOnClickListener { onFilterClicked() }
             binding.resetBtn.setOnClickListener { onResetClicked() }
