@@ -27,13 +27,7 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
             adapter.coverClickListener.onCoverClick(bindingAdapterPosition)
         }
 
-        binding.download.setOnClickListener {
-            onDownloadClick(it, bindingAdapterPosition)
-        }
-        binding.download.setOnLongClickListener {
-            onDownloadLongClick(bindingAdapterPosition)
-            true
-        }
+        binding.download.listener = downloadActionListener
     }
 
     fun bind(item: UpdatesItem) {

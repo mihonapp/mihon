@@ -22,13 +22,7 @@ class ChapterHolder(
     private val binding = ChaptersItemBinding.bind(view)
 
     init {
-        binding.download.setOnClickListener {
-            onDownloadClick(it, bindingAdapterPosition)
-        }
-        binding.download.setOnLongClickListener {
-            onDownloadLongClick(bindingAdapterPosition)
-            true
-        }
+        binding.download.listener = downloadActionListener
     }
 
     fun bind(item: ChapterItem, manga: Manga) {
