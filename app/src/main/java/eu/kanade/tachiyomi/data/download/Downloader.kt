@@ -278,7 +278,8 @@ class Downloader(
                 val maxDownloadsFromSource = queue
                     .groupBy { it.source }
                     .filterKeys { it !is UnmeteredSource }
-                    .maxOf { it.value.size }
+                    .maxOfOrNull { it.value.size }
+                    ?: 0
                 if (
                     queuedDownloads > DOWNLOADS_QUEUED_WARNING_THRESHOLD ||
                     maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD
