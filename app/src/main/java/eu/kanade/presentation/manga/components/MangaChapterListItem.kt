@@ -74,7 +74,7 @@ fun MangaChapterListItem(
                 if (bookmark) {
                     Icon(
                         imageVector = Icons.Default.Bookmark,
-                        contentDescription = stringResource(id = R.string.action_filter_bookmarked),
+                        contentDescription = stringResource(R.string.action_filter_bookmarked),
                         modifier = Modifier
                             .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp }),
                         tint = textColor,

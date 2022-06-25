@@ -13,11 +13,11 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.FlipToBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.SelectAll
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -81,7 +81,7 @@ fun MangaSmallAppBar(
                 IconButton(onClick = onBackClicked) {
                     Icon(
                         imageVector = if (isActionMode) Icons.Default.Close else Icons.Default.ArrowBack,
-                        contentDescription = stringResource(id = R.string.abc_action_bar_up_description),
+                        contentDescription = stringResource(R.string.abc_action_bar_up_description),
                     )
                 }
             },
@@ -90,21 +90,21 @@ fun MangaSmallAppBar(
                     IconButton(onClick = onSelectAll) {
                         Icon(
                             imageVector = Icons.Default.SelectAll,
-                            contentDescription = stringResource(id = R.string.action_select_all),
+                            contentDescription = stringResource(R.string.action_select_all),
                         )
                     }
                     IconButton(onClick = onInvertSelection) {
                         Icon(
                             imageVector = Icons.Default.FlipToBack,
-                            contentDescription = stringResource(id = R.string.action_select_inverse),
+                            contentDescription = stringResource(R.string.action_select_inverse),
                         )
                     }
                 } else {
                     if (onShareClicked != null) {
                         IconButton(onClick = onShareClicked) {
                             Icon(
-                                imageVector = Icons.Default.Share,
-                                contentDescription = stringResource(id = R.string.action_share),
+                                imageVector = Icons.Outlined.Share,
+                                contentDescription = stringResource(R.string.action_share),
                             )
                         }
                     }
@@ -114,8 +114,8 @@ fun MangaSmallAppBar(
                         Box {
                             IconButton(onClick = { onDownloadExpanded(!downloadExpanded) }) {
                                 Icon(
-                                    imageVector = Icons.Default.Download,
-                                    contentDescription = stringResource(id = R.string.manga_download),
+                                    imageVector = Icons.Outlined.Download,
+                                    contentDescription = stringResource(R.string.manga_download),
                                 )
                             }
                             val onDismissRequest = { onDownloadExpanded(false) }
@@ -124,42 +124,42 @@ fun MangaSmallAppBar(
                                 onDismissRequest = onDismissRequest,
                             ) {
                                 DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.download_1)) },
+                                    text = { Text(text = stringResource(R.string.download_1)) },
                                     onClick = {
                                         onDownloadClicked(DownloadAction.NEXT_1_CHAPTER)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.download_5)) },
+                                    text = { Text(text = stringResource(R.string.download_5)) },
                                     onClick = {
                                         onDownloadClicked(DownloadAction.NEXT_5_CHAPTERS)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.download_10)) },
+                                    text = { Text(text = stringResource(R.string.download_10)) },
                                     onClick = {
                                         onDownloadClicked(DownloadAction.NEXT_10_CHAPTERS)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.download_custom)) },
+                                    text = { Text(text = stringResource(R.string.download_custom)) },
                                     onClick = {
                                         onDownloadClicked(DownloadAction.CUSTOM)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.download_unread)) },
+                                    text = { Text(text = stringResource(R.string.download_unread)) },
                                     onClick = {
                                         onDownloadClicked(DownloadAction.UNREAD_CHAPTERS)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.download_all)) },
+                                    text = { Text(text = stringResource(R.string.download_all)) },
                                     onClick = {
                                         onDownloadClicked(DownloadAction.ALL_CHAPTERS)
                                         onDismissRequest()
@@ -175,7 +175,7 @@ fun MangaSmallAppBar(
                             IconButton(onClick = { onMoreExpanded(!moreExpanded) }) {
                                 Icon(
                                     imageVector = Icons.Default.MoreVert,
-                                    contentDescription = stringResource(id = R.string.abc_action_menu_overflow_description),
+                                    contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
                                 )
                             }
                             val onDismissRequest = { onMoreExpanded(false) }
@@ -184,14 +184,14 @@ fun MangaSmallAppBar(
                                 onDismissRequest = onDismissRequest,
                             ) {
                                 DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.action_edit_categories)) },
+                                    text = { Text(text = stringResource(R.string.action_edit_categories)) },
                                     onClick = {
                                         onEditCategoryClicked()
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.action_migrate)) },
+                                    text = { Text(text = stringResource(R.string.action_migrate)) },
                                     onClick = {
                                         onMigrateClicked()
                                         onDismissRequest()
@@ -211,7 +211,7 @@ fun MangaSmallAppBar(
 
         if (downloadedOnlyMode) {
             Text(
-                text = stringResource(id = R.string.label_downloaded_only),
+                text = stringResource(R.string.label_downloaded_only),
                 modifier = Modifier
                     .background(color = MaterialTheme.colorScheme.tertiary)
                     .fillMaxWidth()
@@ -223,7 +223,7 @@ fun MangaSmallAppBar(
         }
         if (incognitoMode) {
             Text(
-                text = stringResource(id = R.string.pref_incognito_mode),
+                text = stringResource(R.string.pref_incognito_mode),
                 modifier = Modifier
                     .background(color = MaterialTheme.colorScheme.primary)
                     .fillMaxWidth()

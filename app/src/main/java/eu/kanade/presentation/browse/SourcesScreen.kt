@@ -219,7 +219,7 @@ fun SourceOptionsDialog(
             Column {
                 val textId = if (Pin.Pinned in source.pin) R.string.action_unpin else R.string.action_pin
                 Text(
-                    text = stringResource(id = textId),
+                    text = stringResource(textId),
                     modifier = Modifier
                         .clickable(onClick = onClickPin)
                         .fillMaxWidth()

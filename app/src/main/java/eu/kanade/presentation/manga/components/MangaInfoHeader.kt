@@ -165,9 +165,9 @@ fun MangaInfoHeader(
             val defaultActionButtonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = .38f)
             MangaActionButton(
                 title = if (favorite) {
-                    stringResource(id = R.string.in_library)
+                    stringResource(R.string.in_library)
                 } else {
-                    stringResource(id = R.string.add_to_library)
+                    stringResource(R.string.add_to_library)
                 },
                 icon = if (favorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                 color = if (favorite) MaterialTheme.colorScheme.primary else defaultActionButtonColor,
@@ -177,7 +177,7 @@ fun MangaInfoHeader(
             if (onTrackingClicked != null) {
                 MangaActionButton(
                     title = if (trackingCount == 0) {
-                        stringResource(id = R.string.manga_tracking_tab)
+                        stringResource(R.string.manga_tracking_tab)
                     } else {
                         quantityStringResource(id = R.plurals.num_trackers, quantity = trackingCount, trackingCount)
                     },
@@ -188,7 +188,7 @@ fun MangaInfoHeader(
             }
             if (onWebViewClicked != null) {
                 MangaActionButton(
-                    title = stringResource(id = R.string.action_web_view),
+                    title = stringResource(R.string.action_web_view),
                     icon = Icons.Default.Public,
                     color = defaultActionButtonColor,
                     onClick = onWebViewClicked,
@@ -287,7 +287,7 @@ private fun MangaAndSourceTitlesLarge(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = title.takeIf { it.isNotBlank() } ?: stringResource(id = R.string.unknown),
+            text = title.takeIf { it.isNotBlank() } ?: stringResource(R.string.unknown),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.clickableNoIndication(
                 onLongClick = { if (title.isNotBlank()) context.copyToClipboard(title, title) },
@@ -297,7 +297,7 @@ private fun MangaAndSourceTitlesLarge(
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = author?.takeIf { it.isNotBlank() } ?: stringResource(id = R.string.unknown_author),
+            text = author?.takeIf { it.isNotBlank() } ?: stringResource(R.string.unknown_author),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier
                 .secondaryItemAlpha()
@@ -350,13 +350,13 @@ private fun MangaAndSourceTitlesLarge(
             ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
                 Text(
                     text = when (status) {
-                        SManga.ONGOING.toLong() -> stringResource(id = R.string.ongoing)
-                        SManga.COMPLETED.toLong() -> stringResource(id = R.string.completed)
-                        SManga.LICENSED.toLong() -> stringResource(id = R.string.licensed)
-                        SManga.PUBLISHING_FINISHED.toLong() -> stringResource(id = R.string.publishing_finished)
-                        SManga.CANCELLED.toLong() -> stringResource(id = R.string.cancelled)
-                        SManga.ON_HIATUS.toLong() -> stringResource(id = R.string.on_hiatus)
-                        else -> stringResource(id = R.string.unknown)
+                        SManga.ONGOING.toLong() -> stringResource(R.string.ongoing)
+                        SManga.COMPLETED.toLong() -> stringResource(R.string.completed)
+                        SManga.LICENSED.toLong() -> stringResource(R.string.licensed)
+                        SManga.PUBLISHING_FINISHED.toLong() -> stringResource(R.string.publishing_finished)
+                        SManga.CANCELLED.toLong() -> stringResource(R.string.cancelled)
+                        SManga.ON_HIATUS.toLong() -> stringResource(R.string.on_hiatus)
+                        else -> stringResource(R.string.unknown)
                     },
                 )
                 DotSeparatorText()
@@ -406,7 +406,7 @@ private fun MangaAndSourceTitlesSmall(
         )
         Column(modifier = Modifier.padding(start = 16.dp)) {
             Text(
-                text = title.ifBlank { stringResource(id = R.string.unknown) },
+                text = title.ifBlank { stringResource(R.string.unknown) },
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.clickableNoIndication(
                     onLongClick = { if (title.isNotBlank()) context.copyToClipboard(title, title) },
@@ -415,7 +415,7 @@ private fun MangaAndSourceTitlesSmall(
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = author?.takeIf { it.isNotBlank() } ?: stringResource(id = R.string.unknown_author),
+                text = author?.takeIf { it.isNotBlank() } ?: stringResource(R.string.unknown_author),
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier
                     .secondaryItemAlpha()
@@ -466,13 +466,13 @@ private fun MangaAndSourceTitlesSmall(
                 ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
                     Text(
                         text = when (status) {
-                            SManga.ONGOING.toLong() -> stringResource(id = R.string.ongoing)
-                            SManga.COMPLETED.toLong() -> stringResource(id = R.string.completed)
-                            SManga.LICENSED.toLong() -> stringResource(id = R.string.licensed)
-                            SManga.PUBLISHING_FINISHED.toLong() -> stringResource(id = R.string.publishing_finished)
-                            SManga.CANCELLED.toLong() -> stringResource(id = R.string.cancelled)
-                            SManga.ON_HIATUS.toLong() -> stringResource(id = R.string.on_hiatus)
-                            else -> stringResource(id = R.string.unknown)
+                            SManga.ONGOING.toLong() -> stringResource(R.string.ongoing)
+                            SManga.COMPLETED.toLong() -> stringResource(R.string.completed)
+                            SManga.LICENSED.toLong() -> stringResource(R.string.licensed)
+                            SManga.PUBLISHING_FINISHED.toLong() -> stringResource(R.string.publishing_finished)
+                            SManga.CANCELLED.toLong() -> stringResource(R.string.cancelled)
+                            SManga.ON_HIATUS.toLong() -> stringResource(R.string.on_hiatus)
+                            else -> stringResource(R.string.unknown)
                         },
                     )
                     DotSeparatorText()

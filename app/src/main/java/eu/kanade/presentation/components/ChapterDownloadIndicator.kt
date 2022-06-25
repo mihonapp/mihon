@@ -61,7 +61,7 @@ fun ChapterDownloadIndicator(
                     )
                     DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.action_delete)) },
+                            text = { Text(text = stringResource(R.string.action_delete)) },
                             onClick = {
                                 onClick(ChapterDownloadAction.DELETE)
                                 isMenuExpanded = false
@@ -122,14 +122,14 @@ fun ChapterDownloadIndicator(
                     )
                     DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.action_start_downloading_now)) },
+                            text = { Text(text = stringResource(R.string.action_start_downloading_now)) },
                             onClick = {
                                 onClick(ChapterDownloadAction.START_NOW)
                                 isMenuExpanded = false
                             },
                         )
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.action_cancel)) },
+                            text = { Text(text = stringResource(R.string.action_cancel)) },
                             onClick = {
                                 onClick(ChapterDownloadAction.CANCEL)
                                 isMenuExpanded = false

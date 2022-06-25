@@ -64,20 +64,20 @@ fun MangaCoverDialog(
                 IconButton(onClick = onDismissRequest) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(id = R.string.action_close),
+                        contentDescription = stringResource(R.string.action_close),
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = onShareClick) {
                     Icon(
                         imageVector = Icons.Outlined.Share,
-                        contentDescription = stringResource(id = R.string.action_share),
+                        contentDescription = stringResource(R.string.action_share),
                     )
                 }
                 IconButton(onClick = onSaveClick) {
                     Icon(
                         imageVector = Icons.Outlined.Save,
-                        contentDescription = stringResource(id = R.string.action_save),
+                        contentDescription = stringResource(R.string.action_save),
                     )
                 }
                 if (onEditClick != null) {
@@ -88,7 +88,7 @@ fun MangaCoverDialog(
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Edit,
-                                contentDescription = stringResource(id = R.string.action_edit_cover),
+                                contentDescription = stringResource(R.string.action_edit_cover),
                             )
                         }
                         DropdownMenu(
@@ -96,14 +96,14 @@ fun MangaCoverDialog(
                             onDismissRequest = { onExpand(false) },
                         ) {
                             DropdownMenuItem(
-                                text = { Text(text = stringResource(id = R.string.action_edit)) },
+                                text = { Text(text = stringResource(R.string.action_edit)) },
                                 onClick = {
                                     onEditClick(EditCoverAction.EDIT)
                                     onExpand(false)
                                 },
                             )
                             DropdownMenuItem(
-                                text = { Text(text = stringResource(id = R.string.action_delete)) },
+                                text = { Text(text = stringResource(R.string.action_delete)) },
                                 onClick = {
                                     onEditClick(EditCoverAction.DELETE)
                                     onExpand(false)

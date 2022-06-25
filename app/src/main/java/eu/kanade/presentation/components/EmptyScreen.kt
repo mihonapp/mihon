@@ -17,7 +17,7 @@ fun EmptyScreen(
     actions: List<EmptyView.Action>? = null,
 ) {
     EmptyScreen(
-        message = stringResource(id = textResource),
+        message = stringResource(textResource),
         actions = actions,
     )
 }

@@ -365,7 +365,7 @@ private fun MangaScreenSmallImpl(
                             } else {
                                 R.string.action_start
                             }
-                            Text(text = stringResource(id = id))
+                            Text(text = stringResource(id))
                         },
                         icon = { Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null) },
                         onClick = onContinueReading,
@@ -410,7 +410,7 @@ private fun MangaScreenSmallImpl(
                         MangaChapterListItem(
                             title = chapterTitle,
                             date = date,
-                            readProgress = lastPageRead?.let { stringResource(id = R.string.chapter_progress, it + 1) },
+                            readProgress = lastPageRead?.let { stringResource(R.string.chapter_progress, it + 1) },
                             scanlator = scanlator,
                             read = chapter.read,
                             bookmark = chapter.bookmark,
@@ -599,7 +599,7 @@ fun MangaScreenLargeImpl(
                             } else {
                                 R.string.action_start
                             }
-                            Text(text = stringResource(id = id))
+                            Text(text = stringResource(id))
                         },
                         icon = { Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null) },
                         onClick = onContinueReading,

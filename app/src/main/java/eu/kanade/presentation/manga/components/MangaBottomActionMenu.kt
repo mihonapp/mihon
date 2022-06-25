@@ -18,10 +18,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkAdd
 import androidx.compose.material.icons.filled.BookmarkRemove
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DoneAll
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.RemoveDone
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -89,7 +89,7 @@ fun MangaBottomActionMenu(
             ) {
                 if (onBookmarkClicked != null) {
                     Button(
-                        title = stringResource(id = R.string.action_bookmark),
+                        title = stringResource(R.string.action_bookmark),
                         icon = Icons.Default.BookmarkAdd,
                         toConfirm = confirm[0],
                         onLongClick = { onLongClickItem(0) },
@@ -98,7 +98,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onRemoveBookmarkClicked != null) {
                     Button(
-                        title = stringResource(id = R.string.action_remove_bookmark),
+                        title = stringResource(R.string.action_remove_bookmark),
                         icon = Icons.Default.BookmarkRemove,
                         toConfirm = confirm[1],
                         onLongClick = { onLongClickItem(1) },
@@ -107,7 +107,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onMarkAsReadClicked != null) {
                     Button(
-                        title = stringResource(id = R.string.action_mark_as_read),
+                        title = stringResource(R.string.action_mark_as_read),
                         icon = Icons.Default.DoneAll,
                         toConfirm = confirm[2],
                         onLongClick = { onLongClickItem(2) },
@@ -116,7 +116,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onMarkAsUnreadClicked != null) {
                     Button(
-                        title = stringResource(id = R.string.action_mark_as_unread),
+                        title = stringResource(R.string.action_mark_as_unread),
                         icon = Icons.Default.RemoveDone,
                         toConfirm = confirm[3],
                         onLongClick = { onLongClickItem(3) },
@@ -125,7 +125,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onMarkPreviousAsReadClicked != null) {
                     Button(
-                        title = stringResource(id = R.string.action_mark_previous_as_read),
+                        title = stringResource(R.string.action_mark_previous_as_read),
                         icon = ImageVector.vectorResource(id = R.drawable.ic_done_prev_24dp),
                         toConfirm = confirm[4],
                         onLongClick = { onLongClickItem(4) },
@@ -134,8 +134,8 @@ fun MangaBottomActionMenu(
                 }
                 if (onDownloadClicked != null) {
                     Button(
-                        title = stringResource(id = R.string.action_download),
-                        icon = Icons.Default.Download,
+                        title = stringResource(R.string.action_download),
+                        icon = Icons.Outlined.Download,
                         toConfirm = confirm[5],
                         onLongClick = { onLongClickItem(5) },
                         onClick = onDownloadClicked,
@@ -143,8 +143,8 @@ fun MangaBottomActionMenu(
                 }
                 if (onDeleteClicked != null) {
                     Button(
-                        title = stringResource(id = R.string.action_delete),
-                        icon = Icons.Default.Delete,
+                        title = stringResource(R.string.action_delete),
+                        icon = Icons.Outlined.Delete,
                         toConfirm = confirm[6],
                         onLongClick = { onLongClickItem(6) },
                         onClick = onDeleteClicked,

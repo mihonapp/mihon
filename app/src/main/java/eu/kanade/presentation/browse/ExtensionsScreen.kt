@@ -299,7 +299,7 @@ fun ExtensionItemContent(
 
             if (warning != null) {
                 Text(
-                    text = stringResource(id = warning).uppercase(),
+                    text = stringResource(warning).uppercase(),
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.error,
                     ),
@@ -370,7 +370,7 @@ fun ExtensionHeader(
     action: @Composable RowScope.() -> Unit = {},
 ) {
     ExtensionHeader(
-        text = stringResource(id = textRes),
+        text = stringResource(textRes),
         modifier = modifier,
         action = action,
     )
