@@ -20,4 +20,8 @@ class GetMangaWithChapters(
             Pair(manga, chapters)
         }
     }
+
+    suspend fun awaitManga(id: Long): Manga {
+        return mangaRepository.getMangaById(id)
+    }
 }

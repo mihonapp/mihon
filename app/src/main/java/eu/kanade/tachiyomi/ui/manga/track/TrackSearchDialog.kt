@@ -80,7 +80,7 @@ class TrackSearchDialog : DialogController {
 
         // Do an initial search based on the manga's title
         if (savedViewState == null) {
-            currentlySearched = trackController.presenter.manga.title
+            currentlySearched = trackController.presenter.manga!!.title
             binding!!.titleInput.editText?.append(currentlySearched)
         }
         search(currentlySearched)

@@ -7,10 +7,11 @@ import android.view.View
 import androidx.core.view.isVisible
 import com.bluelinelabs.conductor.Router
 import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.manga.model.toTriStateGroupState
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.ui.manga.MangaPresenter
+import eu.kanade.tachiyomi.ui.manga.MangaScreenState
 import eu.kanade.tachiyomi.util.view.popupMenu
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
@@ -18,6 +19,9 @@ import eu.kanade.tachiyomi.widget.sheet.TabbedBottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.launch
 
 class ChaptersSettingsSheet(
     private val router: Router,
@@ -28,7 +32,7 @@ class ChaptersSettingsSheet(
 
     private var manga: Manga? = null
 
-    val filters = Filter(context)
+    private val filters = Filter(context)
     private val sort = Sort(context)
     private val display = Display(context)
 
@@ -42,8 +46,14 @@ class ChaptersSettingsSheet(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         scope = MainScope()
-        // TODO: Listen to changes
-        updateManga()
+        scope.launch {
+            presenter.state
+                .filterIsInstance<MangaScreenState.Success>()
+                .collectLatest {
+                    manga = it.manga
+                    getTabViews().forEach { settings -> (settings as Settings).updateView() }
+                }
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -63,17 +73,13 @@ class ChaptersSettingsSheet(
         R.string.action_display,
     )
 
-    private fun updateManga() {
-        manga = presenter.manga.toDomainManga()
-    }
-
     private fun showPopupMenu(view: View) {
         view.popupMenu(
             menuRes = R.menu.default_chapter_filter,
             onMenuItemClick = {
                 when (itemId) {
                     R.id.set_as_default -> {
-                        SetChapterSettingsDialog(presenter.manga).showDialog(router)
+                        SetChapterSettingsDialog(presenter.manga!!.toDbManga()).showDialog(router)
                     }
                 }
             },
@@ -144,10 +150,6 @@ class ChaptersSettingsSheet(
                     bookmarked -> presenter.setBookmarkedFilter(newState)
                     else -> {}
                 }
-
-                // TODO: Remove
-                updateManga()
-                updateView()
             }
         }
     }
@@ -202,16 +204,11 @@ class ChaptersSettingsSheet(
 
             override fun onItemClicked(item: Item) {
                 when (item) {
-                    source -> presenter.setSorting(Manga.CHAPTER_SORTING_SOURCE.toInt())
-                    chapterNum -> presenter.setSorting(Manga.CHAPTER_SORTING_NUMBER.toInt())
-                    uploadDate -> presenter.setSorting(Manga.CHAPTER_SORTING_UPLOAD_DATE.toInt())
+                    source -> presenter.setSorting(Manga.CHAPTER_SORTING_SOURCE)
+                    chapterNum -> presenter.setSorting(Manga.CHAPTER_SORTING_NUMBER)
+                    uploadDate -> presenter.setSorting(Manga.CHAPTER_SORTING_UPLOAD_DATE)
                     else -> throw Exception("Unknown sorting")
                 }
-
-                // TODO: Remove
-                presenter.reverseSortOrder()
-                updateManga()
-                updateView()
             }
         }
     }
@@ -257,14 +254,10 @@ class ChaptersSettingsSheet(
                 if (item.checked) return
 
                 when (item) {
-                    displayTitle -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NAME.toInt())
-                    displayChapterNum -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NUMBER.toInt())
+                    displayTitle -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NAME)
+                    displayChapterNum -> presenter.setDisplayMode(Manga.CHAPTER_DISPLAY_NUMBER)
                     else -> throw NotImplementedError("Unknown display mode")
                 }
-
-                // TODO: Remove
-                updateManga()
-                updateView()
             }
         }
     }

@@ -121,3 +121,5 @@ fun Source.getNameForMangaInfo(): String {
         else -> toString()
     }
 }
+
+fun Source.isLocalOrStub(): Boolean = id == LocalSource.ID || this is SourceManager.StubSource

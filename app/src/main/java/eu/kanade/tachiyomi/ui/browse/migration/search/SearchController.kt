@@ -83,7 +83,7 @@ class SearchController(
         binding.progress.isVisible = isReplacingManga
         if (!isReplacingManga) {
             router.popController(this)
-            if (newManga != null) {
+            if (newManga?.id != null) {
                 val newMangaController = RouterTransaction.with(MangaController(newManga.id!!))
                 if (router.backstack.lastOrNull()?.controller is MangaController) {
                     // Replace old MangaController

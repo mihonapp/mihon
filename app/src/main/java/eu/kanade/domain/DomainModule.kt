@@ -33,6 +33,7 @@ import eu.kanade.domain.manga.interactor.GetFavoritesBySourceId
 import eu.kanade.domain.manga.interactor.GetMangaById
 import eu.kanade.domain.manga.interactor.GetMangaWithChapters
 import eu.kanade.domain.manga.interactor.ResetViewerFlags
+import eu.kanade.domain.manga.interactor.SetMangaChapterFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.domain.source.interactor.GetEnabledSources
@@ -71,6 +72,7 @@ class DomainModule : InjektModule {
         addFactory { GetMangaById(get()) }
         addFactory { GetNextChapter(get()) }
         addFactory { ResetViewerFlags(get()) }
+        addFactory { SetMangaChapterFlags(get()) }
         addFactory { UpdateManga(get()) }
         addFactory { MoveMangaToCategories(get()) }
 

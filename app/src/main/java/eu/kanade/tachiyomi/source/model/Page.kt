@@ -57,6 +57,33 @@ open class Page(
         statusCallback = f
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Page) return false
+
+        if (index != other.index) return false
+        if (url != other.url) return false
+        if (imageUrl != other.imageUrl) return false
+        if (number != other.number) return false
+        if (status != other.status) return false
+        if (progress != other.progress) return false
+        if (statusSubject != other.statusSubject) return false
+        if (statusCallback != other.statusCallback) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = index
+        result = 31 * result + url.hashCode()
+        result = 31 * result + (imageUrl?.hashCode() ?: 0)
+        result = 31 * result + status
+        result = 31 * result + progress
+        result = 31 * result + (statusSubject?.hashCode() ?: 0)
+        result = 31 * result + (statusCallback?.hashCode() ?: 0)
+        return result
+    }
+
     companion object {
         const val QUEUE = 0
         const val LOAD_PAGE = 1

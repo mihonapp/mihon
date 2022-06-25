@@ -10,6 +10,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.databinding.TrackControllerBinding
@@ -25,7 +26,7 @@ import eu.kanade.tachiyomi.widget.sheet.BaseBottomSheetDialog
 
 class TrackSheet(
     val controller: MangaController,
-    val fragmentManager: FragmentManager,
+    private val fragmentManager: FragmentManager,
 ) : BaseBottomSheetDialog(controller.activity!!),
     TrackAdapter.OnClickListener,
     SetTrackStatusDialog.Listener,
@@ -74,8 +75,8 @@ class TrackSheet(
 
     override fun onSetClick(position: Int) {
         val item = adapter.getItem(position) ?: return
-        val manga = controller.presenter.manga
-        val source = controller.presenter.source
+        val manga = controller.presenter.manga?.toDbManga() ?: return
+        val source = controller.presenter.source ?: return
 
         if (item.service is EnhancedTrackService) {
             if (item.track != null) {

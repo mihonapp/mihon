@@ -420,7 +420,7 @@ class MainActivity : BaseActivity() {
             SHORTCUT_MANGA -> {
                 val extras = intent.extras ?: return false
                 val fgController = router.backstack.lastOrNull()?.controller as? MangaController
-                if (fgController?.manga?.id != extras.getLong(MangaController.MANGA_EXTRA)) {
+                if (fgController?.mangaId != extras.getLong(MangaController.MANGA_EXTRA)) {
                     router.popToRoot()
                     setSelectedNavItem(R.id.nav_library)
                     router.pushController(RouterTransaction.with(MangaController(extras)))
@@ -601,6 +601,9 @@ class MainActivity : BaseActivity() {
         }
 
         val isFullComposeController = internalTo is FullComposeController<*>
+        binding.appbar.isVisible = !isFullComposeController
+        binding.controllerContainer.enableScrollingBehavior(!isFullComposeController)
+
         if (!isTablet()) {
             // Save lift state
             if (isPush) {
@@ -623,17 +626,6 @@ class MainActivity : BaseActivity() {
             }
 
             binding.root.isLiftAppBarOnScroll = internalTo !is NoAppBarElevationController
-
-            binding.appbar.isVisible = !isFullComposeController
-            binding.controllerContainer.enableScrollingBehavior(!isFullComposeController)
-
-            // TODO: Remove when MangaController is full compose
-            if (!isFullComposeController) {
-                binding.appbar.isTransparentWhenNotLifted = internalTo is MangaController
-                binding.controllerContainer.overlapHeader = internalTo is MangaController
-            }
-        } else {
-            binding.appbar.isVisible = !isFullComposeController
         }
     }
 
