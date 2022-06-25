@@ -120,7 +120,7 @@
     <string name="manga_removed_library">הוסר מהספרייה</string>
     <string name="manga_info_full_title_label">כותרת</string>
     <string name="unknown">לא ידוע</string>
-    <string name="ongoing">מתמשך</string>
+    <string name="ongoing">נמשך</string>
     <string name="description">תיאור</string>
     <string name="manga_not_in_db">מנגה זו הוסרה ממסד הנתונים.</string>
     <string name="latest">המאוחר ביותר</string>
@@ -682,4 +682,6 @@
     <string name="download_insufficient_space">לא ניתן להוריד פרקים כי אין מספיק מקום אחסון</string>
     <string name="notification_updating">מעדכן ספרייה... (%1$d/%2$d)</string>
     <string name="download_queue_size_warning">אזהרה: הורדות גדולות עלולות לגרום להאטה במקורות ו/או לחסימת Tachiyomi. לחץ כדי ללמוד עוד.</string>
+    <string name="local_invalid_format">פורמט פרק לא תקין</string>
+    <string name="on_hiatus">בהפסקה</string>
 </resources>

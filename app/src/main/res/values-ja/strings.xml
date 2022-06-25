@@ -727,4 +727,5 @@
     <string name="cant_open_last_read_chapter">最後に読んだ章を開けませんでした</string>
     <string name="custom_cover">カスタム表紙</string>
     <string name="not_installed">未インストール</string>
+    <string name="pref_app_language">アプリ言語</string>
 </resources>

@@ -738,4 +738,6 @@
     <string name="network_not_metered">Μόνο σε δίκτυο χωρίς μετρήσεις</string>
     <string name="cant_open_last_read_chapter">Αδυναμία ανοίγματος του τελευταίου κεφαλαίου που διαβάστηκε</string>
     <string name="custom_cover">Προσαρμοσμένο εξώφυλλο</string>
+    <string name="not_installed">Δεν έχει εγκατασταθεί</string>
+    <string name="pref_app_language">Γλώσσα εφαρμογής</string>
 </resources>

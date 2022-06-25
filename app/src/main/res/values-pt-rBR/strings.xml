@@ -739,4 +739,5 @@
     <string name="cant_open_last_read_chapter">Não foi possível abrir o último capítulo lido</string>
     <string name="custom_cover">Capa personalizada</string>
     <string name="not_installed">Não instalado</string>
+    <string name="pref_app_language">Idioma do aplicativo</string>
 </resources>

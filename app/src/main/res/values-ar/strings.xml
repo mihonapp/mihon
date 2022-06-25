@@ -786,4 +786,6 @@
     <string name="on_hold_list">قائمة المعلقة</string>
     <string name="custom_cover">غلاف مخصص</string>
     <string name="cant_open_last_read_chapter">غير قادر على فتح آخر فصل تم قراءته</string>
+    <string name="not_installed">غير مثبت</string>
+    <string name="pref_app_language">لغة تطبيق</string>
 </resources>

@@ -711,4 +711,7 @@
     <string name="ext_info_language">언어</string>
     <string name="reading_list">읽을 목록</string>
     <string name="wish_list">위시리스트</string>
+    <string name="pref_reset_viewer_flags_summary">모든 시리즈의 읽기 모드랑 화면 방향이 재시작함</string>
+    <string name="pref_app_language">앱 언어</string>
+    <string name="not_installed">설치되지 않음</string>
 </resources>

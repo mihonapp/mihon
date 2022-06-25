@@ -659,4 +659,6 @@
     <string name="include">شامل: %s</string>
     <string name="exclude">بدون: %s</string>
     <string name="pref_library_update_categories_details">مانگاهایی که در دسته‌بندی های حذف‌شده هستند، حتی اگر هم‌زمان در دسته‌بندی های مشمول باشند به‌روزرسانی نمی‌شوند.</string>
+    <string name="save_chapter_as_cbz">ذخیره به عنوان فایل آرشیو CBZ</string>
+    <string name="split_tall_images">نصف کردن خودکار عکس های بلند</string>
 </resources>
