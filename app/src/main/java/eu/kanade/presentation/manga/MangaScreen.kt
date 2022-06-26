@@ -338,7 +338,7 @@ private fun MangaScreenSmallImpl(
                         selected.clear()
                     }.takeIf { selected.size == 1 },
                     onDownloadClicked = {
-                        onDownloadChapter!!(selected, ChapterDownloadAction.START)
+                        onDownloadChapter!!(selected.toList(), ChapterDownloadAction.START)
                         selected.clear()
                     }.takeIf {
                         onDownloadChapter != null && selected.any { it.downloadState != Download.State.DOWNLOADED }

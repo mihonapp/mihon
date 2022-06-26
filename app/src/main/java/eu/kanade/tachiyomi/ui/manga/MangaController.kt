@@ -380,7 +380,7 @@ class MangaController :
     // SELECTION MODE ACTIONS
 
     private fun onDownloadChapters(
-        items: List<eu.kanade.tachiyomi.ui.manga.ChapterItem>,
+        items: List<ChapterItem>,
         action: ChapterDownloadAction,
     ) {
         viewScope.launch {
