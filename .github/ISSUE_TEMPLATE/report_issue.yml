@@ -90,7 +90,7 @@ body:
       label: Acknowledgements
       description: Read this carefully, we will close and ignore your issue if you skimmed through this.
       options:
-        - label: I have searched the existing issues and this is a new ticket, **NOT** a duplicate or related to another open issue.
+        - label: I have searched the existing issues and this is a new ticket, **NOT** a duplicate or related to another open or closed issue.
           required: true
         - label: I have written a short but informative title.
           required: true

@@ -7,7 +7,7 @@ I acknowledge that:
   - All extensions
 - I have tried the troubleshooting guide: https://tachiyomi.org/help/guides/troubleshooting-problems/
 - If this is an issue with an extension, that I should be opening an issue in https://github.com/tachiyomiorg/tachiyomi-extensions
-- I have searched the existing issues and this is new ticket **NOT** a duplicate or related to another open issue
+- I have searched the existing issues and this is new ticket **NOT** a duplicate or related to another open or closed issue
 - I will fill out the title and the information in this template
 
 Note that the issue will be automatically closed if you do not fill out the title or requested information.
