@@ -114,18 +114,6 @@ fun VerticalFastScroller(
             Box(
                 modifier = Modifier
                     .offset { IntOffset(0, thumbOffsetY.roundToInt()) }
-                    .height(ThumbLength)
-                    .then(
-                        // Exclude thumb from gesture area only when needed
-                        if (isThumbVisible && !isThumbDragged && !listState.isScrollInProgress) {
-                            Modifier.systemGestureExclusion()
-                        } else Modifier,
-                    )
-                    .padding(horizontal = 8.dp)
-                    .padding(end = endContentPadding)
-                    .width(ThumbThickness)
-                    .alpha(alpha.value)
-                    .background(color = thumbColor, shape = ThumbShape)
                     .then(
                         // Recompose opts
                         if (!listState.isScrollInProgress) {
@@ -139,7 +127,19 @@ fun VerticalFastScroller(
                                 },
                             )
                         } else Modifier,
-                    ),
+                    )
+                    .then(
+                        // Exclude thumb from gesture area only when needed
+                        if (isThumbVisible && !isThumbDragged && !listState.isScrollInProgress) {
+                            Modifier.systemGestureExclusion()
+                        } else Modifier,
+                    )
+                    .height(ThumbLength)
+                    .padding(horizontal = 8.dp)
+                    .padding(end = endContentPadding)
+                    .width(ThumbThickness)
+                    .alpha(alpha.value)
+                    .background(color = thumbColor, shape = ThumbShape),
             )
         }.map { it.measure(scrollerConstraints) }
         val scrollerWidth = scrollerPlaceable.fastMaxBy { it.width }?.width ?: 0
