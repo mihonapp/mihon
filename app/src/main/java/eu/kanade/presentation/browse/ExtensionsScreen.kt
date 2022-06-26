@@ -300,6 +300,8 @@ fun ExtensionItemContent(
             if (warning != null) {
                 Text(
                     text = stringResource(warning).uppercase(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.error,
                     ),
