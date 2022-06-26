@@ -29,7 +29,7 @@ class QuadStateTextView @JvmOverloads constructor(context: Context, attrs: Attri
         val tint = if (state == State.UNCHECKED) {
             context.getThemeColor(R.attr.colorControlNormal)
         } else {
-            context.getThemeColor(R.attr.colorAccent)
+            context.getThemeColor(R.attr.colorPrimary)
         }
         if (tint != 0) {
             TextViewCompat.setCompoundDrawableTintList(this, ColorStateList.valueOf(tint))

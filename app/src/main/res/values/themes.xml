@@ -121,6 +121,34 @@
         <item name="colorPrimaryInverse">@color/greenapple_primaryInverse</item>
     </style>
 
+    <!--== Lavender Theme ==-->
+    <style name="Theme.Tachiyomi.Lavender">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/lavender_primary</item>
+        <item name="colorOnPrimary">@color/lavender_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/lavender_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/lavender_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/lavender_secondary</item>
+        <item name="colorOnSecondary">@color/lavender_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/lavender_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/lavender_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/lavender_tertiary</item>
+        <item name="colorOnTertiary">@color/lavender_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/lavender_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/lavender_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/lavender_background</item>
+        <item name="colorOnBackground">@color/lavender_onBackground</item>
+        <item name="colorSurface">@color/lavender_surface</item>
+        <item name="colorOnSurface">@color/lavender_onSurface</item>
+        <item name="colorSurfaceVariant">@color/lavender_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/lavender_onSurfaceVariant</item>
+        <item name="colorOutline">@color/lavender_outline</item>
+        <item name="colorOnSurfaceInverse">@color/lavender_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/lavender_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/lavender_primaryInverse</item>
+        <item name="elevationOverlayColor">@color/lavender_elevationOverlay</item>
+    </style>
+
     <!--== Midnight Dusk Theme ==-->
     <style name="Theme.Tachiyomi.MidnightDusk">
         <!-- Theme Colors -->

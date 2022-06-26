@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Colors for Lavender theme
+  ~ Original color scheme by CrepeTF
+  ~
+  ~ Key colors:
+  ~ Primary #7B46AF
+  ~ Secondary #7B46AF
+  ~ Tertiary #EDE2FF
+  ~ Neutral #EDE2FF
+-->
+<resources>
+    <color name="lavender_primary">#7B46AF</color>
+    <color name="lavender_onPrimary">#EDE2FF</color>
+    <color name="lavender_primaryContainer">#7B46AF</color>
+    <color name="lavender_onPrimaryContainer">#EDE2FF</color>
+    <color name="lavender_secondary">#7B46AF</color>
+    <color name="lavender_onSecondary">#EDE2FF</color>
+    <color name="lavender_secondaryContainer">#7B46AF</color>
+    <color name="lavender_onSecondaryContainer">#EDE2FF</color>
+    <color name="lavender_tertiary">#EDE2FF</color>
+    <color name="lavender_onTertiary">#7B46AF</color>
+    <color name="lavender_tertiaryContainer">#EDE2FF</color>
+    <color name="lavender_onTertiaryContainer">#7B46AF</color>
+    <color name="lavender_background">#EDE2FF</color>
+    <color name="lavender_onBackground">#1B1B22</color>
+    <color name="lavender_surface">#EDE2FF</color>
+    <color name="lavender_onSurface">#1B1B22</color>
+    <color name="lavender_surfaceVariant">#B9B0CC</color>
+    <color name="lavender_onSurfaceVariant">#D849454E</color>
+    <color name="lavender_outline">#7B46AF</color>
+    <color name="lavender_inverseOnSurface">#F3EFF4</color>
+    <color name="lavender_inverseSurface">#313033</color>
+    <color name="lavender_primaryInverse">#D6BAFF</color>
+    <color name="lavender_elevationOverlay">@color/lavender_primary</color>
+</resources>

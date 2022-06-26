@@ -20,6 +20,9 @@ interface ThemingDelegate {
                 PreferenceValues.AppTheme.GREEN_APPLE -> {
                     resIds += R.style.Theme_Tachiyomi_GreenApple
                 }
+                PreferenceValues.AppTheme.LAVENDER -> {
+                    resIds += R.style.Theme_Tachiyomi_Lavender
+                }
                 PreferenceValues.AppTheme.MIDNIGHT_DUSK -> {
                     resIds += R.style.Theme_Tachiyomi_MidnightDusk
                 }
