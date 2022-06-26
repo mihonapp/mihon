@@ -24,7 +24,6 @@ import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -52,6 +51,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
 import rx.Observable
@@ -60,7 +60,6 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
 import eu.kanade.domain.chapter.model.Chapter as DomainChapter
 import eu.kanade.domain.manga.model.Manga as DomainManga
@@ -108,8 +107,6 @@ class MangaPresenter(
 
     private val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
 
-    private val imageSaver: ImageSaver by injectLazy()
-
     private var trackSubscription: Subscription? = null
     private var searchTrackerJob: Job? = null
     private var refreshTrackersJob: Job? = null
@@ -126,6 +123,13 @@ class MangaPresenter(
     val processedChapters: Sequence<ChapterItem>?
         get() = successState?.processedChapters
 
+    /**
+     * Helper function to update the UI state only if it's currently in success state
+     */
+    private fun updateSuccessState(func: (MangaScreenState.Success) -> MangaScreenState.Success) {
+        _state.update { if (it is MangaScreenState.Success) func(it) else it }
+    }
+
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
@@ -139,27 +143,28 @@ class MangaPresenter(
             getMangaAndChapters.subscribe(mangaId)
                 .collectLatest { (manga, chapters) ->
                     val chapterItems = chapters.toChapterItems(manga)
-                    val currentState = _state.value
-                    _state.value = when (currentState) {
-                        // Initialize success state
-                        MangaScreenState.Loading -> MangaScreenState.Success(
-                            manga = manga,
-                            source = Injekt.get<SourceManager>().getOrStub(manga.source),
-                            dateRelativeTime = preferences.relativeTime().get(),
-                            dateFormat = preferences.dateFormat(),
-                            isFromSource = isFromSource,
-                            trackingAvailable = trackManager.hasLoggedServices(),
-                            chapters = chapterItems,
-                        ).also {
-                            getTrackingObservable(manga)
-                                .subscribeLatestCache(
-                                    { _, count -> successState?.let { _state.value = it.copy(trackingCount = count) } },
-                                    { _, error -> logcat(LogPriority.ERROR, error) },
-                                )
-                        }
+                    _state.update { currentState ->
+                        when (currentState) {
+                            // Initialize success state
+                            MangaScreenState.Loading -> MangaScreenState.Success(
+                                manga = manga,
+                                source = Injekt.get<SourceManager>().getOrStub(manga.source),
+                                dateRelativeTime = preferences.relativeTime().get(),
+                                dateFormat = preferences.dateFormat(),
+                                isFromSource = isFromSource,
+                                trackingAvailable = trackManager.hasLoggedServices(),
+                                chapters = chapterItems,
+                            ).also {
+                                getTrackingObservable(manga)
+                                    .subscribeLatestCache(
+                                        { _, count -> updateSuccessState { it.copy(trackingCount = count) } },
+                                        { _, error -> logcat(LogPriority.ERROR, error) },
+                                    )
+                            }
 
-                        // Update state
-                        is MangaScreenState.Success -> currentState.copy(manga = manga, chapters = chapterItems)
+                            // Update state
+                            is MangaScreenState.Success -> currentState.copy(manga = manga, chapters = chapterItems)
+                        }
                     }
 
                     fetchTrackers()
@@ -173,17 +178,13 @@ class MangaPresenter(
 
         preferences.incognitoMode()
             .asImmediateFlow { incognito ->
-                successState?.let {
-                    _state.value = it.copy(isIncognitoMode = incognito)
-                }
+                updateSuccessState { it.copy(isIncognitoMode = incognito) }
             }
             .launchIn(presenterScope)
 
         preferences.downloadedOnly()
             .asImmediateFlow { downloadedOnly ->
-                successState?.let {
-                    _state.value = it.copy(isDownloadedOnlyMode = downloadedOnly)
-                }
+                updateSuccessState { it.copy(isDownloadedOnlyMode = downloadedOnly) }
             }
             .launchIn(presenterScope)
     }
@@ -213,16 +214,17 @@ class MangaPresenter(
      */
     private fun fetchMangaFromSource(manualFetch: Boolean = false) {
         if (fetchMangaJob?.isActive == true) return
-        val successState = successState ?: return
         fetchMangaJob = presenterScope.launchIO {
-            _state.value = successState.copy(isRefreshingInfo = true)
+            updateSuccessState { it.copy(isRefreshingInfo = true) }
             try {
-                val networkManga = successState.source.getMangaDetails(successState.manga.toMangaInfo())
-                updateManga.awaitUpdateFromSource(successState.manga, networkManga, manualFetch)
+                successState?.let {
+                    val networkManga = it.source.getMangaDetails(it.manga.toMangaInfo())
+                    updateManga.awaitUpdateFromSource(it.manga, networkManga, manualFetch)
+                }
             } catch (e: Throwable) {
                 withUIContext { view?.onFetchMangaInfoError(e) }
             }
-            _state.value = successState.copy(isRefreshingInfo = false)
+            updateSuccessState { it.copy(isRefreshingInfo = false) }
         }
     }
 
@@ -402,15 +404,16 @@ class MangaPresenter(
     }
 
     private fun updateDownloadState(download: Download) {
-        val successState = successState ?: return
-        val modifiedIndex = successState.chapters.indexOfFirst { it.chapter.id == download.chapter.id }
-        if (modifiedIndex >= 0) {
+        updateSuccessState { successState ->
+            val modifiedIndex = successState.chapters.indexOfFirst { it.chapter.id == download.chapter.id }
+            if (modifiedIndex < 0) return@updateSuccessState successState
+
             val newChapters = successState.chapters.toMutableList().apply {
                 val item = removeAt(modifiedIndex)
                     .copy(downloadState = download.status, downloadProgress = download.progress)
                 add(modifiedIndex, item)
             }
-            _state.value = successState.copy(chapters = newChapters)
+            successState.copy(chapters = newChapters)
         }
     }
 
@@ -436,28 +439,28 @@ class MangaPresenter(
      */
     private fun fetchChaptersFromSource(manualFetch: Boolean = false) {
         if (fetchChaptersJob?.isActive == true) return
-        val successState = successState ?: return
-
         fetchChaptersJob = presenterScope.launchIO {
-            _state.value = successState.copy(isRefreshingChapter = true)
+            updateSuccessState { it.copy(isRefreshingChapter = true) }
             try {
-                val chapters = successState.source.getChapterList(successState.manga.toMangaInfo())
-                    .map { it.toSChapter() }
+                successState?.let { successState ->
+                    val chapters = successState.source.getChapterList(successState.manga.toMangaInfo())
+                        .map { it.toSChapter() }
 
-                val (newChapters, _) = syncChaptersWithSource.await(
-                    chapters,
-                    successState.manga,
-                    successState.source,
-                )
+                    val (newChapters, _) = syncChaptersWithSource.await(
+                        chapters,
+                        successState.manga,
+                        successState.source,
+                    )
 
-                if (manualFetch) {
-                    val dbChapters = newChapters.map { it.toDbChapter() }
-                    downloadNewChapters(dbChapters)
+                    if (manualFetch) {
+                        val dbChapters = newChapters.map { it.toDbChapter() }
+                        downloadNewChapters(dbChapters)
+                    }
                 }
             } catch (e: Throwable) {
                 withUIContext { view?.onFetchChaptersError(e) }
             }
-            _state.value = successState.copy(isRefreshingChapter = false)
+            updateSuccessState { it.copy(isRefreshingChapter = false) }
         }
     }
 
@@ -551,26 +554,27 @@ class MangaPresenter(
      * @param chapters the list of chapters to delete.
      */
     fun deleteChapters(chapters: List<DomainChapter>) {
-        val successState = successState ?: return
         launchIO {
             val chapters2 = chapters.map { it.toDbChapter() }
             try {
-                val deletedIds = downloadManager
-                    .deleteChapters(chapters2, successState.manga.toDbManga(), successState.source)
-                    .map { it.id }
-                val deletedChapters = successState.chapters.filter { deletedIds.contains(it.chapter.id) }
-                if (deletedChapters.isEmpty()) return@launchIO
+                updateSuccessState { successState ->
+                    val deletedIds = downloadManager
+                        .deleteChapters(chapters2, successState.manga.toDbManga(), successState.source)
+                        .map { it.id }
+                    val deletedChapters = successState.chapters.filter { deletedIds.contains(it.chapter.id) }
+                    if (deletedChapters.isEmpty()) return@updateSuccessState successState
 
-                // TODO: Don't do this fake status update
-                val newChapters = successState.chapters.toMutableList().apply {
-                    deletedChapters.forEach {
-                        val index = indexOf(it)
-                        val toAdd = removeAt(index)
-                            .copy(downloadState = Download.State.NOT_DOWNLOADED, downloadProgress = 0)
-                        add(index, toAdd)
+                    // TODO: Don't do this fake status update
+                    val newChapters = successState.chapters.toMutableList().apply {
+                        deletedChapters.forEach {
+                            val index = indexOf(it)
+                            val toAdd = removeAt(index)
+                                .copy(downloadState = Download.State.NOT_DOWNLOADED, downloadProgress = 0)
+                            add(index, toAdd)
+                        }
                     }
+                    successState.copy(chapters = newChapters)
                 }
-                _state.value = successState.copy(chapters = newChapters)
             } catch (e: Throwable) {
                 logcat(LogPriority.ERROR, e)
             }
