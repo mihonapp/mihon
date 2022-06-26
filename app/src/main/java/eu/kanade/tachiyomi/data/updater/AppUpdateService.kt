@@ -42,7 +42,6 @@ class AppUpdateService : Service() {
     private lateinit var notifier: AppUpdateNotifier
 
     private var runningJob: Job? = null
-
     private var runningCall: Call? = null
 
     override fun onCreate() {
@@ -133,7 +132,7 @@ class AppUpdateService : Service() {
                 response.close()
                 throw Exception("Unsuccessful response")
             }
-            notifier.onDownloadFinished(apkFile.getUriCompat(this))
+            notifier.promptInstall(apkFile.getUriCompat(this))
         } catch (error: Exception) {
             logcat(LogPriority.ERROR, error)
             if (error is CancellationException ||
@@ -195,7 +194,7 @@ class AppUpdateService : Service() {
             val intent = Intent(context, AppUpdateService::class.java).apply {
                 putExtra(EXTRA_DOWNLOAD_URL, url)
             }
-            return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         }
     }
 }
