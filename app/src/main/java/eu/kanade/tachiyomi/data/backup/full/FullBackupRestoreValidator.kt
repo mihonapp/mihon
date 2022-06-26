@@ -56,7 +56,7 @@ class FullBackupRestoreValidator : AbstractBackupRestoreValidator() {
             .map { it.syncId }
             .distinct()
         val missingTrackers = trackers
-            .mapNotNull { trackManager.getService(it) }
+            .mapNotNull { trackManager.getService(it.toLong()) }
             .filter { !it.isLogged }
             .map { context.getString(it.nameRes()) }
             .sorted()

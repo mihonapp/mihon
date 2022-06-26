@@ -16,7 +16,7 @@ import okhttp3.OkHttpClient
 import eu.kanade.domain.manga.model.Manga as DomainManga
 import eu.kanade.domain.track.model.Track as DomainTrack
 
-class Komga(private val context: Context, id: Int) : TrackService(id), EnhancedTrackService, NoLoginTrackService {
+class Komga(private val context: Context, id: Long) : TrackService(id), EnhancedTrackService, NoLoginTrackService {
 
     companion object {
         const val UNREAD = 1

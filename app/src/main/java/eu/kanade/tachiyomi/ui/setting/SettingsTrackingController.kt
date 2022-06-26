@@ -146,7 +146,7 @@ class SettingsTrackingController :
         return super.onOptionsItemSelected(item)
     }
 
-    private fun updatePreference(id: Int) {
+    private fun updatePreference(id: Long) {
         val pref = findPreference(Keys.trackUsername(id)) as? TrackerPreference
         pref?.notifyChanged()
     }

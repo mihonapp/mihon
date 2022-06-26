@@ -28,7 +28,7 @@ data class Track(
     }
 }
 
-fun Track.toDbTrack(): DbTrack = DbTrack.create(syncId.toInt()).also {
+fun Track.toDbTrack(): DbTrack = DbTrack.create(syncId).also {
     it.id = id
     it.manga_id = mangaId
     it.media_id = remoteId

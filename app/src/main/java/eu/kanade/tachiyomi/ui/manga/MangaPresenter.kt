@@ -692,7 +692,7 @@ class MangaPresenter(
                 .map { tracks ->
                     val dbTracks = tracks.map { it.toDbTrack() }
                     loggedServices.map { service ->
-                        TrackItem(dbTracks.find { it.sync_id == service.id }, service)
+                        TrackItem(dbTracks.find { it.sync_id.toLong() == service.id }, service)
                     }
                 }
                 .collectLatest { trackItems ->

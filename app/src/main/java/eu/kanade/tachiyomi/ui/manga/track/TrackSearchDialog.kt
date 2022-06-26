@@ -54,7 +54,7 @@ class TrackSearchDialog : DialogController {
 
     @Suppress("unused")
     constructor(bundle: Bundle) : super(bundle) {
-        service = Injekt.get<TrackManager>().getService(bundle.getInt(KEY_SERVICE))!!
+        service = Injekt.get<TrackManager>().getService(bundle.getLong(KEY_SERVICE))!!
         currentTrackUrl = bundle.getString(KEY_CURRENT_URL)
     }
 

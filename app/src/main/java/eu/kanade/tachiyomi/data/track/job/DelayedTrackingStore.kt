@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.track.job
 
 import android.content.Context
 import androidx.core.content.edit
-import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.domain.track.model.Track
 import eu.kanade.tachiyomi.util.system.logcat
 import logcat.LogPriority
 
@@ -16,8 +16,8 @@ class DelayedTrackingStore(context: Context) {
     fun addItem(track: Track) {
         val trackId = track.id.toString()
         val (_, lastChapterRead) = preferences.getString(trackId, "0:0.0")!!.split(":")
-        if (track.last_chapter_read > lastChapterRead.toFloat()) {
-            val value = "${track.manga_id}:${track.last_chapter_read}"
+        if (track.lastChapterRead > lastChapterRead.toFloat()) {
+            val value = "${track.mangaId}:${track.lastChapterRead}"
             logcat(LogPriority.DEBUG) { "Queuing track item: $trackId, $value" }
             preferences.edit {
                 putString(trackId, value)

@@ -9,7 +9,10 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.track.interactor.GetTracks
+import eu.kanade.domain.track.interactor.InsertTrack
+import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.Dispatchers
@@ -23,26 +26,27 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
     CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val db = Injekt.get<DatabaseHelper>()
+        val getMangaById = Injekt.get<GetMangaById>()
+        val getTracks = Injekt.get<GetTracks>()
+        val insertTrack = Injekt.get<InsertTrack>()
+
         val trackManager = Injekt.get<TrackManager>()
         val delayedTrackingStore = Injekt.get<DelayedTrackingStore>()
 
         withContext(Dispatchers.IO) {
             val tracks = delayedTrackingStore.getItems().mapNotNull {
-                val manga = db.getManga(it.mangaId).executeAsBlocking() ?: return@withContext
-                db.getTracks(manga.id).executeAsBlocking()
+                val manga = getMangaById.await(it.mangaId) ?: return@withContext
+                getTracks.await(manga.id)
                     .find { track -> track.id == it.trackId }
-                    ?.also { track ->
-                        track.last_chapter_read = it.lastChapterRead
-                    }
+                    ?.copy(lastChapterRead = it.lastChapterRead.toDouble())
             }
 
             tracks.forEach { track ->
                 try {
-                    val service = trackManager.getService(track.sync_id)
+                    val service = trackManager.getService(track.syncId)
                     if (service != null && service.isLogged) {
-                        service.update(track, true)
-                        db.insertTrack(track).executeAsBlocking()
+                        service.update(track.toDbTrack(), true)
+                        insertTrack.await(track)
                     }
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e)

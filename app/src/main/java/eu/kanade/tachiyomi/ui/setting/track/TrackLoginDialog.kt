@@ -19,7 +19,7 @@ class TrackLoginDialog(
     bundle: Bundle? = null,
 ) : LoginDialogPreference(usernameLabelRes, bundle) {
 
-    private val service = Injekt.get<TrackManager>().getService(args.getInt("serviceId"))!!
+    private val service = Injekt.get<TrackManager>().getService(args.getLong("serviceId"))!!
 
     constructor(service: TrackService) : this(service, null)
 

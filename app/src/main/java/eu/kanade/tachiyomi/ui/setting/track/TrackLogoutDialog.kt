@@ -14,7 +14,7 @@ import uy.kohesive.injekt.api.get
 
 class TrackLogoutDialog(bundle: Bundle? = null) : DialogController(bundle) {
 
-    private val service = Injekt.get<TrackManager>().getService(args.getInt("serviceId"))!!
+    private val service = Injekt.get<TrackManager>().getService(args.getLong("serviceId"))!!
 
     constructor(service: TrackService) : this(bundleOf("serviceId" to service.id))
 

@@ -12,7 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class Bangumi(private val context: Context, id: Int) : TrackService(id) {
+class Bangumi(private val context: Context, id: Long) : TrackService(id) {
 
     private val json: Json by injectLazy()
 

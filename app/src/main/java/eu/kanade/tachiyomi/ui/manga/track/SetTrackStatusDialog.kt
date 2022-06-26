@@ -30,7 +30,7 @@ class SetTrackStatusDialog<T> : DialogController
     @Suppress("unused")
     constructor(bundle: Bundle) : super(bundle) {
         val track = bundle.getSerializable(KEY_ITEM_TRACK) as Track
-        val service = Injekt.get<TrackManager>().getService(track.sync_id)!!
+        val service = Injekt.get<TrackManager>().getService(track.sync_id.toLong())!!
         item = TrackItem(track, service)
     }
 

@@ -1,10 +1,11 @@
 package eu.kanade.tachiyomi.ui.browse.migration
 
+import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.hasCustomCover
+import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -17,7 +18,7 @@ object MigrationFlags {
     private const val CUSTOM_COVER = 0b1000
 
     private val coverCache: CoverCache by injectLazy()
-    private val db: DatabaseHelper = Injekt.get()
+    private val getTracks: GetTracks = Injekt.get()
 
     val flags get() = arrayOf(CHAPTERS, CATEGORIES, TRACK, CUSTOM_COVER)
 
@@ -48,14 +49,12 @@ object MigrationFlags {
     fun titles(manga: Manga?): Array<Int> {
         val titles = arrayOf(R.string.chapters, R.string.categories).toMutableList()
         if (manga != null) {
-            db.inTransaction {
-                if (db.getTracks(manga.id).executeAsBlocking().isNotEmpty()) {
-                    titles.add(R.string.track)
-                }
+            if (runBlocking { getTracks.await(manga.id!!) }.isNotEmpty()) {
+                titles.add(R.string.track)
+            }
 
-                if (manga.hasCustomCover(coverCache)) {
-                    titles.add(R.string.custom_cover)
-                }
+            if (manga.hasCustomCover(coverCache)) {
+                titles.add(R.string.custom_cover)
             }
         }
         return titles.toTypedArray()

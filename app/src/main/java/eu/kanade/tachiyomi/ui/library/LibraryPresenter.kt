@@ -123,7 +123,7 @@ class LibraryPresenter(
         val filterCompleted = preferences.filterCompleted().get()
         val loggedInServices = trackManager.services.filter { trackService -> trackService.isLogged }
             .associate { trackService ->
-                Pair(trackService.id, preferences.filterTracking(trackService.id).get())
+                Pair(trackService.id, preferences.filterTracking(trackService.id.toInt()).get())
             }
         val isNotAnyLoggedIn = !loggedInServices.values.any()
 
@@ -173,8 +173,8 @@ class LibraryPresenter(
 
             if (!containsExclude.any() && !containsInclude.any()) return@tracking true
 
-            val exclude = trackedManga?.filterKeys { containsExclude.containsKey(it) }?.values ?: emptyList()
-            val include = trackedManga?.filterKeys { containsInclude.containsKey(it) }?.values ?: emptyList()
+            val exclude = trackedManga?.filterKeys { containsExclude.containsKey(it.toLong()) }?.values ?: emptyList()
+            val include = trackedManga?.filterKeys { containsInclude.containsKey(it.toLong()) }?.values ?: emptyList()
 
             if (containsInclude.any() && containsExclude.any()) {
                 return@tracking if (exclude.isNotEmpty()) !exclude.any() else include.any()
@@ -411,7 +411,7 @@ class LibraryPresenter(
                 .mapValues { tracksForMangaId ->
                     // Check if any of the trackers is logged in for the current manga id
                     tracksForMangaId.value.associate {
-                        Pair(it.sync_id, trackManager.getService(it.sync_id)?.isLogged ?: false)
+                        Pair(it.sync_id, trackManager.getService(it.sync_id.toLong())?.isLogged ?: false)
                     }
                 }
         }.observeOn(Schedulers.io())

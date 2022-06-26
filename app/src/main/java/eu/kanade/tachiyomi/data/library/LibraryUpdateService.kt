@@ -12,6 +12,10 @@ import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetMangaById
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toMangaInfo
+import eu.kanade.domain.track.interactor.GetTracks
+import eu.kanade.domain.track.interactor.InsertTrack
+import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -87,6 +91,8 @@ class LibraryUpdateService(
     private val getMangaById: GetMangaById = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
+    private val getTracks: GetTracks = Injekt.get(),
+    private val insertTrack: InsertTrack = Injekt.get(),
 ) : Service() {
 
     private lateinit var wakeLock: PowerManager.WakeLock
@@ -500,18 +506,18 @@ class LibraryUpdateService(
     }
 
     private suspend fun updateTrackings(manga: LibraryManga, loggedServices: List<TrackService>) {
-        db.getTracks(manga.id).executeAsBlocking()
+        getTracks.await(manga.id!!)
             .map { track ->
                 supervisorScope {
                     async {
-                        val service = trackManager.getService(track.sync_id)
+                        val service = trackManager.getService(track.syncId)
                         if (service != null && service in loggedServices) {
                             try {
-                                val updatedTrack = service.refresh(track)
-                                db.insertTrack(updatedTrack).executeAsBlocking()
+                                val updatedTrack = service.refresh(track.toDbTrack())
+                                insertTrack.await(updatedTrack.toDomainTrack()!!)
 
                                 if (service is EnhancedTrackService) {
-                                    syncChaptersWithTrackServiceTwoWay(db, db.getChapters(manga).executeAsBlocking(), track, service)
+                                    syncChaptersWithTrackServiceTwoWay(db, db.getChapters(manga).executeAsBlocking(), track.toDbTrack(), service)
                                 }
                             } catch (e: Throwable) {
                                 // Ignore errors and continue

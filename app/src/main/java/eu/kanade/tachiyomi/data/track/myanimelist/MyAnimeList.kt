@@ -12,7 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
+class MyAnimeList(private val context: Context, id: Long) : TrackService(id) {
 
     companion object {
         const val READING = 1

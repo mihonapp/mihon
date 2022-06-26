@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import okhttp3.OkHttpClient
 import uy.kohesive.injekt.injectLazy
 
-abstract class TrackService(val id: Int) {
+abstract class TrackService(val id: Long) {
 
     val preferences: PreferencesHelper by injectLazy()
     val networkService: NetworkHelper by injectLazy()
