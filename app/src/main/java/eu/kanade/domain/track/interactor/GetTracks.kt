@@ -3,6 +3,7 @@ package eu.kanade.domain.track.interactor
 import eu.kanade.domain.track.model.Track
 import eu.kanade.domain.track.repository.TrackRepository
 import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
 
 class GetTracks(
@@ -16,5 +17,9 @@ class GetTracks(
             logcat(LogPriority.ERROR, e)
             emptyList()
         }
+    }
+
+    suspend fun subscribe(mangaId: Long): Flow<List<Track>> {
+        return trackRepository.subscribeTracksByMangaId(mangaId)
     }
 }

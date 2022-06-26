@@ -17,6 +17,10 @@ CREATE TABLE manga_sync(
     ON DELETE CASCADE
 );
 
+delete:
+DELETE FROM manga_sync
+WHERE manga_id = :mangaId AND sync_id = :syncId;
+
 getTracksByMangaId:
 SELECT *
 FROM manga_sync

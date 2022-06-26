@@ -15,6 +15,7 @@ import eu.kanade.domain.category.repository.CategoryRepository
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.ShouldUpdateDbChapter
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
+import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
@@ -47,6 +48,7 @@ import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
 import eu.kanade.domain.source.interactor.UpsertSourceData
 import eu.kanade.domain.source.repository.SourceRepository
+import eu.kanade.domain.track.interactor.DeleteTrack
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.repository.TrackRepository
@@ -77,6 +79,7 @@ class DomainModule : InjektModule {
         addFactory { MoveMangaToCategories(get()) }
 
         addSingletonFactory<TrackRepository> { TrackRepositoryImpl(get()) }
+        addFactory { DeleteTrack(get()) }
         addFactory { GetTracks(get()) }
         addFactory { InsertTrack(get()) }
 
@@ -85,6 +88,7 @@ class DomainModule : InjektModule {
         addFactory { UpdateChapter(get()) }
         addFactory { ShouldUpdateDbChapter() }
         addFactory { SyncChaptersWithSource(get(), get(), get(), get()) }
+        addFactory { SyncChaptersWithTrackServiceTwoWay(get(), get()) }
 
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }
         addFactory { DeleteHistoryTable(get()) }

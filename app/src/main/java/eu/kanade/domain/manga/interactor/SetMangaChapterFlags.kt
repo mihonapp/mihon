@@ -4,7 +4,9 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.repository.MangaRepository
 
-class SetMangaChapterFlags(private val mangaRepository: MangaRepository) {
+class SetMangaChapterFlags(
+    private val mangaRepository: MangaRepository,
+) {
 
     suspend fun awaitSetDownloadedFilter(manga: Manga, flag: Long): Boolean {
         return mangaRepository.update(
