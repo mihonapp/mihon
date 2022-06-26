@@ -123,7 +123,6 @@ private fun ScaffoldLayout(
     snackbar: @Composable () -> Unit,
     fab: @Composable () -> Unit,
     bottomBar: @Composable () -> Unit,
-
 ) {
     SubcomposeLayout { constraints ->
         val layoutWidth = constraints.maxWidth
