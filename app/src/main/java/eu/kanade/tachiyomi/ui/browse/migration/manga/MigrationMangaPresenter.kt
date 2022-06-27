@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -29,8 +30,11 @@ class MigrationMangaPresenter(
                 .catch { exception ->
                     _state.value = MigrateMangaState.Error(exception)
                 }
-                .collectLatest { list ->
-                    _state.value = MigrateMangaState.Success(list)
+                .map { list ->
+                    list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
+                }
+                .collectLatest { sortedList ->
+                    _state.value = MigrateMangaState.Success(sortedList)
                 }
         }
     }
