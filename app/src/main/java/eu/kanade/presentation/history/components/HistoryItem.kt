@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -68,15 +69,16 @@ fun HistoryItem(
                 overflow = TextOverflow.Ellipsis,
                 style = textStyle.copy(fontWeight = FontWeight.SemiBold),
             )
+            val readAt = remember { history.readAt?.toTimestampString() ?: "" }
             Text(
                 text = if (history.chapterNumber > -1) {
                     stringResource(
                         R.string.recent_manga_time,
                         chapterFormatter.format(history.chapterNumber),
-                        history.readAt?.toTimestampString() ?: "",
+                        readAt,
                     )
                 } else {
-                    history.readAt?.toTimestampString() ?: ""
+                    readAt
                 },
                 modifier = Modifier.padding(top = 4.dp),
                 style = textStyle,
