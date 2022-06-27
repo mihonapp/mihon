@@ -519,7 +519,7 @@ class MangaPresenter(
 
     fun markPreviousChapterRead(pointer: DomainChapter) {
         val successState = successState ?: return
-        val chapters = successState.chapters.map { it.chapter }
+        val chapters = processedChapters.orEmpty().map { it.chapter }.toList()
         val prevChapters = if (successState.manga.sortDescending()) chapters.asReversed() else chapters
         val pointerPos = prevChapters.indexOf(pointer)
         if (pointerPos != -1) markChaptersRead(prevChapters.take(pointerPos), true)
