@@ -1,6 +1,5 @@
-package eu.kanade.tachiyomi.data.database
+package eu.kanade.tachiyomi.util.chapter
 
-import eu.kanade.tachiyomi.util.chapter.ChapterRecognition.parseChapterNumber
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
@@ -255,7 +254,7 @@ class ChapterRecognitionTest {
     }
 
     private fun assertChapter(mangaTitle: String, name: String, expected: Float) {
-        val chapterNumber = parseChapterNumber(mangaTitle, name)
+        val chapterNumber = ChapterRecognition.parseChapterNumber(mangaTitle, name)
         assertEquals(chapterNumber, expected)
     }
 }
