@@ -176,7 +176,7 @@ class SearchPresenter(
                     .firstOrNull { it.isTrackFrom(updatedTrack, prevDomainManga, prevSource) }
 
                 if (service != null) service.migrateTrack(updatedTrack, domainManga, source)
-                else track
+                else updatedTrack
             }
             insertTrack.awaitAll(tracks)
         }
