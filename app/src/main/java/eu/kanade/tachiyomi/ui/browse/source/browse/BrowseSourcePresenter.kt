@@ -3,6 +3,8 @@ package eu.kanade.tachiyomi.ui.browse.source.browse
 import android.os.Bundle
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.domain.category.interactor.GetCategories
+import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
+import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.InsertTrack
@@ -38,7 +40,6 @@ import eu.kanade.tachiyomi.ui.browse.source.filter.TextSectionItem
 import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateItem
 import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateSectionItem
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
-import eu.kanade.tachiyomi.util.chapter.syncChaptersWithTrackServiceTwoWay
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.removeCovers
@@ -69,7 +70,9 @@ open class BrowseSourcePresenter(
     private val coverCache: CoverCache = Injekt.get(),
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
+    private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
+    private val syncChaptersWithTrackServiceTwoWay: SyncChaptersWithTrackServiceTwoWay = Injekt.get(),
 ) : BasePresenter<BrowseSourceController>() {
 
     /**
@@ -280,24 +283,25 @@ open class BrowseSourcePresenter(
     }
 
     private fun autoAddTrack(manga: Manga) {
-        loggedServices
-            .filterIsInstance<EnhancedTrackService>()
-            .filter { it.accept(source) }
-            .forEach { service ->
-                launchIO {
+        launchIO {
+            loggedServices
+                .filterIsInstance<EnhancedTrackService>()
+                .filter { it.accept(source) }
+                .forEach { service ->
                     try {
                         service.match(manga)?.let { track ->
                             track.manga_id = manga.id!!
                             (service as TrackService).bind(track)
                             insertTrack.await(track.toDomainTrack()!!)
 
-                            syncChaptersWithTrackServiceTwoWay(db, db.getChapters(manga).executeAsBlocking(), track, service as TrackService)
+                            val chapters = getChapterByMangaId.await(manga.id!!)
+                            syncChaptersWithTrackServiceTwoWay.await(chapters, track.toDomainTrack()!!, service)
                         }
                     } catch (e: Exception) {
                         logcat(LogPriority.WARN, e) { "Could not match manga: ${manga.title} with service $service" }
                     }
                 }
-            }
+        }
     }
 
     /**

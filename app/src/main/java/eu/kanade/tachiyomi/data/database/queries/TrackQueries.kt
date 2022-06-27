@@ -15,6 +15,4 @@ interface TrackQueries : DbProvider {
                 .build(),
         )
         .prepare()
-
-    fun insertTrack(track: Track) = db.put().`object`(track).prepare()
 }

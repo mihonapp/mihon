@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.database.queries
 
-import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects
 import com.pushtorefresh.storio.sqlite.queries.Query
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
 import eu.kanade.tachiyomi.data.database.DbProvider
@@ -26,21 +25,16 @@ interface MangaQueries : DbProvider {
         .withGetResolver(LibraryMangaGetResolver.INSTANCE)
         .prepare()
 
-    fun getFavoriteMangas(sortByTitle: Boolean = true): PreparedGetListOfObjects<Manga> {
-        var queryBuilder = Query.builder()
-            .table(MangaTable.TABLE)
-            .where("${MangaTable.COL_FAVORITE} = ?")
-            .whereArgs(1)
-
-        if (sortByTitle) {
-            queryBuilder = queryBuilder.orderBy(MangaTable.COL_TITLE)
-        }
-
-        return db.get()
-            .listOfObjects(Manga::class.java)
-            .withQuery(queryBuilder.build())
-            .prepare()
-    }
+    fun getFavoriteMangas() = db.get()
+        .listOfObjects(Manga::class.java)
+        .withQuery(
+            Query.builder()
+                .table(MangaTable.TABLE)
+                .where("${MangaTable.COL_FAVORITE} = ?")
+                .whereArgs(1)
+                .build(),
+        )
+        .prepare()
 
     fun getManga(url: String, sourceId: Long) = db.get()
         .`object`(Manga::class.java)

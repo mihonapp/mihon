@@ -52,7 +52,7 @@ object ChapterSettingsHelper {
      */
     fun updateAllMangasWithGlobalDefaults() {
         launchIO {
-            val updatedMangas = db.getFavoriteMangas(sortByTitle = false)
+            val updatedMangas = db.getFavoriteMangas()
                 .executeAsBlocking()
                 .map { manga ->
                     with(manga) {

@@ -54,6 +54,7 @@ class NetworkHelper(context: Context) {
 
     val client by lazy { baseClientBuilder.cache(Cache(cacheDir, cacheSize)).build() }
 
+    @Suppress("UNUSED")
     val cloudflareClient by lazy {
         client.newBuilder()
             .addInterceptor(CloudflareInterceptor(context))

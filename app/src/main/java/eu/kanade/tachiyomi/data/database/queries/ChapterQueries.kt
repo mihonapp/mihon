@@ -58,10 +58,6 @@ interface ChapterQueries : DbProvider {
         )
         .prepare()
 
-    fun insertChapters(chapters: List<Chapter>) = db.put().objects(chapters).prepare()
-
-    fun deleteChapters(chapters: List<Chapter>) = db.delete().objects(chapters).prepare()
-
     fun updateChapterProgress(chapter: Chapter) = db.put()
         .`object`(chapter)
         .withPutResolver(ChapterProgressPutResolver())
