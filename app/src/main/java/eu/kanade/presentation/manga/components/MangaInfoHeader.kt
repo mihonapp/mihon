@@ -82,6 +82,8 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlin.math.roundToInt
 
+private val whitespaceLineRegex = Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE))
+
 @Composable
 fun MangaInfoHeader(
     modifier: Modifier = Modifier,
@@ -205,25 +207,25 @@ fun MangaInfoHeader(
             val (expanded, onExpanded) = rememberSaveable {
                 mutableStateOf(fromSource || windowWidthSizeClass != WindowWidthSizeClass.Compact)
             }
-            if (!description.isNullOrBlank()) {
-                val trimmedDescription = remember(description) {
-                    description
-                        .replace(Regex(" +\$", setOf(RegexOption.MULTILINE)), "")
-                        .replace(Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE)), "\n")
-                }
-                MangaSummary(
-                    expandedDescription = description,
-                    shrunkDescription = trimmedDescription,
-                    expanded = expanded,
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .padding(horizontal = 16.dp)
-                        .clickableNoIndication(
-                            onLongClick = { context.copyToClipboard(description, description) },
-                            onClick = { onExpanded(!expanded) },
-                        ),
-                )
+            val desc =
+                description.takeIf { !it.isNullOrBlank() } ?: stringResource(id = R.string.description_placeholder)
+            val trimmedDescription = remember(desc) {
+                desc
+                    .replace(whitespaceLineRegex, "\n")
+                    .trimEnd()
             }
+            MangaSummary(
+                expandedDescription = desc,
+                shrunkDescription = trimmedDescription,
+                expanded = expanded,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(horizontal = 16.dp)
+                    .clickableNoIndication(
+                        onLongClick = { context.copyToClipboard(desc, desc) },
+                        onClick = { onExpanded(!expanded) },
+                    ),
+            )
             val tags = tagsProvider()
             if (!tags.isNullOrEmpty()) {
                 Box(
