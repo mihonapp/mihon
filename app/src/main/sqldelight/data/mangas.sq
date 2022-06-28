@@ -63,7 +63,8 @@ SELECT *
 FROM mangas
 WHERE favorite = 1
 AND LOWER(title) = :title
-AND source != :source;
+AND source != :source
+LIMIT 1;
 
 resetViewerFlags:
 UPDATE mangas
