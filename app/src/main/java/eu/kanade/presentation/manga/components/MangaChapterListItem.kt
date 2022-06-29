@@ -59,16 +59,14 @@ fun MangaChapterListItem(
             )
             .padding(start = 16.dp, top = 12.dp, end = 8.dp, bottom = 12.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .alpha(if (read) ReadItemAlpha else 1f),
-        ) {
-            val textColor = if (bookmark) {
+        Column(modifier = Modifier.weight(1f)) {
+            val textColor = if (bookmark && !read) {
                 MaterialTheme.colorScheme.primary
             } else {
                 MaterialTheme.colorScheme.onSurface
             }
+            val textAlpha = remember(read) { if (read) ReadItemAlpha else 1f }
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 var textHeight by remember { mutableStateOf(0) }
                 if (bookmark) {
@@ -77,7 +75,7 @@ fun MangaChapterListItem(
                         contentDescription = stringResource(R.string.action_filter_bookmarked),
                         modifier = Modifier
                             .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp }),
-                        tint = textColor,
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                 }
@@ -88,10 +86,11 @@ fun MangaChapterListItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     onTextLayout = { textHeight = it.size.height },
+                    modifier = Modifier.alpha(textAlpha),
                 )
             }
             Spacer(modifier = Modifier.height(6.dp))
-            Row {
+            Row(modifier = Modifier.alpha(textAlpha)) {
                 ProvideTextStyle(
                     value = MaterialTheme.typography.bodyMedium
                         .copy(color = textColor, fontSize = 12.sp),
