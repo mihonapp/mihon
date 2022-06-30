@@ -116,7 +116,8 @@ private suspend fun CoroutineDispatcher.acquireTransactionThread(
             // Couldn't acquire a thread, cancel coroutine.
             continuation.cancel(
                 IllegalStateException(
-                    "Unable to acquire a thread to perform the database transaction.", ex,
+                    "Unable to acquire a thread to perform the database transaction.",
+                    ex,
                 ),
             )
         }

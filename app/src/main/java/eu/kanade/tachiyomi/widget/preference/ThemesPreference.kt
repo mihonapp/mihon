@@ -37,12 +37,13 @@ class ThemesPreference @JvmOverloads constructor(context: Context, attrs: Attrib
         recycler?.adapter = adapter
 
         // Retain scroll position on activity recreate after changing theme
-        recycler?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                lastScrollPosition = recyclerView.computeHorizontalScrollOffset()
-            }
-        },
+        recycler?.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    lastScrollPosition = recyclerView.computeHorizontalScrollOffset()
+                }
+            },
         )
         lastScrollPosition?.let { scrollToOffset(it) }
     }

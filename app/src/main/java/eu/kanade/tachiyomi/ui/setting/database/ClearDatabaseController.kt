@@ -64,7 +64,7 @@ class ClearDatabaseController :
 
         adapter = FlexibleAdapter<ClearDatabaseSourceItem>(null, this, true)
         binding.recycler.adapter = adapter
-        binding.recycler.layoutManager = LinearLayoutManager(activity)
+        binding.recycler.layoutManager = LinearLayoutManager(view.context)
         binding.recycler.setHasFixedSize(true)
         adapter?.fastScroller = binding.fastScroller
         recycler = binding.recycler

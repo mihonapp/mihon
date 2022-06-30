@@ -62,7 +62,7 @@ val backupTrackMapper = {
         score: Float,
         remoteUrl: String,
         startDate: Long,
-        finishDate: Long, ->
+        finishDate: Long,  ->
     BackupTracking(
         syncId = syncId.toInt(),
         mediaId = mediaId,

@@ -88,7 +88,8 @@ private fun Modifier.drawScrollbar(
     reverseScrolling: Boolean,
     positionOffset: Float,
 ): Modifier = drawScrollbar(
-    orientation, reverseScrolling,
+    orientation,
+    reverseScrolling,
 ) { reverseDirection, atEnd, thickness, color, alpha ->
     val layoutInfo = state.layoutInfo
     val viewportSize = if (orientation == Orientation.Horizontal) {

@@ -49,7 +49,7 @@ val backupChapterMapper = {
         chapterNumber: Float,
         source_order: Long,
         dateFetch: Long,
-        dateUpload: Long, ->
+        dateUpload: Long,  ->
     BackupChapter(
         url = url,
         name = name,

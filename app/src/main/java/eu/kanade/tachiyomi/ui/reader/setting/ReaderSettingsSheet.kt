@@ -34,27 +34,28 @@ class ReaderSettingsSheet(
         behavior.halfExpandedRatio = 0.25f
 
         val filterTabIndex = getTabViews().indexOf(colorFilterSettings)
-        binding.tabs.addOnTabSelectedListener(object : SimpleTabSelectedListener() {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                val isFilterTab = tab?.position == filterTabIndex
+        binding.tabs.addOnTabSelectedListener(
+            object : SimpleTabSelectedListener() {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    val isFilterTab = tab?.position == filterTabIndex
 
-                // Remove dimmed backdrop so color filter changes can be previewed
-                backgroundDimAnimator.run {
-                    if (isFilterTab) {
-                        if (animatedFraction < 1f) {
-                            start()
+                    // Remove dimmed backdrop so color filter changes can be previewed
+                    backgroundDimAnimator.run {
+                        if (isFilterTab) {
+                            if (animatedFraction < 1f) {
+                                start()
+                            }
+                        } else if (animatedFraction > 0f) {
+                            reverse()
                         }
-                    } else if (animatedFraction > 0f) {
-                        reverse()
+                    }
+
+                    // Hide toolbars
+                    if (activity.menuVisible != !isFilterTab) {
+                        activity.setMenuVisibility(!isFilterTab)
                     }
                 }
-
-                // Hide toolbars
-                if (activity.menuVisible != !isFilterTab) {
-                    activity.setMenuVisibility(!isFilterTab)
-                }
-            }
-        },
+            },
         )
 
         if (showColorFilterSettings) {

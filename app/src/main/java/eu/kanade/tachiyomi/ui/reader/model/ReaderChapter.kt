@@ -10,9 +10,9 @@ data class ReaderChapter(val chapter: Chapter) {
     var state: State =
         State.Wait
         set(value) {
-                field = value
-                stateRelay.call(value)
-            }
+            field = value
+            stateRelay.call(value)
+        }
 
     private val stateRelay by lazy { BehaviorRelay.create(state) }
 
