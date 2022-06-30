@@ -1,7 +1,7 @@
 [versions]
 compiler = "1.2.0"
-compose = "1.3.0-alpha01"
-accompanist = "0.24.12-rc"
+compose = "1.2.0-rc03"
+accompanist = "0.24.13-rc"
 material3 = "1.0.0-alpha14"
 
 [libraries]
