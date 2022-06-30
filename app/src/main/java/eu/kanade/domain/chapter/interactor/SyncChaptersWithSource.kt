@@ -96,7 +96,7 @@ class SyncChaptersWithSource(
                 toAdd.add(toAddChapter)
             } else {
                 if (shouldUpdateDbChapter.await(dbChapter, chapter)) {
-                    if (dbChapter.name != chapter.name && downloadManager.isChapterDownloaded(dbChapter.toDbChapter(), manga.toDbManga())) {
+                    if (dbChapter.name != chapter.name && downloadManager.isChapterDownloaded(dbChapter.name, dbChapter.scanlator, manga.title, manga.source)) {
                         downloadManager.renameChapter(source, manga.toDbManga(), dbChapter.toDbChapter(), chapter.toDbChapter())
                     }
                     var toChangeChapter = dbChapter.copy(

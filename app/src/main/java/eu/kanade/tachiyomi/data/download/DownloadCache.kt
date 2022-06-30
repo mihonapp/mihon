@@ -65,23 +65,31 @@ class DownloadCache(
     /**
      * Returns true if the chapter is downloaded.
      *
-     * @param chapter the chapter to check.
-     * @param manga the manga of the chapter.
+     * @param chapterName the name of the chapter to query.
+     * @param chapterScanlator scanlator of the chapter to query
+     * @param mangaTitle the title of the manga to query.
+     * @param sourceId the id of the source of the chapter.
      * @param skipCache whether to skip the directory cache and check in the filesystem.
      */
-    fun isChapterDownloaded(chapter: Chapter, manga: Manga, skipCache: Boolean): Boolean {
+    fun isChapterDownloaded(
+        chapterName: String,
+        chapterScanlator: String?,
+        mangaTitle: String,
+        sourceId: Long,
+        skipCache: Boolean,
+    ): Boolean {
         if (skipCache) {
-            val source = sourceManager.getOrStub(manga.source)
-            return provider.findChapterDir(chapter, manga, source) != null
+            val source = sourceManager.getOrStub(sourceId)
+            return provider.findChapterDir(chapterName, chapterScanlator, mangaTitle, source) != null
         }
 
         checkRenew()
 
-        val sourceDir = rootDir.files[manga.source]
+        val sourceDir = rootDir.files[sourceId]
         if (sourceDir != null) {
-            val mangaDir = sourceDir.files[provider.getMangaDirName(manga)]
+            val mangaDir = sourceDir.files[provider.getMangaDirName(mangaTitle)]
             if (mangaDir != null) {
-                return provider.getValidChapterDirNames(chapter).any { it in mangaDir.files }
+                return provider.getValidChapterDirNames(chapterName, chapterScanlator).any { it in mangaDir.files }
             }
         }
         return false
@@ -97,7 +105,7 @@ class DownloadCache(
 
         val sourceDir = rootDir.files[manga.source]
         if (sourceDir != null) {
-            val mangaDir = sourceDir.files[provider.getMangaDirName(manga)]
+            val mangaDir = sourceDir.files[provider.getMangaDirName(manga.title)]
             if (mangaDir != null) {
                 return mangaDir.files
                     .filter { !it.endsWith(Downloader.TMP_DIR_SUFFIX) }
@@ -174,7 +182,7 @@ class DownloadCache(
         }
 
         // Retrieve the cached manga directory or cache a new one
-        val mangaDirName = provider.getMangaDirName(manga)
+        val mangaDirName = provider.getMangaDirName(manga.title)
         var mangaDir = sourceDir.files[mangaDirName]
         if (mangaDir == null) {
             mangaDir = MangaDirectory(mangaUniFile)
@@ -194,8 +202,8 @@ class DownloadCache(
     @Synchronized
     fun removeChapter(chapter: Chapter, manga: Manga) {
         val sourceDir = rootDir.files[manga.source] ?: return
-        val mangaDir = sourceDir.files[provider.getMangaDirName(manga)] ?: return
-        provider.getValidChapterDirNames(chapter).forEach {
+        val mangaDir = sourceDir.files[provider.getMangaDirName(manga.title)] ?: return
+        provider.getValidChapterDirNames(chapter.name, chapter.scanlator).forEach {
             if (it in mangaDir.files) {
                 mangaDir.files -= it
             }
@@ -211,9 +219,9 @@ class DownloadCache(
     @Synchronized
     fun removeChapters(chapters: List<Chapter>, manga: Manga) {
         val sourceDir = rootDir.files[manga.source] ?: return
-        val mangaDir = sourceDir.files[provider.getMangaDirName(manga)] ?: return
+        val mangaDir = sourceDir.files[provider.getMangaDirName(manga.title)] ?: return
         chapters.forEach { chapter ->
-            provider.getValidChapterDirNames(chapter).forEach {
+            provider.getValidChapterDirNames(chapter.name, chapter.scanlator).forEach {
                 if (it in mangaDir.files) {
                     mangaDir.files -= it
                 }
@@ -229,7 +237,7 @@ class DownloadCache(
     @Synchronized
     fun removeManga(manga: Manga) {
         val sourceDir = rootDir.files[manga.source] ?: return
-        val mangaDirName = provider.getMangaDirName(manga)
+        val mangaDirName = provider.getMangaDirName(manga.title)
         if (mangaDirName in sourceDir.files) {
             sourceDir.files -= mangaDirName
         }

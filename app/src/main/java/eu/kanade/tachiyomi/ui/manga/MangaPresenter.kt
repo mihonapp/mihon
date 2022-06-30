@@ -435,7 +435,7 @@ class MangaPresenter(
     private fun List<DomainChapter>.toChapterItems(manga: DomainManga): List<ChapterItem> {
         return map { chapter ->
             val activeDownload = downloadManager.queue.find { chapter.id == it.chapter.id }
-            val downloaded = downloadManager.isChapterDownloaded(chapter.toDbChapter(), manga.toDbManga())
+            val downloaded = downloadManager.isChapterDownloaded(chapter.name, chapter.scanlator, manga.title, manga.source)
             val downloadState = when {
                 activeDownload != null -> activeDownload.status
                 downloaded -> Download.State.DOWNLOADED

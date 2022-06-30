@@ -30,7 +30,8 @@ class DownloadPageLoader(
      * Returns an observable containing the pages found on this downloaded chapter.
      */
     override fun getPages(): Observable<List<ReaderPage>> {
-        val chapterPath = downloadManager.provider.findChapterDir(chapter.chapter, manga, source)
+        val dbChapter = chapter.chapter
+        val chapterPath = downloadManager.provider.findChapterDir(dbChapter.name, dbChapter.scanlator, manga.title, source)
         return if (chapterPath?.isFile == true) {
             getPagesFromArchive(chapterPath)
         } else {

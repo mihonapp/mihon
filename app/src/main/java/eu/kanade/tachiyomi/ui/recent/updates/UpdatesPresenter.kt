@@ -121,7 +121,7 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
             val manga = item.manga
             val chapter = item.chapter
 
-            if (downloadManager.isChapterDownloaded(chapter, manga)) {
+            if (downloadManager.isChapterDownloaded(chapter.name, chapter.scanlator, manga.title, manga.source)) {
                 item.status = Download.State.DOWNLOADED
             }
         }
