@@ -9,7 +9,6 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.updatePadding
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
@@ -56,7 +55,7 @@ class PagerTransitionHolder(
         orientation = VERTICAL
         gravity = Gravity.CENTER
         val sidePadding = 64.dpToPx
-        updatePadding(left = sidePadding, right = sidePadding)
+        setPadding(sidePadding, 0, sidePadding, 0)
 
         val transitionView = ReaderTransitionView(context)
         addView(transitionView)

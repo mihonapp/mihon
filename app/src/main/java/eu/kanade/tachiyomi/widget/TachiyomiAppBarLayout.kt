@@ -12,7 +12,6 @@ import android.util.AttributeSet
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.annotation.FloatRange
-import androidx.core.graphics.drawable.updateBounds
 import androidx.core.graphics.withTranslation
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -93,7 +92,7 @@ class TachiyomiAppBarLayout @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
-        statusBarForeground?.updateBounds(right = width, bottom = paddingTop)
+        statusBarForeground?.setBounds(0, 0, width, paddingTop)
     }
 
     override fun onOffsetChanged(offset: Int) {
