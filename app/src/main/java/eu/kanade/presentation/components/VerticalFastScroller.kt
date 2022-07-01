@@ -47,6 +47,7 @@ import kotlin.math.roundToInt
 fun VerticalFastScroller(
     listState: LazyListState,
     modifier: Modifier = Modifier,
+    thumbAllowed: () -> Boolean = { true },
     thumbColor: Color = MaterialTheme.colorScheme.primary,
     topContentPadding: Dp = Dp.Hairline,
     endContentPadding: Dp = Dp.Hairline,
@@ -106,8 +107,12 @@ fun VerticalFastScroller(
             val isThumbVisible = alpha.value > 0f
             LaunchedEffect(scrolled, alpha) {
                 scrolled.collectLatest {
-                    alpha.snapTo(1f)
-                    alpha.animateTo(0f, animationSpec = FadeOutAnimationSpec)
+                    if (thumbAllowed()) {
+                        alpha.snapTo(1f)
+                        alpha.animateTo(0f, animationSpec = FadeOutAnimationSpec)
+                    } else {
+                        alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
+                    }
                 }
             }
 
@@ -186,6 +191,9 @@ private val ThumbShape = RoundedCornerShape(ThumbThickness / 2)
 private val FadeOutAnimationSpec = tween<Float>(
     durationMillis = ViewConfiguration.getScrollBarFadeDuration(),
     delayMillis = 2000,
+)
+private val ImmediateFadeOutAnimationSpec = tween<Float>(
+    durationMillis = ViewConfiguration.getScrollBarFadeDuration(),
 )
 
 private val LazyListItemInfo.top: Int

@@ -353,6 +353,7 @@ private fun MangaScreenSmallImpl(
                 WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
             VerticalFastScroller(
                 listState = chapterListState,
+                thumbAllowed = { scrollBehavior.state.offset == scrollBehavior.state.offsetLimit },
                 topContentPadding = withNavBarContentPadding.calculateTopPadding(),
                 endContentPadding = withNavBarContentPadding.calculateEndPadding(LocalLayoutDirection.current),
             ) {
