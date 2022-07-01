@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dev.chrisbanes.insetter.applyInsetter
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
-import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -30,8 +29,10 @@ import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.onAnimationsFinished
 import eu.kanade.tachiyomi.widget.ActionModeWithToolbar
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import reactivecircus.flowbinding.recyclerview.scrollStateChanges
 import reactivecircus.flowbinding.swiperefreshlayout.refreshes
@@ -107,6 +108,24 @@ class UpdatesController :
                 binding.swipeRefresh.isRefreshing = false
             }
             .launchIn(viewScope)
+
+        viewScope.launch {
+            presenter.updates.collectLatest { updatesItems ->
+                destroyActionModeIfNeeded()
+                if (adapter == null) {
+                    adapter = UpdatesAdapter(this@UpdatesController, binding.recycler.context, updatesItems)
+                    binding.recycler.adapter = adapter
+                    adapter!!.fastScroller = binding.fastScroller
+                } else {
+                    adapter?.updateDataSet(updatesItems)
+                }
+                binding.swipeRefresh.isRefreshing = false
+                binding.fastScroller.isVisible = true
+                binding.recycler.onAnimationsFinished {
+                    (activity as? MainActivity)?.ready = true
+                }
+            }
+        }
     }
 
     override fun onDestroyView(view: View) {
@@ -191,7 +210,7 @@ class UpdatesController :
      */
     private fun openChapter(item: UpdatesItem) {
         val activity = activity ?: return
-        val intent = ReaderActivity.newIntent(activity, item.manga, item.chapter)
+        val intent = ReaderActivity.newIntent(activity, item.manga.id, item.chapter.id)
         startActivity(intent)
     }
 
@@ -202,26 +221,6 @@ class UpdatesController :
     private fun downloadChapters(chapters: List<UpdatesItem>) {
         presenter.downloadChapters(chapters)
         destroyActionModeIfNeeded()
-    }
-
-    /**
-     * Populate adapter with chapters
-     * @param chapters list of [Any]
-     */
-    fun onNextRecentChapters(chapters: List<IFlexible<*>>) {
-        destroyActionModeIfNeeded()
-        if (adapter == null) {
-            adapter = UpdatesAdapter(this@UpdatesController, binding.recycler.context, chapters)
-            binding.recycler.adapter = adapter
-            adapter!!.fastScroller = binding.fastScroller
-        } else {
-            adapter?.updateDataSet(chapters)
-        }
-        binding.swipeRefresh.isRefreshing = false
-        binding.fastScroller.isVisible = true
-        binding.recycler.onAnimationsFinished {
-            (activity as? MainActivity)?.ready = true
-        }
     }
 
     override fun onUpdateEmptyView(size: Int) {
@@ -317,8 +316,8 @@ class UpdatesController :
     }
 
     override fun startDownloadNow(position: Int) {
-        val chapter = adapter?.getItem(position) as? UpdatesItem ?: return
-        presenter.startDownloadingNow(chapter)
+        val item = adapter?.getItem(position) as? UpdatesItem ?: return
+        presenter.startDownloadingNow(item.chapter)
     }
 
     private fun bookmarkChapters(chapters: List<UpdatesItem>, bookmarked: Boolean) {
@@ -357,8 +356,8 @@ class UpdatesController :
         if (chapters.isEmpty()) return
         toolbar.findToolbarItem(R.id.action_download)?.isVisible = chapters.any { !it.isDownloaded }
         toolbar.findToolbarItem(R.id.action_delete)?.isVisible = chapters.any { it.isDownloaded }
-        toolbar.findToolbarItem(R.id.action_bookmark)?.isVisible = chapters.any { !it.bookmark }
-        toolbar.findToolbarItem(R.id.action_remove_bookmark)?.isVisible = chapters.all { it.bookmark }
+        toolbar.findToolbarItem(R.id.action_bookmark)?.isVisible = chapters.any { !it.chapter.bookmark }
+        toolbar.findToolbarItem(R.id.action_remove_bookmark)?.isVisible = chapters.all { it.chapter.bookmark }
         toolbar.findToolbarItem(R.id.action_mark_as_read)?.isVisible = chapters.any { !it.chapter.read }
         toolbar.findToolbarItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
     }
