@@ -18,7 +18,6 @@ import eu.kanade.tachiyomi.data.database.queries.CategoryQueries
 import eu.kanade.tachiyomi.data.database.queries.ChapterQueries
 import eu.kanade.tachiyomi.data.database.queries.MangaCategoryQueries
 import eu.kanade.tachiyomi.data.database.queries.MangaQueries
-import eu.kanade.tachiyomi.data.database.queries.TrackQueries
 
 /**
  * This class provides operations to manage the database through its interfaces.
@@ -26,7 +25,7 @@ import eu.kanade.tachiyomi.data.database.queries.TrackQueries
 class DatabaseHelper(
     openHelper: SupportSQLiteOpenHelper,
 ) :
-    MangaQueries, ChapterQueries, TrackQueries, CategoryQueries, MangaCategoryQueries {
+    MangaQueries, ChapterQueries, CategoryQueries, MangaCategoryQueries {
 
     override val db = DefaultStorIOSQLite.builder()
         .sqliteOpenHelper(openHelper)

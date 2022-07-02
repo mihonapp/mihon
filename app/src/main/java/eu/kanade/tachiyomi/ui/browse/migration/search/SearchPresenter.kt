@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.browse.migration.search
 import android.os.Bundle
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.domain.category.interactor.GetCategories
-import eu.kanade.domain.category.interactor.MoveMangaToCategories
+import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.UpdateChapter
@@ -48,7 +48,7 @@ class SearchPresenter(
     private val getCategories: GetCategories = Injekt.get(),
     private val getTracks: GetTracks = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
-    private val moveMangaToCategories: MoveMangaToCategories = Injekt.get(),
+    private val setMangaCategories: SetMangaCategories = Injekt.get(),
 ) : GlobalSearchPresenter(initialQuery) {
 
     private val replacingMangaRelay = BehaviorRelay.create<Pair<Boolean, Manga?>>()
@@ -164,7 +164,7 @@ class SearchPresenter(
         // Update categories
         if (migrateCategories) {
             val categoryIds = getCategories.await(prevDomainManga.id).map { it.id }
-            moveMangaToCategories.await(domainManga.id, categoryIds)
+            setMangaCategories.await(domainManga.id, categoryIds)
         }
 
         // Update track

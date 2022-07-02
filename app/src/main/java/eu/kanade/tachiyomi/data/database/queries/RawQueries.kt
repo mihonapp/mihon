@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.database.queries
 
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable as Category
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable as Chapter
-import eu.kanade.tachiyomi.data.database.tables.HistoryTable as History
 import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable as MangaCategory
 import eu.kanade.tachiyomi.data.database.tables.MangaTable as Manga
 
@@ -36,39 +35,6 @@ val libraryQuery =
     LEFT JOIN (
         SELECT * FROM ${MangaCategory.TABLE}) AS MC
         ON MC.${MangaCategory.COL_MANGA_ID} = M.${Manga.COL_ID}
-"""
-
-fun getLastReadMangaQuery() =
-    """
-    SELECT ${Manga.TABLE}.*, MAX(${History.TABLE}.${History.COL_LAST_READ}) AS max
-    FROM ${Manga.TABLE}
-    JOIN ${Chapter.TABLE}
-    ON ${Manga.TABLE}.${Manga.COL_ID} = ${Chapter.TABLE}.${Chapter.COL_MANGA_ID}
-    JOIN ${History.TABLE}
-    ON ${Chapter.TABLE}.${Chapter.COL_ID} = ${History.TABLE}.${History.COL_CHAPTER_ID}
-    WHERE ${Manga.TABLE}.${Manga.COL_FAVORITE} = 1
-    GROUP BY ${Manga.TABLE}.${Manga.COL_ID}
-    ORDER BY max DESC
-"""
-
-fun getLatestChapterMangaQuery() =
-    """
-    SELECT ${Manga.TABLE}.*, MAX(${Chapter.TABLE}.${Chapter.COL_DATE_UPLOAD}) AS max
-    FROM ${Manga.TABLE}
-    JOIN ${Chapter.TABLE}
-    ON ${Manga.TABLE}.${Manga.COL_ID} = ${Chapter.TABLE}.${Chapter.COL_MANGA_ID}
-    GROUP BY ${Manga.TABLE}.${Manga.COL_ID}
-    ORDER by max DESC
-"""
-
-fun getChapterFetchDateMangaQuery() =
-    """
-    SELECT ${Manga.TABLE}.*, MAX(${Chapter.TABLE}.${Chapter.COL_DATE_FETCH}) AS max
-    FROM ${Manga.TABLE}
-    JOIN ${Chapter.TABLE}
-    ON ${Manga.TABLE}.${Manga.COL_ID} = ${Chapter.TABLE}.${Chapter.COL_MANGA_ID}
-    GROUP BY ${Manga.TABLE}.${Manga.COL_ID}
-    ORDER by max DESC
 """
 
 /**

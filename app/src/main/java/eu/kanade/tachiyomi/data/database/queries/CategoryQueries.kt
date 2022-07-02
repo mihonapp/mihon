@@ -28,6 +28,4 @@ interface CategoryQueries : DbProvider {
                 .build(),
         )
         .prepare()
-
-    fun insertCategory(category: Category) = db.put().`object`(category).prepare()
 }

@@ -18,7 +18,9 @@ interface MangaRepository {
 
     suspend fun resetViewerFlags(): Boolean
 
-    suspend fun moveMangaToCategories(mangaId: Long, categoryIds: List<Long>)
+    suspend fun setMangaCategories(mangaId: Long, categoryIds: List<Long>)
 
     suspend fun update(update: MangaUpdate): Boolean
+
+    suspend fun updateAll(values: List<MangaUpdate>): Boolean
 }

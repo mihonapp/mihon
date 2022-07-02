@@ -2,12 +2,23 @@ package eu.kanade.tachiyomi.ui.library
 
 import android.os.Bundle
 import com.jakewharton.rxrelay.BehaviorRelay
+import eu.kanade.core.util.asObservable
+import eu.kanade.data.DatabaseHandler
+import eu.kanade.domain.category.interactor.GetCategories
+import eu.kanade.domain.category.interactor.SetMangaCategories
+import eu.kanade.domain.category.model.toDbCategory
+import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
+import eu.kanade.domain.chapter.interactor.UpdateChapter
+import eu.kanade.domain.chapter.model.ChapterUpdate
+import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.MangaUpdate
+import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Chapter
+import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -23,6 +34,8 @@ import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -47,7 +60,13 @@ private typealias LibraryMap = Map<Int, List<LibraryItem>>
  * Presenter of [LibraryController].
  */
 class LibraryPresenter(
-    private val db: DatabaseHelper = Injekt.get(),
+    private val handler: DatabaseHandler = Injekt.get(),
+    private val getTracks: GetTracks = Injekt.get(),
+    private val getCategories: GetCategories = Injekt.get(),
+    private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
+    private val updateChapter: UpdateChapter = Injekt.get(),
+    private val updateManga: UpdateManga = Injekt.get(),
+    private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val preferences: PreferencesHelper = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
@@ -92,6 +111,7 @@ class LibraryPresenter(
      * Subscribes to library if needed.
      */
     fun subscribeLibrary() {
+        // TODO: Move this to a coroutine world
         if (librarySubscription.isNullOrUnsubscribed()) {
             librarySubscription = getLibraryObservable()
                 .combineLatest(badgeTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
@@ -115,7 +135,7 @@ class LibraryPresenter(
      *
      * @param map the map to filter.
      */
-    private fun applyFilters(map: LibraryMap, trackMap: Map<Long, Map<Int, Boolean>>): LibraryMap {
+    private fun applyFilters(map: LibraryMap, trackMap: Map<Long, Map<Long, Boolean>>): LibraryMap {
         val downloadedOnly = preferences.downloadedOnly().get()
         val filterDownloaded = preferences.filterDownloaded().get()
         val filterUnread = preferences.filterUnread().get()
@@ -252,18 +272,30 @@ class LibraryPresenter(
     private fun applySort(categories: List<Category>, map: LibraryMap): LibraryMap {
         val lastReadManga by lazy {
             var counter = 0
-            // Result comes as newest to oldest so it's reversed
-            db.getLastReadManga().executeAsBlocking().reversed().associate { it.id!! to counter++ }
+            // TODO: Make [applySort] a suspended function
+            runBlocking {
+                handler.awaitList {
+                    mangasQueries.getLastRead()
+                }.associate { it._id to counter++ }
+            }
         }
         val latestChapterManga by lazy {
             var counter = 0
-            // Result comes as newest to oldest so it's reversed
-            db.getLatestChapterManga().executeAsBlocking().reversed().associate { it.id!! to counter++ }
+            // TODO: Make [applySort] a suspended function
+            runBlocking {
+                handler.awaitList {
+                    mangasQueries.getLatestByChapterUploadDate()
+                }.associate { it._id to counter++ }
+            }
         }
         val chapterFetchDateManga by lazy {
             var counter = 0
-            // Result comes as newest to oldest so it's reversed
-            db.getChapterFetchDateManga().executeAsBlocking().reversed().associate { it.id!! to counter++ }
+            // TODO: Make [applySort] a suspended function
+            runBlocking {
+                handler.awaitList {
+                    mangasQueries.getLatestByChapterFetchDate()
+                }.associate { it._id to counter++ }
+            }
         }
 
         val sortingModes = categories.associate { category ->
@@ -366,7 +398,7 @@ class LibraryPresenter(
      * @return an observable of the categories.
      */
     private fun getCategoriesObservable(): Observable<List<Category>> {
-        return db.getCategories().asRxObservable()
+        return getCategories.subscribe().map { it.map { it.toDbCategory() } }.asObservable()
     }
 
     /**
@@ -378,7 +410,36 @@ class LibraryPresenter(
     private fun getLibraryMangasObservable(): Observable<LibraryMap> {
         val defaultLibraryDisplayMode = preferences.libraryDisplayMode()
         val shouldSetFromCategory = preferences.categorizedDisplaySettings()
-        return db.getLibraryMangas().asRxObservable()
+
+        // TODO: Move this to domain/data layer
+        return handler
+            .subscribeToList {
+                mangasQueries.getLibrary { _id: Long, source: Long, url: String, artist: String?, author: String?, description: String?, genre: List<String>?, title: String, status: Long, thumbnail_url: String?, favorite: Boolean, last_update: Long?, next_update: Long?, initialized: Boolean, viewer: Long, chapter_flags: Long, cover_last_modified: Long, date_added: Long, unread_count: Long, read_count: Long, category: Long ->
+                    LibraryManga().apply {
+                        this.id = _id
+                        this.source = source
+                        this.url = url
+                        this.artist = artist
+                        this.author = author
+                        this.description = description
+                        this.genre = genre?.joinToString()
+                        this.title = title
+                        this.status = status.toInt()
+                        this.thumbnail_url = thumbnail_url
+                        this.favorite = favorite
+                        this.last_update = last_update ?: 0
+                        this.initialized = initialized
+                        this.viewer_flags = viewer.toInt()
+                        this.chapter_flags = chapter_flags.toInt()
+                        this.cover_last_modified = cover_last_modified
+                        this.date_added = date_added
+                        this.unreadCount = unread_count.toInt()
+                        this.readCount = read_count.toInt()
+                        this.category = category.toInt()
+                    }
+                }
+            }
+            .asObservable()
             .map { list ->
                 list.map { libraryManga ->
                     // Display mode based on user preference: take it from global library setting or category
@@ -396,7 +457,7 @@ class LibraryPresenter(
      *
      * @return an observable of tracked manga.
      */
-    private fun getFilterObservable(): Observable<Map<Long, Map<Int, Boolean>>> {
+    private fun getFilterObservable(): Observable<Map<Long, Map<Long, Boolean>>> {
         return getTracksObservable().combineLatest(filterTriggerRelay.observeOn(Schedulers.io())) { tracks, _ -> tracks }
     }
 
@@ -405,16 +466,20 @@ class LibraryPresenter(
      *
      * @return an observable of tracked manga.
      */
-    private fun getTracksObservable(): Observable<Map<Long, Map<Int, Boolean>>> {
-        return db.getTracks().asRxObservable().map { tracks ->
-            tracks.groupBy { it.manga_id }
-                .mapValues { tracksForMangaId ->
-                    // Check if any of the trackers is logged in for the current manga id
-                    tracksForMangaId.value.associate {
-                        Pair(it.sync_id, trackManager.getService(it.sync_id.toLong())?.isLogged ?: false)
+    private fun getTracksObservable(): Observable<Map<Long, Map<Long, Boolean>>> {
+        // TODO: Move this to domain/data layer
+        return getTracks.subscribe()
+            .asObservable().map { tracks ->
+                tracks
+                    .groupBy { it.mangaId }
+                    .mapValues { tracksForMangaId ->
+                        // Check if any of the trackers is logged in for the current manga id
+                        tracksForMangaId.value.associate {
+                            Pair(it.syncId, trackManager.getService(it.syncId)?.isLogged ?: false)
+                        }
                     }
-                }
-        }.observeOn(Schedulers.io())
+            }
+            .observeOn(Schedulers.io())
     }
 
     /**
@@ -451,11 +516,11 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    fun getCommonCategories(mangas: List<Manga>): Collection<Category> {
+    suspend fun getCommonCategories(mangas: List<Manga>): Collection<Category> {
         if (mangas.isEmpty()) return emptyList()
         return mangas.toSet()
-            .map { db.getCategoriesForManga(it).executeAsBlocking() }
-            .reduce { set1: Iterable<Category>, set2 -> set1.intersect(set2).toMutableList() }
+            .map { getCategories.await(it.id!!).map { it.toDbCategory() } }
+            .reduce { set1, set2 -> set1.intersect(set2).toMutableList() }
     }
 
     /**
@@ -463,9 +528,9 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    fun getMixCategories(mangas: List<Manga>): Collection<Category> {
+    suspend fun getMixCategories(mangas: List<Manga>): Collection<Category> {
         if (mangas.isEmpty()) return emptyList()
-        val mangaCategories = mangas.toSet().map { db.getCategoriesForManga(it).executeAsBlocking() }
+        val mangaCategories = mangas.toSet().map { getCategories.await(it.id!!).map { it.toDbCategory() } }
         val common = mangaCategories.reduce { set1, set2 -> set1.intersect(set2).toMutableList() }
         return mangaCategories.flatten().distinct().subtract(common).toMutableList()
     }
@@ -478,8 +543,9 @@ class LibraryPresenter(
     fun downloadUnreadChapters(mangas: List<Manga>) {
         mangas.forEach { manga ->
             launchIO {
-                val chapters = db.getChapters(manga).executeAsBlocking()
+                val chapters = getChapterByMangaId.await(manga.id!!)
                     .filter { !it.read }
+                    .map { it.toDbChapter() }
 
                 downloadManager.downloadChapters(manga, chapters)
             }
@@ -494,17 +560,20 @@ class LibraryPresenter(
     fun markReadStatus(mangas: List<Manga>, read: Boolean) {
         mangas.forEach { manga ->
             launchIO {
-                val chapters = db.getChapters(manga).executeAsBlocking()
-                chapters.forEach {
-                    it.read = read
-                    if (!read) {
-                        it.last_page_read = 0
+                val chapters = getChapterByMangaId.await(manga.id!!)
+
+                val toUpdate = chapters
+                    .map { chapter ->
+                        ChapterUpdate(
+                            read = read,
+                            lastPageRead = if (read) 0 else null,
+                            id = chapter.id,
+                        )
                     }
-                }
-                db.updateChaptersProgress(chapters).executeAsBlocking()
+                updateChapter.awaitAll(toUpdate)
 
                 if (read && preferences.removeAfterMarkedAsRead()) {
-                    deleteChapters(manga, chapters)
+                    deleteChapters(manga, chapters.map { it.toDbChapter() })
                 }
             }
         }
@@ -519,20 +588,23 @@ class LibraryPresenter(
     /**
      * Remove the selected manga.
      *
-     * @param mangas the list of manga to delete.
+     * @param mangaList the list of manga to delete.
      * @param deleteFromLibrary whether to delete manga from library.
      * @param deleteChapters whether to delete downloaded chapters.
      */
-    fun removeMangas(mangas: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
+    fun removeMangas(mangaList: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
         launchIO {
-            val mangaToDelete = mangas.distinctBy { it.id }
+            val mangaToDelete = mangaList.distinctBy { it.id }
 
             if (deleteFromLibrary) {
-                mangaToDelete.forEach {
-                    it.favorite = false
+                val toDelete = mangaToDelete.map {
                     it.removeCovers(coverCache)
+                    MangaUpdate(
+                        favorite = false,
+                        id = it.id!!,
+                    )
                 }
-                db.insertMangas(mangaToDelete).executeAsBlocking()
+                updateManga.awaitAll(toDelete)
             }
 
             if (deleteChapters) {
@@ -547,35 +619,22 @@ class LibraryPresenter(
     }
 
     /**
-     * Move the given list of manga to categories.
+     * Bulk update categories of manga using old and new common categories.
      *
-     * @param categories the selected categories.
-     * @param mangas the list of manga to move.
-     */
-    fun moveMangasToCategories(categories: List<Category>, mangas: List<Manga>) {
-        val mc = mutableListOf<MangaCategory>()
-
-        for (manga in mangas) {
-            categories.mapTo(mc) { MangaCategory.create(manga, it) }
-        }
-
-        db.setMangaCategories(mc, mangas)
-    }
-
-    /**
-     * Bulk update categories of mangas using old and new common categories.
-     *
-     * @param mangas the list of manga to move.
+     * @param mangaList the list of manga to move.
      * @param addCategories the categories to add for all mangas.
      * @param removeCategories the categories to remove in all mangas.
      */
-    fun updateMangasToCategories(mangas: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {
-        val mangaCategories = mangas.map { manga ->
-            val categories = db.getCategoriesForManga(manga).executeAsBlocking()
-                .subtract(removeCategories).plus(addCategories).distinct()
-            categories.map { MangaCategory.create(manga, it) }
-        }.flatten()
-
-        db.setMangaCategories(mangaCategories, mangas)
+    fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {
+        presenterScope.launchIO {
+            mangaList.map { manga ->
+                val categoryIds = getCategories.await(manga.id!!)
+                    .map { it.toDbCategory() }
+                    .subtract(removeCategories)
+                    .plus(addCategories)
+                    .mapNotNull { it.id?.toLong() }
+                setMangaCategories.await(manga.id!!, categoryIds)
+            }
+        }
     }
 }

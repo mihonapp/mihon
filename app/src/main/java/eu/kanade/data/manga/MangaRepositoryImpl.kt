@@ -46,7 +46,7 @@ class MangaRepositoryImpl(
         }
     }
 
-    override suspend fun moveMangaToCategories(mangaId: Long, categoryIds: List<Long>) {
+    override suspend fun setMangaCategories(mangaId: Long, categoryIds: List<Long>) {
         handler.await(inTransaction = true) {
             mangas_categoriesQueries.deleteMangaCategoryByMangaId(mangaId)
             categoryIds.map { categoryId ->
@@ -57,31 +57,47 @@ class MangaRepositoryImpl(
 
     override suspend fun update(update: MangaUpdate): Boolean {
         return try {
-            handler.await {
-                mangasQueries.update(
-                    source = update.source,
-                    url = update.url,
-                    artist = update.artist,
-                    author = update.author,
-                    description = update.description,
-                    genre = update.genre?.let(listOfStringsAdapter::encode),
-                    title = update.title,
-                    status = update.status,
-                    thumbnailUrl = update.thumbnailUrl,
-                    favorite = update.favorite?.toLong(),
-                    lastUpdate = update.lastUpdate,
-                    initialized = update.initialized?.toLong(),
-                    viewer = update.viewerFlags,
-                    chapterFlags = update.chapterFlags,
-                    coverLastModified = update.coverLastModified,
-                    dateAdded = update.dateAdded,
-                    mangaId = update.id,
-                )
-            }
+            partialUpdate(update)
             true
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             false
+        }
+    }
+
+    override suspend fun updateAll(values: List<MangaUpdate>): Boolean {
+        return try {
+            partialUpdate(*values.toTypedArray())
+            true
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            false
+        }
+    }
+
+    private suspend fun partialUpdate(vararg values: MangaUpdate) {
+        handler.await(inTransaction = true) {
+            values.forEach { value ->
+                mangasQueries.update(
+                    source = value.source,
+                    url = value.url,
+                    artist = value.artist,
+                    author = value.author,
+                    description = value.description,
+                    genre = value.genre?.let(listOfStringsAdapter::encode),
+                    title = value.title,
+                    status = value.status,
+                    thumbnailUrl = value.thumbnailUrl,
+                    favorite = value.favorite?.toLong(),
+                    lastUpdate = value.lastUpdate,
+                    initialized = value.initialized?.toLong(),
+                    viewer = value.viewerFlags,
+                    chapterFlags = value.chapterFlags,
+                    coverLastModified = value.coverLastModified,
+                    dateAdded = value.dateAdded,
+                    mangaId = value.id,
+                )
+            }
         }
     }
 }

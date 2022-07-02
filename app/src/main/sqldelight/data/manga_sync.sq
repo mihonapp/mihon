@@ -21,6 +21,10 @@ delete:
 DELETE FROM manga_sync
 WHERE manga_id = :mangaId AND sync_id = :syncId;
 
+getTracks:
+SELECT *
+FROM manga_sync;
+
 getTracksByMangaId:
 SELECT *
 FROM manga_sync

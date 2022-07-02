@@ -20,6 +20,10 @@ class UpdateManga(
         return mangaRepository.update(mangaUpdate)
     }
 
+    suspend fun awaitAll(values: List<MangaUpdate>): Boolean {
+        return mangaRepository.updateAll(values)
+    }
+
     suspend fun awaitUpdateFromSource(
         localManga: Manga,
         remoteManga: MangaInfo,

@@ -8,6 +8,10 @@ interface CategoryRepository {
 
     fun getAll(): Flow<List<Category>>
 
+    suspend fun getCategoriesByMangaId(mangaId: Long): List<Category>
+
+    fun getCategoriesByMangaIdAsFlow(mangaId: Long): Flow<List<Category>>
+
     @Throws(DuplicateNameException::class)
     suspend fun insert(name: String, order: Long)
 
@@ -15,8 +19,6 @@ interface CategoryRepository {
     suspend fun update(payload: CategoryUpdate)
 
     suspend fun delete(categoryId: Long)
-
-    suspend fun getCategoriesForManga(mangaId: Long): List<Category>
 
     suspend fun checkDuplicateName(name: String): Boolean
 }

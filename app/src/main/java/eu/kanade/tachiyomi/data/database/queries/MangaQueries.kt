@@ -60,8 +60,6 @@ interface MangaQueries : DbProvider {
 
     fun insertManga(manga: Manga) = db.put().`object`(manga).prepare()
 
-    fun insertMangas(mangas: List<Manga>) = db.put().objects(mangas).prepare()
-
     fun updateChapterFlags(manga: Manga) = db.put()
         .`object`(manga)
         .withPutResolver(MangaFlagsPutResolver(MangaTable.COL_CHAPTER_FLAGS, Manga::chapter_flags))
@@ -75,35 +73,5 @@ interface MangaQueries : DbProvider {
     fun updateViewerFlags(manga: Manga) = db.put()
         .`object`(manga)
         .withPutResolver(MangaFlagsPutResolver(MangaTable.COL_VIEWER, Manga::viewer_flags))
-        .prepare()
-
-    fun getLastReadManga() = db.get()
-        .listOfObjects(Manga::class.java)
-        .withQuery(
-            RawQuery.builder()
-                .query(getLastReadMangaQuery())
-                .observesTables(MangaTable.TABLE)
-                .build(),
-        )
-        .prepare()
-
-    fun getLatestChapterManga() = db.get()
-        .listOfObjects(Manga::class.java)
-        .withQuery(
-            RawQuery.builder()
-                .query(getLatestChapterMangaQuery())
-                .observesTables(MangaTable.TABLE)
-                .build(),
-        )
-        .prepare()
-
-    fun getChapterFetchDateManga() = db.get()
-        .listOfObjects(Manga::class.java)
-        .withQuery(
-            RawQuery.builder()
-                .query(getChapterFetchDateMangaQuery())
-                .observesTables(MangaTable.TABLE)
-                .build(),
-        )
         .prepare()
 }
