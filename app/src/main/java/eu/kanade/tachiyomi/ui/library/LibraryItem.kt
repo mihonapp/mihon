@@ -25,7 +25,7 @@ class LibraryItem(
 
     private val sourceManager: SourceManager = Injekt.get()
 
-    var displayMode: Int = -1
+    var displayMode: Long = -1
     var downloadCount = -1
     var unreadCount = -1
     var isLocal = false

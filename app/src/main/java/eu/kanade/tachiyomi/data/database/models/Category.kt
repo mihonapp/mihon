@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
 import java.io.Serializable
+import eu.kanade.domain.category.model.Category as DomainCategory
 
 interface Category : Serializable {
 
@@ -22,16 +23,16 @@ interface Category : Serializable {
     }
 
     var displayMode: Int
-        get() = flags and DisplayModeSetting.MASK
-        set(mode) = setFlags(mode, DisplayModeSetting.MASK)
+        get() = flags and DisplayModeSetting.MASK.toInt()
+        set(mode) = setFlags(mode, DisplayModeSetting.MASK.toInt())
 
     var sortMode: Int
-        get() = flags and SortModeSetting.MASK
-        set(mode) = setFlags(mode, SortModeSetting.MASK)
+        get() = flags and SortModeSetting.MASK.toInt()
+        set(mode) = setFlags(mode, SortModeSetting.MASK.toInt())
 
     var sortDirection: Int
-        get() = flags and SortDirectionSetting.MASK
-        set(mode) = setFlags(mode, SortDirectionSetting.MASK)
+        get() = flags and SortDirectionSetting.MASK.toInt()
+        set(mode) = setFlags(mode, SortDirectionSetting.MASK.toInt())
 
     companion object {
 
@@ -41,4 +42,14 @@ interface Category : Serializable {
 
         fun createDefault(context: Context): Category = create(context.getString(R.string.label_default)).apply { id = 0 }
     }
+}
+
+fun Category.toDomainCategory(): DomainCategory? {
+    val categoryId = id ?: return null
+    return DomainCategory(
+        id = categoryId.toLong(),
+        name = this.name,
+        order = this.order.toLong(),
+        flags = this.flags.toLong(),
+    )
 }

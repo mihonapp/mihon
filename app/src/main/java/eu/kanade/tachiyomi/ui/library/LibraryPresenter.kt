@@ -6,19 +6,18 @@ import eu.kanade.core.util.asObservable
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
-import eu.kanade.domain.category.model.toDbCategory
+import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -34,7 +33,6 @@ import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import rx.Observable
 import rx.Subscription
@@ -45,6 +43,7 @@ import uy.kohesive.injekt.api.get
 import java.text.Collator
 import java.util.Collections
 import java.util.Locale
+import eu.kanade.tachiyomi.data.database.models.Manga as DbManga
 
 /**
  * Class containing library information.
@@ -54,7 +53,7 @@ private data class Library(val categories: List<Category>, val mangaMap: Library
 /**
  * Typealias for the library manga, using the category as keys, and list of manga as values.
  */
-private typealias LibraryMap = Map<Int, List<LibraryItem>>
+typealias LibraryMap = Map<Long, List<LibraryItem>>
 
 /**
  * Presenter of [LibraryController].
@@ -299,11 +298,11 @@ class LibraryPresenter(
         }
 
         val sortingModes = categories.associate { category ->
-            (category.id ?: 0) to SortModeSetting.get(preferences, category)
+            category.id to SortModeSetting.get(preferences, category)
         }
 
         val sortDirections = categories.associate { category ->
-            (category.id ?: 0) to SortDirectionSetting.get(preferences, category)
+            category.id to SortDirectionSetting.get(preferences, category)
         }
 
         val locale = Locale.getDefault()
@@ -311,8 +310,8 @@ class LibraryPresenter(
             strength = Collator.PRIMARY
         }
         val sortFn: (LibraryItem, LibraryItem) -> Int = { i1, i2 ->
-            val sortingMode = sortingModes[i1.manga.category]!!
-            val sortAscending = sortDirections[i1.manga.category]!! == SortDirectionSetting.ASCENDING
+            val sortingMode = sortingModes[i1.manga.category.toLong()]!!
+            val sortAscending = sortDirections[i1.manga.category.toLong()]!! == SortDirectionSetting.ASCENDING
             when (sortingMode) {
                 SortModeSetting.ALPHABETICAL -> {
                     collator.compare(i1.manga.title.lowercase(locale), i2.manga.title.lowercase(locale))
@@ -355,7 +354,7 @@ class LibraryPresenter(
         }
 
         return map.mapValues { entry ->
-            val sortAscending = sortDirections[entry.key]!! == SortDirectionSetting.ASCENDING
+            val sortAscending = sortDirections[entry.key.toLong()]!! == SortDirectionSetting.ASCENDING
 
             val comparator = if (sortAscending) {
                 Comparator(sortFn)
@@ -375,13 +374,13 @@ class LibraryPresenter(
     private fun getLibraryObservable(): Observable<Library> {
         return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable()) { dbCategories, libraryManga ->
             val categories = if (libraryManga.containsKey(0)) {
-                arrayListOf(Category.createDefault(context)) + dbCategories
+                arrayListOf(Category.default(context)) + dbCategories
             } else {
                 dbCategories
             }
 
             libraryManga.forEach { (categoryId, libraryManga) ->
-                val category = categories.first { category -> category.id == categoryId }
+                val category = categories.first { category -> category.id == categoryId.toLong() }
                 libraryManga.forEach { libraryItem ->
                     libraryItem.displayMode = category.displayMode
                 }
@@ -398,7 +397,7 @@ class LibraryPresenter(
      * @return an observable of the categories.
      */
     private fun getCategoriesObservable(): Observable<List<Category>> {
-        return getCategories.subscribe().map { it.map { it.toDbCategory() } }.asObservable()
+        return getCategories.subscribe().asObservable()
     }
 
     /**
@@ -448,7 +447,7 @@ class LibraryPresenter(
                         shouldSetFromCategory,
                         defaultLibraryDisplayMode,
                     )
-                }.groupBy { it.manga.category }
+                }.groupBy { it.manga.category.toLong() }
             }
     }
 
@@ -516,10 +515,10 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    suspend fun getCommonCategories(mangas: List<Manga>): Collection<Category> {
+    suspend fun getCommonCategories(mangas: List<DbManga>): Collection<Category> {
         if (mangas.isEmpty()) return emptyList()
         return mangas.toSet()
-            .map { getCategories.await(it.id!!).map { it.toDbCategory() } }
+            .map { getCategories.await(it.id!!) }
             .reduce { set1, set2 -> set1.intersect(set2).toMutableList() }
     }
 
@@ -528,9 +527,9 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    suspend fun getMixCategories(mangas: List<Manga>): Collection<Category> {
+    suspend fun getMixCategories(mangas: List<DbManga>): Collection<Category> {
         if (mangas.isEmpty()) return emptyList()
-        val mangaCategories = mangas.toSet().map { getCategories.await(it.id!!).map { it.toDbCategory() } }
+        val mangaCategories = mangas.toSet().map { getCategories.await(it.id!!) }
         val common = mangaCategories.reduce { set1, set2 -> set1.intersect(set2).toMutableList() }
         return mangaCategories.flatten().distinct().subtract(common).toMutableList()
     }
@@ -540,7 +539,7 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    fun downloadUnreadChapters(mangas: List<Manga>) {
+    fun downloadUnreadChapters(mangas: List<DbManga>) {
         mangas.forEach { manga ->
             launchIO {
                 val chapters = getChapterByMangaId.await(manga.id!!)
@@ -557,7 +556,7 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    fun markReadStatus(mangas: List<Manga>, read: Boolean) {
+    fun markReadStatus(mangas: List<DbManga>, read: Boolean) {
         mangas.forEach { manga ->
             launchIO {
                 val chapters = getChapterByMangaId.await(manga.id!!)
@@ -579,7 +578,7 @@ class LibraryPresenter(
         }
     }
 
-    private fun deleteChapters(manga: Manga, chapters: List<Chapter>) {
+    private fun deleteChapters(manga: DbManga, chapters: List<Chapter>) {
         sourceManager.get(manga.source)?.let { source ->
             downloadManager.deleteChapters(chapters, manga, source)
         }
@@ -592,7 +591,7 @@ class LibraryPresenter(
      * @param deleteFromLibrary whether to delete manga from library.
      * @param deleteChapters whether to delete downloaded chapters.
      */
-    fun removeMangas(mangaList: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
+    fun removeMangas(mangaList: List<DbManga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
         launchIO {
             val mangaToDelete = mangaList.distinctBy { it.id }
 
@@ -628,12 +627,11 @@ class LibraryPresenter(
     fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {
         presenterScope.launchIO {
             mangaList.map { manga ->
-                val categoryIds = getCategories.await(manga.id!!)
-                    .map { it.toDbCategory() }
+                val categoryIds = getCategories.await(manga.id)
                     .subtract(removeCategories)
                     .plus(addCategories)
-                    .mapNotNull { it.id?.toLong() }
-                setMangaCategories.await(manga.id!!, categoryIds)
+                    .map { it.id }
+                setMangaCategories.await(manga.id, categoryIds)
             }
         }
     }

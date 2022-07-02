@@ -4,9 +4,9 @@ import android.app.Dialog
 import android.os.Bundle
 import com.bluelinelabs.conductor.Controller
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.category.CategoryController

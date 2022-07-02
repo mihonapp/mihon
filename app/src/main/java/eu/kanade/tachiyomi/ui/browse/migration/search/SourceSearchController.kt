@@ -2,7 +2,8 @@ package eu.kanade.tachiyomi.ui.browse.migration.search
 
 import android.os.Bundle
 import android.view.View
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceItem
@@ -28,7 +29,7 @@ class SourceSearchController(
         newManga = item.manga
         val searchController = router.backstack.findLast { it.controller.javaClass == SearchController::class.java }?.controller as SearchController?
         val dialog =
-            SearchController.MigrationDialog(oldManga, newManga, this)
+            SearchController.MigrationDialog(oldManga?.toDbManga(), newManga?.toDbManga(), this)
         dialog.targetController = searchController
         dialog.showDialog(router)
         return true

@@ -9,6 +9,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
@@ -149,6 +150,6 @@ class SearchController(
     override fun onTitleClick(source: CatalogueSource) {
         presenter.preferences.lastUsedSource().set(source.id)
 
-        router.pushController(SourceSearchController(manga, source, presenter.query))
+        router.pushController(SourceSearchController(manga?.toDomainManga(), source, presenter.query))
     }
 }

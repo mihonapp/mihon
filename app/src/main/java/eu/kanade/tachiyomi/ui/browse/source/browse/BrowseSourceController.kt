@@ -20,11 +20,11 @@ import com.google.android.material.snackbar.Snackbar
 import dev.chrisbanes.insetter.applyInsetter
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
-import eu.kanade.domain.category.model.toDbCategory
+import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.source.model.Source
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.SourceControllerBinding
 import eu.kanade.tachiyomi.source.CatalogueSource
@@ -541,7 +541,7 @@ open class BrowseSourceController(bundle: Bundle) :
 
         adapter.allBoundViewHolders.forEach { holder ->
             val item = adapter.getItem(holder.bindingAdapterPosition) as? SourceItem
-            if (item != null && item.manga.id!! == manga.id!!) {
+            if (item != null && item.manga.id == manga.id) {
                 return holder as SourceHolder<*>
             }
         }
@@ -575,7 +575,7 @@ open class BrowseSourceController(bundle: Bundle) :
      */
     override fun onItemClick(view: View, position: Int): Boolean {
         val item = adapter?.getItem(position) as? SourceItem ?: return false
-        router.pushController(MangaController(item.manga.id!!, true))
+        router.pushController(MangaController(item.manga.id, true))
 
         return false
     }
@@ -602,7 +602,7 @@ open class BrowseSourceController(bundle: Bundle) :
                         .setItems(arrayOf(activity.getString(R.string.remove_from_library))) { _, which ->
                             when (which) {
                                 0 -> {
-                                    presenter.changeMangaFavorite(manga)
+                                    presenter.changeMangaFavorite(manga.toDbManga())
                                     adapter?.notifyItemChanged(position)
                                     activity.toast(activity.getString(R.string.manga_removed_library))
                                 }
@@ -637,18 +637,18 @@ open class BrowseSourceController(bundle: Bundle) :
                 when {
                     // Default category set
                     defaultCategory != null -> {
-                        presenter.moveMangaToCategory(newManga, defaultCategory.toDbCategory())
+                        presenter.moveMangaToCategory(newManga.toDbManga(), defaultCategory)
 
-                        presenter.changeMangaFavorite(newManga)
+                        presenter.changeMangaFavorite(newManga.toDbManga())
                         adapter?.notifyItemChanged(position)
                         activity.toast(activity.getString(R.string.manga_added_library))
                     }
 
                     // Automatic 'Default' or no categories
                     defaultCategoryId == 0 || categories.isEmpty() -> {
-                        presenter.moveMangaToCategory(newManga, null)
+                        presenter.moveMangaToCategory(newManga.toDbManga(), null)
 
-                        presenter.changeMangaFavorite(newManga)
+                        presenter.changeMangaFavorite(newManga.toDbManga())
                         adapter?.notifyItemChanged(position)
                         activity.toast(activity.getString(R.string.manga_added_library))
                     }
@@ -664,7 +664,7 @@ open class BrowseSourceController(bundle: Bundle) :
                             }
                         }.toTypedArray()
 
-                        ChangeMangaCategoriesDialog(this@BrowseSourceController, listOf(newManga), categories.map { it.toDbCategory() }, preselected)
+                        ChangeMangaCategoriesDialog(this@BrowseSourceController, listOf(newManga), categories, preselected)
                             .showDialog(router)
                     }
                 }
@@ -681,8 +681,8 @@ open class BrowseSourceController(bundle: Bundle) :
     override fun updateCategoriesForMangas(mangas: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {
         val manga = mangas.firstOrNull() ?: return
 
-        presenter.changeMangaFavorite(manga)
-        presenter.updateMangaCategories(manga, addCategories)
+        presenter.changeMangaFavorite(manga.toDbManga())
+        presenter.updateMangaCategories(manga.toDbManga(), addCategories)
 
         val position = adapter?.currentItems?.indexOfFirst { it -> (it as SourceItem).manga.id == manga.id }
         if (position != null) {

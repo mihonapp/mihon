@@ -8,6 +8,7 @@ import android.os.PowerManager
 import androidx.core.content.ContextCompat
 import eu.kanade.data.chapter.NoChaptersException
 import eu.kanade.domain.category.interactor.GetCategories
+import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
@@ -22,7 +23,6 @@ import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -228,7 +228,7 @@ class LibraryUpdateService(
         ioScope?.cancel()
 
         // Update favorite manga
-        val categoryId = intent.getIntExtra(KEY_CATEGORY, -1)
+        val categoryId = intent.getLongExtra(KEY_CATEGORY, -1L)
         addMangaToQueue(categoryId)
 
         // Destroy service when completed or in case of an error.
@@ -254,11 +254,11 @@ class LibraryUpdateService(
      *
      * @param categoryId the ID of the category to update, or -1 if no category specified.
      */
-    fun addMangaToQueue(categoryId: Int) {
+    fun addMangaToQueue(categoryId: Long) {
         val libraryManga = db.getLibraryMangas().executeAsBlocking()
 
-        val listToUpdate = if (categoryId != -1) {
-            libraryManga.filter { it.category == categoryId }
+        val listToUpdate = if (categoryId != -1L) {
+            libraryManga.filter { it.category.toLong() == categoryId }
         } else {
             val categoriesToUpdate = preferences.libraryUpdateCategories().get().map(String::toInt)
             val listToInclude = if (categoriesToUpdate.isNotEmpty()) {

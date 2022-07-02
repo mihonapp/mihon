@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.library
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import eu.kanade.tachiyomi.data.database.models.Category
+import eu.kanade.domain.category.model.Category
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.LibraryCategoryBinding
 import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
@@ -153,7 +153,7 @@ class LibraryAdapter(
 
     override fun getViewType(position: Int): Int {
         val category = categories.getOrNull(position)
-        return if (isPerCategory && category?.id != 0) {
+        return if (isPerCategory && category?.id != 0L) {
             if (DisplayModeSetting.fromFlag(category?.displayMode) == DisplayModeSetting.LIST) {
                 LIST_DISPLAY_MODE
             } else {

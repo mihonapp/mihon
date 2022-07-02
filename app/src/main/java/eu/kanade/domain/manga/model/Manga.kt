@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import tachiyomi.source.model.MangaInfo
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.io.Serializable
 import eu.kanade.tachiyomi.data.database.models.Manga as DbManga
 
 data class Manga(
@@ -29,7 +30,7 @@ data class Manga(
     val status: Long,
     val thumbnailUrl: String?,
     val initialized: Boolean,
-) {
+) : Serializable {
 
     fun toSManga(): SManga {
         return SManga.create().also {

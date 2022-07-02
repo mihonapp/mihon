@@ -15,9 +15,11 @@ import com.fredporciuncula.flow.preferences.Preference
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.category.model.toDbCategory
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.LibraryControllerBinding
@@ -50,6 +52,7 @@ import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
+import eu.kanade.tachiyomi.data.database.models.Manga as DbManga
 
 class LibraryController(
     bundle: Bundle? = null,
@@ -74,7 +77,7 @@ class LibraryController(
     /**
      * Currently selected mangas.
      */
-    val selectedMangas = mutableSetOf<Manga>()
+    val selectedMangas = mutableSetOf<DbManga>()
 
     /**
      * Relay to notify the UI of selection updates.
@@ -94,12 +97,12 @@ class LibraryController(
     /**
      * Relay to notify the library's viewpager to select all manga
      */
-    val selectAllRelay: PublishRelay<Int> = PublishRelay.create()
+    val selectAllRelay: PublishRelay<Long> = PublishRelay.create()
 
     /**
      * Relay to notify the library's viewpager to select the inverse
      */
-    val selectInverseRelay: PublishRelay<Int> = PublishRelay.create()
+    val selectInverseRelay: PublishRelay<Long> = PublishRelay.create()
 
     /**
      * Number of manga per row in grid mode.
@@ -262,14 +265,14 @@ class LibraryController(
     fun showSettingsSheet() {
         if (adapter?.categories?.isNotEmpty() == true) {
             adapter?.categories?.get(binding.libraryPager.currentItem)?.let { category ->
-                settingsSheet?.show(category)
+                settingsSheet?.show(category.toDbCategory())
             }
         } else {
             settingsSheet?.show()
         }
     }
 
-    fun onNextLibraryUpdate(categories: List<Category>, mangaMap: Map<Int, List<LibraryItem>>) {
+    fun onNextLibraryUpdate(categories: List<Category>, mangaMap: LibraryMap) {
         val view = view ?: return
         val adapter = adapter ?: return
 
@@ -344,7 +347,7 @@ class LibraryController(
         if (!firstLaunch) {
             mangaCountVisibilityRelay.call(preferences.categoryNumberOfItems().get())
         }
-        tabsVisibilityRelay.call(preferences.categoryTabs().get() && adapter?.categories?.size ?: 0 > 1)
+        tabsVisibilityRelay.call(preferences.categoryTabs().get() && (adapter?.categories?.size ?: 0) > 1)
         updateTitle()
     }
 
@@ -493,7 +496,7 @@ class LibraryController(
         actionMode = null
     }
 
-    fun openManga(manga: Manga) {
+    fun openManga(manga: DbManga) {
         // Notify the presenter a manga is being opened.
         presenter.onOpenManga()
 
@@ -506,7 +509,7 @@ class LibraryController(
      * @param manga the manga whose selection has changed.
      * @param selected whether it's now selected or not.
      */
-    fun setSelection(manga: Manga, selected: Boolean) {
+    fun setSelection(manga: DbManga, selected: Boolean) {
         if (selected) {
             if (selectedMangas.add(manga)) {
                 selectionRelay.call(LibrarySelectionEvent.Selected(manga))
@@ -523,7 +526,7 @@ class LibraryController(
      *
      * @param manga the manga whose selection to change.
      */
-    fun toggleSelection(manga: Manga) {
+    fun toggleSelection(manga: DbManga) {
         if (selectedMangas.add(manga)) {
             selectionRelay.call(LibrarySelectionEvent.Selected(manga))
         } else if (selectedMangas.remove(manga)) {
@@ -550,7 +553,7 @@ class LibraryController(
             val mangas = selectedMangas.toList()
 
             // Hide the default category because it has a different behavior than the ones from db.
-            val categories = presenter.categories.filter { it.id != 0 }
+            val categories = presenter.categories.filter { it.id != 0L }
 
             // Get indexes of the common categories to preselect.
             val common = presenter.getCommonCategories(mangas)
@@ -564,7 +567,7 @@ class LibraryController(
                 }
             }.toTypedArray()
             launchUI {
-                ChangeMangaCategoriesDialog(this@LibraryController, mangas, categories, preselected)
+                ChangeMangaCategoriesDialog(this@LibraryController, mangas.map { it.toDomainManga()!! }, categories, preselected)
                     .showDialog(router)
             }
         }
@@ -591,7 +594,7 @@ class LibraryController(
         destroyActionModeIfNeeded()
     }
 
-    override fun deleteMangas(mangas: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
+    override fun deleteMangas(mangas: List<DbManga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
         presenter.removeMangas(mangas, deleteFromLibrary, deleteChapters)
         destroyActionModeIfNeeded()
     }
