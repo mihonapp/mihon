@@ -18,6 +18,7 @@ shortcutHelper.setFilePath("./shortcuts.xml")
 val SUPPORTED_ABIS = setOf("armeabi-v7a", "arm64-v8a", "x86")
 
 android {
+    namespace = "eu.kanade.tachiyomi"
     compileSdk = AndroidConfig.compileSdk
     ndkVersion = AndroidConfig.ndk
 
