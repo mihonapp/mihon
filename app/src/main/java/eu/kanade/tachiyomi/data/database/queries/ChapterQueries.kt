@@ -8,17 +8,6 @@ import eu.kanade.tachiyomi.data.database.tables.ChapterTable
 
 interface ChapterQueries : DbProvider {
 
-    fun getChapters(mangaId: Long) = db.get()
-        .listOfObjects(Chapter::class.java)
-        .withQuery(
-            Query.builder()
-                .table(ChapterTable.TABLE)
-                .where("${ChapterTable.COL_MANGA_ID} = ?")
-                .whereArgs(mangaId)
-                .build(),
-        )
-        .prepare()
-
     fun getChapter(id: Long) = db.get()
         .`object`(Chapter::class.java)
         .withQuery(

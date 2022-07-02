@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.data.toLong
+import eu.kanade.domain.manga.interactor.GetFavorites
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
@@ -16,6 +17,7 @@ import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import data.Mangas as DbManga
+import eu.kanade.domain.manga.model.Manga as DomainManga
 
 abstract class AbstractBackupManager(protected val context: Context) {
 
@@ -24,6 +26,7 @@ abstract class AbstractBackupManager(protected val context: Context) {
     internal val sourceManager: SourceManager = Injekt.get()
     internal val trackManager: TrackManager = Injekt.get()
     protected val preferences: PreferencesHelper = Injekt.get()
+    private val getFavorites: GetFavorites = Injekt.get()
 
     abstract suspend fun createBackup(uri: Uri, flags: Int, isAutoBackup: Boolean): String
 
@@ -60,8 +63,8 @@ abstract class AbstractBackupManager(protected val context: Context) {
      *
      * @return [Manga] from library
      */
-    protected suspend fun getFavoriteManga(): List<DbManga> {
-        return handler.awaitList { mangasQueries.getFavorites() }
+    protected suspend fun getFavoriteManga(): List<DomainManga> {
+        return getFavorites.await()
     }
 
     /**

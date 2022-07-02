@@ -31,9 +31,6 @@ data class Manga(
     val initialized: Boolean,
 ) {
 
-    val sorting: Long
-        get() = chapterFlags and CHAPTER_SORTING_MASK
-
     fun toSManga(): SManga {
         return SManga.create().also {
             it.url = url
@@ -47,6 +44,9 @@ data class Manga(
             it.initialized = initialized
         }
     }
+
+    val sorting: Long
+        get() = chapterFlags and CHAPTER_SORTING_MASK
 
     val displayMode: Long
         get() = chapterFlags and CHAPTER_DISPLAY_MASK

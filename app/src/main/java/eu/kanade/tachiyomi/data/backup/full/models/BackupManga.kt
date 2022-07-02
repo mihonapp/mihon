@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.data.backup.full.models
 
-import data.Mangas
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.database.models.ChapterImpl
 import eu.kanade.tachiyomi.data.database.models.MangaImpl
 import eu.kanade.tachiyomi.data.database.models.TrackImpl
@@ -69,7 +69,7 @@ data class BackupManga(
     }
 
     companion object {
-        fun copyFrom(manga: Mangas): BackupManga {
+        fun copyFrom(manga: Manga): BackupManga {
             return BackupManga(
                 url = manga.url,
                 title = manga.title,
@@ -78,13 +78,13 @@ data class BackupManga(
                 description = manga.description,
                 genre = manga.genre ?: emptyList(),
                 status = manga.status.toInt(),
-                thumbnailUrl = manga.thumbnail_url,
+                thumbnailUrl = manga.thumbnailUrl,
                 favorite = manga.favorite,
                 source = manga.source,
-                dateAdded = manga.date_added,
-                viewer = (manga.viewer.toInt() and ReadingModeType.MASK),
-                viewer_flags = manga.viewer.toInt(),
-                chapterFlags = manga.chapter_flags.toInt(),
+                dateAdded = manga.dateAdded,
+                viewer = (manga.viewerFlags.toInt() and ReadingModeType.MASK),
+                viewer_flags = manga.viewerFlags.toInt(),
+                chapterFlags = manga.chapterFlags.toInt(),
             )
         }
     }
