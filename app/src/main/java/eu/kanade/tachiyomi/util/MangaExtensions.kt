@@ -5,9 +5,7 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
@@ -56,37 +54,27 @@ fun Manga.removeCovers(coverCache: CoverCache = Injekt.get()): Int {
     return coverCache.deleteFromCache(this, true)
 }
 
-fun Manga.shouldDownloadNewChapters(db: DatabaseHelper, prefs: PreferencesHelper): Boolean {
-    return toDomainManga()?.shouldDownloadNewChapters(db, prefs) ?: false
-}
-
-fun DomainManga.shouldDownloadNewChapters(db: DatabaseHelper, prefs: PreferencesHelper): Boolean {
+fun DomainManga.shouldDownloadNewChapters(categories: List<Long>, prefs: PreferencesHelper): Boolean {
     if (!favorite) return false
 
     // Boolean to determine if user wants to automatically download new chapters.
     val downloadNewChapter = prefs.downloadNewChapter().get()
     if (!downloadNewChapter) return false
 
-    val includedCategories = prefs.downloadNewChapterCategories().get().map { it.toInt() }
-    val excludedCategories = prefs.downloadNewChapterCategoriesExclude().get().map { it.toInt() }
+    val includedCategories = prefs.downloadNewChapterCategories().get().map { it.toLong() }
+    val excludedCategories = prefs.downloadNewChapterCategoriesExclude().get().map { it.toLong() }
 
     // Default: Download from all categories
     if (includedCategories.isEmpty() && excludedCategories.isEmpty()) return true
 
-    // Get all categories, else default category (0)
-    val categoriesForManga =
-        db.getCategoriesForManga(id).executeAsBlocking()
-            .mapNotNull { it.id }
-            .takeUnless { it.isEmpty() } ?: listOf(0)
-
     // In excluded category
-    if (categoriesForManga.any { it in excludedCategories }) return false
+    if (categories.any { it in excludedCategories }) return false
 
     // Included category not selected
     if (includedCategories.isEmpty()) return true
 
     // In included category
-    return categoriesForManga.any { it in includedCategories }
+    return categories.any { it in includedCategories }
 }
 
 suspend fun DomainManga.editCover(

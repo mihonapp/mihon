@@ -7,9 +7,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import eu.kanade.domain.category.interactor.GetCategories
+import eu.kanade.domain.category.model.Category
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.DEVICE_BATTERY_NOT_LOW
 import eu.kanade.tachiyomi.data.preference.DEVICE_CHARGING
@@ -41,6 +41,7 @@ import eu.kanade.tachiyomi.widget.materialdialogs.setQuadStateMultiChoiceItems
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -48,14 +49,14 @@ import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsLibraryController : SettingsController() {
 
-    private val db: DatabaseHelper = Injekt.get()
+    private val getCategories: GetCategories by injectLazy()
     private val trackManager: TrackManager by injectLazy()
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_library
 
-        val dbCategories = db.getCategories().executeAsBlocking()
-        val categories = listOf(Category.createDefault(context)) + dbCategories
+        val dbCategories = runBlocking { getCategories.await() }
+        val categories = listOf(Category.default(context)) + dbCategories
 
         preferenceCategory {
             titleRes = R.string.pref_category_display
@@ -110,12 +111,12 @@ class SettingsLibraryController : SettingsController() {
                 entryValues = arrayOf("-1") + categories.map { it.id.toString() }.toTypedArray()
                 defaultValue = "-1"
 
-                val selectedCategory = categories.find { it.id == preferences.defaultCategory() }
+                val selectedCategory = categories.find { it.id == preferences.defaultCategory().toLong() }
                 summary = selectedCategory?.name
                     ?: context.getString(R.string.default_category_summary)
                 onChange { newValue ->
                     summary = categories.find {
-                        it.id == (newValue as String).toInt()
+                        it.id == (newValue as String).toLong()
                     }?.name ?: context.getString(R.string.default_category_summary)
                     true
                 }
@@ -228,10 +229,10 @@ class SettingsLibraryController : SettingsController() {
 
                 fun updateSummary() {
                     val includedCategories = preferences.libraryUpdateCategories().get()
-                        .mapNotNull { id -> categories.find { it.id == id.toInt() } }
+                        .mapNotNull { id -> categories.find { it.id == id.toLong() } }
                         .sortedBy { it.order }
                     val excludedCategories = preferences.libraryUpdateCategoriesExclude().get()
-                        .mapNotNull { id -> categories.find { it.id == id.toInt() } }
+                        .mapNotNull { id -> categories.find { it.id == id.toLong() } }
                         .sortedBy { it.order }
 
                     val allExcluded = excludedCategories.size == categories.size
@@ -327,11 +328,11 @@ class SettingsLibraryController : SettingsController() {
     class LibraryGlobalUpdateCategoriesDialog : DialogController() {
 
         private val preferences: PreferencesHelper = Injekt.get()
-        private val db: DatabaseHelper = Injekt.get()
+        private val getCategories: GetCategories = Injekt.get()
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-            val dbCategories = db.getCategories().executeAsBlocking()
-            val categories = listOf(Category.createDefault(activity!!)) + dbCategories
+            val dbCategories = runBlocking { getCategories.await() }
+            val categories = listOf(Category.default(activity!!)) + dbCategories
 
             val items = categories.map { it.name }
             var selected = categories

@@ -7,6 +7,7 @@ import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.content.ContextCompat
 import eu.kanade.data.chapter.NoChaptersException
+import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
@@ -92,6 +93,7 @@ class LibraryUpdateService(
     private val getMangaById: GetMangaById = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
+    private val getCategories: GetCategories = Injekt.get(),
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
     private val getTracks: GetTracks = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
@@ -346,7 +348,8 @@ class LibraryUpdateService(
                                                     val newDbChapters = newChapters.map { it.toDbChapter() }
 
                                                     if (newChapters.isNotEmpty()) {
-                                                        if (mangaWithNotif.shouldDownloadNewChapters(db, preferences)) {
+                                                        val categoryIds = getCategories.await(domainManga.id).map { it.id }
+                                                        if (domainManga.shouldDownloadNewChapters(categoryIds, preferences)) {
                                                             downloadChapters(mangaWithNotif, newDbChapters)
                                                             hasDownloads.set(true)
                                                         }
