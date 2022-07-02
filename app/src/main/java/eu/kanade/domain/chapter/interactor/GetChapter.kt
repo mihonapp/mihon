@@ -17,4 +17,13 @@ class GetChapter(
             null
         }
     }
+
+    suspend fun await(url: String, mangaId: Long): Chapter? {
+        return try {
+            chapterRepository.getChapterByUrlAndMangaId(url, mangaId)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            null
+        }
+    }
 }

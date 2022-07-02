@@ -33,6 +33,12 @@ SELECT *
 FROM chapters
 WHERE url = :chapterUrl;
 
+getChapterByUrlAndMangaId:
+SELECT *
+FROM chapters
+WHERE url = :chapterUrl
+AND manga_id = :mangaId;
+
 removeChaptersWithIds:
 DELETE FROM chapters
 WHERE _id IN :chapterIds;
