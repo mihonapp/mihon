@@ -185,7 +185,7 @@ object ImageUtil {
      * @return true if the height:width ratio is greater than 3.
      */
     private fun isTallImage(imageStream: InputStream): Boolean {
-        val options = extractImageOptions(imageStream, false)
+        val options = extractImageOptions(imageStream, resetAfterExtraction = false)
         return (options.outHeight / options.outWidth) > 3
     }
 
@@ -197,16 +197,34 @@ object ImageUtil {
             return true
         }
 
-        val options = extractImageOptions(imageFile.openInputStream(), false).apply { inJustDecodeBounds = false }
+        val options = extractImageOptions(imageFile.openInputStream(), resetAfterExtraction = false).apply { inJustDecodeBounds = false }
         // Values are stored as they get modified during split loop
         val imageHeight = options.outHeight
         val imageWidth = options.outWidth
 
-        val splitHeight = getDisplayMaxHeightInPx
+        val splitHeight = (getDisplayMaxHeightInPx * 1.5).toInt()
         // -1 so it doesn't try to split when imageHeight = getDisplayHeightInPx
-        val partCount = (imageHeight - 1) / getDisplayMaxHeightInPx + 1
+        val partCount = (imageHeight - 1) / splitHeight + 1
 
-        logcat { "Splitting ${imageHeight}px height image into $partCount part with estimated ${splitHeight}px per height" }
+        val optimalSplitHeight = imageHeight / partCount
+
+        val splitDataList = (0 until partCount).fold(mutableListOf<SplitData>()) { list, index ->
+            list.apply {
+                // Only continue if the list is empty or there is image remaining
+                if (isEmpty() || imageHeight > last().bottomOffset) {
+                    val topOffset = index * optimalSplitHeight
+                    var outputImageHeight = min(optimalSplitHeight, imageHeight - topOffset)
+
+                    val remainingHeight = imageHeight - (topOffset + outputImageHeight)
+                    // If remaining height is smaller or equal to 1/3th of
+                    // optimal split height then include it in current page
+                    if (remainingHeight <= (optimalSplitHeight / 3)) {
+                        outputImageHeight += remainingHeight
+                    }
+                    add(SplitData(index, topOffset, outputImageHeight))
+                }
+            }
+        }
 
         val bitmapRegionDecoder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             BitmapRegionDecoder.newInstance(imageFile.openInputStream())
@@ -220,34 +238,50 @@ object ImageUtil {
             return false
         }
 
-        try {
-            (0 until partCount).forEach { splitIndex ->
-                val splitPath = imageFilePath.substringBeforeLast(".") + "__${"%03d".format(splitIndex + 1)}.jpg"
+        logcat {
+            "Splitting image with height of $imageHeight into $partCount part " +
+                "with estimated ${optimalSplitHeight}px height per split"
+        }
 
-                val topOffset = splitIndex * splitHeight
-                val outputImageHeight = min(splitHeight, imageHeight - topOffset)
-                val bottomOffset = topOffset + outputImageHeight
-                logcat { "Split #$splitIndex with topOffset=$topOffset height=$outputImageHeight bottomOffset=$bottomOffset" }
+        return try {
+            splitDataList.forEach { splitData ->
+                val splitPath = splitImagePath(imageFilePath, splitData.index)
 
-                val region = Rect(0, topOffset, imageWidth, bottomOffset)
+                val region = Rect(0, splitData.topOffset, imageWidth, splitData.bottomOffset)
 
                 FileOutputStream(splitPath).use { outputStream ->
                     val splitBitmap = bitmapRegionDecoder.decodeRegion(region, options)
                     splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    splitBitmap.recycle()
+                }
+                logcat {
+                    "Success: Split #${splitData.index + 1} with topOffset=${splitData.topOffset} " +
+                        "height=${splitData.outputImageHeight} bottomOffset=${splitData.bottomOffset}"
                 }
             }
             imageFile.delete()
-            return true
+            true
         } catch (e: Exception) {
             // Image splits were not successfully saved so delete them and keep the original image
-            (0 until partCount)
-                .map { imageFilePath.substringBeforeLast(".") + "__${"%03d".format(it + 1)}.jpg" }
+            splitDataList
+                .map { splitImagePath(imageFilePath, it.index) }
                 .forEach { File(it).delete() }
             logcat(LogPriority.ERROR, e)
-            return false
+            false
         } finally {
             bitmapRegionDecoder.recycle()
         }
+    }
+
+    private fun splitImagePath(imageFilePath: String, index: Int) =
+        imageFilePath.substringBeforeLast(".") + "__${"%03d".format(index + 1)}.jpg"
+
+    data class SplitData(
+        val index: Int,
+        val topOffset: Int,
+        val outputImageHeight: Int,
+    ) {
+        val bottomOffset = topOffset + outputImageHeight
     }
 
     /**
