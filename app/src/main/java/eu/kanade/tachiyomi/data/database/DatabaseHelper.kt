@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.data.database.mappers.MangaTypeMapping
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
-import eu.kanade.tachiyomi.data.database.queries.MangaCategoryQueries
 import eu.kanade.tachiyomi.data.database.queries.MangaQueries
 
 /**
@@ -17,7 +16,7 @@ import eu.kanade.tachiyomi.data.database.queries.MangaQueries
 class DatabaseHelper(
     openHelper: SupportSQLiteOpenHelper,
 ) :
-    MangaQueries, MangaCategoryQueries {
+    MangaQueries {
 
     override val db = DefaultStorIOSQLite.builder()
         .sqliteOpenHelper(openHelper)

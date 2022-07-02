@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.browse.source.browse
 import android.os.Bundle
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.domain.category.interactor.GetCategories
-import eu.kanade.domain.category.model.toDbCategory
+import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
@@ -13,7 +13,6 @@ import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -74,6 +73,7 @@ open class BrowseSourcePresenter(
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
+    private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
     private val syncChaptersWithTrackServiceTwoWay: SyncChaptersWithTrackServiceTwoWay = Injekt.get(),
 ) : BasePresenter<BrowseSourceController>() {
@@ -388,8 +388,12 @@ open class BrowseSourcePresenter(
      * @param manga the manga to move.
      */
     private fun moveMangaToCategories(manga: Manga, categories: List<DomainCategory>) {
-        val mc = categories.filter { it.id != 0L }.map { MangaCategory.create(manga, it.toDbCategory()) }
-        db.setMangaCategories(mc, listOf(manga))
+        presenterScope.launchIO {
+            setMangaCategories.await(
+                mangaId = manga.id!!,
+                categoryIds = categories.filter { it.id != 0L }.map { it.id },
+            )
+        }
     }
 
     /**
