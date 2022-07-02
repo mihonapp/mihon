@@ -75,7 +75,7 @@ fun DomainManga.shouldDownloadNewChapters(db: DatabaseHelper, prefs: Preferences
 
     // Get all categories, else default category (0)
     val categoriesForManga =
-        db.getCategoriesForManga(toDbManga()).executeAsBlocking()
+        db.getCategoriesForManga(id).executeAsBlocking()
             .mapNotNull { it.id }
             .takeUnless { it.isEmpty() } ?: listOf(0)
 
