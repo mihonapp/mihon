@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -104,10 +105,12 @@ class DownloadManager(
 
     fun startDownloadNow(chapterId: Long?) {
         if (chapterId == null) return
-        val download = downloader.queue.find { it.chapter.id == chapterId } ?: return
+        val download = downloader.queue.find { it.chapter.id == chapterId }
+        // If not in queue try to start a new download
+        val toAdd = download ?: runBlocking { Download.fromChapterId(chapterId) } ?: return
         val queue = downloader.queue.toMutableList()
-        queue.remove(download)
-        queue.add(0, download)
+        download?.let { queue.remove(it) }
+        queue.add(0, toAdd)
         reorderQueue(queue)
         if (isPaused()) {
             if (DownloadService.isRunning(context)) {

@@ -1,10 +1,17 @@
 package eu.kanade.tachiyomi.data.download.model
 
+import eu.kanade.domain.chapter.interactor.GetChapter
+import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import rx.subjects.PublishSubject
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 data class Download(
     val source: HttpSource,
@@ -56,5 +63,20 @@ data class Download(
         DOWNLOADING(2),
         DOWNLOADED(3),
         ERROR(4),
+    }
+
+    companion object {
+        suspend fun fromChapterId(
+            chapterId: Long,
+            getChapter: GetChapter = Injekt.get(),
+            getMangaById: GetMangaById = Injekt.get(),
+            sourceManager: SourceManager = Injekt.get(),
+        ): Download? {
+            val chapter = getChapter.await(chapterId) ?: return null
+            val manga = getMangaById.await(chapter.mangaId) ?: return null
+            val source = sourceManager.get(manga.source) as? HttpSource ?: return null
+
+            return Download(source, manga.toDbManga(), chapter.toDbChapter())
+        }
     }
 }

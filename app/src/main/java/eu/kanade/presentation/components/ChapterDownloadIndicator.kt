@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -50,6 +49,14 @@ fun ChapterDownloadIndicator(
                     } else {
                         onClick(ChapterDownloadAction.START)
                     }
+                },
+                onLongClick = {
+                    val chapterDownloadAction = when {
+                        isDownloaded -> ChapterDownloadAction.DELETE
+                        isDownloading -> ChapterDownloadAction.CANCEL
+                        else -> ChapterDownloadAction.START_NOW
+                    }
+                    onClick(chapterDownloadAction)
                 },
             ) {
                 if (isDownloaded) {
