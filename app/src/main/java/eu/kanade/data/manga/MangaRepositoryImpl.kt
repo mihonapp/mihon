@@ -79,15 +79,15 @@ class MangaRepositoryImpl(
                 genre = manga.genre,
                 title = manga.title,
                 status = manga.status,
-                thumbnail_url = manga.thumbnailUrl,
+                thumbnailUrl = manga.thumbnailUrl,
                 favorite = manga.favorite,
-                last_update = manga.lastUpdate,
-                next_update = null,
+                lastUpdate = manga.lastUpdate,
+                nextUpdate = null,
                 initialized = manga.initialized,
-                viewer = manga.viewerFlags,
-                chapter_flags = manga.chapterFlags,
-                cover_last_modified = manga.coverLastModified,
-                date_added = manga.dateAdded,
+                viewerFlags = manga.viewerFlags,
+                chapterFlags = manga.chapterFlags,
+                coverLastModified = manga.coverLastModified,
+                dateAdded = manga.dateAdded,
             )
             mangasQueries.selectLastInsertedRowId()
         }

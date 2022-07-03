@@ -41,39 +41,28 @@ class ChapterRepositoryImpl(
     }
 
     override suspend fun update(chapterUpdate: ChapterUpdate) {
-        handler.await {
-            chaptersQueries.update(
-                chapterUpdate.mangaId,
-                chapterUpdate.url,
-                chapterUpdate.name,
-                chapterUpdate.scanlator,
-                chapterUpdate.read?.toLong(),
-                chapterUpdate.bookmark?.toLong(),
-                chapterUpdate.lastPageRead,
-                chapterUpdate.chapterNumber?.toDouble(),
-                chapterUpdate.sourceOrder,
-                chapterUpdate.dateFetch,
-                chapterUpdate.dateUpload,
-                chapterId = chapterUpdate.id,
-            )
-        }
+        partialUpdate(chapterUpdate)
     }
 
     override suspend fun updateAll(chapterUpdates: List<ChapterUpdate>) {
+        partialUpdate(*chapterUpdates.toTypedArray())
+    }
+
+    private suspend fun partialUpdate(vararg chapterUpdates: ChapterUpdate) {
         handler.await(inTransaction = true) {
             chapterUpdates.forEach { chapterUpdate ->
                 chaptersQueries.update(
-                    chapterUpdate.mangaId,
-                    chapterUpdate.url,
-                    chapterUpdate.name,
-                    chapterUpdate.scanlator,
-                    chapterUpdate.read?.toLong(),
-                    chapterUpdate.bookmark?.toLong(),
-                    chapterUpdate.lastPageRead,
-                    chapterUpdate.chapterNumber?.toDouble(),
-                    chapterUpdate.sourceOrder,
-                    chapterUpdate.dateFetch,
-                    chapterUpdate.dateUpload,
+                    mangaId = chapterUpdate.mangaId,
+                    url = chapterUpdate.url,
+                    name = chapterUpdate.name,
+                    scanlator = chapterUpdate.scanlator,
+                    read = chapterUpdate.read?.toLong(),
+                    bookmark = chapterUpdate.bookmark?.toLong(),
+                    lastPageRead = chapterUpdate.lastPageRead,
+                    chapterNumber = chapterUpdate.chapterNumber?.toDouble(),
+                    sourceOrder = chapterUpdate.sourceOrder,
+                    dateFetch = chapterUpdate.dateFetch,
+                    dateUpload = chapterUpdate.dateUpload,
                     chapterId = chapterUpdate.id,
                 )
             }

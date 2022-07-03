@@ -86,15 +86,15 @@ abstract class AbstractBackupManager(protected val context: Context) {
                 genre = manga.getGenres(),
                 title = manga.title,
                 status = manga.status.toLong(),
-                thumbnail_url = manga.thumbnail_url,
+                thumbnailUrl = manga.thumbnail_url,
                 favorite = manga.favorite,
-                last_update = manga.last_update,
-                next_update = 0L,
+                lastUpdate = manga.last_update,
+                nextUpdate = 0L,
                 initialized = manga.initialized,
-                viewer = manga.viewer_flags.toLong(),
-                chapter_flags = manga.chapter_flags.toLong(),
-                cover_last_modified = manga.cover_last_modified,
-                date_added = manga.date_added,
+                viewerFlags = manga.viewer_flags.toLong(),
+                chapterFlags = manga.chapter_flags.toLong(),
+                coverLastModified = manga.cover_last_modified,
+                dateAdded = manga.date_added,
             )
             mangasQueries.selectLastInsertedRowId()
         }

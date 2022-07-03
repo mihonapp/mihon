@@ -25,10 +25,6 @@ CREATE TABLE mangas(
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
 CREATE INDEX mangas_url_index ON mangas(url);
 
-insert:
-INSERT INTO mangas(source,url,artist,author,description,genre,title,status,thumbnail_url,favorite,last_update,next_update,initialized,viewer,chapter_flags,cover_last_modified,date_added)
-VALUES (:source,:url,:artist,:author,:description,:genre,:title,:status,:thumbnail_url,:favorite,:last_update,:next_update,:initialized,:viewer,:chapter_flags,:cover_last_modified,:date_added);
-
 getMangaById:
 SELECT *
 FROM mangas
@@ -145,43 +141,9 @@ deleteMangasNotInLibraryBySourceIds:
 DELETE FROM mangas
 WHERE favorite = 0 AND source IN :sourceIds;
 
-INSERT INTO mangas(
-    source,
-    url,
-    artist,
-    author,
-    description,
-    genre,
-    title,
-    status,
-    thumbnail_url,
-    favorite,
-    last_update,
-    next_update,
-    initialized,
-    viewer,
-    chapter_flags,
-    cover_last_modified,
-    date_added
-) VALUES (
-    :source,
-    :url,
-    :artist,
-    :author,
-    :description,
-    :genre,
-    :title,
-    :status,
-    :thumbnailUrl,
-    :favorite,
-    :lastUpdate,
-    0,
-    :initialized,
-    :viewerFlags,
-    :chapterFlags,
-    :coverLastModified,
-    :dateAdded
-);
+insert:
+INSERT INTO mangas(source,url,artist,author,description,genre,title,status,thumbnail_url,favorite,last_update,next_update,initialized,viewer,chapter_flags,cover_last_modified,date_added)
+VALUES (:source,:url,:artist,:author,:description,:genre,:title,:status,:thumbnailUrl,:favorite,:lastUpdate,:nextUpdate,:initialized,:viewerFlags,:chapterFlags,:coverLastModified,:dateAdded);
 
 update:
 UPDATE mangas SET

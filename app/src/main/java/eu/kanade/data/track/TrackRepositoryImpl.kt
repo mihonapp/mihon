@@ -37,27 +37,16 @@ class TrackRepositoryImpl(
     }
 
     override suspend fun insert(track: Track) {
-        handler.await {
-            manga_syncQueries.insert(
-                mangaId = track.mangaId,
-                syncId = track.syncId,
-                remoteId = track.remoteId,
-                libraryId = track.libraryId,
-                title = track.title,
-                lastChapterRead = track.lastChapterRead,
-                totalChapters = track.totalChapters,
-                status = track.status,
-                score = track.score,
-                remoteUrl = track.remoteUrl,
-                startDate = track.startDate,
-                finishDate = track.finishDate,
-            )
-        }
+        insertValues(track)
     }
 
     override suspend fun insertAll(tracks: List<Track>) {
+        insertValues(*tracks.toTypedArray())
+    }
+
+    private suspend fun insertValues(vararg values: Track) {
         handler.await(inTransaction = true) {
-            tracks.forEach { mangaTrack ->
+            values.forEach { mangaTrack ->
                 manga_syncQueries.insert(
                     mangaId = mangaTrack.mangaId,
                     syncId = mangaTrack.syncId,
