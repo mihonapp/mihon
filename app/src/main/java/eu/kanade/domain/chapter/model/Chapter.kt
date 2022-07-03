@@ -1,5 +1,6 @@
 package eu.kanade.domain.chapter.model
 
+import eu.kanade.tachiyomi.data.database.models.ChapterImpl
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.data.database.models.Chapter as DbChapter
 
@@ -61,7 +62,7 @@ data class Chapter(
 }
 
 // TODO: Remove when all deps are migrated
-fun Chapter.toDbChapter(): DbChapter = DbChapter.create().also {
+fun Chapter.toDbChapter(): DbChapter = ChapterImpl().also {
     it.id = id
     it.manga_id = mangaId
     it.url = url

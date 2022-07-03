@@ -9,6 +9,7 @@ import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.UpdateChapter
+import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetLibraryManga
@@ -19,7 +20,6 @@ import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -547,7 +547,7 @@ class LibraryPresenter(
                 updateChapter.awaitAll(toUpdate)
 
                 if (read && preferences.removeAfterMarkedAsRead()) {
-                    deleteChapters(manga, chapters.map { it.toDbChapter() })
+                    deleteChapters(manga, chapters)
                 }
             }
         }
@@ -555,7 +555,7 @@ class LibraryPresenter(
 
     private fun deleteChapters(manga: Manga, chapters: List<Chapter>) {
         sourceManager.get(manga.source)?.let { source ->
-            downloadManager.deleteChapters(chapters, manga.toDbManga(), source)
+            downloadManager.deleteChapters(chapters.map { it.toDbChapter() }, manga.toDbManga(), source)
         }
     }
 

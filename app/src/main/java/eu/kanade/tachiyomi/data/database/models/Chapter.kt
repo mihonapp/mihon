@@ -20,11 +20,7 @@ interface Chapter : SChapter, Serializable {
 
     var source_order: Int
 
-    val isRecognizedNumber: Boolean
-        get() = chapter_number >= 0f
-
     companion object {
-
         fun create(): Chapter = ChapterImpl().apply {
             chapter_number = -1f
         }

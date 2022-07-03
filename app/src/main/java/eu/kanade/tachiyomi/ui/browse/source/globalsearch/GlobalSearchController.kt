@@ -10,8 +10,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.chrisbanes.insetter.applyInsetter
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.GlobalSearchControllerBinding
 import eu.kanade.tachiyomi.source.CatalogueSource
@@ -65,7 +65,7 @@ open class GlobalSearchController(
      * @param manga clicked item containing manga information.
      */
     override fun onMangaClick(manga: Manga) {
-        router.pushController(MangaController(manga.id!!, true))
+        router.pushController(MangaController(manga.id, true))
     }
 
     /**

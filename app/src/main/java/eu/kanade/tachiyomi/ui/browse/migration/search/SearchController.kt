@@ -7,10 +7,8 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.domain.manga.interactor.GetManga
-import eu.kanade.domain.manga.model.toDbManga
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
@@ -32,7 +30,6 @@ class SearchController(
         runBlocking {
             Injekt.get<GetManga>()
                 .await(mangaId)
-                ?.toDbManga()
         },
     )
 
@@ -89,7 +86,7 @@ class SearchController(
         if (!isReplacingManga) {
             router.popController(this)
             if (newManga?.id != null) {
-                val newMangaController = RouterTransaction.with(MangaController(newManga.id!!))
+                val newMangaController = RouterTransaction.with(MangaController(newManga.id))
                 if (router.backstack.lastOrNull()?.controller is MangaController) {
                     // Replace old MangaController
                     router.replaceTopController(newMangaController)
@@ -109,7 +106,7 @@ class SearchController(
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
             val prefValue = preferences.migrateFlags().get()
             val enabledFlagsPositions = MigrationFlags.getEnabledFlagsPositions(prefValue)
-            val items = MigrationFlags.titles(manga?.toDomainManga())
+            val items = MigrationFlags.titles(manga)
                 .map { resources?.getString(it) }
                 .toTypedArray()
             val selected = items
@@ -145,7 +142,7 @@ class SearchController(
                 }
                 .setNeutralButton(activity?.getString(R.string.action_show_manga)) { _, _ ->
                     dismissDialog()
-                    router.pushController(MangaController(newManga!!.id!!))
+                    router.pushController(MangaController(newManga!!.id))
                 }
                 .create()
         }
@@ -154,6 +151,6 @@ class SearchController(
     override fun onTitleClick(source: CatalogueSource) {
         presenter.preferences.lastUsedSource().set(source.id)
 
-        router.pushController(SourceSearchController(manga?.toDomainManga(), source, presenter.query))
+        router.pushController(SourceSearchController(manga, source, presenter.query))
     }
 }

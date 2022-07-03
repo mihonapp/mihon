@@ -4,8 +4,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import coil.dispose
 import eu.davidea.viewholders.FlexibleViewHolder
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.databinding.GlobalSearchControllerCardItemBinding
 import eu.kanade.tachiyomi.util.view.loadAutoPause
 

@@ -23,9 +23,7 @@ import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -375,7 +373,7 @@ class MangaPresenter(
             getTracks.subscribe(manga.id)
                 .catch { logcat(LogPriority.ERROR, it) }
                 .map { tracks ->
-                    val loggedServicesId = loggedServices.map { it.id.toLong() }
+                    val loggedServicesId = loggedServices.map { it.id }
                     tracks.filter { it.syncId in loggedServicesId }.size
                 }
                 .collectLatest { trackingCount ->
@@ -464,8 +462,7 @@ class MangaPresenter(
                     )
 
                     if (manualFetch) {
-                        val dbChapters = newChapters.map { it.toDbChapter() }
-                        downloadNewChapters(dbChapters)
+                        downloadNewChapters(newChapters)
                     }
                 }
             } catch (e: Throwable) {
@@ -592,12 +589,12 @@ class MangaPresenter(
         }
     }
 
-    private fun downloadNewChapters(chapters: List<Chapter>) {
+    private fun downloadNewChapters(chapters: List<DomainChapter>) {
         presenterScope.launchIO {
             val manga = successState?.manga ?: return@launchIO
             val categories = getCategories.await(manga.id).map { it.id }
             if (chapters.isEmpty() || !manga.shouldDownloadNewChapters(categories, preferences)) return@launchIO
-            downloadChapters(chapters.map { it.toDomainChapter()!! })
+            downloadChapters(chapters)
         }
     }
 
@@ -784,7 +781,7 @@ class MangaPresenter(
         val manga = successState?.manga ?: return
 
         presenterScope.launchIO {
-            deleteTrack.await(manga.id, service.id.toLong())
+            deleteTrack.await(manga.id, service.id)
         }
     }
 

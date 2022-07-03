@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.browse.source.globalsearch
 
 import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.domain.manga.model.Manga
 
 /**
  * Adapter that holds the manga items from search results.

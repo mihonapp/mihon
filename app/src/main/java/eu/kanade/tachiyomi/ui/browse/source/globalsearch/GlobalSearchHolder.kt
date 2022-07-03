@@ -4,7 +4,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import eu.davidea.viewholders.FlexibleViewHolder
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.databinding.GlobalSearchControllerCardBinding
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -92,7 +92,7 @@ class GlobalSearchHolder(view: View, val adapter: GlobalSearchAdapter) :
     private fun getHolder(manga: Manga): GlobalSearchCardHolder? {
         mangaAdapter.allBoundViewHolders.forEach { holder ->
             val item = mangaAdapter.getItem(holder.bindingAdapterPosition)
-            if (item != null && item.manga.id!! == manga.id!!) {
+            if (item != null && item.manga.id == manga.id) {
                 return holder as GlobalSearchCardHolder
             }
         }

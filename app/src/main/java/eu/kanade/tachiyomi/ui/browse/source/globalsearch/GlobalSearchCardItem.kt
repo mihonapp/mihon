@@ -5,8 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Manga
 
 class GlobalSearchCardItem(val manga: Manga) : AbstractFlexibleItem<GlobalSearchCardHolder>() {
 
@@ -35,6 +35,6 @@ class GlobalSearchCardItem(val manga: Manga) : AbstractFlexibleItem<GlobalSearch
     }
 
     override fun hashCode(): Int {
-        return manga.id?.toInt() ?: 0
+        return manga.id.hashCode()
     }
 }

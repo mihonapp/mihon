@@ -352,7 +352,7 @@ class MangaController :
      */
     private fun migrateManga() {
         val manga = presenter.manga ?: return
-        val controller = SearchController(manga.toDbManga())
+        val controller = SearchController(manga)
         controller.targetController = this
         router.pushController(controller)
     }
