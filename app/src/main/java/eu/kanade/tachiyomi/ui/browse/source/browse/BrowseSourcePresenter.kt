@@ -289,7 +289,7 @@ open class BrowseSourcePresenter(
         if (!manga.favorite) {
             manga.removeCovers(coverCache)
         } else {
-            ChapterSettingsHelper.applySettingDefaults(manga)
+            ChapterSettingsHelper.applySettingDefaults(manga.toDomainManga()!!)
 
             autoAddTrack(manga)
         }

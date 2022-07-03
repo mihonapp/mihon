@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
-import eu.kanade.tachiyomi.data.database.models.Chapter
+import eu.kanade.domain.chapter.model.Chapter
+import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import kotlin.math.floor
 
@@ -8,7 +9,7 @@ private val pattern = Regex("""\d+""")
 
 fun hasMissingChapters(higherReaderChapter: ReaderChapter?, lowerReaderChapter: ReaderChapter?): Boolean {
     if (higherReaderChapter == null || lowerReaderChapter == null) return false
-    return hasMissingChapters(higherReaderChapter.chapter, lowerReaderChapter.chapter)
+    return hasMissingChapters(higherReaderChapter.chapter.toDomainChapter(), lowerReaderChapter.chapter.toDomainChapter())
 }
 
 fun hasMissingChapters(higherChapter: Chapter?, lowerChapter: Chapter?): Boolean {
@@ -17,7 +18,7 @@ fun hasMissingChapters(higherChapter: Chapter?, lowerChapter: Chapter?): Boolean
     if (!pattern.containsMatchIn(higherChapter.name) || !pattern.containsMatchIn(lowerChapter.name)) return false
     // Check if potential chapter number was recognized as chapter number
     if (!higherChapter.isRecognizedNumber || !lowerChapter.isRecognizedNumber) return false
-    return hasMissingChapters(higherChapter.chapter_number, lowerChapter.chapter_number)
+    return hasMissingChapters(higherChapter.chapterNumber, lowerChapter.chapterNumber)
 }
 
 fun hasMissingChapters(higherChapterNumber: Float, lowerChapterNumber: Float): Boolean {
@@ -27,7 +28,7 @@ fun hasMissingChapters(higherChapterNumber: Float, lowerChapterNumber: Float): B
 
 fun calculateChapterDifference(higherReaderChapter: ReaderChapter?, lowerReaderChapter: ReaderChapter?): Float {
     if (higherReaderChapter == null || lowerReaderChapter == null) return 0f
-    return calculateChapterDifference(higherReaderChapter.chapter, lowerReaderChapter.chapter)
+    return calculateChapterDifference(higherReaderChapter.chapter.toDomainChapter(), lowerReaderChapter.chapter.toDomainChapter())
 }
 
 fun calculateChapterDifference(higherChapter: Chapter?, lowerChapter: Chapter?): Float {
@@ -36,7 +37,7 @@ fun calculateChapterDifference(higherChapter: Chapter?, lowerChapter: Chapter?):
     if (!pattern.containsMatchIn(higherChapter.name) || !pattern.containsMatchIn(lowerChapter.name)) return 0f
     // Check if potential chapter number was recognized as chapter number
     if (!higherChapter.isRecognizedNumber || !lowerChapter.isRecognizedNumber) return 0f
-    return calculateChapterDifference(higherChapter.chapter_number, lowerChapter.chapter_number)
+    return calculateChapterDifference(higherChapter.chapterNumber, lowerChapter.chapterNumber)
 }
 
 fun calculateChapterDifference(higherChapterNumber: Float, lowerChapterNumber: Float): Float {

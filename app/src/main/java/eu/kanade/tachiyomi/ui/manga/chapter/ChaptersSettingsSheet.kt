@@ -7,7 +7,6 @@ import android.view.View
 import androidx.core.view.isVisible
 import com.bluelinelabs.conductor.Router
 import eu.kanade.domain.manga.model.Manga
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.manga.model.toTriStateGroupState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.manga.MangaPresenter
@@ -79,7 +78,7 @@ class ChaptersSettingsSheet(
             onMenuItemClick = {
                 when (itemId) {
                     R.id.set_as_default -> {
-                        SetChapterSettingsDialog(presenter.manga!!.toDbManga()).showDialog(router)
+                        SetChapterSettingsDialog(presenter.manga!!).showDialog(router)
                     }
                 }
             },

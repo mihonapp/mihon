@@ -267,7 +267,7 @@ class ReaderPresenter(
 
         val context = Injekt.get<Application>()
         val source = sourceManager.getOrStub(manga.source)
-        loader = ChapterLoader(context, downloadManager, manga, source)
+        loader = ChapterLoader(context, downloadManager, manga.toDomainManga()!!, source)
 
         Observable.just(manga).subscribeLatestCache(ReaderActivity::setManga)
         viewerChaptersRelay.subscribeLatestCache(ReaderActivity::setChapters)

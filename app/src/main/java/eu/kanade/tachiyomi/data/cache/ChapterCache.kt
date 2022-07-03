@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.data.cache
 import android.content.Context
 import android.text.format.Formatter
 import com.jakewharton.disklrucache.DiskLruCache
-import eu.kanade.tachiyomi.data.database.models.Chapter
+import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.saveTo
@@ -207,6 +207,6 @@ class ChapterCache(private val context: Context) {
     }
 
     private fun getKey(chapter: Chapter): String {
-        return "${chapter.manga_id}${chapter.url}"
+        return "${chapter.mangaId}${chapter.url}"
     }
 }

@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.system.toast

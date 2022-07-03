@@ -3,7 +3,8 @@ package eu.kanade.tachiyomi.ui.reader.loader
 import android.app.Application
 import android.net.Uri
 import com.hippo.unifile.UniFile
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
@@ -45,7 +46,7 @@ class DownloadPageLoader(
     }
 
     private fun getPagesFromDirectory(): Observable<List<ReaderPage>> {
-        return downloadManager.buildPageList(source, manga, chapter.chapter)
+        return downloadManager.buildPageList(source, manga.toDbManga(), chapter.chapter)
             .map { pages ->
                 pages.map { page ->
                     ReaderPage(page.index, page.url, page.imageUrl) {

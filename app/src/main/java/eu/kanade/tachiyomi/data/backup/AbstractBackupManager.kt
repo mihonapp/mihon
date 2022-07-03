@@ -4,16 +4,18 @@ import android.content.Context
 import android.net.Uri
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.data.toLong
+import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
+import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetFavorites
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.toSChapter
-import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import data.Mangas as DbManga
@@ -27,6 +29,7 @@ abstract class AbstractBackupManager(protected val context: Context) {
     internal val trackManager: TrackManager = Injekt.get()
     protected val preferences: PreferencesHelper = Injekt.get()
     private val getFavorites: GetFavorites = Injekt.get()
+    private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
 
     abstract suspend fun createBackup(uri: Uri, flags: Int, isAutoBackup: Boolean): String
 
@@ -50,12 +53,12 @@ abstract class AbstractBackupManager(protected val context: Context) {
     internal suspend fun restoreChapters(source: Source, manga: Manga, chapters: List<Chapter>): Pair<List<Chapter>, List<Chapter>> {
         val fetchedChapters = source.getChapterList(manga.toMangaInfo())
             .map { it.toSChapter() }
-        val syncedChapters = syncChaptersWithSource(fetchedChapters, manga, source)
+        val syncedChapters = syncChaptersWithSource.await(fetchedChapters, manga.toDomainManga()!!, source)
         if (syncedChapters.first.isNotEmpty()) {
             chapters.forEach { it.manga_id = manga.id }
             updateChapters(chapters)
         }
-        return syncedChapters
+        return syncedChapters.first.map { it.toDbChapter() } to syncedChapters.second.map { it.toDbChapter() }
     }
 
     /**

@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -73,7 +74,7 @@ class HttpPageLoader(
                 .fromAction {
                     // Convert to pages without reader information
                     val pagesToSave = pages.map { Page(it.index, it.url, it.imageUrl) }
-                    chapterCache.putPageListToCache(chapter.chapter, pagesToSave)
+                    chapterCache.putPageListToCache(chapter.chapter.toDomainChapter()!!, pagesToSave)
                 }
                 .onErrorComplete()
                 .subscribeOn(Schedulers.io())
@@ -86,7 +87,7 @@ class HttpPageLoader(
      * the local cache, otherwise fallbacks to network.
      */
     override fun getPages(): Observable<List<ReaderPage>> {
-        return Observable.fromCallable { chapterCache.getPageListFromCache(chapter.chapter) }
+        return Observable.fromCallable { chapterCache.getPageListFromCache(chapter.chapter.toDomainChapter()!!) }
             .onErrorResumeNext { source.fetchPageList(chapter.chapter) }
             .map { pages ->
                 pages.mapIndexed { index, page ->
