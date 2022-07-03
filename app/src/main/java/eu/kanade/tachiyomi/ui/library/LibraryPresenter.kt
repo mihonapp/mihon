@@ -17,7 +17,6 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.model.isLocal
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
@@ -154,7 +153,7 @@ class LibraryPresenter(
             val isDownloaded = when {
                 item.manga.toDomainManga()!!.isLocal() -> true
                 item.downloadCount != -1 -> item.downloadCount > 0
-                else -> downloadManager.getDownloadCount(item.manga) > 0
+                else -> downloadManager.getDownloadCount(item.manga.toDomainManga()!!) > 0
             }
 
             return@downloaded if (downloadedOnly || filterDownloaded == State.INCLUDE.value) isDownloaded
@@ -236,7 +235,7 @@ class LibraryPresenter(
         for ((_, itemList) in map) {
             for (item in itemList) {
                 item.downloadCount = if (showDownloadBadges) {
-                    downloadManager.getDownloadCount(item.manga)
+                    downloadManager.getDownloadCount(item.manga.toDomainManga()!!)
                 } else {
                     // Unset download count if not enabled
                     -1
@@ -521,7 +520,7 @@ class LibraryPresenter(
                     .filter { !it.read }
                     .map { it.toDbChapter() }
 
-                downloadManager.downloadChapters(manga.toDbManga(), chapters)
+                downloadManager.downloadChapters(manga, chapters)
             }
         }
     }
@@ -555,7 +554,7 @@ class LibraryPresenter(
 
     private fun deleteChapters(manga: Manga, chapters: List<Chapter>) {
         sourceManager.get(manga.source)?.let { source ->
-            downloadManager.deleteChapters(chapters.map { it.toDbChapter() }, manga.toDbManga(), source)
+            downloadManager.deleteChapters(chapters.map { it.toDbChapter() }, manga, source)
         }
     }
 
@@ -585,7 +584,7 @@ class LibraryPresenter(
                 mangaToDelete.forEach { manga ->
                     val source = sourceManager.get(manga.source) as? HttpSource
                     if (source != null) {
-                        downloadManager.deleteManga(manga, source)
+                        downloadManager.deleteManga(manga.toDomainManga()!!, source)
                     }
                 }
             }

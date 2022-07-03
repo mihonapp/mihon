@@ -5,10 +5,10 @@ import android.webkit.MimeTypeMap
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier

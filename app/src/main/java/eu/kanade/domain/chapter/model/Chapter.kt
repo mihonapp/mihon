@@ -42,22 +42,20 @@ data class Chapter(
     }
 
     companion object {
-        fun create(): Chapter {
-            return Chapter(
-                id = -1,
-                mangaId = -1,
-                read = false,
-                bookmark = false,
-                lastPageRead = 0,
-                dateFetch = 0,
-                sourceOrder = 0,
-                url = "",
-                name = "",
-                dateUpload = -1,
-                chapterNumber = -1f,
-                scanlator = null,
-            )
-        }
+        fun create() = Chapter(
+            id = -1,
+            mangaId = -1,
+            read = false,
+            bookmark = false,
+            lastPageRead = 0,
+            dateFetch = 0,
+            sourceOrder = 0,
+            url = "",
+            name = "",
+            dateUpload = -1,
+            chapterNumber = -1f,
+            scanlator = null,
+        )
     }
 }
 

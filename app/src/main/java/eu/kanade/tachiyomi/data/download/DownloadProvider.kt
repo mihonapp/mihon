@@ -3,9 +3,9 @@ package eu.kanade.tachiyomi.data.download
 import android.content.Context
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.storage.DiskUtil

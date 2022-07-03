@@ -305,7 +305,7 @@ class MangaPresenter(
      */
     fun hasDownloads(): Boolean {
         val manga = successState?.manga ?: return false
-        return downloadManager.getDownloadCount(manga.toDbManga()) > 0
+        return downloadManager.getDownloadCount(manga) > 0
     }
 
     /**
@@ -313,7 +313,7 @@ class MangaPresenter(
      */
     fun deleteDownloads() {
         val state = successState ?: return
-        downloadManager.deleteManga(state.manga.toDbManga(), state.source)
+        downloadManager.deleteManga(state.manga, state.source)
     }
 
     /**
@@ -541,7 +541,7 @@ class MangaPresenter(
      */
     fun downloadChapters(chapters: List<DomainChapter>) {
         val manga = successState?.manga ?: return
-        downloadManager.downloadChapters(manga.toDbManga(), chapters.map { it.toDbChapter() })
+        downloadManager.downloadChapters(manga, chapters.map { it.toDbChapter() })
     }
 
     /**
@@ -567,7 +567,7 @@ class MangaPresenter(
             try {
                 updateSuccessState { successState ->
                     val deletedIds = downloadManager
-                        .deleteChapters(chapters2, successState.manga.toDbManga(), successState.source)
+                        .deleteChapters(chapters2, successState.manga, successState.source)
                         .map { it.id }
                     val deletedChapters = successState.chapters.filter { deletedIds.contains(it.chapter.id) }
                     if (deletedChapters.isEmpty()) return@updateSuccessState successState

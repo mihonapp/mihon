@@ -5,8 +5,7 @@ import androidx.core.content.edit
 import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetManga
-import eu.kanade.domain.manga.model.toDbManga
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -96,7 +95,7 @@ class DownloadStore(
             val cachedManga = mutableMapOf<Long, Manga?>()
             for ((mangaId, chapterId) in objs) {
                 val manga = cachedManga.getOrPut(mangaId) {
-                    runBlocking { getManga.await(mangaId)?.toDbManga() }
+                    runBlocking { getManga.await(mangaId) }
                 } ?: continue
                 val source = sourceManager.get(manga.source) as? HttpSource ?: continue
                 val chapter = runBlocking { getChapter.await(chapterId) }?.toDbChapter() ?: continue

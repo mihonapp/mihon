@@ -33,20 +33,6 @@ data class Manga(
     val initialized: Boolean,
 ) : Serializable {
 
-    fun toSManga(): SManga {
-        return SManga.create().also {
-            it.url = url
-            it.title = title
-            it.artist = artist
-            it.author = author
-            it.description = description
-            it.genre = genre.orEmpty().joinToString()
-            it.status = status.toInt()
-            it.thumbnail_url = thumbnailUrl
-            it.initialized = initialized
-        }
-    }
-
     val sorting: Long
         get() = chapterFlags and CHAPTER_SORTING_MASK
 
@@ -100,6 +86,18 @@ data class Manga(
         return chapterFlags and CHAPTER_SORT_DIR_MASK == CHAPTER_SORT_DESC
     }
 
+    fun toSManga(): SManga = SManga.create().also {
+        it.url = url
+        it.title = title
+        it.artist = artist
+        it.author = author
+        it.description = description
+        it.genre = genre.orEmpty().joinToString()
+        it.status = status.toInt()
+        it.thumbnail_url = thumbnailUrl
+        it.initialized = initialized
+    }
+
     companion object {
         // Generic filter that does not filter anything
         const val SHOW_ALL = 0x00000000L
@@ -128,6 +126,26 @@ data class Manga(
         const val CHAPTER_DISPLAY_NAME = 0x00000000L
         const val CHAPTER_DISPLAY_NUMBER = 0x00100000L
         const val CHAPTER_DISPLAY_MASK = 0x00100000L
+
+        fun create() = Manga(
+            id = -1L,
+            url = "",
+            title = "",
+            source = -1L,
+            favorite = false,
+            lastUpdate = -1L,
+            dateAdded = -1L,
+            viewerFlags = -1L,
+            chapterFlags = -1L,
+            coverLastModified = -1L,
+            artist = null,
+            author = null,
+            description = null,
+            genre = null,
+            status = 0L,
+            thumbnailUrl = null,
+            initialized = false,
+        )
     }
 }
 

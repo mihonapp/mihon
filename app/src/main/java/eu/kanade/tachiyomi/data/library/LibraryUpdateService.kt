@@ -416,7 +416,7 @@ class LibraryUpdateService(
     private fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
         // We don't want to start downloading while the library is updating, because websites
         // may don't like it and they could ban the user.
-        downloadManager.downloadChapters(manga, chapters, false)
+        downloadManager.downloadChapters(manga.toDomainManga()!!, chapters, false)
     }
 
     /**

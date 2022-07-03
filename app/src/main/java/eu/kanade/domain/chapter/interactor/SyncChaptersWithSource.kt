@@ -7,7 +7,6 @@ import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
@@ -97,7 +96,7 @@ class SyncChaptersWithSource(
             } else {
                 if (shouldUpdateDbChapter.await(dbChapter, chapter)) {
                     if (dbChapter.name != chapter.name && downloadManager.isChapterDownloaded(dbChapter.name, dbChapter.scanlator, manga.title, manga.source)) {
-                        downloadManager.renameChapter(source, manga.toDbManga(), dbChapter.toDbChapter(), chapter.toDbChapter())
+                        downloadManager.renameChapter(source, manga, dbChapter.toDbChapter(), chapter.toDbChapter())
                     }
                     var toChangeChapter = dbChapter.copy(
                         name = chapter.name,
