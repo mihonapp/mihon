@@ -109,7 +109,7 @@ class SearchController(
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
             val prefValue = preferences.migrateFlags().get()
             val enabledFlagsPositions = MigrationFlags.getEnabledFlagsPositions(prefValue)
-            val items = MigrationFlags.titles(manga)
+            val items = MigrationFlags.titles(manga?.toDomainManga())
                 .map { resources?.getString(it) }
                 .toTypedArray()
             val selected = items

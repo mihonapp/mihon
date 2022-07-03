@@ -1,10 +1,10 @@
 package eu.kanade.tachiyomi.ui.browse.migration
 
+import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.util.hasCustomCover
 import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -49,7 +49,7 @@ object MigrationFlags {
     fun titles(manga: Manga?): Array<Int> {
         val titles = arrayOf(R.string.chapters, R.string.categories).toMutableList()
         if (manga != null) {
-            if (runBlocking { getTracks.await(manga.id!!) }.isNotEmpty()) {
+            if (runBlocking { getTracks.await(manga.id) }.isNotEmpty()) {
                 titles.add(R.string.track)
             }
 

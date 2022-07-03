@@ -18,6 +18,7 @@ import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.category.model.toDbCategory
 import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
@@ -586,7 +587,7 @@ class LibraryController(
     }
 
     private fun showDeleteMangaDialog() {
-        DeleteLibraryMangasDialog(this, selectedMangas.toList()).showDialog(router)
+        DeleteLibraryMangasDialog(this, selectedMangas.toList().map { it.toDomainManga()!! }).showDialog(router)
     }
 
     override fun updateCategoriesForMangas(mangas: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {
@@ -594,8 +595,8 @@ class LibraryController(
         destroyActionModeIfNeeded()
     }
 
-    override fun deleteMangas(mangas: List<DbManga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
-        presenter.removeMangas(mangas, deleteFromLibrary, deleteChapters)
+    override fun deleteMangas(mangas: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
+        presenter.removeMangas(mangas.map { it.toDbManga() }, deleteFromLibrary, deleteChapters)
         destroyActionModeIfNeeded()
     }
 

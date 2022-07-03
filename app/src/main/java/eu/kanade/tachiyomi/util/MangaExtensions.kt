@@ -2,10 +2,12 @@ package eu.kanade.tachiyomi.util
 
 import android.content.Context
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
@@ -14,8 +16,6 @@ import uy.kohesive.injekt.api.get
 import java.io.InputStream
 import java.util.Date
 import eu.kanade.domain.manga.model.Manga as DomainManga
-
-fun Manga.isLocal() = source == LocalSource.ID
 
 /**
  * Call before updating [Manga.thumbnail_url] to ensure old cover can be cleared from cache
@@ -30,10 +30,10 @@ fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSa
     if (!refreshSameUrl && thumbnail_url == newUrl) return
 
     when {
-        isLocal() -> {
+        toDomainManga()!!.isLocal() -> {
             cover_last_modified = Date().time
         }
-        hasCustomCover(coverCache) -> {
+        toDomainManga()!!.hasCustomCover(coverCache) -> {
             coverCache.deleteFromCache(this, false)
         }
         else -> {
@@ -43,12 +43,8 @@ fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSa
     }
 }
 
-fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {
-    return coverCache.getCustomCoverFile(id).exists()
-}
-
 fun Manga.removeCovers(coverCache: CoverCache = Injekt.get()): Int {
-    if (isLocal()) return 0
+    if (toDomainManga()!!.isLocal()) return 0
 
     cover_last_modified = Date().time
     return coverCache.deleteFromCache(this, true)

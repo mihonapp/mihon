@@ -6,14 +6,14 @@ import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.util.hasCustomCover
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import eu.kanade.domain.manga.model.Manga as DomainManga
 
 class MangaKeyer : Keyer<Manga> {
     override fun key(data: Manga, options: Options): String {
-        return if (data.hasCustomCover()) {
+        return if (data.toDomainManga()!!.hasCustomCover()) {
             "${data.id};${data.cover_last_modified}"
         } else {
             "${data.thumbnail_url};${data.cover_last_modified}"
