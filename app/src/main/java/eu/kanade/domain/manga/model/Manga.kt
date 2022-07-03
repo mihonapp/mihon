@@ -175,6 +175,28 @@ fun Manga.toMangaInfo(): MangaInfo = MangaInfo(
     title = title,
 )
 
+fun Manga.toMangaUpdate(): MangaUpdate {
+    return MangaUpdate(
+        id = id,
+        source = source,
+        favorite = favorite,
+        lastUpdate = lastUpdate,
+        dateAdded = dateAdded,
+        viewerFlags = viewerFlags,
+        chapterFlags = chapterFlags,
+        coverLastModified = coverLastModified,
+        url = url,
+        title = title,
+        artist = artist,
+        author = author,
+        description = description,
+        genre = genre,
+        status = status,
+        thumbnailUrl = thumbnailUrl,
+        initialized = initialized,
+    )
+}
+
 fun Manga.isLocal(): Boolean = source == LocalSource.ID
 
 fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.core.content.edit
 import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.model.toDbChapter
-import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -34,7 +34,7 @@ class DownloadStore(
 
     private val json: Json by injectLazy()
 
-    private val getMangaById: GetMangaById by injectLazy()
+    private val getManga: GetManga by injectLazy()
     private val getChapter: GetChapter by injectLazy()
 
     /**
@@ -96,7 +96,7 @@ class DownloadStore(
             val cachedManga = mutableMapOf<Long, Manga?>()
             for ((mangaId, chapterId) in objs) {
                 val manga = cachedManga.getOrPut(mangaId) {
-                    runBlocking { getMangaById.await(mangaId)?.toDbManga() }
+                    runBlocking { getManga.await(mangaId)?.toDbManga() }
                 } ?: continue
                 val source = sourceManager.get(manga.source) as? HttpSource ?: continue
                 val chapter = runBlocking { getChapter.await(chapterId) }?.toDbChapter() ?: continue

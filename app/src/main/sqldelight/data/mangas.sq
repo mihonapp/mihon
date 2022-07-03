@@ -145,6 +145,44 @@ deleteMangasNotInLibraryBySourceIds:
 DELETE FROM mangas
 WHERE favorite = 0 AND source IN :sourceIds;
 
+INSERT INTO mangas(
+    source,
+    url,
+    artist,
+    author,
+    description,
+    genre,
+    title,
+    status,
+    thumbnail_url,
+    favorite,
+    last_update,
+    next_update,
+    initialized,
+    viewer,
+    chapter_flags,
+    cover_last_modified,
+    date_added
+) VALUES (
+    :source,
+    :url,
+    :artist,
+    :author,
+    :description,
+    :genre,
+    :title,
+    :status,
+    :thumbnailUrl,
+    :favorite,
+    :lastUpdate,
+    0,
+    :initialized,
+    :viewerFlags,
+    :chapterFlags,
+    :coverLastModified,
+    :dateAdded
+);
+
 update:
 UPDATE mangas SET
     source = coalesce(:source, source),

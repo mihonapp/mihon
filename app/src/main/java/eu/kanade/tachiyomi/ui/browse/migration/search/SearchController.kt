@@ -6,8 +6,9 @@ import androidx.core.view.isVisible
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import eu.kanade.domain.manga.interactor.GetManga
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -18,6 +19,7 @@ import eu.kanade.tachiyomi.ui.browse.migration.MigrationFlags
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchPresenter
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -27,9 +29,11 @@ class SearchController(
 ) : GlobalSearchController(manga?.title) {
 
     constructor(mangaId: Long) : this(
-        Injekt.get<DatabaseHelper>()
-            .getManga(mangaId)
-            .executeAsBlocking(),
+        runBlocking {
+            Injekt.get<GetManga>()
+                .await(mangaId)
+                ?.toDbManga()
+        },
     )
 
     private var newManga: Manga? = null

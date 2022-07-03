@@ -15,7 +15,6 @@ import eu.kanade.data.dateAdapter
 import eu.kanade.data.listOfStringsAdapter
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.DbOpenCallback
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -76,8 +75,6 @@ class AppModule(val app: Application) : InjektModule {
 
         addSingletonFactory { PreferencesHelper(app) }
 
-        addSingletonFactory { DatabaseHelper(get()) }
-
         addSingletonFactory { ChapterCache(app) }
 
         addSingletonFactory { CoverCache(app) }
@@ -105,8 +102,6 @@ class AppModule(val app: Application) : InjektModule {
             get<SourceManager>()
 
             get<Database>()
-
-            get<DatabaseHelper>()
 
             get<DownloadManager>()
         }

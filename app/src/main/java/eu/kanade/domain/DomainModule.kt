@@ -32,10 +32,13 @@ import eu.kanade.domain.history.interactor.UpsertHistory
 import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
 import eu.kanade.domain.manga.interactor.GetFavorites
-import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.manga.interactor.GetLibraryManga
+import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.interactor.GetMangaWithChapters
+import eu.kanade.domain.manga.interactor.InsertManga
 import eu.kanade.domain.manga.interactor.ResetViewerFlags
 import eu.kanade.domain.manga.interactor.SetMangaChapterFlags
+import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.domain.source.interactor.GetEnabledSources
@@ -71,11 +74,14 @@ class DomainModule : InjektModule {
         addSingletonFactory<MangaRepository> { MangaRepositoryImpl(get()) }
         addFactory { GetDuplicateLibraryManga(get()) }
         addFactory { GetFavorites(get()) }
+        addFactory { GetLibraryManga(get()) }
         addFactory { GetMangaWithChapters(get(), get()) }
-        addFactory { GetMangaById(get()) }
+        addFactory { GetManga(get()) }
         addFactory { GetNextChapter(get()) }
         addFactory { ResetViewerFlags(get()) }
         addFactory { SetMangaChapterFlags(get()) }
+        addFactory { SetMangaViewerFlags(get()) }
+        addFactory { InsertManga(get()) }
         addFactory { UpdateManga(get()) }
         addFactory { SetMangaCategories(get()) }
 

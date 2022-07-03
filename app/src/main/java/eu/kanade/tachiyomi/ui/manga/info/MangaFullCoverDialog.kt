@@ -20,7 +20,7 @@ import androidx.core.os.bundleOf
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
-import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.hasCustomCover
@@ -161,7 +161,7 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFul
 
     inner class MangaFullCoverPresenter(
         private val mangaId: Long,
-        private val getMangaById: GetMangaById = Injekt.get(),
+        private val getManga: GetManga = Injekt.get(),
     ) : Presenter<MangaFullCoverDialog>() {
 
         private var presenterScope: CoroutineScope = MainScope()
@@ -176,7 +176,7 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFul
         override fun onCreate(savedState: Bundle?) {
             super.onCreate(savedState)
             presenterScope.launchIO {
-                getMangaById.subscribe(mangaId)
+                getManga.subscribe(mangaId)
                     .collect { _mangaFlow.value = it }
             }
         }

@@ -149,7 +149,7 @@ class MangaPresenter(
 
         presenterScope.launchIO {
             if (!getMangaAndChapters.awaitManga(mangaId).favorite) {
-                ChapterSettingsHelper.applySettingDefaults(mangaId, setMangaChapterFlags)
+                ChapterSettingsHelper.applySettingDefaults(mangaId)
             }
 
             getMangaAndChapters.subscribe(mangaId)

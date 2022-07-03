@@ -9,7 +9,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
@@ -26,7 +26,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
     CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val getMangaById = Injekt.get<GetMangaById>()
+        val getManga = Injekt.get<GetManga>()
         val getTracks = Injekt.get<GetTracks>()
         val insertTrack = Injekt.get<InsertTrack>()
 
@@ -35,7 +35,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
 
         withContext(Dispatchers.IO) {
             val tracks = delayedTrackingStore.getItems().mapNotNull {
-                val manga = getMangaById.await(it.mangaId) ?: return@withContext
+                val manga = getManga.await(it.mangaId) ?: return@withContext
                 getTracks.await(manga.id)
                     .find { track -> track.id == it.trackId }
                     ?.copy(lastChapterRead = it.lastChapterRead.toDouble())

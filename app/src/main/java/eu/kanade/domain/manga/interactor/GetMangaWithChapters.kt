@@ -14,7 +14,7 @@ class GetMangaWithChapters(
 
     suspend fun subscribe(id: Long): Flow<Pair<Manga, List<Chapter>>> {
         return combine(
-            mangaRepository.subscribeMangaById(id),
+            mangaRepository.getMangaByIdAsFlow(id),
             chapterRepository.getChapterByMangaIdAsFlow(id),
         ) { manga, chapters ->
             Pair(manga, chapters)

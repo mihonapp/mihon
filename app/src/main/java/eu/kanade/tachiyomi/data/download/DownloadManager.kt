@@ -5,7 +5,6 @@ import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -32,7 +31,6 @@ import uy.kohesive.injekt.injectLazy
  */
 class DownloadManager(
     private val context: Context,
-    private val db: DatabaseHelper = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
 ) {
 

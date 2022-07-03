@@ -7,11 +7,14 @@ import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
+import eu.kanade.domain.manga.interactor.GetManga
+import eu.kanade.domain.manga.interactor.InsertManga
+import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toDbManga
+import eu.kanade.domain.manga.model.toMangaUpdate
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
@@ -67,13 +70,15 @@ open class BrowseSourcePresenter(
     private val sourceId: Long,
     searchQuery: String? = null,
     private val sourceManager: SourceManager = Injekt.get(),
-    private val db: DatabaseHelper = Injekt.get(),
     private val prefs: PreferencesHelper = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
+    private val getManga: GetManga = Injekt.get(),
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
+    private val insertManga: InsertManga = Injekt.get(),
+    private val updateManga: UpdateManga = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
     private val syncChaptersWithTrackServiceTwoWay: SyncChaptersWithTrackServiceTwoWay = Injekt.get(),
 ) : BasePresenter<BrowseSourceController>() {
@@ -208,19 +213,22 @@ open class BrowseSourcePresenter(
      * @return a manga from the database.
      */
     private fun networkToLocalManga(sManga: SManga, sourceId: Long): Manga {
-        var localManga = db.getManga(sManga.url, sourceId).executeAsBlocking()
+        var localManga = runBlocking { getManga.await(sManga.url, sourceId) }
         if (localManga == null) {
             val newManga = Manga.create(sManga.url, sManga.title, sourceId)
             newManga.copyFrom(sManga)
-            val result = db.insertManga(newManga).executeAsBlocking()
-            newManga.id = result.insertedId()
-            localManga = newManga
+            newManga.id = -1
+            val result = runBlocking {
+                val id = insertManga.await(newManga.toDomainManga()!!)
+                getManga.await(id!!)
+            }
+            localManga = result
         } else if (!localManga.favorite) {
             // if the manga isn't a favorite, set its display title from source
             // if it later becomes a favorite, updated title will go to db
-            localManga.title = sManga.title
+            localManga = localManga.copy(title = sManga.title)
         }
-        return localManga
+        return localManga?.toDbManga()!!
     }
 
     /**
@@ -255,7 +263,11 @@ open class BrowseSourcePresenter(
             val networkManga = source.getMangaDetails(manga.toMangaInfo())
             manga.copyFrom(networkManga.toSManga())
             manga.initialized = true
-            db.insertManga(manga).executeAsBlocking()
+            updateManga.await(
+                manga
+                    .toDomainManga()
+                    ?.toMangaUpdate()!!,
+            )
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
         }
@@ -282,7 +294,13 @@ open class BrowseSourcePresenter(
             autoAddTrack(manga)
         }
 
-        db.insertManga(manga).executeAsBlocking()
+        runBlocking {
+            updateManga.await(
+                manga
+                    .toDomainManga()
+                    ?.toMangaUpdate()!!,
+            )
+        }
     }
 
     private fun autoAddTrack(manga: Manga) {

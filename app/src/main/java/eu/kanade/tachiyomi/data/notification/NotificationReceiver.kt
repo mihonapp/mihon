@@ -11,7 +11,7 @@ import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.toChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
-import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupRestoreService
@@ -46,7 +46,7 @@ import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
  */
 class NotificationReceiver : BroadcastReceiver() {
 
-    private val getMangaById: GetMangaById by injectLazy()
+    private val getManga: GetManga by injectLazy()
     private val getChapter: GetChapter by injectLazy()
     private val updateChapter: UpdateChapter by injectLazy()
     private val downloadManager: DownloadManager by injectLazy()
@@ -178,7 +178,7 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param chapterId id of chapter
      */
     private fun openChapter(context: Context, mangaId: Long, chapterId: Long) {
-        val manga = runBlocking { getMangaById.await(mangaId) }
+        val manga = runBlocking { getManga.await(mangaId) }
         val chapter = runBlocking { getChapter.await(chapterId) }
         if (manga != null && chapter != null) {
             val intent = ReaderActivity.newIntent(context, manga.id, chapter.id).apply {
@@ -248,7 +248,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 .map {
                     val chapter = it.copy(read = true)
                     if (preferences.removeAfterMarkedAsRead()) {
-                        val manga = getMangaById.await(mangaId)
+                        val manga = getManga.await(mangaId)
                         if (manga != null) {
                             val source = sourceManager.get(manga.source)
                             if (source != null) {
@@ -270,7 +270,7 @@ class NotificationReceiver : BroadcastReceiver() {
      */
     private fun downloadChapters(chapterUrls: Array<String>, mangaId: Long) {
         launchIO {
-            val manga = getMangaById.await(mangaId)?.toDbManga()
+            val manga = getManga.await(mangaId)?.toDbManga()
             val chapters = chapterUrls.mapNotNull { getChapter.await(it, mangaId)?.toDbChapter() }
             if (manga != null && chapters.isNotEmpty()) {
                 downloadManager.downloadChapters(manga, chapters)

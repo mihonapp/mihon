@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.util.chapter
 
+import eu.kanade.domain.manga.interactor.GetFavorites
 import eu.kanade.domain.manga.interactor.SetMangaChapterFlags
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.lang.launchIO
@@ -10,7 +10,8 @@ import uy.kohesive.injekt.injectLazy
 object ChapterSettingsHelper {
 
     private val prefs: PreferencesHelper by injectLazy()
-    private val db: DatabaseHelper by injectLazy()
+    private val getFavorites: GetFavorites by injectLazy()
+    private val setMangaChapterFlags: SetMangaChapterFlags by injectLazy()
 
     /**
      * Updates the global Chapter Settings in Preferences.
@@ -23,19 +24,20 @@ object ChapterSettingsHelper {
      * Updates a single manga's Chapter Settings to match what's set in Preferences.
      */
     fun applySettingDefaults(manga: Manga) {
-        with(manga) {
-            readFilter = prefs.filterChapterByRead()
-            downloadedFilter = prefs.filterChapterByDownloaded()
-            bookmarkedFilter = prefs.filterChapterByBookmarked()
-            sorting = prefs.sortChapterBySourceOrNumber()
-            displayMode = prefs.displayChapterByNameOrNumber()
-            setChapterOrder(prefs.sortChapterByAscendingOrDescending())
+        launchIO {
+            setMangaChapterFlags.awaitSetAllFlags(
+                mangaId = manga.id!!,
+                unreadFilter = prefs.filterChapterByRead().toLong(),
+                downloadedFilter = prefs.filterChapterByDownloaded().toLong(),
+                bookmarkedFilter = prefs.filterChapterByBookmarked().toLong(),
+                sortingMode = prefs.sortChapterBySourceOrNumber().toLong(),
+                sortingDirection = prefs.sortChapterByAscendingOrDescending().toLong(),
+                displayMode = prefs.displayChapterByNameOrNumber().toLong(),
+            )
         }
-
-        db.updateChapterFlags(manga).executeAsBlocking()
     }
 
-    suspend fun applySettingDefaults(mangaId: Long, setMangaChapterFlags: SetMangaChapterFlags) {
+    suspend fun applySettingDefaults(mangaId: Long) {
         setMangaChapterFlags.awaitSetAllFlags(
             mangaId = mangaId,
             unreadFilter = prefs.filterChapterByRead().toLong(),
@@ -52,21 +54,18 @@ object ChapterSettingsHelper {
      */
     fun updateAllMangasWithGlobalDefaults() {
         launchIO {
-            val updatedMangas = db.getFavoriteMangas()
-                .executeAsBlocking()
+            getFavorites.await()
                 .map { manga ->
-                    with(manga) {
-                        readFilter = prefs.filterChapterByRead()
-                        downloadedFilter = prefs.filterChapterByDownloaded()
-                        bookmarkedFilter = prefs.filterChapterByBookmarked()
-                        sorting = prefs.sortChapterBySourceOrNumber()
-                        displayMode = prefs.displayChapterByNameOrNumber()
-                        setChapterOrder(prefs.sortChapterByAscendingOrDescending())
-                    }
-                    manga
+                    setMangaChapterFlags.awaitSetAllFlags(
+                        mangaId = manga.id,
+                        unreadFilter = prefs.filterChapterByRead().toLong(),
+                        downloadedFilter = prefs.filterChapterByDownloaded().toLong(),
+                        bookmarkedFilter = prefs.filterChapterByBookmarked().toLong(),
+                        sortingMode = prefs.sortChapterBySourceOrNumber().toLong(),
+                        sortingDirection = prefs.sortChapterByAscendingOrDescending().toLong(),
+                        displayMode = prefs.displayChapterByNameOrNumber().toLong(),
+                    )
                 }
-
-            db.updateChapterFlags(updatedMangas).executeAsBlocking()
         }
     }
 }

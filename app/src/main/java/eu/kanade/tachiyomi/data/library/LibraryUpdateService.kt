@@ -13,16 +13,17 @@ import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.chapter.model.toDbChapter
-import eu.kanade.domain.manga.interactor.GetMangaById
+import eu.kanade.domain.manga.interactor.GetLibraryManga
+import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toMangaInfo
+import eu.kanade.domain.manga.model.toMangaUpdate
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -61,6 +62,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -84,13 +86,13 @@ import eu.kanade.domain.manga.model.Manga as DomainManga
  * destroyed.
  */
 class LibraryUpdateService(
-    val db: DatabaseHelper = Injekt.get(),
     val sourceManager: SourceManager = Injekt.get(),
     val preferences: PreferencesHelper = Injekt.get(),
     val downloadManager: DownloadManager = Injekt.get(),
     val trackManager: TrackManager = Injekt.get(),
     val coverCache: CoverCache = Injekt.get(),
-    private val getMangaById: GetMangaById = Injekt.get(),
+    private val getLibraryManga: GetLibraryManga = Injekt.get(),
+    private val getManga: GetManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
@@ -255,7 +257,7 @@ class LibraryUpdateService(
      * @param categoryId the ID of the category to update, or -1 if no category specified.
      */
     fun addMangaToQueue(categoryId: Long) {
-        val libraryManga = db.getLibraryMangas().executeAsBlocking()
+        val libraryManga = runBlocking { getLibraryManga.await() }
 
         val listToUpdate = if (categoryId != -1L) {
             libraryManga.filter { it.category.toLong() == categoryId }
@@ -323,7 +325,7 @@ class LibraryUpdateService(
                                 }
 
                                 // Don't continue to update if manga not in library
-                                manga.id?.let { getMangaById.await(it) } ?: return@forEach
+                                manga.id?.let { getManga.await(it) } ?: return@forEach
 
                                 withUpdateNotification(
                                     currentlyUpdatingManga,
@@ -434,7 +436,7 @@ class LibraryUpdateService(
             .map { it.toSChapter() }
 
         // Get manga from database to account for if it was removed during the update
-        val dbManga = getMangaById.await(manga.id)
+        val dbManga = getManga.await(manga.id)
             ?: return Pair(emptyList(), emptyList())
 
         // [dbmanga] was used so that manga data doesn't get overwritten
@@ -471,7 +473,14 @@ class LibraryUpdateService(
                                             mangaWithNotif.prepUpdateCover(coverCache, sManga, true)
                                             sManga.thumbnail_url?.let {
                                                 mangaWithNotif.thumbnail_url = it
-                                                db.insertManga(mangaWithNotif).executeAsBlocking()
+                                                try {
+                                                    updateManga.await(
+                                                        mangaWithNotif.toDomainManga()!!
+                                                            .toMangaUpdate(),
+                                                    )
+                                                } catch (e: Exception) {
+                                                    logcat(LogPriority.ERROR) { "Manga don't exist anymore" }
+                                                }
                                             }
                                         } catch (e: Throwable) {
                                             // Ignore errors and continue
