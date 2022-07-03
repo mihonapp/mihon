@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.os.Build
 import androidx.core.content.ContextCompat
-import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
@@ -15,7 +14,6 @@ import eu.kanade.data.dateAdapter
 import eu.kanade.data.listOfStringsAdapter
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.DbOpenCallback
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.saver.ImageSaver
@@ -37,24 +35,18 @@ class AppModule(val app: Application) : InjektModule {
     override fun InjektRegistrar.registerInjectables() {
         addSingleton(app)
 
-        // This is used to allow incremental migration from Storio
-        addSingletonFactory<SupportSQLiteOpenHelper> {
-            val configuration = SupportSQLiteOpenHelper.Configuration.builder(app)
-                .callback(DbOpenCallback())
-                .name(DbOpenCallback.DATABASE_FILENAME)
-                .noBackupDirectory(false)
-                .build()
-
-            if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // Support database inspector in Android Studio
-                FrameworkSQLiteOpenHelperFactory().create(configuration)
-            } else {
-                RequerySQLiteOpenHelperFactory().create(configuration)
-            }
-        }
-
         addSingletonFactory<SqlDriver> {
-            AndroidSqliteDriver(openHelper = get())
+            AndroidSqliteDriver(
+                schema = Database.Schema,
+                context = app,
+                name = "tachiyomi.db",
+                factory = if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // Support database inspector in Android Studio
+                    FrameworkSQLiteOpenHelperFactory()
+                } else {
+                    RequerySQLiteOpenHelperFactory()
+                },
+            )
         }
 
         addSingletonFactory {
