@@ -20,7 +20,6 @@ import eu.kanade.domain.category.model.toDbCategory
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.LibraryControllerBinding
@@ -53,7 +52,6 @@ import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
-import eu.kanade.tachiyomi.data.database.models.Manga as DbManga
 
 class LibraryController(
     bundle: Bundle? = null,
@@ -78,7 +76,7 @@ class LibraryController(
     /**
      * Currently selected mangas.
      */
-    val selectedMangas = mutableSetOf<DbManga>()
+    val selectedMangas = mutableSetOf<Manga>()
 
     /**
      * Relay to notify the UI of selection updates.
@@ -490,18 +488,18 @@ class LibraryController(
     override fun onDestroyActionMode(mode: ActionMode) {
         // Clear all the manga selections and notify child views.
         selectedMangas.clear()
-        selectionRelay.call(LibrarySelectionEvent.Cleared())
+        selectionRelay.call(LibrarySelectionEvent.Cleared)
 
         (activity as? MainActivity)?.showBottomNav(true)
 
         actionMode = null
     }
 
-    fun openManga(manga: DbManga) {
+    fun openManga(manga: Manga) {
         // Notify the presenter a manga is being opened.
         presenter.onOpenManga()
 
-        router.pushController(MangaController(manga.id!!))
+        router.pushController(MangaController(manga.id))
     }
 
     /**
@@ -510,7 +508,7 @@ class LibraryController(
      * @param manga the manga whose selection has changed.
      * @param selected whether it's now selected or not.
      */
-    fun setSelection(manga: DbManga, selected: Boolean) {
+    fun setSelection(manga: Manga, selected: Boolean) {
         if (selected) {
             if (selectedMangas.add(manga)) {
                 selectionRelay.call(LibrarySelectionEvent.Selected(manga))
@@ -527,7 +525,7 @@ class LibraryController(
      *
      * @param manga the manga whose selection to change.
      */
-    fun toggleSelection(manga: DbManga) {
+    fun toggleSelection(manga: Manga) {
         if (selectedMangas.add(manga)) {
             selectionRelay.call(LibrarySelectionEvent.Selected(manga))
         } else if (selectedMangas.remove(manga)) {
@@ -541,7 +539,7 @@ class LibraryController(
      */
     fun clearSelection() {
         selectedMangas.clear()
-        selectionRelay.call(LibrarySelectionEvent.Cleared())
+        selectionRelay.call(LibrarySelectionEvent.Cleared)
         invalidateActionMode()
     }
 
@@ -568,7 +566,7 @@ class LibraryController(
                 }
             }.toTypedArray()
             launchUI {
-                ChangeMangaCategoriesDialog(this@LibraryController, mangas.map { it.toDomainManga()!! }, categories, preselected)
+                ChangeMangaCategoriesDialog(this@LibraryController, mangas, categories, preselected)
                     .showDialog(router)
             }
         }
@@ -587,7 +585,7 @@ class LibraryController(
     }
 
     private fun showDeleteMangaDialog() {
-        DeleteLibraryMangasDialog(this, selectedMangas.toList().map { it.toDomainManga()!! }).showDialog(router)
+        DeleteLibraryMangasDialog(this, selectedMangas.toList()).showDialog(router)
     }
 
     override fun updateCategoriesForMangas(mangas: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {

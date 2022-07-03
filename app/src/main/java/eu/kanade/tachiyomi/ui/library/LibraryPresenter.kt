@@ -16,6 +16,7 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.model.isLocal
+import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -489,10 +490,10 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    suspend fun getCommonCategories(mangas: List<DbManga>): Collection<Category> {
+    suspend fun getCommonCategories(mangas: List<Manga>): Collection<Category> {
         if (mangas.isEmpty()) return emptyList()
         return mangas.toSet()
-            .map { getCategories.await(it.id!!) }
+            .map { getCategories.await(it.id) }
             .reduce { set1, set2 -> set1.intersect(set2).toMutableList() }
     }
 
@@ -501,9 +502,9 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    suspend fun getMixCategories(mangas: List<DbManga>): Collection<Category> {
+    suspend fun getMixCategories(mangas: List<Manga>): Collection<Category> {
         if (mangas.isEmpty()) return emptyList()
-        val mangaCategories = mangas.toSet().map { getCategories.await(it.id!!) }
+        val mangaCategories = mangas.toSet().map { getCategories.await(it.id) }
         val common = mangaCategories.reduce { set1, set2 -> set1.intersect(set2).toMutableList() }
         return mangaCategories.flatten().distinct().subtract(common).toMutableList()
     }
@@ -513,14 +514,14 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    fun downloadUnreadChapters(mangas: List<DbManga>) {
+    fun downloadUnreadChapters(mangas: List<Manga>) {
         mangas.forEach { manga ->
             launchIO {
-                val chapters = getChapterByMangaId.await(manga.id!!)
+                val chapters = getChapterByMangaId.await(manga.id)
                     .filter { !it.read }
                     .map { it.toDbChapter() }
 
-                downloadManager.downloadChapters(manga, chapters)
+                downloadManager.downloadChapters(manga.toDbManga(), chapters)
             }
         }
     }
@@ -530,10 +531,10 @@ class LibraryPresenter(
      *
      * @param mangas the list of manga.
      */
-    fun markReadStatus(mangas: List<DbManga>, read: Boolean) {
+    fun markReadStatus(mangas: List<Manga>, read: Boolean) {
         mangas.forEach { manga ->
             launchIO {
-                val chapters = getChapterByMangaId.await(manga.id!!)
+                val chapters = getChapterByMangaId.await(manga.id)
 
                 val toUpdate = chapters
                     .map { chapter ->
@@ -552,9 +553,9 @@ class LibraryPresenter(
         }
     }
 
-    private fun deleteChapters(manga: DbManga, chapters: List<Chapter>) {
+    private fun deleteChapters(manga: Manga, chapters: List<Chapter>) {
         sourceManager.get(manga.source)?.let { source ->
-            downloadManager.deleteChapters(chapters, manga, source)
+            downloadManager.deleteChapters(chapters, manga.toDbManga(), source)
         }
     }
 

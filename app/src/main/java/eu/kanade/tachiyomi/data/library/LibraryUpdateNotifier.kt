@@ -13,9 +13,9 @@ import androidx.core.app.NotificationManagerCompat
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import eu.kanade.domain.chapter.model.Chapter
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.Downloader
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -294,8 +294,8 @@ class LibraryUpdateNotifier(private val context: Context) {
 
         val displayableChapterNumbers = chapters
             .filter { it.isRecognizedNumber }
-            .sortedBy { it.chapter_number }
-            .map { formatter.format(it.chapter_number) }
+            .sortedBy { it.chapterNumber }
+            .map { formatter.format(it.chapterNumber) }
             .toSet()
 
         return when (displayableChapterNumbers.size) {

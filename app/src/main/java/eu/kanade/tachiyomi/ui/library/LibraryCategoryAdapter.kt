@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.library
 
 import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.domain.manga.model.Manga
 
 /**
  * Adapter storing a list of manga in a certain category.

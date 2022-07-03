@@ -2,6 +2,7 @@ package eu.kanade.domain.category.model
 
 import android.content.Context
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.models.CategoryImpl
 import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
@@ -36,7 +37,8 @@ data class Category(
     }
 }
 
-fun Category.toDbCategory(): DbCategory = DbCategory.create(name).also {
+fun Category.toDbCategory(): DbCategory = CategoryImpl().also {
+    it.name = name
     it.id = id.toInt()
     it.order = order.toInt()
     it.flags = flags.toInt()

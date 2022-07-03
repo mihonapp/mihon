@@ -1,10 +1,9 @@
 package eu.kanade.tachiyomi.ui.library
 
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.domain.manga.model.Manga
 
 sealed class LibrarySelectionEvent {
-
     class Selected(val manga: Manga) : LibrarySelectionEvent()
     class Unselected(val manga: Manga) : LibrarySelectionEvent()
-    class Cleared : LibrarySelectionEvent()
+    object Cleared : LibrarySelectionEvent()
 }

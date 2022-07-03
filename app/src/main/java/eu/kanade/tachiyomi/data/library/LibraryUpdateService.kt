@@ -27,6 +27,7 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -305,7 +306,7 @@ class LibraryUpdateService(
         val semaphore = Semaphore(5)
         val progressCount = AtomicInteger(0)
         val currentlyUpdatingManga = CopyOnWriteArrayList<LibraryManga>()
-        val newUpdates = CopyOnWriteArrayList<Pair<LibraryManga, Array<Chapter>>>()
+        val newUpdates = CopyOnWriteArrayList<Pair<DomainManga, Array<DomainChapter>>>()
         val skippedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val hasDownloads = AtomicBoolean(false)
@@ -358,8 +359,11 @@ class LibraryUpdateService(
 
                                                         // Convert to the manga that contains new chapters
                                                         newUpdates.add(
-                                                            mangaWithNotif to newDbChapters.sortedByDescending { ch -> ch.source_order }
-                                                                .toTypedArray(),
+                                                            mangaWithNotif.toDomainManga()!! to
+                                                                newDbChapters
+                                                                    .map { it.toDomainChapter()!! }
+                                                                    .sortedByDescending { it.sourceOrder }
+                                                                    .toTypedArray(),
                                                         )
                                                     }
                                                 }
@@ -511,7 +515,7 @@ class LibraryUpdateService(
                 return
             }
 
-            notifier.showProgressNotification(listOf(manga), progressCount++, mangaToUpdate.size)
+            notifier.showProgressNotification(listOf(manga.toDomainManga()!!), progressCount++, mangaToUpdate.size)
 
             // Update the tracking details.
             updateTrackings(manga, loggedServices)
@@ -558,7 +562,7 @@ class LibraryUpdateService(
 
         updatingManga.add(manga)
         notifier.showProgressNotification(
-            updatingManga,
+            updatingManga.map { it.toDomainManga()!! },
             completed.get(),
             mangaToUpdate.size,
         )
@@ -572,7 +576,7 @@ class LibraryUpdateService(
         updatingManga.remove(manga)
         completed.andIncrement
         notifier.showProgressNotification(
-            updatingManga,
+            updatingManga.map { it.toDomainManga()!! },
             completed.get(),
             mangaToUpdate.size,
         )
