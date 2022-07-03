@@ -26,7 +26,6 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
             is ChapterTransition.Prev -> bindPrevChapterTransition(transition)
             is ChapterTransition.Next -> bindNextChapterTransition(transition)
         }
-
         missingChapterWarning(transition)
     }
 

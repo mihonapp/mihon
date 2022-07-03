@@ -46,7 +46,7 @@ class WebtoonTransitionHolder(
         layout.orientation = LinearLayout.VERTICAL
         layout.gravity = Gravity.CENTER
 
-        val paddingVertical = 48.dpToPx
+        val paddingVertical = 128.dpToPx
         val paddingHorizontal = 32.dpToPx
         layout.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
 
