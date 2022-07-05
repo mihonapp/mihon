@@ -59,11 +59,14 @@ fun ChapterDownloadIndicator(
                     onClick(chapterDownloadAction)
                 },
             ) {
+                val indicatorModifier = Modifier
+                        .size(IndicatorSize)
+                        .padding(IndicatorPadding)
                 if (isDownloaded) {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = null,
-                        modifier = Modifier.size(IndicatorSize),
+                        modifier = indicatorModifier,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
@@ -76,9 +79,6 @@ fun ChapterDownloadIndicator(
                         )
                     }
                 } else {
-                    val progressIndicatorModifier = Modifier
-                        .size(IndicatorSize)
-                        .padding(IndicatorStrokeWidth)
                     val inactiveAlphaModifier = if (!isDownloading) Modifier.secondaryItemAlpha() else Modifier
                     val arrowModifier = Modifier
                         .size(IndicatorSize - 7.dp)
@@ -91,7 +91,7 @@ fun ChapterDownloadIndicator(
                         if (indeterminate) {
                             arrowColor = strokeColor
                             CircularProgressIndicator(
-                                modifier = progressIndicatorModifier,
+                                modifier = indicatorModifier,
                                 color = strokeColor,
                                 strokeWidth = IndicatorStrokeWidth,
                             )
@@ -107,7 +107,7 @@ fun ChapterDownloadIndicator(
                             }
                             CircularProgressIndicator(
                                 progress = animatedProgress,
-                                modifier = progressIndicatorModifier,
+                                modifier = indicatorModifier,
                                 color = strokeColor,
                                 strokeWidth = IndicatorSize / 2,
                             )
@@ -116,7 +116,7 @@ fun ChapterDownloadIndicator(
                         arrowColor = strokeColor
                         CircularProgressIndicator(
                             progress = 1f,
-                            modifier = progressIndicatorModifier.then(inactiveAlphaModifier),
+                            modifier = indicatorModifier.then(inactiveAlphaModifier),
                             color = strokeColor,
                             strokeWidth = IndicatorStrokeWidth,
                         )
@@ -150,4 +150,6 @@ fun ChapterDownloadIndicator(
 }
 
 private val IndicatorSize = 26.dp
-private val IndicatorStrokeWidth = 2.dp
+private val IndicatorPadding = 2.dp
+// To match composable parameter name when used later
+private val IndicatorStrokeWidth = IndicatorPadding
