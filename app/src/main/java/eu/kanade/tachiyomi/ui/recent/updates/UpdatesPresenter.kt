@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.recent.updates
 import android.os.Bundle
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.data.manga.mangaChapterMapper
+import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
@@ -40,6 +41,7 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
 
     private val handler: DatabaseHandler by injectLazy()
     private val updateChapter: UpdateChapter by injectLazy()
+    private val setReadStatus: SetReadStatus by injectLazy()
 
     private val relativeTime: Int = preferences.relativeTime().get()
     private val dateFormat: DateFormat = preferences.dateFormat()
@@ -167,14 +169,12 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
      */
     fun markChapterRead(items: List<UpdatesItem>, read: Boolean) {
         presenterScope.launchIO {
-            val toUpdate = items.map {
-                ChapterUpdate(
-                    read = read,
-                    lastPageRead = if (!read) 0 else null,
-                    id = it.chapter.id,
-                )
-            }
-            updateChapter.awaitAll(toUpdate)
+            setReadStatus.await(
+                read = read,
+                values = items
+                    .map { it.chapter }
+                    .toTypedArray(),
+            )
         }
     }
 

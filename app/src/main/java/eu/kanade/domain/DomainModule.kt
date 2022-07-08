@@ -14,11 +14,13 @@ import eu.kanade.domain.category.interactor.UpdateCategory
 import eu.kanade.domain.category.repository.CategoryRepository
 import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
+import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.ShouldUpdateDbChapter
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.repository.ChapterRepository
+import eu.kanade.domain.download.interactor.DeleteDownload
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionUpdates
@@ -94,6 +96,7 @@ class DomainModule : InjektModule {
         addFactory { GetChapter(get()) }
         addFactory { GetChapterByMangaId(get()) }
         addFactory { UpdateChapter(get()) }
+        addFactory { SetReadStatus(get(), get(), get(), get()) }
         addFactory { ShouldUpdateDbChapter() }
         addFactory { SyncChaptersWithSource(get(), get(), get(), get()) }
         addFactory { SyncChaptersWithTrackServiceTwoWay(get(), get()) }
@@ -104,6 +107,8 @@ class DomainModule : InjektModule {
         addFactory { UpsertHistory(get()) }
         addFactory { RemoveHistoryById(get()) }
         addFactory { RemoveHistoryByMangaId(get()) }
+
+        addFactory { DeleteDownload(get(), get()) }
 
         addFactory { GetExtensions(get(), get()) }
         addFactory { GetExtensionSources(get()) }

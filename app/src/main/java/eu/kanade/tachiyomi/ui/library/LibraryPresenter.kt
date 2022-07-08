@@ -8,9 +8,8 @@ import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
+import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.UpdateChapter
-import eu.kanade.domain.chapter.model.Chapter
-import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetLibraryManga
 import eu.kanade.domain.manga.interactor.UpdateManga
@@ -65,6 +64,7 @@ class LibraryPresenter(
     private val getTracks: GetTracks = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
+    private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
@@ -533,28 +533,11 @@ class LibraryPresenter(
     fun markReadStatus(mangas: List<Manga>, read: Boolean) {
         mangas.forEach { manga ->
             launchIO {
-                val chapters = getChapterByMangaId.await(manga.id)
-
-                val toUpdate = chapters
-                    .map { chapter ->
-                        ChapterUpdate(
-                            read = read,
-                            lastPageRead = if (read) 0 else null,
-                            id = chapter.id,
-                        )
-                    }
-                updateChapter.awaitAll(toUpdate)
-
-                if (read && preferences.removeAfterMarkedAsRead()) {
-                    deleteChapters(manga, chapters)
-                }
+                setReadStatus.await(
+                    manga = manga,
+                    read = read,
+                )
             }
-        }
-    }
-
-    private fun deleteChapters(manga: Manga, chapters: List<Chapter>) {
-        sourceManager.get(manga.source)?.let { source ->
-            downloadManager.deleteChapters(chapters.map { it.toDbChapter() }, manga, source)
         }
     }
 

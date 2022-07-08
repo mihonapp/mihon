@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.chapter.interactor.UpdateChapter
@@ -79,6 +80,7 @@ class MangaPresenter(
     private val getMangaAndChapters: GetMangaWithChapters = Injekt.get(),
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val setMangaChapterFlags: SetMangaChapterFlags = Injekt.get(),
+    private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
@@ -525,13 +527,10 @@ class MangaPresenter(
      */
     fun markChaptersRead(chapters: List<DomainChapter>, read: Boolean) {
         presenterScope.launchIO {
-            val modified = chapters.filterNot { it.read == read }
-            modified
-                .map { ChapterUpdate(id = it.id, read = read) }
-                .let { updateChapter.awaitAll(it) }
-            if (read && preferences.removeAfterMarkedAsRead()) {
-                deleteChapters(modified)
-            }
+            setReadStatus.await(
+                read = read,
+                values = chapters.toTypedArray(),
+            )
         }
     }
 

@@ -249,9 +249,6 @@ class UpdatesController :
      */
     private fun markAsRead(chapters: List<UpdatesItem>) {
         presenter.markChapterRead(chapters, true)
-        if (presenter.preferences.removeAfterMarkedAsRead()) {
-            deleteChapters(chapters)
-        }
         destroyActionModeIfNeeded()
     }
 
