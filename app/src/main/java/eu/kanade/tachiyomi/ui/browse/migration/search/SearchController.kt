@@ -131,7 +131,7 @@ class SearchController(
                 }
                 .setNeutralButton(activity?.getString(R.string.action_show_manga)) { _, _ ->
                     dismissDialog()
-                    router.pushController(MangaController(newManga))
+                    router.pushController(MangaController(newManga).withFadeTransaction())
                 }
                 .create()
         }
