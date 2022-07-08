@@ -60,8 +60,8 @@ fun ChapterDownloadIndicator(
                 },
             ) {
                 val indicatorModifier = Modifier
-                        .size(IndicatorSize)
-                        .padding(IndicatorPadding)
+                    .size(IndicatorSize)
+                    .padding(IndicatorPadding)
                 if (isDownloaded) {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
@@ -151,5 +151,6 @@ fun ChapterDownloadIndicator(
 
 private val IndicatorSize = 26.dp
 private val IndicatorPadding = 2.dp
+
 // To match composable parameter name when used later
 private val IndicatorStrokeWidth = IndicatorPadding
