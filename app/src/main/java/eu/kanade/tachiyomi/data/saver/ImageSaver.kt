@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.contentValuesOf
+import androidx.core.net.toUri
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
@@ -80,7 +81,7 @@ class ImageSaver(
             }
         }
 
-        DiskUtil.scanMedia(context, destFile)
+        DiskUtil.scanMedia(context, destFile.toUri())
 
         return destFile.getUriCompat(context)
     }

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.Chapter
@@ -203,7 +204,7 @@ class NotificationReceiver : BroadcastReceiver() {
         val file = File(path)
         file.delete()
 
-        DiskUtil.scanMedia(context, file)
+        DiskUtil.scanMedia(context, file.toUri())
     }
 
     /**
