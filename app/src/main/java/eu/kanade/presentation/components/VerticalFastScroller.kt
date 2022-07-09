@@ -121,11 +121,10 @@ fun VerticalFastScroller(
                     .offset { IntOffset(0, thumbOffsetY.roundToInt()) }
                     .then(
                         // Recompose opts
-                        if (!listState.isScrollInProgress) {
+                        if (isThumbVisible && !listState.isScrollInProgress) {
                             Modifier.draggable(
                                 interactionSource = dragInteractionSource,
                                 orientation = Orientation.Vertical,
-                                enabled = isThumbVisible,
                                 state = rememberDraggableState { delta ->
                                     val newOffsetY = thumbOffsetY + delta
                                     thumbOffsetY = newOffsetY.coerceIn(thumbTopPadding, thumbTopPadding + trackHeightPx)
