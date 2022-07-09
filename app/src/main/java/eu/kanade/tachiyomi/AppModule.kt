@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.os.Build
 import androidx.core.content.ContextCompat
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
@@ -45,6 +46,19 @@ class AppModule(val app: Application) : InjektModule {
                     FrameworkSQLiteOpenHelperFactory()
                 } else {
                     RequerySQLiteOpenHelperFactory()
+                },
+                callback = object : AndroidSqliteDriver.Callback(Database.Schema) {
+                    override fun onOpen(db: SupportSQLiteDatabase) {
+                        super.onOpen(db)
+                        setPragma(db, "foreign_keys = ON")
+                        setPragma(db, "journal_mode = WAL")
+                        setPragma(db, "synchronous = NORMAL")
+                    }
+                    private fun setPragma(db: SupportSQLiteDatabase, pragma: String) {
+                        val cursor = db.query("PRAGMA $pragma")
+                        cursor.moveToFirst()
+                        cursor.close()
+                    }
                 },
             )
         }
