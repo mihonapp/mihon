@@ -81,8 +81,8 @@ fun MangaChapterListItem(
                 }
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.bodyMedium
-                        .copy(color = textColor),
+                    color = textColor,
+                    style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     onTextLayout = { textHeight = it.size.height },
