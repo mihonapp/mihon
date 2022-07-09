@@ -2,15 +2,11 @@ package eu.kanade.presentation.manga
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.rememberSplineBasedDecay
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -36,10 +32,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberTopAppBarScrollState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -47,7 +43,6 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -63,12 +58,12 @@ import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SwipeRefreshIndicator
 import eu.kanade.presentation.components.VerticalFastScroller
 import eu.kanade.presentation.manga.components.ChapterHeader
+import eu.kanade.presentation.manga.components.ExpandableMangaDescription
+import eu.kanade.presentation.manga.components.MangaActionRow
 import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.presentation.manga.components.MangaChapterListItem
-import eu.kanade.presentation.manga.components.MangaInfoHeader
+import eu.kanade.presentation.manga.components.MangaInfoBox
 import eu.kanade.presentation.manga.components.MangaSmallAppBar
-import eu.kanade.presentation.manga.components.MangaTopAppBar
-import eu.kanade.presentation.util.ExitUntilCollapsedScrollBehavior
 import eu.kanade.presentation.util.isScrolledToEnd
 import eu.kanade.presentation.util.isScrollingUp
 import eu.kanade.presentation.util.plus
@@ -79,7 +74,6 @@ import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.ui.manga.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.MangaScreenState
 import eu.kanade.tachiyomi.util.lang.toRelativeString
-import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Date
@@ -208,160 +202,169 @@ private fun MangaScreenSmallImpl(
     onMultiDeleteClicked: (List<Chapter>) -> Unit,
 ) {
     val layoutDirection = LocalLayoutDirection.current
-    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
-    val scrollBehavior = ExitUntilCollapsedScrollBehavior(rememberTopAppBarScrollState(), decayAnimationSpec)
     val chapterListState = rememberLazyListState()
-    SideEffect {
-        if (chapterListState.firstVisibleItemIndex > 0 || chapterListState.firstVisibleItemScrollOffset > 0) {
-            // Should go here after a configuration change
-            // Safe to say that the app bar is fully scrolled
-            scrollBehavior.state.offset = scrollBehavior.state.offsetLimit
-        }
-    }
 
     val insetPadding = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues()
-    val (topBarHeight, onTopBarHeightChanged) = remember { mutableStateOf(1) }
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(state.isRefreshingInfo || state.isRefreshingChapter),
-        onRefresh = onRefresh,
-        indicatorPadding = PaddingValues(
-            start = insetPadding.calculateStartPadding(layoutDirection),
-            top = with(LocalDensity.current) { topBarHeight.toDp() },
-            end = insetPadding.calculateEndPadding(layoutDirection),
-        ),
-        indicator = { s, trigger ->
-            SwipeRefreshIndicator(
-                state = s,
-                refreshTriggerDistance = trigger,
+    val chapters = remember(state) { state.processedChapters.toList() }
+    val selected = remember(chapters) { emptyList<ChapterItem>().toMutableStateList() }
+    val selectedPositions = remember(chapters) { arrayOf(-1, -1) } // first and last selected index in list
+
+    val internalOnBackPressed = {
+        if (selected.isNotEmpty()) {
+            selected.clear()
+        } else {
+            onBackClicked()
+        }
+    }
+    BackHandler(onBack = internalOnBackPressed)
+
+    Scaffold(
+        modifier = Modifier
+            .padding(insetPadding),
+        topBar = {
+            val firstVisibleItemIndex by remember {
+                derivedStateOf { chapterListState.firstVisibleItemIndex }
+            }
+            val firstVisibleItemScrollOffset by remember {
+                derivedStateOf { chapterListState.firstVisibleItemScrollOffset }
+            }
+            val animatedTitleAlpha by animateFloatAsState(
+                if (firstVisibleItemIndex > 0) 1f else 0f,
+            )
+            val animatedBgAlpha by animateFloatAsState(
+                if (firstVisibleItemIndex > 0 || firstVisibleItemScrollOffset > 0) 1f else 0f,
+            )
+            MangaSmallAppBar(
+                title = state.manga.title,
+                titleAlphaProvider = { animatedTitleAlpha },
+                backgroundAlphaProvider = { animatedBgAlpha },
+                incognitoMode = state.isIncognitoMode,
+                downloadedOnlyMode = state.isDownloadedOnlyMode,
+                onBackClicked = onBackClicked,
+                onShareClicked = onShareClicked,
+                onDownloadClicked = onDownloadActionClicked,
+                onEditCategoryClicked = onEditCategoryClicked,
+                onMigrateClicked = onMigrateClicked,
+                actionModeCounter = selected.size,
+                onSelectAll = {
+                    selected.clear()
+                    selected.addAll(chapters)
+                },
+                onInvertSelection = {
+                    val toSelect = chapters - selected
+                    selected.clear()
+                    selected.addAll(toSelect)
+                },
             )
         },
-    ) {
-        val chapters = remember(state) { state.processedChapters.toList() }
-        val selected = remember(chapters) { emptyList<ChapterItem>().toMutableStateList() }
-        val selectedPositions = remember(chapters) { arrayOf(-1, -1) } // first and last selected index in list
-
-        val internalOnBackPressed = {
-            if (selected.isNotEmpty()) {
-                selected.clear()
-            } else {
-                onBackClicked()
-            }
-        }
-        BackHandler(onBack = internalOnBackPressed)
-
-        Scaffold(
-            modifier = Modifier
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .padding(insetPadding),
-            topBar = {
-                MangaTopAppBar(
+        bottomBar = {
+            SharedMangaBottomActionMenu(
+                selected = selected,
+                onMultiBookmarkClicked = onMultiBookmarkClicked,
+                onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
+                onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
+                onDownloadChapter = onDownloadChapter,
+                onMultiDeleteClicked = onMultiDeleteClicked,
+                fillFraction = 1f,
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = chapters.any { !it.chapter.read } && selected.isEmpty(),
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                ExtendedFloatingActionButton(
+                    text = {
+                        val id = if (chapters.any { it.chapter.read }) {
+                            R.string.action_resume
+                        } else {
+                            R.string.action_start
+                        }
+                        Text(text = stringResource(id))
+                    },
+                    icon = { Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null) },
+                    onClick = onContinueReading,
+                    expanded = chapterListState.isScrollingUp() || chapterListState.isScrolledToEnd(),
                     modifier = Modifier
-                        .scrollable(
-                            state = rememberScrollableState {
-                                var consumed = runBlocking { chapterListState.scrollBy(-it) } * -1
-                                if (consumed == 0f) {
-                                    // Pass scroll to app bar if we're on the top of the list
-                                    val newOffset =
-                                        (scrollBehavior.state.offset + it).coerceIn(scrollBehavior.state.offsetLimit, 0f)
-                                    consumed = newOffset - scrollBehavior.state.offset
-                                    scrollBehavior.state.offset = newOffset
-                                }
-                                consumed
-                            },
-                            orientation = Orientation.Vertical,
-                            interactionSource = chapterListState.interactionSource as MutableInteractionSource,
-                        ),
-                    title = state.manga.title,
-                    author = state.manga.author,
-                    artist = state.manga.artist,
-                    description = state.manga.description,
-                    tagsProvider = { state.manga.genre },
-                    coverDataProvider = { state.manga },
-                    sourceName = remember { state.source.getNameForMangaInfo() },
-                    isStubSource = remember { state.source is SourceManager.StubSource },
-                    favorite = state.manga.favorite,
-                    status = state.manga.status,
-                    trackingCount = state.trackingCount,
-                    chapterCount = chapters.size,
-                    chapterFiltered = state.manga.chaptersFiltered(),
-                    incognitoMode = state.isIncognitoMode,
-                    downloadedOnlyMode = state.isDownloadedOnlyMode,
-                    fromSource = state.isFromSource,
-                    onBackClicked = internalOnBackPressed,
-                    onCoverClick = onCoverClicked,
-                    onTagClicked = onTagClicked,
-                    onAddToLibraryClicked = onAddToLibraryClicked,
-                    onWebViewClicked = onWebViewClicked,
-                    onTrackingClicked = onTrackingClicked,
-                    onFilterButtonClicked = onFilterButtonClicked,
-                    onShareClicked = onShareClicked,
-                    onDownloadClicked = onDownloadActionClicked,
-                    onEditCategoryClicked = onEditCategoryClicked,
-                    onMigrateClicked = onMigrateClicked,
-                    doGlobalSearch = onSearch,
-                    scrollBehavior = scrollBehavior,
-                    actionModeCounter = selected.size,
-                    onSelectAll = {
-                        selected.clear()
-                        selected.addAll(chapters)
-                    },
-                    onInvertSelection = {
-                        val toSelect = chapters - selected
-                        selected.clear()
-                        selected.addAll(toSelect)
-                    },
-                    onSmallAppBarHeightChanged = onTopBarHeightChanged,
+                        .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()),
+                )
+            }
+        },
+    ) { contentPadding ->
+        val noTopContentPadding = PaddingValues(
+            start = contentPadding.calculateStartPadding(layoutDirection),
+            end = contentPadding.calculateEndPadding(layoutDirection),
+            bottom = contentPadding.calculateBottomPadding(),
+        ) + WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
+        val topPadding = contentPadding.calculateTopPadding()
+
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(state.isRefreshingInfo || state.isRefreshingChapter),
+            onRefresh = onRefresh,
+            indicatorPadding = contentPadding,
+            indicator = { s, trigger ->
+                SwipeRefreshIndicator(
+                    state = s,
+                    refreshTriggerDistance = trigger,
                 )
             },
-            bottomBar = {
-                SharedMangaBottomActionMenu(
-                    selected = selected,
-                    onMultiBookmarkClicked = onMultiBookmarkClicked,
-                    onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
-                    onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
-                    onDownloadChapter = onDownloadChapter,
-                    onMultiDeleteClicked = onMultiDeleteClicked,
-                    fillFraction = 1f,
-                )
-            },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            floatingActionButton = {
-                AnimatedVisibility(
-                    visible = chapters.any { !it.chapter.read } && selected.isEmpty(),
-                    enter = fadeIn(),
-                    exit = fadeOut(),
-                ) {
-                    ExtendedFloatingActionButton(
-                        text = {
-                            val id = if (chapters.any { it.chapter.read }) {
-                                R.string.action_resume
-                            } else {
-                                R.string.action_start
-                            }
-                            Text(text = stringResource(id))
-                        },
-                        icon = { Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null) },
-                        onClick = onContinueReading,
-                        expanded = chapterListState.isScrollingUp() || chapterListState.isScrolledToEnd(),
-                        modifier = Modifier
-                            .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()),
-                    )
-                }
-            },
-        ) { contentPadding ->
-            val withNavBarContentPadding = contentPadding +
-                WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
+        ) {
             VerticalFastScroller(
                 listState = chapterListState,
-                thumbAllowed = { scrollBehavior.state.offset == scrollBehavior.state.offsetLimit },
-                topContentPadding = withNavBarContentPadding.calculateTopPadding(),
-                endContentPadding = withNavBarContentPadding.calculateEndPadding(LocalLayoutDirection.current),
+                topContentPadding = topPadding,
+                endContentPadding = noTopContentPadding.calculateEndPadding(layoutDirection),
             ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxHeight(),
                     state = chapterListState,
-                    contentPadding = withNavBarContentPadding,
+                    contentPadding = noTopContentPadding,
                 ) {
+                    item(contentType = "info_box") {
+                        MangaInfoBox(
+                            windowWidthSizeClass = WindowWidthSizeClass.Compact,
+                            appBarPadding = topPadding,
+                            title = state.manga.title,
+                            author = state.manga.author,
+                            artist = state.manga.artist,
+                            sourceName = remember { state.source.getNameForMangaInfo() },
+                            isStubSource = remember { state.source is SourceManager.StubSource },
+                            coverDataProvider = { state.manga },
+                            status = state.manga.status,
+                            onCoverClick = onCoverClicked,
+                            doSearch = onSearch,
+                        )
+                    }
+
+                    item(contentType = "action_row") {
+                        MangaActionRow(
+                            favorite = state.manga.favorite,
+                            trackingCount = state.trackingCount,
+                            onAddToLibraryClicked = onAddToLibraryClicked,
+                            onWebViewClicked = onWebViewClicked,
+                            onTrackingClicked = onTrackingClicked,
+                            onEditCategory = onEditCategoryClicked,
+                        )
+                    }
+
+                    item(contentType = "desc") {
+                        ExpandableMangaDescription(
+                            defaultExpandState = state.isFromSource,
+                            description = state.manga.description,
+                            tagsProvider = { state.manga.genre },
+                            onTagClicked = onTagClicked,
+                        )
+                    }
+
+                    item(contentType = "header") {
+                        ChapterHeader(
+                            chapterCount = chapters.size,
+                            isChapterFiltered = state.manga.chaptersFiltered(),
+                            onFilterButtonClicked = onFilterButtonClicked,
+                        )
+                    }
+
                     sharedChapterItems(
                         chapters = chapters,
                         state = state,
@@ -514,33 +517,40 @@ fun MangaScreenLargeImpl(
             Row {
                 val withNavBarContentPadding = contentPadding +
                     WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
-                MangaInfoHeader(
+                Column(
                     modifier = Modifier
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
                         .padding(bottom = withNavBarContentPadding.calculateBottomPadding()),
-                    windowWidthSizeClass = WindowWidthSizeClass.Expanded,
-                    appBarPadding = contentPadding.calculateTopPadding(),
-                    title = state.manga.title,
-                    author = state.manga.author,
-                    artist = state.manga.artist,
-                    description = state.manga.description,
-                    tagsProvider = { state.manga.genre },
-                    sourceName = remember { state.source.getNameForMangaInfo() },
-                    isStubSource = remember { state.source is SourceManager.StubSource },
-                    coverDataProvider = { state.manga },
-                    favorite = state.manga.favorite,
-                    status = state.manga.status,
-                    trackingCount = state.trackingCount,
-                    fromSource = state.isFromSource,
-                    onAddToLibraryClicked = onAddToLibraryClicked,
-                    onWebViewClicked = onWebViewClicked,
-                    onTrackingClicked = onTrackingClicked,
-                    onTagClicked = onTagClicked,
-                    onEditCategory = onEditCategoryClicked,
-                    onCoverClick = onCoverClicked,
-                    doSearch = onSearch,
-                )
+                ) {
+                    MangaInfoBox(
+                        windowWidthSizeClass = windowWidthSizeClass,
+                        appBarPadding = contentPadding.calculateTopPadding(),
+                        title = state.manga.title,
+                        author = state.manga.author,
+                        artist = state.manga.artist,
+                        sourceName = remember { state.source.getNameForMangaInfo() },
+                        isStubSource = remember { state.source is SourceManager.StubSource },
+                        coverDataProvider = { state.manga },
+                        status = state.manga.status,
+                        onCoverClick = onCoverClicked,
+                        doSearch = onSearch,
+                    )
+                    MangaActionRow(
+                        favorite = state.manga.favorite,
+                        trackingCount = state.trackingCount,
+                        onAddToLibraryClicked = onAddToLibraryClicked,
+                        onWebViewClicked = onWebViewClicked,
+                        onTrackingClicked = onTrackingClicked,
+                        onEditCategory = onEditCategoryClicked,
+                    )
+                    ExpandableMangaDescription(
+                        defaultExpandState = true,
+                        description = state.manga.description,
+                        tagsProvider = { state.manga.genre },
+                        onTagClicked = onTagClicked,
+                    )
+                }
 
                 val chaptersWeight = if (windowWidthSizeClass == WindowWidthSizeClass.Medium) 1f else 2f
                 VerticalFastScroller(
