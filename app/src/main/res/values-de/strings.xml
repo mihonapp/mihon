@@ -650,7 +650,7 @@
     <string name="pref_tablet_ui_mode">Tablet-Benutzeroberfläche</string>
     <string name="pref_remove_exclude_categories">Ausgeschlossene Kategorien</string>
     <string name="help_translate">Beim Übersetzen mithelfen</string>
-    <string name="ext_app_info">Anwendungsinformationen</string>
+    <string name="ext_app_info">Anwendungsinfos</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installiere und starte Shizuku, um Shizuku als Installationsprogramm für Erweiterungen zu verwenden.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku läuft nicht</string>
     <string name="ext_installer_legacy">Legacy</string>
@@ -740,4 +740,6 @@
     <string name="custom_cover">Benutzerdefiniertes Cover</string>
     <string name="not_installed">Nicht installiert</string>
     <string name="pref_app_language">App-Sprache</string>
+    <string name="theme_lavender">Lavendel</string>
+    <string name="description_placeholder">Keine Beschreibung</string>
 </resources>

@@ -608,7 +608,7 @@
     <string name="notification_updating">ライブラリを更新中... (%1$d/%2$d)</string>
     <string name="theme_monet">ダイナミック</string>
     <string name="tracker_komga_warning">このトラッカーはKomgaにのみ対応します。</string>
-    <string name="about_dont_kill_my_app">一部のスマホメーカーはバックアップグラウンドサービスを終了する追加のアプリ制限を施しています。修正する方法についてはこのWebサイトをご覧ください。</string>
+    <string name="about_dont_kill_my_app">一部のスマホメーカーはバックグラウンドサービスを終了する追加のアプリ制限を施しています。修正する方法についてはこのWebサイトをご覧ください。</string>
     <string name="label_background_activity">バックアップアクティビティ</string>
     <string name="restore_miui_warning">MIUI最適化が有効な場合はバックアップ・復元が正常に機能しない恐れがあります。</string>
     <string name="pref_lowest">最低</string>
@@ -728,4 +728,6 @@
     <string name="custom_cover">カスタム表紙</string>
     <string name="not_installed">未インストール</string>
     <string name="pref_app_language">アプリ言語</string>
+    <string name="theme_lavender">ラベンダー色</string>
+    <string name="description_placeholder">説明がありません</string>
 </resources>

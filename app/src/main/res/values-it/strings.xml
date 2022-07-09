@@ -773,4 +773,6 @@
     <string name="cant_open_last_read_chapter">Impossibile aprire l\'ultimo capitolo letto</string>
     <string name="not_installed">Non installato</string>
     <string name="pref_app_language">Lingua dell\'applicazione</string>
+    <string name="description_placeholder">Nessuna descrizione</string>
+    <string name="theme_lavender">Lavanda</string>
 </resources>

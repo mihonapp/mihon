@@ -220,7 +220,7 @@
     <string name="local_source">本機來源</string>
     <string name="other_source">其他</string>
     <string name="browse">探索</string>
-    <string name="description">詳細資訊</string>
+    <string name="description">簡介</string>
     <string name="ongoing">連載中</string>
     <string name="unknown">不明</string>
     <string name="licensed">已授權</string>
@@ -727,4 +727,7 @@
     <string name="cant_open_last_read_chapter">無法開啟上次閱讀章節</string>
     <string name="custom_cover">自訂封面</string>
     <string name="not_installed">未安裝</string>
+    <string name="pref_app_language">應用程式語言</string>
+    <string name="theme_lavender">薰衣草</string>
+    <string name="description_placeholder">沒有簡介</string>
 </resources>

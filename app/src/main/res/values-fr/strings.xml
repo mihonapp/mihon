@@ -536,7 +536,7 @@
     <string name="download_notifier_download_finish">Téléchargement terminé</string>
     <string name="channel_errors">Erreurs</string>
     <string name="backup_restore_missing_trackers">Traceurs non connectés :</string>
-    <string name="pref_remove_bookmarked_chapters">Permettre la suppression des chapitres marqués d\'un maque-page</string>
+    <string name="pref_remove_bookmarked_chapters">Permettre la suppression des chapitres marqués d\'un marque-page</string>
     <string name="pref_category_delete_chapters">Supprimer des chapitres</string>
     <string name="ext_nsfw_warning">Les sources de cette extension peuvent contenir du contenu NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
@@ -686,7 +686,7 @@
     <string name="pref_remove_exclude_categories">Catégories exclues</string>
     <string name="ext_app_info">Infos sur l\'application</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installez et démarrez Shizuku pour utiliser Shizuku comme installateur d\'extensions.</string>
-    <string name="ext_installer_shizuku_stopped">Shizuku n\'est pas en exécution</string>
+    <string name="ext_installer_shizuku_stopped">Shizuku n\'est pas en cours d\'exécution</string>
     <string name="ext_installer_legacy">Legacy</string>
     <string name="ext_installer_pref">Installateur</string>
     <string name="ext_install_service_notif">Installation de l\'extension…</string>
@@ -774,4 +774,6 @@
     <string name="custom_cover">Couverture personnalisée</string>
     <string name="not_installed">Non installé</string>
     <string name="pref_app_language">Pas installé</string>
+    <string name="description_placeholder">Aucune description</string>
+    <string name="theme_lavender">Lavande</string>
 </resources>

@@ -750,4 +750,8 @@
     <string name="battery_not_low">Když baterie není vybitá</string>
     <string name="cant_open_last_read_chapter">Nelze otevřít poslední přečtenou kapitolu</string>
     <string name="custom_cover">Vlastní obal</string>
+    <string name="not_installed">Nenainstalováno</string>
+    <string name="pref_app_language">Jazyk aplikace</string>
+    <string name="description_placeholder">Bez popisu</string>
+    <string name="theme_lavender">Levandule</string>
 </resources>

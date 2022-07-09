@@ -37,7 +37,7 @@
     <string name="pref_fullscreen">Layar wutuh</string>
     <string name="all_lang">Kabeh</string>
     <string name="all">Kabeh</string>
-    <string name="charging">Ngisi daya</string>
+    <string name="charging">Pas ngisi daya</string>
     <string name="update_weekly">Saben minggu</string>
     <string name="update_48hour">Saben 2 dina</string>
     <string name="update_24hour">Saben dina</string>
@@ -289,4 +289,9 @@
     <string name="pref_library_update_interval">Updatean otomatis</string>
     <string name="lock_with_biometrics">Mbutuhake mbukak kunci</string>
     <string name="pref_side_nav_icon_alignment">Alignment lambang pandhu arah sisih</string>
+    <string name="pref_library_update_refresh_metadata">Nganyari metadata otomatis</string>
+    <string name="network_not_metered">Jaringan gak kebates tok</string>
+    <string name="pref_library_update_manga_restriction">Lewati updatean judul</string>
+    <string name="battery_not_low">Pas baterai ora titik</string>
+    <string name="pref_app_language">Bohoso aplikasi</string>
 </resources>

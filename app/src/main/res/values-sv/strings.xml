@@ -739,4 +739,7 @@
     <string name="cant_open_last_read_chapter">Det går inte att öppna det senast lästa kapitlet</string>
     <string name="not_installed">Inte installerad</string>
     <string name="custom_cover">Anpassat omslag</string>
+    <string name="theme_lavender">Lavendel</string>
+    <string name="description_placeholder">Ingen beskrivning</string>
+    <string name="pref_app_language">Appspråk</string>
 </resources>

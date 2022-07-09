@@ -86,7 +86,7 @@
     <string name="update_weekly">Щонеділі</string>
     <string name="all">Всі</string>
     <string name="pref_library_update_restriction">Обмеження пристрою для автоматичних оновлень</string>
-    <string name="charging">Заряджається</string>
+    <string name="charging">Коли заряджається</string>
     <string name="pref_update_only_non_completed">З статусом \"Завершено\"</string>
     <string name="pref_auto_update_manga_sync">Оновлювати прогрес після прочитання</string>
     <string name="default_category">Категорія за замовчуванням</string>
@@ -285,7 +285,7 @@
     <string name="update_check_no_new_updates">Оновлень не виявлено</string>
     <string name="update_check_look_for_updates">Перевірити оновлення…</string>
     <string name="update_check_notification_download_in_progress">Завантаження в процесі…</string>
-    <string name="update_check_notification_download_complete">Завантаження завершено</string>
+    <string name="update_check_notification_download_complete">Тицьніть для встановлення</string>
     <string name="update_check_notification_download_error">Помилка завантаження</string>
     <string name="update_check_notification_update_available">Доступна нова версія!</string>
     <string name="description_cover">Обкладинка манги</string>
@@ -357,9 +357,10 @@
     <string name="secure_screen_summary">Ховати вміст застосунку при перемиканні програм та блокувати скріншоти</string>
     <string name="pref_category_display">Відображення</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 нова глава</item>
+        <item quantity="one">%1$d нова глава</item>
         <item quantity="few">%1$d нових глав</item>
         <item quantity="many">%1$d нових глав</item>
+        <item quantity="other">%1$d нових глав</item>
     </plurals>
     <string name="notification_chapters_single">Глава %1$s</string>
     <string name="notification_chapters_single_and_more">Глава %1$s та %2$d більше</string>
@@ -377,9 +378,10 @@
     <string name="email">Електропошта</string>
     <string name="pref_always_show_chapter_transition">Завжди показувати перехід глави</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Для 1 тайтлу</item>
+        <item quantity="one">Для %d тайтлу</item>
         <item quantity="few">Для %d тайтлів</item>
         <item quantity="many">Для %d тайтлів</item>
+        <item quantity="other">Для %d тайтлів</item>
     </plurals>
     <string name="action_menu">Меню</string>
     <string name="action_reorganize_by">Переупорядкувати</string>
@@ -422,7 +424,7 @@
     <string name="confirm_exit">Натисніть ще раз, щоб вийти</string>
     <string name="label_downloaded_only">Тільки завантажені</string>
     <string name="gray_background">Сірий</string>
-    <string name="pref_true_color_summary">Зменшує смугастість, але впливає на продуктивність</string>
+    <string name="pref_true_color_summary">Зменшує смугастість, але може вплинути на продуктивність</string>
     <string name="unofficial_extension_message">Це розширення не входить до переліку офіційних розширень Tachiyomi.</string>
     <string name="ext_unofficial">Неофіційне</string>
     <plurals name="num_categories">
@@ -449,7 +451,7 @@
     <string name="downloaded_only_summary">Фільтрувати усю мангу в вашій бібліотеці</string>
     <string name="check_for_updates">Перевірити оновлення</string>
     <string name="battery_optimization_setting_activity_not_found">Не вдалось відкрити налаштування пристрою</string>
-    <string name="pref_refresh_library_covers">Оновити обкладинки манги у бібліотеці</string>
+    <string name="pref_refresh_library_covers">Оновити обкладинки в бібліотеці</string>
     <string name="label_data">Дані</string>
     <string name="restoring_backup_canceled">Відновлення відмінено</string>
     <string name="restoring_backup_error">Відновлення бекапу не вдалось</string>
@@ -493,7 +495,7 @@
     <string name="tapping_inverted_vertical">Вертикально</string>
     <string name="tapping_inverted_horizontal">Горизонтально</string>
     <string name="tapping_inverted_none">Нічого</string>
-    <string name="pref_read_with_tapping_inverted">Інвертувати тицяння</string>
+    <string name="pref_read_with_tapping_inverted">Інвертувати зони тицяння</string>
     <string name="unknown_status">Невідомий стан</string>
     <string name="unknown_author">Невідомий автор</string>
     <string name="requires_app_restart">Потрібен перезапуск додатку, щоб зміни вступили в дію</string>
@@ -520,7 +522,7 @@
     <string name="backup_restore_missing_trackers">Трекери не авторизовано:</string>
     <string name="pref_remove_bookmarked_chapters">Дозволити видалення глав з закладок</string>
     <string name="pref_category_delete_chapters">Видалити глави</string>
-    <string name="ext_nsfw_warning">Може містити контент NSFW (18+)</string>
+    <string name="ext_nsfw_warning">Джерела з цього розширення можуть містити контент NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Це не заважає неофіційним або потенційно невірним розширенням розміщувати вміст NSFW (18+) у додатку.</string>
     <plurals name="missing_chapters_warning">
@@ -557,7 +559,7 @@
     <string name="crash_log_saved">Логи падінь збережено</string>
     <string name="pref_dump_crash_logs_summary">Зберігає логи помилок до файлу для надсилання розробникам</string>
     <string name="pref_dump_crash_logs">Дамп логів про падіння</string>
-    <string name="pref_viewer_nav">Розмітка навігації</string>
+    <string name="pref_viewer_nav">Зони тицяння</string>
     <string name="edge_nav">Межа</string>
     <string name="kindlish_nav">Kindle-подібна</string>
     <string name="l_nav">L-подібна</string>
@@ -578,8 +580,8 @@
     <string name="nav_zone_left">Зліва</string>
     <string name="nav_zone_next">Наступний</string>
     <string name="nav_zone_prev">Попередній</string>
-    <string name="pref_show_navigation_mode_summary">Показувати області дотику при відкритті читалки</string>
-    <string name="pref_show_navigation_mode">Показувати оверлей схеми навігації</string>
+    <string name="pref_show_navigation_mode_summary">Короткочасно відобразити, коли читалку відкрито</string>
+    <string name="pref_show_navigation_mode">Оверлей зон дотику</string>
     <string name="pref_dns_over_https">DNS поверх HTTPS (DoH)</string>
     <string name="pref_download_new_categories_details">Мангу в виключених категоріях не буде завантажено, навіть якщо вона також знаходиться у включених категоріях.</string>
     <string name="pref_category_auto_download">Автозавантаження</string>
@@ -587,7 +589,7 @@
     <string name="include">Включати: %s</string>
     <string name="none">Ніхто</string>
     <string name="pref_library_update_categories_details">Мангу в виключених категоріях не буде оновлено, навіть якщо вона також знаходиться у включених категоріях.</string>
-    <string name="action_sort_chapter_fetch_date">Дата отримання</string>
+    <string name="action_sort_chapter_fetch_date">Дата отримання глави</string>
     <string name="action_show_errors">Тицьніть для перегляду подробиць</string>
     <string name="update_check_eol">Ця версія Android більше не підтримується</string>
     <string name="clipboard_copy_error">Не вдалось скопіювати до буферу обміну</string>
@@ -679,7 +681,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Встановіть і запустіть Shizuku, щоб використовувати Shizuku як інсталятор розширення.</string>
     <string name="pref_verbose_logging">Докладне журналювання</string>
     <string name="pref_verbose_logging_summary">Записувати докладні журнали до системного журналу (знижує продуктивність додатку)</string>
-    <string name="notification_size_warning">Попередження: великі оновлення можуть призвести до сповільнення джерел або збільшити використання батареї</string>
+    <string name="notification_size_warning">Попередження: великі оновлення можуть призвести до сповільнення джерел або збільшити використання батареї. Тицьніть задля подробиць.</string>
     <string name="channel_app_updates">Оновлення додатку</string>
     <string name="download_queue_size_warning">Попередження: великий об\'єм завантажень може призвести до сповільнення роботи джерел та/або блокуванню Tachiyomi.</string>
     <string name="pref_library_update_show_tab_badge">Показувати кількість непрочитаних на значку оновлення</string>
@@ -733,4 +735,33 @@
     <string name="unfinished_list">Не закінчено</string>
     <string name="action_sort_last_manga_update">Останні оновлення манги</string>
     <string name="action_sort_unread_count">Кількість непрочитаного</string>
+    <string name="pref_reset_viewer_flags_summary">Скидує режим читання та орієнтацію всіх серій</string>
+    <string name="theme_lavender">Лаванда</string>
+    <string name="description_placeholder">Без опису</string>
+    <string name="pref_duplicate_pinned_sources_summary">Повторювати прикліплені джерела, у відповідності з їх мовними групами</string>
+    <string name="pref_reset_viewer_flags">Скинути налаштування читалки для кожної серії</string>
+    <string name="pref_reset_viewer_flags_success">Скидання всіх налаштувань</string>
+    <string name="custom_cover">Користувацька обкладинка</string>
+    <string name="pref_reset_viewer_flags_error">Не вдалось скинути налаштування</string>
+    <string name="empty_screen">Йой, трапилась халепа</string>
+    <string name="error_saving_picture">Не вдалось зберегти зображення</string>
+    <string name="not_installed">Не встановлено</string>
+    <string name="network_not_metered">Тільки в безлімітній мережі</string>
+    <string name="source_filter_empty_screen">Встановлених джерел не знайдено</string>
+    <string name="source_empty_screen">Джерел не знайдено</string>
+    <string name="disabled_nav">Вимкнено</string>
+    <string name="pref_duplicate_pinned_sources">Відображати дубльовані закріплені джерела</string>
+    <string name="learn_more">Тицьніть задля подробиць</string>
+    <string name="cant_open_last_read_chapter">Не вдається відкрити останню прочитану главу</string>
+    <string name="pref_app_language">Мова додатку</string>
+    <string name="battery_not_low">Коли батарею заряджено</string>
+    <string name="ext_info_version">Версія</string>
+    <string name="ext_info_language">Мова</string>
+    <string name="ext_info_age_rating">Вікові обмеження</string>
+    <string name="download_notifier_split_page_path_not_found">Не вдалось знайти шлях сторінки %d</string>
+    <string name="pref_navigate_pan">Перейти до панорамування</string>
+    <string name="pref_landscape_zoom">Збільшити горизонтальне зображення</string>
+    <string name="action_close">Закрити</string>
+    <string name="update_check_open">Відкрити на GitHub</string>
+    <string name="update_check_fdroid_migration_info">Нова версія наявна з офіційних релізів. Тицьніть для того аби дізнатись як мігрувати з неофіційних релізів F-Droid.</string>
 </resources>

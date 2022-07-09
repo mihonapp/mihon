@@ -209,7 +209,7 @@
     <string name="description">介绍</string>
     <string name="ongoing">连载中</string>
     <string name="unknown">未知</string>
-    <string name="licensed">已授权</string>
+    <string name="licensed">版权屏蔽</string>
     <string name="remove_from_library">移出书架</string>
     <string name="manga_info_full_title_label">标题</string>
     <string name="manga_added_library">已添加至书架</string>
@@ -271,7 +271,7 @@
     <string name="transition_no_next">后面没有啦</string>
     <string name="transition_no_previous">前面没有啦</string>
     <string name="transition_pages_loading">正在加载页面…</string>
-    <string name="transition_pages_error">第 %1$s 页加载失败</string>
+    <string name="transition_pages_error">图片加载失败：%1$s</string>
     <string name="migration_dialog_what_to_include">选择需要迁移的数据</string>
     <string name="migrate">迁移</string>
     <string name="copy">共存</string>
@@ -663,7 +663,7 @@
     <string name="extension_api_error">无法获取扩展插件列表</string>
     <string name="privacy_policy">隐私政策</string>
     <string name="pref_update_only_completely_read">有未读章节</string>
-    <string name="pref_library_update_manga_restriction">跳过更新标题</string>
+    <string name="pref_library_update_manga_restriction">跳过更新以下作品</string>
     <string name="library_errors_help">有关如何修复库更新错误的帮助，请参阅 %1$s</string>
     <string name="save_chapter_as_cbz">保存为 CBZ 存档</string>
     <string name="publishing_finished">发布完成</string>
@@ -728,4 +728,6 @@
     <string name="custom_cover">自定义封面</string>
     <string name="not_installed">未安装</string>
     <string name="pref_app_language">应用语言</string>
+    <string name="theme_lavender">淡紫色</string>
+    <string name="description_placeholder">无描述</string>
 </resources>

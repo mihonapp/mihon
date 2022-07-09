@@ -728,4 +728,6 @@
     <string name="custom_cover">กำหนดปกเอง</string>
     <string name="not_installed">ยังไม่ถูกติดตั้ง</string>
     <string name="pref_app_language">ภาษาของแอพ</string>
+    <string name="description_placeholder">ไม่มีคำอธิบาย</string>
+    <string name="theme_lavender">ลาเวนเดอร์</string>
 </resources>

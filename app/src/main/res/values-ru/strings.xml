@@ -764,4 +764,6 @@
     <string name="custom_cover">Пользовательская обложка</string>
     <string name="not_installed">Не установлено</string>
     <string name="pref_app_language">Язык приложения</string>
+    <string name="theme_lavender">Лаванда</string>
+    <string name="description_placeholder">Без описания</string>
 </resources>

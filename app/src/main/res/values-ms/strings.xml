@@ -728,4 +728,6 @@
     <string name="custom_cover">Muka hadapan tersuai</string>
     <string name="not_installed">Tidak dipasang</string>
     <string name="pref_app_language">Bahasa aplikasi</string>
+    <string name="theme_lavender">Lavender</string>
+    <string name="description_placeholder">Tiada deskripsi</string>
 </resources>

@@ -771,4 +771,6 @@
     <string name="custom_cover">Portada personalizada</string>
     <string name="not_installed">Sin instalar</string>
     <string name="pref_app_language">Idioma de la aplicación</string>
+    <string name="theme_lavender">Lavanda</string>
+    <string name="description_placeholder">Sin descripción</string>
 </resources>

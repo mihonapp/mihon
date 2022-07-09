@@ -726,4 +726,6 @@
     <string name="ext_info_age_rating">आयु रेटिंग</string>
     <string name="reading_list">पठन सूची</string>
     <string name="wish_list">विश-लिस्ट</string>
+    <string name="theme_lavender">लैवेंडर</string>
+    <string name="pref_app_language">ऐप की भाषा</string>
 </resources>

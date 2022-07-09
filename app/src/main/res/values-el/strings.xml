@@ -740,4 +740,6 @@
     <string name="custom_cover">Προσαρμοσμένο εξώφυλλο</string>
     <string name="not_installed">Δεν έχει εγκατασταθεί</string>
     <string name="pref_app_language">Γλώσσα εφαρμογής</string>
+    <string name="theme_lavender">Λεβάντα</string>
+    <string name="description_placeholder">Χωρίς περιγραφή</string>
 </resources>
