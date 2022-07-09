@@ -6,9 +6,11 @@ import eu.kanade.data.history.HistoryRepositoryImpl
 import eu.kanade.data.manga.MangaRepositoryImpl
 import eu.kanade.data.source.SourceRepositoryImpl
 import eu.kanade.data.track.TrackRepositoryImpl
+import eu.kanade.domain.category.interactor.CreateCategoryWithName
 import eu.kanade.domain.category.interactor.DeleteCategory
 import eu.kanade.domain.category.interactor.GetCategories
-import eu.kanade.domain.category.interactor.InsertCategory
+import eu.kanade.domain.category.interactor.RenameCategory
+import eu.kanade.domain.category.interactor.ReorderCategory
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.interactor.UpdateCategory
 import eu.kanade.domain.category.repository.CategoryRepository
@@ -69,7 +71,9 @@ class DomainModule : InjektModule {
     override fun InjektRegistrar.registerInjectables() {
         addSingletonFactory<CategoryRepository> { CategoryRepositoryImpl(get()) }
         addFactory { GetCategories(get()) }
-        addFactory { InsertCategory(get()) }
+        addFactory { CreateCategoryWithName(get()) }
+        addFactory { RenameCategory(get()) }
+        addFactory { ReorderCategory(get()) }
         addFactory { UpdateCategory(get()) }
         addFactory { DeleteCategory(get()) }
 

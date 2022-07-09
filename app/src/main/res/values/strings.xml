@@ -849,4 +849,9 @@
     <string name="pref_navigate_pan">Navigate to pan</string>
     <string name="pref_landscape_zoom">Zoom landscape image</string>
     <string name="cant_open_last_read_chapter">Unable to open last read chapter</string>
+    <string name="delete_category_confirmation">Do you wish to delete the category %s</string>
+    <string name="delete_category">Delete category</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="internal_error">InternalError: Check crash logs for further information</string>
 </resources>

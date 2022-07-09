@@ -4,7 +4,7 @@ import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.category.model.CategoryUpdate
 import eu.kanade.domain.category.repository.CategoryRepository
-import eu.kanade.domain.category.repository.DuplicateNameException
+import eu.kanade.tachiyomi.Database
 import kotlinx.coroutines.flow.Flow
 
 class CategoryRepositoryImpl(
@@ -31,29 +31,37 @@ class CategoryRepositoryImpl(
         }
     }
 
-    @Throws(DuplicateNameException::class)
-    override suspend fun insert(name: String, order: Long) {
-        if (checkDuplicateName(name)) throw DuplicateNameException(name)
+    override suspend fun insert(category: Category) {
         handler.await {
             categoriesQueries.insert(
-                name = name,
-                order = order,
-                flags = 0L,
+                name = category.name,
+                order = category.order,
+                flags = category.flags,
             )
         }
     }
 
-    @Throws(DuplicateNameException::class)
-    override suspend fun update(payload: CategoryUpdate) {
-        if (payload.name != null && checkDuplicateName(payload.name)) throw DuplicateNameException(payload.name)
+    override suspend fun updatePartial(update: CategoryUpdate) {
         handler.await {
-            categoriesQueries.update(
-                name = payload.name,
-                order = payload.order,
-                flags = payload.flags,
-                categoryId = payload.id,
-            )
+            updatePartialBlocking(update)
         }
+    }
+
+    override suspend fun updatePartial(updates: List<CategoryUpdate>) {
+        handler.await(true) {
+            for (update in updates) {
+                updatePartialBlocking(update)
+            }
+        }
+    }
+
+    private fun Database.updatePartialBlocking(update: CategoryUpdate) {
+        categoriesQueries.update(
+            name = update.name,
+            order = update.order,
+            flags = update.flags,
+            categoryId = update.id,
+        )
     }
 
     override suspend fun delete(categoryId: Long) {
@@ -62,11 +70,5 @@ class CategoryRepositoryImpl(
                 categoryId = categoryId,
             )
         }
-    }
-
-    override suspend fun checkDuplicateName(name: String): Boolean {
-        return handler
-            .awaitList { categoriesQueries.getCategories() }
-            .any { it.name == name }
     }
 }

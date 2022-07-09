@@ -1,34 +1,33 @@
 package eu.kanade.domain.category.interactor
 
-import eu.kanade.domain.category.model.CategoryUpdate
+import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.category.model.anyWithName
 import eu.kanade.domain.category.repository.CategoryRepository
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 
-class DeleteCategory(
+class CreateCategoryWithName(
     private val categoryRepository: CategoryRepository,
 ) {
 
-    suspend fun await(categoryId: Long) = withContext(NonCancellable) await@{
-        try {
-            categoryRepository.delete(categoryId)
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-            return@await Result.InternalError(e)
-        }
-
+    suspend fun await(name: String): Result = withContext(NonCancellable) await@{
         val categories = categoryRepository.getAll()
-        val updates = categories.mapIndexed { index, category ->
-            CategoryUpdate(
-                id = category.id,
-                order = index.toLong(),
-            )
+        if (categories.anyWithName(name)) {
+            return@await Result.NameAlreadyExistsError
         }
 
+        val nextOrder = categories.maxOfOrNull { it.order }?.plus(1) ?: 0
+        val newCategory = Category(
+            id = 0,
+            name = name,
+            order = nextOrder,
+            flags = 0,
+        )
+
         try {
-            categoryRepository.updatePartial(updates)
+            categoryRepository.insert(newCategory)
             Result.Success
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
@@ -38,6 +37,7 @@ class DeleteCategory(
 
     sealed class Result {
         object Success : Result()
+        object NameAlreadyExistsError : Result()
         data class InternalError(val error: Throwable) : Result()
     }
 }
