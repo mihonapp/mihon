@@ -1,12 +1,11 @@
 package eu.kanade.tachiyomi.util.storage
 
 import android.content.Context
-import android.content.Intent
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
 import android.os.StatFs
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.util.lang.Hash
 import java.io.File
@@ -77,18 +76,8 @@ object DiskUtil {
     /**
      * Scans the given file so that it can be shown in gallery apps, for example.
      */
-    fun scanMedia(context: Context, file: File) {
-        scanMedia(context, file.toUri())
-    }
-
-    /**
-     * Scans the given file so that it can be shown in gallery apps, for example.
-     */
     fun scanMedia(context: Context, uri: Uri) {
-        val action = Intent.ACTION_MEDIA_SCANNER_SCAN_FILE
-        val mediaScanIntent = Intent(action)
-        mediaScanIntent.data = uri
-        context.sendBroadcast(mediaScanIntent)
+        MediaScannerConnection.scanFile(context, arrayOf(uri.path), null, null)
     }
 
     /**
