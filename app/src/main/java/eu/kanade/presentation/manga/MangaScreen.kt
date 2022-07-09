@@ -685,8 +685,8 @@ private fun LazyListScope.sharedChapterItems(
             read = chapter.read,
             bookmark = chapter.bookmark,
             selected = selected.contains(chapterItem),
-            downloadState = downloadState,
-            downloadProgress = downloadProgress,
+            downloadStateProvider = { downloadState },
+            downloadProgressProvider = { downloadProgress },
             onLongClick = {
                 val dispatched = onChapterItemLongClick(
                     chapterItem = chapterItem,

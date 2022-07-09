@@ -27,8 +27,8 @@ class ChapterDownloadView @JvmOverloads constructor(
     override fun Content() {
         TachiyomiTheme {
             ChapterDownloadIndicator(
-                downloadState = state,
-                downloadProgress = progress,
+                downloadStateProvider = { state },
+                downloadProgressProvider = { progress },
                 onClick = listener,
             )
         }
