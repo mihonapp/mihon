@@ -37,12 +37,12 @@
         android:entries="@array/image_scale_type"
         app:title="@string/pref_image_scale_type" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/landscape_zoom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
         android:text="@string/pref_landscape_zoom"
         android:textColor="?android:attr/textColorSecondary" />
 
@@ -53,39 +53,39 @@
         android:entries="@array/zoom_start"
         app:title="@string/pref_zoom_start" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/crop_borders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
         android:text="@string/pref_crop_borders"
         android:textColor="?android:attr/textColorSecondary" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/navigate_pan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
         android:text="@string/pref_navigate_pan"
         android:textColor="?android:attr/textColorSecondary" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/dual_page_split"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
         android:text="@string/pref_dual_page_split"
         android:textColor="?android:attr/textColorSecondary" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/dual_page_invert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
         android:text="@string/pref_dual_page_invert"
         android:textColor="?android:attr/textColorSecondary"
         android:visibility="gone"

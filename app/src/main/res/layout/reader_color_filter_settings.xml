@@ -11,12 +11,12 @@
 
         <!-- Brightness -->
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/custom_brightness"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="16dp"
             android:text="@string/pref_custom_brightness"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,12 +61,12 @@
 
         <!-- Color filter -->
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/switch_color_filter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="16dp"
             android:text="@string/pref_custom_color_filter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -237,22 +237,22 @@
 
         <!-- Grayscale -->
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/grayscale"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="16dp"
             android:text="@string/pref_grayscale"
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintTop_toBottomOf="@id/color_filter_mode" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/inverted_colors"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="16dp"
             android:text="@string/pref_inverted_colors"
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintTop_toBottomOf="@id/grayscale" />
