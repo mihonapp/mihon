@@ -211,7 +211,9 @@ class ExtensionManager(
                 mutInstalledExtensions[index] = installedExt.copy(isObsolete = true)
                 changed = true
             } else if (availableExt != null) {
-                val hasUpdate = availableExt.versionCode > installedExt.versionCode
+                val hasUpdate = !installedExt.isUnofficial &&
+                    availableExt.versionCode > installedExt.versionCode
+
                 if (installedExt.hasUpdate != hasUpdate) {
                     mutInstalledExtensions[index] = installedExt.copy(hasUpdate = hasUpdate)
                     changed = true
@@ -381,7 +383,7 @@ class ExtensionManager(
      */
     private fun Extension.Installed.withUpdateCheck(): Extension.Installed {
         val availableExt = availableExtensions.find { it.pkgName == pkgName }
-        if (availableExt != null && availableExt.versionCode > versionCode) {
+        if (isUnofficial.not() && availableExt != null && availableExt.versionCode > versionCode) {
             return copy(hasUpdate = true)
         }
         return this
