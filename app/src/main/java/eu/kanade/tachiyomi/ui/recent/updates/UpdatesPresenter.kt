@@ -17,31 +17,30 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.recent.DateSectionItem
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.toDateKey
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import logcat.LogPriority
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.TreeMap
 
-class UpdatesPresenter : BasePresenter<UpdatesController>() {
-
-    val preferences: PreferencesHelper by injectLazy()
-    private val downloadManager: DownloadManager by injectLazy()
-    private val sourceManager: SourceManager by injectLazy()
-
-    private val handler: DatabaseHandler by injectLazy()
-    private val updateChapter: UpdateChapter by injectLazy()
-    private val setReadStatus: SetReadStatus by injectLazy()
+class UpdatesPresenter(
+    private val preferences: PreferencesHelper = Injekt.get(),
+    private val downloadManager: DownloadManager = Injekt.get(),
+    private val sourceManager: SourceManager = Injekt.get(),
+    private val handler: DatabaseHandler = Injekt.get(),
+    private val updateChapter: UpdateChapter = Injekt.get(),
+    private val setReadStatus: SetReadStatus = Injekt.get(),
+) : BasePresenter<UpdatesController>() {
 
     private val relativeTime: Int = preferences.relativeTime().get()
     private val dateFormat: DateFormat = preferences.dateFormat()
@@ -52,77 +51,70 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        getUpdatesObservable()
+        presenterScope.launchIO {
+            subscribeToUpdates()
 
-        downloadManager.queue.getStatusObservable()
-            .observeOn(Schedulers.io())
-            .onBackpressureBuffer()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(
-                { view, it ->
-                    onDownloadStatusChange(it)
-                    view.onChapterDownloadUpdate(it)
-                },
-                { _, error ->
-                    logcat(LogPriority.ERROR, error)
-                },
-            )
+            downloadManager.queue.getStatusAsFlow()
+                .catch { error -> logcat(LogPriority.ERROR, error) }
+                .collectLatest {
+                    withUIContext {
+                        onDownloadStatusChange(it)
+                        view?.onChapterDownloadUpdate(it)
+                    }
+                }
 
-        downloadManager.queue.getProgressObservable()
-            .observeOn(Schedulers.io())
-            .onBackpressureBuffer()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(UpdatesController::onChapterDownloadUpdate) { _, error ->
-                logcat(LogPriority.ERROR, error)
-            }
+            downloadManager.queue.getProgressAsFlow()
+                .catch { error -> logcat(LogPriority.ERROR, error) }
+                .collectLatest {
+                    withUIContext {
+                        view?.onChapterDownloadUpdate(it)
+                    }
+                }
+        }
     }
 
     /**
      * Get observable containing recent chapters and date
-     *
-     * @return observable containing recent chapters and date
      */
-    private fun getUpdatesObservable() {
+    private suspend fun subscribeToUpdates() {
         // Set date limit for recent chapters
-        presenterScope.launchIO {
-            val cal = Calendar.getInstance().apply {
-                time = Date()
-                add(Calendar.MONTH, -3)
-            }
-
-            handler
-                .subscribeToList {
-                    mangasQueries.getRecentlyUpdated(after = cal.timeInMillis, mangaChapterMapper)
-                }
-                .map { mangaChapter ->
-                    val map = TreeMap<Date, MutableList<Pair<Manga, Chapter>>> { d1, d2 -> d2.compareTo(d1) }
-                    val byDate = mangaChapter.groupByTo(map) { it.second.dateFetch.toDateKey() }
-                    byDate.flatMap { entry ->
-                        val dateItem = DateSectionItem(entry.key, relativeTime, dateFormat)
-                        entry.value
-                            .sortedWith(compareBy({ it.second.dateFetch }, { it.second.chapterNumber })).asReversed()
-                            .map { UpdatesItem(it.second, it.first, dateItem) }
-                    }
-                }
-                .collectLatest { list ->
-                    list.forEach { item ->
-                        // Find an active download for this chapter.
-                        val download = downloadManager.queue.find { it.chapter.id == item.chapter.id }
-
-                        // If there's an active download, assign it, otherwise ask the manager if
-                        // the chapter is downloaded and assign it to the status.
-                        if (download != null) {
-                            item.download = download
-                        }
-                    }
-                    setDownloadedChapters(list)
-
-                    _updates.value = list
-
-                    // Set unread chapter count for bottom bar badge
-                    preferences.unreadUpdatesCount().set(list.count { !it.chapter.read })
-                }
+        val cal = Calendar.getInstance().apply {
+            time = Date()
+            add(Calendar.MONTH, -3)
         }
+
+        handler
+            .subscribeToList {
+                mangasQueries.getRecentlyUpdated(after = cal.timeInMillis, mangaChapterMapper)
+            }
+            .map { mangaChapter ->
+                val map = TreeMap<Date, MutableList<Pair<Manga, Chapter>>> { d1, d2 -> d2.compareTo(d1) }
+                val byDate = mangaChapter.groupByTo(map) { it.second.dateFetch.toDateKey() }
+                byDate.flatMap { entry ->
+                    val dateItem = DateSectionItem(entry.key, relativeTime, dateFormat)
+                    entry.value
+                        .sortedWith(compareBy({ it.second.dateFetch }, { it.second.chapterNumber })).asReversed()
+                        .map { UpdatesItem(it.second, it.first, dateItem) }
+                }
+            }
+            .collectLatest { list ->
+                list.forEach { item ->
+                    // Find an active download for this chapter.
+                    val download = downloadManager.queue.find { it.chapter.id == item.chapter.id }
+
+                    // If there's an active download, assign it, otherwise ask the manager if
+                    // the chapter is downloaded and assign it to the status.
+                    if (download != null) {
+                        item.download = download
+                    }
+                }
+                setDownloadedChapters(list)
+
+                _updates.value = list
+
+                // Set unread chapter count for bottom bar badge
+                preferences.unreadUpdatesCount().set(list.count { !it.chapter.read })
+            }
     }
 
     /**
@@ -184,16 +176,14 @@ class UpdatesPresenter : BasePresenter<UpdatesController>() {
      * @param chapters list of chapters
      */
     fun deleteChapters(chapters: List<UpdatesItem>) {
-        Observable.just(chapters)
-            .doOnNext { deleteChaptersInternal(it) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeFirst(
-                { view, _ ->
-                    view.onChaptersDeleted()
-                },
-                UpdatesController::onChaptersDeletedError,
-            )
+        launchIO {
+            try {
+                deleteChaptersInternal(chapters)
+                withUIContext { view?.onChaptersDeleted() }
+            } catch (e: Throwable) {
+                withUIContext { view?.onChaptersDeletedError(e) }
+            }
+        }
     }
 
     /**

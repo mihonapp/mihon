@@ -1,9 +1,10 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.core.util.asFlow
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SManga
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * A general pager for source requests (latest updates, popular, search)
@@ -15,8 +16,8 @@ abstract class Pager(var currentPage: Int = 1) {
 
     protected val results: PublishRelay<Pair<Int, List<SManga>>> = PublishRelay.create()
 
-    fun results(): Observable<Pair<Int, List<SManga>>> {
-        return results.asObservable()
+    fun asFlow(): Flow<Pair<Int, List<SManga>>> {
+        return results.asObservable().asFlow()
     }
 
     abstract suspend fun requestNextPage()

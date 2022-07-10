@@ -1,10 +1,12 @@
 package eu.kanade.tachiyomi.data.download.model
 
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.core.util.asFlow
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.download.DownloadStore
 import eu.kanade.tachiyomi.source.model.Page
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 import rx.subjects.PublishSubject
 import java.util.concurrent.CopyOnWriteArrayList
@@ -72,7 +74,10 @@ class DownloadQueue(
     fun getActiveDownloads(): Observable<Download> =
         Observable.from(this).filter { download -> download.status == Download.State.DOWNLOADING }
 
+    @Deprecated("Use getStatusAsFlow instead")
     fun getStatusObservable(): Observable<Download> = statusSubject.onBackpressureBuffer()
+
+    fun getStatusAsFlow(): Flow<Download> = getStatusObservable().asFlow()
 
     fun getUpdatedObservable(): Observable<List<Download>> = updatedRelay.onBackpressureBuffer()
         .startWith(Unit)
@@ -84,6 +89,7 @@ class DownloadQueue(
         }
     }
 
+    @Deprecated("Use getProgressAsFlow instead")
     fun getProgressObservable(): Observable<Download> {
         return statusSubject.onBackpressureBuffer()
             .startWith(getActiveDownloads())
@@ -101,6 +107,10 @@ class DownloadQueue(
                 Observable.just(download)
             }
             .filter { it.status == Download.State.DOWNLOADING }
+    }
+
+    fun getProgressAsFlow(): Flow<Download> {
+        return getProgressObservable().asFlow()
     }
 
     private fun setPagesSubject(pages: List<Page>?, subject: PublishSubject<Int>?) {

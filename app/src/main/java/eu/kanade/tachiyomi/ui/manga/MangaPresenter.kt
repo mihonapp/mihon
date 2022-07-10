@@ -59,6 +59,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
@@ -66,9 +67,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.text.DateFormat
@@ -119,8 +117,8 @@ class MangaPresenter(
     /**
      * Subscription to observe download status changes.
      */
-    private var observeDownloadsStatusSubscription: Subscription? = null
-    private var observeDownloadsPageSubscription: Subscription? = null
+    private var observeDownloadsStatusJob: Job? = null
+    private var observeDownloadsPageJob: Job? = null
 
     private var _trackList: List<TrackItem> = emptyList()
     val trackList get() = _trackList
@@ -401,29 +399,29 @@ class MangaPresenter(
     // Chapters list - start
 
     private fun observeDownloads() {
-        observeDownloadsStatusSubscription?.let { remove(it) }
-        observeDownloadsStatusSubscription = downloadManager.queue.getStatusObservable()
-            .observeOn(Schedulers.io())
-            .onBackpressureBuffer()
-            .filter { download -> download.manga.id == successState?.manga?.id }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(
-                { _, it -> updateDownloadState(it) },
-                { _, error ->
-                    logcat(LogPriority.ERROR, error)
-                },
-            )
+        observeDownloadsStatusJob?.cancel()
+        observeDownloadsStatusJob = presenterScope.launchIO {
+            downloadManager.queue.getStatusAsFlow()
+                .filter { it.manga.id == successState?.manga?.id }
+                .catch { error -> logcat(LogPriority.ERROR, error) }
+                .collectLatest {
+                    withUIContext {
+                        updateDownloadState(it)
+                    }
+                }
+        }
 
-        observeDownloadsPageSubscription?.let { remove(it) }
-        observeDownloadsPageSubscription = downloadManager.queue.getProgressObservable()
-            .observeOn(Schedulers.io())
-            .onBackpressureBuffer()
-            .filter { download -> download.manga.id == successState?.manga?.id }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(
-                { _, download -> updateDownloadState(download) },
-                { _, error -> logcat(LogPriority.ERROR, error) },
-            )
+        observeDownloadsPageJob?.cancel()
+        observeDownloadsPageJob = presenterScope.launchIO {
+            downloadManager.queue.getProgressAsFlow()
+                .filter { it.manga.id == successState?.manga?.id }
+                .catch { error -> logcat(LogPriority.ERROR, error) }
+                .collectLatest {
+                    withUIContext {
+                        updateDownloadState(it)
+                    }
+                }
+        }
     }
 
     private fun updateDownloadState(download: Download) {
