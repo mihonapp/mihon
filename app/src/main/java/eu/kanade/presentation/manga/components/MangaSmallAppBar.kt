@@ -74,7 +74,7 @@ fun MangaSmallAppBar(
                     text = if (isActionMode) actionModeCounter.toString() else title,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.alpha(titleAlphaProvider()),
+                    modifier = Modifier.alpha(if (isActionMode) 1f else titleAlphaProvider()),
                 )
             },
             navigationIcon = {

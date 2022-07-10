@@ -228,7 +228,7 @@ private fun MangaScreenSmallImpl(
                 backgroundAlphaProvider = { animatedBgAlpha },
                 incognitoMode = state.isIncognitoMode,
                 downloadedOnlyMode = state.isDownloadedOnlyMode,
-                onBackClicked = onBackClicked,
+                onBackClicked = internalOnBackPressed,
                 onShareClicked = onShareClicked,
                 onDownloadClicked = onDownloadActionClicked,
                 onEditCategoryClicked = onEditCategoryClicked,
