@@ -2,12 +2,12 @@ package eu.kanade.presentation.category.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.category.model.Category
+import eu.kanade.presentation.components.LazyColumn
 
 @Composable
 fun CategoryContent(

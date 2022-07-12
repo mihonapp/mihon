@@ -1,11 +1,9 @@
 package eu.kanade.presentation.components
 
 import androidx.compose.foundation.gestures.FlingBehavior
-import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -17,6 +15,38 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.util.drawVerticalScrollbar
+import eu.kanade.presentation.util.flingBehaviorIgnoringMotionScale
+
+/**
+ * LazyColumn with fling animation fix
+ *
+ * @see flingBehaviorIgnoringMotionScale
+ */
+@Composable
+fun LazyColumn(
+    modifier: Modifier = Modifier,
+    state: LazyListState = rememberLazyListState(),
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    reverseLayout: Boolean = false,
+    verticalArrangement: Arrangement.Vertical =
+        if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    flingBehavior: FlingBehavior = flingBehaviorIgnoringMotionScale(),
+    userScrollEnabled: Boolean = true,
+    content: LazyListScope.() -> Unit,
+) {
+    androidx.compose.foundation.lazy.LazyColumn(
+        modifier = modifier,
+        state = state,
+        contentPadding = contentPadding,
+        reverseLayout = reverseLayout,
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
+        flingBehavior = flingBehavior,
+        userScrollEnabled = userScrollEnabled,
+        content = content,
+    )
+}
 
 /**
  * LazyColumn with scrollbar.
@@ -30,7 +60,7 @@ fun ScrollbarLazyColumn(
     verticalArrangement: Arrangement.Vertical =
         if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
+    flingBehavior: FlingBehavior = flingBehaviorIgnoringMotionScale(),
     userScrollEnabled: Boolean = true,
     content: LazyListScope.() -> Unit,
 ) {
@@ -69,7 +99,7 @@ fun FastScrollLazyColumn(
     verticalArrangement: Arrangement.Vertical =
         if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
+    flingBehavior: FlingBehavior = flingBehaviorIgnoringMotionScale(),
     userScrollEnabled: Boolean = true,
     content: LazyListScope.() -> Unit,
 ) {
