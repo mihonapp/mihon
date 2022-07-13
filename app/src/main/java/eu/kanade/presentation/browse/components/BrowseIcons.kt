@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -105,8 +106,9 @@ fun ExtensionIcon(
             }
         }
         is Extension.Untrusted -> Image(
-            bitmap = ImageBitmap.imageResource(id = R.mipmap.ic_untrusted_source),
+            imageVector = Icons.Default.Dangerous,
             contentDescription = "",
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
             modifier = modifier.then(defaultModifier),
         )
     }
