@@ -136,7 +136,7 @@ data class Manga(
             lastUpdate = -1L,
             dateAdded = -1L,
             viewerFlags = -1L,
-            chapterFlags = -1L,
+            chapterFlags = 0L,
             coverLastModified = -1L,
             artist = null,
             author = null,
