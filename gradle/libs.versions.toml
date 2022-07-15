@@ -59,7 +59,7 @@ natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
 markwon = "io.noties.markwon:core:4.6.2"
 
-material = "com.google.android.material:material:1.7.0-alpha02"
+material = "com.google.android.material:material:1.7.0-alpha03"
 androidprocessbutton = "com.github.dmytrodanylyk.android-process-button:library:1.0.4"
 flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
 flexible-adapter-ui = "com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533"
@@ -81,7 +81,7 @@ flowbinding-viewpager = { module = "io.github.reactivecircus.flowbinding:flowbin
 logcat = "com.squareup.logcat:logcat:0.1"
 
 acra-http = "ch.acra:acra-http:5.9.5"
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.0.0"
+firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.1.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref ="aboutlib_version" }
