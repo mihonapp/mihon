@@ -21,15 +21,18 @@ import eu.kanade.presentation.util.horizontalPadding
 
 @Composable
 fun CategoryListItem(
+    modifier: Modifier = Modifier,
     category: Category,
     canMoveUp: Boolean,
     canMoveDown: Boolean,
     onMoveUp: (Category) -> Unit,
     onMoveDown: (Category) -> Unit,
-    onRename: (Category) -> Unit,
-    onDelete: (Category) -> Unit,
+    onRename: () -> Unit,
+    onDelete: () -> Unit,
 ) {
-    ElevatedCard {
+    ElevatedCard(
+        modifier = modifier,
+    ) {
         Row(
             modifier = Modifier
                 .padding(start = horizontalPadding, top = horizontalPadding, end = horizontalPadding),
@@ -52,10 +55,10 @@ fun CategoryListItem(
                 Icon(imageVector = Icons.Outlined.ArrowDropDown, contentDescription = "")
             }
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { onRename(category) }) {
+            IconButton(onClick = onRename) {
                 Icon(imageVector = Icons.Outlined.Edit, contentDescription = "")
             }
-            IconButton(onClick = { onDelete(category) }) {
+            IconButton(onClick = onDelete) {
                 Icon(imageVector = Icons.Outlined.Delete, contentDescription = "")
             }
         }

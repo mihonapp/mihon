@@ -7,7 +7,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -19,6 +18,7 @@ import eu.kanade.presentation.category.components.CategoryFloatingActionButton
 import eu.kanade.presentation.category.components.CategoryRenameDialog
 import eu.kanade.presentation.category.components.CategoryTopAppBar
 import eu.kanade.presentation.components.EmptyScreen
+import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.presentation.util.plus
@@ -50,25 +50,25 @@ fun CategoryScreen(
         floatingActionButton = {
             CategoryFloatingActionButton(
                 lazyListState = lazyListState,
-                onCreate = { presenter.dialog = CategoryPresenter.Dialog.Create },
+                onCreate = { presenter.dialog = Dialog.Create },
             )
         },
     ) { paddingValues ->
         val context = LocalContext.current
-        val categories by presenter.categories.collectAsState(initial = emptyList())
-        if (categories.isEmpty()) {
-            EmptyScreen(textResource = R.string.information_empty_category)
-        } else {
-            CategoryContent(
-                categories = categories,
-                lazyListState = lazyListState,
-                paddingValues = paddingValues + topPaddingValues + PaddingValues(horizontal = horizontalPadding),
-                onMoveUp = { presenter.moveUp(it) },
-                onMoveDown = { presenter.moveDown(it) },
-                onRename = { presenter.dialog = Dialog.Rename(it) },
-                onDelete = { presenter.dialog = Dialog.Delete(it) },
-            )
+        when {
+            presenter.isLoading -> LoadingScreen()
+            presenter.isEmpty -> EmptyScreen(textResource = R.string.information_empty_category)
+            else -> {
+                CategoryContent(
+                    state = presenter,
+                    lazyListState = lazyListState,
+                    paddingValues = paddingValues + topPaddingValues + PaddingValues(horizontal = horizontalPadding),
+                    onMoveUp = { presenter.moveUp(it) },
+                    onMoveDown = { presenter.moveDown(it) },
+                )
+            }
         }
+
         val onDismissRequest = { presenter.dialog = null }
         when (val dialog = presenter.dialog) {
             Dialog.Create -> {

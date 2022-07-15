@@ -1,35 +1,44 @@
 package eu.kanade.tachiyomi.ui.category
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.os.Bundle
 import eu.kanade.domain.category.interactor.CreateCategoryWithName
 import eu.kanade.domain.category.interactor.DeleteCategory
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.RenameCategory
 import eu.kanade.domain.category.interactor.ReorderCategory
 import eu.kanade.domain.category.model.Category
+import eu.kanade.presentation.category.CategoryState
+import eu.kanade.presentation.category.CategoryStateImpl
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class CategoryPresenter(
+    private val state: CategoryStateImpl = CategoryState() as CategoryStateImpl,
     private val getCategories: GetCategories = Injekt.get(),
     private val createCategoryWithName: CreateCategoryWithName = Injekt.get(),
     private val renameCategory: RenameCategory = Injekt.get(),
     private val reorderCategory: ReorderCategory = Injekt.get(),
     private val deleteCategory: DeleteCategory = Injekt.get(),
-) : BasePresenter<CategoryController>() {
-
-    var dialog: Dialog? by mutableStateOf(null)
-
-    val categories = getCategories.subscribe()
+) : BasePresenter<CategoryController>(), CategoryState by state {
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
     val events = _events.consumeAsFlow()
+
+    override fun onCreate(savedState: Bundle?) {
+        super.onCreate(savedState)
+        presenterScope.launchIO {
+            getCategories.subscribe()
+                .collectLatest {
+                    state.isLoading = false
+                    state.categories = it
+                }
+        }
+    }
 
     fun createCategory(name: String) {
         presenterScope.launchIO {
