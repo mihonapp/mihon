@@ -63,6 +63,8 @@ object PreferenceKeys {
 
     const val dohProvider = "doh_provider"
 
+    const val defaultUserAgent = "default_user_agent"
+
     const val defaultChapterFilterByRead = "default_chapter_filter_by_read"
 
     const val defaultChapterFilterByDownloaded = "default_chapter_filter_by_downloaded"

@@ -32,6 +32,7 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
+import eu.kanade.tachiyomi.util.preference.editTextPreference
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.intListPreference
 import eu.kanade.tachiyomi.util.preference.listPreference
@@ -208,6 +209,28 @@ class SettingsAdvancedController : SettingsController() {
                 onChange {
                     activity?.toast(R.string.requires_app_restart)
                     true
+                }
+            }
+            editTextPreference {
+                key = Keys.defaultUserAgent
+                titleRes = R.string.pref_user_agent_string
+                text = preferences.defaultUserAgent().get()
+                summary = network.defaultUserAgent
+
+                onChange {
+                    activity?.toast(R.string.requires_app_restart)
+                    true
+                }
+            }
+            if (preferences.defaultUserAgent().isSet()) {
+                preference {
+                    key = "pref_reset_user_agent"
+                    titleRes = R.string.pref_reset_user_agent_string
+
+                    onClick {
+                        preferences.defaultUserAgent().delete()
+                        activity?.toast(R.string.requires_app_restart)
+                    }
                 }
             }
         }
