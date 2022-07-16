@@ -6,14 +6,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import eu.kanade.tachiyomi.R
 
 @Composable
 fun CategoryTopAppBar(
-    topAppBarScrollBehavior: TopAppBarScrollBehavior,
     navigateUp: () -> Unit,
 ) {
     SmallTopAppBar(
@@ -26,8 +24,7 @@ fun CategoryTopAppBar(
             }
         },
         title = {
-            Text(text = stringResource(id = R.string.action_edit_categories))
+            Text(text = stringResource(R.string.action_edit_categories))
         },
-        scrollBehavior = topAppBarScrollBehavior,
     )
 }

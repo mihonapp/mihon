@@ -20,7 +20,7 @@ fun CategoryFloatingActionButton(
     onCreate: () -> Unit,
 ) {
     ExtendedFloatingActionButton(
-        text = { Text(text = stringResource(id = R.string.action_add)) },
+        text = { Text(text = stringResource(R.string.action_add)) },
         icon = { Icon(imageVector = Icons.Outlined.Add, contentDescription = "") },
         onClick = onCreate,
         modifier = Modifier

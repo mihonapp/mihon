@@ -57,7 +57,7 @@ fun LibraryGridCover(
         ) {
             if (isLocal) {
                 Badge(
-                    text = stringResource(id = R.string.local_source_badge),
+                    text = stringResource(R.string.local_source_badge),
                     color = MaterialTheme.colorScheme.tertiary,
                     textColor = MaterialTheme.colorScheme.onTertiary,
                 )

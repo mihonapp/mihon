@@ -215,7 +215,7 @@ fun ExpandableMangaDescription(
             mutableStateOf(defaultExpandState)
         }
         val desc =
-            description.takeIf { !it.isNullOrBlank() } ?: stringResource(id = R.string.description_placeholder)
+            description.takeIf { !it.isNullOrBlank() } ?: stringResource(R.string.description_placeholder)
         val trimmedDescription = remember(desc) {
             desc
                 .replace(whitespaceLineRegex, "\n")

@@ -1,7 +1,9 @@
 package eu.kanade.presentation.category.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
@@ -35,11 +37,17 @@ fun CategoryListItem(
     ) {
         Row(
             modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onRename() }
                 .padding(start = horizontalPadding, top = horizontalPadding, end = horizontalPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(imageVector = Icons.Outlined.Label, contentDescription = "")
-            Text(text = category.name, modifier = Modifier.padding(start = horizontalPadding))
+            Text(
+                text = category.name,
+                modifier = Modifier
+                    .padding(start = horizontalPadding),
+            )
         }
         Row {
             IconButton(
