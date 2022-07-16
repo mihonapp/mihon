@@ -1,42 +1,72 @@
 package eu.kanade.tachiyomi.source
 
 import android.content.Context
-import eu.kanade.domain.source.interactor.GetSourceData
-import eu.kanade.domain.source.interactor.UpsertSourceData
 import eu.kanade.domain.source.model.SourceData
+import eu.kanade.domain.source.repository.SourceDataRepository
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.util.lang.launchIO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import rx.Observable
 import tachiyomi.source.model.ChapterInfo
 import tachiyomi.source.model.MangaInfo
-import uy.kohesive.injekt.injectLazy
 
-class SourceManager(private val context: Context) {
+class SourceManager(
+    private val context: Context,
+    private val extensionManager: ExtensionManager,
+    private val sourceRepository: SourceDataRepository,
+) {
 
-    private val extensionManager: ExtensionManager by injectLazy()
-    private val getSourceData: GetSourceData by injectLazy()
-    private val upsertSourceData: UpsertSourceData by injectLazy()
+    private val scope = CoroutineScope(Job() + Dispatchers.IO)
 
-    private val sourcesMap = mutableMapOf<Long, Source>()
+    private var sourcesMap = emptyMap<Long, Source>()
+        set(value) {
+            field = value
+            sourcesMapFlow.value = field
+        }
+
+    private val sourcesMapFlow = MutableStateFlow(sourcesMap)
+
     private val stubSourcesMap = mutableMapOf<Long, StubSource>()
 
-    private val _catalogueSources: MutableStateFlow<List<CatalogueSource>> = MutableStateFlow(listOf())
-    val catalogueSources: Flow<List<CatalogueSource>> = _catalogueSources
-    val onlineSources: Flow<List<HttpSource>> =
-        _catalogueSources.map { sources -> sources.filterIsInstance<HttpSource>() }
+    val catalogueSources: Flow<List<CatalogueSource>> = sourcesMapFlow.map { it.values.filterIsInstance<CatalogueSource>() }
+    val onlineSources: Flow<List<HttpSource>> = catalogueSources.map { sources -> sources.filterIsInstance<HttpSource>() }
 
     init {
-        createInternalSources().forEach { registerSource(it) }
+        scope.launch {
+            extensionManager.getInstalledExtensionsFlow()
+                .collectLatest { extensions ->
+                    val mutableMap = mutableMapOf<Long, Source>(LocalSource.ID to LocalSource(context))
+                    extensions.forEach { extension ->
+                        extension.sources.forEach {
+                            mutableMap[it.id] = it
+                            registerStubSource(it.toSourceData())
+                        }
+                    }
+                    sourcesMap = mutableMap
+                }
+        }
+
+        scope.launch {
+            sourceRepository.subscribeAll()
+                .collectLatest { sources ->
+                    val mutableMap = stubSourcesMap.toMutableMap()
+                    sources.forEach {
+                        mutableMap[it.id] = StubSource(it)
+                    }
+                }
+        }
     }
 
     fun get(sourceKey: Long): Source? {
@@ -58,44 +88,15 @@ class SourceManager(private val context: Context) {
         return stubSourcesMap.values.filterNot { it.id in onlineSourceIds }
     }
 
-    internal fun registerSource(source: Source) {
-        if (!sourcesMap.containsKey(source.id)) {
-            sourcesMap[source.id] = source
-        }
-        registerStubSource(source.toSourceData())
-        triggerCatalogueSources()
-    }
-
     private fun registerStubSource(sourceData: SourceData) {
-        launchIO {
-            val dbSourceData = getSourceData.await(sourceData.id)
-
-            if (dbSourceData != sourceData) {
-                upsertSourceData.await(sourceData)
-            }
-            if (stubSourcesMap[sourceData.id]?.toSourceData() != sourceData) {
-                stubSourcesMap[sourceData.id] = StubSource(sourceData)
-            }
+        scope.launch {
+            val (id, lang, name) = sourceData
+            sourceRepository.upsertSourceData(id, lang, name)
         }
     }
-
-    internal fun unregisterSource(source: Source) {
-        sourcesMap.remove(source.id)
-        triggerCatalogueSources()
-    }
-
-    private fun triggerCatalogueSources() {
-        _catalogueSources.update {
-            sourcesMap.values.filterIsInstance<CatalogueSource>()
-        }
-    }
-
-    private fun createInternalSources(): List<Source> = listOf(
-        LocalSource(context),
-    )
 
     private suspend fun createStubSource(id: Long): StubSource {
-        getSourceData.await(id)?.let {
+        sourceRepository.getSourceData(id)?.let {
             return StubSource(it)
         }
         extensionManager.getSourceData(id)?.let {

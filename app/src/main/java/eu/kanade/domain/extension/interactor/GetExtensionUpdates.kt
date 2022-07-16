@@ -1,6 +1,5 @@
 package eu.kanade.domain.extension.interactor
 
-import eu.kanade.core.util.asFlow
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -15,7 +14,7 @@ class GetExtensionUpdates(
     fun subscribe(): Flow<List<Extension.Installed>> {
         val showNsfwSources = preferences.showNsfwSource().get()
 
-        return extensionManager.getInstalledExtensionsObservable().asFlow()
+        return extensionManager.getInstalledExtensionsFlow()
             .map { installed ->
                 installed
                     .filter { it.hasUpdate && (showNsfwSources || it.isNsfw.not()) }

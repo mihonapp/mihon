@@ -87,9 +87,9 @@ class AppModule(val app: Application) : InjektModule {
 
         addSingletonFactory { NetworkHelper(app) }
 
-        addSingletonFactory { SourceManager(app).also { get<ExtensionManager>().init(it) } }
-
         addSingletonFactory { ExtensionManager(app) }
+
+        addSingletonFactory { SourceManager(app, get(), get()) }
 
         addSingletonFactory { DownloadManager(app) }
 

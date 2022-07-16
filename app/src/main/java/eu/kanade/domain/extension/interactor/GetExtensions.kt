@@ -19,9 +19,9 @@ class GetExtensions(
 
         return combine(
             preferences.enabledLanguages().asFlow(),
-            extensionManager.getInstalledExtensionsObservable().asFlow(),
-            extensionManager.getUntrustedExtensionsObservable().asFlow(),
-            extensionManager.getAvailableExtensionsObservable().asFlow(),
+            extensionManager.getInstalledExtensionsFlow(),
+            extensionManager.getUntrustedExtensionsFlow(),
+            extensionManager.getAvailableExtensionsFlow(),
         ) { _activeLanguages, _installed, _untrusted, _available ->
 
             val installed = _installed

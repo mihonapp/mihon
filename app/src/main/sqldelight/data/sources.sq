@@ -4,7 +4,11 @@ CREATE TABLE sources(
     name TEXT NOT NULL
 );
 
-getSourceData:
+findAll:
+SELECT *
+FROM sources;
+
+findOne:
 SELECT *
 FROM sources
 WHERE _id = :id;
