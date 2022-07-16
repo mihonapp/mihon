@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
@@ -98,7 +99,14 @@ fun LibraryCompactGridItem(
                 .padding(8.dp)
                 .align(Alignment.BottomStart),
             maxLines = 2,
-            style = LocalTextStyle.current.copy(color = Color.White, fontWeight = FontWeight.SemiBold),
+            style = LocalTextStyle.current.copy(
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                shadow = Shadow(
+                    color = Color.Black,
+                    blurRadius = 4f,
+                ),
+            ),
         )
     }
 }

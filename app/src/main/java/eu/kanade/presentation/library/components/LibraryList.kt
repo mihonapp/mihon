@@ -28,7 +28,6 @@ import eu.kanade.tachiyomi.ui.library.LibraryItem
 @Composable
 fun LibraryList(
     items: List<LibraryItem>,
-    columns: Int,
     selection: List<LibraryManga>,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,

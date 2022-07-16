@@ -40,7 +40,6 @@ import uy.kohesive.injekt.api.get
  * @constructor creates an instance of the adapter.
  */
 class LibraryAdapter(
-    private val controller: LibraryController,
     private val presenter: LibraryPresenter,
     private val onClickManga: (LibraryManga) -> Unit,
     private val preferences: PreferencesHelper = Injekt.get(),
@@ -142,7 +141,6 @@ class LibraryAdapter(
                                 DisplayModeSetting.LIST -> {
                                     LibraryList(
                                         items = mangaList,
-                                        columns = presenter.columns,
                                         selection = presenter.selection,
                                         onClick = onClickManga,
                                         onLongClick = {

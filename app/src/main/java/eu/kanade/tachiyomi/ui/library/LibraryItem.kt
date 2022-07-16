@@ -7,9 +7,8 @@ import uy.kohesive.injekt.api.get
 
 class LibraryItem(
     val manga: LibraryManga,
+    private val sourceManager: SourceManager = Injekt.get(),
 ) {
-
-    private val sourceManager: SourceManager = Injekt.get()
 
     var displayMode: Long = -1
     var downloadCount = -1

@@ -18,7 +18,6 @@ import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SetReadStatus
-import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetLibraryManga
 import eu.kanade.domain.manga.interactor.UpdateManga
@@ -46,9 +45,7 @@ import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import rx.Observable
@@ -82,7 +79,6 @@ class LibraryPresenter(
     private val getCategories: GetCategories = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
-    private val updateChapter: UpdateChapter = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val preferences: PreferencesHelper = Injekt.get(),
@@ -109,11 +105,11 @@ class LibraryPresenter(
 
     val selection: MutableList<LibraryManga> = mutableStateListOf()
 
-    val isPerCategory by mutableStateOf(preferences.categorizedDisplaySettings().get())
+    val isPerCategory by preferences.categorizedDisplaySettings().asState()
 
     var columns by mutableStateOf(0)
 
-    var currentDisplayMode by mutableStateOf(preferences.libraryDisplayMode().get())
+    var currentDisplayMode by preferences.libraryDisplayMode().asState()
 
     /**
      * Relay used to apply the UI filters to the last emission of the library.
@@ -234,8 +230,8 @@ class LibraryPresenter(
 
             if (!containsExclude.any() && !containsInclude.any()) return@tracking true
 
-            val exclude = trackedManga?.filterKeys { containsExclude.containsKey(it.toLong()) }?.values ?: emptyList()
-            val include = trackedManga?.filterKeys { containsInclude.containsKey(it.toLong()) }?.values ?: emptyList()
+            val exclude = trackedManga?.filterKeys { containsExclude.containsKey(it) }?.values ?: emptyList()
+            val include = trackedManga?.filterKeys { containsInclude.containsKey(it) }?.values ?: emptyList()
 
             if (containsInclude.any() && containsExclude.any()) {
                 return@tracking if (exclude.isNotEmpty()) !exclude.any() else include.any()
@@ -449,9 +445,6 @@ class LibraryPresenter(
      * value.
      */
     private fun getLibraryMangasObservable(): Observable<LibraryMap> {
-        val defaultLibraryDisplayMode = preferences.libraryDisplayMode()
-        val shouldSetFromCategory = preferences.categorizedDisplaySettings()
-
         return getLibraryManga.subscribe().asObservable()
             .map { list ->
                 list.map { libraryManga ->

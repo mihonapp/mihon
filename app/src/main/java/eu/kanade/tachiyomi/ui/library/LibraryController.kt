@@ -142,7 +142,6 @@ class LibraryController(
         super.onViewCreated(view)
 
         adapter = LibraryAdapter(
-            controller = this,
             presenter = presenter,
             onClickManga = {
                 openManga(it.id!!)
@@ -466,7 +465,7 @@ class LibraryController(
         actionMode = null
     }
 
-    fun openManga(mangaId: Long) {
+    private fun openManga(mangaId: Long) {
         // Notify the presenter a manga is being opened.
         presenter.onOpenManga()
 
