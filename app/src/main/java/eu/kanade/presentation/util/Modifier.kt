@@ -1,8 +1,11 @@
 package eu.kanade.presentation.util
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -16,6 +19,15 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.DpSize
 import kotlin.math.roundToInt
+
+fun Modifier.selectedBackground(isSelected: Boolean): Modifier = composed {
+    if (isSelected) {
+        val alpha = if (isSystemInDarkTheme()) 0.08f else 0.22f
+        background(MaterialTheme.colorScheme.secondary.copy(alpha = alpha))
+    } else {
+        this
+    }
+}
 
 fun Modifier.secondaryItemAlpha(): Modifier = this.alpha(.78f)
 

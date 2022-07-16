@@ -14,16 +14,15 @@ import com.bluelinelabs.conductor.ControllerChangeType
 import com.fredporciuncula.flow.preferences.Preference
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxrelay.BehaviorRelay
-import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.category.model.toDbCategory
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.LibraryControllerBinding
-import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.SearchableNucleusController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
@@ -33,7 +32,6 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
-import eu.kanade.tachiyomi.util.preference.asImmediateFlow
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
@@ -74,40 +72,9 @@ class LibraryController(
     private var actionMode: ActionModeWithToolbar? = null
 
     /**
-     * Currently selected mangas.
-     */
-    val selectedMangas = mutableSetOf<Manga>()
-
-    /**
-     * Relay to notify the UI of selection updates.
-     */
-    val selectionRelay: PublishRelay<LibrarySelectionEvent> = PublishRelay.create()
-
-    /**
-     * Relay to notify search query changes.
-     */
-    val searchRelay: BehaviorRelay<String> = BehaviorRelay.create()
-
-    /**
      * Relay to notify the library's viewpager for updates.
      */
     val libraryMangaRelay: BehaviorRelay<LibraryMangaEvent> = BehaviorRelay.create()
-
-    /**
-     * Relay to notify the library's viewpager to select all manga
-     */
-    val selectAllRelay: PublishRelay<Long> = PublishRelay.create()
-
-    /**
-     * Relay to notify the library's viewpager to select the inverse
-     */
-    val selectInverseRelay: PublishRelay<Long> = PublishRelay.create()
-
-    /**
-     * Number of manga per row in grid mode.
-     */
-    var mangaPerRow = 0
-        private set
 
     /**
      * Adapter of the view pager.
@@ -174,7 +141,19 @@ class LibraryController(
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
-        adapter = LibraryAdapter(this)
+        adapter = LibraryAdapter(
+            controller = this,
+            presenter = presenter,
+            onClickManga = {
+                openManga(it.id!!)
+            },
+        )
+
+        getColumnsPreferenceForCurrentOrientation()
+            .asFlow()
+            .onEach { presenter.columns = it }
+            .launchIn(viewScope)
+
         binding.libraryPager.adapter = adapter
         binding.libraryPager.pageSelections()
             .drop(1)
@@ -185,13 +164,7 @@ class LibraryController(
             }
             .launchIn(viewScope)
 
-        getColumnsPreferenceForCurrentOrientation().asImmediateFlow { mangaPerRow = it }
-            .drop(1)
-            // Set again the adapter to recalculate the covers height
-            .onEach { reattachAdapter() }
-            .launchIn(viewScope)
-
-        if (selectedMangas.isNotEmpty()) {
+        if (adapter!!.categories.isNotEmpty()) {
             createActionModeIfNeeded()
         }
 
@@ -219,6 +192,14 @@ class LibraryController(
             .launchIn(viewScope)
     }
 
+    private fun getColumnsPreferenceForCurrentOrientation(): Preference<Int> {
+        return if (resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            preferences.portraitColumns()
+        } else {
+            preferences.landscapeColumns()
+        }
+    }
+
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
         super.onChangeStarted(handler, type)
         if (type.isEnter) {
@@ -229,7 +210,6 @@ class LibraryController(
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
-        adapter?.onDestroy()
         adapter = null
         settingsSheet?.sheetScope?.cancel()
         settingsSheet = null
@@ -313,24 +293,17 @@ class LibraryController(
             }
         }
 
+        presenter.loadedManga.clear()
+        mangaMap.forEach {
+            presenter.loadedManga[it.key] = it.value
+        }
+        presenter.loadedMangaFlow.value = presenter.loadedManga
+
         // Send the manga map to child fragments after the adapter is updated.
         libraryMangaRelay.call(LibraryMangaEvent(mangaMap))
 
         // Finally update the title
         updateTitle()
-    }
-
-    /**
-     * Returns a preference for the number of manga per row based on the current orientation.
-     *
-     * @return the preference.
-     */
-    private fun getColumnsPreferenceForCurrentOrientation(): Preference<Int> {
-        return if (resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            preferences.portraitColumns()
-        } else {
-            preferences.landscapeColumns()
-        }
     }
 
     private fun onFilterChanged() {
@@ -400,7 +373,6 @@ class LibraryController(
     }
 
     private fun performSearch() {
-        searchRelay.call(presenter.query)
         if (presenter.query.isNotEmpty()) {
             binding.btnGlobalSearch.isVisible = true
             binding.btnGlobalSearch.text =
@@ -455,7 +427,7 @@ class LibraryController(
     }
 
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-        val count = selectedMangas.size
+        val count = presenter.selection.size
         if (count == 0) {
             // Destroy action mode if there are no items selected.
             destroyActionModeIfNeeded()
@@ -466,9 +438,9 @@ class LibraryController(
     }
 
     override fun onPrepareActionToolbar(toolbar: ActionModeWithToolbar, menu: Menu) {
-        if (selectedMangas.isEmpty()) return
+        if (presenter.hasSelection().not()) return
         toolbar.findToolbarItem(R.id.action_download_unread)?.isVisible =
-            selectedMangas.any { it.source != LocalSource.ID }
+            presenter.selection.any { presenter.loadedManga.values.any { it.any { it.isLocal } } }
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
@@ -487,50 +459,18 @@ class LibraryController(
 
     override fun onDestroyActionMode(mode: ActionMode) {
         // Clear all the manga selections and notify child views.
-        selectedMangas.clear()
-        selectionRelay.call(LibrarySelectionEvent.Cleared)
+        presenter.clearSelection()
 
         (activity as? MainActivity)?.showBottomNav(true)
 
         actionMode = null
     }
 
-    fun openManga(manga: Manga) {
+    fun openManga(mangaId: Long) {
         // Notify the presenter a manga is being opened.
         presenter.onOpenManga()
 
-        router.pushController(MangaController(manga.id))
-    }
-
-    /**
-     * Sets the selection for a given manga.
-     *
-     * @param manga the manga whose selection has changed.
-     * @param selected whether it's now selected or not.
-     */
-    fun setSelection(manga: Manga, selected: Boolean) {
-        if (selected) {
-            if (selectedMangas.add(manga)) {
-                selectionRelay.call(LibrarySelectionEvent.Selected(manga))
-            }
-        } else {
-            if (selectedMangas.remove(manga)) {
-                selectionRelay.call(LibrarySelectionEvent.Unselected(manga))
-            }
-        }
-    }
-
-    /**
-     * Toggles the current selection state for a given manga.
-     *
-     * @param manga the manga whose selection to change.
-     */
-    fun toggleSelection(manga: Manga) {
-        if (selectedMangas.add(manga)) {
-            selectionRelay.call(LibrarySelectionEvent.Selected(manga))
-        } else if (selectedMangas.remove(manga)) {
-            selectionRelay.call(LibrarySelectionEvent.Unselected(manga))
-        }
+        router.pushController(MangaController(mangaId))
     }
 
     /**
@@ -538,8 +478,7 @@ class LibraryController(
      * invalidate the action mode to revert the top toolbar
      */
     fun clearSelection() {
-        selectedMangas.clear()
-        selectionRelay.call(LibrarySelectionEvent.Cleared)
+        presenter.clearSelection()
         invalidateActionMode()
     }
 
@@ -549,15 +488,15 @@ class LibraryController(
     private fun showMangaCategoriesDialog() {
         viewScope.launchIO {
             // Create a copy of selected manga
-            val mangas = selectedMangas.toList()
+            val mangas = presenter.selection.toList()
 
             // Hide the default category because it has a different behavior than the ones from db.
             val categories = presenter.categories.filter { it.id != 0L }
 
             // Get indexes of the common categories to preselect.
-            val common = presenter.getCommonCategories(mangas)
+            val common = presenter.getCommonCategories(mangas.mapNotNull { it.toDomainManga() })
             // Get indexes of the mix categories to preselect.
-            val mix = presenter.getMixCategories(mangas)
+            val mix = presenter.getMixCategories(mangas.mapNotNull { it.toDomainManga() })
             val preselected = categories.map {
                 when (it) {
                     in common -> QuadStateTextView.State.CHECKED.ordinal
@@ -566,26 +505,27 @@ class LibraryController(
                 }
             }.toTypedArray()
             launchUI {
-                ChangeMangaCategoriesDialog(this@LibraryController, mangas, categories, preselected)
+                ChangeMangaCategoriesDialog(this@LibraryController, mangas.mapNotNull { it.toDomainManga() }, categories, preselected)
                     .showDialog(router)
             }
         }
     }
 
     private fun downloadUnreadChapters() {
-        val mangas = selectedMangas.toList()
-        presenter.downloadUnreadChapters(mangas)
+        val mangas = presenter.selection.toList()
+        presenter.downloadUnreadChapters(mangas.mapNotNull { it.toDomainManga() })
         destroyActionModeIfNeeded()
     }
 
     private fun markReadStatus(read: Boolean) {
-        val mangas = selectedMangas.toList()
-        presenter.markReadStatus(mangas, read)
+        val mangas = presenter.selection.toList()
+        presenter.markReadStatus(mangas.mapNotNull { it.toDomainManga() }, read)
         destroyActionModeIfNeeded()
     }
 
     private fun showDeleteMangaDialog() {
-        DeleteLibraryMangasDialog(this, selectedMangas.toList()).showDialog(router)
+        val mangas = presenter.selection.toList()
+        DeleteLibraryMangasDialog(this, mangas.mapNotNull { it.toDomainManga() }).showDialog(router)
     }
 
     override fun updateCategoriesForMangas(mangas: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {
@@ -599,21 +539,18 @@ class LibraryController(
     }
 
     private fun selectAllCategoryManga() {
-        adapter?.categories?.getOrNull(binding.libraryPager.currentItem)?.id?.let {
-            selectAllRelay.call(it)
-        }
+        presenter.selectAll(binding.libraryPager.currentItem)
     }
 
     private fun selectInverseCategoryManga() {
-        adapter?.categories?.getOrNull(binding.libraryPager.currentItem)?.id?.let {
-            selectInverseRelay.call(it)
-        }
+        presenter.invertSelection(binding.libraryPager.currentItem)
     }
 
     override fun onSearchViewQueryTextChange(newText: String?) {
         // Ignore events if this controller isn't at the top to avoid query being reset
         if (router.backstack.lastOrNull()?.controller == this) {
             presenter.query = newText ?: ""
+            presenter.searchQuery = newText ?: ""
             performSearch()
         }
     }

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<eu.kanade.tachiyomi.widget.AutofitRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/library_list"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:paddingBottom="@dimen/action_toolbar_list_padding"
-    tools:listitem="@layout/source_list_item" />
