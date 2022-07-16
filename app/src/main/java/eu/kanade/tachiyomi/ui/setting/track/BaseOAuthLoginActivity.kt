@@ -3,12 +3,11 @@ package eu.kanade.tachiyomi.ui.setting.track
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.compose.setContent
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.util.view.setComposeContent
 import uy.kohesive.injekt.injectLazy
 
 abstract class BaseOAuthLoginActivity : BaseActivity() {
@@ -20,10 +19,8 @@ abstract class BaseOAuthLoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
-            TachiyomiTheme {
-                LoadingScreen()
-            }
+        setComposeContent {
+            LoadingScreen()
         }
 
         handleResult(intent.data)

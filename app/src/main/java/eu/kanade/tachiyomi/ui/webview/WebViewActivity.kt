@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.compose.setContent
-import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.webview.WebViewScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -16,6 +14,7 @@ import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.setComposeContent
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import uy.kohesive.injekt.injectLazy
 
@@ -44,18 +43,16 @@ class WebViewActivity : BaseActivity() {
             headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }.toMutableMap()
         }
 
-        setContent {
-            TachiyomiTheme {
-                WebViewScreen(
-                    onUp = { finish() },
-                    initialTitle = intent.extras?.getString(TITLE_KEY),
-                    url = url,
-                    headers = headers,
-                    onShare = this::shareWebpage,
-                    onOpenInBrowser = this::openInBrowser,
-                    onClearCookies = this::clearCookies,
-                )
-            }
+        setComposeContent {
+            WebViewScreen(
+                onUp = { finish() },
+                initialTitle = intent.extras?.getString(TITLE_KEY),
+                url = url,
+                headers = headers,
+                onShare = this::shareWebpage,
+                onOpenInBrowser = this::openInBrowser,
+                onClearCookies = this::clearCookies,
+            )
         }
     }
 

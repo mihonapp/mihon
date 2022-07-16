@@ -3,17 +3,12 @@ package eu.kanade.tachiyomi.ui.base.controller
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
-import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.databinding.ComposeControllerBinding
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.view.setComposeContent
 import nucleus.presenter.Presenter
 
 abstract class FullComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
@@ -27,14 +22,8 @@ abstract class FullComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
         super.onViewCreated(view)
 
         binding.root.apply {
-            consumeWindowInsets = false
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                TachiyomiTheme {
-                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
-                        ComposeContent()
-                    }
-                }
+            setComposeContent {
+                ComposeContent()
             }
         }
     }
@@ -54,15 +43,9 @@ abstract class ComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
         super.onViewCreated(view)
 
         binding.root.apply {
-            consumeWindowInsets = false
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
+            setComposeContent {
                 val nestedScrollInterop = rememberNestedScrollInteropConnection()
-                TachiyomiTheme {
-                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
-                        ComposeContent(nestedScrollInterop)
-                    }
-                }
+                ComposeContent(nestedScrollInterop)
             }
         }
     }
@@ -82,15 +65,9 @@ abstract class BasicComposeController :
         super.onViewCreated(view)
 
         binding.root.apply {
-            consumeWindowInsets = false
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
+            setComposeContent {
                 val nestedScrollInterop = rememberNestedScrollInteropConnection()
-                TachiyomiTheme {
-                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
-                        ComposeContent(nestedScrollInterop)
-                    }
-                }
+                ComposeContent(nestedScrollInterop)
             }
         }
     }
@@ -107,15 +84,9 @@ abstract class SearchableComposeController<P : BasePresenter<*>>(bundle: Bundle?
         super.onViewCreated(view)
 
         binding.root.apply {
-            consumeWindowInsets = false
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
+            setComposeContent {
                 val nestedScrollInterop = rememberNestedScrollInteropConnection()
-                TachiyomiTheme {
-                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
-                        ComposeContent(nestedScrollInterop)
-                    }
-                }
+                ComposeContent(nestedScrollInterop)
             }
         }
     }
