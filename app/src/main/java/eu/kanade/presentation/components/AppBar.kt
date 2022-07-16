@@ -23,24 +23,27 @@ import androidx.compose.ui.text.style.TextOverflow
 import eu.kanade.tachiyomi.R
 
 @Composable
-fun TopAppBar(
+fun AppBar(
     title: String?,
     subtitle: String? = null,
-    navigateUp: () -> Unit,
+    navigateUp: (() -> Unit)? = null,
     navigationIcon: ImageVector = Icons.Default.ArrowBack,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     SmallTopAppBar(
         navigationIcon = {
-            IconButton(onClick = navigateUp) {
-                Icon(
-                    imageVector = navigationIcon,
-                    contentDescription = stringResource(R.string.abc_action_bar_up_description),
-                )
+            navigateUp?.let {
+                IconButton(onClick = it) {
+                    Icon(
+                        imageVector = navigationIcon,
+                        contentDescription = stringResource(R.string.abc_action_bar_up_description),
+                    )
+                }
             }
         },
         title = {
             AppBarTitle(title, subtitle)
+            // TODO: incognito/downloaded only banners
         },
         actions = actions,
     )

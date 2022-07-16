@@ -16,11 +16,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.LinkIcon
 import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
-import eu.kanade.presentation.components.TopAppBar
 import eu.kanade.presentation.more.LogoHeader
 import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.BuildConfig
@@ -42,7 +42,7 @@ fun AboutScreen(
     Scaffold(
         modifier = Modifier.statusBarsPadding(),
         topBar = {
-            TopAppBar(
+            AppBar(
                 title = stringResource(R.string.pref_category_about),
                 navigateUp = navigateUp,
             )

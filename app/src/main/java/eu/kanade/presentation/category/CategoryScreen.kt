@@ -13,10 +13,10 @@ import eu.kanade.presentation.category.components.CategoryCreateDialog
 import eu.kanade.presentation.category.components.CategoryDeleteDialog
 import eu.kanade.presentation.category.components.CategoryFloatingActionButton
 import eu.kanade.presentation.category.components.CategoryRenameDialog
+import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.Scaffold
-import eu.kanade.presentation.components.TopAppBar
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.topPaddingValues
@@ -35,7 +35,7 @@ fun CategoryScreen(
     Scaffold(
         modifier = Modifier.statusBarsPadding(),
         topBar = {
-            TopAppBar(
+            AppBar(
                 title = stringResource(R.string.action_edit_categories),
                 navigateUp = navigateUp,
             )
