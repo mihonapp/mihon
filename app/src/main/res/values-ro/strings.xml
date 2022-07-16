@@ -611,4 +611,12 @@
     <string name="publishing_finished">Editare finalizată</string>
     <string name="cancelled">Anulat</string>
     <string name="on_hiatus">În pauză</string>
+    <string name="notification_update_skipped">%1$d actualizari sarite</string>
+    <string name="skipped_reason_completed">Ignorata deoarece seria este completa</string>
+    <string name="skipped_reason_not_started">Ignorat din cauza lipsei de capitolel citite</string>
+    <string name="local_invalid_format">Format de capitol invalid</string>
+    <string name="download_queue_size_warning">Atentie : actualizarile mari la gramada vor face sursele mai incete si pot/vor bloca Tachiyomi. Apasa pentru mai multe informatii.</string>
+    <string name="getting_started_guide">Ghidul de inceput</string>
+    <string name="notification_update_error">%1$d actualizari esuate</string>
+    <string name="skipped_reason_not_caught_up">Ignorata deoarece sunt capitole necitite</string>
 </resources>

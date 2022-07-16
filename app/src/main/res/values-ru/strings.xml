@@ -766,4 +766,11 @@
     <string name="pref_app_language">Язык приложения</string>
     <string name="theme_lavender">Лаванда</string>
     <string name="description_placeholder">Без описания</string>
+    <string name="internal_error">InternalError: Проверьте журнал ошибок для дополнительной информации</string>
+    <string name="yes">Да</string>
+    <string name="delete_category_confirmation">Хотите ли вы удалить категорию %s</string>
+    <string name="delete_category">Удалить категорию</string>
+    <string name="no">Нет</string>
+    <string name="pref_user_agent_string">User agent по умолчанию</string>
+    <string name="pref_reset_user_agent_string">Сбросить user agent по умолчанию</string>
 </resources>

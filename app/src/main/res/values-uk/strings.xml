@@ -764,4 +764,9 @@
     <string name="action_close">Закрити</string>
     <string name="update_check_open">Відкрити на GitHub</string>
     <string name="update_check_fdroid_migration_info">Нова версія наявна з офіційних релізів. Тицьніть для того аби дізнатись як мігрувати з неофіційних релізів F-Droid.</string>
+    <string name="internal_error">InternalError: Перевірте журнал халеп задля додаткової інформації</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="delete_category_confirmation">Чи бажаєте ви видалити категорію %s</string>
+    <string name="delete_category">Видалити категорію</string>
 </resources>

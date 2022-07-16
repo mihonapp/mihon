@@ -267,7 +267,7 @@
     <string name="obsolete_extension_message">Ekstensi iki ora kasedhiya maneh.</string>
     <string name="extension_api_error">Gagal kanggo entuk dhaptar ekstensi</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="ext_nsfw_warning">Ndean isi konten NSFW (18+)</string>
+    <string name="ext_nsfw_warning">Sumber saka ekstensi iki bisa ngemot konten NSFW (18+)</string>
     <string name="ext_install_service_notif">Masang ekstensi…</string>
     <string name="ext_installer_pref">Pemasang</string>
     <string name="ext_installer_shizuku_stopped">Shizuku ora lumaku</string>
@@ -294,4 +294,25 @@
     <string name="pref_library_update_manga_restriction">Lewati updatean judul</string>
     <string name="battery_not_low">Pas baterai ora titik</string>
     <string name="pref_app_language">Bohoso aplikasi</string>
+    <string name="untrusted_extension_message">Ekstensi iki ditandatangani nganggo sertifikat sing ora dipercaya lan ora diaktifake.
+\n
+\n Ekstensi angkoro bisa maca kredensial login sing disimpen ing Tachiyomi utawa nglakokake kode sewenang-wenang.
+\n
+\n Kanthi percaya karo sertifikat iki, sampeyan nampa risiko kasebut.</string>
+    <string name="unofficial_extension_message">Ekstensi iki ora saka dhaptar ekstensi Tachiyomi resmi.</string>
+    <string name="ext_downloading">Ndownload</string>
+    <string name="pref_show_navigation_mode">Tampilake overlay zona tutul</string>
+    <string name="pref_library_update_categories_details">Manga ing kategori sing ora kalebu ora bakal dianyari sanajan uga ana ing kategori sing kalebu.</string>
+    <string name="none">Ora ono</string>
+    <string name="ext_pending">Ketunda</string>
+    <string name="ext_info_version">Versine</string>
+    <string name="ext_info_language">Bohoso</string>
+    <string name="ext_info_age_rating">Rating umur</string>
+    <string name="ext_app_info">Infone aplikasi</string>
+    <string name="pref_show_navigation_mode_summary">Tampilake kanthi ringkes nalika maca dibukak</string>
+    <string name="pref_dual_page_split">Pamisahan kaca kaping pindho</string>
+    <string name="pref_library_update_restriction">Nganyari otomatis watesan piranti</string>
+    <string name="pref_library_update_refresh_trackers">Nganyari jejak otomatis</string>
+    <string name="pref_library_update_refresh_trackers_summary">Nganyari pelacak nalika nganyari perpustakaan</string>
+    <string name="categorized_display_settings">Setelan saben kategori kanggo ngurutake lan tampilan</string>
 </resources>

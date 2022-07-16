@@ -610,7 +610,7 @@
     <string name="theme_greenapple">Hijau Apel</string>
     <string name="theme_monet">Dinamis</string>
     <string name="pref_app_theme">Tema aplikasi</string>
-    <string name="label_background_activity">"Aktivitas  Dibelakang Layar"</string>
+    <string name="label_background_activity">Aktivitas dibelakang layar</string>
     <string name="pref_lowest">Terendah</string>
     <string name="pref_low">Rendah</string>
     <string name="pref_hide_threshold">Sensitivitas untuk menyembunyikan menu dalam gulir</string>
@@ -730,4 +730,11 @@
     <string name="pref_app_language">Bahasa aplikasi</string>
     <string name="theme_lavender">Lavender</string>
     <string name="description_placeholder">Tidak ada deskripsi</string>
+    <string name="delete_category_confirmation">Apakah anda ingin menghapus kategori %s</string>
+    <string name="internal_error">InternalError: Cek riwayat crash untuk informasi lebih lanjut</string>
+    <string name="delete_category">Hapus kategori</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="pref_user_agent_string">String agen pengguna default</string>
+    <string name="pref_reset_user_agent_string">Setel ulang string agen pengguna default</string>
 </resources>

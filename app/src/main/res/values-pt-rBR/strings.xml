@@ -742,4 +742,11 @@
     <string name="pref_app_language">Idioma do aplicativo</string>
     <string name="theme_lavender">Lavanda</string>
     <string name="description_placeholder">Sem descrição</string>
+    <string name="yes">Sim</string>
+    <string name="delete_category">Deletar categoria</string>
+    <string name="delete_category_confirmation">Você deseja deletar a categoria %s</string>
+    <string name="no">Não</string>
+    <string name="internal_error">Erro interno: Verifique os registros de travamento para mais informações</string>
+    <string name="pref_user_agent_string">Usera Agent padrão</string>
+    <string name="pref_reset_user_agent_string">Redefinir o User Agent padrão</string>
 </resources>

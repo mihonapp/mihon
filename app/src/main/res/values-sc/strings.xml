@@ -742,4 +742,9 @@
     <string name="pref_app_language">Limba de s\'aplicatzione</string>
     <string name="description_placeholder">Peruna descritzione</string>
     <string name="theme_lavender">Archemissa</string>
+    <string name="yes">Eja</string>
+    <string name="delete_category_confirmation">Boles iscantzellare sa categoria %s</string>
+    <string name="no">Nono</string>
+    <string name="internal_error">Errore internu: verìfica sos registros de sas serradas improvisas pro àteras informatziones</string>
+    <string name="delete_category">Iscantzella sa categoria</string>
 </resources>

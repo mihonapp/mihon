@@ -775,4 +775,11 @@
     <string name="pref_app_language">Lingua dell\'applicazione</string>
     <string name="description_placeholder">Nessuna descrizione</string>
     <string name="theme_lavender">Lavanda</string>
+    <string name="internal_error">Errore Interno: Controllare i registri dei crash per ulteriori informazioni</string>
+    <string name="delete_category_confirmation">Vuoi eliminare la categoria %s</string>
+    <string name="delete_category">Elimina categoria</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="pref_reset_user_agent_string">Ripristina la stringa \"user agent\" del browser</string>
+    <string name="pref_user_agent_string">Stringa \"user agent\" predefinita del browser</string>
 </resources>

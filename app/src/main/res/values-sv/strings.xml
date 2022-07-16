@@ -742,4 +742,11 @@
     <string name="theme_lavender">Lavendel</string>
     <string name="description_placeholder">Ingen beskrivning</string>
     <string name="pref_app_language">Appspråk</string>
+    <string name="delete_category_confirmation">Vill du radera kategorin\? %s</string>
+    <string name="internal_error">Interntfel: Kontrollera kraschloggar för ytterligare information</string>
+    <string name="delete_category">Ta bort kategori</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+    <string name="pref_user_agent_string">Standardsträng för användaragent</string>
+    <string name="pref_reset_user_agent_string">Återställ standardsträngen för användaragent</string>
 </resources>

@@ -283,7 +283,7 @@
     <string name="action_global_search_hint">Búsqueda global…</string>
     <string name="latest">Recientes</string>
     <string name="browse">Explorar</string>
-    <string name="channel_common">Común</string>
+    <string name="channel_common">Comunes</string>
     <string name="information_empty_category">No hay categorías. Pulsa el botón «+» para crear una y organizar tu biblioteca.</string>
     <string name="label_migration">Migrar</string>
     <string name="label_extensions">Extensiones</string>
@@ -382,7 +382,7 @@
     <string name="pref_cutout_short">Mostrar contenido en el área recortada</string>
     <string name="information_cloudflare_bypass_failure">Fallo al evitar Cloudflare</string>
     <string name="information_webview_outdated">Actualiza la aplicación WebView para mejorar la compatibilidad</string>
-    <string name="channel_new_chapters">Capítulos actualizados</string>
+    <string name="channel_new_chapters">Nuevos capítulos</string>
     <string name="unlock_app">Desbloquear Tachiyomi</string>
     <string name="secure_screen_summary">Pantalla segura oculta el contenido al cambiar de aplicación y bloquea las capturas de pantalla</string>
     <string name="pref_category_display">Visualización</string>
@@ -421,7 +421,7 @@
     <string name="updating_library">Actualizando biblioteca</string>
     <string name="http_error_hint">Abrir sitio en WebView</string>
     <string name="pref_enable_automatic_extension_updates">Buscar actualizaciones de extensiones</string>
-    <string name="channel_ext_updates">Actualizaciones de extensión</string>
+    <string name="channel_ext_updates">Actualizaciones de extensiones</string>
     <string name="pref_skip_filtered_chapters">Saltar capítulos excluidos por filtros</string>
     <string name="pref_category_reading">Lectura</string>
     <string name="label_sources">Fuentes</string>
@@ -529,9 +529,9 @@
     </plurals>
     <string name="no_pinned_sources">Todavía no has anclado ninguna fuente</string>
     <string name="download_notifier_download_finish">Descarga completada</string>
-    <string name="channel_complete">Completo</string>
-    <string name="channel_progress">Progreso</string>
-    <string name="channel_errors">Errores</string>
+    <string name="channel_complete">Terminadas</string>
+    <string name="channel_progress">En progreso</string>
+    <string name="channel_errors">Con errores</string>
     <string name="backup_restore_missing_trackers">Servicios de seguimiento sin conectar:</string>
     <string name="pref_remove_bookmarked_chapters">Permitir el borrado de capítulos marcados como favoritos</string>
     <string name="pref_category_delete_chapters">Borrar capítulos</string>
@@ -773,4 +773,11 @@
     <string name="pref_app_language">Idioma de la aplicación</string>
     <string name="theme_lavender">Lavanda</string>
     <string name="description_placeholder">Sin descripción</string>
+    <string name="delete_category">Borrar categoría</string>
+    <string name="delete_category_confirmation">¿Quieres borrar la categoría %s\?</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="internal_error">ErrorInterno: Mira el registro de depuración para más información</string>
+    <string name="pref_user_agent_string">Nombre del navegador a usar («user agent»)</string>
+    <string name="pref_reset_user_agent_string">Restablecer el nombre del navegador («user agent»)</string>
 </resources>

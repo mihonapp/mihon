@@ -728,6 +728,13 @@
     <string name="custom_cover">自定义封面</string>
     <string name="not_installed">未安装</string>
     <string name="pref_app_language">应用语言</string>
-    <string name="theme_lavender">淡紫色</string>
+    <string name="theme_lavender">薰衣草</string>
     <string name="description_placeholder">无描述</string>
+    <string name="yes">是</string>
+    <string name="delete_category_confirmation">确定要删除分类“%s”吗？</string>
+    <string name="delete_category">删除分类</string>
+    <string name="no">否</string>
+    <string name="internal_error">InternalError: 内部错误，详情请见崩溃日志</string>
+    <string name="pref_user_agent_string">默认 User Agent 字符串</string>
+    <string name="pref_reset_user_agent_string">重置默认 User Agent 字符串</string>
 </resources>

@@ -728,4 +728,18 @@
     <string name="wish_list">विश-लिस्ट</string>
     <string name="theme_lavender">लैवेंडर</string>
     <string name="pref_app_language">ऐप की भाषा</string>
+    <string name="delete_category">श्रेणी हटाएँ</string>
+    <string name="yes">हाँ</string>
+    <string name="description_placeholder">कोई विवरण नहीं</string>
+    <string name="delete_category_confirmation">क्या आप श्रेणी को हटाना चाहते हैं %s</string>
+    <string name="download_notifier_split_failed">डाउनलोड किया गया चित्र विभाजित नहीं हो सका</string>
+    <string name="no">नहीं</string>
+    <string name="pref_reset_viewer_flags">प्रति श्रृंखला रीडर सेटिंग्स को रीसेट करें</string>
+    <string name="pref_reset_viewer_flags_summary">सभी श्रृंखलाओं के रीडिंग मोड और ओरिएंटेशन को रीसेट करता है</string>
+    <string name="pref_reset_viewer_flags_success">सभी रीडर सेटिंग्स रीसेट करें</string>
+    <string name="pref_reset_viewer_flags_error">पाठक सेटिंग रीसेट नहीं की जा सकी</string>
+    <string name="complete_list">पूरी सूची</string>
+    <string name="not_installed">इनस्टॉल नहीं हुआ है</string>
+    <string name="unfinished_list">अधूरी सूची</string>
+    <string name="empty_screen">खैर, यह अजीब है</string>
 </resources>

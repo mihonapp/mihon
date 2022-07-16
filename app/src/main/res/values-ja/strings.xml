@@ -163,7 +163,7 @@
     <string name="action_remove">削除</string>
     <string name="action_install">インストール</string>
     <string name="action_undo">取り消し</string>
-    <string name="label_help">ヘルプ</string>
+    <string name="label_help">説明</string>
     <string name="action_mark_previous_as_read">前の章を既読にする</string>
     <string name="action_open_in_web_view">WebViewで開く</string>
     <string name="pref_category_reader">ビューア</string>
@@ -599,10 +599,10 @@
     <string name="pref_dark_theme_pure_black">真っ黒モード</string>
     <string name="theme_yotsuba">四葉</string>
     <string name="theme_yinyang">陰陽</string>
-    <string name="theme_tako">タコ</string>
+    <string name="theme_tako">鮹</string>
     <string name="theme_strawberrydaiquiri">ストロベリーダイキリ</string>
     <string name="theme_midnightdusk">黄昏</string>
-    <string name="theme_greenapple">青りんご</string>
+    <string name="theme_greenapple">青林檎</string>
     <string name="pref_app_theme">アプリテーマ</string>
     <string name="action_start_downloading_now">ダウンロードを開始します</string>
     <string name="notification_updating">ライブラリを更新中... (%1$d/%2$d)</string>
@@ -632,7 +632,7 @@
     <string name="pref_hide_threshold">メニューを自動非表示するスクロール量</string>
     <string name="pref_category_timestamps">タイムスタンプ</string>
     <string name="pref_category_navigation">ナビゲーション</string>
-    <string name="theme_tealturquoise">青緑&amp;トルコ石</string>
+    <string name="theme_tealturquoise">青緑&amp;土耳古石</string>
     <string name="pref_category_appearance">外観</string>
     <string name="confirm_lock_change">認証を行って変更を確認してください</string>
     <string name="label_default">既定</string>
@@ -728,6 +728,13 @@
     <string name="custom_cover">カスタム表紙</string>
     <string name="not_installed">未インストール</string>
     <string name="pref_app_language">アプリ言語</string>
-    <string name="theme_lavender">ラベンダー色</string>
+    <string name="theme_lavender">香草色</string>
     <string name="description_placeholder">説明がありません</string>
+    <string name="delete_category_confirmation">カテゴリー「%s」を削除しますか</string>
+    <string name="delete_category">カテゴリーを削除</string>
+    <string name="no">いいえ</string>
+    <string name="internal_error">InternalError：詳しくはクラッシュ ログをご参照ください</string>
+    <string name="yes">はい</string>
+    <string name="pref_user_agent_string">デフォルトのユーザーエージェント文字列</string>
+    <string name="pref_reset_user_agent_string">デフォルトのユーザーエージェント文字列をリセットする</string>
 </resources>

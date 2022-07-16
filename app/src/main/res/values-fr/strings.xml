@@ -687,7 +687,7 @@
     <string name="ext_app_info">Infos sur l\'application</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installez et démarrez Shizuku pour utiliser Shizuku comme installateur d\'extensions.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku n\'est pas en cours d\'exécution</string>
-    <string name="ext_installer_legacy">Legacy</string>
+    <string name="ext_installer_legacy">Ancienne</string>
     <string name="ext_installer_pref">Installateur</string>
     <string name="ext_install_service_notif">Installation de l\'extension…</string>
     <string name="action_sort_count">Total des mangas</string>
@@ -776,4 +776,9 @@
     <string name="pref_app_language">Pas installé</string>
     <string name="description_placeholder">Aucune description</string>
     <string name="theme_lavender">Lavande</string>
+    <string name="delete_category">Effacer catégorie</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="delete_category_confirmation">Est-ce que vous voulez effacer la catégorie\?%s</string>
+    <string name="internal_error">ErreurInterne : Vérifiez votre journal de plante pour plus d\'information</string>
 </resources>

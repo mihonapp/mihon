@@ -85,7 +85,7 @@
     <string name="update_weekly">1주</string>
     <string name="all">전부</string>
     <string name="pref_library_update_restriction">자동 업데이트 조건</string>
-    <string name="charging">충전중</string>
+    <string name="charging">충전할 땐</string>
     <string name="default_category">기본 카테고리</string>
     <string name="all_lang">모든 언어</string>
     <string name="ext_update">업데이트</string>
@@ -283,7 +283,7 @@
     <string name="custom_download">다운로드 할 회차 직접 입력</string>
     <string name="download_custom">사용자 정의</string>
     <string name="reading">읽는 중</string>
-    <string name="completed">다운로드 완료</string>
+    <string name="completed">완료</string>
     <string name="dropped">포기함</string>
     <string name="on_hold">일시중지중</string>
     <string name="plan_to_read">계획중</string>
@@ -450,7 +450,7 @@
     <string name="pref_category_navigation">네비게이션</string>
     <string name="pref_category_timestamps">시간 표시 형식</string>
     <string name="pref_relative_time_short">오늘, 어제</string>
-    <string name="pref_category_library_update">전체 업데이트 설정</string>
+    <string name="pref_category_library_update">전역 업데이트</string>
     <string name="pref_category_security">보안</string>
     <plurals name="lock_after_mins">
         <item quantity="other">%1$s분 후</item>
@@ -714,4 +714,16 @@
     <string name="pref_reset_viewer_flags_summary">모든 시리즈의 읽기 모드랑 화면 방향이 재시작함</string>
     <string name="pref_app_language">앱 언어</string>
     <string name="not_installed">설치되지 않음</string>
+    <string name="theme_lavender">라벤더</string>
+    <string name="network_not_metered">아닌 연결로 네트워크만</string>
+    <string name="no">아니요</string>
+    <string name="yes">네</string>
+    <string name="delete_category_confirmation">카테고리 삭제하고 싶습니까\?%s</string>
+    <string name="delete_category">카테고리 삭제함</string>
+    <string name="internal_error">내부 오류: 더 많은 정보를 보고 싶으면 충돌 로그 보세요</string>
+    <string name="description_placeholder">요약 없음</string>
+    <string name="download_notifier_split_page_path_not_found">파일 경로 못 찾았습니다 %d</string>
+    <string name="unfinished_list">미완성된 목록</string>
+    <string name="empty_screen">와...이거 좀 어색하네</string>
+    <string name="custom_cover">맞춤 표지</string>
 </resources>

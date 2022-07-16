@@ -742,4 +742,9 @@
     <string name="pref_app_language">Γλώσσα εφαρμογής</string>
     <string name="theme_lavender">Λεβάντα</string>
     <string name="description_placeholder">Χωρίς περιγραφή</string>
+    <string name="delete_category">Διαγραφή κατηγορίας</string>
+    <string name="yes">Ναι</string>
+    <string name="delete_category_confirmation">Θέλετε να διαγράψετε την κατηγορία %s</string>
+    <string name="no">Όχι</string>
+    <string name="internal_error">InternalError: Ελέγξτε τα αρχεία καταγραφής σφαλμάτων για περισσότερες πληροφορίες</string>
 </resources>

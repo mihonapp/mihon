@@ -740,4 +740,13 @@
     <string name="custom_cover">Portada personalitzada</string>
     <string name="not_installed">No instal·lat</string>
     <string name="pref_app_language">Llengua de l\'aplicació</string>
+    <string name="delete_category_confirmation">Voleu eliminar la categoria %s\?</string>
+    <string name="yes">Sí</string>
+    <string name="delete_category">Elimina la categoria</string>
+    <string name="no">No</string>
+    <string name="theme_lavender">Lavanda</string>
+    <string name="description_placeholder">Sense descripció</string>
+    <string name="internal_error">Error intern: Reviseu els registres de fallades per a més informació</string>
+    <string name="pref_user_agent_string">Cadena d\'agent d\'usuari per defecte</string>
+    <string name="pref_reset_user_agent_string">Restableix la cadena d\'agent d\'usuari per defecte</string>
 </resources>

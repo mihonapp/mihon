@@ -742,4 +742,11 @@
     <string name="pref_app_language">Uygulama dili</string>
     <string name="description_placeholder">Açıklama yok</string>
     <string name="theme_lavender">Lavanta</string>
+    <string name="yes">Evet</string>
+    <string name="delete_category">Kategoriyi sil</string>
+    <string name="no">Hayır</string>
+    <string name="delete_category_confirmation">%s kategorisini silmek istiyor musunuz\?</string>
+    <string name="internal_error">Dahili hata: Daha fazla bilgi için çökme günlüklerine bakın</string>
+    <string name="pref_user_agent_string">Öntanımlı kullanıcı aracısı dizgesi</string>
+    <string name="pref_reset_user_agent_string">Öntanımlı kullanıcı aracısı dizgesini sıfırla</string>
 </resources>

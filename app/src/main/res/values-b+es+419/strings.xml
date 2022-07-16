@@ -738,4 +738,13 @@
     <string name="network_not_metered">Solo en red sin medidor</string>
     <string name="custom_cover">Portada Personalizada</string>
     <string name="cant_open_last_read_chapter">Imposible abrir el último capítulo leído</string>
+    <string name="yes">Si</string>
+    <string name="internal_error">Error interno: Chequea los registros del fallo para más información</string>
+    <string name="delete_category">Borrar categoria</string>
+    <string name="delete_category_confirmation">Quieres borrar la categoría %s</string>
+    <string name="no">No</string>
+    <string name="theme_lavender">Lavanda</string>
+    <string name="pref_app_language">Idioma de la aplicación</string>
+    <string name="description_placeholder">Sin descripción</string>
+    <string name="not_installed">No instalada</string>
 </resources>

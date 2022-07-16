@@ -754,4 +754,11 @@
     <string name="pref_app_language">Jazyk aplikace</string>
     <string name="description_placeholder">Bez popisu</string>
     <string name="theme_lavender">Levandule</string>
+    <string name="delete_category_confirmation">Přejete si smazat kategorii %s</string>
+    <string name="delete_category">Smazat kategorii</string>
+    <string name="no">Ne</string>
+    <string name="yes">Ano</string>
+    <string name="internal_error">InternalError: Zkontrolujte záznamy pádu pro další informace</string>
+    <string name="pref_reset_user_agent_string">Obnovit výchozí řetězec pro user agent</string>
+    <string name="pref_user_agent_string">Výchozí řetězec pro user agent</string>
 </resources>
