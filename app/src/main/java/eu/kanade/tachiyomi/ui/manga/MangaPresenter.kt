@@ -186,7 +186,7 @@ class MangaPresenter(
                                 trackingAvailable = trackManager.hasLoggedServices(),
                                 chapters = chapterItems,
                                 isIncognitoMode = incognitoMode,
-                                isDownloadedOnlyMode = downloadedOnlyMode
+                                isDownloadedOnlyMode = downloadedOnlyMode,
                             )
 
                             // Update state

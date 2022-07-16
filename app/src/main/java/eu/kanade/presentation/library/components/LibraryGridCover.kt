@@ -11,6 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.components.Badge
+import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.tachiyomi.R
 

@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -23,8 +22,9 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.browse.components.BaseSourceItem
 import eu.kanade.presentation.browse.components.SourceIcon
+import eu.kanade.presentation.components.Badge
+import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.EmptyScreen
-import eu.kanade.presentation.components.ItemBadges
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.theme.header
@@ -112,7 +112,11 @@ fun MigrateSourceItem(
         onClickItem = onClickItem,
         onLongClickItem = onLongClickItem,
         icon = { SourceIcon(source = source) },
-        action = { ItemBadges(primaryText = "$count") },
+        action = {
+            BadgeGroup {
+                Badge(text = "$count")
+            }
+        },
         content = { source, showLanguageInContent ->
             Column(
                 modifier = Modifier
