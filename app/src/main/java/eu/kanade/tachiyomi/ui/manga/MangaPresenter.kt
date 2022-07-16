@@ -45,7 +45,7 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.lang.withUIContext
-import eu.kanade.tachiyomi.util.preference.asImmediateFlow
+import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
 import eu.kanade.tachiyomi.util.system.logcat
@@ -207,13 +207,13 @@ class MangaPresenter(
         }
 
         preferences.incognitoMode()
-            .asImmediateFlow { incognito ->
+            .asHotFlow { incognito ->
                 incognitoMode = incognito
             }
             .launchIn(presenterScope)
 
         preferences.downloadedOnly()
-            .asImmediateFlow { downloadedOnly ->
+            .asHotFlow { downloadedOnly ->
                 downloadedOnlyMode = downloadedOnly
             }
             .launchIn(presenterScope)

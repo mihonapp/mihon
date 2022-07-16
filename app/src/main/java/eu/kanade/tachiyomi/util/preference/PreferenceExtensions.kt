@@ -13,7 +13,7 @@ fun CompoundButton.bindToPreference(pref: Preference<Boolean>) {
     setOnCheckedChangeListener { _, isChecked -> pref.set(isChecked) }
 }
 
-fun <T> Preference<T>.asImmediateFlow(block: (T) -> Unit): Flow<T> {
+fun <T> Preference<T>.asHotFlow(block: (T) -> Unit): Flow<T> {
     block(get())
     return asFlow()
         .onEach { block(it) }

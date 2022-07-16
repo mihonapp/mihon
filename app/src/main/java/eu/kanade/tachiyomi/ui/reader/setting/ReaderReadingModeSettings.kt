@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.databinding.ReaderReadingModeSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
-import eu.kanade.tachiyomi.util.preference.asImmediateFlow
+import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.preference.bindToPreference
 import kotlinx.coroutines.flow.launchIn
 import uy.kohesive.injekt.injectLazy
@@ -73,12 +73,12 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
 
         binding.pagerPrefsGroup.pagerNav.bindToPreference(preferences.navigationModePager())
         preferences.navigationModePager()
-            .asImmediateFlow { binding.pagerPrefsGroup.tappingInverted.isVisible = it != 5 }
+            .asHotFlow { binding.pagerPrefsGroup.tappingInverted.isVisible = it != 5 }
             .launchIn((context as ReaderActivity).lifecycleScope)
         // Makes so that landscape zoom gets hidden away when image scale type is not fit screen
         binding.pagerPrefsGroup.scaleType.bindToPreference(preferences.imageScaleType(), 1)
         preferences.imageScaleType()
-            .asImmediateFlow { binding.pagerPrefsGroup.landscapeZoom.isVisible = it == 1 }
+            .asHotFlow { binding.pagerPrefsGroup.landscapeZoom.isVisible = it == 1 }
             .launchIn((context as ReaderActivity).lifecycleScope)
         binding.pagerPrefsGroup.landscapeZoom.bindToPreference(preferences.landscapeZoom())
 
@@ -89,7 +89,7 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         // Makes so that dual page invert gets hidden away when turning of dual page split
         binding.pagerPrefsGroup.dualPageSplit.bindToPreference(preferences.dualPageSplitPaged())
         preferences.dualPageSplitPaged()
-            .asImmediateFlow { binding.pagerPrefsGroup.dualPageInvert.isVisible = it }
+            .asHotFlow { binding.pagerPrefsGroup.dualPageInvert.isVisible = it }
             .launchIn((context as ReaderActivity).lifecycleScope)
         binding.pagerPrefsGroup.dualPageInvert.bindToPreference(preferences.dualPageInvertPaged())
     }
@@ -105,7 +105,7 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
 
         binding.webtoonPrefsGroup.webtoonNav.bindToPreference(preferences.navigationModeWebtoon())
         preferences.navigationModeWebtoon()
-            .asImmediateFlow { binding.webtoonPrefsGroup.tappingInverted.isVisible = it != 5 }
+            .asHotFlow { binding.webtoonPrefsGroup.tappingInverted.isVisible = it != 5 }
             .launchIn((context as ReaderActivity).lifecycleScope)
         binding.webtoonPrefsGroup.cropBordersWebtoon.bindToPreference(preferences.cropBordersWebtoon())
         binding.webtoonPrefsGroup.webtoonSidePadding.bindToIntPreference(preferences.webtoonSidePadding(), R.array.webtoon_side_padding_values)
@@ -113,7 +113,7 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         // Makes so that dual page invert gets hidden away when turning of dual page split
         binding.webtoonPrefsGroup.dualPageSplit.bindToPreference(preferences.dualPageSplitWebtoon())
         preferences.dualPageSplitWebtoon()
-            .asImmediateFlow { binding.webtoonPrefsGroup.dualPageInvert.isVisible = it }
+            .asHotFlow { binding.webtoonPrefsGroup.dualPageInvert.isVisible = it }
             .launchIn((context as ReaderActivity).lifecycleScope)
         binding.webtoonPrefsGroup.dualPageInvert.bindToPreference(preferences.dualPageInvertWebtoon())
     }

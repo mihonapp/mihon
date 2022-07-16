@@ -24,7 +24,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.util.preference.asImmediateFlow
+import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -138,7 +138,7 @@ abstract class SettingsController : PreferenceController() {
     }
 
     inline fun <T> Preference.visibleIf(preference: com.fredporciuncula.flow.preferences.Preference<T>, crossinline block: (T) -> Boolean) {
-        preference.asImmediateFlow { isVisible = block(it) }
+        preference.asHotFlow { isVisible = block(it) }
             .launchIn(viewScope)
     }
 }

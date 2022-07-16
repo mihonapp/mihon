@@ -44,9 +44,6 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import rx.Observable
 import rx.Subscription
@@ -126,20 +123,10 @@ class LibraryPresenter(
      */
     private val sortTriggerRelay = BehaviorRelay.create(Unit)
 
-    /**
-     * Library subscription.
-     */
     private var librarySubscription: Subscription? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        preferences.libraryDisplayMode()
-            .asFlow()
-            .drop(1)
-            .onEach {
-                currentDisplayMode = it
-            }
-            .launchIn(presenterScope)
 
         subscribeLibrary()
     }

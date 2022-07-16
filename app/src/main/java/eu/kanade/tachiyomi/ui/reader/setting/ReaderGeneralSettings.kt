@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.ReaderGeneralSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.preference.asImmediateFlow
+import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.preference.bindToPreference
 import kotlinx.coroutines.flow.launchIn
 import uy.kohesive.injekt.injectLazy
@@ -39,7 +39,7 @@ class ReaderGeneralSettings @JvmOverloads constructor(context: Context, attrs: A
         binding.showPageNumber.bindToPreference(preferences.showPageNumber())
         binding.fullscreen.bindToPreference(preferences.fullscreen())
         preferences.fullscreen()
-            .asImmediateFlow {
+            .asHotFlow {
                 // If the preference is explicitly disabled, that means the setting was configured since there is a cutout
                 binding.cutoutShort.isVisible = it && ((context as ReaderActivity).hasCutout || !preferences.cutoutShort().get())
                 binding.cutoutShort.bindToPreference(preferences.cutoutShort())

@@ -35,7 +35,7 @@ import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
-import eu.kanade.tachiyomi.util.preference.asImmediateFlow
+import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
@@ -114,7 +114,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
             .launchIn(ProcessLifecycleOwner.get().lifecycleScope)
 
         preferences.themeMode()
-            .asImmediateFlow {
+            .asHotFlow {
                 AppCompatDelegate.setDefaultNightMode(
                     when (it) {
                         PreferenceValues.ThemeMode.light -> AppCompatDelegate.MODE_NIGHT_NO
