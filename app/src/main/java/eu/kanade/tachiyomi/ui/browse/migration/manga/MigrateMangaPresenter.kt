@@ -2,25 +2,29 @@ package eu.kanade.tachiyomi.ui.browse.migration.manga
 
 import android.os.Bundle
 import eu.kanade.domain.manga.interactor.GetFavorites
-import eu.kanade.domain.manga.model.Manga
+import eu.kanade.presentation.browse.MigrateMangaState
+import eu.kanade.presentation.browse.MigrateMangaStateImpl
+import eu.kanade.presentation.browse.MigrationMangaState
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class MigrationMangaPresenter(
+class MigrateMangaPresenter(
     private val sourceId: Long,
+    private val state: MigrateMangaStateImpl = MigrationMangaState() as MigrateMangaStateImpl,
     private val getFavorites: GetFavorites = Injekt.get(),
-) : BasePresenter<MigrationMangaController>() {
+) : BasePresenter<MigrationMangaController>(), MigrateMangaState by state {
 
-    private val _state: MutableStateFlow<MigrateMangaState> = MutableStateFlow(MigrateMangaState.Loading)
-    val state: StateFlow<MigrateMangaState> = _state.asStateFlow()
+    private val _events = Channel<Event>(Int.MAX_VALUE)
+    val events = _events.receiveAsFlow()
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -28,20 +32,20 @@ class MigrationMangaPresenter(
             getFavorites
                 .subscribe(sourceId)
                 .catch { exception ->
-                    _state.value = MigrateMangaState.Error(exception)
+                    logcat(LogPriority.ERROR, exception)
+                    _events.send(Event.FailedFetchingFavorites)
                 }
                 .map { list ->
                     list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
                 }
                 .collectLatest { sortedList ->
-                    _state.value = MigrateMangaState.Success(sortedList)
+                    state.isLoading = false
+                    state.items = sortedList
                 }
         }
     }
-}
 
-sealed class MigrateMangaState {
-    object Loading : MigrateMangaState()
-    data class Error(val error: Throwable) : MigrateMangaState()
-    data class Success(val list: List<Manga>) : MigrateMangaState()
+    sealed class Event {
+        object FailedFetchingFavorites : Event()
+    }
 }

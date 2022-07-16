@@ -1,5 +1,8 @@
 package eu.kanade.presentation.browse
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.util.DisplayMetrics
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -32,7 +35,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +53,7 @@ import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.components.DIVIDER_ALPHA
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.EmptyScreen
+import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.util.horizontalPadding
@@ -66,65 +69,68 @@ fun ExtensionDetailsScreen(
     nestedScrollInterop: NestedScrollConnection,
     presenter: ExtensionDetailsPresenter,
     onClickUninstall: () -> Unit,
-    onClickAppInfo: () -> Unit,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
 ) {
-    val extension = presenter.extension
+    when {
+        presenter.isLoading -> LoadingScreen()
+        presenter.extension == null -> EmptyScreen(textResource = R.string.empty_screen)
+        else -> {
+            val context = LocalContext.current
+            val extension = presenter.extension
+            var showNsfwWarning by remember { mutableStateOf(false) }
 
-    if (extension == null) {
-        EmptyScreen(textResource = R.string.empty_screen)
-        return
-    }
-
-    val sources by presenter.sourcesState.collectAsState()
-
-    var showNsfwWarning by remember { mutableStateOf(false) }
-
-    ScrollbarLazyColumn(
-        modifier = Modifier.nestedScroll(nestedScrollInterop),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-    ) {
-        when {
-            extension.isUnofficial ->
-                item {
-                    WarningBanner(R.string.unofficial_extension_message)
+            ScrollbarLazyColumn(
+                modifier = Modifier.nestedScroll(nestedScrollInterop),
+                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+            ) {
+                when {
+                    extension.isUnofficial ->
+                        item {
+                            WarningBanner(R.string.unofficial_extension_message)
+                        }
+                    extension.isObsolete ->
+                        item {
+                            WarningBanner(R.string.obsolete_extension_message)
+                        }
                 }
-            extension.isObsolete ->
+
                 item {
-                    WarningBanner(R.string.obsolete_extension_message)
+                    DetailsHeader(
+                        extension = extension,
+                        onClickUninstall = onClickUninstall,
+                        onClickAppInfo = {
+                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = Uri.fromParts("package", extension.pkgName, null)
+                                context.startActivity(this)
+                            }
+                        },
+                        onClickAgeRating = {
+                            showNsfwWarning = true
+                        },
+                    )
                 }
-        }
 
-        item {
-            DetailsHeader(
-                extension = extension,
-                onClickUninstall = onClickUninstall,
-                onClickAppInfo = onClickAppInfo,
-                onClickAgeRating = {
-                    showNsfwWarning = true
-                },
-            )
+                items(
+                    items = presenter.sources,
+                    key = { it.source.id },
+                ) { source ->
+                    SourceSwitchPreference(
+                        modifier = Modifier.animateItemPlacement(),
+                        source = source,
+                        onClickSourcePreferences = onClickSourcePreferences,
+                        onClickSource = onClickSource,
+                    )
+                }
+            }
+            if (showNsfwWarning) {
+                NsfwWarningDialog(
+                    onClickConfirm = {
+                        showNsfwWarning = false
+                    },
+                )
+            }
         }
-
-        items(
-            items = sources,
-            key = { it.source.id },
-        ) { source ->
-            SourceSwitchPreference(
-                modifier = Modifier.animateItemPlacement(),
-                source = source,
-                onClickSourcePreferences = onClickSourcePreferences,
-                onClickSource = onClickSource,
-            )
-        }
-    }
-    if (showNsfwWarning) {
-        NsfwWarningDialog(
-            onClickConfirm = {
-                showNsfwWarning = false
-            },
-        )
     }
 }
 

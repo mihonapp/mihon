@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.ComposeController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaController
-import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
 
 class MigrationSourcesController : ComposeController<MigrationSourcesPresenter>() {
@@ -33,10 +32,6 @@ class MigrationSourcesController : ComposeController<MigrationSourcesPresenter>(
                         source.name,
                     ),
                 )
-            },
-            onLongClickItem = { source ->
-                val sourceId = source.id.toString()
-                activity?.copyToClipboard(sourceId, sourceId)
             },
         )
     }

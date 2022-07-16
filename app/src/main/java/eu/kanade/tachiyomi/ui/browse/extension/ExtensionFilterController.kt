@@ -17,9 +17,6 @@ class ExtensionFilterController : ComposeController<ExtensionFilterPresenter>() 
         ExtensionFilterScreen(
             nestedScrollInterop = nestedScrollInterop,
             presenter = presenter,
-            onClickLang = { language ->
-                presenter.toggleLanguage(language)
-            },
         )
     }
 }

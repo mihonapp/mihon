@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -19,47 +17,52 @@ import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterPresenter
-import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterState
-import eu.kanade.tachiyomi.ui.browse.extension.FilterUiModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ExtensionFilterScreen(
     nestedScrollInterop: NestedScrollConnection,
     presenter: ExtensionFilterPresenter,
-    onClickLang: (String) -> Unit,
 ) {
-    val state by presenter.state.collectAsState()
-
-    when (state) {
-        is ExtensionFilterState.Loading -> LoadingScreen()
-        is ExtensionFilterState.Error -> Text(text = (state as ExtensionFilterState.Error).error.message!!)
-        is ExtensionFilterState.Success ->
+    val context = LocalContext.current
+    when {
+        presenter.isLoading -> LoadingScreen()
+        presenter.isEmpty -> EmptyScreen(textResource = R.string.empty_screen)
+        else -> {
             SourceFilterContent(
                 nestedScrollInterop = nestedScrollInterop,
-                items = (state as ExtensionFilterState.Success).models,
-                onClickLang = onClickLang,
+                state = presenter,
+                onClickLang = {
+                    presenter.toggleLanguage(it)
+                },
             )
+        }
+    }
+    LaunchedEffect(Unit) {
+        presenter.events.collectLatest {
+            when (it) {
+                ExtensionFilterPresenter.Event.FailedFetchingLanguages -> {
+                    context.toast(R.string.internal_error)
+                }
+            }
+        }
     }
 }
 
 @Composable
 fun SourceFilterContent(
     nestedScrollInterop: NestedScrollConnection,
-    items: List<FilterUiModel>,
+    state: ExtensionFilterState,
     onClickLang: (String) -> Unit,
 ) {
-    if (items.isEmpty()) {
-        EmptyScreen(textResource = R.string.empty_screen)
-        return
-    }
-
     LazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
         contentPadding = WindowInsets.navigationBars.asPaddingValues(),
     ) {
         items(
-            items = items,
+            items = state.items,
         ) { model ->
             ExtensionFilterItem(
                 modifier = Modifier.animateItemPlacement(),

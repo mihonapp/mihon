@@ -3,11 +3,11 @@ package eu.kanade.tachiyomi.ui.browse.extension
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.StringRes
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import eu.kanade.domain.extension.interactor.GetExtensionUpdates
 import eu.kanade.domain.extension.interactor.GetExtensions
+import eu.kanade.presentation.browse.ExtensionState
+import eu.kanade.presentation.browse.ExtensionsState
+import eu.kanade.presentation.browse.ExtensionsStateImpl
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -17,8 +17,6 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
@@ -27,19 +25,15 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class ExtensionsPresenter(
+    private val state: ExtensionsStateImpl = ExtensionState() as ExtensionsStateImpl,
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensionUpdates: GetExtensionUpdates = Injekt.get(),
     private val getExtensions: GetExtensions = Injekt.get(),
-) : BasePresenter<ExtensionsController>() {
+) : BasePresenter<ExtensionsController>(), ExtensionsState by state {
 
     private val _query: MutableStateFlow<String> = MutableStateFlow("")
 
     private var _currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
-
-    private val _state: MutableStateFlow<ExtensionState> = MutableStateFlow(ExtensionState.Uninitialized)
-    val state: StateFlow<ExtensionState> = _state.asStateFlow()
-
-    var isRefreshing: Boolean by mutableStateOf(true)
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -86,8 +80,6 @@ class ExtensionsPresenter(
                 getExtensionUpdates.subscribe(),
                 _currentDownloads,
             ) { query, (installed, untrusted, available), updates, downloads ->
-                isRefreshing = false
-
                 val languagesWithExtensions = available
                     .filter(queryFilter(query))
                     .groupBy { LocaleHelper.getSourceDisplayName(it.lang, context) }
@@ -121,7 +113,9 @@ class ExtensionsPresenter(
 
                 items
             }.collectLatest {
-                _state.value = ExtensionState.Initialized(it)
+                state.isRefreshing = false
+                state.isLoading = false
+                state.items = it
             }
         }
     }
@@ -134,9 +128,9 @@ class ExtensionsPresenter(
 
     fun updateAllExtensions() {
         launchIO {
-            val state = _state.value
-            if (state !is ExtensionState.Initialized) return@launchIO
-            state.list.mapNotNull {
+            if (state.isEmpty) return@launchIO
+            val items = state.items
+            items.mapNotNull {
                 if (it !is ExtensionUiModel.Item) return@mapNotNull null
                 if (it.extension !is Extension.Installed) return@mapNotNull null
                 if (it.extension.hasUpdate.not()) return@mapNotNull null
@@ -189,7 +183,7 @@ class ExtensionsPresenter(
     }
 
     fun findAvailableExtensions() {
-        isRefreshing = true
+        state.isRefreshing = true
         extensionManager.findAvailableExtensions()
     }
 
@@ -216,9 +210,4 @@ sealed interface ExtensionUiModel {
             }
         }
     }
-}
-
-sealed class ExtensionState {
-    object Uninitialized : ExtensionState()
-    data class Initialized(val list: List<ExtensionUiModel>) : ExtensionState()
 }

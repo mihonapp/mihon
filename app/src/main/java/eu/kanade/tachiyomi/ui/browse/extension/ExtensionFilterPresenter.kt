@@ -3,32 +3,37 @@ package eu.kanade.tachiyomi.ui.browse.extension
 import android.os.Bundle
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.source.interactor.ToggleLanguage
+import eu.kanade.presentation.browse.ExtensionFilterState
+import eu.kanade.presentation.browse.ExtensionFilterStateImpl
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
+import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class ExtensionFilterPresenter(
+    private val state: ExtensionFilterStateImpl = ExtensionFilterState() as ExtensionFilterStateImpl,
     private val getExtensionLanguages: GetExtensionLanguages = Injekt.get(),
     private val toggleLanguage: ToggleLanguage = Injekt.get(),
     private val preferences: PreferencesHelper = Injekt.get(),
-) : BasePresenter<ExtensionFilterController>() {
+) : BasePresenter<ExtensionFilterController>(), ExtensionFilterState by state {
 
-    private val _state: MutableStateFlow<ExtensionFilterState> = MutableStateFlow(ExtensionFilterState.Loading)
-    val state: StateFlow<ExtensionFilterState> = _state.asStateFlow()
+    private val _events = Channel<Event>(Int.MAX_VALUE)
+    val events = _events.receiveAsFlow()
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         presenterScope.launchIO {
             getExtensionLanguages.subscribe()
                 .catch { exception ->
-                    _state.value = ExtensionFilterState.Error(exception)
+                    logcat(LogPriority.ERROR, exception)
+                    _events.send(Event.FailedFetchingLanguages)
                 }
                 .collectLatest(::collectLatestSourceLangMap)
         }
@@ -36,19 +41,17 @@ class ExtensionFilterPresenter(
 
     private fun collectLatestSourceLangMap(extLangs: List<String>) {
         val enabledLanguages = preferences.enabledLanguages().get()
-        val uiModels = extLangs.map {
+        state.items = extLangs.map {
             FilterUiModel(it, it in enabledLanguages)
         }
-        _state.value = ExtensionFilterState.Success(uiModels)
+        state.isLoading = false
     }
 
     fun toggleLanguage(language: String) {
         toggleLanguage.await(language)
     }
-}
 
-sealed class ExtensionFilterState {
-    object Loading : ExtensionFilterState()
-    data class Error(val error: Throwable) : ExtensionFilterState()
-    data class Success(val models: List<FilterUiModel>) : ExtensionFilterState()
+    sealed class Event {
+        object FailedFetchingLanguages : Event()
+    }
 }

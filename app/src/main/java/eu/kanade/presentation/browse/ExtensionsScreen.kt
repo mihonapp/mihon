@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +39,9 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.presentation.browse.components.BaseBrowseItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
+import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.FastScrollLazyColumn
+import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.SwipeRefreshIndicator
 import eu.kanade.presentation.theme.header
 import eu.kanade.presentation.util.horizontalPadding
@@ -49,7 +50,6 @@ import eu.kanade.presentation.util.topPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
-import eu.kanade.tachiyomi.ui.browse.extension.ExtensionState
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionUiModel
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsPresenter
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -69,19 +69,18 @@ fun ExtensionScreen(
     onRefresh: () -> Unit,
     onLaunched: () -> Unit,
 ) {
-    val state by presenter.state.collectAsState()
-    val isRefreshing = presenter.isRefreshing
-
     SwipeRefresh(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
-        state = rememberSwipeRefreshState(isRefreshing),
+        state = rememberSwipeRefreshState(presenter.isRefreshing),
         indicator = { s, trigger -> SwipeRefreshIndicator(s, trigger) },
         onRefresh = onRefresh,
     ) {
-        when (state) {
-            is ExtensionState.Initialized -> {
+        when {
+            presenter.isLoading -> LoadingScreen()
+            presenter.isEmpty -> EmptyScreen(R.string.empty_screen)
+            else -> {
                 ExtensionContent(
-                    items = (state as ExtensionState.Initialized).list,
+                    state = presenter,
                     onLongClickItem = onLongClickItem,
                     onClickItemCancel = onClickItemCancel,
                     onInstallExtension = onInstallExtension,
@@ -93,14 +92,13 @@ fun ExtensionScreen(
                     onLaunched = onLaunched,
                 )
             }
-            ExtensionState.Uninitialized -> {}
         }
     }
 }
 
 @Composable
 fun ExtensionContent(
-    items: List<ExtensionUiModel>,
+    state: ExtensionsState,
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
     onInstallExtension: (Extension.Available) -> Unit,
@@ -117,7 +115,7 @@ fun ExtensionContent(
         contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
     ) {
         items(
-            items = items,
+            items = state.items,
             key = {
                 when (it) {
                     is ExtensionUiModel.Header.Resource -> it.textRes

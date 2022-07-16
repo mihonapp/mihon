@@ -43,7 +43,6 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
             nestedScrollInterop = nestedScrollInterop,
             presenter = presenter,
             onClickUninstall = { presenter.uninstallExtension() },
-            onClickAppInfo = { presenter.openInSettings() },
             onClickSourcePreferences = { router.pushController(SourcePreferencesController(it)) },
             onClickSource = { presenter.toggleSource(it) },
         )

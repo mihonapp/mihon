@@ -19,10 +19,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -42,9 +40,11 @@ import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.topPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.LocalSource
-import eu.kanade.tachiyomi.ui.browse.source.SourceState
 import eu.kanade.tachiyomi.ui.browse.source.SourcesPresenter
+import eu.kanade.tachiyomi.ui.browse.source.SourcesPresenter.Dialog
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SourcesScreen(
@@ -55,44 +55,47 @@ fun SourcesScreen(
     onClickLatest: (Source) -> Unit,
     onClickPin: (Source) -> Unit,
 ) {
-    val state by presenter.state.collectAsState()
-
-    when (state) {
-        is SourceState.Loading -> LoadingScreen()
-        is SourceState.Error -> Text(text = (state as SourceState.Error).error.message!!)
-        is SourceState.Success -> SourceList(
-            nestedScrollConnection = nestedScrollInterop,
-            list = (state as SourceState.Success).uiModels,
-            onClickItem = onClickItem,
-            onClickDisable = onClickDisable,
-            onClickLatest = onClickLatest,
-            onClickPin = onClickPin,
-        )
+    val context = LocalContext.current
+    when {
+        presenter.isLoading -> LoadingScreen()
+        presenter.isEmpty -> EmptyScreen(R.string.source_empty_screen)
+        else -> {
+            SourceList(
+                nestedScrollConnection = nestedScrollInterop,
+                state = presenter,
+                onClickItem = onClickItem,
+                onClickDisable = onClickDisable,
+                onClickLatest = onClickLatest,
+                onClickPin = onClickPin,
+            )
+        }
+    }
+    LaunchedEffect(Unit) {
+        presenter.events.collectLatest { event ->
+            when (event) {
+                SourcesPresenter.Event.FailedFetchingSources -> {
+                    context.toast(R.string.internal_error)
+                }
+            }
+        }
     }
 }
 
 @Composable
 fun SourceList(
     nestedScrollConnection: NestedScrollConnection,
-    list: List<SourceUiModel>,
+    state: SourcesState,
     onClickItem: (Source) -> Unit,
     onClickDisable: (Source) -> Unit,
     onClickLatest: (Source) -> Unit,
     onClickPin: (Source) -> Unit,
 ) {
-    if (list.isEmpty()) {
-        EmptyScreen(textResource = R.string.source_empty_screen)
-        return
-    }
-
-    var sourceState by remember { mutableStateOf<Source?>(null) }
-
     ScrollbarLazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollConnection),
         contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
     ) {
         items(
-            items = list,
+            items = state.items,
             contentType = {
                 when (it) {
                     is SourceUiModel.Header -> "header"
@@ -117,7 +120,7 @@ fun SourceList(
                     modifier = Modifier.animateItemPlacement(),
                     source = model.source,
                     onClickItem = onClickItem,
-                    onLongClickItem = { sourceState = it },
+                    onLongClickItem = { state.dialog = Dialog(it) },
                     onClickLatest = onClickLatest,
                     onClickPin = onClickPin,
                 )
@@ -125,18 +128,19 @@ fun SourceList(
         }
     }
 
-    if (sourceState != null) {
+    if (state.dialog != null) {
+        val source = state.dialog!!.source
         SourceOptionsDialog(
-            source = sourceState!!,
+            source = source,
             onClickPin = {
-                onClickPin(sourceState!!)
-                sourceState = null
+                onClickPin(source)
+                state.dialog = null
             },
             onClickDisable = {
-                onClickDisable(sourceState!!)
-                sourceState = null
+                onClickDisable(source)
+                state.dialog = null
             },
-            onDismiss = { sourceState = null },
+            onDismiss = { state.dialog = null },
         )
     }
 }
