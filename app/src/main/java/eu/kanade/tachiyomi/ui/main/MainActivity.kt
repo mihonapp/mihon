@@ -43,7 +43,7 @@ import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.FabController
-import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
+import eu.kanade.tachiyomi.ui.base.controller.FullComposeContentController
 import eu.kanade.tachiyomi.ui.base.controller.NoAppBarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
@@ -606,7 +606,7 @@ class MainActivity : BaseActivity() {
             binding.fabLayout.rootFab.hide()
         }
 
-        val isFullComposeController = internalTo is FullComposeController<*>
+        val isFullComposeController = internalTo is FullComposeContentController
         binding.appbar.isVisible = !isFullComposeController
         binding.controllerContainer.enableScrollingBehavior(!isFullComposeController)
 

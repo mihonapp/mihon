@@ -11,10 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -28,7 +25,7 @@ import com.google.accompanist.web.rememberWebViewNavigator
 import com.google.accompanist.web.rememberWebViewState
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
-import eu.kanade.presentation.components.AppBarTitle
+import eu.kanade.presentation.components.TopAppBar
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
@@ -48,21 +45,11 @@ fun WebViewScreen(
     val navigator = rememberWebViewNavigator()
 
     Column {
-        SmallTopAppBar(
-            title = {
-                AppBarTitle(
-                    title = state.pageTitle ?: initialTitle,
-                    subtitle = state.content.getCurrentUrl(),
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = onUp) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(R.string.action_close),
-                    )
-                }
-            },
+        TopAppBar(
+            title = state.pageTitle ?: initialTitle,
+            subtitle = state.content.getCurrentUrl(),
+            navigateUp = onUp,
+            navigationIcon = Icons.Default.Close,
             actions = {
                 AppBarActions(
                     listOf(

@@ -73,6 +73,27 @@ abstract class BasicComposeController :
     }
 }
 
+/**
+ * Basic Compose controller without a presenter.
+ */
+abstract class BasicFullComposeController :
+    BaseController<ComposeControllerBinding>(),
+    FullComposeContentController {
+
+    override fun createBinding(inflater: LayoutInflater) =
+        ComposeControllerBinding.inflate(inflater)
+
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
+
+        binding.root.apply {
+            setComposeContent {
+                ComposeContent()
+            }
+        }
+    }
+}
+
 abstract class SearchableComposeController<P : BasePresenter<*>>(bundle: Bundle? = null) :
     SearchableNucleusController<ComposeControllerBinding, P>(bundle),
     ComposeContentController {

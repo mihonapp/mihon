@@ -1,12 +1,15 @@
 package eu.kanade.presentation.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +21,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import eu.kanade.tachiyomi.R
+
+@Composable
+fun TopAppBar(
+    title: String?,
+    subtitle: String? = null,
+    navigateUp: () -> Unit,
+    navigationIcon: ImageVector = Icons.Default.ArrowBack,
+    actions: @Composable RowScope.() -> Unit = {},
+) {
+    SmallTopAppBar(
+        navigationIcon = {
+            IconButton(onClick = navigateUp) {
+                Icon(
+                    imageVector = navigationIcon,
+                    contentDescription = stringResource(R.string.abc_action_bar_up_description),
+                )
+            }
+        },
+        title = {
+            AppBarTitle(title, subtitle)
+        },
+        actions = actions,
+    )
+}
 
 @Composable
 fun AppBarTitle(
