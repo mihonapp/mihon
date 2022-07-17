@@ -1,21 +1,17 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import eu.kanade.presentation.browse.ExtensionFilterScreen
-import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.base.controller.ComposeController
+import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 
-class ExtensionFilterController : ComposeController<ExtensionFilterPresenter>() {
+class ExtensionFilterController : FullComposeController<ExtensionFilterPresenter>() {
 
-    override fun getTitle() = resources?.getString(R.string.label_extensions)
-
-    override fun createPresenter(): ExtensionFilterPresenter = ExtensionFilterPresenter()
+    override fun createPresenter() = ExtensionFilterPresenter()
 
     @Composable
-    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+    override fun ComposeContent() {
         ExtensionFilterScreen(
-            nestedScrollInterop = nestedScrollInterop,
+            navigateUp = router::popCurrentController,
             presenter = presenter,
         )
     }

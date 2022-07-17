@@ -1,20 +1,23 @@
 package eu.kanade.presentation.browse
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import eu.kanade.domain.manga.model.Manga
+import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
+import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.manga.components.BaseMangaListItem
+import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrateMangaPresenter
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrateMangaPresenter.Event
@@ -23,22 +26,33 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun MigrateMangaScreen(
-    nestedScrollInterop: NestedScrollConnection,
+    navigateUp: () -> Unit,
+    title: String?,
     presenter: MigrateMangaPresenter,
     onClickItem: (Manga) -> Unit,
     onClickCover: (Manga) -> Unit,
 ) {
     val context = LocalContext.current
-    when {
-        presenter.isLoading -> LoadingScreen()
-        presenter.isEmpty -> EmptyScreen(textResource = R.string.empty_screen)
-        else -> {
-            MigrateMangaContent(
-                nestedScrollInterop = nestedScrollInterop,
-                state = presenter,
-                onClickItem = onClickItem,
-                onClickCover = onClickCover,
+    Scaffold(
+        modifier = Modifier.statusBarsPadding(),
+        topBar = {
+            AppBar(
+                title = title,
+                navigateUp = navigateUp,
             )
+        },
+    ) { paddingValues ->
+        when {
+            presenter.isLoading -> LoadingScreen()
+            presenter.isEmpty -> EmptyScreen(textResource = R.string.empty_screen)
+            else -> {
+                MigrateMangaContent(
+                    paddingValues = paddingValues,
+                    state = presenter,
+                    onClickItem = onClickItem,
+                    onClickCover = onClickCover,
+                )
+            }
         }
     }
     LaunchedEffect(Unit) {
@@ -54,14 +68,13 @@ fun MigrateMangaScreen(
 
 @Composable
 fun MigrateMangaContent(
-    nestedScrollInterop: NestedScrollConnection,
+    paddingValues: PaddingValues,
     state: MigrateMangaState,
     onClickItem: (Manga) -> Unit,
     onClickCover: (Manga) -> Unit,
 ) {
     ScrollbarLazyColumn(
-        modifier = Modifier.nestedScroll(nestedScrollInterop),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = paddingValues + WindowInsets.navigationBars.asPaddingValues(),
     ) {
         items(state.items) { manga ->
             MigrateMangaItem(

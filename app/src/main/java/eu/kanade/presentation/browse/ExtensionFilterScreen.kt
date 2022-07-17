@@ -1,20 +1,24 @@
 package eu.kanade.presentation.browse
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.PreferenceRow
+import eu.kanade.presentation.components.Scaffold
+import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterPresenter
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -23,21 +27,31 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ExtensionFilterScreen(
-    nestedScrollInterop: NestedScrollConnection,
+    navigateUp: () -> Unit,
     presenter: ExtensionFilterPresenter,
 ) {
     val context = LocalContext.current
-    when {
-        presenter.isLoading -> LoadingScreen()
-        presenter.isEmpty -> EmptyScreen(textResource = R.string.empty_screen)
-        else -> {
-            SourceFilterContent(
-                nestedScrollInterop = nestedScrollInterop,
-                state = presenter,
-                onClickLang = {
-                    presenter.toggleLanguage(it)
-                },
+    Scaffold(
+        modifier = Modifier.statusBarsPadding(),
+        topBar = {
+            AppBar(
+                title = stringResource(R.string.label_extensions),
+                navigateUp = navigateUp,
             )
+        },
+    ) { paddingValues ->
+        when {
+            presenter.isLoading -> LoadingScreen()
+            presenter.isEmpty -> EmptyScreen(textResource = R.string.empty_screen)
+            else -> {
+                SourceFilterContent(
+                    paddingValues = paddingValues,
+                    state = presenter,
+                    onClickLang = {
+                        presenter.toggleLanguage(it)
+                    },
+                )
+            }
         }
     }
     LaunchedEffect(Unit) {
@@ -53,13 +67,12 @@ fun ExtensionFilterScreen(
 
 @Composable
 fun SourceFilterContent(
-    nestedScrollInterop: NestedScrollConnection,
+    paddingValues: PaddingValues,
     state: ExtensionFilterState,
     onClickLang: (String) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.nestedScroll(nestedScrollInterop),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = paddingValues + WindowInsets.navigationBars.asPaddingValues(),
     ) {
         items(
             items = state.items,
