@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -47,6 +48,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.domain.chapter.model.Chapter
@@ -518,7 +520,7 @@ fun MangaScreenLargeImpl(
                     WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
                 Column(
                     modifier = Modifier
-                        .weight(1f)
+                        .widthIn(max = 450.dp)
                         .verticalScroll(rememberScrollState())
                         .padding(bottom = withNavBarContentPadding.calculateBottomPadding()),
                 ) {
@@ -551,10 +553,9 @@ fun MangaScreenLargeImpl(
                     )
                 }
 
-                val chaptersWeight = if (windowWidthSizeClass == WindowWidthSizeClass.Medium) 1f else 2f
                 VerticalFastScroller(
                     listState = chapterListState,
-                    modifier = Modifier.weight(chaptersWeight),
+                    modifier = Modifier.weight(1f),
                     topContentPadding = withNavBarContentPadding.calculateTopPadding(),
                     endContentPadding = withNavBarContentPadding.calculateEndPadding(layoutDirection),
                 ) {
