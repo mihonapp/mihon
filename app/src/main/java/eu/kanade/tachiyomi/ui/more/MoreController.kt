@@ -1,11 +1,9 @@
 package eu.kanade.tachiyomi.ui.more
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import eu.kanade.presentation.more.MoreScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.base.controller.ComposeController
-import eu.kanade.tachiyomi.ui.base.controller.NoAppBarElevationController
+import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.category.CategoryController
@@ -14,18 +12,16 @@ import eu.kanade.tachiyomi.ui.setting.SettingsBackupController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
 
 class MoreController :
-    ComposeController<MorePresenter>(),
-    RootController,
-    NoAppBarElevationController {
+    FullComposeController<MorePresenter>(),
+    RootController {
 
     override fun getTitle() = resources?.getString(R.string.label_more)
 
     override fun createPresenter() = MorePresenter()
 
     @Composable
-    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+    override fun ComposeContent() {
         MoreScreen(
-            nestedScrollInterop = nestedScrollInterop,
             presenter = presenter,
             onClickDownloadQueue = { router.pushController(DownloadController()) },
             onClickCategories = { router.pushController(CategoryController()) },

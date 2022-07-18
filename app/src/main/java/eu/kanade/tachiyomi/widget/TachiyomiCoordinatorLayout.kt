@@ -34,24 +34,8 @@ class TachiyomiCoordinatorLayout @JvmOverloads constructor(
     defStyleAttr: Int = R.attr.coordinatorLayoutStyle,
 ) : CoordinatorLayout(context, attrs, defStyleAttr) {
 
-    /**
-     * Keep lifted state and do nothing on tablet UI
-     */
-    private val isTablet = context.isTablet()
-
     private var appBarLayout: AppBarLayout? = null
     private var tabLayout: TabLayout? = null
-
-    /**
-     * If true, [AppBarLayout] child will be lifted on nested scroll.
-     */
-    var isLiftAppBarOnScroll = true
-
-    /**
-     * Internal check
-     */
-    private val canLiftAppBarOnScroll
-        get() = !isTablet && isLiftAppBarOnScroll
 
     override fun onNestedScroll(
         target: View,
@@ -64,7 +48,7 @@ class TachiyomiCoordinatorLayout @JvmOverloads constructor(
     ) {
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed)
         // Disable elevation overlay when tabs are visible
-        if (canLiftAppBarOnScroll) {
+        if (context.isTablet().not()) {
             if (target is ComposeView) {
                 val scrollCondition = if (type == ViewCompat.TYPE_NON_TOUCH) {
                     dyUnconsumed >= 0
