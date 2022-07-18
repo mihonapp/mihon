@@ -1,0 +1,20 @@
+CREATE VIEW updatesView AS
+SELECT
+    mangas._id AS mangaId,
+    mangas.title AS mangaTitle,
+    chapters._id AS chapterId,
+    chapters.name AS chapterName,
+    chapters.scanlator,
+    chapters.read,
+    chapters.bookmark,
+    mangas.source,
+    mangas.favorite,
+    mangas.thumbnail_url AS thumbnailUrl,
+    mangas.cover_last_modified AS coverLastModified,
+    chapters.date_upload AS dateUpload,
+    chapters.date_fetch AS datefetch
+FROM mangas JOIN chapters
+ON mangas._id = chapters.manga_id
+WHERE favorite = 1
+AND date_fetch > date_added
+ORDER BY date_fetch DESC;

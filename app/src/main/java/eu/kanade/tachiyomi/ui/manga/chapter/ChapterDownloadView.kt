@@ -7,8 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.AbstractComposeView
+import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.ChapterDownloadIndicator
-import eu.kanade.presentation.manga.ChapterDownloadAction
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.data.download.model.Download
 

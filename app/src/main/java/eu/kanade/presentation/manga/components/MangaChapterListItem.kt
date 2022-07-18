@@ -29,8 +29,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.ChapterDownloadIndicator
-import eu.kanade.presentation.manga.ChapterDownloadAction
+import eu.kanade.presentation.util.ReadItemAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 
@@ -134,5 +135,3 @@ fun MangaChapterListItem(
         }
     }
 }
-
-private const val ReadItemAlpha = .38f

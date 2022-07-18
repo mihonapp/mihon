@@ -226,7 +226,7 @@ class MainActivity : BaseActivity() {
         if (!router.hasRootController()) {
             // Set start screen
             if (!handleIntentAction(intent)) {
-                setSelectedNavItem(startScreenId)
+                moveToStartScreen()
             }
         }
         syncActivityViewWithController()
@@ -483,10 +483,15 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
+        // Updates screen has custom back handler
+        if (router.getControllerWithTag("${R.id.nav_updates}") != null) {
+            router.handleBack()
+            return
+        }
         val backstackSize = router.backstackSize
         if (backstackSize == 1 && router.getControllerWithTag("$startScreenId") == null) {
             // Return to start screen
-            setSelectedNavItem(startScreenId)
+            moveToStartScreen()
         } else if (shouldHandleExitConfirmation()) {
             // Exit confirmation (resets after 2 seconds)
             lifecycleScope.launchUI { resetExitConfirmation() }
@@ -497,6 +502,10 @@ class MainActivity : BaseActivity() {
             }
             super.onBackPressed()
         }
+    }
+
+    fun moveToStartScreen() {
+        setSelectedNavItem(startScreenId)
     }
 
     override fun onSupportActionModeStarted(mode: ActionMode) {

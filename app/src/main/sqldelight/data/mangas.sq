@@ -72,16 +72,6 @@ FROM mangas
 WHERE favorite = 0
 GROUP BY source;
 
-getRecentlyUpdated:
-SELECT *
-FROM mangas M
-JOIN chapters C
-ON M._id = C.manga_id
-WHERE M.favorite = 1
-AND C.date_upload > :after
-AND C.date_fetch > M.date_added
-ORDER BY C.date_upload DESC;
-
 getLibrary:
 SELECT M.*, COALESCE(MC.category_id, 0) AS category
 FROM (

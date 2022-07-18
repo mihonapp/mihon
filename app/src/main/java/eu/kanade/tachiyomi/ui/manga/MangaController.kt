@@ -27,7 +27,7 @@ import eu.kanade.data.chapter.NoChaptersException
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.toDbManga
-import eu.kanade.presentation.manga.ChapterDownloadAction
+import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.util.calculateWindowWidthSizeClass

@@ -52,15 +52,16 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.domain.chapter.model.Chapter
+import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.ExtendedFloatingActionButton
 import eu.kanade.presentation.components.LazyColumn
+import eu.kanade.presentation.components.MangaBottomActionMenu
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SwipeRefreshIndicator
 import eu.kanade.presentation.components.VerticalFastScroller
 import eu.kanade.presentation.manga.components.ChapterHeader
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
 import eu.kanade.presentation.manga.components.MangaActionRow
-import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.presentation.manga.components.MangaChapterListItem
 import eu.kanade.presentation.manga.components.MangaInfoBox
 import eu.kanade.presentation.manga.components.MangaSmallAppBar

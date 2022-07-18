@@ -27,3 +27,21 @@ fun LazyListState.isScrollingUp(): Boolean {
         }
     }.value
 }
+
+@Composable
+fun LazyListState.isScrollingDown(): Boolean {
+    var previousIndex by remember { mutableStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember { mutableStateOf(firstVisibleItemScrollOffset) }
+    return remember {
+        derivedStateOf {
+            if (previousIndex != firstVisibleItemIndex) {
+                previousIndex < firstVisibleItemIndex
+            } else {
+                previousScrollOffset <= firstVisibleItemScrollOffset
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }.value
+}

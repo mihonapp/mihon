@@ -1,4 +1,4 @@
-package eu.kanade.presentation.manga.components
+package eu.kanade.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -51,13 +51,13 @@ import kotlinx.coroutines.launch
 fun MangaBottomActionMenu(
     visible: Boolean,
     modifier: Modifier = Modifier,
-    onBookmarkClicked: (() -> Unit)?,
-    onRemoveBookmarkClicked: (() -> Unit)?,
-    onMarkAsReadClicked: (() -> Unit)?,
-    onMarkAsUnreadClicked: (() -> Unit)?,
-    onMarkPreviousAsReadClicked: (() -> Unit)?,
-    onDownloadClicked: (() -> Unit)?,
-    onDeleteClicked: (() -> Unit)?,
+    onBookmarkClicked: (() -> Unit)? = null,
+    onRemoveBookmarkClicked: (() -> Unit)? = null,
+    onMarkAsReadClicked: (() -> Unit)? = null,
+    onMarkAsUnreadClicked: (() -> Unit)? = null,
+    onMarkPreviousAsReadClicked: (() -> Unit)? = null,
+    onDownloadClicked: (() -> Unit)? = null,
+    onDeleteClicked: (() -> Unit)? = null,
 ) {
     AnimatedVisibility(
         visible = visible,

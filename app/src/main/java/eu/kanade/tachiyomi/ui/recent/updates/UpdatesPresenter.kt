@@ -1,135 +1,178 @@
 package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.os.Bundle
-import eu.kanade.data.DatabaseHandler
-import eu.kanade.data.manga.mangaChapterMapper
+import androidx.compose.runtime.Immutable
+import eu.kanade.core.util.insertSeparators
+import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.UpdateChapter
-import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
-import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.interactor.GetManga
+import eu.kanade.domain.updates.interactor.GetUpdates
+import eu.kanade.domain.updates.model.UpdatesWithRelations
+import eu.kanade.presentation.updates.UpdatesUiModel
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.ui.recent.DateSectionItem
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.toDateKey
 import eu.kanade.tachiyomi.util.lang.withUIContext
+import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.update
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.TreeMap
 
 class UpdatesPresenter(
-    private val preferences: PreferencesHelper = Injekt.get(),
-    private val downloadManager: DownloadManager = Injekt.get(),
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val handler: DatabaseHandler = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
+    private val getUpdates: GetUpdates = Injekt.get(),
+    private val getManga: GetManga = Injekt.get(),
+    private val sourceManager: SourceManager = Injekt.get(),
+    private val downloadManager: DownloadManager = Injekt.get(),
+    private val getChapter: GetChapter = Injekt.get(),
+    private val preferences: PreferencesHelper = Injekt.get(),
 ) : BasePresenter<UpdatesController>() {
 
-    private val relativeTime: Int = preferences.relativeTime().get()
-    private val dateFormat: DateFormat = preferences.dateFormat()
+    private val _state: MutableStateFlow<UpdatesState> = MutableStateFlow(UpdatesState.Loading)
+    val state: StateFlow<UpdatesState> = _state.asStateFlow()
 
-    private val _updates: MutableStateFlow<List<UpdatesItem>> = MutableStateFlow(listOf())
-    val updates: StateFlow<List<UpdatesItem>> = _updates.asStateFlow()
+    /**
+     * Helper function to update the UI state only if it's currently in success state
+     */
+    private fun updateSuccessState(func: (UpdatesState.Success) -> UpdatesState.Success) {
+        _state.update { if (it is UpdatesState.Success) func(it) else it }
+    }
+
+    private var incognitoMode = false
+        set(value) {
+            updateSuccessState { it.copy(isIncognitoMode = value) }
+            field = value
+        }
+    private var downloadOnlyMode = false
+        set(value) {
+            updateSuccessState { it.copy(isDownloadedOnlyMode = value) }
+            field = value
+        }
+
+    /**
+     * Subscription to observe download status changes.
+     */
+    private var observeDownloadsStatusJob: Job? = null
+    private var observeDownloadsPageJob: Job? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
         presenterScope.launchIO {
-            subscribeToUpdates()
+            // Set date limit for recent chapters
+            val calendar = Calendar.getInstance().apply {
+                time = Date()
+                add(Calendar.MONTH, -3)
+            }
 
+            getUpdates.subscribe(calendar)
+                .catch { exception ->
+                    _state.value = UpdatesState.Error(exception)
+                }
+                .collectLatest { updates ->
+                    val uiModels = updates.toUpdateUiModels()
+                    _state.update { currentState ->
+                        when (currentState) {
+                            is UpdatesState.Success -> currentState.copy(uiModels)
+                            is UpdatesState.Loading, is UpdatesState.Error ->
+                                UpdatesState.Success(
+                                    uiModels = uiModels,
+                                    isIncognitoMode = incognitoMode,
+                                    isDownloadedOnlyMode = downloadOnlyMode,
+                                )
+                        }
+                    }
+
+                    observeDownloads()
+                }
+        }
+
+        preferences.incognitoMode()
+            .asHotFlow { incognito ->
+                incognitoMode = incognito
+            }
+            .launchIn(presenterScope)
+
+        preferences.downloadedOnly()
+            .asHotFlow { downloadedOnly ->
+                downloadOnlyMode = downloadedOnly
+            }
+            .launchIn(presenterScope)
+    }
+
+    private fun List<UpdatesWithRelations>.toUpdateUiModels(): List<UpdatesUiModel> {
+        return this.map { update ->
+            val activeDownload = downloadManager.queue.find { update.chapterId == it.chapter.id }
+            val downloaded = downloadManager.isChapterDownloaded(
+                update.chapterName,
+                update.scanlator,
+                update.mangaTitle,
+                update.sourceId,
+            )
+            val downloadState = when {
+                activeDownload != null -> activeDownload.status
+                downloaded -> Download.State.DOWNLOADED
+                else -> Download.State.NOT_DOWNLOADED
+            }
+            val item = UpdatesItem(
+                update = update,
+                downloadStateProvider = { downloadState },
+                downloadProgressProvider = { activeDownload?.progress ?: 0 },
+            )
+            UpdatesUiModel.Item(item)
+        }
+            .insertSeparators { before, after ->
+                val beforeDate = before?.item?.update?.dateFetch?.toDateKey() ?: Date(0)
+                val afterDate = after?.item?.update?.dateFetch?.toDateKey() ?: Date(0)
+                when {
+                    beforeDate.time != afterDate.time && afterDate.time != 0L ->
+                        UpdatesUiModel.Header(afterDate)
+                    // Return null to avoid adding a separator between two items.
+                    else -> null
+                }
+            }
+    }
+
+    private suspend fun observeDownloads() {
+        observeDownloadsStatusJob?.cancel()
+        observeDownloadsStatusJob = presenterScope.launchIO {
             downloadManager.queue.getStatusAsFlow()
                 .catch { error -> logcat(LogPriority.ERROR, error) }
                 .collectLatest {
                     withUIContext {
-                        onDownloadStatusChange(it)
-                        view?.onChapterDownloadUpdate(it)
+                        updateDownloadState(it)
                     }
                 }
+        }
 
+        observeDownloadsPageJob?.cancel()
+        observeDownloadsPageJob = presenterScope.launchIO {
             downloadManager.queue.getProgressAsFlow()
                 .catch { error -> logcat(LogPriority.ERROR, error) }
                 .collectLatest {
                     withUIContext {
-                        view?.onChapterDownloadUpdate(it)
+                        updateDownloadState(it)
                     }
                 }
-        }
-    }
-
-    /**
-     * Get observable containing recent chapters and date
-     */
-    private suspend fun subscribeToUpdates() {
-        // Set date limit for recent chapters
-        val cal = Calendar.getInstance().apply {
-            time = Date()
-            add(Calendar.MONTH, -3)
-        }
-
-        handler
-            .subscribeToList {
-                mangasQueries.getRecentlyUpdated(after = cal.timeInMillis, mangaChapterMapper)
-            }
-            .map { mangaChapter ->
-                val map = TreeMap<Date, MutableList<Pair<Manga, Chapter>>> { d1, d2 -> d2.compareTo(d1) }
-                val byDate = mangaChapter.groupByTo(map) { it.second.dateFetch.toDateKey() }
-                byDate.flatMap { entry ->
-                    val dateItem = DateSectionItem(entry.key, relativeTime, dateFormat)
-                    entry.value
-                        .sortedWith(compareBy({ it.second.dateFetch }, { it.second.chapterNumber })).asReversed()
-                        .map { UpdatesItem(it.second, it.first, dateItem) }
-                }
-            }
-            .collectLatest { list ->
-                list.forEach { item ->
-                    // Find an active download for this chapter.
-                    val download = downloadManager.queue.find { it.chapter.id == item.chapter.id }
-
-                    // If there's an active download, assign it, otherwise ask the manager if
-                    // the chapter is downloaded and assign it to the status.
-                    if (download != null) {
-                        item.download = download
-                    }
-                }
-                setDownloadedChapters(list)
-
-                _updates.value = list
-
-                // Set unread chapter count for bottom bar badge
-                preferences.unreadUpdatesCount().set(list.count { !it.chapter.read })
-            }
-    }
-
-    /**
-     * Finds and assigns the list of downloaded chapters.
-     *
-     * @param items the list of chapter from the database.
-     */
-    private fun setDownloadedChapters(items: List<UpdatesItem>) {
-        for (item in items) {
-            val manga = item.manga
-            val chapter = item.chapter
-
-            if (downloadManager.isChapterDownloaded(chapter.name, chapter.scanlator, manga.title, manga.source)) {
-                item.status = Download.State.DOWNLOADED
-            }
         }
     }
 
@@ -138,96 +181,141 @@ class UpdatesPresenter(
      *
      * @param download download object containing progress.
      */
-    private fun onDownloadStatusChange(download: Download) {
-        // Assign the download to the model object.
-        if (download.status == Download.State.QUEUE) {
-            val chapters = (view?.adapter?.currentItems ?: emptyList()).filterIsInstance<UpdatesItem>()
-            val chapter = chapters.find { it.chapter.id == download.chapter.id }
-            if (chapter != null && chapter.download == null) {
-                chapter.download = download
+    private fun updateDownloadState(download: Download) {
+        updateSuccessState { successState ->
+            val modifiedIndex = successState.uiModels.indexOfFirst {
+                it is UpdatesUiModel.Item && it.item.update.chapterId == download.chapter.id
             }
+            if (modifiedIndex < 0) return@updateSuccessState successState
+
+            val newUiModels = successState.uiModels.toMutableList().apply {
+                var uiModel = removeAt(modifiedIndex)
+                if (uiModel is UpdatesUiModel.Item) {
+                    val item = uiModel.item.copy(
+                        downloadStateProvider = { download.status },
+                        downloadProgressProvider = { download.progress },
+                    )
+                    uiModel = UpdatesUiModel.Item(item)
+                }
+                add(modifiedIndex, uiModel)
+            }
+            successState.copy(uiModels = newUiModels)
         }
     }
 
-    fun startDownloadingNow(chapter: Chapter) {
-        downloadManager.startDownloadNow(chapter.id)
+    fun startDownloadingNow(chapterId: Long) {
+        downloadManager.startDownloadNow(chapterId)
+    }
+
+    fun cancelDownload(chapterId: Long) {
+        val activeDownload = downloadManager.queue.find { chapterId == it.chapter.id } ?: return
+        downloadManager.deletePendingDownload(activeDownload)
+        updateDownloadState(activeDownload.apply { status = Download.State.NOT_DOWNLOADED })
     }
 
     /**
-     * Mark selected chapter as read
-     *
-     * @param items list of selected chapters
-     * @param read read status
+     * Mark the selected updates list as read/unread.
+     * @param updates the list of selected updates.
+     * @param read whether to mark chapters as read or unread.
      */
-    fun markChapterRead(items: List<UpdatesItem>, read: Boolean) {
+    fun markUpdatesRead(updates: List<UpdatesItem>, read: Boolean) {
         presenterScope.launchIO {
             setReadStatus.await(
                 read = read,
-                values = items
-                    .map { it.chapter }
+                values = updates
+                    .mapNotNull { getChapter.await(it.update.chapterId) }
                     .toTypedArray(),
             )
         }
     }
 
     /**
-     * Delete selected chapters
-     *
-     * @param chapters list of chapters
+     * Bookmarks the given list of chapters.
+     * @param updates the list of chapters to bookmark.
      */
-    fun deleteChapters(chapters: List<UpdatesItem>) {
-        launchIO {
-            try {
-                deleteChaptersInternal(chapters)
-                withUIContext { view?.onChaptersDeleted() }
-            } catch (e: Throwable) {
-                withUIContext { view?.onChaptersDeletedError(e) }
-            }
-        }
-    }
-
-    /**
-     * Mark selected chapters as bookmarked
-     * @param items list of selected chapters
-     * @param bookmarked bookmark status
-     */
-    fun bookmarkChapters(items: List<UpdatesItem>, bookmarked: Boolean) {
+    fun bookmarkUpdates(updates: List<UpdatesItem>, bookmark: Boolean) {
         presenterScope.launchIO {
-            val toUpdate = items.map {
-                ChapterUpdate(
-                    bookmark = bookmarked,
-                    id = it.chapter.id,
-                )
-            }
-            updateChapter.awaitAll(toUpdate)
+            updates
+                .filterNot { it.update.bookmark == bookmark }
+                .map { ChapterUpdate(id = it.update.chapterId, bookmark = bookmark) }
+                .let { updateChapter.awaitAll(it) }
         }
     }
 
     /**
-     * Download selected chapters
-     * @param items list of recent chapters seleted.
+     * Downloads the given list of chapters with the manager.
+     * @param updatesItem the list of chapters to download.
      */
-    fun downloadChapters(items: List<UpdatesItem>) {
-        items.forEach { downloadManager.downloadChapters(it.manga, listOf(it.chapter.toDbChapter())) }
+    fun downloadChapters(updatesItem: List<UpdatesItem>) {
+        launchIO {
+            val groupedUpdates = updatesItem.groupBy { it.update.mangaId }.values
+            for (updates in groupedUpdates) {
+                val mangaId = updates.first().update.mangaId
+                val manga = getManga.await(mangaId) ?: continue
+                // Don't download if source isn't available
+                sourceManager.get(manga.source) ?: continue
+                val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId)?.toDbChapter() }
+                downloadManager.downloadChapters(manga, chapters)
+            }
+        }
     }
 
     /**
      * Delete selected chapters
      *
-     * @param items chapters selected
+     * @param updatesItem list of chapters
      */
-    private fun deleteChaptersInternal(chapterItems: List<UpdatesItem>) {
-        val itemsByManga = chapterItems.groupBy { it.manga.id }
-        for ((_, items) in itemsByManga) {
-            val manga = items.first().manga
-            val source = sourceManager.get(manga.source) ?: continue
-            val chapters = items.map { it.chapter.toDbChapter() }
+    fun deleteChapters(updatesItem: List<UpdatesItem>) {
+        launchIO {
+            val groupedUpdates = updatesItem.groupBy { it.update.mangaId }.values
+            val deletedIds = groupedUpdates.flatMap { updates ->
+                val mangaId = updates.first().update.mangaId
+                val manga = getManga.await(mangaId) ?: return@flatMap emptyList()
+                val source = sourceManager.get(manga.source) ?: return@flatMap emptyList()
+                val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId)?.toDbChapter() }
+                downloadManager.deleteChapters(chapters, manga, source).mapNotNull { it.id }
+            }
+            updateSuccessState { successState ->
+                val deletedUpdates = successState.uiModels.filter {
+                    it is UpdatesUiModel.Item && deletedIds.contains(it.item.update.chapterId)
+                }
+                if (deletedUpdates.isEmpty()) return@updateSuccessState successState
 
-            downloadManager.deleteChapters(chapters, manga, source)
-            items.forEach {
-                it.status = Download.State.NOT_DOWNLOADED
-                it.download = null
+                // TODO: Don't do this fake status update
+                val newUiModels = successState.uiModels.toMutableList().apply {
+                    deletedUpdates.forEach { deletedUpdate ->
+                        val modifiedIndex = indexOf(deletedUpdate)
+                        var uiModel = removeAt(modifiedIndex)
+                        if (uiModel is UpdatesUiModel.Item) {
+                            val item = uiModel.item.copy(
+                                downloadStateProvider = { Download.State.NOT_DOWNLOADED },
+                                downloadProgressProvider = { 0 },
+                            )
+                            uiModel = UpdatesUiModel.Item(item)
+                        }
+                        add(modifiedIndex, uiModel)
+                    }
+                }
+                successState.copy(uiModels = newUiModels)
             }
         }
     }
 }
+
+sealed class UpdatesState {
+    object Loading : UpdatesState()
+    data class Error(val error: Throwable) : UpdatesState()
+    data class Success(
+        val uiModels: List<UpdatesUiModel>,
+        val isIncognitoMode: Boolean = false,
+        val isDownloadedOnlyMode: Boolean = false,
+        val showSwipeRefreshIndicator: Boolean = false,
+    ) : UpdatesState()
+}
+
+@Immutable
+data class UpdatesItem(
+    val update: UpdatesWithRelations,
+    val downloadStateProvider: () -> Download.State,
+    val downloadProgressProvider: () -> Int,
+)

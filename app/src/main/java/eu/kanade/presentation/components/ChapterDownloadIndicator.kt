@@ -27,10 +27,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.manga.ChapterDownloadAction
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
+
+enum class ChapterDownloadAction {
+    START,
+    START_NOW,
+    CANCEL,
+    DELETE,
+}
 
 @Composable
 fun ChapterDownloadIndicator(

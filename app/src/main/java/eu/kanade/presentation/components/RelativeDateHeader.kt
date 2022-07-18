@@ -1,4 +1,4 @@
-package eu.kanade.presentation.history.components
+package eu.kanade.presentation.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -15,7 +15,7 @@ import java.text.DateFormat
 import java.util.Date
 
 @Composable
-fun HistoryHeader(
+fun RelativeDateHeader(
     modifier: Modifier = Modifier,
     date: Date,
     relativeTime: Int,

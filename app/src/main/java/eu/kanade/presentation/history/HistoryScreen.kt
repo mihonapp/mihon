@@ -39,8 +39,8 @@ import androidx.paging.compose.items
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
+import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.components.ScrollbarLazyColumn
-import eu.kanade.presentation.history.components.HistoryHeader
 import eu.kanade.presentation.history.components.HistoryItem
 import eu.kanade.presentation.history.components.HistoryItemShimmer
 import eu.kanade.presentation.util.plus
@@ -108,7 +108,7 @@ fun HistoryContent(
         items(history) { item ->
             when (item) {
                 is HistoryUiModel.Header -> {
-                    HistoryHeader(
+                    RelativeDateHeader(
                         modifier = Modifier
                             .animateItemPlacement(),
                         date = item.date,

@@ -7,6 +7,7 @@ import eu.kanade.data.manga.MangaRepositoryImpl
 import eu.kanade.data.source.SourceDataRepositoryImpl
 import eu.kanade.data.source.SourceRepositoryImpl
 import eu.kanade.data.track.TrackRepositoryImpl
+import eu.kanade.data.updates.UpdatesRepositoryImpl
 import eu.kanade.domain.category.interactor.CreateCategoryWithName
 import eu.kanade.domain.category.interactor.DeleteCategory
 import eu.kanade.domain.category.interactor.GetCategories
@@ -60,6 +61,8 @@ import eu.kanade.domain.track.interactor.DeleteTrack
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.repository.TrackRepository
+import eu.kanade.domain.updates.interactor.GetUpdates
+import eu.kanade.domain.updates.repository.UpdatesRepository
 import uy.kohesive.injekt.api.InjektModule
 import uy.kohesive.injekt.api.InjektRegistrar
 import uy.kohesive.injekt.api.addFactory
@@ -118,6 +121,9 @@ class DomainModule : InjektModule {
         addFactory { GetExtensionSources(get()) }
         addFactory { GetExtensionUpdates(get(), get()) }
         addFactory { GetExtensionLanguages(get(), get()) }
+
+        addSingletonFactory<UpdatesRepository> { UpdatesRepositoryImpl(get()) }
+        addFactory { GetUpdates(get(), get()) }
 
         addSingletonFactory<SourceRepository> { SourceRepositoryImpl(get(), get()) }
         addSingletonFactory<SourceDataRepository> { SourceDataRepositoryImpl(get()) }
