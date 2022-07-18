@@ -157,7 +157,7 @@ class UpdatesPresenter(
         observeDownloadsStatusJob = presenterScope.launchIO {
             downloadManager.queue.getStatusAsFlow()
                 .catch { error -> logcat(LogPriority.ERROR, error) }
-                .collectLatest {
+                .collect {
                     withUIContext {
                         updateDownloadState(it)
                     }
@@ -168,7 +168,7 @@ class UpdatesPresenter(
         observeDownloadsPageJob = presenterScope.launchIO {
             downloadManager.queue.getProgressAsFlow()
                 .catch { error -> logcat(LogPriority.ERROR, error) }
-                .collectLatest {
+                .collect {
                     withUIContext {
                         updateDownloadState(it)
                     }

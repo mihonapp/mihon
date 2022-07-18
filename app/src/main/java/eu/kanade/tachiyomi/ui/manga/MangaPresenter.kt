@@ -417,7 +417,7 @@ class MangaPresenter(
             downloadManager.queue.getStatusAsFlow()
                 .filter { it.manga.id == successState?.manga?.id }
                 .catch { error -> logcat(LogPriority.ERROR, error) }
-                .collectLatest {
+                .collect {
                     withUIContext {
                         updateDownloadState(it)
                     }
@@ -429,7 +429,7 @@ class MangaPresenter(
             downloadManager.queue.getProgressAsFlow()
                 .filter { it.manga.id == successState?.manga?.id }
                 .catch { error -> logcat(LogPriority.ERROR, error) }
-                .collectLatest {
+                .collect {
                     withUIContext {
                         updateDownloadState(it)
                     }
