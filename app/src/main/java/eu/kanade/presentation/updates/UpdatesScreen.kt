@@ -1,7 +1,6 @@
 package eu.kanade.presentation.updates
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -12,35 +11,25 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FlipToBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallTopAppBar
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.ChapterDownloadAction
-import eu.kanade.presentation.components.DownloadedOnlyModeBanner
 import eu.kanade.presentation.components.EmptyScreen
-import eu.kanade.presentation.components.IncognitoModeBanner
 import eu.kanade.presentation.components.MangaBottomActionMenu
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SwipeRefreshIndicator
@@ -201,72 +190,36 @@ fun UpdatesAppBar(
     onSelectAll: () -> Unit,
     onInvertSelection: () -> Unit,
 ) {
-    val isActionMode = actionModeCounter > 0
-    val backgroundColor = if (isActionMode) {
-        TopAppBarDefaults.centerAlignedTopAppBarColors().containerColor(1f).value
-    } else {
-        MaterialTheme.colorScheme.surface
-    }
-
-    Column(
-        modifier = modifier.drawBehind { drawRect(backgroundColor) },
-    ) {
-        SmallTopAppBar(
-            modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)),
-            navigationIcon = {
-                if (isActionMode) {
-                    IconButton(onClick = { selected.clear() }) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(id = R.string.action_cancel),
-                        )
-                    }
-                }
-            },
-            title = {
-                Text(
-                    text = if (isActionMode) actionModeCounter.toString() else stringResource(R.string.label_recent_updates),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+    AppBar(
+        modifier = modifier,
+        title = stringResource(R.string.label_recent_updates),
+        actions = {
+            IconButton(onClick = onUpdateLibrary) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = stringResource(R.string.action_update_library),
                 )
-            },
-            actions = {
-                if (isActionMode) {
-                    IconButton(onClick = onSelectAll) {
-                        Icon(
-                            imageVector = Icons.Default.SelectAll,
-                            contentDescription = stringResource(R.string.action_select_all),
-                        )
-                    }
-                    IconButton(onClick = onInvertSelection) {
-                        Icon(
-                            imageVector = Icons.Default.FlipToBack,
-                            contentDescription = stringResource(R.string.action_select_inverse),
-                        )
-                    }
-                } else {
-                    IconButton(onClick = onUpdateLibrary) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = stringResource(R.string.action_update_library),
-                        )
-                    }
-                }
-            },
-            // Background handled by parent
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = Color.Transparent,
-                scrolledContainerColor = Color.Transparent,
-            ),
-        )
-
-        if (downloadedOnlyMode) {
-            DownloadedOnlyModeBanner()
-        }
-        if (incognitoMode) {
-            IncognitoModeBanner()
-        }
-    }
+            }
+        },
+        actionModeCounter = actionModeCounter,
+        onCancelActionMode = { selected.clear() },
+        actionModeActions = {
+            IconButton(onClick = onSelectAll) {
+                Icon(
+                    imageVector = Icons.Default.SelectAll,
+                    contentDescription = stringResource(R.string.action_select_all),
+                )
+            }
+            IconButton(onClick = onInvertSelection) {
+                Icon(
+                    imageVector = Icons.Default.FlipToBack,
+                    contentDescription = stringResource(R.string.action_select_inverse),
+                )
+            }
+        },
+        downloadedOnlyMode = downloadedOnlyMode,
+        incognitoMode = incognitoMode,
+    )
 }
 
 @Composable

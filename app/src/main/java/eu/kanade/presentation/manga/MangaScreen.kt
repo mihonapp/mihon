@@ -60,9 +60,9 @@ import eu.kanade.presentation.components.VerticalFastScroller
 import eu.kanade.presentation.manga.components.ChapterHeader
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
 import eu.kanade.presentation.manga.components.MangaActionRow
+import eu.kanade.presentation.manga.components.MangaAppBar
 import eu.kanade.presentation.manga.components.MangaChapterListItem
 import eu.kanade.presentation.manga.components.MangaInfoBox
-import eu.kanade.presentation.manga.components.MangaSmallAppBar
 import eu.kanade.presentation.util.isScrolledToEnd
 import eu.kanade.presentation.util.isScrollingUp
 import eu.kanade.presentation.util.plus
@@ -237,7 +237,7 @@ private fun MangaScreenSmallImpl(
             val animatedBgAlpha by animateFloatAsState(
                 if (firstVisibleItemIndex > 0 || firstVisibleItemScrollOffset > 0) 1f else 0f,
             )
-            MangaSmallAppBar(
+            MangaAppBar(
                 title = state.manga.title,
                 titleAlphaProvider = { animatedTitleAlpha },
                 backgroundAlphaProvider = { animatedBgAlpha },
@@ -458,7 +458,7 @@ fun MangaScreenLargeImpl(
         Scaffold(
             modifier = Modifier.padding(insetPadding),
             topBar = {
-                MangaSmallAppBar(
+                MangaAppBar(
                     modifier = Modifier.onSizeChanged { onTopBarHeightChanged(it.height) },
                     title = state.manga.title,
                     titleAlphaProvider = { if (chapters.any { it.selected }) 1f else 0f },

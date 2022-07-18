@@ -1,22 +1,18 @@
 package eu.kanade.tachiyomi.ui.browse.source
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.browse.SourcesFilterScreen
-import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.base.controller.ComposeController
+import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 
-class SourceFilterController : ComposeController<SourcesFilterPresenter>() {
-
-    override fun getTitle() = resources?.getString(R.string.label_sources)
+class SourceFilterController : FullComposeController<SourcesFilterPresenter>() {
 
     override fun createPresenter(): SourcesFilterPresenter = SourcesFilterPresenter()
 
     @Composable
-    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+    override fun ComposeContent() {
         SourcesFilterScreen(
-            nestedScrollInterop = nestedScrollInterop,
+            navigateUp = router::popCurrentController,
             presenter = presenter,
             onClickLang = { language ->
                 presenter.toggleLanguage(language)

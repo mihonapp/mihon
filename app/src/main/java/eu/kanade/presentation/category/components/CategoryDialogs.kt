@@ -118,16 +118,16 @@ fun CategoryDeleteDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(R.string.no))
-            }
-        },
-        dismissButton = {
             TextButton(onClick = {
                 onDelete()
                 onDismissRequest()
             },) {
-                Text(text = stringResource(R.string.yes))
+                Text(text = stringResource(android.R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(android.R.string.cancel))
             }
         },
         title = {

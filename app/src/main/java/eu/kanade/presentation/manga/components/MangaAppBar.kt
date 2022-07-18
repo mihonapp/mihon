@@ -38,7 +38,7 @@ import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.R
 
 @Composable
-fun MangaSmallAppBar(
+fun MangaAppBar(
     modifier: Modifier = Modifier,
     title: String,
     titleAlphaProvider: () -> Float,
@@ -57,7 +57,7 @@ fun MangaSmallAppBar(
 ) {
     val isActionMode = actionModeCounter > 0
     val backgroundAlpha = if (isActionMode) 1f else backgroundAlphaProvider()
-    val backgroundColor by TopAppBarDefaults.centerAlignedTopAppBarColors().containerColor(1f)
+    val backgroundColor by TopAppBarDefaults.smallTopAppBarColors().containerColor(1f)
     Column(
         modifier = modifier.drawBehind {
             drawRect(backgroundColor.copy(alpha = backgroundAlpha))
@@ -199,7 +199,7 @@ fun MangaSmallAppBar(
                 }
             },
             // Background handled by parent
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            colors = TopAppBarDefaults.smallTopAppBarColors(
                 containerColor = Color.Transparent,
                 scrolledContainerColor = Color.Transparent,
             ),

@@ -72,6 +72,8 @@
     <string name="action_edit_categories">Edit categories</string>
     <string name="action_rename_category">Rename category</string>
     <string name="action_move_category">Set categories</string>
+    <string name="delete_category_confirmation">Do you wish to delete the category \"%s\"?</string>
+    <string name="delete_category">Delete category</string>
     <string name="action_edit_cover">Edit cover</string>
     <string name="action_view_chapters">View chapters</string>
     <string name="action_stop">Stop</string>
@@ -135,6 +137,7 @@
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
+    <string name="internal_error">InternalError: Check crash logs for further information</string>
 
     <!-- Shortcuts-->
     <string name="app_not_available">App not available</string>
@@ -357,6 +360,8 @@
     <string name="scale_type_fit_height">Fit height</string>
     <string name="scale_type_original_size">Original size</string>
     <string name="scale_type_smart_fit">Smart fit</string>
+    <string name="pref_navigate_pan">Navigate to pan</string>
+    <string name="pref_landscape_zoom">Zoom landscape image</string>
     <string name="pref_zoom_start">Zoom start position</string>
     <string name="zoom_start_automatic">Automatic</string>
     <string name="zoom_start_left">Left</string>
@@ -722,6 +727,7 @@
 
     <!-- Updates fragment -->
     <string name="updating_library">Updating library</string>
+    <string name="cant_open_last_read_chapter">Unable to open last read chapter</string>
 
     <!-- History fragment -->
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
@@ -804,9 +810,6 @@
         <item quantity="other">%d extension updates available</item>
     </plurals>
 
-    <!--Content Description-->
-    <string name="description_cover">Cover of manga</string>
-
     <!-- Information Text -->
     <string name="information_no_downloads">No downloads</string>
     <string name="information_no_recent">No recent updates</string>
@@ -848,12 +851,4 @@
     <!-- S Pen actions -->
     <string name="spen_previous_page">Previous page</string>
     <string name="spen_next_page">Next page</string>
-    <string name="pref_navigate_pan">Navigate to pan</string>
-    <string name="pref_landscape_zoom">Zoom landscape image</string>
-    <string name="cant_open_last_read_chapter">Unable to open last read chapter</string>
-    <string name="delete_category_confirmation">Do you wish to delete the category %s</string>
-    <string name="delete_category">Delete category</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="internal_error">InternalError: Check crash logs for further information</string>
 </resources>

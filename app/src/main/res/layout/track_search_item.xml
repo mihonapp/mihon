@@ -24,7 +24,6 @@
             android:layout_height="95dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
-            android:contentDescription="@string/description_cover"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
