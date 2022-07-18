@@ -142,6 +142,9 @@ class MangaController :
                 onMultiMarkAsReadClicked = presenter::markChaptersRead,
                 onMarkPreviousAsReadClicked = presenter::markPreviousChapterRead,
                 onMultiDeleteClicked = this::deleteChaptersWithConfirmation,
+                onChapterSelected = presenter::toggleSelection,
+                onAllChapterSelected = presenter::toggleAllSelection,
+                onInvertSelection = presenter::invertSelection,
             )
         } else {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
