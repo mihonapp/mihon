@@ -465,7 +465,7 @@ class Downloader(
      */
     private fun getImageExtension(response: Response, file: UniFile): String {
         // Read content type if available.
-        val mime = response.body?.contentType()?.let { ct -> "${ct.type}/${ct.subtype}" }
+        val mime = response.body?.contentType()?.run { if (type == "image") "image/$subtype" else null }
             // Else guess from the uri.
             ?: context.contentResolver.getType(file.uri)
             // Else read magic numbers.
