@@ -161,6 +161,8 @@ dependencies {
     implementation(compose.accompanist.webview)
     implementation(compose.accompanist.swiperefresh)
     implementation(compose.accompanist.flowlayout)
+    implementation(compose.accompanist.pager.core)
+    implementation(compose.accompanist.pager.indicators)
 
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)
@@ -302,6 +304,7 @@ tasks {
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
             "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
+            "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi"
         )
     }
 

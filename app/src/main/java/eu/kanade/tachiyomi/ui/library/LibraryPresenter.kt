@@ -4,13 +4,15 @@ import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastAny
 import com.jakewharton.rxrelay.BehaviorRelay
+import eu.kanade.core.prefs.PreferenceMutableState
+import eu.kanade.core.util.asFlow
 import eu.kanade.core.util.asObservable
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.category.interactor.GetCategories
@@ -25,6 +27,10 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.domain.track.interactor.GetTracks
+import eu.kanade.presentation.library.LibraryState
+import eu.kanade.presentation.library.LibraryStateImpl
+import eu.kanade.presentation.library.components.LibraryToolbarTitle
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
@@ -39,14 +45,16 @@ import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
 import eu.kanade.tachiyomi.util.lang.combineLatest
-import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import rx.Observable
-import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
@@ -70,6 +78,7 @@ typealias LibraryMap = Map<Long, List<LibraryItem>>
  * Presenter of [LibraryController].
  */
 class LibraryPresenter(
+    private val state: LibraryStateImpl = LibraryState() as LibraryStateImpl,
     private val handler: DatabaseHandler = Injekt.get(),
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
     private val getTracks: GetTracks = Injekt.get(),
@@ -83,30 +92,26 @@ class LibraryPresenter(
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val trackManager: TrackManager = Injekt.get(),
-) : BasePresenter<LibraryController>() {
+) : BasePresenter<LibraryController>(), LibraryState by state {
 
     private val context = preferences.context
 
-    /**
-     * Categories of the library.
-     */
-    var categories: List<Category> = mutableStateListOf()
+    var loadedManga by mutableStateOf(emptyMap<Long, List<LibraryItem>>())
         private set
-
-    var loadedManga = mutableStateMapOf<Long, List<LibraryItem>>()
-        private set
-
-    val loadedMangaFlow = MutableStateFlow(loadedManga)
-
-    var searchQuery by mutableStateOf(query)
-
-    val selection: MutableList<LibraryManga> = mutableStateListOf()
 
     val isPerCategory by preferences.categorizedDisplaySettings().asState()
 
-    var columns by mutableStateOf(0)
-
     var currentDisplayMode by preferences.libraryDisplayMode().asState()
+
+    val tabVisibility by preferences.categoryTabs().asState()
+
+    val mangaCountVisibility by preferences.categoryNumberOfItems().asState()
+
+    var activeCategory: Int by preferences.lastUsedCategory().asState()
+
+    val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
+
+    val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
 
     /**
      * Relay used to apply the UI filters to the last emission of the library.
@@ -123,7 +128,7 @@ class LibraryPresenter(
      */
     private val sortTriggerRelay = BehaviorRelay.create(Unit)
 
-    private var librarySubscription: Subscription? = null
+    private var librarySubscription: Job? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -135,22 +140,31 @@ class LibraryPresenter(
      * Subscribes to library if needed.
      */
     fun subscribeLibrary() {
-        // TODO: Move this to a coroutine world
-        if (librarySubscription.isNullOrUnsubscribed()) {
-            librarySubscription = getLibraryObservable()
-                .combineLatest(badgeTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
-                    lib.apply { setBadges(mangaMap) }
-                }
-                .combineLatest(getFilterObservable()) { lib, tracks ->
-                    lib.copy(mangaMap = applyFilters(lib.mangaMap, tracks))
-                }
-                .combineLatest(sortTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
-                    lib.copy(mangaMap = applySort(lib.categories, lib.mangaMap))
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeLatestCache({ view, (categories, mangaMap) ->
-                    view.onNextLibraryUpdate(categories, mangaMap)
-                },)
+        /**
+         * TODO: Move this to a coroutine world
+         * - Move filter and sort to getMangaForCategory and only filter and sort the current display category instead of whole library as some has 5000+ items in the library
+         * - Create new db view and new query to just fetch the current category save as needed to instance variable
+         * - Fetch badges to maps and retrive as needed instead of fetching all of them at once
+         */
+        if (librarySubscription == null || librarySubscription!!.isCancelled) {
+            librarySubscription = presenterScope.launchIO {
+                getLibraryObservable()
+                    .combineLatest(badgeTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
+                        lib.apply { setBadges(mangaMap) }
+                    }
+                    .combineLatest(getFilterObservable()) { lib, tracks ->
+                        lib.copy(mangaMap = applyFilters(lib.mangaMap, tracks))
+                    }
+                    .combineLatest(sortTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
+                        lib.copy(mangaMap = applySort(lib.categories, lib.mangaMap))
+                    }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .asFlow()
+                    .collectLatest {
+                        state.isLoading = false
+                        loadedManga = it.mangaMap
+                    }
+            }
         }
     }
 
@@ -397,7 +411,7 @@ class LibraryPresenter(
      * @return an observable of the categories and its manga.
      */
     private fun getLibraryObservable(): Observable<Library> {
-        return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable()) { dbCategories, libraryManga ->
+        return combine(getCategoriesObservable(), getLibraryMangasObservable()) { dbCategories, libraryManga ->
             val categories = if (libraryManga.containsKey(0)) {
                 arrayListOf(Category.default(context)) + dbCategories
             } else {
@@ -411,9 +425,9 @@ class LibraryPresenter(
                 }
             }
 
-            this.categories = categories
+            state.categories = categories
             Library(categories, libraryManga)
-        }
+        }.asObservable()
     }
 
     /**
@@ -421,8 +435,8 @@ class LibraryPresenter(
      *
      * @return an observable of the categories.
      */
-    private fun getCategoriesObservable(): Observable<List<Category>> {
-        return getCategories.subscribe().asObservable()
+    private fun getCategoriesObservable(): Flow<List<Category>> {
+        return getCategories.subscribe()
     }
 
     /**
@@ -431,8 +445,8 @@ class LibraryPresenter(
      * @return an observable containing a map with the category id as key and a list of manga as the
      * value.
      */
-    private fun getLibraryMangasObservable(): Observable<LibraryMap> {
-        return getLibraryManga.subscribe().asObservable()
+    private fun getLibraryMangasObservable(): Flow<LibraryMap> {
+        return getLibraryManga.subscribe()
             .map { list ->
                 list.map { libraryManga ->
                     // Display mode based on user preference: take it from global library setting or category
@@ -447,7 +461,8 @@ class LibraryPresenter(
      * @return an observable of tracked manga.
      */
     private fun getFilterObservable(): Observable<Map<Long, Map<Long, Boolean>>> {
-        return getTracksObservable().combineLatest(filterTriggerRelay.observeOn(Schedulers.io())) { tracks, _ -> tracks }
+        return filterTriggerRelay.observeOn(Schedulers.io())
+            .combineLatest(getTracksObservable()) { _, tracks -> tracks }
     }
 
     /**
@@ -458,7 +473,7 @@ class LibraryPresenter(
     private fun getTracksObservable(): Observable<Map<Long, Map<Long, Boolean>>> {
         // TODO: Move this to domain/data layer
         return getTracks.subscribe()
-            .asObservable().map { tracks ->
+            .map { tracks ->
                 tracks
                     .groupBy { it.mangaId }
                     .mapValues { tracksForMangaId ->
@@ -468,6 +483,7 @@ class LibraryPresenter(
                         }
                     }
             }
+            .asObservable()
             .observeOn(Schedulers.io())
     }
 
@@ -497,7 +513,7 @@ class LibraryPresenter(
      */
     fun onOpenManga() {
         // Avoid further db updates for the library when it's not needed
-        librarySubscription?.let { remove(it) }
+        librarySubscription?.cancel()
     }
 
     /**
@@ -610,14 +626,50 @@ class LibraryPresenter(
     }
 
     @Composable
-    fun getMangaForCategory(categoryId: Long): androidx.compose.runtime.State<List<LibraryItem>> {
+    fun getMangaCountForCategory(categoryId: Long): androidx.compose.runtime.State<Int?> {
+        return produceState<Int?>(initialValue = null, loadedManga) {
+            value = loadedManga[categoryId]?.size
+        }
+    }
+
+    fun getColumnsPreferenceForCurrentOrientation(isLandscape: Boolean): PreferenceMutableState<Int> {
+        return (if (isLandscape) preferences.landscapeColumns() else preferences.portraitColumns()).asState()
+    }
+
+    // TODO: This is good but should we separate title from count or get categories with count from db
+    @Composable
+    fun getToolbarTitle(): androidx.compose.runtime.State<LibraryToolbarTitle> {
+        val category = categories.getOrNull(activeCategory)
+
+        val defaultTitle = stringResource(id = R.string.label_library)
+        val default = remember { LibraryToolbarTitle(defaultTitle) }
+
+        return produceState(initialValue = default, category, mangaCountVisibility, tabVisibility) {
+            val title = if (tabVisibility.not()) category?.name ?: defaultTitle else defaultTitle
+
+            value = when {
+                category == null -> default
+                (tabVisibility.not() && mangaCountVisibility.not()) -> LibraryToolbarTitle(title)
+                tabVisibility.not() && mangaCountVisibility -> LibraryToolbarTitle(title, loadedManga[category.id]?.size)
+                (tabVisibility && categories.size > 1) && mangaCountVisibility -> LibraryToolbarTitle(title)
+                tabVisibility && mangaCountVisibility -> LibraryToolbarTitle(title, loadedManga[category.id]?.size)
+                else -> default
+            }
+        }
+    }
+
+    @Composable
+    fun getMangaForCategory(page: Int): androidx.compose.runtime.State<List<LibraryItem>> {
+        val categoryId = remember(categories) {
+            categories.getOrNull(page)?.id ?: -1
+        }
         val unfiltered = loadedManga[categoryId] ?: emptyList()
 
         return derivedStateOf {
             val query = searchQuery
-            if (query.isNotBlank()) {
+            if (query.isNullOrBlank().not()) {
                 unfiltered.filter {
-                    it.filter(query)
+                    it.filter(query!!)
                 }
             } else {
                 unfiltered
@@ -626,9 +678,9 @@ class LibraryPresenter(
     }
 
     @Composable
-    fun getDisplayMode(index: Int): DisplayModeSetting {
+    fun getDisplayMode(index: Int): androidx.compose.runtime.State<DisplayModeSetting> {
         val category = categories[index]
-        return remember {
+        return derivedStateOf {
             if (isPerCategory.not() || category.id == 0L) {
                 currentDisplayMode
             } else {
@@ -642,34 +694,30 @@ class LibraryPresenter(
     }
 
     fun clearSelection() {
-        selection.clear()
+        state.selection = emptyList()
     }
 
     fun toggleSelection(manga: LibraryManga) {
+        val mutableList = state.selection.toMutableList()
         if (selection.fastAny { it.id == manga.id }) {
-            selection.remove(manga)
+            mutableList.remove(manga)
         } else {
-            selection.add(manga)
+            mutableList.add(manga)
         }
-        view?.invalidateActionMode()
-        view?.createActionModeIfNeeded()
+        state.selection = mutableList
     }
 
     fun selectAll(index: Int) {
         val category = categories[index]
         val items = loadedManga[category.id] ?: emptyList()
-        selection.addAll(items.filterNot { it.manga in selection }.map { it.manga })
-        view?.createActionModeIfNeeded()
-        view?.invalidateActionMode()
+        state.selection = state.selection.toMutableList().apply {
+            addAll(items.filterNot { it.manga in selection }.map { it.manga })
+        }
     }
 
     fun invertSelection(index: Int) {
         val category = categories[index]
         val items = (loadedManga[category.id] ?: emptyList()).map { it.manga }
-        val invert = items.filterNot { it in selection }
-        selection.removeAll(items)
-        selection.addAll(invert)
-        view?.createActionModeIfNeeded()
-        view?.invalidateActionMode()
+        state.selection = items.filterNot { it in selection }
     }
 }

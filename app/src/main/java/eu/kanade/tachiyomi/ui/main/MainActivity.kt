@@ -488,9 +488,13 @@ class MainActivity : BaseActivity() {
             return
         }
         val backstackSize = router.backstackSize
-        if (backstackSize == 1 && router.getControllerWithTag("$startScreenId") == null) {
+        val startScreen = router.getControllerWithTag("$startScreenId")
+        if (backstackSize == 1 && startScreen == null) {
             // Return to start screen
             moveToStartScreen()
+            setSelectedNavItem(startScreenId)
+        } else if (startScreen != null && router.handleBack()) {
+            // Clear selection for Library screen
         } else if (shouldHandleExitConfirmation()) {
             // Exit confirmation (resets after 2 seconds)
             lifecycleScope.launchUI { resetExitConfirmation() }

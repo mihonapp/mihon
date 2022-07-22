@@ -38,8 +38,8 @@ fun Badge(
 ) {
     Box(
         modifier = Modifier
-            .background(color)
-            .clip(shape),
+            .clip(shape)
+            .background(color),
     ) {
         Text(
             text = text,

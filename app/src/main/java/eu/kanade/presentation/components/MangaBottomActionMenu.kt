@@ -195,3 +195,91 @@ private fun RowScope.Button(
         }
     }
 }
+
+@Composable
+fun LibraryBottomActionMenu(
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+    onChangeCategoryClicked: (() -> Unit)?,
+    onMarkAsReadClicked: (() -> Unit)?,
+    onMarkAsUnreadClicked: (() -> Unit)?,
+    onDownloadClicked: (() -> Unit)?,
+    onDeleteClicked: (() -> Unit)?,
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = expandVertically(expandFrom = Alignment.Bottom),
+        exit = shrinkVertically(shrinkTowards = Alignment.Bottom),
+    ) {
+        val scope = rememberCoroutineScope()
+        Surface(
+            modifier = modifier,
+            shape = MaterialTheme.shapes.large,
+            tonalElevation = 3.dp,
+        ) {
+            val haptic = LocalHapticFeedback.current
+            val confirm = remember { mutableStateListOf(false, false, false, false, false) }
+            var resetJob: Job? = remember { null }
+            val onLongClickItem: (Int) -> Unit = { toConfirmIndex ->
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                (0 until 5).forEach { i -> confirm[i] = i == toConfirmIndex }
+                resetJob?.cancel()
+                resetJob = scope.launch {
+                    delay(1000)
+                    if (isActive) confirm[toConfirmIndex] = false
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .padding(horizontal = 8.dp, vertical = 12.dp),
+            ) {
+                if (onChangeCategoryClicked != null) {
+                    Button(
+                        title = stringResource(R.string.action_move_category),
+                        icon = Icons.Default.BookmarkAdd,
+                        toConfirm = confirm[0],
+                        onLongClick = { onLongClickItem(0) },
+                        onClick = onChangeCategoryClicked,
+                    )
+                }
+                if (onMarkAsReadClicked != null) {
+                    Button(
+                        title = stringResource(R.string.action_mark_as_read),
+                        icon = Icons.Default.DoneAll,
+                        toConfirm = confirm[1],
+                        onLongClick = { onLongClickItem(1) },
+                        onClick = onMarkAsReadClicked,
+                    )
+                }
+                if (onMarkAsUnreadClicked != null) {
+                    Button(
+                        title = stringResource(R.string.action_mark_as_unread),
+                        icon = Icons.Default.RemoveDone,
+                        toConfirm = confirm[2],
+                        onLongClick = { onLongClickItem(2) },
+                        onClick = onMarkAsUnreadClicked,
+                    )
+                }
+                if (onDownloadClicked != null) {
+                    Button(
+                        title = stringResource(R.string.action_download),
+                        icon = Icons.Outlined.Download,
+                        toConfirm = confirm[3],
+                        onLongClick = { onLongClickItem(3) },
+                        onClick = onDownloadClicked,
+                    )
+                }
+                if (onDeleteClicked != null) {
+                    Button(
+                        title = stringResource(R.string.action_delete),
+                        icon = Icons.Outlined.Delete,
+                        toConfirm = confirm[4],
+                        onLongClick = { onLongClickItem(4) },
+                        onClick = onDeleteClicked,
+                    )
+                }
+            }
+        }
+    }
+}
