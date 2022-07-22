@@ -68,6 +68,6 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
     private fun isAppLocked(): Boolean {
         if (!SecureActivityDelegate.locked) return false
         return preferences.lockAppAfter().get() <= 0 ||
-            Date().time >= preferences.lastAppUnlock().get() + 60 * 1000 * preferences.lockAppAfter().get()
+            Date().time >= preferences.lastAppClosed().get() + 60 * 1000 * preferences.lockAppAfter().get()
     }
 }

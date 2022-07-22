@@ -56,7 +56,7 @@ class PreferencesHelper(val context: Context) {
 
     fun lockAppAfter() = flowPrefs.getInt("lock_app_after", 0)
 
-    fun lastAppUnlock() = flowPrefs.getLong("last_app_unlock", 0)
+    fun lastAppClosed() = flowPrefs.getLong("last_app_closed", 0)
 
     fun secureScreen() = flowPrefs.getEnum("secure_screen_v2", Values.SecureScreenMode.INCOGNITO)
 

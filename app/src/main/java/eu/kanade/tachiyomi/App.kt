@@ -52,6 +52,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.security.Security
+import java.util.Date
 
 open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
@@ -148,6 +149,7 @@ open class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
     }
 
     override fun onStop(owner: LifecycleOwner) {
+        preferences.lastAppClosed().set(Date().time)
         if (!AuthenticatorUtil.isAuthenticating && preferences.lockAppAfter().get() >= 0) {
             SecureActivityDelegate.locked = true
         }

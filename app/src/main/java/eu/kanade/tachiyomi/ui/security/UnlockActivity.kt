@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.startAuthentication
 import eu.kanade.tachiyomi.util.system.logcat
 import logcat.LogPriority
-import java.util.Date
 
 /**
  * Blank activity with a BiometricPrompt.
@@ -39,7 +38,6 @@ class UnlockActivity : BaseActivity() {
                 ) {
                     super.onAuthenticationSucceeded(activity, result)
                     SecureActivityDelegate.locked = false
-                    preferences.lastAppUnlock().set(Date().time)
                     finish()
                 }
             },
