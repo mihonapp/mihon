@@ -8,6 +8,6 @@
     android:layout_gravity="bottom|end"
     android:minWidth="0dp"
     android:visibility="gone"
-    tools:icon="@drawable/ic_add_24dp"
+    tools:icon="@drawable/ic_help_24dp"
     tools:text="Action"
     tools:visibility="visible" />
