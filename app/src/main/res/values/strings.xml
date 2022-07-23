@@ -721,6 +721,7 @@
     <string name="transition_pages_error">Failed to load pages: %1$s</string>
     <string name="page_list_empty_error">No pages found</string>
     <string name="loader_not_implemented_error">Source not found</string>
+    <string name="loader_rar5_error">RARv5 format is not supported</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Skipping %d chapter, either the source is missing it or it has been filtered out</item>
         <item quantity="other">Skipping %d chapters, either the source is missing them or they have been filtered out</item>
