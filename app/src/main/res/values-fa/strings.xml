@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description_cover">کاور مانگا</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">آپدیت برای یک افرونه موجود است</item>
         <item quantity="other">آپدیت برای %d افرونه موجود است</item>

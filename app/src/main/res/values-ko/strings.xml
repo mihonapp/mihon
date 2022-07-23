@@ -237,7 +237,6 @@
     <string name="update_check_notification_download_complete">탭하여 설치</string>
     <string name="update_check_notification_download_error">다운로드 오류</string>
     <string name="update_check_notification_update_available">업데이트 이용 가능!</string>
-    <string name="description_cover">만화 표지</string>
     <string name="information_no_downloads">다운로드 없음</string>
     <string name="information_no_recent">최근 업데이트 없음</string>
     <string name="information_no_recent_manga">최근 읽은 기록 없음</string>
@@ -716,8 +715,6 @@
     <string name="not_installed">설치되지 않음</string>
     <string name="theme_lavender">라벤더</string>
     <string name="network_not_metered">아닌 연결로 네트워크만</string>
-    <string name="no">아니요</string>
-    <string name="yes">네</string>
     <string name="delete_category_confirmation">카테고리 삭제하고 싶습니까\?%s</string>
     <string name="delete_category">카테고리 삭제함</string>
     <string name="internal_error">내부 오류: 더 많은 정보를 보고 싶으면 충돌 로그 보세요</string>

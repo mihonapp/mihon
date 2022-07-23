@@ -298,7 +298,6 @@
     <string name="update_check_notification_download_complete">แตะเพื่อติดตั้ง</string>
     <string name="update_check_notification_download_error">เกิดข้อผิดพลาดในการดาวน์โหลด</string>
     <string name="update_check_notification_update_available">มีเวอร์ชั่นใหม่!</string>
-    <string name="description_cover">ปกมังงะ</string>
     <string name="information_no_downloads">ไม่มีการดาวน์โหลด</string>
     <string name="information_no_recent">ไม่มีอัปเดตล่าสุด</string>
     <string name="information_no_recent_manga">ไม่มีอะไรที่อ่านเมื่อเร็ว ๆ นี้</string>
@@ -730,10 +729,8 @@
     <string name="pref_app_language">ภาษาของแอพ</string>
     <string name="description_placeholder">ไม่มีคำอธิบาย</string>
     <string name="theme_lavender">ลาเวนเดอร์</string>
-    <string name="yes">ใช่</string>
-    <string name="delete_category_confirmation">ต้องการจะลบหมวดหมู่ %s ไหม</string>
+    <string name="delete_category_confirmation">ต้องการจะลบหมวดหมู่ \"%s\" ไหมhttps://my.nextdns.io/</string>
     <string name="delete_category">ลบหมวดหมู่</string>
-    <string name="no">ไม่</string>
     <string name="internal_error">InternalError: ตรวจสอบบันทึกการแครชสำหรับข้อมูลเพิ่มเติม</string>
     <string name="pref_user_agent_string">ตัวแทนผู้ใช้เริ่มต้น</string>
     <string name="pref_reset_user_agent_string">รีเซ็ตตัวแทนผู้ใช้</string>

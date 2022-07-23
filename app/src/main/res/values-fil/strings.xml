@@ -290,7 +290,6 @@
     <string name="information_webview_outdated">Paki-update po ang WebView app para sa mas maayos na paggana</string>
     <string name="information_webview_required">Kailangan ng Tachiyomi ang WebView</string>
     <string name="information_cloudflare_bypass_failure">Bigong ma-bypass ang Cloudflare</string>
-    <string name="description_cover">Cover ng manga</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">May update sa extension</item>
         <item quantity="other">May update sa %d (na) extension</item>
@@ -743,8 +742,8 @@
     <string name="theme_lavender">Lila</string>
     <string name="description_placeholder">Walang paglalarawan</string>
     <string name="delete_category">Burahin ang kategorya</string>
-    <string name="no">Hindi</string>
     <string name="internal_error">InternalError: Tingnan ang mga crash log para sa karagdagang impormasyon</string>
     <string name="delete_category_confirmation">Gusto mo bang burahin ang kategoryang %s</string>
-    <string name="yes">Oo</string>
+    <string name="pref_reset_user_agent_string">I-reset ang default na string ng user agent</string>
+    <string name="pref_user_agent_string">Default na string ng user agent</string>
 </resources>

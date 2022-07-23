@@ -495,7 +495,6 @@
     <string name="information_no_recent">Ez dago azkenaldiko eguneraketarik</string>
     <string name="information_empty_library">Zure liburutegia hutsik dago</string>
     <string name="information_empty_category">Ez daukazu kategoriarik. Sakatu gehiketa botoia zure liburutegia antolatzeko bat sortzeko.</string>
-    <string name="description_cover">Mangaren azala</string>
     <string name="channel_crash_logs">Erroreen erregistroak</string>
     <string name="spen_previous_page">Aurreko orrialdea</string>
     <string name="on">Piztu</string>

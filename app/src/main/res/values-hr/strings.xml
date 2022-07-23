@@ -35,7 +35,7 @@
     </plurals>
     <string name="default_category_summary">Uvijek pitaj</string>
     <string name="default_category">Standardna kategorija</string>
-    <string name="pref_update_only_non_completed">Je kompletna serija</string>
+    <string name="pref_update_only_non_completed">Sa stanjem „Završeno“</string>
     <string name="charging">Punjenje</string>
     <string name="pref_library_update_restriction">Ograničenja uređaja za automatska ažuriranja</string>
     <string name="update_weekly">Tjedno</string>
@@ -165,7 +165,7 @@
     <string name="track">Praćenje</string>
     <string name="manga">Manga</string>
     <string name="restore_duration">%02d min, %02d s</string>
-    <string name="restore_completed">Obnavljanje je dovršeno</string>
+    <string name="restore_completed">Obnavljanje je završeno</string>
     <string name="backup_created">Sigurnosna kopija je stvorena</string>
     <string name="pref_backup_slots">Maksimalni broj sigurnosnih kopija</string>
     <string name="pref_backup_interval">Učestalost spremanja sigurnosnih kopija</string>
@@ -426,7 +426,6 @@
     <string name="backup_choice">Što želiš spremiti kao sigurnosnu kopiju\?</string>
     <string name="backup_in_progress">Spremanje sigurnosne kopije je već u tijeku</string>
     <string name="information_cloudflare_bypass_failure">Neuspjelo zaobilaženje Cloudflare-a</string>
-    <string name="description_cover">Naslovnica mange</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Dostupna je %d nova verzija proširenja</item>
         <item quantity="few">Dostupne su %d nove verzije proširenja</item>
@@ -452,9 +451,9 @@
     <string name="sort_by_upload_date">Po datumu prijenosa</string>
     <string name="label_data">Podaci</string>
     <plurals name="restore_completed_message">
-        <item quantity="one">Dovršeno u %1$s s %2$s greškom</item>
-        <item quantity="few">Dovršeno u %1$s s %2$s greške</item>
-        <item quantity="other">Dovršeno u %1$s s %2$s grešaka</item>
+        <item quantity="one">Obavljeno u %1$s s %2$s greškom</item>
+        <item quantity="few">Obavljeno u %1$s s %2$s greške</item>
+        <item quantity="other">Obavljeno u %1$s s %2$s grešaka</item>
     </plurals>
     <string name="backup_restore_missing_sources">Nedostaju izvori:</string>
     <string name="invalid_backup_file_missing_manga">Sigurnosna kopija ne sadrži nijedan manga.</string>
@@ -658,7 +657,7 @@
     <string name="ext_install_service_notif">Instaliranje proširenja …</string>
     <string name="ext_app_info">Podaci programa</string>
     <string name="connected_to_wifi">Samo putem Wi-Fi veze</string>
-    <string name="download_queue_size_warning">Upozorenje: velika skupna preuzimanja mogu dovesti do usporavanja izvora i/ili blokiranja Tachiyomija</string>
+    <string name="download_queue_size_warning">Upozorenje: velika skupna preuzimanja mogu dovesti do usporavanja izvora i/ili blokiranja Tachiyomija. Za daljnje informacije dodirni.</string>
     <string name="theme_tealturquoise">Plavozelena i tirkiz</string>
     <string name="clear_database_source_item_count">Broj manga u bazi odataka koje nisu u zbirci: %1$d</string>
     <string name="pref_verbose_logging">Opširno zapisivanje</string>
@@ -675,12 +674,12 @@
     <string name="pref_auto_clear_chapter_cache">Izbriši predmemoriju poglavlja tijekom zatvaranja aplikacije</string>
     <string name="channel_app_updates">Ažuriranja aplikacije</string>
     <string name="database_clean">Čišćenje baze podataka</string>
-    <string name="pref_update_only_completely_read">Sadrži nepročitana poglavlja</string>
+    <string name="pref_update_only_completely_read">S nepročitanim poglavljima</string>
     <string name="enhanced_services">Poboljšane usluge</string>
     <string name="enhanced_tracking_info">Usluge koje pružaju poboljšane funkcije za određene izvore. Manga se automatski prati kad se doda u tvoju biblioteku.</string>
     <string name="action_track">Prati</string>
     <string name="privacy_policy">Politika privatnosti</string>
-    <string name="pref_library_update_manga_restriction">Preskoči aktualiziranje</string>
+    <string name="pref_library_update_manga_restriction">Preskoči aktuliziranje naslova</string>
     <string name="extension_api_error">Neuspjelo preuzimanje popisa proširenja</string>
     <string name="ext_installer_pref">Instaler</string>
     <string name="ext_installer_legacy">Stari način</string>

@@ -277,7 +277,6 @@
     <string name="update_check_notification_download_complete">タップでインストール</string>
     <string name="update_check_notification_download_error">ダウンロード中にエラー発生</string>
     <string name="update_check_notification_update_available">アップデート利用可能！</string>
-    <string name="description_cover">マンガカバー</string>
     <string name="information_no_downloads">ダウンロードがありません</string>
     <string name="information_no_recent">最近の更新はありません</string>
     <string name="information_no_recent_manga">最近に読んだ漫画がありません</string>
@@ -730,11 +729,9 @@
     <string name="pref_app_language">アプリ言語</string>
     <string name="theme_lavender">香草色</string>
     <string name="description_placeholder">説明がありません</string>
-    <string name="delete_category_confirmation">カテゴリー「%s」を削除しますか</string>
+    <string name="delete_category_confirmation">カテゴリー「%s」を削除しますか\?</string>
     <string name="delete_category">カテゴリーを削除</string>
-    <string name="no">いいえ</string>
     <string name="internal_error">InternalError：詳しくはクラッシュ ログをご参照ください</string>
-    <string name="yes">はい</string>
     <string name="pref_user_agent_string">デフォルトのユーザーエージェント文字列</string>
     <string name="pref_reset_user_agent_string">デフォルトのユーザーエージェント文字列をリセットする</string>
 </resources>

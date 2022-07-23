@@ -183,7 +183,6 @@
     <string name="update_check_no_new_updates">Geen nieuwe updates beschikbaar</string>
     <string name="update_check_notification_download_complete">Download voltooid</string>
     <string name="update_check_notification_update_available">Nieuwe versie beschikbaar!</string>
-    <string name="description_cover">Omslag van de manga</string>
     <string name="information_no_downloads">Geen downloads</string>
     <string name="information_no_recent">Geen recente updates</string>
     <string name="information_empty_library">Je bibliotheek is leeg</string>

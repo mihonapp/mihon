@@ -193,7 +193,6 @@
     <string name="update_check_notification_download_error">Error de descarga</string>
     <string name="update_check_notification_update_available">¡Nueva versión disponible!</string>
     <!--Content Description-->
-    <string name="description_cover">Portada del manga</string>
     <!-- Information Text -->
     <string name="information_no_downloads">No hay descargas</string>
     <string name="information_no_recent">No hay actualizaciones recientes</string>
@@ -774,9 +773,7 @@
     <string name="theme_lavender">Lavanda</string>
     <string name="description_placeholder">Sin descripción</string>
     <string name="delete_category">Borrar categoría</string>
-    <string name="delete_category_confirmation">¿Quieres borrar la categoría %s\?</string>
-    <string name="yes">Sí</string>
-    <string name="no">No</string>
+    <string name="delete_category_confirmation">¿Quieres borrar la categoría «%s»\?</string>
     <string name="internal_error">ErrorInterno: Mira el registro de depuración para más información</string>
     <string name="pref_user_agent_string">Nombre del navegador a usar («user agent»)</string>
     <string name="pref_reset_user_agent_string">Restablecer el nombre del navegador («user agent»)</string>

@@ -300,7 +300,6 @@
     <string name="download_notifier_unknown_error">Кӗтмен йӑнӑша пула сыпӑксене тиесе илеймест</string>
     <string name="download_notifier_downloader_title">Тиевҫӗ</string>
     <string name="information_webview_required">Tachiyomi валли WebView кирлӗ</string>
-    <string name="description_cover">Манкӑ хуплашки</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Хушма валли ҫӗнетӳ пур</item>
         <item quantity="other">%d хушма валли ҫӗнетӳ пур</item>

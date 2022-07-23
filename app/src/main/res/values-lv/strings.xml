@@ -751,7 +751,6 @@
     <string name="migration_selection_prompt">Izvēlieties avotu, no kura migrēt</string>
     <string name="download_queue_error">Nevarēja lejupielādēt nodaļas. Varat mēģināt vēlreiz lejupielādes sadaļā</string>
     <string name="download_insufficient_space">Nevarēja lejupielādēt nodaļas, jo trūkst krātuves vietas</string>
-    <string name="description_cover">Manga vāks</string>
     <string name="getting_started_guide">Darba sākšanas rokasgrāmata</string>
     <string name="information_empty_category_dialog">Jums vēl nav nevienas kategorijas.</string>
 </resources>

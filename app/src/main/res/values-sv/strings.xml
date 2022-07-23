@@ -288,7 +288,6 @@
     <string name="update_check_notification_download_complete">Tryck på för att installera</string>
     <string name="update_check_notification_download_error">Nedladdningsfel</string>
     <string name="update_check_notification_update_available">Ny version tillgänglig!</string>
-    <string name="description_cover">Omslag av mangan</string>
     <string name="information_no_downloads">Inga nedladdningar</string>
     <string name="information_no_recent">Inga nya uppdateringar</string>
     <string name="information_no_recent_manga">Inget nyligen läst</string>
@@ -742,11 +741,9 @@
     <string name="theme_lavender">Lavendel</string>
     <string name="description_placeholder">Ingen beskrivning</string>
     <string name="pref_app_language">Appspråk</string>
-    <string name="delete_category_confirmation">Vill du radera kategorin\? %s</string>
+    <string name="delete_category_confirmation">Vill du radera kategorin \"%s\"\?</string>
     <string name="internal_error">Interntfel: Kontrollera kraschloggar för ytterligare information</string>
     <string name="delete_category">Ta bort kategori</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nej</string>
     <string name="pref_user_agent_string">Standardsträng för användaragent</string>
     <string name="pref_reset_user_agent_string">Återställ standardsträngen för användaragent</string>
 </resources>

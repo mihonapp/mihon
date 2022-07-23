@@ -285,7 +285,6 @@
     <string name="display_mode_chapter">%1$s. fejezet</string>
     <string name="channel_crash_logs">Összeomlási naplók</string>
     <string name="information_webview_required">A Tachiyomi működéséhez WebView szükséges</string>
-    <string name="description_cover">Manga borító</string>
     <string name="notification_chapters_multiple">%1$s. fejezetek</string>
     <string name="notification_chapters_single_and_more">A(z) %1$s. fejezet és %2$d egyéb fejezetek</string>
     <string name="share_page_info">%1$s:%2$s, %3$d. oldal</string>
@@ -494,8 +493,6 @@
     <string name="error_invalid_date_supplied">Megadott adat helytelen</string>
     <string name="clear_history_confirmation">Biztos benne\? Minden előzmény elvész.</string>
     <string name="delete_category">Kategória törlése</string>
-    <string name="yes">Igen</string>
-    <string name="no">Nem</string>
     <string name="action_faq_and_guides">Gyakori kérdések és Útmutatók</string>
     <string name="pref_app_language">Alkalmazás nyelve</string>
     <string name="unread">Olvasatlan</string>

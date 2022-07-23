@@ -240,7 +240,6 @@
     <string name="update_check_notification_download_complete">ডাউনলোড সম্পন্ন হয়ে গেছে</string>
     <string name="update_check_notification_download_error">ডাউনলোড ত্রুটি দেখা গিয়েছে</string>
     <string name="update_check_notification_update_available">নতুন সংস্করণ উপলভ্য!</string>
-    <string name="description_cover">মাংগার প্রচ্ছদ</string>
     <string name="information_no_downloads">ডাউনলোড নেই</string>
     <string name="information_no_recent">কোন নতুন হালনাগাদ নেই</string>
     <string name="information_no_recent_manga">সম্প্রতি কিছু পড়া হয়নি</string>
@@ -668,10 +667,16 @@
     <string name="connected_to_wifi">সুধু মাত্র ওয়িফি তে</string>
     <string name="notification_size_warning">সতর্কতা: বড় আপডেটগুলি উত্সের ক্ষতি করে এবং ধীরগতির আপডেটের দিকে নিয়ে যেতে পারে এবং ব্যাটারি ব্যবহারও বাড়িয়ে দিতে পারে</string>
     <string name="notification_updating">লাইব্রেরি আপডেট করা হচ্ছে... (%1$d/%2$d)</string>
-    <string name="download_queue_size_warning">সতর্কতা: বৃহৎ বাল্ক ডাউনলোডের ফলে উৎসগুলি ধীর হয়ে যেতে পারে এবং/অথবা ব্লক হতে পারে তাছিয়মি</string>
+    <string name="download_queue_size_warning">সতর্কতা: বড় আকারের ডাউনলোডের ফলে উৎসগুলি মন্থর হয়ে যেতে পারে এবং/অথবা তাচিওমি ব্লক হয়ে যেতে পারে। আরও জানতে এখানে ট্যাপ করুন।</string>
     <string name="pref_auto_clear_chapter_cache">অ্যাপ বন্দ্ধ করার সময় অধ্যায়ের ক্যাশে পরিষ্কার করুন</string>
     <string name="database_clean">তথ্যশালা পরিষ্কার</string>
     <string name="clear_database_source_item_count">তথ্যশালায় %1$d টি মাঙ্গা যেগুলি লাইব্রেরীতে নেই</string>
     <string name="privacy_policy">গোপনীয়তা নীতি</string>
     <string name="extension_api_error">এক্সটেনশন তালিকা পেতে ব্যার্থ হলো</string>
+    <string name="skipped_reason_completed">এড়িয়ে যাওয়া হয়েছে কারণ সিরিজটি সম্পূর্ণ</string>
+    <string name="notification_update_skipped">%1$d আপডেট(গুলি) এড়িয়ে গেছে</string>
+    <string name="cancelled">বাতিল করা হয়েছে</string>
+    <string name="on_hiatus">বিরতিতে রয়েছে</string>
+    <string name="notification_update_error">%1$d আপডেট(গুলি) ব্যর্থ হয়েছে</string>
+    <string name="publishing_finished">সম্পূর্ণ প্রকাশিত</string>
 </resources>

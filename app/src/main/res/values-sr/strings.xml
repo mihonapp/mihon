@@ -397,7 +397,6 @@
     <string name="information_webview_outdated">Ажурирајте WebView за бољу компатибилност</string>
     <string name="information_webview_required">За Tachiyomi је потребан WebView</string>
     <string name="information_cloudflare_bypass_failure">Неуспешно заобилажење Cloudflare-а</string>
-    <string name="description_cover">Омот манге</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Доступно је %d ново ажурирање додатака</item>
         <item quantity="few">Доступна су %d нова ажурирања додатака</item>

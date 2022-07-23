@@ -2,7 +2,7 @@
 <resources>
     <string name="categories">分類</string>
     <string name="manga">漫畫</string>
-    <string name="chapters">章</string>
+    <string name="chapters">章節</string>
     <string name="history">記錄</string>
     <string name="label_settings">設定</string>
     <string name="label_download_queue">下載佇列</string>
@@ -245,8 +245,7 @@
     <string name="decode_image_error">無法載入該圖片</string>
     <string name="notification_first_add_to_library">請先將漫畫收藏至書櫃再進行更新</string>
     <string name="file_select_backup">選擇備份檔案</string>
-    <string name="description_cover">漫畫封面</string>
-    <string name="information_empty_category">尚無任何分類，輕觸新增按鈕即可建立分類以組織您的書櫃。</string>
+    <string name="information_empty_category">尚無任何分類，輕觸新增按鈕即可建立分類以組織你的書櫃。</string>
     <string name="download_notifier_downloader_title">下載管理員</string>
     <string name="custom_download">下載自訂範圍</string>
     <string name="download_custom">自訂範圍</string>
@@ -274,7 +273,7 @@
     <string name="transition_pages_error">第 %1$s 頁載入失敗</string>
     <string name="information_no_recent">最近無更新</string>
     <string name="name">名稱</string>
-    <string name="track">追跡</string>
+    <string name="track">歷程</string>
     <string name="action_open_log">檢視記錄檔</string>
     <string name="pref_category_tracking">歷程</string>
     <string name="pref_auto_update_manga_sync">閱後自動更新章節進度</string>
@@ -525,7 +524,7 @@
     <string name="edge_nav">邊緣式</string>
     <string name="kindlish_nav">Kindle 式</string>
     <string name="l_nav">L 式</string>
-    <string name="action_filter_tracked">已追跡</string>
+    <string name="action_filter_tracked">已紀錄歷程</string>
     <string name="channel_crash_logs">當機記錄</string>
     <string name="crash_log_saved">已產生當機記錄</string>
     <string name="pref_dump_crash_logs_summary">產生錯誤記錄檔以便分享予開發人員</string>
@@ -732,7 +731,7 @@
     <string name="description_placeholder">沒有簡介</string>
     <string name="delete_category_confirmation">確定要刪除「%s」分類嗎？</string>
     <string name="internal_error">InternalError：請檢視當機記錄以瞭解詳情</string>
-    <string name="yes">是</string>
     <string name="delete_category">刪除分類</string>
-    <string name="no">否</string>
+    <string name="pref_reset_user_agent_string">重設使用者代理字串預設值</string>
+    <string name="pref_user_agent_string">預設使用者代理字串</string>
 </resources>

@@ -220,7 +220,6 @@
     <string name="update_check_notification_download_error">Erreur lors du téléchargement</string>
     <string name="update_check_notification_update_available">Mise à jour disponible !</string>
     <!--Content Description-->
-    <string name="description_cover">Couverture du manga</string>
     <!-- Information Text -->
     <string name="information_no_downloads">Aucun téléchargement en cours</string>
     <string name="information_no_recent">Pas de mises à jour récentes</string>
@@ -777,8 +776,8 @@
     <string name="description_placeholder">Aucune description</string>
     <string name="theme_lavender">Lavande</string>
     <string name="delete_category">Effacer catégorie</string>
-    <string name="yes">Oui</string>
-    <string name="no">Non</string>
-    <string name="delete_category_confirmation">Est-ce que vous voulez effacer la catégorie\?%s</string>
+    <string name="delete_category_confirmation">Souhaitez-vous supprimer la catégorie « %s » \?</string>
     <string name="internal_error">ErreurInterne : Vérifiez votre journal de plante pour plus d\'information</string>
+    <string name="pref_reset_user_agent_string">Réinitialiser le numéro d\'utilisateur par défaut</string>
+    <string name="pref_user_agent_string">Numéro d\'utilisateur par défaut</string>
 </resources>

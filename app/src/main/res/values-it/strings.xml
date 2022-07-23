@@ -224,7 +224,6 @@
     <string name="update_check_notification_download_error">Errore di scaricamento</string>
     <string name="update_check_notification_update_available">Nuova versione disponibile!</string>
     <!--Content Description-->
-    <string name="description_cover">Copertina del manga</string>
     <!-- Information Text -->
     <string name="information_no_downloads">Nessun download</string>
     <string name="information_no_recent">Nessun aggiornamento recente</string>
@@ -776,10 +775,8 @@
     <string name="description_placeholder">Nessuna descrizione</string>
     <string name="theme_lavender">Lavanda</string>
     <string name="internal_error">Errore Interno: Controllare i registri dei crash per ulteriori informazioni</string>
-    <string name="delete_category_confirmation">Vuoi eliminare la categoria %s</string>
+    <string name="delete_category_confirmation">Vuoi eliminare la categoria «%s»\?</string>
     <string name="delete_category">Elimina categoria</string>
-    <string name="yes">Si</string>
-    <string name="no">No</string>
-    <string name="pref_reset_user_agent_string">Ripristina la stringa \"user agent\" del browser</string>
-    <string name="pref_user_agent_string">Stringa \"user agent\" predefinita del browser</string>
+    <string name="pref_reset_user_agent_string">Ripristina la stringa user agent del browser</string>
+    <string name="pref_user_agent_string">Stringa user agent predefinita del browser</string>
 </resources>

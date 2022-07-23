@@ -233,7 +233,6 @@
     <string name="update_check_notification_download_complete">Toque para instalar</string>
     <string name="update_check_notification_download_error">Erro ao fazer download</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
-    <string name="description_cover">Capa do mangá</string>
     <string name="information_no_downloads">Nenhum download</string>
     <string name="information_no_recent">Sem atualizações recentes</string>
     <string name="information_no_recent_manga">Nada lido recentemente</string>
@@ -742,10 +741,8 @@
     <string name="pref_app_language">Idioma do aplicativo</string>
     <string name="theme_lavender">Lavanda</string>
     <string name="description_placeholder">Sem descrição</string>
-    <string name="yes">Sim</string>
     <string name="delete_category">Deletar categoria</string>
-    <string name="delete_category_confirmation">Você deseja deletar a categoria %s</string>
-    <string name="no">Não</string>
+    <string name="delete_category_confirmation">Você deseja deletar a categoria \"%s\"\?</string>
     <string name="internal_error">Erro interno: Verifique os registros de travamento para mais informações</string>
     <string name="pref_user_agent_string">Usera Agent padrão</string>
     <string name="pref_reset_user_agent_string">Redefinir o User Agent padrão</string>

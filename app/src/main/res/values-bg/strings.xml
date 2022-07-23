@@ -233,7 +233,6 @@
     <string name="update_check_notification_download_error">Грешка при изтегляне</string>
     <string name="update_check_notification_update_available">Има нова версия!</string>
     <!--Content Description-->
-    <string name="description_cover">Корица</string>
     <!-- Information Text -->
     <string name="information_no_downloads">Нямате изтегляния</string>
     <string name="information_no_recent">Нямате нови глави</string>

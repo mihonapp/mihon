@@ -240,7 +240,6 @@
     <string name="update_check_notification_download_complete">Ketik untuk memasang</string>
     <string name="update_check_notification_download_error">Ralat muat turun</string>
     <string name="update_check_notification_update_available">Versi baharu boleh didapati!</string>
-    <string name="description_cover">Muka hadapan manga</string>
     <string name="information_no_downloads">Tiada muat turun</string>
     <string name="information_no_recent">Tiada kemas kini terkini</string>
     <string name="information_no_recent_manga">Tiada bacaan setakat ini</string>
@@ -730,9 +729,7 @@
     <string name="pref_app_language">Bahasa aplikasi</string>
     <string name="theme_lavender">Lavender</string>
     <string name="description_placeholder">Tiada deskripsi</string>
-    <string name="delete_category_confirmation">Adakah anda ingin padam kategori %s</string>
-    <string name="yes">Ya</string>
-    <string name="no">Tidak</string>
+    <string name="delete_category_confirmation">Adakah anda ingin padam kategori \"%s\"\?</string>
     <string name="internal_error">RalatDalam: semak log kerosakan untuk maklumat lanjut</string>
     <string name="delete_category">Padam kategori</string>
 </resources>

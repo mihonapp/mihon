@@ -13,7 +13,6 @@
     <string name="information_empty_category">אין לך קטגוריות. לחץ על כפתור הפלוס כדי ליצור אחד לארגון הספרייה שלך.</string>
     <string name="information_empty_library">הספרייה שלך ריקה</string>
     <string name="information_no_downloads">אין הורדות</string>
-    <string name="description_cover">כריכה של מנגה</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">עדכון לתוסף זמין</item>
         <item quantity="two">עדכונים ל-%d תוספים זמינים</item>

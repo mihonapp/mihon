@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="white_background">سفید</string>
+    <string name="action_start">شروعات</string>
+    <string name="black_background">سیاہ</string>
+    <string name="name">نام</string>
+    <string name="action_sort_count">کل مانگا</string>
+    <string name="left_to_right_viewer">بائیں سے دائیں</string>
+    <string name="right_to_left_viewer">دائیں سے بائیں</string>
+    <string name="nav_zone_right">دائیں</string>
+    <string name="nav_zone_left">بائیں</string>
+    <string name="action_sort_total">کل ابواب</string>
+    <string name="action_download">ڈاؤن لوڈ</string>
+    <string name="action_resume">از سر نو شروع کریں</string>
+    <string name="action_show_manga">مانگا دکھائیں</string>
+    <string name="action_open_in_web_view">WebView میں کھولیں</string>
+    <string name="action_migrate">انتقال</string>
+    <string name="action_display_list">فہرست</string>
+    <string name="action_open_in_browser">براؤزر میں کھولیں</string>
+    <string name="action_display_download_badge">ڈاؤن لوڈ شدہ ابواب</string>
+</resources>

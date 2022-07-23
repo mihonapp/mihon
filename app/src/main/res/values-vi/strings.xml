@@ -76,7 +76,7 @@
     <string name="update_48hour">Mỗi 2 ngày</string>
     <string name="all">Tất cả</string>
     <string name="pref_library_update_restriction">Những hạn chế cập nhật thiết bị tự động</string>
-    <string name="charging">Đang sạc</string>
+    <string name="charging">Khi đang sạc</string>
     <string name="pref_update_only_non_completed">Với trạng thái \"Hoàn Thành\"</string>
     <string name="pref_auto_update_manga_sync">Cập nhật tiến triển sau khi đọc</string>
     <!-- Reader section -->
@@ -230,11 +230,10 @@
     <string name="update_check_look_for_updates">Đang tìm cập nhật mới…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Đang tải xuống…</string>
-    <string name="update_check_notification_download_complete">Đã tải xong</string>
+    <string name="update_check_notification_download_complete">Nhấn để cài</string>
     <string name="update_check_notification_download_error">Lỗi khi tải xuống</string>
     <string name="update_check_notification_update_available">Có cập nhật mới!</string>
     <!--Content Description-->
-    <string name="description_cover">Ảnh bìa của truyện</string>
     <!-- Information Text -->
     <string name="information_no_downloads">Không có</string>
     <string name="information_no_recent">Không có cập nhật mới</string>
@@ -450,7 +449,7 @@
     <string name="invalid_backup_file_missing_manga">Backup không chứa manga nào.</string>
     <string name="invalid_backup_file">Tệp sao lưu không hợp lệ</string>
     <string name="add_to_library">Thêm vào thư viện</string>
-    <string name="ext_nsfw_warning">Có thể chứa nội dung NSFW 18+</string>
+    <string name="ext_nsfw_warning">Nguồn truyền từ tiện ích mở rộng này có thể chứa nội dung NSFW 18+</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="pref_library_update_refresh_metadata">Tự động làm mới bộ siêu dữ liệu</string>
     <string name="parental_controls_info">Điều này không ngăn các tiện ích mở rộng không chính thức hoặc có khả năng bị gắn cờ không chính xác hiển thị nội dung NSFW (18+) trong ứng dụng.</string>
@@ -469,13 +468,13 @@
     <string name="edge_nav">Dạng góc cạnh</string>
     <string name="kindlish_nav">Dạng giống Kindle</string>
     <string name="l_nav">Dạng chữ L</string>
-    <string name="pref_viewer_nav">Bố cục điều hướng</string>
+    <string name="pref_viewer_nav">Khu vực nhấn</string>
     <string name="clear_history_completed">Lịch sử đã được xoá</string>
     <string name="pref_clear_history">Xoá lịch sử</string>
     <string name="myanimelist_relogin">Xin hãy đăng nhập lại MAL</string>
     <string name="track_started_reading_date">Ngày bắt đầu</string>
     <string name="pref_incognito_mode">Chế độ ẩn danh</string>
-    <string name="pref_refresh_library_covers">Tải lại ảnh bìa trong thư viện</string>
+    <string name="pref_refresh_library_covers">Làm mới ảnh bìa trong thư viện</string>
     <string name="crash_log_saved">Thông tin lỗi đã được lưu</string>
     <string name="pref_dump_crash_logs">Tệp tin báo lỗi tạm</string>
     <string name="pref_dump_crash_logs_summary">Lưu thông tin lỗi và gửi về nhà phát triển</string>
@@ -584,14 +583,14 @@
     <string name="tapping_inverted_vertical">Dọc</string>
     <string name="tapping_inverted_horizontal">Ngang</string>
     <string name="tapping_inverted_none">Không</string>
-    <string name="pref_read_with_tapping_inverted">Phím đảo ngược</string>
+    <string name="pref_read_with_tapping_inverted">Đảo ngược khu vực nhấn</string>
     <string name="pref_grayscale">Độ xám</string>
-    <string name="pref_true_color_summary">Giảm lỗi hiện sai dải màu, nhưng ảnh hưởng đến hiệu suất</string>
+    <string name="pref_true_color_summary">Giảm lỗi hiện sai dải màu, nhưng có thể ảnh hưởng đến hiệu suất</string>
     <string name="pref_dual_page_invert_summary">Nếu vị trí của phần tách trang kép không khớp với hướng đọc</string>
     <string name="pref_dual_page_invert">Đảo vị trí tách trang kép</string>
     <string name="pref_dual_page_split">Chia đôi trang</string>
-    <string name="pref_show_navigation_mode_summary">Hiển thị các vùng chạm khi trình đọc được mở</string>
-    <string name="pref_show_navigation_mode">Hiển thị lớp phủ bố cục điều hướng</string>
+    <string name="pref_show_navigation_mode_summary">Hiển thị ngắn gọn các vùng chạm khi trình đọc được mở</string>
+    <string name="pref_show_navigation_mode">Hiển thị lớp phủ khu vực nhấn</string>
     <string name="exclude">Loại trừ:%s</string>
     <string name="include">Bao gồm: %s</string>
     <string name="none">Không có</string>
@@ -603,7 +602,7 @@
     <string name="action_asc">Tăng dần</string>
     <string name="action_order_by_chapter_number">Theo số chương</string>
     <string name="action_order_by_upload_date">Theo ngày đăng</string>
-    <string name="action_sort_chapter_fetch_date">Ngày nhập</string>
+    <string name="action_sort_chapter_fetch_date">Ngày nhập chương</string>
     <string name="action_filter_tracked">Đã theo dõi</string>
     <string name="cancel_all_for_series">Hủy bỏ tất cả cho phần truyền này</string>
     <string name="action_display_local_badge">Số truyện cục bộ</string>
@@ -729,7 +728,7 @@
     <string name="error_saving_picture">Lỗi khi lưu ảnh</string>
     <string name="action_close">Đóng</string>
     <string name="pref_duplicate_pinned_sources">Hiện các nguồn bản sao được đính</string>
-    <string name="battery_not_low">Pin không quá ít</string>
+    <string name="battery_not_low">Khi pin không quá ít</string>
     <string name="pref_duplicate_pinned_sources_summary">Các nguồn được đính sẽ lặp lại trong các nhóm ngôn ngữ tương ướng của chúng</string>
     <string name="source_filter_empty_screen">Không có nguồn đã cài tìm thấy</string>
     <string name="source_empty_screen">Không có nguồn nào được tìm thấy</string>
@@ -737,4 +736,36 @@
     <string name="empty_backup_error">Không có mục thư viện nào để sao lưu</string>
     <string name="webview_data_deleted">Dữ liệu WebView đã được xóa</string>
     <string name="pref_clear_webview_data">Xóa dữ liệu WebView</string>
+    <string name="network_not_metered">Chỉ trên mạng lưới không hạn định</string>
+    <string name="action_sort_last_manga_update">Cập nhật truyện lần trước</string>
+    <string name="action_sort_unread_count">Số lượng chưa đọc</string>
+    <string name="split_tall_images">Tự động chia cắt những ảnh quá cao</string>
+    <string name="split_tall_images_summary">Cải thiện khả năng đọc bằng việc chia cắt các ảnh quá cao.</string>
+    <string name="pref_reset_viewer_flags_success">Tất cả cài đặt đọc đã được cài lại</string>
+    <string name="pref_reset_viewer_flags_error">Không thể cài lại cài đặt đọc</string>
+    <string name="pref_user_agent_string">Chuỗi đại diện người dùng mặc định</string>
+    <string name="unfinished_list">Danh sách chưa hoàn thành</string>
+    <string name="cant_open_last_read_chapter">Không thể mở lại chương truyện trước</string>
+    <string name="delete_category">Xóa thể loại</string>
+    <string name="internal_error">Lỗi nội bộ: Kiểm tra nhật ký bị ngắt ứng dụng để biết thêm thông tin</string>
+    <string name="theme_lavender">Oải Hương</string>
+    <string name="pref_app_language">Ngôn ngữ ứng dụng</string>
+    <string name="ext_info_version">Phiên bản</string>
+    <string name="ext_info_language">Ngôn ngữ</string>
+    <string name="pref_reset_viewer_flags_summary">Cài lại chế độ đọc và điều hướng của tất cả các bộ truyện</string>
+    <string name="pref_reset_viewer_flags">Cài lại cài đặt đọc từng bộ truyện</string>
+    <string name="empty_screen">Ờ thì, nó lạ lắm</string>
+    <string name="not_installed">Chưa được cài</string>
+    <string name="reading_list">Danh sách đang đọc</string>
+    <string name="complete_list">Danh sách hoàn thành</string>
+    <string name="on_hold_list">Danh sách đang chờ</string>
+    <string name="wish_list">Danh sách muốn đọc</string>
+    <string name="download_notifier_split_failed">Không thể chia cắt ảnh đã tải xuống</string>
+    <string name="download_notifier_split_page_not_found">Trang %d không thể được tìm thấy khi chia cắt</string>
+    <string name="ext_info_age_rating">Phân loại độ tuổi</string>
+    <string name="download_notifier_split_page_path_not_found">Không thể tìm thấy đường dẫn của trang %d</string>
+    <string name="pref_reset_user_agent_string">Cài lại chuỗi đại diện người dùng mặc định</string>
+    <string name="description_placeholder">Không có mô tả</string>
+    <string name="delete_category_confirmation">Bạn có muốn xóa thể loại %s</string>
+    <string name="custom_cover">Tùy chỉnh ảnh bìa</string>
 </resources>

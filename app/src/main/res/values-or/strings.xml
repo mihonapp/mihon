@@ -109,7 +109,6 @@
     <string name="information_webview_required">Tachiyomi ପାଇଁ WebView ଆବଶ୍ୟକ ଅଟେ</string>
     <string name="information_empty_library">ଆପଣଙ୍କ ଲାଇବ୍ରେରୀ ଖାଲି ଅଛି</string>
     <string name="update_check_notification_download_in_progress">ଡାଉନଲୋଡ୍ ହେଉଛି…</string>
-    <string name="description_cover">ମାଙ୍ଗାର ମଲାଟ</string>
     <string name="update_check_notification_update_available">ନୂଆ ସଂସ୍କରଣ ଉପଲବ୍ଧ!</string>
     <string name="file_select_cover">ମଲାଟର ପ୍ରତିଛବି ଚୟନ କରନ୍ତୁ</string>
     <string name="track_started_reading_date">ଆରମ୍ଭ ତାରିଖ</string>

@@ -536,7 +536,6 @@
     <string name="secure_screen">Sekura ekrano</string>
     <string name="lock_with_biometrics">Devigi malŝlosi</string>
     <string name="pref_refresh_library_covers">Refreŝi kovrilojn de mangaoj en biblioteko</string>
-    <string name="description_cover">Kovrilo de mangao</string>
     <string name="file_select_cover">Elekti kovrilbildon</string>
     <string name="confirm_set_image_as_cover">Ĉu uzi ĉi-bildon kiel kovrilo\?</string>
     <string name="notification_cover_update_failed">Aktualigo de kovrilo fiaskis</string>

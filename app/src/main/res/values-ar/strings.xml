@@ -238,7 +238,6 @@
     <string name="update_check_notification_download_complete">اضغط للتنزيل</string>
     <string name="update_check_notification_download_error">حدث خطأ في التنزيل</string>
     <string name="update_check_notification_update_available">نسخة جديدة متوفرة!</string>
-    <string name="description_cover">غلاف المانجا</string>
     <string name="information_no_downloads">لا توجد تنزيلات</string>
     <string name="information_no_recent">لا توجد تحديثات جديدة</string>
     <string name="information_no_recent_manga">لم تقم بقراءة شيء مُؤخّراً</string>
@@ -788,4 +787,11 @@
     <string name="cant_open_last_read_chapter">غير قادر على فتح آخر فصل تم قراءته</string>
     <string name="not_installed">غير مثبت</string>
     <string name="pref_app_language">لغة تطبيق</string>
+    <string name="delete_category_confirmation">هل تُريد محو هذه الفئة \"%s\"؟</string>
+    <string name="internal_error">خطأ داخلي: تحقق من سجل الاعطال لمزيداً من المعلومات</string>
+    <string name="pref_reset_user_agent_string">اعادة ضبط وتر وكيل ألمستخدم الإفتراضي</string>
+    <string name="pref_user_agent_string">وتر وكيل المستخدم الافتراضي</string>
+    <string name="delete_category">مسح الفئة</string>
+    <string name="description_placeholder">لا وصف</string>
+    <string name="theme_lavender">أُرجواني</string>
 </resources>

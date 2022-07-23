@@ -289,7 +289,6 @@
     <string name="update_check_notification_download_complete">Toca pro installare</string>
     <string name="update_check_notification_download_error">Errore de iscarrigamentu</string>
     <string name="update_check_notification_update_available">Versione noa a disponimentu!</string>
-    <string name="description_cover">Cobertedda de su manga</string>
     <string name="information_no_downloads">Perunu iscarrigamentu</string>
     <string name="information_no_recent">Perunu agiornamentu reghente</string>
     <string name="information_no_recent_manga">Nudda de lèghidu dae pagu</string>
@@ -742,9 +741,9 @@
     <string name="pref_app_language">Limba de s\'aplicatzione</string>
     <string name="description_placeholder">Peruna descritzione</string>
     <string name="theme_lavender">Archemissa</string>
-    <string name="yes">Eja</string>
-    <string name="delete_category_confirmation">Boles iscantzellare sa categoria %s</string>
-    <string name="no">Nono</string>
+    <string name="delete_category_confirmation">Boles iscantzellare sa categoria \"%s\"\?</string>
     <string name="internal_error">Errore internu: verìfica sos registros de sas serradas improvisas pro àteras informatziones</string>
     <string name="delete_category">Iscantzella sa categoria</string>
+    <string name="pref_user_agent_string">Istringa de agente de utente predefinida</string>
+    <string name="pref_reset_user_agent_string">Reseta s\'istringa de agente de utente predefinida</string>
 </resources>

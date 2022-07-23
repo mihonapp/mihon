@@ -231,7 +231,6 @@
     <string name="update_check_notification_download_complete">Ketuk untuk menginstal</string>
     <string name="update_check_notification_download_error">Terjadi kesalahan saat mengunduh</string>
     <string name="update_check_notification_update_available">Versi baru tersedia!</string>
-    <string name="description_cover">Sampul manga</string>
     <string name="information_no_downloads">Tidak ada unduhan</string>
     <string name="information_no_recent">Tidak ada pembaruan</string>
     <string name="information_no_recent_manga">Tidak ada yang dibaca baru-baru ini</string>
@@ -730,11 +729,9 @@
     <string name="pref_app_language">Bahasa aplikasi</string>
     <string name="theme_lavender">Lavender</string>
     <string name="description_placeholder">Tidak ada deskripsi</string>
-    <string name="delete_category_confirmation">Apakah anda ingin menghapus kategori %s</string>
+    <string name="delete_category_confirmation">Apakah anda ingin menghapus kategori \"%s\"\?</string>
     <string name="internal_error">InternalError: Cek riwayat crash untuk informasi lebih lanjut</string>
     <string name="delete_category">Hapus kategori</string>
-    <string name="yes">Ya</string>
-    <string name="no">Tidak</string>
     <string name="pref_user_agent_string">String agen pengguna default</string>
     <string name="pref_reset_user_agent_string">Setel ulang string agen pengguna default</string>
 </resources>

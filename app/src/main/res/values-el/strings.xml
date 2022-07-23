@@ -288,7 +288,6 @@
     <string name="update_check_notification_download_complete">Πατήστε για εγκατάσταση</string>
     <string name="update_check_notification_download_error">Σφάλμα λήψης</string>
     <string name="update_check_notification_update_available">Υπάρχει διαθέσιμη ενημέρωση!</string>
-    <string name="description_cover">Εξώφυλλο manga</string>
     <string name="information_no_downloads">Δεν υπάρχουν λήψεις</string>
     <string name="information_no_recent">Δεν υπάρχουν πρόσφατες ενημερώσεις</string>
     <string name="information_no_recent_manga">Τίποτα δεν διαβάστηκε πρόσφατα</string>
@@ -743,8 +742,8 @@
     <string name="theme_lavender">Λεβάντα</string>
     <string name="description_placeholder">Χωρίς περιγραφή</string>
     <string name="delete_category">Διαγραφή κατηγορίας</string>
-    <string name="yes">Ναι</string>
-    <string name="delete_category_confirmation">Θέλετε να διαγράψετε την κατηγορία %s</string>
-    <string name="no">Όχι</string>
+    <string name="delete_category_confirmation">Θέλετε να διαγράψετε την κατηγορία \"%s\";</string>
     <string name="internal_error">InternalError: Ελέγξτε τα αρχεία καταγραφής σφαλμάτων για περισσότερες πληροφορίες</string>
+    <string name="pref_user_agent_string">Προεπιλεγμένη συμβολοσειρά πράκτορα χρήστη</string>
+    <string name="pref_reset_user_agent_string">Επαναφορά προεπιλεγμένης συμβολοσειράς πράκτορα χρήστη</string>
 </resources>

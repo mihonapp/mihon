@@ -451,7 +451,6 @@
     <string name="notification_chapters_single_and_more">Skyriai %1$s ir %2$d daugiau</string>
     <string name="notification_chapters_multiple">Skyriai %1$s</string>
     <string name="notification_cover_update_failed">Nepavyko atnaujinti viršelio</string>
-    <string name="description_cover">Manga viršelis</string>
     <string name="error_no_match">Nerasta atitikmenų</string>
     <string name="dialog_with_checkbox_reset">Iš naujo nustatyti visus šios mangos skyrius</string>
     <string name="cover_updated">Atnaujintas viršelis</string>

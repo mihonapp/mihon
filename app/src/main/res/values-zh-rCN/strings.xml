@@ -288,7 +288,6 @@
     <string name="update_check_notification_download_complete">轻按安装</string>
     <string name="update_check_notification_download_error">下载失败</string>
     <string name="update_check_notification_update_available">有可用的新版本！</string>
-    <string name="description_cover">漫画封面</string>
     <string name="information_no_downloads">没有下载中的任务</string>
     <string name="information_no_recent">最近没有更新</string>
     <string name="information_no_recent_manga">最近没有阅读</string>
@@ -730,10 +729,8 @@
     <string name="pref_app_language">应用语言</string>
     <string name="theme_lavender">薰衣草</string>
     <string name="description_placeholder">无描述</string>
-    <string name="yes">是</string>
     <string name="delete_category_confirmation">确定要删除分类“%s”吗？</string>
     <string name="delete_category">删除分类</string>
-    <string name="no">否</string>
     <string name="internal_error">InternalError: 内部错误，详情请见崩溃日志</string>
     <string name="pref_user_agent_string">默认 User Agent 字符串</string>
     <string name="pref_reset_user_agent_string">重置默认 User Agent 字符串</string>

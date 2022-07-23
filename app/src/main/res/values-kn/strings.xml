@@ -270,7 +270,6 @@
     <string name="information_webview_outdated">ಉತ್ತಮ ಹೊಂದಾಣಿಕೆಗಾಗಿ ದಯವಿಟ್ಟು ವೆಬ್‌ವೀಕ್ಷಣೆ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ನವೀಕರಿಸಿ</string>
     <string name="information_webview_required">ತಚಿಯೋಮಿಗೆ ವೆಬ್‌ವೀಕ್ಷಣೆ ಅಗತ್ಯವಿದೆ</string>
     <string name="information_cloudflare_bypass_failure">ಕ್ಲೌಡ್‌ಫ್ಲೇರ್ ಅನ್ನು ಬೈಪಾಸ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ</string>
-    <string name="description_cover">ಮಾಂಗಾದ ಕವರ್</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">ವಿಸ್ತರಣೆ ನವೀಕರಣ ಲಭ್ಯವಿದೆ</item>
         <item quantity="other">%d ವಿಸ್ತರಣೆ ನವೀಕರಣಗಳು ಲಭ್ಯವಿದೆ</item>

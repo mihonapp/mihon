@@ -667,7 +667,6 @@
     <string name="manga_tracking_tab">ट्र्याकिङ</string>
     <string name="add_tracking">ट्रयाक गर्नुहोस्</string>
     <string name="reading">पढ्दै</string>
-    <string name="description_cover">माङ्गा को कभर</string>
     <string name="file_picker_error">कुनै फाइल पिकर एप फेला परेन</string>
     <string name="update_check_confirm">डाउनलोड गर्नुहोस्</string>
     <string name="channel_new_chapters">अध्याय अपडेटहरू</string>

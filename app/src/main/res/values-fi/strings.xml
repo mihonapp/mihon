@@ -57,7 +57,6 @@
     <string name="update_check_notification_download_complete">Lataus valmis</string>
     <string name="update_check_notification_download_error">Latausvirhe</string>
     <string name="update_check_notification_update_available">Uusi versio saatavilla!</string>
-    <string name="description_cover">Sarjan kansikuva</string>
     <string name="information_no_downloads">Ei latauksia</string>
     <string name="information_no_recent">Ei viimeisimpiä päivityksiä</string>
     <string name="information_no_recent_manga">Ei mitään luettu viime aikoina</string>
