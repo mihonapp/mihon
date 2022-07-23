@@ -74,9 +74,6 @@ conductor-support-preference = { module = "com.github.tachiyomiorg:conductor-sup
 
 flowbinding-android = { module = "io.github.reactivecircus.flowbinding:flowbinding-android", version.ref = "flowbinding_version" }
 flowbinding-appcompat = { module = "io.github.reactivecircus.flowbinding:flowbinding-appcompat", version.ref = "flowbinding_version" }
-flowbinding-recyclerview = { module = "io.github.reactivecircus.flowbinding:flowbinding-recyclerview", version.ref = "flowbinding_version" }
-flowbinding-swiperefreshlayout = { module = "io.github.reactivecircus.flowbinding:flowbinding-swiperefreshlayout", version.ref = "flowbinding_version" }
-flowbinding-viewpager = { module = "io.github.reactivecircus.flowbinding:flowbinding-viewpager", version.ref = "flowbinding_version" }
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
@@ -106,7 +103,7 @@ js-engine = ["quickjs-android", "duktape-android"]
 sqlite = ["sqlitektx", "sqlite-android"]
 nucleus = ["nucleus-core", "nucleus-supportv7"]
 coil = ["coil-core", "coil-gif", "coil-compose"]
-flowbinding = ["flowbinding-android", "flowbinding-appcompat", "flowbinding-recyclerview", "flowbinding-swiperefreshlayout", "flowbinding-viewpager"]
+flowbinding = ["flowbinding-android", "flowbinding-appcompat"]
 conductor = ["conductor-core", "conductor-viewpager", "conductor-support-preference"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 

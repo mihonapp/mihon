@@ -188,7 +188,6 @@ dependencies {
     implementation(androidx.corektx)
     implementation(androidx.splashscreen)
     implementation(androidx.recyclerview)
-    implementation(androidx.swiperefreshlayout)
     implementation(androidx.viewpager)
 
     implementation(androidx.bundles.lifecycle)
