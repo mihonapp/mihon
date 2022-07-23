@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import android.content.Context
+import com.github.junrar.exception.UnsupportedRarV5Exception
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -83,7 +84,11 @@ class ChapterLoader(
                 when (format) {
                     is LocalSource.Format.Directory -> DirectoryPageLoader(format.file)
                     is LocalSource.Format.Zip -> ZipPageLoader(format.file)
-                    is LocalSource.Format.Rar -> RarPageLoader(format.file)
+                    is LocalSource.Format.Rar -> try {
+                        RarPageLoader(format.file)
+                    } catch (e: UnsupportedRarV5Exception) {
+                        error(context.getString(R.string.loader_rar5_error))
+                    }
                     is LocalSource.Format.Epub -> EpubPageLoader(format.file)
                 }
             }
