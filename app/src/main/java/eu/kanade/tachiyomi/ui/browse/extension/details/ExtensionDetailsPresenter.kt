@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
@@ -70,7 +71,9 @@ class ExtensionDetailsPresenter(
                 .map { }
                 .take(1)
                 .collectLatest {
-                    view?.onExtensionUninstalled()
+                    launchUI {
+                        view?.onExtensionUninstalled()
+                    }
                 }
         }
     }

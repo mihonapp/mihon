@@ -74,6 +74,11 @@ class LibraryController(
             val activity = (activity as? MainActivity) ?: return@LaunchedEffect
             activity.showBottomNav(presenter.selectionMode.not())
         }
+        LaunchedEffect(presenter.isLoading) {
+            if (presenter.isLoading.not()) {
+                (activity as? MainActivity)?.ready = true
+            }
+        }
     }
 
     override fun handleBack(): Boolean {
