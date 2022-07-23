@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
@@ -18,12 +17,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import eu.kanade.presentation.components.TextButton
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
@@ -40,16 +35,7 @@ fun LibraryCompactGrid(
     LazyLibraryGrid(
         columns = columns,
     ) {
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            if (searchQuery.isNullOrEmpty().not()) {
-                TextButton(onClick = onGlobalSearchClicked) {
-                    Text(
-                        text = stringResource(R.string.action_global_search_query, searchQuery!!),
-                        modifier = Modifier.zIndex(99f),
-                    )
-                }
-            }
-        }
+        globalSearchItem(searchQuery, onGlobalSearchClicked)
 
         items(
             items = items,

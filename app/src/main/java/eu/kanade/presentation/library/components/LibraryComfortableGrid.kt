@@ -3,19 +3,14 @@ package eu.kanade.presentation.library.components
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import eu.kanade.domain.manga.model.MangaCover
-import eu.kanade.presentation.components.TextButton
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
@@ -32,16 +27,8 @@ fun LibraryComfortableGrid(
     LazyLibraryGrid(
         columns = columns,
     ) {
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            if (searchQuery.isNullOrEmpty().not()) {
-                TextButton(onClick = onGlobalSearchClicked) {
-                    Text(
-                        text = stringResource(R.string.action_global_search_query, searchQuery!!),
-                        modifier = Modifier.zIndex(99f),
-                    )
-                }
-            }
-        }
+        globalSearchItem(searchQuery, onGlobalSearchClicked)
+
         items(
             items = items,
             key = {
