@@ -22,7 +22,9 @@ import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.presentation.components.Badge
 import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.TextButton
+import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.presentation.util.verticalPadding
 import eu.kanade.tachiyomi.R
@@ -39,7 +41,7 @@ fun LibraryList(
     onGlobalSearchClicked: () -> Unit,
 ) {
     LazyColumn(
-        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = bottomNavPaddingValues + WindowInsets.navigationBars.asPaddingValues(),
     ) {
         item {
             if (searchQuery.isNullOrEmpty().not()) {

@@ -34,9 +34,7 @@ import eu.kanade.presentation.components.MangaBottomActionMenu
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SwipeRefreshIndicator
 import eu.kanade.presentation.components.VerticalFastScroller
-import eu.kanade.presentation.util.NavBarVisibility
-import eu.kanade.presentation.util.isScrollingDown
-import eu.kanade.presentation.util.isScrollingUp
+import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -56,7 +54,6 @@ fun UpdateScreen(
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
     onUpdateLibrary: () -> Unit,
     onBackClicked: () -> Unit,
-    toggleNavBarVisibility: (NavBarVisibility) -> Unit,
     // For bottom action menu
     onMultiBookmarkClicked: (List<UpdatesItem>, bookmark: Boolean) -> Unit,
     onMultiMarkAsReadClicked: (List<UpdatesItem>, read: Boolean) -> Unit,
@@ -85,13 +82,6 @@ fun UpdateScreen(
     }
     // First and last selected index in list
     val selectedPositions = remember(uiModels) { arrayOf(-1, -1) }
-
-    when {
-        selected.isEmpty() &&
-            updatesListState.isScrollingUp() -> toggleNavBarVisibility(NavBarVisibility.SHOW)
-        selected.isNotEmpty() ||
-            updatesListState.isScrollingDown() -> toggleNavBarVisibility(NavBarVisibility.HIDE)
-    }
 
     val internalOnBackPressed = {
         if (selected.isNotEmpty()) {
@@ -133,7 +123,7 @@ fun UpdateScreen(
             )
         },
     ) { contentPadding ->
-        val contentPaddingWithNavBar = contentPadding +
+        val contentPaddingWithNavBar = bottomNavPaddingValues + contentPadding +
             WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
 
         SwipeRefresh(
@@ -153,6 +143,7 @@ fun UpdateScreen(
                 VerticalFastScroller(
                     listState = updatesListState,
                     topContentPadding = contentPaddingWithNavBar.calculateTopPadding(),
+                    bottomContentPadding = contentPaddingWithNavBar.calculateBottomPadding(),
                     endContentPadding = contentPaddingWithNavBar.calculateEndPadding(LocalLayoutDirection.current),
                 ) {
                     LazyColumn(

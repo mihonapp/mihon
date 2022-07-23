@@ -28,6 +28,7 @@ import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.theme.header
+import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.topPaddingValues
@@ -68,7 +69,7 @@ fun MigrateSourceList(
 ) {
     ScrollbarLazyColumn(
         modifier = Modifier.nestedScroll(nestedScrollInterop),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
+        contentPadding = bottomNavPaddingValues + WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
     ) {
         item(key = "title") {
             Text(

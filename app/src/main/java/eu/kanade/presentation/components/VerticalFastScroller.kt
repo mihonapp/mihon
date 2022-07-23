@@ -50,6 +50,7 @@ fun VerticalFastScroller(
     thumbAllowed: () -> Boolean = { true },
     thumbColor: Color = MaterialTheme.colorScheme.primary,
     topContentPadding: Dp = Dp.Hairline,
+    bottomContentPadding: Dp = Dp.Hairline,
     endContentPadding: Dp = Dp.Hairline,
     content: @Composable () -> Unit,
 ) {
@@ -76,7 +77,8 @@ fun VerticalFastScroller(
                 )
             }
 
-            val heightPx = contentHeight.toFloat() - thumbTopPadding - listState.layoutInfo.afterContentPadding
+            val thumbBottomPadding = with(LocalDensity.current) { bottomContentPadding.toPx() }
+            val heightPx = contentHeight.toFloat() - thumbTopPadding - thumbBottomPadding - listState.layoutInfo.afterContentPadding
             val thumbHeightPx = with(LocalDensity.current) { ThumbLength.toPx() }
             val trackHeightPx = heightPx - thumbHeightPx
 

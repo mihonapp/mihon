@@ -10,8 +10,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.updates.UpdateScreen
-import eu.kanade.presentation.util.NavBarVisibility
-import eu.kanade.presentation.util.toBoolean
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -49,7 +47,6 @@ class UpdatesController :
                     onDownloadChapter = this::downloadChapters,
                     onUpdateLibrary = this::updateLibrary,
                     onBackClicked = this::onBackClicked,
-                    toggleNavBarVisibility = this::toggleNavBarVisibility,
                     // For bottom action menu
                     onMultiBookmarkClicked = { updatesItems, bookmark ->
                         presenter.bookmarkUpdates(updatesItems, bookmark)
@@ -80,15 +77,6 @@ class UpdatesController :
         (activity as? MainActivity)?.moveToStartScreen()
     }
 
-    private fun toggleNavBarVisibility(navBarVisibility: NavBarVisibility) {
-        val showNavBar = navBarVisibility.toBoolean()
-        (activity as? MainActivity)?.showBottomNav(showNavBar)
-    }
-
-    /**
-     * Download selected items
-     * @param items list of selected [UpdatesItem]s
-     */
     private fun downloadChapters(items: List<UpdatesItem>, action: ChapterDownloadAction) {
         if (items.isEmpty()) return
         viewScope.launch {

@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.plus
 
 @Composable
@@ -22,7 +23,7 @@ fun LazyLibraryGrid(
     LazyVerticalGrid(
         modifier = modifier,
         columns = if (columns == 0) GridCells.Adaptive(128.dp) else GridCells.Fixed(columns),
-        contentPadding = PaddingValues(12.dp) + WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = bottomNavPaddingValues + PaddingValues(12.dp) + WindowInsets.navigationBars.asPaddingValues(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         content = content,

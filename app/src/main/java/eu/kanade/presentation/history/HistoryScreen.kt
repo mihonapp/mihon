@@ -43,6 +43,7 @@ import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.history.components.HistoryItem
 import eu.kanade.presentation.history.components.HistoryItemShimmer
+import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.shimmerGradient
 import eu.kanade.presentation.util.topPaddingValues
@@ -102,7 +103,7 @@ fun HistoryContent(
     ScrollbarLazyColumn(
         modifier = Modifier
             .nestedScroll(nestedScroll),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
+        contentPadding = bottomNavPaddingValues + WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
         state = scrollState,
     ) {
         items(history) { item ->
