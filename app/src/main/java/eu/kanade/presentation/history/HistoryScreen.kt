@@ -15,6 +15,7 @@ import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
 import eu.kanade.presentation.history.components.HistoryToolbar
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.recent.history.HistoryPresenter
 import eu.kanade.tachiyomi.ui.recent.history.HistoryPresenter.Dialog
@@ -46,6 +47,11 @@ fun HistoryScreen(
                 onClickResume = onClickResume,
                 onClickDelete = { presenter.dialog = Dialog.Delete(it) },
             )
+        }
+        LaunchedEffect(items.loadState.refresh) {
+            if (items.loadState.refresh is LoadState.NotLoading) {
+                (presenter.view?.activity as? MainActivity)?.ready = true
+            }
         }
     }
     val onDismissRequest = { presenter.dialog = null }

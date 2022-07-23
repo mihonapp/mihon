@@ -4,6 +4,7 @@ import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -56,6 +57,11 @@ class UpdatesController :
                     },
                     onMultiDeleteClicked = this::deleteChaptersWithConfirmation,
                 )
+        }
+        LaunchedEffect(state) {
+            if (state !is UpdatesState.Loading) {
+                (activity as? MainActivity)?.ready = true
+            }
         }
     }
 
