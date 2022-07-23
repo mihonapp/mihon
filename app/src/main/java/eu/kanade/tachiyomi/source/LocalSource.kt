@@ -4,7 +4,6 @@ import android.content.Context
 import com.github.junrar.Archive
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
@@ -19,6 +18,7 @@ import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.EpubFile
 import eu.kanade.tachiyomi.util.system.ImageUtil
+import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -27,11 +27,10 @@ import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
+import logcat.LogPriority
 import rx.Observable
 import tachiyomi.source.model.ChapterInfo
 import tachiyomi.source.model.MangaInfo
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.FileInputStream
@@ -41,7 +40,6 @@ import java.util.zip.ZipFile
 
 class LocalSource(
     private val context: Context,
-    private val coverCache: CoverCache = Injekt.get(),
 ) : CatalogueSource, UnmeteredSource {
 
     private val json: Json by injectLazy()
@@ -254,41 +252,46 @@ class LocalSource(
     }
 
     private fun updateCover(chapter: SChapter, manga: SManga): File? {
-        return when (val format = getFormat(chapter)) {
-            is Format.Directory -> {
-                val entry = format.file.listFiles()
-                    ?.sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
-                    ?.find { !it.isDirectory && ImageUtil.isImage(it.name) { FileInputStream(it) } }
+        return try {
+            when (val format = getFormat(chapter)) {
+                is Format.Directory -> {
+                    val entry = format.file.listFiles()
+                        ?.sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
+                        ?.find { !it.isDirectory && ImageUtil.isImage(it.name) { FileInputStream(it) } }
 
-                entry?.let { updateCover(context, manga, it.inputStream()) }
-            }
-            is Format.Zip -> {
-                ZipFile(format.file).use { zip ->
-                    val entry = zip.entries().toList()
-                        .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
-                        .find { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
+                    entry?.let { updateCover(context, manga, it.inputStream()) }
+                }
+                is Format.Zip -> {
+                    ZipFile(format.file).use { zip ->
+                        val entry = zip.entries().toList()
+                            .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
+                            .find { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
 
-                    entry?.let { updateCover(context, manga, zip.getInputStream(it)) }
+                        entry?.let { updateCover(context, manga, zip.getInputStream(it)) }
+                    }
+                }
+                is Format.Rar -> {
+                    Archive(format.file).use { archive ->
+                        val entry = archive.fileHeaders
+                            .sortedWith { f1, f2 -> f1.fileName.compareToCaseInsensitiveNaturalOrder(f2.fileName) }
+                            .find { !it.isDirectory && ImageUtil.isImage(it.fileName) { archive.getInputStream(it) } }
+
+                        entry?.let { updateCover(context, manga, archive.getInputStream(it)) }
+                    }
+                }
+                is Format.Epub -> {
+                    EpubFile(format.file).use { epub ->
+                        val entry = epub.getImagesFromPages()
+                            .firstOrNull()
+                            ?.let { epub.getEntry(it) }
+
+                        entry?.let { updateCover(context, manga, epub.getInputStream(it)) }
+                    }
                 }
             }
-            is Format.Rar -> {
-                Archive(format.file).use { archive ->
-                    val entry = archive.fileHeaders
-                        .sortedWith { f1, f2 -> f1.fileName.compareToCaseInsensitiveNaturalOrder(f2.fileName) }
-                        .find { !it.isDirectory && ImageUtil.isImage(it.fileName) { archive.getInputStream(it) } }
-
-                    entry?.let { updateCover(context, manga, archive.getInputStream(it)) }
-                }
-            }
-            is Format.Epub -> {
-                EpubFile(format.file).use { epub ->
-                    val entry = epub.getImagesFromPages()
-                        .firstOrNull()
-                        ?.let { epub.getEntry(it) }
-
-                    entry?.let { updateCover(context, manga, epub.getInputStream(it)) }
-                }
-            }
+        } catch (e: Throwable) {
+            logcat(LogPriority.ERROR, e) { "Error updating cover for ${manga.title}" }
+            null
         }
     }
 
@@ -365,7 +368,6 @@ class LocalSource(
                 }
             }
 
-            // Create a .nomedia file
             DiskUtil.createNoMediaFile(UniFile.fromFile(mangaDir), context)
 
             manga.thumbnail_url = coverFile.absolutePath
