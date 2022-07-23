@@ -1,6 +1,6 @@
 package eu.kanade.presentation.history
 
-import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,18 +30,18 @@ fun HistoryScreen(
 ) {
     val context = LocalContext.current
     Scaffold(
-        modifier = Modifier.safeContentPadding(),
+        modifier = Modifier.safeDrawingPadding(),
         topBar = {
             HistoryToolbar(state = presenter)
         },
-    ) {
+    ) { contentPadding ->
         val items = presenter.getLazyHistory()
         when {
             items.loadState.refresh is LoadState.Loading && items.itemCount < 1 -> LoadingScreen()
             items.loadState.refresh is LoadState.NotLoading && items.itemCount < 1 -> EmptyScreen(textResource = R.string.information_no_recent_manga)
             else -> HistoryContent(
                 history = items,
-                contentPadding = it,
+                contentPadding = contentPadding,
                 onClickCover = onClickCover,
                 onClickResume = onClickResume,
                 onClickDelete = { presenter.dialog = Dialog.Delete(it) },
@@ -62,7 +62,7 @@ fun HistoryScreen(
                 },
             )
         }
-        Dialog.DeleteAll -> {
+        is Dialog.DeleteAll -> {
             HistoryDeleteAllDialog(
                 onDismissRequest = onDismissRequest,
                 onDelete = {
@@ -70,7 +70,7 @@ fun HistoryScreen(
                 },
             )
         }
-        else -> {}
+        null -> {}
     }
     LaunchedEffect(Unit) {
         presenter.events.collectLatest { event ->
