@@ -2,9 +2,6 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
@@ -29,7 +26,7 @@ fun LazyLibraryGrid(
     LazyVerticalGrid(
         modifier = modifier,
         columns = if (columns == 0) GridCells.Adaptive(128.dp) else GridCells.Fixed(columns),
-        contentPadding = bottomNavPaddingValues + PaddingValues(12.dp, 2.dp) + WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = bottomNavPaddingValues + PaddingValues(12.dp, 2.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         content = content,

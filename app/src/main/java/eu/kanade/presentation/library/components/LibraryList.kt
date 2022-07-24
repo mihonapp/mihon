@@ -2,11 +2,8 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -41,7 +38,7 @@ fun LibraryList(
     onGlobalSearchClicked: () -> Unit,
 ) {
     LazyColumn(
-        contentPadding = bottomNavPaddingValues + WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = bottomNavPaddingValues,
     ) {
         item {
             if (searchQuery.isNullOrEmpty().not()) {

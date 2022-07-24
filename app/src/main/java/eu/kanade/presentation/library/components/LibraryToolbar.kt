@@ -3,7 +3,6 @@ package eu.kanade.presentation.library.components
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
@@ -79,7 +78,6 @@ fun LibraryRegularToolbar(
     val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
     val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
     SmallTopAppBar(
-        modifier = Modifier.safeDrawingPadding(),
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -123,8 +121,7 @@ fun LibrarySelectionToolbar(
         modifier = Modifier
             .drawBehind {
                 drawRect(backgroundColor.copy(alpha = 1f))
-            }
-            .safeDrawingPadding(),
+            },
         navigationIcon = {
             IconButton(onClick = onClickUnselectAll) {
                 Icon(Icons.Outlined.Close, contentDescription = "close")
@@ -156,7 +153,6 @@ fun LibrarySearchToolbar(
 ) {
     val focusRequester = remember { FocusRequester.Default }
     SmallTopAppBar(
-        modifier = Modifier.safeDrawingPadding(),
         navigationIcon = {
             IconButton(onClick = onClickCloseSearch) {
                 Icon(Icons.Outlined.ArrowBack, contentDescription = "back")
