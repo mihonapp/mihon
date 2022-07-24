@@ -54,7 +54,10 @@ fun LibraryTabs(
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Text(text = category.name)
+                            Text(
+                                text = category.name,
+                                color = if (state.currentPage == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                            )
                             if (count != null) {
                                 Pill(
                                     text = "$count",

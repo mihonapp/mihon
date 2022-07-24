@@ -12,6 +12,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.core.prefs.PreferenceMutableState
+import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.SwipeRefreshIndicator
@@ -35,16 +36,16 @@ fun LibraryContent(
     onChangeCurrentPage: (Int) -> Unit,
     onMangaClicked: (Long) -> Unit,
     onToggleSelection: (LibraryManga) -> Unit,
-    onRefresh: () -> Unit,
+    onRefresh: (Category?) -> Unit,
     onGlobalSearchClicked: () -> Unit,
     getNumberOfMangaForCategory: @Composable (Long) -> State<Int?>,
     getDisplayModeForPage: @Composable (Int) -> State<DisplayModeSetting>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getLibraryForPage: @Composable (Int) -> State<List<LibraryItem>>,
 ) {
-    val pagerState = rememberPagerState(currentPage)
-
     val categories = state.categories
+
+    val pagerState = rememberPagerState(currentPage.coerceAtMost(categories.lastIndex))
 
     if (categories.isEmpty()) {
         LoadingScreen()
@@ -78,7 +79,7 @@ fun LibraryContent(
 
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = false),
-            onRefresh = onRefresh,
+            onRefresh = { onRefresh(categories[currentPage]) },
             indicator = { s, trigger ->
                 SwipeRefreshIndicator(
                     state = s,

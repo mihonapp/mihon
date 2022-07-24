@@ -62,7 +62,7 @@ class LibraryController(
             onDeleteClicked = ::showDeleteMangaDialog,
             onClickFilter = ::showSettingsSheet,
             onClickRefresh = {
-                if (LibraryUpdateService.start(context)) {
+                if (LibraryUpdateService.start(context, it)) {
                     context.toast(R.string.updating_library)
                 }
             },

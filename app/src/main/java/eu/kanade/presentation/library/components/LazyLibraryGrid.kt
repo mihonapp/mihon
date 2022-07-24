@@ -29,7 +29,7 @@ fun LazyLibraryGrid(
     LazyVerticalGrid(
         modifier = modifier,
         columns = if (columns == 0) GridCells.Adaptive(128.dp) else GridCells.Fixed(columns),
-        contentPadding = bottomNavPaddingValues + PaddingValues(12.dp) + WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = bottomNavPaddingValues + PaddingValues(12.dp, 2.dp) + WindowInsets.navigationBars.asPaddingValues(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         content = content,
