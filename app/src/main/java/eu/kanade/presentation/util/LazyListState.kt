@@ -8,7 +8,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
-fun LazyListState.isScrolledToEnd() = layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
+@Composable
+fun LazyListState.isScrolledToEnd(): Boolean {
+    return remember {
+        derivedStateOf {
+            val lastItem = layoutInfo.visibleItemsInfo.lastOrNull()
+            lastItem == null || lastItem.size + lastItem.offset <= layoutInfo.viewportEndOffset
+        }
+    }.value
+}
 
 @Composable
 fun LazyListState.isScrollingUp(): Boolean {
