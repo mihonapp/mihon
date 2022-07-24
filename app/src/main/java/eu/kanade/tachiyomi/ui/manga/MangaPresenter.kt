@@ -365,8 +365,10 @@ class MangaPresenter(
 
     fun moveMangaToCategoriesAndAddToLibrary(manga: DomainManga, categories: List<Category>) {
         moveMangaToCategories(categories)
-        presenterScope.launchIO {
-            updateManga.awaitUpdateFavorite(manga.id, true)
+        if (!manga.favorite) {
+            presenterScope.launchIO {
+                updateManga.awaitUpdateFavorite(manga.id, true)
+            }
         }
     }
 
