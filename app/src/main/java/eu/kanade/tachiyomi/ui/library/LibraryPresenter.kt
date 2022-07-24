@@ -412,14 +412,14 @@ class LibraryPresenter(
      */
     private fun getLibraryObservable(): Observable<Library> {
         return combine(getCategoriesFlow(), getLibraryMangasFlow()) { dbCategories, libraryManga ->
-            val categories = if (libraryManga.containsKey(0)) {
+            val categories = if (libraryManga.containsKey(0) || libraryManga.isEmpty()) {
                 arrayListOf(Category.default(context)) + dbCategories
             } else {
                 dbCategories
             }
 
             libraryManga.forEach { (categoryId, libraryManga) ->
-                val category = categories.first { category -> category.id == categoryId.toLong() }
+                val category = categories.first { category -> category.id == categoryId }
                 libraryManga.forEach { libraryItem ->
                     libraryItem.displayMode = category.displayMode
                 }
