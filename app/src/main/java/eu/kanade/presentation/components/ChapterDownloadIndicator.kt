@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -23,7 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -45,119 +48,184 @@ fun ChapterDownloadIndicator(
     downloadProgressProvider: () -> Int,
     onClick: (ChapterDownloadAction) -> Unit,
 ) {
-    val downloadState = downloadStateProvider()
-    val isDownloaded = downloadState == Download.State.DOWNLOADED
-    val isDownloading = downloadState != Download.State.NOT_DOWNLOADED
-    var isMenuExpanded by remember(downloadState) { mutableStateOf(false) }
+    when (val downloadState = downloadStateProvider()) {
+        Download.State.NOT_DOWNLOADED -> NotDownloadedIndicator(modifier = modifier, onClick = onClick)
+        Download.State.QUEUE, Download.State.DOWNLOADING -> DownloadingIndicator(
+            modifier = modifier,
+            downloadState = downloadState,
+            downloadProgressProvider = downloadProgressProvider,
+            onClick = onClick,
+        )
+        Download.State.DOWNLOADED -> DownloadedIndicator(modifier = modifier, onClick = onClick)
+        Download.State.ERROR -> ErrorIndicator(modifier = modifier, onClick = onClick)
+    }
+}
+
+@Composable
+private fun NotDownloadedIndicator(
+    modifier: Modifier = Modifier,
+    onClick: (ChapterDownloadAction) -> Unit,
+) {
     Box(
         modifier = modifier
             .size(IconButtonTokens.StateLayerSize)
-            .combinedClickable(
-                onLongClick = {
-                    val chapterDownloadAction = when {
-                        isDownloaded -> ChapterDownloadAction.DELETE
-                        isDownloading -> ChapterDownloadAction.CANCEL
-                        else -> ChapterDownloadAction.START_NOW
-                    }
-                    onClick(chapterDownloadAction)
-                },
-                onClick = {
-                    if (isDownloaded || isDownloading) {
-                        isMenuExpanded = true
-                    } else {
-                        onClick(ChapterDownloadAction.START)
-                    }
-                },
-                role = Role.Button,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    bounded = false,
-                    radius = IconButtonTokens.StateLayerSize / 2,
-                ),
+            .commonClickable(
+                onLongClick = { onClick(ChapterDownloadAction.START_NOW) },
+                onClick = { onClick(ChapterDownloadAction.START) },
+            )
+            .secondaryItemAlpha(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_download_chapter_24dp),
+            contentDescription = null,
+            modifier = Modifier.size(IndicatorSize),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun DownloadingIndicator(
+    modifier: Modifier = Modifier,
+    downloadState: Download.State,
+    downloadProgressProvider: () -> Int,
+    onClick: (ChapterDownloadAction) -> Unit,
+) {
+    var isMenuExpanded by remember { mutableStateOf(false) }
+    Box(
+        modifier = modifier
+            .size(IconButtonTokens.StateLayerSize)
+            .commonClickable(
+                onLongClick = { onClick(ChapterDownloadAction.CANCEL) },
+                onClick = { isMenuExpanded = true },
             ),
         contentAlignment = Alignment.Center,
     ) {
-        if (isDownloaded) {
-            Icon(
-                imageVector = Icons.Default.CheckCircle,
-                contentDescription = null,
-                modifier = Modifier.size(IndicatorSize),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        val arrowColor: Color
+        val strokeColor = MaterialTheme.colorScheme.onSurfaceVariant
+        val downloadProgress = downloadProgressProvider()
+        val indeterminate = downloadState == Download.State.QUEUE ||
+            (downloadState == Download.State.DOWNLOADING && downloadProgress == 0)
+        if (indeterminate) {
+            arrowColor = strokeColor
+            CircularProgressIndicator(
+                modifier = IndicatorModifier,
+                color = strokeColor,
+                strokeWidth = IndicatorStrokeWidth,
             )
-            DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(R.string.action_delete)) },
-                    onClick = {
-                        onClick(ChapterDownloadAction.DELETE)
-                        isMenuExpanded = false
-                    },
-                )
-            }
         } else {
-            val inactiveAlphaModifier = if (!isDownloading) Modifier.secondaryItemAlpha() else Modifier
-            val arrowColor: Color
-            val strokeColor = MaterialTheme.colorScheme.onSurfaceVariant
-            if (isDownloading) {
-                val downloadProgress = downloadProgressProvider()
-                val indeterminate = downloadState == Download.State.QUEUE ||
-                    (downloadState == Download.State.DOWNLOADING && downloadProgress == 0)
-                if (indeterminate) {
-                    arrowColor = strokeColor
-                    CircularProgressIndicator(
-                        modifier = IndicatorModifier,
-                        color = strokeColor,
-                        strokeWidth = IndicatorStrokeWidth,
-                    )
-                } else {
-                    val animatedProgress by animateFloatAsState(
-                        targetValue = downloadProgress / 100f,
-                        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
-                    )
-                    arrowColor = if (animatedProgress < 0.5f) {
-                        strokeColor
-                    } else {
-                        MaterialTheme.colorScheme.background
-                    }
-                    CircularProgressIndicator(
-                        progress = animatedProgress,
-                        modifier = IndicatorModifier,
-                        color = strokeColor,
-                        strokeWidth = IndicatorSize / 2,
-                    )
-                }
-                DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(R.string.action_start_downloading_now)) },
-                        onClick = {
-                            onClick(ChapterDownloadAction.START_NOW)
-                            isMenuExpanded = false
-                        },
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(R.string.action_cancel)) },
-                        onClick = {
-                            onClick(ChapterDownloadAction.CANCEL)
-                            isMenuExpanded = false
-                        },
-                    )
-                }
+            val animatedProgress by animateFloatAsState(
+                targetValue = downloadProgress / 100f,
+                animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
+            )
+            arrowColor = if (animatedProgress < 0.5f) {
+                strokeColor
             } else {
-                arrowColor = strokeColor
-                CircularProgressIndicator(
-                    progress = 1f,
-                    modifier = IndicatorModifier.then(inactiveAlphaModifier),
-                    color = strokeColor,
-                    strokeWidth = IndicatorStrokeWidth,
-                )
+                MaterialTheme.colorScheme.background
             }
-            Icon(
-                imageVector = Icons.Default.ArrowDownward,
-                contentDescription = null,
-                modifier = ArrowModifier.then(inactiveAlphaModifier),
-                tint = arrowColor,
+            CircularProgressIndicator(
+                progress = animatedProgress,
+                modifier = IndicatorModifier,
+                color = strokeColor,
+                strokeWidth = IndicatorSize / 2,
+            )
+        }
+        DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
+            DropdownMenuItem(
+                text = { Text(text = stringResource(R.string.action_start_downloading_now)) },
+                onClick = {
+                    onClick(ChapterDownloadAction.START_NOW)
+                    isMenuExpanded = false
+                },
+            )
+            DropdownMenuItem(
+                text = { Text(text = stringResource(R.string.action_cancel)) },
+                onClick = {
+                    onClick(ChapterDownloadAction.CANCEL)
+                    isMenuExpanded = false
+                },
+            )
+        }
+        Icon(
+            imageVector = Icons.Default.ArrowDownward,
+            contentDescription = null,
+            modifier = ArrowModifier,
+            tint = arrowColor,
+        )
+    }
+}
+
+@Composable
+private fun DownloadedIndicator(
+    modifier: Modifier = Modifier,
+    onClick: (ChapterDownloadAction) -> Unit,
+) {
+    var isMenuExpanded by remember { mutableStateOf(false) }
+    Box(
+        modifier = modifier
+            .size(IconButtonTokens.StateLayerSize)
+            .commonClickable(
+                onLongClick = { onClick(ChapterDownloadAction.DELETE) },
+                onClick = { isMenuExpanded = true },
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            imageVector = Icons.Default.CheckCircle,
+            contentDescription = null,
+            modifier = Modifier.size(IndicatorSize),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
+            DropdownMenuItem(
+                text = { Text(text = stringResource(R.string.action_delete)) },
+                onClick = {
+                    onClick(ChapterDownloadAction.DELETE)
+                    isMenuExpanded = false
+                },
             )
         }
     }
+}
+
+@Composable
+private fun ErrorIndicator(
+    modifier: Modifier = Modifier,
+    onClick: (ChapterDownloadAction) -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .size(IconButtonTokens.StateLayerSize)
+            .commonClickable(
+                onLongClick = { onClick(ChapterDownloadAction.START) },
+                onClick = { onClick(ChapterDownloadAction.START) },
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            imageVector = Icons.Default.ErrorOutline,
+            contentDescription = null,
+            modifier = Modifier.size(IndicatorSize),
+            tint = MaterialTheme.colorScheme.error,
+        )
+    }
+}
+
+private fun Modifier.commonClickable(
+    onLongClick: () -> Unit,
+    onClick: () -> Unit,
+) = composed {
+    this.combinedClickable(
+        onLongClick = onLongClick,
+        onClick = onClick,
+        role = Role.Button,
+        interactionSource = remember { MutableInteractionSource() },
+        indication = rememberRipple(
+            bounded = false,
+            radius = IconButtonTokens.StateLayerSize / 2,
+        ),
+    )
 }
 
 private val IndicatorSize = 26.dp
