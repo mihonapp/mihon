@@ -132,8 +132,6 @@ open class BrowseSourcePresenter(
         if (savedState != null) {
             query = savedState.getString(::query.name, "")
         }
-
-        restartPager()
     }
 
     override fun onSave(state: Bundle) {

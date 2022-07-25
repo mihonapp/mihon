@@ -141,6 +141,8 @@ open class BrowseSourceController(bundle: Bundle) :
         setupRecycler(view)
 
         binding.progress.isVisible = true
+
+        presenter.restartPager()
     }
 
     open fun initFilterSheet() {
