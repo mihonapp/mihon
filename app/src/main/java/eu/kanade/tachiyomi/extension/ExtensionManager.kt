@@ -19,8 +19,11 @@ import eu.kanade.tachiyomi.util.preference.plusAssign
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import logcat.LogPriority
 import rx.Observable
@@ -93,15 +96,15 @@ class ExtensionManager(
     var availableExtensions = emptyList<Extension.Available>()
         private set(value) {
             field = value
-            availableExtensionsFlow.value = field
+            availableExtensionsFlow.tryEmit(field)
             updatedInstalledExtensionsStatuses(value)
             setupAvailableExtensionsSourcesDataMap(value)
         }
 
-    private val availableExtensionsFlow = MutableStateFlow(availableExtensions)
+    private val availableExtensionsFlow = MutableSharedFlow<List<Extension.Available>>(replay = 1)
 
-    fun getAvailableExtensionsFlow(): StateFlow<List<Extension.Available>> {
-        return availableExtensionsFlow.asStateFlow()
+    fun getAvailableExtensionsFlow(): Flow<List<Extension.Available>> {
+        return availableExtensionsFlow.asSharedFlow()
     }
 
     private var availableExtensionsSourcesData: Map<Long, SourceData> = mapOf()
