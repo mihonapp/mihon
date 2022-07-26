@@ -47,16 +47,16 @@ fun LibraryToolbar(
     onClickFilter: () -> Unit,
     onClickRefresh: () -> Unit,
 ) = when {
-    state.searchQuery != null -> LibrarySearchToolbar(
-        searchQuery = state.searchQuery!!,
-        onChangeSearchQuery = { state.searchQuery = it },
-        onClickCloseSearch = { state.searchQuery = null },
-    )
     state.selectionMode -> LibrarySelectionToolbar(
         state = state,
         onClickUnselectAll = onClickUnselectAll,
         onClickSelectAll = onClickSelectAll,
         onClickInvertSelection = onClickInvertSelection,
+    )
+    state.searchQuery != null -> LibrarySearchToolbar(
+        searchQuery = state.searchQuery!!,
+        onChangeSearchQuery = { state.searchQuery = it },
+        onClickCloseSearch = { state.searchQuery = null },
     )
     else -> LibraryRegularToolbar(
         title = title,
