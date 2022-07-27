@@ -40,10 +40,6 @@ class LibraryController(
      */
     private var settingsSheet: LibrarySettingsSheet? = null
 
-    init {
-        retainViewMode = RetainViewMode.RETAIN_DETACH
-    }
-
     override fun createPresenter(): LibraryPresenter = LibraryPresenter()
 
     @Composable

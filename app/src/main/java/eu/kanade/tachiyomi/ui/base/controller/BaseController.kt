@@ -23,6 +23,8 @@ abstract class BaseController<VB : ViewBinding>(bundle: Bundle? = null) : Contro
     lateinit var viewScope: CoroutineScope
 
     init {
+        retainViewMode = RetainViewMode.RETAIN_DETACH
+
         addLifecycleListener(
             object : LifecycleListener() {
                 override fun postCreateView(controller: Controller, view: View) {
