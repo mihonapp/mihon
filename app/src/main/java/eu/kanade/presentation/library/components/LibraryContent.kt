@@ -14,7 +14,6 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.components.EmptyScreen
-import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.SwipeRefreshIndicator
 import eu.kanade.presentation.library.LibraryState
 import eu.kanade.tachiyomi.R
@@ -44,13 +43,7 @@ fun LibraryContent(
     getLibraryForPage: @Composable (Int) -> State<List<LibraryItem>>,
 ) {
     val categories = state.categories
-
     val pagerState = rememberPagerState(currentPage.coerceAtMost(categories.lastIndex))
-
-    if (categories.isEmpty()) {
-        LoadingScreen()
-        return
-    }
 
     Column(
         modifier = Modifier.padding(contentPadding),
@@ -58,7 +51,7 @@ fun LibraryContent(
         if (showPageTabs && categories.size > 1) {
             LibraryTabs(
                 state = pagerState,
-                categories = state.categories,
+                categories = categories,
                 showMangaCount = showMangaCount,
                 getNumberOfMangaForCategory = getNumberOfMangaForCategory,
                 isDownloadOnly = isDownloadOnly,
