@@ -6,21 +6,22 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -516,12 +517,16 @@ fun MangaScreenLargeImpl(
                 }
             },
         ) { contentPadding ->
-            Row {
+            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
                 val withNavBarContentPadding = contentPadding +
                     WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
+                val firstWidth = (maxWidth / 2).coerceAtMost(450.dp)
+                val secondWidth = maxWidth - firstWidth
+
                 Column(
                     modifier = Modifier
-                        .widthIn(max = 450.dp)
+                        .align(Alignment.TopStart)
+                        .width(firstWidth)
                         .verticalScroll(rememberScrollState())
                         .padding(bottom = withNavBarContentPadding.calculateBottomPadding()),
                 ) {
@@ -556,7 +561,9 @@ fun MangaScreenLargeImpl(
 
                 VerticalFastScroller(
                     listState = chapterListState,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .width(secondWidth),
                     topContentPadding = withNavBarContentPadding.calculateTopPadding(),
                     endContentPadding = withNavBarContentPadding.calculateEndPadding(layoutDirection),
                 ) {
