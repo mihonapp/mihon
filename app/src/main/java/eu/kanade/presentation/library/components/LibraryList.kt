@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,10 +17,10 @@ import androidx.compose.ui.zIndex
 import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.presentation.components.Badge
 import eu.kanade.presentation.components.BadgeGroup
+import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.TextButton
 import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.horizontalPadding
-import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.presentation.util.verticalPadding
 import eu.kanade.tachiyomi.R
@@ -37,7 +36,7 @@ fun LibraryList(
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
 ) {
-    LazyColumn(
+    FastScrollLazyColumn(
         contentPadding = bottomNavPaddingValues,
     ) {
         item {
