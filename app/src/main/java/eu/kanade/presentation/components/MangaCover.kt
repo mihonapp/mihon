@@ -24,8 +24,8 @@ enum class MangaCover(val ratio: Float) {
     operator fun invoke(
         modifier: Modifier = Modifier,
         data: Any?,
-        contentDescription: String? = null,
-        shape: Shape? = null,
+        contentDescription: String = "",
+        shape: Shape = RoundedCornerShape(4.dp),
         onClick: (() -> Unit)? = null,
     ) {
         AsyncImage(
@@ -35,7 +35,7 @@ enum class MangaCover(val ratio: Float) {
             contentDescription = contentDescription,
             modifier = modifier
                 .aspectRatio(ratio)
-                .clip(shape ?: RoundedCornerShape(4.dp))
+                .clip(shape)
                 .then(
                     if (onClick != null) {
                         Modifier.clickable(
