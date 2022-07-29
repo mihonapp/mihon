@@ -644,7 +644,7 @@ class LibraryPresenter(
         val defaultTitle = stringResource(id = R.string.label_library)
         val default = remember { LibraryToolbarTitle(defaultTitle) }
 
-        return produceState(initialValue = default, category, mangaCountVisibility, tabVisibility) {
+        return produceState(initialValue = default, category, loadedManga, mangaCountVisibility, tabVisibility) {
             val title = if (tabVisibility.not()) category?.name ?: defaultTitle else defaultTitle
 
             value = when {
