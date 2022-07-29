@@ -3,8 +3,7 @@ package eu.kanade.tachiyomi.ui.browse.extension
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.StringRes
-import eu.kanade.domain.extension.interactor.GetExtensionUpdates
-import eu.kanade.domain.extension.interactor.GetExtensions
+import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.presentation.browse.ExtensionState
 import eu.kanade.presentation.browse.ExtensionsState
 import eu.kanade.presentation.browse.ExtensionsStateImpl
@@ -27,8 +26,7 @@ import uy.kohesive.injekt.api.get
 class ExtensionsPresenter(
     private val state: ExtensionsStateImpl = ExtensionState() as ExtensionsStateImpl,
     private val extensionManager: ExtensionManager = Injekt.get(),
-    private val getExtensionUpdates: GetExtensionUpdates = Injekt.get(),
-    private val getExtensions: GetExtensions = Injekt.get(),
+    private val getExtensions: GetExtensionsByType = Injekt.get(),
 ) : BasePresenter<ExtensionsController>(), ExtensionsState by state {
 
     private val _query: MutableStateFlow<String> = MutableStateFlow("")
@@ -77,9 +75,8 @@ class ExtensionsPresenter(
             combine(
                 _query,
                 getExtensions.subscribe(),
-                getExtensionUpdates.subscribe(),
                 _currentDownloads,
-            ) { query, (installed, untrusted, available), updates, downloads ->
+            ) { query, (updates, installed, available, untrusted), downloads ->
                 val languagesWithExtensions = available
                     .filter(queryFilter(query))
                     .groupBy { LocaleHelper.getSourceDisplayName(it.lang, context) }

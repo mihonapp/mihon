@@ -1,20 +1,18 @@
 package eu.kanade.domain.extension.interactor
 
-import eu.kanade.core.util.asFlow
+import eu.kanade.domain.extension.model.Extensions
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-typealias ExtensionSegregation = Triple<List<Extension.Installed>, List<Extension.Untrusted>, List<Extension.Available>>
-
-class GetExtensions(
+class GetExtensionsByType(
     private val preferences: PreferencesHelper,
     private val extensionManager: ExtensionManager,
 ) {
 
-    fun subscribe(): Flow<ExtensionSegregation> {
+    fun subscribe(): Flow<Extensions> {
         val showNsfwSources = preferences.showNsfwSource().get()
 
         return combine(
@@ -23,13 +21,13 @@ class GetExtensions(
             extensionManager.getUntrustedExtensionsFlow(),
             extensionManager.getAvailableExtensionsFlow(),
         ) { _activeLanguages, _installed, _untrusted, _available ->
-
-            val installed = _installed
-                .filter { it.hasUpdate.not() && (showNsfwSources || it.isNsfw.not()) }
+            val (updates, installed) = _installed
+                .filter { (showNsfwSources || it.isNsfw.not()) }
                 .sortedWith(
                     compareBy<Extension.Installed> { it.isObsolete.not() }
                         .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name },
                 )
+                .partition { it.hasUpdate }
 
             val untrusted = _untrusted
                 .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
@@ -42,7 +40,7 @@ class GetExtensions(
                         (showNsfwSources || extension.isNsfw.not())
                 }
 
-            Triple(installed, untrusted, available)
+            Extensions(updates, installed, available, untrusted)
         }
     }
 }

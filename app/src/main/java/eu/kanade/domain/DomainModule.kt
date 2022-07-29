@@ -27,8 +27,7 @@ import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.domain.download.interactor.DeleteDownload
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
-import eu.kanade.domain.extension.interactor.GetExtensionUpdates
-import eu.kanade.domain.extension.interactor.GetExtensions
+import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.history.interactor.DeleteHistoryTable
 import eu.kanade.domain.history.interactor.GetHistory
 import eu.kanade.domain.history.interactor.GetNextChapter
@@ -117,9 +116,8 @@ class DomainModule : InjektModule {
 
         addFactory { DeleteDownload(get(), get()) }
 
-        addFactory { GetExtensions(get(), get()) }
+        addFactory { GetExtensionsByType(get(), get()) }
         addFactory { GetExtensionSources(get()) }
-        addFactory { GetExtensionUpdates(get(), get()) }
         addFactory { GetExtensionLanguages(get(), get()) }
 
         addSingletonFactory<UpdatesRepository> { UpdatesRepositoryImpl(get()) }
