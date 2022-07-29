@@ -300,6 +300,7 @@ private fun MangaScreenSmallImpl(
         SwipeRefresh(
             state = rememberSwipeRefreshState(state.isRefreshingInfo || state.isRefreshingChapter),
             onRefresh = onRefresh,
+            swipeEnabled = !chapters.any { it.selected },
             indicatorPadding = contentPadding,
             indicator = { s, trigger ->
                 SwipeRefreshIndicator(
@@ -426,11 +427,14 @@ fun MangaScreenLargeImpl(
     val layoutDirection = LocalLayoutDirection.current
     val density = LocalDensity.current
 
+    val chapters = remember(state) { state.processedChapters.toList() }
+
     val insetPadding = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues()
     val (topBarHeight, onTopBarHeightChanged) = remember { mutableStateOf(0) }
     SwipeRefresh(
         state = rememberSwipeRefreshState(state.isRefreshingInfo || state.isRefreshingChapter),
         onRefresh = onRefresh,
+        swipeEnabled = !chapters.any { it.selected },
         indicatorPadding = PaddingValues(
             start = insetPadding.calculateStartPadding(layoutDirection),
             top = with(density) { topBarHeight.toDp() },
@@ -445,7 +449,6 @@ fun MangaScreenLargeImpl(
         },
     ) {
         val chapterListState = rememberLazyListState()
-        val chapters = remember(state) { state.processedChapters.toList() }
 
         val internalOnBackPressed = {
             if (chapters.any { it.selected }) {
