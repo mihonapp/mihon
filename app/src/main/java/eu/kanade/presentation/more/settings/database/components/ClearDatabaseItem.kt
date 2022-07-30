@@ -40,7 +40,7 @@ fun ClearDatabaseItem(
                 .weight(1f),
         ) {
             Text(
-                text = source.nameWithLanguage,
+                text = source.visualName,
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(text = stringResource(id = R.string.clear_database_source_item_count, count))

@@ -17,8 +17,11 @@ data class Source(
     val isUsedLast: Boolean = false,
 ) {
 
-    val nameWithLanguage: String
-        get() = "$name (${lang.uppercase()})"
+    val visualName: String
+        get() = when {
+            lang.isEmpty() -> name
+            else -> "$name (${lang.uppercase()})"
+        }
 
     val icon: ImageBitmap?
         get() {
