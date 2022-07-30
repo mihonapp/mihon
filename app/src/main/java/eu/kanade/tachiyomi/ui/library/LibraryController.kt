@@ -78,11 +78,17 @@ class LibraryController(
     }
 
     override fun handleBack(): Boolean {
-        if (presenter.selection.isNotEmpty()) {
-            presenter.clearSelection()
-            return true
+        return when {
+            presenter.selection.isNotEmpty() -> {
+                presenter.clearSelection()
+                true
+            }
+            presenter.searchQuery != null -> {
+                presenter.searchQuery = null
+                true
+            }
+            else -> false
         }
-        return false
     }
 
     override fun onViewCreated(view: View) {

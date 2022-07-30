@@ -53,8 +53,8 @@ fun LibraryScreen(
                         onChangeCategoryClicked = onChangeCategoryClicked,
                         onMarkAsReadClicked = onMarkAsReadClicked,
                         onMarkAsUnreadClicked = onMarkAsUnreadClicked,
-                        onDownloadClicked = onDownloadClicked,
-                        onDeleteClicked = onDeleteClicked.takeIf { presenter.selection.none { it.source == LocalSource.ID } },
+                        onDownloadClicked = onDownloadClicked.takeIf { presenter.selection.none { it.source == LocalSource.ID } },
+                        onDeleteClicked = onDeleteClicked,
                     )
                 },
             ) { paddingValues ->
