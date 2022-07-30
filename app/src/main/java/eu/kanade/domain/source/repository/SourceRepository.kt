@@ -1,8 +1,8 @@
 package eu.kanade.domain.source.repository
 
 import eu.kanade.domain.source.model.Source
+import eu.kanade.domain.source.model.SourceWithCount
 import kotlinx.coroutines.flow.Flow
-import eu.kanade.tachiyomi.source.Source as LoadedSource
 
 interface SourceRepository {
 
@@ -12,5 +12,5 @@ interface SourceRepository {
 
     fun getSourcesWithFavoriteCount(): Flow<List<Pair<Source, Long>>>
 
-    fun getSourcesWithNonLibraryManga(): Flow<List<Pair<LoadedSource, Long>>>
+    fun getSourcesWithNonLibraryManga(): Flow<List<SourceWithCount>>
 }
