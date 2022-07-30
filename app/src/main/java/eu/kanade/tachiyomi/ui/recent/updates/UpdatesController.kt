@@ -1,28 +1,19 @@
 package eu.kanade.tachiyomi.ui.recent.updates
 
 import androidx.activity.OnBackPressedDispatcherOwner
-import androidx.appcompat.app.AlertDialog
-import androidx.compose.material3.Text
+import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.updates.UpdateScreen
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.widget.materialdialogs.await
 import kotlinx.coroutines.launch
 
 /**
@@ -36,39 +27,27 @@ class UpdatesController :
 
     @Composable
     override fun ComposeContent() {
-        val state by presenter.state.collectAsState()
-        when (state) {
-            is UpdatesState.Loading -> LoadingScreen()
-            is UpdatesState.Error -> Text(text = (state as UpdatesState.Error).error.message.orEmpty())
-            is UpdatesState.Success ->
+        Crossfade(targetState = presenter.isLoading) { isLoading ->
+            if (isLoading) {
+                LoadingScreen()
+            } else {
                 UpdateScreen(
-                    state = (state as UpdatesState.Success),
-                    onClickCover = this::openManga,
-                    onClickUpdate = this::openChapter,
-                    onDownloadChapter = this::downloadChapters,
-                    onUpdateLibrary = this::updateLibrary,
+                    presenter = presenter,
+                    onClickCover = { item ->
+                        router.pushController(MangaController(item.update.mangaId))
+                    },
                     onBackClicked = this::onBackClicked,
-                    // For bottom action menu
-                    onMultiBookmarkClicked = { updatesItems, bookmark ->
-                        presenter.bookmarkUpdates(updatesItems, bookmark)
-                    },
-                    onMultiMarkAsReadClicked = { updatesItems, read ->
-                        presenter.markUpdatesRead(updatesItems, read)
-                    },
-                    onMultiDeleteClicked = this::deleteChaptersWithConfirmation,
+                    onDownloadChapter = this::downloadChapters,
                 )
-        }
-        LaunchedEffect(state) {
-            if (state !is UpdatesState.Loading) {
-                (activity as? MainActivity)?.ready = true
             }
         }
-    }
-
-    private fun updateLibrary() {
-        activity?.let {
-            if (LibraryUpdateService.start(it)) {
-                it.toast(R.string.updating_library)
+        LaunchedEffect(presenter.selectionMode) {
+            val activity = (activity as? MainActivity) ?: return@LaunchedEffect
+            activity.showBottomNav(presenter.selectionMode.not())
+        }
+        LaunchedEffect(presenter.isLoading) {
+            if (presenter.isLoading.not()) {
+                (activity as? MainActivity)?.ready = true
             }
         }
     }
@@ -105,26 +84,7 @@ class UpdatesController :
                     presenter.deleteChapters(items)
                 }
             }
+            presenter.toggleAllSelection(false)
         }
-    }
-
-    private fun deleteChaptersWithConfirmation(items: List<UpdatesItem>) {
-        if (items.isEmpty()) return
-        viewScope.launch {
-            val result = MaterialAlertDialogBuilder(activity!!)
-                .setMessage(R.string.confirm_delete_chapters)
-                .await(android.R.string.ok, android.R.string.cancel)
-            if (result == AlertDialog.BUTTON_POSITIVE) presenter.deleteChapters(items)
-        }
-    }
-
-    private fun openChapter(item: UpdatesItem) {
-        val activity = activity ?: return
-        val intent = ReaderActivity.newIntent(activity, item.update.mangaId, item.update.chapterId)
-        startActivity(intent)
-    }
-
-    private fun openManga(item: UpdatesItem) {
-        router.pushController(MangaController(item.update.mangaId))
     }
 }

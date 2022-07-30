@@ -26,7 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -44,9 +46,8 @@ import java.text.DateFormat
 
 fun LazyListScope.updatesUiItems(
     uiModels: List<UpdatesUiModel>,
-    itemUiModels: List<UpdatesUiModel.Item>,
-    selected: MutableList<UpdatesUiModel.Item>,
-    selectedPositions: Array<Int>,
+    selectionMode: Boolean,
+    onUpdateSelected: (UpdatesItem, Boolean, Boolean, Boolean) -> Unit,
     onClickCover: (UpdatesItem) -> Unit,
     onClickUpdate: (UpdatesItem) -> Unit,
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
@@ -78,35 +79,27 @@ fun LazyListScope.updatesUiItems(
                 )
             }
             is UpdatesUiModel.Item -> {
-                val value = item.item
-                val update = value.update
+                val updatesItem = item.item
+                val update = updatesItem.update
                 UpdatesUiItem(
                     modifier = Modifier.animateItemPlacement(),
                     update = update,
-                    selected = selected.contains(item),
-                    onClick = {
-                        onUpdatesItemClick(
-                            updatesItem = item,
-                            selected = selected,
-                            updates = itemUiModels,
-                            selectedPositions = selectedPositions,
-                            onUpdateClicked = onClickUpdate,
-                        )
-                    },
+                    selected = updatesItem.selected,
                     onLongClick = {
-                        onUpdatesItemLongClick(
-                            updatesItem = item,
-                            selected = selected,
-                            updates = itemUiModels,
-                            selectedPositions = selectedPositions,
-                        )
+                        onUpdateSelected(updatesItem, !updatesItem.selected, true, true)
                     },
-                    onClickCover = { if (selected.size == 0) onClickCover(value) },
+                    onClick = {
+                        when {
+                            selectionMode -> onUpdateSelected(updatesItem, !updatesItem.selected, true, false)
+                            else -> onClickUpdate(updatesItem)
+                        }
+                    },
+                    onClickCover = { if (selectionMode.not()) onClickCover(updatesItem) },
                     onDownloadChapter = {
-                        if (selected.size == 0) onDownloadChapter(listOf(value), it)
+                        if (selectionMode.not()) onDownloadChapter(listOf(updatesItem), it)
                     },
-                    downloadStateProvider = value.downloadStateProvider,
-                    downloadProgressProvider = value.downloadProgressProvider,
+                    downloadStateProvider = updatesItem.downloadStateProvider,
+                    downloadProgressProvider = updatesItem.downloadProgressProvider,
                 )
             }
         }
@@ -126,12 +119,16 @@ fun UpdatesUiItem(
     downloadStateProvider: () -> Download.State,
     downloadProgressProvider: () -> Int,
 ) {
+    val haptic = LocalHapticFeedback.current
     Row(
         modifier = modifier
             .background(if (selected) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent)
             .combinedClickable(
                 onClick = onClick,
-                onLongClick = onLongClick,
+                onLongClick = {
+                    onLongClick()
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                },
             )
             .height(56.dp)
             .padding(horizontal = horizontalPadding),
@@ -196,75 +193,5 @@ fun UpdatesUiItem(
             downloadProgressProvider = downloadProgressProvider,
             onClick = onDownloadChapter,
         )
-    }
-}
-
-private fun onUpdatesItemLongClick(
-    updatesItem: UpdatesUiModel.Item,
-    selected: MutableList<UpdatesUiModel.Item>,
-    updates: List<UpdatesUiModel.Item>,
-    selectedPositions: Array<Int>,
-): Boolean {
-    if (!selected.contains(updatesItem)) {
-        val selectedIndex = updates.indexOf(updatesItem)
-        if (selected.isEmpty()) {
-            selected.add(updatesItem)
-            selectedPositions[0] = selectedIndex
-            selectedPositions[1] = selectedIndex
-            return true
-        }
-
-        // Try to select the items in-between when possible
-        val range: IntRange
-        if (selectedIndex < selectedPositions[0]) {
-            range = selectedIndex until selectedPositions[0]
-            selectedPositions[0] = selectedIndex
-        } else if (selectedIndex > selectedPositions[1]) {
-            range = (selectedPositions[1] + 1)..selectedIndex
-            selectedPositions[1] = selectedIndex
-        } else {
-            // Just select itself
-            range = selectedIndex..selectedIndex
-        }
-
-        range.forEach {
-            val toAdd = updates[it]
-            if (!selected.contains(toAdd)) {
-                selected.add(toAdd)
-            }
-        }
-        return true
-    }
-    return false
-}
-
-private fun onUpdatesItemClick(
-    updatesItem: UpdatesUiModel.Item,
-    selected: MutableList<UpdatesUiModel.Item>,
-    updates: List<UpdatesUiModel.Item>,
-    selectedPositions: Array<Int>,
-    onUpdateClicked: (UpdatesItem) -> Unit,
-) {
-    val selectedIndex = updates.indexOf(updatesItem)
-    when {
-        selected.contains(updatesItem) -> {
-            val removedIndex = updates.indexOf(updatesItem)
-            selected.remove(updatesItem)
-
-            if (removedIndex == selectedPositions[0]) {
-                selectedPositions[0] = updates.indexOfFirst { selected.contains(it) }
-            } else if (removedIndex == selectedPositions[1]) {
-                selectedPositions[1] = updates.indexOfLast { selected.contains(it) }
-            }
-        }
-        selected.isNotEmpty() -> {
-            if (selectedIndex < selectedPositions[0]) {
-                selectedPositions[0] = selectedIndex
-            } else if (selectedIndex > selectedPositions[1]) {
-                selectedPositions[1] = selectedIndex
-            }
-            selected.add(updatesItem)
-        }
-        else -> onUpdateClicked(updatesItem.item)
     }
 }

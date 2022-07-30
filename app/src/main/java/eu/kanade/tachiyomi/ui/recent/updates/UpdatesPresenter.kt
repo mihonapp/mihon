@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.os.Bundle
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.SetReadStatus
@@ -11,6 +13,8 @@ import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.updates.interactor.GetUpdates
 import eu.kanade.domain.updates.model.UpdatesWithRelations
+import eu.kanade.presentation.updates.UpdatesState
+import eu.kanade.presentation.updates.UpdatesStateImpl
 import eu.kanade.presentation.updates.UpdatesUiModel
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -20,23 +24,22 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.toDateKey
 import eu.kanade.tachiyomi.util.lang.withUIContext
-import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.receiveAsFlow
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
 
 class UpdatesPresenter(
+    private val state: UpdatesStateImpl = UpdatesState() as UpdatesStateImpl,
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val getUpdates: GetUpdates = Injekt.get(),
@@ -44,29 +47,22 @@ class UpdatesPresenter(
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get(),
-) : BasePresenter<UpdatesController>() {
+    preferences: PreferencesHelper = Injekt.get(),
+) : BasePresenter<UpdatesController>(), UpdatesState by state {
 
-    private val _state: MutableStateFlow<UpdatesState> = MutableStateFlow(UpdatesState.Loading)
-    val state: StateFlow<UpdatesState> = _state.asStateFlow()
+    val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
 
-    /**
-     * Helper function to update the UI state only if it's currently in success state
-     */
-    private fun updateSuccessState(func: (UpdatesState.Success) -> UpdatesState.Success) {
-        _state.update { if (it is UpdatesState.Success) func(it) else it }
-    }
+    val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
 
-    private var incognitoMode = false
-        set(value) {
-            updateSuccessState { it.copy(isIncognitoMode = value) }
-            field = value
-        }
-    private var downloadOnlyMode = false
-        set(value) {
-            updateSuccessState { it.copy(isDownloadedOnlyMode = value) }
-            field = value
-        }
+    val relativeTime: Int by preferences.relativeTime().asState()
+
+    val dateFormat: DateFormat by mutableStateOf(preferences.dateFormat())
+
+    private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
+    val events: Flow<Event> = _events.receiveAsFlow()
+
+    // First and last selected index in list
+    private val selectedPositions: Array<Int> = arrayOf(-1, -1)
 
     /**
      * Subscription to observe download status changes.
@@ -85,38 +81,17 @@ class UpdatesPresenter(
             }
 
             getUpdates.subscribe(calendar)
-                .catch { exception ->
-                    _state.value = UpdatesState.Error(exception)
+                .catch {
+                    logcat(LogPriority.ERROR, it)
+                    _events.send(Event.InternalError)
                 }
                 .collectLatest { updates ->
-                    val uiModels = updates.toUpdateUiModels()
-                    _state.update { currentState ->
-                        when (currentState) {
-                            is UpdatesState.Success -> currentState.copy(uiModels)
-                            is UpdatesState.Loading, is UpdatesState.Error ->
-                                UpdatesState.Success(
-                                    uiModels = uiModels,
-                                    isIncognitoMode = incognitoMode,
-                                    isDownloadedOnlyMode = downloadOnlyMode,
-                                )
-                        }
-                    }
+                    state.uiModels = updates.toUpdateUiModels()
+                    state.isLoading = false
 
                     observeDownloads()
                 }
         }
-
-        preferences.incognitoMode()
-            .asHotFlow { incognito ->
-                incognitoMode = incognito
-            }
-            .launchIn(presenterScope)
-
-        preferences.downloadedOnly()
-            .asHotFlow { downloadedOnly ->
-                downloadOnlyMode = downloadedOnly
-            }
-            .launchIn(presenterScope)
     }
 
     private fun List<UpdatesWithRelations>.toUpdateUiModels(): List<UpdatesUiModel> {
@@ -182,24 +157,22 @@ class UpdatesPresenter(
      * @param download download object containing progress.
      */
     private fun updateDownloadState(download: Download) {
-        updateSuccessState { successState ->
-            val modifiedIndex = successState.uiModels.indexOfFirst {
-                it is UpdatesUiModel.Item && it.item.update.chapterId == download.chapter.id
-            }
-            if (modifiedIndex < 0) return@updateSuccessState successState
+        val uiModels = state.uiModels
+        val modifiedIndex = uiModels.indexOfFirst {
+            it is UpdatesUiModel.Item && it.item.update.chapterId == download.chapter.id
+        }
+        if (modifiedIndex < 0) return
 
-            val newUiModels = successState.uiModels.toMutableList().apply {
-                var uiModel = removeAt(modifiedIndex)
-                if (uiModel is UpdatesUiModel.Item) {
-                    val item = uiModel.item.copy(
-                        downloadStateProvider = { download.status },
-                        downloadProgressProvider = { download.progress },
-                    )
-                    uiModel = UpdatesUiModel.Item(item)
-                }
-                add(modifiedIndex, uiModel)
+        state.uiModels = uiModels.toMutableList().apply {
+            var uiModel = removeAt(modifiedIndex)
+            if (uiModel is UpdatesUiModel.Item) {
+                val item = uiModel.item.copy(
+                    downloadStateProvider = { download.status },
+                    downloadProgressProvider = { download.progress },
+                )
+                uiModel = UpdatesUiModel.Item(item)
             }
-            successState.copy(uiModels = newUiModels)
+            add(modifiedIndex, uiModel)
         }
     }
 
@@ -275,42 +248,131 @@ class UpdatesPresenter(
                 val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId)?.toDbChapter() }
                 downloadManager.deleteChapters(chapters, manga, source).mapNotNull { it.id }
             }
-            updateSuccessState { successState ->
-                val deletedUpdates = successState.uiModels.filter {
-                    it is UpdatesUiModel.Item && deletedIds.contains(it.item.update.chapterId)
-                }
-                if (deletedUpdates.isEmpty()) return@updateSuccessState successState
 
-                // TODO: Don't do this fake status update
-                val newUiModels = successState.uiModels.toMutableList().apply {
-                    deletedUpdates.forEach { deletedUpdate ->
-                        val modifiedIndex = indexOf(deletedUpdate)
-                        var uiModel = removeAt(modifiedIndex)
-                        if (uiModel is UpdatesUiModel.Item) {
-                            val item = uiModel.item.copy(
-                                downloadStateProvider = { Download.State.NOT_DOWNLOADED },
-                                downloadProgressProvider = { 0 },
-                            )
-                            uiModel = UpdatesUiModel.Item(item)
-                        }
-                        add(modifiedIndex, uiModel)
+            val uiModels = state.uiModels
+            val deletedUpdates = uiModels.filter {
+                it is UpdatesUiModel.Item && deletedIds.contains(it.item.update.chapterId)
+            }
+            if (deletedUpdates.isEmpty()) return@launchIO
+
+            // TODO: Don't do this fake status update
+            state.uiModels = uiModels.toMutableList().apply {
+                deletedUpdates.forEach { deletedUpdate ->
+                    val modifiedIndex = indexOf(deletedUpdate)
+                    var uiModel = removeAt(modifiedIndex)
+                    if (uiModel is UpdatesUiModel.Item) {
+                        val item = uiModel.item.copy(
+                            downloadStateProvider = { Download.State.NOT_DOWNLOADED },
+                            downloadProgressProvider = { 0 },
+                        )
+                        uiModel = UpdatesUiModel.Item(item)
                     }
+                    add(modifiedIndex, uiModel)
                 }
-                successState.copy(uiModels = newUiModels)
             }
         }
     }
-}
 
-sealed class UpdatesState {
-    object Loading : UpdatesState()
-    data class Error(val error: Throwable) : UpdatesState()
-    data class Success(
-        val uiModels: List<UpdatesUiModel>,
-        val isIncognitoMode: Boolean = false,
-        val isDownloadedOnlyMode: Boolean = false,
-        val showSwipeRefreshIndicator: Boolean = false,
-    ) : UpdatesState()
+    fun toggleSelection(
+        item: UpdatesItem,
+        selected: Boolean,
+        userSelected: Boolean = false,
+        fromLongPress: Boolean = false,
+    ) {
+        val uiModels = state.uiModels
+        val modifiedIndex = uiModels.indexOfFirst {
+            it is UpdatesUiModel.Item && it.item.update.chapterId == item.update.chapterId
+        }
+        if (modifiedIndex < 0) return
+
+        val oldItem = (uiModels[modifiedIndex] as? UpdatesUiModel.Item)?.item ?: return
+        if ((oldItem.selected && selected) || (!oldItem.selected && !selected)) return
+
+        state.uiModels = uiModels.toMutableList().apply {
+            val firstSelection = none { it is UpdatesUiModel.Item && it.item.selected }
+            var newItem = (removeAt(modifiedIndex) as? UpdatesUiModel.Item)?.item?.copy(selected = selected) ?: return@apply
+            add(modifiedIndex, UpdatesUiModel.Item(newItem))
+
+            if (selected && userSelected && fromLongPress) {
+                if (firstSelection) {
+                    selectedPositions[0] = modifiedIndex
+                    selectedPositions[1] = modifiedIndex
+                } else {
+                    // Try to select the items in-between when possible
+                    val range: IntRange
+                    if (modifiedIndex < selectedPositions[0]) {
+                        range = modifiedIndex + 1 until selectedPositions[0]
+                        selectedPositions[0] = modifiedIndex
+                    } else if (modifiedIndex > selectedPositions[1]) {
+                        range = (selectedPositions[1] + 1) until modifiedIndex
+                        selectedPositions[1] = modifiedIndex
+                    } else {
+                        // Just select itself
+                        range = IntRange.EMPTY
+                    }
+
+                    range.forEach {
+                        var uiModel = removeAt(it)
+                        if (uiModel is UpdatesUiModel.Item) {
+                            newItem = uiModel.item.copy(selected = true)
+                            uiModel = UpdatesUiModel.Item(newItem)
+                        }
+                        add(it, uiModel)
+                    }
+                }
+            } else if (userSelected && !fromLongPress) {
+                if (!selected) {
+                    if (modifiedIndex == selectedPositions[0]) {
+                        selectedPositions[0] = indexOfFirst { it is UpdatesUiModel.Item && it.item.selected }
+                    } else if (modifiedIndex == selectedPositions[1]) {
+                        selectedPositions[1] = indexOfLast { it is UpdatesUiModel.Item && it.item.selected }
+                    }
+                } else {
+                    if (modifiedIndex < selectedPositions[0]) {
+                        selectedPositions[0] = modifiedIndex
+                    } else if (modifiedIndex > selectedPositions[1]) {
+                        selectedPositions[1] = modifiedIndex
+                    }
+                }
+            }
+        }
+    }
+
+    fun toggleAllSelection(selected: Boolean) {
+        state.uiModels = state.uiModels.map {
+            when (it) {
+                is UpdatesUiModel.Header -> it
+                is UpdatesUiModel.Item -> {
+                    val newItem = it.item.copy(selected = selected)
+                    UpdatesUiModel.Item(newItem)
+                }
+            }
+        }
+        selectedPositions[0] = -1
+        selectedPositions[1] = -1
+    }
+
+    fun invertSelection() {
+        state.uiModels = state.uiModels.map {
+            when (it) {
+                is UpdatesUiModel.Header -> it
+                is UpdatesUiModel.Item -> {
+                    val newItem = it.item.let { item -> item.copy(selected = !item.selected) }
+                    UpdatesUiModel.Item(newItem)
+                }
+            }
+        }
+        selectedPositions[0] = -1
+        selectedPositions[1] = -1
+    }
+
+    sealed class Dialog {
+        data class DeleteConfirmation(val toDelete: List<UpdatesItem>) : Dialog()
+    }
+
+    sealed class Event {
+        object InternalError : Event()
+    }
 }
 
 @Immutable
@@ -318,4 +380,5 @@ data class UpdatesItem(
     val update: UpdatesWithRelations,
     val downloadStateProvider: () -> Download.State,
     val downloadProgressProvider: () -> Int,
+    val selected: Boolean = false,
 )
