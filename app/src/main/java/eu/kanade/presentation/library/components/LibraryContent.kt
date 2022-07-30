@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import com.google.accompanist.pager.rememberPagerState
@@ -26,8 +27,8 @@ import eu.kanade.tachiyomi.widget.EmptyView
 fun LibraryContent(
     state: LibraryState,
     contentPadding: PaddingValues,
-    currentPage: Int,
-    isLibraryEmpty: Boolean,
+    currentPage: () -> Int,
+    isLibraryEmpty: () -> Boolean,
     isDownloadOnly: Boolean,
     isIncognitoMode: Boolean,
     showPageTabs: Boolean,
@@ -42,12 +43,13 @@ fun LibraryContent(
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getLibraryForPage: @Composable (Int) -> State<List<LibraryItem>>,
 ) {
-    val categories = state.categories
-    val pagerState = rememberPagerState(currentPage.coerceAtMost(categories.lastIndex))
-
     Column(
         modifier = Modifier.padding(contentPadding),
     ) {
+        val categories = state.categories
+        val coercedCurrentPage = remember { currentPage().coerceAtMost(categories.lastIndex) }
+        val pagerState = rememberPagerState(coercedCurrentPage)
+
         if (showPageTabs && categories.size > 1) {
             LibraryTabs(
                 state = pagerState,
@@ -72,7 +74,7 @@ fun LibraryContent(
 
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = false),
-            onRefresh = { onRefresh(categories[currentPage]) },
+            onRefresh = { onRefresh(categories[currentPage()]) },
             indicator = { s, trigger ->
                 SwipeRefreshIndicator(
                     state = s,
@@ -80,7 +82,7 @@ fun LibraryContent(
                 )
             },
         ) {
-            if (state.searchQuery.isNullOrEmpty() && isLibraryEmpty) {
+            if (state.searchQuery.isNullOrEmpty() && isLibraryEmpty()) {
                 val handler = LocalUriHandler.current
                 EmptyScreen(
                     R.string.information_empty_library,

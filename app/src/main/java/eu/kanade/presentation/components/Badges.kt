@@ -1,12 +1,10 @@
 package eu.kanade.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,18 +34,15 @@ fun Badge(
     textColor: Color = MaterialTheme.colorScheme.onSecondary,
     shape: Shape = RectangleShape,
 ) {
-    Box(
+    Text(
+        text = text,
         modifier = Modifier
             .clip(shape)
-            .background(color),
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-            style = LocalTextStyle.current.copy(
-                color = textColor,
-                fontWeight = FontWeight.Medium,
-            ),
-        )
-    }
+            .background(color)
+            .padding(horizontal = 3.dp, vertical = 1.dp),
+        color = textColor,
+        fontWeight = FontWeight.Medium,
+        maxLines = 1,
+        style = MaterialTheme.typography.bodySmall,
+    )
 }

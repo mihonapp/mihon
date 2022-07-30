@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,8 +17,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
@@ -102,10 +102,10 @@ fun LibraryCompactGridItem(
             modifier = Modifier
                 .padding(8.dp)
                 .align(Alignment.BottomStart),
+            color = Color.White,
+            fontSize = 12.sp,
             maxLines = 2,
-            style = LocalTextStyle.current.copy(
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.titleSmall.copy(
                 shadow = Shadow(
                     color = Color.Black,
                     blurRadius = 4f,

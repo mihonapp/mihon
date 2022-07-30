@@ -36,40 +36,43 @@ fun LibraryGridCover(
             data = mangaCover,
         )
         content()
-        BadgeGroup(
-            modifier = Modifier
-                .padding(4.dp)
-                .align(Alignment.TopStart),
-        ) {
-            if (downloadCount > 0) {
-                Badge(
-                    text = "$downloadCount",
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.onTertiary,
-                )
-            }
-            if (unreadCount > 0) {
-                Badge(text = "$unreadCount")
+        if (downloadCount > 0 || unreadCount > 0) {
+            BadgeGroup(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.TopStart),
+            ) {
+                if (downloadCount > 0) {
+                    Badge(
+                        text = "$downloadCount",
+                        color = MaterialTheme.colorScheme.tertiary,
+                        textColor = MaterialTheme.colorScheme.onTertiary,
+                    )
+                }
+                if (unreadCount > 0) {
+                    Badge(text = "$unreadCount")
+                }
             }
         }
-        BadgeGroup(
-            modifier = Modifier
-                .padding(4.dp)
-                .align(Alignment.TopEnd),
-        ) {
-            if (isLocal) {
-                Badge(
-                    text = stringResource(R.string.local_source_badge),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.onTertiary,
-                )
-            }
-            if (isLocal.not() && language.isNotEmpty()) {
-                Badge(
-                    text = language,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.onTertiary,
-                )
+        if (isLocal || language.isNotEmpty()) {
+            BadgeGroup(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.TopEnd),
+            ) {
+                if (isLocal) {
+                    Badge(
+                        text = stringResource(R.string.local_source_badge),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        textColor = MaterialTheme.colorScheme.onTertiary,
+                    )
+                } else if (language.isNotEmpty()) {
+                    Badge(
+                        text = language,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        textColor = MaterialTheme.colorScheme.onTertiary,
+                    )
+                }
             }
         }
     }
