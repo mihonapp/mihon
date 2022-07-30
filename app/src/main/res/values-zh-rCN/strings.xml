@@ -734,4 +734,6 @@
     <string name="internal_error">InternalError: 内部错误，详情请见崩溃日志</string>
     <string name="pref_user_agent_string">默认 User Agent 字符串</string>
     <string name="pref_reset_user_agent_string">重置默认 User Agent 字符串</string>
+    <string name="action_remove_everything">删除一切</string>
+    <string name="loader_rar5_error">不支持 RARv5 格式</string>
 </resources>

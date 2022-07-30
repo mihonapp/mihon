@@ -173,7 +173,7 @@
     </plurals>
     <string name="update_check_notification_update_available">Új verzió érhető el!</string>
     <string name="update_check_notification_download_error">Letöltési hiba</string>
-    <string name="update_check_notification_download_complete">Érints a telepítéshez</string>
+    <string name="update_check_notification_download_complete">Érints meg a telepítéshez</string>
     <string name="email">E-mail-cím</string>
     <string name="pref_category_nsfw_content">NSFW (18+) források</string>
     <string name="show_chapter_number">Fejezetszám</string>
@@ -509,7 +509,7 @@
     <string name="tracker_komga_warning">Ez a tracker csak a Komga forrással kompatibilis.</string>
     <string name="dialog_with_checkbox_remove_description">Ez eltávolítja a fejezet olvasási dátumát. Biztos benne\?</string>
     <string name="pref_update_only_completely_read">Csak a befejezett fejezeteket()</string>
-    <string name="delete_category_confirmation">Törölni akarja a %s kategóriát</string>
+    <string name="delete_category_confirmation">Törölni akarja a %s kategóriát \?</string>
     <string name="internal_error">InternalError: Nézze meg a hibaüzenetet további információért</string>
     <string name="network_not_metered">Csak nem-lemért hálózatokon</string>
     <string name="pref_library_update_manga_restriction">Frissülő elemek kihagyása</string>
@@ -744,4 +744,8 @@
         <item quantity="other">%1$s fejezet és még %2$d</item>
     </plurals>
     <string name="file_select_backup">Biztonsági mentési fájl kiválasztása</string>
+    <string name="pref_user_agent_string">Alap hálózati kliens szöveg</string>
+    <string name="pref_reset_user_agent_string">Alap hálózati kliens szöveg visszaállítása</string>
+    <string name="action_remove_everything">Minden Eltávolitása</string>
+    <string name="loader_rar5_error">RARv5 formátum nem támogatót</string>
 </resources>

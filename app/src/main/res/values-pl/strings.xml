@@ -415,7 +415,7 @@
     <string name="information_webview_required">Widok w przeglądarce jest wymagany dla Tachiyomi</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Dostępna aktualizacja rozszerzenia</item>
-        <item quantity="few">Dostępne %d aktualizacji rozszerzeń</item>
+        <item quantity="few">Dostępne %d aktualizacje rozszerzeń</item>
         <item quantity="many">Dostępne %d aktualizacji rozszerzeń</item>
         <item quantity="other">Dostępne %d aktualizacji rozszerzeń</item>
     </plurals>
@@ -429,7 +429,7 @@
     <string name="notification_chapters_single_and_more">Rozdział %1$s i %2$d więcej</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d nowy rozdział</item>
-        <item quantity="few">%1$d nowych rozdziałów</item>
+        <item quantity="few">%1$d nowe rozdziały</item>
         <item quantity="many">%1$d nowych rozdziałów</item>
         <item quantity="other">%1$d nowych rozdziałów</item>
     </plurals>
@@ -495,7 +495,7 @@
     <string name="pref_read_with_tapping_inverted">Odwróć strefy kliknięcia</string>
     <string name="download_insufficient_space">Nie udało się pobrać rozdziałów z powodu braku miejsca na urządzeniu</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 rozdział</item>
+        <item quantity="one">%1$s rozdział</item>
         <item quantity="few">%1$s rozdziały</item>
         <item quantity="many">%1$s rozdziałów</item>
         <item quantity="other">%1$s rozdziałów</item>
@@ -765,4 +765,11 @@
     <string name="pref_duplicate_pinned_sources">Pokaż zduplikowane przypięte źródła</string>
     <string name="pref_duplicate_pinned_sources_summary">Duplikuj przypięte rozszerzenia w ich grupach językowych</string>
     <string name="download_notifier_split_page_path_not_found">Nie można było znaleźć ścieżki %d strony</string>
+    <string name="pref_user_agent_string">Domyślny user agent string</string>
+    <string name="pref_reset_user_agent_string">Zresetuj domyślny user agent string</string>
+    <string name="delete_category_confirmation">Czy chcesz usunąć kategorię \"%s\"\?</string>
+    <string name="delete_category">Usuń kategorię</string>
+    <string name="internal_error">InternalError: sprawdź log błędów po więcej informacji</string>
+    <string name="action_remove_everything">Usuń wszystko</string>
+    <string name="loader_rar5_error">Format RARv5 jest nieobsługiwany</string>
 </resources>

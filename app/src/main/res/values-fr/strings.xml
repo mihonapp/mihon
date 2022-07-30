@@ -86,7 +86,7 @@
     <string name="pref_custom_color_filter">Filtre de couleur personnalisé</string>
     <string name="pref_keep_screen_on">Garder l\'écran allumé</string>
     <string name="pref_reader_navigation">Navigation</string>
-    <string name="pref_read_with_volume_keys">Boutons de volume</string>
+    <string name="pref_read_with_volume_keys">Avec les boutons de volume</string>
     <string name="pref_reader_theme">Couleur de fond</string>
     <string name="white_background">Blanc</string>
     <string name="black_background">Noir</string>
@@ -499,7 +499,7 @@
     <string name="page_list_empty_error">Aucune page trouvée</string>
     <string name="action_disable_all">Tout désactiver</string>
     <string name="action_enable_all">Tout activer</string>
-    <string name="pref_show_reading_mode_summary">Afficher la liste des modes de lecture lorsque le lecteur est ouvert</string>
+    <string name="pref_show_reading_mode_summary">Affiche la liste des modes de lecture à l\'ouverture du lecteur</string>
     <string name="pref_show_reading_mode">Afficher le mode de lecture</string>
     <string name="action_start">Commencer</string>
     <string name="loader_not_implemented_error">Source non trouvée</string>
@@ -553,7 +553,7 @@
     <string name="downloaded_chapters">Chapitres téléchargés</string>
     <string name="manga_from_library">Manga de la bibliothèque</string>
     <string name="action_search_settings">Rechercher des paramètres</string>
-    <string name="pref_incognito_mode_summary">Met en pause l\'historique de lecture</string>
+    <string name="pref_incognito_mode_summary">Suspend l\'historique de lecture</string>
     <string name="clear_history_confirmation">Êtes-vous sûr(e) \? Tout l\'historique sera effacé.</string>
     <string name="pref_incognito_mode">Mode navigation privée</string>
     <string name="pref_clear_history">Effacer l\'historique</string>
@@ -590,11 +590,11 @@
 \n
 \nVous devrez installer les extensions manquantes et vous connecter ensuite aux services de suivi pour les utiliser.</string>
     <string name="nav_zone_prev">Précédent</string>
-    <string name="pref_dns_over_https">DNS via HTTPS (DoH)</string>
+    <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="nav_zone_right">Droite</string>
     <string name="nav_zone_left">Gauche</string>
     <string name="nav_zone_next">Suivant</string>
-    <string name="pref_show_navigation_mode_summary">Afficher brièvement lorsque le lecteur est ouvert</string>
+    <string name="pref_show_navigation_mode_summary">Affichage bref à l\'ouverture du lecteur</string>
     <string name="pref_show_navigation_mode">Afficher les zones tactiles (superposition)</string>
     <string name="exclude">Exclure : %s</string>
     <string name="include">Inclure : %s</string>
@@ -686,7 +686,7 @@
     <string name="ext_app_info">Infos sur l\'application</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installez et démarrez Shizuku pour utiliser Shizuku comme installateur d\'extensions.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku n\'est pas en cours d\'exécution</string>
-    <string name="ext_installer_legacy">Ancienne</string>
+    <string name="ext_installer_legacy">Legacy</string>
     <string name="ext_installer_pref">Installateur</string>
     <string name="ext_install_service_notif">Installation de l\'extension…</string>
     <string name="action_sort_count">Total des mangas</string>
@@ -780,4 +780,6 @@
     <string name="internal_error">ErreurInterne : Vérifiez votre journal de plante pour plus d\'information</string>
     <string name="pref_reset_user_agent_string">Réinitialiser le numéro d\'utilisateur par défaut</string>
     <string name="pref_user_agent_string">Numéro d\'utilisateur par défaut</string>
+    <string name="action_remove_everything">Tout retirer</string>
+    <string name="loader_rar5_error">Le format RARv5 n\'est pas supporté</string>
 </resources>

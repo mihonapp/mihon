@@ -743,7 +743,9 @@
     <string name="description_placeholder">Walang paglalarawan</string>
     <string name="delete_category">Burahin ang kategorya</string>
     <string name="internal_error">InternalError: Tingnan ang mga crash log para sa karagdagang impormasyon</string>
-    <string name="delete_category_confirmation">Gusto mo bang burahin ang kategoryang %s</string>
+    <string name="delete_category_confirmation">Gusto mo bang burahin ang kategoryang \"%s\"\?</string>
     <string name="pref_reset_user_agent_string">I-reset ang default na string ng user agent</string>
     <string name="pref_user_agent_string">Default na string ng user agent</string>
+    <string name="action_remove_everything">Burahin lahat</string>
+    <string name="loader_rar5_error">Di suportado ang format na RARv5</string>
 </resources>

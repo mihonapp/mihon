@@ -744,6 +744,8 @@
     <string name="delete_category">Deletar categoria</string>
     <string name="delete_category_confirmation">Você deseja deletar a categoria \"%s\"\?</string>
     <string name="internal_error">Erro interno: Verifique os registros de travamento para mais informações</string>
-    <string name="pref_user_agent_string">Usera Agent padrão</string>
+    <string name="pref_user_agent_string">User Agent padrão</string>
     <string name="pref_reset_user_agent_string">Redefinir o User Agent padrão</string>
+    <string name="action_remove_everything">Remover tudo</string>
+    <string name="loader_rar5_error">O formato RARv5 não é suportado</string>
 </resources>

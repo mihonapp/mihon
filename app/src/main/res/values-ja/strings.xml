@@ -729,9 +729,11 @@
     <string name="pref_app_language">アプリ言語</string>
     <string name="theme_lavender">香草色</string>
     <string name="description_placeholder">説明がありません</string>
-    <string name="delete_category_confirmation">カテゴリー「%s」を削除しますか\?</string>
+    <string name="delete_category_confirmation">カテゴリー「%s」を削除しますか？</string>
     <string name="delete_category">カテゴリーを削除</string>
     <string name="internal_error">InternalError：詳しくはクラッシュ ログをご参照ください</string>
     <string name="pref_user_agent_string">デフォルトのユーザーエージェント文字列</string>
     <string name="pref_reset_user_agent_string">デフォルトのユーザーエージェント文字列をリセットする</string>
+    <string name="action_remove_everything">全て除去</string>
+    <string name="loader_rar5_error">フォーマットRARv5は未対応です</string>
 </resources>

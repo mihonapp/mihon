@@ -770,4 +770,6 @@
     <string name="delete_category">Удалить категорию</string>
     <string name="pref_user_agent_string">User agent по умолчанию</string>
     <string name="pref_reset_user_agent_string">Сбросить user agent по умолчанию</string>
+    <string name="action_remove_everything">Удалить всё</string>
+    <string name="loader_rar5_error">Формат RARv5 не поддерживается</string>
 </resources>

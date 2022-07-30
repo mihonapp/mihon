@@ -572,7 +572,7 @@
     <string name="pref_grayscale">灰階</string>
     <string name="notification_incognito_text">停用無痕模式</string>
     <string name="error_no_match">未找到匹配項</string>
-    <string name="source_unsupported">未支援的來源</string>
+    <string name="source_unsupported">不支援的來源</string>
     <string name="unread">未讀</string>
     <string name="date">日期</string>
     <string name="chapter_not_found">未找到章節</string>
@@ -732,6 +732,8 @@
     <string name="delete_category_confirmation">確定要刪除「%s」分類嗎？</string>
     <string name="internal_error">InternalError：請檢視當機記錄以瞭解詳情</string>
     <string name="delete_category">刪除分類</string>
-    <string name="pref_reset_user_agent_string">重設使用者代理字串預設值</string>
+    <string name="pref_reset_user_agent_string">重設預設使用者代理字串</string>
     <string name="pref_user_agent_string">預設使用者代理字串</string>
+    <string name="action_remove_everything">全部清除</string>
+    <string name="loader_rar5_error">不支援 RARv5 格式</string>
 </resources>

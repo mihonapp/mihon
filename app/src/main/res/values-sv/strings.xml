@@ -10,7 +10,7 @@
     <string name="label_download_queue">Nedladdningskö</string>
     <string name="label_library">Bibliotek</string>
     <string name="label_recent_manga">Historik</string>
-    <string name="label_recent_updates">Nytt</string>
+    <string name="label_recent_updates">Uppdateringar</string>
     <string name="label_backup">Säkerhetskopiering och återställning</string>
     <string name="label_migration">Migrera</string>
     <string name="label_extensions">Tillägg</string>
@@ -292,7 +292,7 @@
     <string name="information_no_recent">Inga nya uppdateringar</string>
     <string name="information_no_recent_manga">Inget nyligen läst</string>
     <string name="information_empty_library">Ditt bibliotek är tomt</string>
-    <string name="information_empty_category">Du har inga kategorier. Tryck på plus-knappen för att skapa en för att organisera ditt bibliotek.</string>
+    <string name="information_empty_category">Du har inga kategorier. Tryck på plus-knappen för att skapa en och organisera ditt bibliotek.</string>
     <string name="download_notifier_downloader_title">Nedladdare</string>
     <string name="download_notifier_title_error">Fel</string>
     <string name="download_notifier_unknown_error">Kunde inte ladda ned kapitel på grund av ett oförväntat fel</string>
@@ -746,4 +746,6 @@
     <string name="delete_category">Ta bort kategori</string>
     <string name="pref_user_agent_string">Standardsträng för användaragent</string>
     <string name="pref_reset_user_agent_string">Återställ standardsträngen för användaragent</string>
+    <string name="action_remove_everything">Ta bort allt</string>
+    <string name="loader_rar5_error">RARv5 formatet stöds inte</string>
 </resources>

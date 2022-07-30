@@ -779,4 +779,6 @@
     <string name="delete_category">Elimina categoria</string>
     <string name="pref_reset_user_agent_string">Ripristina la stringa user agent del browser</string>
     <string name="pref_user_agent_string">Stringa user agent predefinita del browser</string>
+    <string name="action_remove_everything">Rimuovi tutto</string>
+    <string name="loader_rar5_error">Il formato RARv5 non è supportato</string>
 </resources>

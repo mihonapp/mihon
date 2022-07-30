@@ -732,4 +732,8 @@
     <string name="delete_category_confirmation">Adakah anda ingin padam kategori \"%s\"\?</string>
     <string name="internal_error">RalatDalam: semak log kerosakan untuk maklumat lanjut</string>
     <string name="delete_category">Padam kategori</string>
+    <string name="pref_user_agent_string">String ejen pengguna lalai</string>
+    <string name="pref_reset_user_agent_string">Set semula string ejen pengguna lalai</string>
+    <string name="action_remove_everything">Buang semuanya</string>
+    <string name="loader_rar5_error">Format RARv5 tidak disokong</string>
 </resources>

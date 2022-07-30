@@ -660,4 +660,7 @@
     <string name="pref_library_update_categories_details">مانگاهایی که در دسته‌بندی های حذف‌شده هستند، حتی اگر هم‌زمان در دسته‌بندی های مشمول باشند به‌روزرسانی نمی‌شوند.</string>
     <string name="save_chapter_as_cbz">ذخیره به عنوان فایل آرشیو CBZ</string>
     <string name="split_tall_images">نصف کردن خودکار عکس های بلند</string>
+    <string name="publishing_finished">انتشار به پایان رسید</string>
+    <string name="local_invalid_format">قالب فصل نامعتبر است</string>
+    <string name="cancelled">لغو شد</string>
 </resources>

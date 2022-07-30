@@ -777,4 +777,6 @@
     <string name="internal_error">ErrorInterno: Mira el registro de depuración para más información</string>
     <string name="pref_user_agent_string">Nombre del navegador a usar («user agent»)</string>
     <string name="pref_reset_user_agent_string">Restablecer el nombre del navegador («user agent»)</string>
+    <string name="action_remove_everything">Quitar todo</string>
+    <string name="loader_rar5_error">El formato RARv5 no se entiende</string>
 </resources>

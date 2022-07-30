@@ -741,4 +741,5 @@
     <string name="empty_screen">खैर, यह अजीब है</string>
     <string name="internal_error">आंतरिक त्रुटि : अधिक जानकारी के लिए क्रैश लॉग की जाँच करें</string>
     <string name="network_not_metered">केवल अनमीटर्ड कनेक्शन पर</string>
+    <string name="loader_rar5_error">RARv5 प्रारूप समर्थित नहीं है</string>
 </resources>
