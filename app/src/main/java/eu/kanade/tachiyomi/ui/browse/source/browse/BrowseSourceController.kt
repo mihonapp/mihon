@@ -350,11 +350,11 @@ open class BrowseSourceController(bundle: Bundle) :
      * @param genreName the name of the genre
      */
     fun searchWithGenre(genreName: String) {
-        presenter.sourceFilters = presenter.source.getFilterList()
+        val defaultFilters = presenter.source.getFilterList()
 
-        var filterList: FilterList? = null
+        var genreExists = false
 
-        filter@ for (sourceFilter in presenter.sourceFilters) {
+        filter@ for (sourceFilter in defaultFilters) {
             if (sourceFilter is Filter.Group<*>) {
                 for (filter in sourceFilter.state) {
                     if (filter is Filter<*> && filter.name.equals(genreName, true)) {
@@ -363,7 +363,7 @@ open class BrowseSourceController(bundle: Bundle) :
                             is Filter.CheckBox -> filter.state = true
                             else -> {}
                         }
-                        filterList = presenter.sourceFilters
+                        genreExists = true
                         break@filter
                     }
                 }
@@ -373,19 +373,20 @@ open class BrowseSourceController(bundle: Bundle) :
 
                 if (index != -1) {
                     sourceFilter.state = index
-                    filterList = presenter.sourceFilters
+                    genreExists = true
                     break
                 }
             }
         }
 
-        if (filterList != null) {
+        if (genreExists) {
+            presenter.sourceFilters = defaultFilters
             filterSheet?.setFilters(presenter.filterItems)
 
             showProgressBar()
 
             adapter?.clear()
-            presenter.restartPager("", filterList)
+            presenter.restartPager("", defaultFilters)
         } else {
             searchWithQuery(genreName)
         }
