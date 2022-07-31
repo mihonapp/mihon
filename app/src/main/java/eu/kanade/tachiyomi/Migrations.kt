@@ -13,7 +13,6 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.updater.AppUpdateJob
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
-import eu.kanade.tachiyomi.ui.library.LibrarySort
 import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
 import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
@@ -104,10 +103,9 @@ object Migrations {
                 // Reset sorting preference if using removed sort by source
                 val oldSortingMode = prefs.getInt(PreferenceKeys.librarySortingMode, 0)
 
-                @Suppress("DEPRECATION")
-                if (oldSortingMode == LibrarySort.SOURCE) {
+                if (oldSortingMode == 5 /* SOURCE */) {
                     prefs.edit {
-                        putInt(PreferenceKeys.librarySortingMode, LibrarySort.ALPHA)
+                        putInt(PreferenceKeys.librarySortingMode, 0 /* ALPHABETICAL */)
                     }
                 }
             }
@@ -200,16 +198,15 @@ object Migrations {
                 val oldSortingMode = prefs.getInt(PreferenceKeys.librarySortingMode, 0)
                 val oldSortingDirection = prefs.getBoolean(PreferenceKeys.librarySortingDirection, true)
 
-                @Suppress("DEPRECATION")
                 val newSortingMode = when (oldSortingMode) {
-                    LibrarySort.ALPHA -> SortModeSetting.ALPHABETICAL
-                    LibrarySort.LAST_READ -> SortModeSetting.LAST_READ
-                    LibrarySort.LAST_CHECKED -> SortModeSetting.LAST_CHECKED
-                    LibrarySort.UNREAD -> SortModeSetting.UNREAD
-                    LibrarySort.TOTAL -> SortModeSetting.TOTAL_CHAPTERS
-                    LibrarySort.LATEST_CHAPTER -> SortModeSetting.LATEST_CHAPTER
-                    LibrarySort.CHAPTER_FETCH_DATE -> SortModeSetting.DATE_FETCHED
-                    LibrarySort.DATE_ADDED -> SortModeSetting.DATE_ADDED
+                    0 -> SortModeSetting.ALPHABETICAL
+                    1 -> SortModeSetting.LAST_READ
+                    2 -> SortModeSetting.LAST_CHECKED
+                    3 -> SortModeSetting.UNREAD
+                    4 -> SortModeSetting.TOTAL_CHAPTERS
+                    6 -> SortModeSetting.LATEST_CHAPTER
+                    8 -> SortModeSetting.DATE_FETCHED
+                    7 -> SortModeSetting.DATE_ADDED
                     else -> SortModeSetting.ALPHABETICAL
                 }
 
