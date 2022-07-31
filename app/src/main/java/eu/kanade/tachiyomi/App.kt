@@ -14,6 +14,7 @@ import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -24,6 +25,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
 import coil.util.DebugLogger
+import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.DomainModule
 import eu.kanade.tachiyomi.data.coil.DomainMangaKeyer
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
@@ -33,6 +35,7 @@ import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.glance.UpdatesGridGlanceWidget
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.preference.asHotFlow
@@ -42,6 +45,8 @@ import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.isDevFlavor
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notification
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import logcat.AndroidLogcatLogger
@@ -124,6 +129,19 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
                     },
                 )
             }.launchIn(ProcessLifecycleOwner.get().lifecycleScope)
+
+        // Updates widget update
+        Injekt.get<DatabaseHandler>()
+            .subscribeToList { updatesViewQueries.updates(after = UpdatesGridGlanceWidget.DateLimit.timeInMillis) }
+            .drop(1)
+            .distinctUntilChanged()
+            .onEach {
+                val manager = GlanceAppWidgetManager(this)
+                if (manager.getGlanceIds(UpdatesGridGlanceWidget::class.java).isNotEmpty()) {
+                    UpdatesGridGlanceWidget().loadData(it)
+                }
+            }
+            .launchIn(ProcessLifecycleOwner.get().lifecycleScope)
 
         if (!LogcatLogger.isInstalled && preferences.verboseLogging()) {
             LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))

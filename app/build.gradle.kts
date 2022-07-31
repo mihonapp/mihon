@@ -189,6 +189,7 @@ dependencies {
     implementation(androidx.splashscreen)
     implementation(androidx.recyclerview)
     implementation(androidx.viewpager)
+    implementation(androidx.glance)
 
     implementation(androidx.bundles.lifecycle)
 

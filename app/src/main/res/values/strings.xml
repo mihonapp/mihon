@@ -853,4 +853,8 @@
     <!-- S Pen actions -->
     <string name="spen_previous_page">Previous page</string>
     <string name="spen_next_page">Next page</string>
+
+    <!-- App widget -->
+    <string name="appwidget_updates_description">See your recently updated manga</string>
+    <string name="appwidget_unavailable_locked">Widget not available when app lock is enabled</string>
 </resources>

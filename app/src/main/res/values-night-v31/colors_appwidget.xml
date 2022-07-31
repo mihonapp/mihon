@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="appwidget_background">@color/m3_sys_color_dynamic_dark_surface</color>
+    <color name="appwidget_on_background">@color/m3_sys_color_dynamic_dark_on_surface</color>
+    <color name="appwidget_surface_variant">@color/m3_sys_color_dynamic_dark_surface_variant</color>
+    <color name="appwidget_on_surface_variant">@color/m3_sys_color_dynamic_dark_on_surface_variant</color>
+    <color name="appwidget_secondary_container">@color/m3_sys_color_dynamic_dark_secondary_container</color>
+    <color name="appwidget_on_secondary_container">@color/m3_sys_color_dynamic_dark_on_secondary_container</color>
+</resources>

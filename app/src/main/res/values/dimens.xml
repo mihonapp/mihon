@@ -15,4 +15,7 @@
 
     <dimen name="tablet_horizontal_cover_margin">128dp</dimen>
     <dimen name="tablet_sidebar_max_width">450dp</dimen>
+
+    <dimen name="appwidget_background_radius">16dp</dimen>
+    <dimen name="appwidget_inner_radius">12dp</dimen>
 </resources>
