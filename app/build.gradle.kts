@@ -247,7 +247,6 @@ dependencies {
     implementation(libs.androidprocessbutton)
     implementation(libs.flexible.adapter.core)
     implementation(libs.flexible.adapter.ui)
-    implementation(libs.viewstatepageradapter)
     implementation(libs.photoview)
     implementation(libs.directionalviewpager) {
         exclude(group = "androidx.viewpager", module = "viewpager")
