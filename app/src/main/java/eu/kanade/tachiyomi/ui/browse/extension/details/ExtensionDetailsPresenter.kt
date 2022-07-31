@@ -14,10 +14,7 @@ import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.take
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -36,13 +33,18 @@ class ExtensionDetailsPresenter(
         presenterScope.launchIO {
             extensionManager.getInstalledExtensionsFlow()
                 .map { it.firstOrNull { it.pkgName == pkgName } }
-                .collectLatest {
-                    state.extension = it
+                .collectLatest { extension ->
+                    // If extension is null it's most likely uninstalled
+                    if (extension == null) {
+                        launchUI {
+                            view?.onExtensionUninstalled()
+                        }
+                        return@collectLatest
+                    }
+                    state.extension = extension
                     fetchExtensionSources()
                 }
         }
-
-        bindToUninstalledExtension()
     }
 
     private fun CoroutineScope.fetchExtensionSources() {
@@ -59,21 +61,6 @@ class ExtensionDetailsPresenter(
                 .collectLatest {
                     state.isLoading = false
                     state.sources = it
-                }
-        }
-    }
-
-    private fun bindToUninstalledExtension() {
-        presenterScope.launchIO {
-            extensionManager.getInstalledExtensionsFlow()
-                .drop(1)
-                .filter { extensions -> extensions.none { it.pkgName == pkgName } }
-                .map { }
-                .take(1)
-                .collectLatest {
-                    launchUI {
-                        view?.onExtensionUninstalled()
-                    }
                 }
         }
     }
