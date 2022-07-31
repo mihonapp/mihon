@@ -44,12 +44,14 @@ fun ClearDatabaseScreen(
             },
         )
     }
-    if (presenter.dialog is ClearDatabasePresenter.Dialog.Delete) {
+    val dialog = presenter.dialog
+    if (dialog is ClearDatabasePresenter.Dialog.Delete) {
         ClearDatabaseDeleteDialog(
             onDismissRequest = { presenter.dialog = null },
             onDelete = {
-                presenter.removeMangaBySourceId((presenter.dialog as ClearDatabasePresenter.Dialog.Delete).sourceIds)
+                presenter.removeMangaBySourceId(dialog.sourceIds)
                 presenter.clearSelection()
+                presenter.dialog = null
                 context.toast(R.string.clear_database_completed)
             },
         )
