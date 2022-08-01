@@ -22,6 +22,7 @@ import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.history.HistoryUiModel
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
@@ -45,10 +46,15 @@ class HistoryPresenter(
     private val deleteHistoryTable: DeleteHistoryTable = Injekt.get(),
     private val removeHistoryById: RemoveHistoryById = Injekt.get(),
     private val removeHistoryByMangaId: RemoveHistoryByMangaId = Injekt.get(),
+    preferences: PreferencesHelper = Injekt.get(),
 ) : BasePresenter<HistoryController>(), HistoryState by state {
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
     val events: Flow<Event> = _events.receiveAsFlow()
+
+    val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
+
+    val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
 
     @Composable
     fun getLazyHistory(): LazyPagingItems<HistoryUiModel> {

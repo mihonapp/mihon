@@ -2,11 +2,7 @@ package eu.kanade.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -18,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -51,19 +48,63 @@ fun AppBar(
     // Banners
     downloadedOnlyMode: Boolean = false,
     incognitoMode: Boolean = false,
+
+    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     val isActionMode by derivedStateOf { actionModeCounter > 0 }
-    val backgroundColor = if (isActionMode) {
-        TopAppBarDefaults.smallTopAppBarColors().containerColor(1f).value
-    } else {
-        MaterialTheme.colorScheme.surface
-    }
+    AppBar(
+        modifier = modifier,
+        titleContent = {
+            if (isActionMode) {
+                AppBarTitle(actionModeCounter.toString())
+            } else {
+                AppBarTitle(title, subtitle)
+            }
+        },
+        navigateUp = navigateUp,
+        navigationIcon = navigationIcon,
+        actions = {
+            if (isActionMode) {
+                actionModeActions()
+            } else {
+                actions()
+            }
+        },
+        isActionMode = isActionMode,
+        onCancelActionMode = onCancelActionMode,
+        downloadedOnlyMode = downloadedOnlyMode,
+        incognitoMode = incognitoMode,
+        scrollBehavior = scrollBehavior,
+    )
+}
+
+@Composable
+fun AppBar(
+    modifier: Modifier = Modifier,
+    // Title
+    titleContent: @Composable () -> Unit,
+    // Up button
+    navigateUp: (() -> Unit)? = null,
+    navigationIcon: ImageVector = Icons.Default.ArrowBack,
+    // Menu
+    actions: @Composable RowScope.() -> Unit = {},
+    // Action mode
+    isActionMode: Boolean,
+    onCancelActionMode: () -> Unit = {},
+    // Banners
+    downloadedOnlyMode: Boolean = false,
+    incognitoMode: Boolean = false,
+
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+) {
+    val scrollFraction = if (isActionMode) 1f else scrollBehavior?.state?.overlappedFraction ?: 0f
+    val backgroundColor by TopAppBarDefaults.smallTopAppBarColors().containerColor(scrollFraction)
 
     Column(
         modifier = modifier.drawBehind { drawRect(backgroundColor) },
     ) {
         SmallTopAppBar(
-            modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)),
+            modifier = Modifier.statusBarsPadding(),
             navigationIcon = {
                 if (isActionMode) {
                     IconButton(onClick = onCancelActionMode) {
@@ -83,25 +124,14 @@ fun AppBar(
                     }
                 }
             },
-            title = {
-                if (isActionMode) {
-                    AppBarTitle(actionModeCounter.toString())
-                } else {
-                    AppBarTitle(title, subtitle)
-                }
-            },
-            actions = {
-                if (isActionMode) {
-                    actionModeActions()
-                } else {
-                    actions()
-                }
-            },
+            title = titleContent,
+            actions = actions,
             // Background handled by parent
             colors = TopAppBarDefaults.smallTopAppBarColors(
                 containerColor = Color.Transparent,
                 scrolledContainerColor = Color.Transparent,
             ),
+            scrollBehavior = scrollBehavior,
         )
 
         if (downloadedOnlyMode) {

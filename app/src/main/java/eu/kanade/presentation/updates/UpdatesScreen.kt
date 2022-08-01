@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -20,9 +19,13 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -57,7 +60,9 @@ fun UpdateScreen(
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
 ) {
     val updatesListState = rememberLazyListState()
-    val insetPaddingValue = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues()
+    val insetPaddingValue = WindowInsets.navigationBars
+        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+        .asPaddingValues()
 
     val internalOnBackPressed = {
         if (presenter.selectionMode) {
@@ -76,9 +81,11 @@ fun UpdateScreen(
         }
     }
 
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier
-            .padding(insetPaddingValue),
+            .padding(insetPaddingValue)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             UpdatesAppBar(
                 incognitoMode = presenter.isIncognitoMode,
@@ -88,6 +95,7 @@ fun UpdateScreen(
                 onSelectAll = { presenter.toggleAllSelection(true) },
                 onInvertSelection = { presenter.invertSelection() },
                 onCancelActionMode = { presenter.toggleAllSelection(false) },
+                scrollBehavior = scrollBehavior,
             )
         },
         bottomBar = {
@@ -185,6 +193,7 @@ fun UpdatesAppBar(
     onSelectAll: () -> Unit,
     onInvertSelection: () -> Unit,
     onCancelActionMode: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     AppBar(
         modifier = modifier,
@@ -215,6 +224,7 @@ fun UpdatesAppBar(
         },
         downloadedOnlyMode = downloadedOnlyMode,
         incognitoMode = incognitoMode,
+        scrollBehavior = scrollBehavior,
     )
 }
 
