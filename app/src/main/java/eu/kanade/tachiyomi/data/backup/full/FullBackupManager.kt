@@ -187,7 +187,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
             if (historyByMangaId.isNotEmpty()) {
                 val history = historyByMangaId.map { history ->
                     val chapter = handler.awaitOne { chaptersQueries.getChapterById(history.chapter_id) }
-                    BackupHistory(chapter.url, history.last_read?.time ?: 0L)
+                    BackupHistory(chapter.url, history.last_read?.time ?: 0L, history.time_read)
                 }
                 if (history.isNotEmpty()) {
                     mangaObject.history = history
@@ -295,11 +295,14 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
     internal suspend fun restoreHistoryForManga(history: List<BackupHistory>) {
         // List containing history to be updated
         val toUpdate = mutableListOf<HistoryUpdate>()
-        for ((url, lastRead) in history) {
+        for ((url, lastRead, readDuration) in history) {
             var dbHistory = handler.awaitOneOrNull { historyQueries.getHistoryByChapterUrl(url) }
             // Check if history already in database and update
             if (dbHistory != null) {
-                dbHistory = dbHistory.copy(last_read = Date(max(lastRead, dbHistory.last_read?.time ?: 0L)))
+                dbHistory = dbHistory.copy(
+                    last_read = Date(max(lastRead, dbHistory.last_read?.time ?: 0L)),
+                    time_read = max(readDuration, dbHistory.time_read) - dbHistory.time_read,
+                )
                 toUpdate.add(
                     HistoryUpdate(
                         chapterId = dbHistory.chapter_id,
@@ -316,7 +319,7 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
                             HistoryUpdate(
                                 chapterId = it._id,
                                 readAt = Date(lastRead),
-                                sessionReadDuration = 0,
+                                sessionReadDuration = readDuration,
                             ),
                         )
                     }

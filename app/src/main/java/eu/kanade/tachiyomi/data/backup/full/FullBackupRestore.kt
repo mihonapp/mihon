@@ -63,7 +63,8 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBa
         val manga = backupManga.getMangaImpl()
         val chapters = backupManga.getChaptersImpl()
         val categories = backupManga.categories.map { it.toInt() }
-        val history = backupManga.brokenHistory.map { BackupHistory(it.url, it.lastRead) } + backupManga.history
+        val history =
+            backupManga.brokenHistory.map { BackupHistory(it.url, it.lastRead, it.readDuration) } + backupManga.history
         val tracks = backupManga.getTrackingImpl()
 
         try {
