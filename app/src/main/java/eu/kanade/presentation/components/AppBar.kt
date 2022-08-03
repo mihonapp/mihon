@@ -89,7 +89,7 @@ fun AppBar(
     // Menu
     actions: @Composable RowScope.() -> Unit = {},
     // Action mode
-    isActionMode: Boolean,
+    isActionMode: Boolean = false,
     onCancelActionMode: () -> Unit = {},
     // Banners
     downloadedOnlyMode: Boolean = false,
