@@ -15,15 +15,13 @@ import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.lang.launchNow
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.preference.plusAssign
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import logcat.LogPriority
 import rx.Observable
@@ -96,15 +94,15 @@ class ExtensionManager(
     var availableExtensions = emptyList<Extension.Available>()
         private set(value) {
             field = value
-            availableExtensionsFlow.tryEmit(field)
+            availableExtensionsFlow.value = field
             updatedInstalledExtensionsStatuses(value)
             setupAvailableExtensionsSourcesDataMap(value)
         }
 
-    private val availableExtensionsFlow = MutableSharedFlow<List<Extension.Available>>(replay = 1)
+    private val availableExtensionsFlow = MutableStateFlow(availableExtensions)
 
-    fun getAvailableExtensionsFlow(): Flow<List<Extension.Available>> {
-        return availableExtensionsFlow.asSharedFlow()
+    fun getAvailableExtensionsFlow(): StateFlow<List<Extension.Available>> {
+        return availableExtensionsFlow.asStateFlow()
     }
 
     private var availableExtensionsSourcesData: Map<Long, SourceData> = mapOf()
@@ -156,18 +154,16 @@ class ExtensionManager(
     /**
      * Finds the available extensions in the [api] and updates [availableExtensions].
      */
-    fun findAvailableExtensions() {
-        launchNow {
-            val extensions: List<Extension.Available> = try {
-                api.findExtensions()
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e)
-                context.toast(R.string.extension_api_error)
-                emptyList()
-            }
-
-            availableExtensions = extensions
+    suspend fun findAvailableExtensions() {
+        val extensions: List<Extension.Available> = try {
+            api.findExtensions()
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            withUIContext { context.toast(R.string.extension_api_error) }
+            emptyList()
         }
+
+        availableExtensions = extensions
     }
 
     /**

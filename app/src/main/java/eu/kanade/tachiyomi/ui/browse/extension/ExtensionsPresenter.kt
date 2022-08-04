@@ -36,8 +36,6 @@ class ExtensionsPresenter(
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        extensionManager.findAvailableExtensions()
-
         val context = Injekt.get<Application>()
         val extensionMapper: (Map<String, InstallStep>) -> ((Extension) -> ExtensionUiModel) = { map ->
             {
@@ -71,13 +69,13 @@ class ExtensionsPresenter(
             }
         }
 
-        launchIO {
+        presenterScope.launchIO {
             combine(
                 _query,
                 getExtensions.subscribe(),
                 _currentDownloads,
-            ) { query, (updates, installed, available, untrusted), downloads ->
-                val languagesWithExtensions = available
+            ) { query, (_updates, _installed, _available, _untrusted), downloads ->
+                val languagesWithExtensions = _available
                     .filter(queryFilter(query))
                     .groupBy { LocaleHelper.getSourceDisplayName(it.lang, context) }
                     .toSortedMap()
@@ -90,14 +88,14 @@ class ExtensionsPresenter(
 
                 val items = mutableListOf<ExtensionUiModel>()
 
-                val updates = updates.filter(queryFilter(query)).map(extensionMapper(downloads))
+                val updates = _updates.filter(queryFilter(query)).map(extensionMapper(downloads))
                 if (updates.isNotEmpty()) {
                     items.add(ExtensionUiModel.Header.Resource(R.string.ext_updates_pending))
                     items.addAll(updates)
                 }
 
-                val installed = installed.filter(queryFilter(query)).map(extensionMapper(downloads))
-                val untrusted = untrusted.filter(queryFilter(query)).map(extensionMapper(downloads))
+                val installed = _installed.filter(queryFilter(query)).map(extensionMapper(downloads))
+                val untrusted = _untrusted.filter(queryFilter(query)).map(extensionMapper(downloads))
                 if (installed.isNotEmpty() || untrusted.isNotEmpty()) {
                     items.add(ExtensionUiModel.Header.Resource(R.string.ext_installed))
                     items.addAll(installed)
@@ -110,21 +108,22 @@ class ExtensionsPresenter(
 
                 items
             }.collectLatest {
-                state.isRefreshing = false
                 state.isLoading = false
                 state.items = it
             }
         }
+
+        presenterScope.launchIO { findAvailableExtensions() }
     }
 
     fun search(query: String) {
-        launchIO {
+        presenterScope.launchIO {
             _query.emit(query)
         }
     }
 
     fun updateAllExtensions() {
-        launchIO {
+        presenterScope.launchIO {
             if (state.isEmpty) return@launchIO
             val items = state.items
             items.mapNotNull {
@@ -151,16 +150,16 @@ class ExtensionsPresenter(
     }
 
     private fun removeDownloadState(extension: Extension) {
-        _currentDownloads.update { map ->
-            val map = map.toMutableMap()
+        _currentDownloads.update { _map ->
+            val map = _map.toMutableMap()
             map.remove(extension.pkgName)
             map
         }
     }
 
     private fun addDownloadState(extension: Extension, installStep: InstallStep) {
-        _currentDownloads.update { map ->
-            val map = map.toMutableMap()
+        _currentDownloads.update { _map ->
+            val map = _map.toMutableMap()
             map[extension.pkgName] = installStep
             map
         }
@@ -180,8 +179,11 @@ class ExtensionsPresenter(
     }
 
     fun findAvailableExtensions() {
-        state.isRefreshing = true
-        extensionManager.findAvailableExtensions()
+        presenterScope.launchIO {
+            state.isRefreshing = true
+            extensionManager.findAvailableExtensions()
+            state.isRefreshing = false
+        }
     }
 
     fun trustSignature(signatureHash: String) {
