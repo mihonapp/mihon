@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi.data.track.myanimelist
 
+import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
+import okhttp3.internal.closeQuietly
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 
@@ -24,11 +26,22 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList, private var t
         }
         // Refresh access token if expired
         if (oauth != null && oauth!!.isExpired()) {
-            chain.proceed(MyAnimeListApi.refreshTokenRequest(oauth!!.refresh_token)).use {
-                if (it.isSuccessful) {
-                    setAuth(json.decodeFromString(it.body!!.string()))
+            val newOauth = runCatching {
+                val oauthResponse = chain.proceed(MyAnimeListApi.refreshTokenRequest(oauth!!))
+
+                if (oauthResponse.isSuccessful) {
+                    oauthResponse.parseAs<OAuth>()
+                } else {
+                    oauthResponse.closeQuietly()
+                    null
                 }
             }
+
+            if (newOauth.getOrNull() == null) {
+                throw IOException("Failed to refresh the access token")
+            }
+
+            setAuth(newOauth.getOrNull())
         }
         if (oauth == null) {
             throw IOException("No authentication token")
