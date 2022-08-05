@@ -5,6 +5,17 @@ CREATE TABLE categories(
     flags INTEGER NOT NULL
 );
 
+-- Insert system category
+INSERT OR IGNORE INTO categories(_id, name, sort, flags) VALUES (0, "", -1, 0);
+-- Disallow deletion of default category
+CREATE TRIGGER IF NOT EXISTS system_category_delete_trigger BEFORE DELETE
+ON categories
+BEGIN SELECT CASE
+    WHEN old._id <= 0 THEN
+        RAISE(ABORT, "System category can't be deleted")
+    END;
+END;
+
 getCategories:
 SELECT
 _id AS id,
@@ -39,6 +50,10 @@ SET name = coalesce(:name, name),
     sort = coalesce(:order, sort),
     flags = coalesce(:flags, flags)
 WHERE _id = :categoryId;
+
+updateAllFlags:
+UPDATE categories SET
+flags = coalesce(?, flags);
 
 selectLastInsertedRowId:
 SELECT last_insert_rowid();

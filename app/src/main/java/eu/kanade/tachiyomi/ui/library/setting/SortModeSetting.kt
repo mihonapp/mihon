@@ -32,7 +32,7 @@ enum class SortModeSetting(val flag: Long) {
         }
 
         fun get(preferences: PreferencesHelper, category: Category?): SortModeSetting {
-            return if (preferences.categorizedDisplaySettings().get() && category != null && category.id != 0L) {
+            return if (category != null && preferences.categorizedDisplaySettings().get()) {
                 fromFlag(category.sortMode)
             } else {
                 preferences.librarySortingMode().get()

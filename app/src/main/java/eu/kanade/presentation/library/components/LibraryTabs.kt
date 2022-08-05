@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.PagerState
 import eu.kanade.domain.category.model.Category
+import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.components.DownloadedOnlyModeBanner
 import eu.kanade.presentation.components.IncognitoModeBanner
 import eu.kanade.presentation.components.Pill
@@ -67,7 +68,7 @@ fun LibraryTabs(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
-                                text = category.name,
+                                text = category.visualName,
                                 color = if (state.currentPage == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                             )
                             if (count != null) {

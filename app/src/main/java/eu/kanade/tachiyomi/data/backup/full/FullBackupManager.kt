@@ -5,6 +5,8 @@ import android.net.Uri
 import com.hippo.unifile.UniFile
 import data.Manga_sync
 import data.Mangas
+import eu.kanade.data.category.categoryMapper
+import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.history.model.HistoryUpdate
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.AbstractBackupManager
@@ -138,7 +140,9 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
     private suspend fun backupCategories(options: Int): List<BackupCategory> {
         // Check if user wants category information in backup
         return if (options and BACKUP_CATEGORY_MASK == BACKUP_CATEGORY) {
-            handler.awaitList { categoriesQueries.getCategories(backupCategoryMapper) }
+            handler.awaitList { categoriesQueries.getCategories(categoryMapper) }
+                .filterNot(Category::isSystemCategory)
+                .map(backupCategoryMapper)
         } else {
             emptyList()
         }
@@ -224,34 +228,37 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
      */
     internal suspend fun restoreCategories(backupCategories: List<BackupCategory>) {
         // Get categories from file and from db
-        val dbCategories = handler.awaitList { categoriesQueries.getCategories() }
+        val dbCategories = handler.awaitList { categoriesQueries.getCategories(categoryMapper) }
 
-        // Iterate over them
-        backupCategories
-            .map { it.getCategoryImpl() }
-            .forEach { category ->
-                // Used to know if the category is already in the db
-                var found = false
-                for (dbCategory in dbCategories) {
-                    // If the category is already in the db, assign the id to the file's category
-                    // and do nothing
-                    if (category.name == dbCategory.name) {
-                        category.id = dbCategory.id.toInt()
-                        found = true
-                        break
-                    }
-                }
-                // If the category isn't in the db, remove the id and insert a new category
-                // Store the inserted id in the category
-                if (!found) {
-                    // Let the db assign the id
-                    category.id = null
-                    category.id = handler.awaitOne {
-                        categoriesQueries.insert(category.name, category.order.toLong(), category.flags.toLong())
-                        categoriesQueries.selectLastInsertedRowId()
-                    }.toInt()
+        val categories = backupCategories.map {
+            var category = it.getCategory()
+            var found = false
+            for (dbCategory in dbCategories) {
+                // If the category is already in the db, assign the id to the file's category
+                // and do nothing
+                if (category.name == dbCategory.name) {
+                    category = category.copy(id = dbCategory.id)
+                    found = true
+                    break
                 }
             }
+            if (!found) {
+                // Let the db assign the id
+                val id = handler.awaitOne {
+                    categoriesQueries.insert(category.name, category.order, category.flags)
+                    categoriesQueries.selectLastInsertedRowId()
+                }
+                category = category.copy(id = id)
+            }
+
+            category
+        }
+
+        preferences.categorizedDisplaySettings().set(
+            (dbCategories + categories)
+                .distinctBy { it.flags }
+                .size > 1,
+        )
     }
 
     /**

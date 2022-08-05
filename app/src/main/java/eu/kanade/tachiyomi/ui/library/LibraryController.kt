@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalContext
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import eu.kanade.domain.category.model.Category
-import eu.kanade.domain.category.model.toDbCategory
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.presentation.library.LibraryScreen
@@ -119,12 +118,8 @@ class LibraryController(
     }
 
     fun showSettingsSheet() {
-        if (presenter.categories.isNotEmpty()) {
-            presenter.categories[presenter.activeCategory].let { category ->
-                settingsSheet?.show(category.toDbCategory())
-            }
-        } else {
-            settingsSheet?.show()
+        presenter.categories[presenter.activeCategory].let { category ->
+            settingsSheet?.show(category)
         }
     }
 

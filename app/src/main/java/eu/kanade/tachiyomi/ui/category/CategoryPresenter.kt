@@ -35,7 +35,7 @@ class CategoryPresenter(
             getCategories.subscribe()
                 .collectLatest {
                     state.isLoading = false
-                    state.categories = it
+                    state.categories = it.filterNot(Category::isSystemCategory)
                 }
         }
     }

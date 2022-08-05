@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.data.backup.full.models
 
-import eu.kanade.tachiyomi.data.database.models.CategoryImpl
+import eu.kanade.domain.category.model.Category
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
@@ -12,19 +12,20 @@ class BackupCategory(
     // Bump by 100 to specify this is a 0.x value
     @ProtoNumber(100) var flags: Long = 0,
 ) {
-    fun getCategoryImpl(): CategoryImpl {
-        return CategoryImpl().apply {
-            name = this@BackupCategory.name
-            flags = this@BackupCategory.flags.toInt()
-            order = this@BackupCategory.order.toInt()
-        }
+    fun getCategory(): Category {
+        return Category(
+            id = 0,
+            name = this@BackupCategory.name,
+            flags = this@BackupCategory.flags,
+            order = this@BackupCategory.order,
+        )
     }
 }
 
-val backupCategoryMapper = { _: Long, name: String, order: Long, flags: Long ->
+val backupCategoryMapper = { category: Category ->
     BackupCategory(
-        name = name,
-        order = order,
-        flags = flags,
+        name = category.name,
+        order = category.order,
+        flags = category.flags,
     )
 }

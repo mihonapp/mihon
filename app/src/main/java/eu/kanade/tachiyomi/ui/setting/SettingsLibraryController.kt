@@ -8,7 +8,9 @@ import androidx.core.text.buildSpannedString
 import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.domain.category.interactor.GetCategories
+import eu.kanade.domain.category.interactor.ResetCategoryFlags
 import eu.kanade.domain.category.model.Category
+import eu.kanade.presentation.category.visualName
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.DEVICE_BATTERY_NOT_LOW
@@ -51,12 +53,13 @@ class SettingsLibraryController : SettingsController() {
 
     private val getCategories: GetCategories by injectLazy()
     private val trackManager: TrackManager by injectLazy()
+    private val resetCategoryFlags: ResetCategoryFlags by injectLazy()
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_library
 
-        val dbCategories = runBlocking { getCategories.await() }
-        val categories = listOf(Category.default(context)) + dbCategories
+        val allCategories = runBlocking { getCategories.await() }
+        val userCategories = allCategories.filterNot(Category::isSystemCategory)
 
         preferenceCategory {
             titleRes = R.string.pref_category_display
@@ -94,7 +97,7 @@ class SettingsLibraryController : SettingsController() {
                 key = "pref_action_edit_categories"
                 titleRes = R.string.action_edit_categories
 
-                val catCount = dbCategories.size
+                val catCount = userCategories.size
                 summary = context.resources.getQuantityString(R.plurals.num_categories, catCount, catCount)
 
                 onClick {
@@ -107,15 +110,15 @@ class SettingsLibraryController : SettingsController() {
                 titleRes = R.string.default_category
 
                 entries = arrayOf(context.getString(R.string.default_category_summary)) +
-                    categories.map { it.name }.toTypedArray()
-                entryValues = arrayOf("-1") + categories.map { it.id.toString() }.toTypedArray()
+                    allCategories.map { it.visualName(context) }.toTypedArray()
+                entryValues = arrayOf("-1") + allCategories.map { it.id.toString() }.toTypedArray()
                 defaultValue = "-1"
 
-                val selectedCategory = categories.find { it.id == preferences.defaultCategory().toLong() }
+                val selectedCategory = allCategories.find { it.id == preferences.defaultCategory().toLong() }
                 summary = selectedCategory?.name
                     ?: context.getString(R.string.default_category_summary)
                 onChange { newValue ->
-                    summary = categories.find {
+                    summary = allCategories.find {
                         it.id == (newValue as String).toLong()
                     }?.name ?: context.getString(R.string.default_category_summary)
                     true
@@ -125,6 +128,14 @@ class SettingsLibraryController : SettingsController() {
             switchPreference {
                 bindTo(preferences.categorizedDisplaySettings())
                 titleRes = R.string.categorized_display_settings
+
+                preferences.categorizedDisplaySettings().asFlow()
+                    .onEach {
+                        if (it.not()) {
+                            resetCategoryFlags.await()
+                        }
+                    }
+                    .launchIn(viewScope)
             }
         }
 
@@ -229,19 +240,19 @@ class SettingsLibraryController : SettingsController() {
 
                 fun updateSummary() {
                     val includedCategories = preferences.libraryUpdateCategories().get()
-                        .mapNotNull { id -> categories.find { it.id == id.toLong() } }
+                        .mapNotNull { id -> allCategories.find { it.id == id.toLong() } }
                         .sortedBy { it.order }
                     val excludedCategories = preferences.libraryUpdateCategoriesExclude().get()
-                        .mapNotNull { id -> categories.find { it.id == id.toLong() } }
+                        .mapNotNull { id -> allCategories.find { it.id == id.toLong() } }
                         .sortedBy { it.order }
 
-                    val allExcluded = excludedCategories.size == categories.size
+                    val allExcluded = excludedCategories.size == allCategories.size
 
                     val includedItemsText = when {
                         // Some selected, but not all
-                        includedCategories.isNotEmpty() && includedCategories.size != categories.size -> includedCategories.joinToString { it.name }
+                        includedCategories.isNotEmpty() && includedCategories.size != allCategories.size -> includedCategories.joinToString { it.name }
                         // All explicitly selected
-                        includedCategories.size == categories.size -> context.getString(R.string.all)
+                        includedCategories.size == allCategories.size -> context.getString(R.string.all)
                         allExcluded -> context.getString(R.string.none)
                         else -> context.getString(R.string.all)
                     }
@@ -331,10 +342,9 @@ class SettingsLibraryController : SettingsController() {
         private val getCategories: GetCategories = Injekt.get()
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-            val dbCategories = runBlocking { getCategories.await() }
-            val categories = listOf(Category.default(activity!!)) + dbCategories
+            val categories = runBlocking { getCategories.await() }
 
-            val items = categories.map { it.name }
+            val items = categories.map { it.visualName(activity!!) }
             var selected = categories
                 .map {
                     when (it.id.toString()) {

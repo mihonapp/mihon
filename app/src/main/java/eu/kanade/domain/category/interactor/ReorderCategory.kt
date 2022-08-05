@@ -13,7 +13,7 @@ class ReorderCategory(
 ) {
 
     suspend fun await(categoryId: Long, newPosition: Int) = withContext(NonCancellable) await@{
-        val categories = categoryRepository.getAll()
+        val categories = categoryRepository.getAll().filterNot(Category::isSystemCategory)
 
         val currentIndex = categories.indexOfFirst { it.id == categoryId }
         if (currentIndex == newPosition) {

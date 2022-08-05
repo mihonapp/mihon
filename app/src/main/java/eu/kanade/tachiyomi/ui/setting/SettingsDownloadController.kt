@@ -12,7 +12,7 @@ import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.category.interactor.GetCategories
-import eu.kanade.domain.category.model.Category
+import eu.kanade.presentation.category.visualName
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
@@ -46,8 +46,7 @@ class SettingsDownloadController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_downloads
 
-        val dbCategories = runBlocking { getCategories.await() }
-        val categories = listOf(Category.default(context)) + dbCategories
+        val categories = runBlocking { getCategories.await() }
 
         preference {
             bindTo(preferences.downloadsDirectory())
@@ -111,7 +110,7 @@ class SettingsDownloadController : SettingsController() {
             multiSelectListPreference {
                 bindTo(preferences.removeExcludeCategories())
                 titleRes = R.string.pref_remove_exclude_categories
-                entries = categories.map { it.name }.toTypedArray()
+                entries = categories.map { it.visualName(context) }.toTypedArray()
                 entryValues = categories.map { it.id.toString() }.toTypedArray()
 
                 preferences.removeExcludeCategories().asFlow()
@@ -255,10 +254,9 @@ class SettingsDownloadController : SettingsController() {
         private val getCategories: GetCategories = Injekt.get()
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-            val dbCategories = runBlocking { getCategories.await() }
-            val categories = listOf(Category.default(activity!!)) + dbCategories
+            val categories = runBlocking { getCategories.await() }
 
-            val items = categories.map { it.name }
+            val items = categories.map { it.visualName(activity!!) }
             var selected = categories
                 .map {
                     when (it.id.toString()) {

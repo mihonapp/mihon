@@ -27,6 +27,7 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.domain.track.interactor.GetTracks
+import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.library.LibraryState
 import eu.kanade.presentation.library.LibraryStateImpl
 import eu.kanade.presentation.library.components.LibraryToolbarTitle
@@ -94,14 +95,8 @@ class LibraryPresenter(
     private val trackManager: TrackManager = Injekt.get(),
 ) : BasePresenter<LibraryController>(), LibraryState by state {
 
-    private val context = preferences.context
-
     var loadedManga by mutableStateOf(emptyMap<Long, List<LibraryItem>>())
         private set
-
-    val isPerCategory by preferences.categorizedDisplaySettings().asState()
-
-    var currentDisplayMode by preferences.libraryDisplayMode().asState()
 
     val tabVisibility by preferences.categoryTabs().asState()
 
@@ -412,8 +407,8 @@ class LibraryPresenter(
      */
     private fun getLibraryObservable(): Observable<Library> {
         return combine(getCategoriesFlow(), getLibraryMangasFlow()) { dbCategories, libraryManga ->
-            val categories = if (libraryManga.containsKey(0) || libraryManga.isEmpty()) {
-                arrayListOf(Category.default(context)) + dbCategories
+            val categories = if (libraryManga.isNotEmpty() && libraryManga.containsKey(0).not()) {
+                dbCategories.filterNot { it.id == Category.UNCATEGORIZED_ID }
             } else {
                 dbCategories
             }
@@ -642,10 +637,12 @@ class LibraryPresenter(
         val category = categories.getOrNull(activeCategory)
 
         val defaultTitle = stringResource(id = R.string.label_library)
+        val categoryName = category?.visualName ?: defaultTitle
+
         val default = remember { LibraryToolbarTitle(defaultTitle) }
 
         return produceState(initialValue = default, category, loadedManga, mangaCountVisibility, tabVisibility) {
-            val title = if (tabVisibility.not()) category?.name ?: defaultTitle else defaultTitle
+            val title = if (tabVisibility.not()) categoryName else defaultTitle
 
             value = when {
                 category == null -> default
@@ -681,11 +678,7 @@ class LibraryPresenter(
     fun getDisplayMode(index: Int): androidx.compose.runtime.State<DisplayModeSetting> {
         val category = categories[index]
         return derivedStateOf {
-            if (isPerCategory.not() || category.id == 0L) {
-                currentDisplayMode
-            } else {
-                DisplayModeSetting.fromFlag(category.displayMode)
-            }
+            DisplayModeSetting.fromFlag(category.displayMode)
         }
     }
 
