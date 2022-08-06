@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.backup.full.models
+package eu.kanade.tachiyomi.data.backup.models
 
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.database.models.ChapterImpl
@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
+@Suppress("DEPRECATION")
 @Serializable
 data class BackupManga(
     // in 1.x some of these values have different names

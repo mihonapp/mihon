@@ -8,7 +8,6 @@ import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.content.ContextCompat
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.backup.full.FullBackupRestore
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isServiceRunning
@@ -70,7 +69,7 @@ class BackupRestoreService : Service() {
     private lateinit var wakeLock: PowerManager.WakeLock
 
     private lateinit var ioScope: CoroutineScope
-    private var backupRestore: AbstractBackupRestore<*>? = null
+    private var restorer: AbstractBackupRestore<*>? = null
     private lateinit var notifier: BackupNotifier
 
     override fun onCreate() {
@@ -94,7 +93,7 @@ class BackupRestoreService : Service() {
     }
 
     private fun destroyJob() {
-        backupRestore?.job?.cancel()
+        restorer?.job?.cancel()
         ioScope.cancel()
         if (wakeLock.isHeld) {
             wakeLock.release()
@@ -118,26 +117,26 @@ class BackupRestoreService : Service() {
         val uri = intent?.getParcelableExtra<Uri>(BackupConst.EXTRA_URI) ?: return START_NOT_STICKY
 
         // Cancel any previous job if needed.
-        backupRestore?.job?.cancel()
+        restorer?.job?.cancel()
 
-        backupRestore = FullBackupRestore(this, notifier)
+        restorer = BackupRestorer(this, notifier)
 
         val handler = CoroutineExceptionHandler { _, exception ->
             logcat(LogPriority.ERROR, exception)
-            backupRestore?.writeErrorLog()
+            restorer?.writeErrorLog()
 
             notifier.showRestoreError(exception.message)
             stopSelf(startId)
         }
         val job = ioScope.launch(handler) {
-            if (backupRestore?.restoreBackup(uri) == false) {
+            if (restorer?.restoreBackup(uri) == false) {
                 notifier.showRestoreError(getString(R.string.restoring_backup_canceled))
             }
         }
         job.invokeOnCompletion {
             stopSelf(startId)
         }
-        backupRestore?.job = job
+        restorer?.job = job
 
         return START_NOT_STICKY
     }

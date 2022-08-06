@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.backup.full.models
+package eu.kanade.tachiyomi.data.backup.models
 
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.serialization.Serializable

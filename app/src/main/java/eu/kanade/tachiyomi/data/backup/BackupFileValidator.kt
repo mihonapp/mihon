@@ -1,10 +1,9 @@
-package eu.kanade.tachiyomi.data.backup.full
+package eu.kanade.tachiyomi.data.backup
 
 import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.backup.AbstractBackupRestoreValidator
-import eu.kanade.tachiyomi.data.backup.full.models.BackupSerializer
+import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.SourceManager
 import okio.buffer
@@ -13,10 +12,10 @@ import okio.source
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class FullBackupRestoreValidator : AbstractBackupRestoreValidator() {
-
-    private val sourceManager: SourceManager = Injekt.get()
-    private val trackManager: TrackManager = Injekt.get()
+class BackupFileValidator(
+    private val sourceManager: SourceManager = Injekt.get(),
+    private val trackManager: TrackManager = Injekt.get(),
+) {
 
     /**
      * Checks for critical backup file data.
@@ -24,8 +23,8 @@ class FullBackupRestoreValidator : AbstractBackupRestoreValidator() {
      * @throws Exception if manga cannot be found.
      * @return List of missing sources or missing trackers.
      */
-    override fun validate(context: Context, uri: Uri): Results {
-        val backupManager = FullBackupManager(context)
+    fun validate(context: Context, uri: Uri): Results {
+        val backupManager = BackupManager(context)
 
         val backup = try {
             val backupString =
@@ -63,4 +62,6 @@ class FullBackupRestoreValidator : AbstractBackupRestoreValidator() {
 
         return Results(missingSources, missingTrackers)
     }
+
+    data class Results(val missingSources: List<String>, val missingTrackers: List<String>)
 }
