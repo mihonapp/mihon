@@ -11,17 +11,74 @@ import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.util.system.createFileInCacheDir
+import kotlinx.coroutines.Job
 import okio.buffer
 import okio.gzip
 import okio.source
+import java.io.File
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
-class BackupRestorer(context: Context, notifier: BackupNotifier) : AbstractBackupRestore<BackupManager>(context, notifier) {
+class BackupRestorer(
+    private val context: Context,
+    private val notifier: BackupNotifier,
+) {
+
+    var job: Job? = null
+
+    private var backupManager = BackupManager(context)
+
+    private var restoreAmount = 0
+    private var restoreProgress = 0
+
+    /**
+     * Mapping of source ID to source name from backup data
+     */
+    private var sourceMapping: Map<Long, String> = emptyMap()
+
+    private val errors = mutableListOf<Pair<Date, String>>()
+
+    suspend fun restoreBackup(uri: Uri): Boolean {
+        val startTime = System.currentTimeMillis()
+        restoreProgress = 0
+        errors.clear()
+
+        if (!performRestore(uri)) {
+            return false
+        }
+
+        val endTime = System.currentTimeMillis()
+        val time = endTime - startTime
+
+        val logFile = writeErrorLog()
+
+        notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name)
+        return true
+    }
+
+    fun writeErrorLog(): File {
+        try {
+            if (errors.isNotEmpty()) {
+                val file = context.createFileInCacheDir("tachiyomi_restore.txt")
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
+
+                file.bufferedWriter().use { out ->
+                    errors.forEach { (date, message) ->
+                        out.write("[${sdf.format(date)}] $message\n")
+                    }
+                }
+                return file
+            }
+        } catch (e: Exception) {
+            // Empty
+        }
+        return File("")
+    }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun performRestore(uri: Uri): Boolean {
-        backupManager = BackupManager(context)
-
+    private suspend fun performRestore(uri: Uri): Boolean {
         val backupString = context.contentResolver.openInputStream(uri)!!.source().gzip().buffer().use { it.readByteArray() }
         val backup = backupManager.parser.decodeFromByteArray(BackupSerializer, backupString)
 
@@ -124,5 +181,16 @@ class BackupRestorer(context: Context, notifier: BackupNotifier) : AbstractBacku
         backupManager.restoreCategories(manga, categories, backupCategories)
         backupManager.restoreHistory(history)
         backupManager.restoreTracking(manga, tracks)
+    }
+
+    /**
+     * Called to update dialog in [BackupConst]
+     *
+     * @param progress restore progress
+     * @param amount total restoreAmount of manga
+     * @param title title of restored manga
+     */
+    private fun showRestoreProgress(progress: Int, amount: Int, title: String) {
+        notifier.showRestoreProgress(title, progress, amount)
     }
 }

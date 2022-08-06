@@ -69,7 +69,7 @@ class BackupRestoreService : Service() {
     private lateinit var wakeLock: PowerManager.WakeLock
 
     private lateinit var ioScope: CoroutineScope
-    private var restorer: AbstractBackupRestore<*>? = null
+    private var restorer: BackupRestorer? = null
     private lateinit var notifier: BackupNotifier
 
     override fun onCreate() {

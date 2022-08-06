@@ -50,17 +50,17 @@ fun Manga.removeCovers(coverCache: CoverCache = Injekt.get()): Int {
     return coverCache.deleteFromCache(this, true)
 }
 
-fun DomainManga.shouldDownloadNewChapters(dbCategories: List<Long>, prefs: PreferencesHelper): Boolean {
+fun DomainManga.shouldDownloadNewChapters(dbCategories: List<Long>, preferences: PreferencesHelper): Boolean {
     if (!favorite) return false
 
     val categories = dbCategories.ifEmpty { listOf(0L) }
 
     // Boolean to determine if user wants to automatically download new chapters.
-    val downloadNewChapter = prefs.downloadNewChapter().get()
+    val downloadNewChapter = preferences.downloadNewChapter().get()
     if (!downloadNewChapter) return false
 
-    val includedCategories = prefs.downloadNewChapterCategories().get().map { it.toLong() }
-    val excludedCategories = prefs.downloadNewChapterCategoriesExclude().get().map { it.toLong() }
+    val includedCategories = preferences.downloadNewChapterCategories().get().map { it.toLong() }
+    val excludedCategories = preferences.downloadNewChapterCategoriesExclude().get().map { it.toLong() }
 
     // Default: Download from all categories
     if (includedCategories.isEmpty() && excludedCategories.isEmpty()) return true

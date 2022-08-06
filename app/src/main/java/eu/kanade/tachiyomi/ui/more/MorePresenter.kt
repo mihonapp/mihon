@@ -18,11 +18,11 @@ import uy.kohesive.injekt.api.get
 
 class MorePresenter(
     private val downloadManager: DownloadManager = Injekt.get(),
-    preferencesHelper: PreferencesHelper = Injekt.get(),
+    preferences: PreferencesHelper = Injekt.get(),
 ) : BasePresenter<MoreController>() {
 
-    val downloadedOnly = preferencesHelper.downloadedOnly().asState()
-    val incognitoMode = preferencesHelper.incognitoMode().asState()
+    val downloadedOnly = preferences.downloadedOnly().asState()
+    val incognitoMode = preferences.incognitoMode().asState()
 
     private var _state: MutableStateFlow<DownloadQueueState> = MutableStateFlow(DownloadQueueState.Stopped)
     val downloadQueueState: StateFlow<DownloadQueueState> = _state.asStateFlow()

@@ -5,9 +5,12 @@ import android.net.Uri
 import com.hippo.unifile.UniFile
 import data.Manga_sync
 import data.Mangas
-import eu.kanade.data.category.categoryMapper
+import eu.kanade.data.DatabaseHandler
+import eu.kanade.data.toLong
+import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.history.model.HistoryUpdate
+import eu.kanade.domain.manga.interactor.GetFavorites
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_CATEGORY
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_CATEGORY_MASK
@@ -29,35 +32,43 @@ import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
 import okio.buffer
 import okio.gzip
 import okio.sink
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.FileOutputStream
 import java.util.Date
 import kotlin.math.max
 import eu.kanade.domain.manga.model.Manga as DomainManga
 
-class BackupManager(context: Context) : AbstractBackupManager(context) {
+class BackupManager(
+    private val context: Context,
+) {
 
-    val parser = ProtoBuf
+    private val handler: DatabaseHandler = Injekt.get()
+    private val sourceManager: SourceManager = Injekt.get()
+    private val preferences: PreferencesHelper = Injekt.get()
+    private val getCategories: GetCategories = Injekt.get()
+    private val getFavorites: GetFavorites = Injekt.get()
+
+    internal val parser = ProtoBuf
 
     /**
-     * Create backup Json file from database
+     * Create backup file from database
      *
      * @param uri path of Uri
      * @param isAutoBackup backup called from scheduled backup job
      */
     @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun createBackup(uri: Uri, flags: Int, isAutoBackup: Boolean): String {
-        // Create root object
-        var backup: Backup? = null
-
-        val databaseManga = getFavoriteManga()
-
-        backup = Backup(
+    suspend fun createBackup(uri: Uri, flags: Int, isAutoBackup: Boolean): String {
+        val databaseManga = getFavorites.await()
+        val backup = Backup(
             backupMangas(databaseManga, flags),
             backupCategories(flags),
             emptyList(),
@@ -73,7 +84,7 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
                     dir = dir.createDirectory("automatic")
 
                     // Delete older backups
-                    val numberOfBackups = numberOfBackups()
+                    val numberOfBackups = preferences.numberOfBackups().get()
                     val backupRegex = Regex("""tachiyomi_\d+-\d+-\d+_\d+-\d+.proto.gz""")
                     dir.listFiles { _, filename -> backupRegex.matches(filename) }
                         .orEmpty()
@@ -93,7 +104,7 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
                 throw IllegalStateException("Failed to get handle on file")
             }
 
-            val byteArray = parser.encodeToByteArray(BackupSerializer, backup!!)
+            val byteArray = parser.encodeToByteArray(BackupSerializer, backup)
             if (byteArray.isEmpty()) {
                 throw IllegalStateException(context.getString(R.string.empty_backup_error))
             }
@@ -133,7 +144,7 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
     private suspend fun backupCategories(options: Int): List<BackupCategory> {
         // Check if user wants category information in backup
         return if (options and BACKUP_CATEGORY_MASK == BACKUP_CATEGORY) {
-            handler.awaitList { categoriesQueries.getCategories(categoryMapper) }
+            getCategories.await()
                 .filterNot(Category::isSystemCategory)
                 .map(backupCategoryMapper)
         } else {
@@ -170,7 +181,7 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
         // Check if user wants category information in backup
         if (options and BACKUP_CATEGORY_MASK == BACKUP_CATEGORY) {
             // Backup categories for this manga
-            val categoriesForManga = handler.awaitList { categoriesQueries.getCategoriesByMangaId(manga.id) }
+            val categoriesForManga = getCategories.await(manga.id)
             if (categoriesForManga.isNotEmpty()) {
                 mangaObject.categories = categoriesForManga.map { it.order }
             }
@@ -201,7 +212,7 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
         return mangaObject
     }
 
-    suspend fun restoreExistingManga(manga: Manga, dbManga: Mangas) {
+    internal suspend fun restoreExistingManga(manga: Manga, dbManga: Mangas) {
         manga.id = dbManga._id
         manga.copyFrom(dbManga)
         updateManga(manga)
@@ -213,7 +224,7 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
      * @param manga manga that needs updating
      * @return Updated manga info.
      */
-    suspend fun restoreNewManga(manga: Manga): Manga {
+    internal suspend fun restoreNewManga(manga: Manga): Manga {
         return manga.also {
             it.initialized = it.description != null
             it.id = insertManga(it)
@@ -227,7 +238,7 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
      */
     internal suspend fun restoreCategories(backupCategories: List<BackupCategory>) {
         // Get categories from file and from db
-        val dbCategories = handler.awaitList { categoriesQueries.getCategories(categoryMapper) }
+        val dbCategories = getCategories.await()
 
         val categories = backupCategories.map {
             var category = it.getCategory()
@@ -267,7 +278,7 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
      * @param categories the categories to restore.
      */
     internal suspend fun restoreCategories(manga: Manga, categories: List<Int>, backupCategories: List<BackupCategory>) {
-        val dbCategories = handler.awaitList { categoriesQueries.getCategories() }
+        val dbCategories = getCategories.await()
         val mangaCategoriesToUpdate = mutableListOf<Pair<Long, Long>>()
 
         categories.forEach { backupCategoryOrder ->
@@ -353,7 +364,6 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
         tracks.map { it.manga_id = manga.id!! }
 
         // Get tracks from database
-
         val dbTracks = handler.awaitList { manga_syncQueries.getTracksByMangaId(manga.id!!) }
         val toUpdate = mutableListOf<Manga_sync>()
         val toInsert = mutableListOf<Track>()
@@ -451,5 +461,140 @@ class BackupManager(context: Context) : AbstractBackupManager(context) {
         val newChapters = chapters.groupBy { it.id != null }
         newChapters[true]?.let { updateKnownChapters(it) }
         newChapters[false]?.let { insertChapters(it) }
+    }
+
+    /**
+     * Returns manga
+     *
+     * @return [Manga], null if not found
+     */
+    internal suspend fun getMangaFromDatabase(url: String, source: Long): Mangas? {
+        return handler.awaitOneOrNull { mangasQueries.getMangaByUrlAndSource(url, source) }
+    }
+
+    /**
+     * Inserts manga and returns id
+     *
+     * @return id of [Manga], null if not found
+     */
+    private suspend fun insertManga(manga: Manga): Long {
+        return handler.awaitOne(true) {
+            mangasQueries.insert(
+                source = manga.source,
+                url = manga.url,
+                artist = manga.artist,
+                author = manga.author,
+                description = manga.description,
+                genre = manga.getGenres(),
+                title = manga.title,
+                status = manga.status.toLong(),
+                thumbnailUrl = manga.thumbnail_url,
+                favorite = manga.favorite,
+                lastUpdate = manga.last_update,
+                nextUpdate = 0L,
+                initialized = manga.initialized,
+                viewerFlags = manga.viewer_flags.toLong(),
+                chapterFlags = manga.chapter_flags.toLong(),
+                coverLastModified = manga.cover_last_modified,
+                dateAdded = manga.date_added,
+            )
+            mangasQueries.selectLastInsertedRowId()
+        }
+    }
+
+    private suspend fun updateManga(manga: Manga): Long {
+        handler.await(true) {
+            mangasQueries.update(
+                source = manga.source,
+                url = manga.url,
+                artist = manga.artist,
+                author = manga.author,
+                description = manga.description,
+                genre = manga.genre,
+                title = manga.title,
+                status = manga.status.toLong(),
+                thumbnailUrl = manga.thumbnail_url,
+                favorite = manga.favorite.toLong(),
+                lastUpdate = manga.last_update,
+                initialized = manga.initialized.toLong(),
+                viewer = manga.viewer_flags.toLong(),
+                chapterFlags = manga.chapter_flags.toLong(),
+                coverLastModified = manga.cover_last_modified,
+                dateAdded = manga.date_added,
+                mangaId = manga.id!!,
+            )
+        }
+        return manga.id!!
+    }
+
+    /**
+     * Inserts list of chapters
+     */
+    private suspend fun insertChapters(chapters: List<Chapter>) {
+        handler.await(true) {
+            chapters.forEach { chapter ->
+                chaptersQueries.insert(
+                    chapter.manga_id!!,
+                    chapter.url,
+                    chapter.name,
+                    chapter.scanlator,
+                    chapter.read,
+                    chapter.bookmark,
+                    chapter.last_page_read.toLong(),
+                    chapter.chapter_number,
+                    chapter.source_order.toLong(),
+                    chapter.date_fetch,
+                    chapter.date_upload,
+                )
+            }
+        }
+    }
+
+    /**
+     * Updates a list of chapters
+     */
+    private suspend fun updateChapters(chapters: List<Chapter>) {
+        handler.await(true) {
+            chapters.forEach { chapter ->
+                chaptersQueries.update(
+                    chapter.manga_id!!,
+                    chapter.url,
+                    chapter.name,
+                    chapter.scanlator,
+                    chapter.read.toLong(),
+                    chapter.bookmark.toLong(),
+                    chapter.last_page_read.toLong(),
+                    chapter.chapter_number.toDouble(),
+                    chapter.source_order.toLong(),
+                    chapter.date_fetch,
+                    chapter.date_upload,
+                    chapter.id!!,
+                )
+            }
+        }
+    }
+
+    /**
+     * Updates a list of chapters with known database ids
+     */
+    private suspend fun updateKnownChapters(chapters: List<Chapter>) {
+        handler.await(true) {
+            chapters.forEach { chapter ->
+                chaptersQueries.update(
+                    mangaId = null,
+                    url = null,
+                    name = null,
+                    scanlator = null,
+                    read = chapter.read.toLong(),
+                    bookmark = chapter.bookmark.toLong(),
+                    lastPageRead = chapter.last_page_read.toLong(),
+                    chapterNumber = null,
+                    sourceOrder = null,
+                    dateFetch = null,
+                    dateUpload = null,
+                    chapterId = chapter.id!!,
+                )
+            }
+        }
     }
 }

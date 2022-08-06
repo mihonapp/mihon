@@ -10,7 +10,7 @@ import uy.kohesive.injekt.injectLazy
 
 object ChapterSettingsHelper {
 
-    private val prefs: PreferencesHelper by injectLazy()
+    private val preferences: PreferencesHelper by injectLazy()
     private val getFavorites: GetFavorites by injectLazy()
     private val setMangaChapterFlags: SetMangaChapterFlags by injectLazy()
 
@@ -18,7 +18,7 @@ object ChapterSettingsHelper {
      * Updates the global Chapter Settings in Preferences.
      */
     fun setGlobalSettings(manga: Manga) {
-        prefs.setChapterSettingsDefault(manga.toDbManga())
+        preferences.setChapterSettingsDefault(manga.toDbManga())
     }
 
     /**
@@ -28,12 +28,12 @@ object ChapterSettingsHelper {
         launchIO {
             setMangaChapterFlags.awaitSetAllFlags(
                 mangaId = manga.id,
-                unreadFilter = prefs.filterChapterByRead().toLong(),
-                downloadedFilter = prefs.filterChapterByDownloaded().toLong(),
-                bookmarkedFilter = prefs.filterChapterByBookmarked().toLong(),
-                sortingMode = prefs.sortChapterBySourceOrNumber().toLong(),
-                sortingDirection = prefs.sortChapterByAscendingOrDescending().toLong(),
-                displayMode = prefs.displayChapterByNameOrNumber().toLong(),
+                unreadFilter = preferences.filterChapterByRead().toLong(),
+                downloadedFilter = preferences.filterChapterByDownloaded().toLong(),
+                bookmarkedFilter = preferences.filterChapterByBookmarked().toLong(),
+                sortingMode = preferences.sortChapterBySourceOrNumber().toLong(),
+                sortingDirection = preferences.sortChapterByAscendingOrDescending().toLong(),
+                displayMode = preferences.displayChapterByNameOrNumber().toLong(),
             )
         }
     }
@@ -41,12 +41,12 @@ object ChapterSettingsHelper {
     suspend fun applySettingDefaults(mangaId: Long) {
         setMangaChapterFlags.awaitSetAllFlags(
             mangaId = mangaId,
-            unreadFilter = prefs.filterChapterByRead().toLong(),
-            downloadedFilter = prefs.filterChapterByDownloaded().toLong(),
-            bookmarkedFilter = prefs.filterChapterByBookmarked().toLong(),
-            sortingMode = prefs.sortChapterBySourceOrNumber().toLong(),
-            sortingDirection = prefs.sortChapterByAscendingOrDescending().toLong(),
-            displayMode = prefs.displayChapterByNameOrNumber().toLong(),
+            unreadFilter = preferences.filterChapterByRead().toLong(),
+            downloadedFilter = preferences.filterChapterByDownloaded().toLong(),
+            bookmarkedFilter = preferences.filterChapterByBookmarked().toLong(),
+            sortingMode = preferences.sortChapterBySourceOrNumber().toLong(),
+            sortingDirection = preferences.sortChapterByAscendingOrDescending().toLong(),
+            displayMode = preferences.displayChapterByNameOrNumber().toLong(),
         )
     }
 
@@ -59,12 +59,12 @@ object ChapterSettingsHelper {
                 .map { manga ->
                     setMangaChapterFlags.awaitSetAllFlags(
                         mangaId = manga.id,
-                        unreadFilter = prefs.filterChapterByRead().toLong(),
-                        downloadedFilter = prefs.filterChapterByDownloaded().toLong(),
-                        bookmarkedFilter = prefs.filterChapterByBookmarked().toLong(),
-                        sortingMode = prefs.sortChapterBySourceOrNumber().toLong(),
-                        sortingDirection = prefs.sortChapterByAscendingOrDescending().toLong(),
-                        displayMode = prefs.displayChapterByNameOrNumber().toLong(),
+                        unreadFilter = preferences.filterChapterByRead().toLong(),
+                        downloadedFilter = preferences.filterChapterByDownloaded().toLong(),
+                        bookmarkedFilter = preferences.filterChapterByBookmarked().toLong(),
+                        sortingMode = preferences.sortChapterBySourceOrNumber().toLong(),
+                        sortingDirection = preferences.sortChapterByAscendingOrDescending().toLong(),
+                        displayMode = preferences.displayChapterByNameOrNumber().toLong(),
                     )
                 }
         }
