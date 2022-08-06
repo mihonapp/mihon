@@ -794,4 +794,8 @@
     <string name="delete_category">مسح الفئة</string>
     <string name="description_placeholder">لا وصف</string>
     <string name="theme_lavender">أُرجواني</string>
+    <string name="appwidget_unavailable_locked">القطعة غير متاحة عند تمكين قفل التطبيق</string>
+    <string name="appwidget_updates_description">شاهد المانقا المجدده حديثاً</string>
+    <string name="action_remove_everything">حذف كل شيء</string>
+    <string name="loader_rar5_error">الصيغه RARv5 غير مدعومه</string>
 </resources>

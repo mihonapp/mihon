@@ -45,7 +45,7 @@
     <string name="action_previous_chapter">上一章</string>
     <string name="action_next_chapter">下一章</string>
     <string name="action_retry">重试</string>
-    <string name="action_remove">移除</string>
+    <string name="action_remove">删除</string>
     <string name="action_resume">继续</string>
     <string name="action_open_in_browser">在浏览器中打开</string>
     <string name="action_display_mode">显示模式</string>
@@ -734,6 +734,8 @@
     <string name="internal_error">InternalError: 内部错误，详情请见崩溃日志</string>
     <string name="pref_user_agent_string">默认 User Agent 字符串</string>
     <string name="pref_reset_user_agent_string">重置默认 User Agent 字符串</string>
-    <string name="action_remove_everything">删除一切</string>
+    <string name="action_remove_everything">全部删除</string>
     <string name="loader_rar5_error">不支持 RARv5 格式</string>
+    <string name="appwidget_unavailable_locked">应用锁开启时小部件不能使用</string>
+    <string name="appwidget_updates_description">查看最近更新的漫画</string>
 </resources>

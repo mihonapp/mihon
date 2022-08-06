@@ -779,4 +779,6 @@
     <string name="pref_reset_user_agent_string">Restablecer el nombre del navegador («user agent»)</string>
     <string name="action_remove_everything">Quitar todo</string>
     <string name="loader_rar5_error">El formato RARv5 no se entiende</string>
+    <string name="appwidget_updates_description">Ver el manga actualizado de forma reciente</string>
+    <string name="appwidget_unavailable_locked">El widget no está disponible cuando el bloqueo de aplicación está activo</string>
 </resources>

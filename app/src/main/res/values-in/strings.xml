@@ -493,7 +493,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">Hapus bab yang ditandai</string>
     <string name="pref_category_delete_chapters">Hapus bab</string>
-    <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau salah dilabeli untuk menampilkan konten NSFW (18+) dalam aplikasi.</string>
+    <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau berpotensi salah ditandai untuk menampilkan konten NSFW (18+) di dalam aplikasi.</string>
     <plurals name="missing_chapters_warning">
         <item quantity="other">Melewati %d bab, entah sumber kehilangan mereka atau karena sudah difilter</item>
     </plurals>
@@ -589,7 +589,7 @@
     <string name="alignment_bottom">Bawah</string>
     <string name="alignment_center">Tengah</string>
     <string name="alignment_top">Atas</string>
-    <string name="pref_side_nav_icon_alignment">Penyesuaian ikon navigasi sisi</string>
+    <string name="pref_side_nav_icon_alignment">Penyelarasan ikon navigasi samping</string>
     <string name="tracking_guide">Panduan pelacakan</string>
     <string name="categorized_display_settings">Pengaturan per-kategori untuk tampilan dan urutan</string>
     <string name="information_empty_category_dialog">Anda belum memiliki kategori apapun.</string>
@@ -630,7 +630,7 @@
     <string name="pref_category_navigation">Navigasi</string>
     <string name="theme_tealturquoise">Teal &amp; Pirus</string>
     <string name="pref_category_appearance">Penampilan</string>
-    <string name="confirm_lock_change">Otentikasi untuk konfirmasi pengubahan</string>
+    <string name="confirm_lock_change">Autentikasi untuk mengonfirmasi perubahan</string>
     <string name="label_default">Bawaan</string>
     <string name="pref_remove_exclude_categories">Kategori yang dikecualikan</string>
     <string name="help_translate">Bantu terjemahkan</string>
@@ -730,10 +730,12 @@
     <string name="theme_lavender">Lavender</string>
     <string name="description_placeholder">Tidak ada deskripsi</string>
     <string name="delete_category_confirmation">Apakah anda ingin menghapus kategori \"%s\"\?</string>
-    <string name="internal_error">InternalError: Cek riwayat crash untuk informasi lebih lanjut</string>
+    <string name="internal_error">InternalError: Periksa log kerusakan untuk informasi lebih lanjut</string>
     <string name="delete_category">Hapus kategori</string>
     <string name="pref_user_agent_string">String agen pengguna default</string>
     <string name="pref_reset_user_agent_string">Setel ulang string agen pengguna default</string>
     <string name="action_remove_everything">Hapus semuanya</string>
     <string name="loader_rar5_error">Format RARv5 tidak didukung</string>
+    <string name="appwidget_updates_description">Lihat manga Anda yang baru saja diperbarui</string>
+    <string name="appwidget_unavailable_locked">Widget tidak tersedia saat kunci aplikasi diaktifkan</string>
 </resources>

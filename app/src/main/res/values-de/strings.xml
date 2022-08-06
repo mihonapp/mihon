@@ -748,4 +748,6 @@
     <string name="pref_reset_user_agent_string">Standard-User-Agent-Text zurücksetzen</string>
     <string name="action_remove_everything">Alles entfernen</string>
     <string name="loader_rar5_error">Das RARv5-Format wird nicht unterstützt</string>
+    <string name="appwidget_updates_description">Deine kürzlich aktualisierten Manga ansehen</string>
+    <string name="appwidget_unavailable_locked">Widget nicht verfügbar, wenn die App-Sperre aktiviert ist</string>
 </resources>

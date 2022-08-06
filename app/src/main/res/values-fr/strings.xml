@@ -698,7 +698,7 @@
     <string name="backup_info">Les sauvegardes automatiques sont fortement conseillées. Nous vous recommandons aussi de conserver des copies ailleurs.</string>
     <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
     <string name="update_72hour">Tous les 3 jours</string>
-    <string name="download_queue_size_warning">Avertissement : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Tachiyomi. Appuyez pour en savoir plus.</string>
+    <string name="download_queue_size_warning">Attention : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Tachiyomi. Appuyez pour en savoir plus.</string>
     <string name="pref_library_update_show_tab_badge">Afficher le nombre de messages non lus sur l\'icône des mises à jour</string>
     <string name="ext_update_all">Tout mettre à jour</string>
     <string name="channel_app_updates">Mises à jour de l\'application</string>
@@ -782,4 +782,6 @@
     <string name="pref_user_agent_string">Numéro d\'utilisateur par défaut</string>
     <string name="action_remove_everything">Tout retirer</string>
     <string name="loader_rar5_error">Le format RARv5 n\'est pas supporté</string>
+    <string name="appwidget_updates_description">Voir vos derniers mangas mis à jour</string>
+    <string name="appwidget_unavailable_locked">Le Widget n\'est pas disponible lorsque l\'application est verrouillée</string>
 </resources>

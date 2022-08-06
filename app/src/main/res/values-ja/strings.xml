@@ -736,4 +736,6 @@
     <string name="pref_reset_user_agent_string">デフォルトのユーザーエージェント文字列をリセットする</string>
     <string name="action_remove_everything">全て除去</string>
     <string name="loader_rar5_error">フォーマットRARv5は未対応です</string>
+    <string name="appwidget_updates_description">最近更新されたマンガを見る</string>
+    <string name="appwidget_unavailable_locked">アプリロックがONの時、ウィジェットは利用できません</string>
 </resources>

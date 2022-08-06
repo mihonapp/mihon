@@ -781,4 +781,6 @@
     <string name="pref_user_agent_string">Stringa user agent predefinita del browser</string>
     <string name="action_remove_everything">Rimuovi tutto</string>
     <string name="loader_rar5_error">Il formato RARv5 non è supportato</string>
+    <string name="appwidget_unavailable_locked">Widget non disponibile quando il blocco app è attivo</string>
+    <string name="appwidget_updates_description">Vedi i manga aggiornati di recente</string>
 </resources>

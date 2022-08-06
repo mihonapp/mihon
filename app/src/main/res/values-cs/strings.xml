@@ -760,4 +760,6 @@
     <string name="pref_user_agent_string">Výchozí řetězec pro user agent</string>
     <string name="action_remove_everything">Odstranit vše</string>
     <string name="loader_rar5_error">Formát RARv5 není podporován</string>
+    <string name="appwidget_unavailable_locked">Widget není k dispozici, když je povolen zámek aplikace</string>
+    <string name="appwidget_updates_description">Podívejte se na vaši nedávno aktualizovanou mangu</string>
 </resources>

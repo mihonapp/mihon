@@ -736,4 +736,6 @@
     <string name="pref_user_agent_string">預設使用者代理字串</string>
     <string name="action_remove_everything">全部清除</string>
     <string name="loader_rar5_error">不支援 RARv5 格式</string>
+    <string name="appwidget_unavailable_locked">當需要解鎖才能存取應用程式時，無法使用小工具</string>
+    <string name="appwidget_updates_description">查看近期更新的漫畫</string>
 </resources>

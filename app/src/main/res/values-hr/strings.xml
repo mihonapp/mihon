@@ -411,9 +411,9 @@
     <string name="clear_database_confirmation">Sigurno\? Izgubit ćeš pročitana poglavlja i napredak manga koji nisu u biblioteci</string>
     <string name="pref_clear_database_summary">Izbriši povijest manga koje se ne nalaze u tvojoj biblioteci</string>
     <string name="pref_clear_database">Isprazni bazu podataka</string>
-    <string name="cookies_cleared">Kolačići su uklonjeni</string>
+    <string name="cookies_cleared">Kolačići su izbrisani</string>
     <string name="pref_clear_cookies">Ukloni kolačiće</string>
-    <string name="cache_delete_error">Došlo je do greške prilikom pražnjenja predmemorije</string>
+    <string name="cache_delete_error">Došlo je do greške prilikom brisanja</string>
     <string name="cache_deleted">Predmemorija je prazna. Broj izbrisanih datoteka: %1$d</string>
     <string name="used_cache">Korišteno: %1$s</string>
     <string name="pref_clear_chapter_cache">Isprazni predmemoriju poglavlja</string>
@@ -703,7 +703,7 @@
     <string name="pref_navigate_pan">Navigiraj pomicanjem slike</string>
     <string name="pref_landscape_zoom">Promijeni uvećanje slike u ležećem formatu</string>
     <string name="action_filter_started">Započeto</string>
-    <string name="pref_update_only_started">Bez pročitanih poglavlja</string>
+    <string name="pref_update_only_started">Koja još nisu pokrenuta</string>
     <string name="skipped_reason_completed">Preskočeno, jer je serija kompletna</string>
     <string name="skipped_reason_not_started">Preskočeno, jer nijedno poglavlje nije pročitano</string>
     <string name="skipped_reason_not_caught_up">Preskočeno, jer postoje nepročitana poglavlja</string>
@@ -714,4 +714,16 @@
     <string name="rotation_reverse_portrait">Preokrenuto uspravno</string>
     <string name="action_move_to_top_all_for_series">Pomakni serijal na vrh</string>
     <string name="disabled_nav">Deaktivirano</string>
+    <string name="empty_backup_error">Nema unosa u biblioteci za spremanje u sigurnosnu kopiju</string>
+    <string name="split_tall_images_summary">Poboljšava performanse čitača dijeljenjem preuzetih visokih slika.</string>
+    <string name="complete_list">Potpun popis</string>
+    <string name="download_notifier_split_failed">Nije bilo moguće podijeliti preuzetu sliku</string>
+    <string name="split_tall_images">Automatski podijeli visoke slike</string>
+    <string name="webview_data_deleted">WebView podaci su izbrisani</string>
+    <string name="pref_clear_webview_data">Izbriši WebView podatke</string>
+    <string name="reading_list">Popis čitanja</string>
+    <string name="wish_list">Popis želja</string>
+    <string name="on_hold_list">Na popisu čekanja</string>
+    <string name="unfinished_list">Popis nedovršenih</string>
+    <string name="download_notifier_split_page_not_found">Stranica %d nije pronađena tijekom razdvajanja</string>
 </resources>

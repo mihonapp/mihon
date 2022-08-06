@@ -292,7 +292,7 @@
     <string name="information_no_recent">Inga nya uppdateringar</string>
     <string name="information_no_recent_manga">Inget nyligen läst</string>
     <string name="information_empty_library">Ditt bibliotek är tomt</string>
-    <string name="information_empty_category">Du har inga kategorier. Tryck på plus-knappen för att skapa en och organisera ditt bibliotek.</string>
+    <string name="information_empty_category">Du har inga kategorier. Tryck på plusknappen för att skapa en för att organisera ditt bibliotek.</string>
     <string name="download_notifier_downloader_title">Nedladdare</string>
     <string name="download_notifier_title_error">Fel</string>
     <string name="download_notifier_unknown_error">Kunde inte ladda ned kapitel på grund av ett oförväntat fel</string>
@@ -748,4 +748,6 @@
     <string name="pref_reset_user_agent_string">Återställ standardsträngen för användaragent</string>
     <string name="action_remove_everything">Ta bort allt</string>
     <string name="loader_rar5_error">RARv5 formatet stöds inte</string>
+    <string name="appwidget_updates_description">Se dina nyligen uppdaterade manga</string>
+    <string name="appwidget_unavailable_locked">Widget är inte tillgänglig när applåset är aktiverat</string>
 </resources>
