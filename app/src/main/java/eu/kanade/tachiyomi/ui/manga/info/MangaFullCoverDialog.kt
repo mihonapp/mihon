@@ -6,16 +6,9 @@ import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.core.os.bundleOf
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -24,6 +17,7 @@ import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.hasCustomCover
+import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.tachiyomi.R
@@ -78,14 +72,7 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFul
                 onDismissRequest = router::popCurrentController,
             )
         } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
+            LoadingScreen()
         }
     }
 
