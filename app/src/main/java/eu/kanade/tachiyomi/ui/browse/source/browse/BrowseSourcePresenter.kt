@@ -387,7 +387,10 @@ open class BrowseSourcePresenter(
      * @return List of categories, not including the default category
      */
     suspend fun getCategories(): List<DomainCategory> {
-        return getCategories.subscribe().firstOrNull() ?: emptyList()
+        return getCategories.subscribe()
+            .firstOrNull()
+            ?.filterNot { it.id == DomainCategory.UNCATEGORIZED_ID }
+            ?: emptyList()
     }
 
     suspend fun getDuplicateLibraryManga(manga: DomainManga): DomainManga? {

@@ -202,7 +202,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         return super.getPackageName()
     }
 
-    protected open fun setupAcra() {
+    private fun setupAcra() {
         if (isDevFlavor.not()) {
             initAcra {
                 buildConfigClass = BuildConfig::class.java
@@ -216,7 +216,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         }
     }
 
-    protected open fun setupNotificationChannels() {
+    private fun setupNotificationChannels() {
         try {
             Notifications.createChannels(this)
         } catch (e: Exception) {
