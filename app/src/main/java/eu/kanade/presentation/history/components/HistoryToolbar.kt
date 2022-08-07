@@ -62,10 +62,10 @@ fun HistoryRegularToolbar(
         title = stringResource(id = R.string.history),
         actions = {
             IconButton(onClick = onClickSearch) {
-                Icon(Icons.Outlined.Search, contentDescription = "search")
+                Icon(Icons.Outlined.Search, contentDescription = stringResource(R.string.action_search))
             }
             IconButton(onClick = onClickDelete) {
-                Icon(Icons.Outlined.DeleteSweep, contentDescription = "delete")
+                Icon(Icons.Outlined.DeleteSweep, contentDescription = stringResource(R.string.pref_clear_history))
             }
         },
         downloadedOnlyMode = downloadedOnlyMode,

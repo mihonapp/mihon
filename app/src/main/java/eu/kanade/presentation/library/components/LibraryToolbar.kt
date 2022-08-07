@@ -27,12 +27,14 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.Pill
 import eu.kanade.presentation.library.LibraryState
 import eu.kanade.presentation.theme.active
+import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -109,13 +111,13 @@ fun LibraryRegularToolbar(
         },
         actions = {
             IconButton(onClick = onClickSearch) {
-                Icon(Icons.Outlined.Search, contentDescription = "search")
+                Icon(Icons.Outlined.Search, contentDescription = stringResource(R.string.action_search))
             }
             IconButton(onClick = onClickFilter) {
-                Icon(Icons.Outlined.FilterList, contentDescription = "search", tint = filterTint)
+                Icon(Icons.Outlined.FilterList, contentDescription = stringResource(R.string.action_filter), tint = filterTint)
             }
             IconButton(onClick = onClickRefresh) {
-                Icon(Icons.Outlined.Refresh, contentDescription = "search")
+                Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.pref_category_library_update))
             }
         },
         incognitoMode = incognitoMode,
