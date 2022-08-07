@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -127,15 +126,13 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
         }
     }
 
-    fun getCurrentUser(): Int {
-        return runBlocking {
-            authClient.newCall(GET("$apiUrl/users/whoami"))
-                .await()
-                .parseAs<JsonObject>()
-                .let {
-                    it["id"]!!.jsonPrimitive.int
-                }
-        }
+    suspend fun getCurrentUser(): Int {
+        return authClient.newCall(GET("$apiUrl/users/whoami"))
+            .await()
+            .parseAs<JsonObject>()
+            .let {
+                it["id"]!!.jsonPrimitive.int
+            }
     }
 
     suspend fun accessToken(code: String): OAuth {

@@ -8,13 +8,13 @@ import eu.kanade.tachiyomi.R
 
 val Category.visualName: String
     @Composable
-    get() = when (id) {
-        Category.UNCATEGORIZED_ID -> stringResource(id = R.string.label_default)
+    get() = when {
+        isSystemCategory -> stringResource(id = R.string.label_default)
         else -> name
     }
 
 fun Category.visualName(context: Context): String =
-    when (id) {
-        Category.UNCATEGORIZED_ID -> context.getString(R.string.label_default)
+    when {
+        isSystemCategory -> context.getString(R.string.label_default)
         else -> name
     }

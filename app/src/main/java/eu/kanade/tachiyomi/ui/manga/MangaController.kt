@@ -61,6 +61,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
 import eu.kanade.tachiyomi.widget.materialdialogs.await
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import eu.kanade.domain.chapter.model.Chapter as DomainChapter
 
@@ -214,7 +215,7 @@ class MangaController :
                 }
             } else null,
             onRequireCategory = { manga, categories ->
-                val ids = presenter.getMangaCategoryIds(manga)
+                val ids = runBlocking { presenter.getMangaCategoryIds(manga) }
                 val preselected = categories.map {
                     if (it.id in ids) {
                         QuadStateTextView.State.CHECKED.ordinal

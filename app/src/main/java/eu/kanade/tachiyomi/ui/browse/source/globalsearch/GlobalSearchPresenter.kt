@@ -32,14 +32,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
-/**
- * Presenter of [GlobalSearchController]
- * Function calls should be done from here. UI calls should be done from the controller.
- *
- * @param sourceManager manages the different sources.
- * @param db manages the database calls.
- * @param preferences manages the preference calls.
- */
 open class GlobalSearchPresenter(
     private val initialQuery: String? = "",
     private val initialExtensionFilter: String? = null,
@@ -256,7 +248,7 @@ open class GlobalSearchPresenter(
         val networkManga = source.getMangaDetails(manga.toMangaInfo())
         manga.copyFrom(networkManga.toSManga())
         manga.initialized = true
-        runBlocking { updateManga.await(manga.toDomainManga()!!.toMangaUpdate()) }
+        updateManga.await(manga.toDomainManga()!!.toMangaUpdate())
         return manga
     }
 

@@ -64,7 +64,6 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
@@ -351,7 +350,7 @@ class MangaPresenter(
      * @return List of categories, not including the default category
      */
     suspend fun getCategories(): List<Category> {
-        return getCategories.await()
+        return getCategories.await().filterNot { it.isSystemCategory }
     }
 
     /**
@@ -360,8 +359,8 @@ class MangaPresenter(
      * @param manga the manga to get categories from.
      * @return Array of category ids the manga is in, if none returns default id
      */
-    fun getMangaCategoryIds(manga: DomainManga): Array<Long> {
-        val categories = runBlocking { getCategories.await(manga.id) }
+    suspend fun getMangaCategoryIds(manga: DomainManga): Array<Long> {
+        val categories = getCategories.await(manga.id)
         return categories.map { it.id }.toTypedArray()
     }
 

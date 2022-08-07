@@ -408,7 +408,7 @@ class LibraryPresenter(
     private fun getLibraryObservable(): Observable<Library> {
         return combine(getCategoriesFlow(), getLibraryMangasFlow()) { dbCategories, libraryManga ->
             val categories = if (libraryManga.isNotEmpty() && libraryManga.containsKey(0).not()) {
-                dbCategories.filterNot { it.id == Category.UNCATEGORIZED_ID }
+                dbCategories.filterNot { it.isSystemCategory }
             } else {
                 dbCategories
             }

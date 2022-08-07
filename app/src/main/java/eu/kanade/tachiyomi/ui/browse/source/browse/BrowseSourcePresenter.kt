@@ -389,7 +389,7 @@ open class BrowseSourcePresenter(
     suspend fun getCategories(): List<DomainCategory> {
         return getCategories.subscribe()
             .firstOrNull()
-            ?.filterNot { it.id == DomainCategory.UNCATEGORIZED_ID }
+            ?.filterNot { it.isSystemCategory }
             ?: emptyList()
     }
 
