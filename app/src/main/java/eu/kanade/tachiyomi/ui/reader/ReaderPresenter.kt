@@ -423,6 +423,7 @@ class ReaderPresenter(
         if (selectedChapter != currentChapters.currChapter) {
             logcat { "Setting ${selectedChapter.chapter.url} as active" }
             saveReadingProgress(currentChapters.currChapter)
+            setReadStartTime()
             loadNewChapter(selectedChapter)
         }
     }
