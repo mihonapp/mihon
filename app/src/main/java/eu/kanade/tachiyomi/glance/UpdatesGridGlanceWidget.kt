@@ -164,8 +164,7 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
         Box(
             modifier = modifier
                 .size(width = CoverWidth, height = CoverHeight)
-                .appWidgetInnerRadius()
-                .background(ColorProvider(R.color.appwidget_surface_variant)),
+                .appWidgetInnerRadius(),
         ) {
             if (cover != null) {
                 Image(
@@ -179,11 +178,9 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
             } else {
                 // Enjoy placeholder
                 Image(
-                    provider = ImageProvider(R.drawable.appwidget_cover_placeholder),
+                    provider = ImageProvider(R.drawable.appwidget_cover_error),
                     contentDescription = null,
-                    modifier = GlanceModifier
-                        .fillMaxSize()
-                        .padding(4.dp),
+                    modifier = GlanceModifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
                 )
             }
@@ -281,7 +278,8 @@ private val ContainerModifier = GlanceModifier
  */
 private fun DpSize.calculateRowAndColumnCount(): Pair<Int, Int> {
     // Hack: Size provided by Glance manager is not reliable so take at least 1 row and 1 column
-    val rowCount = (height.value / 95).toInt().coerceAtLeast(1)
-    val columnCount = (width.value / 64).toInt().coerceAtLeast(1)
+    // Set max to 10 children each direction because of Glance limitation
+    val rowCount = (height.value / 95).toInt().coerceIn(1, 10)
+    val columnCount = (width.value / 64).toInt().coerceIn(1, 10)
     return Pair(rowCount, columnCount)
 }
