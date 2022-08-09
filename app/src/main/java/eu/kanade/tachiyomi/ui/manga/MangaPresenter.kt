@@ -166,8 +166,26 @@ class MangaPresenter(
         // Manga info - start
 
         presenterScope.launchIO {
-            if (!getMangaAndChapters.awaitManga(mangaId).favorite) {
+            val manga = getMangaAndChapters.awaitManga(mangaId)
+
+            if (!manga.favorite) {
                 ChapterSettingsHelper.applySettingDefaults(mangaId)
+            }
+
+            // Show what we have earlier.
+            // Defaults set by the block above won't apply until next update but it doesn't matter
+            // since we don't have any chapter yet.
+            _state.update {
+                MangaScreenState.Success(
+                    manga = manga,
+                    source = Injekt.get<SourceManager>().getOrStub(manga.source),
+                    isFromSource = isFromSource,
+                    trackingAvailable = trackManager.hasLoggedServices(),
+                    chapters = emptyList(),
+                    isRefreshingChapter = true,
+                    isIncognitoMode = incognitoMode,
+                    isDownloadedOnlyMode = downloadedOnlyMode,
+                )
             }
 
             getMangaAndChapters.subscribe(mangaId)
@@ -179,22 +197,13 @@ class MangaPresenter(
                         dateRelativeTime = preferences.relativeTime().get(),
                         dateFormat = preferences.dateFormat(),
                     )
-                    _state.update { currentState ->
-                        when (currentState) {
-                            // Initialize success state
-                            MangaScreenState.Loading -> MangaScreenState.Success(
-                                manga = manga,
-                                source = Injekt.get<SourceManager>().getOrStub(manga.source),
-                                isFromSource = isFromSource,
-                                trackingAvailable = trackManager.hasLoggedServices(),
-                                chapters = chapterItems,
-                                isIncognitoMode = incognitoMode,
-                                isDownloadedOnlyMode = downloadedOnlyMode,
-                            )
-
-                            // Update state
-                            is MangaScreenState.Success -> currentState.copy(manga = manga, chapters = chapterItems)
-                        }
+                    updateSuccessState {
+                        it.copy(
+                            manga = manga,
+                            chapters = chapterItems,
+                            isRefreshingChapter = false,
+                            isRefreshingInfo = false,
+                        )
                     }
 
                     observeTrackers()

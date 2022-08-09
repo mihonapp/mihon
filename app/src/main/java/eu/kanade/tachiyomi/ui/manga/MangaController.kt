@@ -150,8 +150,13 @@ class MangaController :
 
     // Let compose view handle this
     override fun handleBack(): Boolean {
-        (activity as? OnBackPressedDispatcherOwner)?.onBackPressedDispatcher?.onBackPressed()
-        return true
+        val dispatcher = (activity as? OnBackPressedDispatcherOwner)?.onBackPressedDispatcher ?: return false
+        return if (dispatcher.hasEnabledCallbacks()) {
+            dispatcher.onBackPressed()
+            true
+        } else {
+            false
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedViewState: Bundle?): View {
