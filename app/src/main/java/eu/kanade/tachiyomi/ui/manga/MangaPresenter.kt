@@ -753,13 +753,13 @@ class MangaPresenter(
         fromLongPress: Boolean = false,
     ) {
         updateSuccessState { successState ->
-            val modifiedIndex = successState.chapters.indexOfFirst { it.chapter.id == item.chapter.id }
-            if (modifiedIndex < 0) return@updateSuccessState successState
+            val newChapters = successState.processedChapters.toMutableList().apply {
+                val modifiedIndex = successState.processedChapters.indexOfFirst { it == item }
+                if (modifiedIndex < 0) return@apply
 
-            val oldItem = successState.chapters[modifiedIndex]
-            if ((oldItem.selected && selected) || (!oldItem.selected && !selected)) return@updateSuccessState successState
+                val oldItem = get(modifiedIndex)
+                if ((oldItem.selected && selected) || (!oldItem.selected && !selected)) return@apply
 
-            val newChapters = successState.chapters.toMutableList().apply {
                 val firstSelection = none { it.selected }
                 var newItem = removeAt(modifiedIndex)
                 add(modifiedIndex, newItem.copy(selected = selected))
