@@ -1,6 +1,7 @@
 package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,15 +19,14 @@ fun LibraryCoverOnlyGrid(
     onGlobalSearchClicked: () -> Unit,
 ) {
     LazyLibraryGrid(
+        modifier = Modifier.fillMaxSize(),
         columns = columns,
     ) {
         globalSearchItem(searchQuery, onGlobalSearchClicked)
 
         items(
             items = items,
-            key = {
-                it.manga.id!!
-            },
+            contentType = { "library_only_cover_grid_item" },
         ) { libraryItem ->
             LibraryCoverOnlyGridItem(
                 item = libraryItem,

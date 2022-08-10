@@ -42,7 +42,10 @@ fun LazyGridScope.globalSearchItem(
     onGlobalSearchClicked: () -> Unit,
 ) {
     if (searchQuery.isNullOrEmpty().not()) {
-        item(span = { GridItemSpan(maxLineSpan) }) {
+        item(
+            span = { GridItemSpan(maxLineSpan) },
+            contentType = { "library_global_search_item" },
+        ) {
             TextButton(onClick = onGlobalSearchClicked) {
                 Text(
                     text = stringResource(R.string.action_global_search_query, searchQuery!!),

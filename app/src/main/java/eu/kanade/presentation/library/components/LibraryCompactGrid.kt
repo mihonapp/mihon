@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.items
@@ -33,15 +34,14 @@ fun LibraryCompactGrid(
     onGlobalSearchClicked: () -> Unit,
 ) {
     LazyLibraryGrid(
+        modifier = Modifier.fillMaxSize(),
         columns = columns,
     ) {
         globalSearchItem(searchQuery, onGlobalSearchClicked)
 
         items(
             items = items,
-            key = {
-                it.manga.id!!
-            },
+            contentType = { "library_compact_grid_item" },
         ) { libraryItem ->
             LibraryCompactGridItem(
                 item = libraryItem,

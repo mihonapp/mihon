@@ -2,6 +2,7 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
@@ -25,15 +26,14 @@ fun LibraryComfortableGrid(
     onGlobalSearchClicked: () -> Unit,
 ) {
     LazyLibraryGrid(
+        modifier = Modifier.fillMaxSize(),
         columns = columns,
     ) {
         globalSearchItem(searchQuery, onGlobalSearchClicked)
 
         items(
             items = items,
-            key = {
-                it.manga.id!!
-            },
+            contentType = { "library_comfortable_grid_item" },
         ) { libraryItem ->
             LibraryComfortableGridItem(
                 libraryItem,
