@@ -29,7 +29,6 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchCardItem
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchItem
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchPresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.toast
 import uy.kohesive.injekt.Injekt
@@ -98,7 +97,7 @@ class SearchPresenter(
                 withUIContext { view?.applicationContext?.toast(e.message) }
             }
 
-            presenterScope.launchUI { replacingMangaRelay.call(Pair(false, manga)) }
+            withUIContext { replacingMangaRelay.call(Pair(false, manga)) }
         }
     }
 

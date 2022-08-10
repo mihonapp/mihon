@@ -28,7 +28,6 @@ import eu.kanade.tachiyomi.data.saver.Location
 import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toShareIntent
@@ -81,11 +80,11 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFul
         viewScope.launchIO {
             try {
                 val uri = presenter.saveCover(activity, temp = true) ?: return@launchIO
-                launchUI {
+                withUIContext {
                     startActivity(uri.toShareIntent(activity))
                 }
             } catch (e: Throwable) {
-                launchUI {
+                withUIContext {
                     logcat(LogPriority.ERROR, e)
                     activity.toast(R.string.error_saving_cover)
                 }
@@ -98,11 +97,11 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFul
         viewScope.launchIO {
             try {
                 presenter.saveCover(activity, temp = false)
-                launchUI {
+                withUIContext {
                     activity.toast(R.string.cover_saved)
                 }
             } catch (e: Throwable) {
-                launchUI {
+                withUIContext {
                     logcat(LogPriority.ERROR, e)
                     activity.toast(R.string.error_saving_cover)
                 }
@@ -209,13 +208,12 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFul
             presenterScope.launchIO {
                 @Suppress("BlockingMethodInNonBlockingContext")
                 context.contentResolver.openInputStream(data)?.use {
-                    val result = try {
+                    try {
                         manga.editCover(context, it, updateManga, coverCache)
+                        withUIContext { view?.onSetCoverSuccess() }
                     } catch (e: Exception) {
-                        view?.onSetCoverError(e)
-                        false
+                        withUIContext { view?.onSetCoverError(e) }
                     }
-                    withUIContext { if (result) view?.onSetCoverSuccess() }
                 }
             }
         }

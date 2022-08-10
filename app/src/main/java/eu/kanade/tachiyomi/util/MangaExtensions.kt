@@ -80,15 +80,12 @@ suspend fun DomainManga.editCover(
     stream: InputStream,
     updateManga: UpdateManga = Injekt.get(),
     coverCache: CoverCache = Injekt.get(),
-): Boolean {
-    return if (isLocal()) {
+) {
+    if (isLocal()) {
         LocalSource.updateCover(context, toDbManga(), stream)
         updateManga.awaitUpdateCoverLastModified(id)
     } else if (favorite) {
         coverCache.setCustomCoverToCache(toDbManga(), stream)
         updateManga.awaitUpdateCoverLastModified(id)
-    } else {
-        // We should never reach this block
-        false
     }
 }

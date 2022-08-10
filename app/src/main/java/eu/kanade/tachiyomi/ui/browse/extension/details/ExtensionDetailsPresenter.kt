@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
@@ -36,7 +36,7 @@ class ExtensionDetailsPresenter(
                 .collectLatest { extension ->
                     // If extension is null it's most likely uninstalled
                     if (extension == null) {
-                        launchUI {
+                        withUIContext {
                             view?.onExtensionUninstalled()
                         }
                         return@collectLatest

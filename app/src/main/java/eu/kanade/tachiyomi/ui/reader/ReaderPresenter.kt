@@ -43,7 +43,6 @@ import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.lang.byteSize
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.takeBytes
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.storage.DiskUtil
@@ -665,7 +664,7 @@ class ReaderPresenter(
                         location = Location.Pictures.create(relativePath),
                     ),
                 )
-                launchUI {
+                withUIContext {
                     notifier.onComplete(uri)
                     view!!.onSaveImageResult(SaveImageResult.Success(uri))
                 }
@@ -702,7 +701,7 @@ class ReaderPresenter(
                         location = Location.Cache,
                     ),
                 )
-                launchUI {
+                withUIContext {
                     view!!.onShareImageResult(uri, page)
                 }
             }
@@ -720,20 +719,19 @@ class ReaderPresenter(
         val stream = page.stream ?: return
 
         presenterScope.launchIO {
-            val result = try {
+            try {
                 manga.editCover(context, stream())
-            } catch (e: Exception) {
-                false
-            }
-            launchUI {
-                val resultResult = if (!result) {
-                    SetAsCoverResult.Error
-                } else if (manga.isLocal() || manga.favorite) {
-                    SetAsCoverResult.Success
-                } else {
-                    SetAsCoverResult.AddToLibraryFirst
+                withUIContext {
+                    view?.onSetAsCoverResult(
+                        if (manga.isLocal() || manga.favorite) {
+                            SetAsCoverResult.Success
+                        } else {
+                            SetAsCoverResult.AddToLibraryFirst
+                        },
+                    )
                 }
-                view?.onSetAsCoverResult(resultResult)
+            } catch (e: Exception) {
+                withUIContext { view?.onSetAsCoverResult(SetAsCoverResult.Error) }
             }
         }
     }

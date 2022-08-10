@@ -25,8 +25,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.toDateKey
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.channels.Channel
@@ -112,7 +112,7 @@ class HistoryPresenter(
         presenterScope.launchIO {
             val result = deleteHistoryTable.await()
             if (!result) return@launchIO
-            launchUI {
+            withUIContext {
                 view?.activity?.toast(R.string.clear_history_completed)
             }
         }

@@ -42,7 +42,6 @@ import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.preference.asHotFlow
@@ -276,7 +275,7 @@ class MangaPresenter(
                     if (manga.toDbManga().removeCovers() > 0) {
                         updateManga.awaitUpdateCoverLastModified(manga.id)
                     }
-                    launchUI { onRemoved() }
+                    withUIContext { onRemoved() }
                 }
             } else {
                 // Add to library
@@ -284,7 +283,7 @@ class MangaPresenter(
                 if (onDuplicateExists != null) {
                     val duplicate = getDuplicateLibraryManga.await(manga.title, manga.source)
                     if (duplicate != null) {
-                        launchUI { onDuplicateExists(duplicate) }
+                        withUIContext { onDuplicateExists(duplicate) }
                         return@launchIO
                     }
                 }
@@ -299,7 +298,7 @@ class MangaPresenter(
                         val result = updateManga.awaitUpdateFavorite(manga.id, true)
                         if (!result) return@launchIO
                         moveMangaToCategory(defaultCategory)
-                        launchUI { onAdded() }
+                        withUIContext { onAdded() }
                     }
 
                     // Automatic 'Default' or no categories
@@ -307,11 +306,11 @@ class MangaPresenter(
                         val result = updateManga.awaitUpdateFavorite(manga.id, true)
                         if (!result) return@launchIO
                         moveMangaToCategory(null)
-                        launchUI { onAdded() }
+                        withUIContext { onAdded() }
                     }
 
                     // Choose a category
-                    else -> launchUI { onRequireCategory(manga, categories) }
+                    else -> withUIContext { onRequireCategory(manga, categories) }
                 }
 
                 // Finally match with enhanced tracking when available
