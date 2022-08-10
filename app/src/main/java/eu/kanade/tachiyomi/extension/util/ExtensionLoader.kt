@@ -80,10 +80,12 @@ internal object ExtensionLoader {
             context.packageManager.getPackageInfo(pkgName, PACKAGE_FLAGS)
         } catch (error: PackageManager.NameNotFoundException) {
             // Unlikely, but the package may have been uninstalled at this point
-            return LoadResult.Error(error)
+            logcat(LogPriority.ERROR, error)
+            return LoadResult.Error
         }
         if (!isPackageAnExtension(pkgInfo)) {
-            return LoadResult.Error("Tried to load a package that wasn't a extension")
+            logcat(LogPriority.WARN) { "Tried to load a package that wasn't a extension ($pkgName)" }
+            return LoadResult.Error
         }
         return loadExtension(context, pkgName, pkgInfo)
     }
@@ -102,7 +104,8 @@ internal object ExtensionLoader {
             pkgManager.getApplicationInfo(pkgName, PackageManager.GET_META_DATA)
         } catch (error: PackageManager.NameNotFoundException) {
             // Unlikely, but the package may have been uninstalled at this point
-            return LoadResult.Error(error)
+            logcat(LogPriority.ERROR, error)
+            return LoadResult.Error
         }
 
         val extName = pkgManager.getApplicationLabel(appInfo).toString().substringAfter("Tachiyomi: ")
@@ -112,7 +115,7 @@ internal object ExtensionLoader {
         if (versionName.isNullOrEmpty()) {
             val exception = Exception("Missing versionName for extension $extName")
             logcat(LogPriority.WARN, exception)
-            return LoadResult.Error(exception)
+            return LoadResult.Error
         }
 
         // Validate lib version
@@ -123,13 +126,14 @@ internal object ExtensionLoader {
                     "$LIB_VERSION_MIN to $LIB_VERSION_MAX are allowed",
             )
             logcat(LogPriority.WARN, exception)
-            return LoadResult.Error(exception)
+            return LoadResult.Error
         }
 
         val signatureHash = getSignatureHash(pkgInfo)
 
         if (signatureHash == null) {
-            return LoadResult.Error("Package $pkgName isn't signed")
+            logcat(LogPriority.WARN) { "Package $pkgName isn't signed" }
+            return LoadResult.Error
         } else if (signatureHash !in trustedSignatures) {
             val extension = Extension.Untrusted(extName, pkgName, versionName, versionCode, signatureHash)
             logcat(LogPriority.WARN) { "Extension $pkgName isn't trusted" }
@@ -138,7 +142,8 @@ internal object ExtensionLoader {
 
         val isNsfw = appInfo.metaData.getInt(METADATA_NSFW) == 1
         if (!loadNsfwSource && isNsfw) {
-            return LoadResult.Error("NSFW extension $pkgName not allowed")
+            logcat(LogPriority.WARN) { "NSFW extension $pkgName not allowed" }
+            return LoadResult.Error
         }
 
         val hasReadme = appInfo.metaData.getInt(METADATA_HAS_README, 0) == 1
@@ -165,7 +170,7 @@ internal object ExtensionLoader {
                     }
                 } catch (e: Throwable) {
                     logcat(LogPriority.ERROR, e) { "Extension load error: $extName ($it)" }
-                    return LoadResult.Error(e)
+                    return LoadResult.Error
                 }
             }
 
