@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import com.google.accompanist.pager.rememberPagerState
@@ -22,6 +26,8 @@ import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
 import eu.kanade.tachiyomi.widget.EmptyView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun LibraryContent(
@@ -50,6 +56,9 @@ fun LibraryContent(
         val coercedCurrentPage = remember { currentPage().coerceAtMost(categories.lastIndex) }
         val pagerState = rememberPagerState(coercedCurrentPage)
 
+        val scope = rememberCoroutineScope()
+        var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
+
         if (showPageTabs && categories.size > 1) {
             LibraryTabs(
                 state = pagerState,
@@ -73,8 +82,16 @@ fun LibraryContent(
         }
 
         SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = false),
-            onRefresh = { onRefresh(categories[currentPage()]) },
+            state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+            onRefresh = {
+                onRefresh(categories[currentPage()])
+                scope.launch {
+                    // Fake refresh status but hide it after a second as it's a long running task
+                    isRefreshing = true
+                    delay(1000)
+                    isRefreshing = false
+                }
+            },
             indicator = { s, trigger ->
                 SwipeRefreshIndicator(
                     state = s,
