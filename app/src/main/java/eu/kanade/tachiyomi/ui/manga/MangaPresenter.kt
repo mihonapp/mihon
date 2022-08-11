@@ -521,7 +521,7 @@ class MangaPresenter(
                     val chapters = successState.source.getChapterList(successState.manga.toMangaInfo())
                         .map { it.toSChapter() }
 
-                    val (newChapters, _) = syncChaptersWithSource.await(
+                    val newChapters = syncChaptersWithSource.await(
                         chapters,
                         successState.manga,
                         successState.source,

@@ -28,11 +28,19 @@ class SyncChaptersWithSource(
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
 ) {
 
+    /**
+     * Method to synchronize db chapters with source ones
+     *
+     * @param rawSourceChapters the chapters from the source.
+     * @param manga the manga the chapters belong to.
+     * @param source the source the manga belongs to.
+     * @return Newly added chapters
+     */
     suspend fun await(
         rawSourceChapters: List<SChapter>,
         manga: Manga,
         source: Source,
-    ): Pair<List<Chapter>, List<Chapter>> {
+    ): List<Chapter> {
         if (rawSourceChapters.isEmpty() && source.id != LocalSource.ID) {
             throw NoChaptersException()
         }
@@ -114,7 +122,7 @@ class SyncChaptersWithSource(
 
         // Return if there's nothing to add, delete or change, avoiding unnecessary db transactions.
         if (toAdd.isEmpty() && toDelete.isEmpty() && toChange.isEmpty()) {
-            return Pair(emptyList(), emptyList())
+            return emptyList()
         }
 
         val reAdded = mutableListOf<Chapter>()
@@ -174,7 +182,8 @@ class SyncChaptersWithSource(
         // Note that last_update actually represents last time the chapter list changed at all
         updateManga.awaitUpdateLastUpdate(manga.id)
 
-        @Suppress("ConvertArgumentToSet") // See tachiyomiorg/tachiyomi#6372.
-        return Pair(updatedToAdd.subtract(reAdded).toList(), toDelete.subtract(reAdded).toList())
+        val reAddedUrls = reAdded.map { it.url }.toHashSet()
+
+        return updatedToAdd.filterNot { it.url in reAddedUrls }
     }
 }
