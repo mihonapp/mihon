@@ -1,10 +1,12 @@
 package eu.kanade.presentation.library.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.Refresh
@@ -64,6 +66,7 @@ fun LibraryToolbar(
         downloadedOnlyMode = downloadedOnlyMode,
         onChangeSearchQuery = { state.searchQuery = it },
         onClickCloseSearch = { state.searchQuery = null },
+        onClickResetSearch = { state.searchQuery = "" },
         scrollBehavior = scrollBehavior,
     )
     else -> LibraryRegularToolbar(
@@ -164,6 +167,7 @@ fun LibrarySearchToolbar(
     downloadedOnlyMode: Boolean,
     onChangeSearchQuery: (String) -> Unit,
     onClickCloseSearch: () -> Unit,
+    onClickResetSearch: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     val focusRequester = remember { FocusRequester.Default }
@@ -184,6 +188,13 @@ fun LibrarySearchToolbar(
                 // TODO: https://issuetracker.google.com/issues/204502668
                 delay(100)
                 focusRequester.requestFocus()
+            }
+        },
+        actions = {
+            AnimatedVisibility(visible = searchQuery.isNotEmpty()) {
+                IconButton(onClick = onClickResetSearch) {
+                    Icon(Icons.Outlined.Close, contentDescription = stringResource(id = R.string.action_reset))
+                }
             }
         },
         incognitoMode = incognitoMode,

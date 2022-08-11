@@ -1,9 +1,11 @@
 package eu.kanade.presentation.history.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
@@ -44,6 +46,7 @@ fun HistoryToolbar(
             searchQuery = state.searchQuery!!,
             onChangeSearchQuery = { state.searchQuery = it },
             onClickCloseSearch = { state.searchQuery = null },
+            onClickResetSearch = { state.searchQuery = "" },
             incognitoMode = incognitoMode,
             downloadedOnlyMode = downloadedOnlyMode,
         )
@@ -79,6 +82,7 @@ fun HistorySearchToolbar(
     searchQuery: String,
     onChangeSearchQuery: (String) -> Unit,
     onClickCloseSearch: () -> Unit,
+    onClickResetSearch: () -> Unit,
     incognitoMode: Boolean,
     downloadedOnlyMode: Boolean,
 ) {
@@ -98,6 +102,13 @@ fun HistorySearchToolbar(
         },
         navigationIcon = Icons.Outlined.ArrowBack,
         navigateUp = onClickCloseSearch,
+        actions = {
+            AnimatedVisibility(visible = searchQuery.isNotEmpty()) {
+                IconButton(onClick = onClickResetSearch) {
+                    Icon(Icons.Outlined.Close, contentDescription = stringResource(id = R.string.action_reset))
+                }
+            }
+        },
         isActionMode = false,
         downloadedOnlyMode = downloadedOnlyMode,
         incognitoMode = incognitoMode,
