@@ -122,7 +122,7 @@ class SettingsDownloadController : SettingsController() {
                         summary = if (selected.isEmpty()) {
                             resources?.getString(R.string.none)
                         } else {
-                            selected.joinToString { it.name }
+                            selected.joinToString { it.visualName(context) }
                         }
                     }.launchIn(viewScope)
             }
@@ -151,7 +151,7 @@ class SettingsDownloadController : SettingsController() {
                     val includedItemsText = if (selectedCategories.isEmpty()) {
                         context.getString(R.string.all)
                     } else {
-                        selectedCategories.joinToString { it.name }
+                        selectedCategories.joinToString { it.visualName(context) }
                     }
 
                     val excludedCategories = preferences.downloadNewChapterCategoriesExclude().get()
@@ -160,7 +160,7 @@ class SettingsDownloadController : SettingsController() {
                     val excludedItemsText = if (excludedCategories.isEmpty()) {
                         context.getString(R.string.none)
                     } else {
-                        excludedCategories.joinToString { it.name }
+                        excludedCategories.joinToString { it.visualName(context) }
                     }
 
                     summary = buildSpannedString {

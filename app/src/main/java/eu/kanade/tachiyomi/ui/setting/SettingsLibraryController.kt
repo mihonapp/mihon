@@ -115,12 +115,12 @@ class SettingsLibraryController : SettingsController() {
                 defaultValue = "-1"
 
                 val selectedCategory = allCategories.find { it.id == preferences.defaultCategory().toLong() }
-                summary = selectedCategory?.name
+                summary = selectedCategory?.visualName(context)
                     ?: context.getString(R.string.default_category_summary)
                 onChange { newValue ->
                     summary = allCategories.find {
                         it.id == (newValue as String).toLong()
-                    }?.name ?: context.getString(R.string.default_category_summary)
+                    }?.visualName(context) ?: context.getString(R.string.default_category_summary)
                     true
                 }
             }
@@ -250,7 +250,7 @@ class SettingsLibraryController : SettingsController() {
 
                     val includedItemsText = when {
                         // Some selected, but not all
-                        includedCategories.isNotEmpty() && includedCategories.size != allCategories.size -> includedCategories.joinToString { it.name }
+                        includedCategories.isNotEmpty() && includedCategories.size != allCategories.size -> includedCategories.joinToString { it.visualName(context) }
                         // All explicitly selected
                         includedCategories.size == allCategories.size -> context.getString(R.string.all)
                         allExcluded -> context.getString(R.string.none)
@@ -259,7 +259,7 @@ class SettingsLibraryController : SettingsController() {
                     val excludedItemsText = when {
                         excludedCategories.isEmpty() -> context.getString(R.string.none)
                         allExcluded -> context.getString(R.string.all)
-                        else -> excludedCategories.joinToString { it.name }
+                        else -> excludedCategories.joinToString { it.visualName(context) }
                     }
 
                     summary = buildSpannedString {
