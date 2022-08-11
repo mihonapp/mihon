@@ -49,7 +49,7 @@ class DownloadPendingDeleter(context: Context) {
             // Last entry matches the manga, reuse it to avoid decoding json from preferences
             lastEntry.copy(chapters = newChapters)
         } else {
-            val existingEntry = preferences.getString(manga.id!!.toString(), null)
+            val existingEntry = preferences.getString(manga.id.toString(), null)
             if (existingEntry != null) {
                 // Existing entry found on preferences, decode json and add the new chapter
                 val savedEntry = json.decodeFromString<Entry>(existingEntry)

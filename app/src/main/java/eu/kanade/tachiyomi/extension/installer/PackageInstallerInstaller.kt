@@ -10,6 +10,7 @@ import android.content.pm.PackageInstaller
 import android.os.Build
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.lang.use
+import eu.kanade.tachiyomi.util.system.getParcelableExtraCompat
 import eu.kanade.tachiyomi.util.system.getUriSize
 import eu.kanade.tachiyomi.util.system.logcat
 import logcat.LogPriority
@@ -22,7 +23,7 @@ class PackageInstallerInstaller(private val service: Service) : Installer(servic
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)) {
                 PackageInstaller.STATUS_PENDING_USER_ACTION -> {
-                    val userAction = intent.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)
+                    val userAction = intent.getParcelableExtraCompat<Intent>(Intent.EXTRA_INTENT)
                     if (userAction == null) {
                         logcat(LogPriority.ERROR) { "Fatal error for $intent" }
                         continueQueue(InstallStep.Error)

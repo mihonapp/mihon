@@ -31,6 +31,7 @@ data class BackupTracking(
     fun getTrackingImpl(): TrackImpl {
         return TrackImpl().apply {
             sync_id = this@BackupTracking.syncId
+            @Suppress("DEPRECATION")
             media_id = if (this@BackupTracking.mediaIdInt != 0) {
                 this@BackupTracking.mediaIdInt.toLong()
             } else {

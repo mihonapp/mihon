@@ -8,6 +8,7 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
+import eu.kanade.tachiyomi.util.system.getSerializableCompat
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.DialogCheckboxView
 
@@ -27,7 +28,7 @@ class SetChapterSettingsDialog(bundle: Bundle? = null) : DialogController(bundle
             .setTitle(R.string.chapter_settings)
             .setView(view)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                ChapterSettingsHelper.setGlobalSettings(args.getSerializable(MANGA_KEY)!! as Manga)
+                ChapterSettingsHelper.setGlobalSettings(args.getSerializableCompat(MANGA_KEY)!!)
                 if (view.isChecked()) {
                     ChapterSettingsHelper.updateAllMangasWithGlobalDefaults()
                 }

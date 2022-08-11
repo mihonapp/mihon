@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.extension.installer.Installer
 import eu.kanade.tachiyomi.extension.installer.PackageInstallerInstaller
 import eu.kanade.tachiyomi.extension.installer.ShizukuInstaller
 import eu.kanade.tachiyomi.extension.util.ExtensionInstaller.Companion.EXTRA_DOWNLOAD_ID
+import eu.kanade.tachiyomi.util.system.getSerializableExtraCompat
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import logcat.LogPriority
@@ -36,7 +37,7 @@ class ExtensionInstallService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val uri = intent?.data
         val id = intent?.getLongExtra(EXTRA_DOWNLOAD_ID, -1)?.takeIf { it != -1L }
-        val installerUsed = intent?.getSerializableExtra(EXTRA_INSTALLER) as? PreferenceValues.ExtensionInstaller
+        val installerUsed = intent?.getSerializableExtraCompat<PreferenceValues.ExtensionInstaller>(EXTRA_INSTALLER)
         if (uri == null || id == null || installerUsed == null) {
             stopSelf()
             return START_NOT_STICKY

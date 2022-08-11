@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.databinding.TrackScoreDialogBinding
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import eu.kanade.tachiyomi.util.system.getSerializableCompat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -31,7 +32,7 @@ class SetTrackScoreDialog<T> : DialogController
 
     @Suppress("unused")
     constructor(bundle: Bundle) : super(bundle) {
-        val track = bundle.getSerializable(KEY_ITEM_TRACK) as Track
+        val track = bundle.getSerializableCompat<Track>(KEY_ITEM_TRACK)!!
         val service = Injekt.get<TrackManager>().getService(track.sync_id.toLong())!!
         item = TrackItem(track, service)
     }

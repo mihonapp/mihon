@@ -116,7 +116,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                 }
             },
         )
-        recycler.tapListener = f@{ event ->
+        recycler.tapListener = { event ->
             val pos = PointF(event.rawX / recycler.width, event.rawY / recycler.height)
             val navigator = config.navigator
 

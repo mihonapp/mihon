@@ -27,11 +27,11 @@ class SetReadStatus(
         )
     }
 
-    suspend fun await(read: Boolean, vararg values: Chapter): Result = withContext(NonCancellable) f@{
+    suspend fun await(read: Boolean, vararg values: Chapter): Result = withContext(NonCancellable) {
         val chapters = values.filterNot { it.read == read }
 
         if (chapters.isEmpty()) {
-            return@f Result.NoChapters
+            return@withContext Result.NoChapters
         }
 
         val manga = chapters.fold(mutableSetOf<Manga>()) { acc, chapter ->
@@ -49,15 +49,15 @@ class SetReadStatus(
             )
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-            return@f Result.InternalError(e)
+            return@withContext Result.InternalError(e)
         }
 
         if (read && preferences.removeAfterMarkedAsRead()) {
-            manga.forEach { manga ->
+            manga.forEach {
                 deleteDownload.awaitAll(
-                    manga = manga,
+                    manga = it,
                     values = chapters
-                        .filter { manga.id == it.mangaId }
+                        .filter { chapter -> it.id == chapter.mangaId }
                         .toTypedArray(),
                 )
             }
@@ -66,8 +66,8 @@ class SetReadStatus(
         Result.Success
     }
 
-    suspend fun await(mangaId: Long, read: Boolean): Result = withContext(NonCancellable) f@{
-        return@f await(
+    suspend fun await(mangaId: Long, read: Boolean): Result = withContext(NonCancellable) {
+        await(
             read = read,
             values = chapterRepository
                 .getChapterByMangaId(mangaId)

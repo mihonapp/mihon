@@ -12,10 +12,10 @@ class CreateCategoryWithName(
     private val categoryRepository: CategoryRepository,
 ) {
 
-    suspend fun await(name: String): Result = withContext(NonCancellable) await@{
+    suspend fun await(name: String): Result = withContext(NonCancellable) {
         val categories = categoryRepository.getAll()
         if (categories.anyWithName(name)) {
-            return@await Result.NameAlreadyExistsError
+            return@withContext Result.NameAlreadyExistsError
         }
 
         val nextOrder = categories.maxOfOrNull { it.order }?.plus(1) ?: 0

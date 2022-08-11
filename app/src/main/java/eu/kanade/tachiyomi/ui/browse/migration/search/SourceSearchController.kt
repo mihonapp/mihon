@@ -6,6 +6,7 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceItem
+import eu.kanade.tachiyomi.util.system.getSerializableCompat
 
 class SourceSearchController(
     bundle: Bundle,
@@ -20,7 +21,7 @@ class SourceSearchController(
             }
         },
     )
-    private var oldManga: Manga? = args.getSerializable(MANGA_KEY) as Manga?
+    private var oldManga: Manga? = args.getSerializableCompat(MANGA_KEY)
     private var newManga: Manga? = null
 
     override fun onItemClick(view: View, position: Int): Boolean {

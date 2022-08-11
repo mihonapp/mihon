@@ -11,12 +11,12 @@ class DeleteCategory(
     private val categoryRepository: CategoryRepository,
 ) {
 
-    suspend fun await(categoryId: Long) = withContext(NonCancellable) await@{
+    suspend fun await(categoryId: Long) = withContext(NonCancellable) {
         try {
             categoryRepository.delete(categoryId)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-            return@await Result.InternalError(e)
+            return@withContext Result.InternalError(e)
         }
 
         val categories = categoryRepository.getAll()

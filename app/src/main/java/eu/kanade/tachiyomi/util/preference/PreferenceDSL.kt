@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package eu.kanade.tachiyomi.util.preference
 
 import androidx.annotation.StringRes

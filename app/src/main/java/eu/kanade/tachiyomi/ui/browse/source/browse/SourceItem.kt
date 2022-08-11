@@ -52,12 +52,12 @@ class SourceItem(val manga: Manga, private val displayMode: Preference<DisplayMo
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other is SourceItem) {
-            return manga.id!! == other.manga.id!!
+            return manga.id == other.manga.id
         }
         return false
     }
 
     override fun hashCode(): Int {
-        return manga.id!!.hashCode()
+        return manga.id.hashCode()
     }
 }

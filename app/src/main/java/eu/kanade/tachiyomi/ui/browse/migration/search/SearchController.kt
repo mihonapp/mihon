@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.ui.browse.migration.MigrationFlags
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchPresenter
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.util.system.getSerializableCompat
 import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -50,8 +51,8 @@ class SearchController(
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        manga = savedInstanceState.getSerializable(::manga.name) as? Manga
-        newManga = savedInstanceState.getSerializable(::newManga.name) as? Manga
+        manga = savedInstanceState.getSerializableCompat(::manga.name)
+        newManga = savedInstanceState.getSerializableCompat(::newManga.name)
     }
 
     fun migrateManga(manga: Manga? = null, newManga: Manga?) {

@@ -13,10 +13,10 @@ class RenameCategory(
     private val categoryRepository: CategoryRepository,
 ) {
 
-    suspend fun await(categoryId: Long, name: String) = withContext(NonCancellable) await@{
+    suspend fun await(categoryId: Long, name: String) = withContext(NonCancellable) {
         val categories = categoryRepository.getAll()
         if (categories.anyWithName(name)) {
-            return@await Result.NameAlreadyExistsError
+            return@withContext Result.NameAlreadyExistsError
         }
 
         val update = CategoryUpdate(
