@@ -491,7 +491,6 @@ class MainActivity : BaseActivity() {
         if (backstackSize == 1 && startScreen == null) {
             // Return to start screen
             moveToStartScreen()
-            setSelectedNavItem(startScreenId)
         } else if (startScreen != null && router.handleBack()) {
             // Clear selection for Library screen
         } else if (shouldHandleExitConfirmation()) {
