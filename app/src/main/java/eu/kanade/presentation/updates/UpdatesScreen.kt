@@ -24,6 +24,11 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -49,7 +54,9 @@ import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter.Dialog
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter.Event
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.Date
 
 @Composable
@@ -115,9 +122,20 @@ fun UpdateScreen(
         val contentPaddingWithNavBar = (if (presenter.selectionMode) PaddingValues() else bottomNavPaddingValues) +
             contentPadding + WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
 
+        val scope = rememberCoroutineScope()
+        var isRefreshing by remember { mutableStateOf(false) }
+
         SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = false),
-            onRefresh = onUpdateLibrary,
+            state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+            onRefresh = {
+                onUpdateLibrary()
+                scope.launch {
+                    // Fake refresh status but hide it after a second as it's a long running task
+                    isRefreshing = true
+                    delay(1000)
+                    isRefreshing = false
+                }
+            },
             swipeEnabled = presenter.selectionMode.not(),
             indicatorPadding = contentPaddingWithNavBar,
             indicator = { s, trigger ->
