@@ -6,18 +6,16 @@ on:
     tags:
       - v*
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build app
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          access_token: ${{ github.token }}
-          all_but_latest: true
-
       - name: Clone repo
         uses: actions/checkout@v3
 
@@ -30,10 +28,10 @@ jobs:
           java-version: 11
           distribution: adopt
 
-      - name: Build app
+      - name: Build app and run unit tests
         uses: gradle/gradle-command-action@v2
         with:
-          arguments: assembleStandardRelease
+          arguments: assembleStandardRelease testStandardReleaseUnitTest
 
       # Sign APK and create release for tags
 

@@ -6,7 +6,6 @@ coil_version = "2.0.0-rc03"
 conductor_version = "3.1.5"
 flowbinding_version = "1.2.0"
 shizuku_version = "12.1.0"
-robolectric_version = "3.1.4"
 
 [libraries]
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
@@ -87,12 +86,7 @@ aboutlibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibr
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku_version" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku_version" }
 
-junit = "junit:junit:4.13.2"
-assertj-core = "org.assertj:assertj-core:3.16.1"
-mockito-core = "org.mockito:mockito-core:1.10.19"
-
-robolectric-core = { module = "org.robolectric:robolectric", version.ref = "robolectric_version" }
-robolectric-playservices = { module = "org.robolectric:shadows-play-services", version.ref = "robolectric_version" }
+junit = "org.junit.jupiter:junit-jupiter:5.9.0"
 
 leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.7"
 
@@ -106,7 +100,6 @@ coil = ["coil-core","coil-gif",]
 flowbinding = ["flowbinding-android","flowbinding-appcompat","flowbinding-recyclerview","flowbinding-swiperefreshlayout","flowbinding-viewpager"]
 conductor = ["conductor-core","conductor-viewpager","conductor-support-preference"]
 shizuku = ["shizuku-api","shizuku-provider"]
-robolectric = ["robolectric-core","robolectric-playservices"]
 
 [plugins]
 kotlinter = { id = "org.jmailen.kotlinter", version = "3.10.0"}
