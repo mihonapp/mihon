@@ -30,6 +30,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
@@ -81,6 +82,7 @@ class UpdatesPresenter(
             }
 
             getUpdates.subscribe(calendar)
+                .distinctUntilChanged()
                 .catch {
                     logcat(LogPriority.ERROR, it)
                     _events.send(Event.InternalError)
