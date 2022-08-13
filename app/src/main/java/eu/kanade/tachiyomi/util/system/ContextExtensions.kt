@@ -47,6 +47,7 @@ import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 private const val TABLET_UI_MIN_SCREEN_WIDTH_DP = 720
@@ -166,6 +167,9 @@ fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermissio
     }
 }
 
+val getDisplayMaxHeightInPx: Int
+    get() = Resources.getSystem().displayMetrics.let { max(it.heightPixels, it.widthPixels) }
+
 /**
  * Converts to dp.
  */
@@ -258,7 +262,7 @@ fun Context.openInBrowser(uri: Uri, forceDefaultBrowser: Boolean = false) {
 }
 
 fun Context.defaultBrowserPackageName(): String? {
-    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://"))
+    val browserIntent = Intent(Intent.ACTION_VIEW, "http://".toUri())
     return packageManager.resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY)
         ?.activityInfo?.packageName
         ?.takeUnless { it in DeviceUtil.invalidDefaultBrowsers }
@@ -315,8 +319,8 @@ fun Context.isNightMode(): Boolean {
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:appcompat/appcompat/src/main/java/androidx/appcompat/app/AppCompatDelegateImpl.java;l=348;drc=e28752c96fc3fb4d3354781469a1af3dbded4898
  */
 fun Context.createReaderThemeContext(): Context {
-    val prefs = Injekt.get<PreferencesHelper>()
-    val isDarkBackground = when (prefs.readerTheme().get()) {
+    val preferences = Injekt.get<PreferencesHelper>()
+    val isDarkBackground = when (preferences.readerTheme().get()) {
         1, 2 -> true // Black, Gray
         3 -> applicationContext.isNightMode() // Automatic bg uses activity background by default
         else -> false // White
@@ -329,7 +333,7 @@ fun Context.createReaderThemeContext(): Context {
 
         val wrappedContext = ContextThemeWrapper(this, R.style.Theme_Tachiyomi)
         wrappedContext.applyOverrideConfiguration(overrideConf)
-        ThemingDelegate.getThemeResIds(prefs.appTheme().get(), prefs.themeDarkAmoled().get())
+        ThemingDelegate.getThemeResIds(preferences.appTheme().get(), preferences.themeDarkAmoled().get())
             .forEach { wrappedContext.theme.applyStyle(it, true) }
         return wrappedContext
     }

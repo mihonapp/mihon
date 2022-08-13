@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.BitmapRegionDecoder
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -11,19 +12,27 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.webkit.MimeTypeMap
+import androidx.annotation.ColorInt
 import androidx.core.graphics.alpha
 import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.blue
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.get
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import com.hippo.unifile.UniFile
+import logcat.LogPriority
 import tachiyomi.decoder.Format
 import tachiyomi.decoder.ImageDecoder
+import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.URLConnection
 import kotlin.math.abs
+import kotlin.math.min
 
 object ImageUtil {
 
@@ -73,8 +82,7 @@ object ImageUtil {
                 Format.Webp -> type.isAnimated && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                 else -> false
             }
-        } catch (e: Exception) {
-        }
+        } catch (e: Exception) { /* Do Nothing */ }
         return false
     }
 
@@ -106,19 +114,12 @@ object ImageUtil {
     }
 
     /**
-     * Check whether the image is a double-page spread
+     * Check whether the image is wide (which we consider a double-page spread).
+     *
      * @return true if the width is greater than the height
      */
-    fun isDoublePage(imageStream: InputStream): Boolean {
-        imageStream.mark(imageStream.available() + 1)
-
-        val imageBytes = imageStream.readBytes()
-
-        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
-
-        imageStream.reset()
-
+    fun isWideImage(imageStream: BufferedInputStream): Boolean {
+        val options = extractImageOptions(imageStream)
         return options.outWidth > options.outHeight
     }
 
@@ -186,6 +187,111 @@ object ImageUtil {
     }
 
     /**
+     * Check whether the image is considered a tall image.
+     *
+     * @return true if the height:width ratio is greater than 3.
+     */
+    private fun isTallImage(imageStream: InputStream): Boolean {
+        val options = extractImageOptions(imageStream, resetAfterExtraction = false)
+        return (options.outHeight / options.outWidth) > 3
+    }
+
+    /**
+     * Splits tall images to improve performance of reader
+     */
+    fun splitTallImage(imageFile: UniFile, imageFilePath: String): Boolean {
+        if (isAnimatedAndSupported(imageFile.openInputStream()) || !isTallImage(imageFile.openInputStream())) {
+            return true
+        }
+
+        val options = extractImageOptions(imageFile.openInputStream(), resetAfterExtraction = false).apply { inJustDecodeBounds = false }
+        // Values are stored as they get modified during split loop
+        val imageHeight = options.outHeight
+        val imageWidth = options.outWidth
+
+        val splitHeight = (getDisplayMaxHeightInPx * 1.5).toInt()
+        // -1 so it doesn't try to split when imageHeight = getDisplayHeightInPx
+        val partCount = (imageHeight - 1) / splitHeight + 1
+
+        val optimalSplitHeight = imageHeight / partCount
+
+        val splitDataList = (0 until partCount).fold(mutableListOf<SplitData>()) { list, index ->
+            list.apply {
+                // Only continue if the list is empty or there is image remaining
+                if (isEmpty() || imageHeight > last().bottomOffset) {
+                    val topOffset = index * optimalSplitHeight
+                    var outputImageHeight = min(optimalSplitHeight, imageHeight - topOffset)
+
+                    val remainingHeight = imageHeight - (topOffset + outputImageHeight)
+                    // If remaining height is smaller or equal to 1/3th of
+                    // optimal split height then include it in current page
+                    if (remainingHeight <= (optimalSplitHeight / 3)) {
+                        outputImageHeight += remainingHeight
+                    }
+                    add(SplitData(index, topOffset, outputImageHeight))
+                }
+            }
+        }
+
+        val bitmapRegionDecoder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            BitmapRegionDecoder.newInstance(imageFile.openInputStream())
+        } else {
+            @Suppress("DEPRECATION")
+            BitmapRegionDecoder.newInstance(imageFile.openInputStream(), false)
+        }
+
+        if (bitmapRegionDecoder == null) {
+            logcat { "Failed to create new instance of BitmapRegionDecoder" }
+            return false
+        }
+
+        logcat {
+            "Splitting image with height of $imageHeight into $partCount part " +
+                "with estimated ${optimalSplitHeight}px height per split"
+        }
+
+        return try {
+            splitDataList.forEach { splitData ->
+                val splitPath = splitImagePath(imageFilePath, splitData.index)
+
+                val region = Rect(0, splitData.topOffset, imageWidth, splitData.bottomOffset)
+
+                FileOutputStream(splitPath).use { outputStream ->
+                    val splitBitmap = bitmapRegionDecoder.decodeRegion(region, options)
+                    splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    splitBitmap.recycle()
+                }
+                logcat {
+                    "Success: Split #${splitData.index + 1} with topOffset=${splitData.topOffset} " +
+                        "height=${splitData.outputImageHeight} bottomOffset=${splitData.bottomOffset}"
+                }
+            }
+            imageFile.delete()
+            true
+        } catch (e: Exception) {
+            // Image splits were not successfully saved so delete them and keep the original image
+            splitDataList
+                .map { splitImagePath(imageFilePath, it.index) }
+                .forEach { File(it).delete() }
+            logcat(LogPriority.ERROR, e)
+            false
+        } finally {
+            bitmapRegionDecoder.recycle()
+        }
+    }
+
+    private fun splitImagePath(imageFilePath: String, index: Int) =
+        imageFilePath.substringBeforeLast(".") + "__${"%03d".format(index + 1)}.jpg"
+
+    data class SplitData(
+        val index: Int,
+        val topOffset: Int,
+        val outputImageHeight: Int,
+    ) {
+        val bottomOffset = topOffset + outputImageHeight
+    }
+
+    /**
      * Algorithm for determining what background to accompany a comic/manga page
      */
     fun chooseBackground(context: Context, imageStream: InputStream): Drawable {
@@ -209,14 +315,14 @@ object ImageUtil {
         val leftOffsetX = left - offsetX
         val rightOffsetX = right + offsetX
 
-        val topLeftPixel = image.getPixel(left, top)
-        val topRightPixel = image.getPixel(right, top)
-        val midLeftPixel = image.getPixel(left, midY)
-        val midRightPixel = image.getPixel(right, midY)
-        val topCenterPixel = image.getPixel(midX, top)
-        val botLeftPixel = image.getPixel(left, bot)
-        val bottomCenterPixel = image.getPixel(midX, bot)
-        val botRightPixel = image.getPixel(right, bot)
+        val topLeftPixel = image[left, top]
+        val topRightPixel = image[right, top]
+        val midLeftPixel = image[left, midY]
+        val midRightPixel = image[right, midY]
+        val topCenterPixel = image[midX, top]
+        val botLeftPixel = image[left, bot]
+        val bottomCenterPixel = image[midX, bot]
+        val botRightPixel = image[right, bot]
 
         val topLeftIsDark = topLeftPixel.isDark()
         val topRightIsDark = topRightPixel.isDark()
@@ -269,8 +375,8 @@ object ImageUtil {
             var whiteStreak = false
             val notOffset = x == left || x == right
             inner@ for ((index, y) in (0 until image.height step image.height / 25).withIndex()) {
-                val pixel = image.getPixel(x, y)
-                val pixelOff = image.getPixel(x + (if (x < image.width / 2) -offsetX else offsetX), y)
+                val pixel = image[x, y]
+                val pixelOff = image[x + (if (x < image.width / 2) -offsetX else offsetX), y]
                 if (pixel.isWhite()) {
                     whitePixelsStreak++
                     whitePixels++
@@ -361,8 +467,8 @@ object ImageUtil {
         val topCornersIsDark = topLeftIsDark && topRightIsDark
         val botCornersIsDark = botLeftIsDark && botRightIsDark
 
-        val topOffsetCornersIsDark = image.getPixel(leftOffsetX, top).isDark() && image.getPixel(rightOffsetX, top).isDark()
-        val botOffsetCornersIsDark = image.getPixel(leftOffsetX, bot).isDark() && image.getPixel(rightOffsetX, bot).isDark()
+        val topOffsetCornersIsDark = image[leftOffsetX, top].isDark() && image[rightOffsetX, top].isDark()
+        val botOffsetCornersIsDark = image[leftOffsetX, bot].isDark() && image[rightOffsetX, bot].isDark()
 
         val gradient = when {
             darkBG && botCornersIsWhite -> {
@@ -391,14 +497,30 @@ object ImageUtil {
         )
     }
 
-    private fun Int.isDark(): Boolean =
+    private fun @receiver:ColorInt Int.isDark(): Boolean =
         red < 40 && blue < 40 && green < 40 && alpha > 200
 
-    private fun Int.isCloseTo(other: Int): Boolean =
+    private fun @receiver:ColorInt Int.isCloseTo(other: Int): Boolean =
         abs(red - other.red) < 30 && abs(green - other.green) < 30 && abs(blue - other.blue) < 30
 
-    private fun Int.isWhite(): Boolean =
+    private fun @receiver:ColorInt Int.isWhite(): Boolean =
         red + blue + green > 740
+
+    /**
+     * Used to check an image's dimensions without loading it in the memory.
+     */
+    private fun extractImageOptions(
+        imageStream: InputStream,
+        resetAfterExtraction: Boolean = true,
+    ): BitmapFactory.Options {
+        imageStream.mark(imageStream.available() + 1)
+
+        val imageBytes = imageStream.readBytes()
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
+        if (resetAfterExtraction) imageStream.reset()
+        return options
+    }
 
     // Android doesn't include some mappings
     private val SUPPLEMENTARY_MIMETYPE_MAPPING = mapOf(

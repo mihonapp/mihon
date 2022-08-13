@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.track.myanimelist
 
 import eu.kanade.tachiyomi.network.parseAs
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
