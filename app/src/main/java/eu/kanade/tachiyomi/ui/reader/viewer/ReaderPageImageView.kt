@@ -249,6 +249,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             ZoomStartPosition.LEFT -> setScaleAndCenter(scale, PointF(0F, 0F))
             ZoomStartPosition.RIGHT -> setScaleAndCenter(scale, PointF(sWidth.toFloat(), 0F))
             ZoomStartPosition.CENTER -> setScaleAndCenter(scale, center.also { it?.y = 0F })
+            else -> {}
         }
     }
 
@@ -310,7 +311,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                             return true
                         }
 
-                        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                             this@ReaderPageImageView.onViewClicked()
                             return super.onSingleTapConfirmed(e)
                         }

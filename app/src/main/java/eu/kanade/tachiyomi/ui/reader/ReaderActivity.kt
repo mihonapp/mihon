@@ -360,15 +360,16 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         }
 
         // Init listeners on bottom menu
-        binding.pageSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-            override fun onStartTrackingTouch(slider: Slider) {
-                isScrollingThroughPages = true
-            }
+        binding.pageSlider.addOnSliderTouchListener(
+            object : Slider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(slider: Slider) {
+                    isScrollingThroughPages = true
+                }
 
-            override fun onStopTrackingTouch(slider: Slider) {
-                isScrollingThroughPages = false
-            }
-        },
+                override fun onStopTrackingTouch(slider: Slider) {
+                    isScrollingThroughPages = false
+                }
+            },
         )
         binding.pageSlider.addOnChangeListener { slider, value, fromUser ->
             if (viewer != null && fromUser) {

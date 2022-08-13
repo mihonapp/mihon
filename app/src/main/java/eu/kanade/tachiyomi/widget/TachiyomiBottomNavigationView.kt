@@ -115,12 +115,13 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
             .setInterpolator(interpolator)
             .setDuration(duration)
             .applySystemAnimatorScale(context)
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
-                    currentAnimator = null
-                    postInvalidate()
-                }
-            },
+            .setListener(
+                object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        currentAnimator = null
+                        postInvalidate()
+                    }
+                },
             )
     }
 

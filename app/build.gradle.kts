@@ -18,6 +18,7 @@ shortcutHelper.setFilePath("./shortcuts.xml")
 val SUPPORTED_ABIS = setOf("armeabi-v7a", "arm64-v8a", "x86")
 
 android {
+    namespace = "eu.kanade.tachiyomi"
     compileSdk = AndroidConfig.compileSdk
     ndkVersion = AndroidConfig.ndk
 
@@ -246,6 +247,7 @@ dependencies {
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
     // debugImplementation(libs.leakcanary.android)
+    implementation(libs.leakcanary.plumber)
 }
 
 tasks {
@@ -259,19 +261,19 @@ tasks {
     // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api(-markers)
     withType<KotlinCompile> {
         kotlinOptions.freeCompilerArgs += listOf(
-            "-Xopt-in=kotlin.Experimental",
-            "-Xopt-in=kotlin.RequiresOptIn",
-            "-Xopt-in=kotlin.ExperimentalStdlibApi",
-            "-Xopt-in=kotlinx.coroutines.FlowPreview",
-            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xopt-in=kotlinx.coroutines.InternalCoroutinesApi",
-            "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi",
-            "-Xopt-in=coil.annotation.ExperimentalCoilApi",
+            "-opt-in=kotlin.Experimental",
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlin.ExperimentalStdlibApi",
+            "-opt-in=kotlinx.coroutines.FlowPreview",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
+            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
+            "-opt-in=coil.annotation.ExperimentalCoilApi",
         )
     }
 
     // Duplicating Hebrew string assets due to some locale code issues on different devices
-    val copyHebrewStrings = task("copyHebrewStrings", type = Copy::class) {
+    val copyHebrewStrings by registering(Copy::class) {
         from("./src/main/res/values-he")
         into("./src/main/res/values-iw")
         include("**/*")

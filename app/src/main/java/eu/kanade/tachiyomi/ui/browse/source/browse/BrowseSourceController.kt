@@ -354,6 +354,7 @@ open class BrowseSourceController(bundle: Bundle) :
                         when (filter) {
                             is Filter.TriState -> filter.state = 1
                             is Filter.CheckBox -> filter.state = true
+                            else -> {}
                         }
                         filterList = presenter.sourceFilters
                         break@filter

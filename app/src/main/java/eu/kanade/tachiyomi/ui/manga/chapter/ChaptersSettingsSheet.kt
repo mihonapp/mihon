@@ -113,6 +113,7 @@ class ChaptersSettingsSheet(
                     downloaded -> presenter.setDownloadedFilter(newState)
                     unread -> presenter.setUnreadFilter(newState)
                     bookmarked -> presenter.setBookmarkedFilter(newState)
+                    else -> {}
                 }
 
                 initModels()

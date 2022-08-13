@@ -166,12 +166,12 @@ class WebViewActivity : BaseActivity() {
 
         menu.findItem(R.id.action_web_back).apply {
             isEnabled = binding.webview.canGoBack()
-            icon.setTint(if (binding.webview.canGoBack()) iconTintColor else translucentIconTintColor)
+            icon?.setTint(if (binding.webview.canGoBack()) iconTintColor else translucentIconTintColor)
         }
 
         menu.findItem(R.id.action_web_forward).apply {
             isEnabled = binding.webview.canGoForward()
-            icon.setTint(if (binding.webview.canGoForward()) iconTintColor else translucentIconTintColor)
+            icon?.setTint(if (binding.webview.canGoForward()) iconTintColor else translucentIconTintColor)
         }
 
         return super.onPrepareOptionsMenu(menu)

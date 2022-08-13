@@ -1,7 +1,7 @@
 [versions]
-kotlin_version = "1.6.20"
-coroutines_version = "1.6.1"
-serialization_version = "1.3.2"
+kotlin_version = "1.7.10"
+coroutines_version = "1.6.4"
+serialization_version = "1.3.3"
 
 [libraries]
 reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin_version" }
@@ -12,12 +12,11 @@ coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-androi
 
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
 serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization_version" }
-serialization-gradle = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin_version"}
+serialization-gradle = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin_version" }
 
 [bundles]
 coroutines = ["coroutines-core", "coroutines-android"]
-serialization = ["serialization-json","serialization-protobuf"]
+serialization = ["serialization-json", "serialization-protobuf"]
 
 [plugins]
-
-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version"}
+android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version" }

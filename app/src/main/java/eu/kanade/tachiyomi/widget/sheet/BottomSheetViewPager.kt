@@ -45,11 +45,12 @@ class BottomSheetViewPager @JvmOverloads constructor(
     }
 
     init {
-        addOnPageChangeListener(object : SimpleOnPageChangeListener() {
-            override fun onPageSelected(position: Int) {
-                requestLayout()
-            }
-        },
+        addOnPageChangeListener(
+            object : SimpleOnPageChangeListener() {
+                override fun onPageSelected(position: Int) {
+                    requestLayout()
+                }
+            },
         )
     }
 }

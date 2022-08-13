@@ -47,6 +47,7 @@ class AppUpdateChecker {
             when (result) {
                 is AppUpdateResult.NewUpdate -> AppUpdateNotifier(context).promptUpdate(result.release)
                 is AppUpdateResult.NewUpdateFdroidInstallation -> AppUpdateNotifier(context).promptFdroidUpdate()
+                else -> {}
             }
 
             result

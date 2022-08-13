@@ -394,6 +394,7 @@ class LibrarySettingsSheet(
                     unreadBadge -> preferences.unreadBadge().set((item.checked))
                     localBadge -> preferences.localBadge().set((item.checked))
                     languageBadge -> preferences.languageBadge().set((item.checked))
+                    else -> {}
                 }
                 adapter.notifyItemChanged(item)
             }
@@ -418,6 +419,7 @@ class LibrarySettingsSheet(
                 when (item) {
                     showTabs -> preferences.categoryTabs().set(item.checked)
                     showNumberOfItems -> preferences.categoryNumberOfItems().set(item.checked)
+                    else -> {}
                 }
                 adapter.notifyItemChanged(item)
             }
