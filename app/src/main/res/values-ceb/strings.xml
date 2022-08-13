@@ -478,4 +478,22 @@
     <string name="label_background_activity">Kalihokan sa background</string>
     <string name="pref_disable_battery_optimization_summary">Nagtabang sa mga update sa librarya sa background ug pag-backup</string>
     <string name="pref_verbose_logging">Verbose logging</string>
+    <string name="whats_new">Unsay bag-o</string>
+    <string name="help_translate">Tabang sa paghubad</string>
+    <string name="privacy_policy">Polisiya sa pagkapribado</string>
+    <string name="downloaded_only_summary">Pagsala sa tanang manga sa imong library</string>
+    <string name="pref_acra_summary">Nakatabang sa pag-ayo sa bisan unsang mga bug. Walay sensitibo nga datos nga ipadala</string>
+    <string name="licenses">Mga lisensya sa open source</string>
+    <string name="label_downloaded_only">Na-download lang</string>
+    <string name="pref_incognito_mode_summary">Paghunong sa pagbasa sa kasaysayan</string>
+    <string name="notification_incognito_text">I-disable ang incognito mode</string>
+    <string name="pref_incognito_mode">Incognito mode</string>
+    <string name="version">Bersyon</string>
+    <string name="check_for_updates">Susiha ang mga update</string>
+    <string name="updated_version">Mga update sa v%1$s</string>
+    <string name="pref_enable_acra">Ipadala ang mga taho sa pagkahagsa</string>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s ang nahibilin</item>
+        <item quantity="other">%1$s ang nahibilin</item>
+    </plurals>
 </resources>

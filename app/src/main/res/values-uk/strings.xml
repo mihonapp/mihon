@@ -204,7 +204,7 @@
     <string name="other_source">Інші</string>
     <string name="action_global_search_hint">Глобальний пошук…</string>
     <string name="latest">Остання</string>
-    <string name="browse">Переглянути</string>
+    <string name="browse">Огляд</string>
     <string name="manga_not_in_db">Ця манга була видалена з бази даних.</string>
     <string name="description">Опис</string>
     <string name="ongoing">Онгоінг</string>
@@ -408,7 +408,7 @@
     <string name="pref_webtoon_side_padding">Бічний відступ</string>
     <string name="vertical_plus_viewer">Безперервний вертикальний</string>
     <string name="action_select_inverse">Інвертувати вибір</string>
-    <string name="add_tracking">Додати відстеження</string>
+    <string name="add_tracking">Додати стеження</string>
     <string name="pinned_sources">Прикріплено</string>
     <string name="action_unpin">Відкріпити</string>
     <string name="action_pin">Закріпити</string>
@@ -466,10 +466,10 @@
     <string name="restore_duration">%02d хв, %02d сек</string>
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
     <string name="invalid_backup_file_missing_manga">Бекап не містить жодної манги.</string>
-    <string name="invalid_backup_file">Невірний файл бекапу</string>
+    <string name="invalid_backup_file">Невірний файл резервної копії</string>
     <string name="tracker_not_logged_in">Не зареєстровано в: %1$s</string>
     <string name="pref_search_pinned_sources_only">Включати тільки закріплені джерела</string>
-    <string name="tracking_info">Одностороння синхронізація для оновлення прогресу глави в службах відстеження. Налаштуйте відстеження для окремих записів манги з їх кнопками відстеження.</string>
+    <string name="tracking_info">Одностороння синхронізація для оновлення прогресу глави в службах стеження. Налаштуйте для окремих записів манги з допомогою кнопки \"Стеження\".</string>
     <string name="action_display_show_tabs">Показувати вкладки категорій</string>
     <string name="action_display_comfortable_grid">Зручна сітка</string>
     <string name="recent_manga_time">Гл. %1$s - %2$s</string>
@@ -631,7 +631,7 @@
     <string name="about_dont_kill_my_app">У деяких виробників є додаткові обмеження, котрі вбивають фонові сервіси. На цьому сайті більше інформації з приводу того, як це виправити.</string>
     <string name="label_background_activity">Фонова активність</string>
     <string name="restore_miui_warning">Резервування/Відновлення можуть не працювати належним чином, у випадку, якщо вимкнено Оптимізацію MIUI.</string>
-    <string name="enhanced_tracking_info">Сервіси, які надають розширені можливості для певних джерел. Манга буде автоматично відслідковуватись при додаванні до бібліотеки.</string>
+    <string name="enhanced_tracking_info">Сервіси, які надають розширені можливості для певних джерел. Манга буде автоматично відстежуватись при додаванні до бібліотеки.</string>
     <string name="enhanced_services">Розширені сервіси</string>
     <string name="pref_lowest">Найнижча</string>
     <string name="pref_low">Низька</string>
