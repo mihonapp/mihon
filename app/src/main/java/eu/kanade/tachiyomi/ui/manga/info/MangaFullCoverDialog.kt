@@ -6,6 +6,8 @@ import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -112,14 +114,8 @@ class MangaFullCoverDialog : FullComposeController<MangaFullCoverDialog.MangaFul
     private fun changeCover(action: EditCoverAction) {
         when (action) {
             EditCoverAction.EDIT -> {
-                val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                    type = "image/*"
-                }
                 startActivityForResult(
-                    Intent.createChooser(
-                        intent,
-                        resources?.getString(R.string.file_select_cover),
-                    ),
+                    PickVisualMedia().createIntent(activity!!, PickVisualMediaRequest(PickVisualMedia.ImageOnly)),
                     REQUEST_IMAGE_OPEN,
                 )
             }
