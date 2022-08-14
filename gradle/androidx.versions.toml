@@ -4,7 +4,7 @@ lifecycle_version = "2.5.1"
 
 [libraries]
 annotation = "androidx.annotation:annotation:1.4.0"
-appcompat = "androidx.appcompat:appcompat:1.5.0"
+appcompat = "androidx.appcompat:appcompat:1.6.0-beta01"
 biometricktx = "androidx.biometric:biometric-ktx:1.2.0-alpha04"
 constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 coordinatorlayout = "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
