@@ -281,6 +281,8 @@ dependencies {
 }
 
 tasks {
+    val localesConfigTask = registerLocalesConfigTask(project)
+
     withType<Test> {
         useJUnitPlatform()
         testLogging {
@@ -313,7 +315,7 @@ tasks {
     }
 
     preBuild {
-        dependsOn(formatKotlin, copyHebrewStrings)
+        dependsOn(formatKotlin, copyHebrewStrings, localesConfigTask)
     }
 }
 
