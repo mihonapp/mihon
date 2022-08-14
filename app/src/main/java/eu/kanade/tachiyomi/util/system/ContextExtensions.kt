@@ -69,7 +69,7 @@ fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT, 
  * @param duration the duration of the toast. Defaults to short.
  */
 fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT, block: (Toast) -> Unit = {}): Toast {
-    return Toast.makeText(this, text.orEmpty(), duration).also {
+    return Toast.makeText(applicationContext, text.orEmpty(), duration).also {
         block(it)
         it.show()
     }
