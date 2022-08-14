@@ -198,7 +198,6 @@ object Migrations {
                 val oldSortingMode = prefs.getInt(PreferenceKeys.librarySortingMode, 0)
                 val oldSortingDirection = prefs.getBoolean(PreferenceKeys.librarySortingDirection, true)
 
-                @Suppress("DEPRECATION")
                 val newSortingMode = when (oldSortingMode) {
                     0 -> SortModeSetting.ALPHABETICAL
                     1 -> SortModeSetting.LAST_READ
