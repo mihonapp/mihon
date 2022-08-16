@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
 import uy.kohesive.injekt.injectLazy
+import eu.kanade.domain.chapter.model.Chapter as DomainChapter
 
 /**
  * This class is used to provide the directories where the downloads should be saved.
@@ -144,6 +145,10 @@ class DownloadProvider(private val context: Context) {
         )
     }
 
+    fun isChapterDirNameChanged(oldChapter: DomainChapter, newChapter: DomainChapter): Boolean {
+        return oldChapter.name != newChapter.name || oldChapter.scanlator != newChapter.scanlator
+    }
+
     /**
      * Returns valid downloaded chapter directory names.
      *
@@ -152,15 +157,21 @@ class DownloadProvider(private val context: Context) {
      */
     fun getValidChapterDirNames(chapterName: String, chapterScanlator: String?): List<String> {
         val chapterDirName = getChapterDirName(chapterName, chapterScanlator)
-        return listOf(
+        return buildList(5) {
             // Folder of images
-            chapterDirName,
+            add(chapterDirName)
 
             // Archived chapters
-            "$chapterDirName.cbz",
+            add("$chapterDirName.cbz")
+
+            if (chapterScanlator == null) {
+                // Previously null scanlator fields were converted to "" due to a bug
+                add("_$chapterDirName")
+                add("_$chapterDirName.cbz")
+            }
 
             // Legacy chapter directory name used in v0.9.2 and before
-            DiskUtil.buildValidFilename(chapterName),
-        )
+            add(DiskUtil.buildValidFilename(chapterName))
+        }
     }
 }

@@ -37,7 +37,7 @@ data class Chapter(
             url = sChapter.url,
             dateUpload = sChapter.date_upload,
             chapterNumber = sChapter.chapter_number,
-            scanlator = sChapter.scanlator,
+            scanlator = sChapter.scanlator?.ifBlank { null },
         )
     }
 
