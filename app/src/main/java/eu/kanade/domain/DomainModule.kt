@@ -79,7 +79,7 @@ class DomainModule : InjektModule {
         addFactory { ResetCategoryFlags(get(), get()) }
         addFactory { SetDisplayModeForCategory(get(), get()) }
         addFactory { SetSortModeForCategory(get(), get()) }
-        addFactory { CreateCategoryWithName(get()) }
+        addFactory { CreateCategoryWithName(get(), get()) }
         addFactory { RenameCategory(get()) }
         addFactory { ReorderCategory(get()) }
         addFactory { UpdateCategory(get()) }
