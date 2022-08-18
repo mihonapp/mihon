@@ -83,9 +83,9 @@ fun UpdateScreen(
     val context = LocalContext.current
 
     val onUpdateLibrary = {
-        if (LibraryUpdateService.start(context)) {
-            context.toast(R.string.updating_library)
-        }
+        val started = LibraryUpdateService.start(context)
+        context.toast(if (started) R.string.updating_library else R.string.update_already_running)
+        started
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -97,7 +97,7 @@ fun UpdateScreen(
             UpdatesAppBar(
                 incognitoMode = presenter.isIncognitoMode,
                 downloadedOnlyMode = presenter.isDownloadOnly,
-                onUpdateLibrary = onUpdateLibrary,
+                onUpdateLibrary = { onUpdateLibrary() },
                 actionModeCounter = presenter.selected.size,
                 onSelectAll = { presenter.toggleAllSelection(true) },
                 onInvertSelection = { presenter.invertSelection() },
@@ -132,7 +132,8 @@ fun UpdateScreen(
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
             onRefresh = {
-                onUpdateLibrary()
+                val started = onUpdateLibrary()
+                if (!started) return@SwipeRefresh
                 scope.launch {
                     // Fake refresh status but hide it after a second as it's a long running task
                     isRefreshing = true

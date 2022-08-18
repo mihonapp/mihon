@@ -42,7 +42,7 @@ fun LibraryContent(
     onChangeCurrentPage: (Int) -> Unit,
     onMangaClicked: (Long) -> Unit,
     onToggleSelection: (LibraryManga) -> Unit,
-    onRefresh: (Category?) -> Unit,
+    onRefresh: (Category?) -> Boolean,
     onGlobalSearchClicked: () -> Unit,
     getNumberOfMangaForCategory: @Composable (Long) -> State<Int?>,
     getDisplayModeForPage: @Composable (Int) -> State<DisplayModeSetting>,
@@ -84,7 +84,8 @@ fun LibraryContent(
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
             onRefresh = {
-                onRefresh(categories[currentPage()])
+                val started = onRefresh(categories[currentPage()])
+                if (!started) return@SwipeRefresh
                 scope.launch {
                     // Fake refresh status but hide it after a second as it's a long running task
                     isRefreshing = true

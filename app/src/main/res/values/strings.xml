@@ -729,6 +729,7 @@
 
     <!-- Updates fragment -->
     <string name="updating_library">Updating library</string>
+    <string name="update_already_running">An update is already running</string>
     <string name="cant_open_last_read_chapter">Unable to open last read chapter</string>
 
     <!-- History fragment -->

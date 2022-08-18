@@ -57,9 +57,9 @@ class LibraryController(
             onDeleteClicked = ::showDeleteMangaDialog,
             onClickFilter = ::showSettingsSheet,
             onClickRefresh = {
-                if (LibraryUpdateService.start(context, it)) {
-                    context.toast(R.string.updating_library)
-                }
+                val started = LibraryUpdateService.start(context, it)
+                context.toast(if (started) R.string.updating_library else R.string.update_already_running)
+                started
             },
             onClickInvertSelection = { presenter.invertSelection(presenter.activeCategory) },
             onClickSelectAll = { presenter.selectAll(presenter.activeCategory) },

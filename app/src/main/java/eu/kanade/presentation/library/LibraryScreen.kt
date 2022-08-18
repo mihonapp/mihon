@@ -35,7 +35,7 @@ fun LibraryScreen(
     onClickSelectAll: () -> Unit,
     onClickInvertSelection: () -> Unit,
     onClickFilter: () -> Unit,
-    onClickRefresh: (Category?) -> Unit,
+    onClickRefresh: (Category?) -> Boolean,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val insets = WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
