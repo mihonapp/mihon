@@ -29,11 +29,12 @@ fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSa
 
     if (!refreshSameUrl && thumbnail_url == newUrl) return
 
+    val domainManga = toDomainManga()!!
     when {
-        toDomainManga()!!.isLocal() -> {
+        domainManga.isLocal() -> {
             cover_last_modified = Date().time
         }
-        toDomainManga()!!.hasCustomCover(coverCache) -> {
+        domainManga.hasCustomCover(coverCache) -> {
             coverCache.deleteFromCache(this, false)
         }
         else -> {

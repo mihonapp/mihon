@@ -7,7 +7,6 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
-import tachiyomi.source.model.MangaInfo
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.Serializable
@@ -183,17 +182,6 @@ fun Manga.toDbManga(): DbManga = MangaImpl().also {
     it.thumbnail_url = thumbnailUrl
     it.initialized = initialized
 }
-
-fun Manga.toMangaInfo(): MangaInfo = MangaInfo(
-    artist = artist ?: "",
-    author = author ?: "",
-    cover = thumbnailUrl ?: "",
-    description = description ?: "",
-    genres = genre ?: emptyList(),
-    key = url,
-    status = status.toInt(),
-    title = title,
-)
 
 fun Manga.toMangaUpdate(): MangaUpdate {
     return MangaUpdate(

@@ -177,9 +177,6 @@ dependencies {
     implementation(kotlinx.reflect)
     implementation(kotlinx.bundles.coroutines)
 
-    // Source models and interfaces from Tachiyomi 1.x
-    implementation(libs.tachiyomi.api)
-
     // AndroidX libraries
     implementation(androidx.annotation)
     implementation(androidx.appcompat)

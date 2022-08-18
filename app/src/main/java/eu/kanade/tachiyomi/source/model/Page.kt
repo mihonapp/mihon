@@ -5,7 +5,6 @@ import eu.kanade.tachiyomi.network.ProgressListener
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import rx.subjects.Subject
-import tachiyomi.source.model.PageUrl
 
 @Serializable
 open class Page(
@@ -64,17 +63,4 @@ open class Page(
         const val READY = 3
         const val ERROR = 4
     }
-}
-
-fun Page.toPageUrl(): PageUrl {
-    return PageUrl(
-        url = this.imageUrl ?: this.url,
-    )
-}
-
-fun PageUrl.toPage(index: Int): Page {
-    return Page(
-        index = index,
-        imageUrl = this.url,
-    )
 }

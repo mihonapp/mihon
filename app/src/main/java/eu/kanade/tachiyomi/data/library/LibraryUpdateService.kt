@@ -16,7 +16,6 @@ import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetLibraryManga
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.interactor.UpdateManga
-import eu.kanade.domain.manga.model.toMangaInfo
 import eu.kanade.domain.manga.model.toMangaUpdate
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
@@ -29,7 +28,6 @@ import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
-import eu.kanade.tachiyomi.data.database.models.toMangaInfo
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Companion.start
@@ -44,8 +42,6 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.source.model.toSChapter
-import eu.kanade.tachiyomi.source.model.toSManga
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
@@ -69,7 +65,6 @@ import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
-import tachiyomi.source.model.MangaInfo
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -428,16 +423,13 @@ class LibraryUpdateService(
     private suspend fun updateManga(manga: DomainManga): List<DomainChapter> {
         val source = sourceManager.getOrStub(manga.source)
 
-        val mangaInfo: MangaInfo = manga.toMangaInfo()
-
         // Update manga metadata if needed
         if (preferences.autoUpdateMetadata()) {
-            val updatedMangaInfo = source.getMangaDetails(manga.toMangaInfo())
-            updateManga.awaitUpdateFromSource(manga, updatedMangaInfo, manualFetch = false, coverCache)
+            val networkManga = source.getMangaDetails(manga.toSManga())
+            updateManga.awaitUpdateFromSource(manga, networkManga, manualFetch = false, coverCache)
         }
 
-        val chapters = source.getChapterList(mangaInfo)
-            .map { it.toSChapter() }
+        val chapters = source.getChapterList(manga.toSManga())
 
         // Get manga from database to account for if it was removed during the update
         val dbManga = getManga.await(manga.id)
@@ -469,27 +461,19 @@ class LibraryUpdateService(
                                     progressCount,
                                     manga,
                                 ) { mangaWithNotif ->
-                                    sourceManager.get(mangaWithNotif.source)?.let { source ->
+                                    val source = sourceManager.get(mangaWithNotif.source) ?: return@withUpdateNotification
+                                    try {
+                                        val networkManga = source.getMangaDetails(mangaWithNotif.copy())
+                                        mangaWithNotif.prepUpdateCover(coverCache, networkManga, true)
+                                        mangaWithNotif.copyFrom(networkManga)
                                         try {
-                                            val networkManga =
-                                                source.getMangaDetails(mangaWithNotif.toMangaInfo())
-                                            val sManga = networkManga.toSManga()
-                                            mangaWithNotif.prepUpdateCover(coverCache, sManga, true)
-                                            sManga.thumbnail_url?.let {
-                                                mangaWithNotif.thumbnail_url = it
-                                                try {
-                                                    updateManga.await(
-                                                        mangaWithNotif.toDomainManga()!!
-                                                            .toMangaUpdate(),
-                                                    )
-                                                } catch (e: Exception) {
-                                                    logcat(LogPriority.ERROR) { "Manga don't exist anymore" }
-                                                }
-                                            }
-                                        } catch (e: Throwable) {
-                                            // Ignore errors and continue
-                                            logcat(LogPriority.ERROR, e)
+                                            updateManga.await(mangaWithNotif.toDomainManga()!!.toMangaUpdate())
+                                        } catch (e: Exception) {
+                                            logcat(LogPriority.ERROR) { "Manga doesn't exist anymore" }
                                         }
+                                    } catch (e: Throwable) {
+                                        // Ignore errors and continue
+                                        logcat(LogPriority.ERROR, e)
                                     }
                                 }
                             }
@@ -574,7 +558,7 @@ class LibraryUpdateService(
         }
 
         updatingManga.remove(manga)
-        completed.andIncrement
+        completed.getAndIncrement()
         notifier.showProgressNotification(
             updatingManga.map { it.toDomainManga()!! },
             completed.get(),

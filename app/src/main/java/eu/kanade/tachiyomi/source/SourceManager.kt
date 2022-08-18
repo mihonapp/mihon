@@ -19,8 +19,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import rx.Observable
-import tachiyomi.source.model.ChapterInfo
-import tachiyomi.source.model.MangaInfo
 
 class SourceManager(
     private val context: Context,
@@ -115,7 +113,7 @@ class SourceManager(
 
         override val lang: String = sourceData.lang
 
-        override suspend fun getMangaDetails(manga: MangaInfo): MangaInfo {
+        override suspend fun getMangaDetails(manga: SManga): SManga {
             throw getSourceNotInstalledException()
         }
 
@@ -123,7 +121,7 @@ class SourceManager(
             return Observable.error(getSourceNotInstalledException())
         }
 
-        override suspend fun getChapterList(manga: MangaInfo): List<ChapterInfo> {
+        override suspend fun getChapterList(manga: SManga): List<SChapter> {
             throw getSourceNotInstalledException()
         }
 
@@ -131,7 +129,7 @@ class SourceManager(
             return Observable.error(getSourceNotInstalledException())
         }
 
-        override suspend fun getPageList(chapter: ChapterInfo): List<tachiyomi.source.model.Page> {
+        override suspend fun getPageList(chapter: SChapter): List<Page> {
             throw getSourceNotInstalledException()
         }
 
