@@ -26,8 +26,11 @@ subprojects {
     kotlinter {
         experimentalRules = true
 
-        // Doesn't play well with Android Studio
-        disabledRules = arrayOf("experimental:argument-list-wrapping")
+
+        disabledRules = arrayOf(
+            "experimental:argument-list-wrapping", // Doesn't play well with Android Studio
+            "filename", // Often broken to give a more general name
+        )
     }
 }
 

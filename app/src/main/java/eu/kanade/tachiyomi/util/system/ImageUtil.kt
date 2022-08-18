@@ -82,7 +82,9 @@ object ImageUtil {
                 Format.Webp -> type.isAnimated && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                 else -> false
             }
-        } catch (e: Exception) { /* Do Nothing */ }
+        } catch (e: Exception) {
+            /* Do Nothing */
+        }
         return false
     }
 

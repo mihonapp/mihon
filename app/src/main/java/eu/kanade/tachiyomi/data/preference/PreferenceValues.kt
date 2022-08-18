@@ -19,11 +19,13 @@ object PreferenceValues {
     /* ktlint-disable experimental:enum-entry-name-case */
 
     // Keys are lowercase to match legacy string values
+    /* ktlint-disable enum-entry-name-case */
     enum class ThemeMode {
         light,
         dark,
         system,
     }
+    /* ktlint-enable enum-entry-name-case */
 
     /* ktlint-enable experimental:enum-entry-name-case */
 

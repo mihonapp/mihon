@@ -103,9 +103,9 @@ object Migrations {
                 // Reset sorting preference if using removed sort by source
                 val oldSortingMode = prefs.getInt(PreferenceKeys.librarySortingMode, 0)
 
-                if (oldSortingMode == 5 /* SOURCE */) {
+                if (oldSortingMode == 5) { // SOURCE = 5
                     prefs.edit {
-                        putInt(PreferenceKeys.librarySortingMode, 0 /* ALPHABETICAL */)
+                        putInt(PreferenceKeys.librarySortingMode, 0) // ALPHABETICAL = 0
                     }
                 }
             }

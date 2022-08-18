@@ -290,6 +290,10 @@ tasks {
         }
     }
 
+    withType<org.jmailen.gradle.kotlinter.tasks.LintTask>().configureEach {
+        exclude { it.file.path.contains("generated[\\\\/]".toRegex())}
+    }
+
     // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api(-markers)
     withType<KotlinCompile> {
         kotlinOptions.freeCompilerArgs += listOf(
@@ -315,7 +319,8 @@ tasks {
     }
 
     preBuild {
-        dependsOn(formatKotlin, copyHebrewStrings, localesConfigTask)
+        val ktlintTask = if (System.getenv("GITHUB_BASE_REF") == null) formatKotlin else lintKotlin
+        dependsOn(ktlintTask, copyHebrewStrings, localesConfigTask)
     }
 }
 
