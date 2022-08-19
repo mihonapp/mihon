@@ -229,19 +229,24 @@ class SettingsAdvancedController(
                 summary = network.defaultUserAgent
 
                 onChange {
-                    activity?.toast(R.string.requires_app_restart)
-                    true
+                    if (it.toString().isBlank()) {
+                        activity?.toast(R.string.error_user_agent_string_blank)
+                        false
+                    } else {
+                        activity?.toast(R.string.requires_app_restart)
+                        true
+                    }
                 }
             }
-            if (preferences.defaultUserAgent().isSet()) {
-                preference {
-                    key = "pref_reset_user_agent"
-                    titleRes = R.string.pref_reset_user_agent_string
+            preference {
+                key = "pref_reset_user_agent"
+                titleRes = R.string.pref_reset_user_agent_string
 
-                    onClick {
-                        preferences.defaultUserAgent().delete()
-                        activity?.toast(R.string.requires_app_restart)
-                    }
+                visibleIf(preferences.defaultUserAgent()) { it != preferences.defaultUserAgent().defaultValue }
+
+                onClick {
+                    preferences.defaultUserAgent().delete()
+                    activity?.toast(R.string.requires_app_restart)
                 }
             }
         }
