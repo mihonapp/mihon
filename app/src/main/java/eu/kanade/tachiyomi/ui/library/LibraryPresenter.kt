@@ -98,6 +98,8 @@ class LibraryPresenter(
     var loadedManga by mutableStateOf(emptyMap<Long, List<LibraryItem>>())
         private set
 
+    val isLibraryEmpty by derivedStateOf { loadedManga.isEmpty() }
+
     val tabVisibility by preferences.categoryTabs().asState()
 
     val mangaCountVisibility by preferences.categoryNumberOfItems().asState()

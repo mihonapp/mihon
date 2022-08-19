@@ -34,7 +34,7 @@ fun LibraryContent(
     state: LibraryState,
     contentPadding: PaddingValues,
     currentPage: () -> Int,
-    isLibraryEmpty: () -> Boolean,
+    isLibraryEmpty: Boolean,
     isDownloadOnly: Boolean,
     isIncognitoMode: Boolean,
     showPageTabs: Boolean,
@@ -59,7 +59,7 @@ fun LibraryContent(
         val scope = rememberCoroutineScope()
         var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
 
-        if (showPageTabs && categories.size > 1) {
+        if (isLibraryEmpty.not() && showPageTabs && categories.size > 1) {
             LibraryTabs(
                 state = pagerState,
                 categories = categories,
@@ -100,7 +100,7 @@ fun LibraryContent(
                 )
             },
         ) {
-            if (state.searchQuery.isNullOrEmpty() && isLibraryEmpty()) {
+            if (state.searchQuery.isNullOrEmpty() && isLibraryEmpty) {
                 val handler = LocalUriHandler.current
                 EmptyScreen(
                     R.string.information_empty_library,

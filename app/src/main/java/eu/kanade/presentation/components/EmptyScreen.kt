@@ -38,12 +38,11 @@ fun EmptyScreen(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                     )
+                    show(message, actions)
                 }
             },
             modifier = Modifier
                 .align(Alignment.Center),
-        ) { view ->
-            view.show(message, actions)
-        }
+        )
     }
 }
