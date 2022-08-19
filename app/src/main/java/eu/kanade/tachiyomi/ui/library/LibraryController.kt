@@ -121,7 +121,7 @@ class LibraryController(
     }
 
     fun showSettingsSheet() {
-        presenter.categories[presenter.activeCategory].let { category ->
+        presenter.categories.getOrNull(presenter.activeCategory)?.let { category ->
             settingsSheet?.show(category)
         }
     }
