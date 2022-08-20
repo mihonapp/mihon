@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Colors for Tidal Wave theme
+  ~ Original color scheme by NahutabDevelop
+  ~
+  ~ Key colors:
+  ~ Primary #006780
+  ~ Secondary #004152
+  ~ Tertiary #92f7bc
+  ~ Neutral #b6b5b8
+-->
+<resources>
+    <color name="tidalwave_primary">#006780</color>
+    <color name="tidalwave_onPrimary">#ffffff</color>
+    <color name="tidalwave_primaryContainer">#B4D4DF</color>
+    <color name="tidalwave_onPrimaryContainer">#001f28</color>
+    <color name="tidalwave_secondary">#006780</color>
+    <color name="tidalwave_onSecondary">#ffffff</color>
+    <color name="tidalwave_secondaryContainer">#b8eaff</color>
+    <color name="tidalwave_onSecondaryContainer">#001f28</color>
+    <color name="tidalwave_tertiary">#92f7bc</color>
+    <color name="tidalwave_onTertiary">#001c3b</color>
+    <color name="tidalwave_tertiaryContainer">#c3fada</color>
+    <color name="tidalwave_onTertiaryContainer">#78ffd6</color>
+    <color name="tidalwave_background">#fdfbff</color>
+    <color name="tidalwave_onBackground">#001c3b</color>
+    <color name="tidalwave_surface">#fdfbff</color>
+    <color name="tidalwave_onSurface">#001c3b</color>
+    <color name="tidalwave_surfaceVariant">#dce4e8</color>
+    <color name="tidalwave_onSurfaceVariant">#40484c</color>
+    <color name="tidalwave_outline">#70787c</color>
+    <color name="tidalwave_inverseOnSurface">#ffe3c4</color>
+    <color name="tidalwave_inverseSurface">#020400</color>
+    <color name="tidalwave_primaryInverse">#ff987f</color>
+</resources>

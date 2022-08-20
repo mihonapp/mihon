@@ -318,6 +318,33 @@
         <item name="colorPrimaryInverse">@color/yotsuba_primaryInverse</item>
     </style>
 
+    <!--== Tidal Wave Theme ==-->
+    <style name="Theme.Tachiyomi.TidalWave">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/tidalwave_primary</item>
+        <item name="colorOnPrimary">@color/tidalwave_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/tidalwave_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/tidalwave_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/tidalwave_secondary</item>
+        <item name="colorOnSecondary">@color/tidalwave_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/tidalwave_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/tidalwave_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/tidalwave_tertiary</item>
+        <item name="colorOnTertiary">@color/tidalwave_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/tidalwave_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/tidalwave_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/tidalwave_background</item>
+        <item name="colorOnBackground">@color/tidalwave_onBackground</item>
+        <item name="colorSurface">@color/tidalwave_surface</item>
+        <item name="colorOnSurface">@color/tidalwave_onSurface</item>
+        <item name="colorSurfaceVariant">@color/tidalwave_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/tidalwave_onSurfaceVariant</item>
+        <item name="colorOutline">@color/tidalwave_outline</item>
+        <item name="colorOnSurfaceInverse">@color/tidalwave_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/tidalwave_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/tidalwave_primaryInverse</item>
+    </style>
+
     <!--== AMOLED Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.Amoled" parent="" />
 

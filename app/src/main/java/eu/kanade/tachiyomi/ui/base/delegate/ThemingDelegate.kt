@@ -41,6 +41,9 @@ interface ThemingDelegate {
                 PreferenceValues.AppTheme.YOTSUBA -> {
                     resIds += R.style.Theme_Tachiyomi_Yotsuba
                 }
+                PreferenceValues.AppTheme.TIDAL_WAVE -> {
+                    resIds += R.style.Theme_Tachiyomi_TidalWave
+                }
                 else -> {
                     resIds += R.style.Theme_Tachiyomi
                 }
