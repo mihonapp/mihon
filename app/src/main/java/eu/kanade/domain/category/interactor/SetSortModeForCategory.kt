@@ -12,24 +12,6 @@ class SetSortModeForCategory(
     private val categoryRepository: CategoryRepository,
 ) {
 
-    suspend fun await(category: Category, sortDirectionSetting: SortDirectionSetting) {
-        val sort = if (preferences.categorizedDisplaySettings().get()) {
-            SortModeSetting.fromFlag(category.flags)
-        } else {
-            preferences.librarySortingMode().get()
-        }
-        await(category, sort, sortDirectionSetting)
-    }
-
-    suspend fun await(category: Category, sortModeSetting: SortModeSetting) {
-        val direction = if (preferences.categorizedDisplaySettings().get()) {
-            SortDirectionSetting.fromFlag(category.flags)
-        } else {
-            preferences.librarySortingAscending().get()
-        }
-        await(category, sortModeSetting, direction)
-    }
-
     suspend fun await(category: Category, sortModeSetting: SortModeSetting, sortDirectionSetting: SortDirectionSetting) {
         var flags = category.flags and SortModeSetting.MASK.inv() or (sortModeSetting.flag and SortModeSetting.MASK)
         flags = flags and SortDirectionSetting.MASK.inv() or (sortDirectionSetting.flag and SortDirectionSetting.MASK)

@@ -338,7 +338,7 @@ class LibraryPresenter(
         }
 
         val sortDirections = categories.associate { category ->
-            category.id to SortDirectionSetting.get(preferences, category)
+            category.id to SortDirectionSetting.get(category)
         }
 
         val locale = Locale.getDefault()
