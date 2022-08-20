@@ -38,9 +38,9 @@ object PreferenceValues {
         STRAWBERRY_DAIQUIRI(R.string.theme_strawberrydaiquiri),
         TAKO(R.string.theme_tako),
         TEALTURQUOISE(R.string.theme_tealturquoise),
+        TIDAL_WAVE(R.string.theme_tidalwave),
         YINYANG(R.string.theme_yinyang),
         YOTSUBA(R.string.theme_yotsuba),
-        TIDAL_WAVE(R.string.theme_tidalwave),
 
         // Deprecated
         DARK_BLUE(null),
