@@ -77,7 +77,12 @@ class AppModule(val app: Application) : InjektModule {
 
         addSingletonFactory<DatabaseHandler> { AndroidDatabaseHandler(get(), get()) }
 
-        addSingletonFactory { Json { ignoreUnknownKeys = true } }
+        addSingletonFactory {
+            Json {
+                ignoreUnknownKeys = true
+                explicitNulls = false
+            }
+        }
 
         addSingletonFactory { PreferencesHelper(app) }
 
