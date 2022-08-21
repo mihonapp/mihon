@@ -2,7 +2,7 @@
 aboutlib_version = "10.4.0"
 okhttp_version = "4.10.0"
 nucleus_version = "3.0.0"
-coil_version = "2.1.0"
+coil_version = "2.2.0"
 conductor_version = "3.1.7"
 flowbinding_version = "1.2.0"
 shizuku_version = "12.1.0"
