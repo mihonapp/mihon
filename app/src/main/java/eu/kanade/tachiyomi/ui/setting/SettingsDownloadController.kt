@@ -19,6 +19,7 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
+import eu.kanade.tachiyomi.util.preference.infoPreference
 import eu.kanade.tachiyomi.util.preference.intListPreference
 import eu.kanade.tachiyomi.util.preference.multiSelectListPreference
 import eu.kanade.tachiyomi.util.preference.onClick
@@ -129,10 +130,10 @@ class SettingsDownloadController : SettingsController() {
         }
 
         preferenceCategory {
-            titleRes = R.string.pref_category_auto_download
+            titleRes = R.string.pref_download_new
 
             switchPreference {
-                bindTo(preferences.downloadNewChapter())
+                bindTo(preferences.downloadNewChapters())
                 titleRes = R.string.pref_download_new
             }
             preference {
@@ -142,7 +143,7 @@ class SettingsDownloadController : SettingsController() {
                     DownloadCategoriesDialog().showDialog(router)
                 }
 
-                visibleIf(preferences.downloadNewChapter()) { it }
+                visibleIf(preferences.downloadNewChapters()) { it }
 
                 fun updateSummary() {
                     val selectedCategories = preferences.downloadNewChapterCategories().get()
@@ -177,6 +178,25 @@ class SettingsDownloadController : SettingsController() {
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
             }
+        }
+
+        preferenceCategory {
+            titleRes = R.string.download_ahead
+
+            intListPreference {
+                bindTo(preferences.autoDownloadWhileReading())
+                titleRes = R.string.auto_download_while_reading
+                entries = arrayOf(
+                    context.getString(R.string.disabled),
+                    context.resources.getQuantityString(R.plurals.next_unread_chapters, 2, 2),
+                    context.resources.getQuantityString(R.plurals.next_unread_chapters, 3, 3),
+                    context.resources.getQuantityString(R.plurals.next_unread_chapters, 5, 5),
+                    context.resources.getQuantityString(R.plurals.next_unread_chapters, 10, 10),
+                )
+                entryValues = arrayOf("0", "2", "3", "5", "10")
+                summary = "%s"
+            }
+            infoPreference(R.string.download_ahead_info)
         }
     }
 

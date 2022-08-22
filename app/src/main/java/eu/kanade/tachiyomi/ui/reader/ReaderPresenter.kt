@@ -19,8 +19,10 @@ import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
@@ -32,6 +34,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.reader.loader.ChapterLoader
+import eu.kanade.tachiyomi.ui.reader.loader.DownloadPageLoader
 import eu.kanade.tachiyomi.ui.reader.loader.HttpPageLoader
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -63,6 +66,7 @@ import uy.kohesive.injekt.injectLazy
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import eu.kanade.domain.manga.model.Manga as DomainManga
+import eu.kanade.tachiyomi.data.database.models.Chapter as DbChapter
 
 /**
  * Presenter used by the activity to perform background operations.
@@ -118,6 +122,8 @@ class ReaderPresenter(
     private val isLoadingAdjacentChapterRelay = BehaviorRelay.create<Boolean>()
 
     private val imageSaver: ImageSaver by injectLazy()
+
+    private var chapterDownload: Download? = null
 
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
@@ -191,6 +197,9 @@ class ReaderPresenter(
         if (currentChapters != null) {
             currentChapters.unref()
             saveReadingProgress(currentChapters.currChapter)
+            chapterDownload?.let {
+                downloadManager.addDownloadsToStartOfQueue(listOf(it))
+            }
         }
     }
 
@@ -318,6 +327,7 @@ class ReaderPresenter(
                 newChapters.ref()
                 oldChapters?.unref()
 
+                chapterDownload = deleteChapterFromDownloadQueue(newChapters.currChapter)
                 viewerChaptersRelay.call(newChapters)
             }
     }
@@ -416,7 +426,6 @@ class ReaderPresenter(
             selectedChapter.chapter.read = true
             updateTrackChapterRead(selectedChapter)
             deleteChapterIfNeeded(selectedChapter)
-            deleteChapterFromDownloadQueue(currentChapters.currChapter)
         }
 
         if (selectedChapter != currentChapters.currChapter) {
@@ -425,15 +434,56 @@ class ReaderPresenter(
             setReadStartTime()
             loadNewChapter(selectedChapter)
         }
+        val pages = page.chapter.pages ?: return
+        val inDownloadRange = page.number.toDouble() / pages.size > 0.2
+        if (inDownloadRange) {
+            downloadNextChapters()
+        }
+    }
+
+    private fun downloadNextChapters() {
+        val manga = manga ?: return
+        if (getCurrentChapter()?.pageLoader !is DownloadPageLoader) return
+        val nextChapter = viewerChaptersRelay.value?.nextChapter?.chapter ?: return
+        val chaptersNumberToDownload = preferences.autoDownloadWhileReading().get()
+        if (chaptersNumberToDownload == 0 || !manga.favorite) return
+        val isNextChapterDownloaded =
+            downloadManager.isChapterDownloaded(nextChapter.name, nextChapter.scanlator, manga.title, manga.source)
+        if (isNextChapterDownloaded) {
+            downloadAutoNextChapters(chaptersNumberToDownload, nextChapter.id)
+        }
+    }
+
+    private fun downloadAutoNextChapters(choice: Int, nextChapterId: Long?) {
+        val chaptersToDownload = getNextUnreadChaptersSorted(nextChapterId).take(choice - 1)
+        if (chaptersToDownload.isNotEmpty()) {
+            downloadChapters(chaptersToDownload)
+        }
+    }
+
+    private fun getNextUnreadChaptersSorted(nextChapterId: Long?): List<DbChapter> {
+        return chapterList.map { it.chapter.toDomainChapter()!! }
+            .filter { !it.read || it.id == nextChapterId }
+            .sortedWith(getChapterSort(manga?.toDomainManga()!!, false))
+            .map { it.toDbChapter() }
+            .takeLastWhile { it.id != nextChapterId }
+    }
+
+    /**
+     * Downloads the given list of chapters with the manager.
+     * @param chapters the list of chapters to download.
+     */
+    private fun downloadChapters(chapters: List<DbChapter>) {
+        downloadManager.downloadChapters(manga?.toDomainManga()!!, chapters)
     }
 
     /**
      * Removes [currentChapter] from download queue
      * if setting is enabled and [currentChapter] is queued for download
      */
-    private fun deleteChapterFromDownloadQueue(currentChapter: ReaderChapter) {
-        downloadManager.getChapterDownloadOrNull(currentChapter.chapter)?.let { download ->
-            downloadManager.deletePendingDownload(download)
+    private fun deleteChapterFromDownloadQueue(currentChapter: ReaderChapter): Download? {
+        return downloadManager.getChapterDownloadOrNull(currentChapter.chapter)?.apply {
+            downloadManager.deletePendingDownload(this)
         }
     }
 
@@ -448,6 +498,9 @@ class ReaderPresenter(
         val removeAfterReadSlots = preferences.removeAfterReadSlots()
         val chapterToDelete = chapterList.getOrNull(currentChapterPosition - removeAfterReadSlots)
 
+        if (removeAfterReadSlots != 0 && chapterDownload != null) {
+            downloadManager.addDownloadsToStartOfQueue(listOf(chapterDownload!!))
+        }
         // Check if deleting option is enabled and chapter exists
         if (removeAfterReadSlots != -1 && chapterToDelete != null) {
             enqueueDeleteReadChapters(chapterToDelete)

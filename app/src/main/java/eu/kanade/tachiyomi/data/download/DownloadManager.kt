@@ -158,6 +158,20 @@ class DownloadManager(
     }
 
     /**
+     * Tells the downloader to enqueue the given list of downloads at the start of the queue.
+     *
+     * @param downloads the list of downloads to enqueue.
+     */
+    fun addDownloadsToStartOfQueue(downloads: List<Download>) {
+        val wasEmpty = queue.isEmpty()
+        queue.toMutableList().apply {
+            addAll(0, downloads)
+            reorderQueue(this)
+        }
+        if (wasEmpty) startDownloads()
+    }
+
+    /**
      * Builds the page list of a downloaded chapter.
      *
      * @param source the source of the chapter.

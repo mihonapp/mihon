@@ -57,8 +57,8 @@ fun DomainManga.shouldDownloadNewChapters(dbCategories: List<Long>, preferences:
     val categories = dbCategories.ifEmpty { listOf(0L) }
 
     // Boolean to determine if user wants to automatically download new chapters.
-    val downloadNewChapter = preferences.downloadNewChapter().get()
-    if (!downloadNewChapter) return false
+    val downloadNewChapters = preferences.downloadNewChapters().get()
+    if (!downloadNewChapters) return false
 
     val includedCategories = preferences.downloadNewChapterCategories().get().map { it.toLong() }
     val excludedCategories = preferences.downloadNewChapterCategoriesExclude().get().map { it.toLong() }
