@@ -139,14 +139,15 @@ class DownloadProvider(private val context: Context) {
     fun getChapterDirName(chapterName: String, chapterScanlator: String?): String {
         return DiskUtil.buildValidFilename(
             when {
-                chapterScanlator != null -> "${chapterScanlator}_$chapterName"
+                chapterScanlator.isNullOrBlank().not() -> "${chapterScanlator}_$chapterName"
                 else -> chapterName
             },
         )
     }
 
     fun isChapterDirNameChanged(oldChapter: DomainChapter, newChapter: DomainChapter): Boolean {
-        return oldChapter.name != newChapter.name || oldChapter.scanlator != newChapter.scanlator
+        return oldChapter.name != newChapter.name ||
+            oldChapter.scanlator?.takeIf { it.isNotBlank() } != newChapter.scanlator?.takeIf { it.isNotBlank() }
     }
 
     /**
@@ -164,7 +165,7 @@ class DownloadProvider(private val context: Context) {
             // Archived chapters
             add("$chapterDirName.cbz")
 
-            if (chapterScanlator == null) {
+            if (chapterScanlator.isNullOrBlank()) {
                 // Previously null scanlator fields were converted to "" due to a bug
                 add("_$chapterDirName")
                 add("_$chapterDirName.cbz")
