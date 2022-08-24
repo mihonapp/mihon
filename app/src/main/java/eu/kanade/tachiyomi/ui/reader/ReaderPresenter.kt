@@ -500,6 +500,8 @@ class ReaderPresenter(
 
         if (removeAfterReadSlots != 0 && chapterDownload != null) {
             downloadManager.addDownloadsToStartOfQueue(listOf(chapterDownload!!))
+        } else {
+            chapterDownload = null
         }
         // Check if deleting option is enabled and chapter exists
         if (removeAfterReadSlots != -1 && chapterToDelete != null) {
