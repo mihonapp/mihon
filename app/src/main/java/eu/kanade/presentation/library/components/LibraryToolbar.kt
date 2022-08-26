@@ -17,15 +17,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
@@ -138,12 +135,7 @@ fun LibrarySelectionToolbar(
     onClickSelectAll: () -> Unit,
     onClickInvertSelection: () -> Unit,
 ) {
-    val backgroundColor by TopAppBarDefaults.smallTopAppBarColors().containerColor(1f)
     AppBar(
-        modifier = Modifier
-            .drawBehind {
-                drawRect(backgroundColor.copy(alpha = 1f))
-            },
         titleContent = { Text(text = "${state.selection.size}") },
         actions = {
             IconButton(onClick = onClickSelectAll) {

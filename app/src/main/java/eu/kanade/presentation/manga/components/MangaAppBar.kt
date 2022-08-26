@@ -3,10 +3,7 @@ package eu.kanade.presentation.manga.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -18,19 +15,19 @@ import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.DownloadedOnlyModeBanner
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.IncognitoModeBanner
@@ -55,16 +52,11 @@ fun MangaAppBar(
     onSelectAll: () -> Unit,
     onInvertSelection: () -> Unit,
 ) {
-    val isActionMode = actionModeCounter > 0
-    val backgroundAlpha = if (isActionMode) 1f else backgroundAlphaProvider()
-    val backgroundColor by TopAppBarDefaults.smallTopAppBarColors().containerColor(1f)
     Column(
-        modifier = modifier.drawBehind {
-            drawRect(backgroundColor.copy(alpha = backgroundAlpha))
-        },
+        modifier = modifier,
     ) {
+        val isActionMode = actionModeCounter > 0
         SmallTopAppBar(
-            modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)),
             title = {
                 Text(
                     text = if (isActionMode) actionModeCounter.toString() else title,
@@ -198,10 +190,11 @@ fun MangaAppBar(
                     }
                 }
             },
-            // Background handled by parent
+            windowInsets = WindowInsets.statusBars,
             colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = Color.Transparent,
-                scrolledContainerColor = Color.Transparent,
+                containerColor = MaterialTheme.colorScheme
+                    .surfaceColorAtElevation(3.dp)
+                    .copy(alpha = if (isActionMode) 1f else backgroundAlphaProvider()),
             ),
         )
 

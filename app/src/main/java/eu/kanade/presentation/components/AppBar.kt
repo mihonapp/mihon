@@ -2,7 +2,8 @@ package eu.kanade.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -15,6 +16,7 @@ import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -22,12 +24,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
 
 @Composable
@@ -97,14 +98,10 @@ fun AppBar(
 
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    val scrollFraction = if (isActionMode) 1f else scrollBehavior?.state?.overlappedFraction ?: 0f
-    val backgroundColor by TopAppBarDefaults.smallTopAppBarColors().containerColor(scrollFraction)
-
     Column(
-        modifier = modifier.drawBehind { drawRect(backgroundColor) },
+        modifier = modifier,
     ) {
         SmallTopAppBar(
-            modifier = Modifier.statusBarsPadding(),
             navigationIcon = {
                 if (isActionMode) {
                     IconButton(onClick = onCancelActionMode) {
@@ -126,10 +123,11 @@ fun AppBar(
             },
             title = titleContent,
             actions = actions,
-            // Background handled by parent
+            windowInsets = WindowInsets.statusBars,
             colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = Color.Transparent,
-                scrolledContainerColor = Color.Transparent,
+                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                    elevation = if (isActionMode) 3.dp else 0.dp,
+                ),
             ),
             scrollBehavior = scrollBehavior,
         )
