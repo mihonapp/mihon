@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import androidx.compose.runtime.Immutable
+import eu.kanade.core.prefs.CheckboxState
+import eu.kanade.core.prefs.mapAsCheckboxState
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
@@ -61,6 +63,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
@@ -78,6 +81,7 @@ class MangaPresenter(
     val isFromSource: Boolean,
     private val preferences: PreferencesHelper = Injekt.get(),
     private val trackManager: TrackManager = Injekt.get(),
+    private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val getMangaAndChapters: GetMangaWithChapters = Injekt.get(),
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
@@ -182,6 +186,7 @@ class MangaPresenter(
                     isRefreshingChapter = true,
                     isIncognitoMode = incognitoMode,
                     isDownloadedOnlyMode = downloadedOnlyMode,
+                    dialog = null,
                 )
             }
 
@@ -259,8 +264,7 @@ class MangaPresenter(
     fun toggleFavorite(
         onRemoved: () -> Unit,
         onAdded: () -> Unit,
-        onRequireCategory: (manga: DomainManga, availableCats: List<Category>) -> Unit,
-        onDuplicateExists: ((DomainManga) -> Unit)?,
+        checkDuplicate: Boolean = true,
     ) {
         val state = successState ?: return
         presenterScope.launchIO {
@@ -278,10 +282,16 @@ class MangaPresenter(
             } else {
                 // Add to library
                 // First, check if duplicate exists if callback is provided
-                if (onDuplicateExists != null) {
+                if (checkDuplicate) {
                     val duplicate = getDuplicateLibraryManga.await(manga.title, manga.source)
+
                     if (duplicate != null) {
-                        withUIContext { onDuplicateExists(duplicate) }
+                        _state.update { state ->
+                            when (state) {
+                                MangaScreenState.Loading -> state
+                                is MangaScreenState.Success -> state.copy(dialog = Dialog.DuplicateManga(manga, duplicate))
+                            }
+                        }
                         return@launchIO
                     }
                 }
@@ -308,7 +318,7 @@ class MangaPresenter(
                     }
 
                     // Choose a category
-                    else -> withUIContext { onRequireCategory(manga, categories) }
+                    else -> promptChangeCategories()
                 }
 
                 // Finally match with enhanced tracking when available
@@ -330,6 +340,26 @@ class MangaPresenter(
                             }
                         }
                     }
+            }
+        }
+    }
+
+    fun promptChangeCategories() {
+        val state = successState ?: return
+        val manga = state.manga
+        presenterScope.launch {
+            val categories = getCategories()
+            val selection = getMangaCategoryIds(manga)
+            _state.update { state ->
+                when (state) {
+                    MangaScreenState.Loading -> state
+                    is MangaScreenState.Success -> state.copy(
+                        dialog = Dialog.ChangeCategory(
+                            manga = manga,
+                            initialSelection = categories.mapAsCheckboxState { it.id in selection },
+                        ),
+                    )
+                }
             }
         }
     }
@@ -365,13 +395,13 @@ class MangaPresenter(
      * @param manga the manga to get categories from.
      * @return Array of category ids the manga is in, if none returns default id
      */
-    suspend fun getMangaCategoryIds(manga: DomainManga): Array<Long> {
-        val categories = getCategories.await(manga.id)
-        return categories.map { it.id }.toTypedArray()
+    suspend fun getMangaCategoryIds(manga: DomainManga): List<Long> {
+        return getCategories.await(manga.id)
+            .map { it.id }
     }
 
-    fun moveMangaToCategoriesAndAddToLibrary(manga: DomainManga, categories: List<Category>) {
-        moveMangaToCategories(categories)
+    fun moveMangaToCategoriesAndAddToLibrary(manga: DomainManga, categories: List<Long>) {
+        moveMangaToCategory(categories)
         if (!manga.favorite) {
             presenterScope.launchIO {
                 updateManga.awaitUpdateFavorite(manga.id, true)
@@ -387,6 +417,10 @@ class MangaPresenter(
      */
     private fun moveMangaToCategories(categories: List<Category>) {
         val categoryIds = categories.map { it.id }
+        moveMangaToCategory(categoryIds)
+    }
+
+    fun moveMangaToCategory(categoryIds: List<Long>) {
         presenterScope.launchIO {
             setMangaCategories.await(mangaId, categoryIds)
         }
@@ -994,6 +1028,45 @@ class MangaPresenter(
     }
 
     // Track sheet - end
+
+    fun getSourceOrStub(manga: DomainManga): Source {
+        return sourceManager.getOrStub(manga.source)
+    }
+
+    sealed class Dialog {
+        data class ChangeCategory(val manga: DomainManga, val initialSelection: List<CheckboxState<Category>>) : Dialog()
+        data class DeleteChapters(val chapters: List<DomainChapter>) : Dialog()
+        data class DuplicateManga(val manga: DomainManga, val duplicate: DomainManga) : Dialog()
+        data class DownloadCustomAmount(val max: Int) : Dialog()
+    }
+
+    fun dismissDialog() {
+        _state.update { state ->
+            when (state) {
+                MangaScreenState.Loading -> state
+                is MangaScreenState.Success -> state.copy(dialog = null)
+            }
+        }
+    }
+
+    fun showDownloadCustomDialog() {
+        val max = processedChapters?.count() ?: return
+        _state.update { state ->
+            when (state) {
+                MangaScreenState.Loading -> state
+                is MangaScreenState.Success -> state.copy(dialog = Dialog.DownloadCustomAmount(max))
+            }
+        }
+    }
+
+    fun showDeleteChapterDialog(chapters: List<DomainChapter>) {
+        _state.update { state ->
+            when (state) {
+                MangaScreenState.Loading -> state
+                is MangaScreenState.Success -> state.copy(dialog = Dialog.DeleteChapters(chapters))
+            }
+        }
+    }
 }
 
 sealed class MangaScreenState {
@@ -1012,6 +1085,7 @@ sealed class MangaScreenState {
         val isRefreshingChapter: Boolean = false,
         val isIncognitoMode: Boolean = false,
         val isDownloadedOnlyMode: Boolean = false,
+        val dialog: MangaPresenter.Dialog? = null,
     ) : MangaScreenState() {
 
         val processedChapters: Sequence<ChapterItem>

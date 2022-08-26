@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastAny
 import com.jakewharton.rxrelay.BehaviorRelay
+import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.core.util.asFlow
 import eu.kanade.core.util.asObservable
@@ -610,13 +611,15 @@ class LibraryPresenter(
      * @param addCategories the categories to add for all mangas.
      * @param removeCategories the categories to remove in all mangas.
      */
-    fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Category>, removeCategories: List<Category>) {
+    fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
         presenterScope.launchIO {
             mangaList.map { manga ->
                 val categoryIds = getCategories.await(manga.id)
+                    .map { it.id }
                     .subtract(removeCategories)
                     .plus(addCategories)
-                    .map { it.id }
+                    .toList()
+
                 setMangaCategories.await(manga.id, categoryIds)
             }
         }
@@ -714,5 +717,10 @@ class LibraryPresenter(
         val category = categories[index]
         val items = (loadedManga[category.id] ?: emptyList()).map { it.manga }
         state.selection = items.filterNot { it in selection }
+    }
+
+    sealed class Dialog {
+        data class ChangeCategory(val manga: List<Manga>, val initialSelection: List<CheckboxState<Category>>) : Dialog()
+        data class DeleteManga(val manga: List<Manga>) : Dialog()
     }
 }

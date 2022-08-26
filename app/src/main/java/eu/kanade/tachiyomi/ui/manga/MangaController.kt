@@ -6,26 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedDispatcherOwner
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.core.os.bundleOf
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.data.chapter.NoChaptersException
-import eu.kanade.domain.category.model.Category
-import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.toDbManga
+import eu.kanade.presentation.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.MangaScreen
+import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.util.calculateWindowWidthSizeClass
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
@@ -41,11 +41,12 @@ import eu.kanade.tachiyomi.ui.browse.migration.search.SearchController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.browse.source.latest.LatestUpdatesController
-import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
+import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.ui.manga.MangaPresenter.Dialog
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersSettingsSheet
-import eu.kanade.tachiyomi.ui.manga.chapter.DownloadCustomChaptersDialog
+import eu.kanade.tachiyomi.ui.manga.chapter.DownloadCustomAmountDialog
 import eu.kanade.tachiyomi.ui.manga.info.MangaFullCoverDialog
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.ui.manga.track.TrackSearchDialog
@@ -54,21 +55,13 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
-import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.widget.materialdialogs.QuadStateTextView
-import eu.kanade.tachiyomi.widget.materialdialogs.await
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import eu.kanade.domain.chapter.model.Chapter as DomainChapter
 
-class MangaController :
-    FullComposeController<MangaPresenter>,
-    ChangeMangaCategoriesDialog.Listener,
-    DownloadCustomChaptersDialog.Listener {
+class MangaController : FullComposeController<MangaPresenter> {
 
     @Suppress("unused")
     constructor(bundle: Bundle) : this(bundle.getLong(MANGA_EXTRA))
@@ -112,9 +105,19 @@ class MangaController :
     @Composable
     override fun ComposeContent() {
         val state by presenter.state.collectAsState()
+        val dialog by derivedStateOf {
+            when (val state = state) {
+                MangaScreenState.Loading -> null
+                is MangaScreenState.Success -> state.dialog
+            }
+        }
+
         if (state is MangaScreenState.Success) {
             val successState = state as MangaScreenState.Success
             val isHttpSource = remember { successState.source is HttpSource }
+
+            val scope = rememberCoroutineScope()
+
             MangaScreen(
                 state = successState,
                 snackbarHostState = snackbarHostState,
@@ -133,16 +136,67 @@ class MangaController :
                 onCoverClicked = this::openCoverDialog,
                 onShareClicked = this::shareManga.takeIf { isHttpSource },
                 onDownloadActionClicked = this::runDownloadChapterAction.takeIf { !successState.source.isLocalOrStub() },
-                onEditCategoryClicked = this::onCategoriesClick.takeIf { successState.manga.favorite },
+                onEditCategoryClicked = presenter::promptChangeCategories.takeIf { successState.manga.favorite },
                 onMigrateClicked = this::migrateManga.takeIf { successState.manga.favorite },
                 onMultiBookmarkClicked = presenter::bookmarkChapters,
                 onMultiMarkAsReadClicked = presenter::markChaptersRead,
                 onMarkPreviousAsReadClicked = presenter::markPreviousChapterRead,
-                onMultiDeleteClicked = this::deleteChaptersWithConfirmation,
+                onMultiDeleteClicked = presenter::showDeleteChapterDialog,
                 onChapterSelected = presenter::toggleSelection,
                 onAllChapterSelected = presenter::toggleAllSelection,
                 onInvertSelection = presenter::invertSelection,
             )
+
+            val onDismissRequest = { presenter.dismissDialog() }
+            when (val dialog = dialog) {
+                is Dialog.ChangeCategory -> {
+                    ChangeCategoryDialog(
+                        initialSelection = dialog.initialSelection,
+                        onDismissRequest = onDismissRequest,
+                        onEditCategories = {
+                            router.pushController(CategoryController())
+                        },
+                        onConfirm = { include, _ ->
+                            presenter.moveMangaToCategoriesAndAddToLibrary(dialog.manga, include)
+                        },
+                    )
+                }
+                is Dialog.DeleteChapters -> {
+                    DeleteChaptersDialog(
+                        onDismissRequest = onDismissRequest,
+                        onConfirm = {
+                            deleteChapters(dialog.chapters)
+                        },
+                    )
+                }
+                is Dialog.DownloadCustomAmount -> {
+                    DownloadCustomAmountDialog(
+                        maxAmount = dialog.max,
+                        onDismissRequest = onDismissRequest,
+                        onConfirm = { amount ->
+                            val chaptersToDownload = presenter.getUnreadChaptersSorted().take(amount)
+                            if (chaptersToDownload.isNotEmpty()) {
+                                scope.launch { downloadChapters(chaptersToDownload) }
+                            }
+                        },
+                    )
+                }
+                is Dialog.DuplicateManga -> {
+                    DuplicateDialog(
+                        onDismissRequest = onDismissRequest,
+                        onConfirm = {
+                            presenter.toggleFavorite(
+                                onRemoved = {},
+                                onAdded = {},
+                                checkDuplicate = false,
+                            )
+                        },
+                        onOpenManga = { router.pushController(MangaController(dialog.duplicate.id)) },
+                        duplicateFrom = presenter.getSourceOrStub(dialog.duplicate),
+                    )
+                }
+                null -> {}
+            }
         } else {
             LoadingScreen()
         }
@@ -206,30 +260,10 @@ class MangaController :
         }
     }
 
-    private fun onFavoriteClick(checkDuplicate: Boolean = true) {
+    private fun onFavoriteClick() {
         presenter.toggleFavorite(
             onRemoved = this::onFavoriteRemoved,
             onAdded = { activity?.toast(activity?.getString(R.string.manga_added_library)) },
-            onDuplicateExists = if (checkDuplicate) {
-                {
-                    AddDuplicateMangaDialog(
-                        target = this,
-                        libraryManga = it,
-                        onAddToLibrary = { onFavoriteClick(checkDuplicate = false) },
-                    ).showDialog(router)
-                }
-            } else null,
-            onRequireCategory = { manga, categories ->
-                val ids = runBlocking { presenter.getMangaCategoryIds(manga) }
-                val preselected = categories.map {
-                    if (it.id in ids) {
-                        QuadStateTextView.State.CHECKED.ordinal
-                    } else {
-                        QuadStateTextView.State.UNCHECKED.ordinal
-                    }
-                }.toTypedArray()
-                showChangeCategoryDialog(manga, categories, preselected)
-            },
         )
     }
 
@@ -247,40 +281,6 @@ class MangaController :
                 presenter.deleteDownloads()
             }
         }
-    }
-
-    private fun onCategoriesClick() {
-        viewScope.launchIO {
-            val manga = presenter.manga ?: return@launchIO
-            val categories = presenter.getCategories()
-
-            val ids = presenter.getMangaCategoryIds(manga)
-            val preselected = categories.map {
-                if (it.id in ids) {
-                    QuadStateTextView.State.CHECKED.ordinal
-                } else {
-                    QuadStateTextView.State.UNCHECKED.ordinal
-                }
-            }.toTypedArray()
-
-            withUIContext {
-                showChangeCategoryDialog(manga, categories, preselected)
-            }
-        }
-    }
-
-    private fun showChangeCategoryDialog(manga: Manga, categories: List<Category>, preselected: Array<Int>) {
-        ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
-            .showDialog(router)
-    }
-
-    override fun updateCategoriesForMangas(
-        mangas: List<Manga>,
-        addCategories: List<Category>,
-        removeCategories: List<Category>,
-    ) {
-        val changed = mangas.firstOrNull() ?: return
-        presenter.moveMangaToCategoriesAndAddToLibrary(changed, addCategories)
     }
 
     /**
@@ -427,15 +427,6 @@ class MangaController :
         }
     }
 
-    private fun deleteChaptersWithConfirmation(chapters: List<DomainChapter>) {
-        viewScope.launch {
-            val result = MaterialAlertDialogBuilder(activity!!)
-                .setMessage(R.string.confirm_delete_chapters)
-                .await(android.R.string.ok, android.R.string.cancel)
-            if (result == AlertDialog.BUTTON_POSITIVE) deleteChapters(chapters)
-        }
-    }
-
     fun deleteChapters(chapters: List<DomainChapter>) {
         if (chapters.isEmpty()) return
         presenter.deleteChapters(chapters)
@@ -449,7 +440,7 @@ class MangaController :
             DownloadAction.NEXT_5_CHAPTERS -> presenter.getUnreadChaptersSorted().take(5)
             DownloadAction.NEXT_10_CHAPTERS -> presenter.getUnreadChaptersSorted().take(10)
             DownloadAction.CUSTOM -> {
-                showCustomDownloadDialog()
+                presenter.showDownloadCustomDialog()
                 return
             }
             DownloadAction.UNREAD_CHAPTERS -> presenter.getUnreadChapters()
@@ -458,21 +449,6 @@ class MangaController :
             }
         }
         if (!chaptersToDownload.isNullOrEmpty()) {
-            viewScope.launch { downloadChapters(chaptersToDownload) }
-        }
-    }
-
-    private fun showCustomDownloadDialog() {
-        val availableChapters = presenter.processedChapters?.count() ?: return
-        DownloadCustomChaptersDialog(
-            this,
-            availableChapters,
-        ).showDialog(router)
-    }
-
-    override fun downloadCustomChapters(amount: Int) {
-        val chaptersToDownload = presenter.getUnreadChaptersSorted().take(amount)
-        if (chaptersToDownload.isNotEmpty()) {
             viewScope.launch { downloadChapters(chaptersToDownload) }
         }
     }
