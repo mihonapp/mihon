@@ -5,7 +5,7 @@ accompanist = "0.25.1"
 material3 = "1.0.0-beta01"
 
 [libraries]
-activity = "androidx.activity:activity-compose:1.6.0-beta01"
+activity = "androidx.activity:activity-compose:1.6.0-rc01"
 foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 animation = { module = "androidx.compose.animation:animation", version.ref = "compose" }
 animation-graphics = { module = "androidx.compose.animation:animation-graphics", version.ref = "compose" }
