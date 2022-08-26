@@ -231,11 +231,11 @@ class SettingsAdvancedController(
                 onChange {
                     if (it.toString().isBlank()) {
                         activity?.toast(R.string.error_user_agent_string_blank)
-                        false
                     } else {
+                        text = it.toString().trim()
                         activity?.toast(R.string.requires_app_restart)
-                        true
                     }
+                    false
                 }
             }
             preference {
