@@ -16,7 +16,7 @@ fun DeleteChaptersDialog(
         onDismissRequest = onDismissRequest,
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(id = android.R.string.cancel))
+                Text(text = stringResource(android.R.string.cancel))
             }
         },
         confirmButton = {
@@ -26,14 +26,14 @@ fun DeleteChaptersDialog(
                     onConfirm()
                 },
             ) {
-                Text(text = stringResource(id = android.R.string.ok))
+                Text(text = stringResource(android.R.string.ok))
             }
         },
         title = {
-            Text(text = stringResource(id = R.string.are_you_sure))
+            Text(text = stringResource(R.string.are_you_sure))
         },
         text = {
-            Text(text = stringResource(id = R.string.confirm_delete_chapters))
+            Text(text = stringResource(R.string.confirm_delete_chapters))
         },
     )
 }

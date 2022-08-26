@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.R
 val Category.visualName: String
     @Composable
     get() = when {
-        isSystemCategory -> stringResource(id = R.string.label_default)
+        isSystemCategory -> stringResource(R.string.label_default)
         else -> name
     }
 

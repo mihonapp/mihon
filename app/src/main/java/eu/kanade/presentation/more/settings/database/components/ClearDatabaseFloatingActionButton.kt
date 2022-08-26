@@ -27,7 +27,7 @@ fun ClearDatabaseFloatingActionButton(
         ExtendedFloatingActionButton(
             modifier = Modifier.navigationBarsPadding(),
             text = {
-                Text(text = stringResource(id = R.string.action_delete))
+                Text(text = stringResource(R.string.action_delete))
             },
             icon = {
                 Icon(Icons.Outlined.Delete, contentDescription = "")

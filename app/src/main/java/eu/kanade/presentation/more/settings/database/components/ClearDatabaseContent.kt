@@ -35,7 +35,7 @@ fun ClearDatabaseContent(
                     )
                 }
             }
-            false -> EmptyScreen(message = stringResource(id = R.string.database_clean))
+            false -> EmptyScreen(message = stringResource(R.string.database_clean))
         }
     }
 }

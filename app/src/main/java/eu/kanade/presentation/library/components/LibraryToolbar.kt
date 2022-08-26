@@ -193,7 +193,7 @@ fun LibrarySearchToolbar(
         actions = {
             AnimatedVisibility(visible = searchQuery.isNotEmpty()) {
                 IconButton(onClick = onClickResetSearch) {
-                    Icon(Icons.Outlined.Close, contentDescription = stringResource(id = R.string.action_reset))
+                    Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.action_reset))
                 }
             }
         },

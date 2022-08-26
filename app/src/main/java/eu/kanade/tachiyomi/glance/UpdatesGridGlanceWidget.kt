@@ -92,7 +92,7 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = stringResource(id = R.string.appwidget_unavailable_locked),
+                text = stringResource(R.string.appwidget_unavailable_locked),
                 style = TextStyle(
                     color = ColorProvider(R.color.appwidget_on_secondary_container),
                     fontSize = 12.sp,
@@ -114,7 +114,7 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
             if (inData == null) {
                 CircularProgressIndicator()
             } else if (inData.isEmpty()) {
-                Text(text = stringResource(id = R.string.information_no_recent))
+                Text(text = stringResource(R.string.information_no_recent))
             } else {
                 (0 until rowCount).forEach { i ->
                     val coverRow = (0 until columnCount).mapNotNull { j ->

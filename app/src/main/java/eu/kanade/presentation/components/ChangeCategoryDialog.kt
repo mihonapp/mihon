@@ -39,14 +39,14 @@ fun ChangeCategoryDialog(
                         onEditCategories()
                     },
                 ) {
-                    Text(text = stringResource(id = R.string.action_edit_categories))
+                    Text(text = stringResource(R.string.action_edit_categories))
                 }
             },
             title = {
-                Text(text = stringResource(id = R.string.action_move_category))
+                Text(text = stringResource(R.string.action_move_category))
             },
             text = {
-                Text(text = stringResource(id = R.string.information_empty_category_dialog))
+                Text(text = stringResource(R.string.information_empty_category_dialog))
             },
         )
         return
@@ -60,11 +60,11 @@ fun ChangeCategoryDialog(
                     onDismissRequest()
                     onEditCategories()
                 },) {
-                    Text(text = stringResource(id = R.string.action_edit))
+                    Text(text = stringResource(R.string.action_edit))
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(id = android.R.string.cancel))
+                    Text(text = stringResource(android.R.string.cancel))
                 }
                 TextButton(
                     onClick = {
@@ -75,12 +75,12 @@ fun ChangeCategoryDialog(
                         )
                     },
                 ) {
-                    Text(text = stringResource(id = R.string.action_add))
+                    Text(text = stringResource(R.string.action_add))
                 }
             }
         },
         title = {
-            Text(text = stringResource(id = R.string.action_move_category))
+            Text(text = stringResource(R.string.action_move_category))
         },
         text = {
             Column {

@@ -18,19 +18,19 @@ fun ClearDatabaseToolbar(
     onClickInvertSelection: () -> Unit,
 ) {
     AppBar(
-        title = stringResource(id = R.string.pref_clear_database),
+        title = stringResource(R.string.pref_clear_database),
         navigateUp = navigateUp,
         actions = {
             if (state.isEmpty.not()) {
                 AppBarActions(
                     actions = listOf(
                         AppBar.Action(
-                            title = stringResource(id = R.string.action_select_all),
+                            title = stringResource(R.string.action_select_all),
                             icon = Icons.Outlined.SelectAll,
                             onClick = onClickSelectAll,
                         ),
                         AppBar.Action(
-                            title = stringResource(id = R.string.action_select_all),
+                            title = stringResource(R.string.action_select_all),
                             icon = Icons.Outlined.FlipToBack,
                             onClick = onClickInvertSelection,
                         ),

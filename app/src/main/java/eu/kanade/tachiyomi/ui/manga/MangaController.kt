@@ -26,6 +26,8 @@ import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
+import eu.kanade.presentation.manga.components.DownloadCustomAmountDialog
+import eu.kanade.presentation.manga.components.DuplicateMangaDialog
 import eu.kanade.presentation.util.calculateWindowWidthSizeClass
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
@@ -46,7 +48,6 @@ import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaPresenter.Dialog
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersSettingsSheet
-import eu.kanade.tachiyomi.ui.manga.chapter.DownloadCustomAmountDialog
 import eu.kanade.tachiyomi.ui.manga.info.MangaFullCoverDialog
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.ui.manga.track.TrackSearchDialog
@@ -105,6 +106,12 @@ class MangaController : FullComposeController<MangaPresenter> {
     @Composable
     override fun ComposeContent() {
         val state by presenter.state.collectAsState()
+
+        if (state is MangaScreenState.Loading) {
+            LoadingScreen()
+            return
+        }
+
         val dialog by derivedStateOf {
             when (val state = state) {
                 MangaScreenState.Loading -> null
@@ -112,93 +119,88 @@ class MangaController : FullComposeController<MangaPresenter> {
             }
         }
 
-        if (state is MangaScreenState.Success) {
-            val successState = state as MangaScreenState.Success
-            val isHttpSource = remember { successState.source is HttpSource }
+        val successState = state as MangaScreenState.Success
+        val isHttpSource = remember { successState.source is HttpSource }
+        val scope = rememberCoroutineScope()
 
-            val scope = rememberCoroutineScope()
+        MangaScreen(
+            state = successState,
+            snackbarHostState = snackbarHostState,
+            windowWidthSizeClass = calculateWindowWidthSizeClass(),
+            onBackClicked = router::popCurrentController,
+            onChapterClicked = this::openChapter,
+            onDownloadChapter = this::onDownloadChapters.takeIf { !successState.source.isLocalOrStub() },
+            onAddToLibraryClicked = this::onFavoriteClick,
+            onWebViewClicked = this::openMangaInWebView.takeIf { isHttpSource },
+            onTrackingClicked = trackSheet::show.takeIf { successState.trackingAvailable },
+            onTagClicked = this::performGenreSearch,
+            onFilterButtonClicked = settingsSheet::show,
+            onRefresh = presenter::fetchAllFromSource,
+            onContinueReading = this::continueReading,
+            onSearch = this::performSearch,
+            onCoverClicked = this::openCoverDialog,
+            onShareClicked = this::shareManga.takeIf { isHttpSource },
+            onDownloadActionClicked = this::runDownloadChapterAction.takeIf { !successState.source.isLocalOrStub() },
+            onEditCategoryClicked = presenter::promptChangeCategories.takeIf { successState.manga.favorite },
+            onMigrateClicked = this::migrateManga.takeIf { successState.manga.favorite },
+            onMultiBookmarkClicked = presenter::bookmarkChapters,
+            onMultiMarkAsReadClicked = presenter::markChaptersRead,
+            onMarkPreviousAsReadClicked = presenter::markPreviousChapterRead,
+            onMultiDeleteClicked = presenter::showDeleteChapterDialog,
+            onChapterSelected = presenter::toggleSelection,
+            onAllChapterSelected = presenter::toggleAllSelection,
+            onInvertSelection = presenter::invertSelection,
+        )
 
-            MangaScreen(
-                state = successState,
-                snackbarHostState = snackbarHostState,
-                windowWidthSizeClass = calculateWindowWidthSizeClass(),
-                onBackClicked = router::popCurrentController,
-                onChapterClicked = this::openChapter,
-                onDownloadChapter = this::onDownloadChapters.takeIf { !successState.source.isLocalOrStub() },
-                onAddToLibraryClicked = this::onFavoriteClick,
-                onWebViewClicked = this::openMangaInWebView.takeIf { isHttpSource },
-                onTrackingClicked = trackSheet::show.takeIf { successState.trackingAvailable },
-                onTagClicked = this::performGenreSearch,
-                onFilterButtonClicked = settingsSheet::show,
-                onRefresh = presenter::fetchAllFromSource,
-                onContinueReading = this::continueReading,
-                onSearch = this::performSearch,
-                onCoverClicked = this::openCoverDialog,
-                onShareClicked = this::shareManga.takeIf { isHttpSource },
-                onDownloadActionClicked = this::runDownloadChapterAction.takeIf { !successState.source.isLocalOrStub() },
-                onEditCategoryClicked = presenter::promptChangeCategories.takeIf { successState.manga.favorite },
-                onMigrateClicked = this::migrateManga.takeIf { successState.manga.favorite },
-                onMultiBookmarkClicked = presenter::bookmarkChapters,
-                onMultiMarkAsReadClicked = presenter::markChaptersRead,
-                onMarkPreviousAsReadClicked = presenter::markPreviousChapterRead,
-                onMultiDeleteClicked = presenter::showDeleteChapterDialog,
-                onChapterSelected = presenter::toggleSelection,
-                onAllChapterSelected = presenter::toggleAllSelection,
-                onInvertSelection = presenter::invertSelection,
-            )
-
-            val onDismissRequest = { presenter.dismissDialog() }
-            when (val dialog = dialog) {
-                is Dialog.ChangeCategory -> {
-                    ChangeCategoryDialog(
-                        initialSelection = dialog.initialSelection,
-                        onDismissRequest = onDismissRequest,
-                        onEditCategories = {
-                            router.pushController(CategoryController())
-                        },
-                        onConfirm = { include, _ ->
-                            presenter.moveMangaToCategoriesAndAddToLibrary(dialog.manga, include)
-                        },
-                    )
-                }
-                is Dialog.DeleteChapters -> {
-                    DeleteChaptersDialog(
-                        onDismissRequest = onDismissRequest,
-                        onConfirm = {
-                            deleteChapters(dialog.chapters)
-                        },
-                    )
-                }
-                is Dialog.DownloadCustomAmount -> {
-                    DownloadCustomAmountDialog(
-                        maxAmount = dialog.max,
-                        onDismissRequest = onDismissRequest,
-                        onConfirm = { amount ->
-                            val chaptersToDownload = presenter.getUnreadChaptersSorted().take(amount)
-                            if (chaptersToDownload.isNotEmpty()) {
-                                scope.launch { downloadChapters(chaptersToDownload) }
-                            }
-                        },
-                    )
-                }
-                is Dialog.DuplicateManga -> {
-                    DuplicateDialog(
-                        onDismissRequest = onDismissRequest,
-                        onConfirm = {
-                            presenter.toggleFavorite(
-                                onRemoved = {},
-                                onAdded = {},
-                                checkDuplicate = false,
-                            )
-                        },
-                        onOpenManga = { router.pushController(MangaController(dialog.duplicate.id)) },
-                        duplicateFrom = presenter.getSourceOrStub(dialog.duplicate),
-                    )
-                }
-                null -> {}
+        val onDismissRequest = { presenter.dismissDialog() }
+        when (val dialog = dialog) {
+            is Dialog.ChangeCategory -> {
+                ChangeCategoryDialog(
+                    initialSelection = dialog.initialSelection,
+                    onDismissRequest = onDismissRequest,
+                    onEditCategories = {
+                        router.pushController(CategoryController())
+                    },
+                    onConfirm = { include, _ ->
+                        presenter.moveMangaToCategoriesAndAddToLibrary(dialog.manga, include)
+                    },
+                )
             }
-        } else {
-            LoadingScreen()
+            is Dialog.DeleteChapters -> {
+                DeleteChaptersDialog(
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = {
+                        deleteChapters(dialog.chapters)
+                    },
+                )
+            }
+            is Dialog.DownloadCustomAmount -> {
+                DownloadCustomAmountDialog(
+                    maxAmount = dialog.max,
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { amount ->
+                        val chaptersToDownload = presenter.getUnreadChaptersSorted().take(amount)
+                        if (chaptersToDownload.isNotEmpty()) {
+                            scope.launch { downloadChapters(chaptersToDownload) }
+                        }
+                    },
+                )
+            }
+            is Dialog.DuplicateManga -> {
+                DuplicateMangaDialog(
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = {
+                        presenter.toggleFavorite(
+                            onRemoved = {},
+                            onAdded = {},
+                            checkDuplicate = false,
+                        )
+                    },
+                    onOpenManga = { router.pushController(MangaController(dialog.duplicate.id)) },
+                    duplicateFrom = presenter.getSourceOrStub(dialog.duplicate),
+                )
+            }
+            null -> {}
         }
     }
 
@@ -427,7 +429,7 @@ class MangaController : FullComposeController<MangaPresenter> {
         }
     }
 
-    fun deleteChapters(chapters: List<DomainChapter>) {
+    private fun deleteChapters(chapters: List<DomainChapter>) {
         if (chapters.isEmpty()) return
         presenter.deleteChapters(chapters)
     }

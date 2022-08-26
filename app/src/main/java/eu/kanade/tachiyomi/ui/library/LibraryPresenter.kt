@@ -641,7 +641,7 @@ class LibraryPresenter(
     fun getToolbarTitle(): androidx.compose.runtime.State<LibraryToolbarTitle> {
         val category = categories.getOrNull(activeCategory)
 
-        val defaultTitle = stringResource(id = R.string.label_library)
+        val defaultTitle = stringResource(R.string.label_library)
         val categoryName = category?.visualName ?: defaultTitle
 
         val default = remember { LibraryToolbarTitle(defaultTitle) }

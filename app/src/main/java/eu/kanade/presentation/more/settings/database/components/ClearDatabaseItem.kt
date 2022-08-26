@@ -43,7 +43,7 @@ fun ClearDatabaseItem(
                 text = source.visualName,
                 style = MaterialTheme.typography.bodyMedium,
             )
-            Text(text = stringResource(id = R.string.clear_database_source_item_count, count))
+            Text(text = stringResource(R.string.clear_database_source_item_count, count))
         }
         Checkbox(
             checked = isSelected,

@@ -36,7 +36,7 @@ fun DeleteLibraryMangaDialog(
         onDismissRequest = onDismissRequest,
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(id = android.R.string.cancel))
+                Text(text = stringResource(android.R.string.cancel))
             }
         },
         confirmButton = {
@@ -49,11 +49,11 @@ fun DeleteLibraryMangaDialog(
                     )
                 },
             ) {
-                Text(text = stringResource(id = android.R.string.ok))
+                Text(text = stringResource(android.R.string.ok))
             }
         },
         title = {
-            Text(text = stringResource(id = R.string.action_remove))
+            Text(text = stringResource(R.string.action_remove))
         },
         text = {
             Column {
@@ -69,7 +69,7 @@ fun DeleteLibraryMangaDialog(
                                 list = mutableList.toList()
                             },
                         )
-                        Text(text = stringResource(id = state.value))
+                        Text(text = stringResource(state.value))
                     }
                 }
             }

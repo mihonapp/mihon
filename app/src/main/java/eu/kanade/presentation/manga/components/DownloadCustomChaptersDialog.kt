@@ -1,7 +1,6 @@
-package eu.kanade.tachiyomi.ui.manga.chapter
+package eu.kanade.presentation.manga.components
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronLeft
@@ -11,6 +10,8 @@ import androidx.compose.material.icons.outlined.KeyboardDoubleArrowRight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -19,8 +20,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import eu.kanade.tachiyomi.R
 
 @Composable
@@ -34,7 +37,7 @@ fun DownloadCustomAmountDialog(
         onDismissRequest = onDismissRequest,
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(id = android.R.string.cancel))
+                Text(text = stringResource(android.R.string.cancel))
             }
         },
         confirmButton = {
@@ -44,11 +47,11 @@ fun DownloadCustomAmountDialog(
                     onConfirm(amount.coerceIn(0, maxAmount))
                 },
             ) {
-                Text(text = stringResource(id = android.R.string.ok))
+                Text(text = stringResource(R.string.action_download))
             }
         },
         title = {
-            Text(text = stringResource(id = R.string.custom_download))
+            Text(text = stringResource(R.string.custom_download))
         },
         text = {
             val onChangeAmount: (Int) -> Unit = { amount = (amount + it).coerceIn(0, maxAmount) }
@@ -57,7 +60,7 @@ fun DownloadCustomAmountDialog(
             ) {
                 IconButton(
                     onClick = { onChangeAmount(-10) },
-                    enabled = amount > 10,
+                    enabled = amount > 0,
                 ) {
                     Icon(imageVector = Icons.Outlined.KeyboardDoubleArrowLeft, contentDescription = "")
                 }
@@ -67,10 +70,12 @@ fun DownloadCustomAmountDialog(
                 ) {
                     Icon(imageVector = Icons.Outlined.ChevronLeft, contentDescription = "")
                 }
-                BasicTextField(
+                OutlinedTextField(
+                    modifier = Modifier.weight(1f),
                     value = amount.toString(),
                     onValueChange = { onChangeAmount(it.toIntOrNull() ?: 0) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
                 )
                 IconButton(
                     onClick = { onChangeAmount(1) },

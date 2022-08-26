@@ -62,7 +62,7 @@ fun HistoryRegularToolbar(
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     AppBar(
-        title = stringResource(id = R.string.history),
+        title = stringResource(R.string.history),
         actions = {
             IconButton(onClick = onClickSearch) {
                 Icon(Icons.Outlined.Search, contentDescription = stringResource(R.string.action_search))
@@ -105,7 +105,7 @@ fun HistorySearchToolbar(
         actions = {
             AnimatedVisibility(visible = searchQuery.isNotEmpty()) {
                 IconButton(onClick = onClickResetSearch) {
-                    Icon(Icons.Outlined.Close, contentDescription = stringResource(id = R.string.action_reset))
+                    Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.action_reset))
                 }
             }
         },

@@ -110,7 +110,7 @@ fun AppBar(
                     IconButton(onClick = onCancelActionMode) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(id = R.string.action_cancel),
+                            contentDescription = stringResource(R.string.action_cancel),
                         )
                     }
                 } else {
