@@ -1,8 +1,10 @@
 package eu.kanade.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
@@ -85,27 +87,30 @@ fun ChangeCategoryDialog(
         text = {
             Column {
                 selection.forEach { checkbox ->
+                    val onChange: (CheckboxState<Category>) -> Unit = {
+                        val index = selection.indexOf(it)
+                        val mutableList = selection.toMutableList()
+                        mutableList.removeAt(index)
+                        mutableList.add(index, it.next())
+                        selection = mutableList.toList()
+                    }
                     Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onChange(checkbox) },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        val onCheckboxChange: (CheckboxState<Category>) -> Unit = {
-                            val index = selection.indexOf(it)
-                            val mutableList = selection.toMutableList()
-                            mutableList.removeAt(index)
-                            mutableList.add(index, it.next())
-                            selection = mutableList.toList()
-                        }
                         when (checkbox) {
                             is CheckboxState.TriState -> {
                                 TriStateCheckbox(
                                     state = checkbox.asState(),
-                                    onClick = { onCheckboxChange(checkbox) },
+                                    onClick = { onChange(checkbox) },
                                 )
                             }
                             is CheckboxState.State -> {
                                 Checkbox(
                                     checked = checkbox.isChecked,
-                                    onCheckedChange = { onCheckboxChange(checkbox) },
+                                    onCheckedChange = { onChange(checkbox) },
                                 )
                             }
                         }

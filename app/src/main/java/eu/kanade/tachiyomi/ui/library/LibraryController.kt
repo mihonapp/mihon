@@ -13,6 +13,7 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.presentation.components.ChangeCategoryDialog
+import eu.kanade.presentation.components.DeleteLibraryMangaDialog
 import eu.kanade.presentation.library.LibraryScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
