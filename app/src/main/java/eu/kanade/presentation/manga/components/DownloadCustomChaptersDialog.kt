@@ -54,18 +54,18 @@ fun DownloadCustomAmountDialog(
             Text(text = stringResource(R.string.custom_download))
         },
         text = {
-            val onChangeAmount: (Int) -> Unit = { amount = (amount + it).coerceIn(0, maxAmount) }
+            val setAmount: (Int) -> Unit = { amount = it.coerceIn(0, maxAmount) }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
-                    onClick = { onChangeAmount(-10) },
+                    onClick = { setAmount(amount - 10) },
                     enabled = amount > 0,
                 ) {
                     Icon(imageVector = Icons.Outlined.KeyboardDoubleArrowLeft, contentDescription = "")
                 }
                 IconButton(
-                    onClick = { onChangeAmount(-1) },
+                    onClick = { setAmount(amount - 1) },
                     enabled = amount > 0,
                 ) {
                     Icon(imageVector = Icons.Outlined.ChevronLeft, contentDescription = "")
@@ -73,18 +73,18 @@ fun DownloadCustomAmountDialog(
                 OutlinedTextField(
                     modifier = Modifier.weight(1f),
                     value = amount.toString(),
-                    onValueChange = { onChangeAmount(it.toIntOrNull() ?: 0) },
+                    onValueChange = { setAmount(it.toIntOrNull() ?: 0) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
                 )
                 IconButton(
-                    onClick = { onChangeAmount(1) },
+                    onClick = { setAmount(amount + 1) },
                     enabled = amount < maxAmount,
                 ) {
                     Icon(imageVector = Icons.Outlined.ChevronRight, contentDescription = "")
                 }
                 IconButton(
-                    onClick = { onChangeAmount(10) },
+                    onClick = { setAmount(amount + 10) },
                     enabled = amount < maxAmount,
                 ) {
                     Icon(imageVector = Icons.Outlined.KeyboardDoubleArrowRight, contentDescription = "")
