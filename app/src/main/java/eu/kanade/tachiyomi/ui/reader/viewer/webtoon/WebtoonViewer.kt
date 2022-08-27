@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.model.StencilPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
@@ -152,6 +153,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         config.navigationModeChangedListener = {
             val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)
+        }
+
+        config.longStripSplitChangedListener = { enabled ->
+            if (!enabled) {
+                cleanupSplitStrips()
+            }
         }
 
         frame.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
@@ -353,5 +360,16 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             max(0, position - 3),
             min(position + 3, adapter.itemCount - 1),
         )
+    }
+
+    fun onLongStripSplit(currentStrip: Any?, newStrips: List<StencilPage>) {
+        activity.runOnUiThread {
+            // Need to insert on UI thread else images will go blank
+            adapter.onLongStripSplit(currentStrip, newStrips)
+        }
+    }
+
+    private fun cleanupSplitStrips() {
+        adapter.cleanupSplitStrips()
     }
 }

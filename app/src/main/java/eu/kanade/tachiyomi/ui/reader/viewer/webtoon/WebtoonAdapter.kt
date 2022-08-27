@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.model.StencilPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.hasMissingChapters
 import eu.kanade.tachiyomi.util.system.createReaderThemeContext
+import eu.kanade.tachiyomi.util.system.logcat
 
 /**
  * RecyclerView Adapter used by this [viewer] to where [ViewerChapters] updates are posted.
@@ -24,6 +26,26 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
         private set
 
     var currentChapter: ReaderChapter? = null
+
+    fun onLongStripSplit(currentStrip: Any?, newStrips: List<StencilPage>) {
+        if (currentStrip is StencilPage) return
+
+        val placeAtIndex = items.indexOf(currentStrip) + 1
+        // Stop constantly adding split images
+        if (items[placeAtIndex] is StencilPage) return
+
+        val updatedItems = items.toMutableList()
+        updatedItems.addAll(placeAtIndex, newStrips)
+        updateItems(updatedItems)
+        logcat { "New adapter item count is $itemCount" }
+    }
+
+    fun cleanupSplitStrips() {
+        if (items.any { it is StencilPage }) {
+            val updatedItems = items.filterNot { it is StencilPage }
+            updateItems(updatedItems)
+        }
+    }
 
     /**
      * Context that has been wrapped to use the correct theme values based on the
@@ -79,6 +101,10 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
             }
         }
 
+        updateItems(newItems)
+    }
+
+    private fun updateItems(newItems: List<Any>) {
         val result = DiffUtil.calculateDiff(Callback(items, newItems))
         items = newItems
         result.dispatchUpdatesTo(this)

@@ -83,11 +83,13 @@ class PreferencesHelper(val context: Context) {
 
     fun dualPageSplitPaged() = flowPrefs.getBoolean("pref_dual_page_split", false)
 
-    fun dualPageSplitWebtoon() = flowPrefs.getBoolean("pref_dual_page_split_webtoon", false)
-
     fun dualPageInvertPaged() = flowPrefs.getBoolean("pref_dual_page_invert", false)
 
+    fun dualPageSplitWebtoon() = flowPrefs.getBoolean("pref_dual_page_split_webtoon", false)
+
     fun dualPageInvertWebtoon() = flowPrefs.getBoolean("pref_dual_page_invert_webtoon", false)
+
+    fun longStripSplitWebtoon() = flowPrefs.getBoolean("pref_long_strip_split_webtoon", true)
 
     fun showReadingMode() = prefs.getBoolean(Keys.showReadingMode, true)
 

@@ -289,6 +289,11 @@ class SettingsReaderController : SettingsController() {
                 summaryRes = R.string.pref_dual_page_invert_summary
                 visibleIf(preferences.dualPageSplitWebtoon()) { it }
             }
+            switchPreference {
+                bindTo(preferences.longStripSplitWebtoon())
+                titleRes = R.string.pref_long_strip_split
+                summaryRes = R.string.pref_long_strip_split_summary
+            }
         }
 
         preferenceCategory {

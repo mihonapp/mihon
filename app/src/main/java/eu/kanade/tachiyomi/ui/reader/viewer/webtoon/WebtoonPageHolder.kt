@@ -14,10 +14,12 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.model.StencilPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.ImageUtil
+import eu.kanade.tachiyomi.util.system.ImageUtil.SplitData
 import eu.kanade.tachiyomi.util.system.dpToPx
 import rx.Observable
 import rx.Subscription
@@ -274,17 +276,37 @@ class WebtoonPageHolder(
     }
 
     private fun process(imageStream: BufferedInputStream): InputStream {
-        if (!viewer.config.dualPageSplit) {
-            return imageStream
+        if (viewer.config.dualPageSplit) {
+            val isDoublePage = ImageUtil.isWideImage(imageStream)
+            if (isDoublePage) {
+                val upperSide = if (viewer.config.dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
+                return ImageUtil.splitAndMerge(imageStream, upperSide)
+            }
         }
 
-        val isDoublePage = ImageUtil.isWideImage(imageStream)
-        if (!isDoublePage) {
-            return imageStream
+        if (viewer.config.longStripSplit) {
+            if (page is StencilPage) {
+                val splitData = (page as StencilPage).splitData
+                return ImageUtil.splitStrip(imageStream, splitData)
+            }
+
+            val isStripSplitNeeded = ImageUtil.isStripSplitNeeded(imageStream)
+            if (isStripSplitNeeded) {
+                val splitData = onStripSplit(imageStream)
+                splitData?.let { return ImageUtil.splitStrip(imageStream, it) }
+            }
         }
 
-        val upperSide = if (viewer.config.dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
-        return ImageUtil.splitAndMerge(imageStream, upperSide)
+        return imageStream
+    }
+
+    private fun onStripSplit(imageStream: BufferedInputStream): SplitData? {
+        val page = page ?: return null
+        val splitData = ImageUtil.getSplitDataForStream(imageStream).toMutableList()
+        val toReturn = splitData.removeFirstOrNull()
+        val newPages = splitData.map { StencilPage(page, it) }
+        viewer.onLongStripSplit(page, newPages)
+        return toReturn
     }
 
     /**
