@@ -73,7 +73,7 @@ fun ChangeCategoryDialog(
                         onDismissRequest()
                         onConfirm(
                             selection.filter { it is CheckboxState.State.Checked || it is CheckboxState.TriState.Include }.map { it.value.id },
-                            selection.filter { it is CheckboxState.TriState.Exclude }.map { it.value.id },
+                            selection.filter { it is CheckboxState.State.None || it is CheckboxState.TriState.None }.map { it.value.id },
                         )
                     },
                 ) {
