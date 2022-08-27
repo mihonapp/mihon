@@ -747,7 +747,7 @@
     <string name="source_empty_screen">No se ha encontrado ninguna fuente</string>
     <string name="action_sort_last_manga_update">Última actualización de manga</string>
     <string name="action_sort_unread_count">Capítulos restantes</string>
-    <string name="split_tall_images">Dividir automáticamente imágenes demasiado altas</string>
+    <string name="split_tall_images">Dividir imágenes demasiado altas</string>
     <string name="split_tall_images_summary">Mejora el rendimiento del lector dividiendo páginas descargadas mucho más altas que anchas.</string>
     <string name="download_notifier_split_page_not_found">No se ha encontrado la página %d al dividir</string>
     <string name="download_notifier_split_page_path_not_found">La ruta al archivo de la página %d no se encuentra</string>
@@ -781,4 +781,15 @@
     <string name="loader_rar5_error">El formato RARv5 no se entiende</string>
     <string name="appwidget_updates_description">Ver el manga actualizado de forma reciente</string>
     <string name="appwidget_unavailable_locked">El widget no está disponible cuando el bloqueo de aplicación está activo</string>
+    <string name="update_already_running">Ya se está actualizando</string>
+    <string name="theme_tidalwave">Marea</string>
+    <string name="error_user_agent_string_blank">La cadena con el agente de usuario no puede estar vacía</string>
+    <string name="download_ahead_info">Solo funciona en manga que ya esté en tu biblioteca y cuando el capítulo actual y el que va después ya estén descargados</string>
+    <string name="download_ahead">Descargar por adelantado</string>
+    <string name="auto_download_while_reading">Descarga los capítulos siguientes mientras lees</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">El siguiente capítulo sin leer</item>
+        <item quantity="other">Los siguientes %d capítulos sin leer</item>
+    </plurals>
+    <string name="are_you_sure">¿Estás seguro\?</string>
 </resources>

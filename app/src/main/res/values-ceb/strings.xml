@@ -496,4 +496,15 @@
         <item quantity="one">%1$s ang nahibilin</item>
         <item quantity="other">%1$s ang nahibilin</item>
     </plurals>
+    <string name="logout_success">Naka-log out ka na karon</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="logout_title">Log out gikan sa %1$s\?</string>
+    <string name="logout">Log out</string>
+    <string name="login_success">Naka-log in</string>
+    <string name="login_title">Login sa %1$s</string>
+    <string name="email">Email Address</string>
+    <string name="invalid_login">Dili maka log in</string>
+    <string name="unknown_error">Wala mailhi nga sayup</string>
+    <string name="username">Username</string>
 </resources>

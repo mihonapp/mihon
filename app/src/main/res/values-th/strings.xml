@@ -649,7 +649,7 @@
     <string name="theme_tealturquoise">ทีลและเทอร์ควอยซ์</string>
     <string name="theme_yinyang">หยินหยาง</string>
     <string name="theme_yotsuba">โยทซึบะ</string>
-    <string name="pref_dark_theme_pure_black">โหมดมืดดำบริสุทธิ์</string>
+    <string name="pref_dark_theme_pure_black">โหมดมืดดำสนิท</string>
     <string name="pref_category_navigation">แถบนำทาง</string>
     <string name="alignment_top">บน</string>
     <string name="alignment_center">ตรงกลาง</string>
@@ -704,9 +704,9 @@
     <string name="source_empty_screen">ไม่พบแหล่งที่มาใด ๆ</string>
     <string name="action_sort_unread_count">จำนวนตอนที่ยังไม่ได้อ่าน</string>
     <string name="action_sort_last_manga_update">มังงะที่อัปเดตล่าสุด</string>
-    <string name="split_tall_images">แยกรูปภาพที่สูงยาวออกโดยอัตโนมัติ</string>
+    <string name="split_tall_images">แยกรูปภาพสูงยาว</string>
     <string name="download_notifier_split_page_not_found">ไม่พบหน้า %d ขณะกำลังแยกหน้า</string>
-    <string name="split_tall_images_summary">เพิ่มประสิทธิภาพตัวอ่านด้วยการแยกรูปภาพที่สูงยาวที่ดาวน์โหลดไว้</string>
+    <string name="split_tall_images_summary">เพิ่มประสิทธิภาพตัวอ่าน</string>
     <string name="download_notifier_split_page_path_not_found">ไม่พบตำแหน่งไฟล์ของหน้า %d</string>
     <string name="pref_reset_viewer_flags">รีเซ็ตค่ากำหนดตัวอ่านตามเรื่อง</string>
     <string name="pref_reset_viewer_flags_summary">รีเซ็ตโหมดการอ่านและการจัดวางของทุกเรื่อง</string>
@@ -738,4 +738,13 @@
     <string name="loader_rar5_error">ไม่รับรองรูปแบบ RARv5</string>
     <string name="appwidget_updates_description">แสดงมังงะที่อัปเดตล่าสุดของคุณ</string>
     <string name="appwidget_unavailable_locked">วิดเจ็ตไม่พร้อมใช้งานขณะการล็อกแอปเปิดไว้</string>
+    <string name="error_user_agent_string_blank">สตริงตัวแทนผู้ใช้ไม่สามารถทิ้งว่างเปล่าไว้ได้</string>
+    <string name="update_already_running">กำลังอัปเดตอยู่แล้ว</string>
+    <string name="theme_tidalwave">ไทเดลเวฟ</string>
+    <string name="download_ahead">ดาวน์โหลดล่วงหน้า</string>
+    <string name="auto_download_while_reading">ดาวน์โหลดอัตโนมัติขณะกำลังอ่าน</string>
+    <string name="download_ahead_info">ใช้ได้เฉพาะกับรายการที่อยู่ในคลังและตอนปัจจุบันกับตอนถัด ๆ ไปดาวน์โหลดไว้อยู่แล้ว</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">%d ตอนที่ยังไม่ได้อ่านถัดไป</item>
+    </plurals>
 </resources>

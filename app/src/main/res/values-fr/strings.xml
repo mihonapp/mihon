@@ -76,7 +76,7 @@
     <string name="all">Tout</string>
     <string name="pref_library_update_restriction">Restrictions matérielles pour les mises à jour automatiques</string>
     <string name="charging">Lors de la charge</string>
-    <string name="pref_update_only_non_completed">Avec le statut « achevé »</string>
+    <string name="pref_update_only_non_completed">Ayant comme statut « Terminé »</string>
     <string name="pref_auto_update_manga_sync">Synchroniser la progression après lecture</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Plein écran</string>
@@ -318,7 +318,7 @@
     <string name="track_author">Auteur</string>
     <string name="migration_dialog_what_to_include">Sélectionner les données à inclure</string>
     <string name="label_migration">Migrer</string>
-    <string name="label_extension_info">Informations de l\'extension</string>
+    <string name="label_extension_info">Informations sur l\'extension</string>
     <string name="all_lang">Toutes</string>
     <string name="ext_trust">Fiable</string>
     <string name="ext_untrusted">Non fiable</string>
@@ -580,7 +580,7 @@
     <string name="action_asc">Croissante</string>
     <string name="action_order_by_chapter_number">Par numéro de chapitre</string>
     <string name="action_order_by_upload_date">Par date de téléversement</string>
-    <string name="action_filter_tracked">Suivi</string>
+    <string name="action_filter_tracked">Suivis</string>
     <string name="action_display_show_number_of_items">Afficher le nombre d’entrées</string>
     <string name="right_and_left_nav">Droite et gauche</string>
     <string name="pref_dual_page_split">Double page partagée</string>
@@ -711,7 +711,7 @@
     <string name="pref_update_only_completely_read">Avec des chapitres non lus</string>
     <string name="save_chapter_as_cbz">Enregistrer comme archive CBZ</string>
     <string name="library_errors_help">Pour savoir comment corriger les erreurs de mise à jour de la bibliothèque, voir %1$s</string>
-    <string name="on_hiatus">En attente</string>
+    <string name="on_hiatus">En pause</string>
     <string name="publishing_finished">Publication terminée</string>
     <string name="cancelled">Annulé</string>
     <string name="action_faq_and_guides">FAQ et guides</string>
@@ -722,15 +722,15 @@
     <string name="confirm_manga_add_duplicate">Vous avez une entrée dans votre bibliothèque portant le même nom mais provenant d\'une source différente (%1$s).
 \n
 \nSouhaitez-vous toujours continuer \?</string>
-    <string name="pref_navigate_pan">Naviguer jusqu\'au panoramique</string>
+    <string name="pref_navigate_pan">Déplacements latéraux en mode zoom</string>
     <string name="pref_landscape_zoom">Agrandir les images en paysage</string>
     <string name="pref_update_only_started">Qui n\'ont pas encore commencé</string>
     <string name="action_filter_started">Commencé</string>
-    <string name="skipped_reason_completed">Sauté car la série est complète</string>
+    <string name="skipped_reason_completed">Sauté car la série est terminée</string>
     <string name="skipped_reason_not_started">Sauté car aucun chapitre n\'est lu</string>
     <string name="skipped_reason_not_caught_up">Sauté car il y a des chapitres non lus</string>
     <string name="learn_more">Appuyez pour en savoir plus</string>
-    <string name="notification_update_skipped">%1$d mise à jour(s) ignorée(s)</string>
+    <string name="notification_update_skipped">%1$d mise(s) à jour ignorée(s)</string>
     <string name="notification_update_error">Échec de %1$d mise(s) à jour</string>
     <string name="channel_skipped">Ignoré</string>
     <string name="rotation_reverse_portrait">Portrait inversé</string>
@@ -750,8 +750,8 @@
     <string name="action_sort_last_manga_update">Dernière mise à jour du manga</string>
     <string name="action_sort_unread_count">Nombre de non-lus</string>
     <string name="source_empty_screen">Aucune source trouvée</string>
-    <string name="split_tall_images">Division automatique des grandes images</string>
-    <string name="split_tall_images_summary">Améliore les performances du lecteur en fractionnant les grandes images téléchargées.</string>
+    <string name="split_tall_images">Fractionner les images trop grandes</string>
+    <string name="split_tall_images_summary">Améliore les performances du lecteur</string>
     <string name="download_notifier_split_page_not_found">Page %d introuvable lors du fractionnement</string>
     <string name="download_notifier_split_page_path_not_found">Impossible de trouver le chemin du fichier de la page %d</string>
     <string name="pref_reset_viewer_flags">Réinitialiser les paramètres du lecteur par série</string>
@@ -772,16 +772,26 @@
     <string name="cant_open_last_read_chapter">Impossible d\'ouvrir le dernier chapitre lu</string>
     <string name="custom_cover">Couverture personnalisée</string>
     <string name="not_installed">Non installé</string>
-    <string name="pref_app_language">Pas installé</string>
+    <string name="pref_app_language">Langue de l\'application</string>
     <string name="description_placeholder">Aucune description</string>
     <string name="theme_lavender">Lavande</string>
     <string name="delete_category">Effacer catégorie</string>
     <string name="delete_category_confirmation">Souhaitez-vous supprimer la catégorie « %s » \?</string>
     <string name="internal_error">ErreurInterne : Vérifiez votre journal de plante pour plus d\'information</string>
-    <string name="pref_reset_user_agent_string">Réinitialiser le numéro d\'utilisateur par défaut</string>
-    <string name="pref_user_agent_string">Numéro d\'utilisateur par défaut</string>
+    <string name="pref_reset_user_agent_string">Réinitialiser la liste d\'agents utilisateurs</string>
+    <string name="pref_user_agent_string">Liste d\'agents utilisateurs par défaut</string>
     <string name="action_remove_everything">Tout retirer</string>
     <string name="loader_rar5_error">Le format RARv5 n\'est pas supporté</string>
     <string name="appwidget_updates_description">Voir vos derniers mangas mis à jour</string>
     <string name="appwidget_unavailable_locked">Le Widget n\'est pas disponible lorsque l\'application est verrouillée</string>
+    <string name="error_user_agent_string_blank">La liste d\'agents utilisateurs ne peut être vide</string>
+    <string name="update_already_running">Une mise à jour est déjà en cours</string>
+    <string name="theme_tidalwave">Raz-de-marée</string>
+    <string name="download_ahead">Télécharger à l\'avance</string>
+    <string name="auto_download_while_reading">Téléchargement automatique pendant la lecture</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Chapitre suivant non lu</item>
+        <item quantity="other">%d chapitres suivants non lus</item>
+    </plurals>
+    <string name="download_ahead_info">Fonctionne seulement sur les entrées de la bibliothèque et si le chapitre actuel et le suivant sont déjà téléchargés</string>
 </resources>

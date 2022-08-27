@@ -145,7 +145,7 @@
     <string name="pref_backup_service_category">Sandaran automatik</string>
     <string name="pref_backup_interval">Kekerapan sandaran</string>
     <string name="pref_backup_slots">Sandaran maksimum</string>
-    <string name="backup_created">Sandaran dibuat</string>
+    <string name="backup_created">Sandaran dicipta</string>
     <string name="restore_completed">Pemulihan selesai</string>
     <string name="backup_choice">Apakah yang ingin anda sandarkan?</string>
     <string name="restoring_backup">Dalam proses memulihkan sandaran</string>
@@ -350,7 +350,7 @@
     <string name="information_webview_outdated">Sila kemas kini aplikasi WebView untuk keserasian yang lebih baik</string>
     <string name="channel_new_chapters">Pengemaskinian bab</string>
     <string name="unlock_app">Buka kunci Tachiyomi</string>
-    <string name="secure_screen_summary">Skrin selamat menyembunyikan kandungan aplikasi apabila menukar aplikasi dan sekat tangkapan skrin</string>
+    <string name="secure_screen_summary">Skrin keselamatan menyembunyikan kandungan aplikasi apabila menukar aplikasi dan sekat tangkapan skrin</string>
     <string name="pref_category_display">Paparan</string>
     <plurals name="notification_chapters_generic">
         <item quantity="other">%1$d bab baharu</item>
@@ -417,7 +417,7 @@
     <string name="confirm_exit">Tekan kembali sekali lagi untuk keluar</string>
     <string name="label_downloaded_only">Dimuat turun sahaja</string>
     <string name="last_used_source">Terakhir digunakan</string>
-    <string name="check_for_updates">Semak untuk pengemaskinian</string>
+    <string name="check_for_updates">Semak untuk kemas kini</string>
     <string name="local_source_help_guide">Panduan penggunaan sumber setempat</string>
     <string name="restore_duration">%02d minit, %02d saat</string>
     <string name="downloaded_only_summary">Tapis semua manga di dalam pustaka anda</string>
@@ -600,7 +600,7 @@
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin &amp; Yang</string>
     <string name="theme_tako">Tako</string>
-    <string name="theme_midnightdusk">Suasana tengah malam</string>
+    <string name="theme_midnightdusk">Midnight Dusk</string>
     <string name="theme_greenapple">Epal Hijau</string>
     <string name="theme_monet">Dinamik</string>
     <string name="pref_app_theme">Tema aplikasi</string>
@@ -661,13 +661,13 @@
     <string name="clear_database_source_item_count">%1$d manga bukan pustaka dalam pangkalan data</string>
     <string name="extension_api_error">Gagal mendapatkan senarai sambungan</string>
     <string name="privacy_policy">Dasar privasi</string>
-    <string name="pref_library_update_manga_restriction">Langkau mengemaskini siri</string>
+    <string name="pref_library_update_manga_restriction">Langkau mengemas kini judul</string>
     <string name="pref_update_only_completely_read">Dengan bab yang belum dibaca</string>
     <string name="library_errors_help">Untuk bantuan cara menyelesaikan ralat kemas kini pustaka, lihat %1$s</string>
     <string name="save_chapter_as_cbz">Simpan sebagai arkib CBZ</string>
     <string name="cancelled">Dibatalkan</string>
     <string name="publishing_finished">Penerbitan selesai</string>
-    <string name="on_hiatus">Dalam keadaan rehat</string>
+    <string name="on_hiatus">Dalam hiatus</string>
     <string name="action_faq_and_guides">Soalan Lazim dan Panduan</string>
     <string name="backup_restore_invalid_uri">Ralat: tiada URI</string>
     <string name="webtoon_side_padding_5">5%</string>
@@ -680,7 +680,7 @@
     <string name="skipped_reason_completed">Dilangkau kerana siri sudah lengkap</string>
     <string name="pref_update_only_started">Yang mana bacaan belum dimulakan</string>
     <string name="skipped_reason_not_caught_up">Dilangkau kerana ada bab yang belum dibaca</string>
-    <string name="skipped_reason_not_started">Dilangkau kerana masih belum membaca mana-mana bab</string>
+    <string name="skipped_reason_not_started">Dilangkau kerana tiada bab yang dibaca</string>
     <string name="pref_landscape_zoom">Zum imej landskap</string>
     <string name="pref_navigate_pan">Navigasi seperti panorama</string>
     <string name="notification_update_error">%1$d kemas kini gagal</string>
@@ -704,8 +704,8 @@
     <string name="source_empty_screen">Tiada sumber ditemui</string>
     <string name="action_sort_unread_count">Kiraan belum dibaca</string>
     <string name="action_sort_last_manga_update">Kemas kini manga terakhir</string>
-    <string name="split_tall_images">Auto memisah imej yang tinggi</string>
-    <string name="split_tall_images_summary">Meninggkatkan prestasi pembaca dengan memisah imej yang tinggi yang telah dimuat turun.</string>
+    <string name="split_tall_images">Memisah imej yang tinggi</string>
+    <string name="split_tall_images_summary">Meningkatkan prestasi pembaca</string>
     <string name="download_notifier_split_page_not_found">Muka surat %d tidak dijumpai ketika memisah</string>
     <string name="download_notifier_split_page_path_not_found">Lokasi fail muka surat %d tidak ditemui</string>
     <string name="pref_reset_viewer_flags_summary">Menetapkan semula mod bacaan dan orientasi semua siri</string>
@@ -738,4 +738,14 @@
     <string name="loader_rar5_error">Format RARv5 tidak disokong</string>
     <string name="appwidget_unavailable_locked">Widget tidak tersedia apabila kekunci apl digunakan</string>
     <string name="appwidget_updates_description">Lihat kemas kini manga terkini anda</string>
+    <string name="update_already_running">Kemas kini sedang berjalan</string>
+    <string name="error_user_agent_string_blank">Untaian ejen pengguna tidak boleh kosong</string>
+    <string name="auto_download_while_reading">Muat turun automatik semasa membaca</string>
+    <string name="theme_tidalwave">Tidal Wave</string>
+    <string name="download_ahead">Muat turun maju</string>
+    <string name="download_ahead_info">Hanya berguna pada kemasukan dalam pustaka dan sekiranya bab sekarang dan seterusnya telah dimuat turun</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">%d bab tidak dibaca seterusnya</item>
+    </plurals>
+    <string name="are_you_sure">Adakah anda pasti\?</string>
 </resources>

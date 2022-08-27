@@ -89,7 +89,7 @@
     <string name="file_select_backup">Выбрать файл резервной копии</string>
     <string name="file_select_cover">Выбрать обложку</string>
     <string name="fourth_to_last">Четвёртая от прочитанной главы</string>
-    <string name="information_empty_library">Пустая библиотека</string>
+    <string name="information_empty_library">Ваша библиотека пуста</string>
     <string name="information_no_downloads">Нет загрузок</string>
     <string name="information_no_recent">Нет новых обновлений</string>
     <string name="information_no_recent_manga">Ничего не прочитано в последнее время</string>
@@ -109,7 +109,7 @@
     <string name="login_success">Успешный вход</string>
     <string name="login_title">Войти в %1$s</string>
     <string name="manga_download">Загрузить</string>
-    <string name="manga_not_in_db">Эта серия была удалена из базы данных</string>
+    <string name="manga_not_in_db">Эта серия была удалена из базы данных.</string>
     <string name="manga_tracking_tab">Отслеживание</string>
     <string name="name">Название</string>
     <string name="no_next_chapter">Следующая глава не найдена</string>
@@ -251,7 +251,7 @@
     <string name="latest">Последняя</string>
     <string name="browse">Поисковик</string>
     <string name="channel_common">Общий</string>
-    <string name="information_empty_category">Нет категорий. Нажмите кнопку «Добавить» чтобы создать категорию для организации библиотеки</string>
+    <string name="information_empty_category">Нет категорий в библиотеке. Нажмите кнопку «Добавить» чтобы создать категорию для организации вашей библиотеки.</string>
     <string name="label_migration">Миграция</string>
     <string name="label_extensions">Расширения</string>
     <string name="label_extension_info">Информация о расширении</string>
@@ -269,7 +269,7 @@
 \n
 \nВредоносное расширение может считывать любые учетные данные для входа, хранящиеся в Tachiyomi, или выполнять произвольный код.
 \n
-\nДоверяя этому сертификату, вы принимаете эти риски</string>
+\nДоверяя этому сертификату, вы принимаете эти риски.</string>
     <string name="pref_double_tap_anim_speed">Скорость анимации при двойном нажатии</string>
     <string name="double_tap_anim_speed_0">Без анимации</string>
     <string name="double_tap_anim_speed_normal">Нормальная</string>
@@ -319,7 +319,7 @@
     <string name="pref_category_library">Библиотека</string>
     <string name="invalid_download_dir">Недопустимая папка для загрузок</string>
     <string name="ext_obsolete">Устарело</string>
-    <string name="obsolete_extension_message">Это расширение больше недоступно</string>
+    <string name="obsolete_extension_message">Это расширение больше недоступно.</string>
     <string name="pref_date_format">Формат даты</string>
     <string name="pref_category_library_update">Глобальное обновление</string>
     <string name="logout_title">Выйти из %1$s\?</string>
@@ -461,14 +461,14 @@
         <item quantity="many">Выполнено за %1$s с %2$s ошибками</item>
         <item quantity="other">Выполнено за %1$s с %2$s ошибками</item>
     </plurals>
-    <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сервисах отслеживания. Настройте отслеживание при помощи кнопки «Отслеживание»</string>
+    <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сервисах отслеживания. Настройте отслеживание при помощи кнопки «Отслеживание».</string>
     <string name="action_display_unread_badge">Непрочитанные главы</string>
-    <string name="unofficial_extension_message">Это расширение не входит в официальный список расширений Tachiyomi</string>
+    <string name="unofficial_extension_message">Это расширение не входит в официальный список расширений Tachiyomi.</string>
     <string name="ext_unofficial">Неофициальное</string>
     <string name="sort_by_upload_date">Дата загрузки</string>
     <string name="label_data">Данные</string>
     <string name="backup_restore_missing_sources">Отсутствующие источники:</string>
-    <string name="invalid_backup_file_missing_manga">Резервная копия не содержит серий</string>
+    <string name="invalid_backup_file_missing_manga">Резервная копия не содержит серий.</string>
     <string name="invalid_backup_file">Неверный файл резервной копии</string>
     <string name="tracker_not_logged_in">Не выполнен вход: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">При обновлении библиотеки проверять наличие новой обложки и сведений</string>
@@ -525,7 +525,7 @@
     <string name="pref_category_delete_chapters">Удаление глав</string>
     <string name="ext_nsfw_warning">Источики из этого расширения могут содержать контент NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Это не предотвращает появление внутри приложения контента NSFW (18+) из неофициальных или потенциально неправильно помеченных расширений</string>
+    <string name="parental_controls_info">Это не предотвращает появление внутри приложения контента NSFW (18+) из неофициальных или потенциально неправильно помеченных расширений.</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Отсутствует %d глава</item>
         <item quantity="few">Отсутствуют %d главы</item>
@@ -545,7 +545,7 @@
     <string name="pref_incognito_mode_summary">Приостанавливает историю чтения</string>
     <string name="pref_incognito_mode">Режим инкогнито</string>
     <string name="pref_clear_history">Очистить историю</string>
-    <string name="clear_history_confirmation">Вы уверены\? Вся история будет удалена</string>
+    <string name="clear_history_confirmation">Вы уверены\? Вся история будет удалена.</string>
     <string name="clear_history_completed">История удалена</string>
     <string name="spen_next_page">Следующая страница</string>
     <string name="spen_previous_page">Предыдущая страница</string>
@@ -576,7 +576,7 @@
     <string name="pref_dual_page_invert_summary">Если двухстраничное разделение не соответствует направлению чтения</string>
     <string name="backup_restore_content_full">Данные из файла резервной копии будут восстановлены.
 \n
-\nВам будет нужно установить все недостающие расширения и после этого авторизоваться в сервисах отслеживания для их использования</string>
+\nВам будет нужно установить все недостающие расширения и после этого авторизоваться в сервисах отслеживания для их использования.</string>
     <string name="nav_zone_left">Слева</string>
     <string name="nav_zone_right">Справа</string>
     <string name="nav_zone_next">Следующая</string>
@@ -588,8 +588,8 @@
     <string name="exclude">Исключать: %s</string>
     <string name="include">Включать: %s</string>
     <string name="action_sort_chapter_fetch_date">Дата получения главы</string>
-    <string name="pref_download_new_categories_details">Серия не будет загружаться в исключённых категориях, даже если находится во включённых категориях</string>
-    <string name="pref_library_update_categories_details">Серия не будет обновляться в исключённых категориях, даже если находится во включённых категориях</string>
+    <string name="pref_download_new_categories_details">Серия в исключённых категориях не будет загружаться, даже если находится во включённых категориях.</string>
+    <string name="pref_library_update_categories_details">Серия в исключённых категориях не будет обновляться, даже если находится во включённых категориях.</string>
     <string name="pref_category_auto_download">Автозагрузка</string>
     <string name="action_show_errors">Нажать, чтобы увидеть подробности</string>
     <string name="update_check_eol">Эта версия Android больше не поддерживается</string>
@@ -627,7 +627,7 @@
     <string name="alignment_top">По верху</string>
     <string name="categorized_display_settings">Каждая категория имеет собственные настройки</string>
     <string name="tracking_guide">Руководство по отслеживанию</string>
-    <string name="information_empty_category_dialog">Библиотека не имеет категорий</string>
+    <string name="information_empty_category_dialog">Ваша библиотека не имеет категорий.</string>
     <string name="action_start_downloading_now">Начать загрузку сейчас</string>
     <string name="theme_greenapple">Зелёное Яблоко</string>
     <string name="pref_app_theme">Тема приложения</string>
@@ -638,11 +638,11 @@
     <string name="theme_strawberrydaiquiri">Клубничный Дайкири</string>
     <string name="theme_midnightdusk">Полуночные Сумерки</string>
     <string name="notification_updating">Обновление библиотеки… (%1$d/%2$d)</string>
-    <string name="about_dont_kill_my_app">У некоторых производителей есть дополнительные ограничения для приложений, которые убивают фоновые службы. На этом сайте есть более подробная информация о том, как это исправить</string>
-    <string name="restore_miui_warning">Резервная копия/Восстановление может не работать должным образом, если отключена «Оптимизация MIUI»</string>
-    <string name="enhanced_tracking_info">Сервисы, предоставляющие расширенные возможности для определённых источников. Серия будет автоматически отслеживаться при добавлении в библиотеку</string>
+    <string name="about_dont_kill_my_app">У некоторых производителей есть дополнительные ограничения для приложений, которые убивают фоновые службы. На этом сайте есть более подробная информация о том, как это исправить.</string>
+    <string name="restore_miui_warning">Резервная копия/Восстановление может не работать должным образом, если отключена «Оптимизация MIUI».</string>
+    <string name="enhanced_tracking_info">Сервисы, предоставляющие расширенные возможности для определённых источников. Серия будет автоматически отслеживаться при добавлении в библиотеку.</string>
     <string name="enhanced_services">Расширенные сервисы</string>
-    <string name="tracker_komga_warning">Этот сервис отслеживания совместим только с источником Komga</string>
+    <string name="tracker_komga_warning">Этот сервис отслеживания совместим только с источником Komga.</string>
     <string name="theme_monet">Динамическая</string>
     <string name="label_background_activity">Фоновая активность</string>
     <string name="pref_lowest">Самая низкая</string>
@@ -674,7 +674,7 @@
     <string name="pref_remove_exclude_categories">Исключённые категории</string>
     <string name="help_translate">Помочь с переводом</string>
     <string name="ext_app_info">О приложении</string>
-    <string name="ext_installer_shizuku_unavailable_dialog">Установите и запустите Shizuku, чтобы использовать его как установщик расширений</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">Установите и запустите Shizuku, чтобы использовать его как установщик расширений.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku не работает</string>
     <string name="ext_installer_legacy">По умолчанию</string>
     <string name="ext_installer_pref">Установщик</string>
@@ -684,11 +684,11 @@
     <string name="pref_verbose_logging_summary">Записывать подробный журнал в системный журнал (Снижает производительность приложения)</string>
     <string name="action_display_language_badge">Язык</string>
     <string name="label_warning">Предупреждение</string>
-    <string name="notification_size_warning">Большое количество обновлений серий могут привести к замедлению работы источников и увеличению расхода батареи. Нажмите для подробностей</string>
-    <string name="backup_info">Настоятельно рекомендуется использовать автоматические резервные копии. Вы также должны хранить копии в разных папках</string>
+    <string name="notification_size_warning">Большое количество обновлений может привести к замедлению работы источников и увеличению расхода батареи. Нажмите для подробностей.</string>
+    <string name="backup_info">Настоятельно рекомендуется использовать автоматические резервные копии. Вы также должны хранить копии в разных папках.</string>
     <string name="connected_to_wifi">Только по Wi-Fi</string>
     <string name="update_72hour">Каждые 3 дня</string>
-    <string name="download_queue_size_warning">Предупреждение: Большое количество загрузок глав могут привести к замедлению работы источников и/или блокировке Tachiyomi. Нажмите для подробностей</string>
+    <string name="download_queue_size_warning">Предупреждение: Большое количество загрузок может привести к замедлению работы источников и/или блокировке Tachiyomi. Нажмите для подробностей.</string>
     <string name="pref_library_update_show_tab_badge">Непрочитанные главы на иконке «Обновления»</string>
     <string name="ext_update_all">Обновить все</string>
     <string name="channel_app_updates">Обновления приложения</string>
@@ -726,7 +726,7 @@
     <string name="rotation_reverse_portrait">Портретная наоборот</string>
     <string name="action_move_to_top_all_for_series">Переместить серию в начало</string>
     <string name="disabled_nav">Отключено</string>
-    <string name="update_check_fdroid_migration_info">Новая версия доступна на оф. странице Tachiyomi. Нажмите, чтобы узнать, как мигрировать с неофициальной версии из F-Droid</string>
+    <string name="update_check_fdroid_migration_info">Новая версия доступна на оф. странице Tachiyomi. Нажмите, чтобы узнать, как мигрировать с неофициальной версии из F-Droid.</string>
     <string name="error_saving_picture">Не удалось сохранить изображение</string>
     <string name="empty_backup_error">Нет элементов в библиотеке для резервирования</string>
     <string name="update_check_open">Открыть в GitHub</string>
@@ -742,7 +742,7 @@
     <string name="action_sort_unread_count">Количество непрочитанных глав</string>
     <string name="split_tall_images">Разделять длинные изображения</string>
     <string name="download_notifier_split_page_not_found">Страница %d не найдена, при разделении</string>
-    <string name="split_tall_images_summary">Улучшает производительность читалки разделяя длинные загруженные изображения</string>
+    <string name="split_tall_images_summary">Улучшает производительность читалки</string>
     <string name="download_notifier_split_page_path_not_found">Путь к файлам страницы %d не найден</string>
     <string name="pref_reset_viewer_flags">Сбросить настройки читалки для каждой серии</string>
     <string name="pref_reset_viewer_flags_summary">Сбрасывает режим чтения и ориентацию для всех серий</string>
@@ -774,4 +774,17 @@
     <string name="loader_rar5_error">Формат RARv5 не поддерживается</string>
     <string name="appwidget_unavailable_locked">Виджет недоступен при включённой блокировке биометрией</string>
     <string name="appwidget_updates_description">Посмотреть недавно обновлённые серии</string>
+    <string name="update_already_running">Обновление уже запущено</string>
+    <string name="error_user_agent_string_blank">User agent не может быть пустым</string>
+    <string name="theme_tidalwave">Приливная Волна</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Следующая непрочитанная глава</item>
+        <item quantity="few">Следующие %d непрочитанные главы</item>
+        <item quantity="many">Следующие %d непрочитанных глав</item>
+        <item quantity="other">Следующие %d непрочитанных глав</item>
+    </plurals>
+    <string name="download_ahead">Загрузить наперёд</string>
+    <string name="auto_download_while_reading">При чтении</string>
+    <string name="download_ahead_info">Работает только с элементами в библиотеке, а также если текущая и следующая главы уже загружены</string>
+    <string name="are_you_sure">Вы уверены\?</string>
 </resources>

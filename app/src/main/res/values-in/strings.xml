@@ -704,8 +704,8 @@
     <string name="source_empty_screen">Tidak ada sumber yang ditemukan</string>
     <string name="action_sort_last_manga_update">Pembaruan manga terakhir</string>
     <string name="action_sort_unread_count">Jumlah belum dibaca</string>
-    <string name="split_tall_images">Membagi gambar panjang secara otomatis</string>
-    <string name="split_tall_images_summary">Meningkatkan kinerja pembaca dengan memisahkan gambar panjang yang diunduh.</string>
+    <string name="split_tall_images">Membagi gambar panjang</string>
+    <string name="split_tall_images_summary">Meningkatkan kinerja pembaca</string>
     <string name="download_notifier_split_page_not_found">Halaman %d tidak ditemukan saat dipisah</string>
     <string name="download_notifier_split_page_path_not_found">Tidak dapat menemukan jalur file halaman %d</string>
     <string name="pref_reset_viewer_flags_success">Atur ulang semua pengaturan pengguna</string>
@@ -738,4 +738,13 @@
     <string name="loader_rar5_error">Format RARv5 tidak didukung</string>
     <string name="appwidget_updates_description">Lihat manga Anda yang baru saja diperbarui</string>
     <string name="appwidget_unavailable_locked">Widget tidak tersedia saat kunci aplikasi diaktifkan</string>
+    <string name="update_already_running">Pembaruan sudah berjalan</string>
+    <string name="error_user_agent_string_blank">String agen pengguna wajib diisi</string>
+    <string name="theme_tidalwave">Gelombang pasang</string>
+    <string name="download_ahead">Unduh di depan</string>
+    <string name="auto_download_while_reading">Unduh otomatis ketika sedang membaca</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">Selanjutnya chapter %d yang belum dibaca</item>
+    </plurals>
+    <string name="download_ahead_info">Hanya berfungsi pada entri di perpustakaan dan jika bab saat ini ditambah yang berikutnya sudah diunduh</string>
 </resources>

@@ -413,7 +413,7 @@
     <string name="action_menu">Mục chính</string>
     <string name="unlock_app">Mở Khoá Tachiyomi</string>
     <string name="label_sources">Nguồn</string>
-    <string name="label_more">Thêm nữa</string>
+    <string name="label_more">Thêm</string>
     <string name="tracker_not_logged_in">Chưa đăng nhập: %1$s</string>
     <string name="pref_search_pinned_sources_only">Chỉ bao gồm các nguồn được ghim</string>
     <string name="tracking_info">Đồng bộ một chiều để cập nhật tiến trình chương trong các dịch vụ theo dõi. Thiết lập theo dõi cho các truyện riêng lẻ từ các nút theo dõi.</string>
@@ -739,8 +739,8 @@
     <string name="network_not_metered">Chỉ trên mạng lưới không hạn định</string>
     <string name="action_sort_last_manga_update">Cập nhật truyện lần trước</string>
     <string name="action_sort_unread_count">Số lượng chưa đọc</string>
-    <string name="split_tall_images">Tự động chia cắt những ảnh quá cao</string>
-    <string name="split_tall_images_summary">Cải thiện khả năng đọc bằng việc chia cắt các ảnh quá cao.</string>
+    <string name="split_tall_images">Tự động chia cắt những ảnh quá dài</string>
+    <string name="split_tall_images_summary">Cải thiện khả năng đọc bằng việc cắt nhỏ các ảnh quá dài</string>
     <string name="pref_reset_viewer_flags_success">Tất cả cài đặt đọc đã được cài lại</string>
     <string name="pref_reset_viewer_flags_error">Không thể cài lại cài đặt đọc</string>
     <string name="pref_user_agent_string">Chuỗi đại diện người dùng mặc định</string>
@@ -772,4 +772,7 @@
     <string name="appwidget_updates_description">Xem các bộ truyện được cập nhật gần đây</string>
     <string name="action_remove_everything">Loại bỏ tất cả mọi thứ</string>
     <string name="loader_rar5_error">Định dạng RARv5 không được hỗ trợ</string>
+    <string name="update_already_running">Có một cập nhật đang chạy sẵn</string>
+    <string name="theme_tidalwave">Sóng Thủy Triều</string>
+    <string name="error_user_agent_string_blank">Chuỗi đại diện người dùng không thể bỏ trống</string>
 </resources>

@@ -53,7 +53,7 @@
     <string name="action_sort_alpha">எழுத்து வரிசையில்</string>
     <string name="action_sort_total">மொத்த அலகுகள்</string>
     <string name="action_sort_last_read">சமீபத்தில் படித்தவை</string>
-    <string name="action_sort_chapter_fetch_date">எடுக்கப்பட்ட தேதி</string>
+    <string name="action_sort_chapter_fetch_date">அத்தியாயம் எடுக்கப்பட்ட தேதி</string>
     <string name="action_select_all">அனைத்தையும் தேர்வு செய்</string>
     <string name="action_search_settings">தேடுதல் அமைப்புகள்</string>
     <string name="action_remove_bookmark">அலகை குறிக்காதே</string>
@@ -69,4 +69,5 @@
     <string name="action_delete">அழிக்கவும்</string>
     <string name="action_edit">மாற்று</string>
     <string name="action_move_category">பிரிவுகளாக செய்யவும்</string>
+    <string name="delete_category">வகையை நீக்கு</string>
 </resources>

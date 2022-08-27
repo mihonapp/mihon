@@ -764,6 +764,12 @@
     <string name="update_check_open">Відкрити на GitHub</string>
     <string name="update_check_fdroid_migration_info">Нова версія наявна з офіційних релізів. Тицьніть для того аби дізнатись як мігрувати з неофіційних релізів F-Droid.</string>
     <string name="internal_error">InternalError: Перевірте журнал халеп задля додаткової інформації</string>
-    <string name="delete_category_confirmation">Чи бажаєте ви видалити категорію %s</string>
+    <string name="delete_category_confirmation">Чи бажаєте ви видалити категорію \"%s\"\?</string>
     <string name="delete_category">Видалити категорію</string>
+    <string name="appwidget_updates_description">Переглянути нещодавно оновлені серії</string>
+    <string name="appwidget_unavailable_locked">Віджет не доступний при ввімкненому блокуванні додатку</string>
+    <string name="pref_user_agent_string">User agent за замовчуванням</string>
+    <string name="action_remove_everything">Видалити все</string>
+    <string name="pref_reset_user_agent_string">Скинути user agent за замовчуванням</string>
+    <string name="loader_rar5_error">Формат RARv5 не підтримується</string>
 </resources>

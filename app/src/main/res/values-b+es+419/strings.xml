@@ -60,7 +60,7 @@
     <string name="action_remove_bookmark">Quitar capítulo de favoritos</string>
     <string name="action_bookmark">Agregar capítulo a favoritos</string>
     <string name="action_filter_unread">No leído</string>
-    <string name="action_filter_bookmarked">Marcado</string>
+    <string name="action_filter_bookmarked">Favoritos</string>
     <string name="label_download_queue">Lista de descargas</string>
     <string name="label_more">Más</string>
     <string name="track">Siguiendo</string>
@@ -501,7 +501,7 @@
     <string name="download_notifier_download_finish">Descarga completada</string>
     <string name="no_pinned_sources">No tienes fuentes fijadas</string>
     <string name="backup_restore_missing_trackers">Páginas de seguimiento donde no has iniciado sesion:</string>
-    <string name="pref_remove_bookmarked_chapters">Eliminar capítulos guardados</string>
+    <string name="pref_remove_bookmarked_chapters">Permitir el borrado de capítulos en favoritos</string>
     <string name="pref_category_delete_chapters">Eliminar capítulos</string>
     <string name="ext_nsfw_warning">Las fuentes de esta extensión pueden contener contenido NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
@@ -738,8 +738,8 @@
     <string name="custom_cover">Portada Personalizada</string>
     <string name="cant_open_last_read_chapter">Imposible abrir el último capítulo leído</string>
     <string name="internal_error">Error interno: Chequea los registros del fallo para más información</string>
-    <string name="delete_category">Borrar categoria</string>
-    <string name="delete_category_confirmation">Quieres borrar la categoría %s</string>
+    <string name="delete_category">Borrar categoría</string>
+    <string name="delete_category_confirmation">¿Quieres borrar la categoría %s\?</string>
     <string name="theme_lavender">Lavanda</string>
     <string name="pref_app_language">Idioma de la aplicación</string>
     <string name="description_placeholder">Sin descripción</string>

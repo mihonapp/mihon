@@ -704,8 +704,8 @@
     <string name="source_filter_empty_screen">インストール済みのソースが見つかりません</string>
     <string name="action_sort_last_manga_update">前回の漫画更新</string>
     <string name="action_sort_unread_count">未読の章数</string>
-    <string name="split_tall_images">長い画像を自動で分割</string>
-    <string name="split_tall_images_summary">ダウンロードした長い画像を自動で分割してビューアのパフォーマンスを改善します。</string>
+    <string name="split_tall_images">長い画像を分割</string>
+    <string name="split_tall_images_summary">ビューアのパフォーマンスを改善します</string>
     <string name="download_notifier_split_page_not_found">分割時にページ%dが見つかりませんでした</string>
     <string name="pref_reset_viewer_flags">シリーズ別のビューア設定をリセット</string>
     <string name="pref_reset_viewer_flags_summary">各シリーズのビューアモードと画面向きをリセットします</string>
@@ -738,4 +738,13 @@
     <string name="loader_rar5_error">フォーマットRARv5は未対応です</string>
     <string name="appwidget_updates_description">最近更新されたマンガを見る</string>
     <string name="appwidget_unavailable_locked">アプリロックがONの時、ウィジェットは利用できません</string>
+    <string name="update_already_running">アップデートはすでに進行中です</string>
+    <string name="error_user_agent_string_blank">ユーザーエージェント文字列を入力してください</string>
+    <string name="theme_tidalwave">海の波</string>
+    <string name="download_ahead">事前ダウンロード</string>
+    <string name="auto_download_while_reading">読書中に自動でダウンロード</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">次の未読の%d章</item>
+    </plurals>
+    <string name="download_ahead_info">現在のと次の章は既にダウンロード済みの場合のみ、そしてライブラリの項目にのみ有効です</string>
 </resources>

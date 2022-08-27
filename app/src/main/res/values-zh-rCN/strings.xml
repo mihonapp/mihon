@@ -282,12 +282,12 @@
     <string name="file_select_cover">选择封面图片</string>
     <string name="file_select_backup">选择备份文件</string>
     <string name="update_check_confirm">下载</string>
-    <string name="update_check_no_new_updates">没有可用的更新</string>
+    <string name="update_check_no_new_updates">没有新版本</string>
     <string name="update_check_look_for_updates">正在检查更新…</string>
     <string name="update_check_notification_download_in_progress">正在下载…</string>
     <string name="update_check_notification_download_complete">点击安装</string>
     <string name="update_check_notification_download_error">下载失败</string>
-    <string name="update_check_notification_update_available">有可用的新版本！</string>
+    <string name="update_check_notification_update_available">有新版本！</string>
     <string name="information_no_downloads">没有下载中的任务</string>
     <string name="information_no_recent">最近没有更新</string>
     <string name="information_no_recent_manga">最近没有阅读</string>
@@ -704,8 +704,8 @@
     <string name="source_empty_screen">未找到图源</string>
     <string name="action_sort_last_manga_update">上次漫画更新</string>
     <string name="action_sort_unread_count">未读数</string>
-    <string name="split_tall_images">自动拆分高图像</string>
-    <string name="split_tall_images_summary">通过拆分下载的高图像来提高阅读器的性能。</string>
+    <string name="split_tall_images">拆分长图</string>
+    <string name="split_tall_images_summary">提高阅读器的性能</string>
     <string name="download_notifier_split_page_not_found">拆分时未找到页 %d</string>
     <string name="download_notifier_split_page_path_not_found">找不到页面 %d 的文件路径</string>
     <string name="pref_reset_viewer_flags">重置每一连载阅读器设置</string>
@@ -732,10 +732,20 @@
     <string name="delete_category_confirmation">确定要删除分类“%s”吗？</string>
     <string name="delete_category">删除分类</string>
     <string name="internal_error">InternalError: 内部错误，详情请见崩溃日志</string>
-    <string name="pref_user_agent_string">默认 User Agent 字符串</string>
+    <string name="pref_user_agent_string">默认用户代理字符串</string>
     <string name="pref_reset_user_agent_string">重置默认 User Agent 字符串</string>
     <string name="action_remove_everything">全部删除</string>
     <string name="loader_rar5_error">不支持 RARv5 格式</string>
     <string name="appwidget_unavailable_locked">应用锁开启时小部件不能使用</string>
     <string name="appwidget_updates_description">查看最近更新的漫画</string>
+    <string name="update_already_running">有其他更新尚未完成</string>
+    <string name="error_user_agent_string_blank">User Agent 字符串不能为空</string>
+    <string name="theme_tidalwave">浪潮</string>
+    <string name="download_ahead">提前下载</string>
+    <string name="auto_download_while_reading">阅读时自动下载</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">接下去 %d 个未读章节</item>
+    </plurals>
+    <string name="download_ahead_info">仅适用于书架中的条目，且如果当前章节和下一章已经下载</string>
+    <string name="are_you_sure">你确定吗？</string>
 </resources>

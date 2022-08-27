@@ -62,7 +62,7 @@
     <string name="loading">Wird geladen …</string>
     <string name="app_not_available">App nicht verfügbar</string>
     <string name="pref_category_general">Allgemein</string>
-    <string name="pref_category_reader">Lese-Einstellungen</string>
+    <string name="pref_category_reader">Leser</string>
     <string name="pref_category_downloads">Downloads</string>
     <string name="pref_category_tracking">Tracking</string>
     <string name="pref_category_advanced">Erweitert</string>
@@ -716,8 +716,8 @@
     <string name="source_empty_screen">Keine Quelle gefunden</string>
     <string name="action_sort_unread_count">Ungelesenenanzahl</string>
     <string name="action_sort_last_manga_update">Zuletzt aktualisierter Manga</string>
-    <string name="split_tall_images">Hohe Bilder automatisch teilen</string>
-    <string name="split_tall_images_summary">Verbessert die Leseleistung durch Aufteilung hoher heruntergeladener Bilder.</string>
+    <string name="split_tall_images">Hohe Bilder teilen</string>
+    <string name="split_tall_images_summary">Verbessert die Leserleistung</string>
     <string name="download_notifier_split_page_not_found">Seite %d während dem Aufteilen nicht gefunden</string>
     <string name="download_notifier_split_page_path_not_found">Dateipfad der Seite %d konnte nicht gefunden werden</string>
     <string name="pref_reset_viewer_flags_summary">Setzt den Lesemodus und die Ausrichtung aller Serien zurück</string>
@@ -750,4 +750,15 @@
     <string name="loader_rar5_error">Das RARv5-Format wird nicht unterstützt</string>
     <string name="appwidget_updates_description">Deine kürzlich aktualisierten Manga ansehen</string>
     <string name="appwidget_unavailable_locked">Widget nicht verfügbar, wenn die App-Sperre aktiviert ist</string>
+    <string name="update_already_running">Eine Aktualisierung ist bereits im Gange</string>
+    <string name="error_user_agent_string_blank">User-Agent-Text darf nicht leer sein</string>
+    <string name="theme_tidalwave">Flutwelle</string>
+    <string name="download_ahead">Im Voraus herunterladen</string>
+    <string name="auto_download_while_reading">Automatisch während dem Lesen herunterladen</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Nächstes ungelesenes Kapitel</item>
+        <item quantity="other">Nächste %d ungelesene Kapitel</item>
+    </plurals>
+    <string name="download_ahead_info">Funktioniert nur bei Werken in der Bibliothek und wenn das aktuelle Kapitel sowie das darauf folgende bereits heruntergeladen sind</string>
+    <string name="are_you_sure">Bist du dir sicher\?</string>
 </resources>

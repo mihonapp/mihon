@@ -652,4 +652,10 @@
     <string name="extension_api_error">Laajennusluettelon halu epäonnistui</string>
     <string name="ext_install_service_notif">Asennetaan laajennusta…</string>
     <string name="ext_installer_pref">Asentaja</string>
+    <string name="action_remove_everything">Poista kaikki</string>
+    <string name="backup_restore_invalid_uri">Virhe: tyhjä URI</string>
+    <string name="action_sort_last_manga_update">Viimeisin manga päivitys</string>
+    <string name="action_sort_unread_count">Lukemattomien määrä</string>
+    <string name="delete_category">Poista kategoria</string>
+    <string name="action_track">Jäljitä</string>
 </resources>

@@ -749,8 +749,8 @@
     <string name="source_empty_screen">Nessuna fonte trovata</string>
     <string name="action_sort_unread_count">Conteggio non letti</string>
     <string name="action_sort_last_manga_update">Ultimo aggiornamento dei manga</string>
-    <string name="split_tall_images_summary">Migliora le prestazioni del lettore dividendo le immagini scaricate troppo alte.</string>
-    <string name="split_tall_images">Dividi automaticamente le immagini troppo alte</string>
+    <string name="split_tall_images_summary">Migliora le prestazioni del lettore</string>
+    <string name="split_tall_images">Dividi le immagini troppo alte</string>
     <string name="download_notifier_split_page_not_found">Pagina %d non trovata durante la divisione</string>
     <string name="download_notifier_split_page_path_not_found">Impossibile trovare il percorso della pagina %d</string>
     <string name="pref_reset_viewer_flags_summary">Reimposta la modalità di lettura e l\'orientamento per tutte le serie</string>
@@ -783,4 +783,15 @@
     <string name="loader_rar5_error">Il formato RARv5 non è supportato</string>
     <string name="appwidget_unavailable_locked">Widget non disponibile quando il blocco app è attivo</string>
     <string name="appwidget_updates_description">Vedi i manga aggiornati di recente</string>
+    <string name="update_already_running">È già in corso un aggiornamento</string>
+    <string name="error_user_agent_string_blank">La sringa user agent non può essere vuota</string>
+    <string name="theme_tidalwave">Maremoto</string>
+    <string name="download_ahead">Scarica i prossimi</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Il prossimo capitolo non letto</item>
+        <item quantity="other">I prossimi %d capitoli non letti</item>
+    </plurals>
+    <string name="auto_download_while_reading">Download automatico durante la lettura</string>
+    <string name="download_ahead_info">Funziona solo sui manga nella libreria e se il capitolo corrente e quello successivo sono già stati scaricati</string>
+    <string name="are_you_sure">Sei sicuro\?</string>
 </resources>

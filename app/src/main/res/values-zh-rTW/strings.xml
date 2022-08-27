@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="categories">分類</string>
+    <string name="categories">類別</string>
     <string name="manga">漫畫</string>
     <string name="chapters">章節</string>
     <string name="history">記錄</string>
@@ -21,7 +21,7 @@
     <string name="action_filter_unread">未讀</string>
     <string name="action_filter_empty">清除篩選器</string>
     <string name="action_sort_alpha">題名</string>
-    <string name="action_sort_total">章數</string>
+    <string name="action_sort_total">章節總計</string>
     <string name="action_sort_last_read">最近閱讀</string>
     <string name="action_search">搜尋</string>
     <string name="action_global_search">全域搜尋</string>
@@ -37,10 +37,10 @@
     <string name="action_update_library">更新書櫃</string>
     <string name="action_edit">編輯</string>
     <string name="action_add">新增</string>
-    <string name="action_add_category">新增分類</string>
-    <string name="action_edit_categories">管理分類</string>
-    <string name="action_rename_category">重新命名分類</string>
-    <string name="action_move_category">選擇分類</string>
+    <string name="action_add_category">新增類別</string>
+    <string name="action_edit_categories">編輯類別</string>
+    <string name="action_rename_category">重新命名類別</string>
+    <string name="action_move_category">設定類別</string>
     <string name="action_edit_cover">編輯封面</string>
     <string name="action_stop">停止</string>
     <string name="action_pause">暫停</string>
@@ -85,7 +85,7 @@
     <string name="pref_library_update_restriction">自動更新的裝置限制</string>
     <string name="charging">充電時</string>
     <string name="pref_update_only_non_completed">已完結的作品</string>
-    <string name="default_category">預設分類</string>
+    <string name="default_category">預設類別</string>
     <string name="default_category_summary">總是詢問</string>
     <string name="ext_update">更新</string>
     <string name="ext_install">安裝</string>
@@ -145,7 +145,7 @@
     <string name="chapter_error">錯誤</string>
     <string name="chapter_paused">已暫停</string>
     <string name="manga_download">下載</string>
-    <string name="snack_categories_deleted">已刪除分類</string>
+    <string name="snack_categories_deleted">已刪除類別</string>
     <string name="picture_saved">圖片已儲存</string>
     <string name="set_as_cover">設為封面</string>
     <string name="cover_updated">已更新封面</string>
@@ -204,7 +204,7 @@
     <string name="pref_acra_summary">協助我們修復錯誤，傳送的資料將不包含個人敏感訊息</string>
     <string name="login_title">登入 %1$s</string>
     <string name="username">使用者名稱</string>
-    <string name="updating_category">正在更新分類</string>
+    <string name="updating_category">正在更新類別</string>
     <string name="action_global_search_hint">全域搜尋…</string>
     <string name="snack_add_to_library">將漫畫收藏至書櫃？</string>
     <string name="file_select_cover">選擇封面圖片</string>
@@ -234,9 +234,9 @@
     <string name="sorting_mode">排序依據</string>
     <string name="sort_by_source">遵循來源</string>
     <string name="sort_by_number">章節編號</string>
-    <string name="download_1">後一章</string>
-    <string name="download_5">後五章</string>
-    <string name="download_10">後十章</string>
+    <string name="download_1">後 1 章</string>
+    <string name="download_5">後 5 章</string>
+    <string name="download_10">後 10 章</string>
     <string name="completed">已完結</string>
     <string name="score">評分</string>
     <string name="title">標題</string>
@@ -245,7 +245,7 @@
     <string name="decode_image_error">無法載入該圖片</string>
     <string name="notification_first_add_to_library">請先將漫畫收藏至書櫃再進行更新</string>
     <string name="file_select_backup">選擇備份檔案</string>
-    <string name="information_empty_category">尚無任何分類，輕觸新增按鈕即可建立分類以組織你的書櫃。</string>
+    <string name="information_empty_category">尚無任何類別，輕觸新增按鈕即可建立類別以組織你的書櫃。</string>
     <string name="download_notifier_downloader_title">下載管理員</string>
     <string name="custom_download">下載自訂範圍</string>
     <string name="download_custom">自訂範圍</string>
@@ -259,7 +259,7 @@
     <string name="migrate">遷移</string>
     <string name="notification_cover_update_failed">封面更新失敗</string>
     <string name="confirm_delete_chapters">確定要刪除所選的章節嗎？</string>
-    <string name="error_category_exists">已有名稱相同的分類！</string>
+    <string name="error_category_exists">已有名稱相同的類別！</string>
     <string name="chapter_progress">第 %1$d 頁</string>
     <string name="no_next_chapter">找不到下一章</string>
     <string name="no_previous_chapter">找不到前一章</string>
@@ -352,7 +352,7 @@
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">%d 個擴充套件可更新</item>
     </plurals>
-    <string name="action_display_show_tabs">分類索引</string>
+    <string name="action_display_show_tabs">類別索引</string>
     <string name="tabs_header">頁籤</string>
     <string name="gray_background">灰色</string>
     <string name="pref_category_display">檢視</string>
@@ -435,7 +435,7 @@
     </plurals>
     <string name="tracking_info">將章節進度單向同步至閱讀歷程平台，請逕行前往個別作品的「歷程」專區以設置。</string>
     <plurals name="num_categories">
-        <item quantity="other">%d 個分類</item>
+        <item quantity="other">%d 個類別</item>
     </plurals>
     <string name="requires_app_restart">需要重新啟動應用程式以套用</string>
     <string name="label_network">網路</string>
@@ -561,12 +561,12 @@
     <string name="backup_restore_content_full">即將還原備份中的資料。
 \n
 \n隨後請安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
-    <string name="pref_download_new_categories_details">分類同時屬於「排除」及「包含」的漫畫，將不會自動下載。</string>
+    <string name="pref_download_new_categories_details">類別同時屬於「排除」及「包含」的漫畫，將不會自動下載。</string>
     <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
     <string name="pref_create_folder_per_manga_summary">根據漫畫標題建立資料夾</string>
     <string name="pref_show_navigation_mode_summary">開始閱讀時，短暫浮現輕觸區域</string>
     <string name="pref_show_navigation_mode">輕觸區域提示</string>
-    <string name="pref_library_update_categories_details">分類同時屬於「排除」及「包含」的漫畫，將不會自動更新。</string>
+    <string name="pref_library_update_categories_details">類別同時屬於「排除」及「包含」的漫畫，將不會自動更新。</string>
     <string name="cancel_all_for_series">取消此叢書</string>
     <string name="automatic_background">自動</string>
     <string name="pref_grayscale">灰階</string>
@@ -584,7 +584,7 @@
     <string name="local_filter_order_by">排序</string>
     <string name="local_invalid_format">無效的章節格式</string>
     <string name="action_display_local_badge">本機漫畫</string>
-    <string name="information_empty_category_dialog">你目前沒有任何分類。</string>
+    <string name="information_empty_category_dialog">你目前沒有任何類別。</string>
     <string name="error_sharing_cover">分享封面時發生錯誤</string>
     <string name="error_saving_cover">儲存封面時發生錯誤</string>
     <string name="cover_saved">已儲存封面</string>
@@ -601,7 +601,7 @@
     <string name="enhanced_tracking_info">為特定來源提供增強功能的服務。當漫畫被加入書櫃時，將自動登錄閱讀歷程。</string>
     <string name="enhanced_services">增強服務</string>
     <string name="tracking_guide">歷程平台說明</string>
-    <string name="categorized_display_settings">獨立各分類的排序和檢視設定</string>
+    <string name="categorized_display_settings">獨立各類別的排序和檢視設定</string>
     <string name="pref_side_nav_icon_alignment">側邊導覽圖示對齊</string>
     <string name="pref_dark_theme_pure_black">純黑深色模式</string>
     <string name="theme_yotsuba">四葉</string>
@@ -636,14 +636,14 @@
     <string name="action_track">新增</string>
     <string name="pref_category_navigation">導覽</string>
     <string name="help_translate">協助翻譯</string>
-    <string name="pref_remove_exclude_categories">排除的分類</string>
+    <string name="pref_remove_exclude_categories">排除的類別</string>
     <string name="ext_app_info">程式資訊</string>
     <string name="ext_installer_shizuku_unavailable_dialog">若要使用 Shizuku 來安裝擴充套件，請先安裝 Shizuku 並開啟之。</string>
     <string name="ext_installer_legacy">傳統</string>
     <string name="ext_installer_shizuku_stopped">Shizuku 未執行</string>
     <string name="ext_installer_pref">套件安裝程式</string>
     <string name="ext_install_service_notif">正在安裝擴充套件…</string>
-    <string name="action_sort_count">漫畫總數</string>
+    <string name="action_sort_count">漫畫總計</string>
     <string name="action_display_language_badge">語言</string>
     <string name="label_warning">警告</string>
     <string name="notification_size_warning">大量更新會損害來源，並可能導致更新速度緩慢、電池用量增加。輕觸以瞭解詳情。</string>
@@ -705,8 +705,8 @@
     <string name="action_sort_last_manga_update">最近更新漫畫日期</string>
     <string name="action_sort_unread_count">未讀章數</string>
     <string name="download_notifier_split_page_not_found">分割時找不到第 %d 頁</string>
-    <string name="split_tall_images">自動分割過高圖片</string>
-    <string name="split_tall_images_summary">將下載的圖片中尺寸較高者分割，以改善閱讀器效能。</string>
+    <string name="split_tall_images">分割過高的圖片</string>
+    <string name="split_tall_images_summary">用以改善閱讀器效能</string>
     <string name="download_notifier_split_page_path_not_found">找不到第 %d 頁的檔案路徑</string>
     <string name="pref_reset_viewer_flags">重設個別閱讀器設定</string>
     <string name="pref_reset_viewer_flags_summary">將所有叢書的閱讀模式和螢幕方向恢復為預設值</string>
@@ -729,13 +729,22 @@
     <string name="pref_app_language">應用程式語言</string>
     <string name="theme_lavender">薰衣草</string>
     <string name="description_placeholder">沒有簡介</string>
-    <string name="delete_category_confirmation">確定要刪除「%s」分類嗎？</string>
+    <string name="delete_category_confirmation">確定要刪除「%s」類別嗎？</string>
     <string name="internal_error">InternalError：請檢視當機記錄以瞭解詳情</string>
-    <string name="delete_category">刪除分類</string>
+    <string name="delete_category">刪除類別</string>
     <string name="pref_reset_user_agent_string">重設預設使用者代理字串</string>
     <string name="pref_user_agent_string">預設使用者代理字串</string>
     <string name="action_remove_everything">全部清除</string>
     <string name="loader_rar5_error">不支援 RARv5 格式</string>
     <string name="appwidget_unavailable_locked">當需要解鎖才能存取應用程式時，無法使用小工具</string>
     <string name="appwidget_updates_description">查看近期更新的漫畫</string>
+    <string name="update_already_running">已在進行更新</string>
+    <string name="error_user_agent_string_blank">使用者代理字串不能為空</string>
+    <string name="theme_tidalwave">潮浪</string>
+    <string name="download_ahead">預先下載</string>
+    <string name="auto_download_while_reading">閱讀時自動下載</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">接下來未讀的 %d 章</item>
+    </plurals>
+    <string name="download_ahead_info">僅適用於書櫃中的漫畫，並且目前章節及下一章節皆已下載</string>
 </resources>

@@ -716,8 +716,8 @@
     <string name="action_sort_unread_count">Contu de non lèghidos</string>
     <string name="source_empty_screen">Peruna fonte agatada</string>
     <string name="source_filter_empty_screen">Peruna fonte installada agatada</string>
-    <string name="split_tall_images">Partzi in automàticu sas immàgines artas</string>
-    <string name="split_tall_images_summary">Megiorat su rendimentu de su leghidore partzende sas immàgines artas iscarrigadas.</string>
+    <string name="split_tall_images">Partzi sas immàgines artas</string>
+    <string name="split_tall_images_summary">Megiorat su rendimentu de su leghidore</string>
     <string name="download_notifier_split_page_not_found">Pàgina %d no agatada partzende</string>
     <string name="empty_screen">Oja, custu est impitzosu</string>
     <string name="network_not_metered">Petzi in retzes chene datos</string>
@@ -750,4 +750,14 @@
     <string name="loader_rar5_error">Su formadu RARv5 no est suportadu</string>
     <string name="appwidget_unavailable_locked">Su widget no est a disponimentu cando su blocu de s\'aplicatzione est abilitadu</string>
     <string name="appwidget_updates_description">Pòmpia sos manga tuos agiornados dae pagu</string>
+    <string name="update_already_running">B\'est giai un\'agiornamentu in cursu</string>
+    <string name="theme_tidalwave">Maremotu</string>
+    <string name="error_user_agent_string_blank">S\'istringa de s\'agente de s\'utente non podet èssere bòida</string>
+    <string name="download_ahead">Iscàrriga sos imbenientes</string>
+    <string name="auto_download_while_reading">Iscàrriga in automàticu durante sa letura</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Su capìtulu non lèghidu imbeniente</item>
+        <item quantity="other">Sos %d capìtulos lèghidos imbenientes</item>
+    </plurals>
+    <string name="download_ahead_info">Funtzionat petzi cun sos elementos in biblioteca e si su capìtulu atuale e cussu imbeniente sunt giai iscarrigados</string>
 </resources>

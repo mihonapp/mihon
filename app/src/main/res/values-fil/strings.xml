@@ -251,7 +251,7 @@
     <string name="backup_restore_missing_sources">Nawawalang (mga) source:</string>
     <string name="invalid_backup_file_missing_manga">Walang manga ang backup.</string>
     <string name="invalid_backup_file">Invalid na backup</string>
-    <string name="backup_created">Nagawa na ang backup</string>
+    <string name="backup_created">Nai-backup na</string>
     <string name="tracker_not_logged_in">Di naka-login: %1$s</string>
     <string name="pref_backup_slots">Dami ng backup</string>
     <string name="pref_backup_interval">Dalas ng pag-backup</string>
@@ -291,12 +291,12 @@
     <string name="information_webview_required">Kailangan ng Tachiyomi ang WebView</string>
     <string name="information_cloudflare_bypass_failure">Bigong ma-bypass ang Cloudflare</string>
     <plurals name="update_check_notification_ext_updates">
-        <item quantity="one">May update sa extension</item>
-        <item quantity="other">May update sa %d (na) extension</item>
+        <item quantity="one">Merong update sa extension</item>
+        <item quantity="other">May %d (na) update sa extension</item>
     </plurals>
     <string name="update_check_notification_update_available">May bagong bersyon!</string>
     <string name="update_check_notification_download_error">Nagka-error sa pag-download</string>
-    <string name="update_check_notification_download_complete">Pindutin para i-install</string>
+    <string name="update_check_notification_download_complete">Pindutin para ma-install</string>
     <string name="update_check_notification_download_in_progress">Dina-download…</string>
     <string name="update_check_look_for_updates">Naghahanap ng mga update…</string>
     <string name="update_check_no_new_updates">Walang bagong update</string>
@@ -493,7 +493,7 @@
     <string name="restore_duration">%02d (na) min, %02d (na) seg</string>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
-        <item quantity="other">%d (na) tracker</item>
+        <item quantity="other">%d na tracker</item>
     </plurals>
     <string name="no_pinned_sources">Wala kang naka-pin na pinagkukunan</string>
     <string name="channel_complete">Tapos na</string>
@@ -716,8 +716,8 @@
     <string name="source_empty_screen">Walang nakitang source</string>
     <string name="action_sort_last_manga_update">Huling update sa manga</string>
     <string name="action_sort_unread_count">Dami ng di pa nabasa</string>
-    <string name="split_tall_images">Kusang hatiin ang mga matatangkad na larawan</string>
-    <string name="split_tall_images_summary">Pinapahusay ang performance ng reader sa pamamagitan ng paghati sa mga matatangkad na na-download na larawan.</string>
+    <string name="split_tall_images">Hatiin ang mga matatangkad na larawan</string>
+    <string name="split_tall_images_summary">Pinahusay ang pagganap ng mambabasa</string>
     <string name="download_notifier_split_page_not_found">Hindi nakita ang pahina %d habang naghahati</string>
     <string name="download_notifier_split_page_path_not_found">Di makita ang file path ng pahina %d</string>
     <string name="download_notifier_split_failed">Di mahati ang na-download na larawan</string>
@@ -750,4 +750,7 @@
     <string name="loader_rar5_error">Di suportado ang format na RARv5</string>
     <string name="appwidget_updates_description">Tingnan ang mga kamakailang na-update na manga mo</string>
     <string name="appwidget_unavailable_locked">Di available ang widget kapag nakabukas ang lock</string>
+    <string name="update_already_running">May kasalukuyang nasimulan na update</string>
+    <string name="error_user_agent_string_blank">Hindi maaring maging blangko ang User agent string</string>
+    <string name="theme_tidalwave">Tiyuhin alon</string>
 </resources>

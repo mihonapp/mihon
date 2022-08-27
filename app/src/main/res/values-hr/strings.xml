@@ -256,7 +256,7 @@
     <string name="pref_skip_read_chapters">Preskoči pročitana poglavlja</string>
     <string name="update_check_notification_update_available">Dostupna je nova verzija!</string>
     <string name="update_check_notification_download_error">Greška pri preuzimanju</string>
-    <string name="update_check_notification_download_complete">Preuzimanje završeno</string>
+    <string name="update_check_notification_download_complete">Dodirni za instaliranje</string>
     <string name="update_check_notification_download_in_progress">Preuzimanje …</string>
     <string name="update_check_look_for_updates">Traženje novih verzija …</string>
     <string name="update_check_no_new_updates">Nema novih verzija</string>
@@ -666,7 +666,7 @@
     <string name="notification_updating">Aktualiziranje zbirke … (%1$d/%2$d)</string>
     <string name="backup_info">Preporučuje se izrada automatskih sigurnosnih kopija. Čuvaj kopije i na drugim mjestima.</string>
     <string name="pref_tablet_ui_mode">Korisničko sučelje tableta</string>
-    <string name="notification_size_warning">Upozorenje: velika ažuriranja štete izvorima i mogu usporiti ažuriranja i povećati potrošnju baterije</string>
+    <string name="notification_size_warning">Velika aktualiziranja štete izvorima i mogu usporiti aktualiziranja i povećati potrošnju baterije. Dodirni i saznaj više.</string>
     <string name="pref_library_update_show_tab_badge">Prikaži broj nepročitanih na ikoni Ažuriranja</string>
     <string name="pref_low">Niska</string>
     <string name="label_background_activity">Aktivnost u pozadini</string>
@@ -715,10 +715,10 @@
     <string name="action_move_to_top_all_for_series">Pomakni serijal na vrh</string>
     <string name="disabled_nav">Deaktivirano</string>
     <string name="empty_backup_error">Nema unosa u biblioteci za spremanje u sigurnosnu kopiju</string>
-    <string name="split_tall_images_summary">Poboljšava performanse čitača dijeljenjem preuzetih visokih slika.</string>
+    <string name="split_tall_images_summary">Poboljšava performanse čitača</string>
     <string name="complete_list">Potpun popis</string>
     <string name="download_notifier_split_failed">Nije bilo moguće podijeliti preuzetu sliku</string>
-    <string name="split_tall_images">Automatski podijeli visoke slike</string>
+    <string name="split_tall_images">Rastavi visoke slike</string>
     <string name="webview_data_deleted">WebView podaci su izbrisani</string>
     <string name="pref_clear_webview_data">Izbriši WebView podatke</string>
     <string name="reading_list">Popis čitanja</string>
@@ -726,4 +726,5 @@
     <string name="on_hold_list">Na popisu čekanja</string>
     <string name="unfinished_list">Popis nedovršenih</string>
     <string name="download_notifier_split_page_not_found">Stranica %d nije pronađena tijekom razdvajanja</string>
+    <string name="loader_rar5_error">RARv5 format nije podržan</string>
 </resources>

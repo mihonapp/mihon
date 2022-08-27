@@ -716,8 +716,8 @@
     <string name="source_empty_screen">Nenhuma fonte encontrada</string>
     <string name="action_sort_unread_count">Contagem de não lidos</string>
     <string name="action_sort_last_manga_update">Ultima atualização do mangá</string>
-    <string name="split_tall_images">Dividir automaticamente imagens compridas</string>
-    <string name="split_tall_images_summary">Melhora o desempenho do leitor através da divisão de imagens compridas disponíveis offline.</string>
+    <string name="split_tall_images">Dividir imagens compridas</string>
+    <string name="split_tall_images_summary">Melhora o desempenho do leitor</string>
     <string name="download_notifier_split_page_not_found">Página %d não encontrada durante a divisão</string>
     <string name="download_notifier_split_page_path_not_found">Não foi possível encontrar o caminho do arquivo da página %d</string>
     <string name="pref_reset_viewer_flags_summary">Redefine o modo de leitura e orientação de todas as séries</string>
@@ -750,4 +750,15 @@
     <string name="loader_rar5_error">O formato RARv5 não é suportado</string>
     <string name="appwidget_updates_description">Veja seus mangás atualizados recentemente</string>
     <string name="appwidget_unavailable_locked">Widget não disponível quando o bloqueio do app está habilitado</string>
+    <string name="update_already_running">Uma atualização já está em andamento</string>
+    <string name="error_user_agent_string_blank">O valor do User-Agent não pode ficar em branco</string>
+    <string name="theme_tidalwave">Onda Tidal</string>
+    <string name="download_ahead">Fazer download a frente</string>
+    <string name="auto_download_while_reading">Download automático durante a leitura</string>
+    <string name="download_ahead_info">Funciona somente em itens na biblioteca e se o capítulo atual e próximo já estão disponíveis offline</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Próximo capítulo não lido</item>
+        <item quantity="other">Próximos %d capítulos não lidos</item>
+    </plurals>
+    <string name="are_you_sure">Você tem certeza\?</string>
 </resources>

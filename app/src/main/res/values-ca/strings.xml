@@ -716,8 +716,8 @@
     <string name="source_empty_screen">No s\'ha trobat cap font</string>
     <string name="action_sort_unread_count">Nombre de no llegits</string>
     <string name="action_sort_last_manga_update">Darrera actualització de manga</string>
-    <string name="split_tall_images">Divideix automàticament les imatges altes</string>
-    <string name="split_tall_images_summary">Millora el rendiment del lector dividint les imatges baixades massa altes.</string>
+    <string name="split_tall_images">Divideix les imatges altes</string>
+    <string name="split_tall_images_summary">Millora el rendiment del lector</string>
     <string name="download_notifier_split_page_not_found">No s\'ha trobat la pàgina %d en dividir</string>
     <string name="download_notifier_split_page_path_not_found">No s\'ha trobat el camí del fitxer de la pàgina %d</string>
     <string name="pref_reset_viewer_flags">Restableix les opcions del lector per sèrie</string>
@@ -750,4 +750,7 @@
     <string name="loader_rar5_error">El format RARv5 no està suportat</string>
     <string name="appwidget_updates_description">Vegeu els vostres mangues actualitzats recentment</string>
     <string name="action_remove_everything">Elimina-ho tot</string>
+    <string name="update_already_running">Ja s\'està executant una actualització</string>
+    <string name="theme_tidalwave">Tsunami</string>
+    <string name="error_user_agent_string_blank">La cadena de l\'agent d\'usuari no pot estar buida</string>
 </resources>

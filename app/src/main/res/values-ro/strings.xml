@@ -650,8 +650,8 @@
     <string name="alignment_bottom">Partea de jos</string>
     <string name="enhanced_tracking_info">Servicii care oferă caracteristici îmbunătățite pentru anumite surse. Manga sunt urmărite în mod automat atunci când sunt adăugate la biblioteca dumneavoastră.</string>
     <string name="backup_info">Backupurile automate sunt foarte recomandate. Ar trebui să păstrați copii și în alte locuri.</string>
-    <string name="split_tall_images">Divizarea automată a imaginilor înalte</string>
-    <string name="split_tall_images_summary">Îmbunătățește performanța cititorului prin divizarea imaginilor înalte descărcate.</string>
+    <string name="split_tall_images">Împărțiți imagini înalte</string>
+    <string name="split_tall_images_summary">Îmbunătățește performanța cititorului</string>
     <string name="action_close">Închide</string>
     <string name="alignment_center">Centru</string>
     <string name="battery_not_low">Când bateria nu este scăzută</string>
@@ -686,4 +686,6 @@
     <string name="update_72hour">La fiecare 3 zile</string>
     <string name="connected_to_wifi">Doar prin Wi Fi</string>
     <string name="pref_library_update_refresh_trackers_summary">Actualizarea trackerelor la actualizarea bibliotecii</string>
+    <string name="webtoon_side_padding_5">5%</string>
+    <string name="loader_rar5_error">Formatul RARv5 nu este acceptat</string>
 </resources>

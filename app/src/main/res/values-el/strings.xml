@@ -716,8 +716,8 @@
     <string name="action_sort_unread_count">Αριθμός μη αναγνωσμένων</string>
     <string name="action_sort_last_manga_update">Τελευταία ενημέρωση manga</string>
     <string name="source_empty_screen">Δε βρέθηκε πηγή</string>
-    <string name="split_tall_images">Αυτόματη διάσπαση ψηλών εικόνων</string>
-    <string name="split_tall_images_summary">Βελτιώνει την απόδοση του αναγνώστη με τη διάσπαση ψηλών εικόνων που έχουν ληφθεί.</string>
+    <string name="split_tall_images">Διαχωρισμός ψηλών εικόνων</string>
+    <string name="split_tall_images_summary">Βελτιώνει την απόδοση του αναγνώστη</string>
     <string name="download_notifier_split_page_not_found">Η σελίδα %d δε βρέθηκε κατά τη διάσπαση</string>
     <string name="download_notifier_split_page_path_not_found">Δεν ήταν δυνατή η εύρεση της διαδρομής αρχείου της σελίδας %d</string>
     <string name="pref_reset_viewer_flags_summary">Επαναφέρει τη λειτουργία ανάγνωσης και τον προσανατολισμό όλων των σειρών</string>
@@ -750,4 +750,15 @@
     <string name="loader_rar5_error">Η μορφή RARv5 δεν υποστηρίζεται</string>
     <string name="appwidget_updates_description">Δείτε τα πρόσφατα ενημερωμένα manga σας</string>
     <string name="appwidget_unavailable_locked">Το widget δεν είναι διαθέσιμο όταν είναι ενεργοποιημένο το κλείδωμα εφαρμογών</string>
+    <string name="update_already_running">Εκτελείται ήδη μια ενημέρωση</string>
+    <string name="error_user_agent_string_blank">Η συμβολοσειρά πράκτορα χρήστη δεν μπορεί να είναι κενή</string>
+    <string name="theme_tidalwave">Παλιρροϊκό κύμα</string>
+    <string name="download_ahead">Λήψη εκ των προτέρων</string>
+    <string name="auto_download_while_reading">Αυτόματη λήψη κατά την ανάγνωση</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Επόμενο αδιάβαστο κεφάλαιο</item>
+        <item quantity="other">Επόμενα %d αδιάβαστα κεφάλαια</item>
+    </plurals>
+    <string name="download_ahead_info">Λειτουργεί μόνο σε καταχωρήσεις στη βιβλιοθήκη και αν το τρέχον κεφάλαιο και το επόμενο έχουν ήδη ληφθεί</string>
+    <string name="are_you_sure">Είστε σίγουροι;</string>
 </resources>

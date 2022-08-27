@@ -420,7 +420,7 @@
     <string name="invalid_backup_file">Neplatný soubor se zálohou</string>
     <string name="pref_enable_automatic_extension_updates">Kontrolovat dostupnost aktualizací rozšíření</string>
     <string name="tracking_info">Jednosměrná synchronizace pro aktualizaci počtu přečtených kapitol ve sledovacích službách. Nastavení sledování pro každou mangu je možné z jejich tlačítka sledování.</string>
-    <string name="pref_remove_bookmarked_chapters">Povolit mazání založených kapitol</string>
+    <string name="pref_remove_bookmarked_chapters">Povolení mazání kapitol se záložkami</string>
     <string name="pref_category_delete_chapters">Smazat kapitoly</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_20">20%</string>
@@ -695,7 +695,7 @@
     <string name="cancelled">Zrušeno</string>
     <string name="action_show_manga">Zobrazit mangu</string>
     <string name="action_display_cover_only_grid">Mřížka jen s přebaly</string>
-    <string name="webtoon_side_padding_5">5 %</string>
+    <string name="webtoon_side_padding_5">5%</string>
     <string name="confirm_manga_add_duplicate">Ve své knihovně máte položku se stejným názvem, ale z jiného zdroje (%1$s).
 \n
 \nPřejete si přesto pokračovat\?</string>
@@ -736,8 +736,8 @@
     <string name="ext_info_language">Jazyk</string>
     <string name="ext_info_age_rating">Věkové hodnocení</string>
     <string name="ext_info_version">Verze</string>
-    <string name="split_tall_images">Automaticky rozdělit vysoké obrázky</string>
-    <string name="split_tall_images_summary">Zlepšuje výkon čtečky rozdělením vysokých stažených obrázků.</string>
+    <string name="split_tall_images">Rozdělit vysoké obrázky</string>
+    <string name="split_tall_images_summary">Zlepšuje výkon čtečky</string>
     <string name="pref_reset_viewer_flags_error">Nastavení čtečky se nepodařilo resetovat</string>
     <string name="empty_screen">No, tohle je trapné</string>
     <string name="download_notifier_split_page_not_found">Stránka %d nebyla při rozdělení nalezena</string>
@@ -762,4 +762,16 @@
     <string name="loader_rar5_error">Formát RARv5 není podporován</string>
     <string name="appwidget_unavailable_locked">Widget není k dispozici, když je povolen zámek aplikace</string>
     <string name="appwidget_updates_description">Podívejte se na vaši nedávno aktualizovanou mangu</string>
+    <string name="update_already_running">Aktualizace již probíhá</string>
+    <string name="error_user_agent_string_blank">Řetězec uživatelského agenta nemůže být prázdný</string>
+    <string name="theme_tidalwave">Přílivová Vlna</string>
+    <string name="download_ahead">Stáhování dopředu</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Další nepřečtená kapitola</item>
+        <item quantity="few">Další %d nepřečtené kapitoly</item>
+        <item quantity="other">Dalších %d nepřečtených kapitol</item>
+    </plurals>
+    <string name="auto_download_while_reading">Automatické stahování při čtení</string>
+    <string name="download_ahead_info">Funguje pouze na položky v knihovně a pokud je již stažena aktuální kapitola a následující kapitola</string>
+    <string name="are_you_sure">Jste si jistý\?</string>
 </resources>

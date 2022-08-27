@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="name">الإسم</string>
+    <string name="name">الاسم</string>
     <string name="categories">الفئات</string>
     <string name="manga">مانجا</string>
     <string name="chapters">الفصول</string>
@@ -798,4 +798,5 @@
     <string name="appwidget_updates_description">شاهد المانقا المجدده حديثاً</string>
     <string name="action_remove_everything">حذف كل شيء</string>
     <string name="loader_rar5_error">الصيغه RARv5 غير مدعومه</string>
+    <string name="theme_tidalwave">موجة مد و جزر</string>
 </resources>
