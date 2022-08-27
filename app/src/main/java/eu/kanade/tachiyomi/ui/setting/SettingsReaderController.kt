@@ -292,7 +292,7 @@ class SettingsReaderController : SettingsController() {
             switchPreference {
                 bindTo(preferences.longStripSplitWebtoon())
                 titleRes = R.string.pref_long_strip_split
-                summaryRes = R.string.pref_long_strip_split_summary
+                summaryRes = R.string.split_tall_images_summary
             }
         }
 
