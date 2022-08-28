@@ -71,6 +71,10 @@ jobs:
           cp app/build/outputs/apk/standard/release/app-standard-x86-release-unsigned-signed.apk tachiyomi-x86-${{ env.VERSION_TAG }}.apk
           sha=`sha256sum tachiyomi-x86-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
           echo "APK_X86_SHA=$sha" >> $GITHUB_ENV
+          
+          cp app/build/outputs/apk/standard/release/app-standard-x86_64-release-unsigned-signed.apk tachiyomi-x86_64-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum tachiyomi-x86_64-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          echo "APK_X86_64_SHA=$sha" >> $GITHUB_ENV
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/') && github.repository == 'tachiyomiorg/tachiyomi'
@@ -89,11 +93,13 @@ jobs:
             | arm64-v8a | ${{ env.APK_ARM64_V8A_SHA }}
             | armeabi-v7a | ${{ env.APK_ARMEABI_V7A_SHA }}
             | x86 | ${{ env.APK_X86_SHA }} |
+            | x86_64 | ${{ env.APK_X86_64_SHA }} |
           files: |
             tachiyomi-${{ env.VERSION_TAG }}.apk
             tachiyomi-arm64-v8a-${{ env.VERSION_TAG }}.apk
             tachiyomi-armeabi-v7a-${{ env.VERSION_TAG }}.apk
             tachiyomi-x86-${{ env.VERSION_TAG }}.apk
+            tachiyomi-x86_64-${{ env.VERSION_TAG }}.apk
           draft: true
           prerelease: false
         env:
