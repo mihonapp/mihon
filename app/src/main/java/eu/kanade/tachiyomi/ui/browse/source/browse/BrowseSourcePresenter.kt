@@ -194,7 +194,7 @@ open class BrowseSourcePresenter(
         if (!hasNextPage()) return
 
         nextPageJob?.cancel()
-        nextPageJob = launchIO {
+        nextPageJob = presenterScope.launchIO {
             try {
                 pager.requestNextPage()
             } catch (e: Throwable) {

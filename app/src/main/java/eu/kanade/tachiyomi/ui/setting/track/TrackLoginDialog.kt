@@ -21,8 +21,6 @@ class TrackLoginDialog(
 
     private val service = Injekt.get<TrackManager>().getService(args.getLong("serviceId"))!!
 
-    constructor(service: TrackService) : this(service, null)
-
     constructor(service: TrackService, @StringRes usernameLabelRes: Int?) :
         this(usernameLabelRes, bundleOf("serviceId" to service.id))
 

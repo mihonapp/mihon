@@ -920,7 +920,7 @@ class MangaPresenter(
 
     fun trackingSearch(query: String, service: TrackService) {
         searchTrackerJob?.cancel()
-        searchTrackerJob = launchIO {
+        searchTrackerJob = presenterScope.launchIO {
             try {
                 val results = service.search(query)
                 withUIContext { view?.onTrackingSearchResults(results) }
