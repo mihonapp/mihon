@@ -1,9 +1,5 @@
 package eu.kanade.tachiyomi.ui.setting
 
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import androidx.appcompat.widget.SearchView
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChromeReaderMode
 import androidx.compose.material.icons.outlined.Code
@@ -15,25 +11,18 @@ import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.res.painterResource
 import eu.kanade.presentation.more.settings.SettingsMainScreen
 import eu.kanade.presentation.more.settings.SettingsSection
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.ui.base.controller.BasicComposeController
+import eu.kanade.tachiyomi.ui.base.controller.BasicFullComposeController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.setting.search.SettingsSearchController
-import uy.kohesive.injekt.injectLazy
 
-class SettingsMainController : BasicComposeController() {
-
-    private val preferences: PreferencesHelper by injectLazy()
-
-    override fun getTitle() = resources?.getString(R.string.label_settings)
+class SettingsMainController : BasicFullComposeController() {
 
     @Composable
-    override fun ComposeContent(nestedScrollInterop: NestedScrollConnection) {
+    override fun ComposeContent() {
         val settingsSections = listOf(
             SettingsSection(
                 titleRes = R.string.pref_category_general,
@@ -88,34 +77,9 @@ class SettingsMainController : BasicComposeController() {
         )
 
         SettingsMainScreen(
-            nestedScrollInterop = nestedScrollInterop,
+            navigateUp = router::popCurrentController,
             sections = settingsSections,
-        )
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.settings_main, menu)
-
-        // Initialize search option.
-        val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
-        searchView.maxWidth = Int.MAX_VALUE
-
-        // Change hint to show global search.
-        searchView.queryHint = applicationContext?.getString(R.string.action_search_settings)
-
-        searchItem.setOnActionExpandListener(
-            object : MenuItem.OnActionExpandListener {
-                override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                    preferences.lastSearchQuerySearchSettings().set("") // reset saved search query
-                    router.pushController(SettingsSearchController())
-                    return true
-                }
-
-                override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                    return true
-                }
-            },
+            onClickSearch = { router.pushController(SettingsSearchController()) },
         )
     }
 }

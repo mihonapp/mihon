@@ -37,7 +37,7 @@ class ExtensionDetailsPresenter(
 
         presenterScope.launchIO {
             extensionManager.getInstalledExtensionsFlow()
-                .map { it.firstOrNull { pkg-> pkg.pkgName == pkgName } }
+                .map { it.firstOrNull { pkg -> pkg.pkgName == pkgName } }
                 .collectLatest { extension ->
                     // If extension is null it's most likely uninstalled
                     if (extension == null) {

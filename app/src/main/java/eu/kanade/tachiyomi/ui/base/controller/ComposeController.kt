@@ -54,28 +54,6 @@ abstract class ComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
 /**
  * Basic Compose controller without a presenter.
  */
-abstract class BasicComposeController :
-    BaseController<ComposeControllerBinding>(),
-    ComposeContentController {
-
-    override fun createBinding(inflater: LayoutInflater) =
-        ComposeControllerBinding.inflate(inflater)
-
-    override fun onViewCreated(view: View) {
-        super.onViewCreated(view)
-
-        binding.root.apply {
-            setComposeContent {
-                val nestedScrollInterop = rememberNestedScrollInteropConnection()
-                ComposeContent(nestedScrollInterop)
-            }
-        }
-    }
-}
-
-/**
- * Basic Compose controller without a presenter.
- */
 abstract class BasicFullComposeController :
     BaseController<ComposeControllerBinding>(),
     FullComposeContentController {

@@ -1,12 +1,8 @@
 package eu.kanade.presentation.library.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.Refresh
@@ -19,22 +15,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.Pill
+import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.library.LibraryState
 import eu.kanade.presentation.theme.active
 import eu.kanade.tachiyomi.R
-import kotlinx.coroutines.delay
 
 @Composable
 fun LibraryToolbar(
@@ -57,14 +48,14 @@ fun LibraryToolbar(
         onClickSelectAll = onClickSelectAll,
         onClickInvertSelection = onClickInvertSelection,
     )
-    state.searchQuery != null -> LibrarySearchToolbar(
+    state.searchQuery != null -> SearchToolbar(
         searchQuery = state.searchQuery!!,
-        incognitoMode = incognitoMode,
-        downloadedOnlyMode = downloadedOnlyMode,
         onChangeSearchQuery = { state.searchQuery = it },
         onClickCloseSearch = { state.searchQuery = null },
         onClickResetSearch = { state.searchQuery = "" },
         scrollBehavior = scrollBehavior,
+        incognitoMode = incognitoMode,
+        downloadedOnlyMode = downloadedOnlyMode,
     )
     else -> LibraryRegularToolbar(
         title = title,
@@ -149,49 +140,6 @@ fun LibrarySelectionToolbar(
         onCancelActionMode = onClickUnselectAll,
         incognitoMode = incognitoMode,
         downloadedOnlyMode = downloadedOnlyMode,
-    )
-}
-
-@Composable
-fun LibrarySearchToolbar(
-    searchQuery: String,
-    incognitoMode: Boolean,
-    downloadedOnlyMode: Boolean,
-    onChangeSearchQuery: (String) -> Unit,
-    onClickCloseSearch: () -> Unit,
-    onClickResetSearch: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior?,
-) {
-    val focusRequester = remember { FocusRequester.Default }
-    AppBar(
-        navigateUp = onClickCloseSearch,
-        titleContent = {
-            BasicTextField(
-                value = searchQuery,
-                onValueChange = onChangeSearchQuery,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
-                singleLine = true,
-                cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
-            )
-            LaunchedEffect(focusRequester) {
-                // TODO: https://issuetracker.google.com/issues/204502668
-                delay(100)
-                focusRequester.requestFocus()
-            }
-        },
-        actions = {
-            AnimatedVisibility(visible = searchQuery.isNotEmpty()) {
-                IconButton(onClick = onClickResetSearch) {
-                    Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.action_reset))
-                }
-            }
-        },
-        incognitoMode = incognitoMode,
-        downloadedOnlyMode = downloadedOnlyMode,
-        scrollBehavior = scrollBehavior,
     )
 }
 

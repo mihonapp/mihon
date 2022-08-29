@@ -23,14 +23,6 @@ class SettingsSearchPresenter(
         SettingsSearchHelper.initPreferenceSearchResults(preferences.context)
     }
 
-    fun getLastSearchQuerySearchSettings(): String {
-        return preferences.lastSearchQuerySearchSettings().get()
-    }
-
-    fun setLastSearchQuerySearchSettings(query: String) {
-        preferences.lastSearchQuerySearchSettings().set(query)
-    }
-
     fun searchSettings(query: String?) {
         _state.value = if (!query.isNullOrBlank()) {
             SettingsSearchHelper.getFilteredResults(query)

@@ -7,19 +7,23 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
+import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.ui.setting.search.SettingsSearchHelper
 import eu.kanade.tachiyomi.ui.setting.search.SettingsSearchPresenter
@@ -27,24 +31,39 @@ import kotlin.reflect.full.createInstance
 
 @Composable
 fun SettingsSearchScreen(
-    nestedScroll: NestedScrollConnection,
+    navigateUp: () -> Unit,
     presenter: SettingsSearchPresenter,
     onClickResult: (SettingsController) -> Unit,
 ) {
     val results by presenter.state.collectAsState()
+    var query by remember { mutableStateOf("") }
 
-    val scrollState = rememberLazyListState()
-    ScrollbarLazyColumn(
-        modifier = Modifier
-            .nestedScroll(nestedScroll),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-        state = scrollState,
-    ) {
-        items(
-            items = results,
-            key = { it.key.toString() },
-        ) { result ->
-            SearchResult(result, onClickResult)
+    Scaffold(
+        modifier = Modifier.statusBarsPadding(),
+        topBar = {
+            SearchToolbar(
+                searchQuery = query,
+                onChangeSearchQuery = {
+                    query = it
+                    presenter.searchSettings(it)
+                },
+                onClickCloseSearch = navigateUp,
+                onClickResetSearch = { query = "" },
+            )
+
+            // TODO: search placeholder
+            // Text(stringResource(R.string.action_search_settings))
+        },
+    ) { paddingValues ->
+        ScrollbarLazyColumn(
+            contentPadding = paddingValues + WindowInsets.navigationBars.asPaddingValues(),
+        ) {
+            items(
+                items = results,
+                key = { it.key.toString() },
+            ) { result ->
+                SearchResult(result, onClickResult)
+            }
         }
     }
 }

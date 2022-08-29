@@ -1,13 +1,18 @@
 package eu.kanade.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,18 +23,23 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
+import kotlinx.coroutines.delay
 
 @Composable
 fun AppBar(
@@ -203,6 +213,51 @@ fun AppBarActions(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun SearchToolbar(
+    searchQuery: String,
+    onChangeSearchQuery: (String) -> Unit,
+    onClickCloseSearch: () -> Unit,
+    onClickResetSearch: () -> Unit,
+    incognitoMode: Boolean = false,
+    downloadedOnlyMode: Boolean = false,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+) {
+    val focusRequester = remember { FocusRequester.Default }
+    AppBar(
+        titleContent = {
+            BasicTextField(
+                value = searchQuery,
+                onValueChange = onChangeSearchQuery,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
+                singleLine = true,
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
+            )
+        },
+        navigationIcon = Icons.Outlined.ArrowBack,
+        navigateUp = onClickCloseSearch,
+        actions = {
+            AnimatedVisibility(visible = searchQuery.isNotEmpty()) {
+                IconButton(onClick = onClickResetSearch) {
+                    Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.action_reset))
+                }
+            }
+        },
+        isActionMode = false,
+        downloadedOnlyMode = downloadedOnlyMode,
+        incognitoMode = incognitoMode,
+        scrollBehavior = scrollBehavior,
+    )
+    LaunchedEffect(focusRequester) {
+        // TODO: https://issuetracker.google.com/issues/204502668
+        delay(100)
+        focusRequester.requestFocus()
     }
 }
 
