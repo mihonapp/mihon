@@ -6,7 +6,7 @@ import org.gradle.kotlin.dsl.TaskContainerScope
 fun TaskContainerScope.registerLocalesConfigTask(project: Project): TaskProvider<Task> {
     return with(project) {
         register("generateLocalesConfig") {
-            val emptyResourcesElement = "<resources>\\s*<\\/resources>|<resources\\/>".toRegex()
+            val emptyResourcesElement = "<resources>\\s*</resources>|<resources/>".toRegex()
             val valuesPrefix = "values-?".toRegex()
 
             val languages = fileTree("$projectDir/src/main/res/")
@@ -16,13 +16,15 @@ fun TaskContainerScope.registerLocalesConfigTask(project: Project): TaskProvider
                 .filterNot {
                     it.readText().contains(emptyResourcesElement)
                 }
+                .map { it.parentFile.name }
+                .sorted()
                 .joinToString(separator = "\n") {
-                    val language = it.parentFile.name
+                    val language = it
                         .replace(valuesPrefix, "")
+                        .replace("-r", "-")
                         .takeIf(String::isNotBlank) ?: "en"
                     "   <locale android:name=\"$language\"/>"
                 }
-
 
             val content = """
 <?xml version="1.0" encoding="utf-8"?>
