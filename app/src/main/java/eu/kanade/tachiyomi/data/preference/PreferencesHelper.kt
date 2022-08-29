@@ -12,9 +12,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
-import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
-import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
-import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
+import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
+import eu.kanade.tachiyomi.ui.library.setting.LibrarySort
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -169,7 +168,7 @@ class PreferencesHelper(val context: Context) {
 
     fun lastVersionCode() = flowPrefs.getInt("last_version_code", 0)
 
-    fun sourceDisplayMode() = flowPrefs.getEnum("pref_display_mode_catalogue", DisplayModeSetting.COMPACT_GRID)
+    fun sourceDisplayMode() = flowPrefs.getObject("pref_display_mode_catalogue", LibraryDisplayMode.Serializer, LibraryDisplayMode.default)
 
     fun enabledLanguages() = flowPrefs.getStringSet("source_languages", setOf("all", "en", Locale.getDefault().language))
 
@@ -230,7 +229,7 @@ class PreferencesHelper(val context: Context) {
     fun libraryUpdateCategories() = flowPrefs.getStringSet("library_update_categories", emptySet())
     fun libraryUpdateCategoriesExclude() = flowPrefs.getStringSet("library_update_categories_exclude", emptySet())
 
-    fun libraryDisplayMode() = flowPrefs.getEnum("pref_display_mode_library", DisplayModeSetting.COMPACT_GRID)
+    fun libraryDisplayMode() = flowPrefs.getObject("pref_display_mode_library", LibraryDisplayMode.Serializer, LibraryDisplayMode.default)
 
     fun downloadBadge() = flowPrefs.getBoolean("display_download_badge", false)
 
@@ -256,8 +255,7 @@ class PreferencesHelper(val context: Context) {
 
     fun filterTracking(name: Int) = flowPrefs.getInt("${Keys.filterTracked}_$name", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
 
-    fun librarySortingMode() = flowPrefs.getEnum(Keys.librarySortingMode, SortModeSetting.ALPHABETICAL)
-    fun librarySortingAscending() = flowPrefs.getEnum(Keys.librarySortingDirection, SortDirectionSetting.ASCENDING)
+    fun librarySortingMode() = flowPrefs.getObject(Keys.librarySortingMode, LibrarySort.Serializer, LibrarySort.default)
 
     fun migrationSortingMode() = flowPrefs.getEnum(Keys.migrationSortingMode, SetMigrateSorting.Mode.ALPHABETICAL)
     fun migrationSortingDirection() = flowPrefs.getEnum(Keys.migrationSortingDirection, SetMigrateSorting.Direction.ASCENDING)

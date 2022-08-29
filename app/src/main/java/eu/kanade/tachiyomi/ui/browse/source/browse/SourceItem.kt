@@ -10,16 +10,16 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.SourceComfortableGridItemBinding
 import eu.kanade.tachiyomi.databinding.SourceCompactGridItemBinding
-import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
+import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
 
-class SourceItem(val manga: Manga, private val displayMode: Preference<DisplayModeSetting>) :
+class SourceItem(val manga: Manga, private val displayMode: Preference<LibraryDisplayMode>) :
     AbstractFlexibleItem<SourceHolder<*>>() {
 
     override fun getLayoutRes(): Int {
         return when (displayMode.get()) {
-            DisplayModeSetting.COMPACT_GRID, DisplayModeSetting.COVER_ONLY_GRID -> R.layout.source_compact_grid_item
-            DisplayModeSetting.COMFORTABLE_GRID -> R.layout.source_comfortable_grid_item
-            DisplayModeSetting.LIST -> R.layout.source_list_item
+            LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> R.layout.source_compact_grid_item
+            LibraryDisplayMode.ComfortableGrid -> R.layout.source_comfortable_grid_item
+            LibraryDisplayMode.List -> R.layout.source_list_item
         }
     }
 
@@ -28,13 +28,13 @@ class SourceItem(val manga: Manga, private val displayMode: Preference<DisplayMo
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
     ): SourceHolder<*> {
         return when (displayMode.get()) {
-            DisplayModeSetting.COMPACT_GRID, DisplayModeSetting.COVER_ONLY_GRID -> {
+            LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
                 SourceCompactGridHolder(SourceCompactGridItemBinding.bind(view), adapter)
             }
-            DisplayModeSetting.COMFORTABLE_GRID -> {
+            LibraryDisplayMode.ComfortableGrid -> {
                 SourceComfortableGridHolder(SourceComfortableGridItemBinding.bind(view), adapter)
             }
-            DisplayModeSetting.LIST -> {
+            LibraryDisplayMode.List -> {
                 SourceListHolder(view, adapter)
             }
         }

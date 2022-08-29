@@ -13,8 +13,6 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.updater.AppUpdateJob
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
-import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
-import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
@@ -196,33 +194,33 @@ object Migrations {
             }
             if (oldVersion < 64) {
                 val oldSortingMode = prefs.getInt(PreferenceKeys.librarySortingMode, 0)
-                val oldSortingDirection = prefs.getBoolean(PreferenceKeys.librarySortingDirection, true)
+                val oldSortingDirection = prefs.getBoolean("library_sorting_ascending", true)
 
                 val newSortingMode = when (oldSortingMode) {
-                    0 -> SortModeSetting.ALPHABETICAL
-                    1 -> SortModeSetting.LAST_READ
-                    2 -> SortModeSetting.LAST_CHECKED
-                    3 -> SortModeSetting.UNREAD
-                    4 -> SortModeSetting.TOTAL_CHAPTERS
-                    6 -> SortModeSetting.LATEST_CHAPTER
-                    8 -> SortModeSetting.DATE_FETCHED
-                    7 -> SortModeSetting.DATE_ADDED
-                    else -> SortModeSetting.ALPHABETICAL
+                    0 -> "ALPHABETICAL"
+                    1 -> "LAST_READ"
+                    2 -> "LAST_CHECKED"
+                    3 -> "UNREAD"
+                    4 -> "TOTAL_CHAPTERS"
+                    6 -> "LATEST_CHAPTER"
+                    8 -> "DATE_FETCHED"
+                    7 -> "DATE_ADDED"
+                    else -> "ALPHABETICAL"
                 }
 
                 val newSortingDirection = when (oldSortingDirection) {
-                    true -> SortDirectionSetting.ASCENDING
-                    else -> SortDirectionSetting.DESCENDING
+                    true -> "ASCENDING"
+                    else -> "DESCENDING"
                 }
 
                 prefs.edit(commit = true) {
                     remove(PreferenceKeys.librarySortingMode)
-                    remove(PreferenceKeys.librarySortingDirection)
+                    remove("library_sorting_ascending")
                 }
 
                 prefs.edit {
-                    putString(PreferenceKeys.librarySortingMode, newSortingMode.name)
-                    putString(PreferenceKeys.librarySortingDirection, newSortingDirection.name)
+                    putString(PreferenceKeys.librarySortingMode, newSortingMode)
+                    putString("library_sorting_ascending", newSortingDirection)
                 }
             }
             if (oldVersion < 70) {
@@ -265,16 +263,24 @@ object Migrations {
             }
             if (oldVersion < 81) {
                 // Handle renamed enum values
-                @Suppress("DEPRECATION")
-                val newSortingMode = when (val oldSortingMode = preferences.librarySortingMode().get()) {
-                    SortModeSetting.LAST_CHECKED -> SortModeSetting.LAST_MANGA_UPDATE
-                    SortModeSetting.UNREAD -> SortModeSetting.UNREAD_COUNT
-                    SortModeSetting.DATE_FETCHED -> SortModeSetting.CHAPTER_FETCH_DATE
-                    else -> oldSortingMode
+                prefs.edit {
+                    val newSortingMode = when (val oldSortingMode = prefs.getString(PreferenceKeys.librarySortingMode, "ALPHABETICAL")) {
+                        "LAST_CHECKED" -> "LAST_MANGA_UPDATE"
+                        "UNREAD" -> "UNREAD_COUNT"
+                        "DATE_FETCHED" -> "CHAPTER_FETCH_DATE"
+                        else -> oldSortingMode
+                    }
+                    putString(PreferenceKeys.librarySortingMode, newSortingMode)
                 }
-                preferences.librarySortingMode().set(newSortingMode)
             }
-
+            if (oldVersion < 82) {
+                prefs.edit {
+                    val sort = prefs.getString(PreferenceKeys.librarySortingMode, null) ?: return@edit
+                    val direction = prefs.getString("library_sorting_ascending", "ASCENDING")!!
+                    putString(PreferenceKeys.librarySortingMode, "$sort,$direction")
+                    remove("library_sorting_ascending")
+                }
+            }
             return true
         }
 

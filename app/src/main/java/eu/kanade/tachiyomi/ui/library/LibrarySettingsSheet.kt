@@ -11,9 +11,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
-import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
-import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
-import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
+import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
+import eu.kanade.tachiyomi.ui.library.setting.LibrarySort
+import eu.kanade.tachiyomi.ui.library.setting.display
+import eu.kanade.tachiyomi.ui.library.setting.sort
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
@@ -202,29 +203,25 @@ class LibrarySettingsSheet(
             override val footer = null
 
             override fun initModels() {
-                val sorting = SortModeSetting.get(preferences, currentCategory)
-                val order = if (SortDirectionSetting.get(currentCategory) == SortDirectionSetting.ASCENDING) {
-                    Item.MultiSort.SORT_ASC
-                } else {
-                    Item.MultiSort.SORT_DESC
-                }
+                val sort = currentCategory?.sort ?: LibrarySort.default
+                val order = if (sort.isAscending) Item.MultiSort.SORT_ASC else Item.MultiSort.SORT_DESC
 
                 alphabetically.state =
-                    if (sorting == SortModeSetting.ALPHABETICAL) order else Item.MultiSort.SORT_NONE
+                    if (sort.type == LibrarySort.Type.Alphabetical) order else Item.MultiSort.SORT_NONE
                 lastRead.state =
-                    if (sorting == SortModeSetting.LAST_READ) order else Item.MultiSort.SORT_NONE
+                    if (sort.type == LibrarySort.Type.LastRead) order else Item.MultiSort.SORT_NONE
                 lastChecked.state =
-                    if (sorting == SortModeSetting.LAST_MANGA_UPDATE) order else Item.MultiSort.SORT_NONE
+                    if (sort.type == LibrarySort.Type.LastUpdate) order else Item.MultiSort.SORT_NONE
                 unread.state =
-                    if (sorting == SortModeSetting.UNREAD_COUNT) order else Item.MultiSort.SORT_NONE
+                    if (sort.type == LibrarySort.Type.UnreadCount) order else Item.MultiSort.SORT_NONE
                 total.state =
-                    if (sorting == SortModeSetting.TOTAL_CHAPTERS) order else Item.MultiSort.SORT_NONE
+                    if (sort.type == LibrarySort.Type.TotalChapters) order else Item.MultiSort.SORT_NONE
                 latestChapter.state =
-                    if (sorting == SortModeSetting.LATEST_CHAPTER) order else Item.MultiSort.SORT_NONE
+                    if (sort.type == LibrarySort.Type.LatestChapter) order else Item.MultiSort.SORT_NONE
                 chapterFetchDate.state =
-                    if (sorting == SortModeSetting.CHAPTER_FETCH_DATE) order else Item.MultiSort.SORT_NONE
+                    if (sort.type == LibrarySort.Type.ChapterFetchDate) order else Item.MultiSort.SORT_NONE
                 dateAdded.state =
-                    if (sorting == SortModeSetting.DATE_ADDED) order else Item.MultiSort.SORT_NONE
+                    if (sort.type == LibrarySort.Type.DateAdded) order else Item.MultiSort.SORT_NONE
             }
 
             override fun onItemClicked(item: Item) {
@@ -249,20 +246,20 @@ class LibrarySettingsSheet(
 
             private fun setSortPreference(item: Item.MultiStateGroup) {
                 val mode = when (item) {
-                    alphabetically -> SortModeSetting.ALPHABETICAL
-                    lastRead -> SortModeSetting.LAST_READ
-                    lastChecked -> SortModeSetting.LAST_MANGA_UPDATE
-                    unread -> SortModeSetting.UNREAD_COUNT
-                    total -> SortModeSetting.TOTAL_CHAPTERS
-                    latestChapter -> SortModeSetting.LATEST_CHAPTER
-                    chapterFetchDate -> SortModeSetting.CHAPTER_FETCH_DATE
-                    dateAdded -> SortModeSetting.DATE_ADDED
+                    alphabetically -> LibrarySort.Type.Alphabetical
+                    lastRead -> LibrarySort.Type.LastRead
+                    lastChecked -> LibrarySort.Type.LastUpdate
+                    unread -> LibrarySort.Type.UnreadCount
+                    total -> LibrarySort.Type.TotalChapters
+                    latestChapter -> LibrarySort.Type.LatestChapter
+                    chapterFetchDate -> LibrarySort.Type.ChapterFetchDate
+                    dateAdded -> LibrarySort.Type.DateAdded
                     else -> throw NotImplementedError("Unknown display mode")
                 }
                 val direction = if (item.state == Item.MultiSort.SORT_ASC) {
-                    SortDirectionSetting.ASCENDING
+                    LibrarySort.Direction.Ascending
                 } else {
-                    SortDirectionSetting.DESCENDING
+                    LibrarySort.Direction.Descending
                 }
 
                 sheetScope.launchIO {
@@ -297,12 +294,8 @@ class LibrarySettingsSheet(
         }
 
         // Gets user preference of currently selected display mode at current category
-        private fun getDisplayModePreference(): DisplayModeSetting {
-            return if (currentCategory != null && preferences.categorizedDisplaySettings().get()) {
-                DisplayModeSetting.fromFlag(currentCategory!!.displayMode)
-            } else {
-                preferences.libraryDisplayMode().get()
-            }
+        private fun getDisplayModePreference(): LibraryDisplayMode {
+            return currentCategory?.display ?: LibraryDisplayMode.default
         }
 
         inner class DisplayGroup : Group {
@@ -334,19 +327,19 @@ class LibrarySettingsSheet(
             }
 
             // Sets display group selections based on given mode
-            fun setGroupSelections(mode: DisplayModeSetting) {
-                compactGrid.checked = mode == DisplayModeSetting.COMPACT_GRID
-                comfortableGrid.checked = mode == DisplayModeSetting.COMFORTABLE_GRID
-                coverOnlyGrid.checked = mode == DisplayModeSetting.COVER_ONLY_GRID
-                list.checked = mode == DisplayModeSetting.LIST
+            fun setGroupSelections(mode: LibraryDisplayMode) {
+                compactGrid.checked = mode == LibraryDisplayMode.CompactGrid
+                comfortableGrid.checked = mode == LibraryDisplayMode.ComfortableGrid
+                coverOnlyGrid.checked = mode == LibraryDisplayMode.CoverOnlyGrid
+                list.checked = mode == LibraryDisplayMode.List
             }
 
             private fun setDisplayModePreference(item: Item) {
                 val flag = when (item) {
-                    compactGrid -> DisplayModeSetting.COMPACT_GRID
-                    comfortableGrid -> DisplayModeSetting.COMFORTABLE_GRID
-                    coverOnlyGrid -> DisplayModeSetting.COVER_ONLY_GRID
-                    list -> DisplayModeSetting.LIST
+                    compactGrid -> LibraryDisplayMode.CompactGrid
+                    comfortableGrid -> LibraryDisplayMode.ComfortableGrid
+                    coverOnlyGrid -> LibraryDisplayMode.CoverOnlyGrid
+                    list -> LibraryDisplayMode.List
                     else -> throw NotImplementedError("Unknown display mode")
                 }
 

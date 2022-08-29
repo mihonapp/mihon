@@ -1,8 +1,5 @@
 package eu.kanade.domain.category.model
 
-import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
-import eu.kanade.tachiyomi.ui.library.setting.SortDirectionSetting
-import eu.kanade.tachiyomi.ui.library.setting.SortModeSetting
 import java.io.Serializable
 
 data class Category(
@@ -13,15 +10,6 @@ data class Category(
 ) : Serializable {
 
     val isSystemCategory: Boolean = id == UNCATEGORIZED_ID
-
-    val displayMode: Long
-        get() = flags and DisplayModeSetting.MASK
-
-    val sortMode: Long
-        get() = flags and SortModeSetting.MASK
-
-    val sortDirection: Long
-        get() = flags and SortDirectionSetting.MASK
 
     companion object {
 

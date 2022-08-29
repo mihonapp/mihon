@@ -16,6 +16,12 @@ BEGIN SELECT CASE
     END;
 END;
 
+getCategory:
+SELECT *
+FROM categories
+WHERE _id = :id
+LIMIT 1;
+
 getCategories:
 SELECT
 _id AS id,

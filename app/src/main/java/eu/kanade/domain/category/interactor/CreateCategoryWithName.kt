@@ -16,9 +16,10 @@ class CreateCategoryWithName(
 
     private val initialFlags: Long
         get() {
+            val sort = preferences.librarySortingMode().get()
             return preferences.libraryDisplayMode().get().flag or
-                preferences.librarySortingMode().get().flag or
-                preferences.librarySortingAscending().get().flag
+                sort.type.flag or
+                sort.direction.flag
         }
 
     suspend fun await(name: String): Result = withContext(NonCancellable) {

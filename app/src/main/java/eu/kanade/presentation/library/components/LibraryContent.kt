@@ -24,7 +24,7 @@ import eu.kanade.presentation.library.LibraryState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
-import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
+import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
 import eu.kanade.tachiyomi.widget.EmptyView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,7 +45,7 @@ fun LibraryContent(
     onRefresh: (Category?) -> Boolean,
     onGlobalSearchClicked: () -> Unit,
     getNumberOfMangaForCategory: @Composable (Long) -> State<Int?>,
-    getDisplayModeForPage: @Composable (Int) -> State<DisplayModeSetting>,
+    getDisplayModeForPage: @Composable (Int) -> State<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getLibraryForPage: @Composable (Int) -> State<List<LibraryItem>>,
 ) {

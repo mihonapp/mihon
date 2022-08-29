@@ -36,7 +36,6 @@ object PreferenceKeys {
     const val filterTracked = "pref_filter_library_tracked"
 
     const val librarySortingMode = "library_sorting_mode"
-    const val librarySortingDirection = "library_sorting_ascending"
 
     const val migrationSortingMode = "pref_migration_sorting"
     const val migrationSortingDirection = "pref_migration_direction"

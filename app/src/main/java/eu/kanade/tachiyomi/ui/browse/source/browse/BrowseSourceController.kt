@@ -37,7 +37,7 @@ import eu.kanade.tachiyomi.ui.base.controller.SearchableNucleusController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
-import eu.kanade.tachiyomi.ui.library.setting.DisplayModeSetting
+import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.AddDuplicateMangaDialog
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -212,7 +212,7 @@ open class BrowseSourceController(bundle: Bundle) :
             binding.catalogueView.removeView(oldRecycler)
         }
 
-        val recycler = if (preferences.sourceDisplayMode().get() == DisplayModeSetting.LIST) {
+        val recycler = if (preferences.sourceDisplayMode().get() == LibraryDisplayMode.List) {
             RecyclerView(view.context).apply {
                 id = R.id.recycler
                 layoutManager = LinearLayoutManager(context)
@@ -280,8 +280,8 @@ open class BrowseSourceController(bundle: Bundle) :
         )
 
         val displayItem = when (preferences.sourceDisplayMode().get()) {
-            DisplayModeSetting.LIST -> R.id.action_list
-            DisplayModeSetting.COMFORTABLE_GRID -> R.id.action_comfortable_grid
+            LibraryDisplayMode.List -> R.id.action_list
+            LibraryDisplayMode.ComfortableGrid -> R.id.action_comfortable_grid
             else -> R.id.action_compact_grid
         }
         menu.findItem(displayItem).isChecked = true
@@ -304,9 +304,9 @@ open class BrowseSourceController(bundle: Bundle) :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_search -> expandActionViewFromInteraction = true
-            R.id.action_compact_grid -> setDisplayMode(DisplayModeSetting.COMPACT_GRID)
-            R.id.action_comfortable_grid -> setDisplayMode(DisplayModeSetting.COMFORTABLE_GRID)
-            R.id.action_list -> setDisplayMode(DisplayModeSetting.LIST)
+            R.id.action_compact_grid -> setDisplayMode(LibraryDisplayMode.CompactGrid)
+            R.id.action_comfortable_grid -> setDisplayMode(LibraryDisplayMode.ComfortableGrid)
+            R.id.action_list -> setDisplayMode(LibraryDisplayMode.List)
             R.id.action_open_in_web_view -> openInWebView()
             R.id.action_local_source_help -> openLocalSourceHelpGuide()
         }
@@ -503,7 +503,7 @@ open class BrowseSourceController(bundle: Bundle) :
      *
      * @param mode the mode to change to
      */
-    private fun setDisplayMode(mode: DisplayModeSetting) {
+    private fun setDisplayMode(mode: LibraryDisplayMode) {
         val view = view ?: return
         val adapter = adapter ?: return
 

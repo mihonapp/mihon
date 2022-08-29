@@ -11,6 +11,10 @@ class CategoryRepositoryImpl(
     private val handler: DatabaseHandler,
 ) : CategoryRepository {
 
+    override suspend fun get(id: Long): Category? {
+        return handler.awaitOneOrNull { categoriesQueries.getCategory(id, categoryMapper) }
+    }
+
     override suspend fun getAll(): List<Category> {
         return handler.awaitList { categoriesQueries.getCategories(categoryMapper) }
     }
