@@ -6,10 +6,9 @@ class SetMigrateSorting(
     private val preferences: PreferencesHelper,
 ) {
 
-    fun await(mode: Mode, isAscending: Boolean) {
-        val direction = if (isAscending) Direction.ASCENDING else Direction.DESCENDING
-        preferences.migrationSortingDirection().set(direction)
+    fun await(mode: Mode, direction: Direction) {
         preferences.migrationSortingMode().set(mode)
+        preferences.migrationSortingDirection().set(direction)
     }
 
     enum class Mode {

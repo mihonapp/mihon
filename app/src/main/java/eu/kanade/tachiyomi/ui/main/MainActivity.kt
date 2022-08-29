@@ -45,7 +45,6 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.FullComposeContentController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.TabbedController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.base.controller.setRoot
 import eu.kanade.tachiyomi.ui.browse.BrowseController
@@ -162,7 +161,7 @@ class MainActivity : BaseActivity() {
                     R.id.nav_library -> router.setRoot(LibraryController(), id)
                     R.id.nav_updates -> router.setRoot(UpdatesController(), id)
                     R.id.nav_history -> router.setRoot(HistoryController(), id)
-                    R.id.nav_browse -> router.setRoot(BrowseController(), id)
+                    R.id.nav_browse -> router.setRoot(BrowseController(toExtensions = false), id)
                     R.id.nav_more -> router.setRoot(MoreController(), id)
                 }
             } else if (!isHandlingShortcut) {
@@ -588,17 +587,6 @@ class MainActivity : BaseActivity() {
         if (internalTo is RootController) {
             // Always show bottom nav again when returning to a RootController
             showNav(true)
-        }
-
-        if (from is TabbedController) {
-            from.cleanupTabs(binding.tabs)
-        }
-        if (internalTo is TabbedController) {
-            if (internalTo.configureTabs(binding.tabs)) {
-                binding.tabs.isVisible = true
-            }
-        } else {
-            binding.tabs.isVisible = false
         }
 
         if (from is FabController) {

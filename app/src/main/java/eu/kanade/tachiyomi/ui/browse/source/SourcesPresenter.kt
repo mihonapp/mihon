@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.browse.source
 
-import android.os.Bundle
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
@@ -9,9 +8,10 @@ import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.browse.SourceUiModel
 import eu.kanade.presentation.browse.SourcesState
 import eu.kanade.presentation.browse.SourcesStateImpl
-import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -22,17 +22,18 @@ import uy.kohesive.injekt.api.get
 import java.util.TreeMap
 
 class SourcesPresenter(
+    private val presenterScope: CoroutineScope,
     private val state: SourcesStateImpl = SourcesState() as SourcesStateImpl,
+    private val preferences: PreferencesHelper = Injekt.get(),
     private val getEnabledSources: GetEnabledSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
     private val toggleSourcePin: ToggleSourcePin = Injekt.get(),
-) : BasePresenter<SourcesController>(), SourcesState by state {
+) : SourcesState by state {
 
     private val _events = Channel<Event>(Int.MAX_VALUE)
     val events = _events.receiveAsFlow()
 
-    override fun onCreate(savedState: Bundle?) {
-        super.onCreate(savedState)
+    fun onCreate() {
         presenterScope.launchIO {
             getEnabledSources.subscribe()
                 .catch { exception ->
@@ -74,6 +75,12 @@ class SourcesPresenter(
         }
         state.isLoading = false
         state.items = uiModels
+    }
+
+    fun onOpenSource(source: Source) {
+        if (!preferences.incognitoMode().get()) {
+            preferences.lastUsedSource().set(source.id)
+        }
     }
 
     fun toggleSource(source: Source) {

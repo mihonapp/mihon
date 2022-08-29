@@ -10,6 +10,7 @@ interface ExtensionsState {
     val isLoading: Boolean
     val isRefreshing: Boolean
     val items: List<ExtensionUiModel>
+    val updates: Int
     val isEmpty: Boolean
 }
 
@@ -21,5 +22,6 @@ class ExtensionsStateImpl : ExtensionsState {
     override var isLoading: Boolean by mutableStateOf(true)
     override var isRefreshing: Boolean by mutableStateOf(false)
     override var items: List<ExtensionUiModel> by mutableStateOf(emptyList())
+    override var updates: Int by mutableStateOf(0)
     override val isEmpty: Boolean by derivedStateOf { items.isEmpty() }
 }

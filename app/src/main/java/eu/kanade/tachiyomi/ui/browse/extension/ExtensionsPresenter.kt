@@ -1,41 +1,43 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.StringRes
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.presentation.browse.ExtensionState
 import eu.kanade.presentation.browse.ExtensionsState
 import eu.kanade.presentation.browse.ExtensionsStateImpl
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class ExtensionsPresenter(
+    private val presenterScope: CoroutineScope,
     private val state: ExtensionsStateImpl = ExtensionState() as ExtensionsStateImpl,
+    private val preferences: PreferencesHelper = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensions: GetExtensionsByType = Injekt.get(),
-) : BasePresenter<ExtensionsController>(), ExtensionsState by state {
+) : ExtensionsState by state {
 
     private val _query: MutableStateFlow<String> = MutableStateFlow("")
 
     private var _currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
 
-    override fun onCreate(savedState: Bundle?) {
-        super.onCreate(savedState)
-
+    fun onCreate() {
         val context = Injekt.get<Application>()
         val extensionMapper: (Map<String, InstallStep>) -> ((Extension) -> ExtensionUiModel) = { map ->
             {
@@ -114,6 +116,10 @@ class ExtensionsPresenter(
         }
 
         presenterScope.launchIO { findAvailableExtensions() }
+
+        preferences.extensionUpdatesCount().asFlow()
+            .onEach { state.updates = it }
+            .launchIn(presenterScope)
     }
 
     fun search(query: String) {

@@ -21,8 +21,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,14 +38,12 @@ import eu.kanade.presentation.util.topPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.browse.source.SourcesPresenter
-import eu.kanade.tachiyomi.ui.browse.source.SourcesPresenter.Dialog
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SourcesScreen(
-    nestedScrollInterop: NestedScrollConnection,
     presenter: SourcesPresenter,
     onClickItem: (Source) -> Unit,
     onClickDisable: (Source) -> Unit,
@@ -60,7 +56,6 @@ fun SourcesScreen(
         presenter.isEmpty -> EmptyScreen(R.string.source_empty_screen)
         else -> {
             SourceList(
-                nestedScrollConnection = nestedScrollInterop,
                 state = presenter,
                 onClickItem = onClickItem,
                 onClickDisable = onClickDisable,
@@ -82,7 +77,6 @@ fun SourcesScreen(
 
 @Composable
 fun SourceList(
-    nestedScrollConnection: NestedScrollConnection,
     state: SourcesState,
     onClickItem: (Source) -> Unit,
     onClickDisable: (Source) -> Unit,
@@ -90,7 +84,6 @@ fun SourceList(
     onClickPin: (Source) -> Unit,
 ) {
     ScrollbarLazyColumn(
-        modifier = Modifier.nestedScroll(nestedScrollConnection),
         contentPadding = bottomNavPaddingValues + WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
     ) {
         items(
@@ -119,7 +112,7 @@ fun SourceList(
                     modifier = Modifier.animateItemPlacement(),
                     source = model.source,
                     onClickItem = onClickItem,
-                    onLongClickItem = { state.dialog = Dialog(it) },
+                    onLongClickItem = { state.dialog = SourcesPresenter.Dialog(it) },
                     onClickLatest = onClickLatest,
                     onClickPin = onClickPin,
                 )

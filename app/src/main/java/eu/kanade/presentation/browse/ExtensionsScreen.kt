@@ -22,15 +22,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,7 +54,6 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 @Composable
 fun ExtensionScreen(
-    nestedScrollInterop: NestedScrollConnection,
     presenter: ExtensionsPresenter,
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
@@ -68,10 +64,8 @@ fun ExtensionScreen(
     onOpenExtension: (Extension.Installed) -> Unit,
     onClickUpdateAll: () -> Unit,
     onRefresh: () -> Unit,
-    onLaunched: () -> Unit,
 ) {
     SwipeRefresh(
-        modifier = Modifier.nestedScroll(nestedScrollInterop),
         state = rememberSwipeRefreshState(presenter.isRefreshing),
         indicator = { s, trigger -> SwipeRefreshIndicator(s, trigger) },
         onRefresh = onRefresh,
@@ -90,7 +84,6 @@ fun ExtensionScreen(
                     onTrustExtension = onTrustExtension,
                     onOpenExtension = onOpenExtension,
                     onClickUpdateAll = onClickUpdateAll,
-                    onLaunched = onLaunched,
                 )
             }
         }
@@ -108,7 +101,6 @@ fun ExtensionContent(
     onTrustExtension: (Extension.Untrusted) -> Unit,
     onOpenExtension: (Extension.Installed) -> Unit,
     onClickUpdateAll: () -> Unit,
-    onLaunched: () -> Unit,
 ) {
     var trustState by remember { mutableStateOf<Extension.Untrusted?>(null) }
 
@@ -187,9 +179,6 @@ fun ExtensionContent(
                             }
                         },
                     )
-                    LaunchedEffect(Unit) {
-                        onLaunched()
-                    }
                 }
             }
         }
