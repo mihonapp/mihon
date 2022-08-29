@@ -99,25 +99,14 @@ class MangaPresenter(
 ) : BasePresenter<MangaController>() {
 
     private val _state: MutableStateFlow<MangaScreenState> = MutableStateFlow(MangaScreenState.Loading)
-
     val state = _state.asStateFlow()
 
     private val successState: MangaScreenState.Success?
         get() = state.value as? MangaScreenState.Success
 
-    /**
-     * Subscription to update the manga from the source.
-     */
     private var fetchMangaJob: Job? = null
-
-    /**
-     * Subscription to retrieve the new list of chapters from the source.
-     */
     private var fetchChaptersJob: Job? = null
 
-    /**
-     * Subscription to observe download status changes.
-     */
     private var observeDownloadsStatusJob: Job? = null
     private var observeDownloadsPageJob: Job? = null
 
@@ -138,7 +127,7 @@ class MangaPresenter(
     val isFavoritedManga: Boolean
         get() = manga?.favorite ?: false
 
-    val processedChapters: Sequence<ChapterItem>?
+    private val processedChapters: Sequence<ChapterItem>?
         get() = successState?.processedChapters
 
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
@@ -163,8 +152,6 @@ class MangaPresenter(
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-
-        // Manga info - start
 
         presenterScope.launchIO {
             val manga = getMangaAndChapters.awaitManga(mangaId)
@@ -221,15 +208,11 @@ class MangaPresenter(
         }
 
         preferences.incognitoMode()
-            .asHotFlow { incognito ->
-                incognitoMode = incognito
-            }
+            .asHotFlow { incognitoMode = it }
             .launchIn(presenterScope)
 
         preferences.downloadedOnly()
-            .asHotFlow { downloadedOnly ->
-                downloadedOnlyMode = downloadedOnly
-            }
+            .asHotFlow { downloadedOnlyMode = it }
             .launchIn(presenterScope)
     }
 
@@ -239,6 +222,7 @@ class MangaPresenter(
     }
 
     // Manga info - start
+
     /**
      * Fetch manga information from source.
      */
@@ -395,7 +379,7 @@ class MangaPresenter(
      * @param manga the manga to get categories from.
      * @return Array of category ids the manga is in, if none returns default id
      */
-    suspend fun getMangaCategoryIds(manga: DomainManga): List<Long> {
+    private suspend fun getMangaCategoryIds(manga: DomainManga): List<Long> {
         return getCategories.await(manga.id)
             .map { it.id }
     }
@@ -420,7 +404,7 @@ class MangaPresenter(
         moveMangaToCategory(categoryIds)
     }
 
-    fun moveMangaToCategory(categoryIds: List<Long>) {
+    private fun moveMangaToCategory(categoryIds: List<Long>) {
         presenterScope.launchIO {
             setMangaCategories.await(mangaId, categoryIds)
         }
@@ -951,7 +935,7 @@ class MangaPresenter(
                                 .lastOrNull()
                                 ?.chapterNumber?.toDouble() ?: -1.0
 
-                            if (latestLocalReadChapterNumber >= track.lastChapterRead) {
+                            if (latestLocalReadChapterNumber > track.lastChapterRead) {
                                 val updatedTrack = track.copy(
                                     lastChapterRead = latestLocalReadChapterNumber,
                                 )

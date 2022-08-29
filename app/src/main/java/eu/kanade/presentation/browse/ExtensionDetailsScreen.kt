@@ -11,6 +11,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -20,9 +21,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -41,22 +45,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.browse.components.ExtensionIcon
+import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DIVIDER_ALPHA
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.PreferenceRow
+import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
@@ -66,11 +73,68 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 @Composable
 fun ExtensionDetailsScreen(
-    nestedScrollInterop: NestedScrollConnection,
+    navigateUp: () -> Unit,
     presenter: ExtensionDetailsPresenter,
-    onClickUninstall: () -> Unit,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
-    onClickSource: (sourceId: Long) -> Unit,
+) {
+    val uriHandler = LocalUriHandler.current
+
+    Scaffold(
+        modifier = Modifier.statusBarsPadding(),
+        topBar = {
+            AppBar(
+                title = stringResource(R.string.label_extension_info),
+                navigateUp = navigateUp,
+                actions = {
+                    AppBarActions(
+                        actions = buildList {
+                            if (presenter.extension?.isUnofficial == false) {
+                                add(
+                                    AppBar.Action(
+                                        title = stringResource(R.string.whats_new),
+                                        icon = Icons.Outlined.History,
+                                        onClick = { uriHandler.openUri(presenter.getChangelogUrl()) },
+                                    ),
+                                )
+                                add(
+                                    AppBar.Action(
+                                        title = stringResource(R.string.action_faq_and_guides),
+                                        icon = Icons.Outlined.HelpOutline,
+                                        onClick = { uriHandler.openUri(presenter.getReadmeUrl()) },
+                                    ),
+                                )
+                            }
+                            addAll(
+                                listOf(
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.action_enable_all),
+                                        onClick = { presenter.toggleSources(true) },
+                                    ),
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.action_disable_all),
+                                        onClick = { presenter.toggleSources(false) },
+                                    ),
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.pref_clear_cookies),
+                                        onClick = { presenter.clearCookies() },
+                                    ),
+                                ),
+                            )
+                        },
+                    )
+                },
+            )
+        },
+    ) { paddingValues ->
+        ExtensionDetails(paddingValues, presenter, onClickSourcePreferences)
+    }
+}
+
+@Composable
+private fun ExtensionDetails(
+    paddingValues: PaddingValues,
+    presenter: ExtensionDetailsPresenter,
+    onClickSourcePreferences: (sourceId: Long) -> Unit,
 ) {
     when {
         presenter.isLoading -> LoadingScreen()
@@ -81,8 +145,7 @@ fun ExtensionDetailsScreen(
             var showNsfwWarning by remember { mutableStateOf(false) }
 
             ScrollbarLazyColumn(
-                modifier = Modifier.nestedScroll(nestedScrollInterop),
-                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+                contentPadding = paddingValues + WindowInsets.navigationBars.asPaddingValues(),
             ) {
                 when {
                     extension.isUnofficial ->
@@ -98,7 +161,7 @@ fun ExtensionDetailsScreen(
                 item {
                     DetailsHeader(
                         extension = extension,
-                        onClickUninstall = onClickUninstall,
+                        onClickUninstall = { presenter.uninstallExtension() },
                         onClickAppInfo = {
                             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                                 data = Uri.fromParts("package", extension.pkgName, null)
@@ -119,7 +182,7 @@ fun ExtensionDetailsScreen(
                         modifier = Modifier.animateItemPlacement(),
                         source = source,
                         onClickSourcePreferences = onClickSourcePreferences,
-                        onClickSource = onClickSource,
+                        onClickSource = { presenter.toggleSource(it) },
                     )
                 }
             }
