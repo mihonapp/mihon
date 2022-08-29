@@ -97,19 +97,16 @@ class LibraryPresenter(
     private val trackManager: TrackManager = Injekt.get(),
 ) : BasePresenter<LibraryController>(), LibraryState by state {
 
-    var loadedManga by mutableStateOf(emptyMap<Long, List<LibraryItem>>())
-        private set
+    private var loadedManga by mutableStateOf(emptyMap<Long, List<LibraryItem>>())
 
     val isLibraryEmpty by derivedStateOf { loadedManga.isEmpty() }
 
     val tabVisibility by preferences.categoryTabs().asState()
-
     val mangaCountVisibility by preferences.categoryNumberOfItems().asState()
 
     var activeCategory: Int by preferences.lastUsedCategory().asState()
 
     val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
-
     val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
 
     /**
@@ -147,7 +144,7 @@ class LibraryPresenter(
          */
         if (librarySubscription == null || librarySubscription!!.isCancelled) {
             librarySubscription = presenterScope.launchIO {
-                getLibraryObservable()
+                getLibraryFlow().asObservable()
                     .combineLatest(badgeTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
                         lib.apply { setBadges(mangaMap) }
                     }
@@ -402,8 +399,16 @@ class LibraryPresenter(
      *
      * @return an observable of the categories and its manga.
      */
-    private fun getLibraryObservable(): Observable<Library> {
-        return combine(getCategoriesFlow(), getLibraryMangasFlow()) { dbCategories, libraryManga ->
+    private fun getLibraryFlow(): Flow<Library> {
+        val categoriesFlow = getCategories.subscribe()
+        val libraryMangasFlow = getLibraryManga.subscribe()
+            .map { list ->
+                list.map { libraryManga ->
+                    // Display mode based on user preference: take it from global library setting or category
+                    LibraryItem(libraryManga)
+                }.groupBy { it.manga.category.toLong() }
+            }
+        return combine(categoriesFlow, libraryMangasFlow) { dbCategories, libraryManga ->
             val categories = if (libraryManga.isNotEmpty() && libraryManga.containsKey(0).not()) {
                 dbCategories.filterNot { it.isSystemCategory }
             } else {
@@ -412,32 +417,7 @@ class LibraryPresenter(
 
             state.categories = categories
             Library(categories, libraryManga)
-        }.asObservable()
-    }
-
-    /**
-     * Get the categories from the database.
-     *
-     * @return an observable of the categories.
-     */
-    private fun getCategoriesFlow(): Flow<List<Category>> {
-        return getCategories.subscribe()
-    }
-
-    /**
-     * Get the manga grouped by categories.
-     *
-     * @return an observable containing a map with the category id as key and a list of manga as the
-     * value.
-     */
-    private fun getLibraryMangasFlow(): Flow<LibraryMap> {
-        return getLibraryManga.subscribe()
-            .map { list ->
-                list.map { libraryManga ->
-                    // Display mode based on user preference: take it from global library setting or category
-                    LibraryItem(libraryManga)
-                }.groupBy { it.manga.category.toLong() }
-            }
+        }
     }
 
     /**
@@ -531,8 +511,8 @@ class LibraryPresenter(
      * @param mangas the list of manga.
      */
     fun downloadUnreadChapters(mangas: List<Manga>) {
-        mangas.forEach { manga ->
-            launchIO {
+        launchIO {
+            mangas.forEach { manga ->
                 val chapters = getChapterByMangaId.await(manga.id)
                     .filter { !it.read }
                     .map { it.toDbChapter() }
@@ -548,8 +528,8 @@ class LibraryPresenter(
      * @param mangas the list of manga.
      */
     fun markReadStatus(mangas: List<Manga>, read: Boolean) {
-        mangas.forEach { manga ->
-            launchIO {
+        launchIO {
+            mangas.forEach { manga ->
                 setReadStatus.await(
                     manga = manga,
                     read = read,
@@ -635,14 +615,15 @@ class LibraryPresenter(
 
         return produceState(initialValue = default, category, loadedManga, mangaCountVisibility, tabVisibility) {
             val title = if (tabVisibility.not()) categoryName else defaultTitle
+            val count = when {
+                category == null || mangaCountVisibility.not() -> null
+                tabVisibility.not() -> loadedManga[category.id]?.size
+                else -> loadedManga.values.flatten().distinct().size
+            }
 
-            value = when {
-                category == null -> default
-                (tabVisibility.not() && mangaCountVisibility.not()) -> LibraryToolbarTitle(title)
-                tabVisibility.not() && mangaCountVisibility -> LibraryToolbarTitle(title, loadedManga[category.id]?.size)
-                (tabVisibility && categories.size > 1) && mangaCountVisibility -> LibraryToolbarTitle(title)
-                tabVisibility && mangaCountVisibility -> LibraryToolbarTitle(title, loadedManga[category.id]?.size)
-                else -> default
+            value = when (category) {
+                null -> default
+                else -> LibraryToolbarTitle(title, count)
             }
         }
     }
@@ -672,10 +653,6 @@ class LibraryPresenter(
         return derivedStateOf {
             category.display
         }
-    }
-
-    fun hasSelection(): Boolean {
-        return selection.isNotEmpty()
     }
 
     fun clearSelection() {
