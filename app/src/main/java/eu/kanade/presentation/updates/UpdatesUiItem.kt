@@ -1,7 +1,9 @@
 package eu.kanade.presentation.updates
 
+import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +33,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.updates.model.UpdatesWithRelations
@@ -43,6 +47,28 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesItem
 import java.text.DateFormat
+import java.util.Date
+
+@Composable
+fun UpdatesLastUpdatedItem(
+    lastUpdated: Long,
+) {
+    val time = remember(lastUpdated) {
+        DateUtils.getRelativeTimeSpanString(lastUpdated, Date().time, DateUtils.MINUTE_IN_MILLIS)
+    }
+
+    Box(
+        modifier = Modifier
+            .padding(horizontal = horizontalPadding, vertical = 8.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.updates_last_update_info, time),
+            style = LocalTextStyle.current.copy(
+                fontStyle = FontStyle.Italic,
+            ),
+        )
+    }
+}
 
 fun LazyListScope.updatesUiItems(
     uiModels: List<UpdatesUiModel>,

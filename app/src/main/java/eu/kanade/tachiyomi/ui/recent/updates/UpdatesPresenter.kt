@@ -52,11 +52,11 @@ class UpdatesPresenter(
 ) : BasePresenter<UpdatesController>(), UpdatesState by state {
 
     val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
-
     val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
 
-    val relativeTime: Int by preferences.relativeTime().asState()
+    val lastUpdated by preferences.libraryUpdateLastTimestamp().asState()
 
+    val relativeTime: Int by preferences.relativeTime().asState()
     val dateFormat: DateFormat by mutableStateOf(preferences.dateFormat())
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
