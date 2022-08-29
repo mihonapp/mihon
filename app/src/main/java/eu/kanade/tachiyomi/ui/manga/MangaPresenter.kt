@@ -936,20 +936,31 @@ class MangaPresenter(
             item.manga_id = successState.manga.id
             launchIO {
                 try {
-                    val allChapters = successState.chapters
-                        .map { it.chapter.toDbChapter() }
+                    val allChapters = successState.chapters.map { it.chapter }
                     val hasReadChapters = allChapters.any { it.read }
                     service.bind(item, hasReadChapters)
 
                     item.toDomainTrack(idRequired = false)?.let { track ->
                         insertTrack.await(track)
 
-                        (service as? EnhancedTrackService)?.let { _ ->
-                            val chapters = successState.chapters
-                                .map { it.chapter }
+                        // Update chapter progress if newer chapters marked read locally
+                        if (hasReadChapters) {
+                            val latestLocalReadChapterNumber = allChapters
+                                .sortedBy { it.chapterNumber }
+                                .takeWhile { it.read }
+                                .lastOrNull()
+                                ?.chapterNumber?.toDouble() ?: -1.0
 
-                            syncChaptersWithTrackServiceTwoWay
-                                .await(chapters, track, service)
+                            if (latestLocalReadChapterNumber >= track.lastChapterRead) {
+                                val updatedTrack = track.copy(
+                                    lastChapterRead = latestLocalReadChapterNumber,
+                                )
+                                setTrackerLastChapterRead(TrackItem(updatedTrack.toDbTrack(), service), latestLocalReadChapterNumber.toInt())
+                            }
+                        }
+
+                        if (service is EnhancedTrackService) {
+                            syncChaptersWithTrackServiceTwoWay.await(allChapters, track, service)
                         }
                     }
                 } catch (e: Throwable) {
