@@ -32,7 +32,7 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
 
         val placeAtIndex = items.indexOf(currentStrip) + 1
         // Stop constantly adding split images
-        if (items[placeAtIndex] is StencilPage) return
+        if (items.getOrNull(placeAtIndex) is StencilPage) return
 
         val updatedItems = items.toMutableList()
         updatedItems.addAll(placeAtIndex, newStrips)

@@ -223,7 +223,7 @@ object ImageUtil {
             splitDataList.forEach { splitData ->
                 val splitPath = splitImagePath(imageFilePath, splitData.index)
 
-                val region = Rect(0, splitData.topOffset, splitData.outputImageWidth, splitData.bottomOffset)
+                val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
 
                 FileOutputStream(splitPath).use { outputStream ->
                     val splitBitmap = bitmapRegionDecoder.decodeRegion(region, options)
@@ -232,7 +232,7 @@ object ImageUtil {
                 }
                 logcat {
                     "Success: Split #${splitData.index + 1} with topOffset=${splitData.topOffset} " +
-                        "height=${splitData.outputImageHeight} bottomOffset=${splitData.bottomOffset}"
+                        "height=${splitData.splitHeight} bottomOffset=${splitData.bottomOffset}"
                 }
             }
             imageFile.delete()
@@ -274,15 +274,13 @@ object ImageUtil {
 
         logcat {
             "WebtoonSplit #${splitData.index} with topOffset=${splitData.topOffset} " +
-                "outputImageHeight=${splitData.outputImageHeight} bottomOffset=${splitData.bottomOffset}"
+                "splitHeight=${splitData.splitHeight} bottomOffset=${splitData.bottomOffset}"
         }
 
-        val options = extractImageOptions(imageStream).apply { inJustDecodeBounds = false }
-
-        val region = Rect(0, splitData.topOffset, splitData.outputImageWidth, splitData.bottomOffset)
+        val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
 
         try {
-            val splitBitmap = bitmapRegionDecoder.decodeRegion(region, options)
+            val splitBitmap = bitmapRegionDecoder.decodeRegion(region, null)
             val outputStream = ByteArrayOutputStream()
             splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             return ByteArrayInputStream(outputStream.toByteArray())
@@ -302,7 +300,7 @@ object ImageUtil {
             val imageHeight = outHeight
             val imageWidth = outWidth
 
-            val splitHeight = (getDisplayMaxHeightInPx * 1.5).toInt()
+            val splitHeight = getDisplayMaxHeightInPx * 2
             // -1 so it doesn't try to split when imageHeight = splitHeight
             val partCount = (imageHeight - 1) / splitHeight + 1
             val optimalSplitHeight = imageHeight / partCount
@@ -334,10 +332,10 @@ object ImageUtil {
     data class SplitData(
         val index: Int,
         val topOffset: Int,
-        val outputImageHeight: Int,
-        val outputImageWidth: Int,
+        val splitHeight: Int,
+        val splitWidth: Int,
     ) {
-        val bottomOffset = topOffset + outputImageHeight
+        val bottomOffset = topOffset + splitHeight
     }
 
     /**
