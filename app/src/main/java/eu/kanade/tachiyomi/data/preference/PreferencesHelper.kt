@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.ui.library.setting.LibrarySort
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.util.system.DeviceUtil
+import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.isDevFlavor
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import java.io.File
@@ -170,7 +171,7 @@ class PreferencesHelper(val context: Context) {
 
     fun sourceDisplayMode() = flowPrefs.getObject("pref_display_mode_catalogue", LibraryDisplayMode.Serializer, LibraryDisplayMode.default)
 
-    fun enabledLanguages() = flowPrefs.getStringSet("source_languages", setOf("all", "en", Locale.getDefault().language))
+    fun enabledLanguages() = flowPrefs.getStringSet("source_languages", LocaleHelper.getDefaultEnabledLanguages())
 
     fun trackUsername(sync: TrackService) = prefs.getString(Keys.trackUsername(sync.id), "")
 

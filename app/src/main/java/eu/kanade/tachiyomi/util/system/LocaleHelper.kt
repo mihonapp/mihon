@@ -37,20 +37,15 @@ object LocaleHelper {
         val locale = if (lang.isEmpty()) {
             LocaleListCompat.getAdjustedDefault()[0]
         } else {
-            getLocale(lang)
+            Locale.forLanguageTag(lang)
         }
         return locale!!.getDisplayName(locale).replaceFirstChar { it.uppercase(locale) }
     }
 
     /**
-     * Return Locale from string language code
+     * Return the default languages enabled for the sources.
      */
-    private fun getLocale(lang: String): Locale {
-        val sp = lang.split("_", "-")
-        return when (sp.size) {
-            2 -> Locale(sp[0], sp[1])
-            3 -> Locale(sp[0], sp[1], sp[2])
-            else -> Locale(lang)
-        }
+    fun getDefaultEnabledLanguages(): Set<String> {
+        return setOf("all", "en", Locale.getDefault().language)
     }
 }
