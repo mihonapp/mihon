@@ -257,7 +257,7 @@
     <string name="exclude">Exclude: %s</string>
 
       <!-- Extension section -->
-    <string name="all_lang">All</string>
+    <string name="multi_lang">Multi</string>
     <string name="ext_updates_pending">Updates pending</string>
     <string name="ext_update">Update</string>
     <string name="ext_update_all">Update all</string>

@@ -19,7 +19,7 @@ object LocaleHelper {
             SourcesPresenter.LAST_USED_KEY -> context.getString(R.string.last_used_source)
             SourcesPresenter.PINNED_KEY -> context.getString(R.string.pinned_sources)
             "other" -> context.getString(R.string.other_source)
-            "all" -> context.getString(R.string.all_lang)
+            "all" -> context.getString(R.string.multi_lang)
             else -> getDisplayName(lang)
         }
     }
