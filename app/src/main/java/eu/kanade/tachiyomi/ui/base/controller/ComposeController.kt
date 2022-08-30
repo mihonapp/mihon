@@ -10,7 +10,7 @@ import nucleus.presenter.Presenter
 
 abstract class FullComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
     NucleusController<ComposeControllerBinding, P>(bundle),
-    FullComposeContentController {
+    ComposeContentController {
 
     override fun createBinding(inflater: LayoutInflater) =
         ComposeControllerBinding.inflate(inflater)
@@ -31,7 +31,7 @@ abstract class FullComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
  */
 abstract class BasicFullComposeController(bundle: Bundle? = null) :
     BaseController<ComposeControllerBinding>(bundle),
-    FullComposeContentController {
+    ComposeContentController {
 
     override fun createBinding(inflater: LayoutInflater) =
         ComposeControllerBinding.inflate(inflater)
@@ -47,6 +47,6 @@ abstract class BasicFullComposeController(bundle: Bundle? = null) :
     }
 }
 
-interface FullComposeContentController {
+interface ComposeContentController {
     @Composable fun ComposeContent()
 }

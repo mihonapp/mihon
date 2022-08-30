@@ -41,9 +41,9 @@ import eu.kanade.tachiyomi.data.updater.AppUpdateResult
 import eu.kanade.tachiyomi.databinding.MainActivityBinding
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import eu.kanade.tachiyomi.ui.base.controller.ComposeContentController
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.FabController
-import eu.kanade.tachiyomi.ui.base.controller.FullComposeContentController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.base.controller.setRoot
@@ -599,9 +599,9 @@ class MainActivity : BaseActivity() {
             binding.fabLayout.rootFab.hide()
         }
 
-        val isFullComposeController = internalTo is FullComposeContentController
-        binding.appbar.isVisible = !isFullComposeController
-        binding.controllerContainer.enableScrollingBehavior(!isFullComposeController)
+        val isComposeController = internalTo is ComposeContentController
+        binding.appbar.isVisible = !isComposeController
+        binding.controllerContainer.enableScrollingBehavior(!isComposeController)
 
         if (!isTablet()) {
             // Save lift state

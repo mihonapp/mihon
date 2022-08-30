@@ -8,7 +8,13 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDownward
+import androidx.compose.material.icons.outlined.ArrowUpward
+import androidx.compose.material.icons.outlined.Numbers
+import androidx.compose.material.icons.outlined.SortByAlpha
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -75,25 +81,35 @@ fun MigrateSourceList(
     ScrollbarLazyColumn(
         contentPadding = bottomNavPaddingValues + WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
     ) {
-        stickyHeader {
-            Row {
-                Button(onClick = onToggleSortingMode) {
-                    Text(sortingMode.toString())
+        stickyHeader(key = "header") {
+            Row(
+                modifier = Modifier
+                    .animateItemPlacement()
+                    .padding(start = horizontalPadding),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.migration_selection_prompt),
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.header,
+                )
+
+                IconButton(onClick = onToggleSortingMode) {
+                    when (sortingMode) {
+                        SetMigrateSorting.Mode.ALPHABETICAL -> Icon(Icons.Outlined.SortByAlpha, contentDescription = stringResource(R.string.action_sort_alpha))
+                        SetMigrateSorting.Mode.TOTAL -> Icon(Icons.Outlined.Numbers, contentDescription = stringResource(R.string.action_sort_total))
+                    }
                 }
-                Button(onClick = onToggleSortingDirection) {
-                    Text(sortingDirection.toString())
+                IconButton(onClick = onToggleSortingDirection) {
+                    when (sortingDirection) {
+                        SetMigrateSorting.Direction.ASCENDING -> Icon(Icons.Outlined.ArrowUpward, contentDescription = stringResource(R.string.action_asc))
+                        SetMigrateSorting.Direction.DESCENDING -> Icon(Icons.Outlined.ArrowDownward, contentDescription = stringResource(R.string.action_desc))
+                    }
                 }
             }
         }
 
         item(key = "title") {
-            Text(
-                text = stringResource(R.string.migration_selection_prompt),
-                modifier = Modifier
-                    .animateItemPlacement()
-                    .padding(horizontal = horizontalPadding, vertical = 8.dp),
-                style = MaterialTheme.typography.header,
-            )
         }
 
         items(
