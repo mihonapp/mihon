@@ -15,6 +15,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,6 +48,7 @@ fun BrowseSourceToolbar(
     onWebViewClick: () -> Unit,
     onHelpClick: () -> Unit,
     onSearch: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     if (state.searchQuery == null) {
         BrowseSourceRegularToolbar(
@@ -57,6 +59,7 @@ fun BrowseSourceToolbar(
             onSearchClick = { state.searchQuery = "" },
             onWebViewClick = onWebViewClick,
             onHelpClick = onHelpClick,
+            scrollBehavior = scrollBehavior,
         )
     } else {
         BrowseSourceSearchToolbar(
@@ -68,6 +71,7 @@ fun BrowseSourceToolbar(
             },
             onResetClick = { state.searchQuery = "" },
             onSearchClick = onSearch,
+            scrollBehavior = scrollBehavior,
         )
     }
 }
@@ -81,6 +85,7 @@ fun BrowseSourceRegularToolbar(
     onSearchClick: () -> Unit,
     onWebViewClick: () -> Unit,
     onHelpClick: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     AppBar(
         navigateUp = navigateUp,
@@ -156,6 +161,7 @@ fun BrowseSourceRegularToolbar(
                 )
             }
         },
+        scrollBehavior = scrollBehavior,
     )
 }
 
@@ -166,6 +172,7 @@ fun BrowseSourceSearchToolbar(
     navigateUp: () -> Unit,
     onResetClick: () -> Unit,
     onSearchClick: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     val focusRequester = remember { FocusRequester() }
     AppBar(
@@ -197,6 +204,7 @@ fun BrowseSourceSearchToolbar(
                 ),
             )
         },
+        scrollBehavior = scrollBehavior,
     )
     LaunchedEffect(Unit) {
         // TODO: https://issuetracker.google.com/issues/204502668

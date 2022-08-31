@@ -3,6 +3,7 @@ package eu.kanade.presentation.more.settings.database.components
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.SelectAll
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.AppBar
@@ -16,6 +17,7 @@ fun ClearDatabaseToolbar(
     navigateUp: () -> Unit,
     onClickSelectAll: () -> Unit,
     onClickInvertSelection: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     AppBar(
         title = stringResource(R.string.pref_clear_database),
@@ -38,5 +40,6 @@ fun ClearDatabaseToolbar(
                 )
             }
         },
+        scrollBehavior = scrollBehavior,
     )
 }

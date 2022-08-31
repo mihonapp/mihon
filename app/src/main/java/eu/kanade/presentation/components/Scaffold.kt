@@ -17,6 +17,12 @@
 package eu.kanade.presentation.components
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.LocalContentColor
@@ -27,13 +33,17 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.LayoutDirection
@@ -81,7 +91,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Scaffold(
     modifier: Modifier = Modifier,
-    topBar: @Composable () -> Unit = {},
+    topBar: @Composable (TopAppBarScrollBehavior) -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
@@ -90,10 +100,25 @@ fun Scaffold(
     contentColor: Color = contentColorFor(containerColor),
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    Surface(modifier = modifier, color = containerColor, contentColor = contentColor) {
+    /**
+     * Tachiyomi: always handle insets and pass scroll behavior to topBar
+     */
+    val insetPaddingValue = WindowInsets.navigationBars
+        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+        .asPaddingValues()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+
+    Surface(
+        modifier = Modifier
+            .padding(insetPaddingValue)
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .then(modifier),
+        color = containerColor,
+        contentColor = contentColor,
+    ) {
         ScaffoldLayout(
             fabPosition = floatingActionButtonPosition,
-            topBar = topBar,
+            topBar = { topBar(scrollBehavior) },
             bottomBar = bottomBar,
             content = content,
             snackbar = snackbarHost,

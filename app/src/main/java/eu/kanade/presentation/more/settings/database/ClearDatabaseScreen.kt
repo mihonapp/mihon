@@ -19,12 +19,13 @@ fun ClearDatabaseScreen(
 ) {
     val context = LocalContext.current
     Scaffold(
-        topBar = {
+        topBar = { scrollBehavior ->
             ClearDatabaseToolbar(
                 state = presenter,
                 navigateUp = navigateUp,
                 onClickSelectAll = { presenter.selectAll() },
                 onClickInvertSelection = { presenter.invertSelection() },
+                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {

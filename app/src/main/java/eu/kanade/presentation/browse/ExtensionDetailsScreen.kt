@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -80,8 +79,7 @@ fun ExtensionDetailsScreen(
     val uriHandler = LocalUriHandler.current
 
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
+        topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(R.string.label_extension_info),
                 navigateUp = navigateUp,
@@ -123,6 +121,7 @@ fun ExtensionDetailsScreen(
                         },
                     )
                 },
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->

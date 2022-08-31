@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
@@ -33,7 +32,6 @@ fun TabbedScreen(
     }
 
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
         topBar = {
             AppBar(
                 title = stringResource(titleRes),

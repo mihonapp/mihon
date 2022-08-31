@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlipToBack
@@ -18,9 +17,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -67,9 +63,6 @@ fun UpdateScreen(
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
 ) {
     val updatesListState = rememberLazyListState()
-    val insetPaddingValue = WindowInsets.navigationBars
-        .only(WindowInsetsSides.Horizontal)
-        .asPaddingValues()
 
     val internalOnBackPressed = {
         if (presenter.selectionMode) {
@@ -88,12 +81,8 @@ fun UpdateScreen(
         started
     }
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(
-        modifier = Modifier
-            .padding(insetPaddingValue)
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
+        topBar = { scrollBehavior ->
             UpdatesAppBar(
                 incognitoMode = presenter.isIncognitoMode,
                 downloadedOnlyMode = presenter.isDownloadOnly,

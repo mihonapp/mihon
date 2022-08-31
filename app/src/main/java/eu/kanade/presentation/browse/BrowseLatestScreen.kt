@@ -38,7 +38,7 @@ fun BrowseLatestScreen(
     }
 
     Scaffold(
-        topBar = {
+        topBar = { scrollBehavior ->
             BrowseLatestToolbar(
                 navigateUp = navigateUp,
                 source = presenter.source!!,
@@ -46,6 +46,7 @@ fun BrowseLatestScreen(
                 onDisplayModeChange = { presenter.displayMode = it },
                 onHelpClick = onHelpClick,
                 onWebViewClick = onWebViewClick,
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->

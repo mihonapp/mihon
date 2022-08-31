@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,8 +38,7 @@ fun SettingsSearchScreen(
     var query by remember { mutableStateOf("") }
 
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
+        topBar = { scrollBehavior ->
             SearchToolbar(
                 searchQuery = query,
                 onChangeSearchQuery = {
@@ -49,6 +47,7 @@ fun SettingsSearchScreen(
                 },
                 onClickCloseSearch = navigateUp,
                 onClickResetSearch = { query = "" },
+                scrollBehavior = scrollBehavior,
             )
 
             // TODO: search placeholder

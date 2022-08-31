@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.runtime.Composable
@@ -40,11 +39,11 @@ fun AboutScreen(
     val uriHandler = LocalUriHandler.current
 
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
+        topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(R.string.pref_category_about),
                 navigateUp = navigateUp,
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->

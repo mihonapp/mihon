@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,11 +33,11 @@ fun MigrateMangaScreen(
 ) {
     val context = LocalContext.current
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
+        topBar = { scrollBehavior ->
             AppBar(
                 title = title,
                 navigateUp = navigateUp,
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->

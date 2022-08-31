@@ -1,17 +1,8 @@
 package eu.kanade.presentation.library
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.components.LibraryBottomActionMenu
 import eu.kanade.presentation.components.LoadingScreen
@@ -37,16 +28,11 @@ fun LibraryScreen(
     onClickFilter: () -> Unit,
     onClickRefresh: (Category?) -> Boolean,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val insets = WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
     Crossfade(targetState = presenter.isLoading) { state ->
         when (state) {
             true -> LoadingScreen()
             false -> Scaffold(
-                modifier = Modifier
-                    .windowInsetsPadding(insets)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = {
+                topBar = { scrollBehavior ->
                     val title by presenter.getToolbarTitle()
                     val tabVisible = presenter.tabVisibility && presenter.categories.size > 1
                     LibraryToolbar(

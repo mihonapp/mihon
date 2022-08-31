@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Switch
@@ -38,11 +37,11 @@ fun SourcesFilterScreen(
 ) {
     val context = LocalContext.current
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
+        topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(R.string.label_sources),
                 navigateUp = navigateUp,
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->

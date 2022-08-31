@@ -3,7 +3,6 @@ package eu.kanade.presentation.more
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.GetApp
@@ -15,7 +14,6 @@ import androidx.compose.material.icons.outlined.SettingsBackupRestore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -47,12 +45,12 @@ fun MoreScreen(
     val downloadQueueState by presenter.downloadQueueState.collectAsState()
 
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
+        topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(R.string.label_more),
                 downloadedOnlyMode = presenter.downloadedOnly.value,
                 incognitoMode = presenter.incognitoMode.value,
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->

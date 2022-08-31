@@ -71,7 +71,7 @@ fun BrowseSourceScreen(
     }
 
     Scaffold(
-        topBar = {
+        topBar = { scrollBehavior ->
             BrowseSourceToolbar(
                 state = presenter,
                 source = presenter.source!!,
@@ -81,6 +81,7 @@ fun BrowseSourceScreen(
                 onWebViewClick = onWebViewClick,
                 onHelpClick = onHelpClick,
                 onSearch = { presenter.search() },
+                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {

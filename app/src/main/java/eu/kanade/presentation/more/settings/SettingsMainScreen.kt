@@ -4,11 +4,9 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.AppBar
@@ -26,8 +24,7 @@ fun SettingsMainScreen(
     onClickSearch: () -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
+        topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(R.string.label_settings),
                 navigateUp = navigateUp,
@@ -42,6 +39,7 @@ fun SettingsMainScreen(
                         ),
                     )
                 },
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->

@@ -1,23 +1,13 @@
 package eu.kanade.presentation.history
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.paging.LoadState
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
+import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.history.components.HistoryContent
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
@@ -38,15 +28,9 @@ fun HistoryScreen(
     onClickResume: (HistoryWithRelations) -> Unit,
 ) {
     val context = LocalContext.current
-    val insetPaddingValue = WindowInsets.navigationBars
-        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
-        .asPaddingValues()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+
     Scaffold(
-        modifier = Modifier
-            .padding(insetPaddingValue)
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
+        topBar = { scrollBehavior ->
             HistoryToolbar(
                 state = presenter,
                 incognitoMode = presenter.isIncognitoMode,

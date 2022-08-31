@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
@@ -32,11 +31,11 @@ fun ExtensionFilterScreen(
 ) {
     val context = LocalContext.current
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
+        topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(R.string.label_extensions),
                 navigateUp = navigateUp,
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->
