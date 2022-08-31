@@ -19,6 +19,7 @@ const val PREF_DOH_360 = 7
 const val PREF_DOH_QUAD101 = 8
 const val PREF_DOH_MULLVAD = 9
 const val PREF_DOH_CONTROLD = 10
+const val PREF_DOH_NJALLA = 11
 
 fun OkHttpClient.Builder.dohCloudflare() = dns(
     DnsOverHttps.Builder().client(build())
@@ -153,6 +154,21 @@ fun OkHttpClient.Builder.dohControlD() = dns(
             InetAddress.getByName("76.76.10.0"),
             InetAddress.getByName("2606:1a40::"),
             InetAddress.getByName("2606:1a40:1::"),
+        )
+        .build(),
+)
+
+/*
+ * Njalla
+ *
+ * Non logging and uncensored
+ */
+fun OkHttpClient.Builder.dohNajalla() = dns(
+    DnsOverHttps.Builder().client(build())
+        .url("https://dns.njal.la/dns-query".toHttpUrl())
+        .bootstrapDnsHosts(
+            InetAddress.getByName("95.215.19.53"),
+            InetAddress.getByName("2001:67c:2354:2::53"),
         )
         .build(),
 )
