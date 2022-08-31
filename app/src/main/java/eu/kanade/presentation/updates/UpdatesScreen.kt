@@ -164,10 +164,9 @@ fun UpdateScreen(
                         contentPadding = contentPaddingWithNavBar,
                     ) {
                         if (presenter.lastUpdated > 0L) {
-                            item(key = "last_updated") {
-                                UpdatesLastUpdatedItem(presenter.lastUpdated)
-                            }
+                            updatesLastUpdatedItem(presenter.lastUpdated)
                         }
+
                         updatesUiItems(
                             uiModels = presenter.uiModels,
                             selectionMode = presenter.selectionMode,

@@ -49,24 +49,26 @@ import eu.kanade.tachiyomi.ui.recent.updates.UpdatesItem
 import java.text.DateFormat
 import java.util.Date
 
-@Composable
-fun UpdatesLastUpdatedItem(
+fun LazyListScope.updatesLastUpdatedItem(
     lastUpdated: Long,
 ) {
-    val time = remember(lastUpdated) {
-        DateUtils.getRelativeTimeSpanString(lastUpdated, Date().time, DateUtils.MINUTE_IN_MILLIS)
-    }
+    item(key = "last_updated") {
+        val time = remember(lastUpdated) {
+            DateUtils.getRelativeTimeSpanString(lastUpdated, Date().time, DateUtils.MINUTE_IN_MILLIS)
+        }
 
-    Box(
-        modifier = Modifier
-            .padding(horizontal = horizontalPadding, vertical = 8.dp),
-    ) {
-        Text(
-            text = stringResource(R.string.updates_last_update_info, time),
-            style = LocalTextStyle.current.copy(
-                fontStyle = FontStyle.Italic,
-            ),
-        )
+        Box(
+            modifier = Modifier
+                .animateItemPlacement()
+                .padding(horizontal = horizontalPadding, vertical = 8.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.updates_last_update_info, time),
+                style = LocalTextStyle.current.copy(
+                    fontStyle = FontStyle.Italic,
+                ),
+            )
+        }
     }
 }
 

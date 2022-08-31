@@ -202,16 +202,16 @@ sealed interface ExtensionUiModel {
         data class Resource(@StringRes val textRes: Int) : Header
         data class Text(val text: String) : Header
     }
+
     data class Item(
         val extension: Extension,
         val installStep: InstallStep,
     ) : ExtensionUiModel {
 
         fun key(): String {
-            return when (extension) {
-                is Extension.Installed ->
-                    if (extension.hasUpdate) "update_${extension.pkgName}" else extension.pkgName
-                else -> extension.pkgName
+            return when {
+                extension is Extension.Installed && extension.hasUpdate -> "${extension.pkgName}_update"
+                else -> "${extension.pkgName}_${installStep.name}"
             }
         }
     }

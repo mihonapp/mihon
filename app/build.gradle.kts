@@ -288,7 +288,7 @@ tasks {
     }
 
     withType<org.jmailen.gradle.kotlinter.tasks.LintTask>().configureEach {
-        exclude { it.file.path.contains("generated[\\\\/]".toRegex())}
+        exclude { it.file.path.contains("generated[\\\\/]".toRegex()) }
     }
 
     // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api(-markers)
