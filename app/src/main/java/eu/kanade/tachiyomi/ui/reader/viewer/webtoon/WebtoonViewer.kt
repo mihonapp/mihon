@@ -210,6 +210,11 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         logcat { "onPageSelected: ${page.number}/${pages.size}" }
         activity.onPageSelected(page)
 
+        // Skip preload on StencilPage
+        if (page is StencilPage) {
+            return
+        }
+
         // Preload next chapter once we're within the last 5 pages of the current chapter
         val inPreloadRange = pages.size - page.number < 5
         if (inPreloadRange && allowPreload && page.chapter == adapter.currentChapter) {

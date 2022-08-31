@@ -39,6 +39,7 @@ import eu.kanade.tachiyomi.ui.reader.loader.HttpPageLoader
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.model.StencilPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
@@ -414,8 +415,8 @@ class ReaderPresenter(
 
         val selectedChapter = page.chapter
 
-        // Insert page doesn't change page progress
-        if (page is InsertPage) {
+        // InsertPage and StencilPage doesn't change page progress
+        if (page is InsertPage || page is StencilPage) {
             return
         }
 
