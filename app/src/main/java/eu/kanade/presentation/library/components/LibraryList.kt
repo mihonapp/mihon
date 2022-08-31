@@ -2,6 +2,7 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.presentation.components.Badge
 import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.FastScrollLazyColumn
+import eu.kanade.presentation.components.MangaCover.Square
 import eu.kanade.presentation.components.TextButton
 import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.horizontalPadding
@@ -74,62 +76,109 @@ fun LibraryListItem(
     onLongClick: (LibraryManga) -> Unit,
 ) {
     val manga = item.manga
+    MangaListItem(
+        modifier = Modifier.selectedBackground(isSelected),
+        title = manga.title,
+        cover = MangaCover(
+            manga.id!!,
+            manga.source,
+            manga.favorite,
+            manga.thumbnail_url,
+            manga.cover_last_modified,
+        ),
+        onClick = { onClick(manga) },
+        onLongClick = { onLongClick(manga) },
+    ) {
+        if (item.downloadCount > 0) {
+            Badge(
+                text = "${item.downloadCount}",
+                color = MaterialTheme.colorScheme.tertiary,
+                textColor = MaterialTheme.colorScheme.onTertiary,
+            )
+        }
+        if (item.unreadCount > 0) {
+            Badge(text = "${item.unreadCount}")
+        }
+        if (item.isLocal) {
+            Badge(
+                text = stringResource(R.string.local_source_badge),
+                color = MaterialTheme.colorScheme.tertiary,
+                textColor = MaterialTheme.colorScheme.onTertiary,
+            )
+        }
+        if (item.isLocal.not() && item.sourceLanguage.isNotEmpty()) {
+            Badge(
+                text = item.sourceLanguage,
+                color = MaterialTheme.colorScheme.tertiary,
+                textColor = MaterialTheme.colorScheme.onTertiary,
+            )
+        }
+    }
+}
+
+@Composable
+fun MangaListItem(
+    modifier: Modifier = Modifier,
+    title: String,
+    cover: MangaCover,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit = onClick,
+    badges: @Composable RowScope.() -> Unit,
+) {
+    MangaListItem(
+        modifier = modifier,
+        coverContent = {
+            Square(
+                modifier = Modifier
+                    .padding(vertical = verticalPadding)
+                    .fillMaxHeight(),
+                data = cover,
+            )
+        },
+        badges = badges,
+        onClick = onClick,
+        onLongClick = onLongClick,
+        content = {
+            MangaListItemContent(title)
+        },
+    )
+}
+
+@Composable
+fun MangaListItem(
+    modifier: Modifier = Modifier,
+    coverContent: @Composable RowScope.() -> Unit,
+    badges: @Composable RowScope.() -> Unit,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    content: @Composable RowScope.() -> Unit,
+) {
     Row(
-        modifier = Modifier
-            .selectedBackground(isSelected)
+        modifier = modifier
             .height(56.dp)
             .combinedClickable(
-                onClick = { onClick(manga) },
-                onLongClick = { onLongClick(manga) },
+                onClick = onClick,
+                onLongClick = onLongClick,
             )
             .padding(horizontal = horizontalPadding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        eu.kanade.presentation.components.MangaCover.Square(
-            modifier = Modifier
-                .padding(vertical = verticalPadding)
-                .fillMaxHeight(),
-            data = MangaCover(
-                manga.id!!,
-                manga.source,
-                manga.favorite,
-                manga.thumbnail_url,
-                manga.cover_last_modified,
-            ),
-        )
-        Text(
-            text = manga.title,
-            modifier = Modifier
-                .padding(horizontal = horizontalPadding)
-                .weight(1f),
-            maxLines = 2,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-        BadgeGroup {
-            if (item.downloadCount > 0) {
-                Badge(
-                    text = "${item.downloadCount}",
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.onTertiary,
-                )
-            }
-            if (item.unreadCount > 0) {
-                Badge(text = "${item.unreadCount}")
-            }
-            if (item.isLocal) {
-                Badge(
-                    text = stringResource(R.string.local_source_badge),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.onTertiary,
-                )
-            }
-            if (item.isLocal.not() && item.sourceLanguage.isNotEmpty()) {
-                Badge(
-                    text = item.sourceLanguage,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.onTertiary,
-                )
-            }
-        }
+        coverContent()
+        content()
+        BadgeGroup(content = badges)
     }
+}
+
+@Composable
+fun RowScope.MangaListItemContent(
+    text: String,
+) {
+    Text(
+        text = text,
+        modifier = Modifier
+            .padding(horizontal = horizontalPadding)
+            .weight(1f),
+        maxLines = 2,
+        style = MaterialTheme.typography.bodyMedium,
+    )
 }

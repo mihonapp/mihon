@@ -870,4 +870,5 @@
     <!-- App widget -->
     <string name="appwidget_updates_description">See your recently updated manga</string>
     <string name="appwidget_unavailable_locked">Widget not available when app lock is enabled</string>
+    <string name="remove_manga">You are about to remove this manga from your library</string>
 </resources>

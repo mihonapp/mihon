@@ -51,6 +51,12 @@ fun Manga.removeCovers(coverCache: CoverCache = Injekt.get()): Int {
     return coverCache.deleteFromCache(this, true)
 }
 
+fun DomainManga.removeCovers(coverCache: CoverCache = Injekt.get()): DomainManga {
+    if (isLocal()) return this
+    coverCache.deleteFromCache(this, true)
+    return copy(coverLastModified = Date().time)
+}
+
 fun DomainManga.shouldDownloadNewChapters(dbCategories: List<Long>, preferences: PreferencesHelper): Boolean {
     if (!favorite) return false
 

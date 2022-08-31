@@ -3,6 +3,7 @@ package eu.kanade.presentation.library.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -97,20 +98,27 @@ fun LibraryCompactGridItem(
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter),
         )
-        Text(
-            text = manga.title,
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.BottomStart),
-            color = Color.White,
-            fontSize = 12.sp,
-            maxLines = 2,
-            style = MaterialTheme.typography.titleSmall.copy(
-                shadow = Shadow(
-                    color = Color.Black,
-                    blurRadius = 4f,
-                ),
-            ),
-        )
+        MangaGridCompactText(manga.title)
     }
+}
+
+@Composable
+fun BoxScope.MangaGridCompactText(
+    text: String,
+) {
+    Text(
+        text = text,
+        modifier = Modifier
+            .padding(8.dp)
+            .align(Alignment.BottomStart),
+        color = Color.White,
+        fontSize = 12.sp,
+        maxLines = 2,
+        style = MaterialTheme.typography.titleSmall.copy(
+            shadow = Shadow(
+                color = Color.Black,
+                blurRadius = 4f,
+            ),
+        ),
+    )
 }

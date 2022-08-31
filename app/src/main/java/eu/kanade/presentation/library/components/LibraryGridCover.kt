@@ -2,6 +2,7 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,41 @@ import eu.kanade.presentation.components.MangaCover
 import eu.kanade.tachiyomi.R
 
 @Composable
+fun MangaGridCover(
+    modifier: Modifier = Modifier,
+    cover: @Composable BoxScope.() -> Unit = {},
+    badgesStart: (@Composable RowScope.() -> Unit)? = null,
+    badgesEnd: (@Composable RowScope.() -> Unit)? = null,
+    content: @Composable BoxScope.() -> Unit = {},
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .aspectRatio(MangaCover.Book.ratio),
+    ) {
+        cover()
+        content()
+        if (badgesStart != null) {
+            BadgeGroup(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.TopStart),
+                content = badgesStart,
+            )
+        }
+
+        if (badgesEnd != null) {
+            BadgeGroup(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.TopEnd),
+                content = badgesEnd,
+            )
+        }
+    }
+}
+
+@Composable
 fun LibraryGridCover(
     modifier: Modifier = Modifier,
     mangaCover: eu.kanade.domain.manga.model.MangaCover,
@@ -26,54 +62,41 @@ fun LibraryGridCover(
     language: String,
     content: @Composable BoxScope.() -> Unit = {},
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(MangaCover.Book.ratio),
-    ) {
-        MangaCover.Book(
-            modifier = Modifier.fillMaxWidth(),
-            data = mangaCover,
-        )
-        content()
-        if (downloadCount > 0 || unreadCount > 0) {
-            BadgeGroup(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .align(Alignment.TopStart),
-            ) {
-                if (downloadCount > 0) {
-                    Badge(
-                        text = "$downloadCount",
-                        color = MaterialTheme.colorScheme.tertiary,
-                        textColor = MaterialTheme.colorScheme.onTertiary,
-                    )
-                }
-                if (unreadCount > 0) {
-                    Badge(text = "$unreadCount")
-                }
+    MangaGridCover(
+        modifier = modifier,
+        cover = {
+            MangaCover.Book(
+                modifier = Modifier.fillMaxWidth(),
+                data = mangaCover,
+            )
+        },
+        badgesStart = {
+            if (downloadCount > 0) {
+                Badge(
+                    text = "$downloadCount",
+                    color = MaterialTheme.colorScheme.tertiary,
+                    textColor = MaterialTheme.colorScheme.onTertiary,
+                )
             }
-        }
-        if (isLocal || language.isNotEmpty()) {
-            BadgeGroup(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .align(Alignment.TopEnd),
-            ) {
-                if (isLocal) {
-                    Badge(
-                        text = stringResource(R.string.local_source_badge),
-                        color = MaterialTheme.colorScheme.tertiary,
-                        textColor = MaterialTheme.colorScheme.onTertiary,
-                    )
-                } else if (language.isNotEmpty()) {
-                    Badge(
-                        text = language,
-                        color = MaterialTheme.colorScheme.tertiary,
-                        textColor = MaterialTheme.colorScheme.onTertiary,
-                    )
-                }
+            if (unreadCount > 0) {
+                Badge(text = "$unreadCount")
             }
-        }
-    }
+        },
+        badgesEnd = {
+            if (isLocal) {
+                Badge(
+                    text = stringResource(R.string.local_source_badge),
+                    color = MaterialTheme.colorScheme.tertiary,
+                    textColor = MaterialTheme.colorScheme.onTertiary,
+                )
+            } else if (language.isNotEmpty()) {
+                Badge(
+                    text = language,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    textColor = MaterialTheme.colorScheme.onTertiary,
+                )
+            }
+        },
+        content = content,
+    )
 }
