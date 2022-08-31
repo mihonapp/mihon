@@ -32,7 +32,7 @@ class NetworkHelper(context: Context) {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .callTimeout(2, TimeUnit.MINUTES)
-                // .fastFallback(true) // TODO: re-enable when OkHttp 5 is stabler
+                .fastFallback(true)
                 .addInterceptor(userAgentInterceptor)
                 .addNetworkInterceptor(http103Interceptor)
 
