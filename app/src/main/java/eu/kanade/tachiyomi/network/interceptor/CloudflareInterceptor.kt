@@ -2,17 +2,12 @@ package eu.kanade.tachiyomi.network.interceptor
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
-import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.network.NetworkHelper
-import eu.kanade.tachiyomi.util.lang.launchUI
-import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewClientCompat
-import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.isOutdated
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
@@ -26,56 +21,26 @@ import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-class CloudflareInterceptor(private val context: Context) : Interceptor {
+class CloudflareInterceptor(private val context: Context) : WebViewInterceptor(context) {
 
     private val executor = ContextCompat.getMainExecutor(context)
 
     private val networkHelper: NetworkHelper by injectLazy()
 
-    /**
-     * When this is called, it initializes the WebView if it wasn't already. We use this to avoid
-     * blocking the main thread too much. If used too often we could consider moving it to the
-     * Application class.
-     */
-    private val initWebView by lazy {
-        // Crashes on some devices. We skip this in some cases since the only impact is slower
-        // WebView init in those rare cases.
-        // See https://bugs.chromium.org/p/chromium/issues/detail?id=1279562
-        if (DeviceUtil.isMiui || Build.VERSION.SDK_INT == Build.VERSION_CODES.S && DeviceUtil.isSamsung) {
-            return@lazy
-        }
-
-        WebSettings.getDefaultUserAgent(context)
+    override fun shouldIntercept(response: Response): Boolean {
+        // Check if Cloudflare anti-bot is on
+        return response.code in ERROR_CODES && response.header("Server") in SERVER_CHECK
     }
 
-    @Synchronized
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request()
-
-        if (!WebViewUtil.supportsWebView(context)) {
-            launchUI {
-                context.toast(R.string.information_webview_required, Toast.LENGTH_LONG)
-            }
-            return chain.proceed(originalRequest)
-        }
-
-        initWebView
-
-        val response = chain.proceed(originalRequest)
-
-        // Check if Cloudflare anti-bot is on
-        if (response.code !in ERROR_CODES || response.header("Server") !in SERVER_CHECK) {
-            return response
-        }
-
+    override fun intercept(chain: Interceptor.Chain, request: Request, response: Response): Response {
         try {
             response.close()
-            networkHelper.cookieManager.remove(originalRequest.url, COOKIE_NAMES, 0)
-            val oldCookie = networkHelper.cookieManager.get(originalRequest.url)
+            networkHelper.cookieManager.remove(request.url, COOKIE_NAMES, 0)
+            val oldCookie = networkHelper.cookieManager.get(request.url)
                 .firstOrNull { it.name == "cf_clearance" }
-            resolveWithWebView(originalRequest, oldCookie)
+            resolveWithWebView(request, oldCookie)
 
-            return chain.proceed(originalRequest)
+            return chain.proceed(request)
         }
         // Because OkHttp's enqueue only handles IOExceptions, wrap the exception so that
         // we don't crash the entire app
@@ -87,7 +52,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun resolveWithWebView(request: Request, oldCookie: Cookie?) {
+    private fun resolveWithWebView(originalRequest: Request, oldCookie: Cookie?) {
         // We need to lock this thread until the WebView finds the challenge solution url, because
         // OkHttp doesn't support asynchronous interceptors.
         val latch = CountDownLatch(1)
@@ -98,8 +63,8 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
         var cloudflareBypassed = false
         var isWebViewOutdated = false
 
-        val origRequestUrl = request.url.toString()
-        val headers = request.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }.toMutableMap()
+        val origRequestUrl = originalRequest.url.toString()
+        val headers = originalRequest.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }.toMutableMap()
 
         executor.execute {
             val webview = WebView(context)
@@ -107,7 +72,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
             webview.setDefaultSettings()
 
             // Avoid sending empty User-Agent, Chromium WebView will reset to default if empty
-            webview.settings.userAgentString = request.header("User-Agent")
+            webview.settings.userAgentString = originalRequest.header("User-Agent")
                 ?: networkHelper.defaultUserAgent
 
             webview.webViewClient = object : WebViewClientCompat() {
@@ -175,12 +140,10 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
             throw CloudflareBypassException()
         }
     }
-
-    companion object {
-        private val ERROR_CODES = listOf(403, 503)
-        private val SERVER_CHECK = arrayOf("cloudflare-nginx", "cloudflare")
-        private val COOKIE_NAMES = listOf("cf_clearance")
-    }
 }
+
+private val ERROR_CODES = listOf(403, 503)
+private val SERVER_CHECK = arrayOf("cloudflare-nginx", "cloudflare")
+private val COOKIE_NAMES = listOf("cf_clearance")
 
 private class CloudflareBypassException : Exception()
