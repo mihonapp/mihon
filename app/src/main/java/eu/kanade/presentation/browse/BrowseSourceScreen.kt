@@ -34,12 +34,10 @@ import eu.kanade.presentation.components.Scaffold
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.LocalSource
-import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourcePresenter
 import eu.kanade.tachiyomi.ui.browse.source.browse.NoResultsException
 import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
 import eu.kanade.tachiyomi.ui.more.MoreController
-import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.widget.EmptyView
 
 @Composable
@@ -50,6 +48,7 @@ fun BrowseSourceScreen(
     onFabClick: () -> Unit,
     onMangaClick: (Manga) -> Unit,
     onMangaLongClick: (Manga) -> Unit,
+    onWebViewClick: () -> Unit,
 ) {
     val columns by presenter.getColumnsPreferenceForCurrentOrientation()
 
@@ -57,17 +56,10 @@ fun BrowseSourceScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
     val onHelpClick = {
         uriHandler.openUri(LocalSource.HELP_URL)
-    }
-
-    val onWebViewClick = f@{
-        val source = presenter.source as? HttpSource ?: return@f
-        val intent = WebViewActivity.newIntent(context, source.baseUrl, source.id, source.name)
-        context.startActivity(intent)
     }
 
     Scaffold(

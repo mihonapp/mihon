@@ -42,19 +42,19 @@ fun BrowseLatestToolbar(
             AppBarActions(
                 actions = listOf(
                     AppBar.Action(
-                        title = "display_mode",
+                        title = stringResource(id = R.string.action_display_mode),
                         icon = Icons.Filled.ViewModule,
                         onClick = { selectingDisplayMode = true },
                     ),
                     if (source is LocalSource) {
                         AppBar.Action(
-                            title = "help",
+                            title = stringResource(id = R.string.label_help),
                             icon = Icons.Outlined.Help,
                             onClick = onHelpClick,
                         )
                     } else {
                         AppBar.Action(
-                            title = "webview",
+                            title = stringResource(id = R.string.action_web_view),
                             icon = Icons.Outlined.Public,
                             onClick = onWebViewClick,
                         )
