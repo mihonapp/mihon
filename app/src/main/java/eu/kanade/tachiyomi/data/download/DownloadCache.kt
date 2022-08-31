@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 class DownloadCache(
     private val context: Context,
     private val provider: DownloadProvider,
-    private val sourceManager: SourceManager,
+    private val sourceManager: SourceManager = Injekt.get(),
     private val preferences: PreferencesHelper = Injekt.get(),
 ) {
 

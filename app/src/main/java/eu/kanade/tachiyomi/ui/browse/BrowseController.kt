@@ -6,7 +6,8 @@ import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.os.bundleOf
-import eu.kanade.presentation.browse.BrowseScreen
+import eu.kanade.presentation.components.TabbedScreen
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
@@ -30,13 +31,14 @@ class BrowseController : FullComposeController<BrowsePresenter>, RootController 
 
     @Composable
     override fun ComposeContent() {
-        BrowseScreen(
-            startIndex = 1.takeIf { toExtensions },
+        TabbedScreen(
+            titleRes = R.string.browse,
             tabs = listOf(
                 sourcesTab(router, presenter.sourcesPresenter),
                 extensionsTab(router, presenter.extensionsPresenter),
                 migrateSourcesTab(router, presenter.migrationSourcesPresenter),
             ),
+            startIndex = 1.takeIf { toExtensions },
         )
 
         LaunchedEffect(Unit) {

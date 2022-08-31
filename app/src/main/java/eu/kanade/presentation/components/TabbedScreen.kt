@@ -1,4 +1,4 @@
-package eu.kanade.presentation.browse
+package eu.kanade.presentation.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
@@ -15,18 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.components.AppBarActions
-import eu.kanade.presentation.components.Scaffold
-import eu.kanade.presentation.components.TabIndicator
-import eu.kanade.presentation.components.TabText
-import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun BrowseScreen(
+fun TabbedScreen(
+    @StringRes titleRes: Int,
+    tabs: List<TabContent>,
     startIndex: Int? = null,
-    tabs: List<BrowseTab>,
 ) {
     val scope = rememberCoroutineScope()
     val state = rememberPagerState()
@@ -41,7 +36,7 @@ fun BrowseScreen(
         modifier = Modifier.statusBarsPadding(),
         topBar = {
             AppBar(
-                title = stringResource(R.string.browse),
+                title = stringResource(titleRes),
                 actions = {
                     AppBarActions(tabs[state.currentPage].actions)
                 },
@@ -76,7 +71,7 @@ fun BrowseScreen(
     }
 }
 
-data class BrowseTab(
+data class TabContent(
     @StringRes val titleRes: Int,
     val badgeNumber: Int? = null,
     val actions: List<AppBar.Action> = emptyList(),

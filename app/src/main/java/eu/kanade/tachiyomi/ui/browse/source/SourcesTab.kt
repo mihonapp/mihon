@@ -6,9 +6,9 @@ import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.bluelinelabs.conductor.Router
-import eu.kanade.presentation.browse.BrowseTab
 import eu.kanade.presentation.browse.SourcesScreen
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.TabContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.ui.browse.source.latest.LatestUpdatesController
 fun sourcesTab(
     router: Router?,
     presenter: SourcesPresenter,
-) = BrowseTab(
+) = TabContent(
     titleRes = R.string.label_sources,
     actions = listOf(
         AppBar.Action(

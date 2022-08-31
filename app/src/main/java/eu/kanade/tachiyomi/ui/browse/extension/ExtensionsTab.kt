@@ -1,14 +1,14 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.bluelinelabs.conductor.Router
-import eu.kanade.presentation.browse.BrowseTab
 import eu.kanade.presentation.browse.ExtensionScreen
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.TabContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.base.controller.pushController
@@ -18,7 +18,7 @@ import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsControlle
 fun extensionsTab(
     router: Router?,
     presenter: ExtensionsPresenter,
-) = BrowseTab(
+) = TabContent(
     titleRes = R.string.label_extensions,
     badgeNumber = presenter.updates.takeIf { it > 0 },
     actions = listOf(
@@ -33,7 +33,7 @@ fun extensionsTab(
 
         AppBar.Action(
             title = stringResource(R.string.action_filter),
-            icon = Icons.Outlined.FilterList,
+            icon = Icons.Outlined.Translate,
             onClick = { router?.pushController(ExtensionFilterController()) },
         ),
     ),

@@ -20,7 +20,6 @@ import logcat.LogPriority
 import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 
 /**
  * This class is used to manage chapter downloads in the application. It must be instantiated once
@@ -32,10 +31,9 @@ import uy.kohesive.injekt.injectLazy
 class DownloadManager(
     private val context: Context,
     private val getCategories: GetCategories = Injekt.get(),
+    private val sourceManager: SourceManager = Injekt.get(),
+    private val preferences: PreferencesHelper = Injekt.get(),
 ) {
-
-    private val sourceManager: SourceManager by injectLazy()
-    private val preferences: PreferencesHelper by injectLazy()
 
     /**
      * Downloads provider, used to retrieve the folders where the chapters are or should be stored.
@@ -45,12 +43,12 @@ class DownloadManager(
     /**
      * Cache of downloaded chapters.
      */
-    private val cache = DownloadCache(context, provider, sourceManager)
+    private val cache = DownloadCache(context, provider)
 
     /**
      * Downloader whose only task is to download chapters.
      */
-    private val downloader = Downloader(context, provider, cache, sourceManager)
+    private val downloader = Downloader(context, provider, cache)
 
     /**
      * Queue to delay the deletion of a list of chapters until triggered.
@@ -112,7 +110,7 @@ class DownloadManager(
         download?.let { queue.remove(it) }
         queue.add(0, toAdd)
         reorderQueue(queue)
-        if (isPaused()) {
+        if (downloader.isPaused()) {
             if (DownloadService.isRunning(context)) {
                 downloader.start()
             } else {
@@ -120,8 +118,6 @@ class DownloadManager(
             }
         }
     }
-
-    fun isPaused() = downloader.isPaused()
 
     /**
      * Reorders the download queue.

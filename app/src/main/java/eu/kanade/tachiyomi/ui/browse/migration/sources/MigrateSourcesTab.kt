@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import com.bluelinelabs.conductor.Router
-import eu.kanade.presentation.browse.BrowseTab
 import eu.kanade.presentation.browse.MigrateSourceScreen
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.TabContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaController
@@ -17,10 +17,10 @@ import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaController
 fun migrateSourcesTab(
     router: Router?,
     presenter: MigrationSourcesPresenter,
-): BrowseTab {
+): TabContent {
     val uriHandler = LocalUriHandler.current
 
-    return BrowseTab(
+    return TabContent(
         titleRes = R.string.label_migration,
         actions = listOf(
             AppBar.Action(
