@@ -238,7 +238,6 @@
     <string name="ext_install">Įdiegti</string>
     <string name="ext_obsolete">Pasenusi</string>
     <string name="ext_update">Atnaujinimas</string>
-    <string name="all_lang">Visi</string>
     <string name="exclude">Neįtraukti: %s</string>
     <string name="include">Įtraukti: %s</string>
     <string name="none">Nėra</string>

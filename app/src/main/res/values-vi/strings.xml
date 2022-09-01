@@ -77,7 +77,7 @@
     <string name="all">Tất cả</string>
     <string name="pref_library_update_restriction">Những hạn chế cập nhật thiết bị tự động</string>
     <string name="charging">Khi đang sạc</string>
-    <string name="pref_update_only_non_completed">Với trạng thái \"Hoàn Thành\"</string>
+    <string name="pref_update_only_non_completed">Đã có trạng thái \"Hoàn Thành\"</string>
     <string name="pref_auto_update_manga_sync">Cập nhật tiến triển sau khi đọc</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Toàn màn hình</string>
@@ -263,7 +263,6 @@
     <string name="update_weekly">Mỗi tuần</string>
     <string name="default_category">Danh mục mặc định</string>
     <string name="default_category_summary">Luôn hỏi</string>
-    <string name="all_lang">Tất cả</string>
     <string name="ext_update">Cập nhật</string>
     <string name="ext_install">Cài đặt</string>
     <string name="ext_pending">Đang chờ xử lý</string>
@@ -381,7 +380,7 @@
     <string name="pref_category_library_update">Cập nhật toàn bộ</string>
     <string name="pref_category_display">Hiển thị</string>
     <string name="hide_notification_content">Ẩn nội dung thông báo</string>
-    <string name="secure_screen_summary">Bảo vệ màn hình sẽ ẩn nội dung khi chuyển đổi ứng dụng và chặn chụp ảnh màn hình</string>
+    <string name="secure_screen_summary">Bảo vệ màn hình sẽ ẩn nội dung khi chuyển đổi ứng dụng và chặn chụp màn hình</string>
     <string name="secure_screen">Bảo vệ màn hình</string>
     <plurals name="lock_after_mins">
         <item quantity="other">Sau %1$s phút</item>
@@ -615,7 +614,7 @@
     <string name="manga_cover">Ảnh bìa</string>
     <string name="date">Ngày</string>
     <string name="local_filter_order_by">Xếp theo</string>
-    <string name="local_invalid_format">Định dạng chương không đúng</string>
+    <string name="local_invalid_format">Định dạng chương hợp lệ</string>
     <string name="chapter_not_found">Không tìm thấy chương</string>
     <string name="on">Bật</string>
     <string name="off">Tắt</string>
@@ -642,7 +641,7 @@
     <string name="pref_dark_theme_pure_black">Chế độ đen tuyền</string>
     <string name="categorized_display_settings">Tùy chỉnh mỗi danh mục cho sắp xếp và hiện thị</string>
     <string name="tracking_guide">Hướng dẫn theo dõi</string>
-    <string name="enhanced_services">Nguồn nâng cao</string>
+    <string name="enhanced_services">Dịch vụ nâng cao</string>
     <string name="enhanced_tracking_info">Dịch vụ cung cấp các tính năng nâng cao cho các nguồn cụ thể. Truyện sẽ được tự động theo dõi khi được thêm vào thư viện của bạn.</string>
     <string name="about_dont_kill_my_app">Một vài nhà sản xuất có các hạn chế về việc chạy ngầm của ứng dụng có thể gây dừng hiện thị dịch vụ nền. Xem thêm ở địa chỉ này để sửa chữa chúng.</string>
     <string name="pref_relative_format">Dấu thời gian liên quan</string>
@@ -680,7 +679,7 @@
     <string name="ext_installer_legacy">Phần kế thừa</string>
     <string name="pref_verbose_logging">Đăng nhập tường tận</string>
     <string name="action_display_language_badge">Ngôn ngữ</string>
-    <string name="backup_info">Tự động sao lưu là phương án an toàn nhất. Bạn cũng nên giữ lại các bản sao chép ở những nơi khác nữa.</string>
+    <string name="backup_info">Tự động sao lưu là phương án an toàn nhất. Bạn cũng nên giữ lại các bản sao lưu ở những nơi khác.</string>
     <string name="pref_verbose_logging_summary">In các ghi chép tường tận đến cả ghi chép hệ thống ( giảm hiệu suất ứng dụng )</string>
     <string name="notification_size_warning">Các bản cập nhật lớn sẽ gây hại cho các nguồn và có thể dẫn đến các bản cập nhật chậm hơn và cũng làm tăng mức sử dụng pin. Nhấn vào để tìm hiểu thêm.</string>
     <string name="ext_install_service_notif">Đang cài đặt tiện ích mở rộng…</string>
@@ -691,26 +690,26 @@
     <string name="channel_app_updates">Cập nhật ứng dụng</string>
     <string name="ext_update_all">Cập nhật tất cả</string>
     <string name="pref_auto_clear_chapter_cache">Xóa bộ nhớ đệm các chương khi tắt ứng dụng</string>
-    <string name="clear_database_source_item_count">%1$d truyện ngoài thư viện trong cơ sở dữ liệu</string>
+    <string name="clear_database_source_item_count">%1$d truyện ngoài thư viện có trong cơ sở dữ liệu</string>
     <string name="database_clean">Dọn cơ sở dữ liệu</string>
     <string name="extension_api_error">Không tải được danh sách tiện ích mở rộng</string>
     <string name="privacy_policy">Chính sách quyền riêng tư</string>
-    <string name="pref_library_update_manga_restriction">Bỏ qua cập nhật tiêu đề</string>
-    <string name="pref_update_only_completely_read">Với chương chưa đọc</string>
-    <string name="publishing_finished">Xuất bản đã hoàn thành</string>
-    <string name="cancelled">Đã hủy</string>
-    <string name="on_hiatus">Bị gián đoạn</string>
+    <string name="pref_library_update_manga_restriction">Bỏ qua cập nhật các bộ truyện</string>
+    <string name="pref_update_only_completely_read">Có chương chưa đọc</string>
+    <string name="publishing_finished">Đã hoàn thành xuất bản</string>
+    <string name="cancelled">Đã ngưng</string>
+    <string name="on_hiatus">Đang tạm ngưng</string>
     <string name="library_errors_help">Để được trợ giúp về cách sửa lỗi cập nhật thư viện, hãy xem %1$s</string>
     <string name="save_chapter_as_cbz">Lưu dưới dạng lưu trữ CBZ</string>
-    <string name="backup_restore_invalid_uri">Lỗi: trống URI</string>
+    <string name="backup_restore_invalid_uri">Lỗi: URI trống</string>
     <string name="action_faq_and_guides">Câu Hỏi Thờng Gặp và Hướng Dẫn</string>
-    <string name="pref_update_only_started">Mà chưa được bắt đầu</string>
+    <string name="pref_update_only_started">Chưa bắt đầu đọc</string>
     <string name="notification_update_skipped">%1$d cập nhật được bỏ qua</string>
     <string name="learn_more">Nhấn để tìm hiểu thêm</string>
     <string name="pref_landscape_zoom">Phóng ảnh phong cảnh</string>
     <string name="action_show_manga">Hiện truyện manga</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="confirm_manga_add_duplicate">Bạn đang có một tiếp nhận ở trong thư viện với cùng một tên nhưng lại đến từ một nguồn khác (%1$s).
+    <string name="confirm_manga_add_duplicate">Bạn đang có một bộ truyện ở trong thư viện có cùng tên nhưng sử dụng nguồn khác (%1$s).
 \n
 \nBạn vẫn muốn tiếp tục chứ\?</string>
     <string name="action_filter_started">Đã bắt đầu</string>
@@ -720,7 +719,7 @@
     <string name="notification_update_error">%1$d cập nhật thất bại</string>
     <string name="skipped_reason_completed">Đã bỏ qua vì bộ truyện đã hoàn thành</string>
     <string name="skipped_reason_not_caught_up">Đã bỏ qua vì vẫn còn chương chưa đọc</string>
-    <string name="skipped_reason_not_started">Đã bỏ qua vì không có chương được đọc</string>
+    <string name="skipped_reason_not_started">Đã bỏ qua vì chưa chương được đọc</string>
     <string name="channel_skipped">Bỏ qua</string>
     <string name="action_move_to_top_all_for_series">Di chuyển bộ truyện lên đầu</string>
     <string name="disabled_nav">Tắt</string>

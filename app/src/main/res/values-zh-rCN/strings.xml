@@ -91,7 +91,6 @@
     <string name="pref_auto_update_manga_sync">阅读后更新进度</string>
     <string name="default_category">默认分类</string>
     <string name="default_category_summary">始终询问</string>
-    <string name="all_lang">全部</string>
     <string name="ext_update">更新</string>
     <string name="ext_install">安装</string>
     <string name="ext_pending">等待中</string>
@@ -435,7 +434,7 @@
         <item quantity="other">耗时 %1$s，出现 %2$s 个错误</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">无法打开设备设置</string>
-    <string name="pref_true_color_summary">减少色带，但也许会影响性能</string>
+    <string name="pref_true_color_summary">减少色带，但可能会影响性能</string>
     <string name="action_display_unread_badge">未读章节</string>
     <string name="pref_refresh_library_covers">刷新书架封面</string>
     <string name="tracking_info">将章节进度单向同步到追踪服务。点击「追踪」按钮以设置漫画的追踪源。</string>
@@ -664,7 +663,7 @@
     <string name="pref_update_only_completely_read">有未读章节</string>
     <string name="pref_library_update_manga_restriction">跳过更新以下作品</string>
     <string name="library_errors_help">有关如何修复库更新错误的帮助，请参阅 %1$s</string>
-    <string name="save_chapter_as_cbz">保存为 CBZ 存档</string>
+    <string name="save_chapter_as_cbz">保存为 CBZ 压缩包</string>
     <string name="publishing_finished">出版完毕</string>
     <string name="cancelled">已中止</string>
     <string name="on_hiatus">休刊中</string>
@@ -732,20 +731,20 @@
     <string name="delete_category_confirmation">确定要删除分类“%s”吗？</string>
     <string name="delete_category">删除分类</string>
     <string name="internal_error">InternalError: 内部错误，详情请见崩溃日志</string>
-    <string name="pref_user_agent_string">默认用户代理字符串</string>
-    <string name="pref_reset_user_agent_string">重置默认 User Agent 字符串</string>
+    <string name="pref_user_agent_string">默认 User Agent 字符串</string>
+    <string name="pref_reset_user_agent_string">恢复默认 User Agent 字符串</string>
     <string name="action_remove_everything">全部删除</string>
     <string name="loader_rar5_error">不支持 RARv5 格式</string>
-    <string name="appwidget_unavailable_locked">应用锁开启时小部件不能使用</string>
+    <string name="appwidget_unavailable_locked">应用锁开启时，小部件不能使用</string>
     <string name="appwidget_updates_description">查看最近更新的漫画</string>
     <string name="update_already_running">有其他更新尚未完成</string>
     <string name="error_user_agent_string_blank">User Agent 字符串不能为空</string>
     <string name="theme_tidalwave">浪潮</string>
-    <string name="download_ahead">提前下载</string>
+    <string name="download_ahead">预先下载</string>
     <string name="auto_download_while_reading">阅读时自动下载</string>
     <plurals name="next_unread_chapters">
-        <item quantity="other">接下去 %d 个未读章节</item>
+        <item quantity="other">接下来 %d 个未读章节</item>
     </plurals>
-    <string name="download_ahead_info">仅适用于书架中的条目，且如果当前章节和下一章已经下载</string>
+    <string name="download_ahead_info">仅适用于书架中的作品，并且要求当前章节和下一章节已经下载</string>
     <string name="are_you_sure">你确定吗？</string>
 </resources>

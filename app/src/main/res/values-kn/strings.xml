@@ -239,7 +239,6 @@
     <string name="ext_obsolete">ಬಳಕೆಯಲ್ಲಿಲ್ಲದ</string>
     <string name="ext_update">ನವೀಕರಿಸಿ</string>
     <string name="ext_updates_pending">ಬಾಕಿ ಉಳಿದಿರುವ ನವೀಕರಣಗಳು</string>
-    <string name="all_lang">ಎಲ್ಲಾ</string>
     <string name="all">ಎಲ್ಲಾ</string>
     <plurals name="num_categories">
         <item quantity="one">%d ವರ್ಗ</item>

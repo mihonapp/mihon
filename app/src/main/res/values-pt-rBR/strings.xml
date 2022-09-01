@@ -255,7 +255,6 @@
     <string name="label_migration">Migrar</string>
     <string name="label_extensions">Extensões</string>
     <string name="label_extension_info">Informações da extensão</string>
-    <string name="all_lang">Todos</string>
     <string name="ext_update">Atualizar</string>
     <string name="ext_install">Instalar</string>
     <string name="ext_pending">Pendente</string>

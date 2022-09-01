@@ -280,7 +280,6 @@
     <string name="default_category">पूर्वनिर्धारित वर्ग</string>
     <string name="categorized_display_settings">क्रमबद्ध र प्रदर्शनको लागि प्रति-वर्गका सेटिङहरू</string>
     <string name="include">समावेश गर्नुहोस्: %s</string>
-    <string name="all_lang">सबै</string>
     <string name="pref_library_update_show_tab_badge">अपडेट आइकनमा नपढिएको संख्या देखाउनुहोस्</string>
     <string name="pref_library_update_categories_details">\"बहिष्कृत\" वर्गहरूमा रहेका माङ्गा \"समावेश गरिएका\" वर्गहरूमा भए पनि अपडेट हुने छैनन्।</string>
     <string name="ext_app_info">एप जानकारी</string>

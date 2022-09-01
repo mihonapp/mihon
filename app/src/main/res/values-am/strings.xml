@@ -20,7 +20,6 @@
     <string name="ext_obsolete">ጊዜ ያለፈበት</string>
     <string name="ext_update">አዘምን</string>
     <string name="ext_updates_pending">ዝመናዎች በመጠባበቅ ላይ ናቸው</string>
-    <string name="all_lang">ሁሉም</string>
     <string name="all">ሁሉም</string>
     <plurals name="num_categories">
         <item quantity="one">%d ምድብ</item>

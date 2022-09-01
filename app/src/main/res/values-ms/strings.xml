@@ -255,7 +255,6 @@
     <string name="label_extensions">Sambungan</string>
     <string name="label_extension_info">Info sambungan</string>
     <string name="action_open_in_web_view">Buka dalam WebView</string>
-    <string name="all_lang">Semua</string>
     <string name="ext_update">Kemas kini</string>
     <string name="ext_install">Pasang</string>
     <string name="ext_pending">Masih menunggu</string>

@@ -144,7 +144,6 @@
     <string name="none">Ingen</string>
     <string name="include">Inkluder: %s</string>
     <string name="exclude">Utelat: %s</string>
-    <string name="all_lang">Alle</string>
     <string name="ext_update">Oppdater</string>
     <string name="ext_update_all">Oppdater alle</string>
     <string name="ext_install">Installer</string>

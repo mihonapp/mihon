@@ -213,7 +213,7 @@
     <string name="fifth_to_last">Vier-na-laatste gelezen hoofdstuk</string>
     <string name="pref_clear_chapter_cache">Leeg hoofdstukkencache</string>
     <string name="cache_deleted">Cache geleegd. %1$d bestanden zijn verwijderd</string>
-    <string name="cache_delete_error">Er is een fout opgetreden bij het legen van de cache</string>
+    <string name="cache_delete_error">Fout opgetreden tijdens het wissen</string>
     <string name="pref_clear_database">Database leegmaken</string>
     <string name="pref_clear_database_summary">Verwijder geschiedenis voor manga die niet in je bibliotheek zijn opgeslagen</string>
     <string name="pref_refresh_library_tracking">Tracking bijwerken</string>
@@ -255,7 +255,6 @@
     <string name="label_migration">Migreren</string>
     <string name="label_extensions">Extensies</string>
     <string name="label_extension_info">Informatie over extensie</string>
-    <string name="all_lang">Alles</string>
     <string name="ext_update">Bijwerken</string>
     <string name="ext_install">Installeren</string>
     <string name="ext_pending">Aan het afwachten</string>
@@ -701,4 +700,14 @@
     <string name="action_move_to_top_all_for_series">Breng serie naar boven</string>
     <string name="pref_update_only_started">Geen gelezen hoofdstukken</string>
     <string name="skipped_reason_completed">Overgeslagen want de serie is af</string>
+    <string name="split_tall_images">Split tall afbeeldingen</string>
+    <string name="split_tall_images_summary">Verbetert de prestaties van de lezer</string>
+    <string name="complete_list">Volledige lijst</string>
+    <string name="unfinished_list">Onvoltooide lijst</string>
+    <string name="download_ahead">Download vooruit</string>
+    <string name="webview_data_deleted">WebView-gegevens gewist</string>
+    <string name="pref_clear_webview_data">WebView-gegevens wissen</string>
+    <string name="download_notifier_split_failed">Kan gedownloade afbeelding niet splitsen</string>
+    <string name="loader_rar5_error">RARv5-indeling wordt niet ondersteund</string>
+    <string name="download_notifier_split_page_not_found">Pagina %d niet gevonden tijdens het splitsen</string>
 </resources>

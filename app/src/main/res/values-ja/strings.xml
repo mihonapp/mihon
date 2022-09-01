@@ -80,7 +80,6 @@
     <string name="pref_auto_update_manga_sync">読んだ後に読書進捗を更新</string>
     <string name="default_category">デフォルトカテゴリー</string>
     <string name="default_category_summary">毎回尋ねる</string>
-    <string name="all_lang">すべて</string>
     <string name="ext_update">更新</string>
     <string name="ext_install">インストール</string>
     <string name="ext_pending">保留</string>
@@ -747,4 +746,5 @@
         <item quantity="other">次の未読の%d章</item>
     </plurals>
     <string name="download_ahead_info">現在のと次の章は既にダウンロード済みの場合のみ、そしてライブラリの項目にのみ有効です</string>
+    <string name="are_you_sure">本当に実行しますか？</string>
 </resources>

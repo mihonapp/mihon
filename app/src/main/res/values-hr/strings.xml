@@ -26,7 +26,6 @@
     <string name="ext_obsolete">Zastarjelo</string>
     <string name="ext_update">Ažuriraj</string>
     <string name="ext_updates_pending">Ažuriranja na čekanju</string>
-    <string name="all_lang">Svi</string>
     <string name="all">Sve</string>
     <plurals name="num_categories">
         <item quantity="one">%d kategorija</item>

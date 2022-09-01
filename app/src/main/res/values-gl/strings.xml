@@ -106,7 +106,6 @@
     <string name="ext_obsolete">Obsoletas</string>
     <string name="ext_update">Actualizar</string>
     <string name="ext_updates_pending">Actualizacións pendentes</string>
-    <string name="all_lang">Todas</string>
     <string name="all">Todas</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoría</item>

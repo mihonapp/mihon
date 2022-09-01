@@ -102,7 +102,6 @@
     <string name="pref_update_only_non_completed">ที่มีสถานะ \"จบแล้ว\"</string>
     <string name="pref_auto_update_manga_sync">อัปเดตความคืบหน้าหลังอ่าน</string>
     <string name="default_category">หมวดหมู่เริ่มต้น</string>
-    <string name="all_lang">ทั้งหมด</string>
     <string name="ext_trust">เชื่อถือได้</string>
     <string name="ext_untrusted">ไม่น่าเชื่อถือ</string>
     <string name="ext_uninstall">ถอนการติดตั้ง</string>
@@ -747,4 +746,5 @@
     <plurals name="next_unread_chapters">
         <item quantity="other">%d ตอนที่ยังไม่ได้อ่านถัดไป</item>
     </plurals>
+    <string name="are_you_sure">แน่ใจแล้วใช่หรือไม่\?</string>
 </resources>

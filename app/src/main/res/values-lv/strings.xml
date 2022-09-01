@@ -309,7 +309,6 @@
     <string name="pref_library_update_categories_details">Izslēgto kategoriju manga netiks atjaunināta, pat ja tās ir arī iekļautajās kategorijās.</string>
     <string name="none">Neviens</string>
     <string name="include">Iekļaut: %s</string>
-    <string name="all_lang">Visas</string>
     <string name="ext_update_all">Atjaunināt visu</string>
     <string name="ext_updates_pending">Gaida atjauninājumu</string>
     <string name="ext_installed">Instalēts</string>

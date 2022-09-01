@@ -231,7 +231,6 @@
     <string name="pref_library_update_categories_details">माङ्गाः याः वर्जितवर्गेषु सन्ति ताः अन्तर्भूतवर्गेषु सन्ति चेदपि तासां नवीकरणं न भविष्यति।</string>
     <string name="obsolete_extension_message">अयं विस्तारः इतःपरं न उपलभ्यः।</string>
     <string name="ext_trust">विश्वासः</string>
-    <string name="all_lang">सर्वाणि</string>
     <string name="ext_update_all">सर्वाणि नवीकरोतु</string>
     <string name="ext_update">नवीकरोतु</string>
     <string name="ext_install">प्रतिस्थायतु</string>

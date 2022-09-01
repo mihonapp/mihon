@@ -253,7 +253,6 @@
     <string name="local_source_badge">Lokalna</string>
     <string name="information_empty_category">Nie masz żadnych kategorii. Dotknij plusa, aby je utworzyć i zorganizować swoją bibliotekę.</string>
     <string name="label_extensions">Rozszerzenia</string>
-    <string name="all_lang">Wszystkie</string>
     <string name="ext_install">Zainstaluj</string>
     <string name="ext_pending">Oczekujące</string>
     <string name="ext_downloading">Pobieranie</string>
@@ -725,7 +724,7 @@
     <string name="action_close">Zamknij</string>
     <string name="action_move_to_top_all_for_series">Przenieś serię na górę</string>
     <string name="action_sort_unread_count">Ilość nieprzeczytanych</string>
-    <string name="split_tall_images">Automatycznie rozdzielaj wysokie obrazy</string>
+    <string name="split_tall_images">Rozdzielaj wysokie obrazy</string>
     <string name="learn_more">Kliknij, by dowiedzieć się więcej</string>
     <string name="update_check_open">Otwórz na GitHubie</string>
     <string name="pref_reset_viewer_flags_success">Reset wszystkich ustawień czytnika</string>
@@ -742,7 +741,7 @@
     <string name="webview_data_deleted">Dane WebView wyczyszczone</string>
     <string name="download_notifier_split_failed">Nie można rozdzielić pobranego obrazka</string>
     <string name="action_sort_last_manga_update">Ostatnia aktualizacja mangi</string>
-    <string name="split_tall_images_summary">Poprawia wydajność czytnika rozdzielając wysokie pobrane obrazy.</string>
+    <string name="split_tall_images_summary">Poprawia wydajność czytnika</string>
     <string name="description_placeholder">Brak opisu</string>
     <string name="wish_list">Lista życzeń</string>
     <string name="on_hold_list">Lista odłożonych na później</string>
@@ -772,4 +771,19 @@
     <string name="internal_error">InternalError: sprawdź log błędów po więcej informacji</string>
     <string name="action_remove_everything">Usuń wszystko</string>
     <string name="loader_rar5_error">Format RARv5 jest nieobsługiwany</string>
+    <string name="error_user_agent_string_blank">Pole user agent nie może być puste</string>
+    <string name="update_already_running">Aktualizacja już trwa</string>
+    <string name="theme_tidalwave">Tsunami</string>
+    <string name="download_ahead">Pobierz z wyprzedzeniem</string>
+    <string name="auto_download_while_reading">Pobieraj podczas czytania</string>
+    <string name="appwidget_updates_description">Zobacz ostatnio zaktualizowane mangi</string>
+    <string name="appwidget_unavailable_locked">Widżet nie jest dostępny kiedy blokada aplikacji jest włączona</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Następny nieprzeczytany rozdział</item>
+        <item quantity="few">%d następnych nieprzeczytanych rozdziałów</item>
+        <item quantity="many">%d następnych nieprzeczytanych rozdziałów</item>
+        <item quantity="other">%d następnych nieprzeczytanych rozdziałów</item>
+    </plurals>
+    <string name="are_you_sure">Jesteś pewien\?</string>
+    <string name="download_ahead_info">Działa tylko na wpisach w bibliotece oraz jeśli aktualny rozdział i następny są już pobrane</string>
 </resources>

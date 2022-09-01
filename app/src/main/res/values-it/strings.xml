@@ -280,7 +280,6 @@
     <string name="action_global_search">Ricerca globale</string>
     <string name="action_display_download_badge">Capitoli scaricati</string>
     <string name="action_reset">Reimposta</string>
-    <string name="all_lang">Tutte</string>
     <string name="ext_update">Aggiorna</string>
     <string name="ext_install">Installa</string>
     <string name="ext_pending">In coda</string>

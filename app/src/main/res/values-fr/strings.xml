@@ -319,7 +319,6 @@
     <string name="migration_dialog_what_to_include">Sélectionner les données à inclure</string>
     <string name="label_migration">Migrer</string>
     <string name="label_extension_info">Informations sur l\'extension</string>
-    <string name="all_lang">Toutes</string>
     <string name="ext_trust">Fiable</string>
     <string name="ext_untrusted">Non fiable</string>
     <string name="pager_viewer">Pages</string>
@@ -794,4 +793,5 @@
         <item quantity="other">%d chapitres suivants non lus</item>
     </plurals>
     <string name="download_ahead_info">Fonctionne seulement sur les entrées de la bibliothèque et si le chapitre actuel et le suivant sont déjà téléchargés</string>
+    <string name="are_you_sure">Êtes-vous sûr(e) \?</string>
 </resources>

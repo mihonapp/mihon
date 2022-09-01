@@ -91,7 +91,6 @@
     <string name="pref_auto_update_manga_sync">Agiorna su progressu a pustis de sa leghidura</string>
     <string name="default_category">Categoria predefinida</string>
     <string name="default_category_summary">Pedi semper</string>
-    <string name="all_lang">Totus</string>
     <string name="ext_update">Agiorna</string>
     <string name="ext_install">Installa</string>
     <string name="ext_pending">Isetende</string>
@@ -760,4 +759,5 @@
         <item quantity="other">Sos %d capìtulos lèghidos imbenientes</item>
     </plurals>
     <string name="download_ahead_info">Funtzionat petzi cun sos elementos in biblioteca e si su capìtulu atuale e cussu imbeniente sunt giai iscarrigados</string>
+    <string name="are_you_sure">Seguru ses\?</string>
 </resources>

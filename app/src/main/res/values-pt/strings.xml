@@ -267,7 +267,6 @@
     <string name="action_reset">Reiniciar</string>
     <string name="action_open_log">Abrir registo</string>
     <string name="pref_category_tracking">Listas</string>
-    <string name="all_lang">Tudo</string>
     <string name="pref_double_tap_anim_speed">Velocidade de animação de toque duplo</string>
     <string name="pager_viewer">Paginação</string>
     <string name="color_filter_r_value">R</string>

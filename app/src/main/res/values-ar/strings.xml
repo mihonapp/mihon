@@ -253,7 +253,6 @@
     <string name="label_extensions">الإضافات</string>
     <string name="label_extension_info">معلومات اﻹضافة</string>
     <string name="action_display_download_badge">الفصول المحملة</string>
-    <string name="all_lang">الكل</string>
     <string name="ext_update">تحديث</string>
     <string name="ext_install">تثبيت</string>
     <string name="ext_pending">المُعلقة</string>

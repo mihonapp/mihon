@@ -255,7 +255,6 @@
     <string name="label_migration">प्रवास</string>
     <string name="label_extensions">विस्तार</string>
     <string name="label_extension_info">विस्तार की जानकारी</string>
-    <string name="all_lang">सभी</string>
     <string name="ext_update">अद्यतन</string>
     <string name="ext_install">स्थापित करें</string>
     <string name="ext_pending">अपूर्ण</string>

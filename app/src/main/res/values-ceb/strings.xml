@@ -221,7 +221,6 @@
     <string name="update_72hour">Kada 3 ka adlaw</string>
     <string name="pref_library_update_refresh_metadata_summary">Susiha ang bag-ong hapin ug mga detalye kung mag-update sa librarya</string>
     <string name="include">Apil ang: %s</string>
-    <string name="all_lang">Tanan</string>
     <string name="ext_updates_pending">Naghulat ang mga update</string>
     <string name="ext_update">Update</string>
     <string name="ext_update_all">Update tanan</string>

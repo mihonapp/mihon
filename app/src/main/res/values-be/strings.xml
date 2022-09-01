@@ -107,7 +107,6 @@
     <string name="ext_obsolete">Састарэла</string>
     <string name="ext_update">Абнаўленне</string>
     <string name="ext_updates_pending">Даступны абнаўлення</string>
-    <string name="all_lang">Усе</string>
     <string name="exclude">Выключыць: %s</string>
     <string name="include">Уключаць: %s</string>
     <string name="none">Ніхто</string>

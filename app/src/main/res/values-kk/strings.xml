@@ -240,7 +240,6 @@
     <string name="none">Ешқайсы</string>
     <string name="exclude">Шығару: %s</string>
     <string name="include">Қосу: %s</string>
-    <string name="all_lang">Барлығы</string>
     <string name="ext_installing">Орнатылуда</string>
     <string name="ext_installed">Орнатылды</string>
     <string name="ext_trust">Сенім</string>

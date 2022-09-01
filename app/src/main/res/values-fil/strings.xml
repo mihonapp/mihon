@@ -219,7 +219,6 @@
     <string name="ext_obsolete">Di-suportado</string>
     <string name="ext_update">I-update</string>
     <string name="ext_updates_pending">Dapat i-update</string>
-    <string name="all_lang">Lahat</string>
     <string name="all">Lahat</string>
     <plurals name="num_categories">
         <item quantity="one">%d kategorya</item>
@@ -493,7 +492,7 @@
     <string name="restore_duration">%02d (na) min, %02d (na) seg</string>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
-        <item quantity="other">%d na tracker</item>
+        <item quantity="other">%d (na) tracker</item>
     </plurals>
     <string name="no_pinned_sources">Wala kang naka-pin na pinagkukunan</string>
     <string name="channel_complete">Tapos na</string>
@@ -717,7 +716,7 @@
     <string name="action_sort_last_manga_update">Huling update sa manga</string>
     <string name="action_sort_unread_count">Dami ng di pa nabasa</string>
     <string name="split_tall_images">Hatiin ang mga matatangkad na larawan</string>
-    <string name="split_tall_images_summary">Pinahusay ang pagganap ng mambabasa</string>
+    <string name="split_tall_images_summary">Pinapahusay ang performance ng reader</string>
     <string name="download_notifier_split_page_not_found">Hindi nakita ang pahina %d habang naghahati</string>
     <string name="download_notifier_split_page_path_not_found">Di makita ang file path ng pahina %d</string>
     <string name="download_notifier_split_failed">Di mahati ang na-download na larawan</string>
@@ -750,7 +749,15 @@
     <string name="loader_rar5_error">Di suportado ang format na RARv5</string>
     <string name="appwidget_updates_description">Tingnan ang mga kamakailang na-update na manga mo</string>
     <string name="appwidget_unavailable_locked">Di available ang widget kapag nakabukas ang lock</string>
-    <string name="update_already_running">May kasalukuyang nasimulan na update</string>
-    <string name="error_user_agent_string_blank">Hindi maaring maging blangko ang User agent string</string>
-    <string name="theme_tidalwave">Tiyuhin alon</string>
+    <string name="update_already_running">May ina-update sa ngayon</string>
+    <string name="error_user_agent_string_blank">Hindi dapat blangko ang user agent string</string>
+    <string name="theme_tidalwave">Daluyong</string>
+    <string name="download_ahead">I-download agad</string>
+    <string name="auto_download_while_reading">Kusang mag-download habang nagbabasa</string>
+    <string name="download_ahead_info">Gagana lang sa mga entry sa aklatan at kung naka-download na ang kasalukuyang kabanata pati ang susunod</string>
+    <string name="are_you_sure">Sigurado ka ba\?</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Susunod na kabanatang di pa nabasa</item>
+        <item quantity="other">Susunod na %d (na) kabanatang di pa nabasa</item>
+    </plurals>
 </resources>

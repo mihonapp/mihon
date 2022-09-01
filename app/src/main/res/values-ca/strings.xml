@@ -91,7 +91,6 @@
     <string name="pref_auto_update_manga_sync">Actualitza el progrés després de llegir</string>
     <string name="default_category">Categoria per defecte</string>
     <string name="default_category_summary">Demana-ho sempre</string>
-    <string name="all_lang">Tot</string>
     <string name="ext_update">Actualitza</string>
     <string name="ext_install">Instal·la</string>
     <string name="ext_pending">Pendent</string>

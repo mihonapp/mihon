@@ -253,7 +253,6 @@
     <string name="label_migration">Migrasi</string>
     <string name="label_extensions">Ekstensi</string>
     <string name="label_extension_info">Info ekstensi</string>
-    <string name="all_lang">Semua</string>
     <string name="ext_update">Perbarui</string>
     <string name="ext_install">Pasang</string>
     <string name="ext_pending">Tertunda</string>
