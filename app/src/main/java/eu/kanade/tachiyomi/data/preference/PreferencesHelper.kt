@@ -53,6 +53,10 @@ class PreferencesHelper(val context: Context) {
 
     fun lockAppAfter() = flowPrefs.getInt("lock_app_after", 0)
 
+    /**
+     * For app lock. Will be set when there is a pending timed lock.
+     * Otherwise this pref should be deleted.
+     */
     fun lastAppClosed() = flowPrefs.getLong("last_app_closed", 0)
 
     fun secureScreen() = flowPrefs.getEnum("secure_screen_v2", Values.SecureScreenMode.INCOGNITO)

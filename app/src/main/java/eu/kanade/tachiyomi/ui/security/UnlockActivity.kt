@@ -37,7 +37,7 @@ class UnlockActivity : BaseActivity() {
                     result: BiometricPrompt.AuthenticationResult,
                 ) {
                     super.onAuthenticationSucceeded(activity, result)
-                    SecureActivityDelegate.locked = false
+                    SecureActivityDelegate.unlock()
                     finish()
                 }
             },

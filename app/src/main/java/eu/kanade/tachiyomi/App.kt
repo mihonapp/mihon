@@ -39,7 +39,6 @@ import eu.kanade.tachiyomi.glance.UpdatesGridGlanceWidget
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.preference.asHotFlow
-import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.isDevFlavor
@@ -60,7 +59,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.security.Security
-import java.util.Date
 
 class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
@@ -175,10 +173,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        preferences.lastAppClosed().set(Date().time)
-        if (!AuthenticatorUtil.isAuthenticating && preferences.lockAppAfter().get() >= 0) {
-            SecureActivityDelegate.locked = true
-        }
+        SecureActivityDelegate.onApplicationStopped()
     }
 
     override fun getPackageName(): String {
