@@ -107,9 +107,7 @@ class DownloadCache(
         if (sourceDir != null) {
             val mangaDir = sourceDir.files[provider.getMangaDirName(manga.title)]
             if (mangaDir != null) {
-                return mangaDir.files
-                    .filter { !it.endsWith(Downloader.TMP_DIR_SUFFIX) }
-                    .size
+                return mangaDir.files.size
             }
         }
         return 0
@@ -155,7 +153,11 @@ class DownloadCache(
             mangaDirs.values.forEach { mangaDir ->
                 val chapterDirs = mangaDir.dir.listFiles()
                     .orEmpty()
-                    .mapNotNull { it.name?.replace(".cbz", "") }
+                    .mapNotNull { chapterDir ->
+                        chapterDir.name
+                            ?.replace(".cbz", "")
+                            ?.takeUnless { it.endsWith(Downloader.TMP_DIR_SUFFIX) }
+                    }
                     .toHashSet()
 
                 mangaDir.files = chapterDirs

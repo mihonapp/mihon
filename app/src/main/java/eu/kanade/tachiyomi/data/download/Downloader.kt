@@ -541,7 +541,7 @@ class Downloader(
         dirname: String,
         tmpDir: UniFile,
     ) {
-        val zip = mangaDir.createFile("$dirname.cbz.tmp")
+        val zip = mangaDir.createFile("$dirname.cbz$TMP_DIR_SUFFIX")
         ZipOutputStream(BufferedOutputStream(zip.openOutputStream())).use { zipOut ->
             zipOut.setMethod(ZipEntry.STORED)
 
