@@ -32,7 +32,7 @@ import eu.kanade.tachiyomi.ui.base.controller.openInBrowser
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.setting.database.ClearDatabaseController
 import eu.kanade.tachiyomi.util.CrashLogUtil
-import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchNonCancellableIO
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.defaultValue
@@ -89,7 +89,9 @@ class SettingsAdvancedController(
             summaryRes = R.string.pref_dump_crash_logs_summary
 
             onClick {
-                CrashLogUtil(context).dumpLogs()
+                viewScope.launchNonCancellableIO {
+                    CrashLogUtil(context).dumpLogs()
+                }
             }
         }
 
@@ -340,7 +342,7 @@ class SettingsAdvancedController(
 
     private fun clearChapterCache() {
         val activity = activity ?: return
-        launchIO {
+        viewScope.launchNonCancellableIO {
             try {
                 val deletedFiles = chapterCache.clear()
                 withUIContext {
@@ -358,12 +360,13 @@ class SettingsAdvancedController(
     private fun clearWebViewData() {
         val activity = activity ?: return
         try {
-            val webview = WebView(activity)
-            webview.setDefaultSettings()
-            webview.clearCache(true)
-            webview.clearFormData()
-            webview.clearHistory()
-            webview.clearSslPreferences()
+            WebView(activity).run {
+                setDefaultSettings()
+                clearCache(true)
+                clearFormData()
+                clearHistory()
+                clearSslPreferences()
+            }
             WebStorage.getInstance().deleteAllData()
             activity.applicationInfo?.dataDir?.let { File("$it/app_webview/").deleteRecursively() }
             activity.toast(R.string.webview_data_deleted)
@@ -375,7 +378,7 @@ class SettingsAdvancedController(
 
     private fun resetViewerFlags() {
         val activity = activity ?: return
-        launchIO {
+        viewScope.launchNonCancellableIO {
             val success = mangaRepository.resetViewerFlags()
             withUIContext {
                 val message = if (success) {

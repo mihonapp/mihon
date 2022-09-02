@@ -49,6 +49,7 @@ import eu.kanade.tachiyomi.ui.library.setting.display
 import eu.kanade.tachiyomi.ui.library.setting.sort
 import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchNonCancellableIO
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
 import kotlinx.coroutines.Job
@@ -511,7 +512,7 @@ class LibraryPresenter(
      * @param mangas the list of manga.
      */
     fun downloadUnreadChapters(mangas: List<Manga>) {
-        launchIO {
+        presenterScope.launchNonCancellableIO {
             mangas.forEach { manga ->
                 val chapters = getChapterByMangaId.await(manga.id)
                     .filter { !it.read }
@@ -528,7 +529,7 @@ class LibraryPresenter(
      * @param mangas the list of manga.
      */
     fun markReadStatus(mangas: List<Manga>, read: Boolean) {
-        launchIO {
+        presenterScope.launchNonCancellableIO {
             mangas.forEach { manga ->
                 setReadStatus.await(
                     manga = manga,
@@ -546,7 +547,7 @@ class LibraryPresenter(
      * @param deleteChapters whether to delete downloaded chapters.
      */
     fun removeMangas(mangaList: List<DbManga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
-        launchIO {
+        presenterScope.launchNonCancellableIO {
             val mangaToDelete = mangaList.distinctBy { it.id }
 
             if (deleteFromLibrary) {
@@ -579,7 +580,7 @@ class LibraryPresenter(
      * @param removeCategories the categories to remove in all mangas.
      */
     fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
-        presenterScope.launchIO {
+        presenterScope.launchNonCancellableIO {
             mangaList.map { manga ->
                 val categoryIds = getCategories.await(manga.id)
                     .map { it.id }

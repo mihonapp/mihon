@@ -24,20 +24,6 @@ object ChapterSettingsHelper {
     /**
      * Updates a single manga's Chapter Settings to match what's set in Preferences.
      */
-    fun applySettingDefaults(manga: Manga) {
-        launchIO {
-            setMangaChapterFlags.awaitSetAllFlags(
-                mangaId = manga.id,
-                unreadFilter = preferences.filterChapterByRead().toLong(),
-                downloadedFilter = preferences.filterChapterByDownloaded().toLong(),
-                bookmarkedFilter = preferences.filterChapterByBookmarked().toLong(),
-                sortingMode = preferences.sortChapterBySourceOrNumber().toLong(),
-                sortingDirection = preferences.sortChapterByAscendingOrDescending().toLong(),
-                displayMode = preferences.displayChapterByNameOrNumber().toLong(),
-            )
-        }
-    }
-
     suspend fun applySettingDefaults(mangaId: Long) {
         setMangaChapterFlags.awaitSetAllFlags(
             mangaId = mangaId,

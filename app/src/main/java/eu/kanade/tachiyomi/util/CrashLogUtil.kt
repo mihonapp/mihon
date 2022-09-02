@@ -7,7 +7,6 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
@@ -21,17 +20,15 @@ class CrashLogUtil(private val context: Context) {
         setSmallIcon(R.drawable.ic_tachi)
     }
 
-    fun dumpLogs() {
-        launchIO {
-            try {
-                val file = context.createFileInCacheDir("tachiyomi_crash_logs.txt")
-                Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}").waitFor()
-                file.appendText(getDebugInfo())
+    suspend fun dumpLogs() {
+        try {
+            val file = context.createFileInCacheDir("tachiyomi_crash_logs.txt")
+            Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}").waitFor()
+            file.appendText(getDebugInfo())
 
-                showNotification(file.getUriCompat(context))
-            } catch (e: Throwable) {
-                withUIContext { context.toast("Failed to get logs") }
-            }
+            showNotification(file.getUriCompat(context))
+        } catch (e: Throwable) {
+            withUIContext { context.toast("Failed to get logs") }
         }
     }
 

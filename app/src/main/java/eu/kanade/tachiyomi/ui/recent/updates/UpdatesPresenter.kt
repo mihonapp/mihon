@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchNonCancellableIO
 import eu.kanade.tachiyomi.util.lang.toDateKey
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
@@ -221,7 +222,7 @@ class UpdatesPresenter(
      * @param updatesItem the list of chapters to download.
      */
     fun downloadChapters(updatesItem: List<UpdatesItem>) {
-        launchIO {
+        presenterScope.launchNonCancellableIO {
             val groupedUpdates = updatesItem.groupBy { it.update.mangaId }.values
             for (updates in groupedUpdates) {
                 val mangaId = updates.first().update.mangaId
@@ -240,7 +241,7 @@ class UpdatesPresenter(
      * @param updatesItem list of chapters
      */
     fun deleteChapters(updatesItem: List<UpdatesItem>) {
-        launchIO {
+        presenterScope.launchNonCancellableIO {
             val groupedUpdates = updatesItem.groupBy { it.update.mangaId }.values
             val deletedIds = groupedUpdates.flatMap { updates ->
                 val mangaId = updates.first().update.mangaId
@@ -253,7 +254,7 @@ class UpdatesPresenter(
             val deletedUpdates = uiModels.filter {
                 it is UpdatesUiModel.Item && deletedIds.contains(it.item.update.chapterId)
             }
-            if (deletedUpdates.isEmpty()) return@launchIO
+            if (deletedUpdates.isEmpty()) return@launchNonCancellableIO
 
             // TODO: Don't do this fake status update
             state.uiModels = uiModels.toMutableList().apply {
