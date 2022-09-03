@@ -6,6 +6,7 @@ import com.hippo.unifile.UniFile
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.Injekt
@@ -111,6 +112,15 @@ class DownloadCache(
             }
         }
         return 0
+    }
+
+    /**
+     * Returns true if source has download
+     *
+     * @param source the source to check.
+     */
+    fun sourceHasDownload(source: Source): Boolean {
+        return rootDir.files[source.id]?.files?.size?.let { it > 0 } ?: false
     }
 
     /**
