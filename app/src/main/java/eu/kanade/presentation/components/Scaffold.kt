@@ -18,21 +18,10 @@ package eu.kanade.presentation.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.SmallTopAppBar
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.contentColorFor
@@ -83,9 +72,9 @@ import androidx.compose.ui.unit.dp
  * matching content color for [containerColor], or to the current [LocalContentColor] if
  * [containerColor] is not a color from the theme.
  * @param content content of the screen. The lambda receives a [PaddingValues] that should be
- * applied to the content root via [Modifier.padding] to properly offset top and bottom bars. If
- * using [Modifier.verticalScroll], apply this modifier to the child of the scroll, and not on
- * the scroll itself.
+ * applied to the content root via [Modifier.padding] and [Modifier.consumeWindowInsets] to
+ * properly offset top and bottom bars. If using [Modifier.verticalScroll], apply this modifier to
+ * the child of the scroll, and not on the scroll itself.
  */
 @ExperimentalMaterial3Api
 @Composable
@@ -101,16 +90,12 @@ fun Scaffold(
     content: @Composable (PaddingValues) -> Unit,
 ) {
     /**
-     * Tachiyomi: always handle insets and pass scroll behavior to topBar
+     * Tachiyomi: Pass scroll behavior to topBar
      */
-    val insetPaddingValue = WindowInsets.navigationBars
-        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
-        .asPaddingValues()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
-    Surface(
+    androidx.compose.material3.Surface(
         modifier = Modifier
-            .padding(insetPaddingValue)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .then(modifier),
         color = containerColor,
@@ -231,9 +216,19 @@ private fun ScaffoldLayout(
              * Tachiyomi: Also take account of fab height when providing inner padding
              */
             val bodyContentPlaceables = subcompose(ScaffoldLayoutContent.MainContent) {
+                val insets = WindowInsets.Companion.safeDrawing
+                    .asPaddingValues(this@SubcomposeLayout)
                 val innerPadding = PaddingValues(
-                    top = topBarHeight.toDp(),
-                    bottom = bottomBarHeight.toDp() + fabHeight.toDp(),
+                    top =
+                    if (topBarHeight == 0) insets.calculateTopPadding()
+                    else topBarHeight.toDp(),
+                    bottom =
+                    (
+                        if (bottomBarHeight == 0) insets.calculateBottomPadding()
+                        else bottomBarHeight.toDp()
+                        ) + fabHeight.toDp(),
+                    start = insets.calculateLeftPadding((this@SubcomposeLayout).layoutDirection),
+                    end = insets.calculateRightPadding((this@SubcomposeLayout).layoutDirection),
                 )
                 content(innerPadding)
             }.map { it.measure(looseConstraints) }
