@@ -39,6 +39,8 @@ class BrowseController : FullComposeController<BrowsePresenter>, RootController 
                 migrateSourcesTab(router, presenter.migrationSourcesPresenter),
             ),
             startIndex = 1.takeIf { toExtensions },
+            incognitoMode = presenter.isIncognitoMode,
+            downloadedOnlyMode = presenter.isDownloadOnly,
         )
 
         LaunchedEffect(Unit) {

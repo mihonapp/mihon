@@ -1,6 +1,5 @@
 package eu.kanade.presentation.library.components
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -30,8 +29,6 @@ fun LibraryTabs(
     getNumberOfMangaForCategory: @Composable (Long) -> State<Int?>,
 ) {
     val scope = rememberCoroutineScope()
-
-    val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
 
     Column {
         ScrollableTabRow(

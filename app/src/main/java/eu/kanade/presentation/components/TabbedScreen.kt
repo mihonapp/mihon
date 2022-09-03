@@ -21,6 +21,8 @@ fun TabbedScreen(
     @StringRes titleRes: Int,
     tabs: List<TabContent>,
     startIndex: Int? = null,
+    incognitoMode: Boolean,
+    downloadedOnlyMode: Boolean,
 ) {
     val scope = rememberCoroutineScope()
     val state = rememberPagerState()
@@ -55,6 +57,13 @@ fun TabbedScreen(
                         },
                     )
                 }
+            }
+
+            if (downloadedOnlyMode) {
+                DownloadedOnlyModeBanner()
+            }
+            if (incognitoMode) {
+                IncognitoModeBanner()
             }
 
             HorizontalPager(
