@@ -80,7 +80,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
             authClient.newCall(GET(url.toString()))
                 .await()
                 .use {
-                    var responseBody = it.body?.string().orEmpty()
+                    var responseBody = it.body.string()
                     if (responseBody.isEmpty()) {
                         throw Exception("Null Response")
                     }
@@ -135,8 +135,8 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
                 .build()
 
             // TODO: get user readed chapter here
-            var response = authClient.newCall(requestUserRead).await()
-            var responseBody = response.body?.string().orEmpty()
+            val response = authClient.newCall(requestUserRead).await()
+            val responseBody = response.body.string()
             if (responseBody.isEmpty()) {
                 throw Exception("Null Response")
             }
@@ -182,10 +182,6 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
 
         private const val redirectUrl = "tachiyomi://bangumi-auth"
         private const val baseMangaUrl = "$apiUrl/mangas"
-
-        fun mangaUrl(remoteId: Int): String {
-            return "$baseMangaUrl/$remoteId"
-        }
 
         fun authUrl(): Uri =
             loginUrl.toUri().buildUpon()

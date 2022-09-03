@@ -70,7 +70,7 @@ suspend fun Call.await(): Response {
                     }
 
                     continuation.resume(response) {
-                        response.body?.closeQuietly()
+                        response.body.closeQuietly()
                     }
                 }
 
@@ -107,7 +107,7 @@ fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListene
         .addNetworkInterceptor { chain ->
             val originalResponse = chain.proceed(chain.request())
             originalResponse.newBuilder()
-                .body(ProgressResponseBody(originalResponse.body!!, listener))
+                .body(ProgressResponseBody(originalResponse.body, listener))
                 .build()
         }
         .build()
@@ -119,7 +119,7 @@ inline fun <reified T> Response.parseAs(): T {
     // Avoiding Injekt.get<Json>() due to compiler issues
     val json = Injekt.getInstance<Json>(fullType<Json>().type)
     this.use {
-        val responseBody = it.body?.string().orEmpty()
+        val responseBody = it.body.string()
         return json.decodeFromString(responseBody)
     }
 }

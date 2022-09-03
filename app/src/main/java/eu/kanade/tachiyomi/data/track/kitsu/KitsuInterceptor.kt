@@ -26,7 +26,7 @@ class KitsuInterceptor(val kitsu: Kitsu) : Interceptor {
         if (currAuth.isExpired()) {
             val response = chain.proceed(KitsuApi.refreshTokenRequest(refreshToken))
             if (response.isSuccessful) {
-                newAuth(json.decodeFromString(response.body!!.string()))
+                newAuth(json.decodeFromString(response.body.string()))
             } else {
                 response.close()
             }

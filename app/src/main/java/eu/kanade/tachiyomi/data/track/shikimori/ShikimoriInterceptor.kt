@@ -26,7 +26,7 @@ class ShikimoriInterceptor(val shikimori: Shikimori) : Interceptor {
         if (currAuth.isExpired()) {
             val response = chain.proceed(ShikimoriApi.refreshTokenRequest(refreshToken))
             if (response.isSuccessful) {
-                newAuth(json.decodeFromString<OAuth>(response.body!!.string()))
+                newAuth(json.decodeFromString<OAuth>(response.body.string()))
             } else {
                 response.close()
             }
