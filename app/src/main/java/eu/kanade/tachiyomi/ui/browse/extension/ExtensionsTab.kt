@@ -25,10 +25,7 @@ fun extensionsTab(
         AppBar.Action(
             title = stringResource(R.string.action_search),
             icon = Icons.Outlined.Search,
-            onClick = {
-                // TODO: extensions search
-                // presenter.search(query)
-            },
+            onClick = { presenter.search("") },
         ),
 
         AppBar.Action(

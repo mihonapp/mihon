@@ -16,6 +16,8 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -33,7 +35,8 @@ class ExtensionsPresenter(
     private val getExtensions: GetExtensionsByType = Injekt.get(),
 ) : ExtensionsState by state {
 
-    private val _query: MutableStateFlow<String> = MutableStateFlow("")
+    private val _query: MutableStateFlow<String?> = MutableStateFlow(null)
+    val query: StateFlow<String?> = _query.asStateFlow()
 
     private var _currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
 
@@ -77,8 +80,10 @@ class ExtensionsPresenter(
                 getExtensions.subscribe(),
                 _currentDownloads,
             ) { query, (_updates, _installed, _available, _untrusted), downloads ->
+                val searchQuery = query ?: ""
+
                 val languagesWithExtensions = _available
-                    .filter(queryFilter(query))
+                    .filter(queryFilter(searchQuery))
                     .groupBy { LocaleHelper.getSourceDisplayName(it.lang, context) }
                     .toSortedMap()
                     .flatMap { (key, value) ->
@@ -90,14 +95,14 @@ class ExtensionsPresenter(
 
                 val items = mutableListOf<ExtensionUiModel>()
 
-                val updates = _updates.filter(queryFilter(query)).map(extensionMapper(downloads))
+                val updates = _updates.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
                 if (updates.isNotEmpty()) {
                     items.add(ExtensionUiModel.Header.Resource(R.string.ext_updates_pending))
                     items.addAll(updates)
                 }
 
-                val installed = _installed.filter(queryFilter(query)).map(extensionMapper(downloads))
-                val untrusted = _untrusted.filter(queryFilter(query)).map(extensionMapper(downloads))
+                val installed = _installed.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
+                val untrusted = _untrusted.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
                 if (installed.isNotEmpty() || untrusted.isNotEmpty()) {
                     items.add(ExtensionUiModel.Header.Resource(R.string.ext_installed))
                     items.addAll(installed)
@@ -122,7 +127,7 @@ class ExtensionsPresenter(
             .launchIn(presenterScope)
     }
 
-    fun search(query: String) {
+    fun search(query: String?) {
         presenterScope.launchIO {
             _query.emit(query)
         }

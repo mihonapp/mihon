@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import eu.kanade.presentation.components.TabbedScreen
 import eu.kanade.tachiyomi.R
@@ -31,6 +33,8 @@ class BrowseController : FullComposeController<BrowsePresenter>, RootController 
 
     @Composable
     override fun ComposeContent() {
+        val query by presenter.extensionsPresenter.query.collectAsState()
+
         TabbedScreen(
             titleRes = R.string.browse,
             tabs = listOf(
@@ -39,6 +43,8 @@ class BrowseController : FullComposeController<BrowsePresenter>, RootController 
                 migrateSourcesTab(router, presenter.migrationSourcesPresenter),
             ),
             startIndex = 1.takeIf { toExtensions },
+            searchQuery = query,
+            onChangeSearchQuery = { presenter.extensionsPresenter.search(it) },
             incognitoMode = presenter.isIncognitoMode,
             downloadedOnlyMode = presenter.isDownloadOnly,
         )
