@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.R
 fun BrowseSourceComfortableGrid(
     mangaList: LazyPagingItems<Manga>,
     getMangaState: @Composable ((Manga) -> State<Manga>),
+    header: (@Composable () -> Unit)? = null,
     columns: GridCells,
     contentPadding: PaddingValues,
     onMangaClick: (Manga) -> Unit,
@@ -37,12 +38,18 @@ fun BrowseSourceComfortableGrid(
 ) {
     LazyVerticalGrid(
         columns = columns,
-        contentPadding = PaddingValues(8.dp) + contentPadding,
+        contentPadding = PaddingValues(8.dp, 4.dp) + contentPadding,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            if (mangaList.loadState.prepend is LoadState.Loading) {
+        if (header != null) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                header()
+            }
+        }
+
+        if (mangaList.loadState.prepend is LoadState.Loading) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
                 BrowseSourceLoadingItem()
             }
         }
@@ -57,8 +64,8 @@ fun BrowseSourceComfortableGrid(
             )
         }
 
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            if (mangaList.loadState.refresh is LoadState.Loading || mangaList.loadState.append is LoadState.Loading) {
+        if (mangaList.loadState.refresh is LoadState.Loading || mangaList.loadState.append is LoadState.Loading) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
                 BrowseSourceLoadingItem()
             }
         }

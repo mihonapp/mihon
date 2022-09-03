@@ -43,11 +43,12 @@ fun BrowseSourceToolbar(
 ) {
     if (state.searchQuery == null) {
         BrowseSourceRegularToolbar(
-            source = source,
+            title = if (state.isUserQuery) state.currentQuery else source.name,
+            isLocalSource = source is LocalSource,
             displayMode = displayMode,
             onDisplayModeChange = onDisplayModeChange,
             navigateUp = navigateUp,
-            onSearchClick = { state.searchQuery = "" },
+            onSearchClick = { state.searchQuery = if (state.isUserQuery) state.currentQuery else "" },
             onWebViewClick = onWebViewClick,
             onHelpClick = onHelpClick,
             scrollBehavior = scrollBehavior,
@@ -56,10 +57,7 @@ fun BrowseSourceToolbar(
         BrowseSourceSearchToolbar(
             searchQuery = state.searchQuery!!,
             onSearchQueryChanged = { state.searchQuery = it },
-            navigateUp = {
-                state.searchQuery = null
-                onSearch()
-            },
+            navigateUp = { state.searchQuery = null },
             onResetClick = { state.searchQuery = "" },
             onSearchClick = onSearch,
             scrollBehavior = scrollBehavior,
@@ -69,7 +67,8 @@ fun BrowseSourceToolbar(
 
 @Composable
 fun BrowseSourceRegularToolbar(
-    source: CatalogueSource,
+    title: String,
+    isLocalSource: Boolean,
     displayMode: LibraryDisplayMode,
     onDisplayModeChange: (LibraryDisplayMode) -> Unit,
     navigateUp: () -> Unit,
@@ -80,7 +79,7 @@ fun BrowseSourceRegularToolbar(
 ) {
     AppBar(
         navigateUp = navigateUp,
-        title = source.name,
+        title = title,
         actions = {
             var selectingDisplayMode by remember { mutableStateOf(false) }
             AppBarActions(
@@ -95,7 +94,7 @@ fun BrowseSourceRegularToolbar(
                         icon = Icons.Filled.ViewModule,
                         onClick = { selectingDisplayMode = true },
                     ),
-                    if (source is LocalSource) {
+                    if (isLocalSource) {
                         AppBar.Action(
                             title = stringResource(id = R.string.label_help),
                             icon = Icons.Outlined.Help,

@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import eu.kanade.domain.source.interactor.GetRemoteManga
 import eu.kanade.domain.source.model.Pin
 import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.browse.components.BaseSourceItem
@@ -45,9 +46,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun SourcesScreen(
     presenter: SourcesPresenter,
-    onClickItem: (Source) -> Unit,
+    onClickItem: (Source, String) -> Unit,
     onClickDisable: (Source) -> Unit,
-    onClickLatest: (Source) -> Unit,
     onClickPin: (Source) -> Unit,
 ) {
     val context = LocalContext.current
@@ -59,7 +59,6 @@ fun SourcesScreen(
                 state = presenter,
                 onClickItem = onClickItem,
                 onClickDisable = onClickDisable,
-                onClickLatest = onClickLatest,
                 onClickPin = onClickPin,
             )
         }
@@ -78,9 +77,8 @@ fun SourcesScreen(
 @Composable
 fun SourceList(
     state: SourcesState,
-    onClickItem: (Source) -> Unit,
+    onClickItem: (Source, String) -> Unit,
     onClickDisable: (Source) -> Unit,
-    onClickLatest: (Source) -> Unit,
     onClickPin: (Source) -> Unit,
 ) {
     ScrollbarLazyColumn(
@@ -113,7 +111,6 @@ fun SourceList(
                     source = model.source,
                     onClickItem = onClickItem,
                     onLongClickItem = { state.dialog = SourcesPresenter.Dialog(it) },
-                    onClickLatest = onClickLatest,
                     onClickPin = onClickPin,
                 )
             }
@@ -155,19 +152,18 @@ fun SourceHeader(
 fun SourceItem(
     modifier: Modifier = Modifier,
     source: Source,
-    onClickItem: (Source) -> Unit,
+    onClickItem: (Source, String) -> Unit,
     onLongClickItem: (Source) -> Unit,
-    onClickLatest: (Source) -> Unit,
     onClickPin: (Source) -> Unit,
 ) {
     BaseSourceItem(
         modifier = modifier,
         source = source,
-        onClickItem = { onClickItem(source) },
+        onClickItem = { onClickItem(source, GetRemoteManga.QUERY_POPULAR) },
         onLongClickItem = { onLongClickItem(source) },
         action = { source ->
             if (source.supportsLatest) {
-                TextButton(onClick = { onClickLatest(source) }) {
+                TextButton(onClick = { onClickItem(source, GetRemoteManga.QUERY_LATEST) }) {
                     Text(
                         text = stringResource(R.string.latest),
                         style = LocalTextStyle.current.copy(

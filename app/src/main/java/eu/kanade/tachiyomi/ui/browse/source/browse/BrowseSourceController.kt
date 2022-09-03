@@ -41,6 +41,10 @@ open class BrowseSourceController(bundle: Bundle) :
      */
     protected var filterSheet: SourceFilterSheet? = null
 
+    override fun createPresenter(): BrowseSourcePresenter {
+        return BrowseSourcePresenter(args.getLong(SOURCE_ID_KEY), args.getString(SEARCH_QUERY_KEY))
+    }
+
     @Composable
     override fun ComposeContent() {
         val scope = rememberCoroutineScope()
@@ -49,7 +53,6 @@ open class BrowseSourceController(bundle: Bundle) :
         BrowseSourceScreen(
             presenter = presenter,
             navigateUp = { router.popCurrentController() },
-            onDisplayModeChange = { presenter.displayMode = (it) },
             onFabClick = { filterSheet?.show() },
             onMangaClick = { router.pushController(MangaController(it.id, true)) },
             onMangaLongClick = { manga ->
@@ -106,10 +109,6 @@ open class BrowseSourceController(bundle: Bundle) :
         LaunchedEffect(presenter.filters) {
             initFilterSheet()
         }
-    }
-
-    override fun createPresenter(): BrowseSourcePresenter {
-        return BrowseSourcePresenter(args.getLong(SOURCE_ID_KEY), args.getString(SEARCH_QUERY_KEY))
     }
 
     open fun initFilterSheet() {

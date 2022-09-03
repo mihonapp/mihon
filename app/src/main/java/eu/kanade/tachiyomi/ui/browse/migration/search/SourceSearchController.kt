@@ -7,7 +7,9 @@ import androidx.core.os.bundleOf
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.presentation.browse.SourceSearchScreen
 import eu.kanade.tachiyomi.source.CatalogueSource
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
+import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.getSerializableCompat
 
 class SourceSearchController(
@@ -27,16 +29,25 @@ class SourceSearchController(
 
     @Composable
     override fun ComposeContent() {
+        // LocalContext is not a first available to us when we try access it
+        // Decoupling from BrowseSourceController is needed
+        val context = applicationContext!!
+
         SourceSearchScreen(
             presenter = presenter,
             navigateUp = { router.popCurrentController() },
             onFabClick = { filterSheet?.show() },
-            onClickManga = {
+            onMangaClick = {
                 newManga = it
                 val searchController = router.backstack.findLast { it.controller.javaClass == SearchController::class.java }?.controller as SearchController?
                 val dialog = SearchController.MigrationDialog(oldManga, newManga, this)
                 dialog.targetController = searchController
                 dialog.showDialog(router)
+            },
+            onWebViewClick = f@{
+                val source = presenter.source as? HttpSource ?: return@f
+                val intent = WebViewActivity.newIntent(context, source.baseUrl, source.id, source.name)
+                context.startActivity(intent)
             },
         )
 

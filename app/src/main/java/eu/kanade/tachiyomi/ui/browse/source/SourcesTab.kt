@@ -13,7 +13,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
-import eu.kanade.tachiyomi.ui.browse.source.latest.LatestUpdatesController
 
 @Composable
 fun sourcesTab(
@@ -36,16 +35,12 @@ fun sourcesTab(
     content = {
         SourcesScreen(
             presenter = presenter,
-            onClickItem = { source ->
+            onClickItem = { source, query ->
                 presenter.onOpenSource(source)
-                router?.pushController(BrowseSourceController(source))
+                router?.pushController(BrowseSourceController(source, query))
             },
             onClickDisable = { source ->
                 presenter.toggleSource(source)
-            },
-            onClickLatest = { source ->
-                presenter.onOpenSource(source)
-                router?.pushController(LatestUpdatesController(source))
             },
             onClickPin = { source ->
                 presenter.togglePin(source)

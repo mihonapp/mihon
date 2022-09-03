@@ -51,6 +51,7 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.GetLanguagesWithSources
+import eu.kanade.domain.source.interactor.GetRemoteManga
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
 import eu.kanade.domain.source.interactor.GetSourcesWithNonLibraryManga
 import eu.kanade.domain.source.interactor.SetMigrateSorting
@@ -133,6 +134,7 @@ class DomainModule : InjektModule {
         addSingletonFactory<SourceDataRepository> { SourceDataRepositoryImpl(get()) }
         addFactory { GetEnabledSources(get(), get()) }
         addFactory { GetLanguagesWithSources(get(), get()) }
+        addFactory { GetRemoteManga(get()) }
         addFactory { GetSourcesWithFavoriteCount(get(), get()) }
         addFactory { GetSourcesWithNonLibraryManga(get()) }
         addFactory { SetMigrateSorting(get()) }
