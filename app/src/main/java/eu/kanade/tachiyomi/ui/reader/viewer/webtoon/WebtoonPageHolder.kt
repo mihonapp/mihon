@@ -19,7 +19,6 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.ImageUtil
-import eu.kanade.tachiyomi.util.system.ImageUtil.SplitData
 import eu.kanade.tachiyomi.util.system.dpToPx
 import rx.Observable
 import rx.Subscription
@@ -286,27 +285,31 @@ class WebtoonPageHolder(
 
         if (viewer.config.longStripSplit) {
             if (page is StencilPage) {
-                val splitData = (page as StencilPage).splitData
-                return ImageUtil.splitStrip(imageStream, splitData)
+                return imageStream
             }
-
             val isStripSplitNeeded = ImageUtil.isStripSplitNeeded(imageStream)
             if (isStripSplitNeeded) {
-                val splitData = onStripSplit(imageStream)
-                splitData?.let { return ImageUtil.splitStrip(imageStream, it) }
+                onStripSplit(imageStream)?.let { return it }
             }
         }
 
         return imageStream
     }
 
-    private fun onStripSplit(imageStream: BufferedInputStream): SplitData? {
+    private fun onStripSplit(imageStream: BufferedInputStream): InputStream? {
         val page = page ?: return null
-        val splitData = ImageUtil.getSplitDataForStream(imageStream).toMutableList()
-        val toReturn = splitData.removeFirstOrNull()
-        val newPages = splitData.map { StencilPage(page, it) }
-        viewer.onLongStripSplit(page, newPages)
-        return toReturn
+        val streamFn = page.stream ?: return null
+        val splitData = ImageUtil.getSplitDataForStream(imageStream)
+        if (splitData.size == 1) return imageStream
+        val newPages = splitData.map {
+            StencilPage(page) { ImageUtil.splitStrip(it, streamFn) }
+        }.toMutableList()
+        return newPages.removeFirst().stream?.invoke()
+            .also {
+                // Doing this first and then returning InputStream
+                // results in various issues with splitting
+                viewer.onLongStripSplit(page, newPages)
+            }
     }
 
     /**

@@ -28,6 +28,7 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
     var currentChapter: ReaderChapter? = null
 
     fun onLongStripSplit(currentStrip: Any?, newStrips: List<StencilPage>) {
+        if (newStrips.isEmpty()) return
         if (currentStrip is StencilPage) return
 
         val placeAtIndex = items.indexOf(currentStrip) + 1

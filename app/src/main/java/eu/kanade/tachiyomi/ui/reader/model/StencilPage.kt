@@ -1,15 +1,16 @@
 package eu.kanade.tachiyomi.ui.reader.model
 
-import eu.kanade.tachiyomi.util.system.ImageUtil
+import java.io.InputStream
 
 class StencilPage(
     parent: ReaderPage,
-    val splitData: ImageUtil.SplitData,
+    stencilStream: () -> InputStream,
 ) : ReaderPage(parent.index, parent.url, parent.imageUrl) {
 
     override var chapter: ReaderChapter = parent.chapter
 
     init {
-        stream = parent.stream
+        status = READY
+        stream = stencilStream
     }
 }

@@ -268,8 +268,8 @@ object ImageUtil {
     /**
      * Split the imageStream according to the provided splitData
      */
-    fun splitStrip(imageStream: InputStream, splitData: SplitData): InputStream {
-        val bitmapRegionDecoder = getBitmapRegionDecoder(imageStream)
+    fun splitStrip(splitData: SplitData, streamFn: () -> InputStream): InputStream {
+        val bitmapRegionDecoder = getBitmapRegionDecoder(streamFn())
             ?: throw Exception("Failed to create new instance of BitmapRegionDecoder")
 
         logcat {
