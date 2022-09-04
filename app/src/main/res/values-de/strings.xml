@@ -280,7 +280,7 @@
     <string name="ext_trust">Vertrauen</string>
     <string name="ext_untrusted">Nicht vertrauenswürdig</string>
     <string name="untrusted_extension">Nicht vertrauenswürdige Erweiterung</string>
-    <string name="pref_double_tap_anim_speed">Doppeltipp Animationsgeschwindigkeit</string>
+    <string name="pref_double_tap_anim_speed">Doppeltipp-Animationsgeschwindigkeit</string>
     <string name="custom_download">Benutzerdefinierte Anzahl herunterladen</string>
     <string name="migration_dialog_what_to_include">Wähle zu beinhaltende Daten</string>
     <string name="pager_viewer">Seiten</string>
@@ -409,8 +409,8 @@
     <string name="add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="confirm_exit">Zum Beenden nochmal die Zurück-Taste drücken</string>
     <string name="information_webview_required">WebView ist für Tachiyomi erforderlich</string>
-    <string name="licenses">Open-Source-Lizenzen</string>
-    <string name="website">Website</string>
+    <string name="licenses">Quelloffene Lizenzen</string>
+    <string name="website">Webseite</string>
     <string name="pref_confirm_exit">Beenden bestätigen</string>
     <string name="label_downloaded_only">Nur Heruntergeladenes</string>
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
@@ -423,7 +423,7 @@
     <string name="check_for_updates">Nach Aktualisierungen suchen</string>
     <string name="last_used_source">Zuletzt genutzt</string>
     <string name="local_source_help_guide">Anleitung für lokale Quellen</string>
-    <string name="restore_duration">%02d Min., %02d Sek.</string>
+    <string name="restore_duration">%02d Min., %02d Sek.</string>
     <string name="downloaded_only_summary">Filtert alle Manga in deiner Bibliothek</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s verbleibend</item>
@@ -607,7 +607,7 @@
     <string name="information_empty_category_dialog">Du hast noch keine Kategorien.</string>
     <string name="action_start_downloading_now">Download jetzt starten</string>
     <string name="notification_updating">Aktualisiere Bibliothek… (%1$d/%2$d)</string>
-    <string name="about_dont_kill_my_app">Einige Hersteller haben zusätzliche Anwendungsbeschränkungen, die Hintergrunddienste stoppen. Diese Website hat mehr Informationen darüber, wie man dies beheben kann.</string>
+    <string name="about_dont_kill_my_app">Einige Hersteller haben zusätzliche Anwendungsbeschränkungen, die Hintergrunddienste stoppen. Diese Webseite hat mehr Informationen darüber, wie man dies beheben kann.</string>
     <string name="restore_miui_warning">Die Sicherung/Wiederherstellung funktioniert möglicherweise nicht richtig, wenn die MIUI-Optimierung deaktiviert ist.</string>
     <string name="pref_dark_theme_pure_black">Tiefschwarzer Dunkelmodus</string>
     <string name="theme_yotsuba">Yotsuba</string>
@@ -760,4 +760,9 @@
     </plurals>
     <string name="download_ahead_info">Funktioniert nur bei Werken in der Bibliothek und wenn das aktuelle Kapitel sowie das darauf folgende bereits heruntergeladen sind</string>
     <string name="are_you_sure">Bist du dir sicher\?</string>
+    <string name="pref_long_strip_split">Hohe Bilder aufteilen (BETA)</string>
+    <string name="remove_manga">Du bist gerade dabei, diesen Manga aus deiner Bibliothek zu entfernen</string>
+    <string name="multi_lang">Mehrere</string>
+    <string name="updates_last_update_info">Letzte Aktualisierung der Bibliothek: %1$s</string>
+    <string name="popular">Beliebt</string>
 </resources>

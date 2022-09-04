@@ -760,4 +760,9 @@
     </plurals>
     <string name="download_ahead_info">Λειτουργεί μόνο σε καταχωρήσεις στη βιβλιοθήκη και αν το τρέχον κεφάλαιο και το επόμενο έχουν ήδη ληφθεί</string>
     <string name="are_you_sure">Είστε σίγουροι;</string>
+    <string name="pref_long_strip_split">Διαχωρισμός ψηλών εικόνων (BETA)</string>
+    <string name="multi_lang">Πολλαπλό</string>
+    <string name="popular">Δημοφιλή</string>
+    <string name="updates_last_update_info">Τελευταία ενημέρωση βιβλιοθήκης: %1$s</string>
+    <string name="remove_manga">Πρόκειται να αφαιρέσετε αυτό το manga από τη βιβλιοθήκη σας</string>
 </resources>

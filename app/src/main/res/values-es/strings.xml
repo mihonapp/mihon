@@ -791,4 +791,7 @@
         <item quantity="other">Los siguientes %d capítulos sin leer</item>
     </plurals>
     <string name="are_you_sure">¿Estás seguro\?</string>
+    <string name="pref_long_strip_split">Separar imágenes más altas que anchas (en desarrollo)</string>
+    <string name="updates_last_update_info">La biblioteca se actualizó: %1$s</string>
+    <string name="remove_manga">Estás a punto de borrar este manga de tu biblioteca</string>
 </resources>

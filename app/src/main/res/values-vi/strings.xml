@@ -774,4 +774,8 @@
     <string name="update_already_running">Có một cập nhật đang chạy sẵn</string>
     <string name="theme_tidalwave">Sóng Thủy Triều</string>
     <string name="error_user_agent_string_blank">Chuỗi đại diện người dùng không thể bỏ trống</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">%d chương chưa đọc tiếp</item>
+    </plurals>
+    <string name="auto_download_while_reading">Tự động tải khi đang đọc</string>
 </resources>

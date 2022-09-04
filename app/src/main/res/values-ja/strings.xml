@@ -747,4 +747,8 @@
     </plurals>
     <string name="download_ahead_info">現在のと次の章は既にダウンロード済みの場合のみ、そしてライブラリの項目にのみ有効です</string>
     <string name="are_you_sure">本当に実行しますか？</string>
+    <string name="multi_lang">多言語</string>
+    <string name="updates_last_update_info">前回のライブラリ更新：%1$s</string>
+    <string name="pref_long_strip_split">長い画像の分割（BETA）</string>
+    <string name="remove_manga">この漫画をライブラリから消去しようとしています</string>
 </resources>

@@ -62,7 +62,7 @@
     <string name="update_48hour">A cada 2 dias</string>
     <string name="all">Tudo</string>
     <string name="pref_library_update_restriction">Restrições do aparelho para atualizações automáticas</string>
-    <string name="charging">A carregar</string>
+    <string name="charging">Ao carregar</string>
     <string name="pref_update_only_non_completed">Com estado \'\'Terminado\'\'</string>
     <string name="pref_auto_update_manga_sync">Atualizar progresso após a leitura</string>
     <!-- Reader section -->
@@ -207,7 +207,7 @@
     <string name="download_notifier_unknown_error">Não foi possível transferir o capítulo devido a um erro inesperado</string>
     <string name="download_notifier_text_only_wifi">Sem ligação de Wi-Fi disponível</string>
     <string name="categories">Categorias</string>
-    <string name="manga">Mangá</string>
+    <string name="manga">Manga</string>
     <string name="track">Monitorização</string>
     <string name="history">Histórico</string>
     <string name="label_extensions">Extensões</string>
@@ -371,6 +371,7 @@
     <string name="lock_never">Nunca</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Após %1$s minuto</item>
+        <item quantity="many">Após %1$s minutos</item>
         <item quantity="other">Após %1$s minutos</item>
     </plurals>
     <string name="secure_screen">Ecrã seguro</string>
@@ -386,6 +387,7 @@
     <string name="notification_chapters_multiple">Capítulos %1$s</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Capítulos %1$s e 1 mais</item>
+        <item quantity="many">Capítulos %1$s e %2$d mais</item>
         <item quantity="other">Capítulos %1$s e %2$d mais</item>
     </plurals>
     <string name="hide_notification_content">Esconder conteúdo das notificações</string>
@@ -397,6 +399,7 @@
     <string name="pref_always_show_chapter_transition">Mostrar sempre transição entre capítulos</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">Para %d título</item>
+        <item quantity="many">Para %d título</item>
         <item quantity="other">Para %d títulos</item>
     </plurals>
     <string name="action_menu">Menu</string>
@@ -407,12 +410,14 @@
     <string name="action_move_to_bottom">Mover para o final</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d novo capítulo</item>
+        <item quantity="many">%1$d novos capítulos</item>
         <item quantity="other">%1$d novos capítulos</item>
     </plurals>
     <string name="notification_chapters_single">Capítulo %1$s</string>
     <string name="channel_ext_updates">Atualizações de extensão</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Atualização de extensão disponível</item>
+        <item quantity="many">%d atualizações de extensão disponíveis</item>
         <item quantity="other">%d atualizações de extensão disponíveis</item>
     </plurals>
     <string name="updating_library">Atualizando biblioteca</string>
@@ -458,6 +463,7 @@
     <string name="pref_search_pinned_sources_only">Apenas incluir fontes fixadas</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s restante</item>
+        <item quantity="many">%1$s restantes</item>
         <item quantity="other">%1$s restantes</item>
     </plurals>
     <string name="gray_background">Cinzento</string>
@@ -466,16 +472,18 @@
     <string name="pref_true_color_summary">Reduz bandas de cor, mas pode impactar a performance</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoria</item>
+        <item quantity="many">%d categorias</item>
         <item quantity="other">%d categorias</item>
     </plurals>
     <string name="action_display_unread_badge">Capítulos não lidos</string>
     <string name="battery_optimization_setting_activity_not_found">Não foi possível abrir as definições do aparelho</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Concluído em %1$s com %2$s erro</item>
+        <item quantity="many">Concluído em %1$s com %2$s erros</item>
         <item quantity="other">Concluído em %1$s com %2$s erros</item>
     </plurals>
     <string name="pref_refresh_library_covers">Atualizar capas da biblioteca</string>
-    <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços de monitorização. Defina a monitorização para entradas individuais das mangás no seu botão de monitorização.</string>
+    <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços de rastreamento. Defina o rastreamento para entradas individuais de manga no seu botão de rastreamento.</string>
     <string name="unofficial_extension_message">Esta extensão não vem da lista oficial de extensões do Tachiyomi.</string>
     <string name="pref_show_reading_mode_summary">Mostra brevemente o modo atual quando o leitor é aberto</string>
     <string name="page_list_empty_error">Nenhuma página encontrada</string>
@@ -506,6 +514,7 @@
     <string name="loader_not_implemented_error">Fonte não encontrada</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s capítulo</item>
+        <item quantity="many">%1$s capítulos</item>
         <item quantity="other">%1$s capítulos</item>
     </plurals>
     <string name="unknown_status">Estado desconhecido</string>
@@ -521,8 +530,9 @@
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Data de adição</string>
     <plurals name="num_trackers">
-        <item quantity="one">%d monitorizador</item>
-        <item quantity="other">%d monitorizadores</item>
+        <item quantity="one">%d rastreador</item>
+        <item quantity="many">%d rastreadores</item>
+        <item quantity="other">%d rastreadores</item>
     </plurals>
     <string name="no_pinned_sources">Você não possui fontes fixadas</string>
     <string name="channel_complete">Completo</string>
@@ -532,12 +542,13 @@
     <string name="backup_restore_missing_trackers">Monitorizadores sem sessão iniciada:</string>
     <string name="pref_remove_bookmarked_chapters">Permitir a eliminação de capítulos marcados</string>
     <string name="pref_category_delete_chapters">Eliminar capítulos</string>
-    <string name="ext_nsfw_warning">Pode conter conteúdo NSFW (18+)</string>
+    <string name="ext_nsfw_warning">Fontes desta extensão poderão conter conteúdo NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Isto não impede extensões não oficiais ou incorretamente marcadas de mostrarem conteúdo NSFW (18+) dentro da app.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Ignorando %d capítulo, ou está em falta na fonte ou foi filtrado</item>
-        <item quantity="other">Ignorando %d capítulos, ou está em falta na fonte ou foi filtrado</item>
+        <item quantity="one">Ignorando %d capítulo, ou a fonte está em falta ou foi filtrado</item>
+        <item quantity="many">Ignorando %d capítulos, ou a fonte está em falta ou foi filtrado</item>
+        <item quantity="other">Ignorando %d capítulos, ou a fonte está em falta ou foi filtrado</item>
     </plurals>
     <string name="no_chapters_error">Nenhum capítulo encontrado</string>
     <string name="chapter_settings_updated">Definições padrão de capítulo atualizadas</string>
@@ -645,7 +656,7 @@
     <string name="notification_updating">Atualizando biblioteca… (%1$d/%2$d)</string>
     <string name="error_no_match">Nenhuma correspondência encontrada</string>
     <string name="source_unsupported">Fonte não é suportada</string>
-    <string name="enhanced_tracking_info">Serviços que oferecem características melhoradas para fontes específicas. Mangás são automaticamente monitorizados quando adicionados à sua biblioteca.</string>
+    <string name="enhanced_tracking_info">Serviços que oferecem características melhoradas para fontes específicas. Manga são automaticamente rastreadas quando adicionadas à sua biblioteca.</string>
     <string name="enhanced_services">Serviços melhorados</string>
     <string name="pref_library_update_refresh_trackers">Atualizar monitorizadores automaticamente</string>
     <string name="pref_library_update_refresh_trackers_summary">Atualizar monitorizadores ao atualizar biblioteca</string>
@@ -656,7 +667,8 @@
     <string name="recently">Recentemente</string>
     <plurals name="relative_time">
         <item quantity="one">Ontem</item>
-        <item quantity="other">%1$d dias atrás</item>
+        <item quantity="many">Há %1$d dias</item>
+        <item quantity="other">Há %1$d dias</item>
     </plurals>
     <string name="relative_time_today">Hoje</string>
     <string name="pref_category_navigation">Navegação</string>
@@ -715,7 +727,7 @@
     <string name="disabled_nav">Desativado</string>
     <string name="action_display_cover_only_grid">Grelha apenas de capas</string>
     <string name="action_close">Fechar</string>
-    <string name="battery_not_low">Bateria não fraca</string>
+    <string name="battery_not_low">Quando a bateria não está fraca</string>
     <string name="action_move_to_top_all_for_series">Mover séries para o topo</string>
     <string name="skipped_reason_completed">Ignorado porque a séria está completa</string>
     <string name="skipped_reason_not_started">Ignorado porque nenhum capítulo foi lido</string>
@@ -744,8 +756,8 @@
     <string name="pref_duplicate_pinned_sources_summary">Repita as fontes fixadas nos seus respetivos grupos de idiomas</string>
     <string name="action_sort_last_manga_update">Última mangá atualizada</string>
     <string name="action_sort_unread_count">Contagem de não lidos</string>
-    <string name="split_tall_images">Dividir automaticamente imagens altas</string>
-    <string name="split_tall_images_summary">Melhora o desempenho do leitor através da divisão de imagens altas transferidas.</string>
+    <string name="split_tall_images">Dividir imagens altas</string>
+    <string name="split_tall_images_summary">Melhora o desempenho do leitor</string>
     <string name="download_notifier_split_failed">Não foi possível dividir a imagem transferida</string>
     <string name="empty_screen">Bem, isto é estranho</string>
     <string name="pref_reset_viewer_flags_error">Não foi possível repor as definições do leitor</string>
@@ -755,5 +767,44 @@
     <string name="pref_reset_viewer_flags">Repor as definições do leitor por série</string>
     <string name="pref_reset_viewer_flags_summary">Repõe o modo de leitura e orientação de todas as séries</string>
     <string name="download_notifier_split_page_path_not_found">Não foi possível encontrar o caminho do ficheiro da página %d</string>
-    <string name="loader_rar5_error">Formato RARv5 não é suportado.</string>
+    <string name="loader_rar5_error">O formato RARv5 não é suportado</string>
+    <string name="multi_lang">Multi</string>
+    <string name="pref_long_strip_split">Dividir imagens altas (BETA)</string>
+    <string name="auto_download_while_reading">Transferência automática durante leitura</string>
+    <string name="delete_category_confirmation">Deseja apagar a categoria \"%s\"\?</string>
+    <string name="delete_category">Apagar categoria</string>
+    <string name="internal_error">InternalError: Verifique registos de falhas para mais informações</string>
+    <string name="error_user_agent_string_blank">String de agente de usuário não pode estar em branco</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Próximo capítulo não lido</item>
+        <item quantity="many">Próximos %d capítulos não lidos</item>
+        <item quantity="other">Próximos %d capítulos não lidos</item>
+    </plurals>
+    <string name="are_you_sure">Tem a certeza\?</string>
+    <string name="updates_last_update_info">Última atualização da biblioteca: %1$s</string>
+    <string name="appwidget_updates_description">Veja as suas mangás recentemente atualizadas</string>
+    <string name="remove_manga">Está prestes a remover esta mangá da sua biblioteca</string>
+    <string name="download_ahead_info">Apenas funciona em entradas na biblioteca e se o capítulo atual, mais o próximo, já estiverem transferidos</string>
+    <string name="theme_tidalwave">Maremoto</string>
+    <string name="pref_app_language">Idioma da aplicação</string>
+    <string name="ext_info_version">Versão</string>
+    <string name="ext_info_language">Idioma</string>
+    <string name="description_placeholder">Sem descrição</string>
+    <string name="complete_list">Lista de Completos</string>
+    <string name="wish_list">Lista de Desejos</string>
+    <string name="unfinished_list">Lista de Inacabados</string>
+    <string name="update_already_running">Uma atualização já está a correr</string>
+    <string name="appwidget_unavailable_locked">Widget não disponível quando o bloqueio de aplicações está ativo</string>
+    <string name="network_not_metered">Apenas em redes com tráfego ilimitado</string>
+    <string name="download_ahead">Transferência em antecedência</string>
+    <string name="on_hold_list">Lista dos Em Espera</string>
+    <string name="ext_info_age_rating">Classificação etária</string>
+    <string name="pref_reset_user_agent_string">Redefinir string de agente de usuário predefinido</string>
+    <string name="pref_user_agent_string">String de agente de usuário padrão</string>
+    <string name="not_installed">Não instalado</string>
+    <string name="cant_open_last_read_chapter">Incapaz de abrir último capítulo lido</string>
+    <string name="custom_cover">Capa personalizada</string>
+    <string name="reading_list">Lista dos Em Leitura</string>
+    <string name="action_remove_everything">Remover tudo</string>
+    <string name="theme_lavender">Lavanda</string>
 </resources>

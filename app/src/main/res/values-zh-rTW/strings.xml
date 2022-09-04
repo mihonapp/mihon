@@ -701,7 +701,7 @@
     <string name="pref_duplicate_pinned_sources_summary">將來源同時釘選於「已釘選」及其所屬的語言分組</string>
     <string name="source_empty_screen">找不到來源</string>
     <string name="source_filter_empty_screen">找不到已安裝的來源</string>
-    <string name="action_sort_last_manga_update">最近更新漫畫日期</string>
+    <string name="action_sort_last_manga_update">上次更新漫畫日期</string>
     <string name="action_sort_unread_count">未讀章數</string>
     <string name="download_notifier_split_page_not_found">分割時找不到第 %d 頁</string>
     <string name="split_tall_images">分割過高的圖片</string>
@@ -747,4 +747,8 @@
     </plurals>
     <string name="download_ahead_info">僅適用於書櫃中的漫畫，並且目前章節及下一章節皆已下載</string>
     <string name="are_you_sure">你確定嗎？</string>
+    <string name="pref_long_strip_split">分割過高的圖片 (BETA)</string>
+    <string name="multi_lang">多語</string>
+    <string name="remove_manga">即將從書櫃中移除此漫畫</string>
+    <string name="updates_last_update_info">書櫃更新於：%1$s</string>
 </resources>

@@ -747,4 +747,9 @@
         <item quantity="other">%d ตอนที่ยังไม่ได้อ่านถัดไป</item>
     </plurals>
     <string name="are_you_sure">แน่ใจแล้วใช่หรือไม่\?</string>
+    <string name="multi_lang">หลายภาษา</string>
+    <string name="pref_long_strip_split">แบ่งภาพสูงยาว (เบตา)</string>
+    <string name="updates_last_update_info">อัปเดตคลังล่าสุด: %1$s</string>
+    <string name="remove_manga">คุณกำลังจะนำมังงะนี้ออกจากคลัง</string>
+    <string name="popular">ยอดนิยม</string>
 </resources>

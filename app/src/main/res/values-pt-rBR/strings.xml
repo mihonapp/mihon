@@ -341,6 +341,7 @@
     <string name="lock_never">Nunca</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Por %1$s minuto</item>
+        <item quantity="many">Por %1$s minutos</item>
         <item quantity="other">Por %1$s minutos</item>
     </plurals>
     <string name="secure_screen">Tela segura</string>
@@ -354,6 +355,7 @@
     <string name="pref_category_display">Visualização</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d capítulo novo</item>
+        <item quantity="many">%1$d capítulos novos</item>
         <item quantity="other">%1$d capítulos novos</item>
     </plurals>
     <string name="notification_chapters_single">Capítulo %1$s</string>
@@ -361,6 +363,7 @@
     <string name="notification_chapters_multiple">Capítulos %1$s</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Capítulos %1$s e mais 1</item>
+        <item quantity="many">Capítulos %1$s e mais %2$d</item>
         <item quantity="other">Capítulos %1$s e mais %2$d</item>
     </plurals>
     <string name="hide_notification_content">Ocultar conteúdo da notificação</string>
@@ -372,6 +375,7 @@
     <string name="pref_always_show_chapter_transition">Sempre mostrar a transição entre capítulos</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">Para %d título</item>
+        <item quantity="many">Para %d títulos</item>
         <item quantity="other">Para %d títulos</item>
     </plurals>
     <string name="action_menu">Menu</string>
@@ -383,6 +387,7 @@
     <string name="pref_enable_automatic_extension_updates">Procurar por atualizações de extensão</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Atualização de extensão disponível</item>
+        <item quantity="many">%d atualizações de extensão disponíveis</item>
         <item quantity="other">%d atualizações de extensão disponíveis</item>
     </plurals>
     <string name="channel_ext_updates">Atualizações de extensões</string>
@@ -427,6 +432,7 @@
     <string name="downloaded_only_summary">Filtra todos os mangás em sua biblioteca</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s restante</item>
+        <item quantity="many">%1$s restantes</item>
         <item quantity="other">%1$s restantes</item>
     </plurals>
     <string name="pref_search_pinned_sources_only">Incluir somente as fontes fixadas</string>
@@ -436,11 +442,13 @@
     <string name="pref_true_color_summary">Reduz o efeito de anéis nos degradês, mas pode afetar o desempenho</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoria</item>
+        <item quantity="many">%d categorias</item>
         <item quantity="other">%d categorias</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Não foi possível abrir as configurações do dispositivo</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Concluído em %1$s com %2$s erro</item>
+        <item quantity="many">Concluído em %1$s com %2$s erros</item>
         <item quantity="other">Concluído em %1$s com %2$s erros</item>
     </plurals>
     <string name="action_display_unread_badge">Capítulos não lidos</string>
@@ -471,6 +479,7 @@
     <string name="action_disable">Desativar</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s capítulo</item>
+        <item quantity="many">%1$s capítulos</item>
         <item quantity="other">%1$s capítulos</item>
     </plurals>
     <string name="requires_app_restart">Requer o reinício do aplicativo para ter efeito</string>
@@ -492,6 +501,7 @@
     <string name="pref_category_theme">Tema</string>
     <plurals name="num_trackers">
         <item quantity="one">%d monitorador</item>
+        <item quantity="many">%d monitoradores</item>
         <item quantity="other">%d monitoradores</item>
     </plurals>
     <string name="no_pinned_sources">Você não tem fontes fixadas</string>
@@ -507,6 +517,7 @@
     <string name="parental_controls_info">Isso não impede que extensões não oficiais ou potencialmente sinalizadas de maneira incorreta apresentem conteúdo NSFW (+18) no aplicativo.</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Pulando %d capítulo, ou ele está faltando na fonte, ou ele foi filtrado</item>
+        <item quantity="many">Pulando %d capítulos, ou eles estão faltando na fonte, ou eles foram filtrados</item>
         <item quantity="other">Pulando %d capítulos, ou eles estão faltando na fonte, ou eles foram filtrados</item>
     </plurals>
     <string name="no_chapters_error">Nenhum capítulo encontrado</string>
@@ -633,6 +644,7 @@
     <string name="pref_relative_format">Datas relativas</string>
     <plurals name="relative_time">
         <item quantity="one">Ontem</item>
+        <item quantity="many">%1$d dias atrás</item>
         <item quantity="other">%1$d dias atrás</item>
     </plurals>
     <string name="relative_time_today">Hoje</string>
@@ -757,7 +769,13 @@
     <string name="download_ahead_info">Funciona somente em itens na biblioteca e se o capítulo atual e próximo já estão disponíveis offline</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Próximo capítulo não lido</item>
+        <item quantity="many">Próximos %d capítulos não lidos</item>
         <item quantity="other">Próximos %d capítulos não lidos</item>
     </plurals>
     <string name="are_you_sure">Você tem certeza\?</string>
+    <string name="multi_lang">Múltiplas</string>
+    <string name="pref_long_strip_split">Dividir imagens compridas (BETA)</string>
+    <string name="updates_last_update_info">Última atualização da biblioteca: %1$s</string>
+    <string name="remove_manga">Você está prestes a remover este mangá de sua biblioteca</string>
+    <string name="popular">Popular</string>
 </resources>

@@ -780,9 +780,9 @@
     <string name="appwidget_unavailable_locked">Widżet nie jest dostępny kiedy blokada aplikacji jest włączona</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Następny nieprzeczytany rozdział</item>
-        <item quantity="few">%d następnych nieprzeczytanych rozdziałów</item>
-        <item quantity="many">%d następnych nieprzeczytanych rozdziałów</item>
-        <item quantity="other">%d następnych nieprzeczytanych rozdziałów</item>
+        <item quantity="few">Następne %d nieprzeczytane rozdziały</item>
+        <item quantity="many">Następne %d nieprzeczytanych rozdziałów</item>
+        <item quantity="other">Następne %d nieprzeczytanych rozdziałów</item>
     </plurals>
     <string name="are_you_sure">Jesteś pewien\?</string>
     <string name="download_ahead_info">Działa tylko na wpisach w bibliotece oraz jeśli aktualny rozdział i następny są już pobrane</string>

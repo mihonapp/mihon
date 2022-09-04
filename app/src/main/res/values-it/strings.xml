@@ -374,6 +374,7 @@
     <string name="lock_never">Mai</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Dopo %1$s minuto</item>
+        <item quantity="many">Dopo %1$s minuti</item>
         <item quantity="other">Dopo %1$s minuti</item>
     </plurals>
     <string name="secure_screen">Schermo sicuro</string>
@@ -389,10 +390,12 @@
     <string name="channel_ext_updates">Aggiornamenti estensione</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Aggiornamento estensione disponibile</item>
+        <item quantity="many">%d estensioni hanno aggiornamenti disponibili</item>
         <item quantity="other">%d estensioni hanno aggiornamenti disponibili</item>
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">Capitolo %1$s e un altro</item>
+        <item quantity="one">Capitoli %1$s e un altro</item>
+        <item quantity="many">Capitoli %1$s e altri %2$d</item>
         <item quantity="other">Capitoli %1$s e altri %2$d</item>
     </plurals>
     <string name="notification_chapters_multiple">Capitoli %1$s</string>
@@ -400,10 +403,12 @@
     <string name="notification_chapters_single">Capitolo %1$s</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d nuovo capitolo</item>
+        <item quantity="many">%1$d nuovi capitoli</item>
         <item quantity="other">%1$d nuovi capitoli</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">Per %d titolo</item>
+        <item quantity="many">Per %d titoli</item>
         <item quantity="other">Per %d titoli</item>
     </plurals>
     <string name="notification_check_updates">Cercando nuovi capitoli</string>
@@ -459,6 +464,7 @@
     <string name="last_used_source">Ultimo usato</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s rimanente</item>
+        <item quantity="many">%1$s rimanenti</item>
         <item quantity="other">%1$s rimanenti</item>
     </plurals>
     <string name="downloaded_only_summary">Filtra tutti i manga nella tua libreria</string>
@@ -467,6 +473,7 @@
     <string name="pref_refresh_library_covers">Aggiorna le copertine della libreria</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Completato in %1$s con %2$s errore</item>
+        <item quantity="many">Completato in %1$s con %2$s errori</item>
         <item quantity="other">Completato in %1$s con %2$s errori</item>
     </plurals>
     <string name="restore_duration">%02d min, %02d sec</string>
@@ -474,7 +481,8 @@
     <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento del capitolo sui servizi di tracking. Imposta il tracking per i singoli manga dai loro pulsanti di tracking.</string>
     <string name="pref_true_color_summary">Riduce il banding, ma potrebbe influire sulle prestazioni</string>
     <plurals name="num_categories">
-        <item quantity="one">Una categoria</item>
+        <item quantity="one">%d categoria</item>
+        <item quantity="many">%d categorie</item>
         <item quantity="other">%d categorie</item>
     </plurals>
     <string name="action_display_unread_badge">Capitoli non letti</string>
@@ -505,6 +513,7 @@
     <string name="loader_not_implemented_error">Fonte non trovata</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s capitolo</item>
+        <item quantity="many">%1$s capitoli</item>
         <item quantity="other">%1$s capitoli</item>
     </plurals>
     <string name="unknown_status">Stato sconosciuto</string>
@@ -525,7 +534,8 @@
     <string name="action_sort_date_added">Data di aggiunta</string>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
-        <item quantity="other">%d tracker</item>
+        <item quantity="many">%d trackers</item>
+        <item quantity="other">%d trackers</item>
     </plurals>
     <string name="channel_progress">Progresso</string>
     <string name="channel_errors">Errori</string>
@@ -538,6 +548,7 @@
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d capitolo saltato, la fonte non ce l\'ha o è stato filtrato</item>
+        <item quantity="many">%d capitoli saltati, la fonte non li ha o sono stati filtrati</item>
         <item quantity="other">%d capitoli saltati, la fonte non li ha o sono stati filtrati</item>
     </plurals>
     <string name="backup_restore_missing_trackers">Tracker non collegati:</string>
@@ -653,6 +664,7 @@
     <string name="pref_relative_format">Data e Ora relativi</string>
     <plurals name="relative_time">
         <item quantity="one">Ieri</item>
+        <item quantity="many">%1$d giorni fa</item>
         <item quantity="other">%1$d giorni fa</item>
     </plurals>
     <string name="relative_time_today">Oggi</string>
@@ -788,9 +800,15 @@
     <string name="download_ahead">Scarica i prossimi</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Il prossimo capitolo non letto</item>
+        <item quantity="many">I prossimi %d capitoli non letti</item>
         <item quantity="other">I prossimi %d capitoli non letti</item>
     </plurals>
     <string name="auto_download_while_reading">Download automatico durante la lettura</string>
     <string name="download_ahead_info">Funziona solo sui manga nella libreria e se il capitolo corrente e quello successivo sono già stati scaricati</string>
     <string name="are_you_sure">Sei sicuro\?</string>
+    <string name="multi_lang">Multiple</string>
+    <string name="updates_last_update_info">Ultimo aggiornamento libreria: %1$s</string>
+    <string name="pref_long_strip_split">Dividi immagini alte (BETA)</string>
+    <string name="remove_manga">Stai per rimuovere questo manga dalla tua libreria</string>
+    <string name="popular">Popolare</string>
 </resources>

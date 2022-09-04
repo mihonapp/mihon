@@ -743,4 +743,7 @@
     <string name="pref_app_language">Idioma de la aplicación</string>
     <string name="description_placeholder">Sin descripción</string>
     <string name="not_installed">No instalada</string>
+    <string name="pref_long_strip_split">Dividir imágenes altas (BETA)</string>
+    <string name="download_ahead">Descargar por adelantado</string>
+    <string name="action_remove_everything">Remover todo</string>
 </resources>

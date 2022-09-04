@@ -35,10 +35,10 @@
     <string name="default_category_summary">Uvijek pitaj</string>
     <string name="default_category">Standardna kategorija</string>
     <string name="pref_update_only_non_completed">Sa stanjem „Završeno“</string>
-    <string name="charging">Punjenje</string>
+    <string name="charging">Kad se puni</string>
     <string name="pref_library_update_restriction">Ograničenja uređaja za automatska ažuriranja</string>
     <string name="update_weekly">Tjedno</string>
-    <string name="update_48hour">Svaki drugi dan</string>
+    <string name="update_48hour">Svaka 2 dana</string>
     <string name="update_24hour">Dnevno</string>
     <string name="update_12hour">Svakih 12 sati</string>
     <string name="update_6hour">Svakih 6 sati</string>
@@ -240,7 +240,7 @@
     <string name="pref_custom_color_filter">Prilagođeni filtar boja</string>
     <string name="pref_custom_brightness">Prilagođena svjetlina</string>
     <string name="pref_crop_borders">Odreži rubove</string>
-    <string name="pref_true_color_summary">Smanjuje nijansiranje, ali utječe na performansu</string>
+    <string name="pref_true_color_summary">Smanjuje oštre prijelaze između nijansi, ali može utjecati na performansu</string>
     <string name="pref_true_color">32-bitna boja</string>
     <string name="pref_show_page_number">Prikaži broj stranice</string>
     <string name="pref_double_tap_anim_speed">Brzina animacije dvostrukog dodira</string>
@@ -446,7 +446,7 @@
     <string name="download_notifier_title_error">Greška</string>
     <string name="download_notifier_downloader_title">Preuzimanja</string>
     <string name="information_webview_outdated">Za bolju kompatibilnost, aktualiziraj WebView</string>
-    <string name="pref_refresh_library_covers">Osvježi naslovnice za manga u biblioteci</string>
+    <string name="pref_refresh_library_covers">Aktualiziraj naslovnice biblioteke</string>
     <string name="sort_by_upload_date">Po datumu prijenosa</string>
     <string name="label_data">Podaci</string>
     <plurals name="restore_completed_message">
@@ -488,7 +488,7 @@
     <string name="tapping_inverted_vertical">Okomito</string>
     <string name="tapping_inverted_horizontal">Vodoravno</string>
     <string name="tapping_inverted_none">Ništa</string>
-    <string name="pref_read_with_tapping_inverted">Preokreni dodirivanje</string>
+    <string name="pref_read_with_tapping_inverted">Preokreni područja za dodirivanje</string>
     <string name="unknown_status">Nepoznato stanje</string>
     <string name="unknown_author">Nepoznat autor</string>
     <string name="action_download_unread">Preuzmi nepročitana poglavlja</string>
@@ -511,7 +511,7 @@
     <string name="channel_errors">Greške</string>
     <string name="pref_remove_bookmarked_chapters">Dozvoli brisanje označenih poglavlja</string>
     <string name="pref_category_delete_chapters">Izbriši poglavlja</string>
-    <string name="ext_nsfw_warning">Može sadržavati neprikladan sadržaj (18+)</string>
+    <string name="ext_nsfw_warning">Izvori ovog proširenja mogu sadržavati neprikladan sadržaj (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="backup_restore_missing_trackers">Praćenja bez prijave:</string>
     <string name="parental_controls_info">To ne sprečava neslužbene ili potencijalno krivo označena proširenja prikazati neprikladan sadržaj (18+) unutar aplikacije.</string>
@@ -548,7 +548,7 @@
     <string name="crash_log_saved">Zapisi rušenja programa su spremljeni</string>
     <string name="pref_dump_crash_logs_summary">Sprema zapise grešaka u datoteku za obavještavanje programera</string>
     <string name="pref_dump_crash_logs">Spremi zapise rušenja programa</string>
-    <string name="pref_viewer_nav">Način navigacije</string>
+    <string name="pref_viewer_nav">Područja dodira</string>
     <string name="edge_nav">Rub</string>
     <string name="kindlish_nav">Kao Kindle</string>
     <string name="l_nav">U obliku slova L</string>
@@ -565,7 +565,7 @@
     <string name="pref_dual_page_invert_summary">Ako se dvostranična podjela ne podudara sa smjerom čitanja</string>
     <string name="pref_dual_page_invert">Preokreni smještaj dvostranične podjele</string>
     <string name="pref_dual_page_split">Dvostranična podjela</string>
-    <string name="pref_show_navigation_mode_summary">Prikaži dodirna područja kad se čitač otvori</string>
+    <string name="pref_show_navigation_mode_summary">Kratko prikaži kada je čitač otvoren</string>
     <string name="nav_zone_right">Desno</string>
     <string name="nav_zone_left">Lijevo</string>
     <string name="nav_zone_next">Sljedeće</string>
@@ -578,7 +578,7 @@
     <string name="exclude">Isključi: %s</string>
     <string name="include">Uključi: %s</string>
     <string name="pref_library_update_categories_details">Manga u isključenim kategorijama neće se ažurirati čak niti ako se također nalaze u uključenim kategorijama.</string>
-    <string name="action_sort_chapter_fetch_date">Datum preuzimanja</string>
+    <string name="action_sort_chapter_fetch_date">Datum preuzimanja poglavlja</string>
     <string name="action_show_errors">Dodirni za prikaz detalja</string>
     <string name="update_check_eol">Ove verzija androida više nije podržana</string>
     <string name="clipboard_copy_error">Kopiranje nije uspješno</string>
@@ -707,7 +707,7 @@
     <string name="skipped_reason_not_started">Preskočeno, jer nijedno poglavlje nije pročitano</string>
     <string name="skipped_reason_not_caught_up">Preskočeno, jer postoje nepročitana poglavlja</string>
     <string name="notification_update_error">Nauspjela aktualiziranja: %1$d</string>
-    <string name="learn_more">Saznaj više</string>
+    <string name="learn_more">Dodirni za daljnje informacije</string>
     <string name="channel_skipped">Preskočeno</string>
     <string name="notification_update_skipped">Preskočena aktualiziranja: %1$d</string>
     <string name="rotation_reverse_portrait">Preokrenuto uspravno</string>
@@ -726,4 +726,18 @@
     <string name="unfinished_list">Popis nedovršenih</string>
     <string name="download_notifier_split_page_not_found">Stranica %d nije pronađena tijekom razdvajanja</string>
     <string name="loader_rar5_error">RARv5 format nije podržan</string>
+    <string name="download_ahead_info">Radi samo na unosima u biblioteci i ako je trenutačno poglavlje plus sljedeće već preuzeto</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Sljedeće nepročitano poglavlje</item>
+        <item quantity="few">Sljedeća %d nepročitana poglavlja</item>
+        <item quantity="other">Sljedećih %d nepročitanih poglavlja</item>
+    </plurals>
+    <string name="action_sort_last_manga_update">Zadnje aktualiziranje mange</string>
+    <string name="pref_long_strip_split">Rastavi visoke slike (BETA)</string>
+    <string name="network_not_metered">Samo na mrežom bez ograničenja</string>
+    <string name="battery_not_low">Kad se baterija nije slaba</string>
+    <string name="action_sort_unread_count">Broj nepročitanih</string>
+    <string name="delete_category">Izbriši kategoriju</string>
+    <string name="delete_category_confirmation">Želiš li izbrisati kategoriju „%s”\?</string>
+    <string name="auto_download_while_reading">Automatski preuzmi tijekom čitanja</string>
 </resources>

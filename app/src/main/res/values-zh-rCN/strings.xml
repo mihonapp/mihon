@@ -617,9 +617,9 @@
     <string name="pref_highest">最高</string>
     <string name="pref_hide_threshold">滚动时隐藏菜单的灵敏度</string>
     <string name="pref_inverted_colors">反转</string>
-    <string name="pref_relative_time_long">长 (短+、n 天前)</string>
+    <string name="pref_relative_time_long">长期 (今天、昨天、几天前)</string>
     <string name="relative_time_today">今天</string>
-    <string name="pref_relative_time_short">短 (今天、昨天)</string>
+    <string name="pref_relative_time_short">短期 (今天、昨天)</string>
     <string name="pref_relative_format">相对时间戳</string>
     <plurals name="relative_time">
         <item quantity="other">%1$d 天前</item>
@@ -673,7 +673,7 @@
     <string name="action_show_manga">显示漫画</string>
     <string name="action_display_cover_only_grid">封面网格</string>
     <string name="pref_landscape_zoom">缩放竖屏图片</string>
-    <string name="pref_navigate_pan">平移图片而非翻页</string>
+    <string name="pref_navigate_pan">图片放大时先平移再翻页</string>
     <string name="confirm_manga_add_duplicate">库中有一个名称相同但图源不同（%1$s）的条目。
 \n
 \n你仍希望继续吗？</string>
@@ -703,8 +703,8 @@
     <string name="source_empty_screen">未找到图源</string>
     <string name="action_sort_last_manga_update">上次漫画更新</string>
     <string name="action_sort_unread_count">未读数</string>
-    <string name="split_tall_images">拆分长图</string>
-    <string name="split_tall_images_summary">提高阅读器的性能</string>
+    <string name="split_tall_images">分割长图</string>
+    <string name="split_tall_images_summary">可以改善阅读器的性能</string>
     <string name="download_notifier_split_page_not_found">拆分时未找到页 %d</string>
     <string name="download_notifier_split_page_path_not_found">找不到页面 %d 的文件路径</string>
     <string name="pref_reset_viewer_flags">重置每一连载阅读器设置</string>
@@ -747,4 +747,9 @@
     </plurals>
     <string name="download_ahead_info">仅适用于书架中的作品，并且要求当前章节和下一章节已经下载</string>
     <string name="are_you_sure">你确定吗？</string>
+    <string name="pref_long_strip_split">分割长图 (测试版)</string>
+    <string name="multi_lang">多语言</string>
+    <string name="updates_last_update_info">书架上次更新时间：%1$s</string>
+    <string name="remove_manga">即将从书架中删除此漫画。</string>
+    <string name="popular">受欢迎</string>
 </resources>
