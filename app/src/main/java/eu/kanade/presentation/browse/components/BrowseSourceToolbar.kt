@@ -43,12 +43,12 @@ fun BrowseSourceToolbar(
 ) {
     if (state.searchQuery == null) {
         BrowseSourceRegularToolbar(
-            title = if (state.isUserQuery) state.currentQuery else source.name,
+            title = if (state.isUserQuery) state.currentFilter.query else source.name,
             isLocalSource = source is LocalSource,
             displayMode = displayMode,
             onDisplayModeChange = onDisplayModeChange,
             navigateUp = navigateUp,
-            onSearchClick = { state.searchQuery = if (state.isUserQuery) state.currentQuery else "" },
+            onSearchClick = { state.searchQuery = if (state.isUserQuery) state.currentFilter.query else "" },
             onWebViewClick = onWebViewClick,
             onHelpClick = onHelpClick,
             scrollBehavior = scrollBehavior,

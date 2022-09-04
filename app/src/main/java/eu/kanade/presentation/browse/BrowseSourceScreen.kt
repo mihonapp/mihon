@@ -100,7 +100,7 @@ fun BrowseSourceScreen(
         },
         floatingActionButton = {
             BrowseSourceFloatingActionButton(
-                isVisible = presenter.filters.isNotEmpty(),
+                isVisible = presenter.filters.isNotEmpty() && presenter.currentFilter is BrowseSourcePresenter.Filter.UserInput,
                 onFabClick = onFabClick,
             )
         },
@@ -126,7 +126,7 @@ fun BrowseSourceScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     FilterChip(
-                        selected = presenter.currentQuery == GetRemoteManga.QUERY_POPULAR,
+                        selected = presenter.currentFilter == BrowseSourcePresenter.Filter.Popular,
                         onClick = {
                             presenter.resetFilter()
                             presenter.search(GetRemoteManga.QUERY_POPULAR)
@@ -145,7 +145,7 @@ fun BrowseSourceScreen(
                     )
                     if (presenter.source?.supportsLatest == true) {
                         FilterChip(
-                            selected = presenter.currentQuery == GetRemoteManga.QUERY_LATEST,
+                            selected = presenter.currentFilter == BrowseSourcePresenter.Filter.Latest,
                             onClick = {
                                 presenter.resetFilter()
                                 presenter.search(GetRemoteManga.QUERY_LATEST)
@@ -165,7 +165,7 @@ fun BrowseSourceScreen(
                     }
                     if (presenter.filters.isNotEmpty()) {
                         FilterChip(
-                            selected = presenter.currentQuery != GetRemoteManga.QUERY_POPULAR && presenter.currentQuery != GetRemoteManga.QUERY_LATEST,
+                            selected = presenter.currentFilter is BrowseSourcePresenter.Filter.UserInput,
                             onClick = onFabClick,
                             leadingIcon = {
                                 Icon(

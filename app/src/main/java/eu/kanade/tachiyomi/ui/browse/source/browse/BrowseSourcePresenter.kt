@@ -120,11 +120,11 @@ open class BrowseSourcePresenter(
 
     @Composable
     fun getMangaList(): Flow<PagingData<DomainManga>> {
-        return remember(currentQuery, currentFilters) {
+        return remember(currentFilter) {
             Pager(
                 PagingConfig(pageSize = 25),
             ) {
-                getRemoteManga.subscribe(sourceId, currentQuery, currentFilters)
+                getRemoteManga.subscribe(sourceId, currentFilter.query, currentFilter.filters)
             }.flow
                 .map {
                     it.map {
@@ -156,13 +156,16 @@ open class BrowseSourcePresenter(
     }
 
     fun resetFilter() {
-        val newFilters = source!!.getFilterList()
-        state.filters = newFilters
-        state.currentFilters = state.filters
+        if (currentFilter !is Filter.UserInput) return
+        state.currentFilter = (currentFilter as Filter.UserInput).copy(filters = source!!.getFilterList())
     }
 
     fun search(query: String? = null) {
-        state.currentQuery = query ?: searchQuery ?: ""
+        var new = Filter.valueOf(query ?: searchQuery ?: "")
+        if (new is Filter.UserInput && currentFilter is Filter.UserInput) {
+            new = new.copy(filters = currentFilter.filters)
+        }
+        state.currentFilter = new
     }
 
     override fun onCreate(savedState: Bundle?) {
@@ -309,7 +312,10 @@ open class BrowseSourcePresenter(
      * @param filters a list of active filters.
      */
     fun setSourceFilter(filters: FilterList) {
-        state.currentFilters = filters
+        state.currentFilter = when (val filter = currentFilter) {
+            Filter.Latest, Filter.Popular -> Filter.UserInput(filters = filters)
+            is Filter.UserInput -> filter.copy(filters = filters)
+        }
     }
 
     /**
@@ -338,6 +344,22 @@ open class BrowseSourcePresenter(
                 mangaId = manga.id,
                 categoryIds = categoryIds.toList(),
             )
+        }
+    }
+
+    sealed class Filter(open val query: String, open val filters: FilterList) {
+        object Popular : Filter(query = GetRemoteManga.QUERY_POPULAR, filters = FilterList())
+        object Latest : Filter(query = GetRemoteManga.QUERY_LATEST, filters = FilterList())
+        data class UserInput(override val query: String = "", override val filters: FilterList = FilterList()) : Filter(query = query, filters = filters)
+
+        companion object {
+            fun valueOf(query: String): Filter {
+                return when (query) {
+                    GetRemoteManga.QUERY_POPULAR -> Popular
+                    GetRemoteManga.QUERY_LATEST -> Latest
+                    else -> UserInput(query = query)
+                }
+            }
         }
     }
 
