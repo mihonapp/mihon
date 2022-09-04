@@ -103,6 +103,9 @@ open class BrowseSourcePresenter(
 
     var displayMode by preferences.sourceDisplayMode().asState()
 
+    val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
+    val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
+
     @Composable
     fun getColumnsPreferenceForCurrentOrientation(): State<GridCells> {
         val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE

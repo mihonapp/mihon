@@ -70,6 +70,8 @@ open class BrowseSourceController(bundle: Bundle) :
                 val intent = WebViewActivity.newIntent(context, source.baseUrl, source.id, source.name)
                 context.startActivity(intent)
             },
+            incognitoMode = presenter.isIncognitoMode,
+            downloadedOnlyMode = presenter.isDownloadOnly,
         )
 
         val onDismissRequest = { presenter.dialog = null }
