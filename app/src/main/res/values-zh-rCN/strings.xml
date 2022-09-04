@@ -751,5 +751,5 @@
     <string name="multi_lang">多语言</string>
     <string name="updates_last_update_info">书架上次更新时间：%1$s</string>
     <string name="remove_manga">即将从书架中删除此漫画。</string>
-    <string name="popular">受欢迎</string>
+    <string name="popular">热门</string>
 </resources>
