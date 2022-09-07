@@ -349,6 +349,7 @@ class LocalSource(
             var coverFile = getCoverFile(manga.url, baseDirsFiles)
             if (coverFile == null) {
                 coverFile = File(mangaDir.absolutePath, DEFAULT_COVER_NAME)
+                coverFile.createNewFile()
             }
 
             // It might not exist at this point
