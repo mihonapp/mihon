@@ -289,25 +289,24 @@ class WebtoonPageHolder(
             }
             val isStripSplitNeeded = ImageUtil.isStripSplitNeeded(imageStream)
             if (isStripSplitNeeded) {
-                onStripSplit(imageStream)?.let { return it }
+                return onStripSplit(imageStream)
             }
         }
 
         return imageStream
     }
 
-    private fun onStripSplit(imageStream: BufferedInputStream): InputStream? {
-        val page = page ?: return null
-        val streamFn = page.stream ?: return null
+    private fun onStripSplit(imageStream: BufferedInputStream): InputStream {
+        // If we have reached this point [page] and its stream shouldn't be null
+        val page = page!!
+        val stream = page.stream!!
         val splitData = ImageUtil.getSplitDataForStream(imageStream)
-        if (splitData.size == 1) return imageStream
         val newPages = splitData.map {
-            StencilPage(page) { ImageUtil.splitStrip(it, streamFn) }
+            StencilPage(page) { ImageUtil.splitStrip(it, stream) }
         }.toMutableList()
-        return newPages.removeFirst().stream?.invoke()
+        return newPages.removeFirst().stream!!()
             .also {
-                // Doing this first and then returning InputStream
-                // results in various issues with splitting
+                // Running [onLongStripSplit] first results in issues with splitting
                 viewer.onLongStripSplit(page, newPages)
             }
     }

@@ -261,7 +261,7 @@ object ImageUtil {
 
         val options = extractImageOptions(imageStream)
         val imageHeightIsBiggerThanWidth = options.outHeight > options.outWidth
-        val imageHeightBiggerThanScreenHeight = options.outHeight > getDisplayMaxHeightInPx
+        val imageHeightBiggerThanScreenHeight = options.outHeight > optimalImageHeight
         return imageHeightIsBiggerThanWidth && imageHeightBiggerThanScreenHeight
     }
 
@@ -300,9 +300,8 @@ object ImageUtil {
             val imageHeight = outHeight
             val imageWidth = outWidth
 
-            val splitHeight = getDisplayMaxHeightInPx * 2
-            // -1 so it doesn't try to split when imageHeight = splitHeight
-            val partCount = (imageHeight - 1) / splitHeight + 1
+            // -1 so it doesn't try to split when imageHeight = optimalImageHeight
+            val partCount = (imageHeight - 1) / optimalImageHeight + 1
             val optimalSplitHeight = imageHeight / partCount
 
             logcat {
@@ -316,15 +315,15 @@ object ImageUtil {
                     if (isNotEmpty() && imageHeight <= last().bottomOffset) break
 
                     val topOffset = index * optimalSplitHeight
-                    var outputImageHeight = min(optimalSplitHeight, imageHeight - topOffset)
+                    var splitHeight = min(optimalSplitHeight, imageHeight - topOffset)
 
-                    val remainingHeight = imageHeight - (topOffset + outputImageHeight)
+                    val remainingHeight = imageHeight - (topOffset + splitHeight)
                     // If remaining height is smaller or equal to 1/10th of
                     // optimal split height then include it in current page
                     if (remainingHeight <= (optimalSplitHeight / 10)) {
-                        outputImageHeight += remainingHeight
+                        splitHeight += remainingHeight
                     }
-                    add(SplitData(index, topOffset, outputImageHeight, imageWidth))
+                    add(SplitData(index, topOffset, splitHeight, imageWidth))
                 }
             }
         }
@@ -577,6 +576,8 @@ object ImageUtil {
             BitmapRegionDecoder.newInstance(imageStream, false)
         }
     }
+
+    private val optimalImageHeight = getDisplayMaxHeightInPx * 2
 
     // Android doesn't include some mappings
     private val SUPPLEMENTARY_MIMETYPE_MAPPING = mapOf(
