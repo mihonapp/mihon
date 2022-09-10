@@ -43,7 +43,6 @@ import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.base.controller.ComposeContentController
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
-import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.base.controller.setRoot
@@ -121,12 +120,6 @@ class MainActivity : BaseActivity() {
 
         // Draw edge-to-edge
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        binding.fabLayout.rootFab.applyInsetter {
-            ignoreVisibility(true)
-            type(navigationBars = true) {
-                margin()
-            }
-        }
         binding.bottomNav?.applyInsetter {
             type(navigationBars = true) {
                 padding()
@@ -587,16 +580,6 @@ class MainActivity : BaseActivity() {
         if (internalTo is RootController) {
             // Always show bottom nav again when returning to a RootController
             showNav(true)
-        }
-
-        if (from is FabController) {
-            from.cleanupFab(binding.fabLayout.rootFab)
-        }
-        if (internalTo is FabController) {
-            binding.fabLayout.rootFab.show()
-            internalTo.configureFab(binding.fabLayout.rootFab)
-        } else {
-            binding.fabLayout.rootFab.hide()
         }
 
         val isComposeController = internalTo is ComposeContentController

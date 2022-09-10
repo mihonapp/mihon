@@ -70,47 +70,10 @@
     <!--Widgets-->
     <!--=======-->
 
-    <style name="Widget.Tachiyomi.GridView" parent="android:Widget">
-        <item name="android:smoothScrollbar">true</item>
-        <item name="android:numColumns">auto_fit</item>
-        <item name="android:stretchMode">columnWidth</item>
-        <item name="android:scrollbarStyle">outsideOverlay</item>
-    </style>
-
-    <style name="Widget.Tachiyomi.GridView.Source">
-        <item name="android:gravity">top|left</item>
-        <item name="android:smoothScrollbar">true</item>
-        <item name="android:cacheColorHint">?android:attr/textColorHint</item>
-        <item name="android:fastScrollEnabled">true</item>
-        <item name="android:horizontalSpacing">0dp</item>
-        <item name="android:verticalSpacing">0dp</item>
-    </style>
-
-
     <style name="Widget.Tachiyomi.SpinnerItem" parent="Widget.AppCompat.DropDownItem.Spinner">
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:background">@drawable/list_item_selector</item>
     </style>
-
-
-    <style name="Widget.Tachiyomi.Chip.Action" parent="Widget.Material3.Chip.Suggestion">
-        <item name="chipBackgroundColor">?attr/chipBackgroundColor</item>
-        <item name="android:textColor">?attr/chipTextColor</item>
-        <item name="rippleColor">?attr/colorControlHighlight</item>
-        <item name="chipStrokeWidth">0dp</item>
-
-        <!-- Smaller text/height -->
-        <item name="chipMinHeight">28dp</item>
-        <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
-
-        <!-- Collapse horizontal margin -->
-        <item name="chipMinTouchTargetSize">28dp</item>
-
-        <!-- Custom chip states -->
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-    </style>
-
 
     <style name="Widget.Tachiyomi.CircularProgressIndicator.Small" parent="Widget.Material3.CircularProgressIndicator">
         <item name="indicatorSize">16dp</item>
@@ -128,33 +91,6 @@
         <item name="android:textColor">@color/button_action_selector</item>
         <item name="android:textSize">12sp</item>
     </style>
-
-    <style name="Widget.Tachiyomi.Button.IconButton" parent="Widget.Material3.Button.TextButton.Icon">
-        <item name="iconTint">?attr/colorAccent</item>
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
-        <item name="android:minWidth">0dp</item>
-    </style>
-
-    <style name="Widget.Tachiyomi.Button.InlineButton" parent="Widget.Material3.Button.TextButton">
-        <item name="android:minHeight">0dp</item>
-        <item name="android:minWidth">0dp</item>
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-
-        <item name="android:background">?android:attr/colorBackground</item>
-        <item name="backgroundTint">@null</item>
-        <item name="rippleColor">@null</item>
-    </style>
-
-    <style name="Widget.Tachiyomi.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton" />
-
-
     <!--=======================-->
     <!--Widgets.MaterialDivider-->
     <!--=======================-->
@@ -237,16 +173,6 @@
     <style name="ShapeAppearanceOverlay.Cover" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/card_radius</item>
-    </style>
-
-    <style name="ThemeOverlay.Tachiyomi.Dialog.Fullscreen" parent="ThemeOverlay.Material3">
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowAnimationStyle">@style/Animation.Tachiyomi.Dialog</item>
-    </style>
-
-    <style name="Animation.Tachiyomi.Dialog" parent="Animation.AppCompat.Dialog">
-        <item name="android:windowEnterAnimation">@anim/fade_in_short</item>
-        <item name="android:windowExitAnimation">@anim/fade_out_short</item>
     </style>
 
     <!--===========-->
