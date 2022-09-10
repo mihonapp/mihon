@@ -300,11 +300,12 @@ class WebtoonPageHolder(
         // If we have reached this point [page] and its stream shouldn't be null
         val page = page!!
         val stream = page.stream!!
-        val splitData = ImageUtil.getSplitDataForStream(imageStream)
+        val splitData = ImageUtil.getSplitDataForStream(imageStream).toMutableList()
+        val currentSplitData = splitData.removeFirst()
         val newPages = splitData.map {
             StencilPage(page) { ImageUtil.splitStrip(it, stream) }
-        }.toMutableList()
-        return newPages.removeFirst().stream!!()
+        }
+        return ImageUtil.splitStrip(currentSplitData) { imageStream }
             .also {
                 // Running [onLongStripSplit] first results in issues with splitting
                 viewer.onLongStripSplit(page, newPages)
