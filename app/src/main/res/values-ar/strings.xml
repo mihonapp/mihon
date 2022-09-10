@@ -14,7 +14,7 @@
     <string name="label_backup">النسخ الاحتياطي والإستعادة</string>
     <string name="action_settings">اﻹعدادات</string>
     <string name="action_filter">الترتيب حسب</string>
-    <string name="action_filter_downloaded">التنزيلات</string>
+    <string name="action_filter_downloaded">تم التنزيل</string>
     <string name="action_filter_bookmarked">المحفوظة</string>
     <string name="action_filter_unread">غير مقروءة</string>
     <string name="action_filter_empty">إزالة الترتيب</string>
@@ -251,7 +251,7 @@
     <string name="channel_common">عامٌّ</string>
     <string name="label_migration">نقل</string>
     <string name="label_extensions">الإضافات</string>
-    <string name="label_extension_info">معلومات اﻹضافة</string>
+    <string name="label_extension_info">معلومات الإضافة</string>
     <string name="action_display_download_badge">الفصول المحملة</string>
     <string name="ext_update">تحديث</string>
     <string name="ext_install">تثبيت</string>
@@ -647,7 +647,7 @@
     <string name="alignment_top">أعلى</string>
     <string name="pref_side_nav_icon_alignment">محاذاة رموز التنقل الجانبية</string>
     <string name="cancel_all_for_series">إلغاء الكل لهذه السلسلة</string>
-    <string name="action_display_local_badge">المانغا المحلية</string>
+    <string name="action_display_local_badge">المانجا المحلية</string>
     <string name="information_empty_category_dialog">ليس لديك اي قوائم بعد.</string>
     <string name="action_start_downloading_now">ابدأ التحميل الآن</string>
     <string name="theme_strawberrydaiquiri">أحمر</string>
@@ -697,7 +697,7 @@
     <string name="pref_tablet_ui_mode">واجهة مستخدم الجهاز اللوحي</string>
     <string name="pref_remove_exclude_categories">فئات المستثناة</string>
     <string name="ext_installer_pref">المثبت</string>
-    <string name="action_sort_count">مجموع المانغا</string>
+    <string name="action_sort_count">مجموع المانجا</string>
     <string name="label_warning">تحذير</string>
     <string name="action_display_language_badge">اللغة</string>
     <string name="backup_info">يوصى بشدة بالنسخ الاحتياطي التلقائي. يجب عليك الإحتفاظ بنُسخ في أماكن أخرى أيضًا.</string>
@@ -761,10 +761,10 @@
     <string name="pref_duplicate_pinned_sources_summary">تكرار المصادر المثبتة في مجموعات اللغة الخاصة بها</string>
     <string name="source_filter_empty_screen">لا يوجد مصادر مثبته</string>
     <string name="source_empty_screen">لا يوجد مصدر</string>
-    <string name="action_sort_unread_count">المانغا الغير مقروءة</string>
-    <string name="action_sort_last_manga_update">آخر مانجا محملة</string>
+    <string name="action_sort_unread_count">المانجا الغير مقروءة</string>
+    <string name="action_sort_last_manga_update">آخر تحديث للمانجا</string>
     <string name="split_tall_images_summary">يحسن أداء القارئ عن طريق تقسيم الصور الطويلة التي تم تنزيلها.</string>
-    <string name="split_tall_images">تقسيم تلقائي للصور الطويلة</string>
+    <string name="split_tall_images">تقسيم للصور الطويلة</string>
     <string name="download_notifier_split_page_not_found">لم يتم العثور على الصفحة %d أثناء التقسيم</string>
     <string name="download_notifier_split_page_path_not_found">لم يتم العثور على مسار الصفخة %d</string>
     <string name="pref_reset_viewer_flags_success">اعادة تعيين جميع اعدادات القارئ</string>
@@ -798,4 +798,23 @@
     <string name="action_remove_everything">حذف كل شيء</string>
     <string name="loader_rar5_error">الصيغه RARv5 غير مدعومه</string>
     <string name="theme_tidalwave">موجة مد و جزر</string>
+    <string name="multi_lang">متعدد</string>
+    <string name="pref_long_strip_split">إنقسام الصور الطويلة (بيتا)</string>
+    <string name="update_already_running">هنالك تحديث جارٍ بالفعل</string>
+    <string name="download_ahead">التنزيل المسبق</string>
+    <string name="download_ahead_info">يعمل فقط على الإدخالات في المكتبة وإذا كان الفصل الحالي بالإضافة إلى الفصل التالي قد تم تنزيلهم بالفعل</string>
+    <string name="auto_download_while_reading">التحميل تلقائيا أثناء القراءة</string>
+    <string name="are_you_sure">هل أنت واثق؟</string>
+    <string name="updates_last_update_info">آخر تحديث للمكتبة: %1$s</string>
+    <string name="error_user_agent_string_blank">سلسلة وكيل المستخدم لا يمكن أن تكون فارغة</string>
+    <string name="popular">شائع</string>
+    <string name="remove_manga">أنت علي وشك أن تحذف هذه المانجا من مكتبتك</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="zero">الفصل التالي غير المقروء</item>
+        <item quantity="one">الفصل التالي غير المقروء</item>
+        <item quantity="two">الفصلان غير المقروءان التاليان</item>
+        <item quantity="few">بضعة ال %d فصول غير المقروءة التالية</item>
+        <item quantity="many">عدة ال %d فصول غير المقروءة التالية</item>
+        <item quantity="other">الفصول %d غير المقروءة التالية</item>
+    </plurals>
 </resources>

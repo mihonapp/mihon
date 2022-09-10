@@ -760,4 +760,9 @@
         <item quantity="one">Susunod na kabanatang di pa nabasa</item>
         <item quantity="other">Susunod na %d (na) kabanatang di pa nabasa</item>
     </plurals>
+    <string name="multi_lang">Marami</string>
+    <string name="remove_manga">Tatanggalin mo na ang manga na ito mula sa Aklatan mo</string>
+    <string name="updates_last_update_info">Huling na-update ang Aklatan noong: %1$s</string>
+    <string name="pref_long_strip_split">Hatiin ang mga matatangkad na larawan (BETA)</string>
+    <string name="popular">Sikat</string>
 </resources>

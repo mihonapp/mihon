@@ -740,4 +740,9 @@
     <string name="delete_category">Izbriši kategoriju</string>
     <string name="delete_category_confirmation">Želiš li izbrisati kategoriju „%s”\?</string>
     <string name="auto_download_while_reading">Automatski preuzmi tijekom čitanja</string>
+    <string name="internal_error">Interna greška: Provjeri zapisnike o prekidu programa za daljnje informacije</string>
+    <string name="pref_app_language">Jezik aplikacije</string>
+    <string name="action_close">Zatvori</string>
+    <string name="action_remove_everything">Ukloni sve</string>
+    <string name="theme_lavender">Lavanda</string>
 </resources>

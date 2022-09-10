@@ -751,4 +751,5 @@
     <string name="multi_lang">多語</string>
     <string name="remove_manga">即將從書櫃中移除此漫畫</string>
     <string name="updates_last_update_info">書櫃更新於：%1$s</string>
+    <string name="popular">熱門</string>
 </resources>

@@ -714,8 +714,8 @@
     <string name="source_filter_empty_screen">Ingen installerad källa hittades</string>
     <string name="action_sort_last_manga_update">Sista manga-uppdateringen</string>
     <string name="action_sort_unread_count">Antal olästa</string>
-    <string name="split_tall_images">Automatisk delning av höga bilder</string>
-    <string name="split_tall_images_summary">Förbättrar läsarens prestanda genom att dela upp långa nedladdade bilder.</string>
+    <string name="split_tall_images">Dela upp höga bilder</string>
+    <string name="split_tall_images_summary">Förbättrar läsarens prestanda</string>
     <string name="download_notifier_split_page_not_found">Sida %d hittades inte under delning</string>
     <string name="source_empty_screen">Ingen källa hittad</string>
     <string name="pref_reset_viewer_flags_error">Kunde inte återställa läsarinställningarna</string>
@@ -749,4 +749,20 @@
     <string name="loader_rar5_error">RARv5 formatet stöds inte</string>
     <string name="appwidget_updates_description">Se dina nyligen uppdaterade manga</string>
     <string name="appwidget_unavailable_locked">Widget är inte tillgänglig när applåset är aktiverat</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Nästa olästa kapitel</item>
+        <item quantity="other">Nästa %d olästa kapitel</item>
+    </plurals>
+    <string name="update_already_running">En uppdatering pågår redan</string>
+    <string name="multi_lang">Multi</string>
+    <string name="error_user_agent_string_blank">Strängen för användaragent kan inte vara tom</string>
+    <string name="are_you_sure">Är du säker\?</string>
+    <string name="updates_last_update_info">Biblioteket uppdaterades senast: %1$s</string>
+    <string name="popular">Populära</string>
+    <string name="remove_manga">Du är på väg att ta bort den här mangan från ditt bibliotek</string>
+    <string name="download_ahead">Ladda ner i förväg</string>
+    <string name="theme_tidalwave">Tidvattenvåg</string>
+    <string name="download_ahead_info">Fungerar endast för poster i biblioteket och om det aktuella kapitlet och nästa kapitel redan har laddats ner</string>
+    <string name="pref_long_strip_split">Dela stora bilder (BETA)</string>
+    <string name="auto_download_while_reading">Automatisk nedladdning under läsning</string>
 </resources>

@@ -506,7 +506,7 @@
     <string name="confirm_set_chapter_settings">デフォルト設定として保存しますか？</string>
     <string name="chapter_settings">章の設定</string>
     <string name="action_search_settings">検索設定</string>
-    <string name="downloaded_chapters">ダウンロードした章</string>
+    <string name="downloaded_chapters">ダウンロードした章の数</string>
     <string name="manga_from_library">ライブラリからのマンガ</string>
     <string name="pref_incognito_mode_summary">閲覧履歴の記録を一時停止します</string>
     <string name="pref_incognito_mode">シークレット モード</string>
@@ -751,4 +751,5 @@
     <string name="updates_last_update_info">前回のライブラリ更新：%1$s</string>
     <string name="pref_long_strip_split">長い画像の分割（BETA）</string>
     <string name="remove_manga">この漫画をライブラリから消去しようとしています</string>
+    <string name="popular">人気</string>
 </resources>

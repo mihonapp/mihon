@@ -713,16 +713,16 @@
     <string name="ext_installer_pref">Installer</string>
     <plurals name="relative_time">
         <item quantity="one">Ieri</item>
-        <item quantity="few"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="other"/>
     </plurals>
     <string name="pref_create_folder_per_manga_summary">Creează foldere în funcție de titlul manga</string>
     <string name="automatic_background">Automat</string>
     <string name="on">Pornit</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Următorul capitol necitit</item>
-        <item quantity="few"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="other"/>
     </plurals>
     <string name="are_you_sure">Ești sigur\?</string>
     <string name="error_saving_picture">Eroare la salvarea imaginii</string>
@@ -733,4 +733,5 @@
     <string name="pref_create_folder_per_manga">Salvează pagini în dosare separate</string>
     <string name="description_placeholder">Fără descriere</string>
     <string name="notification_incognito_text">Dezactivează modul incognito</string>
+    <string name="download_ahead_info">Funcționează numai pentru intrările din bibliotecă și dacă capitolul curent și următorul sunt deja descărcate</string>
 </resources>
