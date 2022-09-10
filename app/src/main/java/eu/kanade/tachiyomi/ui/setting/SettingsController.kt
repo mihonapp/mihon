@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.animation.doOnEnd
-import androidx.core.view.updatePadding
 import androidx.preference.Preference
 import androidx.preference.PreferenceController
 import androidx.preference.PreferenceGroup
@@ -23,7 +22,6 @@ import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
-import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import kotlinx.coroutines.CoroutineScope
@@ -42,11 +40,6 @@ abstract class SettingsController : PreferenceController() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
-
-        if (this is RootController) {
-            listView.clipToPadding = false
-            listView.updatePadding(bottom = view.context.resources.getDimensionPixelSize(R.dimen.action_toolbar_list_padding))
-        }
 
         listView.applyInsetter {
             type(navigationBars = true) {

@@ -1,20 +1,11 @@
 <resources>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-
     <dimen name="bottom_sheet_width">0dp</dimen>
 
     <dimen name="card_radius">4dp</dimen>
     <dimen name="card_selector_radius">6dp</dimen>
     <dimen name="dialog_radius">8dp</dimen>
 
-    <dimen name="fab_list_padding">88dp</dimen>
-
-    <dimen name="action_toolbar_list_padding">72dp</dimen>
-
     <dimen name="screen_edge_margin">16dp</dimen>
-
-    <dimen name="tablet_horizontal_cover_margin">128dp</dimen>
-    <dimen name="tablet_sidebar_max_width">450dp</dimen>
 
     <dimen name="appwidget_background_radius">16dp</dimen>
     <dimen name="appwidget_inner_radius">12dp</dimen>
