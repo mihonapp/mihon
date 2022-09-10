@@ -1,0 +1,5 @@
+# Hebrew assets are copied on build
+/src/main/res/values-iw/
+
+# Generated
+locales_config.xml

@@ -11,9 +11,3 @@
 /build
 *.apk
 app/**/output.json
-
-# Hebrew assets are copied on build
-app/src/main/res/values-iw/
-
-# Generated
-locales_config.xml

@@ -149,6 +149,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":i18n"))
+
     // Compose
     implementation(compose.activity)
     implementation(compose.foundation)
@@ -280,8 +282,6 @@ dependencies {
 }
 
 tasks {
-    val localesConfigTask = registerLocalesConfigTask(project)
-
     withType<Test> {
         useJUnitPlatform()
         testLogging {
@@ -310,16 +310,11 @@ tasks {
         )
     }
 
-    // Duplicating Hebrew string assets due to some locale code issues on different devices
-    val copyHebrewStrings by registering(Copy::class) {
-        from("./src/main/res/values-he")
-        into("./src/main/res/values-iw")
-        include("**/*")
-    }
+
 
     preBuild {
         val ktlintTask = if (System.getenv("GITHUB_BASE_REF") == null) formatKotlin else lintKotlin
-        dependsOn(ktlintTask, copyHebrewStrings, localesConfigTask)
+        dependsOn(ktlintTask)
     }
 }
 
