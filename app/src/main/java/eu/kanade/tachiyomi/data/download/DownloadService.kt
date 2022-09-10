@@ -25,6 +25,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -46,6 +48,9 @@ class DownloadService : Service() {
          * Relay used to know when the service is running.
          */
         val runningRelay: BehaviorRelay<Boolean> = BehaviorRelay.create(false)
+
+        private val _isRunning = MutableStateFlow(false)
+        val isRunning = _isRunning.asStateFlow()
 
         /**
          * Starts this service.
@@ -98,6 +103,7 @@ class DownloadService : Service() {
         startForeground(Notifications.ID_DOWNLOAD_CHAPTER_PROGRESS, getPlaceholderNotification())
         wakeLock = acquireWakeLock(javaClass.name)
         runningRelay.call(true)
+        _isRunning.value = true
         subscriptions = CompositeSubscription()
         listenDownloaderState()
         listenNetworkChanges()
@@ -109,6 +115,7 @@ class DownloadService : Service() {
     override fun onDestroy() {
         ioScope?.cancel()
         runningRelay.call(false)
+        _isRunning.value = false
         subscriptions.unsubscribe()
         downloadManager.stopDownloads()
         wakeLock.releaseIfNeeded()

@@ -35,14 +35,25 @@ data class DownloadHeaderItem(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is DownloadHeaderItem) {
-            return id == other.id && name == other.name
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+
+        other as DownloadHeaderItem
+
+        if (id != other.id) return false
+        if (name != other.name) return false
+        if (size != other.size) return false
+        if (subItemsCount != other.subItemsCount) return false
+        if (subItems !== other.subItems) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
-        return id.hashCode()
+        var result = id.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + size
+        result = 31 * result + subItems.hashCode()
+        return result
     }
 
     init {

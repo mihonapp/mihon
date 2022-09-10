@@ -1,132 +1,316 @@
 package eu.kanade.tachiyomi.ui.download
 
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.view.isVisible
+import android.view.ViewGroup.MarginLayoutParams
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Velocity
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.ViewCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import dev.chrisbanes.insetter.applyInsetter
+import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.EmptyScreen
+import eu.kanade.presentation.components.ExtendedFloatingActionButton
+import eu.kanade.presentation.components.Pill
+import eu.kanade.presentation.components.Scaffold
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.databinding.DownloadControllerBinding
+import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import eu.kanade.tachiyomi.source.model.Page
-import eu.kanade.tachiyomi.ui.base.controller.FabController
-import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import eu.kanade.tachiyomi.util.view.shrinkOnScroll
+import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
+import eu.kanade.tachiyomi.util.lang.launchUI
+import me.saket.cascade.CascadeDropdownMenu
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 /**
  * Controller that shows the currently active downloads.
  * Uses R.layout.fragment_download_queue.
  */
 class DownloadController :
-    NucleusController<DownloadControllerBinding, DownloadPresenter>(),
-    FabController,
+    FullComposeController<DownloadPresenter>(),
     DownloadAdapter.DownloadItemListener {
+
+    private lateinit var controllerBinding: DownloadListBinding
 
     /**
      * Adapter containing the active downloads.
      */
     private var adapter: DownloadAdapter? = null
-    private var actionFab: ExtendedFloatingActionButton? = null
-    private var actionFabScrollListener: RecyclerView.OnScrollListener? = null
 
     /**
      * Map of subscriptions for active downloads.
      */
     private val progressSubscriptions by lazy { mutableMapOf<Download, Subscription>() }
 
-    /**
-     * Whether the download queue is running or not.
-     */
-    private var isRunning: Boolean = false
-
-    init {
-        setHasOptionsMenu(true)
-    }
-
-    override fun createBinding(inflater: LayoutInflater) = DownloadControllerBinding.inflate(inflater)
-
-    override fun createPresenter(): DownloadPresenter {
-        return DownloadPresenter()
-    }
-
-    override fun getTitle(): String? {
-        return resources?.getString(R.string.label_download_queue)
-    }
+    override fun createPresenter() = DownloadPresenter()
 
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
-        binding.recycler.applyInsetter {
-            type(navigationBars = true) {
-                padding()
-            }
+        viewScope.launchUI {
+            presenter.getDownloadStatusFlow()
+                .collect(this@DownloadController::onStatusChange)
         }
-
-        // Check if download queue is empty and update information accordingly.
-        setInformationView()
-
-        // Initialize adapter.
-        adapter = DownloadAdapter(this@DownloadController)
-        binding.recycler.adapter = adapter
-        adapter?.isHandleDragEnabled = true
-        adapter?.fastScroller = binding.fastScroller
-
-        // Set the layout manager for the recycler and fixed size.
-        binding.recycler.layoutManager = LinearLayoutManager(view.context)
-        binding.recycler.setHasFixedSize(true)
-
-        actionFabScrollListener = actionFab?.shrinkOnScroll(binding.recycler)
-
-        // Subscribe to changes
-        DownloadService.runningRelay
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeUntilDestroy { onQueueStatusChange(it) }
-
-        presenter.getDownloadStatusObservable()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeUntilDestroy { onStatusChange(it) }
-
-        presenter.getDownloadProgressObservable()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeUntilDestroy { onUpdateDownloadedPages(it) }
-
-        presenter.downloadQueue.getUpdatedObservable()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeUntilDestroy {
-                updateTitle(it.size)
-            }
-    }
-
-    override fun configureFab(fab: ExtendedFloatingActionButton) {
-        actionFab = fab
-        fab.setOnClickListener {
-            val context = applicationContext ?: return@setOnClickListener
-
-            if (isRunning) {
-                DownloadService.stop(context)
-                presenter.pauseDownloads()
-            } else {
-                DownloadService.start(context)
-            }
-
-            setInformationView()
+        viewScope.launchUI {
+            presenter.getDownloadProgressFlow()
+                .collect(this@DownloadController::onUpdateDownloadedPages)
         }
     }
 
-    override fun cleanupFab(fab: ExtendedFloatingActionButton) {
-        fab.setOnClickListener(null)
-        actionFabScrollListener?.let { binding.recycler.removeOnScrollListener(it) }
-        actionFab = null
+    @Composable
+    override fun ComposeContent() {
+        val context = LocalContext.current
+        val downloadList by presenter.state.collectAsState()
+
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+        var fabExpanded by remember { mutableStateOf(true) }
+        val nestedScrollConnection = remember {
+            // All this lines just for fab state :/
+            object : NestedScrollConnection {
+                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                    fabExpanded = available.y >= 0
+                    return scrollBehavior.nestedScrollConnection.onPreScroll(available, source)
+                }
+
+                override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                    return scrollBehavior.nestedScrollConnection.onPostScroll(consumed, available, source)
+                }
+
+                override suspend fun onPreFling(available: Velocity): Velocity {
+                    return scrollBehavior.nestedScrollConnection.onPreFling(available)
+                }
+
+                override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                    return scrollBehavior.nestedScrollConnection.onPostFling(consumed, available)
+                }
+            }
+        }
+
+        Scaffold(
+            topBar = {
+                AppBar(
+                    titleContent = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(R.string.label_download_queue),
+                                maxLines = 1,
+                                modifier = Modifier.weight(1f, false),
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            if (downloadList.isNotEmpty()) {
+                                val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
+                                Pill(
+                                    text = "${downloadList.size}",
+                                    modifier = Modifier.padding(start = 4.dp),
+                                    color = MaterialTheme.colorScheme.onBackground
+                                        .copy(alpha = pillAlpha),
+                                    fontSize = 14.sp,
+                                )
+                            }
+                        }
+                    },
+                    navigateUp = router::popCurrentController,
+                    actions = {
+                        if (downloadList.isNotEmpty()) {
+                            val (expanded, onExpanded) = remember { mutableStateOf(false) }
+                            Box {
+                                IconButton(onClick = { onExpanded(!expanded) }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.MoreVert,
+                                        contentDescription = stringResource(R.string.label_more),
+                                    )
+                                }
+                                CascadeDropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { onExpanded(false) },
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(id = R.string.action_reorganize_by)) },
+                                        children = {
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(id = R.string.action_order_by_upload_date)) },
+                                                children = {
+                                                    DropdownMenuItem(
+                                                        text = { Text(text = stringResource(id = R.string.action_newest)) },
+                                                        onClick = {
+                                                            reorderQueue({ it.download.chapter.date_upload }, true)
+                                                            onExpanded(false)
+                                                        },
+                                                    )
+                                                    DropdownMenuItem(
+                                                        text = { Text(text = stringResource(id = R.string.action_oldest)) },
+                                                        onClick = {
+                                                            reorderQueue({ it.download.chapter.date_upload }, false)
+                                                            onExpanded(false)
+                                                        },
+                                                    )
+                                                },
+                                            )
+                                            DropdownMenuItem(
+                                                text = { Text(text = stringResource(id = R.string.action_order_by_chapter_number)) },
+                                                children = {
+                                                    DropdownMenuItem(
+                                                        text = { Text(text = stringResource(id = R.string.action_asc)) },
+                                                        onClick = {
+                                                            reorderQueue({ it.download.chapter.chapter_number }, false)
+                                                            onExpanded(false)
+                                                        },
+                                                    )
+                                                    DropdownMenuItem(
+                                                        text = { Text(text = stringResource(id = R.string.action_desc)) },
+                                                        onClick = {
+                                                            reorderQueue({ it.download.chapter.chapter_number }, true)
+                                                            onExpanded(false)
+                                                        },
+                                                    )
+                                                },
+                                            )
+                                        },
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(id = R.string.action_cancel_all)) },
+                                        onClick = {
+                                            presenter.clearQueue(context)
+                                            onExpanded(false)
+                                        },
+                                    )
+                                }
+                            }
+                        }
+                    },
+                    scrollBehavior = scrollBehavior,
+                )
+            },
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = downloadList.isNotEmpty(),
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    val isRunning by DownloadService.isRunning.collectAsState()
+                    ExtendedFloatingActionButton(
+                        text = {
+                            val id = if (isRunning) {
+                                R.string.action_pause
+                            } else {
+                                R.string.action_resume
+                            }
+                            Text(text = stringResource(id))
+                        },
+                        icon = {
+                            val icon = if (isRunning) {
+                                Icons.Default.Pause
+                            } else {
+                                Icons.Default.PlayArrow
+                            }
+                            Icon(imageVector = icon, contentDescription = null)
+                        },
+                        onClick = {
+                            if (isRunning) {
+                                DownloadService.stop(context)
+                                presenter.pauseDownloads()
+                            } else {
+                                DownloadService.start(context)
+                            }
+                        },
+                        expanded = fabExpanded,
+                        modifier = Modifier.navigationBarsPadding(),
+                    )
+                }
+            },
+        ) { contentPadding ->
+            if (downloadList.isEmpty()) {
+                EmptyScreen(textResource = R.string.information_no_downloads)
+                return@Scaffold
+            }
+            val density = LocalDensity.current
+            val layoutDirection = LocalLayoutDirection.current
+            val left = with(density) { contentPadding.calculateLeftPadding(layoutDirection).toPx().roundToInt() }
+            val top = with(density) { contentPadding.calculateTopPadding().toPx().roundToInt() }
+            val right = with(density) { contentPadding.calculateRightPadding(layoutDirection).toPx().roundToInt() }
+            val bottom = with(density) { contentPadding.calculateBottomPadding().toPx().roundToInt() }
+
+            Box(modifier = Modifier.nestedScroll(nestedScrollConnection)) {
+                AndroidView(
+                    factory = { context ->
+                        controllerBinding = DownloadListBinding.inflate(LayoutInflater.from(context))
+                        adapter = DownloadAdapter(this@DownloadController)
+                        controllerBinding.recycler.adapter = adapter
+                        adapter?.isHandleDragEnabled = true
+                        adapter?.fastScroller = controllerBinding.fastScroller
+                        controllerBinding.recycler.layoutManager = LinearLayoutManager(context)
+
+                        ViewCompat.setNestedScrollingEnabled(controllerBinding.root, true)
+
+                        controllerBinding.root
+                    },
+                    update = {
+                        controllerBinding.recycler
+                            .updatePadding(
+                                left = left,
+                                top = top,
+                                right = right,
+                                bottom = bottom,
+                            )
+
+                        controllerBinding.fastScroller
+                            .updateLayoutParams<MarginLayoutParams> {
+                                leftMargin = left
+                                topMargin = top
+                                rightMargin = right
+                                bottomMargin = bottom
+                            }
+
+                        adapter?.updateDataSet(downloadList)
+                    },
+                )
+            }
+        }
     }
 
     override fun onDestroyView(view: View) {
@@ -136,32 +320,6 @@ class DownloadController :
         progressSubscriptions.clear()
         adapter = null
         super.onDestroyView(view)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.download_queue, menu)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.clear_queue).isVisible = !presenter.downloadQueue.isEmpty()
-        menu.findItem(R.id.reorder).isVisible = !presenter.downloadQueue.isEmpty()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val context = applicationContext ?: return false
-        when (item.itemId) {
-            R.id.clear_queue -> {
-                DownloadService.stop(context)
-                presenter.clearQueue()
-            }
-            R.id.newest, R.id.oldest -> {
-                reorderQueue({ it.download.chapter.date_upload }, item.itemId == R.id.newest)
-            }
-            R.id.asc, R.id.desc -> {
-                reorderQueue({ it.download.chapter.chapter_number }, item.itemId == R.id.desc)
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun <R : Comparable<R>> reorderQueue(selector: (DownloadItem) -> R, reverse: Boolean = false) {
@@ -243,30 +401,6 @@ class DownloadController :
     }
 
     /**
-     * Called when the queue's status has changed. Updates the visibility of the buttons.
-     *
-     * @param running whether the queue is now running or not.
-     */
-    private fun onQueueStatusChange(running: Boolean) {
-        isRunning = running
-        activity?.invalidateOptionsMenu()
-
-        // Check if download queue is empty and update information accordingly.
-        setInformationView()
-    }
-
-    /**
-     * Called from the presenter to assign the downloads for the adapter.
-     *
-     * @param downloads the downloads from the queue.
-     */
-    fun onNextDownloads(downloads: List<DownloadHeaderItem>) {
-        activity?.invalidateOptionsMenu()
-        setInformationView()
-        adapter?.updateDataSet(downloads)
-    }
-
-    /**
      * Called when the progress of a download changes.
      *
      * @param download the download whose progress has changed.
@@ -291,39 +425,7 @@ class DownloadController :
      * @return the holder of the download or null if it's not bound.
      */
     private fun getHolder(download: Download): DownloadHolder? {
-        return binding.recycler.findViewHolderForItemId(download.chapter.id!!) as? DownloadHolder
-    }
-
-    /**
-     * Set information view when queue is empty
-     */
-    private fun setInformationView() {
-        if (presenter.downloadQueue.isEmpty()) {
-            binding.emptyView.show(R.string.information_no_downloads)
-            actionFab?.isVisible = false
-            updateTitle()
-        } else {
-            binding.emptyView.hide()
-            actionFab?.apply {
-                isVisible = true
-
-                setText(
-                    if (isRunning) {
-                        R.string.action_pause
-                    } else {
-                        R.string.action_resume
-                    },
-                )
-
-                setIconResource(
-                    if (isRunning) {
-                        R.drawable.ic_pause_24dp
-                    } else {
-                        R.drawable.ic_play_arrow_24dp
-                    },
-                )
-            }
-        }
+        return controllerBinding.recycler.findViewHolderForItemId(download.chapter.id!!) as? DownloadHolder
     }
 
     /**
@@ -373,7 +475,7 @@ class DownloadController :
                         ?.filterIsInstance<DownloadItem>()
                         ?.map(DownloadItem::download)
                         ?.partition { item.download.manga.id == it.manga.id }
-                        ?: Pair(listOf<Download>(), listOf<Download>())
+                        ?: Pair(listOf(), listOf())
                     presenter.reorder(selectedSeries + otherSeries)
                 }
                 R.id.cancel_download -> {
@@ -389,16 +491,6 @@ class DownloadController :
                     }
                 }
             }
-        }
-    }
-
-    private fun updateTitle(queueSize: Int = 0) {
-        val defaultTitle = getTitle()
-
-        if (queueSize == 0) {
-            setTitle(defaultTitle)
-        } else {
-            setTitle("$defaultTitle ($queueSize)")
         }
     }
 }

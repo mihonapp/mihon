@@ -62,6 +62,7 @@ flexible-adapter-ui = "com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c801
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
+cascade = "me.saket.cascade:cascade-compose:2.0.0-beta1"
 
 conductor-core = { module = "com.bluelinelabs:conductor", version.ref = "conductor_version" }
 conductor-support-preference = { module = "com.github.tachiyomiorg:conductor-support-preference", version.ref = "conductor_version" }

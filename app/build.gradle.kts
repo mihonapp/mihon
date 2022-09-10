@@ -73,6 +73,7 @@ android {
             signingConfig = debugType.signingConfig
             versionNameSuffix = debugType.versionNameSuffix
             applicationIdSuffix = debugType.applicationIdSuffix
+            matchingFallbacks.add("release")
         }
     }
 
@@ -252,6 +253,7 @@ dependencies {
     implementation(libs.insetter)
     implementation(libs.markwon)
     implementation(libs.aboutLibraries.compose)
+    implementation(libs.cascade)
 
     // Conductor
     implementation(libs.bundles.conductor)

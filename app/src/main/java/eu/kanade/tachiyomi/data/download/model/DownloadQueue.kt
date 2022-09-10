@@ -83,6 +83,8 @@ class DownloadQueue(
         .startWith(Unit)
         .map { this }
 
+    fun getUpdatedAsFlow(): Flow<List<Download>> = getUpdatedObservable().asFlow()
+
     private fun setPagesFor(download: Download) {
         if (download.status == Download.State.DOWNLOADED || download.status == Download.State.ERROR) {
             setPagesSubject(download.pages, null)

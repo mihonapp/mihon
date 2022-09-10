@@ -30,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:layout_marginEnd="4dp"
             android:paddingHorizontal="10dp"
             android:paddingVertical="8dp"
             android:scaleType="center"
