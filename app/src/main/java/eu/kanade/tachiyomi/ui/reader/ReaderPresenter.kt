@@ -54,6 +54,7 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.system.isOnline
 import eu.kanade.tachiyomi.util.system.logcat
+import eu.kanade.tachiyomi.util.system.toInt
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -449,15 +450,19 @@ class ReaderPresenter(
         val nextChapter = viewerChaptersRelay.value?.nextChapter?.chapter ?: return
         val chaptersNumberToDownload = preferences.autoDownloadWhileReading().get()
         if (chaptersNumberToDownload == 0 || !manga.favorite) return
-        val isNextChapterDownloaded =
-            downloadManager.isChapterDownloaded(nextChapter.name, nextChapter.scanlator, manga.title, manga.source)
-        if (isNextChapterDownloaded) {
-            downloadAutoNextChapters(chaptersNumberToDownload, nextChapter.id)
+        val isNextChapterDownloadedOrQueued = downloadManager.isChapterDownloaded(
+            nextChapter.name,
+            nextChapter.scanlator,
+            manga.title,
+            manga.source,
+        ) || downloadManager.getChapterDownloadOrNull(nextChapter) != null
+        if (isNextChapterDownloadedOrQueued) {
+            downloadAutoNextChapters(chaptersNumberToDownload, nextChapter.id, nextChapter.read)
         }
     }
 
-    private fun downloadAutoNextChapters(choice: Int, nextChapterId: Long?) {
-        val chaptersToDownload = getNextUnreadChaptersSorted(nextChapterId).take(choice - 1)
+    private fun downloadAutoNextChapters(choice: Int, nextChapterId: Long?, isNextChapterRead: Boolean) {
+        val chaptersToDownload = getNextUnreadChaptersSorted(nextChapterId).take(choice - 1 + isNextChapterRead.toInt())
         if (chaptersToDownload.isNotEmpty()) {
             downloadChapters(chaptersToDownload)
         }
