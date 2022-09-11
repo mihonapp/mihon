@@ -2,6 +2,7 @@ package eu.kanade.presentation.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TabPosition
@@ -20,6 +21,7 @@ fun TabIndicator(currentTabPosition: TabPosition) {
     TabRowDefaults.Indicator(
         Modifier
             .tabIndicatorOffset(currentTabPosition)
+            .padding(horizontal = 8.dp)
             .clip(RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)),
     )
 }
