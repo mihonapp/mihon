@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.source.online
 
+import eu.kanade.tachiyomi.network.CACHE_CONTROL_NO_STORE
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.asObservableSuccess
@@ -15,7 +16,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.net.URI
 import java.net.URISyntaxException
@@ -301,7 +301,11 @@ abstract class HttpSource : CatalogueSource {
      * @param page the page whose source image has to be downloaded.
      */
     fun fetchImage(page: Page): Observable<Response> {
-        return client.newCallWithProgress(imageRequest(page), page)
+        val request = imageRequest(page).newBuilder()
+            // images will be cached or saved manually, so don't take up network cache
+            .cacheControl(CACHE_CONTROL_NO_STORE)
+            .build()
+        return client.newCallWithProgress(request, page)
             .asObservableSuccess()
     }
 

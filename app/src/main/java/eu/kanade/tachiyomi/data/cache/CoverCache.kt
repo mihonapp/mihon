@@ -11,7 +11,6 @@ import eu.kanade.domain.manga.model.Manga as DomainManga
 /**
  * Class used to create cover cache.
  * It is used to store the covers of the library.
- * Makes use of Glide (which can avoid repeating requests) to download covers.
  * Names of files are created with the md5 of the thumbnail URL.
  *
  * @param context the application context.
