@@ -1,6 +1,5 @@
 package eu.kanade.domain.extension.interactor
 
-import eu.kanade.core.util.asFlow
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -17,7 +16,10 @@ class GetExtensionLanguages(
             extensionManager.getAvailableExtensionsFlow(),
         ) { enabledLanguage, availableExtensions ->
             availableExtensions
-                .map { it.lang }
+                .flatMap { ext ->
+                    if (ext.sources.isEmpty()) listOf(ext.lang)
+                    else ext.sources.map { it.lang }
+                }
                 .distinct()
                 .sortedWith(
                     compareBy(

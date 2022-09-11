@@ -86,10 +86,10 @@ class ExtensionsPresenter(
                     .filter(queryFilter(searchQuery))
                     .groupBy { LocaleHelper.getSourceDisplayName(it.lang, context) }
                     .toSortedMap()
-                    .flatMap { (key, value) ->
+                    .flatMap { (lang, exts) ->
                         listOf(
-                            ExtensionUiModel.Header.Text(key),
-                            *value.map(extensionMapper(downloads)).toTypedArray(),
+                            ExtensionUiModel.Header.Text(lang),
+                            *exts.map(extensionMapper(downloads)).toTypedArray(),
                         )
                     }
 
