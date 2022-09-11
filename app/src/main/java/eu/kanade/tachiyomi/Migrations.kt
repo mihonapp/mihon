@@ -111,8 +111,11 @@ object Migrations {
                 // Migrate library filters to tri-state versions
                 fun convertBooleanPrefToTriState(key: String): Int {
                     val oldPrefValue = prefs.getBoolean(key, false)
-                    return if (oldPrefValue) ExtendedNavigationView.Item.TriStateGroup.State.INCLUDE.value
-                    else ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value
+                    return if (oldPrefValue) {
+                        ExtendedNavigationView.Item.TriStateGroup.State.INCLUDE.value
+                    } else {
+                        ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value
+                    }
                 }
                 prefs.edit {
                     putInt(PreferenceKeys.filterDownloaded, convertBooleanPrefToTriState("pref_filter_downloaded_key"))

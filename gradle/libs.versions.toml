@@ -103,5 +103,5 @@ conductor = ["conductor-core", "conductor-support-preference"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 
 [plugins]
-kotlinter = { id = "org.jmailen.kotlinter", version = "3.11.1" }
+kotlinter = { id = "org.jmailen.kotlinter", version = "3.12.0" }
 versionsx = { id = "com.github.ben-manes.versions", version = "0.42.0" }

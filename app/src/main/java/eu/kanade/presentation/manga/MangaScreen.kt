@@ -673,7 +673,9 @@ private fun LazyListScope.sharedChapterItems(
             },
             onDownloadClick = if (onDownloadChapter != null) {
                 { onDownloadChapter(listOf(chapterItem), it) }
-            } else null,
+            } else {
+                null
+            },
         )
     }
 }

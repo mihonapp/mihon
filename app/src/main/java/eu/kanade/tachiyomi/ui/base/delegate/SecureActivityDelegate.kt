@@ -50,7 +50,7 @@ private var lockState = LockState.INACTIVE
 private enum class LockState {
     INACTIVE,
     PENDING,
-    ACTIVE
+    ACTIVE,
 }
 
 class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObserver {

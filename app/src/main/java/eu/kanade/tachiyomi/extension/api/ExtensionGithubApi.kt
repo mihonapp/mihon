@@ -29,14 +29,18 @@ internal class ExtensionGithubApi {
 
     suspend fun findExtensions(): List<Extension.Available> {
         return withIOContext {
-            val githubResponse = if (requiresFallbackSource) null else try {
-                networkService.client
-                    .newCall(GET("${REPO_URL_PREFIX}index.min.json"))
-                    .await()
-            } catch (e: Throwable) {
-                logcat(LogPriority.ERROR, e) { "Failed to get extensions from GitHub" }
-                requiresFallbackSource = true
+            val githubResponse = if (requiresFallbackSource) {
                 null
+            } else {
+                try {
+                    networkService.client
+                        .newCall(GET("${REPO_URL_PREFIX}index.min.json"))
+                        .await()
+                } catch (e: Throwable) {
+                    logcat(LogPriority.ERROR, e) { "Failed to get extensions from GitHub" }
+                    requiresFallbackSource = true
+                    null
+                }
             }
 
             val response = githubResponse ?: run {

@@ -238,7 +238,9 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
                     .let {
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                             it.transformations(RoundedCornersTransformation(roundPx))
-                        } else it // Handled by system
+                        } else {
+                            it // Handled by system
+                        }
                     }
                     .build()
                 Pair(updatesView.mangaId, app.imageLoader.executeBlocking(request).drawable?.toBitmap())

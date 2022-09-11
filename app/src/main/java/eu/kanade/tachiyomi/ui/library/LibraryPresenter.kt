@@ -190,32 +190,44 @@ class LibraryPresenter(
                 else -> downloadManager.getDownloadCount(item.manga.toDomainManga()!!) > 0
             }
 
-            return@downloaded if (downloadedOnly || filterDownloaded == State.INCLUDE.value) isDownloaded
-            else !isDownloaded
+            return@downloaded if (downloadedOnly || filterDownloaded == State.INCLUDE.value) {
+                isDownloaded
+            } else {
+                !isDownloaded
+            }
         }
 
         val filterFnUnread: (LibraryItem) -> Boolean = unread@{ item ->
             if (filterUnread == State.IGNORE.value) return@unread true
             val isUnread = item.manga.unreadCount != 0
 
-            return@unread if (filterUnread == State.INCLUDE.value) isUnread
-            else !isUnread
+            return@unread if (filterUnread == State.INCLUDE.value) {
+                isUnread
+            } else {
+                !isUnread
+            }
         }
 
         val filterFnStarted: (LibraryItem) -> Boolean = started@{ item ->
             if (filterStarted == State.IGNORE.value) return@started true
             val hasStarted = item.manga.hasStarted
 
-            return@started if (filterStarted == State.INCLUDE.value) hasStarted
-            else !hasStarted
+            return@started if (filterStarted == State.INCLUDE.value) {
+                hasStarted
+            } else {
+                !hasStarted
+            }
         }
 
         val filterFnCompleted: (LibraryItem) -> Boolean = completed@{ item ->
             if (filterCompleted == State.IGNORE.value) return@completed true
             val isCompleted = item.manga.status == SManga.COMPLETED
 
-            return@completed if (filterCompleted == State.INCLUDE.value) isCompleted
-            else !isCompleted
+            return@completed if (filterCompleted == State.INCLUDE.value) {
+                isCompleted
+            } else {
+                !isCompleted
+            }
         }
 
         val filterFnTracking: (LibraryItem) -> Boolean = tracking@{ item ->

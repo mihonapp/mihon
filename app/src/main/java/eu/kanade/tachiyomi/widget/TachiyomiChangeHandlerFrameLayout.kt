@@ -39,7 +39,9 @@ class TachiyomiChangeHandlerFrameLayout(
             behavior.apply {
                 shouldHeaderOverlap = overlapHeader
             }
-        } else null
+        } else {
+            null
+        }
         if (!enable) {
             // The behavior doesn't reset translationY when shouldHeaderOverlap is false
             translationY = 0F

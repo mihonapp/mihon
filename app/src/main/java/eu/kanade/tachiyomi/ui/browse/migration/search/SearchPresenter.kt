@@ -167,8 +167,11 @@ class SearchPresenter(
                 val service = enhancedServices
                     .firstOrNull { it.isTrackFrom(updatedTrack, prevManga, prevSource) }
 
-                if (service != null) service.migrateTrack(updatedTrack, manga, source)
-                else updatedTrack
+                if (service != null) {
+                    service.migrateTrack(updatedTrack, manga, source)
+                } else {
+                    updatedTrack
+                }
             }
             insertTrack.awaitAll(tracks)
         }

@@ -103,12 +103,16 @@ private fun Modifier.drawScrollbar(
     val estimatedItemSize = if (items.isEmpty()) 0f else itemsSize.toFloat() / items.size
     val totalSize = estimatedItemSize * layoutInfo.totalItemsCount
     val thumbSize = viewportSize / totalSize * viewportSize
-    val startOffset = if (items.isEmpty()) 0f else items
-        .first()
-        .run {
-            val startPadding = if (reverseDirection) layoutInfo.afterContentPadding else layoutInfo.beforeContentPadding
-            startPadding + ((estimatedItemSize * index - offset) / totalSize * viewportSize)
-        }
+    val startOffset = if (items.isEmpty()) {
+        0f
+    } else {
+        items
+            .first()
+            .run {
+                val startPadding = if (reverseDirection) layoutInfo.afterContentPadding else layoutInfo.beforeContentPadding
+                startPadding + ((estimatedItemSize * index - offset) / totalSize * viewportSize)
+            }
+    }
     val drawScrollbar = onDrawScrollbar(
         orientation, reverseDirection, atEnd, showScrollbar,
         thickness, color, alpha, thumbSize, startOffset, positionOffset,
@@ -202,7 +206,9 @@ private fun Modifier.drawScrollbar(
     val isLtr = LocalLayoutDirection.current == LayoutDirection.Ltr
     val reverseDirection = if (orientation == Orientation.Horizontal) {
         if (isLtr) reverseScrolling else !reverseScrolling
-    } else reverseScrolling
+    } else {
+        reverseScrolling
+    }
     val atEnd = if (orientation == Orientation.Vertical) isLtr else true
 
     val context = LocalContext.current

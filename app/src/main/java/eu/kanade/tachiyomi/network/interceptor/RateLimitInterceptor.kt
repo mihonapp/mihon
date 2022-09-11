@@ -74,10 +74,12 @@ internal class RateLimitInterceptor(
                         throw IOException("Canceled")
                     } else if (hasRemovedExpired) {
                         break
-                    } else try { // wait for the first entry to expire, or notified by cached response
-                        (requestQueue as Object).wait(requestQueue.first - periodStart)
-                    } catch (_: InterruptedException) {
-                        continue
+                    } else {
+                        try { // wait for the first entry to expire, or notified by cached response
+                            (requestQueue as Object).wait(requestQueue.first - periodStart)
+                        } catch (_: InterruptedException) {
+                            continue
+                        }
                     }
                 }
 

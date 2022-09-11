@@ -220,12 +220,18 @@ private fun ScaffoldLayout(
                     .asPaddingValues(this@SubcomposeLayout)
                 val innerPadding = PaddingValues(
                     top =
-                    if (topBarHeight == 0) insets.calculateTopPadding()
-                    else topBarHeight.toDp(),
+                    if (topBarHeight == 0) {
+                        insets.calculateTopPadding()
+                    } else {
+                        topBarHeight.toDp()
+                    },
                     bottom =
                     (
-                        if (bottomBarHeight == 0) insets.calculateBottomPadding()
-                        else bottomBarHeight.toDp()
+                        if (bottomBarHeight == 0) {
+                            insets.calculateBottomPadding()
+                        } else {
+                            bottomBarHeight.toDp()
+                        }
                         ) + fabHeight.toDp(),
                     start = insets.calculateLeftPadding((this@SubcomposeLayout).layoutDirection),
                     end = insets.calculateRightPadding((this@SubcomposeLayout).layoutDirection),

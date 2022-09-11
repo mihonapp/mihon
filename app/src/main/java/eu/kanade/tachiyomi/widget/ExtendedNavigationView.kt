@@ -117,7 +117,7 @@ open class ExtendedNavigationView @JvmOverloads constructor(
             enum class State(val value: Int) {
                 IGNORE(0),
                 INCLUDE(1),
-                EXCLUDE(2)
+                EXCLUDE(2),
             }
 
             override fun getStateDrawable(context: Context): Drawable? {

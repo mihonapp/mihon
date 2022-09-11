@@ -13,11 +13,13 @@ class SetMigrateSorting(
 
     enum class Mode {
         ALPHABETICAL,
-        TOTAL;
+        TOTAL,
+        ;
     }
 
     enum class Direction {
         ASCENDING,
-        DESCENDING;
+        DESCENDING,
+        ;
     }
 }

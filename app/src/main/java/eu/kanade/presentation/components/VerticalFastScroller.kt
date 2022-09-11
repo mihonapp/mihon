@@ -145,13 +145,17 @@ fun VerticalFastScroller(
                                     )
                                 },
                             )
-                        } else Modifier,
+                        } else {
+                            Modifier
+                        },
                     )
                     .then(
                         // Exclude thumb from gesture area only when needed
                         if (isThumbVisible && !isThumbDragged && !listState.isScrollInProgress) {
                             Modifier.systemGestureExclusion()
-                        } else Modifier,
+                        } else {
+                            Modifier
+                        },
                     )
                     .height(ThumbLength)
                     .padding(horizontal = 8.dp)
@@ -321,13 +325,17 @@ fun VerticalGridFastScroller(
                                     )
                                 },
                             )
-                        } else Modifier,
+                        } else {
+                            Modifier
+                        },
                     )
                     .then(
                         // Exclude thumb from gesture area only when needed
                         if (isThumbVisible && !isThumbDragged && !state.isScrollInProgress) {
                             Modifier.systemGestureExclusion()
-                        } else Modifier,
+                        } else {
+                            Modifier
+                        },
                     )
                     .height(ThumbLength)
                     .padding(horizontal = 8.dp)

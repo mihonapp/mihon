@@ -46,7 +46,9 @@ class MaterialFastScroll @JvmOverloads constructor(context: Context, attrs: Attr
                     } else {
                         event.x > handle.width + ViewCompat.getPaddingStart(handle)
                     }
-                ) return false
+                ) {
+                    return false
+                }
                 // end
 
                 if (ignoreTouchesOutsideHandle &&

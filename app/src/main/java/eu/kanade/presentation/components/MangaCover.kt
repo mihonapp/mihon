@@ -18,7 +18,8 @@ import eu.kanade.tachiyomi.R
 
 enum class MangaCover(val ratio: Float) {
     Square(1f / 1f),
-    Book(2f / 3f);
+    Book(2f / 3f),
+    ;
 
     @Composable
     operator fun invoke(
@@ -42,7 +43,9 @@ enum class MangaCover(val ratio: Float) {
                             role = Role.Button,
                             onClick = onClick,
                         )
-                    } else Modifier,
+                    } else {
+                        Modifier
+                    },
                 ),
             contentScale = ContentScale.Crop,
         )

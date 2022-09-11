@@ -44,8 +44,11 @@ class BackupFileValidator(
             .filter { sourceManager.get(it.key) == null }
             .values.map {
                 val id = it.toLongOrNull()
-                if (id == null) it
-                else sourceManager.getOrStub(id).toString()
+                if (id == null) {
+                    it
+                } else {
+                    sourceManager.getOrStub(id).toString()
+                }
             }
             .distinct()
             .sorted()

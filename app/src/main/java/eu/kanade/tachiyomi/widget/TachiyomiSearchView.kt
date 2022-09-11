@@ -48,7 +48,9 @@ class TachiyomiSearchView @JvmOverloads constructor(
                 clearFocus()
                 listener?.onQueryTextSubmit(query.toString())
                 true
-            } else false
+            } else {
+                false
+            }
         }
     }
 

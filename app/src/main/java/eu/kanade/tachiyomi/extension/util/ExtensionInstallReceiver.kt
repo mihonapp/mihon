@@ -50,11 +50,13 @@ internal class ExtensionInstallReceiver(private val listener: Listener) :
 
         when (intent.action) {
             Intent.ACTION_PACKAGE_ADDED -> {
-                if (!isReplacing(intent)) launchNow {
-                    when (val result = getExtensionFromIntent(context, intent)) {
-                        is LoadResult.Success -> listener.onExtensionInstalled(result.extension)
-                        is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
-                        else -> {}
+                if (!isReplacing(intent)) {
+                    launchNow {
+                        when (val result = getExtensionFromIntent(context, intent)) {
+                            is LoadResult.Success -> listener.onExtensionInstalled(result.extension)
+                            is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
+                            else -> {}
+                        }
                     }
                 }
             }

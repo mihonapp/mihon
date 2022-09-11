@@ -305,7 +305,8 @@ class MangaController : FullComposeController<MangaPresenter> {
                 previousController.search(query)
             }
             is UpdatesController,
-            is HistoryController, -> {
+            is HistoryController,
+            -> {
                 // Manually navigate to LibraryController
                 router.handleBack()
                 (router.activity as MainActivity).setSelectedNavItem(R.id.nav_library)

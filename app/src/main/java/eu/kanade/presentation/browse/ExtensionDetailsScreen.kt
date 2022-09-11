@@ -338,7 +338,9 @@ private fun InfoText(
 
     val clickableModifier = if (onClick != null) {
         Modifier.clickable(interactionSource, indication = null) { onClick() }
-    } else Modifier
+    } else {
+        Modifier
+    }
 
     Column(
         modifier = modifier.then(clickableModifier),

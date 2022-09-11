@@ -41,8 +41,11 @@ class KomgaApi(private val client: OkHttpClient) {
                 val progress = client
                     .newCall(GET("${url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi"))
                     .await().let {
-                        if (url.contains("/api/v1/series/")) it.parseAs<ReadProgressV2Dto>()
-                        else it.parseAs<ReadProgressDto>().toV2()
+                        if (url.contains("/api/v1/series/")) {
+                            it.parseAs<ReadProgressV2Dto>()
+                        } else {
+                            it.parseAs<ReadProgressDto>().toV2()
+                        }
                     }
 
                 track.apply {
