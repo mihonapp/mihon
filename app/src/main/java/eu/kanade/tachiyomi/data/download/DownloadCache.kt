@@ -6,7 +6,6 @@ import com.hippo.unifile.UniFile
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.Injekt
@@ -115,15 +114,6 @@ class DownloadCache(
     }
 
     /**
-     * Returns true if source has download
-     *
-     * @param source the source to check.
-     */
-    fun sourceHasDownload(source: Source): Boolean {
-        return rootDir.files[source.id]?.files?.size?.let { it > 0 } ?: false
-    }
-
-    /**
      * Checks if the cache needs a renewal and performs it if needed.
      */
     @Synchronized
@@ -138,17 +128,13 @@ class DownloadCache(
      * Renews the downloads cache.
      */
     private fun renew() {
-        val onlineSources = sourceManager.getOnlineSources()
-
-        val stubSources = sourceManager.getStubSources()
-
-        val allSource = onlineSources + stubSources
+        val sources = sourceManager.getOnlineSources() + sourceManager.getStubSources()
 
         val sourceDirs = rootDir.dir.listFiles()
             .orEmpty()
             .associate { it.name to SourceDirectory(it) }
             .mapNotNullKeys { entry ->
-                allSource.find { provider.getSourceDirName(it).equals(entry.key, ignoreCase = true) }?.id
+                sources.find { provider.getSourceDirName(it).equals(entry.key, ignoreCase = true) }?.id
             }
 
         rootDir.files = sourceDirs
