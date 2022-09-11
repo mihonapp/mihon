@@ -310,19 +310,19 @@ object ImageUtil {
             }
 
             return mutableListOf<SplitData>().apply {
-                for (index in (0 until partCount)) {
+                val range = 0 until partCount
+                for (index in range) {
                     // Only continue if the list is empty or there is image remaining
                     if (isNotEmpty() && imageHeight <= last().bottomOffset) break
 
                     val topOffset = index * optimalSplitHeight
                     var splitHeight = min(optimalSplitHeight, imageHeight - topOffset)
 
-                    val remainingHeight = imageHeight - (topOffset + splitHeight)
-                    // If remaining height is smaller or equal to 1/10th of
-                    // optimal split height then include it in current page
-                    if (remainingHeight <= (optimalSplitHeight / 10)) {
+                    if (index == range.last) {
+                        val remainingHeight = imageHeight - (topOffset + splitHeight)
                         splitHeight += remainingHeight
                     }
+
                     add(SplitData(index, topOffset, splitHeight, imageWidth))
                 }
             }
