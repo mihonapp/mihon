@@ -67,13 +67,30 @@ class LibraryItem(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other is LibraryItem) {
-            return manga.id == other.manga.id
-        }
-        return false
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as LibraryItem
+
+        if (manga != other.manga) return false
+        if (sourceManager != other.sourceManager) return false
+        if (displayMode != other.displayMode) return false
+        if (downloadCount != other.downloadCount) return false
+        if (unreadCount != other.unreadCount) return false
+        if (isLocal != other.isLocal) return false
+        if (sourceLanguage != other.sourceLanguage) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
-        return manga.id!!.hashCode()
+        var result = manga.hashCode()
+        result = 31 * result + sourceManager.hashCode()
+        result = 31 * result + displayMode.hashCode()
+        result = 31 * result + downloadCount
+        result = 31 * result + unreadCount
+        result = 31 * result + isLocal.hashCode()
+        result = 31 * result + sourceLanguage.hashCode()
+        return result
     }
 }
