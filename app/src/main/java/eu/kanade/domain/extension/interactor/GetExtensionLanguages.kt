@@ -17,8 +17,11 @@ class GetExtensionLanguages(
         ) { enabledLanguage, availableExtensions ->
             availableExtensions
                 .flatMap { ext ->
-                    if (ext.sources.isEmpty()) listOf(ext.lang)
-                    else ext.sources.map { it.lang }
+                    if (ext.sources.isEmpty()) {
+                        listOf(ext.lang)
+                    } else {
+                        ext.sources.map { it.lang }
+                    }
                 }
                 .distinct()
                 .sortedWith(
