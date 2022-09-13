@@ -14,7 +14,7 @@ ui-util = { module = "androidx.compose.ui:ui-util", version.ref = "compose" }
 
 material3-core = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 material3-windowsizeclass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "material3" }
-material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.18"
+material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.17"
 material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist" }
