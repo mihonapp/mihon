@@ -75,21 +75,22 @@ GROUP BY source;
 getLibrary:
 SELECT M.*, COALESCE(MC.category_id, 0) AS category
 FROM (
-    SELECT mangas.*, COALESCE(C.unreadCount, 0) AS unread_count, COALESCE(R.readCount, 0) AS read_count
+    SELECT mangas.*, COALESCE(UR.unreadCount, 0) AS unread_count, COALESCE(R.readCount, 0) AS read_count
     FROM mangas
     LEFT JOIN (
         SELECT chapters.manga_id, COUNT(*) AS unreadCount
         FROM chapters
         WHERE chapters.read = 0
         GROUP BY chapters.manga_id
-    ) AS C
-    ON mangas._id = C.manga_id
+    ) AS UR
+    ON mangas._id = UR.manga_id
     LEFT JOIN (
         SELECT chapters.manga_id, COUNT(*) AS readCount
         FROM chapters
         WHERE chapters.read = 1
         GROUP BY chapters.manga_id
     ) AS R
+    ON mangas._id = R.manga_id
     WHERE mangas.favorite = 1
     GROUP BY mangas._id
     ORDER BY mangas.title
