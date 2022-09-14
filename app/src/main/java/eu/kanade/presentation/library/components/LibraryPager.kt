@@ -3,7 +3,6 @@ package eu.kanade.presentation.library.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,9 +23,9 @@ fun LibraryPager(
     selectedManga: List<LibraryManga>,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
-    getDisplayModeForPage: @Composable (Int) -> State<LibraryDisplayMode>,
+    getDisplayModeForPage: @Composable (Int) -> LibraryDisplayMode,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
-    getLibraryForPage: @Composable (Int) -> State<List<LibraryItem>>,
+    getLibraryForPage: @Composable (Int) -> List<LibraryItem>,
     onClickManga: (LibraryManga) -> Unit,
     onLongClickManga: (LibraryManga) -> Unit,
 ) {
@@ -40,8 +39,8 @@ fun LibraryPager(
             // To make sure only one offscreen page is being composed
             return@HorizontalPager
         }
-        val library by getLibraryForPage(page)
-        val displayMode by getDisplayModeForPage(page)
+        val library = getLibraryForPage(page)
+        val displayMode = getDisplayModeForPage(page)
         val columns by if (displayMode != LibraryDisplayMode.List) {
             val configuration = LocalConfiguration.current
             val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE

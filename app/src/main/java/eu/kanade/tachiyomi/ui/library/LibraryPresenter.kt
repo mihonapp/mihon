@@ -43,9 +43,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
 import eu.kanade.tachiyomi.ui.library.setting.LibrarySort
-import eu.kanade.tachiyomi.ui.library.setting.display
 import eu.kanade.tachiyomi.ui.library.setting.sort
 import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.launchIO
@@ -642,13 +640,12 @@ class LibraryPresenter(
     }
 
     @Composable
-    fun getMangaForCategory(page: Int): androidx.compose.runtime.State<List<LibraryItem>> {
-        val categoryId = remember(categories) {
-            categories.getOrNull(page)?.id ?: -1
+    fun getMangaForCategory(page: Int): List<LibraryItem> {
+        val unfiltered = remember(categories, loadedManga) {
+            val categoryId = categories.getOrNull(page)?.id ?: -1
+            loadedManga[categoryId] ?: emptyList()
         }
-        val unfiltered = loadedManga[categoryId] ?: emptyList()
-
-        return derivedStateOf {
+        return remember(unfiltered) {
             val query = searchQuery
             if (query.isNullOrBlank().not()) {
                 unfiltered.filter {
@@ -657,14 +654,6 @@ class LibraryPresenter(
             } else {
                 unfiltered
             }
-        }
-    }
-
-    @Composable
-    fun getDisplayMode(index: Int): androidx.compose.runtime.State<LibraryDisplayMode> {
-        val category = categories[index]
-        return derivedStateOf {
-            category.display
         }
     }
 

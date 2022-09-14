@@ -45,9 +45,9 @@ fun LibraryContent(
     onRefresh: (Category?) -> Boolean,
     onGlobalSearchClicked: () -> Unit,
     getNumberOfMangaForCategory: @Composable (Long) -> State<Int?>,
-    getDisplayModeForPage: @Composable (Int) -> State<LibraryDisplayMode>,
+    getDisplayModeForPage: @Composable (Int) -> LibraryDisplayMode,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
-    getLibraryForPage: @Composable (Int) -> State<List<LibraryItem>>,
+    getLibraryForPage: @Composable (Int) -> List<LibraryItem>,
 ) {
     Column(
         modifier = Modifier.padding(contentPadding),

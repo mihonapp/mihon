@@ -11,6 +11,7 @@ import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.library.LibraryPresenter
+import eu.kanade.tachiyomi.ui.library.setting.display
 
 @Composable
 fun LibraryScreen(
@@ -72,7 +73,7 @@ fun LibraryScreen(
                     onRefresh = onClickRefresh,
                     onGlobalSearchClicked = onGlobalSearchClicked,
                     getNumberOfMangaForCategory = { presenter.getMangaCountForCategory(it) },
-                    getDisplayModeForPage = { presenter.getDisplayMode(index = it) },
+                    getDisplayModeForPage = { presenter.categories[it].display },
                     getColumnsForOrientation = { presenter.getColumnsPreferenceForCurrentOrientation(it) },
                     getLibraryForPage = { presenter.getMangaForCategory(page = it) },
                     isIncognitoMode = presenter.isIncognitoMode,
