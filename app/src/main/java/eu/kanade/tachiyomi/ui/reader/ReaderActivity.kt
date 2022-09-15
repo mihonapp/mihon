@@ -508,9 +508,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         // Settings sheet
         with(binding.actionSettings) {
             setTooltip(R.string.action_settings)
-
+            val readerSettingSheetDialog = ReaderSettingsSheet(this@ReaderActivity)
             setOnClickListener {
-                ReaderSettingsSheet(this@ReaderActivity).show()
+                if (!readerSettingSheetDialog.isShowing()) {
+                    readerSettingSheetDialog.show()
+                }
             }
 
             setOnLongClickListener {
