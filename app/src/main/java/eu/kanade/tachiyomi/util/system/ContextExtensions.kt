@@ -24,10 +24,8 @@ import android.util.TypedValue
 import android.view.Display
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
-import androidx.annotation.StringRes
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -51,29 +49,6 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 private const val TABLET_UI_MIN_SCREEN_WIDTH_DP = 720
-
-/**
- * Display a toast in this context.
- *
- * @param resource the text resource.
- * @param duration the duration of the toast. Defaults to short.
- */
-fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT, block: (Toast) -> Unit = {}): Toast {
-    return toast(getString(resource), duration, block)
-}
-
-/**
- * Display a toast in this context.
- *
- * @param text the text to display.
- * @param duration the duration of the toast. Defaults to short.
- */
-fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT, block: (Toast) -> Unit = {}): Toast {
-    return Toast.makeText(applicationContext, text.orEmpty(), duration).also {
-        block(it)
-        it.show()
-    }
-}
 
 /**
  * Copies a string to clipboard

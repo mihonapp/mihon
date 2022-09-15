@@ -150,6 +150,8 @@ android {
 
 dependencies {
     implementation(project(":i18n"))
+    implementation(project(":core"))
+    implementation(project(":source-api"))
 
     // Compose
     implementation(compose.activity)

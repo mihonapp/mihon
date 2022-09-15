@@ -5,6 +5,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import rx.Emitter
@@ -20,6 +21,7 @@ import kotlin.coroutines.resumeWithException
 
 suspend fun <T> Observable<T>.awaitSingle(): T = single().awaitOne()
 
+@OptIn(InternalCoroutinesApi::class)
 private suspend fun <T> Observable<T>.awaitOne(): T = suspendCancellableCoroutine { cont ->
     cont.unsubscribeOnCancellation(
         subscribe(

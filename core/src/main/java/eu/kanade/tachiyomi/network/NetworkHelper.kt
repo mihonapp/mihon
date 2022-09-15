@@ -1,20 +1,20 @@
 package eu.kanade.tachiyomi.network
 
 import android.content.Context
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import androidx.preference.PreferenceManager
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.Http103Interceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.util.concurrent.TimeUnit
 
 class NetworkHelper(context: Context) {
 
-    private val preferences: PreferencesHelper by injectLazy()
+    // TODO: Abstract preferences similar to 1.x
+    private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     private val cacheDir = File(context.cacheDir, "network_cache")
     private val cacheSize = 5L * 1024 * 1024 // 5 MiB
@@ -36,14 +36,14 @@ class NetworkHelper(context: Context) {
                 .addInterceptor(userAgentInterceptor)
                 .addNetworkInterceptor(http103Interceptor)
 
-            if (preferences.verboseLogging()) {
+            if (preferences.getBoolean("verbose_logging", false)) {
                 val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.HEADERS
                 }
                 builder.addNetworkInterceptor(httpLoggingInterceptor)
             }
 
-            when (preferences.dohProvider()) {
+            when (preferences.getInt("doh_provider", -1)) {
                 PREF_DOH_CLOUDFLARE -> builder.dohCloudflare()
                 PREF_DOH_GOOGLE -> builder.dohGoogle()
                 PREF_DOH_ADGUARD -> builder.dohAdGuard()
@@ -70,6 +70,6 @@ class NetworkHelper(context: Context) {
     }
 
     val defaultUserAgent by lazy {
-        preferences.defaultUserAgent().get()
+        preferences.getString("default_user_agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0")!!
     }
 }

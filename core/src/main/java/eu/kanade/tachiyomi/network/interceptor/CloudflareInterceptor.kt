@@ -5,7 +5,7 @@ import android.content.Context
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.core.R
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.isOutdated
