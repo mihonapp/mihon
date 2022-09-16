@@ -23,6 +23,15 @@ interface SecureActivityDelegate {
     fun registerSecureActivity(activity: AppCompatActivity)
 
     companion object {
+        fun onApplicationCreated() {
+            val lockDelay = Injekt.get<PreferencesHelper>().lockAppAfter().get()
+            if (lockDelay == 0) {
+                // Restore always active app lock
+                // Delayed lock will be restored later on activity resume
+                lockState = LockState.ACTIVE
+            }
+        }
+
         fun onApplicationStopped() {
             val preferences = Injekt.get<PreferencesHelper>()
             if (!preferences.useAuthenticator().get()) return

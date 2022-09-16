@@ -172,6 +172,10 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         }.build()
     }
 
+    override fun onCreate(owner: LifecycleOwner) {
+        SecureActivityDelegate.onApplicationCreated()
+    }
+
     override fun onStop(owner: LifecycleOwner) {
         SecureActivityDelegate.onApplicationStopped()
     }
