@@ -205,7 +205,7 @@ open class BrowseSourcePresenter(
      * @param manga to initialize.
      */
     private suspend fun initializeManga(manga: DomainManga) {
-        if (manga.thumbnailUrl != null && manga.initialized) return
+        if (manga.thumbnailUrl != null || manga.initialized) return
         withContext(NonCancellable) {
             val db = manga.toDbManga()
             try {
