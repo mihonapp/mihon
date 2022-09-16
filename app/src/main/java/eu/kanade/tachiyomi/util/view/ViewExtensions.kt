@@ -32,8 +32,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.children
 import androidx.core.view.descendants
 import androidx.core.view.forEach
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.snackbar.Snackbar
 import eu.kanade.presentation.theme.TachiyomiTheme
@@ -173,42 +171,6 @@ inline fun View.popupMenu(
     popup.show()
     return popup
 }
-
-/**
- * Shrink an ExtendedFloatingActionButton when the associated RecyclerView is scrolled down.
- *
- * @param recycler [RecyclerView] that the FAB should shrink/extend in response to.
- */
-inline fun ExtendedFloatingActionButton.shrinkOnScroll(recycler: RecyclerView): RecyclerView.OnScrollListener {
-    val listener = object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            if (dy <= 0) {
-                extend()
-            } else {
-                shrink()
-            }
-        }
-    }
-    recycler.addOnScrollListener(listener)
-    return listener
-}
-
-/**
- * Callback will be run immediately when no animation running
- */
-fun RecyclerView.onAnimationsFinished(callback: (RecyclerView) -> Unit) = post(
-    object : Runnable {
-        override fun run() {
-            if (isAnimating) {
-                itemAnimator?.isRunning {
-                    post(this)
-                }
-            } else {
-                callback(this@onAnimationsFinished)
-            }
-        }
-    },
-)
 
 /**
  * Returns this ViewGroup's first child of specified class
