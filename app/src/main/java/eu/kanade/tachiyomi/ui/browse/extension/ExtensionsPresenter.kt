@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -77,7 +78,7 @@ class ExtensionsPresenter(
         presenterScope.launchIO {
             combine(
                 _query,
-                getExtensions.subscribe(),
+                getExtensions.subscribe().stateIn(presenterScope),
                 _currentDownloads,
             ) { query, (_updates, _installed, _available, _untrusted), downloads ->
                 val searchQuery = query ?: ""
