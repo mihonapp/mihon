@@ -284,6 +284,15 @@ object Migrations {
                     remove("library_sorting_ascending")
                 }
             }
+            if (oldVersion < 84) {
+                if (preferences.numberOfBackups().get() == 1) {
+                    preferences.numberOfBackups().set(2)
+                }
+                if (preferences.backupInterval().get() == 0) {
+                    preferences.backupInterval().set(12)
+                    BackupCreatorJob.setupTask(context)
+                }
+            }
             return true
         }
 

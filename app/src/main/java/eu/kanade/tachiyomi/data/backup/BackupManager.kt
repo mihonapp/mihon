@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.backup
 
+import android.Manifest
 import android.content.Context
 import android.net.Uri
 import com.hippo.unifile.UniFile
@@ -34,6 +35,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.copyFrom
+import eu.kanade.tachiyomi.util.system.hasPermission
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toLong
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -68,6 +70,10 @@ class BackupManager(
      */
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun createBackup(uri: Uri, flags: Int, isAutoBackup: Boolean): String {
+        if (!context.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            throw IllegalStateException(context.getString(R.string.missing_storage_permission))
+        }
+
         val databaseManga = getFavorites.await()
         val backup = Backup(
             backupMangas(databaseManga, flags),

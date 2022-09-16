@@ -108,14 +108,13 @@ class SettingsBackupController : SettingsController() {
                 bindTo(preferences.backupInterval())
                 titleRes = R.string.pref_backup_interval
                 entriesRes = arrayOf(
-                    R.string.update_never,
                     R.string.update_6hour,
                     R.string.update_12hour,
                     R.string.update_24hour,
                     R.string.update_48hour,
                     R.string.update_weekly,
                 )
-                entryValues = arrayOf("0", "6", "12", "24", "48", "168")
+                entryValues = arrayOf("6", "12", "24", "48", "168")
                 summary = "%s"
 
                 onChange { newValue ->
@@ -137,8 +136,6 @@ class SettingsBackupController : SettingsController() {
                     }
                 }
 
-                visibleIf(preferences.backupInterval()) { it > 0 }
-
                 preferences.backupsDirectory().asFlow()
                     .onEach { path ->
                         val dir = UniFile.fromUri(context, path.toUri())
@@ -149,11 +146,9 @@ class SettingsBackupController : SettingsController() {
             intListPreference {
                 bindTo(preferences.numberOfBackups())
                 titleRes = R.string.pref_backup_slots
-                entries = arrayOf("1", "2", "3", "4", "5")
+                entries = arrayOf("2", "3", "4", "5")
                 entryValues = entries
                 summary = "%s"
-
-                visibleIf(preferences.backupInterval()) { it > 0 }
             }
         }
 

@@ -214,7 +214,7 @@ class PreferencesHelper(val context: Context) {
 
     fun numberOfBackups() = flowPrefs.getInt("backup_slots", 2)
 
-    fun backupInterval() = flowPrefs.getInt("backup_interval", 0)
+    fun backupInterval() = flowPrefs.getInt("backup_interval", 12)
 
     fun removeAfterReadSlots() = prefs.getInt(Keys.removeAfterReadSlots, -1)
 
