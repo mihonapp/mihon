@@ -11,6 +11,7 @@ android {
     defaultConfig {
         minSdk = AndroidConfig.minSdk
         targetSdk = AndroidConfig.targetSdk
+        consumerProguardFile("consumer-proguard.pro")
     }
 
     compileOptions {
