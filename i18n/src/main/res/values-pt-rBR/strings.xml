@@ -672,7 +672,7 @@
     <string name="action_display_language_badge">Idioma</string>
     <string name="notification_size_warning">Atualizações com muitos itens prejudicam as fontes e podem deixar as atualizações lentas e aumentar o uso da bateria. Toque para saber mais.</string>
     <string name="label_warning">Aviso</string>
-    <string name="backup_info">Backups automáticos são altamente recomendados. Você deve manter cópias em outros locais também.</string>
+    <string name="backup_info">Você deve manter cópias em outros locais também.</string>
     <string name="connected_to_wifi">Somente no Wi-Fi</string>
     <string name="update_72hour">A cada 3 dias</string>
     <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi. Toque para saber mais.</string>
@@ -760,7 +760,7 @@
     <string name="action_remove_everything">Remover tudo</string>
     <string name="loader_rar5_error">O formato RARv5 não é suportado</string>
     <string name="appwidget_updates_description">Veja seus mangás atualizados recentemente</string>
-    <string name="appwidget_unavailable_locked">Widget não disponível quando o bloqueio do app está habilitado</string>
+    <string name="appwidget_unavailable_locked">Widget não disponível quando o bloqueio do aplicativo está habilitado</string>
     <string name="update_already_running">Uma atualização já está em andamento</string>
     <string name="error_user_agent_string_blank">O valor do User-Agent não pode ficar em branco</string>
     <string name="theme_tidalwave">Onda Tidal</string>
@@ -778,4 +778,5 @@
     <string name="updates_last_update_info">Última atualização da biblioteca: %1$s</string>
     <string name="remove_manga">Você está prestes a remover este mangá de sua biblioteca</string>
     <string name="popular">Popular</string>
+    <string name="missing_storage_permission">Permissões de armazenamento não concedidas</string>
 </resources>

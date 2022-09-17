@@ -647,7 +647,7 @@
     <string name="label_warning">警告</string>
     <string name="notification_size_warning">大量更新會損害來源，並可能導致更新速度緩慢、電池用量增加。輕觸以瞭解詳情。</string>
     <string name="pref_verbose_logging">錄製詳細記錄</string>
-    <string name="backup_info">強烈建議啟用自動備份，並在他處保留副本。</string>
+    <string name="backup_info">你應該在多處保存備份副本。</string>
     <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
     <string name="connected_to_wifi">僅透過 Wi-Fi</string>
     <string name="update_72hour">每 3 日</string>
@@ -752,4 +752,5 @@
     <string name="remove_manga">即將從書櫃中移除此漫畫</string>
     <string name="updates_last_update_info">書櫃更新於：%1$s</string>
     <string name="popular">熱門</string>
+    <string name="missing_storage_permission">未被授予儲存空間權限</string>
 </resources>

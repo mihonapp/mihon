@@ -146,7 +146,7 @@
     <string name="pref_backup_service_category">स्वचालित बैकअप</string>
     <string name="pref_backup_interval">बैकअप फ़्रीक्वेंसी</string>
     <string name="pref_backup_slots">अधिकतम बैकअप</string>
-    <string name="backup_created">बैकअप बनाया</string>
+    <string name="backup_created">बैकअप बनाया गया है</string>
     <string name="restore_completed">पुनर्स्थापना पूर्ण हुआ</string>
     <string name="backup_choice">आप बैकअप के लिए क्या चाहते हैं?</string>
     <string name="restoring_backup">बैकअप को पुनर्स्थापित करना</string>
@@ -237,7 +237,7 @@
     <string name="update_check_no_new_updates">कोई नया अद्यतन उपलब्ध नहीं है</string>
     <string name="update_check_look_for_updates">अपडेट के लिए खोज…</string>
     <string name="update_check_notification_download_in_progress">डाउनलोड…</string>
-    <string name="update_check_notification_download_complete">इंस्टॉल करने के लिए दबाएं</string>
+    <string name="update_check_notification_download_complete">इंस्टॉल करने के लिए यह टेप करें</string>
     <string name="update_check_notification_download_error">डाउनलोड त्रुटि</string>
     <string name="update_check_notification_update_available">नया संस्करण उपलब्ध है!</string>
     <string name="information_no_downloads">कोई डाउनलोड नहीं है</string>
@@ -341,7 +341,7 @@
     <string name="lock_never">कभी नहीँ</string>
     <plurals name="lock_after_mins">
         <item quantity="one">%1$s मिनट के बाद</item>
-        <item quantity="other">%1$s मिनट के बाद</item>
+        <item quantity="other">%1$s मिनटो के बाद</item>
     </plurals>
     <string name="secure_screen">स्क्रीन सुरक्षित करें</string>
     <string name="ext_updates_pending">अपडेट लंबित हैं</string>
@@ -407,7 +407,7 @@
     <string name="add_to_library">पुस्तकालय में जोड़ें</string>
     <string name="manga_info_collapse">कम</string>
     <string name="manga_info_expand">अधिक</string>
-    <string name="information_webview_required">ताचियोमी के लिए WebView आवश्यक है।</string>
+    <string name="information_webview_required">ताचियोमी के लिए वेबव्हिव आवश्यक है</string>
     <string name="licenses">ओपन सोर्स लाइसेंस</string>
     <string name="website">वेबसाइट</string>
     <string name="pref_confirm_exit">बाहर निकलने की पुष्टि करें</string>
@@ -426,8 +426,8 @@
     <string name="restore_duration">%02d मिनट,%02d सेकंड</string>
     <string name="downloaded_only_summary">अपने पुस्तकालय में सभी मंगा फ़िल्टर करे</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">%1$s बाकी</item>
-        <item quantity="other">%1$s बाकी</item>
+        <item quantity="one">%1$s बचा हुआ</item>
+        <item quantity="other">%1$s बचे हुए</item>
     </plurals>
     <string name="pref_search_pinned_sources_only">केवल पिन किए गए स्रोत शामिल हैं</string>
     <string name="viewer">पढ़न मोड</string>
@@ -470,7 +470,7 @@
     <string name="action_disable">बंद करें</string>
     <string name="action_start">प्रारंभ</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">%1$s अध्याय</item>
+        <item quantity="one">अध्याय %1$s</item>
         <item quantity="other">%1$s अध्याय</item>
     </plurals>
     <string name="label_network">नेटवर्क</string>
@@ -662,8 +662,8 @@
     <string name="label_warning">चेतावनी</string>
     <string name="action_display_language_badge">भाषा</string>
     <string name="backup_info">स्वचालित बैकअप की अत्यधिक अनुशंसा की जाती है। आपको अन्य जगहों पर भी प्रतियां रखनी चाहिए।</string>
-    <string name="download_queue_size_warning">चेतावनी: बड़े बल्क डाउनलोड के कारण स्रोत धीमे हो सकते हैं और/या ताचियोमी को अवरुद्ध कर सकते हैं। अधिक जानने के लिए टैप करें</string>
-    <string name="notification_size_warning">चेतावनी: बड़े अपडेट स्रोतों को नुकसान पहुंचाते हैं और इससे धीमे अपडेट हो सकते हैं और बैटरी का उपयोग भी बढ़ सकता है। अधिक जानने के लिए टैप करें</string>
+    <string name="download_queue_size_warning">चेतावनी: बड़े बल्क डाउनलोड के कारण स्रोत धीमे हो सकते हैं। और/या ताचियोमी को ब्लॉक कर सकते हैं। अधिक जानने के लिए यह टैप करें ।</string>
+    <string name="notification_size_warning">बड़े अपडेट स्रोतों को नुकसान पहुंचाते हैं और इससे धीमे अपडेट हो सकते हैं, और बैटरी का उपयोग भी बढ़ सकता है। अधिक जानने के लिए टैप करें ।</string>
     <string name="channel_app_updates">ऐप अपडेट</string>
     <string name="update_72hour">हर 3 दिन</string>
     <string name="connected_to_wifi">केवल वाई-फ़ाई पर</string>
@@ -717,7 +717,7 @@
     <string name="pref_duplicate_pinned_sources_summary">उनके संबंधित भाषा समूहों में पिन किए गए स्रोतों को फिर से दिखाएं</string>
     <string name="download_notifier_split_page_path_not_found">चित्र %d का फ़ाइल पथ नहीं खोजा जा सका</string>
     <string name="empty_backup_error">बैकअप करने के लिए कोई पुस्तकालय प्रविष्टि नहीं</string>
-    <string name="update_check_fdroid_migration_info">एक नया संस्करण आधिकारिक रिलीज के द्वारा उपलब्ध है। अनौपचारिक F-Droid रिलीज से माइग्रेट करने का तरीका जानने के लिए टैप करें</string>
+    <string name="update_check_fdroid_migration_info">एक नया संस्करण आधिकारिक रिलीज के द्वारा उपलब्ध है। अनौपचारिक F-Droid रिलीज से माइग्रेट करने का तरीका जानने के लिए यह टैप करें ।</string>
     <string name="split_tall_images">लंबे चित्रों की ऑटो हिस्से</string>
     <string name="ext_info_version">संस्करण</string>
     <string name="ext_info_language">भाषा</string>
@@ -728,7 +728,7 @@
     <string name="pref_app_language">ऐप की भाषा</string>
     <string name="delete_category">श्रेणी हटाएँ</string>
     <string name="description_placeholder">कोई विवरण नहीं</string>
-    <string name="delete_category_confirmation">क्या आप श्रेणी को हटाना चाहते हैं %s</string>
+    <string name="delete_category_confirmation">क्या आप %s कैटेगरी को हटाना चाहते हैं \?</string>
     <string name="download_notifier_split_failed">डाउनलोड किया गया चित्र विभाजित नहीं हो सका</string>
     <string name="pref_reset_viewer_flags">प्रति श्रृंखला रीडर सेटिंग्स को रीसेट करें</string>
     <string name="pref_reset_viewer_flags_summary">सभी श्रृंखलाओं के रीडिंग मोड और ओरिएंटेशन को रीसेट करता है</string>
@@ -741,4 +741,28 @@
     <string name="internal_error">आंतरिक त्रुटि : अधिक जानकारी के लिए क्रैश लॉग की जाँच करें</string>
     <string name="network_not_metered">केवल अनमीटर्ड कनेक्शन पर</string>
     <string name="loader_rar5_error">RARv5 प्रारूप समर्थित नहीं है</string>
+    <string name="updates_last_update_info">पुस्तकालय पिछली बार अपडेट किया गया: %1$s</string>
+    <string name="appwidget_updates_description">अपना हाल ही में अपडेट किया गया मांगा देखें</string>
+    <string name="download_ahead_info">केवल लाइब्रेरी में प्रविष्टियों पर काम करता है। और यदि वर्तमान अध्याय और अगला अध्याय पहले ही डाउनलोड हो चुका है</string>
+    <string name="custom_cover">कस्टम कवर</string>
+    <string name="pref_user_agent_string">चूक यूजर एजेंट स्ट्रिंग (User agent string)</string>
+    <string name="download_ahead">आगे डाउनलोड करें</string>
+    <string name="auto_download_while_reading">पढ़ते समय ऑटो डाउनलोड करे</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">अगला अपठित अध्याय</item>
+        <item quantity="other">अगले अपठित अध्याय %d</item>
+    </plurals>
+    <string name="action_remove_everything">सब कुछ हटा दें</string>
+    <string name="popular">लोकप्रिय</string>
+    <string name="pref_long_strip_split">लंबी इमेज को विभाजित करें (BETA)</string>
+    <string name="theme_tidalwave">टाइडल वेव्ह</string>
+    <string name="error_user_agent_string_blank">यूजर एजेंट स्ट्रिंग (User Agent String) खाली नहीं रखा जा सकता</string>
+    <string name="multi_lang">मल्टी</string>
+    <string name="are_you_sure">क्या आपको यकीन है \?</string>
+    <string name="appwidget_unavailable_locked">ऐप लॉक लागू होने पर विजेट उपलब्ध नहीं होता</string>
+    <string name="remove_manga">आप इस मांगा को अपनी लाइब्रेरी से निकालने वाले हैं</string>
+    <string name="update_already_running">एक अपडेट पहले से चल रहा है</string>
+    <string name="cant_open_last_read_chapter">अंतिम पढ़ा गया अध्याय खोलने में असमर्थ</string>
+    <string name="pref_reset_user_agent_string">यूजर एजेंट स्ट्रिंग(User agent string) डिफॉल्ट रिसेट करें</string>
+    <string name="on_hold_list">होल्ड लिस्ट में</string>
 </resources>

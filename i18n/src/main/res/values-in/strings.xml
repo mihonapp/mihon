@@ -645,7 +645,7 @@
     <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Tachiyomi. Ketuk untuk mempelajari lebih lanjut.</string>
     <string name="label_warning">Peringatan</string>
     <string name="pref_verbose_logging_summary">Cetak catatan berlebih ke catatan sistem (mengurangi kinerja aplikasi)</string>
-    <string name="backup_info">Pencadangan otomatis sangat disarankan. Anda juga harus menyimpan duplikat di tempat lain.</string>
+    <string name="backup_info">Anda juga harus menyimpan salinan cadangan di tempat lain.</string>
     <string name="pref_verbose_logging">Pencatatan berlebihan</string>
     <string name="pref_custom_color_filter">Filter warna kustom</string>
     <string name="pref_custom_brightness">Atur kecerahan</string>
@@ -751,4 +751,6 @@
     <string name="multi_lang">Multi</string>
     <string name="pref_long_strip_split">Potong gambar panjang (BETA)</string>
     <string name="are_you_sure">Apa kamu yakin\?</string>
+    <string name="popular">Popular</string>
+    <string name="missing_storage_permission">Izin penyimpanan tidak diberikan</string>
 </resources>

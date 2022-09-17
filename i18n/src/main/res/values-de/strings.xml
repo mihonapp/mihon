@@ -660,7 +660,7 @@
     <string name="action_display_language_badge">Sprache</string>
     <string name="label_warning">Warnung</string>
     <string name="notification_size_warning">Große Aktualisierungen schaden Quellen und könnten zu langsameren Aktualisierungen sowie höherem Akkuverbrauch führen. Tippe, um mehr zu erfahren.</string>
-    <string name="backup_info">Automatische Sicherungen sind sehr zu empfehlen. Du solltest auch Kopien an anderen Orten aufbewahren.</string>
+    <string name="backup_info">Du solltest auch Kopien der Sicherungen an anderen Orten aufbewahren.</string>
     <string name="connected_to_wifi">Nur über WLAN</string>
     <string name="update_72hour">Alle 3 Tage</string>
     <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Tachiyomi blockieren. Tippe, um mehr zu erfahren.</string>
@@ -762,7 +762,8 @@
     <string name="are_you_sure">Bist du dir sicher\?</string>
     <string name="pref_long_strip_split">Hohe Bilder aufteilen (BETA)</string>
     <string name="remove_manga">Du bist gerade dabei, diesen Manga aus deiner Bibliothek zu entfernen</string>
-    <string name="multi_lang">Mehrere</string>
+    <string name="multi_lang">Mehrere Sprachen</string>
     <string name="updates_last_update_info">Letzte Aktualisierung der Bibliothek: %1$s</string>
     <string name="popular">Beliebt</string>
+    <string name="missing_storage_permission">Speicherberechtigungen nicht erteilt</string>
 </resources>

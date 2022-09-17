@@ -647,7 +647,7 @@
     <string name="pref_verbose_logging">详细日志记录</string>
     <string name="label_warning">警告</string>
     <string name="action_display_language_badge">语言</string>
-    <string name="backup_info">强烈建议启用自动备份，你也应该在其他地方保存副本。</string>
+    <string name="backup_info">你应该将备份数据保存到多个地方。</string>
     <string name="notification_size_warning">大型更新会损害图源，并可能导致更新速度变慢以及电池用量增加。轻按了解更多。</string>
     <string name="connected_to_wifi">仅连接至 Wi-Fi 时</string>
     <string name="update_72hour">每 3 天</string>
@@ -752,4 +752,5 @@
     <string name="updates_last_update_info">书架上次更新时间：%1$s</string>
     <string name="remove_manga">即将从书架中删除此漫画。</string>
     <string name="popular">热门</string>
+    <string name="missing_storage_permission">未授予存储权限</string>
 </resources>

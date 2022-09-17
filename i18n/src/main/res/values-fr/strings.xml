@@ -375,6 +375,7 @@
     <string name="lock_never">Jamais</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Après %1$s minute</item>
+        <item quantity="many">Après %1$s minutes</item>
         <item quantity="other">Après %1$s minutes</item>
     </plurals>
     <string name="secure_screen">Mode discret</string>
@@ -388,6 +389,7 @@
     <string name="pref_category_display">Affichage</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d nouveau chapitre</item>
+        <item quantity="many">%1$d nouveaux chapitres</item>
         <item quantity="other">%1$d nouveaux chapitres</item>
     </plurals>
     <string name="notification_chapters_single">Chapitre %1$s</string>
@@ -395,6 +397,7 @@
     <string name="notification_chapters_multiple">Chapitres %1$s</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Chapitre %1$s et 1 autre</item>
+        <item quantity="many">Chapitres %1$s et %2$d autres</item>
         <item quantity="other">Chapitres %1$s et %2$d autres</item>
     </plurals>
     <string name="hide_notification_content">Cacher le contenu des notifications</string>
@@ -406,6 +409,7 @@
     <string name="pref_always_show_chapter_transition">Toujours afficher la transition entre les chapitres</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">Pour %d titre</item>
+        <item quantity="many">Pour %d titres</item>
         <item quantity="other">Pour %d titres</item>
     </plurals>
     <string name="action_menu">Menu</string>
@@ -417,6 +421,7 @@
     <string name="channel_ext_updates">Mises à jour d\'extensions</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Mise à jour d\'extension disponible</item>
+        <item quantity="many">%d mises à jour d\'extensions disponibles</item>
         <item quantity="other">%d mises à jour d\'extensions disponibles</item>
     </plurals>
     <string name="http_error_hint">Consultez le site Web de WebView</string>
@@ -460,6 +465,7 @@
     <string name="local_source_help_guide">Guide des sources locales</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s restant</item>
+        <item quantity="many">%1$s restants</item>
         <item quantity="other">%1$s restants</item>
     </plurals>
     <string name="downloaded_only_summary">Filtrer tous les mangas dans la bibliothèque</string>
@@ -469,11 +475,13 @@
     <string name="pref_true_color_summary">Réduit les bandes de couleur, mais peut impacter les performances</string>
     <plurals name="num_categories">
         <item quantity="one">%d catégorie</item>
+        <item quantity="many">%d catégories</item>
         <item quantity="other">%d catégories</item>
     </plurals>
     <string name="viewer">Mode de lecture</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Effectuée en %1$s avec %2$s erreur</item>
+        <item quantity="many">Effectuée en %1$s avec %2$s erreurs</item>
         <item quantity="other">Effectuée en %1$s avec %2$s erreurs</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Impossible d\'ouvrir les paramètres de l\'appareil</string>
@@ -504,6 +512,7 @@
     <string name="loader_not_implemented_error">Source non trouvée</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s chapitre</item>
+        <item quantity="many">%1$s chapitres</item>
         <item quantity="other">%1$s chapitres</item>
     </plurals>
     <string name="action_disable">Désactiver</string>
@@ -526,6 +535,7 @@
     <string name="pref_category_theme">Thème</string>
     <plurals name="num_trackers">
         <item quantity="one">Suivi par %d service</item>
+        <item quantity="many">Suivi par %d services</item>
         <item quantity="other">Suivi par %d services</item>
     </plurals>
     <string name="no_pinned_sources">Vous n\'avez aucune source épinglée</string>
@@ -541,6 +551,7 @@
     <string name="parental_controls_info">Ceci n\'empêche pas les extensions non officielles ou potentiellement mal signalées de diffuser du contenu +18 dans l\'application.</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d chapitre a été sauté, soit la source ne l\'a pas, soit il a été filtré</item>
+        <item quantity="many">%d chapitres ont été sautés, soit la source ne l\'a pas, soit il ont été filtrés</item>
         <item quantity="other">%d chapitres ont été sautés, soit la source ne l\'a pas, soit il ont été filtrés</item>
     </plurals>
     <string name="no_chapters_error">Aucun chapitre trouvé</string>
@@ -667,6 +678,7 @@
     <string name="pref_relative_format">Horodatages relatifs</string>
     <plurals name="relative_time">
         <item quantity="one">Hier</item>
+        <item quantity="many">Il y a %1$d jours</item>
         <item quantity="other">Il y a %1$d jours</item>
     </plurals>
     <string name="relative_time_today">Aujourd\'hui</string>
@@ -694,7 +706,7 @@
     <string name="action_display_language_badge">Langue</string>
     <string name="label_warning">Attention</string>
     <string name="notification_size_warning">Les mises à jour importantes nuisent aux sources et peuvent entraîner un ralentissement des mises à jour ainsi qu\'une augmentation de l\'utilisation de la batterie. Appuyez pour en savoir plus.</string>
-    <string name="backup_info">Les sauvegardes automatiques sont fortement conseillées. Nous vous recommandons aussi de conserver des copies ailleurs.</string>
+    <string name="backup_info">Vous devez également conserver des copies des sauvegardes à d\'autres endroits.</string>
     <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
     <string name="update_72hour">Tous les 3 jours</string>
     <string name="download_queue_size_warning">Attention : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Tachiyomi. Appuyez pour en savoir plus.</string>
@@ -790,8 +802,15 @@
     <string name="auto_download_while_reading">Téléchargement automatique pendant la lecture</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Chapitre suivant non lu</item>
-        <item quantity="other">%d chapitres suivants non lus</item>
+        <item quantity="many">Les %d suivants non lus</item>
+        <item quantity="other">Les %d suivants non lus</item>
     </plurals>
     <string name="download_ahead_info">Fonctionne seulement sur les entrées de la bibliothèque et si le chapitre actuel et le suivant sont déjà téléchargés</string>
     <string name="are_you_sure">Êtes-vous sûr(e) \?</string>
+    <string name="popular">Populaire</string>
+    <string name="pref_long_strip_split">Diviser les grandes images (BETA)</string>
+    <string name="multi_lang">Multiple</string>
+    <string name="updates_last_update_info">Dernière mis à jour de la bibliothèque le : %1$s</string>
+    <string name="remove_manga">Vous êtes sur le point de supprimer ce manga de votre bibliothèque</string>
+    <string name="missing_storage_permission">Autorisations de stockage non accordées</string>
 </resources>

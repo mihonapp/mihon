@@ -144,7 +144,7 @@
     <string name="theme_monet">Dynamisk</string>
     <string name="theme_greenapple">Æble grøn</string>
     <string name="theme_midnightdusk">Skumring</string>
-    <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
+    <string name="theme_strawberrydaiquiri">Jordbær Daiquiri</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_tealturquoise">Blågrøn &amp; Turquoise</string>
     <string name="theme_yinyang">Yin-yang</string>
@@ -153,7 +153,7 @@
     <string name="pref_category_navigation">Navigation</string>
     <string name="pref_side_nav_icon_alignment">Justering af sidenavigationsikon</string>
     <string name="alignment_top">Top</string>
-    <string name="alignment_center">Center</string>
+    <string name="alignment_center">Midte</string>
     <string name="alignment_bottom">Bund</string>
     <string name="pref_category_timestamps">Tidsstempler</string>
     <string name="pref_relative_time_long">Lang (Kort+, n dage siden)</string>
@@ -229,4 +229,15 @@
     <string name="include">Inkluder: %s</string>
     <string name="pref_app_language">App sprog</string>
     <string name="action_remove_everything">Fjern alt</string>
+    <string name="login">Login</string>
+    <string name="unknown_error">Ukendt fejl</string>
+    <string name="internal_error">InternalError: Tjek nedbrudslogfiler for yderligere information</string>
+    <string name="logout_success">Du er nu logget ud</string>
+    <string name="invalid_login">Kunne ikke logge ind</string>
+    <string name="login_success">Logget ind</string>
+    <string name="logout_title">Log af %1$s\?</string>
+    <string name="add_to_library">Tilføj til bibliotek</string>
+    <string name="in_library">I Biblioteket</string>
+    <string name="remove_from_library">Fjern fra biblioteket</string>
+    <string name="logout">Log af</string>
 </resources>

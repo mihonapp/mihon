@@ -664,7 +664,7 @@
     <string name="ext_app_info">Info o Aplikaci</string>
     <string name="pref_inverted_colors">Invertované</string>
     <string name="label_warning">Varování</string>
-    <string name="backup_info">Automatické zálohy jsou vřele doporučeny. Měli byste si uchovat kopii zálohy na více místech.</string>
+    <string name="backup_info">Kopie záloh by jste také měli uchovat na více místech.</string>
     <string name="action_sort_count">Celkem mangy</string>
     <string name="action_select_inverse">Vybrat obráceně</string>
     <string name="pref_category_navigation">Navigace</string>
@@ -778,4 +778,5 @@
     <string name="pref_long_strip_split">Rozdělit vysoké obrázky (BETA)</string>
     <string name="updates_last_update_info">Poslední aktualizace knihovny: %1$s</string>
     <string name="popular">Populární</string>
+    <string name="missing_storage_permission">Nebyla udělena oprávnění k úložišti</string>
 </resources>

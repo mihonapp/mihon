@@ -659,7 +659,7 @@
     <string name="pref_verbose_logging_summary">Εκτύπωση λεπτομερών αρχείων καταγραφής στο αρχείο καταγραφής συστήματος (μειώνει την απόδοση της εφαρμογής)</string>
     <string name="action_display_language_badge">Γλώσσα</string>
     <string name="label_warning">Προειδοποίηση</string>
-    <string name="backup_info">Συνιστάται ιδιαίτερα η δημιουργία αυτόματων αντιγράφων ασφαλείας. Θα πρέπει να διατηρείτε αντίγραφα και σε άλλα μέρη.</string>
+    <string name="backup_info">Θα πρέπει να διατηρείτε αντίγραφα αντιγράφων ασφαλείας και σε άλλα μέρη.</string>
     <string name="notification_size_warning">Οι μεγάλες ενημερώσεις βλάπτουν τις πηγές και μπορεί να οδηγήσουν σε πιο αργές ενημερώσεις και σε αυξημένη χρήση της μπαταρίας. Πατήστε για να μάθετε περισσότερα.</string>
     <string name="connected_to_wifi">Μόνο σε Wi-Fi</string>
     <string name="update_72hour">Κάθε 3 ημέρες</string>
@@ -765,4 +765,5 @@
     <string name="popular">Δημοφιλή</string>
     <string name="updates_last_update_info">Τελευταία ενημέρωση βιβλιοθήκης: %1$s</string>
     <string name="remove_manga">Πρόκειται να αφαιρέσετε αυτό το manga από τη βιβλιοθήκη σας</string>
+    <string name="missing_storage_permission">Δεν έχουν χορηγηθεί δικαιώματα αποθήκευσης</string>
 </resources>

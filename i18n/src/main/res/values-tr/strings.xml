@@ -657,7 +657,7 @@
     <string name="action_sort_count">Toplam manga</string>
     <string name="label_warning">Uyarı</string>
     <string name="action_display_language_badge">Dil</string>
-    <string name="backup_info">Otomatik yedeklemeler şiddetle tavsiye edilir. Kopyaları başka yerlerde de tutmalısınız.</string>
+    <string name="backup_info">Yedeklerin kopyalarını başka yerlerde de tutmalısınız.</string>
     <string name="notification_size_warning">Büyük güncellemeler kaynaklara zarar verir ve daha yavaş güncellemelere ve ayrıca pil kullanımının artmasına neden olabilir. Daha fazlasını öğrenmek için dokunun.</string>
     <string name="pref_verbose_logging">Ayrıntılı günlük kaydı</string>
     <string name="pref_verbose_logging_summary">Ayrıntılı günlükleri sistem günlüğüne yaz (uygulama performansını düşürür)</string>
@@ -765,4 +765,5 @@
     <string name="multi_lang">Çoklu</string>
     <string name="pref_long_strip_split">Uzun görselleri böl (BETA)</string>
     <string name="popular">Popüler</string>
+    <string name="missing_storage_permission">Depolama izinleri verilmedi</string>
 </resources>

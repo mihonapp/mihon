@@ -647,7 +647,7 @@
     <string name="pref_verbose_logging_summary">Cetak log berjela ke log sistem (mengurangkan prestasi aplikasi)</string>
     <string name="label_warning">Amaran</string>
     <string name="action_display_language_badge">Bahasa</string>
-    <string name="backup_info">Sandaran automatik sangat disyorkan. Anda patut simpan salinan di tempat lain juga.</string>
+    <string name="backup_info">Anda patut simpan salinan sandaran di tempat lain juga.</string>
     <string name="notification_size_warning">Kemas kini yang besar membahayakan sumber dan mengakibatkan sumber menjadi perlahan dan juga peningkatan penggunaan bateri. Ketik untuk ketahui selebihnya.</string>
     <string name="connected_to_wifi">Hanya menggunakan Wi-Fi</string>
     <string name="update_72hour">Setiap 3 hari</string>
@@ -752,4 +752,5 @@
     <string name="remove_manga">Anda akan membuang manga ini dariapda pustaka anda</string>
     <string name="pref_long_strip_split">Pisah imej panjang (BETA)</string>
     <string name="popular">Popular</string>
+    <string name="missing_storage_permission">Kebenaran storan tidak diberikan</string>
 </resources>

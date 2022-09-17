@@ -704,7 +704,7 @@
     <string name="pref_verbose_logging">Registrazione dettagliata</string>
     <string name="action_display_language_badge">Lingua</string>
     <string name="label_warning">Attenzione</string>
-    <string name="backup_info">I backup automatici sono altamente consigliati. Dovresti tenere delle copie anche in altri posti.</string>
+    <string name="backup_info">Dovresti tenere delle copie dei backup anche in altri posti.</string>
     <string name="notification_size_warning">Grossi aggiornamenti danneggiano le fonti, possono rallentare gli aggiornamenti e aumentare il consumo di batteria. Tocca per saperne di più.</string>
     <string name="connected_to_wifi">Solo su Wi-Fi</string>
     <string name="update_72hour">Ogni 3 giorni</string>
@@ -811,4 +811,5 @@
     <string name="pref_long_strip_split">Dividi immagini alte (BETA)</string>
     <string name="remove_manga">Stai per rimuovere questo manga dalla tua libreria</string>
     <string name="popular">Popolare</string>
+    <string name="missing_storage_permission">Autorizzazioni per l\'archiviazione non concesse</string>
 </resources>
