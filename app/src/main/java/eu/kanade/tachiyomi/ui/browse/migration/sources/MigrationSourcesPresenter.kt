@@ -42,11 +42,11 @@ class MigrationSourcesPresenter(
                 }
         }
 
-        preferences.migrationSortingDirection().asFlow()
+        preferences.migrationSortingDirection().changes()
             .onEach { state.sortingDirection = it }
             .launchIn(presenterScope)
 
-        preferences.migrationSortingMode().asFlow()
+        preferences.migrationSortingMode().changes()
             .onEach { state.sortingMode = it }
             .launchIn(presenterScope)
     }

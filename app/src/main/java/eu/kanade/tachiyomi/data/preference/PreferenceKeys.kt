@@ -56,10 +56,6 @@ object PreferenceKeys {
 
     const val searchPinnedSourcesOnly = "search_pinned_sources_only"
 
-    const val dohProvider = "doh_provider"
-
-    const val defaultUserAgent = "default_user_agent"
-
     const val defaultChapterFilterByRead = "default_chapter_filter_by_read"
 
     const val defaultChapterFilterByDownloaded = "default_chapter_filter_by_downloaded"
@@ -71,8 +67,6 @@ object PreferenceKeys {
     const val defaultChapterSortByAscendingOrDescending = "default_chapter_sort_by_ascending_or_descending"
 
     const val defaultChapterDisplayByNameOrNumber = "default_chapter_display_by_name_or_number"
-
-    const val verboseLogging = "verbose_logging"
 
     const val autoClearChapterCache = "auto_clear_chapter_cache"
 

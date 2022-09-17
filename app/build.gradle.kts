@@ -226,7 +226,6 @@ dependencies {
 
     // Preferences
     implementation(libs.preferencektx)
-    implementation(libs.flowpreferences)
 
     // Model View Presenter
     implementation(libs.bundles.nucleus)

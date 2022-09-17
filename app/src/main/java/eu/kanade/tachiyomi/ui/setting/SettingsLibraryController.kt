@@ -79,7 +79,7 @@ class SettingsLibraryController : SettingsController() {
                     }
                 }
 
-                combine(preferences.portraitColumns().asFlow(), preferences.landscapeColumns().asFlow()) { portraitCols, landscapeCols -> Pair(portraitCols, landscapeCols) }
+                combine(preferences.portraitColumns().changes(), preferences.landscapeColumns().changes()) { portraitCols, landscapeCols -> Pair(portraitCols, landscapeCols) }
                     .onEach { (portraitCols, landscapeCols) ->
                         val portrait = getColumnValue(portraitCols)
                         val landscape = getColumnValue(landscapeCols)
@@ -114,7 +114,7 @@ class SettingsLibraryController : SettingsController() {
                 entryValues = arrayOf("-1") + allCategories.map { it.id.toString() }.toTypedArray()
                 defaultValue = "-1"
 
-                val selectedCategory = allCategories.find { it.id == preferences.defaultCategory().toLong() }
+                val selectedCategory = allCategories.find { it.id == preferences.defaultCategory().get().toLong() }
                 summary = selectedCategory?.visualName(context)
                     ?: context.getString(R.string.default_category_summary)
                 onChange { newValue ->
@@ -129,7 +129,7 @@ class SettingsLibraryController : SettingsController() {
                 bindTo(preferences.categorizedDisplaySettings())
                 titleRes = R.string.categorized_display_settings
 
-                preferences.categorizedDisplaySettings().asFlow()
+                preferences.categorizedDisplaySettings().changes()
                     .onEach {
                         if (it.not()) {
                             resetCategoryFlags.await()
@@ -197,7 +197,7 @@ class SettingsLibraryController : SettingsController() {
                     summary = context.getString(R.string.restrictions, restrictionsText)
                 }
 
-                preferences.libraryUpdateDeviceRestriction().asFlow()
+                preferences.libraryUpdateDeviceRestriction().changes()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
             }
@@ -226,7 +226,7 @@ class SettingsLibraryController : SettingsController() {
                     summary = restrictionsText
                 }
 
-                preferences.libraryUpdateMangaRestriction().asFlow()
+                preferences.libraryUpdateMangaRestriction().changes()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
             }
@@ -269,10 +269,10 @@ class SettingsLibraryController : SettingsController() {
                     }
                 }
 
-                preferences.libraryUpdateCategories().asFlow()
+                preferences.libraryUpdateCategories().changes()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
-                preferences.libraryUpdateCategoriesExclude().asFlow()
+                preferences.libraryUpdateCategoriesExclude().changes()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
             }

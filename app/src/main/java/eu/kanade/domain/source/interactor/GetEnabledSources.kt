@@ -17,10 +17,10 @@ class GetEnabledSources(
 
     fun subscribe(): Flow<List<Source>> {
         return combine(
-            preferences.pinnedSources().asFlow(),
-            preferences.enabledLanguages().asFlow(),
-            preferences.disabledSources().asFlow(),
-            preferences.lastUsedSource().asFlow(),
+            preferences.pinnedSources().changes(),
+            preferences.enabledLanguages().changes(),
+            preferences.disabledSources().changes(),
+            preferences.lastUsedSource().changes(),
             repository.getSources(),
         ) { pinnedSourceIds, enabledLanguages, disabledSources, lastUsedSource, sources ->
             val duplicatePins = preferences.duplicatePinnedSources().get()

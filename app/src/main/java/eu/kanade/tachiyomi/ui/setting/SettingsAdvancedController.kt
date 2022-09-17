@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Target
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.network.PREF_DOH_360
 import eu.kanade.tachiyomi.network.PREF_DOH_ADGUARD
 import eu.kanade.tachiyomi.network.PREF_DOH_ALIDNS
@@ -69,6 +70,7 @@ class SettingsAdvancedController(
     private val network: NetworkHelper by injectLazy()
     private val chapterCache: ChapterCache by injectLazy()
     private val trackManager: TrackManager by injectLazy()
+    private val networkPreferences: NetworkPreferences by injectLazy()
 
     @SuppressLint("BatteryLife")
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
@@ -96,7 +98,7 @@ class SettingsAdvancedController(
         }
 
         switchPreference {
-            key = Keys.verboseLogging
+            key = networkPreferences.verboseLogging().key()
             titleRes = R.string.pref_verbose_logging
             summaryRes = R.string.pref_verbose_logging_summary
             defaultValue = isDevFlavor
@@ -189,7 +191,7 @@ class SettingsAdvancedController(
                 onClick { clearWebViewData() }
             }
             intListPreference {
-                key = Keys.dohProvider
+                key = networkPreferences.dohProvider().key()
                 titleRes = R.string.pref_dns_over_https
                 entries = arrayOf(
                     context.getString(R.string.disabled),
@@ -227,10 +229,11 @@ class SettingsAdvancedController(
                     true
                 }
             }
+            val defaultUserAgent = networkPreferences.defaultUserAgent()
             editTextPreference {
-                key = Keys.defaultUserAgent
+                key = defaultUserAgent.key()
                 titleRes = R.string.pref_user_agent_string
-                text = preferences.defaultUserAgent().get()
+                text = defaultUserAgent.get()
                 summary = network.defaultUserAgent
 
                 onChange {
@@ -247,10 +250,10 @@ class SettingsAdvancedController(
                 key = "pref_reset_user_agent"
                 titleRes = R.string.pref_reset_user_agent_string
 
-                visibleIf(preferences.defaultUserAgent()) { it != preferences.defaultUserAgent().defaultValue }
+                visibleIf(defaultUserAgent) { it != defaultUserAgent.defaultValue() }
 
                 onClick {
-                    preferences.defaultUserAgent().delete()
+                    defaultUserAgent.delete()
                     activity?.toast(R.string.requires_app_restart)
                 }
             }

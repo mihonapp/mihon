@@ -27,12 +27,12 @@ object ChapterSettingsHelper {
     suspend fun applySettingDefaults(mangaId: Long) {
         setMangaChapterFlags.awaitSetAllFlags(
             mangaId = mangaId,
-            unreadFilter = preferences.filterChapterByRead().toLong(),
-            downloadedFilter = preferences.filterChapterByDownloaded().toLong(),
-            bookmarkedFilter = preferences.filterChapterByBookmarked().toLong(),
-            sortingMode = preferences.sortChapterBySourceOrNumber().toLong(),
-            sortingDirection = preferences.sortChapterByAscendingOrDescending().toLong(),
-            displayMode = preferences.displayChapterByNameOrNumber().toLong(),
+            unreadFilter = preferences.filterChapterByRead().get().toLong(),
+            downloadedFilter = preferences.filterChapterByDownloaded().get().toLong(),
+            bookmarkedFilter = preferences.filterChapterByBookmarked().get().toLong(),
+            sortingMode = preferences.sortChapterBySourceOrNumber().get().toLong(),
+            sortingDirection = preferences.sortChapterByAscendingOrDescending().get().toLong(),
+            displayMode = preferences.displayChapterByNameOrNumber().get().toLong(),
         )
     }
 
@@ -45,12 +45,12 @@ object ChapterSettingsHelper {
                 .map { manga ->
                     setMangaChapterFlags.awaitSetAllFlags(
                         mangaId = manga.id,
-                        unreadFilter = preferences.filterChapterByRead().toLong(),
-                        downloadedFilter = preferences.filterChapterByDownloaded().toLong(),
-                        bookmarkedFilter = preferences.filterChapterByBookmarked().toLong(),
-                        sortingMode = preferences.sortChapterBySourceOrNumber().toLong(),
-                        sortingDirection = preferences.sortChapterByAscendingOrDescending().toLong(),
-                        displayMode = preferences.displayChapterByNameOrNumber().toLong(),
+                        unreadFilter = preferences.filterChapterByRead().get().toLong(),
+                        downloadedFilter = preferences.filterChapterByDownloaded().get().toLong(),
+                        bookmarkedFilter = preferences.filterChapterByBookmarked().get().toLong(),
+                        sortingMode = preferences.sortChapterBySourceOrNumber().get().toLong(),
+                        sortingDirection = preferences.sortChapterByAscendingOrDescending().get().toLong(),
+                        displayMode = preferences.displayChapterByNameOrNumber().get().toLong(),
                     )
                 }
         }

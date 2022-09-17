@@ -72,6 +72,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 class MainActivity : BaseActivity() {
@@ -105,7 +107,15 @@ class MainActivity : BaseActivity() {
 
         super.onCreate(savedInstanceState)
 
-        val didMigration = if (savedInstanceState == null) Migrations.upgrade(preferences) else false
+        val didMigration = if (savedInstanceState == null) {
+            Migrations.upgrade(
+                context = applicationContext,
+                preferences = preferences,
+                networkPreferences = Injekt.get(),
+            )
+        } else {
+            false
+        }
 
         binding = MainActivityBinding.inflate(layoutInflater)
 
@@ -240,7 +250,7 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        merge(preferences.showUpdatesNavBadge().asFlow(), preferences.unreadUpdatesCount().asFlow())
+        merge(preferences.showUpdatesNavBadge().changes(), preferences.unreadUpdatesCount().changes())
             .onEach { setUnreadUpdatesBadge() }
             .launchIn(lifecycleScope)
 
@@ -253,7 +263,7 @@ class MainActivity : BaseActivity() {
             .launchIn(lifecycleScope)
 
         binding.incognitoMode.isVisible = preferences.incognitoMode().get()
-        preferences.incognitoMode().asFlow()
+        preferences.incognitoMode().changes()
             .drop(1)
             .onEach {
                 binding.incognitoMode.isVisible = it
@@ -490,7 +500,7 @@ class MainActivity : BaseActivity() {
             lifecycleScope.launchUI { resetExitConfirmation() }
         } else if (backstackSize == 1 || !router.handleBack()) {
             // Regular back (i.e. closing the app)
-            if (preferences.autoClearChapterCache()) {
+            if (preferences.autoClearChapterCache().get()) {
                 chapterCache.clear()
             }
             super.onBackPressed()
@@ -534,7 +544,7 @@ class MainActivity : BaseActivity() {
     private fun shouldHandleExitConfirmation(): Boolean {
         return router.backstackSize == 1 &&
             router.getControllerWithTag("$startScreenId") != null &&
-            preferences.confirmExit() &&
+            preferences.confirmExit().get() &&
             !isConfirmingExit
     }
 

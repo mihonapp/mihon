@@ -52,7 +52,7 @@ class SetReadStatus(
             return@withContext Result.InternalError(e)
         }
 
-        if (read && preferences.removeAfterMarkedAsRead()) {
+        if (read && preferences.removeAfterMarkedAsRead().get()) {
             manga.forEach {
                 deleteDownload.awaitAll(
                     manga = it,

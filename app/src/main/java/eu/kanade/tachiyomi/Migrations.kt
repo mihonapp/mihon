@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi
 
+import android.content.Context
 import android.os.Build
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
@@ -12,6 +13,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.updater.AppUpdateJob
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
+import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.util.preference.minusAssign
@@ -31,9 +33,11 @@ object Migrations {
      * @param preferences Preferences of the application.
      * @return true if a migration is performed, false otherwise.
      */
-    fun upgrade(preferences: PreferencesHelper): Boolean {
-        val context = preferences.context
-
+    fun upgrade(
+        context: Context,
+        preferences: PreferencesHelper,
+        networkPreferences: NetworkPreferences,
+    ): Boolean {
         val oldVersion = preferences.lastVersionCode().get()
         if (oldVersion < BuildConfig.VERSION_CODE) {
             preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
@@ -143,7 +147,7 @@ object Migrations {
                 val wasDohEnabled = prefs.getBoolean("enable_doh", false)
                 if (wasDohEnabled) {
                     prefs.edit {
-                        putInt(PreferenceKeys.dohProvider, PREF_DOH_CLOUDFLARE)
+                        putInt(networkPreferences.dohProvider().key(), PREF_DOH_CLOUDFLARE)
                         remove("enable_doh")
                     }
                 }

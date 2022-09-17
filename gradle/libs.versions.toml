@@ -37,7 +37,6 @@ sqlitektx = "androidx.sqlite:sqlite-ktx:2.3.0-alpha05"
 sqlite-android = "com.github.requery:sqlite-android:3.36.0"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.0"
-flowpreferences = "com.fredporciuncula:flow-preferences:1.8.0"
 
 nucleus-core = { module = "info.android15.nucleus:nucleus", version.ref = "nucleus_version" }
 nucleus-supportv7 = { module = "info.android15.nucleus:nucleus-support-v7", version.ref = "nucleus_version" }

@@ -164,7 +164,7 @@ class DownloadService : Service() {
      */
     private fun onNetworkStateChanged() {
         if (isOnline()) {
-            if (preferences.downloadOnlyOverWifi() && !isConnectedToWifi()) {
+            if (preferences.downloadOnlyOverWifi().get() && !isConnectedToWifi()) {
                 stopDownloads(R.string.download_notifier_text_only_wifi)
             } else {
                 val started = downloadManager.startDownloads()

@@ -12,7 +12,7 @@ class GetExtensionLanguages(
 ) {
     fun subscribe(): Flow<List<String>> {
         return combine(
-            preferences.enabledLanguages().asFlow(),
+            preferences.enabledLanguages().changes(),
             extensionManager.getAvailableExtensionsFlow(),
         ) { enabledLanguage, availableExtensions ->
             availableExtensions

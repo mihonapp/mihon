@@ -84,7 +84,7 @@ class BackupNotifier(private val context: Context) {
         val builder = with(progressNotificationBuilder) {
             setContentTitle(context.getString(R.string.restoring_backup))
 
-            if (!preferences.hideNotificationContent()) {
+            if (!preferences.hideNotificationContent().get()) {
                 setContentText(content)
             }
 

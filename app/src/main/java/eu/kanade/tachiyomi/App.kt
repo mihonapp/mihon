@@ -37,6 +37,7 @@ import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.glance.UpdatesGridGlanceWidget
 import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.WebViewUtil
@@ -63,6 +64,7 @@ import java.security.Security
 class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
     private val preferences: PreferencesHelper by injectLazy()
+    private val networkPreferences: NetworkPreferences by injectLazy()
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
 
@@ -82,6 +84,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         }
 
         Injekt.importModule(AppModule(this))
+        Injekt.importModule(PreferenceModule(this))
         Injekt.importModule(DomainModule())
 
         setupAcra()
@@ -90,7 +93,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
         // Show notification to disable Incognito Mode when it's enabled
-        preferences.incognitoMode().asFlow()
+        preferences.incognitoMode().changes()
             .onEach { enabled ->
                 val notificationManager = NotificationManagerCompat.from(this)
                 if (enabled) {
@@ -141,7 +144,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
             }
             .launchIn(ProcessLifecycleOwner.get().lifecycleScope)
 
-        if (!LogcatLogger.isInstalled && preferences.verboseLogging()) {
+        if (!LogcatLogger.isInstalled && networkPreferences.verboseLogging().get()) {
             LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))
         }
     }
@@ -168,7 +171,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
             diskCache(diskCacheInit)
             crossfade((300 * this@App.animatorDurationScale).toInt())
             allowRgb565(getSystemService<ActivityManager>()!!.isLowRamDevice)
-            if (preferences.verboseLogging()) logger(DebugLogger())
+            if (networkPreferences.verboseLogging().get()) logger(DebugLogger())
         }.build()
     }
 

@@ -32,15 +32,15 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
     init {
         addView(binding.root)
 
-        preferences.colorFilter().asFlow()
+        preferences.colorFilter().changes()
             .onEach { setColorFilter(it) }
             .launchIn((context as ReaderActivity).lifecycleScope)
 
-        preferences.colorFilterMode().asFlow()
+        preferences.colorFilterMode().changes()
             .onEach { setColorFilter(preferences.colorFilter().get()) }
             .launchIn(context.lifecycleScope)
 
-        preferences.customBrightness().asFlow()
+        preferences.customBrightness().changes()
             .onEach { setCustomBrightness(it) }
             .launchIn(context.lifecycleScope)
 
@@ -139,7 +139,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
      */
     private fun setCustomBrightness(enabled: Boolean) {
         if (enabled) {
-            preferences.customBrightnessValue().asFlow()
+            preferences.customBrightnessValue().changes()
                 .sample(100)
                 .onEach { setCustomBrightnessValue(it) }
                 .launchIn((context as ReaderActivity).lifecycleScope)
@@ -167,7 +167,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
      */
     private fun setColorFilter(enabled: Boolean) {
         if (enabled) {
-            preferences.colorFilterValue().asFlow()
+            preferences.colorFilterValue().changes()
                 .sample(100)
                 .onEach { setColorFilterValue(it) }
                 .launchIn((context as ReaderActivity).lifecycleScope)

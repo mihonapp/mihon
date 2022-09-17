@@ -16,8 +16,8 @@ class GetSourcesWithFavoriteCount(
 
     fun subscribe(): Flow<List<Pair<Source, Long>>> {
         return combine(
-            preferences.migrationSortingDirection().asFlow(),
-            preferences.migrationSortingMode().asFlow(),
+            preferences.migrationSortingDirection().changes(),
+            preferences.migrationSortingMode().changes(),
             repository.getSourcesWithFavoriteCount(),
         ) { direction, mode, list ->
             list.sortedWith(sortFn(direction, mode))

@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.library.setting
 
 import eu.kanade.domain.category.model.Category
-import com.fredporciuncula.flow.preferences.Serializer as PreferencesSerializer
 
 sealed class LibraryDisplayMode(
     override val flag: Long,
@@ -14,12 +13,12 @@ sealed class LibraryDisplayMode(
     object List : LibraryDisplayMode(0b00000010)
     object CoverOnlyGrid : LibraryDisplayMode(0b00000011)
 
-    object Serializer : PreferencesSerializer<LibraryDisplayMode> {
-        override fun deserialize(serialized: String): LibraryDisplayMode {
+    object Serializer {
+        fun deserialize(serialized: String): LibraryDisplayMode {
             return LibraryDisplayMode.deserialize(serialized)
         }
 
-        override fun serialize(value: LibraryDisplayMode): String {
+        fun serialize(value: LibraryDisplayMode): String {
             return value.serialize()
         }
     }

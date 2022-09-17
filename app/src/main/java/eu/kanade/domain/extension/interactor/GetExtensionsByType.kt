@@ -16,7 +16,7 @@ class GetExtensionsByType(
         val showNsfwSources = preferences.showNsfwSource().get()
 
         return combine(
-            preferences.enabledLanguages().asFlow(),
+            preferences.enabledLanguages().changes(),
             extensionManager.getInstalledExtensionsFlow(),
             extensionManager.getUntrustedExtensionsFlow(),
             extensionManager.getAvailableExtensionsFlow(),

@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
-import com.fredporciuncula.flow.preferences.Preference
+import eu.kanade.tachiyomi.core.preference.Preference
 import eu.kanade.tachiyomi.data.preference.PreferenceValues.TappingInvertMode
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import kotlinx.coroutines.CoroutineScope
@@ -80,7 +80,7 @@ abstract class ViewerConfig(preferences: PreferencesHelper, private val scope: C
         valueAssignment: (T) -> Unit,
         onChanged: (T) -> Unit = {},
     ) {
-        asFlow()
+        changes()
             .onEach { valueAssignment(it) }
             .distinctUntilChanged()
             .onEach { onChanged(it) }

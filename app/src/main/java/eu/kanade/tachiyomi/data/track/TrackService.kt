@@ -69,9 +69,9 @@ abstract class TrackService(val id: Long) {
         get() = getUsername().isNotEmpty() &&
             getPassword().isNotEmpty()
 
-    fun getUsername() = preferences.trackUsername(this)!!
+    fun getUsername() = preferences.trackUsername(this).get()
 
-    fun getPassword() = preferences.trackPassword(this)!!
+    fun getPassword() = preferences.trackPassword(this).get()
 
     fun saveCredentials(username: String, password: String) {
         preferences.setTrackCredentials(this, username, password)

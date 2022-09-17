@@ -123,7 +123,7 @@ class ExtensionsPresenter(
 
         presenterScope.launchIO { findAvailableExtensions() }
 
-        preferences.extensionUpdatesCount().asFlow()
+        preferences.extensionUpdatesCount().changes()
             .onEach { state.updates = it }
             .launchIn(presenterScope)
     }

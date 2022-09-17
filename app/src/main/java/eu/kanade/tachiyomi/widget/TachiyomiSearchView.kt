@@ -31,13 +31,15 @@ class TachiyomiSearchView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-        Injekt.get<PreferencesHelper>().incognitoMode().asHotFlow {
-            imeOptions = if (it) {
-                imeOptions or EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING
-            } else {
-                imeOptions and EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING.inv()
+        Injekt.get<PreferencesHelper>().incognitoMode()
+            .asHotFlow {
+                imeOptions = if (it) {
+                    imeOptions or EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING
+                } else {
+                    imeOptions and EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING.inv()
+                }
             }
-        }.launchIn(scope!!)
+            .launchIn(scope!!)
     }
 
     override fun setOnQueryTextListener(listener: OnQueryTextListener?) {

@@ -283,7 +283,7 @@ class MangaPresenter(
 
                 // Now check if user previously set categories, when available
                 val categories = getCategories()
-                val defaultCategoryId = preferences.defaultCategory().toLong()
+                val defaultCategoryId = preferences.defaultCategory().get().toLong()
                 val defaultCategory = categories.find { it.id == defaultCategoryId }
                 when {
                     // Default category set

@@ -47,7 +47,7 @@ class DownloadCache(
     private var rootDir = RootDirectory(getDirectoryFromPreference())
 
     init {
-        preferences.downloadsDirectory().asFlow()
+        preferences.downloadsDirectory().changes()
             .onEach {
                 lastRenew = 0L // invalidate cache
                 rootDir = RootDirectory(getDirectoryFromPreference())

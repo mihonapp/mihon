@@ -1,6 +1,7 @@
 package eu.kanade.domain.source.interactor
 
 import eu.kanade.domain.source.model.Source
+import eu.kanade.tachiyomi.core.preference.getAndSet
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
@@ -14,10 +15,8 @@ class ToggleSource(
     }
 
     fun await(sourceId: Long, enable: Boolean = sourceId.toString() in preferences.disabledSources().get()) {
-        if (enable) {
-            preferences.disabledSources() -= sourceId.toString()
-        } else {
-            preferences.disabledSources() += sourceId.toString()
+        preferences.disabledSources().getAndSet { disabled ->
+            if (enable) disabled.minus("$sourceId") else disabled.plus("$sourceId")
         }
     }
 }

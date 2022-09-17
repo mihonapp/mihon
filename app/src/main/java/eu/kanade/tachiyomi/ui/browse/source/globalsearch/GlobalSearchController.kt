@@ -174,7 +174,7 @@ open class GlobalSearchController(
      * @param searchResult result of search.
      */
     fun setItems(searchResult: List<GlobalSearchItem>) {
-        if (searchResult.isEmpty() && preferences.searchPinnedSourcesOnly()) {
+        if (searchResult.isEmpty() && preferences.searchPinnedSourcesOnly().get()) {
             binding.emptyView.show(R.string.no_pinned_sources)
         } else {
             binding.emptyView.hide()

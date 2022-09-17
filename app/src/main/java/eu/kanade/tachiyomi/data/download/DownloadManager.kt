@@ -414,7 +414,7 @@ class DownloadManager(
 
         return if (categoriesForManga.intersect(categoriesToExclude).isNotEmpty()) {
             chapters.filterNot { it.read }
-        } else if (!preferences.removeBookmarkedChapters()) {
+        } else if (!preferences.removeBookmarkedChapters().get()) {
             chapters.filterNot { it.bookmark }
         } else {
             chapters

@@ -58,7 +58,7 @@ class SettingsDownloadController : SettingsController() {
                 ctrl.showDialog(router)
             }
 
-            preferences.downloadsDirectory().asFlow()
+            preferences.downloadsDirectory().changes()
                 .onEach { path ->
                     val dir = UniFile.fromUri(context, path.toUri())
                     summary = dir.filePath ?: path
@@ -114,7 +114,7 @@ class SettingsDownloadController : SettingsController() {
                 entries = categories.map { it.visualName(context) }.toTypedArray()
                 entryValues = categories.map { it.id.toString() }.toTypedArray()
 
-                preferences.removeExcludeCategories().asFlow()
+                preferences.removeExcludeCategories().changes()
                     .onEach { mutable ->
                         val selected = mutable
                             .mapNotNull { id -> categories.find { it.id == id.toLong() } }
@@ -171,10 +171,10 @@ class SettingsDownloadController : SettingsController() {
                     }
                 }
 
-                preferences.downloadNewChapterCategories().asFlow()
+                preferences.downloadNewChapterCategories().changes()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
-                preferences.downloadNewChapterCategoriesExclude().asFlow()
+                preferences.downloadNewChapterCategoriesExclude().changes()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
             }

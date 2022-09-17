@@ -140,11 +140,11 @@ class ReaderPresenter(
             ?: error("Requested chapter of id $chapterId not found in chapter list")
 
         val chaptersForReader = when {
-            (preferences.skipRead() || preferences.skipFiltered()) -> {
+            (preferences.skipRead().get() || preferences.skipFiltered().get()) -> {
                 val filteredChapters = chapters.filterNot {
                     when {
-                        preferences.skipRead() && it.read -> true
-                        preferences.skipFiltered() -> {
+                        preferences.skipRead().get() && it.read -> true
+                        preferences.skipFiltered().get() -> {
                             (manga.readFilter == DomainManga.CHAPTER_SHOW_READ.toInt() && !it.read) ||
                                 (manga.readFilter == DomainManga.CHAPTER_SHOW_UNREAD.toInt() && it.read) ||
                                 (manga.downloadedFilter == DomainManga.CHAPTER_SHOW_DOWNLOADED.toInt() && !downloadManager.isChapterDownloaded(it.name, it.scanlator, manga.title, manga.source)) ||
@@ -502,7 +502,7 @@ class ReaderPresenter(
     private fun deleteChapterIfNeeded(currentChapter: ReaderChapter) {
         // Determine which chapter should be deleted and enqueue
         val currentChapterPosition = chapterList.indexOf(currentChapter)
-        val removeAfterReadSlots = preferences.removeAfterReadSlots()
+        val removeAfterReadSlots = preferences.removeAfterReadSlots().get()
         val chapterToDelete = chapterList.getOrNull(currentChapterPosition - removeAfterReadSlots)
 
         if (removeAfterReadSlots != 0 && chapterDownload != null) {
@@ -619,7 +619,7 @@ class ReaderPresenter(
      * Returns the viewer position used by this manga or the default one.
      */
     fun getMangaReadingMode(resolveDefault: Boolean = true): Int {
-        val default = preferences.defaultReadingMode()
+        val default = preferences.defaultReadingMode().get()
         val readingMode = ReadingModeType.fromPreference(manga?.readingModeType)
         return when {
             resolveDefault && readingMode == ReadingModeType.DEFAULT -> default
@@ -656,7 +656,7 @@ class ReaderPresenter(
      * Returns the orientation type used by this manga or the default one.
      */
     fun getMangaOrientationType(resolveDefault: Boolean = true): Int {
-        val default = preferences.defaultOrientationType()
+        val default = preferences.defaultOrientationType().get()
         val orientation = OrientationType.fromPreference(manga?.orientationType)
         return when {
             resolveDefault && orientation == OrientationType.DEFAULT -> default
@@ -714,7 +714,7 @@ class ReaderPresenter(
         val filename = generateFilename(manga, page)
 
         // Pictures directory.
-        val relativePath = if (preferences.folderPerManga()) DiskUtil.buildValidFilename(manga.title) else ""
+        val relativePath = if (preferences.folderPerManga().get()) DiskUtil.buildValidFilename(manga.title) else ""
 
         // Copy file in background.
         try {
@@ -818,7 +818,7 @@ class ReaderPresenter(
      * will run in a background thread and errors are ignored.
      */
     private fun updateTrackChapterRead(readerChapter: ReaderChapter) {
-        if (!preferences.autoUpdateTrack()) return
+        if (!preferences.autoUpdateTrack().get()) return
         val manga = manga ?: return
 
         val chapterRead = readerChapter.chapter.chapter_number.toDouble()

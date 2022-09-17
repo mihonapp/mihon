@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.library.setting
 
 import eu.kanade.domain.category.model.Category
-import com.fredporciuncula.flow.preferences.Serializer as PreferencesSerializer
 
 data class LibrarySort(
     val type: Type,
@@ -57,12 +56,12 @@ data class LibrarySort(
         }
     }
 
-    object Serializer : PreferencesSerializer<LibrarySort> {
-        override fun deserialize(serialized: String): LibrarySort {
+    object Serializer {
+        fun deserialize(serialized: String): LibrarySort {
             return LibrarySort.deserialize(serialized)
         }
 
-        override fun serialize(value: LibrarySort): String {
+        fun serialize(value: LibrarySort): String {
             return value.serialize()
         }
     }

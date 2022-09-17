@@ -380,7 +380,7 @@ class LibraryUpdateService(
                                         failedUpdates.add(mangaWithNotif to errorMessage)
                                     }
 
-                                    if (preferences.autoUpdateTrackers()) {
+                                    if (preferences.autoUpdateTrackers().get()) {
                                         updateTrackings(mangaWithNotif, loggedServices)
                                     }
                                 }
@@ -430,7 +430,7 @@ class LibraryUpdateService(
         val source = sourceManager.getOrStub(manga.source)
 
         // Update manga metadata if needed
-        if (preferences.autoUpdateMetadata()) {
+        if (preferences.autoUpdateMetadata().get()) {
             val networkManga = source.getMangaDetails(manga.toSManga())
             updateManga.awaitUpdateFromSource(manga, networkManga, manualFetch = false, coverCache)
         }

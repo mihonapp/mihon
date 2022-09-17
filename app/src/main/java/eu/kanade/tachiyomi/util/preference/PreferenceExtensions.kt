@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.util.preference
 
 import android.widget.CompoundButton
-import com.fredporciuncula.flow.preferences.Preference
+import eu.kanade.tachiyomi.core.preference.Preference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 
@@ -15,7 +15,7 @@ fun CompoundButton.bindToPreference(pref: Preference<Boolean>) {
 
 fun <T> Preference<T>.asHotFlow(block: (T) -> Unit): Flow<T> {
     block(get())
-    return asFlow()
+    return changes()
         .onEach { block(it) }
 }
 

@@ -111,7 +111,7 @@ open class BrowseSourcePresenter(
         val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
         return produceState<GridCells>(initialValue = GridCells.Adaptive(128.dp), isLandscape) {
             (if (isLandscape) preferences.landscapeColumns() else preferences.portraitColumns())
-                .asFlow()
+                .changes()
                 .collectLatest { columns ->
                     value = if (columns == 0) GridCells.Adaptive(128.dp) else GridCells.Fixed(columns)
                 }
@@ -257,7 +257,7 @@ open class BrowseSourcePresenter(
     fun addFavorite(manga: DomainManga) {
         presenterScope.launch {
             val categories = getCategories()
-            val defaultCategoryId = preferences.defaultCategory()
+            val defaultCategoryId = preferences.defaultCategory().get()
             val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
 
             when {

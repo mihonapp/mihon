@@ -193,7 +193,7 @@ class ExtensionManager(
             .map(AvailableSources::lang)
 
         val deviceLanguage = Locale.getDefault().language
-        val defaultLanguages = preferences.enabledLanguages().defaultValue
+        val defaultLanguages = preferences.enabledLanguages().defaultValue()
         val languagesToEnable = availableLanguages.filter {
             it != deviceLanguage && it.startsWith(deviceLanguage)
         }

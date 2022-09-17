@@ -39,7 +39,7 @@ class DownloadProvider(private val context: Context) {
     }
 
     init {
-        preferences.downloadsDirectory().asFlow()
+        preferences.downloadsDirectory().changes()
             .onEach { downloadsDir = UniFile.fromUri(context, it.toUri()) }
             .launchIn(scope)
     }

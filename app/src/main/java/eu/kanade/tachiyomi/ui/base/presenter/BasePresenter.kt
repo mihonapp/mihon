@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.ui.base.presenter
 
 import android.os.Bundle
-import com.fredporciuncula.flow.preferences.Preference
 import eu.kanade.core.prefs.PreferenceMutableState
+import eu.kanade.tachiyomi.core.preference.Preference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel

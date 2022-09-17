@@ -130,7 +130,7 @@ abstract class SettingsController : PreferenceController() {
         (activity as? AppCompatActivity)?.supportActionBar?.title = getTitle()
     }
 
-    inline fun <T> Preference.visibleIf(preference: com.fredporciuncula.flow.preferences.Preference<T>, crossinline block: (T) -> Boolean) {
+    inline fun <T> Preference.visibleIf(preference: eu.kanade.tachiyomi.core.preference.Preference<T>, crossinline block: (T) -> Boolean) {
         preference.asHotFlow { isVisible = block(it) }
             .launchIn(viewScope)
     }

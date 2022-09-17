@@ -194,7 +194,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         initializeMenu()
 
         // Finish when incognito mode is disabled
-        preferences.incognitoMode().asFlow()
+        preferences.incognitoMode().changes()
             .drop(1)
             .onEach { if (!it) finish() }
             .launchIn(lifecycleScope)
@@ -446,7 +446,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                     presenter.setMangaReadingMode(newReadingMode.flagValue)
 
                     menuToggleToast?.cancel()
-                    if (!preferences.showReadingMode()) {
+                    if (!preferences.showReadingMode().get()) {
                         menuToggleToast = toast(newReadingMode.stringRes)
                     }
 
@@ -480,7 +480,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         updateCropBordersShortcut()
         listOf(preferences.cropBorders(), preferences.cropBordersWebtoon())
             .forEach { pref ->
-                pref.asFlow()
+                pref.changes()
                     .onEach { updateCropBordersShortcut() }
                     .launchIn(lifecycleScope)
             }
@@ -493,7 +493,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 popupMenu(
                     items = OrientationType.values().map { it.flagValue to it.stringRes },
                     selectedItemId = presenter.manga?.orientationType
-                        ?: preferences.defaultOrientationType(),
+                        ?: preferences.defaultOrientationType().get(),
                 ) {
                     val newOrientation = OrientationType.fromPreference(itemId)
 
@@ -635,7 +635,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         updateViewerInset(preferences.fullscreen().get())
         binding.viewerContainer.addView(newViewer.getView())
 
-        if (preferences.showReadingMode()) {
+        if (preferences.showReadingMode().get()) {
             showReadingModeToast(presenter.getMangaReadingMode())
         }
 
@@ -949,7 +949,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
          * Initializes the reader subscriptions.
          */
         init {
-            preferences.readerTheme().asFlow()
+            preferences.readerTheme().changes()
                 .onEach {
                     binding.readerContainer.setBackgroundResource(
                         when (preferences.readerTheme().get()) {
@@ -962,41 +962,41 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 }
                 .launchIn(lifecycleScope)
 
-            preferences.showPageNumber().asFlow()
+            preferences.showPageNumber().changes()
                 .onEach { setPageNumberVisibility(it) }
                 .launchIn(lifecycleScope)
 
-            preferences.trueColor().asFlow()
+            preferences.trueColor().changes()
                 .onEach { setTrueColor(it) }
                 .launchIn(lifecycleScope)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                preferences.cutoutShort().asFlow()
+                preferences.cutoutShort().changes()
                     .onEach { setCutoutShort(it) }
                     .launchIn(lifecycleScope)
             }
 
-            preferences.keepScreenOn().asFlow()
+            preferences.keepScreenOn().changes()
                 .onEach { setKeepScreenOn(it) }
                 .launchIn(lifecycleScope)
 
-            preferences.customBrightness().asFlow()
+            preferences.customBrightness().changes()
                 .onEach { setCustomBrightness(it) }
                 .launchIn(lifecycleScope)
 
-            preferences.colorFilter().asFlow()
+            preferences.colorFilter().changes()
                 .onEach { setColorFilter(it) }
                 .launchIn(lifecycleScope)
 
-            preferences.colorFilterMode().asFlow()
+            preferences.colorFilterMode().changes()
                 .onEach { setColorFilter(preferences.colorFilter().get()) }
                 .launchIn(lifecycleScope)
 
-            merge(preferences.grayscale().asFlow(), preferences.invertedColors().asFlow())
+            merge(preferences.grayscale().changes(), preferences.invertedColors().changes())
                 .onEach { setLayerPaint(preferences.grayscale().get(), preferences.invertedColors().get()) }
                 .launchIn(lifecycleScope)
 
-            preferences.fullscreen().asFlow()
+            preferences.fullscreen().changes()
                 .onEach {
                     WindowCompat.setDecorFitsSystemWindows(window, !it)
                     updateViewerInset(it)
@@ -1060,7 +1060,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
          */
         private fun setCustomBrightness(enabled: Boolean) {
             if (enabled) {
-                preferences.customBrightnessValue().asFlow()
+                preferences.customBrightnessValue().changes()
                     .sample(100)
                     .onEach { setCustomBrightnessValue(it) }
                     .launchIn(lifecycleScope)
@@ -1074,7 +1074,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
          */
         private fun setColorFilter(enabled: Boolean) {
             if (enabled) {
-                preferences.colorFilterValue().asFlow()
+                preferences.colorFilterValue().changes()
                     .sample(100)
                     .onEach { setColorFilterValue(it) }
                     .launchIn(lifecycleScope)

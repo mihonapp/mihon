@@ -71,7 +71,7 @@ class LibraryUpdateNotifier(private val context: Context) {
      * @param total the total progress.
      */
     fun showProgressNotification(manga: List<Manga>, current: Int, total: Int) {
-        if (preferences.hideNotificationContent()) {
+        if (preferences.hideNotificationContent().get()) {
             progressNotificationBuilder
                 .setContentTitle(context.getString(R.string.notification_check_updates))
                 .setContentText("($current/$total)")
@@ -167,12 +167,12 @@ class LibraryUpdateNotifier(private val context: Context) {
                 Notifications.ID_NEW_CHAPTERS,
                 context.notification(Notifications.CHANNEL_NEW_CHAPTERS) {
                     setContentTitle(context.getString(R.string.notification_new_chapters))
-                    if (updates.size == 1 && !preferences.hideNotificationContent()) {
+                    if (updates.size == 1 && !preferences.hideNotificationContent().get()) {
                         setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
                     } else {
                         setContentText(context.resources.getQuantityString(R.plurals.notification_new_chapters_summary, updates.size, updates.size))
 
-                        if (!preferences.hideNotificationContent()) {
+                        if (!preferences.hideNotificationContent().get()) {
                             setStyle(
                                 NotificationCompat.BigTextStyle().bigText(
                                     updates.joinToString("\n") {
@@ -197,7 +197,7 @@ class LibraryUpdateNotifier(private val context: Context) {
             )
 
             // Per-manga notification
-            if (!preferences.hideNotificationContent()) {
+            if (!preferences.hideNotificationContent().get()) {
                 launchUI {
                     updates.forEach { (manga, chapters) ->
                         notify(manga.id.hashCode(), createNewChaptersNotification(manga, chapters))
