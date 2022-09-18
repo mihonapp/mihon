@@ -59,7 +59,10 @@ class SettingsGeneralController : SettingsController() {
                     for (i in 0 until parser.attributeCount) {
                         if (parser.getAttributeName(i) == "name") {
                             val langTag = parser.getAttributeValue(i)
-                            langs.add(Pair(langTag, LocaleHelper.getDisplayName(langTag)))
+                            val displayName = LocaleHelper.getDisplayName(langTag)
+                            if (displayName.isNotEmpty()) {
+                                langs.add(Pair(langTag, displayName))
+                            }
                         }
                     }
                 }
