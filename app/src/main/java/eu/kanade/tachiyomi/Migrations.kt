@@ -168,7 +168,7 @@ object Migrations {
                 }
             }
             if (oldVersion < 60) {
-                // Re-enable update check that was prevously accidentally disabled for M
+                // Re-enable update check that was previously accidentally disabled for M
                 if (BuildConfig.INCLUDE_UPDATER && Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
                     AppUpdateJob.setupTask(context)
                 }
