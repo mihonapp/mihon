@@ -3,11 +3,11 @@ package eu.kanade.tachiyomi.ui.browse.extension
 import android.app.Application
 import androidx.annotation.StringRes
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.browse.ExtensionState
 import eu.kanade.presentation.browse.ExtensionsState
 import eu.kanade.presentation.browse.ExtensionsStateImpl
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
@@ -31,7 +31,7 @@ import uy.kohesive.injekt.api.get
 class ExtensionsPresenter(
     private val presenterScope: CoroutineScope,
     private val state: ExtensionsStateImpl = ExtensionState() as ExtensionsStateImpl,
-    private val preferences: PreferencesHelper = Injekt.get(),
+    private val preferences: SourcePreferences = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensions: GetExtensionsByType = Injekt.get(),
 ) : ExtensionsState by state {

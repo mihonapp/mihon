@@ -1,22 +1,24 @@
 package eu.kanade.domain.source.interactor
 
 import eu.kanade.domain.source.model.Source
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.core.preference.getAndSet
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.util.preference.minusAssign
-import eu.kanade.tachiyomi.util.preference.plusAssign
 
 class ToggleSource(
-    private val preferences: PreferencesHelper,
+    private val preferences: SourcePreferences,
 ) {
 
-    fun await(source: Source, enable: Boolean = source.id.toString() in preferences.disabledSources().get()) {
+    fun await(source: Source, enable: Boolean = isEnabled(source.id)) {
         await(source.id, enable)
     }
 
-    fun await(sourceId: Long, enable: Boolean = sourceId.toString() in preferences.disabledSources().get()) {
+    fun await(sourceId: Long, enable: Boolean = isEnabled(sourceId)) {
         preferences.disabledSources().getAndSet { disabled ->
             if (enable) disabled.minus("$sourceId") else disabled.plus("$sourceId")
         }
+    }
+
+    private fun isEnabled(sourceId: Long): Boolean {
+        return sourceId.toString() in preferences.disabledSources().get()
     }
 }

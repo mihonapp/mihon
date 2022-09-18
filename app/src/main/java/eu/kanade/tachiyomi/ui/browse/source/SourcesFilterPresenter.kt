@@ -5,9 +5,9 @@ import eu.kanade.domain.source.interactor.GetLanguagesWithSources
 import eu.kanade.domain.source.interactor.ToggleLanguage
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.model.Source
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.browse.SourcesFilterState
 import eu.kanade.presentation.browse.SourcesFilterStateImpl
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.logcat
@@ -24,7 +24,7 @@ class SourcesFilterPresenter(
     private val getLanguagesWithSources: GetLanguagesWithSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
     private val toggleLanguage: ToggleLanguage = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get(),
+    private val preferences: SourcePreferences = Injekt.get(),
 ) : BasePresenter<SourceFilterController>(), SourcesFilterState by state {
 
     private val _events = Channel<Event>(Int.MAX_VALUE)

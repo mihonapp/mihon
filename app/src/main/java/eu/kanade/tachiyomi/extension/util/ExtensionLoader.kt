@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import androidx.core.content.pm.PackageInfoCompat
 import dalvik.system.PathClassLoader
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
 import eu.kanade.tachiyomi.source.CatalogueSource
@@ -26,7 +26,7 @@ import uy.kohesive.injekt.injectLazy
 @SuppressLint("PackageManagerGetSignatures")
 internal object ExtensionLoader {
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val preferences: SourcePreferences by injectLazy()
     private val loadNsfwSource by lazy {
         preferences.showNsfwSource().get()
     }

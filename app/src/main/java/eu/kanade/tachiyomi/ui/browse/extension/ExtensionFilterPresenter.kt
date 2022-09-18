@@ -3,9 +3,9 @@ package eu.kanade.tachiyomi.ui.browse.extension
 import android.os.Bundle
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.source.interactor.ToggleLanguage
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.browse.ExtensionFilterState
 import eu.kanade.presentation.browse.ExtensionFilterStateImpl
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.logcat
@@ -21,7 +21,7 @@ class ExtensionFilterPresenter(
     private val state: ExtensionFilterStateImpl = ExtensionFilterState() as ExtensionFilterStateImpl,
     private val getExtensionLanguages: GetExtensionLanguages = Injekt.get(),
     private val toggleLanguage: ToggleLanguage = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get(),
+    private val preferences: SourcePreferences = Injekt.get(),
 ) : BasePresenter<ExtensionFilterController>(), ExtensionFilterState by state {
 
     private val _events = Channel<Event>(Int.MAX_VALUE)

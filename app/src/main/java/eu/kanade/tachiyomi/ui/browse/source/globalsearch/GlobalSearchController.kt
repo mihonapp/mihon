@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.GlobalSearchControllerBinding
@@ -34,6 +35,7 @@ open class GlobalSearchController(
     GlobalSearchAdapter.OnTitleClickListener {
 
     private val preferences: PreferencesHelper by injectLazy()
+    private val sourcePreferences: SourcePreferences by injectLazy()
 
     /**
      * Adapter containing search results grouped by lang.
@@ -174,7 +176,7 @@ open class GlobalSearchController(
      * @param searchResult result of search.
      */
     fun setItems(searchResult: List<GlobalSearchItem>) {
-        if (searchResult.isEmpty() && preferences.searchPinnedSourcesOnly().get()) {
+        if (searchResult.isEmpty() && sourcePreferences.searchPinnedSourcesOnly().get()) {
             binding.emptyView.show(R.string.no_pinned_sources)
         } else {
             binding.emptyView.hide()
@@ -205,7 +207,7 @@ open class GlobalSearchController(
      */
     override fun onTitleClick(source: CatalogueSource) {
         if (!preferences.incognitoMode().get()) {
-            preferences.lastUsedSource().set(source.id)
+            sourcePreferences.lastUsedSource().set(source.id)
         }
         router.pushController(BrowseSourceController(source, presenter.query))
     }

@@ -1,14 +1,14 @@
 package eu.kanade.domain.extension.interactor
 
 import eu.kanade.domain.extension.model.Extensions
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
 class GetExtensionsByType(
-    private val preferences: PreferencesHelper,
+    private val preferences: SourcePreferences,
     private val extensionManager: ExtensionManager,
 ) {
 

@@ -6,6 +6,7 @@ import eu.kanade.domain.manga.interactor.InsertManga
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.manga.model.toMangaUpdate
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -35,6 +36,7 @@ open class GlobalSearchPresenter(
     private val initialExtensionFilter: String? = null,
     val sourceManager: SourceManager = Injekt.get(),
     val preferences: PreferencesHelper = Injekt.get(),
+    val sourcePreferences: SourcePreferences = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
     private val insertManga: InsertManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
@@ -96,9 +98,9 @@ open class GlobalSearchPresenter(
      * @return list containing enabled sources.
      */
     protected open fun getEnabledSources(): List<CatalogueSource> {
-        val languages = preferences.enabledLanguages().get()
-        val disabledSourceIds = preferences.disabledSources().get()
-        val pinnedSourceIds = preferences.pinnedSources().get()
+        val languages = sourcePreferences.enabledLanguages().get()
+        val disabledSourceIds = sourcePreferences.disabledSources().get()
+        val pinnedSourceIds = sourcePreferences.pinnedSources().get()
 
         return sourceManager.getCatalogueSources()
             .filter { it.lang in languages }
@@ -123,8 +125,8 @@ open class GlobalSearchPresenter(
             return filteredSources
         }
 
-        val onlyPinnedSources = preferences.searchPinnedSourcesOnly().get()
-        val pinnedSourceIds = preferences.pinnedSources().get()
+        val onlyPinnedSources = sourcePreferences.searchPinnedSourcesOnly().get()
+        val pinnedSourceIds = sourcePreferences.pinnedSources().get()
 
         return enabledSources
             .filter { if (onlyPinnedSources) it.id.toString() in pinnedSourceIds else true }
@@ -156,7 +158,7 @@ open class GlobalSearchPresenter(
         val initialItems = sources.map { createCatalogueSearchItem(it, null) }
         var items = initialItems
 
-        val pinnedSourceIds = preferences.pinnedSources().get()
+        val pinnedSourceIds = sourcePreferences.pinnedSources().get()
 
         fetchSourcesSubscription?.unsubscribe()
         fetchSourcesSubscription = Observable.from(sources)

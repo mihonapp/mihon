@@ -13,6 +13,7 @@ import eu.kanade.data.AndroidDatabaseHandler
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.data.dateAdapter
 import eu.kanade.data.listOfStringsAdapter
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.core.preference.AndroidPreferenceStore
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.data.cache.ChapterCache
@@ -129,6 +130,9 @@ class PreferenceModule(val application: Application) : InjektModule {
                 preferenceStore = get(),
                 verboseLogging = isDevFlavor,
             )
+        }
+        addSingletonFactory {
+            SourcePreferences(get())
         }
         addSingletonFactory {
             PreferencesHelper(

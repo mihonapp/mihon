@@ -1,9 +1,9 @@
 package eu.kanade.domain.source.interactor
 
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.domain.source.service.SourcePreferences
 
 class SetMigrateSorting(
-    private val preferences: PreferencesHelper,
+    private val preferences: SourcePreferences,
 ) {
 
     fun await(mode: Mode, direction: Direction) {
@@ -14,12 +14,10 @@ class SetMigrateSorting(
     enum class Mode {
         ALPHABETICAL,
         TOTAL,
-        ;
     }
 
     enum class Direction {
         ASCENDING,
         DESCENDING,
-        ;
     }
 }

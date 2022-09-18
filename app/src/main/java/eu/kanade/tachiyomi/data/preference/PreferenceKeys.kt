@@ -37,9 +37,6 @@ object PreferenceKeys {
 
     const val librarySortingMode = "library_sorting_mode"
 
-    const val migrationSortingMode = "pref_migration_sorting"
-    const val migrationSortingDirection = "pref_migration_direction"
-
     const val hideNotificationContent = "hide_notification_content"
 
     const val autoUpdateMetadata = "auto_update_metadata"
@@ -53,8 +50,6 @@ object PreferenceKeys {
     const val skipRead = "skip_read"
 
     const val skipFiltered = "skip_filtered"
-
-    const val searchPinnedSourcesOnly = "search_pinned_sources_only"
 
     const val defaultChapterFilterByRead = "default_chapter_filter_by_read"
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import androidx.core.net.toUri
-import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.core.preference.getEnum
@@ -16,7 +15,6 @@ import eu.kanade.tachiyomi.ui.library.setting.LibrarySort
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.util.system.DeviceUtil
-import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import java.io.File
@@ -166,15 +164,11 @@ class PreferencesHelper(
 
     fun autoUpdateTrack() = this.preferenceStore.getBoolean(Keys.autoUpdateTrack, true)
 
-    fun lastUsedSource() = this.preferenceStore.getLong("last_catalogue_source", -1)
-
     fun lastUsedCategory() = this.preferenceStore.getInt("last_used_category", 0)
 
     fun lastVersionCode() = this.preferenceStore.getInt("last_version_code", 0)
 
     fun sourceDisplayMode() = this.preferenceStore.getObject("pref_display_mode_catalogue", LibraryDisplayMode.default, LibraryDisplayMode.Serializer::serialize, LibraryDisplayMode.Serializer::deserialize)
-
-    fun enabledLanguages() = this.preferenceStore.getStringSet("source_languages", LocaleHelper.getDefaultEnabledLanguages())
 
     fun trackUsername(sync: TrackService) = this.preferenceStore.getString(Keys.trackUsername(sync.id), "")
 
@@ -260,23 +254,10 @@ class PreferencesHelper(
 
     fun librarySortingMode() = this.preferenceStore.getObject(Keys.librarySortingMode, LibrarySort.default, LibrarySort.Serializer::serialize, LibrarySort.Serializer::deserialize)
 
-    fun migrationSortingMode() = this.preferenceStore.getEnum(Keys.migrationSortingMode, SetMigrateSorting.Mode.ALPHABETICAL)
-    fun migrationSortingDirection() = this.preferenceStore.getEnum(Keys.migrationSortingDirection, SetMigrateSorting.Direction.ASCENDING)
-
     fun automaticExtUpdates() = this.preferenceStore.getBoolean("automatic_ext_updates", true)
-
-    fun showNsfwSource() = this.preferenceStore.getBoolean("show_nsfw_source", true)
-
-    fun extensionUpdatesCount() = this.preferenceStore.getInt("ext_updates_count", 0)
 
     fun lastAppCheck() = this.preferenceStore.getLong("last_app_check", 0)
     fun lastExtCheck() = this.preferenceStore.getLong("last_ext_check", 0)
-
-    fun searchPinnedSourcesOnly() = this.preferenceStore.getBoolean(Keys.searchPinnedSourcesOnly, false)
-
-    fun disabledSources() = this.preferenceStore.getStringSet("hidden_catalogues", emptySet())
-
-    fun pinnedSources() = this.preferenceStore.getStringSet("pinned_catalogues", emptySet())
 
     fun downloadNewChapters() = this.preferenceStore.getBoolean("download_new", false)
 
@@ -294,8 +275,6 @@ class PreferencesHelper(
     fun skipFiltered() = this.preferenceStore.getBoolean(Keys.skipFiltered, true)
 
     fun migrateFlags() = this.preferenceStore.getInt("migrate_flags", Int.MAX_VALUE)
-
-    fun trustedSignatures() = this.preferenceStore.getStringSet("trusted_signatures", emptySet())
 
     fun filterChapterByRead() = this.preferenceStore.getInt(Keys.defaultChapterFilterByRead, DomainManga.SHOW_ALL.toInt())
 
@@ -319,8 +298,6 @@ class PreferencesHelper(
     )
 
     fun autoClearChapterCache() = this.preferenceStore.getBoolean(Keys.autoClearChapterCache, false)
-
-    fun duplicatePinnedSources() = this.preferenceStore.getBoolean("duplicate_pinned_sources", false)
 
     fun setChapterSettingsDefault(manga: Manga) {
         filterChapterByRead().set(manga.readFilter)

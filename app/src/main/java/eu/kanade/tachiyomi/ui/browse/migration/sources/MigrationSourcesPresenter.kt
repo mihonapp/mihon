@@ -2,9 +2,9 @@ package eu.kanade.tachiyomi.ui.browse.migration.sources
 
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
 import eu.kanade.domain.source.interactor.SetMigrateSorting
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.browse.MigrateSourceState
 import eu.kanade.presentation.browse.MigrateSourceStateImpl
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +21,7 @@ import uy.kohesive.injekt.api.get
 class MigrationSourcesPresenter(
     private val presenterScope: CoroutineScope,
     private val state: MigrateSourceStateImpl = MigrateSourceState() as MigrateSourceStateImpl,
-    private val preferences: PreferencesHelper = Injekt.get(),
+    private val preferences: SourcePreferences = Injekt.get(),
     private val getSourcesWithFavoriteCount: GetSourcesWithFavoriteCount = Injekt.get(),
     private val setMigrateSorting: SetMigrateSorting = Injekt.get(),
 ) : MigrateSourceState by state {

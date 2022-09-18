@@ -4,7 +4,7 @@ import eu.kanade.domain.source.model.Pin
 import eu.kanade.domain.source.model.Pins
 import eu.kanade.domain.source.model.Source
 import eu.kanade.domain.source.repository.SourceRepository
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.source.LocalSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 
 class GetEnabledSources(
     private val repository: SourceRepository,
-    private val preferences: PreferencesHelper,
+    private val preferences: SourcePreferences,
 ) {
 
     fun subscribe(): Flow<List<Source>> {

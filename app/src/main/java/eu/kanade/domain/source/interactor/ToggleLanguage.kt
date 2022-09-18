@@ -1,12 +1,10 @@
 package eu.kanade.domain.source.interactor
 
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.core.preference.getAndSet
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.util.preference.minusAssign
-import eu.kanade.tachiyomi.util.preference.plusAssign
 
 class ToggleLanguage(
-    val preferences: PreferencesHelper,
+    val preferences: SourcePreferences,
 ) {
 
     fun await(language: String) {
