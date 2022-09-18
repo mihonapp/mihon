@@ -14,11 +14,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -62,7 +59,6 @@ import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.util.horizontalPadding
-import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
@@ -131,7 +127,7 @@ fun ExtensionDetailsScreen(
 
 @Composable
 private fun ExtensionDetails(
-    paddingValues: PaddingValues,
+    contentPadding: PaddingValues,
     presenter: ExtensionDetailsPresenter,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
 ) {
@@ -144,7 +140,7 @@ private fun ExtensionDetails(
             var showNsfwWarning by remember { mutableStateOf(false) }
 
             ScrollbarLazyColumn(
-                contentPadding = paddingValues + WindowInsets.navigationBars.asPaddingValues(),
+                contentPadding = contentPadding,
             ) {
                 when {
                     extension.isUnofficial ->

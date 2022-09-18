@@ -1,9 +1,6 @@
 package eu.kanade.presentation.more.settings
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
@@ -14,7 +11,6 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
-import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 
 @Composable
@@ -42,9 +38,9 @@ fun SettingsMainScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-    ) { paddingValues ->
+    ) { contentPadding ->
         ScrollbarLazyColumn(
-            contentPadding = paddingValues + WindowInsets.navigationBars.asPaddingValues(),
+            contentPadding = contentPadding,
         ) {
             sections.map {
                 item {

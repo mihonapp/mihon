@@ -2,10 +2,7 @@ package eu.kanade.presentation.more.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +19,6 @@ import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.util.horizontalPadding
-import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.ui.setting.search.SettingsSearchHelper
 import eu.kanade.tachiyomi.ui.setting.search.SettingsSearchPresenter
@@ -53,9 +49,9 @@ fun SettingsSearchScreen(
             // TODO: search placeholder
             // Text(stringResource(R.string.action_search_settings))
         },
-    ) { paddingValues ->
+    ) { contentPadding ->
         ScrollbarLazyColumn(
-            contentPadding = paddingValues + WindowInsets.navigationBars.asPaddingValues(),
+            contentPadding = contentPadding,
         ) {
             items(
                 items = results,
@@ -75,14 +71,14 @@ private fun SearchResult(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = horizontalPadding, vertical = 8.dp)
             .clickable {
                 // Must pass a new Controller instance to avoid this error
                 // https://github.com/bluelinelabs/Conductor/issues/446
                 val controller = result.searchController::class.createInstance()
                 controller.preferenceKey = result.key
                 onClickResult(controller)
-            },
+            }
+            .padding(horizontal = horizontalPadding, vertical = 8.dp),
     ) {
         Text(
             text = result.title,

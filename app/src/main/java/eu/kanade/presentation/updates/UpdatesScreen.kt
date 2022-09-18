@@ -2,14 +2,9 @@ package eu.kanade.presentation.updates
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlipToBack
@@ -112,7 +107,7 @@ fun UpdateScreen(
             if (presenter.selectionMode) {
                 PaddingValues()
             } else {
-                bottomNavPaddingValues + WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
+                bottomNavPaddingValues
             }
 
         val scope = rememberCoroutineScope()

@@ -1,9 +1,6 @@
 package eu.kanade.presentation.browse
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,7 +13,6 @@ import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.manga.components.BaseMangaListItem
-import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrateMangaPresenter
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrateMangaPresenter.Event
@@ -40,13 +36,13 @@ fun MigrateMangaScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-    ) { paddingValues ->
+    ) { contentPadding ->
         when {
             presenter.isLoading -> LoadingScreen()
             presenter.isEmpty -> EmptyScreen(textResource = R.string.empty_screen)
             else -> {
                 MigrateMangaContent(
-                    paddingValues = paddingValues,
+                    contentPadding = contentPadding,
                     state = presenter,
                     onClickItem = onClickItem,
                     onClickCover = onClickCover,
@@ -67,13 +63,13 @@ fun MigrateMangaScreen(
 
 @Composable
 fun MigrateMangaContent(
-    paddingValues: PaddingValues,
+    contentPadding: PaddingValues,
     state: MigrateMangaState,
     onClickItem: (Manga) -> Unit,
     onClickCover: (Manga) -> Unit,
 ) {
     ScrollbarLazyColumn(
-        contentPadding = paddingValues + WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = contentPadding,
     ) {
         items(state.items) { manga ->
             MigrateMangaItem(

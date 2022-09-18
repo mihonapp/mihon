@@ -2,10 +2,7 @@ package eu.kanade.presentation.more.about
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.runtime.Composable
@@ -46,9 +43,9 @@ fun AboutScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-    ) { paddingValues ->
+    ) { contentPadding ->
         ScrollbarLazyColumn(
-            contentPadding = paddingValues + WindowInsets.navigationBars.asPaddingValues(),
+            contentPadding = contentPadding,
         ) {
             item {
                 LogoHeader()
