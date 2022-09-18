@@ -133,10 +133,10 @@ class AppUpdateService : Service() {
                 throw Exception("Unsuccessful response")
             }
             notifier.promptInstall(apkFile.getUriCompat(this))
-        } catch (error: Exception) {
-            logcat(LogPriority.ERROR, error)
-            if (error is CancellationException ||
-                (error is StreamResetException && error.errorCode == ErrorCode.CANCEL)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            if (e is CancellationException ||
+                (e is StreamResetException && e.errorCode == ErrorCode.CANCEL)
             ) {
                 notifier.cancel()
             } else {

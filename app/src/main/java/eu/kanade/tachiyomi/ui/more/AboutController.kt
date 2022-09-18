@@ -45,9 +45,9 @@ class AboutController : BasicFullComposeController() {
         activity!!.toast(R.string.update_check_look_for_updates)
 
         viewScope.launchIO {
-            val result = updateChecker.checkForUpdate(activity!!, isUserPrompt = true)
-            withUIContext {
-                try {
+            try {
+                val result = updateChecker.checkForUpdate(activity!!, isUserPrompt = true)
+                withUIContext {
                     when (result) {
                         is AppUpdateResult.NewUpdate -> {
                             NewUpdateDialogController(result).showDialog(router)
@@ -57,10 +57,10 @@ class AboutController : BasicFullComposeController() {
                         }
                         else -> {}
                     }
-                } catch (error: Exception) {
-                    activity?.toast(error.message)
-                    logcat(LogPriority.ERROR, error)
                 }
+            } catch (e: Exception) {
+                withUIContext { activity?.toast(e.message) }
+                logcat(LogPriority.ERROR, e)
             }
         }
     }
