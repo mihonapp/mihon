@@ -11,7 +11,7 @@ leakcanary = "2.9.1"
 
 [libraries]
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
-google-services-gradle = "com.google.gms:google-services:4.3.13"
+google-services-gradle = "com.google.gms:google-services:4.3.14"
 
 rxandroid = "io.reactivex:rxandroid:1.2.1"
 rxjava = "io.reactivex:rxjava:1.3.8"
