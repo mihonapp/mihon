@@ -116,6 +116,7 @@ class MainActivity : BaseActivity() {
                 preferences = preferences,
                 networkPreferences = Injekt.get(),
                 sourcePreferences = sourcePreferences,
+                securityPreferences = Injekt.get(),
             )
         } else {
             false

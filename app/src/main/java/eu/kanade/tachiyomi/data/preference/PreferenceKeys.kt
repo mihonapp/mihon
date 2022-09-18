@@ -37,8 +37,6 @@ object PreferenceKeys {
 
     const val librarySortingMode = "library_sorting_mode"
 
-    const val hideNotificationContent = "hide_notification_content"
-
     const val autoUpdateMetadata = "auto_update_metadata"
 
     const val autoUpdateTrackers = "auto_update_trackers"

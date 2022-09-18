@@ -5,9 +5,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
+import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.preference.bindTo
-import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.infoPreference
 import eu.kanade.tachiyomi.util.preference.intListPreference
@@ -19,16 +18,18 @@ import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.startAuthentication
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import uy.kohesive.injekt.injectLazy
 
 class SettingsSecurityController : SettingsController() {
+
+    private val securityPreferences: SecurityPreferences by injectLazy()
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_security
 
         if (context.isAuthenticationSupported()) {
             switchPreference {
-                bindTo(preferences.useAuthenticator())
+                bindTo(securityPreferences.useAuthenticator())
                 titleRes = R.string.lock_with_biometrics
 
                 requireAuthentication(
@@ -39,7 +40,7 @@ class SettingsSecurityController : SettingsController() {
             }
 
             intListPreference {
-                bindTo(preferences.lockAppAfter())
+                bindTo(securityPreferences.lockAppAfter())
                 titleRes = R.string.lock_when_idle
                 val values = arrayOf("0", "1", "2", "5", "10", "-1")
                 entries = values.mapNotNull {
@@ -79,22 +80,21 @@ class SettingsSecurityController : SettingsController() {
                     false
                 }
 
-                visibleIf(preferences.useAuthenticator()) { it }
+                visibleIf(securityPreferences.useAuthenticator()) { it }
             }
         }
 
         switchPreference {
-            key = Keys.hideNotificationContent
+            bindTo(securityPreferences.hideNotificationContent())
             titleRes = R.string.hide_notification_content
-            defaultValue = false
         }
 
         listPreference {
-            bindTo(preferences.secureScreen())
+            bindTo(securityPreferences.secureScreen())
             titleRes = R.string.secure_screen
             summary = "%s"
-            entriesRes = PreferenceValues.SecureScreenMode.values().map { it.titleResId }.toTypedArray()
-            entryValues = PreferenceValues.SecureScreenMode.values().map { it.name }.toTypedArray()
+            entriesRes = SecurityPreferences.SecureScreenMode.values().map { it.titleResId }.toTypedArray()
+            entryValues = SecurityPreferences.SecureScreenMode.values().map { it.name }.toTypedArray()
         }
 
         infoPreference(R.string.secure_screen_summary)

@@ -46,7 +46,7 @@ import coil.transform.RoundedCornersTransformation
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.lang.launchIO
@@ -61,7 +61,7 @@ import java.util.Date
 
 class UpdatesGridGlanceWidget : GlanceAppWidget() {
     private val app: Application by injectLazy()
-    private val preferences: PreferencesHelper by injectLazy()
+    private val preferences: SecurityPreferences by injectLazy()
 
     private val coroutineScope = MainScope()
 

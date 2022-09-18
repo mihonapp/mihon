@@ -16,6 +16,7 @@ import eu.kanade.data.listOfStringsAdapter
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.core.preference.AndroidPreferenceStore
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
+import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -142,6 +143,9 @@ class PreferenceModule(val application: Application) : InjektModule {
         }
         addSingletonFactory {
             SourcePreferences(get())
+        }
+        addSingletonFactory {
+            SecurityPreferences(get())
         }
         addSingletonFactory {
             PreferencesHelper(

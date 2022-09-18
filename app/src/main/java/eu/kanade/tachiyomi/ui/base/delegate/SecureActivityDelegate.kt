@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
+import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.security.UnlockActivity
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
@@ -24,7 +24,7 @@ interface SecureActivityDelegate {
 
     companion object {
         fun onApplicationCreated() {
-            val lockDelay = Injekt.get<PreferencesHelper>().lockAppAfter().get()
+            val lockDelay = Injekt.get<SecurityPreferences>().lockAppAfter().get()
             if (lockDelay == 0) {
                 // Restore always active app lock
                 // Delayed lock will be restored later on activity resume
@@ -33,7 +33,7 @@ interface SecureActivityDelegate {
         }
 
         fun onApplicationStopped() {
-            val preferences = Injekt.get<PreferencesHelper>()
+            val preferences = Injekt.get<SecurityPreferences>()
             if (!preferences.useAuthenticator().get()) return
             if (lockState != LockState.ACTIVE) {
                 preferences.lastAppClosed().set(Date().time)
@@ -49,7 +49,7 @@ interface SecureActivityDelegate {
 
         fun unlock() {
             lockState = LockState.INACTIVE
-            Injekt.get<PreferencesHelper>().lastAppClosed().delete()
+            Injekt.get<SecurityPreferences>().lastAppClosed().delete()
         }
     }
 }
@@ -67,6 +67,7 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
     private lateinit var activity: AppCompatActivity
 
     private val preferences: PreferencesHelper by injectLazy()
+    private val securityPreferences: SecurityPreferences by injectLazy()
 
     override fun registerSecureActivity(activity: AppCompatActivity) {
         this.activity = activity
@@ -82,31 +83,31 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
     }
 
     private fun setSecureScreen() {
-        val secureScreenFlow = preferences.secureScreen().changes()
+        val secureScreenFlow = securityPreferences.secureScreen().changes()
         val incognitoModeFlow = preferences.incognitoMode().changes()
         combine(secureScreenFlow, incognitoModeFlow) { secureScreen, incognitoMode ->
-            secureScreen == PreferenceValues.SecureScreenMode.ALWAYS ||
-                secureScreen == PreferenceValues.SecureScreenMode.INCOGNITO && incognitoMode
+            secureScreen == SecurityPreferences.SecureScreenMode.ALWAYS ||
+                secureScreen == SecurityPreferences.SecureScreenMode.INCOGNITO && incognitoMode
         }
             .onEach { activity.window.setSecureScreen(it) }
             .launchIn(activity.lifecycleScope)
     }
 
     private fun setAppLock() {
-        if (!preferences.useAuthenticator().get()) return
+        if (!securityPreferences.useAuthenticator().get()) return
         if (activity.isAuthenticationSupported()) {
             updatePendingLockStatus()
             if (!isAppLocked()) return
             activity.startActivity(Intent(activity, UnlockActivity::class.java))
             activity.overridePendingTransition(0, 0)
         } else {
-            preferences.useAuthenticator().set(false)
+            securityPreferences.useAuthenticator().set(false)
         }
     }
 
     private fun updatePendingLockStatus() {
-        val lastClosedPref = preferences.lastAppClosed()
-        val lockDelay = 60000 * preferences.lockAppAfter().get()
+        val lastClosedPref = securityPreferences.lastAppClosed()
+        val lockDelay = 60000 * securityPreferences.lockAppAfter().get()
         if (lastClosedPref.isSet() && lockDelay > 0) {
             // Restore pending status in case app was killed
             lockState = LockState.PENDING
