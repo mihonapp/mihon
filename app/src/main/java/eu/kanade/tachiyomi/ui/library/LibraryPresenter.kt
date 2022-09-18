@@ -645,7 +645,7 @@ class LibraryPresenter(
             val categoryId = categories.getOrNull(page)?.id ?: -1
             loadedManga[categoryId] ?: emptyList()
         }
-        return remember(unfiltered) {
+        return remember(unfiltered, searchQuery) {
             val query = searchQuery
             if (query.isNullOrBlank().not()) {
                 unfiltered.filter {
