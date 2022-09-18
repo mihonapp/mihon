@@ -92,8 +92,6 @@ open class GlobalSearchController(
             inflater,
             R.menu.global_search,
             R.id.action_search,
-            null,
-            false, // the onMenuItemActionExpand will handle this
         )
 
         optionsMenuSearchItem = menu.findItem(R.id.action_search)

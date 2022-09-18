@@ -21,7 +21,6 @@ import com.bluelinelabs.conductor.ControllerChangeType
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import kotlinx.coroutines.CoroutineScope
@@ -114,20 +113,8 @@ abstract class SettingsController : PreferenceController() {
             }
     }
 
-    open fun getTitle(): String? {
-        return preferenceScreen?.title?.toString()
-    }
-
     private fun setTitle() {
-        var parentController = parentController
-        while (parentController != null) {
-            if (parentController is BaseController<*> && parentController.getTitle() != null) {
-                return
-            }
-            parentController = parentController.parentController
-        }
-
-        (activity as? AppCompatActivity)?.supportActionBar?.title = getTitle()
+        (activity as? AppCompatActivity)?.supportActionBar?.title = preferenceScreen?.title?.toString()
     }
 
     inline fun <T> Preference.visibleIf(preference: eu.kanade.tachiyomi.core.preference.Preference<T>, crossinline block: (T) -> Boolean) {

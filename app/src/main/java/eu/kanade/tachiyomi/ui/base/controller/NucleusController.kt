@@ -9,7 +9,7 @@ import nucleus.presenter.Presenter
 
 @Suppress("LeakingThis")
 abstract class NucleusController<VB : ViewBinding, P : Presenter<*>>(val bundle: Bundle? = null) :
-    RxController<VB>(bundle),
+    BaseController<VB>(bundle),
     PresenterFactory<P> {
 
     private val delegate = NucleusConductorDelegate(this)

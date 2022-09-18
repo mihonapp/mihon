@@ -27,5 +27,4 @@ class SecurityPreferences(
         INCOGNITO(R.string.pref_incognito_mode),
         NEVER(R.string.lock_never),
     }
-
 }

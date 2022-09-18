@@ -6,7 +6,6 @@ import android.text.style.CharacterStyle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.annotation.StringRes
 import androidx.appcompat.widget.SearchView
 import androidx.core.text.getSpans
 import androidx.core.widget.doAfterTextChanged
@@ -43,10 +42,7 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
         inflater: MenuInflater,
         menuId: Int,
         searchItemId: Int,
-        @StringRes queryHint: Int? = null,
-        restoreCurrentQuery: Boolean = true,
     ) {
-        // Inflate menu
         inflater.inflate(menuId, menu)
 
         // Initialize search option.
@@ -93,21 +89,6 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
             searchItem.expandActionView()
             searchView.setQuery(nonSubmittedQuery, false)
             onSearchViewQueryTextChange(nonSubmittedQuery)
-        } else {
-            if (queryHint != null) {
-                searchView.queryHint = applicationContext?.getString(queryHint)
-            }
-
-            if (restoreCurrentQuery) {
-                // Restoring a query the user had submitted
-                if (query.isNotBlank()) {
-                    searchItem.expandActionView()
-                    searchView.setQuery(query, true)
-                    searchView.clearFocus()
-                    onSearchViewQueryTextChange(query)
-                    onSearchViewQueryTextSubmit(query)
-                }
-            }
         }
 
         // Workaround for weird behavior where searchView gets empty text change despite
@@ -191,11 +172,39 @@ abstract class SearchableNucleusController<VB : ViewBinding, P : BasePresenter<*
     }
 
     /**
+     * Workaround for buggy menu item layout after expanding/collapsing an expandable item like a SearchView.
+     * This method should be removed when fixed upstream.
+     * Issue link: https://issuetracker.google.com/issues/37657375
+     */
+    private var expandActionViewFromInteraction = false
+
+    private fun MenuItem.fixExpand(onExpand: ((MenuItem) -> Boolean)? = null, onCollapse: ((MenuItem) -> Boolean)? = null) {
+        setOnActionExpandListener(
+            object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                    return onExpand?.invoke(item) ?: true
+                }
+
+                override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                    activity?.invalidateOptionsMenu()
+
+                    return onCollapse?.invoke(item) ?: true
+                }
+            },
+        )
+
+        if (expandActionViewFromInteraction) {
+            expandActionViewFromInteraction = false
+            expandActionView()
+        }
+    }
+
+    /**
      * During the conversion to SearchableNucleusController (after which I plan to merge its code
      * into BaseController) this addresses an issue where the searchView.onTextFocus event is not
      * triggered
      */
-    override fun invalidateMenuOnExpand(): Boolean {
+    private fun invalidateMenuOnExpand(): Boolean {
         return if (expandActionViewFromInteraction) {
             activity?.invalidateOptionsMenu()
             setCurrentSearchViewState(SearchViewState.FOCUSED) // we are technically focused here

@@ -41,15 +41,6 @@ open class BasePresenter<V> : RxPresenter<V>() {
     fun <T> Preference<T>.asState() = PreferenceMutableState(this, presenterScope)
 
     /**
-     * Subscribes an observable with [deliverFirst] and adds it to the presenter's lifecycle
-     * subscription list.
-     *
-     * @param onNext function to execute when the observable emits an item.
-     * @param onError function to execute when the observable throws an error.
-     */
-    fun <T> Observable<T>.subscribeFirst(onNext: (V, T) -> Unit, onError: ((V, Throwable) -> Unit) = { _, _ -> }) = compose(deliverFirst<T>()).subscribe(split(onNext, onError)).apply { add(this) }
-
-    /**
      * Subscribes an observable with [deliverLatestCache] and adds it to the presenter's lifecycle
      * subscription list.
      *

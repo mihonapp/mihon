@@ -43,9 +43,8 @@ object DiskUtil {
     /**
      * Returns the root folders of all the available external storages.
      */
-    fun getExternalStorages(context: Context): Collection<File> {
-        val directories = mutableSetOf<File>()
-        directories += ContextCompat.getExternalFilesDirs(context, null)
+    fun getExternalStorages(context: Context): List<File> {
+        return ContextCompat.getExternalFilesDirs(context, null)
             .filterNotNull()
             .mapNotNull {
                 val file = File(it.absolutePath.substringBefore("/Android/"))
@@ -56,8 +55,6 @@ object DiskUtil {
                     null
                 }
             }
-
-        return directories
     }
 
     /**
