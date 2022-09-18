@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -19,12 +20,14 @@ import eu.kanade.tachiyomi.R
 fun ClearDatabaseContent(
     state: ClearDatabaseState,
     contentPadding: PaddingValues,
+    lazyListState: LazyListState,
     onClickSelection: (Source) -> Unit,
 ) {
     Crossfade(targetState = state.isEmpty.not()) { _state ->
         when (_state) {
             true -> FastScrollLazyColumn(
                 contentPadding = contentPadding + WindowInsets.navigationBars.asPaddingValues(),
+                state = lazyListState,
             ) {
                 items(state.items) { sourceWithCount ->
                     ClearDatabaseItem(

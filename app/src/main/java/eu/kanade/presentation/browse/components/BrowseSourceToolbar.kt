@@ -85,24 +85,24 @@ fun BrowseSourceRegularToolbar(
             AppBarActions(
                 actions = listOf(
                     AppBar.Action(
-                        title = stringResource(id = R.string.action_search),
+                        title = stringResource(R.string.action_search),
                         icon = Icons.Outlined.Search,
                         onClick = onSearchClick,
                     ),
                     AppBar.Action(
-                        title = stringResource(id = R.string.action_display_mode),
+                        title = stringResource(R.string.action_display_mode),
                         icon = Icons.Filled.ViewModule,
                         onClick = { selectingDisplayMode = true },
                     ),
                     if (isLocalSource) {
                         AppBar.Action(
-                            title = stringResource(id = R.string.label_help),
+                            title = stringResource(R.string.label_help),
                             icon = Icons.Outlined.Help,
                             onClick = onHelpClick,
                         )
                     } else {
                         AppBar.Action(
-                            title = stringResource(id = R.string.action_web_view),
+                            title = stringResource(R.string.action_web_view),
                             icon = Icons.Outlined.Public,
                             onClick = onWebViewClick,
                         )
@@ -114,7 +114,7 @@ fun BrowseSourceRegularToolbar(
                 onDismissRequest = { selectingDisplayMode = false },
             ) {
                 DropdownMenuItem(
-                    text = { Text(text = stringResource(id = R.string.action_display_comfortable_grid)) },
+                    text = { Text(text = stringResource(R.string.action_display_comfortable_grid)) },
                     onClick = { onDisplayModeChange(LibraryDisplayMode.ComfortableGrid) },
                     trailingIcon = {
                         if (displayMode == LibraryDisplayMode.ComfortableGrid) {
@@ -126,7 +126,7 @@ fun BrowseSourceRegularToolbar(
                     },
                 )
                 DropdownMenuItem(
-                    text = { Text(text = stringResource(id = R.string.action_display_grid)) },
+                    text = { Text(text = stringResource(R.string.action_display_grid)) },
                     onClick = { onDisplayModeChange(LibraryDisplayMode.CompactGrid) },
                     trailingIcon = {
                         if (displayMode == LibraryDisplayMode.CompactGrid) {
@@ -138,7 +138,7 @@ fun BrowseSourceRegularToolbar(
                     },
                 )
                 DropdownMenuItem(
-                    text = { Text(text = stringResource(id = R.string.action_display_list)) },
+                    text = { Text(text = stringResource(R.string.action_display_list)) },
                     onClick = { onDisplayModeChange(LibraryDisplayMode.List) },
                     trailingIcon = {
                         if (displayMode == LibraryDisplayMode.List) {

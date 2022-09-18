@@ -174,20 +174,20 @@ class DownloadController :
                                     onDismissRequest = { onExpanded(false) },
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text(text = stringResource(id = R.string.action_reorganize_by)) },
+                                        text = { Text(text = stringResource(R.string.action_reorganize_by)) },
                                         children = {
                                             DropdownMenuItem(
-                                                text = { Text(text = stringResource(id = R.string.action_order_by_upload_date)) },
+                                                text = { Text(text = stringResource(R.string.action_order_by_upload_date)) },
                                                 children = {
                                                     DropdownMenuItem(
-                                                        text = { Text(text = stringResource(id = R.string.action_newest)) },
+                                                        text = { Text(text = stringResource(R.string.action_newest)) },
                                                         onClick = {
                                                             reorderQueue({ it.download.chapter.date_upload }, true)
                                                             onExpanded(false)
                                                         },
                                                     )
                                                     DropdownMenuItem(
-                                                        text = { Text(text = stringResource(id = R.string.action_oldest)) },
+                                                        text = { Text(text = stringResource(R.string.action_oldest)) },
                                                         onClick = {
                                                             reorderQueue({ it.download.chapter.date_upload }, false)
                                                             onExpanded(false)
@@ -196,17 +196,17 @@ class DownloadController :
                                                 },
                                             )
                                             DropdownMenuItem(
-                                                text = { Text(text = stringResource(id = R.string.action_order_by_chapter_number)) },
+                                                text = { Text(text = stringResource(R.string.action_order_by_chapter_number)) },
                                                 children = {
                                                     DropdownMenuItem(
-                                                        text = { Text(text = stringResource(id = R.string.action_asc)) },
+                                                        text = { Text(text = stringResource(R.string.action_asc)) },
                                                         onClick = {
                                                             reorderQueue({ it.download.chapter.chapter_number }, false)
                                                             onExpanded(false)
                                                         },
                                                     )
                                                     DropdownMenuItem(
-                                                        text = { Text(text = stringResource(id = R.string.action_desc)) },
+                                                        text = { Text(text = stringResource(R.string.action_desc)) },
                                                         onClick = {
                                                             reorderQueue({ it.download.chapter.chapter_number }, true)
                                                             onExpanded(false)
@@ -217,7 +217,7 @@ class DownloadController :
                                         },
                                     )
                                     DropdownMenuItem(
-                                        text = { Text(text = stringResource(id = R.string.action_cancel_all)) },
+                                        text = { Text(text = stringResource(R.string.action_cancel_all)) },
                                         onClick = {
                                             presenter.clearQueue(context)
                                             onExpanded(false)

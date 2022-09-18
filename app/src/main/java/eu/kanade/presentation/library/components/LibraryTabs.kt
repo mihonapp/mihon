@@ -13,8 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.PagerState
 import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.category.visualName
-import eu.kanade.presentation.components.DownloadedOnlyModeBanner
-import eu.kanade.presentation.components.IncognitoModeBanner
+import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.TabIndicator
 import eu.kanade.presentation.components.TabText
 import kotlinx.coroutines.launch
@@ -51,11 +50,7 @@ fun LibraryTabs(
                 )
             }
         }
-        if (isDownloadOnly) {
-            DownloadedOnlyModeBanner()
-        }
-        if (isIncognitoMode) {
-            IncognitoModeBanner()
-        }
+
+        AppStateBanners(isDownloadOnly, isIncognitoMode)
     }
 }

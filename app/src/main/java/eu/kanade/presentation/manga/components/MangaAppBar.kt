@@ -28,9 +28,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.components.DownloadedOnlyModeBanner
+import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DropdownMenu
-import eu.kanade.presentation.components.IncognitoModeBanner
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.R
 
@@ -198,11 +197,6 @@ fun MangaAppBar(
             ),
         )
 
-        if (downloadedOnlyMode) {
-            DownloadedOnlyModeBanner()
-        }
-        if (incognitoMode) {
-            IncognitoModeBanner()
-        }
+        AppStateBanners(downloadedOnlyMode, incognitoMode)
     }
 }

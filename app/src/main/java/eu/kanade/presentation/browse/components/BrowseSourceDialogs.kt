@@ -18,7 +18,7 @@ fun RemoveMangaDialog(
         onDismissRequest = onDismissRequest,
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(id = android.R.string.cancel))
+                Text(text = stringResource(android.R.string.cancel))
             }
         },
         confirmButton = {
@@ -28,11 +28,11 @@ fun RemoveMangaDialog(
                     onConfirm()
                 },
             ) {
-                Text(text = stringResource(id = R.string.action_remove))
+                Text(text = stringResource(R.string.action_remove))
             }
         },
         title = {
-            Text(text = stringResource(id = R.string.are_you_sure))
+            Text(text = stringResource(R.string.are_you_sure))
         },
         text = {
             Text(text = stringResource(R.string.remove_manga))

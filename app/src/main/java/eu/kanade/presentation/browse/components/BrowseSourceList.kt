@@ -91,7 +91,7 @@ fun BrowseSourceListItem(
         onLongClick = onLongClick,
         badges = {
             if (manga.favorite) {
-                Badge(text = stringResource(id = R.string.in_library))
+                Badge(text = stringResource(R.string.in_library))
             }
         },
         content = {

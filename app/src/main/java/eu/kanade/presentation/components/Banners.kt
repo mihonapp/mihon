@@ -1,6 +1,7 @@
 package eu.kanade.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +14,20 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
 
 @Composable
-fun DownloadedOnlyModeBanner() {
+fun ColumnScope.AppStateBanners(
+    downloadedOnlyMode: Boolean,
+    incognitoMode: Boolean,
+) {
+    if (downloadedOnlyMode) {
+        DownloadedOnlyModeBanner()
+    }
+    if (incognitoMode) {
+        IncognitoModeBanner()
+    }
+}
+
+@Composable
+private fun DownloadedOnlyModeBanner() {
     Text(
         text = stringResource(R.string.label_downloaded_only),
         modifier = Modifier
@@ -27,7 +41,7 @@ fun DownloadedOnlyModeBanner() {
 }
 
 @Composable
-fun IncognitoModeBanner() {
+private fun IncognitoModeBanner() {
     Text(
         text = stringResource(R.string.pref_incognito_mode),
         modifier = Modifier

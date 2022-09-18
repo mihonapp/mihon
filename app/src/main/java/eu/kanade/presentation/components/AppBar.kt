@@ -144,12 +144,7 @@ fun AppBar(
             scrollBehavior = scrollBehavior,
         )
 
-        if (downloadedOnlyMode) {
-            DownloadedOnlyModeBanner()
-        }
-        if (incognitoMode) {
-            IncognitoModeBanner()
-        }
+        AppStateBanners(downloadedOnlyMode, incognitoMode)
     }
 }
 

@@ -40,10 +40,9 @@ import eu.kanade.presentation.browse.components.BrowseSourceComfortableGrid
 import eu.kanade.presentation.browse.components.BrowseSourceCompactGrid
 import eu.kanade.presentation.browse.components.BrowseSourceList
 import eu.kanade.presentation.browse.components.BrowseSourceToolbar
-import eu.kanade.presentation.components.DownloadedOnlyModeBanner
+import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.ExtendedFloatingActionButton
-import eu.kanade.presentation.components.IncognitoModeBanner
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.tachiyomi.R
@@ -90,12 +89,8 @@ fun BrowseSourceScreen(
                     onSearch = { presenter.search() },
                     scrollBehavior = scrollBehavior,
                 )
-                if (downloadedOnlyMode) {
-                    DownloadedOnlyModeBanner()
-                }
-                if (incognitoMode) {
-                    IncognitoModeBanner()
-                }
+
+                AppStateBanners(downloadedOnlyMode, incognitoMode)
             }
         },
         floatingActionButton = {
@@ -140,7 +135,7 @@ fun BrowseSourceScreen(
                             )
                         },
                         label = {
-                            Text(text = stringResource(id = R.string.popular))
+                            Text(text = stringResource(R.string.popular))
                         },
                     )
                     if (presenter.source?.supportsLatest == true) {
@@ -159,7 +154,7 @@ fun BrowseSourceScreen(
                                 )
                             },
                             label = {
-                                Text(text = stringResource(id = R.string.latest))
+                                Text(text = stringResource(R.string.latest))
                             },
                         )
                     }
@@ -176,7 +171,7 @@ fun BrowseSourceScreen(
                                 )
                             },
                             label = {
-                                Text(text = stringResource(id = R.string.action_filter))
+                                Text(text = stringResource(R.string.action_filter))
                             },
                         )
                     }
@@ -195,7 +190,7 @@ fun BrowseSourceFloatingActionButton(
     AnimatedVisibility(visible = isVisible) {
         ExtendedFloatingActionButton(
             modifier = modifier,
-            text = { Text(text = stringResource(id = R.string.action_filter)) },
+            text = { Text(text = stringResource(R.string.action_filter)) },
             icon = { Icon(Icons.Outlined.FilterList, contentDescription = "") },
             onClick = onFabClick,
         )

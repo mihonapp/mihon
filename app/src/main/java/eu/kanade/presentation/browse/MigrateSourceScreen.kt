@@ -1,5 +1,6 @@
 package eu.kanade.presentation.browse
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -84,7 +85,7 @@ fun MigrateSourceList(
         stickyHeader(key = "header") {
             Row(
                 modifier = Modifier
-                    .animateItemPlacement()
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(start = horizontalPadding),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -109,14 +110,9 @@ fun MigrateSourceList(
             }
         }
 
-        item(key = "title") {
-        }
-
         items(
             items = list,
-            key = { (source, _) ->
-                source.id
-            },
+            key = { (source, _) -> source.id },
         ) { (source, count) ->
             MigrateSourceItem(
                 modifier = Modifier.animateItemPlacement(),
