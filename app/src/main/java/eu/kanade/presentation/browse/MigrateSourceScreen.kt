@@ -70,7 +70,7 @@ fun MigrateSourceScreen(
 }
 
 @Composable
-fun MigrateSourceList(
+private fun MigrateSourceList(
     list: List<Pair<Source, Long>>,
     onClickItem: (Source) -> Unit,
     onLongClickItem: (Source) -> Unit,
@@ -126,7 +126,7 @@ fun MigrateSourceList(
 }
 
 @Composable
-fun MigrateSourceItem(
+private fun MigrateSourceItem(
     modifier: Modifier = Modifier,
     source: Source,
     count: Long,

@@ -62,7 +62,7 @@ fun MigrateMangaScreen(
 }
 
 @Composable
-fun MigrateMangaContent(
+private fun MigrateMangaContent(
     contentPadding: PaddingValues,
     state: MigrateMangaState,
     onClickItem: (Manga) -> Unit,
@@ -82,7 +82,7 @@ fun MigrateMangaContent(
 }
 
 @Composable
-fun MigrateMangaItem(
+private fun MigrateMangaItem(
     modifier: Modifier = Modifier,
     manga: Manga,
     onClickItem: (Manga) -> Unit,

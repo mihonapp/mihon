@@ -66,7 +66,7 @@ fun SourcesFilterScreen(
 }
 
 @Composable
-fun SourcesFilterContent(
+private fun SourcesFilterContent(
     contentPadding: PaddingValues,
     state: SourcesFilterState,
     onClickLang: (String) -> Unit,
@@ -111,7 +111,7 @@ fun SourcesFilterContent(
 }
 
 @Composable
-fun SourcesFilterHeader(
+private fun SourcesFilterHeader(
     modifier: Modifier,
     language: String,
     enabled: Boolean,
@@ -128,7 +128,7 @@ fun SourcesFilterHeader(
 }
 
 @Composable
-fun SourcesFilterItem(
+private fun SourcesFilterItem(
     modifier: Modifier,
     source: Source,
     enabled: Boolean,

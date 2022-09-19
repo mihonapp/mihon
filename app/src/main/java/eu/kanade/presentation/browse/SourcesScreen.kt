@@ -75,7 +75,7 @@ fun SourcesScreen(
 }
 
 @Composable
-fun SourceList(
+private fun SourceList(
     state: SourcesState,
     onClickItem: (Source, String) -> Unit,
     onClickDisable: (Source) -> Unit,
@@ -135,7 +135,7 @@ fun SourceList(
 }
 
 @Composable
-fun SourceHeader(
+private fun SourceHeader(
     modifier: Modifier = Modifier,
     language: String,
 ) {
@@ -149,7 +149,7 @@ fun SourceHeader(
 }
 
 @Composable
-fun SourceItem(
+private fun SourceItem(
     modifier: Modifier = Modifier,
     source: Source,
     onClickItem: (Source, String) -> Unit,
@@ -181,7 +181,7 @@ fun SourceItem(
 }
 
 @Composable
-fun SourcePinButton(
+private fun SourcePinButton(
     isPinned: Boolean,
     onClick: () -> Unit,
 ) {
@@ -197,7 +197,7 @@ fun SourcePinButton(
 }
 
 @Composable
-fun SourceOptionsDialog(
+private fun SourceOptionsDialog(
     source: Source,
     onClickPin: () -> Unit,
     onClickDisable: () -> Unit,

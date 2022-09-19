@@ -30,6 +30,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LazyColumn
+import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.MangaBottomActionMenu
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SwipeRefreshIndicator
@@ -55,10 +56,7 @@ fun UpdateScreen(
     presenter: UpdatesPresenter,
     onClickCover: (UpdatesItem) -> Unit,
     onBackClicked: () -> Unit,
-    onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
 ) {
-    val updatesListState = rememberLazyListState()
-
     val internalOnBackPressed = {
         if (presenter.selectionMode) {
             presenter.toggleAllSelection(false)
@@ -69,7 +67,6 @@ fun UpdateScreen(
     BackHandler(onBack = internalOnBackPressed)
 
     val context = LocalContext.current
-
     val onUpdateLibrary = {
         val started = LibraryUpdateService.start(context)
         context.toast(if (started) R.string.updating_library else R.string.update_already_running)
@@ -92,7 +89,7 @@ fun UpdateScreen(
         bottomBar = {
             UpdatesBottomBar(
                 selected = presenter.selected,
-                onDownloadChapter = onDownloadChapter,
+                onDownloadChapter = presenter::downloadChapters,
                 onMultiBookmarkClicked = presenter::bookmarkUpdates,
                 onMultiMarkAsReadClicked = presenter::markUpdatesRead,
                 onMultiDeleteClicked = {
@@ -102,69 +99,93 @@ fun UpdateScreen(
             )
         },
     ) { contentPadding ->
-        // During selection mode bottom nav is not visible
-        val contentPaddingWithNavBar = contentPadding +
-            if (presenter.selectionMode) {
-                PaddingValues()
-            } else {
-                bottomNavPaddingValues
-            }
-
-        val scope = rememberCoroutineScope()
-        var isRefreshing by remember { mutableStateOf(false) }
-
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-            onRefresh = {
-                val started = onUpdateLibrary()
-                if (!started) return@SwipeRefresh
-                scope.launch {
-                    // Fake refresh status but hide it after a second as it's a long running task
-                    isRefreshing = true
-                    delay(1000)
-                    isRefreshing = false
-                }
-            },
-            swipeEnabled = presenter.selectionMode.not(),
-            indicatorPadding = contentPaddingWithNavBar,
-            indicator = { s, trigger ->
-                SwipeRefreshIndicator(
-                    state = s,
-                    refreshTriggerDistance = trigger,
+        when {
+            presenter.isLoading -> LoadingScreen()
+            presenter.uiModels.isEmpty() -> EmptyScreen(textResource = R.string.information_no_recent)
+            else -> {
+                UpdateScreenContent(
+                    presenter = presenter,
+                    contentPadding = contentPadding,
+                    onUpdateLibrary = onUpdateLibrary,
+                    onClickCover = onClickCover,
                 )
-            },
-        ) {
-            if (presenter.uiModels.isEmpty()) {
-                EmptyScreen(textResource = R.string.information_no_recent)
-            } else {
-                VerticalFastScroller(
-                    listState = updatesListState,
-                    topContentPadding = contentPaddingWithNavBar.calculateTopPadding(),
-                    endContentPadding = contentPaddingWithNavBar.calculateEndPadding(LocalLayoutDirection.current),
-                ) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxHeight(),
-                        state = updatesListState,
-                        contentPadding = contentPaddingWithNavBar,
-                    ) {
-                        if (presenter.lastUpdated > 0L) {
-                            updatesLastUpdatedItem(presenter.lastUpdated)
-                        }
+            }
+        }
+    }
+}
 
-                        updatesUiItems(
-                            uiModels = presenter.uiModels,
-                            selectionMode = presenter.selectionMode,
-                            onUpdateSelected = presenter::toggleSelection,
-                            onClickCover = onClickCover,
-                            onClickUpdate = {
-                                val intent = ReaderActivity.newIntent(context, it.update.mangaId, it.update.chapterId)
-                                context.startActivity(intent)
-                            },
-                            onDownloadChapter = onDownloadChapter,
-                            relativeTime = presenter.relativeTime,
-                            dateFormat = presenter.dateFormat,
-                        )
+@Composable
+private fun UpdateScreenContent(
+    presenter: UpdatesPresenter,
+    contentPadding: PaddingValues,
+    onUpdateLibrary: () -> Boolean,
+    onClickCover: (UpdatesItem) -> Unit,
+) {
+    val context = LocalContext.current
+    val updatesListState = rememberLazyListState()
+
+    // During selection mode bottom nav is not visible
+    val contentPaddingWithNavBar = contentPadding +
+        if (presenter.selectionMode) {
+            PaddingValues()
+        } else {
+            bottomNavPaddingValues
+        }
+
+    val scope = rememberCoroutineScope()
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+        onRefresh = {
+            val started = onUpdateLibrary()
+            if (!started) return@SwipeRefresh
+            scope.launch {
+                // Fake refresh status but hide it after a second as it's a long running task
+                isRefreshing = true
+                delay(1000)
+                isRefreshing = false
+            }
+        },
+        swipeEnabled = presenter.selectionMode.not(),
+        indicatorPadding = contentPaddingWithNavBar,
+        indicator = { s, trigger ->
+            SwipeRefreshIndicator(
+                state = s,
+                refreshTriggerDistance = trigger,
+            )
+        },
+    ) {
+        if (presenter.uiModels.isEmpty()) {
+            EmptyScreen(textResource = R.string.information_no_recent)
+        } else {
+            VerticalFastScroller(
+                listState = updatesListState,
+                topContentPadding = contentPaddingWithNavBar.calculateTopPadding(),
+                endContentPadding = contentPaddingWithNavBar.calculateEndPadding(LocalLayoutDirection.current),
+            ) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxHeight(),
+                    state = updatesListState,
+                    contentPadding = contentPaddingWithNavBar,
+                ) {
+                    if (presenter.lastUpdated > 0L) {
+                        updatesLastUpdatedItem(presenter.lastUpdated)
                     }
+
+                    updatesUiItems(
+                        uiModels = presenter.uiModels,
+                        selectionMode = presenter.selectionMode,
+                        onUpdateSelected = presenter::toggleSelection,
+                        onClickCover = onClickCover,
+                        onClickUpdate = {
+                            val intent = ReaderActivity.newIntent(context, it.update.mangaId, it.update.chapterId)
+                            context.startActivity(intent)
+                        },
+                        onDownloadChapter = presenter::downloadChapters,
+                        relativeTime = presenter.relativeTime,
+                        dateFormat = presenter.dateFormat,
+                    )
                 }
             }
         }
@@ -193,7 +214,7 @@ fun UpdateScreen(
 }
 
 @Composable
-fun UpdatesAppBar(
+private fun UpdatesAppBar(
     modifier: Modifier = Modifier,
     incognitoMode: Boolean,
     downloadedOnlyMode: Boolean,
@@ -239,7 +260,7 @@ fun UpdatesAppBar(
 }
 
 @Composable
-fun UpdatesBottomBar(
+private fun UpdatesBottomBar(
     selected: List<UpdatesUiModel.Item>,
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
     onMultiBookmarkClicked: (List<UpdatesItem>, bookmark: Boolean) -> Unit,

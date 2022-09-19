@@ -45,7 +45,7 @@ class WebViewActivity : BaseActivity() {
 
         setComposeContent {
             WebViewScreen(
-                onUp = { finish() },
+                onNavigateUp = { finish() },
                 initialTitle = intent.extras?.getString(TITLE_KEY),
                 url = url,
                 headers = headers,

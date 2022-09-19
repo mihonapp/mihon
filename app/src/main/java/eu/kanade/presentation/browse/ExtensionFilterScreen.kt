@@ -61,7 +61,7 @@ fun ExtensionFilterScreen(
 }
 
 @Composable
-fun SourceFilterContent(
+private fun SourceFilterContent(
     contentPadding: PaddingValues,
     state: ExtensionFilterState,
     onClickLang: (String) -> Unit,
@@ -83,7 +83,7 @@ fun SourceFilterContent(
 }
 
 @Composable
-fun ExtensionFilterItem(
+private fun ExtensionFilterItem(
     modifier: Modifier,
     lang: String,
     enabled: Boolean,

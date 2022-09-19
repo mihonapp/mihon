@@ -13,10 +13,12 @@ import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.updates.interactor.GetUpdates
 import eu.kanade.domain.updates.model.UpdatesWithRelations
+import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.updates.UpdatesState
 import eu.kanade.presentation.updates.UpdatesStateImpl
 import eu.kanade.presentation.updates.UpdatesUiModel
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
@@ -33,6 +35,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -178,11 +181,37 @@ class UpdatesPresenter(
         }
     }
 
-    fun startDownloadingNow(chapterId: Long) {
+    fun downloadChapters(items: List<UpdatesItem>, action: ChapterDownloadAction) {
+        if (items.isEmpty()) return
+        presenterScope.launch {
+            when (action) {
+                ChapterDownloadAction.START -> {
+                    downloadChapters(items)
+                    if (items.any { it.downloadStateProvider() == Download.State.ERROR }) {
+                        DownloadService.start(view!!.activity!!)
+                    }
+                }
+                ChapterDownloadAction.START_NOW -> {
+                    val chapterId = items.singleOrNull()?.update?.chapterId ?: return@launch
+                    startDownloadingNow(chapterId)
+                }
+                ChapterDownloadAction.CANCEL -> {
+                    val chapterId = items.singleOrNull()?.update?.chapterId ?: return@launch
+                    cancelDownload(chapterId)
+                }
+                ChapterDownloadAction.DELETE -> {
+                    deleteChapters(items)
+                }
+            }
+            toggleAllSelection(false)
+        }
+    }
+
+    private fun startDownloadingNow(chapterId: Long) {
         downloadManager.startDownloadNow(chapterId)
     }
 
-    fun cancelDownload(chapterId: Long) {
+    private fun cancelDownload(chapterId: Long) {
         val activeDownload = downloadManager.queue.find { chapterId == it.chapter.id } ?: return
         downloadManager.deletePendingDownload(activeDownload)
         updateDownloadState(activeDownload.apply { status = Download.State.NOT_DOWNLOADED })

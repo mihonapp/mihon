@@ -30,7 +30,7 @@ import eu.kanade.tachiyomi.util.system.setDefaultSettings
 
 @Composable
 fun WebViewScreen(
-    onUp: () -> Unit,
+    onNavigateUp: () -> Unit,
     initialTitle: String?,
     url: String,
     headers: Map<String, String> = emptyMap(),
@@ -47,7 +47,7 @@ fun WebViewScreen(
                 AppBar(
                     title = state.pageTitle ?: initialTitle,
                     subtitle = state.content.getCurrentUrl(),
-                    navigateUp = onUp,
+                    navigateUp = onNavigateUp,
                     navigationIcon = Icons.Default.Close,
                     actions = {
                         AppBarActions(

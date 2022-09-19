@@ -95,14 +95,13 @@ class LibraryController(
         }
 
         LaunchedEffect(presenter.selectionMode) {
-            val activity = (activity as? MainActivity) ?: return@LaunchedEffect
             // Could perhaps be removed when navigation is in a Compose world
             if (router.backstackSize == 1) {
-                activity.showBottomNav(presenter.selectionMode.not())
+                (activity as? MainActivity)?.showBottomNav(presenter.selectionMode.not())
             }
         }
         LaunchedEffect(presenter.isLoading) {
-            if (presenter.isLoading.not()) {
+            if (!presenter.isLoading) {
                 (activity as? MainActivity)?.ready = true
             }
         }
