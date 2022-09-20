@@ -17,7 +17,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.preference.bindTo
-import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.infoPreference
 import eu.kanade.tachiyomi.util.preference.intListPreference
@@ -38,7 +37,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.io.File
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsDownloadController : SettingsController() {
 
@@ -66,9 +64,8 @@ class SettingsDownloadController : SettingsController() {
                 .launchIn(viewScope)
         }
         switchPreference {
-            key = Keys.downloadOnlyOverWifi
+            bindTo(preferences.downloadOnlyOverWifi())
             titleRes = R.string.connected_to_wifi
-            defaultValue = true
         }
         switchPreference {
             bindTo(preferences.saveChaptersAsCBZ())
@@ -84,12 +81,11 @@ class SettingsDownloadController : SettingsController() {
             titleRes = R.string.pref_category_delete_chapters
 
             switchPreference {
-                key = Keys.removeAfterMarkedAsRead
+                bindTo(preferences.removeAfterMarkedAsRead())
                 titleRes = R.string.pref_remove_after_marked_as_read
-                defaultValue = false
             }
             intListPreference {
-                key = Keys.removeAfterReadSlots
+                bindTo(preferences.removeAfterReadSlots())
                 titleRes = R.string.pref_remove_after_read
                 entriesRes = arrayOf(
                     R.string.disabled,
@@ -100,13 +96,11 @@ class SettingsDownloadController : SettingsController() {
                     R.string.fifth_to_last,
                 )
                 entryValues = arrayOf("-1", "0", "1", "2", "3", "4")
-                defaultValue = "-1"
                 summary = "%s"
             }
             switchPreference {
-                key = Keys.removeBookmarkedChapters
+                bindTo(preferences.removeBookmarkedChapters())
                 titleRes = R.string.pref_remove_bookmarked_chapters
-                defaultValue = false
             }
             multiSelectListPreference {
                 bindTo(preferences.removeExcludeCategories())

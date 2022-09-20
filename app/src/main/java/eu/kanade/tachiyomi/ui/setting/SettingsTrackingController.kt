@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.setting.track.TrackLoginDialog
 import eu.kanade.tachiyomi.ui.setting.track.TrackLogoutDialog
 import eu.kanade.tachiyomi.util.preference.add
-import eu.kanade.tachiyomi.util.preference.defaultValue
+import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.iconRes
 import eu.kanade.tachiyomi.util.preference.infoPreference
 import eu.kanade.tachiyomi.util.preference.onClick
@@ -44,9 +44,8 @@ class SettingsTrackingController :
         titleRes = R.string.pref_category_tracking
 
         switchPreference {
-            key = Keys.autoUpdateTrack
+            bindTo(preferences.autoUpdateTrack())
             titleRes = R.string.pref_auto_update_manga_sync
-            defaultValue = true
         }
 
         preferenceCategory {

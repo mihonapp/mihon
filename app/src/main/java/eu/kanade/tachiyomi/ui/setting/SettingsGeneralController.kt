@@ -9,7 +9,6 @@ import androidx.preference.PreferenceScreen
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.preference.bindTo
-import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.listPreference
 import eu.kanade.tachiyomi.util.preference.onChange
 import eu.kanade.tachiyomi.util.preference.onClick
@@ -19,7 +18,6 @@ import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import org.xmlpull.v1.XmlPullParser
 import uy.kohesive.injekt.injectLazy
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsGeneralController : SettingsController() {
 
@@ -33,9 +31,8 @@ class SettingsGeneralController : SettingsController() {
             titleRes = R.string.pref_library_update_show_tab_badge
         }
         switchPreference {
-            key = Keys.confirmExit
+            bindTo(preferences.confirmExit())
             titleRes = R.string.pref_confirm_exit
-            defaultValue = false
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             preference {
