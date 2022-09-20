@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer
 
 import eu.kanade.tachiyomi.core.preference.Preference
 import eu.kanade.tachiyomi.data.preference.PreferenceValues.TappingInvertMode
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.onEach
 /**
  * Common configuration for all viewers.
  */
-abstract class ViewerConfig(preferences: PreferencesHelper, private val scope: CoroutineScope) {
+abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val scope: CoroutineScope) {
 
     var imagePropertyChangedListener: (() -> Unit)? = null
 
@@ -42,33 +42,33 @@ abstract class ViewerConfig(preferences: PreferencesHelper, private val scope: C
         protected set
 
     init {
-        preferences.readWithLongTap()
+        readerPreferences.readWithLongTap()
             .register({ longTapEnabled = it })
 
-        preferences.pageTransitions()
+        readerPreferences.pageTransitions()
             .register({ usePageTransitions = it })
 
-        preferences.doubleTapAnimSpeed()
+        readerPreferences.doubleTapAnimSpeed()
             .register({ doubleTapAnimDuration = it })
 
-        preferences.readWithVolumeKeys()
+        readerPreferences.readWithVolumeKeys()
             .register({ volumeKeysEnabled = it })
 
-        preferences.readWithVolumeKeysInverted()
+        readerPreferences.readWithVolumeKeysInverted()
             .register({ volumeKeysInverted = it })
 
-        preferences.trueColor()
+        readerPreferences.trueColor()
             .register({ trueColor = it }, { imagePropertyChangedListener?.invoke() })
 
-        preferences.alwaysShowChapterTransition()
+        readerPreferences.alwaysShowChapterTransition()
             .register({ alwaysShowChapterTransition = it })
 
-        forceNavigationOverlay = preferences.showNavigationOverlayNewUser().get()
+        forceNavigationOverlay = readerPreferences.showNavigationOverlayNewUser().get()
         if (forceNavigationOverlay) {
-            preferences.showNavigationOverlayNewUser().set(false)
+            readerPreferences.showNavigationOverlayNewUser().set(false)
         }
 
-        preferences.showNavigationOverlayOnStart()
+        readerPreferences.showNavigationOverlayOnStart()
             .register({ navigationOverlayOnStart = it })
     }
 

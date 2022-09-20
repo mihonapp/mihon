@@ -7,7 +7,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.ReaderReadingModeSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
@@ -23,7 +22,7 @@ import uy.kohesive.injekt.injectLazy
 class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     NestedScrollView(context, attrs) {
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val readerPreferences: ReaderPreferences by injectLazy()
 
     private val binding = ReaderReadingModeSettingsBinding.inflate(LayoutInflater.from(context), this, false)
 
@@ -69,29 +68,29 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         binding.webtoonPrefsGroup.root.isVisible = false
         binding.pagerPrefsGroup.root.isVisible = true
 
-        binding.pagerPrefsGroup.tappingInverted.bindToPreference(preferences.pagerNavInverted())
+        binding.pagerPrefsGroup.tappingInverted.bindToPreference(readerPreferences.pagerNavInverted())
 
-        binding.pagerPrefsGroup.pagerNav.bindToPreference(preferences.navigationModePager())
-        preferences.navigationModePager()
+        binding.pagerPrefsGroup.pagerNav.bindToPreference(readerPreferences.navigationModePager())
+        readerPreferences.navigationModePager()
             .asHotFlow { binding.pagerPrefsGroup.tappingInverted.isVisible = it != 5 }
             .launchIn((context as ReaderActivity).lifecycleScope)
         // Makes so that landscape zoom gets hidden away when image scale type is not fit screen
-        binding.pagerPrefsGroup.scaleType.bindToPreference(preferences.imageScaleType(), 1)
-        preferences.imageScaleType()
+        binding.pagerPrefsGroup.scaleType.bindToPreference(readerPreferences.imageScaleType(), 1)
+        readerPreferences.imageScaleType()
             .asHotFlow { binding.pagerPrefsGroup.landscapeZoom.isVisible = it == 1 }
             .launchIn((context as ReaderActivity).lifecycleScope)
-        binding.pagerPrefsGroup.landscapeZoom.bindToPreference(preferences.landscapeZoom())
+        binding.pagerPrefsGroup.landscapeZoom.bindToPreference(readerPreferences.landscapeZoom())
 
-        binding.pagerPrefsGroup.zoomStart.bindToPreference(preferences.zoomStart(), 1)
-        binding.pagerPrefsGroup.cropBorders.bindToPreference(preferences.cropBorders())
-        binding.pagerPrefsGroup.navigatePan.bindToPreference(preferences.navigateToPan())
+        binding.pagerPrefsGroup.zoomStart.bindToPreference(readerPreferences.zoomStart(), 1)
+        binding.pagerPrefsGroup.cropBorders.bindToPreference(readerPreferences.cropBorders())
+        binding.pagerPrefsGroup.navigatePan.bindToPreference(readerPreferences.navigateToPan())
 
-        binding.pagerPrefsGroup.dualPageSplit.bindToPreference(preferences.dualPageSplitPaged())
+        binding.pagerPrefsGroup.dualPageSplit.bindToPreference(readerPreferences.dualPageSplitPaged())
         // Makes it so that dual page invert gets hidden away when dual page split is turned off
-        preferences.dualPageSplitPaged()
+        readerPreferences.dualPageSplitPaged()
             .asHotFlow { binding.pagerPrefsGroup.dualPageInvert.isVisible = it }
             .launchIn((context as ReaderActivity).lifecycleScope)
-        binding.pagerPrefsGroup.dualPageInvert.bindToPreference(preferences.dualPageInvertPaged())
+        binding.pagerPrefsGroup.dualPageInvert.bindToPreference(readerPreferences.dualPageInvertPaged())
     }
 
     /**
@@ -101,21 +100,21 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         binding.pagerPrefsGroup.root.isVisible = false
         binding.webtoonPrefsGroup.root.isVisible = true
 
-        binding.webtoonPrefsGroup.tappingInverted.bindToPreference(preferences.webtoonNavInverted())
+        binding.webtoonPrefsGroup.tappingInverted.bindToPreference(readerPreferences.webtoonNavInverted())
 
-        binding.webtoonPrefsGroup.webtoonNav.bindToPreference(preferences.navigationModeWebtoon())
-        preferences.navigationModeWebtoon()
+        binding.webtoonPrefsGroup.webtoonNav.bindToPreference(readerPreferences.navigationModeWebtoon())
+        readerPreferences.navigationModeWebtoon()
             .asHotFlow { binding.webtoonPrefsGroup.tappingInverted.isVisible = it != 5 }
             .launchIn((context as ReaderActivity).lifecycleScope)
-        binding.webtoonPrefsGroup.cropBordersWebtoon.bindToPreference(preferences.cropBordersWebtoon())
-        binding.webtoonPrefsGroup.webtoonSidePadding.bindToIntPreference(preferences.webtoonSidePadding(), R.array.webtoon_side_padding_values)
+        binding.webtoonPrefsGroup.cropBordersWebtoon.bindToPreference(readerPreferences.cropBordersWebtoon())
+        binding.webtoonPrefsGroup.webtoonSidePadding.bindToIntPreference(readerPreferences.webtoonSidePadding(), R.array.webtoon_side_padding_values)
 
-        binding.webtoonPrefsGroup.dualPageSplit.bindToPreference(preferences.dualPageSplitWebtoon())
+        binding.webtoonPrefsGroup.dualPageSplit.bindToPreference(readerPreferences.dualPageSplitWebtoon())
         // Makes it so that dual page invert gets hidden away when dual page split is turned off
-        preferences.dualPageSplitWebtoon()
+        readerPreferences.dualPageSplitWebtoon()
             .asHotFlow { binding.webtoonPrefsGroup.dualPageInvert.isVisible = it }
             .launchIn((context as ReaderActivity).lifecycleScope)
-        binding.webtoonPrefsGroup.dualPageInvert.bindToPreference(preferences.dualPageInvertWebtoon())
-        binding.webtoonPrefsGroup.longStripSplit.bindToPreference(preferences.longStripSplitWebtoon())
+        binding.webtoonPrefsGroup.dualPageInvert.bindToPreference(readerPreferences.dualPageInvertWebtoon())
+        binding.webtoonPrefsGroup.longStripSplit.bindToPreference(readerPreferences.longStripSplitWebtoon())
     }
 }

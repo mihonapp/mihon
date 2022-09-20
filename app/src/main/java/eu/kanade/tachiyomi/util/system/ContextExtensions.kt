@@ -40,6 +40,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.lang.truncateCenter
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
@@ -295,7 +296,8 @@ fun Context.isNightMode(): Boolean {
  */
 fun Context.createReaderThemeContext(): Context {
     val preferences = Injekt.get<PreferencesHelper>()
-    val isDarkBackground = when (preferences.readerTheme().get()) {
+    val readerPreferences = Injekt.get<ReaderPreferences>()
+    val isDarkBackground = when (readerPreferences.readerTheme().get()) {
         1, 2 -> true // Black, Gray
         3 -> applicationContext.isNightMode() // Automatic bg uses activity background by default
         else -> false // White

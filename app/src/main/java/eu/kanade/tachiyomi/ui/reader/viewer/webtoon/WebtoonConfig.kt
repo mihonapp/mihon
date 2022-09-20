@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.DisabledNavigation
@@ -21,8 +21,8 @@ import uy.kohesive.injekt.api.get
  */
 class WebtoonConfig(
     scope: CoroutineScope,
-    preferences: PreferencesHelper = Injekt.get(),
-) : ViewerConfig(preferences, scope) {
+    readerPreferences: ReaderPreferences = Injekt.get(),
+) : ViewerConfig(readerPreferences, scope) {
 
     var themeChangedListener: (() -> Unit)? = null
 
@@ -37,32 +37,32 @@ class WebtoonConfig(
 
     var longStripSplitChangedListener: ((Boolean) -> Unit)? = null
 
-    val theme = preferences.readerTheme().get()
+    val theme = readerPreferences.readerTheme().get()
 
     init {
-        preferences.cropBordersWebtoon()
+        readerPreferences.cropBordersWebtoon()
             .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
 
-        preferences.webtoonSidePadding()
+        readerPreferences.webtoonSidePadding()
             .register({ sidePadding = it }, { imagePropertyChangedListener?.invoke() })
 
-        preferences.navigationModeWebtoon()
+        readerPreferences.navigationModeWebtoon()
             .register({ navigationMode = it }, { updateNavigation(it) })
 
-        preferences.webtoonNavInverted()
+        readerPreferences.webtoonNavInverted()
             .register({ tappingInverted = it }, { navigator.invertMode = it })
-        preferences.webtoonNavInverted().changes()
+        readerPreferences.webtoonNavInverted().changes()
             .drop(1)
             .onEach { navigationModeChangedListener?.invoke() }
             .launchIn(scope)
 
-        preferences.dualPageSplitWebtoon()
+        readerPreferences.dualPageSplitWebtoon()
             .register({ dualPageSplit = it }, { imagePropertyChangedListener?.invoke() })
 
-        preferences.dualPageInvertWebtoon()
+        readerPreferences.dualPageInvertWebtoon()
             .register({ dualPageInvert = it }, { imagePropertyChangedListener?.invoke() })
 
-        preferences.longStripSplitWebtoon()
+        readerPreferences.longStripSplitWebtoon()
             .register(
                 { longStripSplit = it },
                 {
@@ -71,7 +71,7 @@ class WebtoonConfig(
                 },
             )
 
-        preferences.readerTheme().changes()
+        readerPreferences.readerTheme().changes()
             .drop(1)
             .distinctUntilChanged()
             .onEach { themeChangedListener?.invoke() }

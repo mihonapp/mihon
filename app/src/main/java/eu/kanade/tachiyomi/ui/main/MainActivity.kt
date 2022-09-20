@@ -120,6 +120,7 @@ class MainActivity : BaseActivity() {
                 sourcePreferences = sourcePreferences,
                 securityPreferences = Injekt.get(),
                 libraryPreferences = libraryPreferences,
+                readerPreferences = Injekt.get(),
             )
         } else {
             false

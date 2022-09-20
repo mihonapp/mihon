@@ -42,6 +42,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.StencilPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.editCover
@@ -78,6 +79,7 @@ class ReaderPresenter(
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val preferences: PreferencesHelper = Injekt.get(),
+    private val readerPreferences: ReaderPreferences = Injekt.get(),
     private val delayedTrackingStore: DelayedTrackingStore = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
@@ -140,11 +142,11 @@ class ReaderPresenter(
             ?: error("Requested chapter of id $chapterId not found in chapter list")
 
         val chaptersForReader = when {
-            (preferences.skipRead().get() || preferences.skipFiltered().get()) -> {
+            (readerPreferences.skipRead().get() || readerPreferences.skipFiltered().get()) -> {
                 val filteredChapters = chapters.filterNot {
                     when {
-                        preferences.skipRead().get() && it.read -> true
-                        preferences.skipFiltered().get() -> {
+                        readerPreferences.skipRead().get() && it.read -> true
+                        readerPreferences.skipFiltered().get() -> {
                             (manga.readFilter == DomainManga.CHAPTER_SHOW_READ.toInt() && !it.read) ||
                                 (manga.readFilter == DomainManga.CHAPTER_SHOW_UNREAD.toInt() && it.read) ||
                                 (manga.downloadedFilter == DomainManga.CHAPTER_SHOW_DOWNLOADED.toInt() && !downloadManager.isChapterDownloaded(it.name, it.scanlator, manga.title, manga.source)) ||
@@ -619,7 +621,7 @@ class ReaderPresenter(
      * Returns the viewer position used by this manga or the default one.
      */
     fun getMangaReadingMode(resolveDefault: Boolean = true): Int {
-        val default = preferences.defaultReadingMode().get()
+        val default = readerPreferences.defaultReadingMode().get()
         val readingMode = ReadingModeType.fromPreference(manga?.readingModeType)
         return when {
             resolveDefault && readingMode == ReadingModeType.DEFAULT -> default
@@ -656,7 +658,7 @@ class ReaderPresenter(
      * Returns the orientation type used by this manga or the default one.
      */
     fun getMangaOrientationType(resolveDefault: Boolean = true): Int {
-        val default = preferences.defaultOrientationType().get()
+        val default = readerPreferences.defaultOrientationType().get()
         val orientation = OrientationType.fromPreference(manga?.orientationType)
         return when {
             resolveDefault && orientation == OrientationType.DEFAULT -> default
@@ -714,7 +716,7 @@ class ReaderPresenter(
         val filename = generateFilename(manga, page)
 
         // Pictures directory.
-        val relativePath = if (preferences.folderPerManga().get()) DiskUtil.buildValidFilename(manga.title) else ""
+        val relativePath = if (readerPreferences.folderPerManga().get()) DiskUtil.buildValidFilename(manga.title) else ""
 
         // Copy file in background.
         try {

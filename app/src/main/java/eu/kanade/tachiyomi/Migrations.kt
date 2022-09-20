@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -42,6 +43,7 @@ object Migrations {
         sourcePreferences: SourcePreferences,
         securityPreferences: SecurityPreferences,
         libraryPreferences: LibraryPreferences,
+        readerPreferences: ReaderPreferences,
     ): Boolean {
         val oldVersion = preferences.lastVersionCode().get()
         if (oldVersion < BuildConfig.VERSION_CODE) {
@@ -269,8 +271,8 @@ object Migrations {
             if (oldVersion < 77) {
                 val oldReaderTap = prefs.getBoolean("reader_tap", false)
                 if (!oldReaderTap) {
-                    preferences.navigationModePager().set(5)
-                    preferences.navigationModeWebtoon().set(5)
+                    readerPreferences.navigationModePager().set(5)
+                    readerPreferences.navigationModeWebtoon().set(5)
                 }
             }
             if (oldVersion < 81) {

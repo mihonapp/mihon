@@ -10,7 +10,7 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.core.preference.getAndSet
 import eu.kanade.tachiyomi.databinding.ReaderColorFilterSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.preference.bindToPreference
@@ -25,28 +25,28 @@ import uy.kohesive.injekt.injectLazy
 class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     NestedScrollView(context, attrs) {
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val readerPreferences: ReaderPreferences by injectLazy()
 
     private val binding = ReaderColorFilterSettingsBinding.inflate(LayoutInflater.from(context), this, false)
 
     init {
         addView(binding.root)
 
-        preferences.colorFilter().changes()
+        readerPreferences.colorFilter().changes()
             .onEach { setColorFilter(it) }
             .launchIn((context as ReaderActivity).lifecycleScope)
 
-        preferences.colorFilterMode().changes()
-            .onEach { setColorFilter(preferences.colorFilter().get()) }
+        readerPreferences.colorFilterMode().changes()
+            .onEach { setColorFilter(readerPreferences.colorFilter().get()) }
             .launchIn(context.lifecycleScope)
 
-        preferences.customBrightness().changes()
+        readerPreferences.customBrightness().changes()
             .onEach { setCustomBrightness(it) }
             .launchIn(context.lifecycleScope)
 
         // Get color and update values
-        val color = preferences.colorFilterValue().get()
-        val brightness = preferences.customBrightnessValue().get()
+        val color = readerPreferences.colorFilterValue().get()
+        val brightness = readerPreferences.customBrightnessValue().get()
 
         val argb = setValues(color)
 
@@ -61,11 +61,11 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
         binding.sliderColorFilterBlue.value = argb[3].toFloat()
 
         // Set listeners
-        binding.switchColorFilter.bindToPreference(preferences.colorFilter())
-        binding.customBrightness.bindToPreference(preferences.customBrightness())
-        binding.colorFilterMode.bindToPreference(preferences.colorFilterMode())
-        binding.grayscale.bindToPreference(preferences.grayscale())
-        binding.invertedColors.bindToPreference(preferences.invertedColors())
+        binding.switchColorFilter.bindToPreference(readerPreferences.colorFilter())
+        binding.customBrightness.bindToPreference(readerPreferences.customBrightness())
+        binding.colorFilterMode.bindToPreference(readerPreferences.colorFilterMode())
+        binding.grayscale.bindToPreference(readerPreferences.grayscale())
+        binding.invertedColors.bindToPreference(readerPreferences.invertedColors())
 
         binding.sliderColorFilterAlpha.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
@@ -90,7 +90,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
 
         binding.sliderBrightness.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
-                preferences.customBrightnessValue().set(value.toInt())
+                readerPreferences.customBrightnessValue().set(value.toInt())
             }
         }
     }
@@ -139,7 +139,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
      */
     private fun setCustomBrightness(enabled: Boolean) {
         if (enabled) {
-            preferences.customBrightnessValue().changes()
+            readerPreferences.customBrightnessValue().changes()
                 .sample(100)
                 .onEach { setCustomBrightnessValue(it) }
                 .launchIn((context as ReaderActivity).lifecycleScope)
@@ -167,7 +167,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
      */
     private fun setColorFilter(enabled: Boolean) {
         if (enabled) {
-            preferences.colorFilterValue().changes()
+            readerPreferences.colorFilterValue().changes()
                 .sample(100)
                 .onEach { setColorFilterValue(it) }
                 .launchIn((context as ReaderActivity).lifecycleScope)
@@ -190,9 +190,9 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
      * @param bitShift amounts of bits that gets shifted to receive value
      */
     private fun setColorValue(color: Int, mask: Long, bitShift: Int) {
-        val currentColor = preferences.colorFilterValue().get()
-        val updatedColor = (color shl bitShift) or (currentColor and mask.inv().toInt())
-        preferences.colorFilterValue().set(updatedColor)
+        readerPreferences.colorFilterValue().getAndSet { currentColor ->
+            (color shl bitShift) or (currentColor and mask.inv().toInt())
+        }
     }
 }
 

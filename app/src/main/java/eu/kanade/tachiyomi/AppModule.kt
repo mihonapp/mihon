@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.system.isDevFlavor
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import kotlinx.serialization.json.Json
@@ -150,6 +151,9 @@ class PreferenceModule(val application: Application) : InjektModule {
         }
         addSingletonFactory {
             LibraryPreferences(get())
+        }
+        addSingletonFactory {
+            ReaderPreferences(get())
         }
         addSingletonFactory {
             PreferencesHelper(
