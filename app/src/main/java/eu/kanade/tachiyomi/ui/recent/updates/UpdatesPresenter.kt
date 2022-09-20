@@ -10,6 +10,7 @@ import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.updates.interactor.GetUpdates
 import eu.kanade.domain.updates.model.UpdatesWithRelations
@@ -53,12 +54,13 @@ class UpdatesPresenter(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
     preferences: PreferencesHelper = Injekt.get(),
+    libraryPreferences: LibraryPreferences = Injekt.get(),
 ) : BasePresenter<UpdatesController>(), UpdatesState by state {
 
     val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
     val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
 
-    val lastUpdated by preferences.libraryUpdateLastTimestamp().asState()
+    val lastUpdated by libraryPreferences.libraryUpdateLastTimestamp().asState()
 
     val relativeTime: Int by preferences.relativeTime().asState()
     val dateFormat: DateFormat by mutableStateOf(preferences.dateFormat())

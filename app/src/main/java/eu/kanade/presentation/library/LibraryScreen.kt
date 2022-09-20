@@ -4,6 +4,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.library.model.display
 import eu.kanade.presentation.components.LibraryBottomActionMenu
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.Scaffold
@@ -11,7 +12,6 @@ import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.library.LibraryPresenter
-import eu.kanade.tachiyomi.ui.library.setting.display
 
 @Composable
 fun LibraryScreen(

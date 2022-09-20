@@ -31,6 +31,7 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import dev.chrisbanes.insetter.applyInsetter
+import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
@@ -80,6 +81,7 @@ import uy.kohesive.injekt.injectLazy
 class MainActivity : BaseActivity() {
 
     private val sourcePreferences: SourcePreferences by injectLazy()
+    private val libraryPreferences: LibraryPreferences by injectLazy()
 
     lateinit var binding: MainActivityBinding
 
@@ -117,6 +119,7 @@ class MainActivity : BaseActivity() {
                 networkPreferences = Injekt.get(),
                 sourcePreferences = sourcePreferences,
                 securityPreferences = Injekt.get(),
+                libraryPreferences = libraryPreferences,
             )
         } else {
             false
@@ -255,7 +258,7 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        merge(preferences.showUpdatesNavBadge().changes(), preferences.unreadUpdatesCount().changes())
+        merge(libraryPreferences.showUpdatesNavBadge().changes(), libraryPreferences.unreadUpdatesCount().changes())
             .onEach { setUnreadUpdatesBadge() }
             .launchIn(lifecycleScope)
 
@@ -385,7 +388,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setUnreadUpdatesBadge() {
-        val updates = if (preferences.showUpdatesNavBadge().get()) preferences.unreadUpdatesCount().get() else 0
+        val updates = if (libraryPreferences.showUpdatesNavBadge().get()) libraryPreferences.unreadUpdatesCount().get() else 0
         if (updates > 0) {
             nav.getOrCreateBadge(R.id.nav_updates).apply {
                 number = updates

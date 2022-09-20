@@ -18,13 +18,13 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.SwipeRefreshIndicator
 import eu.kanade.presentation.library.LibraryState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
-import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
 import eu.kanade.tachiyomi.widget.EmptyView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

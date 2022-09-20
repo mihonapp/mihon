@@ -1,15 +1,15 @@
 package eu.kanade.domain.updates.interactor
 
+import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.updates.model.UpdatesWithRelations
 import eu.kanade.domain.updates.repository.UpdatesRepository
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import java.util.Calendar
 
 class GetUpdates(
     private val repository: UpdatesRepository,
-    private val preferences: PreferencesHelper,
+    private val preferences: LibraryPreferences,
 ) {
 
     fun subscribe(calendar: Calendar): Flow<List<UpdatesWithRelations>> = subscribe(calendar.time.time)

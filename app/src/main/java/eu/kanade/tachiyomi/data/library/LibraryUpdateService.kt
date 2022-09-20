@@ -13,6 +13,7 @@ import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetLibraryManga
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.interactor.UpdateManga
@@ -86,6 +87,7 @@ import eu.kanade.domain.manga.model.Manga as DomainManga
 class LibraryUpdateService(
     val sourceManager: SourceManager = Injekt.get(),
     val preferences: PreferencesHelper = Injekt.get(),
+    val libraryPreferences: LibraryPreferences = Injekt.get(),
     val downloadManager: DownloadManager = Injekt.get(),
     val trackManager: TrackManager = Injekt.get(),
     val coverCache: CoverCache = Injekt.get(),
@@ -228,7 +230,7 @@ class LibraryUpdateService(
 
         // If this is a chapter update; set the last update time to now
         if (target == Target.CHAPTERS) {
-            preferences.libraryUpdateLastTimestamp().set(Date().time)
+            libraryPreferences.libraryUpdateLastTimestamp().set(Date().time)
         }
 
         // Update favorite manga
@@ -264,14 +266,14 @@ class LibraryUpdateService(
         val listToUpdate = if (categoryId != -1L) {
             libraryManga.filter { it.category.toLong() == categoryId }
         } else {
-            val categoriesToUpdate = preferences.libraryUpdateCategories().get().map(String::toInt)
+            val categoriesToUpdate = libraryPreferences.libraryUpdateCategories().get().map(String::toInt)
             val listToInclude = if (categoriesToUpdate.isNotEmpty()) {
                 libraryManga.filter { it.category in categoriesToUpdate }
             } else {
                 libraryManga
             }
 
-            val categoriesToExclude = preferences.libraryUpdateCategoriesExclude().get().map(String::toInt)
+            val categoriesToExclude = libraryPreferences.libraryUpdateCategoriesExclude().get().map(String::toInt)
             val listToExclude = if (categoriesToExclude.isNotEmpty()) {
                 libraryManga.filter { it.category in categoriesToExclude }
             } else {
@@ -312,8 +314,8 @@ class LibraryUpdateService(
         val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val hasDownloads = AtomicBoolean(false)
         val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
-        val currentUnreadUpdatesCount = preferences.unreadUpdatesCount().get()
-        val restrictions = preferences.libraryUpdateMangaRestriction().get()
+        val currentUnreadUpdatesCount = libraryPreferences.unreadUpdatesCount().get()
+        val restrictions = libraryPreferences.libraryUpdateMangaRestriction().get()
 
         withIOContext {
             mangaToUpdate.groupBy { it.source }
@@ -396,7 +398,7 @@ class LibraryUpdateService(
         if (newUpdates.isNotEmpty()) {
             notifier.showUpdateNotifications(newUpdates)
             val newChapterCount = newUpdates.sumOf { it.second.size }
-            preferences.unreadUpdatesCount().set(currentUnreadUpdatesCount + newChapterCount)
+            libraryPreferences.unreadUpdatesCount().set(currentUnreadUpdatesCount + newChapterCount)
             if (hasDownloads.get()) {
                 DownloadService.start(this)
             }

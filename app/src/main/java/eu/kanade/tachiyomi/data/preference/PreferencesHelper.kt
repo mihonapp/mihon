@@ -10,13 +10,10 @@ import eu.kanade.tachiyomi.core.preference.getEnum
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
-import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
-import eu.kanade.tachiyomi.ui.library.setting.LibrarySort
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
-import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -144,17 +141,9 @@ class PreferencesHelper(
 
     fun readerHideThreshold() = this.preferenceStore.getEnum("reader_hide_threshold", Values.ReaderHideThreshold.LOW)
 
-    fun portraitColumns() = this.preferenceStore.getInt("pref_library_columns_portrait_key", 0)
-
-    fun landscapeColumns() = this.preferenceStore.getInt("pref_library_columns_landscape_key", 0)
-
     fun autoUpdateTrack() = this.preferenceStore.getBoolean(Keys.autoUpdateTrack, true)
 
-    fun lastUsedCategory() = this.preferenceStore.getInt("last_used_category", 0)
-
     fun lastVersionCode() = this.preferenceStore.getInt("last_version_code", 0)
-
-    fun sourceDisplayMode() = this.preferenceStore.getObject("pref_display_mode_catalogue", LibraryDisplayMode.default, LibraryDisplayMode.Serializer::serialize, LibraryDisplayMode.Serializer::deserialize)
 
     fun trackUsername(sync: TrackService) = this.preferenceStore.getString(Keys.trackUsername(sync.id), "")
 
@@ -200,45 +189,7 @@ class PreferencesHelper(
 
     fun removeExcludeCategories() = this.preferenceStore.getStringSet("remove_exclude_categories", emptySet())
 
-    fun libraryUpdateInterval() = this.preferenceStore.getInt("pref_library_update_interval_key", 24)
-    fun libraryUpdateLastTimestamp() = this.preferenceStore.getLong("library_update_last_timestamp", 0L)
-
-    fun libraryUpdateDeviceRestriction() = this.preferenceStore.getStringSet("library_update_restriction", setOf(DEVICE_ONLY_ON_WIFI))
-    fun libraryUpdateMangaRestriction() = this.preferenceStore.getStringSet("library_update_manga_restriction", setOf(MANGA_HAS_UNREAD, MANGA_NON_COMPLETED, MANGA_NON_READ))
-
-    fun showUpdatesNavBadge() = this.preferenceStore.getBoolean("library_update_show_tab_badge", false)
-    fun unreadUpdatesCount() = this.preferenceStore.getInt("library_unread_updates_count", 0)
-
-    fun libraryUpdateCategories() = this.preferenceStore.getStringSet("library_update_categories", emptySet())
-    fun libraryUpdateCategoriesExclude() = this.preferenceStore.getStringSet("library_update_categories_exclude", emptySet())
-
-    fun libraryDisplayMode() = this.preferenceStore.getObject("pref_display_mode_library", LibraryDisplayMode.default, LibraryDisplayMode.Serializer::serialize, LibraryDisplayMode.Serializer::deserialize)
-
-    fun downloadBadge() = this.preferenceStore.getBoolean("display_download_badge", false)
-
-    fun localBadge() = this.preferenceStore.getBoolean("display_local_badge", true)
-
     fun downloadedOnly() = this.preferenceStore.getBoolean("pref_downloaded_only", false)
-
-    fun unreadBadge() = this.preferenceStore.getBoolean("display_unread_badge", true)
-
-    fun languageBadge() = this.preferenceStore.getBoolean("display_language_badge", false)
-
-    fun categoryTabs() = this.preferenceStore.getBoolean("display_category_tabs", true)
-
-    fun categoryNumberOfItems() = this.preferenceStore.getBoolean("display_number_of_items", false)
-
-    fun filterDownloaded() = this.preferenceStore.getInt(Keys.filterDownloaded, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
-
-    fun filterUnread() = this.preferenceStore.getInt(Keys.filterUnread, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
-
-    fun filterStarted() = this.preferenceStore.getInt(Keys.filterStarted, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
-
-    fun filterCompleted() = this.preferenceStore.getInt(Keys.filterCompleted, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
-
-    fun filterTracking(name: Int) = this.preferenceStore.getInt("${Keys.filterTracked}_$name", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
-
-    fun librarySortingMode() = this.preferenceStore.getObject(Keys.librarySortingMode, LibrarySort.default, LibrarySort.Serializer::serialize, LibrarySort.Serializer::deserialize)
 
     fun automaticExtUpdates() = this.preferenceStore.getBoolean("automatic_ext_updates", true)
 
@@ -251,10 +202,6 @@ class PreferencesHelper(
     fun downloadNewChapterCategoriesExclude() = this.preferenceStore.getStringSet("download_new_categories_exclude", emptySet())
 
     fun autoDownloadWhileReading() = this.preferenceStore.getInt("auto_download_while_reading", 0)
-
-    fun defaultCategory() = this.preferenceStore.getInt(Keys.defaultCategory, -1)
-
-    fun categorizedDisplaySettings() = this.preferenceStore.getBoolean("categorized_display", false)
 
     fun skipRead() = this.preferenceStore.getBoolean(Keys.skipRead, false)
 

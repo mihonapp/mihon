@@ -25,25 +25,11 @@ object PreferenceKeys {
 
     const val removeBookmarkedChapters = "pref_remove_bookmarked"
 
-    const val filterDownloaded = "pref_filter_library_downloaded"
-
-    const val filterUnread = "pref_filter_library_unread"
-
-    const val filterStarted = "pref_filter_library_started"
-
-    const val filterCompleted = "pref_filter_library_completed"
-
-    const val filterTracked = "pref_filter_library_tracked"
-
-    const val librarySortingMode = "library_sorting_mode"
-
     const val autoUpdateMetadata = "auto_update_metadata"
 
     const val autoUpdateTrackers = "auto_update_trackers"
 
     const val dateFormat = "app_date_format"
-
-    const val defaultCategory = "default_category"
 
     const val skipRead = "skip_read"
 

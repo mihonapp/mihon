@@ -3,7 +3,7 @@ package eu.kanade.domain.category.interactor
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.category.model.anyWithName
 import eu.kanade.domain.category.repository.CategoryRepository
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
@@ -11,7 +11,7 @@ import logcat.LogPriority
 
 class CreateCategoryWithName(
     private val categoryRepository: CategoryRepository,
-    private val preferences: PreferencesHelper,
+    private val preferences: LibraryPreferences,
 ) {
 
     private val initialFlags: Long

@@ -23,6 +23,7 @@ import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
+import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.interactor.InsertManga
@@ -30,6 +31,7 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.manga.model.toMangaUpdate
 import eu.kanade.domain.source.interactor.GetRemoteManga
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.presentation.browse.BrowseSourceState
@@ -86,6 +88,8 @@ open class BrowseSourcePresenter(
     private val state: BrowseSourceStateImpl = BrowseSourceState(searchQuery) as BrowseSourceStateImpl,
     private val sourceManager: SourceManager = Injekt.get(),
     private val preferences: PreferencesHelper = Injekt.get(),
+    private val sourcePreferences: SourcePreferences = Injekt.get(),
+    private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
     private val getRemoteManga: GetRemoteManga = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
@@ -101,7 +105,7 @@ open class BrowseSourcePresenter(
 
     private val loggedServices by lazy { Injekt.get<TrackManager>().services.filter { it.isLogged } }
 
-    var displayMode by preferences.sourceDisplayMode().asState()
+    var displayMode by sourcePreferences.sourceDisplayMode().asState()
 
     val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
     val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
@@ -110,7 +114,7 @@ open class BrowseSourcePresenter(
     fun getColumnsPreferenceForCurrentOrientation(): State<GridCells> {
         val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
         return produceState<GridCells>(initialValue = GridCells.Adaptive(128.dp), isLandscape) {
-            (if (isLandscape) preferences.landscapeColumns() else preferences.portraitColumns())
+            (if (isLandscape) libraryPreferences.landscapeColumns() else libraryPreferences.portraitColumns())
                 .changes()
                 .collectLatest { columns ->
                     value = if (columns == 0) GridCells.Adaptive(128.dp) else GridCells.Fixed(columns)
@@ -257,7 +261,7 @@ open class BrowseSourcePresenter(
     fun addFavorite(manga: DomainManga) {
         presenterScope.launch {
             val categories = getCategories()
-            val defaultCategoryId = preferences.defaultCategory().get()
+            val defaultCategoryId = libraryPreferences.defaultCategory().get()
             val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
 
             when {

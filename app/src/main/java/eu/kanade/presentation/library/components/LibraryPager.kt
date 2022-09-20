@@ -12,9 +12,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import eu.kanade.core.prefs.PreferenceMutableState
+import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
-import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
 
 @Composable
 fun LibraryPager(

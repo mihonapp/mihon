@@ -1,5 +1,6 @@
 package eu.kanade.domain.source.service
 
+import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.core.preference.getEnum
@@ -8,6 +9,8 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 class SourcePreferences(
     private val preferenceStore: PreferenceStore,
 ) {
+
+    fun sourceDisplayMode() = this.preferenceStore.getObject("pref_display_mode_catalogue", LibraryDisplayMode.default, LibraryDisplayMode.Serializer::serialize, LibraryDisplayMode.Serializer::deserialize)
 
     fun enabledLanguages() = this.preferenceStore.getStringSet("source_languages", LocaleHelper.getDefaultEnabledLanguages())
 

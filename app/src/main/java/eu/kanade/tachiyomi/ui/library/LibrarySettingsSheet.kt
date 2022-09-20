@@ -7,14 +7,15 @@ import com.bluelinelabs.conductor.Router
 import eu.kanade.domain.category.interactor.SetDisplayModeForCategory
 import eu.kanade.domain.category.interactor.SetSortModeForCategory
 import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.library.model.LibraryDisplayMode
+import eu.kanade.domain.library.model.LibrarySort
+import eu.kanade.domain.library.model.display
+import eu.kanade.domain.library.model.sort
+import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
-import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
-import eu.kanade.tachiyomi.ui.library.setting.LibrarySort
-import eu.kanade.tachiyomi.ui.library.setting.display
-import eu.kanade.tachiyomi.ui.library.setting.sort
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
@@ -129,14 +130,14 @@ class LibrarySettingsSheet(
                     downloaded.state = State.INCLUDE.value
                     downloaded.enabled = false
                 } else {
-                    downloaded.state = preferences.filterDownloaded().get()
+                    downloaded.state = libraryPreferences.filterDownloaded().get()
                 }
-                unread.state = preferences.filterUnread().get()
-                started.state = preferences.filterStarted().get()
-                completed.state = preferences.filterCompleted().get()
+                unread.state = libraryPreferences.filterUnread().get()
+                started.state = libraryPreferences.filterStarted().get()
+                completed.state = libraryPreferences.filterCompleted().get()
 
                 trackFilters.forEach { trackFilter ->
-                    trackFilter.value.state = preferences.filterTracking(trackFilter.key.toInt()).get()
+                    trackFilter.value.state = libraryPreferences.filterTracking(trackFilter.key.toInt()).get()
                 }
             }
 
@@ -150,14 +151,14 @@ class LibrarySettingsSheet(
                 }
                 item.state = newState
                 when (item) {
-                    downloaded -> preferences.filterDownloaded().set(newState)
-                    unread -> preferences.filterUnread().set(newState)
-                    started -> preferences.filterStarted().set(newState)
-                    completed -> preferences.filterCompleted().set(newState)
+                    downloaded -> libraryPreferences.filterDownloaded().set(newState)
+                    unread -> libraryPreferences.filterUnread().set(newState)
+                    started -> libraryPreferences.filterStarted().set(newState)
+                    completed -> libraryPreferences.filterCompleted().set(newState)
                     else -> {
                         trackFilters.forEach { trackFilter ->
                             if (trackFilter.value == item) {
-                                preferences.filterTracking(trackFilter.key.toInt()).set(newState)
+                                libraryPreferences.filterTracking(trackFilter.key.toInt()).set(newState)
                             }
                         }
                     }
@@ -360,20 +361,20 @@ class LibrarySettingsSheet(
             override val footer = null
 
             override fun initModels() {
-                downloadBadge.checked = preferences.downloadBadge().get()
-                unreadBadge.checked = preferences.unreadBadge().get()
-                localBadge.checked = preferences.localBadge().get()
-                languageBadge.checked = preferences.languageBadge().get()
+                downloadBadge.checked = libraryPreferences.downloadBadge().get()
+                unreadBadge.checked = libraryPreferences.unreadBadge().get()
+                localBadge.checked = libraryPreferences.localBadge().get()
+                languageBadge.checked = libraryPreferences.languageBadge().get()
             }
 
             override fun onItemClicked(item: Item) {
                 item as Item.CheckboxGroup
                 item.checked = !item.checked
                 when (item) {
-                    downloadBadge -> preferences.downloadBadge().set((item.checked))
-                    unreadBadge -> preferences.unreadBadge().set((item.checked))
-                    localBadge -> preferences.localBadge().set((item.checked))
-                    languageBadge -> preferences.languageBadge().set((item.checked))
+                    downloadBadge -> libraryPreferences.downloadBadge().set((item.checked))
+                    unreadBadge -> libraryPreferences.unreadBadge().set((item.checked))
+                    localBadge -> libraryPreferences.localBadge().set((item.checked))
+                    languageBadge -> libraryPreferences.languageBadge().set((item.checked))
                     else -> {}
                 }
                 adapter.notifyItemChanged(item)
@@ -389,16 +390,16 @@ class LibrarySettingsSheet(
             override val footer = null
 
             override fun initModels() {
-                showTabs.checked = preferences.categoryTabs().get()
-                showNumberOfItems.checked = preferences.categoryNumberOfItems().get()
+                showTabs.checked = libraryPreferences.categoryTabs().get()
+                showNumberOfItems.checked = libraryPreferences.categoryNumberOfItems().get()
             }
 
             override fun onItemClicked(item: Item) {
                 item as Item.CheckboxGroup
                 item.checked = !item.checked
                 when (item) {
-                    showTabs -> preferences.categoryTabs().set(item.checked)
-                    showNumberOfItems -> preferences.categoryNumberOfItems().set(item.checked)
+                    showTabs -> libraryPreferences.categoryTabs().set(item.checked)
+                    showNumberOfItems -> libraryPreferences.categoryNumberOfItems().set(item.checked)
                     else -> {}
                 }
                 adapter.notifyItemChanged(item)
@@ -410,6 +411,7 @@ class LibrarySettingsSheet(
         ExtendedNavigationView(context, attrs) {
 
         val preferences: PreferencesHelper by injectLazy()
+        val libraryPreferences: LibraryPreferences by injectLazy()
         lateinit var adapter: Adapter
 
         /**

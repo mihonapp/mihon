@@ -34,6 +34,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import eu.kanade.data.source.NoResultsException
+import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.source.interactor.GetRemoteManga
 import eu.kanade.presentation.browse.components.BrowseSourceComfortableGrid
@@ -48,7 +49,6 @@ import eu.kanade.presentation.components.Scaffold
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourcePresenter
-import eu.kanade.tachiyomi.ui.library.setting.LibraryDisplayMode
 import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.widget.EmptyView
 

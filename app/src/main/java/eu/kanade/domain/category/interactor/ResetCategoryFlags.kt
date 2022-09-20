@@ -1,11 +1,11 @@
 package eu.kanade.domain.category.interactor
 
 import eu.kanade.domain.category.repository.CategoryRepository
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.ui.library.setting.plus
+import eu.kanade.domain.library.model.plus
+import eu.kanade.domain.library.service.LibraryPreferences
 
 class ResetCategoryFlags(
-    private val preferences: PreferencesHelper,
+    private val preferences: LibraryPreferences,
     private val categoryRepository: CategoryRepository,
 ) {
 
