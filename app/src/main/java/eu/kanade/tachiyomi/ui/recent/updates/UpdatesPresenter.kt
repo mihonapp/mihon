@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.UpdateChapter
@@ -17,7 +16,6 @@ import eu.kanade.domain.updates.model.UpdatesWithRelations
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.updates.UpdatesState
 import eu.kanade.presentation.updates.UpdatesStateImpl
-import eu.kanade.presentation.updates.UpdatesUiModel
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -26,7 +24,6 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNonCancellableIO
-import eu.kanade.tachiyomi.util.lang.toDateKey
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.Job
@@ -87,6 +84,8 @@ class UpdatesPresenter(
                 add(Calendar.MONTH, -3)
             }
 
+            observeDownloads()
+
             getUpdates.subscribe(calendar)
                 .distinctUntilChanged()
                 .catch {
@@ -94,15 +93,13 @@ class UpdatesPresenter(
                     _events.send(Event.InternalError)
                 }
                 .collectLatest { updates ->
-                    state.uiModels = updates.toUpdateUiModels()
+                    state.items = updates.toUpdateItems()
                     state.isLoading = false
-
-                    observeDownloads()
                 }
         }
     }
 
-    private fun List<UpdatesWithRelations>.toUpdateUiModels(): List<UpdatesUiModel> {
+    private fun List<UpdatesWithRelations>.toUpdateItems(): List<UpdatesItem> {
         return this.map { update ->
             val activeDownload = downloadManager.queue.find { update.chapterId == it.chapter.id }
             val downloaded = downloadManager.isChapterDownloaded(
@@ -116,23 +113,12 @@ class UpdatesPresenter(
                 downloaded -> Download.State.DOWNLOADED
                 else -> Download.State.NOT_DOWNLOADED
             }
-            val item = UpdatesItem(
+            UpdatesItem(
                 update = update,
                 downloadStateProvider = { downloadState },
                 downloadProgressProvider = { activeDownload?.progress ?: 0 },
             )
-            UpdatesUiModel.Item(item)
         }
-            .insertSeparators { before, after ->
-                val beforeDate = before?.item?.update?.dateFetch?.toDateKey() ?: Date(0)
-                val afterDate = after?.item?.update?.dateFetch?.toDateKey() ?: Date(0)
-                when {
-                    beforeDate.time != afterDate.time && afterDate.time != 0L ->
-                        UpdatesUiModel.Header(afterDate)
-                    // Return null to avoid adding a separator between two items.
-                    else -> null
-                }
-            }
     }
 
     private suspend fun observeDownloads() {
@@ -165,21 +151,18 @@ class UpdatesPresenter(
      * @param download download object containing progress.
      */
     private fun updateDownloadState(download: Download) {
-        state.uiModels = uiModels.toMutableList().apply {
-            val modifiedIndex = uiModels.indexOfFirst {
-                it is UpdatesUiModel.Item && it.item.update.chapterId == download.chapter.id
+        state.items = items.toMutableList().apply {
+            val modifiedIndex = indexOfFirst {
+                it.update.chapterId == download.chapter.id
             }
             if (modifiedIndex < 0) return@apply
 
-            var uiModel = removeAt(modifiedIndex)
-            if (uiModel is UpdatesUiModel.Item) {
-                val item = uiModel.item.copy(
+            val item = removeAt(modifiedIndex)
+                .copy(
                     downloadStateProvider = { download.status },
                     downloadProgressProvider = { download.progress },
                 )
-                uiModel = UpdatesUiModel.Item(item)
-            }
-            add(modifiedIndex, uiModel)
+            add(modifiedIndex, item)
         }
     }
 
@@ -282,24 +265,20 @@ class UpdatesPresenter(
                 downloadManager.deleteChapters(chapters, manga, source).mapNotNull { it.id }
             }
 
-            val deletedUpdates = uiModels.filter {
-                it is UpdatesUiModel.Item && deletedIds.contains(it.item.update.chapterId)
+            val deletedUpdates = items.filter {
+                deletedIds.contains(it.update.chapterId)
             }
             if (deletedUpdates.isEmpty()) return@launchNonCancellableIO
 
             // TODO: Don't do this fake status update
-            state.uiModels = uiModels.toMutableList().apply {
+            state.items = items.toMutableList().apply {
                 deletedUpdates.forEach { deletedUpdate ->
                     val modifiedIndex = indexOf(deletedUpdate)
-                    var uiModel = removeAt(modifiedIndex)
-                    if (uiModel is UpdatesUiModel.Item) {
-                        val item = uiModel.item.copy(
-                            downloadStateProvider = { Download.State.NOT_DOWNLOADED },
-                            downloadProgressProvider = { 0 },
-                        )
-                        uiModel = UpdatesUiModel.Item(item)
-                    }
-                    add(modifiedIndex, uiModel)
+                    val item = removeAt(modifiedIndex).copy(
+                        downloadStateProvider = { Download.State.NOT_DOWNLOADED },
+                        downloadProgressProvider = { 0 },
+                    )
+                    add(modifiedIndex, item)
                 }
             }
         }
@@ -311,18 +290,16 @@ class UpdatesPresenter(
         userSelected: Boolean = false,
         fromLongPress: Boolean = false,
     ) {
-        state.uiModels = uiModels.toMutableList().apply {
-            val modifiedIndex = indexOfFirst {
-                it is UpdatesUiModel.Item && it.item == item
-            }
+        state.items = items.toMutableList().apply {
+            val modifiedIndex = indexOfFirst { it == item }
             if (modifiedIndex < 0) return@apply
 
-            val oldItem = (get(modifiedIndex) as? UpdatesUiModel.Item)?.item ?: return@apply
-            if ((oldItem.selected && selected) || (!oldItem.selected && !selected)) return@apply
+            val oldItem = get(modifiedIndex)
+            if (oldItem.selected == selected) return@apply
 
-            val firstSelection = none { it is UpdatesUiModel.Item && it.item.selected }
-            var newItem = (removeAt(modifiedIndex) as? UpdatesUiModel.Item)?.item?.copy(selected = selected) ?: return@apply
-            add(modifiedIndex, UpdatesUiModel.Item(newItem))
+            val firstSelection = none { it.selected }
+            var newItem = removeAt(modifiedIndex).copy(selected = selected)
+            add(modifiedIndex, newItem)
 
             if (selected && userSelected && fromLongPress) {
                 if (firstSelection) {
@@ -343,20 +320,16 @@ class UpdatesPresenter(
                     }
 
                     range.forEach {
-                        var uiModel = removeAt(it)
-                        if (uiModel is UpdatesUiModel.Item) {
-                            newItem = uiModel.item.copy(selected = true)
-                            uiModel = UpdatesUiModel.Item(newItem)
-                        }
-                        add(it, uiModel)
+                        newItem = removeAt(it).copy(selected = true)
+                        add(it, newItem)
                     }
                 }
             } else if (userSelected && !fromLongPress) {
                 if (!selected) {
                     if (modifiedIndex == selectedPositions[0]) {
-                        selectedPositions[0] = indexOfFirst { it is UpdatesUiModel.Item && it.item.selected }
+                        selectedPositions[0] = indexOfFirst { it.selected }
                     } else if (modifiedIndex == selectedPositions[1]) {
-                        selectedPositions[1] = indexOfLast { it is UpdatesUiModel.Item && it.item.selected }
+                        selectedPositions[1] = indexOfLast { it.selected }
                     }
                 } else {
                     if (modifiedIndex < selectedPositions[0]) {
@@ -370,28 +343,16 @@ class UpdatesPresenter(
     }
 
     fun toggleAllSelection(selected: Boolean) {
-        state.uiModels = state.uiModels.map {
-            when (it) {
-                is UpdatesUiModel.Header -> it
-                is UpdatesUiModel.Item -> {
-                    val newItem = it.item.copy(selected = selected)
-                    UpdatesUiModel.Item(newItem)
-                }
-            }
+        state.items = items.map {
+            it.copy(selected = selected)
         }
         selectedPositions[0] = -1
         selectedPositions[1] = -1
     }
 
     fun invertSelection() {
-        state.uiModels = state.uiModels.map {
-            when (it) {
-                is UpdatesUiModel.Header -> it
-                is UpdatesUiModel.Item -> {
-                    val newItem = it.item.let { item -> item.copy(selected = !item.selected) }
-                    UpdatesUiModel.Item(newItem)
-                }
-            }
+        state.items = items.map {
+            it.copy(selected = !it.selected)
         }
         selectedPositions[0] = -1
         selectedPositions[1] = -1

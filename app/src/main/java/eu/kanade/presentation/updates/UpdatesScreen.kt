@@ -93,8 +93,7 @@ fun UpdateScreen(
                 onMultiBookmarkClicked = presenter::bookmarkUpdates,
                 onMultiMarkAsReadClicked = presenter::markUpdatesRead,
                 onMultiDeleteClicked = {
-                    val updateItems = presenter.selected.map { it.item }
-                    presenter.dialog = Dialog.DeleteConfirmation(updateItems)
+                    presenter.dialog = Dialog.DeleteConfirmation(it)
                 },
             )
         },
@@ -261,7 +260,7 @@ private fun UpdatesAppBar(
 
 @Composable
 private fun UpdatesBottomBar(
-    selected: List<UpdatesUiModel.Item>,
+    selected: List<UpdatesItem>,
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
     onMultiBookmarkClicked: (List<UpdatesItem>, bookmark: Boolean) -> Unit,
     onMultiMarkAsReadClicked: (List<UpdatesItem>, read: Boolean) -> Unit,
@@ -271,25 +270,25 @@ private fun UpdatesBottomBar(
         visible = selected.isNotEmpty(),
         modifier = Modifier.fillMaxWidth(),
         onBookmarkClicked = {
-            onMultiBookmarkClicked.invoke(selected.map { it.item }, true)
-        }.takeIf { selected.any { !it.item.update.bookmark } },
+            onMultiBookmarkClicked.invoke(selected, true)
+        }.takeIf { selected.any { !it.update.bookmark } },
         onRemoveBookmarkClicked = {
-            onMultiBookmarkClicked.invoke(selected.map { it.item }, false)
-        }.takeIf { selected.all { it.item.update.bookmark } },
+            onMultiBookmarkClicked.invoke(selected, false)
+        }.takeIf { selected.all { it.update.bookmark } },
         onMarkAsReadClicked = {
-            onMultiMarkAsReadClicked(selected.map { it.item }, true)
-        }.takeIf { selected.any { !it.item.update.read } },
+            onMultiMarkAsReadClicked(selected, true)
+        }.takeIf { selected.any { !it.update.read } },
         onMarkAsUnreadClicked = {
-            onMultiMarkAsReadClicked(selected.map { it.item }, false)
-        }.takeIf { selected.any { it.item.update.read } },
+            onMultiMarkAsReadClicked(selected, false)
+        }.takeIf { selected.any { it.update.read } },
         onDownloadClicked = {
-            onDownloadChapter(selected.map { it.item }, ChapterDownloadAction.START)
+            onDownloadChapter(selected, ChapterDownloadAction.START)
         }.takeIf {
-            selected.any { it.item.downloadStateProvider() != Download.State.DOWNLOADED }
+            selected.any { it.downloadStateProvider() != Download.State.DOWNLOADED }
         },
         onDeleteClicked = {
-            onMultiDeleteClicked(selected.map { it.item })
-        }.takeIf { selected.any { it.item.downloadStateProvider() == Download.State.DOWNLOADED } },
+            onMultiDeleteClicked(selected)
+        }.takeIf { selected.any { it.downloadStateProvider() == Download.State.DOWNLOADED } },
     )
 }
 
