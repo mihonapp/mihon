@@ -18,6 +18,7 @@ import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
@@ -80,6 +81,7 @@ class ReaderPresenter(
     private val downloadManager: DownloadManager = Injekt.get(),
     private val preferences: PreferencesHelper = Injekt.get(),
     private val readerPreferences: ReaderPreferences = Injekt.get(),
+    private val trackPreferences: TrackPreferences = Injekt.get(),
     private val delayedTrackingStore: DelayedTrackingStore = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
@@ -820,7 +822,7 @@ class ReaderPresenter(
      * will run in a background thread and errors are ignored.
      */
     private fun updateTrackChapterRead(readerChapter: ReaderChapter) {
-        if (!preferences.autoUpdateTrack().get()) return
+        if (!trackPreferences.autoUpdateTrack().get()) return
         val manga = manga ?: return
 
         val chapterRead = readerChapter.chapter.chapter_number.toDouble()

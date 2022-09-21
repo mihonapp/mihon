@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
+import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.NoLoginTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -38,13 +39,14 @@ class SettingsTrackingController :
     TrackLogoutDialog.Listener {
 
     private val trackManager: TrackManager by injectLazy()
+    private val trackPreferences: TrackPreferences by injectLazy()
     private val sourceManager: SourceManager by injectLazy()
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_tracking
 
         switchPreference {
-            bindTo(preferences.autoUpdateTrack())
+            bindTo(trackPreferences.autoUpdateTrack())
             titleRes = R.string.pref_auto_update_manga_sync
         }
 

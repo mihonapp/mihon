@@ -8,8 +8,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.core.preference.getEnum
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.track.TrackService
-import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 import java.io.File
@@ -41,10 +39,6 @@ class PreferencesHelper(
 
     fun sideNavIconAlignment() = preferenceStore.getInt("pref_side_nav_icon_alignment", 0)
 
-    fun autoUpdateMetadata() = preferenceStore.getBoolean("auto_update_metadata", false)
-
-    fun autoUpdateTrackers() = preferenceStore.getBoolean("auto_update_trackers", false)
-
     fun themeMode() = preferenceStore.getEnum(
         "pref_theme_mode_key",
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { Values.ThemeMode.system } else { Values.ThemeMode.light },
@@ -58,19 +52,6 @@ class PreferencesHelper(
     fun themeDarkAmoled() = preferenceStore.getBoolean("pref_theme_dark_amoled_key", false)
 
     fun lastVersionCode() = preferenceStore.getInt("last_version_code", 0)
-
-    fun trackUsername(sync: TrackService) = preferenceStore.getString(Keys.trackUsername(sync.id), "")
-
-    fun trackPassword(sync: TrackService) = preferenceStore.getString(Keys.trackPassword(sync.id), "")
-
-    fun setTrackCredentials(sync: TrackService, username: String, password: String) {
-        trackUsername(sync).set(username)
-        trackPassword(sync).set(password)
-    }
-
-    fun trackToken(sync: TrackService) = preferenceStore.getString(Keys.trackToken(sync.id), "")
-
-    fun anilistScoreType() = preferenceStore.getString("anilist_score_type", Anilist.POINT_10)
 
     fun backupsDirectory() = preferenceStore.getString("backup_directory", defaultBackupDir.toString())
 
@@ -114,8 +95,6 @@ class PreferencesHelper(
     fun downloadNewChapterCategoriesExclude() = preferenceStore.getStringSet("download_new_categories_exclude", emptySet())
 
     fun autoDownloadWhileReading() = preferenceStore.getInt("auto_download_while_reading", 0)
-
-    fun autoUpdateTrack() = preferenceStore.getBoolean("pref_auto_update_manga_sync_key", true)
 
     fun migrateFlags() = preferenceStore.getInt("migrate_flags", Int.MAX_VALUE)
 

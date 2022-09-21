@@ -141,12 +141,12 @@ class Kitsu(private val context: Context, id: Long) : TrackService(id) {
     }
 
     fun saveToken(oauth: OAuth?) {
-        preferences.trackToken(this).set(json.encodeToString(oauth))
+        trackPreferences.trackToken(this).set(json.encodeToString(oauth))
     }
 
     fun restoreToken(): OAuth? {
         return try {
-            json.decodeFromString<OAuth>(preferences.trackToken(this).get())
+            json.decodeFromString<OAuth>(trackPreferences.trackToken(this).get())
         } catch (e: Exception) {
             null
         }

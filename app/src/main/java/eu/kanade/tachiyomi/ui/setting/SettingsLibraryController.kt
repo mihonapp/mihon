@@ -277,13 +277,13 @@ class SettingsLibraryController : SettingsController() {
                     .launchIn(viewScope)
             }
             switchPreference {
-                bindTo(preferences.autoUpdateMetadata())
+                bindTo(libraryPreferences.autoUpdateMetadata())
                 titleRes = R.string.pref_library_update_refresh_metadata
                 summaryRes = R.string.pref_library_update_refresh_metadata_summary
             }
             if (trackManager.hasLoggedServices()) {
                 switchPreference {
-                    bindTo(preferences.autoUpdateTrackers())
+                    bindTo(libraryPreferences.autoUpdateTrackers())
                     titleRes = R.string.pref_library_update_refresh_trackers
                     summaryRes = R.string.pref_library_update_refresh_trackers_summary
                 }

@@ -37,7 +37,7 @@ class Anilist(private val context: Context, id: Long) : TrackService(id) {
 
     override val supportsReadingDates: Boolean = true
 
-    private val scorePreference = preferences.anilistScoreType()
+    private val scorePreference = trackPreferences.anilistScoreType()
 
     init {
         // If the preference is an int from APIv1, logout user to force using APIv2
@@ -211,17 +211,17 @@ class Anilist(private val context: Context, id: Long) : TrackService(id) {
 
     override fun logout() {
         super.logout()
-        preferences.trackToken(this).delete()
+        trackPreferences.trackToken(this).delete()
         interceptor.setAuth(null)
     }
 
     fun saveOAuth(oAuth: OAuth?) {
-        preferences.trackToken(this).set(json.encodeToString(oAuth))
+        trackPreferences.trackToken(this).set(json.encodeToString(oAuth))
     }
 
     fun loadOAuth(): OAuth? {
         return try {
-            json.decodeFromString<OAuth>(preferences.trackToken(this).get())
+            json.decodeFromString<OAuth>(trackPreferences.trackToken(this).get())
         } catch (e: Exception) {
             null
         }

@@ -15,6 +15,7 @@ import eu.kanade.data.dateAdapter
 import eu.kanade.data.listOfStringsAdapter
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.core.preference.AndroidPreferenceStore
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
@@ -154,6 +155,9 @@ class PreferenceModule(val application: Application) : InjektModule {
         }
         addSingletonFactory {
             ReaderPreferences(get())
+        }
+        addSingletonFactory {
+            TrackPreferences(get())
         }
         addSingletonFactory {
             PreferencesHelper(

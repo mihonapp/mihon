@@ -27,6 +27,10 @@ class LibraryPreferences(
     fun libraryUpdateDeviceRestriction() = preferenceStore.getStringSet("library_update_restriction", setOf(DEVICE_ONLY_ON_WIFI))
     fun libraryUpdateMangaRestriction() = preferenceStore.getStringSet("library_update_manga_restriction", setOf(MANGA_HAS_UNREAD, MANGA_NON_COMPLETED, MANGA_NON_READ))
 
+    fun autoUpdateMetadata() = preferenceStore.getBoolean("auto_update_metadata", false)
+
+    fun autoUpdateTrackers() = preferenceStore.getBoolean("auto_update_trackers", false)
+
     // region Filter
 
     fun filterDownloaded() = preferenceStore.getInt("pref_filter_library_downloaded", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
