@@ -13,6 +13,7 @@ import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.toChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
@@ -20,7 +21,6 @@ import eu.kanade.tachiyomi.data.backup.BackupRestoreService
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.updater.AppUpdateService
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -241,14 +241,14 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param mangaId id of manga
      */
     private fun markAsRead(chapterUrls: Array<String>, mangaId: Long) {
-        val preferences: PreferencesHelper = Injekt.get()
+        val downloadPreferences: DownloadPreferences = Injekt.get()
         val sourceManager: SourceManager = Injekt.get()
 
         launchIO {
             val toUpdate = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
                 .map {
                     val chapter = it.copy(read = true)
-                    if (preferences.removeAfterMarkedAsRead().get()) {
+                    if (downloadPreferences.removeAfterMarkedAsRead().get()) {
                         val manga = getManga.await(mangaId)
                         if (manga != null) {
                             val source = sourceManager.get(manga.source)

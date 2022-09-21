@@ -15,6 +15,7 @@ import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
 import eu.kanade.domain.manga.interactor.GetMangaWithChapters
@@ -82,6 +83,7 @@ class MangaPresenter(
     val mangaId: Long,
     val isFromSource: Boolean,
     private val preferences: PreferencesHelper = Injekt.get(),
+    private val downloadPreferences: DownloadPreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val trackManager: TrackManager = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
@@ -679,7 +681,7 @@ class MangaPresenter(
         presenterScope.launchNonCancellableIO {
             val manga = successState?.manga ?: return@launchNonCancellableIO
             val categories = getCategories.await(manga.id).map { it.id }
-            if (chapters.isEmpty() || !manga.shouldDownloadNewChapters(categories, preferences)) return@launchNonCancellableIO
+            if (chapters.isEmpty() || !manga.shouldDownloadNewChapters(categories, downloadPreferences)) return@launchNonCancellableIO
             downloadChapters(chapters)
         }
     }

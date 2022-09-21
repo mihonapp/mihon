@@ -4,6 +4,7 @@ import android.content.Context
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
@@ -12,7 +13,6 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.Page
@@ -62,7 +62,7 @@ class Downloader(
     private val cache: DownloadCache,
     private val sourceManager: SourceManager = Injekt.get(),
     private val chapterCache: ChapterCache = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get(),
+    private val downloadPreferences: DownloadPreferences = Injekt.get(),
 ) {
 
     /**
@@ -480,7 +480,7 @@ class Downloader(
     }
 
     private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile): Boolean {
-        if (!preferences.splitTallImages().get()) return true
+        if (!downloadPreferences.splitTallImages().get()) return true
 
         val filename = String.format("%03d", page.number)
         val imageFile = tmpDir.listFiles()?.find { it.name!!.startsWith(filename) }
@@ -518,7 +518,7 @@ class Downloader(
 
         download.status = if (downloadedImages.size == download.pages!!.size) {
             // Only rename the directory if it's downloaded.
-            if (preferences.saveChaptersAsCBZ().get()) {
+            if (downloadPreferences.saveChaptersAsCBZ().get()) {
                 archiveChapter(mangaDir, dirname, tmpDir)
             } else {
                 tmpDir.renameTo(dirname)

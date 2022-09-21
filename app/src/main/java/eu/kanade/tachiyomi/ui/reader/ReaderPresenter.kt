@@ -9,6 +9,7 @@ import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.history.interactor.UpsertHistory
 import eu.kanade.domain.history.model.HistoryUpdate
 import eu.kanade.domain.manga.interactor.GetManga
@@ -80,6 +81,7 @@ class ReaderPresenter(
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val preferences: PreferencesHelper = Injekt.get(),
+    private val downloadPreferences: DownloadPreferences = Injekt.get(),
     private val readerPreferences: ReaderPreferences = Injekt.get(),
     private val trackPreferences: TrackPreferences = Injekt.get(),
     private val delayedTrackingStore: DelayedTrackingStore = Injekt.get(),
@@ -452,7 +454,7 @@ class ReaderPresenter(
         val manga = manga ?: return
         if (getCurrentChapter()?.pageLoader !is DownloadPageLoader) return
         val nextChapter = viewerChaptersRelay.value?.nextChapter?.chapter ?: return
-        val chaptersNumberToDownload = preferences.autoDownloadWhileReading().get()
+        val chaptersNumberToDownload = downloadPreferences.autoDownloadWhileReading().get()
         if (chaptersNumberToDownload == 0 || !manga.favorite) return
         val isNextChapterDownloadedOrQueued = downloadManager.isChapterDownloaded(
             nextChapter.name,
@@ -506,7 +508,7 @@ class ReaderPresenter(
     private fun deleteChapterIfNeeded(currentChapter: ReaderChapter) {
         // Determine which chapter should be deleted and enqueue
         val currentChapterPosition = chapterList.indexOf(currentChapter)
-        val removeAfterReadSlots = preferences.removeAfterReadSlots().get()
+        val removeAfterReadSlots = downloadPreferences.removeAfterReadSlots().get()
         val chapterToDelete = chapterList.getOrNull(currentChapterPosition - removeAfterReadSlots)
 
         if (removeAfterReadSlots != 0 && chapterDownload != null) {

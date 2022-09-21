@@ -13,6 +13,7 @@ import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetLibraryManga
 import eu.kanade.domain.manga.interactor.GetManga
@@ -36,7 +37,6 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.MANGA_HAS_UNREAD
 import eu.kanade.tachiyomi.data.preference.MANGA_NON_COMPLETED
 import eu.kanade.tachiyomi.data.preference.MANGA_NON_READ
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -86,7 +86,7 @@ import eu.kanade.domain.manga.model.Manga as DomainManga
  */
 class LibraryUpdateService(
     val sourceManager: SourceManager = Injekt.get(),
-    val preferences: PreferencesHelper = Injekt.get(),
+    val downloadPreferences: DownloadPreferences = Injekt.get(),
     val libraryPreferences: LibraryPreferences = Injekt.get(),
     val downloadManager: DownloadManager = Injekt.get(),
     val trackManager: TrackManager = Injekt.get(),
@@ -355,7 +355,7 @@ class LibraryUpdateService(
 
                                                     if (newChapters.isNotEmpty()) {
                                                         val categoryIds = getCategories.await(domainManga.id).map { it.id }
-                                                        if (domainManga.shouldDownloadNewChapters(categoryIds, preferences)) {
+                                                        if (domainManga.shouldDownloadNewChapters(categoryIds, downloadPreferences)) {
                                                             downloadChapters(mangaWithNotif, newDbChapters)
                                                             hasDownloads.set(true)
                                                         }

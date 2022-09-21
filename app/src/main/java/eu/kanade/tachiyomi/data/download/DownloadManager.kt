@@ -4,12 +4,12 @@ import android.content.Context
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.domain.category.interactor.GetCategories
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
@@ -32,7 +32,7 @@ class DownloadManager(
     private val context: Context,
     private val getCategories: GetCategories = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get(),
+    private val downloadPreferences: DownloadPreferences = Injekt.get(),
 ) {
 
     /**
@@ -405,7 +405,7 @@ class DownloadManager(
 
     private fun getChaptersToDelete(chapters: List<Chapter>, manga: Manga): List<Chapter> {
         // Retrieve the categories that are set to exclude from being deleted on read
-        val categoriesToExclude = preferences.removeExcludeCategories().get().map(String::toLong)
+        val categoriesToExclude = downloadPreferences.removeExcludeCategories().get().map(String::toLong)
 
         val categoriesForManga = runBlocking { getCategories.await(manga.id) }
             .map { it.id }
@@ -414,7 +414,7 @@ class DownloadManager(
 
         return if (categoriesForManga.intersect(categoriesToExclude).isNotEmpty()) {
             chapters.filterNot { it.read }
-        } else if (!preferences.removeBookmarkedChapters().get()) {
+        } else if (!downloadPreferences.removeBookmarkedChapters().get()) {
             chapters.filterNot { it.bookmark }
         } else {
             chapters

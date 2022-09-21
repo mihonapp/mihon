@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.util
 
 import android.content.Context
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.isLocal
@@ -8,7 +9,6 @@ import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
 import uy.kohesive.injekt.Injekt
@@ -57,7 +57,7 @@ fun DomainManga.removeCovers(coverCache: CoverCache = Injekt.get()): DomainManga
     return copy(coverLastModified = Date().time)
 }
 
-fun DomainManga.shouldDownloadNewChapters(dbCategories: List<Long>, preferences: PreferencesHelper): Boolean {
+fun DomainManga.shouldDownloadNewChapters(dbCategories: List<Long>, preferences: DownloadPreferences): Boolean {
     if (!favorite) return false
 
     val categories = dbCategories.ifEmpty { listOf(0L) }

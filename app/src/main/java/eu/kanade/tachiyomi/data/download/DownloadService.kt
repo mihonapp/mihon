@@ -9,9 +9,9 @@ import android.os.PowerManager
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.jakewharton.rxrelay.BehaviorRelay
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
@@ -84,7 +84,7 @@ class DownloadService : Service() {
 
     private val downloadManager: DownloadManager by injectLazy()
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val downloadPreferences: DownloadPreferences by injectLazy()
 
     /**
      * Wake lock to prevent the device to enter sleep mode.
@@ -164,7 +164,7 @@ class DownloadService : Service() {
      */
     private fun onNetworkStateChanged() {
         if (isOnline()) {
-            if (preferences.downloadOnlyOverWifi().get() && !isConnectedToWifi()) {
+            if (downloadPreferences.downloadOnlyOverWifi().get() && !isConnectedToWifi()) {
                 stopDownloads(R.string.download_notifier_text_only_wifi)
             } else {
                 val started = downloadManager.startDownloads()

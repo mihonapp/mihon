@@ -3,9 +3,9 @@ package eu.kanade.tachiyomi.data.download
 import android.content.Context
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.Injekt
@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit
  * @param context the application context.
  * @param provider the downloads directories provider.
  * @param sourceManager the source manager.
- * @param preferences the preferences of the app.
+ * @param downloadPreferences the preferences of the app.
  */
 class DownloadCache(
     private val context: Context,
     private val provider: DownloadProvider,
     private val sourceManager: SourceManager = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get(),
+    private val downloadPreferences: DownloadPreferences = Injekt.get(),
 ) {
 
     /**
@@ -47,7 +47,7 @@ class DownloadCache(
     private var rootDir = RootDirectory(getDirectoryFromPreference())
 
     init {
-        preferences.downloadsDirectory().changes()
+        downloadPreferences.downloadsDirectory().changes()
             .onEach {
                 lastRenew = 0L // invalidate cache
                 rootDir = RootDirectory(getDirectoryFromPreference())
@@ -58,7 +58,7 @@ class DownloadCache(
      * Returns the downloads directory from the user's preferences.
      */
     private fun getDirectoryFromPreference(): UniFile {
-        val dir = preferences.downloadsDirectory().get()
+        val dir = downloadPreferences.downloadsDirectory().get()
         return UniFile.fromUri(context, dir.toUri())
     }
 

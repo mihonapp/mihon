@@ -12,9 +12,9 @@ import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.category.interactor.GetCategories
+import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.presentation.category.visualName
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.preference.bindTo
 import eu.kanade.tachiyomi.util.preference.entriesRes
@@ -41,6 +41,7 @@ import java.io.File
 class SettingsDownloadController : SettingsController() {
 
     private val getCategories: GetCategories by injectLazy()
+    private val downloadPreferences: DownloadPreferences by injectLazy()
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_downloads
@@ -48,7 +49,7 @@ class SettingsDownloadController : SettingsController() {
         val categories = runBlocking { getCategories.await() }
 
         preference {
-            bindTo(preferences.downloadsDirectory())
+            bindTo(downloadPreferences.downloadsDirectory())
             titleRes = R.string.pref_download_directory
             onClick {
                 val ctrl = DownloadDirectoriesDialog()
@@ -56,7 +57,7 @@ class SettingsDownloadController : SettingsController() {
                 ctrl.showDialog(router)
             }
 
-            preferences.downloadsDirectory().changes()
+            downloadPreferences.downloadsDirectory().changes()
                 .onEach { path ->
                     val dir = UniFile.fromUri(context, path.toUri())
                     summary = dir.filePath ?: path
@@ -64,15 +65,15 @@ class SettingsDownloadController : SettingsController() {
                 .launchIn(viewScope)
         }
         switchPreference {
-            bindTo(preferences.downloadOnlyOverWifi())
+            bindTo(downloadPreferences.downloadOnlyOverWifi())
             titleRes = R.string.connected_to_wifi
         }
         switchPreference {
-            bindTo(preferences.saveChaptersAsCBZ())
+            bindTo(downloadPreferences.saveChaptersAsCBZ())
             titleRes = R.string.save_chapter_as_cbz
         }
         switchPreference {
-            bindTo(preferences.splitTallImages())
+            bindTo(downloadPreferences.splitTallImages())
             titleRes = R.string.split_tall_images
             summaryRes = R.string.split_tall_images_summary
         }
@@ -81,11 +82,11 @@ class SettingsDownloadController : SettingsController() {
             titleRes = R.string.pref_category_delete_chapters
 
             switchPreference {
-                bindTo(preferences.removeAfterMarkedAsRead())
+                bindTo(downloadPreferences.removeAfterMarkedAsRead())
                 titleRes = R.string.pref_remove_after_marked_as_read
             }
             intListPreference {
-                bindTo(preferences.removeAfterReadSlots())
+                bindTo(downloadPreferences.removeAfterReadSlots())
                 titleRes = R.string.pref_remove_after_read
                 entriesRes = arrayOf(
                     R.string.disabled,
@@ -99,16 +100,16 @@ class SettingsDownloadController : SettingsController() {
                 summary = "%s"
             }
             switchPreference {
-                bindTo(preferences.removeBookmarkedChapters())
+                bindTo(downloadPreferences.removeBookmarkedChapters())
                 titleRes = R.string.pref_remove_bookmarked_chapters
             }
             multiSelectListPreference {
-                bindTo(preferences.removeExcludeCategories())
+                bindTo(downloadPreferences.removeExcludeCategories())
                 titleRes = R.string.pref_remove_exclude_categories
                 entries = categories.map { it.visualName(context) }.toTypedArray()
                 entryValues = categories.map { it.id.toString() }.toTypedArray()
 
-                preferences.removeExcludeCategories().changes()
+                downloadPreferences.removeExcludeCategories().changes()
                     .onEach { mutable ->
                         val selected = mutable
                             .mapNotNull { id -> categories.find { it.id == id.toLong() } }
@@ -127,20 +128,20 @@ class SettingsDownloadController : SettingsController() {
             titleRes = R.string.pref_download_new
 
             switchPreference {
-                bindTo(preferences.downloadNewChapters())
+                bindTo(downloadPreferences.downloadNewChapters())
                 titleRes = R.string.pref_download_new
             }
             preference {
-                bindTo(preferences.downloadNewChapterCategories())
+                bindTo(downloadPreferences.downloadNewChapterCategories())
                 titleRes = R.string.categories
                 onClick {
                     DownloadCategoriesDialog().showDialog(router)
                 }
 
-                visibleIf(preferences.downloadNewChapters()) { it }
+                visibleIf(downloadPreferences.downloadNewChapters()) { it }
 
                 fun updateSummary() {
-                    val selectedCategories = preferences.downloadNewChapterCategories().get()
+                    val selectedCategories = downloadPreferences.downloadNewChapterCategories().get()
                         .mapNotNull { id -> categories.find { it.id == id.toLong() } }
                         .sortedBy { it.order }
                     val includedItemsText = if (selectedCategories.isEmpty()) {
@@ -149,7 +150,7 @@ class SettingsDownloadController : SettingsController() {
                         selectedCategories.joinToString { it.visualName(context) }
                     }
 
-                    val excludedCategories = preferences.downloadNewChapterCategoriesExclude().get()
+                    val excludedCategories = downloadPreferences.downloadNewChapterCategoriesExclude().get()
                         .mapNotNull { id -> categories.find { it.id == id.toLong() } }
                         .sortedBy { it.order }
                     val excludedItemsText = if (excludedCategories.isEmpty()) {
@@ -165,10 +166,10 @@ class SettingsDownloadController : SettingsController() {
                     }
                 }
 
-                preferences.downloadNewChapterCategories().changes()
+                downloadPreferences.downloadNewChapterCategories().changes()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
-                preferences.downloadNewChapterCategoriesExclude().changes()
+                downloadPreferences.downloadNewChapterCategoriesExclude().changes()
                     .onEach { updateSummary() }
                     .launchIn(viewScope)
             }
@@ -178,7 +179,7 @@ class SettingsDownloadController : SettingsController() {
             titleRes = R.string.download_ahead
 
             intListPreference {
-                bindTo(preferences.autoDownloadWhileReading())
+                bindTo(downloadPreferences.autoDownloadWhileReading())
                 titleRes = R.string.auto_download_while_reading
                 entries = arrayOf(
                     context.getString(R.string.disabled),
@@ -208,14 +209,14 @@ class SettingsDownloadController : SettingsController() {
                 }
 
                 val file = UniFile.fromUri(context, uri)
-                preferences.downloadsDirectory().set(file.uri.toString())
+                downloadPreferences.downloadsDirectory().set(file.uri.toString())
             }
         }
     }
 
     fun predefinedDirectorySelected(selectedDir: String) {
         val path = File(selectedDir).toUri()
-        preferences.downloadsDirectory().set(path.toString())
+        downloadPreferences.downloadsDirectory().set(path.toString())
     }
 
     fun customDirectorySelected() {
@@ -229,11 +230,11 @@ class SettingsDownloadController : SettingsController() {
 
     class DownloadDirectoriesDialog : DialogController() {
 
-        private val preferences: PreferencesHelper = Injekt.get()
+        private val downloadPreferences: DownloadPreferences = Injekt.get()
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
             val activity = activity!!
-            val currentDir = preferences.downloadsDirectory().get()
+            val currentDir = downloadPreferences.downloadsDirectory().get()
             val externalDirs = listOf(getDefaultDownloadDir(), File(activity.getString(R.string.custom_dir))).map(File::toString)
             var selectedIndex = externalDirs.indexOfFirst { it in currentDir }
 
@@ -264,7 +265,7 @@ class SettingsDownloadController : SettingsController() {
 
     class DownloadCategoriesDialog : DialogController() {
 
-        private val preferences: PreferencesHelper = Injekt.get()
+        private val downloadPreferences: DownloadPreferences = Injekt.get()
         private val getCategories: GetCategories = Injekt.get()
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
@@ -274,8 +275,8 @@ class SettingsDownloadController : SettingsController() {
             var selected = categories
                 .map {
                     when (it.id.toString()) {
-                        in preferences.downloadNewChapterCategories().get() -> QuadStateTextView.State.CHECKED.ordinal
-                        in preferences.downloadNewChapterCategoriesExclude().get() -> QuadStateTextView.State.INVERSED.ordinal
+                        in downloadPreferences.downloadNewChapterCategories().get() -> QuadStateTextView.State.CHECKED.ordinal
+                        in downloadPreferences.downloadNewChapterCategoriesExclude().get() -> QuadStateTextView.State.INVERSED.ordinal
                         else -> QuadStateTextView.State.UNCHECKED.ordinal
                     }
                 }
@@ -302,8 +303,8 @@ class SettingsDownloadController : SettingsController() {
                         .map { categories[it].id.toString() }
                         .toSet()
 
-                    preferences.downloadNewChapterCategories().set(included)
-                    preferences.downloadNewChapterCategoriesExclude().set(excluded)
+                    downloadPreferences.downloadNewChapterCategories().set(included)
+                    downloadPreferences.downloadNewChapterCategoriesExclude().set(excluded)
                 }
                 .setNegativeButton(android.R.string.cancel, null)
                 .create()
