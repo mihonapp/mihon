@@ -19,8 +19,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.surfaceColorAtElevation
@@ -113,7 +113,7 @@ fun AppBar(
     Column(
         modifier = modifier,
     ) {
-        SmallTopAppBar(
+        TopAppBar(
             navigationIcon = {
                 if (isActionMode) {
                     IconButton(onClick = onCancelActionMode) {
