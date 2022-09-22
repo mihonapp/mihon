@@ -31,7 +31,6 @@ import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.preference.TrackerPreference
 import uy.kohesive.injekt.injectLazy
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsTrackingController :
     SettingsController(),
@@ -104,7 +103,7 @@ class SettingsTrackingController :
     ): TrackerPreference {
         return add(
             TrackerPreference(context).apply {
-                key = Keys.trackUsername(service.id)
+                key = TrackPreferences.trackUsername(service.id)
                 titleRes = service.nameRes()
                 iconRes = service.getLogo()
                 iconColor = service.getLogoColor()
@@ -148,7 +147,7 @@ class SettingsTrackingController :
     }
 
     private fun updatePreference(id: Long) {
-        val pref = findPreference(Keys.trackUsername(id)) as? TrackerPreference
+        val pref = findPreference(TrackPreferences.trackUsername(id)) as? TrackerPreference
         pref?.notifyChanged()
     }
 

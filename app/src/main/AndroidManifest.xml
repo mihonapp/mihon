@@ -21,6 +21,8 @@
     <!-- To view extension packages in API 30+ -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".App"
         android:allowBackup="false"

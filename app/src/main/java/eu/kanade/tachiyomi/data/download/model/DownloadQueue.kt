@@ -71,7 +71,7 @@ class DownloadQueue(
         updatedRelay.call(Unit)
     }
 
-    fun getActiveDownloads(): Observable<Download> =
+    private fun getActiveDownloads(): Observable<Download> =
         Observable.from(this).filter { download -> download.status == Download.State.DOWNLOADING }
 
     @Deprecated("Use getStatusAsFlow instead")
