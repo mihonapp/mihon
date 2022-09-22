@@ -2,15 +2,11 @@ package eu.kanade.tachiyomi.data.preference
 
 import android.content.Context
 import android.os.Build
-import android.os.Environment
-import androidx.core.net.toUri
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.core.preference.getEnum
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
-import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -22,12 +18,6 @@ class PreferencesHelper(
     val context: Context,
     private val preferenceStore: PreferenceStore,
 ) {
-
-    private val defaultBackupDir = File(
-        Environment.getExternalStorageDirectory().absolutePath + File.separator +
-            context.getString(R.string.app_name),
-        "backup",
-    ).toUri()
 
     fun confirmExit() = preferenceStore.getBoolean("pref_confirm_exit", false)
 
@@ -47,18 +37,12 @@ class PreferencesHelper(
 
     fun lastVersionCode() = preferenceStore.getInt("last_version_code", 0)
 
-    fun backupsDirectory() = preferenceStore.getString("backup_directory", defaultBackupDir.toString())
-
     fun relativeTime() = preferenceStore.getInt("relative_time", 7)
 
     fun dateFormat(format: String = preferenceStore.getString(Keys.dateFormat, "").get()): DateFormat = when (format) {
         "" -> DateFormat.getDateInstance(DateFormat.SHORT)
         else -> SimpleDateFormat(format, Locale.getDefault())
     }
-
-    fun numberOfBackups() = preferenceStore.getInt("backup_slots", 2)
-
-    fun backupInterval() = preferenceStore.getInt("backup_interval", 12)
 
     fun downloadedOnly() = preferenceStore.getBoolean("pref_downloaded_only", false)
 

@@ -121,6 +121,7 @@ class MainActivity : BaseActivity() {
                 securityPreferences = Injekt.get(),
                 libraryPreferences = libraryPreferences,
                 readerPreferences = Injekt.get(),
+                backupPreferences = Injekt.get(),
             )
         } else {
             false

@@ -18,6 +18,7 @@ import androidx.core.os.bundleOf
 import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hippo.unifile.UniFile
+import eu.kanade.domain.backup.service.BackupPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
@@ -42,6 +43,7 @@ import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import uy.kohesive.injekt.injectLazy
 
 class SettingsBackupController : SettingsController() {
 
@@ -49,6 +51,8 @@ class SettingsBackupController : SettingsController() {
      * Flags containing information of what to backup.
      */
     private var backupFlags = 0
+
+    private val backupPreferences: BackupPreferences by injectLazy()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -105,7 +109,7 @@ class SettingsBackupController : SettingsController() {
             titleRes = R.string.pref_backup_service_category
 
             intListPreference {
-                bindTo(preferences.backupInterval())
+                bindTo(backupPreferences.backupInterval())
                 titleRes = R.string.pref_backup_interval
                 entriesRes = arrayOf(
                     R.string.update_6hour,
@@ -124,7 +128,7 @@ class SettingsBackupController : SettingsController() {
                 }
             }
             preference {
-                bindTo(preferences.backupsDirectory())
+                bindTo(backupPreferences.backupsDirectory())
                 titleRes = R.string.pref_backup_directory
 
                 onClick {
@@ -136,7 +140,7 @@ class SettingsBackupController : SettingsController() {
                     }
                 }
 
-                preferences.backupsDirectory().changes()
+                backupPreferences.backupsDirectory().changes()
                     .onEach { path ->
                         val dir = UniFile.fromUri(context, path.toUri())
                         summary = dir.filePath + "/automatic"
@@ -144,7 +148,7 @@ class SettingsBackupController : SettingsController() {
                     .launchIn(viewScope)
             }
             intListPreference {
-                bindTo(preferences.numberOfBackups())
+                bindTo(backupPreferences.numberOfBackups())
                 titleRes = R.string.pref_backup_slots
                 entries = arrayOf("2", "3", "4", "5")
                 entryValues = entries
@@ -183,7 +187,7 @@ class SettingsBackupController : SettingsController() {
                         Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
                     activity.contentResolver.takePersistableUriPermission(uri, flags)
-                    preferences.backupsDirectory().set(uri.toString())
+                    backupPreferences.backupsDirectory().set(uri.toString())
                 }
                 CODE_BACKUP_CREATE -> {
                     val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or

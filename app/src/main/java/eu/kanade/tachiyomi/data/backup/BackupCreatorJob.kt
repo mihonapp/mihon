@@ -13,8 +13,8 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.hippo.unifile.UniFile
+import eu.kanade.domain.backup.service.BackupPreferences
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notificationManager
 import logcat.LogPriority
@@ -26,10 +26,10 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
     CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val preferences = Injekt.get<PreferencesHelper>()
+        val backupPreferences = Injekt.get<BackupPreferences>()
         val notifier = BackupNotifier(context)
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
-            ?: preferences.backupsDirectory().get().toUri()
+            ?: backupPreferences.backupsDirectory().get().toUri()
         val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupConst.BACKUP_ALL)
         val isAutoBackup = inputData.getBoolean(IS_AUTO_BACKUP_KEY, true)
 
@@ -54,8 +54,8 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
         }
 
         fun setupTask(context: Context, prefInterval: Int? = null) {
-            val preferences = Injekt.get<PreferencesHelper>()
-            val interval = prefInterval ?: preferences.backupInterval().get()
+            val backupPreferences = Injekt.get<BackupPreferences>()
+            val interval = prefInterval ?: backupPreferences.backupInterval().get()
             val workManager = WorkManager.getInstance(context)
             if (interval > 0) {
                 val request = PeriodicWorkRequestBuilder<BackupCreatorJob>(

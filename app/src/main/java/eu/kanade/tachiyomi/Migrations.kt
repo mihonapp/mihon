@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import eu.kanade.domain.backup.service.BackupPreferences
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
@@ -44,6 +45,7 @@ object Migrations {
         securityPreferences: SecurityPreferences,
         libraryPreferences: LibraryPreferences,
         readerPreferences: ReaderPreferences,
+        backupPreferences: BackupPreferences,
     ): Boolean {
         val oldVersion = preferences.lastVersionCode().get()
         if (oldVersion < BuildConfig.VERSION_CODE) {
@@ -296,11 +298,11 @@ object Migrations {
                 }
             }
             if (oldVersion < 84) {
-                if (preferences.numberOfBackups().get() == 1) {
-                    preferences.numberOfBackups().set(2)
+                if (backupPreferences.numberOfBackups().get() == 1) {
+                    backupPreferences.numberOfBackups().set(2)
                 }
-                if (preferences.backupInterval().get() == 0) {
-                    preferences.backupInterval().set(12)
+                if (backupPreferences.backupInterval().get() == 0) {
+                    backupPreferences.backupInterval().set(12)
                     BackupCreatorJob.setupTask(context)
                 }
             }
