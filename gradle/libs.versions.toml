@@ -88,7 +88,7 @@ sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extension
 sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
-junit = "org.junit.jupiter:junit-jupiter:5.9.0"
+junit = "org.junit.jupiter:junit-jupiter:5.9.1"
 
 [bundles]
 reactivex = ["rxandroid", "rxjava", "rxrelay"]
