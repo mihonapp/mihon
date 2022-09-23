@@ -52,7 +52,13 @@ open class BrowseSourceController(bundle: Bundle) :
 
         BrowseSourceScreen(
             presenter = presenter,
-            navigateUp = { router.popCurrentController() },
+            navigateUp = {
+                if (presenter.isUserQuery) {
+                    presenter.search()
+                } else {
+                    router.popCurrentController()
+                }
+            },
             onFabClick = { filterSheet?.show() },
             onMangaClick = { router.pushController(MangaController(it.id, true)) },
             onMangaLongClick = { manga ->
