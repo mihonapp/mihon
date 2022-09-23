@@ -13,9 +13,19 @@ class ReaderSettingsSheet(
     private val showColorFilterSettings: Boolean = false,
 ) : TabbedBottomSheetDialog(activity) {
 
-    private val readingModeSettings = ReaderReadingModeSettings(activity)
-    private val generalSettings = ReaderGeneralSettings(activity)
-    private val colorFilterSettings = ReaderColorFilterSettings(activity)
+    private lateinit var readingModeSettings: ReaderReadingModeSettings
+    private lateinit var generalSettings: ReaderGeneralSettings
+    private lateinit var colorFilterSettings: ReaderColorFilterSettings
+
+    init {
+        initSettings()
+    }
+
+    private fun initSettings() {
+        readingModeSettings = ReaderReadingModeSettings(activity)
+        generalSettings = ReaderGeneralSettings(activity)
+        colorFilterSettings = ReaderColorFilterSettings(activity)
+    }
 
     private val backgroundDimAnimator by lazy {
         val sheetBackgroundDim = window?.attributes?.dimAmount ?: 0.25f
@@ -74,4 +84,9 @@ class ReaderSettingsSheet(
         R.string.pref_category_general,
         R.string.custom_filter,
     )
+
+    override fun show() {
+        initSettings()
+        super.show()
+    }
 }
