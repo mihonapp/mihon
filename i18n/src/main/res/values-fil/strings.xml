@@ -660,7 +660,7 @@
     <string name="notification_size_warning">Babala: Nakasasama ang mga malalaking update sa source at maaaring humantong sa mabagal na update at pagtaas ng paggamit sa baterya. Pindutin para matuto pa.</string>
     <string name="action_display_language_badge">Wika</string>
     <string name="label_warning">Babala</string>
-    <string name="backup_info">Rinerekomenda po namin ang kusang pag-backup. Kailangan mo ring magtabi ng mga kopya sa ibang lugar.</string>
+    <string name="backup_info">Dapat nagtatabi rin kayo ng mga kopya ng backup sa ibang mga lugar.</string>
     <string name="connected_to_wifi">Sa Wi-Fi lang</string>
     <string name="update_72hour">Kada 3 araw</string>
     <string name="download_queue_size_warning">Babala: maaari pong humantong sa pagbagal at/o pagharang ng mga source sa Tachiyomi ang mga malalaking maramihang pag-download. Pakipindot po ito para matuto pa.</string>
@@ -765,4 +765,5 @@
     <string name="updates_last_update_info">Huling na-update ang Aklatan noong: %1$s</string>
     <string name="pref_long_strip_split">Hatiin ang mga matatangkad na larawan (BETA)</string>
     <string name="popular">Sikat</string>
+    <string name="missing_storage_permission">Hindi binigay ang mga permiso sa storage</string>
 </resources>

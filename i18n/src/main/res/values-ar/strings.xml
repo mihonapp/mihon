@@ -82,7 +82,7 @@
     <string name="all">الكل</string>
     <string name="pref_library_update_restriction">تقييد التحديث التلقائي للجهاز</string>
     <string name="charging">عند الشحن</string>
-    <string name="pref_update_only_non_completed">سلسلة منتهية</string>
+    <string name="pref_update_only_non_completed">مع حالة \"مكتمل\"</string>
     <string name="pref_auto_update_manga_sync">تحديث تقدّم الفصول بعد القراءة</string>
     <string name="default_category">الفئة الافتراضية</string>
     <string name="default_category_summary">السؤال دائماً</string>
@@ -235,7 +235,7 @@
     <string name="update_check_no_new_updates">لا تتوفر تحديثات جديدة</string>
     <string name="update_check_look_for_updates">البحث عن التحديثات…</string>
     <string name="update_check_notification_download_in_progress">جار التنزيل…</string>
-    <string name="update_check_notification_download_complete">اضغط للتنزيل</string>
+    <string name="update_check_notification_download_complete">اضغط للتثبيت</string>
     <string name="update_check_notification_download_error">حدث خطأ في التنزيل</string>
     <string name="update_check_notification_update_available">نسخة جديدة متوفرة!</string>
     <string name="information_no_downloads">لا توجد تنزيلات</string>
@@ -546,11 +546,11 @@
     <string name="action_global_search_query">إبحث عن \"%1$s\" بشكلٍ شامل</string>
     <string name="updated_version">حُدِّث إلى الإصدار v%1$s</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="zero">جميع الفصول تم تحديثها بنجاح</item>
-        <item quantity="one">تم تخطي فصل واحد ، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="two">تم تخطي فصلين، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="few">تم تخطي بعض الفصول، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="many">تم تخطي الكثير من الفصول ، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="zero">تم تخطي %d فصل، جميع الفصول تم تحديثها بنجاح</item>
+        <item quantity="one">تم تخطي فصل %d، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="two">تم تخطي %d، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="few">تم تخطي %d فصول، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="many">تم تخطي %d من الفصول ، إما أن المصدر مفقود أو تمت تصفيته</item>
         <item quantity="other">‎تم تخطي %d فصل، إما أن المصدر مفقود أو تمت تصفيته</item>
     </plurals>
     <string name="no_chapters_error">لم يتم العثور على الفصول</string>
@@ -700,7 +700,7 @@
     <string name="action_sort_count">مجموع المانجا</string>
     <string name="label_warning">تحذير</string>
     <string name="action_display_language_badge">اللغة</string>
-    <string name="backup_info">يوصى بشدة بالنسخ الاحتياطي التلقائي. يجب عليك الإحتفاظ بنُسخ في أماكن أخرى أيضًا.</string>
+    <string name="backup_info">يجب عليك الإحتفاظ بنُسخ في أماكن أخرى أيضًا.</string>
     <string name="notification_size_warning">التحديثات الكبيرة تضر بالمصادر، وتؤدي لتحديثات أبطأ، وقد تسبب زيادة في استهلاك البطارية۔ اضغط لمعرفة المزيد۔</string>
     <string name="pref_verbose_logging">التسجيل المطول</string>
     <string name="ext_app_info">معلومات التطبيق</string>
@@ -719,7 +719,7 @@
     <string name="save_chapter_as_cbz">احفظ كأرشيف CBZ</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="pref_library_update_manga_restriction">تخطي تحديث العناوين</string>
-    <string name="pref_update_only_completely_read">مع الفصل (الفصول) الغيرالمقروءة</string>
+    <string name="pref_update_only_completely_read">مع فصل (فصول) غير مقروءة</string>
     <string name="ext_installer_legacy">قياسي</string>
     <string name="pref_auto_clear_chapter_cache">امسح ملفات التخزين المؤقت عند إغلاق التطبيق</string>
     <string name="database_clean">تنظيف قاعدة البيانات</string>
@@ -738,7 +738,7 @@
     <string name="confirm_manga_add_duplicate">لديك محتوى في مكتبتك بنفس الإسم و لكن من مصدر مختلف (%1$s).
 \n
 \nهل مازلت تريد أن تكمل؟</string>
-    <string name="pref_update_only_started">لم تقرأ أي فصول</string>
+    <string name="pref_update_only_started">هذا لم يبدأ بعد</string>
     <string name="skipped_reason_completed">تم تخطيها لإنتهاء السلسلة</string>
     <string name="pref_navigate_pan">قُدْ للتحرك</string>
     <string name="pref_landscape_zoom">كبر الصوره الأفقية</string>
@@ -763,7 +763,7 @@
     <string name="source_empty_screen">لا يوجد مصدر</string>
     <string name="action_sort_unread_count">المانجا الغير مقروءة</string>
     <string name="action_sort_last_manga_update">آخر تحديث للمانجا</string>
-    <string name="split_tall_images_summary">يحسن أداء القارئ عن طريق تقسيم الصور الطويلة التي تم تنزيلها.</string>
+    <string name="split_tall_images_summary">يحسن أداء القارئ</string>
     <string name="split_tall_images">تقسيم للصور الطويلة</string>
     <string name="download_notifier_split_page_not_found">لم يتم العثور على الصفحة %d أثناء التقسيم</string>
     <string name="download_notifier_split_page_path_not_found">لم يتم العثور على مسار الصفخة %d</string>
@@ -808,7 +808,7 @@
     <string name="updates_last_update_info">آخر تحديث للمكتبة: %1$s</string>
     <string name="error_user_agent_string_blank">سلسلة وكيل المستخدم لا يمكن أن تكون فارغة</string>
     <string name="popular">شائع</string>
-    <string name="remove_manga">أنت علي وشك أن تحذف هذه المانجا من مكتبتك</string>
+    <string name="remove_manga">أنت على وشك أن تحذف هذه المانجا من مكتبتك</string>
     <plurals name="next_unread_chapters">
         <item quantity="zero">الفصل التالي غير المقروء</item>
         <item quantity="one">الفصل التالي غير المقروء</item>
@@ -817,4 +817,5 @@
         <item quantity="many">عدة ال %d فصول غير المقروءة التالية</item>
         <item quantity="other">الفصول %d غير المقروءة التالية</item>
     </plurals>
+    <string name="missing_storage_permission">لم يتم منح أذن التخزين</string>
 </resources>

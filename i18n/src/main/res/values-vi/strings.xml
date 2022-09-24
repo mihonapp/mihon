@@ -679,7 +679,7 @@
     <string name="ext_installer_legacy">Phần kế thừa</string>
     <string name="pref_verbose_logging">Đăng nhập tường tận</string>
     <string name="action_display_language_badge">Ngôn ngữ</string>
-    <string name="backup_info">Tự động sao lưu là phương án an toàn nhất. Bạn cũng nên giữ lại các bản sao lưu ở những nơi khác.</string>
+    <string name="backup_info">Bạn nên giữ lại bản sao của sao lưu ở các nơi khác nữa.</string>
     <string name="pref_verbose_logging_summary">In các ghi chép tường tận đến cả ghi chép hệ thống ( giảm hiệu suất ứng dụng )</string>
     <string name="notification_size_warning">Các bản cập nhật lớn sẽ gây hại cho các nguồn và có thể dẫn đến các bản cập nhật chậm hơn và cũng làm tăng mức sử dụng pin. Nhấn vào để tìm hiểu thêm.</string>
     <string name="ext_install_service_notif">Đang cài đặt tiện ích mở rộng…</string>
@@ -778,4 +778,13 @@
         <item quantity="other">%d chương chưa đọc tiếp</item>
     </plurals>
     <string name="auto_download_while_reading">Tự động tải khi đang đọc</string>
+    <string name="missing_storage_permission">Quyền truy cập lưu trữ không được thông qua</string>
+    <string name="popular">Nổi Tiếng</string>
+    <string name="are_you_sure">Bạn chắc chứ\?</string>
+    <string name="remove_manga">Bạn chuẩn bị gỡ bỏ bộ truyện này ra khỏi thư viện của bạn</string>
+    <string name="updates_last_update_info">Thư viện lần cuối được cập nhật: %1$s</string>
+    <string name="download_ahead">Tải Trước</string>
+    <string name="download_ahead_info">Tải trước chỉ áp dụng cho các mục ở trong thư viện và nếu chương cuối cùng đã được tải rồi</string>
+    <string name="pref_long_strip_split">Tách các ảnh cao (BETA)</string>
+    <string name="multi_lang">Đa Ngôn Ngữ</string>
 </resources>

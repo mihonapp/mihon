@@ -340,7 +340,7 @@
     <string name="lock_always">Завжди</string>
     <string name="lock_never">Ніколи</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">Після 1 хвилини</item>
+        <item quantity="one">Після %1$s хвилини</item>
         <item quantity="few">Після %1$s хвилин</item>
         <item quantity="many">Після %1$s хвилин</item>
         <item quantity="other">Після %1$s хвилин</item>
@@ -441,7 +441,7 @@
     <string name="tabs_header">Вкладки</string>
     <string name="badges_header">Значки</string>
     <plurals name="download_queue_summary">
-        <item quantity="one">Залишилось 1</item>
+        <item quantity="one">%1$s залишилось</item>
         <item quantity="few">%1$s залишилось</item>
         <item quantity="many">%1$s залишилось</item>
         <item quantity="other">%1$s залишилось</item>
@@ -483,7 +483,7 @@
     <string name="action_start">Розпочати</string>
     <string name="loader_not_implemented_error">Джерело не знайдено</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 глава</item>
+        <item quantity="one">%1$s глава</item>
         <item quantity="few">%1$s глав</item>
         <item quantity="many">%1$s глав</item>
         <item quantity="other">%1$s глав</item>
@@ -507,7 +507,7 @@
     <string name="pref_category_theme">Тема</string>
     <string name="action_sort_date_added">Дата додавання</string>
     <plurals name="num_trackers">
-        <item quantity="one">1 трекер</item>
+        <item quantity="one">%d трекер</item>
         <item quantity="few">%d трекери</item>
         <item quantity="many">%d трекерів</item>
         <item quantity="other">%d трекерів</item>
@@ -524,8 +524,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Це не заважає неофіційним або потенційно невірним розширенням розміщувати вміст NSFW (18+) у додатку.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Пропускається 1 глава, тому що джерело не має її, або вона була відфільтрована</item>
-        <item quantity="few">Пропускається %d глав, тому що джерело не має їх, або вони була відфільтровані</item>
+        <item quantity="one">Пропускається %d глава, тому що джерело не має її, або вона була відфільтрована</item>
+        <item quantity="few">Пропускається %d глав, тому що джерело не має їх, або вони були відфільтровані</item>
         <item quantity="many">Пропускається %d глав, тому що джерело не має їх, або вони була відфільтровані</item>
         <item quantity="other">Пропускається %d глав, тому що джерело не має їх, або вони була відфільтровані</item>
     </plurals>
@@ -684,7 +684,7 @@
     <string name="download_queue_size_warning">Попередження: великий об\'єм завантажень може призвести до сповільнення роботи джерел та/або блокуванню Tachiyomi.</string>
     <string name="pref_library_update_show_tab_badge">Показувати кількість непрочитаних на значку оновлення</string>
     <string name="ext_update_all">Оновити все</string>
-    <string name="backup_info">Наполегливо рекомендується використовувати автоматичне резервування. Також ви повинні зберігати копії в інших місцях.</string>
+    <string name="backup_info">Ви повинні зберігати декілька резервних копій в інших місцях.</string>
     <string name="label_warning">Попередження</string>
     <string name="action_display_language_badge">Мова</string>
     <string name="update_72hour">Що 3 дні</string>
@@ -723,7 +723,7 @@
     <string name="download_notifier_split_page_not_found">Сторінку %d не знайдено, при розділенні</string>
     <string name="download_notifier_split_failed">Неможливо розділити завантажене зображення</string>
     <string name="split_tall_images">Розділяти довгі зображення</string>
-    <string name="split_tall_images_summary">Покращує продуктивність читалки, поділяючи довгі завантажені зображення.</string>
+    <string name="split_tall_images_summary">Покращує продуктивність читалки</string>
     <string name="webview_data_deleted">Дані WebView очищені</string>
     <string name="pref_clear_webview_data">Очистити дані WebView</string>
     <string name="reading_list">Читаю</string>
@@ -771,4 +771,23 @@
     <string name="action_remove_everything">Видалити все</string>
     <string name="pref_reset_user_agent_string">Скинути user agent за замовчуванням</string>
     <string name="loader_rar5_error">Формат RARv5 не підтримується</string>
+    <string name="multi_lang">Багатомовне</string>
+    <string name="pref_long_strip_split">Розділяти високі зображення (БЕТА)</string>
+    <string name="updates_last_update_info">Останнє оновлення бібліотеки: %1$s</string>
+    <string name="missing_storage_permission">Доступ до файлової системи не надано</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Наступна непрочитана глава</item>
+        <item quantity="few">Наступні %d непрочитані глави</item>
+        <item quantity="many">Наступні %d непрочитані глави</item>
+        <item quantity="other">Наступні %d непрочитані глави</item>
+    </plurals>
+    <string name="download_ahead">Завантажувати наперед</string>
+    <string name="download_ahead_info">Працює тільки на мангу збережену в бібліотеці, якщо поточна глава, та наступна за нею вже завантажені</string>
+    <string name="remove_manga">Ви збираєтесь видалити цю мангу з вашої бібліотеки</string>
+    <string name="theme_tidalwave">Приливна Хвиля</string>
+    <string name="are_you_sure">Ви впевнені\?</string>
+    <string name="update_already_running">Оновлення вже розпочато</string>
+    <string name="error_user_agent_string_blank">Рядок User agent не може бути пустим</string>
+    <string name="popular">Популярне</string>
+    <string name="auto_download_while_reading">Автоматичне завантаження під час читання</string>
 </resources>

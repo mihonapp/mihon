@@ -741,4 +741,5 @@
     <string name="update_already_running">업데이트가 이미 실행 중입니다</string>
     <string name="error_user_agent_string_blank">사용자 에이전트 문자열은 비워 둘 수 없습니다</string>
     <string name="download_ahead">미리 다운로드</string>
+    <string name="multi_lang">다수의</string>
 </resources>
