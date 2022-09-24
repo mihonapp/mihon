@@ -198,7 +198,6 @@ class ChapterRecognitionTest {
 
         assertChapter(mangaTitle, "Fairy Tail 404.extravol002", 404.99f)
         assertChapter(mangaTitle, "Fairy Tail 404 extravol002", 404.99f)
-        assertChapter(mangaTitle, "Fairy Tail 404.evol002", 404.5f)
     }
 
     @Test
@@ -207,7 +206,6 @@ class ChapterRecognitionTest {
 
         assertChapter(mangaTitle, "Fairy Tail 404.omakevol002", 404.98f)
         assertChapter(mangaTitle, "Fairy Tail 404 omakevol002", 404.98f)
-        assertChapter(mangaTitle, "Fairy Tail 404.ovol002", 404.15f)
     }
 
     @Test
@@ -216,7 +214,6 @@ class ChapterRecognitionTest {
 
         assertChapter(mangaTitle, "Fairy Tail 404.specialvol002", 404.97f)
         assertChapter(mangaTitle, "Fairy Tail 404 specialvol002", 404.97f)
-        assertChapter(mangaTitle, "Fairy Tail 404.svol002", 404.19f)
     }
 
     @Test
@@ -251,6 +248,16 @@ class ChapterRecognitionTest {
     @Test
     fun `Chapters ending with s`() {
         assertChapter("One Outs", "One Outs 001", 1f)
+    }
+
+    @Test
+    fun `Chapters containing ordinals`() {
+        val mangaTitle = "The Sister of the Woods with a Thousand Young"
+
+        assertChapter(mangaTitle, "The 1st Night", 1f)
+        assertChapter(mangaTitle, "The 2nd Night", 2f)
+        assertChapter(mangaTitle, "The 3rd Night", 3f)
+        assertChapter(mangaTitle, "The 4th Night", 4f)
     }
 
     private fun assertChapter(mangaTitle: String, name: String, expected: Float) {
