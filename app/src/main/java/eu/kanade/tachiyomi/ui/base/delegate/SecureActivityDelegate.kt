@@ -25,8 +25,8 @@ interface SecureActivityDelegate {
     companion object {
         fun onApplicationCreated() {
             val lockDelay = Injekt.get<SecurityPreferences>().lockAppAfter().get()
-            if (lockDelay == 0) {
-                // Restore always active app lock
+            if (lockDelay <= 0) {
+                // Restore always active/on start app lock
                 // Delayed lock will be restored later on activity resume
                 lockState = LockState.ACTIVE
             }
@@ -39,8 +39,12 @@ interface SecureActivityDelegate {
                 preferences.lastAppClosed().set(Date().time)
             }
             if (!AuthenticatorUtil.isAuthenticating) {
-                lockState = if (preferences.lockAppAfter().get() >= 0) {
+                val lockAfter = preferences.lockAppAfter().get()
+                lockState = if (lockAfter > 0) {
                     LockState.PENDING
+                } else if (lockAfter == -1) {
+                    // Never lock on idle
+                    LockState.INACTIVE
                 } else {
                     LockState.ACTIVE
                 }
