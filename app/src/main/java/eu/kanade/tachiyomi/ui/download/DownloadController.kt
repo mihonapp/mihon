@@ -90,19 +90,6 @@ class DownloadController :
 
     override fun createPresenter() = DownloadPresenter()
 
-    override fun onViewCreated(view: View) {
-        super.onViewCreated(view)
-
-        viewScope.launchUI {
-            presenter.getDownloadStatusFlow()
-                .collect(this@DownloadController::onStatusChange)
-        }
-        viewScope.launchUI {
-            presenter.getDownloadProgressFlow()
-                .collect(this@DownloadController::onUpdateDownloadedPages)
-        }
-    }
-
     @Composable
     override fun ComposeContent() {
         val context = LocalContext.current
@@ -290,6 +277,15 @@ class DownloadController :
                         controllerBinding.recycler.layoutManager = LinearLayoutManager(context)
 
                         ViewCompat.setNestedScrollingEnabled(controllerBinding.root, true)
+
+                        viewScope.launchUI {
+                            presenter.getDownloadStatusFlow()
+                                .collect(this@DownloadController::onStatusChange)
+                        }
+                        viewScope.launchUI {
+                            presenter.getDownloadProgressFlow()
+                                .collect(this@DownloadController::onUpdateDownloadedPages)
+                        }
 
                         controllerBinding.root
                     },

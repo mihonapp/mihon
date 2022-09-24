@@ -75,7 +75,9 @@ class DownloadQueue(
         Observable.from(this).filter { download -> download.status == Download.State.DOWNLOADING }
 
     @Deprecated("Use getStatusAsFlow instead")
-    fun getStatusObservable(): Observable<Download> = statusSubject.onBackpressureBuffer()
+    fun getStatusObservable(): Observable<Download> = statusSubject
+        .startWith(getActiveDownloads())
+        .onBackpressureBuffer()
 
     fun getStatusAsFlow(): Flow<Download> = getStatusObservable().asFlow()
 
