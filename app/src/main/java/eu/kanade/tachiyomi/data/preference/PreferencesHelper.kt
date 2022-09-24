@@ -4,13 +4,11 @@ import android.content.Context
 import android.os.Build
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.core.preference.getEnum
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
-import eu.kanade.domain.manga.model.Manga as DomainManga
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
@@ -53,19 +51,6 @@ class PreferencesHelper(
 
     fun migrateFlags() = preferenceStore.getInt("migrate_flags", Int.MAX_VALUE)
 
-    fun filterChapterByRead() = preferenceStore.getInt("default_chapter_filter_by_read", DomainManga.SHOW_ALL.toInt())
-
-    fun filterChapterByDownloaded() = preferenceStore.getInt("default_chapter_filter_by_downloaded", DomainManga.SHOW_ALL.toInt())
-
-    fun filterChapterByBookmarked() = preferenceStore.getInt("default_chapter_filter_by_bookmarked", DomainManga.SHOW_ALL.toInt())
-
-    // and upload date
-    fun sortChapterBySourceOrNumber() = preferenceStore.getInt("default_chapter_sort_by_source_or_number", DomainManga.CHAPTER_SORTING_SOURCE.toInt())
-
-    fun displayChapterByNameOrNumber() = preferenceStore.getInt("default_chapter_display_by_name_or_number", DomainManga.CHAPTER_DISPLAY_NAME.toInt())
-
-    fun sortChapterByAscendingOrDescending() = preferenceStore.getInt("default_chapter_sort_by_ascending_or_descending", DomainManga.CHAPTER_SORT_DESC.toInt())
-
     fun incognitoMode() = preferenceStore.getBoolean("incognito_mode", false)
 
     fun tabletUiMode() = preferenceStore.getEnum("tablet_ui_mode", Values.TabletUiMode.AUTOMATIC)
@@ -76,13 +61,4 @@ class PreferencesHelper(
     )
 
     fun autoClearChapterCache() = preferenceStore.getBoolean("auto_clear_chapter_cache", false)
-
-    fun setChapterSettingsDefault(manga: Manga) {
-        filterChapterByRead().set(manga.readFilter)
-        filterChapterByDownloaded().set(manga.downloadedFilter)
-        filterChapterByBookmarked().set(manga.bookmarkedFilter)
-        sortChapterBySourceOrNumber().set(manga.sorting)
-        displayChapterByNameOrNumber().set(manga.displayMode)
-        sortChapterByAscendingOrDescending().set(if (manga.sortDescending()) DomainManga.CHAPTER_SORT_DESC.toInt() else DomainManga.CHAPTER_SORT_ASC.toInt())
-    }
 }

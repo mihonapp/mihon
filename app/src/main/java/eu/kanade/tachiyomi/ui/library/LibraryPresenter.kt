@@ -48,7 +48,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchNonCancellableIO
+import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
 import kotlinx.coroutines.Job
@@ -524,7 +524,7 @@ class LibraryPresenter(
      * @param mangas the list of manga.
      */
     fun downloadUnreadChapters(mangas: List<Manga>) {
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             mangas.forEach { manga ->
                 val chapters = getChapterByMangaId.await(manga.id)
                     .filter { !it.read }
@@ -541,7 +541,7 @@ class LibraryPresenter(
      * @param mangas the list of manga.
      */
     fun markReadStatus(mangas: List<Manga>, read: Boolean) {
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             mangas.forEach { manga ->
                 setReadStatus.await(
                     manga = manga,
@@ -559,7 +559,7 @@ class LibraryPresenter(
      * @param deleteChapters whether to delete downloaded chapters.
      */
     fun removeMangas(mangaList: List<DbManga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             val mangaToDelete = mangaList.distinctBy { it.id }
 
             if (deleteFromLibrary) {
@@ -592,7 +592,7 @@ class LibraryPresenter(
      * @param removeCategories the categories to remove in all mangas.
      */
     fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             mangaList.map { manga ->
                 val categoryIds = getCategories.await(manga.id)
                     .map { it.id }

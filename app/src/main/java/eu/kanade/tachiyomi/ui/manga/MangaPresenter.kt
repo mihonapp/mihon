@@ -9,6 +9,7 @@ import eu.kanade.core.prefs.mapAsCheckboxState
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
@@ -41,10 +42,9 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
-import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchNonCancellableIO
+import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.preference.asHotFlow
@@ -91,6 +91,7 @@ class MangaPresenter(
     private val getMangaAndChapters: GetMangaWithChapters = Injekt.get(),
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val setMangaChapterFlags: SetMangaChapterFlags = Injekt.get(),
+    private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
@@ -162,7 +163,7 @@ class MangaPresenter(
             val manga = getMangaAndChapters.awaitManga(mangaId)
 
             if (!manga.favorite) {
-                ChapterSettingsHelper.applySettingDefaults(mangaId)
+                setMangaDefaultChapterFlags.await(manga)
             }
 
             // Show what we have earlier.
@@ -646,7 +647,7 @@ class MangaPresenter(
      * @param chapters the list of chapters to delete.
      */
     fun deleteChapters(chapters: List<DomainChapter>) {
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             val chapters2 = chapters.map { it.toDbChapter() }
             try {
                 updateSuccessState { successState ->
@@ -678,10 +679,10 @@ class MangaPresenter(
     }
 
     private fun downloadNewChapters(chapters: List<DomainChapter>) {
-        presenterScope.launchNonCancellableIO {
-            val manga = successState?.manga ?: return@launchNonCancellableIO
+        presenterScope.launchNonCancellable {
+            val manga = successState?.manga ?: return@launchNonCancellable
             val categories = getCategories.await(manga.id).map { it.id }
-            if (chapters.isEmpty() || !manga.shouldDownloadNewChapters(categories, downloadPreferences)) return@launchNonCancellableIO
+            if (chapters.isEmpty() || !manga.shouldDownloadNewChapters(categories, downloadPreferences)) return@launchNonCancellable
             downloadChapters(chapters)
         }
     }
@@ -698,7 +699,7 @@ class MangaPresenter(
             State.INCLUDE -> DomainManga.CHAPTER_SHOW_UNREAD
             State.EXCLUDE -> DomainManga.CHAPTER_SHOW_READ
         }
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetUnreadFilter(manga, flag)
         }
     }
@@ -716,7 +717,7 @@ class MangaPresenter(
             State.EXCLUDE -> DomainManga.CHAPTER_SHOW_NOT_DOWNLOADED
         }
 
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetDownloadedFilter(manga, flag)
         }
     }
@@ -734,7 +735,7 @@ class MangaPresenter(
             State.EXCLUDE -> DomainManga.CHAPTER_SHOW_NOT_BOOKMARKED
         }
 
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetBookmarkFilter(manga, flag)
         }
     }
@@ -746,7 +747,7 @@ class MangaPresenter(
     fun setDisplayMode(mode: Long) {
         val manga = successState?.manga ?: return
 
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetDisplayMode(manga, mode)
         }
     }
@@ -758,7 +759,7 @@ class MangaPresenter(
     fun setSorting(sort: Long) {
         val manga = successState?.manga ?: return
 
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetSortingModeOrFlipOrder(manga, sort)
         }
     }
@@ -873,7 +874,7 @@ class MangaPresenter(
 
     fun refreshTrackers() {
         refreshTrackersJob?.cancel()
-        refreshTrackersJob = presenterScope.launchNonCancellableIO {
+        refreshTrackersJob = presenterScope.launchNonCancellable {
             supervisorScope {
                 try {
                     trackList
@@ -921,7 +922,7 @@ class MangaPresenter(
         val successState = successState ?: return
         if (item != null) {
             item.manga_id = successState.manga.id
-            presenterScope.launchNonCancellableIO {
+            presenterScope.launchNonCancellable {
                 try {
                     val allChapters = successState.chapters.map { it.chapter }
                     val hasReadChapters = allChapters.any { it.read }
@@ -962,13 +963,13 @@ class MangaPresenter(
     fun unregisterTracking(service: TrackService) {
         val manga = successState?.manga ?: return
 
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             deleteTrack.await(manga.id, service.id)
         }
     }
 
     private fun updateRemote(track: Track, service: TrackService) {
-        presenterScope.launchNonCancellableIO {
+        presenterScope.launchNonCancellable {
             try {
                 service.update(track)
 

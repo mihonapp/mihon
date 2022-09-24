@@ -2,6 +2,7 @@ package eu.kanade.domain.library.service
 
 import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.domain.library.model.LibrarySort
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
 import eu.kanade.tachiyomi.data.preference.MANGA_HAS_UNREAD
@@ -75,6 +76,32 @@ class LibraryPreferences(
     fun libraryUpdateCategories() = preferenceStore.getStringSet("library_update_categories", emptySet())
 
     fun libraryUpdateCategoriesExclude() = preferenceStore.getStringSet("library_update_categories_exclude", emptySet())
+
+    // endregion
+
+    // region Chapter
+
+    fun filterChapterByRead() = preferenceStore.getLong("default_chapter_filter_by_read", Manga.SHOW_ALL)
+
+    fun filterChapterByDownloaded() = preferenceStore.getLong("default_chapter_filter_by_downloaded", Manga.SHOW_ALL)
+
+    fun filterChapterByBookmarked() = preferenceStore.getLong("default_chapter_filter_by_bookmarked", Manga.SHOW_ALL)
+
+    // and upload date
+    fun sortChapterBySourceOrNumber() = preferenceStore.getLong("default_chapter_sort_by_source_or_number", Manga.CHAPTER_SORTING_SOURCE)
+
+    fun displayChapterByNameOrNumber() = preferenceStore.getLong("default_chapter_display_by_name_or_number", Manga.CHAPTER_DISPLAY_NAME)
+
+    fun sortChapterByAscendingOrDescending() = preferenceStore.getLong("default_chapter_sort_by_ascending_or_descending", Manga.CHAPTER_SORT_DESC)
+
+    fun setChapterSettingsDefault(manga: Manga) {
+        filterChapterByRead().set(manga.unreadFilterRaw)
+        filterChapterByDownloaded().set(manga.downloadedFilterRaw)
+        filterChapterByBookmarked().set(manga.bookmarkedFilterRaw)
+        sortChapterBySourceOrNumber().set(manga.sorting)
+        displayChapterByNameOrNumber().set(manga.displayMode)
+        sortChapterByAscendingOrDescending().set(if (manga.sortDescending()) Manga.CHAPTER_SORT_DESC else Manga.CHAPTER_SORT_ASC)
+    }
 
     // endregion
 }

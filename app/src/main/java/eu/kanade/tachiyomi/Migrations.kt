@@ -306,6 +306,26 @@ object Migrations {
                     BackupCreatorJob.setupTask(context)
                 }
             }
+            if (oldVersion < 85) {
+                val preferences = listOf(
+                    libraryPreferences.filterChapterByRead(),
+                    libraryPreferences.filterChapterByDownloaded(),
+                    libraryPreferences.filterChapterByBookmarked(),
+                    libraryPreferences.sortChapterBySourceOrNumber(),
+                    libraryPreferences.displayChapterByNameOrNumber(),
+                    libraryPreferences.sortChapterByAscendingOrDescending(),
+                )
+
+                prefs.edit {
+                    preferences.forEach { preference ->
+                        val key = preference.key()
+                        val value = prefs.getInt(key, Int.MIN_VALUE)
+                        if (value == Int.MIN_VALUE) return@forEach
+                        remove(key)
+                        putLong(key, value.toLong())
+                    }
+                }
+            }
             return true
         }
 
