@@ -9,7 +9,6 @@ import eu.kanade.tachiyomi.core.R
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.isOutdated
-import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
 import okhttp3.Cookie
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -57,25 +56,19 @@ class CloudflareInterceptor(private val context: Context) : WebViewInterceptor(c
         // OkHttp doesn't support asynchronous interceptors.
         val latch = CountDownLatch(1)
 
-        var webView: WebView? = null
+        var webview: WebView? = null
 
         var challengeFound = false
         var cloudflareBypassed = false
         var isWebViewOutdated = false
 
         val origRequestUrl = originalRequest.url.toString()
-        val headers = originalRequest.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }.toMutableMap()
+        val headers = parseHeaders(originalRequest.headers)
 
         executor.execute {
-            val webview = WebView(context)
-            webView = webview
-            webview.setDefaultSettings()
+            webview = createWebView(originalRequest)
 
-            // Avoid sending empty User-Agent, Chromium WebView will reset to default if empty
-            webview.settings.userAgentString = originalRequest.header("User-Agent")
-                ?: networkHelper.defaultUserAgent
-
-            webview.webViewClient = object : WebViewClientCompat() {
+            webview?.webViewClient = object : WebViewClientCompat() {
                 override fun onPageFinished(view: WebView, url: String) {
                     fun isCloudFlareBypassed(): Boolean {
                         return networkHelper.cookieManager.get(origRequestUrl.toHttpUrl())
@@ -113,7 +106,7 @@ class CloudflareInterceptor(private val context: Context) : WebViewInterceptor(c
                 }
             }
 
-            webView?.loadUrl(origRequestUrl, headers)
+            webview?.loadUrl(origRequestUrl, headers)
         }
 
         // Wait a reasonable amount of time to retrieve the solution. The minimum should be
@@ -122,12 +115,13 @@ class CloudflareInterceptor(private val context: Context) : WebViewInterceptor(c
 
         executor.execute {
             if (!cloudflareBypassed) {
-                isWebViewOutdated = webView?.isOutdated() == true
+                isWebViewOutdated = webview?.isOutdated() == true
             }
 
-            webView?.stopLoading()
-            webView?.destroy()
-            webView = null
+            webview?.run {
+                stopLoading()
+                destroy()
+            }
         }
 
         // Throw exception if we failed to bypass Cloudflare

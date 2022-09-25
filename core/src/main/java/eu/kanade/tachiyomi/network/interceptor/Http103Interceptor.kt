@@ -43,18 +43,18 @@ class Http103Interceptor(context: Context) : WebViewInterceptor(context) {
 
         val jsInterface = JsInterface(latch)
 
-        var outerWebView: WebView? = null
+        var webview: WebView? = null
 
         var exception: Exception? = null
 
         val requestUrl = originalRequest.url.toString()
-        val headers = originalRequest.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }.toMutableMap()
+        val headers = parseHeaders(originalRequest.headers)
 
         executor.execute {
-            val webview = createWebView(originalRequest).also { outerWebView = it }
-            webview.addJavascriptInterface(jsInterface, "android")
+            webview = createWebView(originalRequest)
+            webview?.addJavascriptInterface(jsInterface, "android")
 
-            webview.webViewClient = object : WebViewClientCompat() {
+            webview?.webViewClient = object : WebViewClientCompat() {
                 override fun onPageFinished(view: WebView, url: String) {
                     view.evaluateJavascript(jsScript) {}
                 }
@@ -73,17 +73,16 @@ class Http103Interceptor(context: Context) : WebViewInterceptor(context) {
                 }
             }
 
-            webview.loadUrl(requestUrl, headers)
+            webview?.loadUrl(requestUrl, headers)
         }
 
         latch.await(10, TimeUnit.SECONDS)
 
         executor.execute {
-            outerWebView?.run {
+            webview?.run {
                 stopLoading()
                 destroy()
             }
-            outerWebView = null
         }
 
         exception?.let { throw it }
