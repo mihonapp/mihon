@@ -256,13 +256,13 @@ class MangaController : FullComposeController<MangaPresenter> {
     private fun onFavoriteClick() {
         presenter.toggleFavorite(
             onRemoved = this::onFavoriteRemoved,
-            onAdded = { activity?.toast(activity?.getString(R.string.manga_added_library)) },
+            onAdded = { activity?.toast(R.string.manga_added_library) },
         )
     }
 
     private fun onFavoriteRemoved() {
         val context = activity ?: return
-        context.toast(activity?.getString(R.string.manga_removed_library))
+        context.toast(R.string.manga_removed_library)
         viewScope.launch {
             if (!presenter.hasDownloads()) return@launch
             val result = snackbarHostState.showSnackbar(
@@ -367,7 +367,7 @@ class MangaController : FullComposeController<MangaPresenter> {
 
     fun onFetchChaptersError(error: Throwable) {
         if (error is NoChaptersException) {
-            activity?.toast(activity?.getString(R.string.no_chapters_error))
+            activity?.toast(R.string.no_chapters_error)
         } else {
             activity?.toast(error.message)
         }
