@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import eu.kanade.domain.manga.model.MangaCover
@@ -179,6 +180,7 @@ fun RowScope.MangaListItemContent(
             .padding(horizontal = horizontalPadding)
             .weight(1f),
         maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
         style = MaterialTheme.typography.bodyMedium,
     )
 }

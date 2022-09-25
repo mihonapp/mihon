@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
@@ -114,6 +115,7 @@ fun BoxScope.MangaGridCompactText(
         color = Color.White,
         fontSize = 12.sp,
         maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
         style = MaterialTheme.typography.titleSmall.copy(
             shadow = Shadow(
                 color = Color.Black,
