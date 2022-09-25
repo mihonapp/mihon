@@ -1,13 +1,17 @@
 package eu.kanade.presentation.browse
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FilterList
@@ -15,6 +19,7 @@ import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -42,6 +47,7 @@ import eu.kanade.presentation.browse.components.BrowseSourceCompactGrid
 import eu.kanade.presentation.browse.components.BrowseSourceList
 import eu.kanade.presentation.browse.components.BrowseSourceToolbar
 import eu.kanade.presentation.components.AppStateBanners
+import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.ExtendedFloatingActionButton
 import eu.kanade.presentation.components.LoadingScreen
@@ -56,7 +62,7 @@ import eu.kanade.tachiyomi.widget.EmptyView
 fun BrowseSourceScreen(
     presenter: BrowseSourcePresenter,
     navigateUp: () -> Unit,
-    onFabClick: () -> Unit,
+    openFilterSheet: () -> Unit,
     onMangaClick: (Manga) -> Unit,
     onMangaLongClick: (Manga) -> Unit,
     onWebViewClick: () -> Unit,
@@ -76,8 +82,8 @@ fun BrowseSourceScreen(
     }
 
     Scaffold(
-        topBar = { scrollBehavior ->
-            Column {
+        topBar = {
+            Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                 BrowseSourceToolbar(
                     state = presenter,
                     source = presenter.source!!,
@@ -87,37 +93,12 @@ fun BrowseSourceScreen(
                     onWebViewClick = onWebViewClick,
                     onHelpClick = onHelpClick,
                     onSearch = { presenter.search() },
-                    scrollBehavior = scrollBehavior,
                 )
 
-                AppStateBanners(downloadedOnlyMode, incognitoMode)
-            }
-        },
-        floatingActionButton = {
-            BrowseSourceFloatingActionButton(
-                isVisible = presenter.filters.isNotEmpty() && presenter.currentFilter is BrowseSourcePresenter.Filter.UserInput,
-                onFabClick = onFabClick,
-            )
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
-    ) { paddingValues ->
-        BrowseSourceContent(
-            state = presenter,
-            mangaList = mangaList,
-            getMangaState = { presenter.getManga(it) },
-            columns = columns,
-            displayMode = presenter.displayMode,
-            snackbarHostState = snackbarHostState,
-            contentPadding = paddingValues,
-            onWebViewClick = onWebViewClick,
-            onHelpClick = { uriHandler.openUri(MoreController.URL_HELP) },
-            onLocalSourceHelpClick = onHelpClick,
-            onMangaClick = onMangaClick,
-            onMangaLongClick = onMangaLongClick,
-            header = {
                 Row(
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     FilterChip(
@@ -161,7 +142,7 @@ fun BrowseSourceScreen(
                     if (presenter.filters.isNotEmpty()) {
                         FilterChip(
                             selected = presenter.currentFilter is BrowseSourcePresenter.Filter.UserInput,
-                            onClick = onFabClick,
+                            onClick = openFilterSheet,
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Outlined.FilterList,
@@ -176,7 +157,29 @@ fun BrowseSourceScreen(
                         )
                     }
                 }
-            },
+
+                Divider()
+
+                AppStateBanners(downloadedOnlyMode, incognitoMode)
+            }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+    ) { paddingValues ->
+        BrowseSourceContent(
+            state = presenter,
+            mangaList = mangaList,
+            getMangaState = { presenter.getManga(it) },
+            columns = columns,
+            displayMode = presenter.displayMode,
+            snackbarHostState = snackbarHostState,
+            contentPadding = paddingValues,
+            onWebViewClick = onWebViewClick,
+            onHelpClick = { uriHandler.openUri(MoreController.URL_HELP) },
+            onLocalSourceHelpClick = onHelpClick,
+            onMangaClick = onMangaClick,
+            onMangaLongClick = onMangaLongClick,
         )
     }
 }
@@ -202,7 +205,6 @@ fun BrowseSourceContent(
     state: BrowseSourceState,
     mangaList: LazyPagingItems<Manga>,
     getMangaState: @Composable ((Manga) -> State<Manga>),
-    header: (@Composable () -> Unit)? = null,
     columns: GridCells,
     displayMode: LibraryDisplayMode,
     snackbarHostState: SnackbarHostState,
@@ -274,7 +276,6 @@ fun BrowseSourceContent(
                 contentPadding = contentPadding,
                 onMangaClick = onMangaClick,
                 onMangaLongClick = onMangaLongClick,
-                header = header,
             )
         }
         LibraryDisplayMode.List -> {
@@ -284,7 +285,6 @@ fun BrowseSourceContent(
                 contentPadding = contentPadding,
                 onMangaClick = onMangaClick,
                 onMangaLongClick = onMangaLongClick,
-                header = header,
             )
         }
         else -> {
@@ -295,7 +295,6 @@ fun BrowseSourceContent(
                 contentPadding = contentPadding,
                 onMangaClick = onMangaClick,
                 onMangaLongClick = onMangaLongClick,
-                header = header,
             )
         }
     }

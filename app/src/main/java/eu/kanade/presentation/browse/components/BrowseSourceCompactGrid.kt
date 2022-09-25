@@ -41,7 +41,6 @@ fun BrowseSourceCompactGrid(
     contentPadding: PaddingValues,
     onMangaClick: (Manga) -> Unit,
     onMangaLongClick: (Manga) -> Unit,
-    header: (@Composable () -> Unit)? = null,
 ) {
     LazyVerticalGrid(
         columns = columns,
@@ -49,12 +48,6 @@ fun BrowseSourceCompactGrid(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        if (header != null) {
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                header()
-            }
-        }
-
         item(span = { GridItemSpan(maxLineSpan) }) {
             if (mangaList.loadState.prepend is LoadState.Loading) {
                 BrowseSourceLoadingItem()

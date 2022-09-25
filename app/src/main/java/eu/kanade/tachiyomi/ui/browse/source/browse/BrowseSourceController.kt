@@ -59,7 +59,7 @@ open class BrowseSourceController(bundle: Bundle) :
                     router.popCurrentController()
                 }
             },
-            onFabClick = { filterSheet?.show() },
+            openFilterSheet = { filterSheet?.show() },
             onMangaClick = { router.pushController(MangaController(it.id, true)) },
             onMangaLongClick = { manga ->
                 scope.launchIO {

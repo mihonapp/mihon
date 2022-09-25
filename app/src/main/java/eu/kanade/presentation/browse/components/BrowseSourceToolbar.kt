@@ -39,7 +39,7 @@ fun BrowseSourceToolbar(
     onWebViewClick: () -> Unit,
     onHelpClick: () -> Unit,
     onSearch: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     if (state.searchQuery == null) {
         BrowseSourceRegularToolbar(
@@ -75,7 +75,7 @@ fun BrowseSourceRegularToolbar(
     onSearchClick: () -> Unit,
     onWebViewClick: () -> Unit,
     onHelpClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     AppBar(
         navigateUp = navigateUp,
@@ -162,7 +162,7 @@ fun BrowseSourceSearchToolbar(
     navigateUp: () -> Unit,
     onResetClick: () -> Unit,
     onSearchClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     SearchToolbar(
         searchQuery = searchQuery,
