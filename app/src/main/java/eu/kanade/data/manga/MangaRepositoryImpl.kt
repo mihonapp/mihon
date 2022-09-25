@@ -2,6 +2,7 @@ package eu.kanade.data.manga
 
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.data.listOfStringsAdapter
+import eu.kanade.data.updateStrategyAdapter
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.repository.MangaRepository
@@ -92,6 +93,7 @@ class MangaRepositoryImpl(
                 chapterFlags = manga.chapterFlags,
                 coverLastModified = manga.coverLastModified,
                 dateAdded = manga.dateAdded,
+                updateStrategy = manga.updateStrategy,
             )
             mangasQueries.selectLastInsertedRowId()
         }
@@ -138,6 +140,7 @@ class MangaRepositoryImpl(
                     coverLastModified = value.coverLastModified,
                     dateAdded = value.dateAdded,
                     mangaId = value.id,
+                    updateStrategy = value.updateStrategy?.let(updateStrategyAdapter::encode),
                 )
             }
         }

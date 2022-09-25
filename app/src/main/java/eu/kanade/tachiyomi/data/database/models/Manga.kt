@@ -93,6 +93,7 @@ fun Manga.toDomainManga(): DomainManga? {
         genre = getGenres(),
         status = status.toLong(),
         thumbnailUrl = thumbnail_url,
+        updateStrategy = update_strategy,
         initialized = initialized,
     )
 }

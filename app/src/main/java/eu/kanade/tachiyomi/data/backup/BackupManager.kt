@@ -7,6 +7,7 @@ import com.hippo.unifile.UniFile
 import data.Manga_sync
 import data.Mangas
 import eu.kanade.data.DatabaseHandler
+import eu.kanade.data.updateStrategyAdapter
 import eu.kanade.domain.backup.service.BackupPreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.model.Category
@@ -506,6 +507,7 @@ class BackupManager(
                 chapterFlags = manga.chapter_flags.toLong(),
                 coverLastModified = manga.cover_last_modified,
                 dateAdded = manga.date_added,
+                updateStrategy = manga.update_strategy,
             )
             mangasQueries.selectLastInsertedRowId()
         }
@@ -531,6 +533,7 @@ class BackupManager(
                 coverLastModified = manga.cover_last_modified,
                 dateAdded = manga.date_added,
                 mangaId = manga.id!!,
+                updateStrategy = manga.update_strategy.let(updateStrategyAdapter::encode),
             )
         }
         return manga.id!!

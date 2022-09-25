@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.data.database.models
 
+import eu.kanade.tachiyomi.source.model.UpdateStrategy
+
 open class MangaImpl : Manga {
 
     override var id: Long? = null
@@ -27,6 +29,8 @@ open class MangaImpl : Manga {
     override var last_update: Long = 0
 
     override var date_added: Long = 0
+
+    override var update_strategy: UpdateStrategy = UpdateStrategy.ALWAYS_UPDATE
 
     override var initialized: Boolean = false
 

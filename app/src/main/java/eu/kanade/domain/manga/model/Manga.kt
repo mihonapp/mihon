@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.MangaImpl
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -29,6 +30,7 @@ data class Manga(
     val genre: List<String>?,
     val status: Long,
     val thumbnailUrl: String?,
+    val updateStrategy: UpdateStrategy,
     val initialized: Boolean,
 ) : Serializable {
 
@@ -143,6 +145,7 @@ data class Manga(
             genre = null,
             status = 0L,
             thumbnailUrl = null,
+            updateStrategy = UpdateStrategy.ALWAYS_UPDATE,
             initialized = false,
         )
     }
@@ -180,6 +183,7 @@ fun Manga.toDbManga(): DbManga = MangaImpl().also {
     it.genre = genre?.let(listOfStringsAdapter::encode)
     it.status = status.toInt()
     it.thumbnail_url = thumbnailUrl
+    it.update_strategy = updateStrategy
     it.initialized = initialized
 }
 
@@ -201,6 +205,7 @@ fun Manga.toMangaUpdate(): MangaUpdate {
         genre = genre,
         status = status,
         thumbnailUrl = thumbnailUrl,
+        updateStrategy = updateStrategy,
         initialized = initialized,
     )
 }
