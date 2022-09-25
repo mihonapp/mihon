@@ -95,6 +95,20 @@ open class GlobalSearchController(
         )
 
         optionsMenuSearchItem = menu.findItem(R.id.action_search)
+
+        // Focus search on launch from browse screen
+        if (initialQuery.isNullOrEmpty()) {
+            optionsMenuSearchItem?.expandActionView()
+        }
+    }
+
+    override fun onSearchMenuItemActionCollapse(item: MenuItem?) {
+        super.onSearchMenuItemActionCollapse(item)
+        // Close this screen if query is empty
+        // i.e. launch from browse screen and clicking the back button icon without making any search
+        if (presenter.query.isEmpty()) {
+            router.popCurrentController()
+        }
     }
 
     override fun onSearchMenuItemActionExpand(item: MenuItem?) {
