@@ -14,6 +14,7 @@ import com.google.accompanist.pager.PagerState
 import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.components.AppStateBanners
+import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.TabIndicator
 import eu.kanade.presentation.components.TabText
 import kotlinx.coroutines.launch
@@ -34,6 +35,9 @@ fun LibraryTabs(
             selectedTabIndex = state.currentPage,
             edgePadding = 0.dp,
             indicator = { TabIndicator(it[state.currentPage]) },
+            // TODO: use default when width is fixed upstream
+            // https://issuetracker.google.com/issues/242879624
+            divider = {},
         ) {
             categories.forEachIndexed { index, category ->
                 val count by if (showMangaCount) {
@@ -50,6 +54,8 @@ fun LibraryTabs(
                 )
             }
         }
+
+        Divider()
 
         AppStateBanners(isDownloadOnly, isIncognitoMode)
     }
