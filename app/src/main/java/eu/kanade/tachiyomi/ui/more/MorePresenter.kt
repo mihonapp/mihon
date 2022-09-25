@@ -1,9 +1,9 @@
 package eu.kanade.tachiyomi.ui.more
 
 import android.os.Bundle
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +18,8 @@ import uy.kohesive.injekt.api.get
 
 class MorePresenter(
     private val downloadManager: DownloadManager = Injekt.get(),
-    preferences: PreferencesHelper = Injekt.get(),
+    preferences: BasePreferences = Injekt.get(),
+
 ) : BasePresenter<MoreController>() {
 
     val downloadedOnly = preferences.downloadedOnly().asState()

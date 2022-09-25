@@ -13,6 +13,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.insertSeparators
 import androidx.paging.map
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.history.interactor.DeleteHistoryTable
 import eu.kanade.domain.history.interactor.GetHistory
@@ -22,7 +23,6 @@ import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.history.HistoryUiModel
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.toDateKey
@@ -46,7 +46,7 @@ class HistoryPresenter(
     private val deleteHistoryTable: DeleteHistoryTable = Injekt.get(),
     private val removeHistoryById: RemoveHistoryById = Injekt.get(),
     private val removeHistoryByMangaId: RemoveHistoryByMangaId = Injekt.get(),
-    preferences: PreferencesHelper = Injekt.get(),
+    preferences: BasePreferences = Injekt.get(),
 ) : BasePresenter<HistoryController>(), HistoryState by state {
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)

@@ -1,9 +1,9 @@
 package eu.kanade.tachiyomi.ui.base.delegate
 
 import android.app.Activity
+import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -11,37 +11,37 @@ interface ThemingDelegate {
     fun applyAppTheme(activity: Activity)
 
     companion object {
-        fun getThemeResIds(appTheme: PreferenceValues.AppTheme, isAmoled: Boolean): List<Int> {
+        fun getThemeResIds(appTheme: AppTheme, isAmoled: Boolean): List<Int> {
             val resIds = mutableListOf<Int>()
             when (appTheme) {
-                PreferenceValues.AppTheme.MONET -> {
+                AppTheme.MONET -> {
                     resIds += R.style.Theme_Tachiyomi_Monet
                 }
-                PreferenceValues.AppTheme.GREEN_APPLE -> {
+                AppTheme.GREEN_APPLE -> {
                     resIds += R.style.Theme_Tachiyomi_GreenApple
                 }
-                PreferenceValues.AppTheme.LAVENDER -> {
+                AppTheme.LAVENDER -> {
                     resIds += R.style.Theme_Tachiyomi_Lavender
                 }
-                PreferenceValues.AppTheme.MIDNIGHT_DUSK -> {
+                AppTheme.MIDNIGHT_DUSK -> {
                     resIds += R.style.Theme_Tachiyomi_MidnightDusk
                 }
-                PreferenceValues.AppTheme.STRAWBERRY_DAIQUIRI -> {
+                AppTheme.STRAWBERRY_DAIQUIRI -> {
                     resIds += R.style.Theme_Tachiyomi_StrawberryDaiquiri
                 }
-                PreferenceValues.AppTheme.TAKO -> {
+                AppTheme.TAKO -> {
                     resIds += R.style.Theme_Tachiyomi_Tako
                 }
-                PreferenceValues.AppTheme.TEALTURQUOISE -> {
+                AppTheme.TEALTURQUOISE -> {
                     resIds += R.style.Theme_Tachiyomi_TealTurquoise
                 }
-                PreferenceValues.AppTheme.YINYANG -> {
+                AppTheme.YINYANG -> {
                     resIds += R.style.Theme_Tachiyomi_YinYang
                 }
-                PreferenceValues.AppTheme.YOTSUBA -> {
+                AppTheme.YOTSUBA -> {
                     resIds += R.style.Theme_Tachiyomi_Yotsuba
                 }
-                PreferenceValues.AppTheme.TIDAL_WAVE -> {
+                AppTheme.TIDAL_WAVE -> {
                     resIds += R.style.Theme_Tachiyomi_TidalWave
                 }
                 else -> {
@@ -60,8 +60,8 @@ interface ThemingDelegate {
 
 class ThemingDelegateImpl : ThemingDelegate {
     override fun applyAppTheme(activity: Activity) {
-        val preferences = Injekt.get<PreferencesHelper>()
-        ThemingDelegate.getThemeResIds(preferences.appTheme().get(), preferences.themeDarkAmoled().get())
+        val uiPreferences = Injekt.get<UiPreferences>()
+        ThemingDelegate.getThemeResIds(uiPreferences.appTheme().get(), uiPreferences.themeDarkAmoled().get())
             .forEach { activity.setTheme(it) }
     }
 }

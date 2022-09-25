@@ -10,10 +10,10 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notification
@@ -68,7 +68,7 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
         private const val TAG = "ExtensionUpdate"
 
         fun setupTask(context: Context, forceAutoUpdateJob: Boolean? = null) {
-            val preferences = Injekt.get<PreferencesHelper>()
+            val preferences = Injekt.get<BasePreferences>()
             val autoUpdateJob = forceAutoUpdateJob ?: preferences.automaticExtUpdates().get()
             if (autoUpdateJob) {
                 val constraints = Constraints.Builder()

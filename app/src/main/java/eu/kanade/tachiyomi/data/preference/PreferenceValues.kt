@@ -16,38 +16,6 @@ const val MANGA_NON_READ = "manga_started"
  */
 object PreferenceValues {
 
-    /* ktlint-disable experimental:enum-entry-name-case */
-
-    // Keys are lowercase to match legacy string values
-    /* ktlint-disable enum-entry-name-case */
-    enum class ThemeMode {
-        light,
-        dark,
-        system,
-    }
-    /* ktlint-enable enum-entry-name-case */
-
-    /* ktlint-enable experimental:enum-entry-name-case */
-
-    enum class AppTheme(val titleResId: Int?) {
-        DEFAULT(R.string.label_default),
-        MONET(R.string.theme_monet),
-        GREEN_APPLE(R.string.theme_greenapple),
-        LAVENDER(R.string.theme_lavender),
-        MIDNIGHT_DUSK(R.string.theme_midnightdusk),
-        STRAWBERRY_DAIQUIRI(R.string.theme_strawberrydaiquiri),
-        TAKO(R.string.theme_tako),
-        TEALTURQUOISE(R.string.theme_tealturquoise),
-        TIDAL_WAVE(R.string.theme_tidalwave),
-        YINYANG(R.string.theme_yinyang),
-        YOTSUBA(R.string.theme_yotsuba),
-
-        // Deprecated
-        DARK_BLUE(null),
-        HOT_PINK(null),
-        BLUE(null),
-    }
-
     enum class TappingInvertMode(val shouldInvertHorizontal: Boolean = false, val shouldInvertVertical: Boolean = false) {
         NONE,
         HORIZONTAL(shouldInvertHorizontal = true),
@@ -60,13 +28,6 @@ object PreferenceValues {
         HIGH(13),
         LOW(31),
         LOWEST(47),
-    }
-
-    enum class TabletUiMode(val titleResId: Int) {
-        AUTOMATIC(R.string.automatic_background),
-        ALWAYS(R.string.lock_always),
-        LANDSCAPE(R.string.landscape),
-        NEVER(R.string.lock_never),
     }
 
     enum class ExtensionInstaller(val titleResId: Int) {

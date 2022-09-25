@@ -10,10 +10,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.chrisbanes.insetter.applyInsetter
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.GlobalSearchControllerBinding
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.base.controller.SearchableNucleusController
@@ -34,7 +34,7 @@ open class GlobalSearchController(
     GlobalSearchCardAdapter.OnMangaClickListener,
     GlobalSearchAdapter.OnTitleClickListener {
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val preferences: BasePreferences by injectLazy()
     private val sourcePreferences: SourcePreferences by injectLazy()
 
     /**

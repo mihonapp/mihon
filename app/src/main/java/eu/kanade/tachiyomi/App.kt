@@ -27,14 +27,15 @@ import coil.disk.DiskCache
 import coil.util.DebugLogger
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.DomainModule
+import eu.kanade.domain.base.BasePreferences
+import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.data.coil.DomainMangaKeyer
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverKeyer
 import eu.kanade.tachiyomi.data.coil.MangaKeyer
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.glance.UpdatesGridGlanceWidget
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
@@ -63,7 +64,8 @@ import java.security.Security
 
 class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val basePreferences: BasePreferences by injectLazy()
+    private val uiPreferences: UiPreferences by injectLazy()
     private val networkPreferences: NetworkPreferences by injectLazy()
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
@@ -93,7 +95,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
         // Show notification to disable Incognito Mode when it's enabled
-        preferences.incognitoMode().changes()
+        basePreferences.incognitoMode().changes()
             .onEach { enabled ->
                 val notificationManager = NotificationManagerCompat.from(this)
                 if (enabled) {
@@ -120,13 +122,13 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
             }
             .launchIn(ProcessLifecycleOwner.get().lifecycleScope)
 
-        preferences.themeMode()
+        uiPreferences.themeMode()
             .asHotFlow {
                 AppCompatDelegate.setDefaultNightMode(
                     when (it) {
-                        PreferenceValues.ThemeMode.light -> AppCompatDelegate.MODE_NIGHT_NO
-                        PreferenceValues.ThemeMode.dark -> AppCompatDelegate.MODE_NIGHT_YES
-                        PreferenceValues.ThemeMode.system -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                        ThemeMode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+                        ThemeMode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
+                        ThemeMode.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                     },
                 )
             }.launchIn(ProcessLifecycleOwner.get().lifecycleScope)
@@ -230,7 +232,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         private var registered = false
 
         override fun onReceive(context: Context, intent: Intent) {
-            preferences.incognitoMode().set(false)
+            basePreferences.incognitoMode().set(false)
         }
 
         fun register() {

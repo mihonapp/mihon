@@ -36,9 +36,9 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
+import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.lang.truncateCenter
@@ -262,11 +262,11 @@ fun Context.isTablet(): Boolean {
 
 fun Context.prepareTabletUiContext(): Context {
     val configuration = resources.configuration
-    val expected = when (Injekt.get<PreferencesHelper>().tabletUiMode().get()) {
-        PreferenceValues.TabletUiMode.AUTOMATIC -> isTablet()
-        PreferenceValues.TabletUiMode.ALWAYS -> true
-        PreferenceValues.TabletUiMode.LANDSCAPE -> configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        PreferenceValues.TabletUiMode.NEVER -> false
+    val expected = when (Injekt.get<UiPreferences>().tabletUiMode().get()) {
+        TabletUiMode.AUTOMATIC -> isTablet()
+        TabletUiMode.ALWAYS -> true
+        TabletUiMode.LANDSCAPE -> configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        TabletUiMode.NEVER -> false
     }
     if (configuration.smallestScreenWidthDp >= TABLET_UI_MIN_SCREEN_WIDTH_DP != expected) {
         val overrideConf = Configuration()
@@ -295,7 +295,7 @@ fun Context.isNightMode(): Boolean {
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:appcompat/appcompat/src/main/java/androidx/appcompat/app/AppCompatDelegateImpl.java;l=348;drc=e28752c96fc3fb4d3354781469a1af3dbded4898
  */
 fun Context.createReaderThemeContext(): Context {
-    val preferences = Injekt.get<PreferencesHelper>()
+    val preferences = Injekt.get<UiPreferences>()
     val readerPreferences = Injekt.get<ReaderPreferences>()
     val isDarkBackground = when (readerPreferences.readerTheme().get()) {
         1, 2 -> true // Black, Gray

@@ -19,6 +19,7 @@ import androidx.paging.map
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.mapAsCheckboxState
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
@@ -40,7 +41,6 @@ import eu.kanade.presentation.browse.BrowseSourceStateImpl
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -87,8 +87,8 @@ open class BrowseSourcePresenter(
     searchQuery: String? = null,
     private val state: BrowseSourceStateImpl = BrowseSourceState(searchQuery) as BrowseSourceStateImpl,
     private val sourceManager: SourceManager = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get(),
-    private val sourcePreferences: SourcePreferences = Injekt.get(),
+    preferences: BasePreferences = Injekt.get(),
+    sourcePreferences: SourcePreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
     private val getRemoteManga: GetRemoteManga = Injekt.get(),

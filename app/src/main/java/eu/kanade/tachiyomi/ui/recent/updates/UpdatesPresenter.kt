@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.UpdateChapter
@@ -11,6 +12,7 @@ import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetManga
+import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.updates.interactor.GetUpdates
 import eu.kanade.domain.updates.model.UpdatesWithRelations
 import eu.kanade.presentation.components.ChapterDownloadAction
@@ -19,7 +21,6 @@ import eu.kanade.presentation.updates.UpdatesStateImpl
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
@@ -32,6 +33,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import logcat.LogPriority
@@ -50,17 +52,18 @@ class UpdatesPresenter(
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
-    preferences: PreferencesHelper = Injekt.get(),
+    basePreferences: BasePreferences = Injekt.get(),
+    uiPreferences: UiPreferences = Injekt.get(),
     libraryPreferences: LibraryPreferences = Injekt.get(),
 ) : BasePresenter<UpdatesController>(), UpdatesState by state {
 
-    val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
-    val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
+    val isDownloadOnly: Boolean by basePreferences.downloadedOnly().asState()
+    val isIncognitoMode: Boolean by basePreferences.incognitoMode().asState()
 
     val lastUpdated by libraryPreferences.libraryUpdateLastTimestamp().asState()
 
-    val relativeTime: Int by preferences.relativeTime().asState()
-    val dateFormat: DateFormat by mutableStateOf(preferences.dateFormat())
+    val relativeTime: Int by uiPreferences.relativeTime().asState()
+    val dateFormat: DateFormat by mutableStateOf(UiPreferences.dateFormat(uiPreferences.dateFormat().get()))
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
     val events: Flow<Event> = _events.receiveAsFlow()

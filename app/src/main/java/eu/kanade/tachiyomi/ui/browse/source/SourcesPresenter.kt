@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.source
 
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
@@ -9,7 +10,6 @@ import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.browse.SourceUiModel
 import eu.kanade.presentation.browse.SourcesState
 import eu.kanade.presentation.browse.SourcesStateImpl
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +25,7 @@ import java.util.TreeMap
 class SourcesPresenter(
     private val presenterScope: CoroutineScope,
     private val state: SourcesStateImpl = SourcesState() as SourcesStateImpl,
-    private val preferences: PreferencesHelper = Injekt.get(),
+    private val preferences: BasePreferences = Injekt.get(),
     private val sourcePreferences: SourcePreferences = Injekt.get(),
     private val getEnabledSources: GetEnabledSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),

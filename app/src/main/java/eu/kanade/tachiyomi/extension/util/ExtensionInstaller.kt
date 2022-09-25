@@ -11,8 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.installer.Installer
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
@@ -54,7 +54,7 @@ internal class ExtensionInstaller(private val context: Context) {
      */
     private val downloadsRelay = PublishRelay.create<Pair<Long, InstallStep>>()
 
-    private val installerPref = Injekt.get<PreferencesHelper>().extensionInstaller()
+    private val extensionInstaller = Injekt.get<BasePreferences>().extensionInstaller()
 
     /**
      * Adds the given extension to the downloads queue and returns an observable containing its
@@ -133,7 +133,7 @@ internal class ExtensionInstaller(private val context: Context) {
      * @param uri The uri of the extension to install.
      */
     fun installApk(downloadId: Long, uri: Uri) {
-        when (val installer = installerPref.get()) {
+        when (val installer = extensionInstaller.get()) {
             PreferenceValues.ExtensionInstaller.LEGACY -> {
                 val intent = Intent(context, ExtensionInstallActivity::class.java)
                     .setDataAndType(uri, APK_MIME)

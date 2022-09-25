@@ -6,8 +6,8 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceViewHolder
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.util.system.dpToPx
 
 class ThemesPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
@@ -19,7 +19,7 @@ class ThemesPreference @JvmOverloads constructor(context: Context, attrs: Attrib
 
     var lastScrollPosition: Int? = null
 
-    var entries: List<PreferenceValues.AppTheme> = emptyList()
+    var entries: List<AppTheme> = emptyList()
         set(value) {
             field = value
             adapter.setItems(value)

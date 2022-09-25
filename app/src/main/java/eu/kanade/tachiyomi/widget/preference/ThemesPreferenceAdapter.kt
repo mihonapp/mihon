@@ -5,9 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.recyclerview.widget.RecyclerView
+import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.PrefThemeItemBinding
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.util.system.getResourceColor
@@ -16,9 +16,9 @@ import uy.kohesive.injekt.injectLazy
 class ThemesPreferenceAdapter(private val clickListener: OnItemClickListener) :
     RecyclerView.Adapter<ThemesPreferenceAdapter.ThemeViewHolder>() {
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val preferences: UiPreferences by injectLazy()
 
-    private var themes = emptyList<PreferenceValues.AppTheme>()
+    private var themes = emptyList<AppTheme>()
 
     private lateinit var binding: PrefThemeItemBinding
 
@@ -41,7 +41,7 @@ class ThemesPreferenceAdapter(private val clickListener: OnItemClickListener) :
         holder.bind(themes[position])
     }
 
-    fun setItems(themes: List<PreferenceValues.AppTheme>) {
+    fun setItems(themes: List<AppTheme>) {
         this.themes = themes
         notifyDataSetChanged()
     }
@@ -51,7 +51,7 @@ class ThemesPreferenceAdapter(private val clickListener: OnItemClickListener) :
         private val selectedColor = view.context.getResourceColor(R.attr.colorAccent)
         private val unselectedColor = view.context.getResourceColor(android.R.attr.divider)
 
-        fun bind(appTheme: PreferenceValues.AppTheme) {
+        fun bind(appTheme: AppTheme) {
             binding.name.text = view.context.getString(appTheme.titleResId!!)
 
             // For rounded corners

@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.compose.runtime.Immutable
 import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.mapAsCheckboxState
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
@@ -30,11 +31,11 @@ import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
+import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -82,7 +83,8 @@ import eu.kanade.domain.manga.model.Manga as DomainManga
 class MangaPresenter(
     val mangaId: Long,
     val isFromSource: Boolean,
-    private val preferences: PreferencesHelper = Injekt.get(),
+    private val basePreferences: BasePreferences = Injekt.get(),
+    private val uiPreferences: UiPreferences = Injekt.get(),
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val trackManager: TrackManager = Injekt.get(),
@@ -189,8 +191,8 @@ class MangaPresenter(
                     val chapterItems = chapters.toChapterItems(
                         context = view?.activity ?: Injekt.get<Application>(),
                         manga = manga,
-                        dateRelativeTime = preferences.relativeTime().get(),
-                        dateFormat = preferences.dateFormat(),
+                        dateRelativeTime = uiPreferences.relativeTime().get(),
+                        dateFormat = UiPreferences.dateFormat(uiPreferences.dateFormat().get()),
                     )
                     updateSuccessState {
                         it.copy(
@@ -213,11 +215,11 @@ class MangaPresenter(
                 }
         }
 
-        preferences.incognitoMode()
+        basePreferences.incognitoMode()
             .asHotFlow { incognitoMode = it }
             .launchIn(presenterScope)
 
-        preferences.downloadedOnly()
+        basePreferences.downloadedOnly()
             .asHotFlow { downloadedOnlyMode = it }
             .launchIn(presenterScope)
     }

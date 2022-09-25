@@ -19,8 +19,8 @@ import androidx.preference.PreferenceScreen
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import dev.chrisbanes.insetter.applyInsetter
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +33,7 @@ import uy.kohesive.injekt.api.get
 abstract class SettingsController : PreferenceController() {
 
     var preferenceKey: String? = null
-    val preferences: PreferencesHelper = Injekt.get()
+    val preferences: BasePreferences = Injekt.get()
     val viewScope: CoroutineScope = MainScope()
     private var themedContext: Context? = null
 

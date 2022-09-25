@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceScreen
+import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.AppTheme
+import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.preference.bindTo
-import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.initThenAdd
 import eu.kanade.tachiyomi.util.preference.intListPreference
@@ -20,13 +22,13 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 import eu.kanade.tachiyomi.util.system.isTablet
 import eu.kanade.tachiyomi.widget.preference.ThemesPreference
+import uy.kohesive.injekt.injectLazy
 import java.util.Date
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
-import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
 class SettingsAppearanceController : SettingsController() {
 
     private var themesPreference: ThemesPreference? = null
+    private val uiPreferences: UiPreferences by injectLazy()
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_appearance
@@ -35,7 +37,7 @@ class SettingsAppearanceController : SettingsController() {
             titleRes = R.string.pref_category_theme
 
             listPreference {
-                bindTo(preferences.themeMode())
+                bindTo(uiPreferences.themeMode())
                 titleRes = R.string.pref_theme_mode
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -45,9 +47,9 @@ class SettingsAppearanceController : SettingsController() {
                         R.string.theme_dark,
                     )
                     entryValues = arrayOf(
-                        Values.ThemeMode.system.name,
-                        Values.ThemeMode.light.name,
-                        Values.ThemeMode.dark.name,
+                        ThemeMode.SYSTEM.name,
+                        ThemeMode.LIGHT.name,
+                        ThemeMode.DARK.name,
                     )
                 } else {
                     entriesRes = arrayOf(
@@ -55,19 +57,19 @@ class SettingsAppearanceController : SettingsController() {
                         R.string.theme_dark,
                     )
                     entryValues = arrayOf(
-                        Values.ThemeMode.light.name,
-                        Values.ThemeMode.dark.name,
+                        ThemeMode.LIGHT.name,
+                        ThemeMode.DARK.name,
                     )
                 }
 
                 summary = "%s"
             }
             themesPreference = initThenAdd(ThemesPreference(context)) {
-                bindTo(preferences.appTheme())
+                bindTo(uiPreferences.appTheme())
                 titleRes = R.string.pref_app_theme
 
-                val appThemes = Values.AppTheme.values().filter {
-                    val monetFilter = if (it == Values.AppTheme.MONET) {
+                val appThemes = AppTheme.values().filter {
+                    val monetFilter = if (it == AppTheme.MONET) {
                         DeviceUtil.isDynamicColorAvailable
                     } else {
                         true
@@ -82,10 +84,10 @@ class SettingsAppearanceController : SettingsController() {
                 }
             }
             switchPreference {
-                bindTo(preferences.themeDarkAmoled())
+                bindTo(uiPreferences.themeDarkAmoled())
                 titleRes = R.string.pref_dark_theme_pure_black
 
-                visibleIf(preferences.themeMode()) { it != Values.ThemeMode.light }
+                visibleIf(uiPreferences.themeMode()) { it != ThemeMode.LIGHT }
 
                 onChange {
                     activity?.let { ActivityCompat.recreate(it) }
@@ -99,7 +101,7 @@ class SettingsAppearanceController : SettingsController() {
                 titleRes = R.string.pref_category_navigation
 
                 intListPreference {
-                    bindTo(preferences.sideNavIconAlignment())
+                    bindTo(uiPreferences.sideNavIconAlignment())
                     titleRes = R.string.pref_side_nav_icon_alignment
                     entriesRes = arrayOf(
                         R.string.alignment_top,
@@ -116,7 +118,7 @@ class SettingsAppearanceController : SettingsController() {
             titleRes = R.string.pref_category_timestamps
 
             intListPreference {
-                bindTo(preferences.relativeTime())
+                bindTo(uiPreferences.relativeTime())
                 titleRes = R.string.pref_relative_format
                 val values = arrayOf("0", "2", "7")
                 entryValues = values
@@ -131,13 +133,13 @@ class SettingsAppearanceController : SettingsController() {
             }
 
             listPreference {
-                key = Keys.dateFormat
+                bindTo(uiPreferences.dateFormat())
                 titleRes = R.string.pref_date_format
                 entryValues = arrayOf("", "MM/dd/yy", "dd/MM/yy", "yyyy-MM-dd", "dd MMM yyyy", "MMM dd, yyyy")
 
                 val now = Date().time
                 entries = entryValues.map { value ->
-                    val formattedDate = preferences.dateFormat(value.toString()).format(now)
+                    val formattedDate = UiPreferences.dateFormat(value.toString()).format(now)
                     if (value == "") {
                         "${context.getString(R.string.label_default)} ($formattedDate)"
                     } else {
@@ -145,7 +147,6 @@ class SettingsAppearanceController : SettingsController() {
                     }
                 }.toTypedArray()
 
-                defaultValue = ""
                 summary = "%s"
             }
         }

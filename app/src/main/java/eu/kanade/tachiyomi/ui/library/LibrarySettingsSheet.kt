@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import com.bluelinelabs.conductor.Router
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.SetDisplayModeForCategory
 import eu.kanade.domain.category.interactor.SetSortModeForCategory
 import eu.kanade.domain.category.model.Category
@@ -13,7 +14,6 @@ import eu.kanade.domain.library.model.display
 import eu.kanade.domain.library.model.sort
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.util.lang.launchIO
@@ -410,7 +410,7 @@ class LibrarySettingsSheet(
     open inner class Settings(context: Context, attrs: AttributeSet?) :
         ExtendedNavigationView(context, attrs) {
 
-        val preferences: PreferencesHelper by injectLazy()
+        val preferences: BasePreferences by injectLazy()
         val libraryPreferences: LibraryPreferences by injectLazy()
         lateinit var adapter: Adapter
 

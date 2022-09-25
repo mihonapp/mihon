@@ -9,7 +9,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.pushController
@@ -21,7 +20,6 @@ import eu.kanade.tachiyomi.util.system.getSerializableCompat
 import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 
 class SearchController(
     private var manga: Manga? = null,
@@ -101,11 +99,10 @@ class SearchController(
 
     class MigrationDialog(private val manga: Manga? = null, private val newManga: Manga? = null, private val callingController: Controller? = null) : DialogController() {
 
-        private val preferences: PreferencesHelper by injectLazy()
-
         @Suppress("DEPRECATION")
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-            val prefValue = preferences.migrateFlags().get()
+            val migrateFlags = ((targetController as SearchController).presenter as SearchPresenter).migrateFlags
+            val prefValue = migrateFlags.get()
             val enabledFlagsPositions = MigrationFlags.getEnabledFlagsPositions(prefValue)
             val items = MigrationFlags.titles(manga)
                 .map { resources?.getString(it) }
@@ -124,7 +121,7 @@ class SearchController(
                     val selectedIndices = mutableListOf<Int>()
                     selected.forEachIndexed { i, b -> if (b) selectedIndices.add(i) }
                     val newValue = MigrationFlags.getFlagsFromPositions(selectedIndices.toTypedArray())
-                    preferences.migrateFlags().set(newValue)
+                    migrateFlags.set(newValue)
 
                     if (callingController != null) {
                         if (callingController.javaClass == SourceSearchController::class.java) {

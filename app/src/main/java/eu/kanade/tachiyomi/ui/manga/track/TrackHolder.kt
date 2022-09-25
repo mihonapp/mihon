@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi.ui.manga.track
 import android.annotation.SuppressLint
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.TrackItemBinding
 import eu.kanade.tachiyomi.util.view.popupMenu
 import uy.kohesive.injekt.injectLazy
@@ -12,10 +12,10 @@ import java.text.DateFormat
 
 class TrackHolder(private val binding: TrackItemBinding, adapter: TrackAdapter) : RecyclerView.ViewHolder(binding.root) {
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val preferences: UiPreferences by injectLazy()
 
     private val dateFormat: DateFormat by lazy {
-        preferences.dateFormat()
+        UiPreferences.dateFormat(preferences.dateFormat().get())
     }
 
     private val listener = adapter.rowClickListener

@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import eu.kanade.domain.history.model.HistoryWithRelations
+import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.history.HistoryUiModel
@@ -22,7 +23,6 @@ import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.shimmerGradient
 import eu.kanade.presentation.util.topPaddingValues
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.text.DateFormat
@@ -34,10 +34,10 @@ fun HistoryContent(
     onClickCover: (HistoryWithRelations) -> Unit,
     onClickResume: (HistoryWithRelations) -> Unit,
     onClickDelete: (HistoryWithRelations) -> Unit,
-    preferences: PreferencesHelper = Injekt.get(),
+    preferences: UiPreferences = Injekt.get(),
 ) {
     val relativeTime: Int = remember { preferences.relativeTime().get() }
-    val dateFormat: DateFormat = remember { preferences.dateFormat() }
+    val dateFormat: DateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
 
     ScrollbarLazyColumn(
         contentPadding = contentPadding + bottomNavPaddingValues + topPaddingValues,

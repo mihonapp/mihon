@@ -15,6 +15,8 @@ import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
+import eu.kanade.tachiyomi.core.preference.Preference
+import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -45,11 +47,16 @@ class SearchPresenter(
     private val getTracks: GetTracks = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
+    preferenceStore: PreferenceStore = Injekt.get(),
 ) : GlobalSearchPresenter(initialQuery) {
 
     private val replacingMangaRelay = BehaviorRelay.create<Pair<Boolean, Manga?>>()
     private val coverCache: CoverCache by injectLazy()
     private val enhancedServices by lazy { Injekt.get<TrackManager>().services.filterIsInstance<EnhancedTrackService>() }
+
+    val migrateFlags: Preference<Int> by lazy {
+        preferenceStore.getInt("migrate_flags", Int.MAX_VALUE)
+    }
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -106,7 +113,7 @@ class SearchPresenter(
         manga: Manga,
         replace: Boolean,
     ) {
-        val flags = preferences.migrateFlags().get()
+        val flags = migrateFlags.get()
 
         val migrateChapters = MigrationFlags.hasChapters(flags)
         val migrateCategories = MigrationFlags.hasCategories(flags)

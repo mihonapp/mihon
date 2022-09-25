@@ -9,8 +9,8 @@ import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.dd.processbutton.iml.ActionProcessButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.PrefAccountLoginBinding
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import uy.kohesive.injekt.injectLazy
@@ -23,7 +23,7 @@ abstract class LoginDialogPreference(
     var binding: PrefAccountLoginBinding? = null
         private set
 
-    val preferences: PreferencesHelper by injectLazy()
+    val preferences: BasePreferences by injectLazy()
 
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {
         binding = PrefAccountLoginBinding.inflate(LayoutInflater.from(activity!!))

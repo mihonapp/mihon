@@ -5,14 +5,16 @@ import android.os.Build
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import eu.kanade.domain.backup.service.BackupPreferences
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.MANGA_NON_COMPLETED
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.updater.AppUpdateJob
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
@@ -39,7 +41,9 @@ object Migrations {
      */
     fun upgrade(
         context: Context,
-        preferences: PreferencesHelper,
+        preferenceStore: PreferenceStore,
+        basePreferences: BasePreferences,
+        uiPreferences: UiPreferences,
         networkPreferences: NetworkPreferences,
         sourcePreferences: SourcePreferences,
         securityPreferences: SecurityPreferences,
@@ -47,9 +51,10 @@ object Migrations {
         readerPreferences: ReaderPreferences,
         backupPreferences: BackupPreferences,
     ): Boolean {
-        val oldVersion = preferences.lastVersionCode().get()
+        val lastVersionCode = preferenceStore.getInt("last_version_code", 0)
+        val oldVersion = lastVersionCode.get()
         if (oldVersion < BuildConfig.VERSION_CODE) {
-            preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
+            lastVersionCode.set(BuildConfig.VERSION_CODE)
 
             // Always set up background tasks to ensure they're running
             if (BuildConfig.INCLUDE_UPDATER) {
@@ -263,8 +268,8 @@ object Migrations {
                 if (oldSecureScreen) {
                     securityPreferences.secureScreen().set(SecurityPreferences.SecureScreenMode.ALWAYS)
                 }
-                if (DeviceUtil.isMiui && preferences.extensionInstaller().get() == PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER) {
-                    preferences.extensionInstaller().set(PreferenceValues.ExtensionInstaller.LEGACY)
+                if (DeviceUtil.isMiui && basePreferences.extensionInstaller().get() == PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER) {
+                    basePreferences.extensionInstaller().set(PreferenceValues.ExtensionInstaller.LEGACY)
                 }
             }
             if (oldVersion < 76) {
@@ -323,6 +328,14 @@ object Migrations {
                         if (value == Int.MIN_VALUE) return@forEach
                         remove(key)
                         putLong(key, value.toLong())
+                    }
+                }
+            }
+            if (oldVersion < 86) {
+                if (uiPreferences.themeMode().isSet()) {
+                    prefs.edit {
+                        val themeMode = prefs.getString(uiPreferences.themeMode().key(), null) ?: return@edit
+                        putString(uiPreferences.themeMode().key(), themeMode.uppercase())
                     }
                 }
             }

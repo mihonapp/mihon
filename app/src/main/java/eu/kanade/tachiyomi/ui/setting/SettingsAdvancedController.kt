@@ -9,7 +9,10 @@ import android.webkit.WebView
 import androidx.core.net.toUri
 import androidx.preference.PreferenceScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.repository.MangaRepository
+import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
@@ -70,6 +73,8 @@ class SettingsAdvancedController(
     private val chapterCache: ChapterCache by injectLazy()
     private val trackManager: TrackManager by injectLazy()
     private val networkPreferences: NetworkPreferences by injectLazy()
+    private val libraryPreferences: LibraryPreferences by injectLazy()
+    private val uiPreferences: UiPreferences by injectLazy()
 
     @SuppressLint("BatteryLife")
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
@@ -156,7 +161,7 @@ class SettingsAdvancedController(
                 onClick { clearChapterCache() }
             }
             switchPreference {
-                bindTo(preferences.autoClearChapterCache())
+                bindTo(libraryPreferences.autoClearChapterCache())
                 titleRes = R.string.pref_auto_clear_chapter_cache
             }
             preference {
@@ -327,11 +332,11 @@ class SettingsAdvancedController(
             titleRes = R.string.pref_category_display
 
             listPreference {
-                bindTo(preferences.tabletUiMode())
+                bindTo(uiPreferences.tabletUiMode())
                 titleRes = R.string.pref_tablet_ui_mode
                 summary = "%s"
-                entriesRes = PreferenceValues.TabletUiMode.values().map { it.titleResId }.toTypedArray()
-                entryValues = PreferenceValues.TabletUiMode.values().map { it.name }.toTypedArray()
+                entriesRes = TabletUiMode.values().map { it.titleResId }.toTypedArray()
+                entryValues = TabletUiMode.values().map { it.name }.toTypedArray()
 
                 onChange {
                     activity?.toast(R.string.requires_app_restart)

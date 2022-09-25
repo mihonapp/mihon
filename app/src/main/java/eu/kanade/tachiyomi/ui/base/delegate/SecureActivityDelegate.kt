@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.security.UnlockActivity
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
@@ -70,7 +70,7 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
 
     private lateinit var activity: AppCompatActivity
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val preferences: BasePreferences by injectLazy()
     private val securityPreferences: SecurityPreferences by injectLazy()
 
     override fun registerSecureActivity(activity: AppCompatActivity) {

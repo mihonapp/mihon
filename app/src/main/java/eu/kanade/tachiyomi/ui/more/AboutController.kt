@@ -1,10 +1,10 @@
 package eu.kanade.tachiyomi.ui.more
 
 import androidx.compose.runtime.Composable
+import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.more.about.AboutScreen
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
 import eu.kanade.tachiyomi.ui.base.controller.BasicFullComposeController
@@ -23,7 +23,7 @@ import java.util.TimeZone
 
 class AboutController : BasicFullComposeController() {
 
-    private val preferences: PreferencesHelper by injectLazy()
+    private val preferences: UiPreferences by injectLazy()
     private val updateChecker by lazy { AppUpdateChecker() }
 
     @Composable
@@ -78,7 +78,7 @@ class AboutController : BasicFullComposeController() {
             )
             outputDf.timeZone = TimeZone.getDefault()
 
-            buildTime!!.toDateTimestampString(preferences.dateFormat())
+            buildTime!!.toDateTimestampString(UiPreferences.dateFormat(preferences.dateFormat().get()))
         } catch (e: Exception) {
             BuildConfig.BUILD_TIME
         }
