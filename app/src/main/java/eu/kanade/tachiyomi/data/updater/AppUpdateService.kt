@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.ProgressListener
 import eu.kanade.tachiyomi.network.await
-import eu.kanade.tachiyomi.network.newCallWithProgress
+import eu.kanade.tachiyomi.network.newCachelessCallWithProgress
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.storage.saveTo
@@ -119,7 +119,7 @@ class AppUpdateService : Service() {
 
         try {
             // Download the new update.
-            val call = network.client.newCallWithProgress(GET(url), progressListener)
+            val call = network.client.newCachelessCallWithProgress(GET(url), progressListener)
             runningCall = call
             val response = call.await()
 

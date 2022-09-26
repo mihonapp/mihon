@@ -1,10 +1,9 @@
 package eu.kanade.tachiyomi.source.online
 
-import eu.kanade.tachiyomi.network.CACHE_CONTROL_NO_STORE
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.asObservableSuccess
-import eu.kanade.tachiyomi.network.newCallWithProgress
+import eu.kanade.tachiyomi.network.newCachelessCallWithProgress
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
@@ -301,11 +300,8 @@ abstract class HttpSource : CatalogueSource {
      * @param page the page whose source image has to be downloaded.
      */
     fun fetchImage(page: Page): Observable<Response> {
-        val request = imageRequest(page).newBuilder()
-            // images will be cached or saved manually, so don't take up network cache
-            .cacheControl(CACHE_CONTROL_NO_STORE)
-            .build()
-        return client.newCallWithProgress(request, page)
+        // images will be cached or saved manually, so don't take up network cache
+        return client.newCachelessCallWithProgress(imageRequest(page), page)
             .asObservableSuccess()
     }
 

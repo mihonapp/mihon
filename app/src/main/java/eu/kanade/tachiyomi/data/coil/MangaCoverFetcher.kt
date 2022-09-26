@@ -14,7 +14,6 @@ import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher.Companion.USE_CUSTOM_COVER
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.network.CACHE_CONTROL_NO_STORE
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -334,6 +333,7 @@ class MangaCoverFetcher(
     companion object {
         const val USE_CUSTOM_COVER = "use_custom_cover"
 
+        private val CACHE_CONTROL_NO_STORE = CacheControl.Builder().noStore().build()
         private val CACHE_CONTROL_NO_NETWORK_NO_CACHE = CacheControl.Builder().noCache().onlyIfCached().build()
     }
 }

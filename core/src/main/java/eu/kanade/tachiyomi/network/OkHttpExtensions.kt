@@ -101,7 +101,7 @@ fun Call.asObservableSuccess(): Observable<Response> {
     }
 }
 
-fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListener): Call {
+fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: ProgressListener): Call {
     val progressClient = newBuilder()
         .cache(null)
         .addNetworkInterceptor { chain ->
