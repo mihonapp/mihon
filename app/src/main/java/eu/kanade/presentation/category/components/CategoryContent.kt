@@ -28,7 +28,7 @@ fun CategoryContent(
     ) {
         itemsIndexed(
             items = categories,
-            key = { _, category -> category.id },
+            key = { _, category -> "category-${category.id}" },
         ) { index, category ->
             CategoryListItem(
                 modifier = Modifier.animateItemPlacement(),

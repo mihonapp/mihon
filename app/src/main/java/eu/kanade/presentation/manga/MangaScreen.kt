@@ -645,7 +645,7 @@ private fun LazyListScope.sharedChapterItems(
 ) {
     items(
         items = chapters,
-        key = { it.chapter.id },
+        key = { "chapter-${it.chapter.id}" },
         contentType = { MangaScreenItem.CHAPTER },
     ) { chapterItem ->
         val haptic = LocalHapticFeedback.current

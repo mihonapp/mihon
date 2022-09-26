@@ -109,17 +109,17 @@ private fun ExtensionContent(
     ) {
         items(
             items = state.items,
-            key = {
-                when (it) {
-                    is ExtensionUiModel.Header.Resource -> it.textRes
-                    is ExtensionUiModel.Header.Text -> it.text
-                    is ExtensionUiModel.Item -> it.key()
-                }
-            },
             contentType = {
                 when (it) {
                     is ExtensionUiModel.Item -> "item"
                     else -> "header"
+                }
+            },
+            key = {
+                when (it) {
+                    is ExtensionUiModel.Header.Resource -> it.textRes
+                    is ExtensionUiModel.Header.Text -> it.text
+                    is ExtensionUiModel.Item -> "extension-${it.key()}"
                 }
             },
         ) { item ->
