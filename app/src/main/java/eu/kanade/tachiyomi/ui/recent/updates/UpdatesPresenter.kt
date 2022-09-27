@@ -274,7 +274,7 @@ class UpdatesPresenter(
             if (deletedUpdates.isEmpty()) return@launchNonCancellable
 
             // TODO: Don't do this fake status update
-            state.items = items.toMutableList().apply {
+            state.items = state.items.toMutableList().apply {
                 deletedUpdates.forEach { deletedUpdate ->
                     val modifiedIndex = indexOf(deletedUpdate)
                     val item = removeAt(modifiedIndex).copy(

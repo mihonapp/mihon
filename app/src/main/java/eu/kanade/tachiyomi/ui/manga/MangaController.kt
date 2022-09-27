@@ -161,6 +161,7 @@ class MangaController : FullComposeController<MangaPresenter> {
                 DeleteChaptersDialog(
                     onDismissRequest = onDismissRequest,
                     onConfirm = {
+                        presenter.toggleAllSelection(false)
                         deleteChapters(dialog.chapters)
                     },
                 )

@@ -196,8 +196,8 @@ private fun UpdateScreenContent(
             UpdatesDeleteConfirmationDialog(
                 onDismissRequest = onDismissDialog,
                 onConfirm = {
-                    presenter.deleteChapters(dialog.toDelete)
                     presenter.toggleAllSelection(false)
+                    presenter.deleteChapters(dialog.toDelete)
                 },
             )
         }
