@@ -18,7 +18,6 @@ import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 class CloudflareInterceptor(private val context: Context) : WebViewInterceptor(context) {
 
@@ -109,9 +108,7 @@ class CloudflareInterceptor(private val context: Context) : WebViewInterceptor(c
             webview?.loadUrl(origRequestUrl, headers)
         }
 
-        // Wait a reasonable amount of time to retrieve the solution. The minimum should be
-        // around 4 seconds but it can take more due to slow networks or server issues.
-        latch.await(12, TimeUnit.SECONDS)
+        latch.awaitFor30Seconds()
 
         executor.execute {
             if (!cloudflareBypassed) {

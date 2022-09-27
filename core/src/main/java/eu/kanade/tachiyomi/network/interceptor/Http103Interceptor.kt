@@ -15,7 +15,6 @@ import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 // TODO: Remove when OkHttp can handle HTTP 103 responses
 class Http103Interceptor(context: Context) : WebViewInterceptor(context) {
@@ -76,7 +75,7 @@ class Http103Interceptor(context: Context) : WebViewInterceptor(context) {
             webview?.loadUrl(requestUrl, headers)
         }
 
-        latch.await(10, TimeUnit.SECONDS)
+        latch.awaitFor30Seconds()
 
         executor.execute {
             webview?.run {

@@ -18,6 +18,8 @@ import okhttp3.Request
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 import java.util.Locale
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 abstract class WebViewInterceptor(private val context: Context) : Interceptor {
 
@@ -69,6 +71,10 @@ abstract class WebViewInterceptor(private val context: Context) : Interceptor {
             }
             .groupBy(keySelector = { (name, _) -> name }) { (_, value) -> value }
             .mapValues { it.value.getOrNull(0).orEmpty() }
+    }
+
+    fun CountDownLatch.awaitFor30Seconds() {
+        await(30, TimeUnit.SECONDS)
     }
 
     fun createWebView(request: Request): WebView {
