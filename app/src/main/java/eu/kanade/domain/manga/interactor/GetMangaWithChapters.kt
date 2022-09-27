@@ -24,4 +24,8 @@ class GetMangaWithChapters(
     suspend fun awaitManga(id: Long): Manga {
         return mangaRepository.getMangaById(id)
     }
+
+    suspend fun awaitChapters(id: Long): List<Chapter> {
+        return chapterRepository.getChapterByMangaId(id)
+    }
 }
