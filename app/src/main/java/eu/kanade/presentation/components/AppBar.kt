@@ -41,7 +41,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
-import kotlinx.coroutines.delay
 
 @Composable
 fun AppBar(
@@ -225,7 +224,7 @@ fun SearchToolbar(
     downloadedOnlyMode: Boolean = false,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    val focusRequester = remember { FocusRequester.Default }
+    val focusRequester = remember { FocusRequester() }
     AppBar(
         titleContent = {
             BasicTextField(
@@ -256,8 +255,6 @@ fun SearchToolbar(
         scrollBehavior = scrollBehavior,
     )
     LaunchedEffect(focusRequester) {
-        // TODO: https://issuetracker.google.com/issues/204502668
-        delay(100)
         focusRequester.requestFocus()
     }
 }
