@@ -22,6 +22,7 @@ fun TabbedScreen(
     tabs: List<TabContent>,
     startIndex: Int? = null,
     searchQuery: String? = null,
+    @StringRes placeholderRes: Int? = null,
     onChangeSearchQuery: (String?) -> Unit = {},
     incognitoMode: Boolean,
     downloadedOnlyMode: Boolean,
@@ -47,6 +48,7 @@ fun TabbedScreen(
             } else {
                 SearchToolbar(
                     searchQuery = searchQuery,
+                    placeholderText = placeholderRes?.let { stringResource(it) },
                     onChangeSearchQuery = {
                         onChangeSearchQuery(it)
                     },

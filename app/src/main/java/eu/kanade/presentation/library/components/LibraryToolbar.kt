@@ -2,6 +2,8 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FlipToBack
@@ -17,7 +19,10 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.components.AppBar
@@ -48,15 +53,30 @@ fun LibraryToolbar(
         onClickSelectAll = onClickSelectAll,
         onClickInvertSelection = onClickInvertSelection,
     )
-    state.searchQuery != null -> SearchToolbar(
-        searchQuery = state.searchQuery!!,
-        onChangeSearchQuery = { state.searchQuery = it },
-        onClickCloseSearch = { state.searchQuery = null },
-        onClickResetSearch = { state.searchQuery = "" },
-        scrollBehavior = scrollBehavior,
-        incognitoMode = incognitoMode,
-        downloadedOnlyMode = downloadedOnlyMode,
-    )
+    state.searchQuery != null -> {
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val focusManager = LocalFocusManager.current
+
+        SearchToolbar(
+            searchQuery = state.searchQuery!!,
+            onChangeSearchQuery = { state.searchQuery = it },
+            onClickCloseSearch = { state.searchQuery = null },
+            onClickResetSearch = { state.searchQuery = "" },
+            scrollBehavior = scrollBehavior,
+            incognitoMode = incognitoMode,
+            downloadedOnlyMode = downloadedOnlyMode,
+            placeholderText = stringResource(R.string.action_search_hint),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search,
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                },
+            ),
+        )
+    }
     else -> LibraryRegularToolbar(
         title = title,
         hasFilters = state.hasActiveFilters,

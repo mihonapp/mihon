@@ -17,6 +17,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import eu.kanade.domain.library.model.LibraryDisplayMode
@@ -57,6 +59,7 @@ fun BrowseSourceToolbar(
         BrowseSourceSearchToolbar(
             searchQuery = state.searchQuery!!,
             onSearchQueryChanged = { state.searchQuery = it },
+            placeholderText = stringResource(R.string.action_search_hint),
             navigateUp = { state.searchQuery = null },
             onResetClick = { state.searchQuery = "" },
             onSearchClick = onSearch,
@@ -159,18 +162,25 @@ fun BrowseSourceRegularToolbar(
 fun BrowseSourceSearchToolbar(
     searchQuery: String,
     onSearchQueryChanged: (String) -> Unit,
+    placeholderText: String?,
     navigateUp: () -> Unit,
     onResetClick: () -> Unit,
     onSearchClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
     SearchToolbar(
         searchQuery = searchQuery,
         onChangeSearchQuery = onSearchQueryChanged,
+        placeholderText = placeholderText,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(
             onSearch = {
                 onSearchClick()
+                focusManager.clearFocus()
+                keyboardController?.hide()
             },
         ),
         onClickCloseSearch = navigateUp,
