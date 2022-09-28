@@ -66,7 +66,6 @@ import eu.kanade.presentation.manga.components.MangaChapterListItem
 import eu.kanade.presentation.manga.components.MangaInfoBox
 import eu.kanade.presentation.util.isScrolledToEnd
 import eu.kanade.presentation.util.isScrollingUp
-import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.SourceManager
@@ -207,7 +206,6 @@ private fun MangaScreenSmallImpl(
     onAllChapterSelected: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
 ) {
-    val layoutDirection = LocalLayoutDirection.current
     val chapterListState = rememberLazyListState()
 
     val chapters = remember(state) { state.processedChapters.toList() }
@@ -222,6 +220,8 @@ private fun MangaScreenSmallImpl(
     BackHandler(onBack = internalOnBackPressed)
 
     Scaffold(
+        modifier = Modifier
+            .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
         topBar = {
             val firstVisibleItemIndex by remember {
                 derivedStateOf { chapterListState.firstVisibleItemIndex }
@@ -287,11 +287,6 @@ private fun MangaScreenSmallImpl(
             }
         },
     ) { contentPadding ->
-        val noTopContentPadding = PaddingValues(
-            start = contentPadding.calculateStartPadding(layoutDirection),
-            end = contentPadding.calculateEndPadding(layoutDirection),
-            bottom = contentPadding.calculateBottomPadding(),
-        ) + WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
         val topPadding = contentPadding.calculateTopPadding()
 
         SwipeRefresh(
@@ -309,12 +304,13 @@ private fun MangaScreenSmallImpl(
             VerticalFastScroller(
                 listState = chapterListState,
                 topContentPadding = topPadding,
-                endContentPadding = noTopContentPadding.calculateEndPadding(layoutDirection),
             ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxHeight(),
                     state = chapterListState,
-                    contentPadding = noTopContentPadding,
+                    contentPadding = PaddingValues(
+                        bottom = contentPadding.calculateBottomPadding(),
+                    ),
                 ) {
                     item(
                         key = MangaScreenItem.INFO_BOX,
@@ -518,8 +514,6 @@ fun MangaScreenLargeImpl(
             },
         ) { contentPadding ->
             BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                val withNavBarContentPadding = contentPadding +
-                    WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
                 val firstWidth = (maxWidth / 2).coerceAtMost(450.dp)
                 val secondWidth = maxWidth - firstWidth
 
@@ -527,8 +521,7 @@ fun MangaScreenLargeImpl(
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .width(firstWidth)
-                        .verticalScroll(rememberScrollState())
-                        .padding(bottom = withNavBarContentPadding.calculateBottomPadding()),
+                        .verticalScroll(rememberScrollState()),
                 ) {
                     MangaInfoBox(
                         windowWidthSizeClass = windowWidthSizeClass,
@@ -564,13 +557,15 @@ fun MangaScreenLargeImpl(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .width(secondWidth),
-                    topContentPadding = withNavBarContentPadding.calculateTopPadding(),
-                    endContentPadding = withNavBarContentPadding.calculateEndPadding(layoutDirection),
+                    topContentPadding = contentPadding.calculateTopPadding(),
                 ) {
                     LazyColumn(
                         modifier = Modifier.fillMaxHeight(),
                         state = chapterListState,
-                        contentPadding = withNavBarContentPadding,
+                        contentPadding = PaddingValues(
+                            top = contentPadding.calculateTopPadding(),
+                            bottom = contentPadding.calculateBottomPadding(),
+                        ),
                     ) {
                         item(
                             key = MangaScreenItem.CHAPTER_HEADER,
@@ -599,6 +594,7 @@ fun MangaScreenLargeImpl(
 @Composable
 private fun SharedMangaBottomActionMenu(
     selected: List<ChapterItem>,
+    modifier: Modifier = Modifier,
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
     onMultiMarkAsReadClicked: (List<Chapter>, markAsRead: Boolean) -> Unit,
     onMarkPreviousAsReadClicked: (Chapter) -> Unit,
@@ -608,7 +604,7 @@ private fun SharedMangaBottomActionMenu(
 ) {
     MangaBottomActionMenu(
         visible = selected.isNotEmpty(),
-        modifier = Modifier.fillMaxWidth(fillFraction),
+        modifier = modifier.fillMaxWidth(fillFraction),
         onBookmarkClicked = {
             onMultiBookmarkClicked.invoke(selected.map { it.chapter }, true)
         }.takeIf { selected.any { !it.chapter.bookmark } },
