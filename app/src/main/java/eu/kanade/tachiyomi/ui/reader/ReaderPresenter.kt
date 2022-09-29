@@ -843,12 +843,14 @@ class ReaderPresenter(
                         // for a while. The view can still be garbage collected.
                         async {
                             runCatching {
-                                if (context.isOnline()) {
+                                try {
+                                    if (!context.isOnline()) error("Couldn't update tracker as device is offline")
                                     service.update(updatedTrack.toDbTrack(), true)
                                     insertTrack.await(updatedTrack)
-                                } else {
+                                } catch (e: Exception) {
                                     delayedTrackingStore.addItem(updatedTrack)
                                     DelayedTrackingUpdateJob.setupTask(context)
+                                    throw e
                                 }
                             }
                         }

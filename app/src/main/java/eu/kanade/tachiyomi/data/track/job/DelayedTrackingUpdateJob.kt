@@ -14,9 +14,8 @@ import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.logcat
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -33,9 +32,9 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
         val trackManager = Injekt.get<TrackManager>()
         val delayedTrackingStore = Injekt.get<DelayedTrackingStore>()
 
-        withContext(Dispatchers.IO) {
+        withIOContext {
             val tracks = delayedTrackingStore.getItems().mapNotNull {
-                val manga = getManga.await(it.mangaId) ?: return@withContext
+                val manga = getManga.await(it.mangaId) ?: return@withIOContext
                 getTracks.await(manga.id)
                     .find { track -> track.id == it.trackId }
                     ?.copy(lastChapterRead = it.lastChapterRead.toDouble())
@@ -48,12 +47,11 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
                         service.update(track.toDbTrack(), true)
                         insertTrack.await(track)
                     }
+                    delayedTrackingStore.remove(track)
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e)
                 }
             }
-
-            delayedTrackingStore.clear()
         }
 
         return Result.success()
