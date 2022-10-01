@@ -631,7 +631,7 @@ class LibraryPresenter(
             val count = when {
                 category == null || mangaCountVisibility.not() -> null
                 tabVisibility.not() -> loadedManga[category.id]?.size
-                else -> loadedManga.values.flatten().distinct().size
+                else -> loadedManga.values.flatten().distinctBy { it.manga.id }.size
             }
 
             value = when (category) {
