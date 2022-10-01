@@ -212,13 +212,5 @@ sealed interface ExtensionUiModel {
     data class Item(
         val extension: Extension,
         val installStep: InstallStep,
-    ) : ExtensionUiModel {
-
-        fun key(): String {
-            return when {
-                extension is Extension.Installed && extension.hasUpdate -> "${extension.pkgName}_update"
-                else -> "${extension.pkgName}_${installStep.name}"
-            }
-        }
-    }
+    ) : ExtensionUiModel
 }

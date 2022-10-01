@@ -7,3 +7,8 @@ import androidx.compose.runtime.Composable
 fun DotSeparatorText() {
     Text(text = " • ")
 }
+
+@Composable
+fun DotSeparatorNoSpaceText() {
+    Text(text = "•")
+}

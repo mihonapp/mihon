@@ -1,8 +1,9 @@
 package eu.kanade.presentation.browse
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -10,15 +11,18 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.presentation.browse.components.BaseBrowseItem
@@ -40,10 +45,12 @@ import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.SwipeRefreshIndicator
+import eu.kanade.presentation.manga.components.DotSeparatorNoSpaceText
 import eu.kanade.presentation.theme.header
 import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.presentation.util.plus
+import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.presentation.util.topPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -117,9 +124,8 @@ private fun ExtensionContent(
             },
             key = {
                 when (it) {
-                    is ExtensionUiModel.Header.Resource -> it.textRes
-                    is ExtensionUiModel.Header.Text -> it.text
-                    is ExtensionUiModel.Item -> "extension-${it.key()}"
+                    is ExtensionUiModel.Header -> "extensionHeader-${it.hashCode()}"
+                    is ExtensionUiModel.Item -> "extension-${it.extension.hashCode()}"
                 }
             },
         ) { item ->
@@ -219,7 +225,27 @@ private fun ExtensionItem(
         onClickItem = { onClickItem(extension) },
         onLongClickItem = { onLongClickItem(extension) },
         icon = {
-            ExtensionIcon(extension = extension)
+            Box(
+                modifier = Modifier
+                    .size(40.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                val idle = installStep.isCompleted()
+                if (!idle) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(40.dp),
+                        strokeWidth = 2.dp,
+                    )
+                }
+
+                val padding by animateDpAsState(targetValue = if (idle) 0.dp else 8.dp)
+                ExtensionIcon(
+                    extension = extension,
+                    modifier = Modifier
+                        .matchParentSize()
+                        .padding(padding),
+                )
+            }
         },
         action = {
             ExtensionItemActions(
@@ -232,6 +258,7 @@ private fun ExtensionItem(
     ) {
         ExtensionItemContent(
             extension = extension,
+            installStep = installStep,
             modifier = Modifier.weight(1f),
         )
     }
@@ -240,19 +267,9 @@ private fun ExtensionItem(
 @Composable
 private fun ExtensionItemContent(
     extension: Extension,
+    installStep: InstallStep,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val warning = remember(extension) {
-        when {
-            extension is Extension.Untrusted -> R.string.ext_untrusted
-            extension is Extension.Installed && extension.isUnofficial -> R.string.ext_unofficial
-            extension is Extension.Installed && extension.isObsolete -> R.string.ext_obsolete
-            extension.isNsfw -> R.string.ext_nsfw_short
-            else -> null
-        }
-    }
-
     Column(
         modifier = modifier.padding(start = horizontalPadding),
     ) {
@@ -262,32 +279,51 @@ private fun ExtensionItemContent(
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium,
         )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        // Won't look good but it's not like we can ellipsize overflowing content
+        FlowRow(
+            modifier = Modifier.secondaryItemAlpha(),
+            mainAxisSpacing = 4.dp,
         ) {
-            if (extension.lang.isNullOrEmpty().not()) {
-                Text(
-                    text = LocaleHelper.getSourceDisplayName(extension.lang, context),
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
+            ProvideTextStyle(value = MaterialTheme.typography.bodySmall) {
+                if (extension is Extension.Installed && extension.lang.isNotEmpty()) {
+                    Text(
+                        text = LocaleHelper.getSourceDisplayName(extension.lang, LocalContext.current),
+                    )
+                }
 
-            if (extension.versionName.isNotEmpty()) {
-                Text(
-                    text = extension.versionName,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
+                if (extension.versionName.isNotEmpty()) {
+                    Text(
+                        text = extension.versionName,
+                    )
+                }
 
-            if (warning != null) {
-                Text(
-                    text = stringResource(warning).uppercase(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodySmall.copy(
+                val warning = when {
+                    extension is Extension.Untrusted -> R.string.ext_untrusted
+                    extension is Extension.Installed && extension.isUnofficial -> R.string.ext_unofficial
+                    extension is Extension.Installed && extension.isObsolete -> R.string.ext_obsolete
+                    extension.isNsfw -> R.string.ext_nsfw_short
+                    else -> null
+                }
+                if (warning != null) {
+                    Text(
+                        text = stringResource(warning).uppercase(),
                         color = MaterialTheme.colorScheme.error,
-                    ),
-                )
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+
+                if (!installStep.isCompleted()) {
+                    DotSeparatorNoSpaceText()
+                    Text(
+                        text = when (installStep) {
+                            InstallStep.Pending -> stringResource(R.string.ext_pending)
+                            InstallStep.Downloading -> stringResource(R.string.ext_downloading)
+                            InstallStep.Installing -> stringResource(R.string.ext_installing)
+                            else -> error("Must not show non-install process text")
+                        },
+                    )
+                }
             }
         }
     }
@@ -301,46 +337,38 @@ private fun ExtensionItemActions(
     onClickItemCancel: (Extension) -> Unit = {},
     onClickItemAction: (Extension) -> Unit = {},
 ) {
-    val isIdle = remember(installStep) {
-        installStep == InstallStep.Idle || installStep == InstallStep.Error
-    }
+    val isIdle = installStep.isCompleted()
     Row(modifier = modifier) {
-        TextButton(
-            onClick = { onClickItemAction(extension) },
-            enabled = isIdle,
-        ) {
-            Text(
-                text = when (installStep) {
-                    InstallStep.Pending -> stringResource(R.string.ext_pending)
-                    InstallStep.Downloading -> stringResource(R.string.ext_downloading)
-                    InstallStep.Installing -> stringResource(R.string.ext_installing)
-                    InstallStep.Installed -> stringResource(R.string.ext_installed)
-                    InstallStep.Error -> stringResource(R.string.action_retry)
-                    InstallStep.Idle -> {
-                        when (extension) {
-                            is Extension.Installed -> {
-                                if (extension.hasUpdate) {
-                                    stringResource(R.string.ext_update)
-                                } else {
-                                    stringResource(R.string.action_settings)
+        if (isIdle) {
+            TextButton(
+                onClick = { onClickItemAction(extension) },
+            ) {
+                Text(
+                    text = when (installStep) {
+                        InstallStep.Installed -> stringResource(R.string.ext_installed)
+                        InstallStep.Error -> stringResource(R.string.action_retry)
+                        InstallStep.Idle -> {
+                            when (extension) {
+                                is Extension.Installed -> {
+                                    if (extension.hasUpdate) {
+                                        stringResource(R.string.ext_update)
+                                    } else {
+                                        stringResource(R.string.action_settings)
+                                    }
                                 }
+                                is Extension.Untrusted -> stringResource(R.string.ext_trust)
+                                is Extension.Available -> stringResource(R.string.ext_install)
                             }
-                            is Extension.Untrusted -> stringResource(R.string.ext_trust)
-                            is Extension.Available -> stringResource(R.string.ext_install)
                         }
-                    }
-                },
-                style = LocalTextStyle.current.copy(
-                    color = if (isIdle) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceTint,
-                ),
-            )
-        }
-        if (isIdle.not()) {
+                        else -> error("Must not show install process text")
+                    },
+                )
+            }
+        } else {
             IconButton(onClick = { onClickItemCancel(extension) }) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onBackground,
+                    contentDescription = stringResource(id = R.string.action_cancel),
                 )
             }
         }
