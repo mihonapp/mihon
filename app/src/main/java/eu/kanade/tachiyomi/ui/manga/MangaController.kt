@@ -17,7 +17,6 @@ import androidx.core.os.bundleOf
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import eu.kanade.data.chapter.NoChaptersException
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.presentation.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.DuplicateMangaDialog
@@ -216,7 +215,7 @@ class MangaController : FullComposeController<MangaPresenter> {
         val source = presenter.source as? HttpSource ?: return
 
         val url = try {
-            source.mangaDetailsRequest(manga.toDbManga()).url.toString()
+            source.getMangaUrl(manga.toSManga())
         } catch (e: Exception) {
             return
         }
@@ -226,12 +225,12 @@ class MangaController : FullComposeController<MangaPresenter> {
         startActivity(intent)
     }
 
-    fun shareManga() {
+    private fun shareManga() {
         val context = view?.context ?: return
         val manga = presenter.manga ?: return
         val source = presenter.source as? HttpSource ?: return
         try {
-            val url = source.mangaDetailsRequest(manga.toDbManga()).url.toString()
+            val url = source.getMangaUrl(manga.toSManga())
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, url)
