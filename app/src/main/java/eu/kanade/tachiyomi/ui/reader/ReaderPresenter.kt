@@ -132,7 +132,7 @@ class ReaderPresenter(
 
     private val imageSaver: ImageSaver by injectLazy()
 
-    private var chapterDownload: Download? = null
+    private var chapterToDownload: Download? = null
 
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
@@ -206,7 +206,7 @@ class ReaderPresenter(
         if (currentChapters != null) {
             currentChapters.unref()
             saveReadingProgress(currentChapters.currChapter)
-            chapterDownload?.let {
+            chapterToDownload?.let {
                 downloadManager.addDownloadsToStartOfQueue(listOf(it))
             }
         }
@@ -336,7 +336,7 @@ class ReaderPresenter(
                 newChapters.ref()
                 oldChapters?.unref()
 
-                chapterDownload = deleteChapterFromDownloadQueue(newChapters.currChapter)
+                chapterToDownload = deleteChapterFromDownloadQueue(newChapters.currChapter)
                 viewerChaptersRelay.call(newChapters)
             }
     }
@@ -511,11 +511,9 @@ class ReaderPresenter(
         val removeAfterReadSlots = downloadPreferences.removeAfterReadSlots().get()
         val chapterToDelete = chapterList.getOrNull(currentChapterPosition - removeAfterReadSlots)
 
-        if (removeAfterReadSlots != 0 && chapterDownload != null) {
-            downloadManager.addDownloadsToStartOfQueue(listOf(chapterDownload!!))
-        } else {
-            chapterDownload = null
-        }
+        // If chapter is completely read no need to download it
+        chapterToDownload = null
+
         // Check if deleting option is enabled and chapter exists
         if (removeAfterReadSlots != -1 && chapterToDelete != null) {
             enqueueDeleteReadChapters(chapterToDelete)
