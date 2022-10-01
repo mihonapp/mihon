@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -193,17 +192,6 @@ class MangaController : FullComposeController<MangaPresenter> {
                 )
             }
             null -> {}
-        }
-    }
-
-    // Let Compose view handle this
-    override fun handleBack(): Boolean {
-        val dispatcher = (activity as? OnBackPressedDispatcherOwner)?.onBackPressedDispatcher ?: return false
-        return if (dispatcher.hasEnabledCallbacks()) {
-            dispatcher.onBackPressed()
-            true
-        } else {
-            false
         }
     }
 

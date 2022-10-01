@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,13 +53,7 @@ open class BrowseSourceController(bundle: Bundle) :
 
         BrowseSourceScreen(
             presenter = presenter,
-            navigateUp = {
-                if (presenter.isUserQuery) {
-                    presenter.search()
-                } else {
-                    router.popCurrentController()
-                }
-            },
+            navigateUp = ::navigateUp,
             openFilterSheet = { filterSheet?.show() },
             onMangaClick = { router.pushController(MangaController(it.id, true)) },
             onMangaLongClick = { manga ->
@@ -114,8 +109,18 @@ open class BrowseSourceController(bundle: Bundle) :
             null -> {}
         }
 
+        BackHandler(onBack = ::navigateUp)
+
         LaunchedEffect(presenter.filters) {
             initFilterSheet()
+        }
+    }
+
+    private fun navigateUp() {
+        when {
+            presenter.searchQuery != null -> presenter.searchQuery = null
+            presenter.isUserQuery -> presenter.search()
+            else -> router.popCurrentController()
         }
     }
 
@@ -144,8 +149,7 @@ open class BrowseSourceController(bundle: Bundle) :
      * @param newQuery the new query.
      */
     fun searchWithQuery(newQuery: String) {
-        presenter.searchQuery = newQuery
-        presenter.search()
+        presenter.search(newQuery)
     }
 
     /**

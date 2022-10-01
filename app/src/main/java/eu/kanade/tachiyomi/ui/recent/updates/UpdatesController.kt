@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.recent.updates
 
-import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import eu.kanade.presentation.updates.UpdateScreen
@@ -34,17 +33,6 @@ class UpdatesController :
             if (!presenter.isLoading) {
                 (activity as? MainActivity)?.ready = true
             }
-        }
-    }
-
-    // Let Compose view handle this
-    override fun handleBack(): Boolean {
-        val dispatcher = (activity as? OnBackPressedDispatcherOwner)?.onBackPressedDispatcher ?: return false
-        return if (dispatcher.hasEnabledCallbacks()) {
-            dispatcher.onBackPressed()
-            true
-        } else {
-            false
         }
     }
 }
