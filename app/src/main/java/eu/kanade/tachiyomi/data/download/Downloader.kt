@@ -320,7 +320,9 @@ class Downloader(
                     if (pages.isEmpty()) {
                         throw Exception(context.getString(R.string.page_list_empty_error))
                     }
-                    download.pages = pages
+                    // Don't trust index from source
+                    val reIndexedPages = pages.mapIndexed { index, page -> Page(index, page.url, page.imageUrl, page.uri) }
+                    download.pages = reIndexedPages
                 }
         } else {
             // Or if the page list already exists, start from the file
