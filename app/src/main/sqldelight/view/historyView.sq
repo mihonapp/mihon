@@ -26,13 +26,6 @@ JOIN (
 ) AS max_last_read
 ON chapters.manga_id = max_last_read.manga_id;
 
-countHistory:
-SELECT count(*)
-FROM historyView
-WHERE historyView.readAt > 0
-AND maxReadAtChapterId = historyView.chapterId
-AND lower(historyView.title) LIKE ('%' || :query || '%');
-
 history:
 SELECT
 id,
@@ -50,8 +43,7 @@ FROM historyView
 WHERE historyView.readAt > 0
 AND maxReadAtChapterId = historyView.chapterId
 AND lower(historyView.title) LIKE ('%' || :query || '%')
-ORDER BY readAt DESC
-LIMIT :limit OFFSET :offset;
+ORDER BY readAt DESC;
 
 getLatestHistory:
 SELECT

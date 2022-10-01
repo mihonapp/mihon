@@ -1,13 +1,13 @@
 package eu.kanade.domain.history.repository
 
-import androidx.paging.PagingSource
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.history.model.HistoryUpdate
 import eu.kanade.domain.history.model.HistoryWithRelations
+import kotlinx.coroutines.flow.Flow
 
 interface HistoryRepository {
 
-    fun getHistory(query: String): PagingSource<Long, HistoryWithRelations>
+    fun getHistory(query: String): Flow<List<HistoryWithRelations>>
 
     suspend fun getLastHistory(): HistoryWithRelations?
 

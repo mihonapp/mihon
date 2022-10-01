@@ -1,6 +1,5 @@
 package eu.kanade.data.history
 
-import androidx.paging.PagingSource
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.data.chapter.chapterMapper
 import eu.kanade.data.manga.mangaMapper
@@ -10,19 +9,17 @@ import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
 
 class HistoryRepositoryImpl(
     private val handler: DatabaseHandler,
 ) : HistoryRepository {
 
-    override fun getHistory(query: String): PagingSource<Long, HistoryWithRelations> {
-        return handler.subscribeToPagingSource(
-            countQuery = { historyViewQueries.countHistory(query) },
-            queryProvider = { limit, offset ->
-                historyViewQueries.history(query, limit, offset, historyWithRelationsMapper)
-            },
-        )
+    override fun getHistory(query: String): Flow<List<HistoryWithRelations>> {
+        return handler.subscribeToList {
+            historyViewQueries.history(query, historyWithRelationsMapper)
+        }
     }
 
     override suspend fun getLastHistory(): HistoryWithRelations? {
