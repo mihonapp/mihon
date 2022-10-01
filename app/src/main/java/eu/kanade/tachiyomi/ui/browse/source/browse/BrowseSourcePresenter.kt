@@ -66,15 +66,14 @@ import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateItem
 import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateSectionItem
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.withIOContext
+import eu.kanade.tachiyomi.util.lang.withNonCancellableContext
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.system.logcat
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -212,17 +211,13 @@ open class BrowseSourcePresenter(
      */
     private suspend fun initializeManga(manga: DomainManga) {
         if (manga.thumbnailUrl != null || manga.initialized) return
-        withContext(NonCancellable) {
-            val db = manga.toDbManga()
+        withNonCancellableContext {
             try {
-                val networkManga = source!!.getMangaDetails(db.copy())
-                db.copyFrom(networkManga)
-                db.initialized = true
-                updateManga.await(
-                    db
-                        .toDomainManga()
-                        ?.toMangaUpdate()!!,
-                )
+                val networkManga = source!!.getMangaDetails(manga.toSManga())
+                val updatedManga = manga.copyFrom(networkManga)
+                    .copy(initialized = true)
+
+                updateManga.await(updatedManga.toMangaUpdate())
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
             }
