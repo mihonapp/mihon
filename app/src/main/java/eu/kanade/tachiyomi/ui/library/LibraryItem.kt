@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.library
 
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -23,7 +24,7 @@ class LibraryItem(
      * @return true if the manga should be included, false otherwise.
      */
     fun filter(constraint: String): Boolean {
-        val sourceName by lazy { sourceManager.getOrStub(manga.source).name }
+        val sourceName by lazy { sourceManager.getOrStub(manga.source).getNameForMangaInfo() }
         val genres by lazy { manga.getGenres() }
         return manga.title.contains(constraint, true) ||
             (manga.author?.contains(constraint, true) ?: false) ||
