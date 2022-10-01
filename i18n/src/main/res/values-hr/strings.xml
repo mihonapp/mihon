@@ -24,8 +24,8 @@
     <string name="ext_pending">Na čekanju</string>
     <string name="ext_install">Instaliraj</string>
     <string name="ext_obsolete">Zastarjelo</string>
-    <string name="ext_update">Ažuriraj</string>
-    <string name="ext_updates_pending">Ažuriranja na čekanju</string>
+    <string name="ext_update">Aktualiziraj</string>
+    <string name="ext_updates_pending">Aktualiziranja na čekanju</string>
     <string name="all">Sve</string>
     <plurals name="num_categories">
         <item quantity="one">%d kategorija</item>
@@ -36,7 +36,7 @@
     <string name="default_category">Standardna kategorija</string>
     <string name="pref_update_only_non_completed">Sa stanjem „Završeno“</string>
     <string name="charging">Kad se puni</string>
-    <string name="pref_library_update_restriction">Ograničenja uređaja za automatska ažuriranja</string>
+    <string name="pref_library_update_restriction">Ograničenja uređaja za automatska aktualiziranja</string>
     <string name="update_weekly">Tjedno</string>
     <string name="update_48hour">Svaka 2 dana</string>
     <string name="update_24hour">Dnevno</string>
@@ -44,7 +44,7 @@
     <string name="update_6hour">Svakih 6 sati</string>
     <string name="update_never">Isključeno</string>
     <string name="pref_library_update_interval">Automatska aktualiziranja</string>
-    <string name="pref_category_library_update">Globalno ažuriranje</string>
+    <string name="pref_category_library_update">Globalno aktualiziranje</string>
     <string name="landscape">Ležeći format</string>
     <string name="portrait">Uspravni format</string>
     <string name="pref_library_columns">Broj elemenata po retku</string>
@@ -80,7 +80,7 @@
     <string name="information_empty_category">Nemaš kategorija. Za stvaranje kategorije i organiziranje biblioteke dodirni gumb plus.</string>
     <string name="information_empty_library">Tvoja biblioteka je prazna</string>
     <string name="information_no_recent_manga">Ništa nije nedavno čitano</string>
-    <string name="information_no_recent">Nema nedavnih ažuriranja</string>
+    <string name="information_no_recent">Nema nedavnih aktualiziranja</string>
     <string name="information_no_downloads">Nema preuzimanja</string>
     <string name="label_help">Pomoć</string>
     <string name="label_extension_info">Podaci proširenja</string>
@@ -89,7 +89,7 @@
     <string name="label_backup">Sigurnosna kopija i obnavljanje</string>
     <string name="label_sources">Izvori</string>
     <string name="label_recent_manga">Povijest</string>
-    <string name="label_recent_updates">Ažuriranja</string>
+    <string name="label_recent_updates">Aktualiziranja</string>
     <string name="label_library">Biblioteka</string>
     <string name="label_download_queue">Popis preuzimanja</string>
     <string name="label_settings">Postavke</string>
@@ -135,8 +135,8 @@
     <string name="action_add_category">Dodaj kategoriju</string>
     <string name="action_add">Dodaj</string>
     <string name="action_edit">Uredi</string>
-    <string name="action_update_library">Ažuriraj biblioteku</string>
-    <string name="action_update">Ažuriraj</string>
+    <string name="action_update_library">Aktualiziraj biblioteku</string>
+    <string name="action_update">Aktualiziraj</string>
     <string name="action_delete">Izbriši</string>
     <string name="action_remove_bookmark">Ukloni zabilješku poglavlja</string>
     <string name="action_bookmark">Zabilježi poglavlje</string>
@@ -266,8 +266,8 @@
     <string name="notification_cover_update_failed">Neuspjelo ažuriranje naslovnice</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Poglavlja %1$s i još jedno</item>
-        <item quantity="few">Poglavlja %1$s i još %2$s</item>
-        <item quantity="other">Poglavlja %1$s i još %2$s</item>
+        <item quantity="few">Poglavlja %1$s i još %2$d</item>
+        <item quantity="other">Poglavlja %1$s i još %2$d</item>
     </plurals>
     <string name="notification_chapters_multiple">Poglavlja %1$s</string>
     <string name="notification_chapters_single_and_more">Poglavlje %1$s i još %2$d</string>
@@ -365,7 +365,7 @@
     <string name="manga_not_in_db">Ovaj je manga uklonjen iz baze podataka.</string>
     <string name="local_source_help_guide">Vodič za lokalni izvor</string>
     <string name="browse">Pretraži</string>
-    <string name="latest">Najnovije</string>
+    <string name="latest">Najnoviji</string>
     <string name="action_global_search_hint">Globalna pretraga …</string>
     <string name="pinned_sources">Označeni</string>
     <string name="last_used_source">Zadnji korišteni</string>
@@ -461,7 +461,7 @@
     <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
     <string name="unofficial_extension_message">Ovo proširenje nije sa službenog popisa Tachiyomi proširenja.</string>
     <string name="ext_unofficial">Neslužbeno</string>
-    <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom ažuriranja biblioteke</string>
+    <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom aktualiziranja biblioteke</string>
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
     <string name="action_display_unread_badge">Nepročitana poglavlja</string>
     <string name="action_migrate">Migriraj</string>
@@ -577,7 +577,7 @@
     <string name="pref_category_auto_download">Automatsko preuzimanje</string>
     <string name="exclude">Isključi: %s</string>
     <string name="include">Uključi: %s</string>
-    <string name="pref_library_update_categories_details">Manga u isključenim kategorijama neće se ažurirati čak niti ako se također nalaze u uključenim kategorijama.</string>
+    <string name="pref_library_update_categories_details">Manga u isključenim kategorijama neće se aktualizirati čak niti ako se također nalaze u uključenim kategorijama.</string>
     <string name="action_sort_chapter_fetch_date">Datum preuzimanja poglavlja</string>
     <string name="action_show_errors">Dodirni za prikaz detalja</string>
     <string name="update_check_eol">Ove verzija androida više nije podržana</string>
@@ -624,7 +624,7 @@
     <string name="theme_monet">Dinamički</string>
     <string name="pref_app_theme">Tema programa</string>
     <string name="theme_yotsuba">Yotsuba</string>
-    <string name="theme_yinyang">Yin/Yang</string>
+    <string name="theme_yinyang">Jin i Jang</string>
     <string name="pref_inverted_colors">Invertirano</string>
     <plurals name="relative_time">
         <item quantity="one">Prije %1$d dan</item>
@@ -634,11 +634,11 @@
     <string name="relative_time_today">Danas</string>
     <string name="recently">Nedavno</string>
     <string name="pref_relative_time_long">Dugo (Kratko+, n proteklih dana)</string>
-    <string name="pref_relative_time_short">Kratko(danas, jučer)</string>
+    <string name="pref_relative_time_short">Kratko (danas, jučer)</string>
     <string name="pref_relative_format">Relativna vremenska oznaka</string>
     <string name="pref_category_timestamps">Vremenska oznaka</string>
-    <string name="pref_category_navigation">Navigation</string>
-    <string name="pref_dark_theme_pure_black">Teal &amp; Turquoise</string>
+    <string name="pref_category_navigation">Navigacija</string>
+    <string name="pref_dark_theme_pure_black">Potpuno crna tamna tema</string>
     <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
     <string name="pref_category_appearance">Izgled</string>
     <string name="getting_started_guide">Početni vodič</string>
@@ -663,10 +663,10 @@
     <string name="pref_verbose_logging_summary">Ispiši opširan zapis u zapisnik sustava (smanjuje performanse aplikacije)</string>
     <string name="tracker_komga_warning">Ovaj način pračenja je kompatibilan samo s izvorom Komga.</string>
     <string name="notification_updating">Aktualiziranje zbirke … (%1$d/%2$d)</string>
-    <string name="backup_info">Preporučuje se izrada automatskih sigurnosnih kopija. Čuvaj kopije i na drugim mjestima.</string>
+    <string name="backup_info">Čuvaj sigurnosne kopije i na drugim mjestima.</string>
     <string name="pref_tablet_ui_mode">Korisničko sučelje tableta</string>
     <string name="notification_size_warning">Velika aktualiziranja štete izvorima i mogu usporiti aktualiziranja i povećati potrošnju baterije. Dodirni i saznaj više.</string>
-    <string name="pref_library_update_show_tab_badge">Prikaži broj nepročitanih na ikoni Ažuriranja</string>
+    <string name="pref_library_update_show_tab_badge">Prikaži broj nepročitanih na ikoni „Aktualiziranja”</string>
     <string name="pref_low">Niska</string>
     <string name="label_background_activity">Aktivnost u pozadini</string>
     <string name="pref_hide_threshold">Osjetljivost za skrivanje izbornika pri pomicanju</string>
@@ -745,4 +745,12 @@
     <string name="action_close">Zatvori</string>
     <string name="action_remove_everything">Ukloni sve</string>
     <string name="theme_lavender">Lavanda</string>
+    <string name="ext_info_language">Jezik</string>
+    <string name="ext_info_version">Verzija</string>
+    <string name="popular">Popularni</string>
+    <string name="ext_info_age_rating">Dobna granica</string>
+    <string name="download_ahead">Preuzmi unaprijed</string>
+    <string name="multi_lang">Višejezičnost</string>
+    <string name="missing_storage_permission">Nedostaje dozvola za spremanje</string>
+    <string name="theme_tidalwave">Tsunami</string>
 </resources>

@@ -710,4 +710,22 @@
     <string name="download_notifier_split_failed">Kan gedownloade afbeelding niet splitsen</string>
     <string name="loader_rar5_error">RARv5-indeling wordt niet ondersteund</string>
     <string name="download_notifier_split_page_not_found">Pagina %d niet gevonden tijdens het splitsen</string>
+    <string name="internal_error">InternalError: Bekijk de crash logs voor meer informatie</string>
+    <string name="theme_lavender">Lavendel</string>
+    <string name="action_sort_last_manga_update">Laatst bijgewerkte manga</string>
+    <string name="action_remove_everything">Alles verwijderen</string>
+    <string name="delete_category_confirmation">Wenst u categorie \"%s\" te verwijderen\?</string>
+    <string name="delete_category">Categorie verwijderen</string>
+    <string name="action_close">Sluiten</string>
+    <string name="theme_tidalwave">Vloedgolf</string>
+    <string name="disabled_nav">Uitgeschakeld</string>
+    <string name="network_not_metered">Alleen op ongelimiteerd netwerk</string>
+    <string name="auto_download_while_reading">Automatisch downloaden tijdens het lezen</string>
+    <string name="ext_info_language">Taal</string>
+    <string name="multi_lang">Meedere</string>
+    <string name="ext_info_age_rating">Classificatie per leeftijd</string>
+    <string name="pref_long_strip_split">Grote afbeeldingen splitsen (BETA)</string>
+    <string name="ext_info_version">Versie</string>
+    <string name="battery_not_low">Wanneer de batterij niet leeg is</string>
+    <string name="pref_app_language">Taal van de applicatie</string>
 </resources>

@@ -669,7 +669,7 @@
     <string name="ext_update_all">I-update lahat</string>
     <string name="clear_database_source_item_count">May %1$d (na) manga sa database na wala sa Aklatan</string>
     <string name="pref_auto_clear_chapter_cache">Linisin ang cache ng kabanata pagkasara</string>
-    <string name="database_clean">Linisin ang database</string>
+    <string name="database_clean">Walang malilinis</string>
     <string name="extension_api_error">Bigong makuha ang mga extension</string>
     <string name="privacy_policy">Patakaran sa Pagkapribado</string>
     <string name="library_errors_help">Para makahingi ng tulong sa pag-ayos sa mga error sa pag-update ng Aklatan, tingnan ang %1$s</string>
@@ -766,4 +766,6 @@
     <string name="pref_long_strip_split">Hatiin ang mga matatangkad na larawan (BETA)</string>
     <string name="popular">Sikat</string>
     <string name="missing_storage_permission">Hindi binigay ang mga permiso sa storage</string>
+    <string name="skipped_reason_not_always_update">Nilaktawan dahil hindi kailangan ang pag-update sa serye</string>
+    <string name="action_search_hint">Maghanap…</string>
 </resources>

@@ -669,7 +669,7 @@
     <string name="channel_app_updates">Anwendungsaktualisierungen</string>
     <string name="pref_auto_clear_chapter_cache">Kapitel-Zwischenspeicher beim Schließen der App löschen</string>
     <string name="clear_database_source_item_count">%1$d Nicht-Bibliotheksmanga in der Datenbank</string>
-    <string name="database_clean">Datenbank bereinigt</string>
+    <string name="database_clean">Nichts zu bereinigen</string>
     <string name="extension_api_error">Herunterladen der Erweiterungsliste ist fehlgeschlagen</string>
     <string name="privacy_policy">Datenschutzbestimmungen</string>
     <string name="pref_update_only_completely_read">Mit ungelesenen Kapiteln</string>
@@ -766,4 +766,6 @@
     <string name="updates_last_update_info">Letzte Aktualisierung der Bibliothek: %1$s</string>
     <string name="popular">Beliebt</string>
     <string name="missing_storage_permission">Speicherberechtigungen nicht erteilt</string>
+    <string name="skipped_reason_not_always_update">Übersprungen, da die Serie keine Aktualisierung benötigt</string>
+    <string name="action_search_hint">Suchen…</string>
 </resources>

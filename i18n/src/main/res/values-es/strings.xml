@@ -783,7 +783,7 @@
     <string name="update_already_running">Ya se está actualizando</string>
     <string name="theme_tidalwave">Marea</string>
     <string name="error_user_agent_string_blank">La cadena con el agente de usuario no puede estar vacía</string>
-    <string name="download_ahead_info">Solo funciona en manga que ya esté en tu biblioteca y cuando el capítulo actual y el que va después ya estén descargados</string>
+    <string name="download_ahead_info">Solo funciona con manga que ya esté en tu biblioteca y cuando el capítulo actual y el que va después ya estén descargados</string>
     <string name="download_ahead">Descargar por adelantado</string>
     <string name="auto_download_while_reading">Descarga los capítulos siguientes mientras lees</string>
     <plurals name="next_unread_chapters">
@@ -797,4 +797,6 @@
     <string name="popular">Popular</string>
     <string name="multi_lang">Multi</string>
     <string name="missing_storage_permission">No se han concedido los permisos de almacenamiento</string>
+    <string name="skipped_reason_not_always_update">Saltando, porque este manga no necesita actualizarse</string>
+    <string name="action_search_hint">Buscar…</string>
 </resources>

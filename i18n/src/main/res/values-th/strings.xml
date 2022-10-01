@@ -621,7 +621,7 @@
     <string name="action_sort_count">จำนวนมังงะ</string>
     <string name="pref_tablet_ui_mode">UI แท็บเล็ต</string>
     <string name="clear_database_source_item_count">มังงะ %1$d เรื่อง ที่ไม่ได้อยู่ในคลังในฐานข้อมูล</string>
-    <string name="database_clean">ล้างฐานข้อมูลแล้ว</string>
+    <string name="database_clean">ไม่มีอะไรให้ต้องล้าง</string>
     <string name="about_dont_kill_my_app">ผู้ผลิตบางรายมีข้อจำกัดเพิ่มเติมของแอปที่ปิดบริการพื้นหลัง เว็บไซต์นี้มีข้อมูลเพิ่มเติมเกี่ยวกับวิธีการแก้ไข</string>
     <string name="pref_verbose_logging">การบันทึกอย่างละเอียด</string>
     <string name="pref_library_update_manga_restriction">เรื่องที่ข้ามการอัปเดต</string>
@@ -753,4 +753,6 @@
     <string name="remove_manga">คุณกำลังจะนำมังงะนี้ออกจากคลัง</string>
     <string name="popular">ยอดนิยม</string>
     <string name="missing_storage_permission">ไม่ได้รับการอนุญาตให้ใช้งานที่จัดเก็บ</string>
+    <string name="action_search_hint">ค้นหา…</string>
+    <string name="skipped_reason_not_always_update">ถูกข้ามเนื่องจากเรื่องไม่จำเป็นต้องถูกอัปเดต</string>
 </resources>

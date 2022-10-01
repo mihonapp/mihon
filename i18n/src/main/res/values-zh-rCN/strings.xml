@@ -87,7 +87,7 @@
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">设备自动更新限制</string>
     <string name="charging">充电时</string>
-    <string name="pref_update_only_non_completed">状态为“已完结”</string>
+    <string name="pref_update_only_non_completed">已完结</string>
     <string name="pref_auto_update_manga_sync">阅读后更新进度</string>
     <string name="default_category">默认分类</string>
     <string name="default_category_summary">始终询问</string>
@@ -180,10 +180,10 @@
     <string name="cache_delete_error">清除时出现错误</string>
     <string name="pref_clear_cookies">清除 Cookies</string>
     <string name="cookies_cleared">Cookies 已清除</string>
-    <string name="pref_clear_database">清除数据库</string>
-    <string name="pref_clear_database_summary">删除未保存在书架中的漫画的历史</string>
+    <string name="pref_clear_database">清理数据库</string>
+    <string name="pref_clear_database_summary">删除未添加到书架的漫画记录</string>
     <string name="clear_database_confirmation">你确定吗？不在书架中的漫画的已读章节和进度将会丢失</string>
-    <string name="clear_database_completed">已删除条目</string>
+    <string name="clear_database_completed">数据已删除</string>
     <string name="pref_refresh_library_tracking">刷新追踪进度</string>
     <string name="pref_refresh_library_tracking_summary">从追踪服务中更新漫画的阅读状态，评分以及阅读进度</string>
     <string name="version">版本</string>
@@ -211,7 +211,7 @@
     <string name="licensed">版权屏蔽</string>
     <string name="remove_from_library">移出书架</string>
     <string name="manga_info_full_title_label">标题</string>
-    <string name="manga_added_library">已添加至书架</string>
+    <string name="manga_added_library">已添加到书架</string>
     <string name="manga_removed_library">已移出书架</string>
     <string name="delete_downloads_for_manga">删除已下载的章节？</string>
     <string name="copied_to_clipboard">已复制到剪贴板：
@@ -253,7 +253,7 @@
     <string name="snack_categories_deleted">分类已删除</string>
     <string name="dialog_with_checkbox_remove_description">此章节的阅读日期将被清除，你确定吗？</string>
     <string name="dialog_with_checkbox_reset">重置此漫画所有章节</string>
-    <string name="snack_add_to_library">将漫画添加至书架？</string>
+    <string name="snack_add_to_library">要将漫画添加到书架吗？</string>
     <string name="picture_saved">图片已保存</string>
     <string name="custom_filter">滤镜</string>
     <string name="set_as_cover">设为封面</string>
@@ -277,7 +277,7 @@
     <string name="download_queue_error">无法下载该章节。请重试</string>
     <string name="notification_new_chapters">发现新章节</string>
     <string name="notification_cover_update_failed">封面更新失败</string>
-    <string name="notification_first_add_to_library">请先将漫画添加至书架再进行更新</string>
+    <string name="notification_first_add_to_library">请先将漫画添加到书架</string>
     <string name="file_select_cover">选择封面图片</string>
     <string name="file_select_backup">选择备份文件</string>
     <string name="update_check_confirm">下载</string>
@@ -405,7 +405,7 @@
     <string name="website">官网</string>
     <string name="confirm_exit">再按一次退出</string>
     <string name="pref_confirm_exit">确认退出</string>
-    <string name="add_to_library">添加至书架</string>
+    <string name="add_to_library">添加到书架</string>
     <string name="in_library">在书架中</string>
     <string name="label_downloaded_only">仅限已下载内容</string>
     <string name="creating_backup_error">备份失败</string>
@@ -496,7 +496,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">这并不能防止非官方或可能被错误标记的扩展插件在应用中显示 NSFW (18+) 内容。</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">跳过 %d 个章节，要么是图源缺少这些章节，要么是被过滤掉了</item>
+        <item quantity="other">跳过了 %d 章，可能是图源没有这些章节，或者被筛选规则排除了</item>
     </plurals>
     <string name="no_chapters_error">未找到章节</string>
     <string name="chapter_settings_updated">已更新默认章节设置</string>
@@ -648,7 +648,7 @@
     <string name="label_warning">警告</string>
     <string name="action_display_language_badge">语言</string>
     <string name="backup_info">你应该将备份数据保存到多个地方。</string>
-    <string name="notification_size_warning">大型更新会损害图源，并可能导致更新速度变慢以及电池用量增加。轻按了解更多。</string>
+    <string name="notification_size_warning">大量更新会损害图源，并可能导致更新变慢、耗电增加。点击了解详情。</string>
     <string name="connected_to_wifi">仅连接至 Wi-Fi 时</string>
     <string name="update_72hour">每 3 天</string>
     <string name="download_queue_size_warning">警告：批量下载可能会导致图源变慢和/或图源封锁 Tachiyomi。轻按了解更多。</string>
@@ -656,8 +656,8 @@
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">应用更新</string>
     <string name="pref_auto_clear_chapter_cache">关闭应用时清除章节缓存</string>
-    <string name="database_clean">数据库清理</string>
-    <string name="clear_database_source_item_count">数据库有 %1$d 本漫画不在书架中</string>
+    <string name="database_clean">无需清理</string>
+    <string name="clear_database_source_item_count">数据库中有 %1$d 本漫画未添加到书架</string>
     <string name="extension_api_error">无法获取扩展插件列表</string>
     <string name="privacy_policy">隐私政策</string>
     <string name="pref_update_only_completely_read">有未读章节</string>
@@ -678,10 +678,10 @@
 \n
 \n你仍希望继续吗？</string>
     <string name="action_filter_started">已开始</string>
-    <string name="pref_update_only_started">尚未开始</string>
-    <string name="skipped_reason_completed">跳过，因连载完结</string>
-    <string name="skipped_reason_not_caught_up">跳过，因有未读章节</string>
-    <string name="skipped_reason_not_started">跳过，因无已读章节</string>
+    <string name="pref_update_only_started">尚未开始阅读</string>
+    <string name="skipped_reason_completed">已跳过，因为作品已完结</string>
+    <string name="skipped_reason_not_caught_up">已跳过，因为有未读章节</string>
+    <string name="skipped_reason_not_started">已跳过，因为尚未开始阅读</string>
     <string name="learn_more">轻按了解更多</string>
     <string name="notification_update_error">%1$d 个更新失败了</string>
     <string name="notification_update_skipped">已跳过 %1$d 个更新</string>
@@ -749,8 +749,10 @@
     <string name="are_you_sure">你确定吗？</string>
     <string name="pref_long_strip_split">分割长图 (测试版)</string>
     <string name="multi_lang">多语言</string>
-    <string name="updates_last_update_info">书架上次更新时间：%1$s</string>
+    <string name="updates_last_update_info">书架更新于：%1$s</string>
     <string name="remove_manga">即将从书架中删除此漫画。</string>
     <string name="popular">热门</string>
     <string name="missing_storage_permission">未授予存储权限</string>
+    <string name="skipped_reason_not_always_update">已跳过，因为作品无需更新</string>
+    <string name="action_search_hint">搜索…</string>
 </resources>

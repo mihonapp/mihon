@@ -746,4 +746,11 @@
     <string name="pref_long_strip_split">Dividir imágenes altas (BETA)</string>
     <string name="download_ahead">Descargar por adelantado</string>
     <string name="action_remove_everything">Remover todo</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Último capítulo sin leer</item>
+        <item quantity="many">Últimos capítulos sin leer</item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="auto_download_while_reading">Descargar automáticamente mientras se lee</string>
+    <string name="action_search_hint">Buscar…</string>
 </resources>
