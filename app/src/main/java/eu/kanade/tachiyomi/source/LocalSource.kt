@@ -150,17 +150,20 @@ class LocalSource(
         // Augment manga details based on metadata files
         try {
             val mangaDirFiles = getMangaDirsFiles(manga.url, baseDirsFile).toList()
-            val comicInfoMetadata = mangaDirFiles
-                .firstOrNull { it.name == COMIC_INFO_FILE || it.name == ".noxml" }
+            val comicInfoFile = mangaDirFiles
+                .firstOrNull { it.name == COMIC_INFO_FILE }
+            val noXmlFile = mangaDirFiles
+                .firstOrNull { it.name == ".noxml" }
+            if (comicInfoFile != null && noXmlFile != null) noXmlFile.delete()
 
             when {
                 // Top level ComicInfo.xml
-                comicInfoMetadata?.name == COMIC_INFO_FILE -> {
-                    setMangaDetailsFromComicInfoFile(comicInfoMetadata.inputStream(), manga)
+                comicInfoFile != null -> {
+                    setMangaDetailsFromComicInfoFile(comicInfoFile.inputStream(), manga)
                 }
 
                 // Copy ComicInfo.xml from chapter archive to top level if found
-                comicInfoMetadata == null -> {
+                noXmlFile == null -> {
                     val chapterArchives = mangaDirFiles
                         .filter { isSupportedArchiveFile(it.extension) }
                         .toList()
