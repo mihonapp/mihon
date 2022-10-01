@@ -16,7 +16,6 @@ import eu.kanade.presentation.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.DeleteLibraryMangaDialog
 import eu.kanade.presentation.library.LibraryScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
@@ -197,7 +196,7 @@ class LibraryController(
     private fun showMangaCategoriesDialog() {
         viewScope.launchIO {
             // Create a copy of selected manga
-            val mangaList = presenter.selection.mapNotNull { it.toDomainManga() }.toList()
+            val mangaList = presenter.selection.map { it.manga }
 
             // Hide the default category because it has a different behavior than the ones from db.
             val categories = presenter.categories.filter { it.id != 0L }
@@ -219,18 +218,18 @@ class LibraryController(
 
     private fun downloadUnreadChapters() {
         val mangaList = presenter.selection.toList()
-        presenter.downloadUnreadChapters(mangaList.mapNotNull { it.toDomainManga() })
+        presenter.downloadUnreadChapters(mangaList.map { it.manga })
         presenter.clearSelection()
     }
 
     private fun markReadStatus(read: Boolean) {
         val mangaList = presenter.selection.toList()
-        presenter.markReadStatus(mangaList.mapNotNull { it.toDomainManga() }, read)
+        presenter.markReadStatus(mangaList.map { it.manga }, read)
         presenter.clearSelection()
     }
 
     private fun showDeleteMangaDialog() {
-        val mangaList = presenter.selection.mapNotNull { it.toDomainManga() }.toList()
+        val mangaList = presenter.selection.map { it.manga }
         presenter.dialog = LibraryPresenter.Dialog.DeleteManga(mangaList)
     }
 }

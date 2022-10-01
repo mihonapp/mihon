@@ -55,7 +55,7 @@ fun LibraryScreen(
                         onChangeCategoryClicked = onChangeCategoryClicked,
                         onMarkAsReadClicked = onMarkAsReadClicked,
                         onMarkAsUnreadClicked = onMarkAsUnreadClicked,
-                        onDownloadClicked = onDownloadClicked.takeIf { presenter.selection.none { it.source == LocalSource.ID } },
+                        onDownloadClicked = onDownloadClicked.takeIf { presenter.selection.none { it.manga.source == LocalSource.ID } },
                         onDeleteClicked = onDeleteClicked,
                     )
                 },

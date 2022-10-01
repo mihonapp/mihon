@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.presentation.components.Badge
 import eu.kanade.presentation.components.BadgeGroup
@@ -28,7 +29,6 @@ import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.presentation.util.verticalPadding
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
 @Composable
@@ -61,7 +61,7 @@ fun LibraryList(
         ) { libraryItem ->
             LibraryListItem(
                 item = libraryItem,
-                isSelected = libraryItem.manga in selection,
+                isSelected = libraryItem.libraryManga in selection,
                 onClick = onClick,
                 onLongClick = onLongClick,
             )
@@ -76,19 +76,20 @@ fun LibraryListItem(
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
 ) {
-    val manga = item.manga
+    val libraryManga = item.libraryManga
+    val manga = libraryManga.manga
     MangaListItem(
         modifier = Modifier.selectedBackground(isSelected),
         title = manga.title,
         cover = MangaCover(
-            manga.id!!,
+            manga.id,
             manga.source,
             manga.favorite,
-            manga.thumbnail_url,
-            manga.cover_last_modified,
+            manga.thumbnailUrl,
+            manga.coverLastModified,
         ),
-        onClick = { onClick(manga) },
-        onLongClick = { onLongClick(manga) },
+        onClick = { onClick(libraryManga) },
+        onLongClick = { onLongClick(libraryManga) },
     ) {
         if (item.downloadCount > 0) {
             Badge(

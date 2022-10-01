@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.model.MangaCover
-import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
 @Composable
@@ -38,7 +38,7 @@ fun LibraryComfortableGrid(
         ) { libraryItem ->
             LibraryComfortableGridItem(
                 libraryItem,
-                libraryItem.manga in selection,
+                libraryItem.libraryManga in selection,
                 onClick,
                 onLongClick,
             )
@@ -53,26 +53,27 @@ fun LibraryComfortableGridItem(
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
 ) {
-    val manga = item.manga
+    val libraryManga = item.libraryManga
+    val manga = libraryManga.manga
     LibraryGridItemSelectable(isSelected = isSelected) {
         Column(
             modifier = Modifier
                 .combinedClickable(
                     onClick = {
-                        onClick(manga)
+                        onClick(libraryManga)
                     },
                     onLongClick = {
-                        onLongClick(manga)
+                        onLongClick(libraryManga)
                     },
                 ),
         ) {
             LibraryGridCover(
                 mangaCover = MangaCover(
-                    manga.id!!,
+                    manga.id,
                     manga.source,
                     manga.favorite,
-                    manga.thumbnail_url,
-                    manga.cover_last_modified,
+                    manga.thumbnailUrl,
+                    manga.coverLastModified,
                 ),
                 downloadCount = item.downloadCount,
                 unreadCount = item.unreadCount,

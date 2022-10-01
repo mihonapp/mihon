@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.kanade.tachiyomi.data.database.models.LibraryManga
+import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
 @Composable
@@ -30,7 +30,7 @@ fun LibraryCoverOnlyGrid(
         ) { libraryItem ->
             LibraryCoverOnlyGridItem(
                 item = libraryItem,
-                isSelected = libraryItem.manga in selection,
+                isSelected = libraryItem.libraryManga in selection,
                 onClick = onClick,
                 onLongClick = onLongClick,
             )
@@ -45,24 +45,25 @@ fun LibraryCoverOnlyGridItem(
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
 ) {
-    val manga = item.manga
+    val libraryManga = item.libraryManga
+    val manga = libraryManga.manga
     LibraryGridCover(
         modifier = Modifier
             .selectedOutline(isSelected)
             .combinedClickable(
                 onClick = {
-                    onClick(manga)
+                    onClick(libraryManga)
                 },
                 onLongClick = {
-                    onLongClick(manga)
+                    onLongClick(libraryManga)
                 },
             ),
         mangaCover = eu.kanade.domain.manga.model.MangaCover(
-            manga.id!!,
+            manga.id,
             manga.source,
             manga.favorite,
-            manga.thumbnail_url,
-            manga.cover_last_modified,
+            manga.thumbnailUrl,
+            manga.coverLastModified,
         ),
         downloadCount = item.downloadCount,
         unreadCount = item.unreadCount,

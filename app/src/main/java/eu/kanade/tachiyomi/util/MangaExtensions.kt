@@ -20,26 +20,26 @@ import eu.kanade.domain.manga.model.Manga as DomainManga
 /**
  * Call before updating [Manga.thumbnail_url] to ensure old cover can be cleared from cache
  */
-fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSameUrl: Boolean) {
+fun DomainManga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSameUrl: Boolean): DomainManga {
     // Never refresh covers if the new url is null, as the current url has possibly become invalid
-    val newUrl = remoteManga.thumbnail_url ?: return
+    val newUrl = remoteManga.thumbnail_url ?: return this
 
     // Never refresh covers if the url is empty to avoid "losing" existing covers
-    if (newUrl.isEmpty()) return
+    if (newUrl.isEmpty()) return this
 
-    if (!refreshSameUrl && thumbnail_url == newUrl) return
+    if (!refreshSameUrl && thumbnailUrl == newUrl) return this
 
-    val domainManga = toDomainManga()!!
-    when {
-        domainManga.isLocal() -> {
-            cover_last_modified = Date().time
+    return when {
+        isLocal() -> {
+            this.copy(coverLastModified = Date().time)
         }
-        domainManga.hasCustomCover(coverCache) -> {
+        hasCustomCover(coverCache) -> {
             coverCache.deleteFromCache(this, false)
+            this
         }
         else -> {
-            cover_last_modified = Date().time
             coverCache.deleteFromCache(this, false)
+            this.copy(coverLastModified = Date().time)
         }
     }
 }

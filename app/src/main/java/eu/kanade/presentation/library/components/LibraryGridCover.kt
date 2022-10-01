@@ -56,8 +56,8 @@ fun MangaGridCover(
 fun LibraryGridCover(
     modifier: Modifier = Modifier,
     mangaCover: eu.kanade.domain.manga.model.MangaCover,
-    downloadCount: Int,
-    unreadCount: Int,
+    downloadCount: Long,
+    unreadCount: Long,
     isLocal: Boolean,
     language: String,
     content: @Composable BoxScope.() -> Unit = {},

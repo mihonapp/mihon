@@ -1,19 +1,19 @@
 package eu.kanade.tachiyomi.ui.library
 
-import eu.kanade.tachiyomi.data.database.models.LibraryManga
+import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class LibraryItem(
-    val manga: LibraryManga,
+    val libraryManga: LibraryManga,
     private val sourceManager: SourceManager = Injekt.get(),
 ) {
 
     var displayMode: Long = -1
-    var downloadCount = -1
-    var unreadCount = -1
+    var downloadCount: Long = -1
+    var unreadCount: Long = -1
     var isLocal = false
     var sourceLanguage = ""
 
@@ -24,12 +24,12 @@ class LibraryItem(
      * @return true if the manga should be included, false otherwise.
      */
     fun filter(constraint: String): Boolean {
-        val sourceName by lazy { sourceManager.getOrStub(manga.source).getNameForMangaInfo() }
-        val genres by lazy { manga.getGenres() }
-        return manga.title.contains(constraint, true) ||
-            (manga.author?.contains(constraint, true) ?: false) ||
-            (manga.artist?.contains(constraint, true) ?: false) ||
-            (manga.description?.contains(constraint, true) ?: false) ||
+        val sourceName by lazy { sourceManager.getOrStub(libraryManga.manga.source).getNameForMangaInfo() }
+        val genres by lazy { libraryManga.manga.genre }
+        return libraryManga.manga.title.contains(constraint, true) ||
+            (libraryManga.manga.author?.contains(constraint, true) ?: false) ||
+            (libraryManga.manga.artist?.contains(constraint, true) ?: false) ||
+            (libraryManga.manga.description?.contains(constraint, true) ?: false) ||
             if (constraint.contains(",")) {
                 constraint.split(",").all { containsSourceOrGenre(it.trim(), sourceName, genres) }
             } else {
@@ -73,7 +73,7 @@ class LibraryItem(
 
         other as LibraryItem
 
-        if (manga != other.manga) return false
+        if (libraryManga != other.libraryManga) return false
         if (sourceManager != other.sourceManager) return false
         if (displayMode != other.displayMode) return false
         if (downloadCount != other.downloadCount) return false
@@ -85,11 +85,11 @@ class LibraryItem(
     }
 
     override fun hashCode(): Int {
-        var result = manga.hashCode()
+        var result = libraryManga.hashCode()
         result = 31 * result + sourceManager.hashCode()
         result = 31 * result + displayMode.hashCode()
-        result = 31 * result + downloadCount
-        result = 31 * result + unreadCount
+        result = 31 * result + downloadCount.toInt()
+        result = 31 * result + unreadCount.toInt()
         result = 31 * result + isLocal.hashCode()
         result = 31 * result + sourceLanguage.hashCode()
         return result

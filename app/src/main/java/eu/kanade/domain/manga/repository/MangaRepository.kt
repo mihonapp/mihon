@@ -1,8 +1,8 @@
 package eu.kanade.domain.manga.repository
 
+import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
-import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import kotlinx.coroutines.flow.Flow
 
 interface MangaRepository {

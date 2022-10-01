@@ -1,7 +1,7 @@
 package eu.kanade.domain.manga.interactor
 
+import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.repository.MangaRepository
-import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import kotlinx.coroutines.flow.Flow
 
 class GetLibraryManga(
