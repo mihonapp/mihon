@@ -34,10 +34,10 @@ object LocaleHelper {
             return ""
         }
 
-        val locale = when {
-            lang.isEmpty() -> LocaleListCompat.getAdjustedDefault()[0]
-            lang == "zh-CN" -> Locale.forLanguageTag("zh-Hans")
-            lang == "zh-TW" -> Locale.forLanguageTag("zh-Hant")
+        val locale = when (lang) {
+            "" -> LocaleListCompat.getAdjustedDefault()[0]
+            "zh-CN" -> Locale.forLanguageTag("zh-Hans")
+            "zh-TW" -> Locale.forLanguageTag("zh-Hant")
             else -> Locale.forLanguageTag(lang)
         }
         return locale!!.getDisplayName(locale).replaceFirstChar { it.uppercase(locale) }
