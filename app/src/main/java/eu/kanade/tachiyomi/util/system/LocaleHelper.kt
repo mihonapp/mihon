@@ -12,7 +12,7 @@ import java.util.Locale
 object LocaleHelper {
 
     /**
-     * Returns Display name of a string language code
+     * Returns display name of a string language code.
      */
     fun getSourceDisplayName(lang: String?, context: Context): String {
         return when (lang) {
@@ -25,7 +25,7 @@ object LocaleHelper {
     }
 
     /**
-     * Returns Display name of a string language code
+     * Returns display name of a string language code.
      *
      * @param lang empty for system language
      */
@@ -34,10 +34,11 @@ object LocaleHelper {
             return ""
         }
 
-        val locale = if (lang.isEmpty()) {
-            LocaleListCompat.getAdjustedDefault()[0]
-        } else {
-            Locale.forLanguageTag(lang)
+        val locale = when {
+            lang.isEmpty() -> LocaleListCompat.getAdjustedDefault()[0]
+            lang == "zh-CN" -> Locale.forLanguageTag("zh-Hans")
+            lang == "zh-TW" -> Locale.forLanguageTag("zh-Hant")
+            else -> Locale.forLanguageTag(lang)
         }
         return locale!!.getDisplayName(locale).replaceFirstChar { it.uppercase(locale) }
     }
