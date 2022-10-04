@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -36,6 +37,11 @@
         android:theme="@style/Theme.Tachiyomi"
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security_config">
+
+        <!-- enable profiling by macrobenchmark -->
+        <profileable
+            android:shell="true"
+            tools:targetApi="q" />
 
         <activity
             android:name=".ui.main.MainActivity"

@@ -75,10 +75,20 @@ android {
             applicationIdSuffix = debugType.applicationIdSuffix
             matchingFallbacks.add("release")
         }
+        create("benchmark") {
+            initWith(getByName("release"))
+
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks.add("release")
+            isDebuggable = false
+            versionNameSuffix = "-benchmark"
+            applicationIdSuffix = ".benchmark"
+        }
     }
 
     sourceSets {
         getByName("preview").res.srcDirs("src/debug/res")
+        getByName("benchmark").res.srcDirs("src/debug/res")
     }
 
     flavorDimensions.add("default")
@@ -193,6 +203,7 @@ dependencies {
     implementation(androidx.recyclerview)
     implementation(androidx.viewpager)
     implementation(androidx.glance)
+    implementation(androidx.profileinstaller)
 
     implementation(androidx.bundles.lifecycle)
 
@@ -280,6 +291,15 @@ dependencies {
     // For detecting memory leaks; see https://square.github.io/leakcanary/
     // debugImplementation(libs.leakcanary.android)
     implementation(libs.leakcanary.plumber)
+}
+
+androidComponents {
+    beforeVariants { variantBuilder ->
+        // Disables standardBenchmark
+        if (variantBuilder.buildType == "benchmark") {
+            variantBuilder.enable = variantBuilder.productFlavors.containsAll(listOf("default" to "dev"))
+        }
+    }
 }
 
 tasks {
