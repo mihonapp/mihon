@@ -41,7 +41,6 @@ import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.topPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrationSourcesPresenter
-import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 
 @Composable
@@ -145,7 +144,7 @@ private fun MigrateSourceItem(
                 Badge(text = "$count")
             }
         },
-        content = { source, showLanguageInContent ->
+        content = { _, sourceLangString ->
             Column(
                 modifier = Modifier
                     .padding(horizontal = horizontalPadding)
@@ -161,9 +160,9 @@ private fun MigrateSourceItem(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (showLanguageInContent) {
+                    if (sourceLangString != null) {
                         Text(
-                            text = LocaleHelper.getDisplayName(source.lang),
+                            text = sourceLangString,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodySmall,

@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.util.horizontalPadding
@@ -21,15 +22,16 @@ fun BaseSourceItem(
     onLongClickItem: () -> Unit = {},
     icon: @Composable RowScope.(Source) -> Unit = defaultIcon,
     action: @Composable RowScope.(Source) -> Unit = {},
-    content: @Composable RowScope.(Source, Boolean) -> Unit = defaultContent,
+    content: @Composable RowScope.(Source, String?) -> Unit = defaultContent,
 ) {
+    val sourceLangString = LocaleHelper.getSourceDisplayName(source.lang, LocalContext.current).takeIf { showLanguageInContent }
     BaseBrowseItem(
         modifier = modifier,
         onClickItem = onClickItem,
         onLongClickItem = onLongClickItem,
         icon = { icon.invoke(this, source) },
         action = { action.invoke(this, source) },
-        content = { content.invoke(this, source, showLanguageInContent) },
+        content = { content.invoke(this, source, sourceLangString) },
     )
 }
 
@@ -37,21 +39,21 @@ private val defaultIcon: @Composable RowScope.(Source) -> Unit = { source ->
     SourceIcon(source = source)
 }
 
-private val defaultContent: @Composable RowScope.(Source, Boolean) -> Unit = { source, showLanguageInContent ->
+private val defaultContent: @Composable RowScope.(Source, String?) -> Unit = { source, sourceLangString ->
     Column(
         modifier = Modifier
             .padding(horizontal = horizontalPadding)
             .weight(1f),
     ) {
         Text(
-            text = source.name.ifBlank { source.id.toString() },
+            text = source.name,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium,
         )
-        if (showLanguageInContent) {
+        if (sourceLangString != null) {
             Text(
-                text = LocaleHelper.getDisplayName(source.lang),
+                text = sourceLangString,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall,
