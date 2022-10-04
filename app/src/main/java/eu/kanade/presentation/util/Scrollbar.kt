@@ -48,12 +48,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.draw.CacheDrawScope
-import androidx.compose.ui.draw.DrawResult
-import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -117,13 +116,11 @@ private fun Modifier.drawScrollbar(
         orientation, reverseDirection, atEnd, showScrollbar,
         thickness, color, alpha, thumbSize, startOffset, positionOffset,
     )
-    onDrawWithContent {
-        drawContent()
-        drawScrollbar()
-    }
+    drawContent()
+    drawScrollbar()
 }
 
-private fun CacheDrawScope.onDrawScrollbar(
+private fun ContentDrawScope.onDrawScrollbar(
     orientation: Orientation,
     reverseDirection: Boolean,
     atEnd: Boolean,
@@ -167,13 +164,13 @@ private fun CacheDrawScope.onDrawScrollbar(
 private fun Modifier.drawScrollbar(
     orientation: Orientation,
     reverseScrolling: Boolean,
-    onBuildDrawCache: CacheDrawScope.(
+    onDraw: ContentDrawScope.(
         reverseDirection: Boolean,
         atEnd: Boolean,
         thickness: Float,
         color: Color,
         alpha: () -> Float,
-    ) -> DrawResult,
+    ) -> Unit,
 ): Modifier = composed {
     val scrolled = remember {
         MutableSharedFlow<Unit>(
@@ -216,8 +213,8 @@ private fun Modifier.drawScrollbar(
     val color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.364f)
     Modifier
         .nestedScroll(nestedScrollConnection)
-        .drawWithCache {
-            onBuildDrawCache(reverseDirection, atEnd, thickness, color, alpha::value)
+        .drawWithContent {
+            onDraw(reverseDirection, atEnd, thickness, color, alpha::value)
         }
 }
 
