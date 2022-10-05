@@ -69,10 +69,15 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         binding.pagerPrefsGroup.root.isVisible = true
 
         binding.pagerPrefsGroup.tappingInverted.bindToPreference(readerPreferences.pagerNavInverted())
+        binding.pagerPrefsGroup.navigatePan.bindToPreference(readerPreferences.navigateToPan())
 
         binding.pagerPrefsGroup.pagerNav.bindToPreference(readerPreferences.navigationModePager())
         readerPreferences.navigationModePager()
-            .asHotFlow { binding.pagerPrefsGroup.tappingInverted.isVisible = it != 5 }
+            .asHotFlow {
+                val isTappingEnabled = it != 5
+                binding.pagerPrefsGroup.tappingInverted.isVisible = isTappingEnabled
+                binding.pagerPrefsGroup.navigatePan.isVisible = isTappingEnabled
+            }
             .launchIn((context as ReaderActivity).lifecycleScope)
         // Makes so that landscape zoom gets hidden away when image scale type is not fit screen
         binding.pagerPrefsGroup.scaleType.bindToPreference(readerPreferences.imageScaleType(), 1)
@@ -83,7 +88,6 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
 
         binding.pagerPrefsGroup.zoomStart.bindToPreference(readerPreferences.zoomStart(), 1)
         binding.pagerPrefsGroup.cropBorders.bindToPreference(readerPreferences.cropBorders())
-        binding.pagerPrefsGroup.navigatePan.bindToPreference(readerPreferences.navigateToPan())
 
         binding.pagerPrefsGroup.dualPageSplit.bindToPreference(readerPreferences.dualPageSplitPaged())
         // Makes it so that dual page invert gets hidden away when dual page split is turned off
