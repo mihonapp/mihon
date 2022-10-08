@@ -92,7 +92,7 @@ fun BrowseSourceScreen(
                     navigateUp = navigateUp,
                     onWebViewClick = onWebViewClick,
                     onHelpClick = onHelpClick,
-                    onSearch = { presenter.search() },
+                    onSearch = { presenter.search(it) },
                 )
 
                 Row(
@@ -104,7 +104,7 @@ fun BrowseSourceScreen(
                     FilterChip(
                         selected = presenter.currentFilter == BrowseSourcePresenter.Filter.Popular,
                         onClick = {
-                            presenter.resetFilter()
+                            presenter.reset()
                             presenter.search(GetRemoteManga.QUERY_POPULAR)
                         },
                         leadingIcon = {
@@ -123,7 +123,7 @@ fun BrowseSourceScreen(
                         FilterChip(
                             selected = presenter.currentFilter == BrowseSourcePresenter.Filter.Latest,
                             onClick = {
-                                presenter.resetFilter()
+                                presenter.reset()
                                 presenter.search(GetRemoteManga.QUERY_LATEST)
                             },
                             leadingIcon = {

@@ -44,7 +44,7 @@ fun SourceSearchScreen(
                 placeholderText = stringResource(R.string.action_search_hint),
                 navigateUp = navigateUp,
                 onResetClick = { presenter.searchQuery = "" },
-                onSearchClick = { presenter.search() },
+                onSearchClick = { presenter.search(it) },
                 scrollBehavior = scrollBehavior,
             )
         },

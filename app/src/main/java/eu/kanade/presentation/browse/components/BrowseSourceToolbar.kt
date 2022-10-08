@@ -40,7 +40,7 @@ fun BrowseSourceToolbar(
     navigateUp: () -> Unit,
     onWebViewClick: () -> Unit,
     onHelpClick: () -> Unit,
-    onSearch: () -> Unit,
+    onSearch: (String) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     if (state.searchQuery == null) {
@@ -56,13 +56,17 @@ fun BrowseSourceToolbar(
             scrollBehavior = scrollBehavior,
         )
     } else {
+        val cancelSearch = { state.searchQuery = null }
         BrowseSourceSearchToolbar(
             searchQuery = state.searchQuery!!,
             onSearchQueryChanged = { state.searchQuery = it },
             placeholderText = stringResource(R.string.action_search_hint),
-            navigateUp = { state.searchQuery = null },
+            navigateUp = cancelSearch,
             onResetClick = { state.searchQuery = "" },
-            onSearchClick = onSearch,
+            onSearchClick = {
+                onSearch(it)
+                cancelSearch()
+            },
             scrollBehavior = scrollBehavior,
         )
     }
@@ -165,7 +169,7 @@ fun BrowseSourceSearchToolbar(
     placeholderText: String?,
     navigateUp: () -> Unit,
     onResetClick: () -> Unit,
-    onSearchClick: () -> Unit,
+    onSearchClick: (String) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -178,7 +182,7 @@ fun BrowseSourceSearchToolbar(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(
             onSearch = {
-                onSearchClick()
+                onSearchClick(searchQuery)
                 focusManager.clearFocus()
                 keyboardController?.hide()
             },

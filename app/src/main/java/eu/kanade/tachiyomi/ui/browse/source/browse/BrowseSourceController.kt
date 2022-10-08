@@ -119,7 +119,10 @@ open class BrowseSourceController(bundle: Bundle) :
     private fun navigateUp() {
         when {
             presenter.searchQuery != null -> presenter.searchQuery = null
-            presenter.isUserQuery -> presenter.search()
+            presenter.isUserQuery -> {
+                val (_, filters) = presenter.currentFilter as BrowseSourcePresenter.Filter.UserInput
+                presenter.search(query = "", filters = filters)
+            }
             else -> router.popCurrentController()
         }
     }
@@ -132,10 +135,10 @@ open class BrowseSourceController(bundle: Bundle) :
         filterSheet = SourceFilterSheet(
             activity!!,
             onFilterClicked = {
-                presenter.setSourceFilter(presenter.filters)
+                presenter.search(filters = presenter.filters)
             },
             onResetClicked = {
-                presenter.resetFilter()
+                presenter.reset()
                 filterSheet?.setFilters(presenter.filterItems)
             },
         )
@@ -190,10 +193,9 @@ open class BrowseSourceController(bundle: Bundle) :
         }
 
         if (genreExists) {
-            filterSheet?.setFilters(presenter.filterItems)
+            filterSheet?.setFilters(defaultFilters.toItems())
 
-            presenter.searchQuery = ""
-            presenter.setFilter(defaultFilters)
+            presenter.search(filters = defaultFilters)
         } else {
             searchWithQuery(genreName)
         }
