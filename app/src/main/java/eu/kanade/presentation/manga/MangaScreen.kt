@@ -616,7 +616,7 @@ private fun SharedMangaBottomActionMenu(
         }.takeIf { selected.any { !it.chapter.read } },
         onMarkAsUnreadClicked = {
             onMultiMarkAsReadClicked(selected.map { it.chapter }, false)
-        }.takeIf { selected.any { it.chapter.read } },
+        }.takeIf { selected.any { it.chapter.read || it.chapter.lastPageRead > 0L } },
         onMarkPreviousAsReadClicked = {
             onMarkPreviousAsReadClicked(selected[0].chapter)
         }.takeIf { selected.size == 1 },
