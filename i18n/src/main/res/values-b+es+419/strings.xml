@@ -573,7 +573,7 @@
     <string name="pref_show_navigation_mode_summary">Mostrar brevemente cuando se abre el lector</string>
     <string name="exclude">Excluir: %s</string>
     <string name="include">Incluir: %s</string>
-    <string name="pref_dual_page_invert">Invertir la posición de las páginas duales</string>
+    <string name="pref_dual_page_invert">Invert split page placement</string>
     <string name="pref_show_navigation_mode">Mostrar el diseño de la zona de toque</string>
     <string name="pref_library_update_categories_details">Los manga en las categorías excluidas no se actualizarán aún cuando estén en las categorías incluidas.</string>
     <string name="unread">No leído</string>
@@ -749,7 +749,7 @@
     <plurals name="next_unread_chapters">
         <item quantity="one">Último capítulo sin leer</item>
         <item quantity="many">Últimos capítulos sin leer</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="auto_download_while_reading">Descargar automáticamente mientras se lee</string>
     <string name="action_search_hint">Buscar…</string>

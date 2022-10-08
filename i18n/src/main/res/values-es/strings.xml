@@ -373,6 +373,7 @@
     <string name="lock_never">Nunca</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Tras %1$s minuto</item>
+        <item quantity="many">Tras %1$s minutos</item>
         <item quantity="other">Tras %1$s minutos</item>
     </plurals>
     <string name="secure_screen">Pantalla segura</string>
@@ -386,6 +387,7 @@
     <string name="pref_category_display">Visualización</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d nuevo capítulo</item>
+        <item quantity="many">%1$d nuevos capítulos</item>
         <item quantity="other">%1$d nuevos capítulos</item>
     </plurals>
     <string name="notification_chapters_single">Capítulo %1$s</string>
@@ -393,6 +395,7 @@
     <string name="notification_chapters_multiple">Capítulos %1$s</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Capítulos %1$s y 1 más</item>
+        <item quantity="many">Capítulos %1$s y %2$d más</item>
         <item quantity="other">Capítulos %1$s y %2$d más</item>
     </plurals>
     <string name="hide_notification_content">Ocultar el contenido de las notificaciones</string>
@@ -404,6 +407,7 @@
     <string name="pref_always_show_chapter_transition">Hacer transición entre capítulos</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">Para %d título</item>
+        <item quantity="many">Para %d títulos</item>
         <item quantity="other">Para %d títulos</item>
     </plurals>
     <string name="action_menu">Menú</string>
@@ -414,6 +418,7 @@
     <string name="action_move_to_bottom">Mover al final</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Actualización de extensión disponible</item>
+        <item quantity="many">%d actualizaciones de extensiones disponibles</item>
         <item quantity="other">%d actualizaciones de extensiones disponibles</item>
     </plurals>
     <string name="updating_library">Actualizando biblioteca</string>
@@ -458,6 +463,7 @@
     <string name="local_source_help_guide">Guía de fuente local</string>
     <plurals name="download_queue_summary">
         <item quantity="one">Queda %1$s</item>
+        <item quantity="many">Quedan %1$s</item>
         <item quantity="other">Quedan %1$s</item>
     </plurals>
     <string name="downloaded_only_summary">Filtra todo el manga de tu biblioteca para ver solo el que esté disponible sin conexión</string>
@@ -468,12 +474,14 @@
     <string name="pref_true_color_summary">Reduce el efecto anillado en los degradados y mejora la calidad de los grises, algo más lento</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoría</item>
+        <item quantity="many">%d categorías</item>
         <item quantity="other">%d categorías</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">No se pudieron abrir los ajustes del dispositivo</string>
     <string name="pref_refresh_library_covers">Volver a descargar las portadas en la biblioteca</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Completada en %1$s con %2$s error</item>
+        <item quantity="many">Completada en %1$s con %2$s errores</item>
         <item quantity="other">Completada en %1$s con %2$s errores</item>
     </plurals>
     <string name="tracking_info">La sincronización de estos servicios solo funciona en un solo sentido. Cada manga en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
@@ -501,6 +509,7 @@
     <string name="loader_not_implemented_error">No se ha encontrado la fuente</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s capítulo</item>
+        <item quantity="many">%1$s capítulos</item>
         <item quantity="other">%1$s capítulos</item>
     </plurals>
     <string name="action_disable">Desactivar</string>
@@ -523,6 +532,7 @@
     <string name="action_sort_date_added">Por fecha en la biblioteca</string>
     <plurals name="num_trackers">
         <item quantity="one">%d servicio de seguimiento</item>
+        <item quantity="many">%d servicios de seguimiento</item>
         <item quantity="other">%d servicios de seguimiento</item>
     </plurals>
     <string name="no_pinned_sources">Todavía no has anclado ninguna fuente</string>
@@ -538,6 +548,7 @@
     <string name="parental_controls_info">Esto no evita que las extensiones extraoficiales o que estén mal clasificadas muestren contenido para mayores de 18 años en la aplicación.</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Se ha omitido un capítulo, esto podría deberse a que la fuente no lo tenga o a que tus ajustes lo estén filtrando</item>
+        <item quantity="many">Se han omitido %d capítulos, esto podría deberse a que la fuente no los tenga o a que tus ajustes los estén filtrando</item>
         <item quantity="other">Se han omitido %d capítulos, esto podría deberse a que la fuente no los tenga o a que tus ajustes los estén filtrando</item>
     </plurals>
     <string name="no_chapters_error">No hay capítulos</string>
@@ -592,9 +603,9 @@
     <string name="nav_zone_left">Izquierda</string>
     <string name="nav_zone_next">Siguiente</string>
     <string name="nav_zone_prev">Anterior</string>
-    <string name="pref_dual_page_invert_summary">Si la ubicación de la división de página dual no coincide con la dirección de lectura</string>
-    <string name="pref_dual_page_invert">Invertir la ubicación de la división de página dual</string>
-    <string name="pref_dual_page_split">División de página dual</string>
+    <string name="pref_dual_page_invert_summary">Si la partición de la página ancha no coincide con la dirección de lectura</string>
+    <string name="pref_dual_page_invert">Dividir la página partida en la dirección contraria</string>
+    <string name="pref_dual_page_split">Partir en dos las páginas anchas</string>
     <string name="pref_show_navigation_mode_summary">Muestra una vista previa de las zonas al abrir el lector</string>
     <string name="pref_show_navigation_mode">Ver superposición con zonas de toque</string>
     <string name="exclude">Excluir: %s</string>
@@ -664,6 +675,7 @@
     <string name="pref_inverted_colors">Invertido</string>
     <plurals name="relative_time">
         <item quantity="one">Ayer</item>
+        <item quantity="many">Hace %1$d días</item>
         <item quantity="other">Hace %1$d días</item>
     </plurals>
     <string name="relative_time_today">Hoy</string>
@@ -747,7 +759,7 @@
     <string name="action_sort_last_manga_update">Última actualización de manga</string>
     <string name="action_sort_unread_count">Capítulos restantes</string>
     <string name="split_tall_images">Dividir imágenes demasiado altas</string>
-    <string name="split_tall_images_summary">Mejora el rendimiento del lector dividiendo páginas descargadas mucho más altas que anchas.</string>
+    <string name="split_tall_images_summary">Mejora el rendimiento del lector dividiendo páginas descargadas mucho más altas que anchas</string>
     <string name="download_notifier_split_page_not_found">No se ha encontrado la página %d al dividir</string>
     <string name="download_notifier_split_page_path_not_found">La ruta al archivo de la página %d no se encuentra</string>
     <string name="pref_reset_viewer_flags_summary">Restablece el modo de lectura y orientación en toda la biblioteca</string>
@@ -788,6 +800,7 @@
     <string name="auto_download_while_reading">Descarga los capítulos siguientes mientras lees</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">El siguiente capítulo sin leer</item>
+        <item quantity="many">Los siguientes %d capítulos sin leer</item>
         <item quantity="other">Los siguientes %d capítulos sin leer</item>
     </plurals>
     <string name="are_you_sure">¿Estás seguro\?</string>

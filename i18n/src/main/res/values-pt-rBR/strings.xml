@@ -559,9 +559,9 @@
     <string name="action_filter_tracked">Monitorado</string>
     <string name="action_display_show_number_of_items">Mostrar o número de itens</string>
     <string name="right_and_left_nav">Direita e Esquerda</string>
-    <string name="pref_dual_page_split">Dividir as páginas duplas</string>
-    <string name="pref_dual_page_invert_summary">Se a posição das páginas duplas divididas não se adequar ao modo de leitura</string>
-    <string name="pref_dual_page_invert">Inverter a posição das páginas duplas divididas</string>
+    <string name="pref_dual_page_split">Dividir as páginas longas</string>
+    <string name="pref_dual_page_invert_summary">Se a posição das páginas longas divididas não se adequar ao modo de leitura</string>
+    <string name="pref_dual_page_invert">Inverter a posição das páginas divididas</string>
     <string name="backup_restore_content_full">Os dados do arquivo de backup serão restaurados.
 \n
 \nVocê precisará instalar quaisquer extensões que estejam faltando e depois realizar o login nos serviços de monitoramento para utilizá-los.</string>
@@ -698,7 +698,7 @@
     <string name="confirm_manga_add_duplicate">Você tem um item na sua biblioteca com o mesmo nome, mas de uma fonte diferente (%1$s).
 \n
 \nVocê deseja continuar mesmo assim\?</string>
-    <string name="pref_navigate_pan">Navegar para o painel</string>
+    <string name="pref_navigate_pan">Navegar imagens longas ao tocar</string>
     <string name="pref_landscape_zoom">Dar zoom em imagens horizontais</string>
     <string name="action_display_cover_only_grid">Grade somente com capas</string>
     <string name="action_filter_started">Iniciado</string>

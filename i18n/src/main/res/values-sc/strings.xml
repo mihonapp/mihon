@@ -548,9 +548,9 @@
     <string name="action_filter_tracked">Arrastadu</string>
     <string name="action_display_show_number_of_items">Ammustra su nùmeru de elementos</string>
     <string name="right_and_left_nav">Destra e manca</string>
-    <string name="pref_dual_page_split">Partzidura a duas pàginas</string>
-    <string name="pref_dual_page_invert_summary">Si sa positzione de sa partzidura de sa pàgina dòpia non currispondet a sa diretzione de leghidura</string>
-    <string name="pref_dual_page_invert">Fùrria su positzionamentu de sa partzidura a duas pàginas</string>
+    <string name="pref_dual_page_split">Partzi sas pàginas largas</string>
+    <string name="pref_dual_page_invert_summary">Si sa positzione de sas pàginas largas partzidas non currispondet a sa diretzione de leghidura</string>
+    <string name="pref_dual_page_invert">Fùrria su positzionamentu de sas pàginas partzidas</string>
     <string name="backup_restore_content_full">Sos datos dae su documentu de sa còpia de seguresa s\'ant a ripristinare.
 \n
 \nA pustis as a dèpere installare sas estensiones chi mancant e atzèdere a sos servìtzios de arrastamentu pro los pòdere impreare.</string>
@@ -690,7 +690,7 @@
     <string name="confirm_manga_add_duplicate">Tenes un\'elementu in sa biblioteca tua cun su matessi nùmene ma dae una fonte diferente (%1$s).
 \n
 \nBoles sighire su matessi\?</string>
-    <string name="pref_navigate_pan">Nàviga pro iscùrrere a intro de sa pàgina ismanniada</string>
+    <string name="pref_navigate_pan">Iscurre sas pàginas largas tochende·las</string>
     <string name="skipped_reason_completed">Brincadu ca sa sèrie est acabada</string>
     <string name="skipped_reason_not_caught_up">Brincadu ca bi sunt capìtulos non lèghidos</string>
     <string name="skipped_reason_not_started">Brincadu ca non bi sunt capìtulos lèghidos</string>

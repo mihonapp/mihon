@@ -338,9 +338,9 @@
     <string name="pref_show_reading_mode_summary">แสดงโหมดปัจจุบันสั้น ๆ เมื่อตัวอ่านเปิดขั้นมา</string>
     <string name="pref_show_reading_mode">แสดงโหมดการอ่าน</string>
     <string name="pref_cutout_short">แสดงเนื้อหาในพื้นที่ตัดออก</string>
-    <string name="pref_dual_page_invert_summary">หากการจัดวางการแยกหน้าคู่ไม่ตรงกับทิศทางการอ่าน</string>
-    <string name="pref_dual_page_invert">แยกหน้าคู่แบบสลับตำแหน่ง</string>
-    <string name="pref_dual_page_split">แยกหน้าคู่</string>
+    <string name="pref_dual_page_invert_summary">หากการจัดวางการแยกหน้ากว้างไม่ตรงกับทิศทางการอ่าน</string>
+    <string name="pref_dual_page_invert">แยกส่วนหน้ากว้างแบบสลับตำแหน่ง</string>
+    <string name="pref_dual_page_split">แยกส่วนหน้ากว้าง</string>
     <string name="pref_show_navigation_mode_summary">แสดงครู่หนึ่งเมื่อเปิดตัวอ่าน</string>
     <string name="pref_show_navigation_mode">แสดงตำแหน่งโซนการแตะ</string>
     <string name="ext_nsfw_warning">แหล่งที่มาจากส่วนขยายนี้อาจมีเนื้อหา NSFW (18+)</string>
@@ -556,7 +556,7 @@
     </plurals>
     <string name="spen_previous_page">หน้าก่อน</string>
     <string name="channel_crash_logs">บันทึกข้อขัดข้อง</string>
-    <string name="channel_ext_updates">ส่วนขยายอัปเดต</string>
+    <string name="channel_ext_updates">การอัปเดตส่วนขยาย</string>
     <string name="channel_new_chapters">อัปเดตตอน</string>
     <string name="channel_errors">ข้อผิดพลาด</string>
     <string name="channel_complete">เสร็จสมบูรณ์</string>
@@ -567,7 +567,7 @@
     <string name="information_webview_required">Tachiyomi จำเป็นต้องใช้ WebView</string>
     <string name="information_cloudflare_bypass_failure">ไม่สามารถเลี่ยงผ่าน Cloudflare ได้</string>
     <plurals name="update_check_notification_ext_updates">
-        <item quantity="other">ส่วนขยาย %d มีการอัปเดตพร้อมใช้งาน</item>
+        <item quantity="other">มีการอัปเดตส่วนขยาย %d รายการพร้อมใช้งาน</item>
     </plurals>
     <string name="information_empty_category_dialog">คุณยังไม่มีหมวดหมู่</string>
     <string name="confirm_lock_change">ยืนยันการเปลี่ยนแปลง</string>
@@ -670,7 +670,7 @@
     <string name="backup_restore_invalid_uri">เกิดข้อผิดพลาด: URI ว่างเปล่า</string>
     <string name="action_faq_and_guides">คำถามที่พบบ่อยและคู่มือ</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="pref_navigate_pan">แพนมุมมองเมื่อนำทาง</string>
+    <string name="pref_navigate_pan">แพนหน้ากว้างเมื่อแตะ</string>
     <string name="action_display_cover_only_grid">ตารางแสดงแค่หน้าปก</string>
     <string name="pref_landscape_zoom">ซูมภาพแนวนอน</string>
     <string name="skipped_reason_not_caught_up">ถูกข้ามเนื่องจากมีตอนที่ยังไม่ได้อ่าน</string>

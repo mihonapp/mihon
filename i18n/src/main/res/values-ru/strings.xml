@@ -538,7 +538,7 @@
     <string name="confirm_set_chapter_settings">Вы уверены, что хотите сохранить эти настройки по умолчанию\?</string>
     <string name="chapter_settings">Настройки главы</string>
     <string name="share_page_info">%1$s: %2$s, страница %3$d</string>
-    <string name="action_search_settings">Поиск настроек</string>
+    <string name="action_search_settings">Искать настройки</string>
     <string name="downloaded_chapters">Загруженные главы</string>
     <string name="manga_from_library">Серия из библиотеки</string>
     <string name="pref_incognito_mode_summary">Приостанавливает историю чтения</string>
@@ -570,9 +570,9 @@
     <string name="action_filter_tracked">Отслеживается</string>
     <string name="action_display_show_number_of_items">Количество серий</string>
     <string name="right_and_left_nav">Справа и слева</string>
-    <string name="pref_dual_page_split">Двухстраничное разделение</string>
-    <string name="pref_dual_page_invert">Двухстраничное разделение наоборот</string>
-    <string name="pref_dual_page_invert_summary">Если двухстраничное разделение не соответствует направлению чтения</string>
+    <string name="pref_dual_page_split">Разделение широких страниц</string>
+    <string name="pref_dual_page_invert">Разделение широких страниц наоборот</string>
+    <string name="pref_dual_page_invert_summary">Если разделение широких страниц не соответствует направлению чтения</string>
     <string name="backup_restore_content_full">Данные из файла резервной копии будут восстановлены.
 \n
 \nВам будет нужно установить все недостающие расширения и после этого авторизоваться в сервисах отслеживания для их использования.</string>
@@ -711,7 +711,7 @@
 \n
 \nВы по-прежнему хотите продолжить\?</string>
     <string name="action_display_cover_only_grid">Сетка без названия</string>
-    <string name="pref_navigate_pan">Перейти к панораме</string>
+    <string name="pref_navigate_pan">Панорамирование широких изображений при касании</string>
     <string name="pref_landscape_zoom">Увеличивать изображение по горизонтали</string>
     <string name="action_filter_started">Начато</string>
     <string name="pref_update_only_started">Серия не начата</string>

@@ -551,8 +551,8 @@
     <string name="parental_controls_info">Ceci n\'empêche pas les extensions non officielles ou potentiellement mal signalées de diffuser du contenu +18 dans l\'application.</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d chapitre a été sauté, soit la source ne l\'a pas, soit il a été filtré</item>
-        <item quantity="many">%d chapitres ont été sautés, soit la source ne l\'a pas, soit il ont été filtrés</item>
-        <item quantity="other">%d chapitres ont été sautés, soit la source ne l\'a pas, soit il ont été filtrés</item>
+        <item quantity="many">%d chapitres ont été sautés, soit la source ne les a pas, soit ils ont été filtrés</item>
+        <item quantity="other">%d chapitres ont été sautés, soit la source ne les a pas, soit il ont été filtrés</item>
     </plurals>
     <string name="no_chapters_error">Aucun chapitre trouvé</string>
     <string name="confirm_set_chapter_settings">Appliquer ce paramétrage par défaut \?</string>
@@ -715,7 +715,7 @@
     <string name="channel_app_updates">Mises à jour de l\'application</string>
     <string name="pref_auto_clear_chapter_cache">Effacer le cache du chapitre à la fermeture de l\'application</string>
     <string name="clear_database_source_item_count">%1$d manga hors bibliothèque dans la base de données</string>
-    <string name="database_clean">Base de données effacée</string>
+    <string name="database_clean">Rien à effacer</string>
     <string name="extension_api_error">Échec de la récupération de la liste des extensions</string>
     <string name="privacy_policy">Politique de confidentialité</string>
     <string name="pref_library_update_manga_restriction">Ignorer la mise à jour</string>
@@ -813,4 +813,6 @@
     <string name="updates_last_update_info">Dernière mis à jour de la bibliothèque le : %1$s</string>
     <string name="remove_manga">Vous êtes sur le point de supprimer ce manga de votre bibliothèque</string>
     <string name="missing_storage_permission">Autorisations de stockage non accordées</string>
+    <string name="action_search_hint">Recherche…</string>
+    <string name="skipped_reason_not_always_update">Passées car la série ne nécessite pas de mise à jour</string>
 </resources>

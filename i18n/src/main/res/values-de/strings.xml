@@ -550,7 +550,7 @@
     <string name="right_and_left_nav">Rechts und Links</string>
     <string name="pref_dual_page_split">Doppelseiten aufteilen</string>
     <string name="pref_dual_page_invert_summary">Falls die Platzierung der aufgeteilten Doppelseite nicht mit der Leserichtung übereinstimmt</string>
-    <string name="pref_dual_page_invert">Doppelseiten-Platzierung invertieren</string>
+    <string name="pref_dual_page_invert">Doppelseiten-Platzierung umkehren</string>
     <string name="backup_restore_content_full">Die Daten der Sicherungsdatei werden wiederhergestellt.
 \n
 \nDu musst jegliche fehlende Erweiterungen installieren und dich anschließend bei den Tracking-Anbietern einloggen, um sie zu benutzen.</string>

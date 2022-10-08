@@ -807,4 +807,8 @@
     <string name="reading_list">Lista dos Em Leitura</string>
     <string name="action_remove_everything">Remover tudo</string>
     <string name="theme_lavender">Lavanda</string>
+    <string name="popular">Famoso</string>
+    <string name="skipped_reason_not_always_update">Ignorado porque a série não requer atualizações</string>
+    <string name="action_search_hint">Pesquisar…</string>
+    <string name="missing_storage_permission">Permissões de armazenamento não concedidas</string>
 </resources>

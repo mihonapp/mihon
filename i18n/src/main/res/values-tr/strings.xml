@@ -548,9 +548,9 @@
     <string name="action_filter_tracked">İzleniyor</string>
     <string name="action_display_show_number_of_items">Öge sayısını göster</string>
     <string name="right_and_left_nav">Sağ ve Sol</string>
-    <string name="pref_dual_page_split">Çift sayfalı bölme</string>
-    <string name="pref_dual_page_invert_summary">Çift sayfalı bölme yerleşimi okuma yönüyle eşleşmiyorsa</string>
-    <string name="pref_dual_page_invert">Çift sayfalı bölme yerleşimi ters çevir</string>
+    <string name="pref_dual_page_split">Geniş sayfaları böl</string>
+    <string name="pref_dual_page_invert_summary">Bölünmüş geniş sayfaların yerleşimi okuma yönüyle eşleşmiyorsa</string>
+    <string name="pref_dual_page_invert">Bölünmüş sayfa yerleşimi ters çevir</string>
     <string name="backup_restore_content_full">Yedek dosyadaki veriler geri yüklenecek.
 \n
 \nEksik uzantıları yüklemeniz ve daha sonra bunları kullanmak için izleme hizmetlerinde oturum açmanız gerekecektir.</string>
@@ -692,7 +692,7 @@
     <string name="skipped_reason_completed">Manga tamamlandığı için atlandı</string>
     <string name="skipped_reason_not_caught_up">Okunmamış bölümler olduğu için atlandı</string>
     <string name="skipped_reason_not_started">Hiçbir bölüm okunmadığı için atlandı</string>
-    <string name="pref_navigate_pan">Kaydırmak için gezin</string>
+    <string name="pref_navigate_pan">Dokunulduğunda geniş görselleri kaydır</string>
     <string name="pref_landscape_zoom">Yatay görseli yakınlaştır</string>
     <string name="notification_update_error">%1$d güncelleme başarısız oldu</string>
     <string name="notification_update_skipped">%1$d güncelleme atlandı</string>

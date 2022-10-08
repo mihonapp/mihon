@@ -556,8 +556,8 @@
     <string name="pref_webtoon_side_padding">Boční odsazení</string>
     <string name="pref_skip_filtered_chapters">Přeskakovat filtrované kapitoly</string>
     <string name="pref_cutout_short">Zobrazovat obsah v oblasti výřezu displeje</string>
-    <string name="pref_dual_page_invert_summary">Pokud umístění rozdělených stránek nesouhlasí se směrem čtení</string>
-    <string name="pref_dual_page_invert">Převrátit umístění rozdělených stránek</string>
+    <string name="pref_dual_page_invert_summary">Pokud umístění rozdělených širokých stránek neodpovídá směru čtení</string>
+    <string name="pref_dual_page_invert">Invertovat umístění rozdělené stránky</string>
     <string name="pref_show_navigation_mode">Zobrazit překrytí oblastí dotyku</string>
     <string name="exclude">Vynechat: %s</string>
     <string name="include">Zahrnout: %s</string>
@@ -572,7 +572,7 @@
     <string name="vertical_plus_viewer">Průběžné vertikální</string>
     <string name="edge_nav">Okraj</string>
     <string name="pref_read_with_tapping_inverted">Invertovat oblasti dotyku</string>
-    <string name="pref_dual_page_split">Rozdělení na dvě stránky</string>
+    <string name="pref_dual_page_split">Rozdělit široké stránky</string>
     <string name="pref_show_navigation_mode_summary">Krátce zobrazit, když je čtečka otevřena</string>
     <string name="theme_system">Sledování systému</string>
     <string name="action_show_errors">Klepněte pro zobrazení podrobností</string>
@@ -742,7 +742,7 @@
     <string name="download_notifier_split_page_not_found">Stránka %d nebyla při rozdělení nalezena</string>
     <string name="download_notifier_split_page_path_not_found">Nepodařilo se najít cestu k souboru stránky %d</string>
     <string name="download_notifier_split_failed">Stažený obrázek se nepodařilo rozdělit</string>
-    <string name="pref_navigate_pan">Přejít na posun</string>
+    <string name="pref_navigate_pan">Posunutí širokých snímků při klepnutí</string>
     <string name="action_sort_unread_count">Počet nepřečtených</string>
     <string name="action_sort_last_manga_update">Poslední aktualizace mangy</string>
     <string name="battery_not_low">Když baterie není vybitá</string>

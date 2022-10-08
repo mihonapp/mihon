@@ -592,9 +592,9 @@
     <string name="action_filter_tracked">Tracciati</string>
     <string name="action_display_show_number_of_items">Mostra numero elementi</string>
     <string name="right_and_left_nav">Destra e Sinistra</string>
-    <string name="pref_dual_page_split">Dividi pagine doppie</string>
-    <string name="pref_dual_page_invert_summary">Se il posizionamento della divisione a doppia pagina non corrisponde alla direzione di lettura</string>
-    <string name="pref_dual_page_invert">Inverti il posizionamento delle doppie pagine divise</string>
+    <string name="pref_dual_page_split">Dividi le pagine larghe</string>
+    <string name="pref_dual_page_invert_summary">Se il posizionamento delle pagine larghe divise non corrisponde alla direzione di lettura</string>
+    <string name="pref_dual_page_invert">Inverti il posizionamento delle pagine divise</string>
     <string name="backup_restore_content_full">Verranno recuperati i dati dal file di backup.
 \n
 \nAvrai bisogno di installare le estensioni mancanti ed effettuare l\'accesso ai servizi di tracking per utilizzarli.</string>
@@ -728,7 +728,7 @@
     <string name="backup_restore_invalid_uri">Errore: URI vuoto</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostra manga</string>
-    <string name="pref_navigate_pan">Naviga per scorrere</string>
+    <string name="pref_navigate_pan">Scorri le pagine larghe toccando</string>
     <string name="pref_landscape_zoom">Ingrandisci le immagini orizzontali</string>
     <string name="confirm_manga_add_duplicate">Hai un elemento nella libreria con lo stesso nome ma da un altra fonte (%1$s).
 \n

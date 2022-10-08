@@ -537,9 +537,9 @@
     <string name="action_filter_tracked">已追踪</string>
     <string name="action_display_show_number_of_items">显示漫画数目</string>
     <string name="right_and_left_nav">左右样式</string>
-    <string name="pref_dual_page_split">双页拆分</string>
-    <string name="pref_dual_page_invert">反转双页拆分排版</string>
-    <string name="pref_dual_page_invert_summary">若双页拆分的排版方向与阅读方向不符</string>
+    <string name="pref_dual_page_split">拆分双页</string>
+    <string name="pref_dual_page_invert">拆分双页时交换顺序</string>
+    <string name="pref_dual_page_invert_summary">拆分双页的顺序与阅读方向不符时可以开启</string>
     <string name="backup_restore_content_full">即将还原备份文件中的数据。
 \n
 \n随后请重新安装所有缺失的扩展插件并重新登录追踪服务。</string>
@@ -651,7 +651,7 @@
     <string name="notification_size_warning">大量更新会损害图源，并可能导致更新变慢、耗电增加。点击了解详情。</string>
     <string name="connected_to_wifi">仅连接至 Wi-Fi 时</string>
     <string name="update_72hour">每 3 天</string>
-    <string name="download_queue_size_warning">警告：批量下载可能会导致图源变慢和/或图源封锁 Tachiyomi。轻按了解更多。</string>
+    <string name="download_queue_size_warning">警告：批量下载可能导致图源变慢，甚至会使得它们屏蔽 Tachiyomi。点击了解详情。</string>
     <string name="pref_library_update_show_tab_badge">在更新图标上显示未读计数</string>
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">应用更新</string>
@@ -682,7 +682,7 @@
     <string name="skipped_reason_completed">已跳过，因为作品已完结</string>
     <string name="skipped_reason_not_caught_up">已跳过，因为有未读章节</string>
     <string name="skipped_reason_not_started">已跳过，因为尚未开始阅读</string>
-    <string name="learn_more">轻按了解更多</string>
+    <string name="learn_more">点击了解详情</string>
     <string name="notification_update_error">%1$d 个更新失败了</string>
     <string name="notification_update_skipped">已跳过 %1$d 个更新</string>
     <string name="channel_skipped">已跳过</string>

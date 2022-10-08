@@ -547,7 +547,7 @@
     <string name="pref_create_folder_per_manga_summary">Buat folder sesuai judul manga</string>
     <string name="exclude">Kecuali: %s</string>
     <string name="include">Termasuk: %s</string>
-    <string name="pref_dual_page_split">Bagi dua halaman</string>
+    <string name="pref_dual_page_split">Membagi halaman lebar</string>
     <string name="cancel_all_for_series">Batal semua untuk seri ini</string>
     <string name="update_check_eol">Versi Android ini tidak lagi didukung</string>
     <string name="clipboard_copy_error">Gagal menyalin ke papan klip</string>
@@ -572,8 +572,8 @@
     <string name="local_filter_order_by">Urutkan menurut</string>
     <string name="local_invalid_format">Format bab tidak valid</string>
     <string name="chapter_not_found">Bab tak ditemukan</string>
-    <string name="pref_dual_page_invert_summary">Jika penempatan dari pemisah halaman ganda tidak cocok dengan arah membaca</string>
-    <string name="pref_dual_page_invert">Balikkan penempatan pemisah halaman ganda</string>
+    <string name="pref_dual_page_invert_summary">Jika penempatan halaman lebar terpisah tidak sesuai dengan arah membaca</string>
+    <string name="pref_dual_page_invert">Balikkan penempatan halaman pemisah</string>
     <string name="pref_show_navigation_mode_summary">Tunjukkan secara singkat saat pembaca dibuka</string>
     <string name="pref_library_update_refresh_trackers_summary">Perbarui pelacak ketika memperbarui pustaka</string>
     <string name="pref_library_update_refresh_trackers">Segarkan pelacak secara otomatis</string>
@@ -681,7 +681,7 @@
     <string name="skipped_reason_not_caught_up">Dilewati karena ada bab yang belum dibaca</string>
     <string name="skipped_reason_not_started">Dilewati karena tidak ada bab yang dibaca</string>
     <string name="pref_landscape_zoom">Perbesar gambar lanskap</string>
-    <string name="pref_navigate_pan">Navigasikan ke panorama</string>
+    <string name="pref_navigate_pan">Geser gambar lebar saat mengetuk</string>
     <string name="notification_update_skipped">%1$d pembaruan terlewat</string>
     <string name="learn_more">Pelajari lebih lanjut</string>
     <string name="channel_skipped">Terlewat</string>

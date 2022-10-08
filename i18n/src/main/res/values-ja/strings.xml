@@ -537,9 +537,9 @@
     <string name="l_nav">L形</string>
     <string name="action_desc">降順</string>
     <string name="action_asc">昇順</string>
-    <string name="pref_dual_page_invert_summary">分割したダブルページは閲覧方向に一致しない場合は有効にしてください</string>
-    <string name="pref_dual_page_invert">分割したダブルページの順位を反転</string>
-    <string name="pref_dual_page_split">ダブルページを分割</string>
+    <string name="pref_dual_page_invert_summary">分割されたワイドページの配置が読む方向と一致しない場合</string>
+    <string name="pref_dual_page_invert">分割ページの配置を反転</string>
+    <string name="pref_dual_page_split">ワイド ページの分割</string>
     <string name="backup_restore_content_full">バックアップファイルからデータを復旧します。
 \n
 \n後で手動で必要な拡張機能をインストールし、使用したい追跡サービスにログインしてください。</string>
@@ -681,7 +681,7 @@
     <string name="pref_landscape_zoom">横長の画像をズーム</string>
     <string name="skipped_reason_completed">完結済みの為スキップしました</string>
     <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
-    <string name="pref_navigate_pan">ページ内で移動</string>
+    <string name="pref_navigate_pan">タップ時にワイド画像をパンする</string>
     <string name="notification_update_skipped">%1$d件の更新がスキップされました</string>
     <string name="learn_more">タップでもっと詳しく</string>
     <string name="channel_skipped">スキップ済み</string>

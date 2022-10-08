@@ -537,8 +537,8 @@
     <string name="action_filter_tracked">Dijejaki</string>
     <string name="action_display_show_number_of_items">Tunjuk jumlah bilangan</string>
     <string name="right_and_left_nav">Kanan dan kiri</string>
-    <string name="pref_dual_page_split">Memisah dua muka surat</string>
-    <string name="pref_dual_page_invert_summary">Jika kedudukan memisah dua muka surat tidak sama dengan arah membaca</string>
+    <string name="pref_dual_page_split">Memisah muka surat lebar</string>
+    <string name="pref_dual_page_invert_summary">Jika kedudukan memisah muka surat lebar tidak sama dengan arah membaca</string>
     <string name="pref_dual_page_invert">Songsangkan kedudukan memisah muka surat</string>
     <string name="backup_restore_content_full">Data dari fail sandaran akan dipulihkan.
 \n
@@ -681,7 +681,7 @@
     <string name="skipped_reason_not_caught_up">Dilangkau kerana ada bab yang belum dibaca</string>
     <string name="skipped_reason_not_started">Dilangkau kerana tiada bab yang dibaca</string>
     <string name="pref_landscape_zoom">Zum imej landskap</string>
-    <string name="pref_navigate_pan">Navigasi seperti panorama</string>
+    <string name="pref_navigate_pan">panorama imej lebar apabila mengetik</string>
     <string name="notification_update_error">%1$d kemas kini gagal</string>
     <string name="notification_update_skipped">%1$d kemas kini dilangkau</string>
     <string name="channel_skipped">Dilangkau</string>
