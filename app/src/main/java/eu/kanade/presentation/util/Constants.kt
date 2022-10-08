@@ -10,6 +10,5 @@ val horizontalPadding = horizontal
 val verticalPadding = vertical
 
 val topPaddingValues = PaddingValues(top = vertical)
-val bottomNavPaddingValues = PaddingValues(bottom = 96.dp)
 
 const val ReadItemAlpha = .38f

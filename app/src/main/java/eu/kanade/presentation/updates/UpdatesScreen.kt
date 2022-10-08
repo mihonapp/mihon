@@ -35,7 +35,6 @@ import eu.kanade.presentation.components.MangaBottomActionMenu
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SwipeRefreshIndicator
 import eu.kanade.presentation.components.VerticalFastScroller
-import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -46,6 +45,7 @@ import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter.Dialog
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter.Event
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView.Companion.bottomNavPadding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -124,12 +124,7 @@ private fun UpdateScreenContent(
     val updatesListState = rememberLazyListState()
 
     // During selection mode bottom nav is not visible
-    val contentPaddingWithNavBar = contentPadding +
-        if (presenter.selectionMode) {
-            PaddingValues()
-        } else {
-            bottomNavPaddingValues
-        }
+    val contentPaddingWithNavBar = contentPadding + bottomNavPadding
 
     val scope = rememberCoroutineScope()
     var isRefreshing by remember { mutableStateOf(false) }

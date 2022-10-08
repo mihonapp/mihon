@@ -8,12 +8,18 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.ViewPropertyAnimator
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.dp
 import androidx.customview.view.AbsSavedState
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.applySystemAnimatorScale
+import eu.kanade.tachiyomi.util.system.pxToDp
 
 class TachiyomiBottomNavigationView @JvmOverloads constructor(
     context: Context,
@@ -48,6 +54,11 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
         // Disallow translation change when state down
         if (currentState == STATE_DOWN) return
         super.setTranslationY(translationY)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        bottomNavPadding = PaddingValues(bottom = h.pxToDp.dp)
     }
 
     /**
@@ -137,5 +148,8 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
 
         private const val SLIDE_UP_ANIMATION_DURATION = 225L
         private const val SLIDE_DOWN_ANIMATION_DURATION = 175L
+
+        var bottomNavPadding by mutableStateOf(PaddingValues())
+            private set
     }
 }

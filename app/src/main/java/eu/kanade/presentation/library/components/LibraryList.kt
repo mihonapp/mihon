@@ -1,6 +1,7 @@
 package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,16 +25,18 @@ import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.MangaCover.Square
 import eu.kanade.presentation.components.TextButton
-import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.presentation.util.verticalPadding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibraryItem
+import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView.Companion.bottomNavPadding
 
 @Composable
 fun LibraryList(
     items: List<LibraryItem>,
+    contentPadding: PaddingValues,
     selection: List<LibraryManga>,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
@@ -42,7 +45,7 @@ fun LibraryList(
 ) {
     FastScrollLazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = bottomNavPaddingValues,
+        contentPadding = bottomNavPadding + contentPadding,
     ) {
         item {
             if (searchQuery.isNullOrEmpty().not()) {

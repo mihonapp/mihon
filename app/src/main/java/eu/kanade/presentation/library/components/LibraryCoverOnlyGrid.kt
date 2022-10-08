@@ -1,6 +1,7 @@
 package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import eu.kanade.tachiyomi.ui.library.LibraryItem
 fun LibraryCoverOnlyGrid(
     items: List<LibraryItem>,
     columns: Int,
+    contentPadding: PaddingValues,
     selection: List<LibraryManga>,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
@@ -21,6 +23,7 @@ fun LibraryCoverOnlyGrid(
     LazyLibraryGrid(
         modifier = Modifier.fillMaxSize(),
         columns = columns,
+        contentPadding = contentPadding,
     ) {
         globalSearchItem(searchQuery, onGlobalSearchClicked)
 

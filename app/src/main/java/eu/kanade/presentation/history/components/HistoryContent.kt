@@ -10,9 +10,9 @@ import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.history.HistoryUiModel
-import eu.kanade.presentation.util.bottomNavPaddingValues
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.topPaddingValues
+import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView.Companion.bottomNavPadding
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.text.DateFormat
@@ -30,7 +30,7 @@ fun HistoryContent(
     val dateFormat: DateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
 
     ScrollbarLazyColumn(
-        contentPadding = contentPadding + bottomNavPaddingValues + topPaddingValues,
+        contentPadding = contentPadding + bottomNavPadding + topPaddingValues,
     ) {
         items(
             items = history,
