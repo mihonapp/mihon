@@ -24,6 +24,7 @@ import android.util.TypedValue
 import android.view.Display
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.view.ContextThemeWrapper
@@ -183,6 +184,9 @@ val Context.powerManager: PowerManager
     get() = getSystemService()!!
 
 val Context.keyguardManager: KeyguardManager
+    get() = getSystemService()!!
+
+val Context.inputMethodManager: InputMethodManager
     get() = getSystemService()!!
 
 val Context.displayCompat: Display?

@@ -10,6 +10,7 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import eu.kanade.tachiyomi.util.system.logcat
+import eu.kanade.tachiyomi.util.view.hideKeyboard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -61,6 +62,8 @@ abstract class BaseController<VB : ViewBinding>(bundle: Bundle? = null) : Contro
     open fun onViewCreated(view: View) {}
 
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
+        view?.hideKeyboard()
+
         if (type.isEnter) {
             setTitle()
             setHasOptionsMenu(true)

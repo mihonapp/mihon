@@ -37,6 +37,7 @@ import com.google.android.material.snackbar.Snackbar
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.system.inputMethodManager
 
 inline fun ComposeView.setComposeContent(crossinline content: @Composable () -> Unit) {
     consumeWindowInsets = false
@@ -208,4 +209,8 @@ fun View?.isVisibleOnScreen(): Boolean {
     this.getGlobalVisibleRect(actualPosition)
     val screen = Rect(0, 0, Resources.getSystem().displayMetrics.widthPixels, Resources.getSystem().displayMetrics.heightPixels)
     return actualPosition.intersect(screen)
+}
+
+fun View.hideKeyboard() {
+    context.inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
 }
