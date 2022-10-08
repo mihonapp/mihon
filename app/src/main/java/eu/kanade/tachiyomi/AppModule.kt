@@ -33,6 +33,7 @@ import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.job.DelayedTrackingStore
 import eu.kanade.tachiyomi.extension.ExtensionManager
+import eu.kanade.tachiyomi.network.JavaScriptEngine
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.source.SourceManager
@@ -79,7 +80,6 @@ class AppModule(val app: Application) : InjektModule {
                 },
             )
         }
-
         addSingletonFactory {
             Database(
                 driver = get(),
@@ -92,7 +92,6 @@ class AppModule(val app: Application) : InjektModule {
                 ),
             )
         }
-
         addSingletonFactory<DatabaseHandler> { AndroidDatabaseHandler(get(), get()) }
 
         addSingletonFactory {
@@ -101,7 +100,6 @@ class AppModule(val app: Application) : InjektModule {
                 explicitNulls = false
             }
         }
-
         addSingletonFactory {
             XML {
                 unknownChildHandler = UnknownChildHandler { _, _, _, _, _ -> emptyList() }
@@ -110,19 +108,17 @@ class AppModule(val app: Application) : InjektModule {
         }
 
         addSingletonFactory { ChapterCache(app) }
-
         addSingletonFactory { CoverCache(app) }
 
         addSingletonFactory { NetworkHelper(app) }
-
-        addSingletonFactory { ExtensionManager(app) }
+        addSingletonFactory { JavaScriptEngine(app) }
 
         addSingletonFactory { SourceManager(app, get(), get()) }
+        addSingletonFactory { ExtensionManager(app) }
 
         addSingletonFactory { DownloadManager(app) }
 
         addSingletonFactory { TrackManager(app) }
-
         addSingletonFactory { DelayedTrackingStore(app) }
 
         addSingletonFactory { ImageSaver(app) }

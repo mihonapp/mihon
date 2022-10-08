@@ -223,9 +223,6 @@ dependencies {
     // Data serialization (JSON, protobuf)
     implementation(kotlinx.bundles.serialization)
 
-    // JavaScript engine
-    implementation(libs.bundles.js.engine)
-
     // HTML parser
     implementation(libs.jsoup)
 

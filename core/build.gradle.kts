@@ -43,4 +43,7 @@ dependencies {
     api(libs.preferencektx)
 
     implementation(androidx.corektx)
+
+    // JavaScript engine
+    implementation(libs.bundles.js.engine)
 }
