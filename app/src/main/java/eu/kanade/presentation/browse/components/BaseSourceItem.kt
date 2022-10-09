@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 @Composable
@@ -53,6 +54,7 @@ private val defaultContent: @Composable RowScope.(Source, String?) -> Unit = { s
         )
         if (sourceLangString != null) {
             Text(
+                modifier = Modifier.secondaryItemAlpha(),
                 text = sourceLangString,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

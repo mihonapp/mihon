@@ -187,11 +187,12 @@ private fun SourcePinButton(
 ) {
     val icon = if (isPinned) Icons.Filled.PushPin else Icons.Outlined.PushPin
     val tint = if (isPinned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+    val description = if (isPinned) R.string.action_unpin else R.string.action_pin
     IconButton(onClick = onClick) {
         Icon(
             imageVector = icon,
-            contentDescription = "",
             tint = tint,
+            contentDescription = stringResource(description),
         )
     }
 }

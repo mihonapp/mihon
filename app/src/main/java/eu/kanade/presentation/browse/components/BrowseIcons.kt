@@ -49,7 +49,7 @@ fun SourceIcon(
         source.isStub && icon == null -> {
             Image(
                 imageVector = Icons.Default.Warning,
-                contentDescription = "",
+                contentDescription = null,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
                 modifier = modifier.then(defaultModifier),
             )
@@ -57,14 +57,14 @@ fun SourceIcon(
         icon != null -> {
             Image(
                 bitmap = icon,
-                contentDescription = "",
+                contentDescription = null,
                 modifier = modifier.then(defaultModifier),
             )
         }
         else -> {
             Image(
                 painter = painterResource(id = R.mipmap.ic_local_source),
-                contentDescription = "",
+                contentDescription = null,
                 modifier = modifier.then(defaultModifier),
             )
         }
