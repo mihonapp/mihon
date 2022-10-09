@@ -46,7 +46,6 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.removeCovers
@@ -685,6 +684,10 @@ class LibraryPresenter(
         val category = categories[index]
         val items = (loadedManga[category.id] ?: emptyList()).map { it.libraryManga }
         state.selection = items.filterNot { it in selection }
+    }
+
+    private fun <T, U, R> Observable<T>.combineLatest(o2: Observable<U>, combineFn: (T, U) -> R): Observable<R> {
+        return Observable.combineLatest(this, o2, combineFn)
     }
 
     sealed class Dialog {

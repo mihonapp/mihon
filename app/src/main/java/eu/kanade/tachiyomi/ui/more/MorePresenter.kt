@@ -9,17 +9,14 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import rx.Observable
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.CompositeSubscription
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class MorePresenter(
     private val downloadManager: DownloadManager = Injekt.get(),
     preferences: BasePreferences = Injekt.get(),
-
 ) : BasePresenter<MoreController>() {
 
     val downloadedOnly = preferences.downloadedOnly().asState()
@@ -28,57 +25,25 @@ class MorePresenter(
     private var _state: MutableStateFlow<DownloadQueueState> = MutableStateFlow(DownloadQueueState.Stopped)
     val downloadQueueState: StateFlow<DownloadQueueState> = _state.asStateFlow()
 
-    private var isDownloading: Boolean = false
-    private var downloadQueueSize: Int = 0
-    private var untilDestroySubscriptions = CompositeSubscription()
-
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        if (untilDestroySubscriptions.isUnsubscribed) {
-            untilDestroySubscriptions = CompositeSubscription()
-        }
-
-        initDownloadQueueSummary()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        untilDestroySubscriptions.unsubscribe()
-    }
-
-    private fun initDownloadQueueSummary() {
-        // Handle running/paused status change
-        DownloadService.runningRelay
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeUntilDestroy { isRunning ->
-                isDownloading = isRunning
-                updateDownloadQueueState()
-            }
-
-        // Handle queue progress updating
-        downloadManager.queue.getUpdatedObservable()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeUntilDestroy {
-                downloadQueueSize = it.size
-                updateDownloadQueueState()
-            }
-    }
-
-    private fun updateDownloadQueueState() {
+        // Handle running/paused status change and queue progress updating
         presenterScope.launchIO {
-            val pendingDownloadExists = downloadQueueSize != 0
-            _state.value = when {
-                !pendingDownloadExists -> DownloadQueueState.Stopped
-                !isDownloading && !pendingDownloadExists -> DownloadQueueState.Paused(0)
-                !isDownloading && pendingDownloadExists -> DownloadQueueState.Paused(downloadQueueSize)
-                else -> DownloadQueueState.Downloading(downloadQueueSize)
-            }
+            combine(
+                DownloadService.isRunning,
+                downloadManager.queue.getUpdatedAsFlow(),
+            ) { isRunning, downloadQueue -> Pair(isRunning, downloadQueue.size) }
+                .collectLatest { (isDownloading, downloadQueueSize) ->
+                    val pendingDownloadExists = downloadQueueSize != 0
+                    _state.value = when {
+                        !pendingDownloadExists -> DownloadQueueState.Stopped
+                        !isDownloading && !pendingDownloadExists -> DownloadQueueState.Paused(0)
+                        !isDownloading && pendingDownloadExists -> DownloadQueueState.Paused(downloadQueueSize)
+                        else -> DownloadQueueState.Downloading(downloadQueueSize)
+                    }
+                }
         }
-    }
-
-    private fun <T> Observable<T>.subscribeUntilDestroy(onNext: (T) -> Unit): Subscription {
-        return subscribe(onNext).also { untilDestroySubscriptions.add(it) }
     }
 }
 

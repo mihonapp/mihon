@@ -8,11 +8,9 @@ import android.os.IBinder
 import android.os.PowerManager
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isConnectedToWifi
@@ -32,7 +30,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
 import ru.beryukhov.reactivenetwork.ReactiveNetwork
-import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -43,11 +40,6 @@ import uy.kohesive.injekt.injectLazy
 class DownloadService : Service() {
 
     companion object {
-
-        /**
-         * Relay used to know when the service is running.
-         */
-        val runningRelay: BehaviorRelay<Boolean> = BehaviorRelay.create(false)
 
         private val _isRunning = MutableStateFlow(false)
         val isRunning = _isRunning.asStateFlow()
@@ -83,7 +75,6 @@ class DownloadService : Service() {
     }
 
     private val downloadManager: DownloadManager by injectLazy()
-
     private val downloadPreferences: DownloadPreferences by injectLazy()
 
     /**
@@ -91,62 +82,58 @@ class DownloadService : Service() {
      */
     private lateinit var wakeLock: PowerManager.WakeLock
 
-    private lateinit var subscriptions: CompositeSubscription
     private lateinit var ioScope: CoroutineScope
 
-    /**
-     * Called when the service is created.
-     */
     override fun onCreate() {
         super.onCreate()
         ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         startForeground(Notifications.ID_DOWNLOAD_CHAPTER_PROGRESS, getPlaceholderNotification())
         wakeLock = acquireWakeLock(javaClass.name)
-        runningRelay.call(true)
         _isRunning.value = true
-        subscriptions = CompositeSubscription()
         listenDownloaderState()
         listenNetworkChanges()
     }
 
-    /**
-     * Called when the service is destroyed.
-     */
     override fun onDestroy() {
         ioScope?.cancel()
-        runningRelay.call(false)
         _isRunning.value = false
-        subscriptions.unsubscribe()
         downloadManager.stopDownloads()
         wakeLock.releaseIfNeeded()
         super.onDestroy()
     }
 
-    /**
-     * Not used.
-     */
+    // Not used
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_NOT_STICKY
     }
 
-    /**
-     * Not used.
-     */
+    // Not used
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
 
+    private fun stopDownloads(@StringRes string: Int) {
+        downloadManager.stopDownloads(getString(string))
+    }
+
     /**
      * Listens to network changes.
-     *
-     * @see onNetworkStateChanged
      */
     private fun listenNetworkChanges() {
         ReactiveNetwork()
             .observeNetworkConnectivity(applicationContext)
             .onEach {
                 withUIContext {
-                    onNetworkStateChanged()
+                    if (isOnline()) {
+                        if (downloadPreferences.downloadOnlyOverWifi().get() && !isConnectedToWifi()) {
+                            stopDownloads(R.string.download_notifier_text_only_wifi)
+                        } else {
+                            val started = downloadManager.startDownloads()
+                            if (!started) stopSelf()
+                        }
+                    } else {
+                        stopDownloads(R.string.download_notifier_no_network)
+                    }
                 }
             }
             .catch { error ->
@@ -160,40 +147,19 @@ class DownloadService : Service() {
     }
 
     /**
-     * Called when the network state changes.
-     */
-    private fun onNetworkStateChanged() {
-        if (isOnline()) {
-            if (downloadPreferences.downloadOnlyOverWifi().get() && !isConnectedToWifi()) {
-                stopDownloads(R.string.download_notifier_text_only_wifi)
-            } else {
-                val started = downloadManager.startDownloads()
-                if (!started) stopSelf()
-            }
-        } else {
-            stopDownloads(R.string.download_notifier_no_network)
-        }
-    }
-
-    private fun stopDownloads(@StringRes string: Int) {
-        downloadManager.stopDownloads(getString(string))
-    }
-
-    /**
      * Listens to downloader status. Enables or disables the wake lock depending on the status.
      */
     private fun listenDownloaderState() {
-        subscriptions += downloadManager.runningRelay
-            .doOnError {
-                /* Swallow wakelock error */
-            }
-            .subscribe { running ->
-                if (running) {
+        _isRunning
+            .onEach { isRunning ->
+                if (isRunning) {
                     wakeLock.acquireIfNeeded()
                 } else {
                     wakeLock.releaseIfNeeded()
                 }
             }
+            .catch { /* Ignore errors */ }
+            .launchIn(ioScope)
     }
 
     /**
