@@ -28,6 +28,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
+/**
+ * ExtendedFloatingActionButton with custom transition between collapsed/expanded state.
+ *
+ * @see androidx.compose.material3.ExtendedFloatingActionButton
+ */
 @Composable
 fun ExtendedFloatingActionButton(
     text: @Composable () -> Unit,

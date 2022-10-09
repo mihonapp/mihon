@@ -30,6 +30,11 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.util.minimumTouchTargetSize
 import kotlin.math.ln
 
+/**
+ * Surface with additional onLongClick functionality.
+ *
+ * @see androidx.compose.material3.Surface
+ */
 @Composable
 @NonRestartableComposable
 fun Surface(

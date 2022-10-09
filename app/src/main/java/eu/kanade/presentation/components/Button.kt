@@ -41,6 +41,11 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.util.animateElevation
 import androidx.compose.material3.ButtonDefaults as M3ButtonDefaults
 
+/**
+ * TextButton with additional onLongClick functionality.
+ *
+ * @see androidx.compose.material3.TextButton
+ */
 @Composable
 fun TextButton(
     onClick: () -> Unit,
@@ -74,6 +79,11 @@ fun TextButton(
         content = content,
     )
 
+/**
+ * Button with additional onLongClick functionality.
+ *
+ * @see androidx.compose.material3.TextButton
+ */
 @Composable
 fun Button(
     onClick: () -> Unit,
