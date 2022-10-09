@@ -1,11 +1,8 @@
 package eu.kanade.presentation.components
 
-import android.os.Build
-import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefreshState
@@ -42,14 +39,6 @@ fun SwipeRefresh(
         indicatorPadding = indicatorPadding,
         indicator = { s, trigger -> SwipeRefreshIndicator(s, trigger) },
     ) {
-        // TODO: remove this workaround when A12 stretch overscroll works well with refreshing
-        // see https://github.com/tachiyomiorg/tachiyomi/issues/8168
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
-                content()
-            }
-        } else {
-            content()
-        }
+        content()
     }
 }
