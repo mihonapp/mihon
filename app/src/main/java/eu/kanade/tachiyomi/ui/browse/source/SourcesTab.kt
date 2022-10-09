@@ -32,9 +32,10 @@ fun sourcesTab(
             onClick = { router?.pushController(SourceFilterController()) },
         ),
     ),
-    content = {
+    content = { contentPadding ->
         SourcesScreen(
             presenter = presenter,
+            contentPadding = contentPadding,
             onClickItem = { source, query ->
                 presenter.onOpenSource(source)
                 router?.pushController(BrowseSourceController(source, query))

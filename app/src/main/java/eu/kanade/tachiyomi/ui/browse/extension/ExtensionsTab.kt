@@ -34,9 +34,10 @@ fun extensionsTab(
             onClick = { router?.pushController(ExtensionFilterController()) },
         ),
     ),
-    content = {
+    content = { contentPadding ->
         ExtensionScreen(
             presenter = presenter,
+            contentPadding = contentPadding,
             onLongClickItem = { extension ->
                 when (extension) {
                     is Extension.Available -> presenter.installExtension(extension)

@@ -5,11 +5,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
@@ -55,11 +53,11 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionUiModel
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsPresenter
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView.Companion.bottomNavPadding
 
 @Composable
 fun ExtensionScreen(
     presenter: ExtensionsPresenter,
+    contentPadding: PaddingValues,
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
     onInstallExtension: (Extension.Available) -> Unit,
@@ -77,10 +75,14 @@ fun ExtensionScreen(
     ) {
         when {
             presenter.isLoading -> LoadingScreen()
-            presenter.isEmpty -> EmptyScreen(R.string.empty_screen)
+            presenter.isEmpty -> EmptyScreen(
+                textResource = R.string.empty_screen,
+                modifier = Modifier.padding(contentPadding),
+            )
             else -> {
                 ExtensionContent(
                     state = presenter,
+                    contentPadding = contentPadding,
                     onLongClickItem = onLongClickItem,
                     onClickItemCancel = onClickItemCancel,
                     onInstallExtension = onInstallExtension,
@@ -98,6 +100,7 @@ fun ExtensionScreen(
 @Composable
 private fun ExtensionContent(
     state: ExtensionsState,
+    contentPadding: PaddingValues,
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
     onInstallExtension: (Extension.Available) -> Unit,
@@ -110,7 +113,7 @@ private fun ExtensionContent(
     var trustState by remember { mutableStateOf<Extension.Untrusted?>(null) }
 
     FastScrollLazyColumn(
-        contentPadding = bottomNavPadding + WindowInsets.navigationBars.asPaddingValues() + topPaddingValues,
+        contentPadding = contentPadding + topPaddingValues,
     ) {
         items(
             items = state.items,

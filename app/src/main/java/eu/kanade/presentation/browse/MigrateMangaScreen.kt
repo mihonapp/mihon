@@ -1,6 +1,7 @@
 package eu.kanade.presentation.browse
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,7 +40,10 @@ fun MigrateMangaScreen(
     ) { contentPadding ->
         when {
             presenter.isLoading -> LoadingScreen()
-            presenter.isEmpty -> EmptyScreen(textResource = R.string.empty_screen)
+            presenter.isEmpty -> EmptyScreen(
+                textResource = R.string.empty_screen,
+                modifier = Modifier.padding(contentPadding),
+            )
             else -> {
                 MigrateMangaContent(
                     contentPadding = contentPadding,

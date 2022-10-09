@@ -1,9 +1,11 @@
 package eu.kanade.presentation.category
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.category.components.CategoryContent
@@ -48,7 +50,10 @@ fun CategoryScreen(
         val context = LocalContext.current
         when {
             presenter.isLoading -> LoadingScreen()
-            presenter.isEmpty -> EmptyScreen(textResource = R.string.information_empty_category)
+            presenter.isEmpty -> EmptyScreen(
+                textResource = R.string.information_empty_category,
+                modifier = Modifier.padding(paddingValues),
+            )
             else -> {
                 CategoryContent(
                     state = presenter,

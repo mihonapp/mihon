@@ -15,7 +15,6 @@ import androidx.compose.ui.zIndex
 import eu.kanade.presentation.components.FastScrollLazyVerticalGrid
 import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView.Companion.bottomNavPadding
 
 @Composable
 fun LazyLibraryGrid(
@@ -27,7 +26,7 @@ fun LazyLibraryGrid(
     FastScrollLazyVerticalGrid(
         columns = if (columns == 0) GridCells.Adaptive(128.dp) else GridCells.Fixed(columns),
         modifier = modifier,
-        contentPadding = contentPadding + bottomNavPadding + PaddingValues(12.dp),
+        contentPadding = contentPadding + PaddingValues(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         content = content,

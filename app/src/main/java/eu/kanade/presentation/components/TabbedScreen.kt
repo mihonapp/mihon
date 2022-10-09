@@ -2,6 +2,7 @@ package eu.kanade.presentation.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -95,7 +97,11 @@ fun TabbedScreen(
                 state = state,
                 verticalAlignment = Alignment.Top,
             ) { page ->
-                tabs[page].content()
+                tabs[page].content(
+                    TachiyomiBottomNavigationView.withBottomNavPadding(
+                        PaddingValues(bottom = contentPadding.calculateBottomPadding()),
+                    ),
+                )
             }
         }
     }
@@ -105,5 +111,5 @@ data class TabContent(
     @StringRes val titleRes: Int,
     val badgeNumber: Int? = null,
     val actions: List<AppBar.Action> = emptyList(),
-    val content: @Composable () -> Unit,
+    val content: @Composable (contentPadding: PaddingValues) -> Unit,
 )

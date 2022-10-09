@@ -31,7 +31,6 @@ import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.presentation.util.verticalPadding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibraryItem
-import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView.Companion.bottomNavPadding
 
 @Composable
 fun LibraryList(
@@ -45,7 +44,7 @@ fun LibraryList(
 ) {
     FastScrollLazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = bottomNavPadding + contentPadding,
+        contentPadding = contentPadding,
     ) {
         item {
             if (searchQuery.isNullOrEmpty().not()) {

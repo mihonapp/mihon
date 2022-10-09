@@ -81,16 +81,6 @@
     </style>
 
 
-    <!--==============-->
-    <!--Widgets.Button-->
-    <!--==============-->
-    <style name="Widget.Tachiyomi.Button.ActionButton" parent="Widget.Material3.Button.TextButton.Icon">
-        <item name="iconGravity">top</item>
-        <item name="iconTint">@color/button_action_selector</item>
-        <item name="iconPadding">4dp</item>
-        <item name="android:textColor">@color/button_action_selector</item>
-        <item name="android:textSize">12sp</item>
-    </style>
     <!--=======================-->
     <!--Widgets.MaterialDivider-->
     <!--=======================-->

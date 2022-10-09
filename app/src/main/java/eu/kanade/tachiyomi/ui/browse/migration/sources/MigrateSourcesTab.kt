@@ -31,9 +31,10 @@ fun migrateSourcesTab(
                 },
             ),
         ),
-        content = {
+        content = { contentPadding ->
             MigrateSourceScreen(
                 presenter = presenter,
+                contentPadding = contentPadding,
                 onClickItem = { source ->
                     router?.pushController(
                         MigrationMangaController(

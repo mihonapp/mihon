@@ -1,6 +1,7 @@
 package eu.kanade.presentation.browse
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Switch
@@ -43,7 +44,10 @@ fun SourcesFilterScreen(
     ) { contentPadding ->
         when {
             presenter.isLoading -> LoadingScreen()
-            presenter.isEmpty -> EmptyScreen(textResource = R.string.source_filter_empty_screen)
+            presenter.isEmpty -> EmptyScreen(
+                textResource = R.string.source_filter_empty_screen,
+                modifier = Modifier.padding(contentPadding),
+            )
             else -> {
                 SourcesFilterContent(
                     contentPadding = contentPadding,

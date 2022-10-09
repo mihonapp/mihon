@@ -256,7 +256,10 @@ class DownloadController :
             },
         ) { contentPadding ->
             if (downloadList.isEmpty()) {
-                EmptyScreen(textResource = R.string.information_no_downloads)
+                EmptyScreen(
+                    textResource = R.string.information_no_downloads,
+                    modifier = Modifier.padding(contentPadding),
+                )
                 return@Scaffold
             }
             val density = LocalDensity.current

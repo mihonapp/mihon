@@ -15,18 +15,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.platform.LocalUriHandler
 import com.google.accompanist.pager.rememberPagerState
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.domain.library.model.LibraryManga
-import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.SwipeRefresh
 import eu.kanade.presentation.library.LibraryState
-import eu.kanade.tachiyomi.R
+import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.ui.library.LibraryItem
-import eu.kanade.tachiyomi.widget.EmptyView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -100,19 +97,6 @@ fun LibraryContent(
             },
             enabled = state.selectionMode.not(),
         ) {
-            if (state.searchQuery.isNullOrEmpty() && isLibraryEmpty) {
-                val handler = LocalUriHandler.current
-                EmptyScreen(
-                    R.string.information_empty_library,
-                    listOf(
-                        EmptyView.Action(R.string.getting_started_guide, R.drawable.ic_help_24dp) {
-                            handler.openUri("https://tachiyomi.org/help/guides/getting-started")
-                        },
-                    ),
-                )
-                return@SwipeRefresh
-            }
-
             LibraryPager(
                 state = pagerState,
                 contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlipToBack
@@ -33,7 +34,6 @@ import eu.kanade.presentation.components.MangaBottomActionMenu
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SwipeRefresh
 import eu.kanade.presentation.components.VerticalFastScroller
-import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
@@ -43,7 +43,7 @@ import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter.Dialog
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter.Event
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView.Companion.bottomNavPadding
+import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -96,13 +96,17 @@ fun UpdateScreen(
             )
         },
     ) { contentPadding ->
+        val contentPaddingWithNavBar = TachiyomiBottomNavigationView.withBottomNavPadding(contentPadding)
         when {
             presenter.isLoading -> LoadingScreen()
-            presenter.uiModels.isEmpty() -> EmptyScreen(textResource = R.string.information_no_recent)
+            presenter.uiModels.isEmpty() -> EmptyScreen(
+                textResource = R.string.information_no_recent,
+                modifier = Modifier.padding(contentPaddingWithNavBar),
+            )
             else -> {
                 UpdateScreenContent(
                     presenter = presenter,
-                    contentPadding = contentPadding,
+                    contentPadding = contentPaddingWithNavBar,
                     onUpdateLibrary = onUpdateLibrary,
                     onClickCover = onClickCover,
                 )
@@ -120,10 +124,6 @@ private fun UpdateScreenContent(
 ) {
     val context = LocalContext.current
     val updatesListState = rememberLazyListState()
-
-    // During selection mode bottom nav is not visible
-    val contentPaddingWithNavBar = contentPadding + bottomNavPadding
-
     val scope = rememberCoroutineScope()
     var isRefreshing by remember { mutableStateOf(false) }
 
@@ -140,39 +140,35 @@ private fun UpdateScreenContent(
             }
         },
         enabled = presenter.selectionMode.not(),
-        indicatorPadding = contentPaddingWithNavBar,
+        indicatorPadding = contentPadding,
     ) {
-        if (presenter.uiModels.isEmpty()) {
-            EmptyScreen(textResource = R.string.information_no_recent)
-        } else {
-            VerticalFastScroller(
-                listState = updatesListState,
-                topContentPadding = contentPaddingWithNavBar.calculateTopPadding(),
-                endContentPadding = contentPaddingWithNavBar.calculateEndPadding(LocalLayoutDirection.current),
+        VerticalFastScroller(
+            listState = updatesListState,
+            topContentPadding = contentPadding.calculateTopPadding(),
+            endContentPadding = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxHeight(),
+                state = updatesListState,
+                contentPadding = contentPadding,
             ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxHeight(),
-                    state = updatesListState,
-                    contentPadding = contentPaddingWithNavBar,
-                ) {
-                    if (presenter.lastUpdated > 0L) {
-                        updatesLastUpdatedItem(presenter.lastUpdated)
-                    }
-
-                    updatesUiItems(
-                        uiModels = presenter.uiModels,
-                        selectionMode = presenter.selectionMode,
-                        onUpdateSelected = presenter::toggleSelection,
-                        onClickCover = onClickCover,
-                        onClickUpdate = {
-                            val intent = ReaderActivity.newIntent(context, it.update.mangaId, it.update.chapterId)
-                            context.startActivity(intent)
-                        },
-                        onDownloadChapter = presenter::downloadChapters,
-                        relativeTime = presenter.relativeTime,
-                        dateFormat = presenter.dateFormat,
-                    )
+                if (presenter.lastUpdated > 0L) {
+                    updatesLastUpdatedItem(presenter.lastUpdated)
                 }
+
+                updatesUiItems(
+                    uiModels = presenter.uiModels,
+                    selectionMode = presenter.selectionMode,
+                    onUpdateSelected = presenter::toggleSelection,
+                    onClickCover = onClickCover,
+                    onClickUpdate = {
+                        val intent = ReaderActivity.newIntent(context, it.update.mangaId, it.update.chapterId)
+                        context.startActivity(intent)
+                    },
+                    onDownloadChapter = presenter::downloadChapters,
+                    relativeTime = presenter.relativeTime,
+                    dateFormat = presenter.dateFormat,
+                )
             }
         }
     }

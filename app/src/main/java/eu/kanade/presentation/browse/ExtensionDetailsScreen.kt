@@ -133,7 +133,10 @@ private fun ExtensionDetails(
 ) {
     when {
         presenter.isLoading -> LoadingScreen()
-        presenter.extension == null -> EmptyScreen(textResource = R.string.empty_screen)
+        presenter.extension == null -> EmptyScreen(
+            textResource = R.string.empty_screen,
+            modifier = Modifier.padding(contentPadding),
+        )
         else -> {
             val context = LocalContext.current
             val extension = presenter.extension
