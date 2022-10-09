@@ -98,7 +98,7 @@ class DownloadService : Service() {
         ioScope?.cancel()
         _isRunning.value = false
         downloadManager.stopDownloads()
-        wakeLock.releaseIfNeeded()
+        wakeLock.releaseIfHeld()
         super.onDestroy()
     }
 
@@ -116,9 +116,6 @@ class DownloadService : Service() {
         downloadManager.stopDownloads(getString(string))
     }
 
-    /**
-     * Listens to network changes.
-     */
     private fun listenNetworkChanges() {
         ReactiveNetwork()
             .observeNetworkConnectivity(applicationContext)
@@ -153,26 +150,22 @@ class DownloadService : Service() {
         _isRunning
             .onEach { isRunning ->
                 if (isRunning) {
-                    wakeLock.acquireIfNeeded()
+                    wakeLock.acquireIfNotHeld()
                 } else {
-                    wakeLock.releaseIfNeeded()
+                    wakeLock.releaseIfHeld()
                 }
             }
-            .catch { /* Ignore errors */ }
+            .catch {
+                // Ignore errors
+            }
             .launchIn(ioScope)
     }
 
-    /**
-     * Releases the wake lock if it's held.
-     */
-    private fun PowerManager.WakeLock.releaseIfNeeded() {
+    private fun PowerManager.WakeLock.releaseIfHeld() {
         if (isHeld) release()
     }
 
-    /**
-     * Acquires the wake lock if it's not held.
-     */
-    private fun PowerManager.WakeLock.acquireIfNeeded() {
+    private fun PowerManager.WakeLock.acquireIfNotHeld() {
         if (!isHeld) acquire()
     }
 
