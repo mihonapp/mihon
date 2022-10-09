@@ -37,14 +37,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.presentation.browse.components.BaseBrowseItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.components.SwipeRefreshIndicator
+import eu.kanade.presentation.components.SwipeRefresh
 import eu.kanade.presentation.manga.components.DotSeparatorNoSpaceText
 import eu.kanade.presentation.theme.header
 import eu.kanade.presentation.util.horizontalPadding
@@ -73,9 +71,9 @@ fun ExtensionScreen(
     onRefresh: () -> Unit,
 ) {
     SwipeRefresh(
-        state = rememberSwipeRefreshState(presenter.isRefreshing),
-        indicator = { s, trigger -> SwipeRefreshIndicator(s, trigger) },
+        refreshing = presenter.isRefreshing,
         onRefresh = onRefresh,
+        enabled = !presenter.isLoading,
     ) {
         when {
             presenter.isLoading -> LoadingScreen()

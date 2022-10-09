@@ -17,14 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.presentation.components.EmptyScreen
-import eu.kanade.presentation.components.SwipeRefreshIndicator
+import eu.kanade.presentation.components.SwipeRefresh
 import eu.kanade.presentation.library.LibraryState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibraryItem
@@ -89,7 +87,7 @@ fun LibraryContent(
         }
 
         SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+            refreshing = isRefreshing,
             onRefresh = {
                 val started = onRefresh(categories[currentPage()])
                 if (!started) return@SwipeRefresh
@@ -100,12 +98,7 @@ fun LibraryContent(
                     isRefreshing = false
                 }
             },
-            indicator = { s, trigger ->
-                SwipeRefreshIndicator(
-                    state = s,
-                    refreshTriggerDistance = trigger,
-                )
-            },
+            enabled = state.selectionMode.not(),
         ) {
             if (state.searchQuery.isNullOrEmpty() && isLibraryEmpty) {
                 val handler = LocalUriHandler.current

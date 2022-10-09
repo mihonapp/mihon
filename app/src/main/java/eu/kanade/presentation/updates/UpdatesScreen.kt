@@ -24,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.EmptyScreen
@@ -33,7 +31,7 @@ import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.MangaBottomActionMenu
 import eu.kanade.presentation.components.Scaffold
-import eu.kanade.presentation.components.SwipeRefreshIndicator
+import eu.kanade.presentation.components.SwipeRefresh
 import eu.kanade.presentation.components.VerticalFastScroller
 import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
@@ -130,7 +128,7 @@ private fun UpdateScreenContent(
     var isRefreshing by remember { mutableStateOf(false) }
 
     SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+        refreshing = isRefreshing,
         onRefresh = {
             val started = onUpdateLibrary()
             if (!started) return@SwipeRefresh
@@ -141,14 +139,8 @@ private fun UpdateScreenContent(
                 isRefreshing = false
             }
         },
-        swipeEnabled = presenter.selectionMode.not(),
+        enabled = presenter.selectionMode.not(),
         indicatorPadding = contentPaddingWithNavBar,
-        indicator = { s, trigger ->
-            SwipeRefreshIndicator(
-                state = s,
-                refreshTriggerDistance = trigger,
-            )
-        },
     ) {
         if (presenter.uiModels.isEmpty()) {
             EmptyScreen(textResource = R.string.information_no_recent)

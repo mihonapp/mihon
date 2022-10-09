@@ -48,15 +48,13 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.ExtendedFloatingActionButton
 import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.components.MangaBottomActionMenu
 import eu.kanade.presentation.components.Scaffold
-import eu.kanade.presentation.components.SwipeRefreshIndicator
+import eu.kanade.presentation.components.SwipeRefresh
 import eu.kanade.presentation.components.VerticalFastScroller
 import eu.kanade.presentation.manga.components.ChapterHeader
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
@@ -290,16 +288,10 @@ private fun MangaScreenSmallImpl(
         val topPadding = contentPadding.calculateTopPadding()
 
         SwipeRefresh(
-            state = rememberSwipeRefreshState(state.isRefreshingData),
+            refreshing = state.isRefreshingData,
             onRefresh = onRefresh,
-            swipeEnabled = !chapters.any { it.selected },
+            enabled = chapters.none { it.selected },
             indicatorPadding = contentPadding,
-            indicator = { s, trigger ->
-                SwipeRefreshIndicator(
-                    state = s,
-                    refreshTriggerDistance = trigger,
-                )
-            },
         ) {
             VerticalFastScroller(
                 listState = chapterListState,
@@ -425,21 +417,14 @@ fun MangaScreenLargeImpl(
     val insetPadding = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues()
     val (topBarHeight, onTopBarHeightChanged) = remember { mutableStateOf(0) }
     SwipeRefresh(
-        state = rememberSwipeRefreshState(state.isRefreshingData),
+        refreshing = state.isRefreshingData,
         onRefresh = onRefresh,
-        swipeEnabled = !chapters.any { it.selected },
+        enabled = chapters.none { it.selected },
         indicatorPadding = PaddingValues(
             start = insetPadding.calculateStartPadding(layoutDirection),
             top = with(density) { topBarHeight.toDp() },
             end = insetPadding.calculateEndPadding(layoutDirection),
         ),
-        clipIndicatorToPadding = true,
-        indicator = { s, trigger ->
-            SwipeRefreshIndicator(
-                state = s,
-                refreshTriggerDistance = trigger,
-            )
-        },
     ) {
         val chapterListState = rememberLazyListState()
 
