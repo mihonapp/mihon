@@ -91,6 +91,7 @@ open class BrowseSourceController(bundle: Bundle) :
                     onConfirm = {
                         presenter.changeMangaFavorite(dialog.manga)
                     },
+                    mangaToRemove = dialog.manga,
                 )
             }
             is Dialog.ChangeMangaCategory -> {
