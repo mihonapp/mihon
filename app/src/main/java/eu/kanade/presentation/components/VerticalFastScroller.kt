@@ -42,9 +42,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastFirstOrNull
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMaxBy
-import eu.kanade.presentation.util.plus
+import eu.kanade.presentation.components.Scroller.STICKY_HEADER_KEY_PREFIX
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -53,6 +54,11 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
+/**
+ * Draws vertical fast scroller to a lazy list
+ *
+ * Set key with [STICKY_HEADER_KEY_PREFIX] prefix to any sticky header item in the list.
+ */
 @Composable
 fun VerticalFastScroller(
     listState: LazyListState,
@@ -386,7 +392,8 @@ private fun computeScrollRange(state: LazyGridState): Int {
 private fun computeScrollOffset(state: LazyListState): Int {
     if (state.layoutInfo.totalItemsCount == 0) return 0
     val visibleItems = state.layoutInfo.visibleItemsInfo
-    val startChild = visibleItems.first()
+    val startChild = visibleItems
+        .fastFirstOrNull { (it.key as? String)?.startsWith(STICKY_HEADER_KEY_PREFIX)?.not() ?: true }!!
     val endChild = visibleItems.last()
     val minPosition = min(startChild.index, endChild.index)
     val maxPosition = max(startChild.index, endChild.index)
@@ -401,11 +408,16 @@ private fun computeScrollOffset(state: LazyListState): Int {
 private fun computeScrollRange(state: LazyListState): Int {
     if (state.layoutInfo.totalItemsCount == 0) return 0
     val visibleItems = state.layoutInfo.visibleItemsInfo
-    val startChild = visibleItems.first()
+    val startChild = visibleItems
+        .fastFirstOrNull { (it.key as? String)?.startsWith(STICKY_HEADER_KEY_PREFIX)?.not() ?: true }!!
     val endChild = visibleItems.last()
     val laidOutArea = endChild.bottom - startChild.top
     val laidOutRange = abs(startChild.index - endChild.index) + 1
     return (laidOutArea.toFloat() / laidOutRange * state.layoutInfo.totalItemsCount).roundToInt()
+}
+
+object Scroller {
+    const val STICKY_HEADER_KEY_PREFIX = "sticky:"
 }
 
 private val ThumbLength = 48.dp

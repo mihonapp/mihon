@@ -62,11 +62,18 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastFirstOrNull
 import androidx.compose.ui.util.fastSumBy
+import eu.kanade.presentation.components.Scroller.STICKY_HEADER_KEY_PREFIX
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
+/**
+ * Draws horizontal scrollbar to a LazyList.
+ *
+ * Set key with [STICKY_HEADER_KEY_PREFIX] prefix to any sticky header item in the list.
+ */
 fun Modifier.drawHorizontalScrollbar(
     state: LazyListState,
     reverseScrolling: Boolean = false,
@@ -74,6 +81,11 @@ fun Modifier.drawHorizontalScrollbar(
     positionOffsetPx: Float = 0f,
 ): Modifier = drawScrollbar(state, Orientation.Horizontal, reverseScrolling, positionOffsetPx)
 
+/**
+ * Draws vertical scrollbar to a LazyList.
+ *
+ * Set key with [STICKY_HEADER_KEY_PREFIX] prefix to any sticky header item in the list.
+ */
 fun Modifier.drawVerticalScrollbar(
     state: LazyListState,
     reverseScrolling: Boolean = false,
@@ -106,7 +118,7 @@ private fun Modifier.drawScrollbar(
         0f
     } else {
         items
-            .first()
+            .fastFirstOrNull { (it.key as? String)?.startsWith(STICKY_HEADER_KEY_PREFIX)?.not() ?: true }!!
             .run {
                 val startPadding = if (reverseDirection) layoutInfo.afterContentPadding else layoutInfo.beforeContentPadding
                 startPadding + ((estimatedItemSize * index - offset) / totalSize * viewportSize)

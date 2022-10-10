@@ -32,6 +32,7 @@ import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.ScrollbarLazyColumn
+import eu.kanade.presentation.components.Scroller.STICKY_HEADER_KEY_PREFIX
 import eu.kanade.presentation.theme.header
 import eu.kanade.presentation.util.horizontalPadding
 import eu.kanade.presentation.util.plus
@@ -85,7 +86,7 @@ private fun MigrateSourceList(
     ScrollbarLazyColumn(
         contentPadding = contentPadding + topPaddingValues,
     ) {
-        stickyHeader(key = "header") {
+        stickyHeader(key = STICKY_HEADER_KEY_PREFIX) {
             Row(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background)
