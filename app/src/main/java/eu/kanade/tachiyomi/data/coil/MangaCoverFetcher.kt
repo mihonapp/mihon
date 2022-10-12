@@ -232,7 +232,7 @@ class MangaCoverFetcher(
         val editor = diskCacheLazy.value.edit(diskCacheKey) ?: return null
         try {
             diskCacheLazy.value.fileSystem.write(editor.data) {
-                response.body!!.source().readAll(this)
+                response.body.source().readAll(this)
             }
             return editor.commitAndGet()
         } catch (e: Exception) {

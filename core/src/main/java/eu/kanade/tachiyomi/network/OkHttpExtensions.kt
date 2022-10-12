@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.network
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -59,6 +60,7 @@ fun Call.asObservable(): Observable<Response> {
 }
 
 // Based on https://github.com/gildor/kotlin-coroutines-okhttp
+@OptIn(ExperimentalCoroutinesApi::class)
 suspend fun Call.await(): Response {
     return suspendCancellableCoroutine { continuation ->
         enqueue(

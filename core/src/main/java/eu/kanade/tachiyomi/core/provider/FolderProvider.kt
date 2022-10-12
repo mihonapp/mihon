@@ -7,6 +7,4 @@ interface FolderProvider {
     fun directory(): File
 
     fun path(): String
-
 }
-

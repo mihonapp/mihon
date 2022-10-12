@@ -5,7 +5,7 @@ import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.core.preference.getEnum
 
 class SecurityPreferences(
-    private val preferenceStore: PreferenceStore
+    private val preferenceStore: PreferenceStore,
 ) {
 
     fun useAuthenticator() = preferenceStore.getBoolean("use_biometric_lock", false)

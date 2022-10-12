@@ -14,7 +14,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
 class AndroidPreferenceStore(
-    context: Context
+    context: Context,
 ) : PreferenceStore {
 
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -26,15 +26,15 @@ class AndroidPreferenceStore(
     }
 
     override fun getLong(key: String, defaultValue: Long): Preference<Long> {
-        return LongPrimitive(sharedPreferences, keyFlow,key, defaultValue)
+        return LongPrimitive(sharedPreferences, keyFlow, key, defaultValue)
     }
 
     override fun getInt(key: String, defaultValue: Int): Preference<Int> {
-        return IntPrimitive(sharedPreferences, keyFlow,key, defaultValue)
+        return IntPrimitive(sharedPreferences, keyFlow, key, defaultValue)
     }
 
     override fun getFloat(key: String, defaultValue: Float): Preference<Float> {
-        return FloatPrimitive(sharedPreferences, keyFlow,key, defaultValue)
+        return FloatPrimitive(sharedPreferences, keyFlow, key, defaultValue)
     }
 
     override fun getBoolean(key: String, defaultValue: Boolean): Preference<Boolean> {
@@ -57,9 +57,9 @@ class AndroidPreferenceStore(
             key = key,
             defaultValue = defaultValue,
             serializer = serializer,
-            deserializer = deserializer
+            deserializer = deserializer,
         )
-}
+    }
 }
 
 private val SharedPreferences.keyFlow

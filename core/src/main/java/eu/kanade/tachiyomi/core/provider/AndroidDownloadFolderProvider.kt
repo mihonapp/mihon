@@ -7,13 +7,13 @@ import eu.kanade.tachiyomi.core.R
 import java.io.File
 
 class AndroidDownloadFolderProvider(
-    val context: Context
+    val context: Context,
 ) : FolderProvider {
 
     override fun directory(): File {
         return File(
             Environment.getExternalStorageDirectory().absolutePath + File.separator +
-                    context.getString(R.string.app_name),
+                context.getString(R.string.app_name),
             "downloads",
         )
     }
@@ -21,5 +21,4 @@ class AndroidDownloadFolderProvider(
     override fun path(): String {
         return directory().toUri().toString()
     }
-
 }

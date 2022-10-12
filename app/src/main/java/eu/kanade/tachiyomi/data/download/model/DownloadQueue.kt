@@ -74,14 +74,12 @@ class DownloadQueue(
     private fun getActiveDownloads(): Observable<Download> =
         Observable.from(this).filter { download -> download.status == Download.State.DOWNLOADING }
 
-    @Deprecated("Use getStatusAsFlow instead")
     private fun getStatusObservable(): Observable<Download> = statusSubject
         .startWith(getActiveDownloads())
         .onBackpressureBuffer()
 
     fun getStatusAsFlow(): Flow<Download> = getStatusObservable().asFlow()
 
-    @Deprecated("Use getUpdatedAsFlow instead")
     private fun getUpdatedObservable(): Observable<List<Download>> = updatedRelay.onBackpressureBuffer()
         .startWith(Unit)
         .map { this }
@@ -94,7 +92,6 @@ class DownloadQueue(
         }
     }
 
-    @Deprecated("Use getProgressAsFlow instead")
     private fun getProgressObservable(): Observable<Download> {
         return statusSubject.onBackpressureBuffer()
             .startWith(getActiveDownloads())

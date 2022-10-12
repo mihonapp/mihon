@@ -18,5 +18,5 @@ enum class UpdateStrategy {
      * during library updates. Useful for cases where the series is previously
      * known to be finished and have only a single chapter, for example.
      */
-    ONLY_FETCH_ONCE
+    ONLY_FETCH_ONCE,
 }

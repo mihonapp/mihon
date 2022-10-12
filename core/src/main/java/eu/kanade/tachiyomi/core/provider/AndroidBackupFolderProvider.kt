@@ -7,7 +7,7 @@ import eu.kanade.tachiyomi.core.R
 import java.io.File
 
 class AndroidBackupFolderProvider(
-    private val context: Context
+    private val context: Context,
 ) : FolderProvider {
 
     override fun directory(): File {
@@ -21,5 +21,4 @@ class AndroidBackupFolderProvider(
     override fun path(): String {
         return directory().toUri().toString()
     }
-
 }

@@ -19,6 +19,6 @@ class BaselineProfileGenerator {
 
             // TODO: Navigate to browse-extensions screen when storage permission
             // in sources screen moved. Possibly open manga details screen too?
-        }
+        },
     )
 }

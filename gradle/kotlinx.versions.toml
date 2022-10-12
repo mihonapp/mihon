@@ -1,5 +1,5 @@
 [versions]
-kotlin_version = "1.7.10"
+kotlin_version = "1.7.20"
 coroutines_version = "1.6.4"
 serialization_version = "1.4.0"
 xml_serialization_version = "0.84.3"

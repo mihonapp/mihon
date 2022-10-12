@@ -21,7 +21,6 @@ interface Preference<T> {
     fun changes(): Flow<T>
 
     fun stateIn(scope: CoroutineScope): StateFlow<T>
-
 }
 
 inline fun <reified T, R : T> Preference<T>.getAndSet(crossinline block: (T) -> R) = set(block(get()))

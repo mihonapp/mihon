@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.core.preference
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import androidx.core.content.edit
-import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
@@ -68,7 +66,7 @@ sealed class AndroidPreference<T>(
         preferences: SharedPreferences,
         keyFlow: Flow<String?>,
         key: String,
-        defaultValue: String
+        defaultValue: String,
     ) : AndroidPreference<String>(preferences, keyFlow, key, defaultValue) {
         override fun read(preferences: SharedPreferences, key: String, defaultValue: String): String {
             return preferences.getString(key, defaultValue) ?: defaultValue
@@ -83,7 +81,7 @@ sealed class AndroidPreference<T>(
         preferences: SharedPreferences,
         keyFlow: Flow<String?>,
         key: String,
-        defaultValue: Long
+        defaultValue: Long,
     ) : AndroidPreference<Long>(preferences, keyFlow, key, defaultValue) {
         override fun read(preferences: SharedPreferences, key: String, defaultValue: Long): Long {
             return preferences.getLong(key, defaultValue)
@@ -98,7 +96,7 @@ sealed class AndroidPreference<T>(
         preferences: SharedPreferences,
         keyFlow: Flow<String?>,
         key: String,
-        defaultValue: Int
+        defaultValue: Int,
     ) : AndroidPreference<Int>(preferences, keyFlow, key, defaultValue) {
         override fun read(preferences: SharedPreferences, key: String, defaultValue: Int): Int {
             return preferences.getInt(key, defaultValue)
@@ -113,7 +111,7 @@ sealed class AndroidPreference<T>(
         preferences: SharedPreferences,
         keyFlow: Flow<String?>,
         key: String,
-        defaultValue: Float
+        defaultValue: Float,
     ) : AndroidPreference<Float>(preferences, keyFlow, key, defaultValue) {
         override fun read(preferences: SharedPreferences, key: String, defaultValue: Float): Float {
             return preferences.getFloat(key, defaultValue)
@@ -128,7 +126,7 @@ sealed class AndroidPreference<T>(
         preferences: SharedPreferences,
         keyFlow: Flow<String?>,
         key: String,
-        defaultValue: Boolean
+        defaultValue: Boolean,
     ) : AndroidPreference<Boolean>(preferences, keyFlow, key, defaultValue) {
         override fun read(preferences: SharedPreferences, key: String, defaultValue: Boolean): Boolean {
             return preferences.getBoolean(key, defaultValue)
@@ -143,7 +141,7 @@ sealed class AndroidPreference<T>(
         preferences: SharedPreferences,
         keyFlow: Flow<String?>,
         key: String,
-        defaultValue: Set<String>
+        defaultValue: Set<String>,
     ) : AndroidPreference<Set<String>>(preferences, keyFlow, key, defaultValue) {
         override fun read(preferences: SharedPreferences, key: String, defaultValue: Set<String>): Set<String> {
             return preferences.getStringSet(key, defaultValue) ?: defaultValue
@@ -160,7 +158,7 @@ sealed class AndroidPreference<T>(
         key: String,
         defaultValue: T,
         val serializer: (T) -> String,
-        val deserializer: (String) -> T
+        val deserializer: (String) -> T,
     ) : AndroidPreference<T>(preferences, keyFlow, key, defaultValue) {
         override fun read(preferences: SharedPreferences, key: String, defaultValue: T): T {
             return try {
@@ -174,5 +172,4 @@ sealed class AndroidPreference<T>(
             putString(key, serializer(value))
         }
     }
-
 }
