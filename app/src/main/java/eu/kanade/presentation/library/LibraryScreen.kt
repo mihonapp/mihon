@@ -96,6 +96,7 @@ fun LibraryScreen(
                     onChangeCurrentPage = { presenter.activeCategory = it },
                     onMangaClicked = onMangaClicked,
                     onToggleSelection = { presenter.toggleSelection(it) },
+                    onToggleRangeSelection = { presenter.toggleRangeSelection(it) },
                     onRefresh = onClickRefresh,
                     onGlobalSearchClicked = onGlobalSearchClicked,
                     getNumberOfMangaForCategory = { presenter.getMangaCountForCategory(it) },

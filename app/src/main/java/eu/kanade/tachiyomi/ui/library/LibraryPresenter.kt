@@ -662,10 +662,38 @@ class LibraryPresenter(
         state.selection = emptyList()
     }
 
+    private fun removeSelected(mutableList: MutableList<LibraryManga>, manga: LibraryManga): Boolean {
+        if (selection.fastAny { it.manga.id == manga.manga.id }) {
+            return mutableList.remove(manga)
+        }
+        return false
+    }
+
     fun toggleSelection(manga: LibraryManga) {
         val mutableList = state.selection.toMutableList()
-        if (selection.fastAny { it.manga.id == manga.manga.id }) {
-            mutableList.remove(manga)
+        if (!removeSelected(mutableList, manga)) {
+            mutableList.add(manga)
+        }
+        state.selection = mutableList
+    }
+
+    /**
+     * Selects all mangas between and including the given manga and the last pressed manga from the
+     * same category as the given manga
+     */
+    fun toggleRangeSelection(manga: LibraryManga) {
+        val mutableList = state.selection.toMutableList()
+        if (!removeSelected(mutableList, manga) && mutableList.fastAny
+            { it.category == manga.category }
+        ) {
+            val items = (loadedManga[manga.category] ?: emptyList()).map { it.libraryManga }
+            val lastMangaIndex = items.indexOf(mutableList.findLast { it.category == manga.category })
+            val curMangaIndex = items.indexOf(manga)
+            val newList = when (lastMangaIndex >= curMangaIndex + 1) {
+                true -> items.subList(curMangaIndex, lastMangaIndex)
+                false -> items.subList(lastMangaIndex, curMangaIndex + 1)
+            }
+            mutableList.addAll(newList.filterNot { it in selection })
         } else {
             mutableList.add(manga)
         }
