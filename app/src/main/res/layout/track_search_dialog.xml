@@ -66,6 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:padding="16dp"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:visibility="gone"
                 tools:text="@string/no_results_found" />
@@ -95,8 +96,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginVertical="8dp"
-            android:text="@string/action_track"
-            android:enabled="false" />
+            android:enabled="false"
+            android:text="@string/action_track" />
 
     </LinearLayout>
 
