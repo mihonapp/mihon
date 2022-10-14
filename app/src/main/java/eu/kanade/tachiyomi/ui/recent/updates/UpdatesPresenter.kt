@@ -215,7 +215,7 @@ class UpdatesPresenter(
         presenterScope.launchIO {
             setReadStatus.await(
                 read = read,
-                values = updates
+                chapters = updates
                     .mapNotNull { getChapter.await(it.update.chapterId) }
                     .toTypedArray(),
             )

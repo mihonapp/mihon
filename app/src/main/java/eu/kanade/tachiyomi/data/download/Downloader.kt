@@ -395,7 +395,7 @@ class Downloader(
             // When the page is ready, set page path, progress (just in case) and status
             .doOnNext { file ->
                 val success = splitTallImageIfNeeded(page, tmpDir)
-                if (success.not()) {
+                if (!success) {
                     notifier.onError(context.getString(R.string.download_notifier_split_failed), download.chapter.name, download.manga.title)
                 }
                 page.uri = file.uri

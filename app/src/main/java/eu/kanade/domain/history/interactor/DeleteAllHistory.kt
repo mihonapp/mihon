@@ -2,7 +2,7 @@ package eu.kanade.domain.history.interactor
 
 import eu.kanade.domain.history.repository.HistoryRepository
 
-class DeleteHistoryTable(
+class DeleteAllHistory(
     private val repository: HistoryRepository,
 ) {
 

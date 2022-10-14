@@ -9,8 +9,8 @@ import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.isLocal
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.ChapterRecognition
@@ -42,7 +42,7 @@ class SyncChaptersWithSource(
         manga: Manga,
         source: Source,
     ): List<Chapter> {
-        if (rawSourceChapters.isEmpty() && source.id != LocalSource.ID) {
+        if (rawSourceChapters.isEmpty() && !source.isLocal()) {
             throw NoChaptersException()
         }
 

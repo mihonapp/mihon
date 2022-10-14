@@ -7,9 +7,8 @@ import eu.kanade.domain.download.interactor.DeleteDownload
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.repository.MangaRepository
+import eu.kanade.tachiyomi.util.lang.withNonCancellableContext
 import eu.kanade.tachiyomi.util.system.logcat
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.withContext
 import logcat.LogPriority
 
 class SetReadStatus(
@@ -27,49 +26,39 @@ class SetReadStatus(
         )
     }
 
-    suspend fun await(read: Boolean, vararg values: Chapter): Result = withContext(NonCancellable) {
-        val chapters = values.filterNot { it.read == read }
-
-        if (chapters.isEmpty()) {
-            return@withContext Result.NoChapters
-        }
-
-        val manga = chapters.fold(mutableSetOf<Manga>()) { acc, chapter ->
-            if (acc.all { it.id != chapter.mangaId }) {
-                acc += mangaRepository.getMangaById(chapter.mangaId)
-            }
-            acc
+    suspend fun await(read: Boolean, vararg chapters: Chapter): Result = withNonCancellableContext {
+        val chaptersToUpdate = chapters.filterNot { it.read == read }
+        if (chaptersToUpdate.isEmpty()) {
+            return@withNonCancellableContext Result.NoChapters
         }
 
         try {
             chapterRepository.updateAll(
-                chapters.map { chapter ->
-                    mapper(chapter, read)
-                },
+                chaptersToUpdate.map { mapper(it, read) },
             )
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-            return@withContext Result.InternalError(e)
+            return@withNonCancellableContext Result.InternalError(e)
         }
 
         if (read && downloadPreferences.removeAfterMarkedAsRead().get()) {
-            manga.forEach {
-                deleteDownload.awaitAll(
-                    manga = it,
-                    values = chapters
-                        .filter { chapter -> it.id == chapter.mangaId }
-                        .toTypedArray(),
-                )
-            }
+            chaptersToUpdate
+                .groupBy { it.mangaId }
+                .forEach { (mangaId, chapters) ->
+                    deleteDownload.awaitAll(
+                        manga = mangaRepository.getMangaById(mangaId),
+                        chapters = chapters.toTypedArray(),
+                    )
+                }
         }
 
         Result.Success
     }
 
-    suspend fun await(mangaId: Long, read: Boolean): Result = withContext(NonCancellable) {
+    suspend fun await(mangaId: Long, read: Boolean): Result = withNonCancellableContext {
         await(
             read = read,
-            values = chapterRepository
+            chapters = chapterRepository
                 .getChapterByMangaId(mangaId)
                 .toTypedArray(),
         )

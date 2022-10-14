@@ -28,4 +28,6 @@ fun Source.getNameForMangaInfo(): String {
     }
 }
 
-fun Source.isLocalOrStub(): Boolean = id == LocalSource.ID || this is SourceManager.StubSource
+fun Source.isLocal(): Boolean = id == LocalSource.ID
+
+fun Source.isLocalOrStub(): Boolean = isLocal() || this is SourceManager.StubSource

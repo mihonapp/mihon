@@ -109,9 +109,9 @@ class MangaRepositoryImpl(
         }
     }
 
-    override suspend fun updateAll(values: List<MangaUpdate>): Boolean {
+    override suspend fun updateAll(mangaUpdates: List<MangaUpdate>): Boolean {
         return try {
-            partialUpdate(*values.toTypedArray())
+            partialUpdate(*mangaUpdates.toTypedArray())
             true
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
@@ -119,9 +119,9 @@ class MangaRepositoryImpl(
         }
     }
 
-    private suspend fun partialUpdate(vararg values: MangaUpdate) {
+    private suspend fun partialUpdate(vararg mangaUpdates: MangaUpdate) {
         handler.await(inTransaction = true) {
-            values.forEach { value ->
+            mangaUpdates.forEach { value ->
                 mangasQueries.update(
                     source = value.source,
                     url = value.url,

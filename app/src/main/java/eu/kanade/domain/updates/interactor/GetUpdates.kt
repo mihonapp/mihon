@@ -18,7 +18,7 @@ class GetUpdates(
         return repository.subscribeAll(after)
             .onEach { updates ->
                 // Set unread chapter count for bottom bar badge
-                preferences.unreadUpdatesCount().set(updates.count { it.read.not() })
+                preferences.unreadUpdatesCount().set(updates.count { !it.read })
             }
     }
 }

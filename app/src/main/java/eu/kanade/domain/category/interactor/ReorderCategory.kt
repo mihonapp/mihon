@@ -3,21 +3,20 @@ package eu.kanade.domain.category.interactor
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.category.model.CategoryUpdate
 import eu.kanade.domain.category.repository.CategoryRepository
+import eu.kanade.tachiyomi.util.lang.withNonCancellableContext
 import eu.kanade.tachiyomi.util.system.logcat
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.withContext
 import logcat.LogPriority
 
 class ReorderCategory(
     private val categoryRepository: CategoryRepository,
 ) {
 
-    suspend fun await(categoryId: Long, newPosition: Int) = withContext(NonCancellable) {
+    suspend fun await(categoryId: Long, newPosition: Int) = withNonCancellableContext {
         val categories = categoryRepository.getAll().filterNot(Category::isSystemCategory)
 
         val currentIndex = categories.indexOfFirst { it.id == categoryId }
         if (currentIndex == newPosition) {
-            return@withContext Result.Unchanged
+            return@withNonCancellableContext Result.Unchanged
         }
 
         val reorderedCategories = categories.toMutableList()

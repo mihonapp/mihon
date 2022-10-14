@@ -44,9 +44,9 @@ class TrackRepositoryImpl(
         insertValues(*tracks.toTypedArray())
     }
 
-    private suspend fun insertValues(vararg values: Track) {
+    private suspend fun insertValues(vararg tracks: Track) {
         handler.await(inTransaction = true) {
-            values.forEach { mangaTrack ->
+            tracks.forEach { mangaTrack ->
                 manga_syncQueries.insert(
                     mangaId = mangaTrack.mangaId,
                     syncId = mangaTrack.syncId,

@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.model.Chapter
-import eu.kanade.domain.history.interactor.DeleteHistoryTable
+import eu.kanade.domain.history.interactor.DeleteAllHistory
 import eu.kanade.domain.history.interactor.GetHistory
 import eu.kanade.domain.history.interactor.GetNextChapter
 import eu.kanade.domain.history.interactor.RemoveHistoryById
@@ -38,7 +38,7 @@ class HistoryPresenter(
     private val state: HistoryStateImpl = HistoryState() as HistoryStateImpl,
     private val getHistory: GetHistory = Injekt.get(),
     private val getNextChapter: GetNextChapter = Injekt.get(),
-    private val deleteHistoryTable: DeleteHistoryTable = Injekt.get(),
+    private val deleteAllHistory: DeleteAllHistory = Injekt.get(),
     private val removeHistoryById: RemoveHistoryById = Injekt.get(),
     private val removeHistoryByMangaId: RemoveHistoryByMangaId = Injekt.get(),
     preferences: BasePreferences = Injekt.get(),
@@ -101,7 +101,7 @@ class HistoryPresenter(
 
     fun deleteAllHistory() {
         presenterScope.launchIO {
-            val result = deleteHistoryTable.await()
+            val result = deleteAllHistory.await()
             if (!result) return@launchIO
             withUIContext {
                 view?.activity?.toast(R.string.clear_history_completed)

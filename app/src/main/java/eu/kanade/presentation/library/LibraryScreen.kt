@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.library.model.display
+import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.EmptyScreenAction
 import eu.kanade.presentation.components.LibraryBottomActionMenu
@@ -18,7 +19,6 @@ import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.library.LibraryPresenter
 import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
 
@@ -64,7 +64,7 @@ fun LibraryScreen(
                         onChangeCategoryClicked = onChangeCategoryClicked,
                         onMarkAsReadClicked = onMarkAsReadClicked,
                         onMarkAsUnreadClicked = onMarkAsUnreadClicked,
-                        onDownloadClicked = onDownloadClicked.takeIf { presenter.selection.none { it.manga.source == LocalSource.ID } },
+                        onDownloadClicked = onDownloadClicked.takeIf { presenter.selection.none { it.manga.isLocal() } },
                         onDeleteClicked = onDeleteClicked,
                     )
                 },
