@@ -102,25 +102,27 @@ class UpdatesPresenter(
     }
 
     private fun List<UpdatesWithRelations>.toUpdateItems(): List<UpdatesItem> {
-        return this.map { update ->
-            val activeDownload = downloadManager.queue.find { update.chapterId == it.chapter.id }
-            val downloaded = downloadManager.isChapterDownloaded(
-                update.chapterName,
-                update.scanlator,
-                update.mangaTitle,
-                update.sourceId,
-            )
-            val downloadState = when {
-                activeDownload != null -> activeDownload.status
-                downloaded -> Download.State.DOWNLOADED
-                else -> Download.State.NOT_DOWNLOADED
+        return this
+            .distinctBy { it.chapterId }
+            .map {
+                val activeDownload = downloadManager.queue.find { download -> it.chapterId == download.chapter.id }
+                val downloaded = downloadManager.isChapterDownloaded(
+                    it.chapterName,
+                    it.scanlator,
+                    it.mangaTitle,
+                    it.sourceId,
+                )
+                val downloadState = when {
+                    activeDownload != null -> activeDownload.status
+                    downloaded -> Download.State.DOWNLOADED
+                    else -> Download.State.NOT_DOWNLOADED
+                }
+                UpdatesItem(
+                    update = it,
+                    downloadStateProvider = { downloadState },
+                    downloadProgressProvider = { activeDownload?.progress ?: 0 },
+                )
             }
-            UpdatesItem(
-                update = update,
-                downloadStateProvider = { downloadState },
-                downloadProgressProvider = { activeDownload?.progress ?: 0 },
-            )
-        }
     }
 
     private suspend fun observeDownloads() {

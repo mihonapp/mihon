@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -78,9 +77,9 @@ class ExtensionsPresenter(
         presenterScope.launchIO {
             combine(
                 _query,
-                getExtensions.subscribe().stateIn(presenterScope),
                 _currentDownloads,
-            ) { query, (_updates, _installed, _available, _untrusted), downloads ->
+                getExtensions.subscribe(),
+            ) { query, downloads, (_updates, _installed, _available, _untrusted) ->
                 val searchQuery = query ?: ""
 
                 val languagesWithExtensions = _available
@@ -137,15 +136,16 @@ class ExtensionsPresenter(
     fun updateAllExtensions() {
         presenterScope.launchIO {
             if (state.isEmpty) return@launchIO
-            val items = state.items
-            items.mapNotNull {
-                if (it !is ExtensionUiModel.Item) return@mapNotNull null
-                if (it.extension !is Extension.Installed) return@mapNotNull null
-                if (it.extension.hasUpdate.not()) return@mapNotNull null
-                it.extension
-            }.forEach {
-                updateExtension(it)
-            }
+            state.items
+                .mapNotNull {
+                    when {
+                        it !is ExtensionUiModel.Item -> null
+                        it.extension !is Extension.Installed -> null
+                        !it.extension.hasUpdate -> null
+                        else -> it.extension
+                    }
+                }
+                .forEach { updateExtension(it) }
         }
     }
 
