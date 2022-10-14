@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,13 +65,12 @@ fun EmptyScreen(
                 Text(
                     text = face,
                     modifier = Modifier.secondaryItemAlpha(),
-                    fontFamily = FontFamily.Monospace,
                     style = MaterialTheme.typography.displayMedium,
                 )
 
                 Text(
                     text = message,
-                    modifier = Modifier.paddingFromBaseline(top = 24.dp),
+                    modifier = Modifier.paddingFromBaseline(top = 24.dp).secondaryItemAlpha(),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
