@@ -12,6 +12,4 @@
         <attr name="summary" format="reference|string" />
     </declare-styleable>
 
-    <attr name="colorFilterActive" format="reference|integer"/>
-
 </resources>

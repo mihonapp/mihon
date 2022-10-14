@@ -19,9 +19,6 @@
     <color name="surface_amoled">#000001</color>
     <color name="background_amoled">#000000</color>
 
-    <color name="filter_light">#FFC107</color>
-    <color name="filter_dark">#FFEB3B</color>
-
     <color name="reader_background_dark">#202125</color>
 
     <!-- Material Design Colors -->

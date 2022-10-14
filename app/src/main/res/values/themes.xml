@@ -79,9 +79,6 @@
         <item name="sliderStyle">@style/Widget.Tachiyomi.Slider</item>
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
 
-        <!-- Custom Attributes-->
-        <item name="colorFilterActive">@color/filter_light</item>
-
         <!-- Preference text appearance -->
         <item name="android:textAppearanceListItem">?attr/textAppearanceBodyLarge</item>
         <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Tachiyomi.Preference.Secondary</item>

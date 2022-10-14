@@ -11,10 +11,11 @@ import androidx.compose.material.icons.filled.FlipToBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.outlined.Download
-import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -31,21 +32,24 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.DownloadAction
+import eu.kanade.presentation.theme.active
 import eu.kanade.tachiyomi.R
 
 @Composable
-fun MangaAppBar(
+fun MangaToolbar(
     modifier: Modifier = Modifier,
     title: String,
     titleAlphaProvider: () -> Float,
     backgroundAlphaProvider: () -> Float = titleAlphaProvider,
+    hasFilters: Boolean,
     incognitoMode: Boolean,
     downloadedOnlyMode: Boolean,
     onBackClicked: () -> Unit,
-    onShareClicked: (() -> Unit)?,
-    onDownloadClicked: ((DownloadAction) -> Unit)?,
-    onEditCategoryClicked: (() -> Unit)?,
-    onMigrateClicked: (() -> Unit)?,
+    onClickFilter: () -> Unit,
+    onClickShare: (() -> Unit)?,
+    onClickDownload: ((DownloadAction) -> Unit)?,
+    onClickEditCategory: (() -> Unit)?,
+    onClickMigrate: (() -> Unit)?,
     // For action mode
     actionModeCounter: Int,
     onSelectAll: () -> Unit,
@@ -87,16 +91,7 @@ fun MangaAppBar(
                         )
                     }
                 } else {
-                    if (onShareClicked != null) {
-                        IconButton(onClick = onShareClicked) {
-                            Icon(
-                                imageVector = Icons.Outlined.Share,
-                                contentDescription = stringResource(R.string.action_share),
-                            )
-                        }
-                    }
-
-                    if (onDownloadClicked != null) {
+                    if (onClickDownload != null) {
                         val (downloadExpanded, onDownloadExpanded) = remember { mutableStateOf(false) }
                         Box {
                             IconButton(onClick = { onDownloadExpanded(!downloadExpanded) }) {
@@ -113,42 +108,42 @@ fun MangaAppBar(
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(R.string.download_1)) },
                                     onClick = {
-                                        onDownloadClicked(DownloadAction.NEXT_1_CHAPTER)
+                                        onClickDownload(DownloadAction.NEXT_1_CHAPTER)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(R.string.download_5)) },
                                     onClick = {
-                                        onDownloadClicked(DownloadAction.NEXT_5_CHAPTERS)
+                                        onClickDownload(DownloadAction.NEXT_5_CHAPTERS)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(R.string.download_10)) },
                                     onClick = {
-                                        onDownloadClicked(DownloadAction.NEXT_10_CHAPTERS)
+                                        onClickDownload(DownloadAction.NEXT_10_CHAPTERS)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(R.string.download_custom)) },
                                     onClick = {
-                                        onDownloadClicked(DownloadAction.CUSTOM)
+                                        onClickDownload(DownloadAction.CUSTOM)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(R.string.download_unread)) },
                                     onClick = {
-                                        onDownloadClicked(DownloadAction.UNREAD_CHAPTERS)
+                                        onClickDownload(DownloadAction.UNREAD_CHAPTERS)
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(R.string.download_all)) },
                                     onClick = {
-                                        onDownloadClicked(DownloadAction.ALL_CHAPTERS)
+                                        onClickDownload(DownloadAction.ALL_CHAPTERS)
                                         onDismissRequest()
                                     },
                                 )
@@ -156,7 +151,12 @@ fun MangaAppBar(
                         }
                     }
 
-                    if (onEditCategoryClicked != null && onMigrateClicked != null) {
+                    val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
+                    IconButton(onClick = onClickFilter) {
+                        Icon(Icons.Outlined.FilterList, contentDescription = stringResource(R.string.action_filter), tint = filterTint)
+                    }
+
+                    if (onClickEditCategory != null && onClickMigrate != null) {
                         val (moreExpanded, onMoreExpanded) = remember { mutableStateOf(false) }
                         Box {
                             IconButton(onClick = { onMoreExpanded(!moreExpanded) }) {
@@ -170,17 +170,26 @@ fun MangaAppBar(
                                 expanded = moreExpanded,
                                 onDismissRequest = onDismissRequest,
                             ) {
+                                if (onClickShare != null) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(R.string.action_share)) },
+                                        onClick = {
+                                            onClickShare()
+                                            onDismissRequest()
+                                        },
+                                    )
+                                }
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(R.string.action_edit_categories)) },
                                     onClick = {
-                                        onEditCategoryClicked()
+                                        onClickEditCategory()
                                         onDismissRequest()
                                     },
                                 )
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(R.string.action_migrate)) },
                                     onClick = {
-                                        onMigrateClicked()
+                                        onClickMigrate()
                                         onDismissRequest()
                                     },
                                 )

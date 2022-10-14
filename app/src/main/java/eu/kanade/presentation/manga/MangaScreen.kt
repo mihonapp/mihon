@@ -59,9 +59,9 @@ import eu.kanade.presentation.components.VerticalFastScroller
 import eu.kanade.presentation.manga.components.ChapterHeader
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
 import eu.kanade.presentation.manga.components.MangaActionRow
-import eu.kanade.presentation.manga.components.MangaAppBar
 import eu.kanade.presentation.manga.components.MangaChapterListItem
 import eu.kanade.presentation.manga.components.MangaInfoBox
+import eu.kanade.presentation.manga.components.MangaToolbar
 import eu.kanade.presentation.util.isScrolledToEnd
 import eu.kanade.presentation.util.isScrollingUp
 import eu.kanade.tachiyomi.R
@@ -119,7 +119,7 @@ fun MangaScreen(
             onWebViewClicked = onWebViewClicked,
             onTrackingClicked = onTrackingClicked,
             onTagClicked = onTagClicked,
-            onFilterButtonClicked = onFilterButtonClicked,
+            onFilterClicked = onFilterButtonClicked,
             onRefresh = onRefresh,
             onContinueReading = onContinueReading,
             onSearch = onSearch,
@@ -179,7 +179,7 @@ private fun MangaScreenSmallImpl(
     onWebViewClicked: (() -> Unit)?,
     onTrackingClicked: (() -> Unit)?,
     onTagClicked: (String) -> Unit,
-    onFilterButtonClicked: () -> Unit,
+    onFilterClicked: () -> Unit,
     onRefresh: () -> Unit,
     onContinueReading: () -> Unit,
     onSearch: (query: String, global: Boolean) -> Unit,
@@ -233,17 +233,19 @@ private fun MangaScreenSmallImpl(
             val animatedBgAlpha by animateFloatAsState(
                 if (firstVisibleItemIndex > 0 || firstVisibleItemScrollOffset > 0) 1f else 0f,
             )
-            MangaAppBar(
+            MangaToolbar(
                 title = state.manga.title,
                 titleAlphaProvider = { animatedTitleAlpha },
                 backgroundAlphaProvider = { animatedBgAlpha },
+                hasFilters = state.manga.chaptersFiltered(),
                 incognitoMode = state.isIncognitoMode,
                 downloadedOnlyMode = state.isDownloadedOnlyMode,
                 onBackClicked = internalOnBackPressed,
-                onShareClicked = onShareClicked,
-                onDownloadClicked = onDownloadActionClicked,
-                onEditCategoryClicked = onEditCategoryClicked,
-                onMigrateClicked = onMigrateClicked,
+                onClickFilter = onFilterClicked,
+                onClickShare = onShareClicked,
+                onClickDownload = onDownloadActionClicked,
+                onClickEditCategory = onEditCategoryClicked,
+                onClickMigrate = onMigrateClicked,
                 actionModeCounter = chapters.count { it.selected },
                 onSelectAll = { onAllChapterSelected(true) },
                 onInvertSelection = { onInvertSelection() },
@@ -355,8 +357,7 @@ private fun MangaScreenSmallImpl(
                     ) {
                         ChapterHeader(
                             chapterCount = chapters.size,
-                            isChapterFiltered = state.manga.chaptersFiltered(),
-                            onFilterButtonClicked = onFilterButtonClicked,
+                            onClick = onFilterClicked,
                         )
                     }
 
@@ -440,18 +441,20 @@ fun MangaScreenLargeImpl(
         Scaffold(
             modifier = Modifier.padding(insetPadding),
             topBar = {
-                MangaAppBar(
+                MangaToolbar(
                     modifier = Modifier.onSizeChanged { onTopBarHeightChanged(it.height) },
                     title = state.manga.title,
                     titleAlphaProvider = { if (chapters.any { it.selected }) 1f else 0f },
                     backgroundAlphaProvider = { 1f },
+                    hasFilters = state.manga.chaptersFiltered(),
                     incognitoMode = state.isIncognitoMode,
                     downloadedOnlyMode = state.isDownloadedOnlyMode,
                     onBackClicked = internalOnBackPressed,
-                    onShareClicked = onShareClicked,
-                    onDownloadClicked = onDownloadActionClicked,
-                    onEditCategoryClicked = onEditCategoryClicked,
-                    onMigrateClicked = onMigrateClicked,
+                    onClickFilter = onFilterButtonClicked,
+                    onClickShare = onShareClicked,
+                    onClickDownload = onDownloadActionClicked,
+                    onClickEditCategory = onEditCategoryClicked,
+                    onClickMigrate = onMigrateClicked,
                     actionModeCounter = chapters.count { it.selected },
                     onSelectAll = { onAllChapterSelected(true) },
                     onInvertSelection = { onInvertSelection() },
@@ -558,8 +561,7 @@ fun MangaScreenLargeImpl(
                         ) {
                             ChapterHeader(
                                 chapterCount = chapters.size,
-                                isChapterFiltered = state.manga.chaptersFiltered(),
-                                onFilterButtonClicked = onFilterButtonClicked,
+                                onClick = onFilterButtonClicked,
                             )
                         }
 
