@@ -1,5 +1,5 @@
 [versions]
-agp_version = "7.3.0"
+agp_version = "7.3.1"
 lifecycle_version = "2.5.1"
 espresso = "3.4.0"
 macrobenchmark = "1.1.0"
