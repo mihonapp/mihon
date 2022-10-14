@@ -63,6 +63,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -76,7 +77,6 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.components.TextButton
 import eu.kanade.presentation.util.clickableNoIndication
-import eu.kanade.presentation.util.quantityStringResource
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.SManga
@@ -184,7 +184,7 @@ fun MangaActionRow(
                 title = if (trackingCount == 0) {
                     stringResource(R.string.manga_tracking_tab)
                 } else {
-                    quantityStringResource(id = R.plurals.num_trackers, quantity = trackingCount, trackingCount)
+                    pluralStringResource(id = R.plurals.num_trackers, count = trackingCount, trackingCount)
                 },
                 icon = if (trackingCount == 0) Icons.Default.Sync else Icons.Default.Done,
                 color = if (trackingCount == 0) defaultActionButtonColor else MaterialTheme.colorScheme.primary,

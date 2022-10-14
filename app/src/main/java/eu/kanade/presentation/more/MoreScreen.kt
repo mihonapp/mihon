@@ -16,13 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.components.SwitchPreference
-import eu.kanade.presentation.util.quantityStringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.more.DownloadQueueState
 import eu.kanade.tachiyomi.ui.more.MoreController
@@ -86,9 +86,9 @@ fun MoreScreen(
                             stringResource(R.string.paused)
                         } else {
                             "${stringResource(R.string.paused)} • ${
-                            quantityStringResource(
-                                R.plurals.download_queue_summary,
-                                pending,
+                            pluralStringResource(
+                                id = R.plurals.download_queue_summary,
+                                count = pending,
                                 pending,
                             )
                             }"
@@ -96,7 +96,7 @@ fun MoreScreen(
                     }
                     is DownloadQueueState.Downloading -> {
                         val pending = (downloadQueueState as DownloadQueueState.Downloading).pending
-                        quantityStringResource(R.plurals.download_queue_summary, pending, pending)
+                        pluralStringResource(id = R.plurals.download_queue_summary, count = pending, pending)
                     }
                 },
                 painter = rememberVectorPainter(Icons.Outlined.GetApp),

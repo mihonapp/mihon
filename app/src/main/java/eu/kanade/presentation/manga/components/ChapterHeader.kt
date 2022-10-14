@@ -14,9 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.util.quantityStringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getResourceColor
 
@@ -37,7 +37,7 @@ fun ChapterHeader(
             text = if (chapterCount == null) {
                 stringResource(R.string.chapters)
             } else {
-                quantityStringResource(id = R.plurals.manga_num_chapters, quantity = chapterCount)
+                pluralStringResource(id = R.plurals.manga_num_chapters, count = chapterCount, chapterCount)
             },
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.weight(1f),
