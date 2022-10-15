@@ -136,11 +136,11 @@ class SyncChaptersWithSource(
 
         val deletedChapterNumbers = TreeSet<Float>()
         val deletedReadChapterNumbers = TreeSet<Float>()
+        val deletedBookmarkedChapterNumbers = TreeSet<Float>()
 
         toDelete.forEach { chapter ->
-            if (chapter.read) {
-                deletedReadChapterNumbers.add(chapter.chapterNumber)
-            }
+            if (chapter.read) deletedReadChapterNumbers.add(chapter.chapterNumber)
+            if (chapter.bookmark) deletedBookmarkedChapterNumbers.add(chapter.chapterNumber)
             deletedChapterNumbers.add(chapter.chapterNumber)
         }
 
@@ -149,20 +149,19 @@ class SyncChaptersWithSource(
 
         // Date fetch is set in such a way that the upper ones will have bigger value than the lower ones
         // Sources MUST return the chapters from most to less recent, which is common.
-
         var itemCount = toAdd.size
         var updatedToAdd = toAdd.map { toAddItem ->
             var chapter = toAddItem.copy(dateFetch = rightNow + itemCount--)
 
             if (chapter.isRecognizedNumber.not() || chapter.chapterNumber !in deletedChapterNumbers) return@map chapter
 
-            if (chapter.chapterNumber in deletedReadChapterNumbers) {
-                chapter = chapter.copy(read = true)
-            }
+            chapter = chapter.copy(
+                read = chapter.chapterNumber in deletedReadChapterNumbers,
+                bookmark = chapter.chapterNumber in deletedBookmarkedChapterNumbers,
+            )
 
             // Try to to use the fetch date of the original entry to not pollute 'Updates' tab
-            val oldDateFetch = deletedChapterNumberDateFetchMap[chapter.chapterNumber]
-            oldDateFetch?.let {
+            deletedChapterNumberDateFetchMap[chapter.chapterNumber]?.let {
                 chapter = chapter.copy(dateFetch = it)
             }
 
