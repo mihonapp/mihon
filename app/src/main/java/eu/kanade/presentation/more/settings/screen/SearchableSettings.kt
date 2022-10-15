@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more.settings.screen
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -10,9 +11,11 @@ import eu.kanade.presentation.more.settings.PreferenceScaffold
 import eu.kanade.presentation.util.LocalBackPress
 
 interface SearchableSettings : Screen {
+
     @Composable
     @ReadOnlyComposable
-    fun getTitle(): String
+    @StringRes
+    fun getTitleRes(): Int
 
     @Composable
     fun getPreferences(): List<Preference>
@@ -25,7 +28,7 @@ interface SearchableSettings : Screen {
     override fun Content() {
         val handleBack = LocalBackPress.currentOrThrow
         PreferenceScaffold(
-            title = getTitle(),
+            titleRes = getTitleRes(),
             onBackPressed = handleBack::invoke,
             actions = { AppBarAction() },
             itemsProvider = { getPreferences() },

@@ -32,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -57,17 +58,19 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class SettingsTrackingScreen : SearchableSettings {
+
     @ReadOnlyComposable
     @Composable
-    override fun getTitle(): String = stringResource(id = R.string.pref_category_tracking)
+    @StringRes
+    override fun getTitleRes() = R.string.pref_category_tracking
 
     @Composable
     override fun RowScope.AppBarAction() {
-        val context = LocalContext.current
-        IconButton(onClick = { context.openInBrowser("https://tachiyomi.org/help/guides/tracking/") }) {
+        val uriHandler = LocalUriHandler.current
+        IconButton(onClick = { uriHandler.openUri("https://tachiyomi.org/help/guides/tracking/") }) {
             Icon(
                 imageVector = Icons.Default.HelpOutline,
-                contentDescription = stringResource(id = R.string.tracking_guide),
+                contentDescription = stringResource(R.string.tracking_guide),
             )
         }
     }
@@ -100,55 +103,55 @@ class SettingsTrackingScreen : SearchableSettings {
         return listOf(
             Preference.PreferenceItem.SwitchPreference(
                 pref = trackPreferences.autoUpdateTrack(),
-                title = stringResource(id = R.string.pref_auto_update_manga_sync),
+                title = stringResource(R.string.pref_auto_update_manga_sync),
             ),
             Preference.PreferenceGroup(
-                title = stringResource(id = R.string.services),
+                title = stringResource(R.string.services),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(id = trackManager.myAnimeList.nameRes()),
+                        title = stringResource(trackManager.myAnimeList.nameRes()),
                         service = trackManager.myAnimeList,
                         login = { context.openInBrowser(MyAnimeListApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackManager.myAnimeList) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(id = trackManager.aniList.nameRes()),
+                        title = stringResource(trackManager.aniList.nameRes()),
                         service = trackManager.aniList,
                         login = { context.openInBrowser(AnilistApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackManager.aniList) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(id = trackManager.kitsu.nameRes()),
+                        title = stringResource(trackManager.kitsu.nameRes()),
                         service = trackManager.kitsu,
                         login = { dialog = LoginDialog(trackManager.kitsu, R.string.email) },
                         logout = { dialog = LogoutDialog(trackManager.kitsu) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(id = trackManager.mangaUpdates.nameRes()),
+                        title = stringResource(trackManager.mangaUpdates.nameRes()),
                         service = trackManager.mangaUpdates,
                         login = { dialog = LoginDialog(trackManager.mangaUpdates, R.string.username) },
                         logout = { dialog = LogoutDialog(trackManager.mangaUpdates) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(id = trackManager.shikimori.nameRes()),
+                        title = stringResource(trackManager.shikimori.nameRes()),
                         service = trackManager.shikimori,
                         login = { context.openInBrowser(ShikimoriApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackManager.shikimori) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(id = trackManager.bangumi.nameRes()),
+                        title = stringResource(trackManager.bangumi.nameRes()),
                         service = trackManager.bangumi,
                         login = { context.openInBrowser(BangumiApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackManager.bangumi) },
                     ),
-                    Preference.infoPreference(stringResource(id = R.string.tracking_info)),
+                    Preference.infoPreference(stringResource(R.string.tracking_info)),
                 ),
             ),
             Preference.PreferenceGroup(
-                title = stringResource(id = R.string.enhanced_services),
+                title = stringResource(R.string.enhanced_services),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(id = trackManager.komga.nameRes()),
+                        title = stringResource(trackManager.komga.nameRes()),
                         service = trackManager.komga,
                         login = {
                             val sourceManager = Injekt.get<SourceManager>()
@@ -164,7 +167,7 @@ class SettingsTrackingScreen : SearchableSettings {
                         },
                         logout = trackManager.komga::logout,
                     ),
-                    Preference.infoPreference(stringResource(id = R.string.enhanced_tracking_info)),
+                    Preference.infoPreference(stringResource(R.string.enhanced_tracking_info)),
                 ),
             ),
         )
@@ -186,14 +189,14 @@ class SettingsTrackingScreen : SearchableSettings {
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
-            title = { Text(text = stringResource(id = R.string.login_title, stringResource(id = service.nameRes()))) },
+            title = { Text(text = stringResource(R.string.login_title, stringResource(service.nameRes()))) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = username,
                         onValueChange = { username = it },
-                        label = { Text(text = stringResource(id = uNameStringRes)) },
+                        label = { Text(text = stringResource(uNameStringRes)) },
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         singleLine = true,
                         isError = inputError && username.text.isEmpty(),
@@ -204,7 +207,7 @@ class SettingsTrackingScreen : SearchableSettings {
                         modifier = Modifier.fillMaxWidth(),
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text(text = stringResource(id = R.string.password)) },
+                        label = { Text(text = stringResource(R.string.password)) },
                         trailingIcon = {
                             IconButton(onClick = { hidePassword = !hidePassword }) {
                                 Icon(
@@ -253,13 +256,13 @@ class SettingsTrackingScreen : SearchableSettings {
                         },
                     ) {
                         val id = if (processing) R.string.loading else R.string.login
-                        Text(text = stringResource(id = id))
+                        Text(text = stringResource(id))
                     }
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = onDismissRequest,
                     ) {
-                        Text(text = stringResource(id = android.R.string.cancel))
+                        Text(text = stringResource(android.R.string.cancel))
                     }
                 }
             },
@@ -293,7 +296,7 @@ class SettingsTrackingScreen : SearchableSettings {
             onDismissRequest = onDismissRequest,
             title = {
                 Text(
-                    text = stringResource(id = R.string.logout_title, stringResource(id = service.nameRes())),
+                    text = stringResource(R.string.logout_title, stringResource(service.nameRes())),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -304,7 +307,7 @@ class SettingsTrackingScreen : SearchableSettings {
                         modifier = Modifier.weight(1f),
                         onClick = onDismissRequest,
                     ) {
-                        Text(text = stringResource(id = android.R.string.cancel))
+                        Text(text = stringResource(android.R.string.cancel))
                     }
                     Button(
                         modifier = Modifier.weight(1f),
@@ -318,7 +321,7 @@ class SettingsTrackingScreen : SearchableSettings {
                             contentColor = MaterialTheme.colorScheme.onError,
                         ),
                     ) {
-                        Text(text = stringResource(id = R.string.logout))
+                        Text(text = stringResource(R.string.logout))
                     }
                 }
             },

@@ -86,12 +86,12 @@ fun MultiSelectListPreferenceWidget(
                         showDialog(false)
                     },
                 ) {
-                    Text(text = stringResource(id = android.R.string.ok))
+                    Text(text = stringResource(android.R.string.ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDialog(false) }) {
-                    Text(text = stringResource(id = android.R.string.cancel))
+                    Text(text = stringResource(android.R.string.cancel))
                 }
             },
         )

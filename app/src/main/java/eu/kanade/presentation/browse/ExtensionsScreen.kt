@@ -369,7 +369,7 @@ private fun ExtensionItemActions(
             IconButton(onClick = { onClickItemCancel(extension) }) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(id = R.string.action_cancel),
+                    contentDescription = stringResource(R.string.action_cancel),
                 )
             }
         }

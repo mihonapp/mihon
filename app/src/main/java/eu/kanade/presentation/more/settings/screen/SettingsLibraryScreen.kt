@@ -1,6 +1,7 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,7 +59,8 @@ class SettingsLibraryScreen : SearchableSettings {
 
     @Composable
     @ReadOnlyComposable
-    override fun getTitle(): String = stringResource(id = R.string.pref_category_library)
+    @StringRes
+    override fun getTitleRes() = R.string.pref_category_library
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -123,14 +125,14 @@ class SettingsLibraryScreen : SearchableSettings {
         // For default category
         val ids = listOf(libraryPreferences.defaultCategory().defaultValue()) +
             allCategories.map { it.id.toInt() }
-        val labels = listOf(stringResource(id = R.string.default_category_summary)) +
+        val labels = listOf(stringResource(R.string.default_category_summary)) +
             allCategories.map { it.visualName(context) }
 
         return Preference.PreferenceGroup(
-            title = stringResource(id = R.string.categories),
+            title = stringResource(R.string.categories),
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(id = R.string.action_edit_categories),
+                    title = stringResource(R.string.action_edit_categories),
                     subtitle = pluralStringResource(
                         id = R.plurals.num_categories,
                         count = userCategoriesCount,
@@ -140,13 +142,13 @@ class SettingsLibraryScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryPreferences.defaultCategory(),
-                    title = stringResource(id = R.string.default_category),
-                    subtitle = selectedCategory?.visualName ?: stringResource(id = R.string.default_category_summary),
+                    title = stringResource(R.string.default_category),
+                    subtitle = selectedCategory?.visualName ?: stringResource(R.string.default_category_summary),
                     entries = ids.zip(labels).toMap(),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPreferences.categorizedDisplaySettings(),
-                    title = stringResource(id = R.string.categorized_display_settings),
+                    title = stringResource(R.string.categorized_display_settings),
                     onValueChanged = {
                         if (!it) {
                             scope.launch {
@@ -176,34 +178,34 @@ class SettingsLibraryScreen : SearchableSettings {
         val libraryUpdateInterval by libraryUpdateIntervalPref.collectAsState()
 
         val deviceRestrictionEntries = mapOf(
-            DEVICE_ONLY_ON_WIFI to stringResource(id = R.string.connected_to_wifi),
-            DEVICE_NETWORK_NOT_METERED to stringResource(id = R.string.network_not_metered),
-            DEVICE_CHARGING to stringResource(id = R.string.charging),
-            DEVICE_BATTERY_NOT_LOW to stringResource(id = R.string.battery_not_low),
+            DEVICE_ONLY_ON_WIFI to stringResource(R.string.connected_to_wifi),
+            DEVICE_NETWORK_NOT_METERED to stringResource(R.string.network_not_metered),
+            DEVICE_CHARGING to stringResource(R.string.charging),
+            DEVICE_BATTERY_NOT_LOW to stringResource(R.string.battery_not_low),
         )
         val deviceRestrictions = libraryUpdateDeviceRestrictionPref.collectAsState()
             .value
             .sorted()
             .map { deviceRestrictionEntries.getOrElse(it) { it } }
-            .let { if (it.isEmpty()) stringResource(id = R.string.none) else it.joinToString() }
+            .let { if (it.isEmpty()) stringResource(R.string.none) else it.joinToString() }
 
         val mangaRestrictionEntries = mapOf(
-            MANGA_HAS_UNREAD to stringResource(id = R.string.pref_update_only_completely_read),
-            MANGA_NON_READ to stringResource(id = R.string.pref_update_only_started),
-            MANGA_NON_COMPLETED to stringResource(id = R.string.pref_update_only_non_completed),
+            MANGA_HAS_UNREAD to stringResource(R.string.pref_update_only_completely_read),
+            MANGA_NON_READ to stringResource(R.string.pref_update_only_started),
+            MANGA_NON_COMPLETED to stringResource(R.string.pref_update_only_non_completed),
         )
         val mangaRestrictions = libraryUpdateMangaRestrictionPref.collectAsState()
             .value
             .map { mangaRestrictionEntries.getOrElse(it) { it } }
-            .let { if (it.isEmpty()) stringResource(id = R.string.none) else it.joinToString() }
+            .let { if (it.isEmpty()) stringResource(R.string.none) else it.joinToString() }
 
         val included by libraryUpdateCategoriesPref.collectAsState()
         val excluded by libraryUpdateCategoriesExcludePref.collectAsState()
         var showDialog by rememberSaveable { mutableStateOf(false) }
         if (showDialog) {
             TriStateListDialog(
-                title = stringResource(id = R.string.categories),
-                message = stringResource(id = R.string.pref_library_update_categories_details),
+                title = stringResource(R.string.categories),
+                message = stringResource(R.string.pref_library_update_categories_details),
                 items = allCategories,
                 initialChecked = included.mapNotNull { id -> allCategories.find { it.id.toString() == id } },
                 initialInversed = excluded.mapNotNull { id -> allCategories.find { it.id.toString() == id } },
@@ -217,19 +219,19 @@ class SettingsLibraryScreen : SearchableSettings {
             )
         }
         return Preference.PreferenceGroup(
-            title = stringResource(id = R.string.pref_category_library_update),
+            title = stringResource(R.string.pref_category_library_update),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryUpdateIntervalPref,
-                    title = stringResource(id = R.string.pref_library_update_interval),
+                    title = stringResource(R.string.pref_library_update_interval),
                     subtitle = "%s",
                     entries = mapOf(
-                        0 to stringResource(id = R.string.update_never),
-                        12 to stringResource(id = R.string.update_12hour),
-                        24 to stringResource(id = R.string.update_24hour),
-                        48 to stringResource(id = R.string.update_48hour),
-                        72 to stringResource(id = R.string.update_72hour),
-                        168 to stringResource(id = R.string.update_weekly),
+                        0 to stringResource(R.string.update_never),
+                        12 to stringResource(R.string.update_12hour),
+                        24 to stringResource(R.string.update_24hour),
+                        48 to stringResource(R.string.update_48hour),
+                        72 to stringResource(R.string.update_72hour),
+                        168 to stringResource(R.string.update_weekly),
                     ),
                     onValueChanged = {
                         LibraryUpdateJob.setupTask(context, it)
@@ -239,8 +241,8 @@ class SettingsLibraryScreen : SearchableSettings {
                 Preference.PreferenceItem.MultiSelectListPreference(
                     pref = libraryUpdateDeviceRestrictionPref,
                     enabled = libraryUpdateInterval > 0,
-                    title = stringResource(id = R.string.pref_library_update_restriction),
-                    subtitle = stringResource(id = R.string.restrictions, deviceRestrictions),
+                    title = stringResource(R.string.pref_library_update_restriction),
+                    subtitle = stringResource(R.string.restrictions, deviceRestrictions),
                     entries = deviceRestrictionEntries,
                     onValueChanged = {
                         // Post to event looper to allow the preference to be updated.
@@ -250,12 +252,12 @@ class SettingsLibraryScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.MultiSelectListPreference(
                     pref = libraryUpdateMangaRestrictionPref,
-                    title = stringResource(id = R.string.pref_library_update_manga_restriction),
+                    title = stringResource(R.string.pref_library_update_manga_restriction),
                     subtitle = mangaRestrictions,
                     entries = mangaRestrictionEntries,
                 ),
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(id = R.string.categories),
+                    title = stringResource(R.string.categories),
                     subtitle = getCategoriesLabel(
                         allCategories = allCategories,
                         included = included,
@@ -265,14 +267,14 @@ class SettingsLibraryScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPreferences.autoUpdateMetadata(),
-                    title = stringResource(id = R.string.pref_library_update_refresh_metadata),
-                    subtitle = stringResource(id = R.string.pref_library_update_refresh_metadata_summary),
+                    title = stringResource(R.string.pref_library_update_refresh_metadata),
+                    subtitle = stringResource(R.string.pref_library_update_refresh_metadata_summary),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPreferences.autoUpdateTrackers(),
                     enabled = Injekt.get<TrackManager>().hasLoggedServices(),
-                    title = stringResource(id = R.string.pref_library_update_refresh_trackers),
-                    subtitle = stringResource(id = R.string.pref_library_update_refresh_trackers_summary),
+                    title = stringResource(R.string.pref_library_update_refresh_trackers),
+                    subtitle = stringResource(R.string.pref_library_update_refresh_trackers_summary),
                 ),
             ),
         )
@@ -291,7 +293,7 @@ class SettingsLibraryScreen : SearchableSettings {
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
-            title = { Text(text = stringResource(id = R.string.pref_library_columns)) },
+            title = { Text(text = stringResource(R.string.pref_library_columns)) },
             text = {
                 Row {
                     Column(
@@ -299,7 +301,7 @@ class SettingsLibraryScreen : SearchableSettings {
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
-                            text = stringResource(id = R.string.portrait),
+                            text = stringResource(R.string.portrait),
                             style = MaterialTheme.typography.labelMedium,
                         )
                         NumberPicker(
@@ -320,7 +322,7 @@ class SettingsLibraryScreen : SearchableSettings {
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
-                            text = stringResource(id = R.string.landscape),
+                            text = stringResource(R.string.landscape),
                             style = MaterialTheme.typography.labelMedium,
                         )
                         NumberPicker(
@@ -339,12 +341,12 @@ class SettingsLibraryScreen : SearchableSettings {
             },
             dismissButton = {
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(id = android.R.string.cancel))
+                    Text(text = stringResource(android.R.string.cancel))
                 }
             },
             confirmButton = {
                 TextButton(onClick = { onValueChanged(portraitValue, landscapeValue) }) {
-                    Text(text = stringResource(id = android.R.string.ok))
+                    Text(text = stringResource(android.R.string.ok))
                 }
             },
         )

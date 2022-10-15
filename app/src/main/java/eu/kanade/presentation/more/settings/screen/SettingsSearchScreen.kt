@@ -115,7 +115,7 @@ class SettingsSearchScreen : Screen {
                                 decorationBox = {
                                     if (textFieldValue.text.isEmpty()) {
                                         Text(
-                                            text = stringResource(id = R.string.action_search_settings),
+                                            text = stringResource(R.string.action_search_settings),
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             style = MaterialTheme.typography.bodyLarge,
                                         )
@@ -218,7 +218,7 @@ private fun SearchResult(
                     /* Don't show anything just yet */
                 }
                 // No result
-                it.isEmpty() -> item { EmptyScreen(stringResource(id = R.string.no_results_found)) }
+                it.isEmpty() -> item { EmptyScreen(stringResource(R.string.no_results_found)) }
                 // Show result list
                 else -> items(
                     items = it,
@@ -256,7 +256,7 @@ private fun SearchResult(
 private fun getIndex() = settingScreens
     .map { screen ->
         SettingsData(
-            title = screen.getTitle(),
+            title = stringResource(screen.getTitleRes()),
             route = screen,
             contents = screen.getPreferences(),
         )

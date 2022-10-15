@@ -117,7 +117,7 @@ fun <T> TriStateListDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(id = android.R.string.cancel))
+                Text(text = stringResource(android.R.string.cancel))
             }
         },
         confirmButton = {
@@ -132,7 +132,7 @@ fun <T> TriStateListDialog(
                     onValueChanged(included, excluded)
                 },
             ) {
-                Text(text = stringResource(id = android.R.string.ok))
+                Text(text = stringResource(android.R.string.ok))
             }
         },
     )

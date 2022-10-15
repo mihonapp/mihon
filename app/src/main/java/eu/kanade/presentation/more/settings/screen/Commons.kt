@@ -42,6 +42,6 @@ fun getCategoriesLabel(
         allExcluded -> stringResource(R.string.all)
         else -> excludedCategories.joinToString { it.visualName(context) }
     }
-    return stringResource(id = R.string.include, includedItemsText) + "\n" +
-        stringResource(id = R.string.exclude, excludedItemsText)
+    return stringResource(R.string.include, includedItemsText) + "\n" +
+        stringResource(R.string.exclude, excludedItemsText)
 }

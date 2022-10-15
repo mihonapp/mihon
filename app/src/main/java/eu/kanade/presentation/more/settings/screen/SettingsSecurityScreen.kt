@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more.settings.screen
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
@@ -21,7 +22,8 @@ class SettingsSecurityScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable
-    override fun getTitle(): String = stringResource(id = R.string.pref_category_security)
+    @StringRes
+    override fun getTitleRes() = R.string.pref_category_security
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -36,7 +38,7 @@ class SettingsSecurityScreen : SearchableSettings {
         return listOf(
             Preference.PreferenceItem.SwitchPreference(
                 pref = useAuthPref,
-                title = stringResource(id = R.string.lock_with_biometrics),
+                title = stringResource(R.string.lock_with_biometrics),
                 enabled = authSupported,
                 onValueChanged = {
                     (context as FragmentActivity).authenticate(
@@ -46,14 +48,14 @@ class SettingsSecurityScreen : SearchableSettings {
             ),
             Preference.PreferenceItem.ListPreference(
                 pref = securityPreferences.lockAppAfter(),
-                title = stringResource(id = R.string.lock_when_idle),
+                title = stringResource(R.string.lock_when_idle),
                 subtitle = "%s",
                 enabled = authSupported && useAuth,
                 entries = LockAfterValues
                     .associateWith {
                         when (it) {
-                            -1 -> stringResource(id = R.string.lock_never)
-                            0 -> stringResource(id = R.string.lock_always)
+                            -1 -> stringResource(R.string.lock_never)
+                            0 -> stringResource(R.string.lock_always)
                             else -> pluralStringResource(id = R.plurals.lock_after_mins, count = it, it)
                         }
                     },
@@ -65,16 +67,16 @@ class SettingsSecurityScreen : SearchableSettings {
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = securityPreferences.hideNotificationContent(),
-                title = stringResource(id = R.string.hide_notification_content),
+                title = stringResource(R.string.hide_notification_content),
             ),
             Preference.PreferenceItem.ListPreference(
                 pref = securityPreferences.secureScreen(),
-                title = stringResource(id = R.string.secure_screen),
+                title = stringResource(R.string.secure_screen),
                 subtitle = "%s",
                 entries = SecurityPreferences.SecureScreenMode.values()
-                    .associateWith { stringResource(id = it.titleResId) },
+                    .associateWith { stringResource(it.titleResId) },
             ),
-            Preference.infoPreference(stringResource(id = R.string.secure_screen_summary)),
+            Preference.infoPreference(stringResource(R.string.secure_screen_summary)),
         )
     }
 }

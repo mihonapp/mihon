@@ -88,7 +88,7 @@ fun EmptyScreen(
                     actions.forEach {
                         ActionButton(
                             modifier = Modifier.weight(1f),
-                            title = stringResource(id = it.stringResId),
+                            title = stringResource(it.stringResId),
                             icon = it.icon,
                             onClick = it.onClick,
                         )

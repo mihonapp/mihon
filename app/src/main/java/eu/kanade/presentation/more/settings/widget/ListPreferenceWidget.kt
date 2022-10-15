@@ -70,7 +70,7 @@ fun <T> ListPreferenceWidget(
             },
             confirmButton = {
                 TextButton(onClick = { showDialog(false) }) {
-                    Text(text = stringResource(id = android.R.string.cancel))
+                    Text(text = stringResource(android.R.string.cancel))
                 }
             },
         )

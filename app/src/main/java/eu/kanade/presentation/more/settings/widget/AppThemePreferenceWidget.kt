@@ -101,7 +101,7 @@ private fun AppThemesList(
                 }
 
                 Text(
-                    text = stringResource(id = appTheme.titleResId!!),
+                    text = stringResource(appTheme.titleResId!!),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp)

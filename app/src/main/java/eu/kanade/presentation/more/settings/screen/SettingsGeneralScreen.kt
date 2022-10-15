@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -21,9 +22,11 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class SettingsGeneralScreen : SearchableSettings {
+
     @Composable
     @ReadOnlyComposable
-    override fun getTitle(): String = stringResource(id = R.string.pref_category_general)
+    @StringRes
+    override fun getTitleRes() = R.string.pref_category_general
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -33,14 +36,14 @@ class SettingsGeneralScreen : SearchableSettings {
             add(
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPrefs.showUpdatesNavBadge(),
-                    title = stringResource(id = R.string.pref_library_update_show_tab_badge),
+                    title = stringResource(R.string.pref_library_update_show_tab_badge),
                 ),
             )
 
             add(
                 Preference.PreferenceItem.SwitchPreference(
                     pref = prefs.confirmExit(),
-                    title = stringResource(id = R.string.pref_confirm_exit),
+                    title = stringResource(R.string.pref_confirm_exit),
                 ),
             )
 
@@ -48,7 +51,7 @@ class SettingsGeneralScreen : SearchableSettings {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 add(
                     Preference.PreferenceItem.TextPreference(
-                        title = stringResource(id = R.string.pref_manage_notifications),
+                        title = stringResource(R.string.pref_manage_notifications),
                         onClick = {
                             val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                                 putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
@@ -64,7 +67,7 @@ class SettingsGeneralScreen : SearchableSettings {
             add(
                 Preference.PreferenceItem.BasicListPreference(
                     value = currentLanguage,
-                    title = stringResource(id = R.string.pref_app_language),
+                    title = stringResource(R.string.pref_app_language),
                     subtitle = "%s",
                     entries = langs,
                     onValueChanged = { newValue ->

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,9 +54,11 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class SettingsBackupScreen : SearchableSettings {
+
     @ReadOnlyComposable
     @Composable
-    override fun getTitle(): String = stringResource(id = R.string.label_backup)
+    @StringRes
+    override fun getTitleRes() = R.string.label_backup
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -110,8 +113,8 @@ class SettingsBackupScreen : SearchableSettings {
         }
 
         return Preference.PreferenceItem.TextPreference(
-            title = stringResource(id = R.string.pref_create_backup),
-            subtitle = stringResource(id = R.string.pref_create_backup_summ),
+            title = stringResource(R.string.pref_create_backup),
+            subtitle = stringResource(R.string.pref_create_backup_summ),
             onClick = {
                 scope.launch {
                     if (!BackupCreatorJob.isManualJobRunning(context)) {
@@ -135,7 +138,7 @@ class SettingsBackupScreen : SearchableSettings {
         val flags = remember { mutableStateListOf<Int>() }
         AlertDialog(
             onDismissRequest = onDismissRequest,
-            title = { Text(text = stringResource(id = R.string.backup_choice)) },
+            title = { Text(text = stringResource(R.string.backup_choice)) },
             text = {
                 val choices = remember {
                     mapOf(
@@ -148,13 +151,13 @@ class SettingsBackupScreen : SearchableSettings {
                 Column {
                     CreateBackupDialogItem(
                         isSelected = true,
-                        title = stringResource(id = R.string.manga),
+                        title = stringResource(R.string.manga),
                     )
                     choices.forEach { (k, v) ->
                         val isSelected = flags.contains(k)
                         CreateBackupDialogItem(
                             isSelected = isSelected,
-                            title = stringResource(id = v),
+                            title = stringResource(v),
                             modifier = Modifier.clickable {
                                 if (isSelected) {
                                     flags.remove(k)
@@ -168,7 +171,7 @@ class SettingsBackupScreen : SearchableSettings {
             },
             dismissButton = {
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(id = android.R.string.cancel))
+                    Text(text = stringResource(android.R.string.cancel))
                 }
             },
             confirmButton = {
@@ -178,7 +181,7 @@ class SettingsBackupScreen : SearchableSettings {
                         onConfirm(flag)
                     },
                 ) {
-                    Text(text = stringResource(id = android.R.string.ok))
+                    Text(text = stringResource(android.R.string.ok))
                 }
             },
         )
@@ -218,7 +221,7 @@ class SettingsBackupScreen : SearchableSettings {
                     val clipboard = LocalClipboardManager.current
                     AlertDialog(
                         onDismissRequest = onDismissRequest,
-                        title = { Text(text = stringResource(id = R.string.invalid_backup_file)) },
+                        title = { Text(text = stringResource(R.string.invalid_backup_file)) },
                         text = { Text(text = err.message) },
                         dismissButton = {
                             TextButton(
@@ -228,12 +231,12 @@ class SettingsBackupScreen : SearchableSettings {
                                     onDismissRequest()
                                 },
                             ) {
-                                Text(text = stringResource(id = R.string.copy))
+                                Text(text = stringResource(R.string.copy))
                             }
                         },
                         confirmButton = {
                             TextButton(onClick = onDismissRequest) {
-                                Text(text = stringResource(id = android.R.string.ok))
+                                Text(text = stringResource(android.R.string.ok))
                             }
                         },
                     )
@@ -241,9 +244,9 @@ class SettingsBackupScreen : SearchableSettings {
                 is MissingRestoreComponents -> {
                     AlertDialog(
                         onDismissRequest = onDismissRequest,
-                        title = { Text(text = stringResource(id = R.string.pref_restore_backup)) },
+                        title = { Text(text = stringResource(R.string.pref_restore_backup)) },
                         text = {
-                            var msg = stringResource(id = R.string.backup_restore_content_full)
+                            var msg = stringResource(R.string.backup_restore_content_full)
                             if (err.sources.isNotEmpty()) {
                                 msg += "\n\n${stringResource(R.string.backup_restore_missing_sources)}\n${err.sources.joinToString("\n") { "- $it" }}"
                             }
@@ -259,7 +262,7 @@ class SettingsBackupScreen : SearchableSettings {
                                     onDismissRequest()
                                 },
                             ) {
-                                Text(text = stringResource(id = R.string.action_restore))
+                                Text(text = stringResource(R.string.action_restore))
                             }
                         },
                     )
@@ -287,8 +290,8 @@ class SettingsBackupScreen : SearchableSettings {
         }
 
         return Preference.PreferenceItem.TextPreference(
-            title = stringResource(id = R.string.pref_restore_backup),
-            subtitle = stringResource(id = R.string.pref_restore_backup_summ),
+            title = stringResource(R.string.pref_restore_backup),
+            subtitle = stringResource(R.string.pref_restore_backup_summ),
             onClick = {
                 if (!BackupRestoreService.isRunning(context)) {
                     if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
@@ -324,17 +327,17 @@ class SettingsBackupScreen : SearchableSettings {
         }
 
         return Preference.PreferenceGroup(
-            title = stringResource(id = R.string.pref_backup_service_category),
+            title = stringResource(R.string.pref_backup_service_category),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = backupPreferences.backupInterval(),
-                    title = stringResource(id = R.string.pref_backup_interval),
+                    title = stringResource(R.string.pref_backup_interval),
                     entries = mapOf(
-                        6 to stringResource(id = R.string.update_6hour),
-                        12 to stringResource(id = R.string.update_12hour),
-                        24 to stringResource(id = R.string.update_24hour),
-                        48 to stringResource(id = R.string.update_48hour),
-                        168 to stringResource(id = R.string.update_weekly),
+                        6 to stringResource(R.string.update_6hour),
+                        12 to stringResource(R.string.update_12hour),
+                        24 to stringResource(R.string.update_24hour),
+                        48 to stringResource(R.string.update_48hour),
+                        168 to stringResource(R.string.update_weekly),
                     ),
                     onValueChanged = {
                         BackupCreatorJob.setupTask(context, it)
@@ -342,7 +345,7 @@ class SettingsBackupScreen : SearchableSettings {
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(id = R.string.pref_backup_directory),
+                    title = stringResource(R.string.pref_backup_directory),
                     subtitle = remember(backupDir) {
                         UniFile.fromUri(context, backupDir.toUri()).filePath!! + "/automatic"
                     },
@@ -350,10 +353,10 @@ class SettingsBackupScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = backupPreferences.numberOfBackups(),
-                    title = stringResource(id = R.string.pref_backup_slots),
+                    title = stringResource(R.string.pref_backup_slots),
                     entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
                 ),
-                Preference.infoPreference(stringResource(id = R.string.backup_info)),
+                Preference.infoPreference(stringResource(R.string.backup_info)),
             ),
         )
     }

@@ -1,13 +1,15 @@
 package eu.kanade.presentation.more.settings
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.Scaffold
 
 @Composable
 fun PreferenceScaffold(
-    title: String,
+    @StringRes titleRes: Int,
     actions: @Composable RowScope.() -> Unit = {},
     onBackPressed: () -> Unit = {},
     itemsProvider: @Composable () -> List<Preference>,
@@ -15,7 +17,7 @@ fun PreferenceScaffold(
     Scaffold(
         topBar = { scrollBehavior ->
             AppBar(
-                title = title,
+                title = stringResource(titleRes),
                 navigateUp = onBackPressed,
                 actions = actions,
                 scrollBehavior = scrollBehavior,

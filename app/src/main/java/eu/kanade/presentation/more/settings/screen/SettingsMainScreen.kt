@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more.settings.screen
 
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChromeReaderMode
 import androidx.compose.material.icons.outlined.Code
@@ -26,9 +27,11 @@ import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.tachiyomi.R
 
 object SettingsMainScreen : SearchableSettings {
+
     @Composable
     @ReadOnlyComposable
-    override fun getTitle(): String = stringResource(id = R.string.label_settings)
+    @StringRes
+    override fun getTitleRes() = R.string.label_settings
 
     @Composable
     @NonRestartableComposable
@@ -93,7 +96,7 @@ object SettingsMainScreen : SearchableSettings {
         val navigator = LocalNavigator.currentOrThrow
         val backPress = LocalBackPress.currentOrThrow
         PreferenceScaffold(
-            title = getTitle(),
+            titleRes = getTitleRes(),
             actions = {
                 AppBarActions(
                     listOf(

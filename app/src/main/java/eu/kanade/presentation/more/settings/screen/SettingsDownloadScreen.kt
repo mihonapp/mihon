@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.collectAsState
@@ -33,9 +34,11 @@ import uy.kohesive.injekt.api.get
 import java.io.File
 
 class SettingsDownloadScreen : SearchableSettings {
+
     @ReadOnlyComposable
     @Composable
-    override fun getTitle(): String = stringResource(id = R.string.pref_category_downloads)
+    @StringRes
+    override fun getTitleRes() = R.string.pref_category_downloads
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -47,16 +50,16 @@ class SettingsDownloadScreen : SearchableSettings {
             getDownloadLocationPreference(downloadPreferences = downloadPreferences),
             Preference.PreferenceItem.SwitchPreference(
                 pref = downloadPreferences.downloadOnlyOverWifi(),
-                title = stringResource(id = R.string.connected_to_wifi),
+                title = stringResource(R.string.connected_to_wifi),
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = downloadPreferences.saveChaptersAsCBZ(),
-                title = stringResource(id = R.string.save_chapter_as_cbz),
+                title = stringResource(R.string.save_chapter_as_cbz),
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = downloadPreferences.splitTallImages(),
-                title = stringResource(id = R.string.split_tall_images),
-                subtitle = stringResource(id = R.string.split_tall_images_summary),
+                title = stringResource(R.string.split_tall_images),
+                subtitle = stringResource(R.string.split_tall_images_summary),
             ),
             getDeleteChaptersGroup(
                 downloadPreferences = downloadPreferences,
@@ -97,13 +100,13 @@ class SettingsDownloadScreen : SearchableSettings {
 
         return Preference.PreferenceItem.ListPreference(
             pref = currentDirPref,
-            title = stringResource(id = R.string.pref_download_directory),
+            title = stringResource(R.string.pref_download_directory),
             subtitle = remember(currentDir) {
                 UniFile.fromUri(context, currentDir.toUri()).filePath!!
             },
             entries = mapOf(
                 defaultDirPair,
-                customDirEntryKey to stringResource(id = R.string.custom_dir),
+                customDirEntryKey to stringResource(R.string.custom_dir),
             ),
             onValueChanged = {
                 val default = it == defaultDirPair.first
@@ -117,7 +120,7 @@ class SettingsDownloadScreen : SearchableSettings {
 
     @Composable
     private fun rememberDefaultDownloadDir(): Pair<String, String> {
-        val appName = stringResource(id = R.string.app_name)
+        val appName = stringResource(R.string.app_name)
         return remember {
             val file = UniFile.fromFile(
                 File(
@@ -135,27 +138,27 @@ class SettingsDownloadScreen : SearchableSettings {
         categories: List<Category>,
     ): Preference.PreferenceGroup {
         return Preference.PreferenceGroup(
-            title = stringResource(id = R.string.pref_category_delete_chapters),
+            title = stringResource(R.string.pref_category_delete_chapters),
             preferenceItems = listOf(
                 Preference.PreferenceItem.SwitchPreference(
                     pref = downloadPreferences.removeAfterMarkedAsRead(),
-                    title = stringResource(id = R.string.pref_remove_after_marked_as_read),
+                    title = stringResource(R.string.pref_remove_after_marked_as_read),
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = downloadPreferences.removeAfterReadSlots(),
-                    title = stringResource(id = R.string.pref_remove_after_read),
+                    title = stringResource(R.string.pref_remove_after_read),
                     entries = mapOf(
-                        -1 to stringResource(id = R.string.disabled),
-                        0 to stringResource(id = R.string.last_read_chapter),
-                        1 to stringResource(id = R.string.second_to_last),
-                        2 to stringResource(id = R.string.third_to_last),
-                        3 to stringResource(id = R.string.fourth_to_last),
-                        4 to stringResource(id = R.string.fifth_to_last),
+                        -1 to stringResource(R.string.disabled),
+                        0 to stringResource(R.string.last_read_chapter),
+                        1 to stringResource(R.string.second_to_last),
+                        2 to stringResource(R.string.third_to_last),
+                        3 to stringResource(R.string.fourth_to_last),
+                        4 to stringResource(R.string.fifth_to_last),
                     ),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = downloadPreferences.removeBookmarkedChapters(),
-                    title = stringResource(id = R.string.pref_remove_bookmarked_chapters),
+                    title = stringResource(R.string.pref_remove_bookmarked_chapters),
                 ),
                 getExcludedCategoriesPreference(
                     downloadPreferences = downloadPreferences,
@@ -170,7 +173,7 @@ class SettingsDownloadScreen : SearchableSettings {
         downloadPreferences: DownloadPreferences,
         categories: () -> List<Category>,
     ): Preference.PreferenceItem.MultiSelectListPreference {
-        val none = stringResource(id = R.string.none)
+        val none = stringResource(R.string.none)
         val pref = downloadPreferences.removeExcludeCategories()
         val entries = categories().associate { it.id.toString() to it.visualName }
         val subtitle by produceState(initialValue = "") {
@@ -186,7 +189,7 @@ class SettingsDownloadScreen : SearchableSettings {
         }
         return Preference.PreferenceItem.MultiSelectListPreference(
             pref = pref,
-            title = stringResource(id = R.string.pref_remove_exclude_categories),
+            title = stringResource(R.string.pref_remove_exclude_categories),
             subtitle = subtitle,
             entries = entries,
         )
@@ -208,8 +211,8 @@ class SettingsDownloadScreen : SearchableSettings {
         var showDialog by rememberSaveable { mutableStateOf(false) }
         if (showDialog) {
             TriStateListDialog(
-                title = stringResource(id = R.string.categories),
-                message = stringResource(id = R.string.pref_download_new_categories_details),
+                title = stringResource(R.string.categories),
+                message = stringResource(R.string.pref_download_new_categories_details),
                 items = allCategories,
                 initialChecked = included.mapNotNull { id -> allCategories.find { it.id.toString() == id } },
                 initialInversed = excluded.mapNotNull { id -> allCategories.find { it.id.toString() == id } },
@@ -224,14 +227,14 @@ class SettingsDownloadScreen : SearchableSettings {
         }
 
         return Preference.PreferenceGroup(
-            title = stringResource(id = R.string.pref_download_new),
+            title = stringResource(R.string.pref_download_new),
             preferenceItems = listOf(
                 Preference.PreferenceItem.SwitchPreference(
                     pref = downloadNewChaptersPref,
-                    title = stringResource(id = R.string.pref_download_new),
+                    title = stringResource(R.string.pref_download_new),
                 ),
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(id = R.string.categories),
+                    title = stringResource(R.string.categories),
                     subtitle = getCategoriesLabel(
                         allCategories = allCategories,
                         included = included,
@@ -249,20 +252,20 @@ class SettingsDownloadScreen : SearchableSettings {
         downloadPreferences: DownloadPreferences,
     ): Preference.PreferenceGroup {
         return Preference.PreferenceGroup(
-            title = stringResource(id = R.string.download_ahead),
+            title = stringResource(R.string.download_ahead),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = downloadPreferences.autoDownloadWhileReading(),
-                    title = stringResource(id = R.string.auto_download_while_reading),
+                    title = stringResource(R.string.auto_download_while_reading),
                     entries = listOf(0, 2, 3, 5, 10).associateWith {
                         if (it == 0) {
-                            stringResource(id = R.string.disabled)
+                            stringResource(R.string.disabled)
                         } else {
                             pluralStringResource(id = R.plurals.next_unread_chapters, count = it, it)
                         }
                     },
                 ),
-                Preference.infoPreference(stringResource(id = R.string.download_ahead_info)),
+                Preference.infoPreference(stringResource(R.string.download_ahead_info)),
             ),
         )
     }
