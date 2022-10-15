@@ -1,0 +1,79 @@
+package eu.kanade.presentation.more.settings.screen
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
+import eu.kanade.domain.base.BasePreferences
+import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
+import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
+
+class SettingsBrowseScreen : SearchableSettings {
+    @ReadOnlyComposable
+    @Composable
+    override fun getTitle(): String = stringResource(id = R.string.browse)
+
+    @Composable
+    override fun getPreferences(): List<Preference> {
+        val context = LocalContext.current
+        val sourcePreferences = remember { Injekt.get<SourcePreferences>() }
+        val preferences = remember { Injekt.get<BasePreferences>() }
+        return listOf(
+            Preference.PreferenceGroup(
+                title = stringResource(id = R.string.label_sources),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.SwitchPreference(
+                        pref = sourcePreferences.duplicatePinnedSources(),
+                        title = stringResource(id = R.string.pref_duplicate_pinned_sources),
+                        subtitle = stringResource(id = R.string.pref_duplicate_pinned_sources_summary),
+                    ),
+                ),
+            ),
+            Preference.PreferenceGroup(
+                title = stringResource(id = R.string.label_extensions),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.SwitchPreference(
+                        pref = preferences.automaticExtUpdates(),
+                        title = stringResource(id = R.string.pref_enable_automatic_extension_updates),
+                        onValueChanged = {
+                            ExtensionUpdateJob.setupTask(context, it)
+                            true
+                        },
+                    ),
+                ),
+            ),
+            Preference.PreferenceGroup(
+                title = stringResource(id = R.string.action_global_search),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.SwitchPreference(
+                        pref = sourcePreferences.searchPinnedSourcesOnly(),
+                        title = stringResource(id = R.string.pref_search_pinned_sources_only),
+                    ),
+                ),
+            ),
+            Preference.PreferenceGroup(
+                title = stringResource(id = R.string.pref_category_nsfw_content),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.SwitchPreference(
+                        pref = sourcePreferences.showNsfwSource(),
+                        title = stringResource(id = R.string.pref_show_nsfw_source),
+                        subtitle = stringResource(id = R.string.requires_app_restart),
+                        onValueChanged = {
+                            (context as FragmentActivity).authenticate(
+                                title = context.getString(R.string.pref_category_nsfw_content),
+                            )
+                        },
+                    ),
+                    Preference.infoPreference(stringResource(id = R.string.parental_controls_info)),
+                ),
+            ),
+        )
+    }
+}

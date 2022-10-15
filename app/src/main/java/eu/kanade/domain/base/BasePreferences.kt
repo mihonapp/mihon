@@ -23,4 +23,6 @@ class BasePreferences(
         "extension_installer",
         if (DeviceUtil.isMiui) PreferenceValues.ExtensionInstaller.LEGACY else PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER,
     )
+
+    fun acraEnabled() = preferenceStore.getBoolean("acra.enable", true)
 }

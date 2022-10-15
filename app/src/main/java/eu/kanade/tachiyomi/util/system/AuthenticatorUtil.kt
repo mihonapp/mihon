@@ -10,6 +10,9 @@ import androidx.biometric.auth.AuthPromptCallback
 import androidx.biometric.auth.startClass2BiometricOrCredentialAuthentication
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import eu.kanade.tachiyomi.R
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 object AuthenticatorUtil {
 
@@ -40,6 +43,45 @@ object AuthenticatorUtil {
             confirmationRequired = confirmationRequired,
             executor = ContextCompat.getMainExecutor(this),
             callback = callback,
+        )
+    }
+
+    suspend fun FragmentActivity.authenticate(
+        title: String,
+        subtitle: String? = getString(R.string.confirm_lock_change),
+    ): Boolean = suspendCancellableCoroutine { cont ->
+        if (!isAuthenticationSupported()) {
+            cont.resume(true)
+            return@suspendCancellableCoroutine
+        }
+
+        startAuthentication(
+            title,
+            subtitle,
+            callback = object : AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(
+                    activity: FragmentActivity?,
+                    result: BiometricPrompt.AuthenticationResult,
+                ) {
+                    super.onAuthenticationSucceeded(activity, result)
+                    cont.resume(true)
+                }
+
+                override fun onAuthenticationError(
+                    activity: FragmentActivity?,
+                    errorCode: Int,
+                    errString: CharSequence,
+                ) {
+                    super.onAuthenticationError(activity, errorCode, errString)
+                    activity?.toast(errString.toString())
+                    cont.resume(false)
+                }
+
+                override fun onAuthenticationFailed(activity: FragmentActivity?) {
+                    super.onAuthenticationFailed(activity)
+                    cont.resume(false)
+                }
+            },
         )
     }
 

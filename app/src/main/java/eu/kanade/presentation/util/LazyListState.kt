@@ -9,6 +9,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 @Composable
+fun LazyListState.isScrolledToStart(): Boolean {
+    return remember {
+        derivedStateOf {
+            val firstItem = layoutInfo.visibleItemsInfo.firstOrNull()
+            firstItem == null || firstItem.offset == layoutInfo.viewportStartOffset
+        }
+    }.value
+}
+
+@Composable
 fun LazyListState.isScrolledToEnd(): Boolean {
     return remember {
         derivedStateOf {

@@ -8,6 +8,7 @@ flowbinding_version = "1.2.0"
 shizuku_version = "12.2.0"
 sqldelight = "1.5.4"
 leakcanary = "2.9.1"
+voyager = "1.0.0-beta16"
 
 [libraries]
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
@@ -90,6 +91,12 @@ sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.
 
 junit = "org.junit.jupiter:junit-jupiter:5.9.1"
 
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+
+materialmotion-core = "io.github.fornewid:material-motion-compose-core:0.10.2-beta"
+numberpicker= "com.chargemap.compose:numberpicker:1.0.3"
+
 [bundles]
 reactivex = ["rxandroid", "rxjava", "rxrelay"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-dnsoverhttps"]
@@ -100,6 +107,7 @@ coil = ["coil-core", "coil-gif", "coil-compose"]
 flowbinding = ["flowbinding-android", "flowbinding-appcompat"]
 conductor = ["conductor-core", "conductor-support-preference"]
 shizuku = ["shizuku-api", "shizuku-provider"]
+voyager = ["voyager-navigator", "voyager-transitions"]
 
 [plugins]
 kotlinter = { id = "org.jmailen.kotlinter", version = "3.12.0" }

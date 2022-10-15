@@ -141,12 +141,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     sqldelight {
@@ -178,6 +178,7 @@ dependencies {
     implementation(compose.accompanist.flowlayout)
     implementation(compose.accompanist.pager.core)
     implementation(compose.accompanist.pager.indicators)
+    implementation(compose.accompanist.permissions)
 
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)
@@ -264,6 +265,9 @@ dependencies {
     implementation(libs.markwon)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.cascade)
+    implementation(libs.numberpicker)
+    implementation(libs.bundles.voyager)
+    implementation(libs.materialmotion.core)
 
     // Conductor
     implementation(libs.bundles.conductor)
@@ -315,10 +319,12 @@ tasks {
         kotlinOptions.freeCompilerArgs += listOf(
             "-opt-in=coil.annotation.ExperimentalCoilApi",
             "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi",
+            "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi",
             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
             "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
             "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",

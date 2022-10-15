@@ -56,6 +56,17 @@ abstract class BasicFullComposeController(bundle: Bundle? = null) :
             }
         }
     }
+
+    // Let Compose view handle this
+    override fun handleBack(): Boolean {
+        val dispatcher = (activity as? OnBackPressedDispatcherOwner)?.onBackPressedDispatcher ?: return false
+        return if (dispatcher.hasEnabledCallbacks()) {
+            dispatcher.onBackPressed()
+            true
+        } else {
+            false
+        }
+    }
 }
 
 interface ComposeContentController {
