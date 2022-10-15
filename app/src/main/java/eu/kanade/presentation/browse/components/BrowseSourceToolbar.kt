@@ -3,13 +3,11 @@ package eu.kanade.presentation.browse.components
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material.icons.filled.ViewModule
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -26,6 +24,7 @@ import eu.kanade.presentation.browse.BrowseSourceState
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
+import eu.kanade.presentation.components.RadioButton
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.CatalogueSource
@@ -98,7 +97,7 @@ fun BrowseSourceRegularToolbar(
                     ),
                     AppBar.Action(
                         title = stringResource(R.string.action_display_mode),
-                        icon = Icons.Filled.ViewModule,
+                        icon = if (displayMode == LibraryDisplayMode.List) Icons.Filled.ViewList else Icons.Filled.ViewModule,
                         onClick = { selectingDisplayMode = true },
                     ),
                     if (isLocalSource) {
@@ -120,41 +119,20 @@ fun BrowseSourceRegularToolbar(
                 expanded = selectingDisplayMode,
                 onDismissRequest = { selectingDisplayMode = false },
             ) {
-                DropdownMenuItem(
+                RadioButton(
                     text = { Text(text = stringResource(R.string.action_display_comfortable_grid)) },
                     onClick = { onDisplayModeChange(LibraryDisplayMode.ComfortableGrid) },
-                    trailingIcon = {
-                        if (displayMode == LibraryDisplayMode.ComfortableGrid) {
-                            Icon(
-                                imageVector = Icons.Outlined.Check,
-                                contentDescription = "",
-                            )
-                        }
-                    },
+                    isChecked = displayMode == LibraryDisplayMode.ComfortableGrid,
                 )
-                DropdownMenuItem(
+                RadioButton(
                     text = { Text(text = stringResource(R.string.action_display_grid)) },
                     onClick = { onDisplayModeChange(LibraryDisplayMode.CompactGrid) },
-                    trailingIcon = {
-                        if (displayMode == LibraryDisplayMode.CompactGrid) {
-                            Icon(
-                                imageVector = Icons.Outlined.Check,
-                                contentDescription = "",
-                            )
-                        }
-                    },
+                    isChecked = displayMode == LibraryDisplayMode.CompactGrid,
                 )
-                DropdownMenuItem(
+                RadioButton(
                     text = { Text(text = stringResource(R.string.action_display_list)) },
                     onClick = { onDisplayModeChange(LibraryDisplayMode.List) },
-                    trailingIcon = {
-                        if (displayMode == LibraryDisplayMode.List) {
-                            Icon(
-                                imageVector = Icons.Outlined.Check,
-                                contentDescription = "",
-                            )
-                        }
-                    },
+                    isChecked = displayMode == LibraryDisplayMode.List,
                 )
             }
         },

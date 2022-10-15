@@ -2,6 +2,11 @@ package eu.kanade.presentation.components
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.RadioButtonChecked
+import androidx.compose.material.icons.outlined.RadioButtonUnchecked
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
@@ -24,5 +29,30 @@ fun DropdownMenu(
         offset = DpOffset(8.dp, (-8).dp),
         properties = properties,
         content = content,
+    )
+}
+
+@Composable
+fun RadioButton(
+    text: @Composable () -> Unit,
+    onClick: () -> Unit,
+    isChecked: Boolean,
+) {
+    DropdownMenuItem(
+        text = text,
+        onClick = onClick,
+        trailingIcon = {
+            if (isChecked) {
+                Icon(
+                    imageVector = Icons.Outlined.RadioButtonChecked,
+                    contentDescription = "",
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Outlined.RadioButtonUnchecked,
+                    contentDescription = "",
+                )
+            }
+        },
     )
 }
