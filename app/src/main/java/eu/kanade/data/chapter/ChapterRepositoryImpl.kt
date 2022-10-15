@@ -81,6 +81,10 @@ class ChapterRepositoryImpl(
         return handler.awaitList { chaptersQueries.getChaptersByMangaId(mangaId, chapterMapper) }
     }
 
+    override suspend fun getBookmarkedChaptersByMangaId(mangaId: Long): List<Chapter> {
+        return handler.awaitList { chaptersQueries.getBookmarkedChaptersByMangaId(mangaId, chapterMapper) }
+    }
+
     override suspend fun getChapterById(id: Long): Chapter? {
         return handler.awaitOneOrNull { chaptersQueries.getChapterById(id, chapterMapper) }
     }

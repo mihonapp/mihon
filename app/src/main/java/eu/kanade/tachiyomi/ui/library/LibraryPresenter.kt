@@ -20,6 +20,7 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.chapter.interactor.GetBookmarkedChaptersByMangaId
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.model.toDbChapter
@@ -85,6 +86,7 @@ class LibraryPresenter(
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
     private val getTracks: GetTracks = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
+    private val getBookmarkedChaptersByMangaId: GetBookmarkedChaptersByMangaId = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
@@ -174,6 +176,7 @@ class LibraryPresenter(
         val filterDownloaded = libraryPreferences.filterDownloaded().get()
         val filterUnread = libraryPreferences.filterUnread().get()
         val filterStarted = libraryPreferences.filterStarted().get()
+        val filterBookmarked = libraryPreferences.filterBookmarked().get()
         val filterCompleted = libraryPreferences.filterCompleted().get()
         val loggedInServices = trackManager.services.filter { trackService -> trackService.isLogged }
             .associate { trackService ->
@@ -218,6 +221,19 @@ class LibraryPresenter(
             }
         }
 
+        val filterFnBookmarked: (LibraryItem) -> Boolean = bookmarked@{ item ->
+            if (filterBookmarked == State.IGNORE.value) return@bookmarked true
+            return@bookmarked runBlocking {
+                val isBookmarked = getBookmarkedChaptersByMangaId.await(item.libraryManga.manga.id).isNotEmpty()
+
+                return@runBlocking if (filterBookmarked == State.INCLUDE.value) {
+                    isBookmarked
+                } else {
+                    !isBookmarked
+                }
+            }
+        }
+
         val filterFnCompleted: (LibraryItem) -> Boolean = completed@{ item ->
             if (filterCompleted == State.IGNORE.value) return@completed true
             val isCompleted = item.libraryManga.manga.status.toInt() == SManga.COMPLETED
@@ -258,6 +274,7 @@ class LibraryPresenter(
                 !filterFnDownloaded(item) ||
                     !filterFnUnread(item) ||
                     !filterFnStarted(item) ||
+                    !filterFnBookmarked(item) ||
                     !filterFnCompleted(item) ||
                     !filterFnTracking(item)
                 )

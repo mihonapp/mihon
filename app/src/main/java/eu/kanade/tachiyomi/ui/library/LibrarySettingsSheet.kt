@@ -100,6 +100,7 @@ class LibrarySettingsSheet(
             private val downloaded = Item.TriStateGroup(R.string.action_filter_downloaded, this)
             private val unread = Item.TriStateGroup(R.string.action_filter_unread, this)
             private val started = Item.TriStateGroup(R.string.action_filter_started, this)
+            private val bookmarked = Item.TriStateGroup(R.string.action_filter_bookmarked, this)
             private val completed = Item.TriStateGroup(R.string.completed, this)
             private val trackFilters: Map<Long, Item.TriStateGroup>
 
@@ -114,7 +115,7 @@ class LibrarySettingsSheet(
                         trackFilters = services.associate { service ->
                             Pair(service.id, Item.TriStateGroup(getServiceResId(service, size), this))
                         }
-                        val list: MutableList<Item> = mutableListOf(downloaded, unread, started, completed)
+                        val list: MutableList<Item> = mutableListOf(downloaded, unread, started, bookmarked, completed)
                         if (size > 1) list.add(Item.Header(R.string.action_filter_tracked))
                         list.addAll(trackFilters.values)
                         items = list
@@ -134,6 +135,7 @@ class LibrarySettingsSheet(
                 }
                 unread.state = libraryPreferences.filterUnread().get()
                 started.state = libraryPreferences.filterStarted().get()
+                bookmarked.state = libraryPreferences.filterBookmarked().get()
                 completed.state = libraryPreferences.filterCompleted().get()
 
                 trackFilters.forEach { trackFilter ->
@@ -154,6 +156,7 @@ class LibrarySettingsSheet(
                     downloaded -> libraryPreferences.filterDownloaded().set(newState)
                     unread -> libraryPreferences.filterUnread().set(newState)
                     started -> libraryPreferences.filterStarted().set(newState)
+                    bookmarked -> libraryPreferences.filterBookmarked().set(newState)
                     completed -> libraryPreferences.filterCompleted().set(newState)
                     else -> {
                         trackFilters.forEach { trackFilter ->
