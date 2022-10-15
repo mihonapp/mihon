@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.RadioButtonChecked
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
@@ -33,10 +34,10 @@ fun DropdownMenu(
 }
 
 @Composable
-fun RadioButton(
+fun RadioMenuItem(
     text: @Composable () -> Unit,
-    onClick: () -> Unit,
     isChecked: Boolean,
+    onClick: () -> Unit,
 ) {
     DropdownMenuItem(
         text = text,
@@ -46,6 +47,7 @@ fun RadioButton(
                 Icon(
                     imageVector = Icons.Outlined.RadioButtonChecked,
                     contentDescription = "",
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             } else {
                 Icon(

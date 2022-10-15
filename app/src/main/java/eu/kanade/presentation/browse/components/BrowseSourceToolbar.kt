@@ -24,7 +24,7 @@ import eu.kanade.presentation.browse.BrowseSourceState
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
-import eu.kanade.presentation.components.RadioButton
+import eu.kanade.presentation.components.RadioMenuItem
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.CatalogueSource
@@ -119,21 +119,24 @@ fun BrowseSourceRegularToolbar(
                 expanded = selectingDisplayMode,
                 onDismissRequest = { selectingDisplayMode = false },
             ) {
-                RadioButton(
+                RadioMenuItem(
                     text = { Text(text = stringResource(R.string.action_display_comfortable_grid)) },
-                    onClick = { onDisplayModeChange(LibraryDisplayMode.ComfortableGrid) },
                     isChecked = displayMode == LibraryDisplayMode.ComfortableGrid,
-                )
-                RadioButton(
+                ) {
+                    onDisplayModeChange(LibraryDisplayMode.ComfortableGrid)
+                }
+                RadioMenuItem(
                     text = { Text(text = stringResource(R.string.action_display_grid)) },
-                    onClick = { onDisplayModeChange(LibraryDisplayMode.CompactGrid) },
                     isChecked = displayMode == LibraryDisplayMode.CompactGrid,
-                )
-                RadioButton(
+                ) {
+                    onDisplayModeChange(LibraryDisplayMode.CompactGrid)
+                }
+                RadioMenuItem(
                     text = { Text(text = stringResource(R.string.action_display_list)) },
-                    onClick = { onDisplayModeChange(LibraryDisplayMode.List) },
                     isChecked = displayMode == LibraryDisplayMode.List,
-                )
+                ) {
+                    onDisplayModeChange(LibraryDisplayMode.List)
+                }
             }
         },
         scrollBehavior = scrollBehavior,
