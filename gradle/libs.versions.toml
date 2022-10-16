@@ -73,7 +73,7 @@ flowbinding-appcompat = { module = "io.github.reactivecircus.flowbinding:flowbin
 logcat = "com.squareup.logcat:logcat:0.1"
 
 acra-http = "ch.acra:acra-http:5.9.6"
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.1.1"
+firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.2.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "aboutlib_version" }
