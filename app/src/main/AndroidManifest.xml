@@ -57,6 +57,12 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
+
+        <activity
+            android:process=":error_handler"
+            android:name=".crash.CrashActivity"
+            android:exported="true" />
+
         <activity
             android:name=".ui.main.DeepLinkActivity"
             android:launchMode="singleTask"

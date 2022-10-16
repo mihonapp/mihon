@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.lang.withNonCancellableContext
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
@@ -20,7 +21,7 @@ class CrashLogUtil(private val context: Context) {
         setSmallIcon(R.drawable.ic_tachi)
     }
 
-    suspend fun dumpLogs() {
+    suspend fun dumpLogs() = withNonCancellableContext {
         try {
             val file = context.createFileInCacheDir("tachiyomi_crash_logs.txt")
             Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}").waitFor()

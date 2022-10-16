@@ -59,6 +59,7 @@ import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import rikka.sui.Sui
 import uy.kohesive.injekt.Injekt
@@ -89,7 +90,7 @@ class SettingsAdvancedScreen : SearchableSettings {
                 title = stringResource(R.string.pref_dump_crash_logs),
                 subtitle = stringResource(R.string.pref_dump_crash_logs_summary),
                 onClick = {
-                    scope.launchNonCancellable {
+                    scope.launch {
                         CrashLogUtil(context).dumpLogs()
                     }
                 },
