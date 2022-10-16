@@ -159,6 +159,17 @@
     <string name="pref_category_advanced">Advanced</string>
     <string name="pref_category_about">About</string>
 
+    <string name="pref_general_summary">App language, notifications</string>
+    <string name="pref_appearance_summary">Theme, date &amp; time format</string>
+    <string name="pref_library_summary">Categories, global update</string>
+    <string name="pref_reader_summary">Reading mode, display, navigation</string>
+    <string name="pref_downloads_summary">Automatic download, download ahead</string>
+    <string name="pref_tracking_summary">One-way progress sync, enhanced sync</string>
+    <string name="pref_browse_summary">Sources, extensions, global search</string>
+    <string name="pref_backup_summary">Manual &amp; automatic backups</string>
+    <string name="pref_security_summary">App lock, secure screen</string>
+    <string name="pref_advanced_summary">Dump crash logs, battery optimizations</string>
+
       <!-- General section -->
     <string name="pref_category_theme">Theme</string>
     <string name="pref_theme_mode">Dark mode</string>

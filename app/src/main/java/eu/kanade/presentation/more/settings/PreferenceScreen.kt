@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -12,7 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
-import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
 import eu.kanade.presentation.more.settings.widget.PreferenceGroupHeader
@@ -55,9 +53,6 @@ fun PreferenceScreen(
 
                     item {
                         Column {
-                            if (i != 0) {
-                                Divider(modifier = Modifier.padding(bottom = 8.dp))
-                            }
                             PreferenceGroupHeader(title = preference.title)
                         }
                     }
@@ -68,7 +63,9 @@ fun PreferenceScreen(
                         )
                     }
                     item {
-                        Spacer(modifier = Modifier.height(12.dp))
+                        if (i < items.lastIndex) {
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
                     }
                 }
 

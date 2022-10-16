@@ -8,7 +8,7 @@ flowbinding_version = "1.2.0"
 shizuku_version = "12.2.0"
 sqldelight = "1.5.4"
 leakcanary = "2.9.1"
-voyager = "1.0.0-rc02"
+voyager = "1.0.0-beta16"
 
 [libraries]
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"

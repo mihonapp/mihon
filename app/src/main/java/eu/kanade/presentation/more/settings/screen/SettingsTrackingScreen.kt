@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -22,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -189,7 +190,20 @@ class SettingsTrackingScreen : SearchableSettings {
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
-            title = { Text(text = stringResource(R.string.login_title, stringResource(service.nameRes()))) },
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(R.string.login_title, stringResource(service.nameRes())),
+                        modifier = Modifier.weight(1f),
+                    )
+                    IconButton(onClick = onDismissRequest) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(R.string.action_close),
+                        )
+                    }
+                }
+            },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
@@ -232,38 +246,30 @@ class SettingsTrackingScreen : SearchableSettings {
                 }
             },
             confirmButton = {
-                Column {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = !processing,
-                        onClick = {
-                            if (username.text.isEmpty() || password.text.isEmpty()) {
-                                inputError = true
-                                return@Button
-                            }
-                            scope.launchIO {
-                                inputError = false
-                                processing = true
-                                val result = checkLogin(
-                                    context = context,
-                                    service = service,
-                                    username = username.text,
-                                    password = password.text,
-                                )
-                                if (result) onDismissRequest()
-                                processing = false
-                            }
-                        },
-                    ) {
-                        val id = if (processing) R.string.loading else R.string.login
-                        Text(text = stringResource(id))
-                    }
-                    TextButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = onDismissRequest,
-                    ) {
-                        Text(text = stringResource(android.R.string.cancel))
-                    }
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !processing,
+                    onClick = {
+                        if (username.text.isEmpty() || password.text.isEmpty()) {
+                            inputError = true
+                            return@Button
+                        }
+                        scope.launchIO {
+                            inputError = false
+                            processing = true
+                            val result = checkLogin(
+                                context = context,
+                                service = service,
+                                username = username.text,
+                                password = password.text,
+                            )
+                            if (result) onDismissRequest()
+                            processing = false
+                        }
+                    },
+                ) {
+                    val id = if (processing) R.string.loading else R.string.login
+                    Text(text = stringResource(id))
                 }
             },
         )

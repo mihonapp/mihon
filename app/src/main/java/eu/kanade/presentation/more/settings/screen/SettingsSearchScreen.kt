@@ -146,8 +146,7 @@ class SettingsSearchScreen : Screen {
                 contentPadding = contentPadding,
             ) { result ->
                 SearchableSettings.highlightKey = result.highlightKey
-                navigator.popUntil { it is SettingsMainScreen }
-                navigator.push(result.route)
+                navigator.replace(result.route)
             }
         }
     }

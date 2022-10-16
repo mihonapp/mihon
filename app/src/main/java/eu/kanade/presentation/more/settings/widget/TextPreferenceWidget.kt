@@ -8,18 +8,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun TextPreferenceWidget(
+    modifier: Modifier = Modifier,
     title: String,
     subtitle: String? = null,
     icon: ImageVector? = null,
     onPreferenceClick: (() -> Unit)? = null,
 ) {
-    // TODO: Handle auth requirement here?
     BasePreferenceWidget(
+        modifier = modifier,
         title = title,
         subtitle = subtitle,
         icon = icon,

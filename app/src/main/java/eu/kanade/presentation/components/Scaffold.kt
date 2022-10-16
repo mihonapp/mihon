@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
  * @sample androidx.compose.material3.samples.ScaffoldWithSimpleSnackbar
  *
  * Tachiyomi changes:
+ * * Pass scroll behavior to top bar by default
  * * Remove height constraint for expanded app bar
  * * Also take account of fab height when providing inner padding
  *
@@ -80,6 +81,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Scaffold(
     modifier: Modifier = Modifier,
+    topBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState()),
     topBar: @Composable (TopAppBarScrollBehavior) -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
@@ -89,21 +91,16 @@ fun Scaffold(
     contentColor: Color = contentColorFor(containerColor),
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    /**
-     * Tachiyomi: Pass scroll behavior to topBar
-     */
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-
     androidx.compose.material3.Surface(
         modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
             .then(modifier),
         color = containerColor,
         contentColor = contentColor,
     ) {
         ScaffoldLayout(
             fabPosition = floatingActionButtonPosition,
-            topBar = { topBar(scrollBehavior) },
+            topBar = { topBar(topBarScrollBehavior) },
             bottomBar = bottomBar,
             content = content,
             snackbar = snackbarHost,

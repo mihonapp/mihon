@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,13 +14,11 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -47,7 +44,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.ExtendedFloatingActionButton
@@ -55,6 +51,7 @@ import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.components.MangaBottomActionMenu
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SwipeRefresh
+import eu.kanade.presentation.components.TwoPanelBox
 import eu.kanade.presentation.components.VerticalFastScroller
 import eu.kanade.presentation.manga.components.ChapterHeader
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
@@ -501,79 +498,74 @@ fun MangaScreenLargeImpl(
                 }
             },
         ) { contentPadding ->
-            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                val firstWidth = (maxWidth / 2).coerceAtMost(450.dp)
-                val secondWidth = maxWidth - firstWidth
-
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .width(firstWidth)
-                        .verticalScroll(rememberScrollState()),
-                ) {
-                    MangaInfoBox(
-                        windowWidthSizeClass = windowWidthSizeClass,
-                        appBarPadding = contentPadding.calculateTopPadding(),
-                        title = state.manga.title,
-                        author = state.manga.author,
-                        artist = state.manga.artist,
-                        sourceName = remember { state.source.getNameForMangaInfo() },
-                        isStubSource = remember { state.source is SourceManager.StubSource },
-                        coverDataProvider = { state.manga },
-                        status = state.manga.status,
-                        onCoverClick = onCoverClicked,
-                        doSearch = onSearch,
-                    )
-                    MangaActionRow(
-                        favorite = state.manga.favorite,
-                        trackingCount = state.trackingCount,
-                        onAddToLibraryClicked = onAddToLibraryClicked,
-                        onWebViewClicked = onWebViewClicked,
-                        onTrackingClicked = onTrackingClicked,
-                        onEditCategory = onEditCategoryClicked,
-                    )
-                    ExpandableMangaDescription(
-                        defaultExpandState = true,
-                        description = state.manga.description,
-                        tagsProvider = { state.manga.genre },
-                        onTagClicked = onTagClicked,
-                    )
-                }
-
-                VerticalFastScroller(
-                    listState = chapterListState,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .width(secondWidth),
-                    topContentPadding = contentPadding.calculateTopPadding(),
-                ) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxHeight(),
-                        state = chapterListState,
-                        contentPadding = PaddingValues(
-                            top = contentPadding.calculateTopPadding(),
-                            bottom = contentPadding.calculateBottomPadding(),
-                        ),
+            TwoPanelBox(
+                startContent = {
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState()),
                     ) {
-                        item(
-                            key = MangaScreenItem.CHAPTER_HEADER,
-                            contentType = MangaScreenItem.CHAPTER_HEADER,
-                        ) {
-                            ChapterHeader(
-                                chapterCount = chapters.size,
-                                onClick = onFilterButtonClicked,
-                            )
-                        }
-
-                        sharedChapterItems(
-                            chapters = chapters,
-                            onChapterClicked = onChapterClicked,
-                            onDownloadChapter = onDownloadChapter,
-                            onChapterSelected = onChapterSelected,
+                        MangaInfoBox(
+                            windowWidthSizeClass = windowWidthSizeClass,
+                            appBarPadding = contentPadding.calculateTopPadding(),
+                            title = state.manga.title,
+                            author = state.manga.author,
+                            artist = state.manga.artist,
+                            sourceName = remember { state.source.getNameForMangaInfo() },
+                            isStubSource = remember { state.source is SourceManager.StubSource },
+                            coverDataProvider = { state.manga },
+                            status = state.manga.status,
+                            onCoverClick = onCoverClicked,
+                            doSearch = onSearch,
+                        )
+                        MangaActionRow(
+                            favorite = state.manga.favorite,
+                            trackingCount = state.trackingCount,
+                            onAddToLibraryClicked = onAddToLibraryClicked,
+                            onWebViewClicked = onWebViewClicked,
+                            onTrackingClicked = onTrackingClicked,
+                            onEditCategory = onEditCategoryClicked,
+                        )
+                        ExpandableMangaDescription(
+                            defaultExpandState = true,
+                            description = state.manga.description,
+                            tagsProvider = { state.manga.genre },
+                            onTagClicked = onTagClicked,
                         )
                     }
-                }
-            }
+                },
+                endContent = {
+                    VerticalFastScroller(
+                        listState = chapterListState,
+                        topContentPadding = contentPadding.calculateTopPadding(),
+                    ) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxHeight(),
+                            state = chapterListState,
+                            contentPadding = PaddingValues(
+                                top = contentPadding.calculateTopPadding(),
+                                bottom = contentPadding.calculateBottomPadding(),
+                            ),
+                        ) {
+                            item(
+                                key = MangaScreenItem.CHAPTER_HEADER,
+                                contentType = MangaScreenItem.CHAPTER_HEADER,
+                            ) {
+                                ChapterHeader(
+                                    chapterCount = chapters.size,
+                                    onClick = onFilterButtonClicked,
+                                )
+                            }
+
+                            sharedChapterItems(
+                                chapters = chapters,
+                                onChapterClicked = onChapterClicked,
+                                onDownloadChapter = onDownloadChapter,
+                                onChapterSelected = onChapterSelected,
+                            )
+                        }
+                    }
+                },
+            )
         }
     }
 }

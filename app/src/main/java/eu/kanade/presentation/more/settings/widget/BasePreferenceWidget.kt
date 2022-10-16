@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 import eu.kanade.presentation.util.secondaryItemAlpha
 import kotlinx.coroutines.delay
@@ -54,12 +55,12 @@ internal fun BasePreferenceWidget(
                     modifier = Modifier
                         .padding(
                             start = HorizontalPadding,
-                            top = 4.dp,
+                            top = 0.dp,
                             end = HorizontalPadding,
                         )
                         .secondaryItemAlpha(),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 10,
                 )
             }
         } else {
@@ -106,15 +107,13 @@ private fun BasePreferenceWidgetImpl(
                     imageVector = icon,
                     contentDescription = null,
                     modifier = Modifier
-                        .padding(start = HorizontalPadding, end = 12.dp)
-                        .secondaryItemAlpha(),
-                    tint = MaterialTheme.colorScheme.onSurface,
+                        .padding(start = HorizontalPadding, end = 0.dp),
                 )
             }
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(vertical = 14.dp),
+                    .padding(vertical = 16.dp),
             ) {
                 if (title.isNotBlank()) {
                     Row(
@@ -125,7 +124,8 @@ private fun BasePreferenceWidgetImpl(
                             text = title,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 2,
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 20.sp,
                         )
                     }
                 }
@@ -173,4 +173,4 @@ internal fun Modifier.highlightBackground(highlighted: Boolean): Modifier = comp
 }
 
 internal val TrailingWidgetBuffer = 16.dp
-internal val HorizontalPadding = 16.dp
+internal val HorizontalPadding = 24.dp

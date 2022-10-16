@@ -79,7 +79,7 @@ fun <T> TriStateListDialog(
                             val state = selected[index]
                             Row(
                                 modifier = Modifier
-                                    .clip(RoundedCornerShape(25))
+                                    .clip(RoundedCornerShape(8.dp))
                                     .clickable {
                                         selected[index] = when (state) {
                                             State.UNCHECKED -> State.CHECKED
