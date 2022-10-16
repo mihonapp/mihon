@@ -749,7 +749,7 @@
     <string name="are_you_sure">Adakah anda pasti\?</string>
     <string name="multi_lang">Pelbagai</string>
     <string name="updates_last_update_info">Terakhir pustaka dikemas kini: %1$s</string>
-    <string name="remove_manga">Anda akan membuang manga ini dariapda pustaka anda</string>
+    <string name="remove_manga">Anda akan membuang \"%s\" ini dariapda pustaka anda</string>
     <string name="pref_long_strip_split">Pisah imej panjang (BETA)</string>
     <string name="popular">Popular</string>
     <string name="missing_storage_permission">Kebenaran storan tidak diberikan</string>

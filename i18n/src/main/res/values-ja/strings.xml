@@ -750,7 +750,7 @@
     <string name="multi_lang">多言語</string>
     <string name="updates_last_update_info">前回のライブラリ更新：%1$s</string>
     <string name="pref_long_strip_split">長い画像の分割（BETA）</string>
-    <string name="remove_manga">この漫画をライブラリから消去しようとしています</string>
+    <string name="remove_manga">ライブラリから「%s」を削除しようとしています</string>
     <string name="popular">人気</string>
     <string name="missing_storage_permission">ストレージ権限を持っていません</string>
     <string name="skipped_reason_not_always_update">シリーズは更新を必要としないため、スキップされました</string>

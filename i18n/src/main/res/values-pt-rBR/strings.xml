@@ -776,7 +776,7 @@
     <string name="multi_lang">Múltiplas</string>
     <string name="pref_long_strip_split">Dividir imagens compridas (BETA)</string>
     <string name="updates_last_update_info">Última atualização da biblioteca: %1$s</string>
-    <string name="remove_manga">Você está prestes a remover este mangá de sua biblioteca</string>
+    <string name="remove_manga">Você está prestes a remover \"%s\" de sua biblioteca</string>
     <string name="popular">Popular</string>
     <string name="missing_storage_permission">Permissões de armazenamento não concedidas</string>
     <string name="skipped_reason_not_always_update">Pulado porque a série não requer atualizações</string>

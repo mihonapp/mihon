@@ -750,7 +750,7 @@
     <string name="pref_long_strip_split">分割长图 (测试版)</string>
     <string name="multi_lang">多语言</string>
     <string name="updates_last_update_info">书架更新于：%1$s</string>
-    <string name="remove_manga">即将从书架中删除此漫画。</string>
+    <string name="remove_manga">即将从书架中删除“%s”。</string>
     <string name="popular">热门</string>
     <string name="missing_storage_permission">未授予存储权限</string>
     <string name="skipped_reason_not_always_update">已跳过，因为作品无需更新</string>

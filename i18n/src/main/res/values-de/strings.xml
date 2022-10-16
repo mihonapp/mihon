@@ -280,7 +280,7 @@
     <string name="ext_trust">Vertrauen</string>
     <string name="ext_untrusted">Nicht vertrauenswürdig</string>
     <string name="untrusted_extension">Nicht vertrauenswürdige Erweiterung</string>
-    <string name="pref_double_tap_anim_speed">Doppeltipp-Animationsgeschwindigkeit</string>
+    <string name="pref_double_tap_anim_speed">Animationsgeschwindigkeit beim Doppeltippen</string>
     <string name="custom_download">Benutzerdefinierte Anzahl herunterladen</string>
     <string name="migration_dialog_what_to_include">Wähle zu beinhaltende Daten</string>
     <string name="pager_viewer">Seiten</string>
@@ -300,7 +300,7 @@
     <string name="transition_pages_loading">Lade Seiten…</string>
     <string name="transition_pages_error">Seiten konnten nicht geladen werden: %1$s</string>
     <string name="action_open_in_web_view">In WebView öffnen</string>
-    <string name="pref_true_color">32-Bit Farben</string>
+    <string name="pref_true_color">32-Bit-Farben</string>
     <string name="pref_skip_read_chapters">Überspringe gelesene Kapitel</string>
     <string name="pref_read_with_long_tap">Bei langem Antippen anzeigen</string>
     <string name="filter_mode_overlay">Überlagerung</string>
@@ -475,7 +475,7 @@
     </plurals>
     <string name="requires_app_restart">Erfordert einen Neustart der Anwendung, um wirksam zu werden</string>
     <string name="label_network">Netzwerk</string>
-    <string name="pref_read_with_tapping_inverted">Tippzonen invertieren</string>
+    <string name="pref_read_with_tapping_inverted">Tippzonen umkehren</string>
     <string name="tapping_inverted_both">Beide</string>
     <string name="tapping_inverted_vertical">Vertikal</string>
     <string name="tapping_inverted_horizontal">Horizontal</string>
@@ -548,9 +548,9 @@
     <string name="action_filter_tracked">Getrackt</string>
     <string name="action_display_show_number_of_items">Anzahl der Elemente anzeigen</string>
     <string name="right_and_left_nav">Rechts und Links</string>
-    <string name="pref_dual_page_split">Doppelseiten aufteilen</string>
-    <string name="pref_dual_page_invert_summary">Falls die Platzierung der aufgeteilten Doppelseite nicht mit der Leserichtung übereinstimmt</string>
-    <string name="pref_dual_page_invert">Doppelseiten-Platzierung umkehren</string>
+    <string name="pref_dual_page_split">Breite Seiten aufteilen</string>
+    <string name="pref_dual_page_invert_summary">Falls die Platzierung der aufgeteilten Seiten nicht mit der Leserichtung übereinstimmt</string>
+    <string name="pref_dual_page_invert">Platzierung aufgeteilter Seiten umkehren</string>
     <string name="backup_restore_content_full">Die Daten der Sicherungsdatei werden wiederhergestellt.
 \n
 \nDu musst jegliche fehlende Erweiterungen installieren und dich anschließend bei den Tracking-Anbietern einloggen, um sie zu benutzen.</string>
@@ -688,7 +688,7 @@
 \nMöchtest du trotzdem fortfahren\?</string>
     <string name="action_display_cover_only_grid">Nur-Cover-Kacheln</string>
     <string name="pref_landscape_zoom">Bild im Querformat vergrößern</string>
-    <string name="pref_navigate_pan">Innerhalb der Seite navigieren</string>
+    <string name="pref_navigate_pan">Beim Tippen innerhalb breiter Seiten navigieren</string>
     <string name="action_filter_started">Angefangen</string>
     <string name="pref_update_only_started">Die noch nicht begonnen wurden</string>
     <string name="skipped_reason_completed">Übersprungen, da die Serie abgeschlossen ist</string>
@@ -761,7 +761,7 @@
     <string name="download_ahead_info">Funktioniert nur bei Werken in der Bibliothek und wenn das aktuelle Kapitel sowie das darauf folgende bereits heruntergeladen sind</string>
     <string name="are_you_sure">Bist du dir sicher\?</string>
     <string name="pref_long_strip_split">Hohe Bilder aufteilen (BETA)</string>
-    <string name="remove_manga">Du bist gerade dabei, diesen Manga aus deiner Bibliothek zu entfernen</string>
+    <string name="remove_manga">Du bist gerade dabei, „%s“ aus deiner Bibliothek zu entfernen</string>
     <string name="multi_lang">Mehrere Sprachen</string>
     <string name="updates_last_update_info">Letzte Aktualisierung der Bibliothek: %1$s</string>
     <string name="popular">Beliebt</string>

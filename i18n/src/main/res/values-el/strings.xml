@@ -548,9 +548,9 @@
     <string name="action_filter_tracked">Παρακολουθούνται</string>
     <string name="action_display_show_number_of_items">Εμφάνιση αριθμού στοιχείων</string>
     <string name="right_and_left_nav">Δεξιά και Aριστερά</string>
-    <string name="pref_dual_page_split">Διπλή διαίρεση σελίδας</string>
-    <string name="pref_dual_page_invert_summary">Εάν η τοποθέτηση του διαχωρισμού διπλής σελίδας δεν ταιριάζει με την κατεύθυνση ανάγνωσης</string>
-    <string name="pref_dual_page_invert">Αντιστροφή τοποθέτησης διαχωρισμού διπλής σελίδας</string>
+    <string name="pref_dual_page_split">Διαχωρισμός πλατιών σελίδων</string>
+    <string name="pref_dual_page_invert_summary">Εάν η τοποθέτηση των διαχωρισμένων πλατιών σελίδων δεν ταιριάζει με την κατεύθυνση ανάγνωσης</string>
+    <string name="pref_dual_page_invert">Αντιστροφή τοποθέτησης διαχωρισμένης σελίδας</string>
     <string name="backup_restore_content_full">Τα δεδομένα από το αντίγραφο ασφαλείας θα αποκατασταθούν
 \n
 \nΘα χρειαστεί να εγκαταστήσετε τυχόν επεκτάσεις που λείπουν και στη συνέχεια να συνδεθείτε στις υπηρεσίες παρακολούθησης για να τις χρησιμοποιήσετε.</string>
@@ -690,7 +690,7 @@
     <string name="action_display_cover_only_grid">Πλέγμα μόνο με εξώφυλλα</string>
     <string name="action_filter_started">Ξεκίνησε</string>
     <string name="pref_update_only_started">Που δεν έχουν ξεκινήσει</string>
-    <string name="pref_navigate_pan">Πλοήγηση για οριζόντια μετακίνηση</string>
+    <string name="pref_navigate_pan">Μετατόπιση πλατιών εικόνων κατά το πάτημα</string>
     <string name="skipped_reason_completed">Παραλείφθηκε επειδή η σειρά ολοκληρώθηκε</string>
     <string name="skipped_reason_not_caught_up">Παραβλέφθηκε επειδή υπάρχουν μη αναγνωσμένα κεφάλαια</string>
     <string name="skipped_reason_not_started">Παραλείπεται επειδή δεν έχουν διαβαστεί κεφάλαια</string>
@@ -764,7 +764,7 @@
     <string name="multi_lang">Πολλαπλό</string>
     <string name="popular">Δημοφιλή</string>
     <string name="updates_last_update_info">Τελευταία ενημέρωση βιβλιοθήκης: %1$s</string>
-    <string name="remove_manga">Πρόκειται να αφαιρέσετε αυτό το manga από τη βιβλιοθήκη σας</string>
+    <string name="remove_manga">Πρόκειται να αφαιρέσετε το \"%s\" από τη βιβλιοθήκη σας</string>
     <string name="missing_storage_permission">Δεν έχουν χορηγηθεί δικαιώματα αποθήκευσης</string>
     <string name="skipped_reason_not_always_update">Παραλείφθηκε επειδή η σειρά δεν απαιτεί ενημερώσεις</string>
     <string name="action_search_hint">Αναζήτηση…</string>

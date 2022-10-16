@@ -593,9 +593,9 @@
     <string name="action_filter_tracked">Suivis</string>
     <string name="action_display_show_number_of_items">Afficher le nombre d’entrées</string>
     <string name="right_and_left_nav">Droite et gauche</string>
-    <string name="pref_dual_page_split">Double page partagée</string>
-    <string name="pref_dual_page_invert_summary">Si le placement de la double page ne correspond pas au sens de lecture</string>
-    <string name="pref_dual_page_invert">Inverser le placement des doubles pages</string>
+    <string name="pref_dual_page_split">Diviser les pages larges</string>
+    <string name="pref_dual_page_invert_summary">Si l\'emplacement des pages larges divisées ne correspond pas au sens de lecture</string>
+    <string name="pref_dual_page_invert">Inverser le placement des pages divisées</string>
     <string name="backup_restore_content_full">Les données du fichier de sauvegarde seront restaurées.
 \n
 \nVous devrez installer les extensions manquantes et vous connecter ensuite aux services de suivi pour les utiliser.</string>
@@ -733,7 +733,7 @@
     <string name="confirm_manga_add_duplicate">Vous avez une entrée dans votre bibliothèque portant le même nom mais provenant d\'une source différente (%1$s).
 \n
 \nSouhaitez-vous toujours continuer \?</string>
-    <string name="pref_navigate_pan">Déplacements latéraux en mode zoom</string>
+    <string name="pref_navigate_pan">Panoramique des images larges en appuyant</string>
     <string name="pref_landscape_zoom">Agrandir les images en paysage</string>
     <string name="pref_update_only_started">Qui n\'ont pas encore commencé</string>
     <string name="action_filter_started">Commencé</string>
@@ -811,7 +811,7 @@
     <string name="pref_long_strip_split">Diviser les grandes images (BETA)</string>
     <string name="multi_lang">Multiple</string>
     <string name="updates_last_update_info">Dernière mis à jour de la bibliothèque le : %1$s</string>
-    <string name="remove_manga">Vous êtes sur le point de supprimer ce manga de votre bibliothèque</string>
+    <string name="remove_manga">Vous êtes sur le point de retirer « %s » de votre bibliothèque.</string>
     <string name="missing_storage_permission">Autorisations de stockage non accordées</string>
     <string name="action_search_hint">Recherche…</string>
     <string name="skipped_reason_not_always_update">Passées car la série ne nécessite pas de mise à jour</string>

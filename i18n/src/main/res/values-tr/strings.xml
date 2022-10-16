@@ -760,7 +760,7 @@
     </plurals>
     <string name="download_ahead_info">Yalnızca kitaplıktaki girdilerde ve geçerli bölüm ile bir sonraki bölüm zaten indirildiyse çalışır</string>
     <string name="are_you_sure">Emin misiniz\?</string>
-    <string name="remove_manga">Bu mangayı kitaplığınızdan kaldırmak üzeresiniz</string>
+    <string name="remove_manga">\"%s\"yi kitaplığınızdan kaldırmak üzeresiniz</string>
     <string name="updates_last_update_info">Kitaplık son güncelleme zamanı: %1$s</string>
     <string name="multi_lang">Çoklu</string>
     <string name="pref_long_strip_split">Uzun görselleri böl (BETA)</string>

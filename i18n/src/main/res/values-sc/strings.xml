@@ -760,7 +760,7 @@
     </plurals>
     <string name="download_ahead_info">Funtzionat petzi cun sos elementos in biblioteca e si su capìtulu atuale e cussu imbeniente sunt giai iscarrigados</string>
     <string name="are_you_sure">Seguru ses\?</string>
-    <string name="remove_manga">As a bogare custu manga dae sa biblioteca tua</string>
+    <string name="remove_manga">As a bogare \"%s\" dae sa biblioteca tua</string>
     <string name="multi_lang">Mùltiplas</string>
     <string name="pref_long_strip_split">Partzi sas immàgines artas (BETA)</string>
     <string name="updates_last_update_info">Ùrtimu agiornamentu de sa biblioteca: %1$s</string>

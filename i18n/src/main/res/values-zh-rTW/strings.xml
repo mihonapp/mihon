@@ -537,9 +537,9 @@
     <string name="action_display_show_number_of_items">顯示藏書數目</string>
     <string name="manga_from_library">書櫃上的漫畫</string>
     <string name="downloaded_chapters">已下載的章節</string>
-    <string name="pref_dual_page_split">雙頁分割</string>
+    <string name="pref_dual_page_split">分割寬頁</string>
     <string name="pref_dual_page_invert_summary">若分割後的排版方向與翻閱順序不符</string>
-    <string name="pref_dual_page_invert">反轉雙頁分割排版</string>
+    <string name="pref_dual_page_invert">反轉分割頁面排版</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_category_auto_download">自動下載</string>
     <string name="rotation_portrait">直向</string>
@@ -672,7 +672,7 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">顯示漫畫</string>
     <string name="pref_landscape_zoom">縮放橫向圖片</string>
-    <string name="pref_navigate_pan">平移圖片而後翻頁</string>
+    <string name="pref_navigate_pan">輕觸時移動圖片</string>
     <string name="action_display_cover_only_grid">純封面格狀</string>
     <string name="confirm_manga_add_duplicate">書櫃中已有一個來自不同來源 (%1$s) 的同名項目。
 \n
@@ -749,7 +749,7 @@
     <string name="are_you_sure">你確定嗎？</string>
     <string name="pref_long_strip_split">分割過高的圖片 (BETA)</string>
     <string name="multi_lang">多語</string>
-    <string name="remove_manga">即將從書櫃中移除此漫畫</string>
+    <string name="remove_manga">即將從書櫃中移除《%s》</string>
     <string name="updates_last_update_info">書櫃更新於：%1$s</string>
     <string name="popular">熱門</string>
     <string name="missing_storage_permission">未被授予儲存空間權限</string>

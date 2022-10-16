@@ -13,7 +13,7 @@
     <string name="label_recent_manga">ប្រវត្តិ</string>
     <string name="action_sort_alpha">តម្រៀបតាមអក្សរ</string>
     <string name="name">ឈ្មោះ</string>
-    <string name="categories">ការតម្រៀប</string>
+    <string name="categories">ការតម្រៀបថ្នាក់</string>
     <string name="history">ប្រវត្តិ</string>
     <string name="label_more">ច្រើនទៀត</string>
     <string name="label_settings">ការកំណត់</string>
@@ -191,4 +191,16 @@
     <string name="title">ចំណងជើង</string>
     <string name="description">សង្ខេបរឿង</string>
     <string name="completed">Concluído</string>
+    <string name="ongoing">កំពុងតែចេញផ្សាយ</string>
+    <string name="default_category">ថ្នាក់ធម្មតា</string>
+    <string name="on_hiatus">ត្រូវបានផ្អាកការចេញផ្សាយ</string>
+    <string name="unknown">មិនច្បាស់</string>
+    <string name="local_invalid_format">ទម្រង់ភាគមិនត្រឹមត្រួវ</string>
+    <string name="chapter_not_found">គ្មានភាគ</string>
+    <string name="no_chapters_error">គ្មានភាគ</string>
+    <string name="cancelled">ត្រូវបានបញ្ឈប់ការចេញផ្សាយ</string>
+    <string name="publishing_finished">ចេញផ្សាយចប់ហើយ</string>
+    <string name="updating_library">កំពុងតែធ្វើបច្ចុប្បន្នភាពបណ្ណាល័យ</string>
+    <string name="licensed">មានឡាយសិន</string>
+    <string name="loader_rar5_error">ទម្រង់RARv5មិនត្រូវបានទទួលយកទេ</string>
 </resources>

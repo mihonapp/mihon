@@ -787,7 +787,7 @@
     <string name="download_ahead_info">Работает только с элементами в библиотеке, а также если текущая и следующая главы уже загружены</string>
     <string name="are_you_sure">Вы уверены\?</string>
     <string name="multi_lang">Многоязычное</string>
-    <string name="remove_manga">Вы собираетесь удалить эту серию из вашей библиотеки</string>
+    <string name="remove_manga">Вы собираетесь удалить «%s» из вашей библиотеки</string>
     <string name="pref_long_strip_split">Разделять длинные изображения (БЕТА)</string>
     <string name="updates_last_update_info">Последнее обновление библиотеки: %1$s</string>
     <string name="popular">Популярное</string>

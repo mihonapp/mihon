@@ -806,7 +806,7 @@
     <string name="are_you_sure">¿Estás seguro\?</string>
     <string name="pref_long_strip_split">Separar imágenes más altas que anchas (en desarrollo)</string>
     <string name="updates_last_update_info">La biblioteca se actualizó: %1$s</string>
-    <string name="remove_manga">Estás a punto de borrar este manga de tu biblioteca</string>
+    <string name="remove_manga">Estás a punto de borrar «%s» de tu biblioteca</string>
     <string name="popular">Popular</string>
     <string name="multi_lang">Multi</string>
     <string name="missing_storage_permission">No se han concedido los permisos de almacenamiento</string>

@@ -746,7 +746,7 @@
         <item quantity="other">Selanjutnya chapter %d yang belum dibaca</item>
     </plurals>
     <string name="download_ahead_info">Hanya berfungsi pada entri di perpustakaan dan jika bab saat ini ditambah yang berikutnya sudah diunduh</string>
-    <string name="remove_manga">Kamu akan menghapus manga ini dari pustaka</string>
+    <string name="remove_manga">Kamu akan menghapus \"%s\" dari pustaka</string>
     <string name="updates_last_update_info">Pustaka terakhir diperbarui: %1$s</string>
     <string name="multi_lang">Multi</string>
     <string name="pref_long_strip_split">Potong gambar panjang (BETA)</string>

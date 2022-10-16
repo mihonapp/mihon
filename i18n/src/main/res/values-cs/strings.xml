@@ -773,7 +773,7 @@
     <string name="auto_download_while_reading">Automatické stahování při čtení</string>
     <string name="download_ahead_info">Funguje pouze na položky v knihovně a pokud je již stažena aktuální kapitola a následující kapitola</string>
     <string name="are_you_sure">Jste si jistí\?</string>
-    <string name="remove_manga">Chystáte se odstranit tuto mangu ze své knihovny</string>
+    <string name="remove_manga">Chystáte se odstranit \"%s\" ze své knihovny</string>
     <string name="multi_lang">Multi</string>
     <string name="pref_long_strip_split">Rozdělit vysoké obrázky (BETA)</string>
     <string name="updates_last_update_info">Poslední aktualizace knihovny: %1$s</string>

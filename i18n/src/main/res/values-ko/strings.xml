@@ -44,7 +44,7 @@
     <string name="action_install">설치</string>
     <string name="label_settings">설정</string>
     <string name="action_display">디스플레이</string>
-    <string name="history">역사</string>
+    <string name="history">기록</string>
     <string name="label_download_queue">다운로드 대기열</string>
     <string name="label_library">서재</string>
     <string name="label_recent_manga">기록</string>
@@ -60,7 +60,7 @@
     <string name="action_open_log">로그 열기</string>
     <string name="action_create">만들기</string>
     <string name="action_restore">복구하기</string>
-    <string name="loading">로딩 중.…</string>
+    <string name="loading">로딩 중…</string>
     <string name="app_not_available">앱 이용 불가</string>
     <string name="pref_category_general">일반</string>
     <string name="pref_category_reader">뷰어</string>
@@ -368,7 +368,7 @@
     <string name="tapping_inverted_vertical">수직 반전</string>
     <string name="tapping_inverted_horizontal">수평 반전</string>
     <string name="pref_grayscale">그레이스케일</string>
-    <string name="pref_dual_page_split">이중 페이지 분할</string>
+    <string name="pref_dual_page_split">넓은 페이지 분할</string>
     <string name="ext_unofficial">비공식</string>
     <string name="action_display_comfortable_grid">보기편한 그리드</string>
     <string name="pref_dark_theme_pure_black">검은색 다크모드</string>
@@ -400,7 +400,7 @@
     <string name="pref_category_reading_mode">읽기 모드</string>
     <string name="whats_new">업데이트 내역</string>
     <string name="last_used_source">마지막으로 사용</string>
-    <string name="pref_dual_page_invert">이중 페이지 분할 순서 뒤집기</string>
+    <string name="pref_dual_page_invert">분할 페이지 순서 뒤집기</string>
     <string name="edge_nav">양쪽 가장자리</string>
     <string name="action_view_chapters">회차 목록 보기</string>
     <string name="action_display_unread_badge">읽지 않은 회차</string>
@@ -490,7 +490,7 @@
     <string name="channel_app_updates">앱 업데이트</string>
     <string name="channel_progress">진행 상황</string>
     <string name="channel_errors">오류</string>
-    <string name="database_clean">데이터베이스 정리</string>
+    <string name="database_clean">지울 것이 없습니다</string>
     <string name="learn_more">터치하여 자세히 알아보기</string>
     <string name="chapter_settings_updated">기본 회차 설정을 업데이트 했습니다</string>
     <string name="channel_skipped">건너뜀</string>
@@ -559,7 +559,7 @@
     <string name="information_cloudflare_bypass_failure">Cloudflare를 통과하지 못했습니다</string>
     <string name="information_webview_required">Tachiyomi를 사용하려면 WebView가 필요합니다</string>
     <string name="information_webview_outdated">호환성을 위해 WebView 어플리케이션을 업데이트 해 주세요</string>
-    <string name="pref_navigate_pan">페이지 내 이동</string>
+    <string name="pref_navigate_pan">탭 하여 넓은 이미지 이동</string>
     <string name="obsolete_extension_message">이 확장기능은 더이상 이용이 불가능합니다.</string>
     <string name="ext_install_service_notif">확장기능 설치 중…</string>
     <string name="ext_installer_legacy">레거시</string>
@@ -590,16 +590,16 @@
     <string name="spen_previous_page">이전 페이지</string>
     <string name="action_show_manga">만화 보기</string>
     <string name="action_desc">내림차순</string>
-    <string name="theme_monet">활력</string>
+    <string name="theme_monet">다이내믹</string>
     <string name="action_display_cover_only_grid">표지 그리드</string>
     <string name="action_reorganize_by">재정렬</string>
     <string name="action_newest">최신 순</string>
     <string name="pref_category_theme">테마</string>
-    <string name="theme_midnightdusk">한밤중의 어둠</string>
+    <string name="theme_midnightdusk">황혼</string>
     <string name="ext_obsolete">지원 종료</string>
     <string name="tracker_not_logged_in">로그인 불가: %1$s</string>
     <string name="no_results_found">검색 결과가 없습니다</string>
-    <string name="pref_dual_page_invert_summary">이중 페이지 분할 시 배치가 읽는 방향과 다를 경우 사용하세요</string>
+    <string name="pref_dual_page_invert_summary">넓은 페이지 분할 시 배치가 읽는 방향과 다를 경우</string>
     <string name="ext_nsfw_short">19금</string>
     <string name="action_filter_started">읽는 중</string>
     <string name="action_display_show_tabs">카테고리 탭 보이기</string>
@@ -633,7 +633,7 @@
     <string name="backup_restore_content_full">백업 파일에서 데이터가 복구됩니다.
 \n
 \n복구 완료 후 없어진 소스를 다시 설치하고 트래킹 서비스에 로그인 해야 합니다.</string>
-    <string name="backup_info">자동 백업이 매우 권장됩니다. 백업 파일은 다른 장소에 나눠 보관하세요.</string>
+    <string name="backup_info">백업 파일은 복사하여 다른 장소에 나눠 보관하세요.</string>
     <string name="pref_disable_battery_optimization_summary">백그라운드 서재 업데이트와 라이브러리 업데이트를 도울 수 있습니다</string>
     <string name="pref_verbose_logging">자세한 로그</string>
     <string name="pref_verbose_logging_summary">자세한 로그를 시스템 로그에 기록 (성능이 하락할 수 있습니다)</string>
@@ -666,7 +666,7 @@
     <string name="pref_update_only_started">읽지 않음</string>
     <string name="action_move_to_top_all_for_series">만화 전체를 맨 위로 이동</string>
     <string name="action_webview_refresh">새로고침</string>
-    <string name="theme_greenapple">초록 사과</string>
+    <string name="theme_greenapple">청사과</string>
     <string name="theme_tako">문어</string>
     <string name="theme_yinyang">음과 양</string>
     <string name="theme_yotsuba">요츠바</string>
@@ -724,12 +724,12 @@
     <string name="custom_cover">맞춤 표지</string>
     <string name="ext_info_age_rating">연령 관람등급</string>
     <string name="action_remove_everything">다 제거하기</string>
-    <string name="pref_reset_viewer_flags_success">모든 뷰어 설정 초기화할 수 없습니다</string>
-    <string name="pref_user_agent_string">부전승으로 사용자 수</string>
-    <string name="pref_reset_user_agent_string">부전승으로 사용자 수 리셋</string>
+    <string name="pref_reset_viewer_flags_success">모든 뷰어 설정을 초기화했습니다</string>
+    <string name="pref_user_agent_string">기본 사용자 에이전트 문자열</string>
+    <string name="pref_reset_user_agent_string">기본 사용자 에이전트 문자열 리셋</string>
     <string name="complete_list">완결 목록</string>
     <string name="pref_reset_viewer_flags_error">뷰어 설정을 초기화 할 수 없습니다</string>
-    <string name="pref_reset_viewer_flags">시리즈마다 뷰어 설정 초기화 할 수 없음</string>
+    <string name="pref_reset_viewer_flags">시리즈마다 뷰어 설정 초기화</string>
     <string name="cant_open_last_read_chapter">마지막 회차를 열 수 없습니다</string>
     <string name="appwidget_updates_description">최근에 업데이트 받는 만화 보기</string>
     <string name="on_hold_list">보류 목록</string>
@@ -737,9 +737,22 @@
     <string name="download_notifier_split_page_not_found">나누어 짐 중에 %d페이지 안 찾습니다</string>
     <string name="loader_rar5_error">RARv5 포맷은 지원되지 않습니다</string>
     <string name="appwidget_unavailable_locked">앱 잠금 사용 중에 위젯 이용할 없습니다</string>
-    <string name="theme_tidalwave">해일</string>
+    <string name="theme_tidalwave">파도</string>
     <string name="update_already_running">업데이트가 이미 실행 중입니다</string>
     <string name="error_user_agent_string_blank">사용자 에이전트 문자열은 비워 둘 수 없습니다</string>
     <string name="download_ahead">미리 다운로드</string>
     <string name="multi_lang">다수의</string>
+    <string name="pref_long_strip_split">긴 이미지 분할 (BETA)</string>
+    <string name="remove_manga">서재에서 \"%s\"을(를) 제거하려고 합니다</string>
+    <string name="missing_storage_permission">저장공간 사용 권한이 없음</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">읽지 않은 다음 %d 회차</item>
+    </plurals>
+    <string name="auto_download_while_reading">읽을 때 자동 다운로드</string>
+    <string name="updates_last_update_info">마지막 서재 업데이트: %1$s</string>
+    <string name="download_ahead_info">만화가 내 서재에 추가되어 있고, 현재 회차와 다음 회차가 이미 다운로드된 경우에만 작동됩니다</string>
+    <string name="popular">인기</string>
+    <string name="are_you_sure">정말로 실행합니까\?</string>
+    <string name="skipped_reason_not_always_update">만화에 업데이트가 필요하지 않음으로 건너뜀</string>
+    <string name="action_search_hint">검색…</string>
 </resources>

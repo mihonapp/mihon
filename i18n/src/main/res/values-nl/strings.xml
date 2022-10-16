@@ -548,7 +548,7 @@
     <string name="action_display_show_number_of_items">Aantal items tonen</string>
     <string name="action_filter_tracked">Getracked</string>
     <string name="right_and_left_nav">Rechts en links</string>
-    <string name="pref_dual_page_split">Dubbele pagina\'s opsplitsen</string>
+    <string name="pref_dual_page_split">Brede pagina\'s opsplitsen</string>
     <string name="backup_restore_content_full">Data uit het back-upbestand zal worden teruggezet.
 \n
 \nJe zult missende extensies opnieuw moeten installeren, en opnieuw moeten inloggen bij de trackingdiensten om deze weer te gebruiken.</string>
@@ -556,8 +556,8 @@
     <string name="nav_zone_left">Links</string>
     <string name="nav_zone_next">Volgende</string>
     <string name="nav_zone_prev">Vorige</string>
-    <string name="pref_dual_page_invert_summary">Als de plaats van de dubble-paginasplitsing niet overeenkomt met de leesrichting</string>
-    <string name="pref_dual_page_invert">Plaatsing van dubbele-paginasplitsing omkeren</string>
+    <string name="pref_dual_page_invert_summary">Als de paginasplitsing in de breedte niet overeenkomt met de leesrichting</string>
+    <string name="pref_dual_page_invert">paginasplitsing omkeren</string>
     <string name="pref_show_navigation_mode_summary">Laat de tikzones zien als de lezer wordt geopend</string>
     <string name="pref_show_navigation_mode">Navigatielayout als overlay laten zien</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
@@ -655,7 +655,7 @@
     <string name="ext_installer_legacy">Verouderd</string>
     <string name="ext_installer_shizuku_stopped">Shizuku wordt niet uitgevoerd</string>
     <string name="ext_installer_pref">Installatieprogramma</string>
-    <string name="backup_info">Het is erg aangeraden om automatische back-ups te gebruiken en deze op meerdere plekken te bewaren.</string>
+    <string name="backup_info">Je zou kopies van back-ups ook in andere plaatsen moeten hebben.</string>
     <string name="connected_to_wifi">Alleen via Wi-Fi</string>
     <string name="pref_verbose_logging">Uitgebreide logging</string>
     <string name="notification_size_warning">Waarschuwing: grote updates schaden bronnen en kunnen leiden tot slomere updates en verhoogd batterijgebruik</string>
@@ -728,4 +728,16 @@
     <string name="ext_info_version">Versie</string>
     <string name="battery_not_low">Wanneer de batterij niet leeg is</string>
     <string name="pref_app_language">Taal van de applicatie</string>
+    <string name="empty_backup_error">Geen bibliotheek inzendingen om te backuppen</string>
+    <string name="action_sort_unread_count">Ongelezen aantal</string>
+    <string name="download_ahead_info">Werkt alleen bij vermeldingen in de bibliotheek en als het huidige hoofdstuk en het volgende al gedownload zijn</string>
+    <string name="pref_user_agent_string">Standaard \'user-agent-string\'</string>
+    <string name="pref_duplicate_pinned_sources">Laat gedupliceerde vastgezette bronnen zien</string>
+    <string name="pref_duplicate_pinned_sources_summary">Herhaal vastgezetten bronnen in hun respectieve taal groepen</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Volgende ongelezen hoofdstuk</item>
+        <item quantity="other">Volgende aantal %d ongelezen hoofdstukken</item>
+    </plurals>
+    <string name="action_search_hint">Zoek…</string>
+    <string name="missing_storage_permission">Opslag bevoegdheden niet verleent</string>
 </resources>

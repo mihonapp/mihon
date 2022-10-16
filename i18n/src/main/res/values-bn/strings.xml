@@ -659,7 +659,7 @@
     <string name="help_translate">অনুবাদে সাহায্য করুন</string>
     <string name="ext_installer_shizuku_unavailable_dialog">এক্সটেনশন ইনস্টলার হিসাবে Shizuku ব্যবহার করতে Shizuku ইনস্টল করুন এবং শুরু করুন।</string>
     <string name="pref_tablet_ui_mode">তাব্লেত উই</string>
-    <string name="action_sort_count">মোট মাঙ্গা</string>
+    <string name="action_sort_count">সর্বমোট মঙ্গা</string>
     <string name="label_warning">সতর্কতা</string>
     <string name="action_display_language_badge">ভাষা</string>
     <string name="update_72hour">প্রতি ৩ দিন</string>
@@ -678,4 +678,6 @@
     <string name="on_hiatus">বিরতিতে রয়েছে</string>
     <string name="notification_update_error">%1$d আপডেট(গুলি) ব্যর্থ হয়েছে</string>
     <string name="publishing_finished">সম্পূর্ণ প্রকাশিত</string>
+    <string name="action_filter_started">শুরু করা হয়েছে</string>
+    <string name="action_sort_last_manga_update">সর্বশেষ মাঙা হালনাগাদ</string>
 </resources>

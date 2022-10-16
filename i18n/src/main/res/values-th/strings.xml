@@ -750,7 +750,7 @@
     <string name="multi_lang">หลายภาษา</string>
     <string name="pref_long_strip_split">แบ่งภาพสูงยาว (เบตา)</string>
     <string name="updates_last_update_info">อัปเดตคลังล่าสุด: %1$s</string>
-    <string name="remove_manga">คุณกำลังจะนำมังงะนี้ออกจากคลัง</string>
+    <string name="remove_manga">คุณกำลังจะนำ \"%s\" ออกจากคลัง</string>
     <string name="popular">ยอดนิยม</string>
     <string name="missing_storage_permission">ไม่ได้รับการอนุญาตให้ใช้งานที่จัดเก็บ</string>
     <string name="action_search_hint">ค้นหา…</string>

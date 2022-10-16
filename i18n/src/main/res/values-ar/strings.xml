@@ -546,12 +546,12 @@
     <string name="action_global_search_query">إبحث عن \"%1$s\" بشكلٍ شامل</string>
     <string name="updated_version">حُدِّث إلى الإصدار v%1$s</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="zero">تم تخطي %d فصل، جميع الفصول تم تحديثها بنجاح</item>
+        <item quantity="zero">تم تخطي فصل %d ، إما أن المصدر مفقود أو تمت حذفة</item>
         <item quantity="one">تم تخطي فصل %d، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="two">تم تخطي %d، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="few">تم تخطي %d فصول، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="many">تم تخطي %d من الفصول ، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="other">‎تم تخطي %d فصل، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="two">تم تخطي الفصلان %d، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="few">تم تخطي الفصول %d ، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="many">تم تخطي من الفصول %d ، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="other">‎تم تخطي الفصل %d ، إما أن المصدر مفقود أو تمت تصفيته</item>
     </plurals>
     <string name="no_chapters_error">لم يتم العثور على الفصول</string>
     <string name="share_page_info">%1$s: %2$s, صفحة %3$d</string>
@@ -588,9 +588,9 @@
     <string name="pref_dump_crash_logs_summary">يحفظ سجلات الأخطاء في ملف للمشاركة مع المطورين</string>
     <string name="pref_dump_crash_logs">استخراج سجلات الاخطاء</string>
     <string name="right_and_left_nav">يميناً و يساراً</string>
-    <string name="pref_dual_page_invert_summary">إذا كان موضع تقسيم الصفحات المزدوجة لا يتطابق مع اتجاه القراءة</string>
-    <string name="pref_dual_page_invert">عكس موضع تقسيم الصفحة المزدوجة</string>
-    <string name="pref_dual_page_split">شق الصفحة لنصفين</string>
+    <string name="pref_dual_page_invert_summary">إذا كان موضع تقسيم الصفحات العريضة لا يتطابق مع اتجاه القراءة</string>
+    <string name="pref_dual_page_invert">عكس موضع تقسيم الصفحة</string>
+    <string name="pref_dual_page_split">تقسيم الصفحات العريضة</string>
     <string name="action_desc">تنازلياً</string>
     <string name="action_asc">تصاعدياً</string>
     <string name="action_order_by_upload_date">حسب تاريخ الرفع</string>
@@ -722,7 +722,7 @@
     <string name="pref_update_only_completely_read">مع فصل (فصول) غير مقروءة</string>
     <string name="ext_installer_legacy">قياسي</string>
     <string name="pref_auto_clear_chapter_cache">امسح ملفات التخزين المؤقت عند إغلاق التطبيق</string>
-    <string name="database_clean">تنظيف قاعدة البيانات</string>
+    <string name="database_clean">لا شئ للتنظيف</string>
     <string name="clear_database_source_item_count">عدد المانغا غير المتواجدة بقاعدة بيانات المكتبه%1$d</string>
     <string name="extension_api_error">فشل الحصول على قائمة الملحقات</string>
     <string name="ext_installer_shizuku_unavailable_dialog">قم بتثبيت \"Shizuku\" لاستخدامه كمثبت ملحق.</string>
@@ -740,7 +740,7 @@
 \nهل مازلت تريد أن تكمل؟</string>
     <string name="pref_update_only_started">هذا لم يبدأ بعد</string>
     <string name="skipped_reason_completed">تم تخطيها لإنتهاء السلسلة</string>
-    <string name="pref_navigate_pan">قُدْ للتحرك</string>
+    <string name="pref_navigate_pan">تحريك الصور أثناء النقر</string>
     <string name="pref_landscape_zoom">كبر الصوره الأفقية</string>
     <string name="channel_skipped">متجاوز</string>
     <string name="error_saving_picture">خطأ أثناء حفظ الصورة</string>
@@ -808,7 +808,7 @@
     <string name="updates_last_update_info">آخر تحديث للمكتبة: %1$s</string>
     <string name="error_user_agent_string_blank">سلسلة وكيل المستخدم لا يمكن أن تكون فارغة</string>
     <string name="popular">شائع</string>
-    <string name="remove_manga">أنت على وشك أن تحذف هذه المانجا من مكتبتك</string>
+    <string name="remove_manga">أنت على وشك أن تحذف \"%s\" من مكتبتك</string>
     <plurals name="next_unread_chapters">
         <item quantity="zero">الفصل التالي غير المقروء</item>
         <item quantity="one">الفصل التالي غير المقروء</item>
@@ -818,4 +818,6 @@
         <item quantity="other">الفصول %d غير المقروءة التالية</item>
     </plurals>
     <string name="missing_storage_permission">لم يتم منح أذن التخزين</string>
+    <string name="action_search_hint">بحث…</string>
+    <string name="skipped_reason_not_always_update">تم التخطي لأن السلسلة لا تتطلب تحديثات</string>
 </resources>

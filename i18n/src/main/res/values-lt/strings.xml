@@ -213,7 +213,7 @@
     <string name="pref_cutout_short">Parodyti turinį iškirptoje zonoje</string>
     <string name="pref_dual_page_invert_summary">Jeigu dvigubų puslapių pozicijos nesutampa su skaitymo kryptimi</string>
     <string name="pref_dual_page_invert">Apkeisti dvigubų puslapių padėtis</string>
-    <string name="pref_dual_page_split">Dvigubo puslapio rėžimas</string>
+    <string name="pref_dual_page_split">Perskirti plačius puslapius</string>
     <string name="pref_show_navigation_mode_summary">Trumpai parodyti skaitytuvą, kai atidarytas</string>
     <string name="pref_fullscreen">Pilno ekrano rėžimas</string>
     <string name="ext_nsfw_warning">Šaltiniuose gali būti N18 turinio</string>
@@ -538,7 +538,7 @@
     <string name="spen_previous_page">Ankstesnis puslapis</string>
     <string name="restore_miui_warning">Atsarginės kopijos kūrimas / atkūrimas gali veikti netinkamai, jei \"MIUI Optimization\" yra išjungtas.</string>
     <string name="restoring_backup_canceled">Atšauktas atkūrimas</string>
-    <string name="backup_info">Rekomenduojama automatiškai sukurti atsargines kopijas. Turėtumėte šias kopijas saugoti ir kitose vietose.</string>
+    <string name="backup_info">Atsargines kopijas turėtumėte laikyti ir kitose vietose.</string>
     <string name="cookies_cleared">Slapukai išvalyti</string>
     <string name="label_data">Duomenys</string>
     <string name="clear_database_source_item_count">%1$d nebibliotekinė manga duomenų bazėje</string>
@@ -586,7 +586,7 @@
     <string name="pref_disable_battery_optimization">Išjungti akumuliatoriaus optimizavimą</string>
     <string name="restore_completed">Atkūrimas baigtas</string>
     <string name="restore_duration">%02d min, %02d sek</string>
-    <string name="database_clean">Duomenų bazės valymas</string>
+    <string name="database_clean">Nėra ką išvalyti</string>
     <string name="webview_data_deleted">„WebView“ duomenys išvalyti</string>
     <string name="getting_started_guide">Darbo pradžios vadovas</string>
     <string name="download_notifier_split_page_not_found">Puslapis %d nerastas skaidant</string>
@@ -761,4 +761,21 @@
     <string name="transition_next">Kitas:</string>
     <string name="loader_rar5_error">RARv5 formatas nepalaikomas</string>
     <string name="source_filter_empty_screen">Įdiegtų šaltinių nerasta</string>
+    <string name="theme_tidalwave">Potvynio banga</string>
+    <string name="action_search_hint">Ieškoti…</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Kitas neskaitytas skyrius</item>
+        <item quantity="few">Kiti %d neskaityti skyriai</item>
+        <item quantity="other">Kiti %d neskaitytų skyrių</item>
+    </plurals>
+    <string name="pref_long_strip_split">Perskirti aukštus paveikslėlius (BETA versija)</string>
+    <string name="error_user_agent_string_blank">Vartotojo agento eilutė negali būti tuščia</string>
+    <string name="update_already_running">Atnaujinimas jau vykdomas</string>
+    <string name="updates_last_update_info">Biblioteka paskutinį kartą atnaujinta: %1$s</string>
+    <string name="remove_manga">Ketinate pašalinti „%s“ iš bibliotekos</string>
+    <string name="download_ahead_info">Veikia tik bibliotekoje esantiems įrašams ir tik tada, jei jau atsisiųstas dabartinis ir kitas skyrius</string>
+    <string name="download_ahead">Atsisiųsti į priekį</string>
+    <string name="auto_download_while_reading">Automatinis atsisiuntimas beskaitant</string>
+    <string name="skipped_reason_not_always_update">Praleista, nes serijai nereikia atnaujinimų</string>
+    <string name="missing_storage_permission">Nesuteikti saugojimo leidimai</string>
 </resources>
