@@ -12,6 +12,10 @@ import eu.kanade.tachiyomi.ui.library.LibraryItem
 @Composable
 fun LibraryCoverOnlyGrid(
     items: List<LibraryItem>,
+    showDownloadBadges: Boolean,
+    showUnreadBadges: Boolean,
+    showLocalBadges: Boolean,
+    showLanguageBadges: Boolean,
     columns: Int,
     contentPadding: PaddingValues,
     selection: List<LibraryManga>,
@@ -33,6 +37,10 @@ fun LibraryCoverOnlyGrid(
         ) { libraryItem ->
             LibraryCoverOnlyGridItem(
                 item = libraryItem,
+                showDownloadBadge = showDownloadBadges,
+                showUnreadBadge = showUnreadBadges,
+                showLocalBadge = showLocalBadges,
+                showLanguageBadge = showLanguageBadges,
                 isSelected = libraryItem.libraryManga in selection,
                 onClick = onClick,
                 onLongClick = onLongClick,
@@ -44,6 +52,10 @@ fun LibraryCoverOnlyGrid(
 @Composable
 fun LibraryCoverOnlyGridItem(
     item: LibraryItem,
+    showDownloadBadge: Boolean,
+    showUnreadBadge: Boolean,
+    showLocalBadge: Boolean,
+    showLanguageBadge: Boolean,
     isSelected: Boolean,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
@@ -68,9 +80,10 @@ fun LibraryCoverOnlyGridItem(
             manga.thumbnailUrl,
             manga.coverLastModified,
         ),
-        downloadCount = item.downloadCount,
-        unreadCount = item.unreadCount,
-        isLocal = item.isLocal,
-        language = item.sourceLanguage,
+        item = item,
+        showDownloadBadge = showDownloadBadge,
+        showUnreadBadge = showUnreadBadge,
+        showLocalBadge = showLocalBadge,
+        showLanguageBadge = showLanguageBadge,
     )
 }

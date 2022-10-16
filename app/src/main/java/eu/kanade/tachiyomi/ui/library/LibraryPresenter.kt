@@ -106,6 +106,11 @@ class LibraryPresenter(
     val tabVisibility by libraryPreferences.categoryTabs().asState()
     val mangaCountVisibility by libraryPreferences.categoryNumberOfItems().asState()
 
+    val showDownloadBadges by libraryPreferences.downloadBadge().asState()
+    val showUnreadBadges by libraryPreferences.unreadBadge().asState()
+    val showLocalBadges by libraryPreferences.localBadge().asState()
+    val showLanguageBadges by libraryPreferences.languageBadge().asState()
+
     var activeCategory: Int by libraryPreferences.lastUsedCategory().asState()
 
     val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
@@ -115,11 +120,6 @@ class LibraryPresenter(
      * Relay used to apply the UI filters to the last emission of the library.
      */
     private val filterTriggerRelay = BehaviorRelay.create(Unit)
-
-    /**
-     * Relay used to apply the UI update to the last emission of the library.
-     */
-    private val badgeTriggerRelay = BehaviorRelay.create(Unit)
 
     /**
      * Relay used to apply the selected sorting method to the last emission of the library.
@@ -142,14 +142,11 @@ class LibraryPresenter(
          * TODO: Move this to a coroutine world
          * - Move filter and sort to getMangaForCategory and only filter and sort the current display category instead of whole library as some has 5000+ items in the library
          * - Create new db view and new query to just fetch the current category save as needed to instance variable
-         * - Fetch badges to maps and retrive as needed instead of fetching all of them at once
+         * - Fetch badges to maps and retrieve as needed instead of fetching all of them at once
          */
         if (librarySubscription == null || librarySubscription!!.isCancelled) {
             librarySubscription = presenterScope.launchIO {
                 getLibraryFlow().asObservable()
-                    .combineLatest(badgeTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
-                        lib.apply { setBadges(mangaMap) }
-                    }
                     .combineLatest(getFilterObservable()) { lib, tracks ->
                         lib.copy(mangaMap = applyFilters(lib.mangaMap, tracks))
                     }
@@ -201,7 +198,7 @@ class LibraryPresenter(
 
         val filterFnUnread: (LibraryItem) -> Boolean = unread@{ item ->
             if (filterUnread == State.IGNORE.value) return@unread true
-            val isUnread = item.libraryManga.unreadCount != 0L
+            val isUnread = item.libraryManga.unreadCount > 0
 
             return@unread if (filterUnread == State.INCLUDE.value) {
                 isUnread
@@ -281,50 +278,6 @@ class LibraryPresenter(
         }
 
         return map.mapValues { entry -> entry.value.filter(filterFn) }
-    }
-
-    /**
-     * Sets downloaded chapter count to each manga.
-     *
-     * @param map the map of manga.
-     */
-    private fun setBadges(map: LibraryMap) {
-        val showDownloadBadges = libraryPreferences.downloadBadge().get()
-        val showUnreadBadges = libraryPreferences.unreadBadge().get()
-        val showLocalBadges = libraryPreferences.localBadge().get()
-        val showLanguageBadges = libraryPreferences.languageBadge().get()
-
-        for ((_, itemList) in map) {
-            for (item in itemList) {
-                item.downloadCount = if (showDownloadBadges) {
-                    downloadManager.getDownloadCount(item.libraryManga.manga).toLong()
-                } else {
-                    // Unset download count if not enabled
-                    -1
-                }
-
-                item.unreadCount = if (showUnreadBadges) {
-                    item.libraryManga.unreadCount
-                } else {
-                    // Unset unread count if not enabled
-                    -1
-                }
-
-                item.isLocal = if (showLocalBadges) {
-                    item.libraryManga.manga.isLocal()
-                } else {
-                    // Hide / Unset local badge if not enabled
-                    false
-                }
-
-                item.sourceLanguage = if (showLanguageBadges) {
-                    sourceManager.getOrStub(item.libraryManga.manga.source).lang.uppercase()
-                } else {
-                    // Unset source language if not enabled
-                    ""
-                }
-            }
-        }
     }
 
     /**
@@ -434,8 +387,13 @@ class LibraryPresenter(
             .map { list ->
                 list.map { libraryManga ->
                     // Display mode based on user preference: take it from global library setting or category
-                    LibraryItem(libraryManga)
-                }.groupBy { it.libraryManga.category.toLong() }
+                    LibraryItem(libraryManga).apply {
+                        downloadCount = downloadManager.getDownloadCount(libraryManga.manga).toLong()
+                        unreadCount = libraryManga.unreadCount
+                        isLocal = libraryManga.manga.isLocal()
+                        sourceLanguage = sourceManager.getOrStub(libraryManga.manga.source).lang
+                    }
+                }.groupBy { it.libraryManga.category }
             }
         return combine(categoriesFlow, libraryMangasFlow) { dbCategories, libraryManga ->
             val categories = if (libraryManga.isNotEmpty() && libraryManga.containsKey(0).not()) {
@@ -456,7 +414,7 @@ class LibraryPresenter(
      */
     private fun getFilterObservable(): Observable<Map<Long, Map<Long, Boolean>>> {
         return filterTriggerRelay.observeOn(Schedulers.io())
-            .combineLatest(getTracksObservable()) { _, tracks -> tracks }
+            .combineLatest(getTracksFlow().asObservable().observeOn(Schedulers.io())) { _, tracks -> tracks }
     }
 
     /**
@@ -464,7 +422,7 @@ class LibraryPresenter(
      *
      * @return an observable of tracked manga.
      */
-    private fun getTracksObservable(): Observable<Map<Long, Map<Long, Boolean>>> {
+    private fun getTracksFlow(): Flow<Map<Long, Map<Long, Boolean>>> {
         // TODO: Move this to domain/data layer
         return getTracks.subscribe()
             .map { tracks ->
@@ -477,8 +435,6 @@ class LibraryPresenter(
                         }
                     }
             }
-            .asObservable()
-            .observeOn(Schedulers.io())
     }
 
     /**
@@ -486,13 +442,6 @@ class LibraryPresenter(
      */
     fun requestFilterUpdate() {
         filterTriggerRelay.call(Unit)
-    }
-
-    /**
-     * Requests the library to have download badges added.
-     */
-    fun requestBadgesUpdate() {
-        badgeTriggerRelay.call(Unit)
     }
 
     /**

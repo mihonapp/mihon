@@ -127,9 +127,7 @@ class LibraryController(
             when (group) {
                 is LibrarySettingsSheet.Filter.FilterGroup -> onFilterChanged()
                 is LibrarySettingsSheet.Sort.SortGroup -> onSortChanged()
-                is LibrarySettingsSheet.Display.DisplayGroup -> {}
-                is LibrarySettingsSheet.Display.BadgeGroup -> onBadgeSettingChanged()
-                is LibrarySettingsSheet.Display.TabsGroup -> {} // onTabsSettingsChanged()
+                else -> {} // Handled via different mechanisms
             }
         }
     }
@@ -156,10 +154,6 @@ class LibraryController(
     private fun onFilterChanged() {
         presenter.requestFilterUpdate()
         activity?.invalidateOptionsMenu()
-    }
-
-    private fun onBadgeSettingChanged() {
-        presenter.requestBadgesUpdate()
     }
 
     private fun onSortChanged() {

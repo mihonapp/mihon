@@ -20,6 +20,10 @@ import eu.kanade.tachiyomi.ui.library.LibraryItem
 @Composable
 fun LibraryComfortableGrid(
     items: List<LibraryItem>,
+    showDownloadBadges: Boolean,
+    showUnreadBadges: Boolean,
+    showLocalBadges: Boolean,
+    showLanguageBadges: Boolean,
     columns: Int,
     contentPadding: PaddingValues,
     selection: List<LibraryManga>,
@@ -40,10 +44,14 @@ fun LibraryComfortableGrid(
             contentType = { "library_comfortable_grid_item" },
         ) { libraryItem ->
             LibraryComfortableGridItem(
-                libraryItem,
-                libraryItem.libraryManga in selection,
-                onClick,
-                onLongClick,
+                item = libraryItem,
+                showDownloadBadge = showDownloadBadges,
+                showUnreadBadge = showUnreadBadges,
+                showLocalBadge = showLocalBadges,
+                showLanguageBadge = showLanguageBadges,
+                isSelected = libraryItem.libraryManga in selection,
+                onClick = onClick,
+                onLongClick = onLongClick,
             )
         }
     }
@@ -52,6 +60,10 @@ fun LibraryComfortableGrid(
 @Composable
 fun LibraryComfortableGridItem(
     item: LibraryItem,
+    showDownloadBadge: Boolean,
+    showUnreadBadge: Boolean,
+    showLocalBadge: Boolean,
+    showLanguageBadge: Boolean,
     isSelected: Boolean,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
@@ -78,10 +90,11 @@ fun LibraryComfortableGridItem(
                     manga.thumbnailUrl,
                     manga.coverLastModified,
                 ),
-                downloadCount = item.downloadCount,
-                unreadCount = item.unreadCount,
-                isLocal = item.isLocal,
-                language = item.sourceLanguage,
+                item = item,
+                showDownloadBadge = showDownloadBadge,
+                showUnreadBadge = showUnreadBadge,
+                showLocalBadge = showLocalBadge,
+                showLanguageBadge = showLanguageBadge,
             )
             MangaGridComfortableText(
                 text = manga.title,

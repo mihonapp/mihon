@@ -6,16 +6,13 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.components.Badge
 import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.MangaCover
-import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.library.LibraryItem
 
 @Composable
 fun MangaGridCover(
@@ -56,10 +53,11 @@ fun MangaGridCover(
 fun LibraryGridCover(
     modifier: Modifier = Modifier,
     mangaCover: eu.kanade.domain.manga.model.MangaCover,
-    downloadCount: Long,
-    unreadCount: Long,
-    isLocal: Boolean,
-    language: String,
+    item: LibraryItem,
+    showDownloadBadge: Boolean,
+    showUnreadBadge: Boolean,
+    showLocalBadge: Boolean,
+    showLanguageBadge: Boolean,
     content: @Composable BoxScope.() -> Unit = {},
 ) {
     MangaGridCover(
@@ -71,31 +69,11 @@ fun LibraryGridCover(
             )
         },
         badgesStart = {
-            if (downloadCount > 0) {
-                Badge(
-                    text = "$downloadCount",
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.onTertiary,
-                )
-            }
-            if (unreadCount > 0) {
-                Badge(text = "$unreadCount")
-            }
+            DownloadsBadge(enabled = showDownloadBadge, item = item)
+            UnreadBadge(enabled = showUnreadBadge, item = item)
         },
         badgesEnd = {
-            if (isLocal) {
-                Badge(
-                    text = stringResource(R.string.local_source_badge),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.onTertiary,
-                )
-            } else if (language.isNotEmpty()) {
-                Badge(
-                    text = language,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.onTertiary,
-                )
-            }
+            LanguageBadge(showLanguage = showLanguageBadge, showLocal = showLocalBadge, item = item)
         },
         content = content,
     )

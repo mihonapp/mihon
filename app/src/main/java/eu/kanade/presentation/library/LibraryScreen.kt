@@ -103,6 +103,10 @@ fun LibraryScreen(
                     getDisplayModeForPage = { presenter.categories[it].display },
                     getColumnsForOrientation = { presenter.getColumnsPreferenceForCurrentOrientation(it) },
                     getLibraryForPage = { presenter.getMangaForCategory(page = it) },
+                    showDownloadBadges = presenter.showDownloadBadges,
+                    showUnreadBadges = presenter.showUnreadBadges,
+                    showLocalBadges = presenter.showLocalBadges,
+                    showLanguageBadges = presenter.showLanguageBadges,
                     isIncognitoMode = presenter.isIncognitoMode,
                     isDownloadOnly = presenter.isDownloadOnly,
                 )

@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.model.MangaCover
-import eu.kanade.presentation.components.Badge
 import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.MangaCover.Square
@@ -35,6 +34,10 @@ import eu.kanade.tachiyomi.ui.library.LibraryItem
 @Composable
 fun LibraryList(
     items: List<LibraryItem>,
+    showDownloadBadges: Boolean,
+    showUnreadBadges: Boolean,
+    showLocalBadges: Boolean,
+    showLanguageBadges: Boolean,
     contentPadding: PaddingValues,
     selection: List<LibraryManga>,
     onClick: (LibraryManga) -> Unit,
@@ -63,6 +66,10 @@ fun LibraryList(
         ) { libraryItem ->
             LibraryListItem(
                 item = libraryItem,
+                showDownloadBadge = showDownloadBadges,
+                showUnreadBadge = showUnreadBadges,
+                showLocalBadge = showLocalBadges,
+                showLanguageBadge = showLanguageBadges,
                 isSelected = libraryItem.libraryManga in selection,
                 onClick = onClick,
                 onLongClick = onLongClick,
@@ -74,6 +81,10 @@ fun LibraryList(
 @Composable
 fun LibraryListItem(
     item: LibraryItem,
+    showDownloadBadge: Boolean,
+    showUnreadBadge: Boolean,
+    showLocalBadge: Boolean,
+    showLanguageBadge: Boolean,
     isSelected: Boolean,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
@@ -93,30 +104,9 @@ fun LibraryListItem(
         onClick = { onClick(libraryManga) },
         onLongClick = { onLongClick(libraryManga) },
     ) {
-        if (item.downloadCount > 0) {
-            Badge(
-                text = "${item.downloadCount}",
-                color = MaterialTheme.colorScheme.tertiary,
-                textColor = MaterialTheme.colorScheme.onTertiary,
-            )
-        }
-        if (item.unreadCount > 0) {
-            Badge(text = "${item.unreadCount}")
-        }
-        if (item.isLocal) {
-            Badge(
-                text = stringResource(R.string.local_source_badge),
-                color = MaterialTheme.colorScheme.tertiary,
-                textColor = MaterialTheme.colorScheme.onTertiary,
-            )
-        }
-        if (item.isLocal.not() && item.sourceLanguage.isNotEmpty()) {
-            Badge(
-                text = item.sourceLanguage,
-                color = MaterialTheme.colorScheme.tertiary,
-                textColor = MaterialTheme.colorScheme.onTertiary,
-            )
-        }
+        DownloadsBadge(enabled = showDownloadBadge, item = item)
+        UnreadBadge(enabled = showUnreadBadge, item = item)
+        LanguageBadge(showLanguage = showLanguageBadge, showLocal = showLocalBadge, item = item)
     }
 }
 

@@ -29,6 +29,10 @@ import eu.kanade.tachiyomi.ui.library.LibraryItem
 @Composable
 fun LibraryCompactGrid(
     items: List<LibraryItem>,
+    showDownloadBadges: Boolean,
+    showUnreadBadges: Boolean,
+    showLocalBadges: Boolean,
+    showLanguageBadges: Boolean,
     columns: Int,
     contentPadding: PaddingValues,
     selection: List<LibraryManga>,
@@ -50,6 +54,10 @@ fun LibraryCompactGrid(
         ) { libraryItem ->
             LibraryCompactGridItem(
                 item = libraryItem,
+                showDownloadBadge = showDownloadBadges,
+                showUnreadBadge = showUnreadBadges,
+                showLocalBadge = showLocalBadges,
+                showLanguageBadge = showLanguageBadges,
                 isSelected = libraryItem.libraryManga in selection,
                 onClick = onClick,
                 onLongClick = onLongClick,
@@ -61,6 +69,10 @@ fun LibraryCompactGrid(
 @Composable
 fun LibraryCompactGridItem(
     item: LibraryItem,
+    showDownloadBadge: Boolean,
+    showUnreadBadge: Boolean,
+    showLocalBadge: Boolean,
+    showLanguageBadge: Boolean,
     isSelected: Boolean,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
@@ -85,10 +97,11 @@ fun LibraryCompactGridItem(
             manga.thumbnailUrl,
             manga.coverLastModified,
         ),
-        downloadCount = item.downloadCount,
-        unreadCount = item.unreadCount,
-        isLocal = item.isLocal,
-        language = item.sourceLanguage,
+        item = item,
+        showDownloadBadge = showDownloadBadge,
+        showUnreadBadge = showUnreadBadge,
+        showLocalBadge = showLocalBadge,
+        showLanguageBadge = showLanguageBadge,
     ) {
         Box(
             modifier = Modifier

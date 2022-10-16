@@ -22,7 +22,6 @@ import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.presentation.components.SwipeRefresh
 import eu.kanade.presentation.library.LibraryState
-import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -33,8 +32,6 @@ fun LibraryContent(
     contentPadding: PaddingValues,
     currentPage: () -> Int,
     isLibraryEmpty: Boolean,
-    isDownloadOnly: Boolean,
-    isIncognitoMode: Boolean,
     showPageTabs: Boolean,
     showMangaCount: Boolean,
     onChangeCurrentPage: (Int) -> Unit,
@@ -47,6 +44,12 @@ fun LibraryContent(
     getDisplayModeForPage: @Composable (Int) -> LibraryDisplayMode,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getLibraryForPage: @Composable (Int) -> List<LibraryItem>,
+    showDownloadBadges: Boolean,
+    showUnreadBadges: Boolean,
+    showLocalBadges: Boolean,
+    showLanguageBadges: Boolean,
+    isDownloadOnly: Boolean,
+    isIncognitoMode: Boolean,
 ) {
     Column(
         modifier = Modifier.padding(
@@ -106,6 +109,10 @@ fun LibraryContent(
                 getDisplayModeForPage = getDisplayModeForPage,
                 getColumnsForOrientation = getColumnsForOrientation,
                 getLibraryForPage = getLibraryForPage,
+                showDownloadBadges = showDownloadBadges,
+                showUnreadBadges = showUnreadBadges,
+                showLocalBadges = showLocalBadges,
+                showLanguageBadges = showLanguageBadges,
                 onClickManga = onClickManga,
                 onLongClickManga = onLongClickManga,
                 onGlobalSearchClicked = onGlobalSearchClicked,
