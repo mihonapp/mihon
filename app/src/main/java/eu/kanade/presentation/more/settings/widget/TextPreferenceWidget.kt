@@ -1,37 +1,66 @@
 package eu.kanade.presentation.more.settings.widget
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Preview
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import eu.kanade.presentation.util.secondaryItemAlpha
 
 @Composable
 fun TextPreferenceWidget(
     modifier: Modifier = Modifier,
-    title: String,
+    title: String? = null,
     subtitle: String? = null,
     icon: ImageVector? = null,
+    iconTint: Color = MaterialTheme.colorScheme.primary,
+    widget: @Composable (() -> Unit)? = null,
     onPreferenceClick: (() -> Unit)? = null,
 ) {
     BasePreferenceWidget(
         modifier = modifier,
         title = title,
-        subtitle = subtitle,
-        icon = icon,
+        subcomponent = if (!subtitle.isNullOrBlank()) {
+            {
+                Text(
+                    text = subtitle,
+                    modifier = Modifier
+                        .padding(horizontal = HorizontalPadding)
+                        .secondaryItemAlpha(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 10,
+                )
+            }
+        } else {
+            null
+        },
+        icon = if (icon != null) {
+            {
+                Icon(
+                    imageVector = icon,
+                    tint = iconTint,
+                    contentDescription = null,
+                )
+            }
+        } else {
+            null
+        },
         onClick = onPreferenceClick,
+        widget = widget,
     )
 }
 
 @Preview
 @Composable
-fun TextPreferenceWidgetPreview() {
+private fun TextPreferenceWidgetPreview() {
     MaterialTheme {
         Surface {
             Column {

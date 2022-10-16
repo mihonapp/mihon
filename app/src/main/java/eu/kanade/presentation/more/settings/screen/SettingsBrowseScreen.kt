@@ -74,7 +74,7 @@ class SettingsBrowseScreen : SearchableSettings {
                             )
                         },
                     ),
-                    Preference.infoPreference(stringResource(R.string.parental_controls_info)),
+                    Preference.PreferenceItem.InfoPreference(stringResource(R.string.parental_controls_info)),
                 ),
             ),
         )

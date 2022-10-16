@@ -76,7 +76,7 @@ class SettingsSecurityScreen : SearchableSettings {
                 entries = SecurityPreferences.SecureScreenMode.values()
                     .associateWith { stringResource(it.titleResId) },
             ),
-            Preference.infoPreference(stringResource(R.string.secure_screen_summary)),
+            Preference.PreferenceItem.InfoPreference(stringResource(R.string.secure_screen_summary)),
         )
     }
 }

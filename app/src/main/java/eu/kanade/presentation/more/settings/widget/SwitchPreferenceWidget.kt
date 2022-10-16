@@ -20,23 +20,24 @@ fun SwitchPreferenceWidget(
     checked: Boolean = false,
     onCheckedChanged: (Boolean) -> Unit,
 ) {
-    BasePreferenceWidget(
+    TextPreferenceWidget(
         title = title,
         subtitle = subtitle,
         icon = icon,
-        onClick = { onCheckedChanged(!checked) },
-    ) {
-        Switch(
-            checked = checked,
-            onCheckedChange = null,
-            modifier = Modifier.padding(start = TrailingWidgetBuffer),
-        )
-    }
+        widget = {
+            Switch(
+                checked = checked,
+                onCheckedChange = null,
+                modifier = Modifier.padding(start = TrailingWidgetBuffer),
+            )
+        },
+        onPreferenceClick = { onCheckedChanged(!checked) },
+    )
 }
 
 @Preview
 @Composable
-fun SwitchPreferenceWidgetPreview() {
+private fun SwitchPreferenceWidgetPreview() {
     MaterialTheme {
         Surface {
             Column {

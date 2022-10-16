@@ -182,9 +182,10 @@ private fun SearchResult(
                                 }
                             }
                             is Preference.PreferenceItem<*> -> sequenceOf(null to p)
-                            else -> emptySequence() // Ignore other prefs
                         }
                     }
+                    // Don't show info preference
+                    .filterNot { it.second is Preference.PreferenceItem.InfoPreference }
                     // Filter by search query
                     .filter { (_, p) ->
                         val inTitle = p.title.contains(searchKey, true)

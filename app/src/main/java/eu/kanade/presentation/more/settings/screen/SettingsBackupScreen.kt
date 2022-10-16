@@ -356,7 +356,7 @@ class SettingsBackupScreen : SearchableSettings {
                     title = stringResource(R.string.pref_backup_slots),
                     entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
                 ),
-                Preference.infoPreference(stringResource(R.string.backup_info)),
+                Preference.PreferenceItem.InfoPreference(stringResource(R.string.backup_info)),
             ),
         )
     }

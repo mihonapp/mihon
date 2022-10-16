@@ -15,6 +15,7 @@ import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.more.settings.widget.AppThemePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.EditTextPreferenceWidget
+import eu.kanade.presentation.more.settings.widget.InfoWidget
 import eu.kanade.presentation.more.settings.widget.ListPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.MultiSelectListPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
@@ -162,6 +163,9 @@ internal fun PreferenceItem(
                         onClick = { if (isLogged) item.logout() else item.login() },
                     )
                 }
+            }
+            is Preference.PreferenceItem.InfoPreference -> {
+                InfoWidget(text = item.title)
             }
         }
     }

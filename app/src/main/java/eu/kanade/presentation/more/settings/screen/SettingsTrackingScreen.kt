@@ -145,7 +145,7 @@ class SettingsTrackingScreen : SearchableSettings {
                         login = { context.openInBrowser(BangumiApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackManager.bangumi) },
                     ),
-                    Preference.infoPreference(stringResource(R.string.tracking_info)),
+                    Preference.PreferenceItem.InfoPreference(stringResource(R.string.tracking_info)),
                 ),
             ),
             Preference.PreferenceGroup(
@@ -168,7 +168,7 @@ class SettingsTrackingScreen : SearchableSettings {
                         },
                         logout = trackManager.komga::logout,
                     ),
-                    Preference.infoPreference(stringResource(R.string.enhanced_tracking_info)),
+                    Preference.PreferenceItem.InfoPreference(stringResource(R.string.enhanced_tracking_info)),
                 ),
             ),
         )

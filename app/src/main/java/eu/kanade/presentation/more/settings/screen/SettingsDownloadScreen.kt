@@ -265,7 +265,7 @@ class SettingsDownloadScreen : SearchableSettings {
                         }
                     },
                 ),
-                Preference.infoPreference(stringResource(R.string.download_ahead_info)),
+                Preference.PreferenceItem.InfoPreference(stringResource(R.string.download_ahead_info)),
             ),
         )
     }
