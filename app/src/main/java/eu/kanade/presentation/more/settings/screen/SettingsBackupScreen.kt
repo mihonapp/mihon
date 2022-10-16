@@ -22,12 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -135,19 +135,19 @@ class SettingsBackupScreen : SearchableSettings {
         onConfirm: (flag: Int) -> Unit,
         onDismissRequest: () -> Unit,
     ) {
-        val flags = remember { mutableStateListOf<Int>() }
+        val choices = remember {
+            mapOf(
+                BackupConst.BACKUP_CATEGORY to R.string.categories,
+                BackupConst.BACKUP_CHAPTER to R.string.chapters,
+                BackupConst.BACKUP_TRACK to R.string.track,
+                BackupConst.BACKUP_HISTORY to R.string.history,
+            )
+        }
+        val flags = remember { choices.keys.toMutableStateList() }
         AlertDialog(
             onDismissRequest = onDismissRequest,
             title = { Text(text = stringResource(R.string.backup_choice)) },
             text = {
-                val choices = remember {
-                    mapOf(
-                        BackupConst.BACKUP_CATEGORY to R.string.categories,
-                        BackupConst.BACKUP_CHAPTER to R.string.chapters,
-                        BackupConst.BACKUP_TRACK to R.string.track,
-                        BackupConst.BACKUP_HISTORY to R.string.history,
-                    )
-                }
                 Column {
                     CreateBackupDialogItem(
                         isSelected = true,
