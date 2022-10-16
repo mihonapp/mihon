@@ -254,7 +254,6 @@ dependencies {
 
     // UI libraries
     implementation(libs.material)
-    implementation(libs.androidprocessbutton)
     implementation(libs.flexible.adapter.core)
     implementation(libs.flexible.adapter.ui)
     implementation(libs.photoview)
