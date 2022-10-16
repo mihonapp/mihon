@@ -72,6 +72,7 @@ fun EmptyScreen(
                     text = message,
                     modifier = Modifier.paddingFromBaseline(top = 24.dp).secondaryItemAlpha(),
                     style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
                 )
             }
             if (!actions.isNullOrEmpty()) {
