@@ -15,7 +15,6 @@ import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.core.util.asFlow
 import eu.kanade.core.util.asObservable
-import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
@@ -82,7 +81,6 @@ typealias LibraryMap = Map<Long, List<LibraryItem>>
  */
 class LibraryPresenter(
     private val state: LibraryStateImpl = LibraryState() as LibraryStateImpl,
-    private val handler: DatabaseHandler = Injekt.get(),
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
     private val getTracks: GetTracks = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
@@ -286,37 +284,7 @@ class LibraryPresenter(
      * @param map the map to sort.
      */
     private fun applySort(categories: List<Category>, map: LibraryMap): LibraryMap {
-        val lastReadManga by lazy {
-            var counter = 0
-            // TODO: Make [applySort] a suspended function
-            runBlocking {
-                handler.awaitList {
-                    mangasQueries.getLastRead()
-                }.associate { it._id to counter++ }
-            }
-        }
-        val latestChapterManga by lazy {
-            var counter = 0
-            // TODO: Make [applySort] a suspended function
-            runBlocking {
-                handler.awaitList {
-                    mangasQueries.getLatestByChapterUploadDate()
-                }.associate { it._id to counter++ }
-            }
-        }
-        val chapterFetchDateManga by lazy {
-            var counter = 0
-            // TODO: Make [applySort] a suspended function
-            runBlocking {
-                handler.awaitList {
-                    mangasQueries.getLatestByChapterFetchDate()
-                }.associate { it._id to counter++ }
-            }
-        }
-
-        val sortModes = categories.associate { category ->
-            category.id to category.sort
-        }
+        val sortModes = categories.associate { it.id to it.sort }
 
         val locale = Locale.getDefault()
         val collator = Collator.getInstance(locale).apply {
@@ -329,9 +297,7 @@ class LibraryPresenter(
                     collator.compare(i1.libraryManga.manga.title.lowercase(locale), i2.libraryManga.manga.title.lowercase(locale))
                 }
                 LibrarySort.Type.LastRead -> {
-                    val manga1LastRead = lastReadManga[i1.libraryManga.manga.id] ?: 0
-                    val manga2LastRead = lastReadManga[i2.libraryManga.manga.id] ?: 0
-                    manga1LastRead.compareTo(manga2LastRead)
+                    i1.libraryManga.lastRead.compareTo(i2.libraryManga.lastRead)
                 }
                 LibrarySort.Type.LastUpdate -> {
                     i1.libraryManga.manga.lastUpdate.compareTo(i2.libraryManga.manga.lastUpdate)
@@ -347,16 +313,10 @@ class LibraryPresenter(
                     i1.libraryManga.totalChapters.compareTo(i2.libraryManga.totalChapters)
                 }
                 LibrarySort.Type.LatestChapter -> {
-                    val manga1latestChapter = latestChapterManga[i1.libraryManga.manga.id]
-                        ?: latestChapterManga.size
-                    val manga2latestChapter = latestChapterManga[i2.libraryManga.manga.id]
-                        ?: latestChapterManga.size
-                    manga1latestChapter.compareTo(manga2latestChapter)
+                    i1.libraryManga.latestUpload.compareTo(i2.libraryManga.latestUpload)
                 }
                 LibrarySort.Type.ChapterFetchDate -> {
-                    val manga1chapterFetchDate = chapterFetchDateManga[i1.libraryManga.manga.id] ?: 0
-                    val manga2chapterFetchDate = chapterFetchDateManga[i2.libraryManga.manga.id] ?: 0
-                    manga1chapterFetchDate.compareTo(manga2chapterFetchDate)
+                    i1.libraryManga.chapterFetchedAt.compareTo(i2.libraryManga.chapterFetchedAt)
                 }
                 LibrarySort.Type.DateAdded -> {
                     i1.libraryManga.manga.dateAdded.compareTo(i2.libraryManga.manga.dateAdded)

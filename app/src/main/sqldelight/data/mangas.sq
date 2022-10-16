@@ -74,62 +74,6 @@ FROM mangas
 WHERE favorite = 0
 GROUP BY source;
 
-getLibrary:
-SELECT M.*, COALESCE(MC.category_id, 0) AS category
-FROM (
-    SELECT mangas.*, COALESCE(UR.unreadCount, 0) AS unread_count, COALESCE(R.readCount, 0) AS read_count
-    FROM mangas
-    LEFT JOIN (
-        SELECT chapters.manga_id, COUNT(*) AS unreadCount
-        FROM chapters
-        WHERE chapters.read = 0
-        GROUP BY chapters.manga_id
-    ) AS UR
-    ON mangas._id = UR.manga_id
-    LEFT JOIN (
-        SELECT chapters.manga_id, COUNT(*) AS readCount
-        FROM chapters
-        WHERE chapters.read = 1
-        GROUP BY chapters.manga_id
-    ) AS R
-    ON mangas._id = R.manga_id
-    WHERE mangas.favorite = 1
-    GROUP BY mangas._id
-    ORDER BY mangas.title
-) AS M
-LEFT JOIN (
-    SELECT *
-    FROM mangas_categories
-) AS MC
-ON M._id = MC.manga_id;
-
-getLastRead:
-SELECT M.*, MAX(H.last_read) AS max
-FROM mangas M
-JOIN chapters C
-ON M._id = C.manga_id
-JOIN history H
-ON C._id = H.chapter_id
-WHERE M.favorite = 1
-GROUP BY M._id
-ORDER BY max ASC;
-
-getLatestByChapterUploadDate:
-SELECT M.*, MAX(C.date_upload) AS max
-FROM mangas M
-JOIN chapters C
-ON M._id = C.manga_id
-GROUP BY M._id
-ORDER BY max ASC;
-
-getLatestByChapterFetchDate:
-SELECT M.*, MAX(C.date_fetch) AS max
-FROM mangas M
-JOIN chapters C
-ON M._id = C.manga_id
-GROUP BY M._id
-ORDER BY max ASC;
-
 deleteMangasNotInLibraryBySourceIds:
 DELETE FROM mangas
 WHERE favorite = 0 AND source IN :sourceIds;
