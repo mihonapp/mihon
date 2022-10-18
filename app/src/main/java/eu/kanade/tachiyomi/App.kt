@@ -11,7 +11,6 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Looper
 import android.webkit.WebView
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -28,8 +27,6 @@ import coil.util.DebugLogger
 import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.DomainModule
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.ui.UiPreferences
-import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.crash.CrashActivity
 import eu.kanade.tachiyomi.crash.GlobalExceptionHandler
 import eu.kanade.tachiyomi.data.coil.DomainMangaKeyer
@@ -42,7 +39,6 @@ import eu.kanade.tachiyomi.glance.UpdatesGridGlanceWidget
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
-import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.isDevFlavor
@@ -67,7 +63,6 @@ import java.security.Security
 class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
     private val basePreferences: BasePreferences by injectLazy()
-    private val uiPreferences: UiPreferences by injectLazy()
     private val networkPreferences: NetworkPreferences by injectLazy()
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
@@ -125,17 +120,6 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
                 }
             }
             .launchIn(ProcessLifecycleOwner.get().lifecycleScope)
-
-        uiPreferences.themeMode()
-            .asHotFlow {
-                AppCompatDelegate.setDefaultNightMode(
-                    when (it) {
-                        ThemeMode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-                        ThemeMode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
-                        ThemeMode.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                    },
-                )
-            }.launchIn(ProcessLifecycleOwner.get().lifecycleScope)
 
         // Updates widget update
         Injekt.get<DatabaseHandler>()

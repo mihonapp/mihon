@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 
 @Composable
@@ -40,7 +39,7 @@ fun TrackingPreferenceWidget(
             modifier = modifier
                 .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
                 .fillMaxWidth()
-                .padding(horizontal = HorizontalPadding, vertical = 8.dp),
+                .padding(horizontal = PrefsHorizontalPadding, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
@@ -62,7 +61,7 @@ fun TrackingPreferenceWidget(
                     .padding(horizontal = 16.dp),
                 maxLines = 1,
                 style = MaterialTheme.typography.titleLarge,
-                fontSize = 20.sp,
+                fontSize = TitleFontSize,
             )
             if (checked) {
                 Icon(

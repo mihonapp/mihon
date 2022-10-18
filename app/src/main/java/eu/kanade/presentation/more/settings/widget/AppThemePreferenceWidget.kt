@@ -78,7 +78,7 @@ private fun AppThemesList(
         modifier = Modifier
             .animateContentSize()
             .padding(vertical = 8.dp),
-        contentPadding = PaddingValues(horizontal = HorizontalPadding),
+        contentPadding = PaddingValues(horizontal = PrefsHorizontalPadding),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(

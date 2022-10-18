@@ -33,9 +33,9 @@ fun TextPreferenceWidget(
                 Text(
                     text = subtitle,
                     modifier = Modifier
-                        .padding(horizontal = HorizontalPadding)
+                        .padding(horizontal = PrefsHorizontalPadding)
                         .secondaryItemAlpha(),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     maxLines = 10,
                 )
             }

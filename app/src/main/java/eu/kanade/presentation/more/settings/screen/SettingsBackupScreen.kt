@@ -8,11 +8,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
@@ -39,8 +40,12 @@ import androidx.core.net.toUri
 import com.google.accompanist.permissions.rememberPermissionState
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.backup.service.BackupPreferences
+import eu.kanade.presentation.components.Divider
+import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.collectAsState
+import eu.kanade.presentation.util.isScrolledToEnd
+import eu.kanade.presentation.util.isScrolledToStart
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
@@ -148,25 +153,34 @@ class SettingsBackupScreen : SearchableSettings {
             onDismissRequest = onDismissRequest,
             title = { Text(text = stringResource(R.string.backup_choice)) },
             text = {
-                Column {
-                    CreateBackupDialogItem(
-                        isSelected = true,
-                        title = stringResource(R.string.manga),
-                    )
-                    choices.forEach { (k, v) ->
-                        val isSelected = flags.contains(k)
-                        CreateBackupDialogItem(
-                            isSelected = isSelected,
-                            title = stringResource(v),
-                            modifier = Modifier.clickable {
-                                if (isSelected) {
-                                    flags.remove(k)
-                                } else {
-                                    flags.add(k)
-                                }
-                            },
-                        )
+                Box {
+                    val state = rememberLazyListState()
+                    ScrollbarLazyColumn(state = state) {
+                        item {
+                            CreateBackupDialogItem(
+                                isSelected = true,
+                                title = stringResource(R.string.manga),
+                            )
+                        }
+                        choices.forEach { (k, v) ->
+                            item {
+                                val isSelected = flags.contains(k)
+                                CreateBackupDialogItem(
+                                    isSelected = isSelected,
+                                    title = stringResource(v),
+                                    modifier = Modifier.clickable {
+                                        if (isSelected) {
+                                            flags.remove(k)
+                                        } else {
+                                            flags.add(k)
+                                        }
+                                    },
+                                )
+                            }
+                        }
                     }
+                    if (!state.isScrolledToStart()) Divider(modifier = Modifier.align(Alignment.TopCenter))
+                    if (!state.isScrolledToEnd()) Divider(modifier = Modifier.align(Alignment.BottomCenter))
                 }
             },
             dismissButton = {

@@ -53,30 +53,30 @@ internal fun BasePreferenceWidget(
         ) {
             if (icon != null) {
                 Box(
-                    modifier = Modifier.padding(start = HorizontalPadding),
+                    modifier = Modifier.padding(start = PrefsHorizontalPadding, end = 8.dp),
                     content = { icon() },
                 )
             }
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = PrefsVerticalPadding),
             ) {
                 if (!title.isNullOrBlank()) {
                     Text(
-                        modifier = Modifier.padding(horizontal = HorizontalPadding),
+                        modifier = Modifier.padding(horizontal = PrefsHorizontalPadding),
                         text = title,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 2,
                         style = MaterialTheme.typography.titleLarge,
-                        fontSize = 20.sp,
+                        fontSize = TitleFontSize,
                     )
                 }
                 subcomponent?.invoke(this)
             }
             if (widget != null) {
                 Box(
-                    modifier = Modifier.padding(end = HorizontalPadding),
+                    modifier = Modifier.padding(end = PrefsHorizontalPadding),
                     content = { widget() },
                 )
             }
@@ -117,4 +117,6 @@ internal fun Modifier.highlightBackground(highlighted: Boolean): Modifier = comp
 }
 
 internal val TrailingWidgetBuffer = 16.dp
-internal val HorizontalPadding = 24.dp
+internal val PrefsHorizontalPadding = 16.dp
+internal val PrefsVerticalPadding = 16.dp
+internal val TitleFontSize = 16.sp

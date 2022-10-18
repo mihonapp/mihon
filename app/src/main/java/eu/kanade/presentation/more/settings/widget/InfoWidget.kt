@@ -23,7 +23,7 @@ import eu.kanade.tachiyomi.R
 internal fun InfoWidget(text: String) {
     Column(
         modifier = Modifier
-            .padding(horizontal = HorizontalPadding, vertical = 16.dp)
+            .padding(horizontal = PrefsHorizontalPadding, vertical = 16.dp)
             .secondaryItemAlpha(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
@@ -33,7 +33,7 @@ internal fun InfoWidget(text: String) {
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
         )
     }
 }

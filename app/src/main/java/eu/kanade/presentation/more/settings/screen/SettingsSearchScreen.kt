@@ -91,12 +91,15 @@ class SettingsSearchScreen : Screen {
                 Column {
                     TopAppBar(
                         navigationIcon = {
-                            IconButton(onClick = navigator::pop) {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowBack,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
+                            val canPop = remember { navigator.canPop }
+                            if (canPop) {
+                                IconButton(onClick = navigator::pop) {
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowBack,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
                             }
                         },
                         title = {

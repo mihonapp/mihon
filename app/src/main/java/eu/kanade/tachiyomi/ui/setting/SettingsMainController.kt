@@ -9,6 +9,7 @@ import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.ScreenTransition
 import eu.kanade.presentation.components.TwoPanelBox
+import eu.kanade.presentation.more.settings.screen.AboutScreen
 import eu.kanade.presentation.more.settings.screen.SettingsBackupScreen
 import eu.kanade.presentation.more.settings.screen.SettingsGeneralScreen
 import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
@@ -19,14 +20,10 @@ import eu.kanade.tachiyomi.ui.base.controller.BasicFullComposeController
 import soup.compose.material.motion.animation.materialSharedAxisX
 import soup.compose.material.motion.animation.rememberSlideDistance
 
-class SettingsMainController : BasicFullComposeController {
-
-    @Suppress("unused")
-    constructor(bundle: Bundle) : this(bundle.getBoolean(TO_BACKUP_SCREEN))
-
-    constructor(toBackupScreen: Boolean = false) : super(bundleOf(TO_BACKUP_SCREEN to toBackupScreen))
+class SettingsMainController(bundle: Bundle = bundleOf()) : BasicFullComposeController(bundle) {
 
     private val toBackupScreen = args.getBoolean(TO_BACKUP_SCREEN)
+    private val toAboutScreen = args.getBoolean(TO_ABOUT_SCREEN)
 
     @Composable
     override fun ComposeContent() {
@@ -34,7 +31,13 @@ class SettingsMainController : BasicFullComposeController {
             val widthSizeClass = calculateWindowWidthSizeClass()
             if (widthSizeClass == WindowWidthSizeClass.Compact) {
                 Navigator(
-                    screen = if (toBackupScreen) SettingsBackupScreen() else SettingsMainScreen,
+                    screen = if (toBackupScreen) {
+                        SettingsBackupScreen()
+                    } else if (toAboutScreen) {
+                        AboutScreen()
+                    } else {
+                        SettingsMainScreen
+                    },
                     content = {
                         CompositionLocalProvider(LocalBackPress provides this::back) {
                             val slideDistance = rememberSlideDistance()
@@ -52,7 +55,13 @@ class SettingsMainController : BasicFullComposeController {
                 )
             } else {
                 Navigator(
-                    screen = if (toBackupScreen) SettingsBackupScreen() else SettingsGeneralScreen(),
+                    screen = if (toBackupScreen) {
+                        SettingsBackupScreen()
+                    } else if (toAboutScreen) {
+                        AboutScreen()
+                    } else {
+                        SettingsGeneralScreen()
+                    },
                 ) {
                     TwoPanelBox(
                         startContent = {
@@ -81,6 +90,17 @@ class SettingsMainController : BasicFullComposeController {
     private fun back() {
         activity?.onBackPressed()
     }
+
+    companion object {
+        fun toBackupScreen(): SettingsMainController {
+            return SettingsMainController(bundleOf(TO_BACKUP_SCREEN to true))
+        }
+
+        fun toAboutScreen(): SettingsMainController {
+            return SettingsMainController(bundleOf(TO_ABOUT_SCREEN to true))
+        }
+    }
 }
 
 private const val TO_BACKUP_SCREEN = "to_backup_screen"
+private const val TO_ABOUT_SCREEN = "to_about_screen"

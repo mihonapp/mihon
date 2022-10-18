@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
@@ -19,6 +20,7 @@ import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.isTablet
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.merge
 import uy.kohesive.injekt.Injekt
@@ -55,8 +57,24 @@ class SettingsAppearanceScreen : SearchableSettings {
         val amoledPref = uiPreferences.themeDarkAmoled()
 
         LaunchedEffect(Unit) {
+            themeModePref.changes()
+                .drop(1)
+                .debounce(1000)
+                .collectLatest {
+                    AppCompatDelegate.setDefaultNightMode(
+                        when (it) {
+                            ThemeMode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+                            ThemeMode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
+                            ThemeMode.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                        },
+                    )
+                }
+        }
+
+        LaunchedEffect(Unit) {
             merge(appThemePref.changes(), amoledPref.changes())
                 .drop(2)
+                .debounce(1000)
                 .collectLatest { (context as? Activity)?.let { ActivityCompat.recreate(it) } }
         }
 

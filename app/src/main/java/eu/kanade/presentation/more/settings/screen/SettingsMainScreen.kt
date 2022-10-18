@@ -4,7 +4,8 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.CollectionsBookmark
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.GetApp
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Security
@@ -25,8 +27,11 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +40,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastFirstOrNull
 import androidx.core.graphics.ColorUtils
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -76,7 +80,9 @@ object SettingsMainScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val backPress = LocalBackPress.currentOrThrow
         val containerColor = if (twoPane) getPalerSurface() else MaterialTheme.colorScheme.surface
+        val topBarState = rememberTopAppBarState()
         Scaffold(
+            topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState),
             topBar = { scrollBehavior ->
                 // https://issuetracker.google.com/issues/249688556
                 MaterialTheme(
@@ -114,15 +120,34 @@ object SettingsMainScreen : Screen {
             },
             containerColor = containerColor,
             content = { contentPadding ->
-                LazyColumn(contentPadding = contentPadding) {
-                    items(
+                val state = rememberLazyListState()
+                val indexSelected = if (twoPane) {
+                    items.indexOfFirst { it.screen::class == navigator.items.first()::class }
+                        .also {
+                            LaunchedEffect(Unit) {
+                                state.animateScrollToItem(it)
+                                if (it > 0) {
+                                    // Lift scroll
+                                    topBarState.contentOffset = topBarState.heightOffsetLimit
+                                }
+                            }
+                        }
+                } else {
+                    null
+                }
+
+                LazyColumn(
+                    state = state,
+                    contentPadding = contentPadding,
+                ) {
+                    itemsIndexed(
                         items = items,
-                        key = { it.hashCode() },
-                    ) { item ->
+                        key = { _, item -> item.hashCode() },
+                    ) { index, item ->
+                        val selected = indexSelected == index
                         var modifier: Modifier = Modifier
                         var contentColor = LocalContentColor.current
                         if (twoPane) {
-                            val selected = navigator.items.fastFirstOrNull { it::class == item.screen::class } != null
                             modifier = Modifier
                                 .padding(horizontal = 8.dp)
                                 .clip(RoundedCornerShape(24.dp))
@@ -141,7 +166,7 @@ object SettingsMainScreen : Screen {
                             TextPreferenceWidget(
                                 modifier = modifier,
                                 title = stringResource(item.titleRes),
-                                subtitle = stringResource(item.subtitleRes),
+                                subtitle = item.formatSubtitle(),
                                 icon = item.icon,
                                 onPreferenceClick = { navigator.navigate(item.screen, twoPane) },
                             )
@@ -160,6 +185,7 @@ object SettingsMainScreen : Screen {
 private data class Item(
     @StringRes val titleRes: Int,
     @StringRes val subtitleRes: Int,
+    val formatSubtitle: @Composable () -> String = { stringResource(subtitleRes) },
     val icon: ImageVector,
     val screen: Screen,
 )
@@ -224,5 +250,14 @@ private val items = listOf(
         subtitleRes = R.string.pref_advanced_summary,
         icon = Icons.Outlined.Code,
         screen = SettingsAdvancedScreen(),
+    ),
+    Item(
+        titleRes = R.string.pref_category_about,
+        subtitleRes = 0,
+        formatSubtitle = {
+            "${stringResource(R.string.app_name)} ${AboutScreen.getVersionName(withBuildDate = false)}"
+        },
+        icon = Icons.Outlined.Info,
+        screen = AboutScreen(),
     ),
 )

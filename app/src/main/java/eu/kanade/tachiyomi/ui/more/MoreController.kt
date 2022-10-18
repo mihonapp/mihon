@@ -21,9 +21,9 @@ class MoreController :
             presenter = presenter,
             onClickDownloadQueue = { router.pushController(DownloadController()) },
             onClickCategories = { router.pushController(CategoryController()) },
-            onClickBackupAndRestore = { router.pushController(SettingsMainController(toBackupScreen = true)) },
+            onClickBackupAndRestore = { router.pushController(SettingsMainController.toBackupScreen()) },
             onClickSettings = { router.pushController(SettingsMainController()) },
-            onClickAbout = { router.pushController(AboutController()) },
+            onClickAbout = { router.pushController(SettingsMainController.toAboutScreen()) },
         )
     }
 
