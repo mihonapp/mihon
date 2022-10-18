@@ -37,6 +37,7 @@ dependencies {
 
     api(kotlinx.coroutines.core)
     api(kotlinx.serialization.json)
+    api(kotlinx.serialization.json.okio)
 
     api(libs.injekt.core)
 

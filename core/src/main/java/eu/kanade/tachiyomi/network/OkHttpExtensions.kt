@@ -2,23 +2,27 @@ package eu.kanade.tachiyomi.network
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.okio.decodeFromBufferedSource
+import kotlinx.serialization.serializer
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.internal.closeQuietly
 import rx.Observable
 import rx.Producer
 import rx.Subscription
 import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.fullType
+import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resumeWithException
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 val jsonMime = "application/json; charset=utf-8".toMediaType()
 
@@ -72,7 +76,7 @@ suspend fun Call.await(): Response {
                     }
 
                     continuation.resume(response) {
-                        response.body.closeQuietly()
+                        response.body.close()
                     }
                 }
 
@@ -118,11 +122,15 @@ fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: Progre
 }
 
 inline fun <reified T> Response.parseAs(): T {
-    // Avoiding Injekt.get<Json>() due to compiler issues
-    val json = Injekt.getInstance<Json>(fullType<Json>().type)
-    this.use {
-        val responseBody = it.body.string()
-        return json.decodeFromString(responseBody)
+    return internalParseAs(this, typeOf<T>())
+}
+
+@Suppress("UNCHECKED_CAST")
+@OptIn(ExperimentalSerializationApi::class)
+fun <T> internalParseAs(response: Response, type: KType): T {
+    val deserializer = serializer(type) as KSerializer<T>
+    return response.body.source().use {
+        Injekt.get<Json>().decodeFromBufferedSource(deserializer, it)
     }
 }
 
