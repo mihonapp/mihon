@@ -7,6 +7,8 @@ import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.source.SourceManager
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -30,6 +32,8 @@ class DownloadCache(
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
 ) {
 
+    private val scope = MainScope()
+
     /**
      * The interval after which this cache should be invalidated. 1 hour shouldn't cause major
      * issues, as the cache is only used for UI feedback.
@@ -49,6 +53,7 @@ class DownloadCache(
                 lastRenew = 0L // invalidate cache
                 rootDownloadsDir = RootDirectory(getDirectoryFromPreference())
             }
+            .launchIn(scope)
     }
 
     /**
@@ -210,7 +215,9 @@ class DownloadCache(
             .orEmpty()
             .associate { it.name to SourceDirectory(it) }
             .mapNotNullKeys { entry ->
-                sources.find { provider.getSourceDirName(it).equals(entry.key, ignoreCase = true) }?.id
+                sources.find {
+                    provider.getSourceDirName(it).equals(entry.key, ignoreCase = true)
+                }?.id
             }
 
         rootDownloadsDir.files = sourceDirs
