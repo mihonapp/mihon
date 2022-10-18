@@ -4,9 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -42,11 +46,13 @@ fun CrashScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     Scaffold(
+        contentWindowInsets = WindowInsets.systemBars,
         bottomBar = {
             val strokeWidth = Dp.Hairline
             val borderColor = MaterialTheme.colorScheme.outline
             Column(
                 modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surface)
                     .drawBehind {
                         drawLine(
                             borderColor,
@@ -55,6 +61,7 @@ fun CrashScreen(
                             strokeWidth.value,
                         )
                     }
+                    .padding(WindowInsets.navigationBars.asPaddingValues())
                     .padding(horizontal = horizontalPadding, vertical = verticalPadding),
                 verticalArrangement = Arrangement.spacedBy(verticalPadding),
             ) {
@@ -79,10 +86,10 @@ fun CrashScreen(
     ) { paddingValues ->
         Column(
             modifier = Modifier
+                .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
                 .padding(top = 56.dp)
-                .padding(horizontal = horizontalPadding)
-                .verticalScroll(rememberScrollState()),
+                .padding(horizontal = horizontalPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Icon(
