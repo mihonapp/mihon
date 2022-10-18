@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.util.fastAny
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
@@ -41,7 +42,7 @@ fun LibraryCoverOnlyGrid(
                 showUnreadBadge = showUnreadBadges,
                 showLocalBadge = showLocalBadges,
                 showLanguageBadge = showLanguageBadges,
-                isSelected = libraryItem.libraryManga in selection,
+                isSelected = selection.fastAny { it.id == libraryItem.libraryManga.id },
                 onClick = onClick,
                 onLongClick = onLongClick,
             )

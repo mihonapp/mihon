@@ -588,19 +588,14 @@ class LibraryPresenter(
         state.selection = emptyList()
     }
 
-    private fun removeSelected(mutableList: MutableList<LibraryManga>, manga: LibraryManga): Boolean {
-        if (selection.fastAny { it.manga.id == manga.manga.id }) {
-            return mutableList.remove(manga)
-        }
-        return false
-    }
-
     fun toggleSelection(manga: LibraryManga) {
-        val mutableList = state.selection.toMutableList()
-        if (!removeSelected(mutableList, manga)) {
-            mutableList.add(manga)
+        state.selection = selection.toMutableList().apply {
+            if (fastAny { it.id == manga.id }) {
+                removeAll { it.id == manga.id }
+            } else {
+                add(manga)
+            }
         }
-        state.selection = mutableList
     }
 
     /**
@@ -608,22 +603,22 @@ class LibraryPresenter(
      * same category as the given manga
      */
     fun toggleRangeSelection(manga: LibraryManga) {
-        val mutableList = state.selection.toMutableList()
-        if (!removeSelected(mutableList, manga) && mutableList.fastAny
-            { it.category == manga.category }
-        ) {
+        state.selection = selection.toMutableList().apply {
+            val lastSelected = lastOrNull()
+            if (lastSelected == null || lastSelected.category != manga.category) {
+                add(manga)
+                return@apply
+            }
             val items = (loadedManga[manga.category] ?: emptyList()).map { it.libraryManga }
-            val lastMangaIndex = items.indexOf(mutableList.findLast { it.category == manga.category })
+            val lastMangaIndex = items.indexOf(lastSelected)
             val curMangaIndex = items.indexOf(manga)
-            val newList = when (lastMangaIndex >= curMangaIndex + 1) {
+            val selectedIds = map { it.id }
+            val newSelections = when (lastMangaIndex >= curMangaIndex + 1) {
                 true -> items.subList(curMangaIndex, lastMangaIndex)
                 false -> items.subList(lastMangaIndex, curMangaIndex + 1)
-            }
-            mutableList.addAll(newList.filterNot { it in selection })
-        } else {
-            mutableList.add(manga)
+            }.filterNot { it.id in selectedIds }
+            addAll(newSelections)
         }
-        state.selection = mutableList
     }
 
     fun selectAll(index: Int) {

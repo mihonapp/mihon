@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.zIndex
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.model.MangaCover
@@ -25,7 +26,6 @@ import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.MangaCover.Square
 import eu.kanade.presentation.util.horizontalPadding
-import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.presentation.util.verticalPadding
 import eu.kanade.tachiyomi.R
@@ -70,7 +70,7 @@ fun LibraryList(
                 showUnreadBadge = showUnreadBadges,
                 showLocalBadge = showLocalBadges,
                 showLanguageBadge = showLanguageBadges,
-                isSelected = libraryItem.libraryManga in selection,
+                isSelected = selection.fastAny { it.id == libraryItem.libraryManga.id },
                 onClick = onClick,
                 onLongClick = onLongClick,
             )

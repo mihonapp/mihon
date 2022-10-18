@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastAny
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
@@ -58,7 +59,7 @@ fun LibraryCompactGrid(
                 showUnreadBadge = showUnreadBadges,
                 showLocalBadge = showLocalBadges,
                 showLanguageBadge = showLanguageBadges,
-                isSelected = libraryItem.libraryManga in selection,
+                isSelected = selection.fastAny { it.id == libraryItem.libraryManga.id },
                 onClick = onClick,
                 onLongClick = onLongClick,
             )
