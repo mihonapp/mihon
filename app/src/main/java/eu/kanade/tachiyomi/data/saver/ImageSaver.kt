@@ -101,14 +101,13 @@ class ImageSaver(
             MediaStore.MediaColumns.DATE_MODIFIED,
         )
 
-        val selection = "${MediaStore.MediaColumns.RELATIVE_PATH}='$relativePath' AND " +
-            "${MediaStore.MediaColumns.DISPLAY_NAME}='$imagePath'"
+        val selection = "${MediaStore.MediaColumns.RELATIVE_PATH}=? AND ${MediaStore.MediaColumns.DISPLAY_NAME}=?"
 
         context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
             selection,
-            null,
+            arrayOf(relativePath, imagePath),
             null,
         ).use { cursor ->
             if (cursor != null && cursor.count >= 1) {
