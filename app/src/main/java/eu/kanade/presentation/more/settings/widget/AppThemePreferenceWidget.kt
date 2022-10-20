@@ -45,6 +45,8 @@ import eu.kanade.presentation.components.DIVIDER_ALPHA
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.secondaryItemAlpha
+import eu.kanade.tachiyomi.util.system.DeviceUtil
+import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 
 @Composable
 internal fun AppThemePreferenceWidget(
@@ -72,7 +74,8 @@ private fun AppThemesList(
     onItemClick: (AppTheme) -> Unit,
 ) {
     val appThemes = remember {
-        AppTheme.values().filter { it.titleResId != null }
+        AppTheme.values()
+            .filterNot { it.titleResId == null || (it == AppTheme.MONET && !DeviceUtil.isDynamicColorAvailable) }
     }
     LazyRow(
         modifier = Modifier
