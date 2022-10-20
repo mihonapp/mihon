@@ -1,6 +1,8 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.Manifest
+import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -111,7 +113,12 @@ class SettingsBackupScreen : SearchableSettings {
                 onConfirm = {
                     showCreateDialog = false
                     flag = it
-                    chooseBackupDir.launch(Backup.getBackupFilename())
+                    try {
+                        chooseBackupDir.launch(Backup.getBackupFilename())
+                    } catch (e: ActivityNotFoundException) {
+                        flag = 0
+                        context.toast(R.string.file_picker_error)
+                    }
                 },
                 onDismissRequest = { showCreateDialog = false },
             )
@@ -260,12 +267,16 @@ class SettingsBackupScreen : SearchableSettings {
                         onDismissRequest = onDismissRequest,
                         title = { Text(text = stringResource(R.string.pref_restore_backup)) },
                         text = {
-                            var msg = stringResource(R.string.backup_restore_content_full)
-                            if (err.sources.isNotEmpty()) {
-                                msg += "\n\n${stringResource(R.string.backup_restore_missing_sources)}\n${err.sources.joinToString("\n") { "- $it" }}"
-                            }
-                            if (err.sources.isNotEmpty()) {
-                                msg += "\n\n${stringResource(R.string.backup_restore_missing_trackers)}\n${err.trackers.joinToString("\n") { "- $it" }}"
+                            val msg = buildString {
+                                append(stringResource(R.string.backup_restore_content_full))
+                                if (err.sources.isNotEmpty()) {
+                                    append("\n\n").append(stringResource(R.string.backup_restore_missing_sources))
+                                    err.sources.joinTo(this, separator = "\n- ", prefix = "\n- ")
+                                }
+                                if (err.trackers.isNotEmpty()) {
+                                    append("\n\n").append(stringResource(R.string.backup_restore_missing_trackers))
+                                    err.trackers.joinTo(this, separator = "\n- ", prefix = "\n- ")
+                                }
                             }
                             Text(text = msg)
                         },
@@ -285,7 +296,14 @@ class SettingsBackupScreen : SearchableSettings {
             }
         }
 
-        val chooseBackup = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        val chooseBackup = rememberLauncherForActivityResult(
+            object : ActivityResultContracts.GetContent() {
+                override fun createIntent(context: Context, input: String): Intent {
+                    val intent = super.createIntent(context, input)
+                    return Intent.createChooser(intent, context.getString(R.string.file_select_backup))
+                }
+            },
+        ) {
             if (it != null) {
                 val results = try {
                     BackupFileValidator().validate(context, it)
@@ -311,6 +329,7 @@ class SettingsBackupScreen : SearchableSettings {
                     if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
                         context.toast(R.string.restore_miui_warning, Toast.LENGTH_LONG)
                     }
+                    // no need to catch because it's wrapped with a chooser
                     chooseBackup.launch("*/*")
                 } else {
                     context.toast(R.string.restore_in_progress)
@@ -363,7 +382,13 @@ class SettingsBackupScreen : SearchableSettings {
                     subtitle = remember(backupDir) {
                         UniFile.fromUri(context, backupDir.toUri()).filePath!! + "/automatic"
                     },
-                    onClick = { pickBackupLocation.launch(null) },
+                    onClick = {
+                        try {
+                            pickBackupLocation.launch(null)
+                        } catch (e: ActivityNotFoundException) {
+                            context.toast(R.string.file_picker_error)
+                        }
+                    },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = backupPreferences.numberOfBackups(),

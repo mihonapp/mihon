@@ -70,7 +70,6 @@ import kotlin.math.roundToInt
 
 /**
  * Controller that shows the currently active downloads.
- * Uses R.layout.fragment_download_queue.
  */
 class DownloadController :
     FullComposeController<DownloadPresenter>(),

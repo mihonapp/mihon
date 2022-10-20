@@ -292,11 +292,12 @@ private fun MangaAndSourceTitlesLarge(
         MangaCover.Book(
             modifier = Modifier.fillMaxWidth(0.65f),
             data = coverDataProvider(),
+            contentDescription = stringResource(R.string.manga_cover),
             onClick = onCoverClick,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = title.takeIf { it.isNotBlank() } ?: stringResource(R.string.unknown),
+            text = title.ifBlank { stringResource(R.string.unknown_title) },
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.clickableNoIndication(
                 onLongClick = { if (title.isNotBlank()) context.copyToClipboard(title, title) },
@@ -419,11 +420,12 @@ private fun MangaAndSourceTitlesSmall(
                 .sizeIn(maxWidth = 100.dp)
                 .align(Alignment.Top),
             data = coverDataProvider(),
+            contentDescription = stringResource(R.string.manga_cover),
             onClick = onCoverClick,
         )
         Column(modifier = Modifier.padding(start = 16.dp)) {
             Text(
-                text = title.ifBlank { stringResource(R.string.unknown) },
+                text = title.ifBlank { stringResource(R.string.unknown_title) },
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.clickableNoIndication(
                     onLongClick = {
@@ -583,7 +585,7 @@ private fun MangaSummary(
                 val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_caret_down)
                 Icon(
                     painter = rememberAnimatedVectorPainter(image, !expanded),
-                    contentDescription = null,
+                    contentDescription = stringResource(if (expanded) R.string.manga_info_collapse else R.string.manga_info_expand),
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.background(Brush.radialGradient(colors = colors.asReversed())),
                 )

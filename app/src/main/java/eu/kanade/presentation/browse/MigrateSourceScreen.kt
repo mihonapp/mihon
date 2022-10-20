@@ -102,7 +102,7 @@ private fun MigrateSourceList(
                 IconButton(onClick = onToggleSortingMode) {
                     when (sortingMode) {
                         SetMigrateSorting.Mode.ALPHABETICAL -> Icon(Icons.Outlined.SortByAlpha, contentDescription = stringResource(R.string.action_sort_alpha))
-                        SetMigrateSorting.Mode.TOTAL -> Icon(Icons.Outlined.Numbers, contentDescription = stringResource(R.string.action_sort_total))
+                        SetMigrateSorting.Mode.TOTAL -> Icon(Icons.Outlined.Numbers, contentDescription = stringResource(R.string.action_sort_count))
                     }
                 }
                 IconButton(onClick = onToggleSortingDirection) {

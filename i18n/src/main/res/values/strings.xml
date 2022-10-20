@@ -43,6 +43,7 @@
     <string name="action_filter_tracked">Tracked</string>
     <string name="action_filter_unread">Unread</string>
     <string name="action_filter_started">Started</string>
+    <!-- reserved for #4048 -->
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
     <string name="action_sort_count">Total manga</string>
@@ -63,11 +64,9 @@
     <string name="action_mark_as_unread">Mark as unread</string>
     <string name="action_mark_previous_as_read">Mark previous as read</string>
     <string name="action_download">Download</string>
-    <string name="action_download_unread">Download unread chapters</string>
     <string name="action_bookmark">Bookmark chapter</string>
     <string name="action_remove_bookmark">Unbookmark chapter</string>
     <string name="action_delete">Delete</string>
-    <string name="action_update">Update</string>
     <string name="action_update_library">Update library</string>
     <string name="action_enable_all">Enable all</string>
     <string name="action_disable_all">Disable all</string>
@@ -129,11 +128,11 @@
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
     <string name="action_reset">Reset</string>
+    <!-- missing undo feature after Compose rewrite #7454 -->
     <string name="action_undo">Undo</string>
     <string name="action_close">Close</string>
     <string name="action_open_log">Open log</string>
     <string name="action_show_errors">Tap to see details</string>
-    <string name="action_create">Create</string>
     <string name="action_restore">Restore</string>
     <string name="action_webview_back">Back</string>
     <string name="action_webview_forward">Forward</string>
@@ -467,8 +466,6 @@
     <string name="pref_backup_service_category">Automatic backups</string>
     <string name="pref_backup_interval">Backup frequency</string>
     <string name="pref_backup_slots">Maximum backups</string>
-    <string name="tracker_not_logged_in">Not logged in: %1$s</string>
-    <string name="backup_restore_invalid_uri">Error: empty URI</string>
     <string name="backup_created">Backup created</string>
     <string name="invalid_backup_file">Invalid backup file</string>
     <string name="invalid_backup_file_missing_manga">Backup does not contain any manga.</string>
@@ -574,7 +571,6 @@
     <string name="logout_title">Log out from %1$s?</string>
     <string name="logout">Log out</string>
     <string name="logout_success">You are now logged out</string>
-    <string name="invalid_login">Could not log in</string>
     <string name="unknown_error">Unknown error</string>
 
     <!-- Library fragment -->
@@ -586,6 +582,7 @@
     <string name="tabs_header">Tabs</string>
 
     <!-- Catalogue fragment -->
+    <!-- missing prompt after Compose rewrite #7901 -->
     <string name="no_more_results">No more results</string>
     <string name="no_results_found">No results found</string>
     <!-- Do not translate "WebView" -->
@@ -606,14 +603,11 @@
     <string name="local_filter_order_by">Order by</string>
     <string name="date">Date</string>
 
-    <!-- Manga activity -->
-    <string name="manga_not_in_db">This manga has been removed from the database.</string>
-
     <!-- Manga info fragment -->
-    <string name="description">Description</string>
     <string name="ongoing">Ongoing</string>
     <string name="unknown">Unknown</string>
     <string name="unknown_author">Unknown author</string>
+    <!-- reserved for #6163 -->
     <string name="unknown_status">Unknown status</string>
     <string name="licensed">Licensed</string>
     <string name="publishing_finished">Publishing finished</string>
@@ -621,8 +615,9 @@
     <string name="on_hiatus">On hiatus</string>
     <string name="add_to_library">Add to library</string>
     <string name="in_library">In library</string>
+    <!-- missing confirm menu after Compose rewrite #7901 -->
     <string name="remove_from_library">Remove from library</string>
-    <string name="manga_info_full_title_label">Title</string>
+    <string name="unknown_title">Unknown title</string>
     <string name="confirm_manga_add_duplicate">You have an entry in your library with the same name but from a different source (%1$s).\n\nDo you still wish to continue?</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
@@ -646,7 +641,6 @@
     <string name="chapter_paused">Paused</string>
     <string name="show_title">Source title</string>
     <string name="show_chapter_number">Chapter number</string>
-    <string name="sorting_mode">Sorting mode</string>
     <string name="sort_by_source">By source</string>
     <string name="sort_by_number">By chapter number</string>
     <string name="sort_by_upload_date">By upload date</string>
@@ -708,14 +702,13 @@
     <string name="track_started_reading_date">Start date</string>
     <string name="track_finished_reading_date">Finish date</string>
     <string name="track_type">Type</string>
-    <string name="track_author">Author</string>
-    <string name="error_invalid_date_supplied">Invalid date supplied</string>
     <string name="myanimelist_relogin">Please login to MAL again</string>
     <string name="source_unsupported">Source is not supported</string>
     <string name="error_no_match">No match found</string>
 
     <!-- Category activity -->
     <string name="error_category_exists">A category with this name already exists!</string>
+    <!-- missing undo feature after Compose rewrite #7454 -->
     <string name="snack_categories_deleted">Categories deleted</string>
 
     <!-- Dialog option with checkbox view -->
@@ -733,7 +726,6 @@
     <string name="share_page_info">%1$s: %2$s, page %3$d</string>
     <string name="chapter_progress">Page: %1$d</string>
     <string name="no_next_chapter">Next chapter not found</string>
-    <string name="no_previous_chapter">Previous chapter not found</string>
     <string name="decode_image_error">The image couldn\'t be loaded</string>
     <string name="confirm_set_image_as_cover">Use this image as cover art?</string>
     <string name="pref_category_for_this_series">For this series</string>
@@ -830,6 +822,7 @@
     <!--UpdateCheck-->
     <string name="update_check_confirm">Download</string>
     <string name="update_check_open">Open on GitHub</string>
+    <!-- reserved for future use -->
     <string name="update_check_eol">This Android version is no longer supported</string>
     <string name="update_check_no_new_updates">No new updates available</string>
     <string name="update_check_look_for_updates">Searching for updates…</string>

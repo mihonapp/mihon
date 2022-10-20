@@ -65,7 +65,7 @@ class SettingsDownloadScreen : SearchableSettings {
                 downloadPreferences = downloadPreferences,
                 categories = allCategories,
             ),
-            getDownloadNewChaptersGroup(
+            getAutoDownloadGroup(
                 downloadPreferences = downloadPreferences,
                 allCategories = allCategories,
             ),
@@ -196,7 +196,7 @@ class SettingsDownloadScreen : SearchableSettings {
     }
 
     @Composable
-    private fun getDownloadNewChaptersGroup(
+    private fun getAutoDownloadGroup(
         downloadPreferences: DownloadPreferences,
         allCategories: List<Category>,
     ): Preference.PreferenceGroup {
@@ -227,7 +227,7 @@ class SettingsDownloadScreen : SearchableSettings {
         }
 
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.pref_download_new),
+            title = stringResource(R.string.pref_category_auto_download),
             preferenceItems = listOf(
                 Preference.PreferenceItem.SwitchPreference(
                     pref = downloadNewChaptersPref,
