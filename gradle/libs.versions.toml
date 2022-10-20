@@ -55,7 +55,7 @@ natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
 markwon = "io.noties.markwon:core:4.6.2"
 
-material = "com.google.android.material:material:1.7.0-rc01"
+material = "com.google.android.material:material:1.7.0"
 flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
 flexible-adapter-ui = "com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533"
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
