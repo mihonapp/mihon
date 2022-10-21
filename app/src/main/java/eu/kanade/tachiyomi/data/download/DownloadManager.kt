@@ -287,10 +287,7 @@ class DownloadManager(
             }
 
             // Delete source directory if empty
-            val sourceDir = provider.findSourceDir(source)
-            if (sourceDir?.listFiles()?.isEmpty() == true) {
-                sourceDir.delete()
-            }
+            cache.removeSourceIfEmpty(source)
         }
 
         return filteredChapters

@@ -338,27 +338,35 @@ class LibraryPresenter(
      * @return an observable of the categories and its manga.
      */
     private fun getLibraryFlow(): Flow<Library> {
-        val categoriesFlow = getCategories.subscribe()
-        val libraryMangasFlow = getLibraryManga.subscribe()
-            .map { list ->
-                list.map { libraryManga ->
+        val libraryMangasFlow = combine(
+            getLibraryManga.subscribe(),
+            libraryPreferences.downloadBadge().changes(),
+        ) { libraryMangaList, downloadBadgePref ->
+            libraryMangaList
+                .map { libraryManga ->
                     // Display mode based on user preference: take it from global library setting or category
                     LibraryItem(libraryManga).apply {
-                        downloadCount = downloadManager.getDownloadCount(libraryManga.manga).toLong()
+                        downloadCount = if (downloadBadgePref) {
+                            downloadManager.getDownloadCount(libraryManga.manga).toLong()
+                        } else {
+                            0
+                        }
                         unreadCount = libraryManga.unreadCount
                         isLocal = libraryManga.manga.isLocal()
                         sourceLanguage = sourceManager.getOrStub(libraryManga.manga.source).lang
                     }
-                }.groupBy { it.libraryManga.category }
-            }
-        return combine(categoriesFlow, libraryMangasFlow) { dbCategories, libraryManga ->
-            val categories = if (libraryManga.isNotEmpty() && libraryManga.containsKey(0).not()) {
-                dbCategories.filterNot { it.isSystemCategory }
+                }
+                .groupBy { it.libraryManga.category }
+        }
+
+        return combine(getCategories.subscribe(), libraryMangasFlow) { categories, libraryManga ->
+            val displayCategories = if (libraryManga.isNotEmpty() && libraryManga.containsKey(0).not()) {
+                categories.filterNot { it.isSystemCategory }
             } else {
-                dbCategories
+                categories
             }
 
-            state.categories = categories
+            state.categories = displayCategories
             Library(categories, libraryManga)
         }
     }
