@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
@@ -239,7 +240,10 @@ class SettingsTrackingScreen : SearchableSettings {
                         } else {
                             VisualTransformation.None
                         },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        ),
                         singleLine = true,
                         isError = inputError && password.text.isEmpty(),
                     )
