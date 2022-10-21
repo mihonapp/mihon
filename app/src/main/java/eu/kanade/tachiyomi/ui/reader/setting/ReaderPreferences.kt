@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.reader.setting
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.core.preference.getEnum
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
+import eu.kanade.tachiyomi.util.system.isReleaseFlavor
 
 class ReaderPreferences(
     private val preferenceStore: PreferenceStore,
@@ -30,7 +31,8 @@ class ReaderPreferences(
 
     fun defaultOrientationType() = preferenceStore.getInt("pref_default_orientation_type_key", OrientationType.FREE.flagValue)
 
-    fun longStripSplitWebtoon() = preferenceStore.getBoolean("pref_long_strip_split_webtoon", true)
+    // TODO: Enable in release build when the feature is stable
+    fun longStripSplitWebtoon() = preferenceStore.getBoolean("pref_long_strip_split_webtoon", !isReleaseFlavor)
 
     fun imageScaleType() = preferenceStore.getInt("pref_image_scale_type_key", 1)
 
