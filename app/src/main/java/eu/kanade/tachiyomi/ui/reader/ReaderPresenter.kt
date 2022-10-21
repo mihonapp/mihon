@@ -392,7 +392,7 @@ class ReaderPresenter(
         if (chapter.pageLoader is HttpPageLoader) {
             val manga = manga ?: return
             val dbChapter = chapter.chapter
-            val isDownloaded = downloadManager.isChapterDownloaded(dbChapter.name, dbChapter.scanlator, manga.title, manga.source)
+            val isDownloaded = downloadManager.isChapterDownloaded(dbChapter.name, dbChapter.scanlator, manga.title, manga.source, skipCache = true)
             if (isDownloaded) {
                 chapter.state = ReaderChapter.State.Wait
             }
@@ -463,6 +463,7 @@ class ReaderPresenter(
             nextChapter.scanlator,
             manga.title,
             manga.source,
+            skipCache = true,
         ) || downloadManager.getChapterDownloadOrNull(nextChapter) != null
         if (isNextChapterDownloadedOrQueued) {
             downloadAutoNextChapters(chaptersNumberToDownload, nextChapter.id, nextChapter.read)

@@ -57,6 +57,7 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
                 prevChapter.scanlator,
                 manga.title,
                 manga.source,
+                skipCache = true,
             )
             val isCurrentDownloaded = transition.from.pageLoader is DownloadPageLoader
             binding.upperText.text = buildSpannedString {
@@ -94,6 +95,7 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
                 nextChapter.scanlator,
                 manga.title,
                 manga.source,
+                skipCache = true,
             )
             binding.upperText.text = buildSpannedString {
                 bold { append(context.getString(R.string.transition_finished)) }
