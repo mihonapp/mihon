@@ -14,6 +14,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.withStyledAttributes
 import androidx.core.view.forEach
 import androidx.core.view.get
+import androidx.core.view.size
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.preference.Preference
 import eu.kanade.tachiyomi.databinding.PrefSpinnerBinding
@@ -66,12 +67,13 @@ class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     fun setSelection(selection: Int) {
-        popup?.menu?.get(selectedPosition)?.let {
-            it.icon = emptyIcon
-            it.title = entries[selectedPosition]
+        if (selectedPosition < (popup?.menu?.size ?: 0)) {
+            popup?.menu?.getItem(selectedPosition)?.let {
+                it.icon = emptyIcon
+            }
         }
         selectedPosition = selection
-        popup?.menu?.get(selectedPosition)?.let {
+        popup?.menu?.getItem(selectedPosition)?.let {
             it.icon = checkmarkIcon
         }
         binding.details.text = entries.getOrNull(selection).orEmpty()
