@@ -380,8 +380,10 @@ class SettingsBackupScreen : SearchableSettings {
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(R.string.pref_backup_directory),
                     subtitle = remember(backupDir) {
-                        UniFile.fromUri(context, backupDir.toUri()).filePath!! + "/automatic"
-                    },
+                        (UniFile.fromUri(context, backupDir.toUri())?.filePath)?.let {
+                            "$it/automatic"
+                        }
+                    } ?: stringResource(R.string.invalid_location, backupDir),
                     onClick = {
                         try {
                             pickBackupLocation.launch(null)

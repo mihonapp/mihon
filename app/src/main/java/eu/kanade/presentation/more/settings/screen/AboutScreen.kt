@@ -205,7 +205,7 @@ class AboutScreen : Screen {
                 BuildConfig.DEBUG -> {
                     "Debug ${BuildConfig.COMMIT_SHA}".let {
                         if (withBuildDate) {
-                            "$it (${getFormattedBuildTime()}"
+                            "$it (${getFormattedBuildTime()})"
                         } else {
                             it
                         }

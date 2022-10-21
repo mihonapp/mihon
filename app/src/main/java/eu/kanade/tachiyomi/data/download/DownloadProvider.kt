@@ -57,7 +57,7 @@ class DownloadProvider(private val context: Context) {
                 .createDirectory(getMangaDirName(mangaTitle))
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e) { "Invalid download directory" }
-            throw Exception(context.getString(R.string.invalid_download_dir))
+            throw Exception(context.getString(R.string.invalid_location, downloadsDir))
         }
     }
 

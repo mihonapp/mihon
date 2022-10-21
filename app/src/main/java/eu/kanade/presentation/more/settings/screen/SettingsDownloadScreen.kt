@@ -102,8 +102,8 @@ class SettingsDownloadScreen : SearchableSettings {
             pref = currentDirPref,
             title = stringResource(R.string.pref_download_directory),
             subtitle = remember(currentDir) {
-                UniFile.fromUri(context, currentDir.toUri()).filePath!!
-            },
+                UniFile.fromUri(context, currentDir.toUri())?.filePath
+            } ?: stringResource(R.string.invalid_location, currentDir),
             entries = mapOf(
                 defaultDirPair,
                 customDirEntryKey to stringResource(R.string.custom_dir),
