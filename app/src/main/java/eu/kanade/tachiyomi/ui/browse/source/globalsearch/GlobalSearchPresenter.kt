@@ -114,7 +114,7 @@ open class GlobalSearchPresenter(
         var filteredSources: List<CatalogueSource>? = null
 
         if (!filter.isNullOrEmpty()) {
-            filteredSources = extensionManager.installedExtensions
+            filteredSources = extensionManager.installedExtensionsFlow.value
                 .filter { it.pkgName == filter }
                 .flatMap { it.sources }
                 .filter { it in enabledSources }

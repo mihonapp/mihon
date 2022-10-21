@@ -46,7 +46,7 @@ class SourceManager(
 
     init {
         scope.launch {
-            extensionManager.getInstalledExtensionsFlow()
+            extensionManager.installedExtensionsFlow
                 .collectLatest { extensions ->
                     val mutableMap = mutableMapOf<Long, Source>(LocalSource.ID to LocalSource(context))
                     extensions.forEach { extension ->

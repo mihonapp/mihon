@@ -17,9 +17,9 @@ class GetExtensionsByType(
 
         return combine(
             preferences.enabledLanguages().changes(),
-            extensionManager.getInstalledExtensionsFlow(),
-            extensionManager.getUntrustedExtensionsFlow(),
-            extensionManager.getAvailableExtensionsFlow(),
+            extensionManager.installedExtensionsFlow,
+            extensionManager.untrustedExtensionsFlow,
+            extensionManager.availableExtensionsFlow,
         ) { _activeLanguages, _installed, _untrusted, _available ->
             val (updates, installed) = _installed
                 .filter { (showNsfwSources || it.isNsfw.not()) }
