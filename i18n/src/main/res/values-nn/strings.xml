@@ -30,7 +30,6 @@
     <string name="action_bookmark">Bokmerk kapittel</string>
     <string name="action_remove_bookmark">Fjern bokmerke</string>
     <string name="action_delete">Slett</string>
-    <string name="action_update">Oppdater</string>
     <string name="action_update_library">Oppdater bibliotek</string>
     <string name="action_enable_all">Aktiver alle</string>
     <string name="action_disable_all">Deaktiver alle</string>
@@ -73,7 +72,6 @@
     <string name="action_close">Lukka</string>
     <string name="action_open_log">Opne logg</string>
     <string name="action_show_errors">Trykk for å sjå detaljar</string>
-    <string name="action_create">Oppretta</string>
     <string name="action_webview_back">Tilbake</string>
     <string name="action_faq_and_guides">FAQ og guidar</string>
     <string name="loading">Lastar…</string>
@@ -222,8 +220,6 @@
     <string name="pref_create_backup">Lag reservekopi</string>
     <string name="pref_restore_backup">Gjenopprett reservekopi</string>
     <string name="pref_backup_directory">Reservekopifil-mappe</string>
-    <string name="tracker_not_logged_in">Ikkje logga inn: %1$s</string>
-    <string name="backup_restore_invalid_uri">Feil: tom URI</string>
     <string name="backup_created">Reservekopi oppretta</string>
     <string name="invalid_backup_file">Ugyldig reservekopifil</string>
     <string name="invalid_backup_file_missing_manga">Reservekopi inneheld ingen manga.</string>
@@ -262,8 +258,6 @@
     <string name="action_global_search_hint">Globalt søk…</string>
     <string name="action_global_search_query">Søk etter «%1$s» globalt</string>
     <string name="browse">Utforsk</string>
-    <string name="manga_not_in_db">Denne mangaen har vorte fjerna frå databasen.</string>
-    <string name="description">Skildring</string>
     <string name="unknown">Ukjend</string>
     <string name="unknown_author">Ukjend forfattar</string>
     <string name="unknown_status">Ukjend status</string>
@@ -305,7 +299,6 @@
     <string name="set_chapter_settings_as_default">Sett som standard</string>
     <string name="whats_new">Kva er nytt</string>
     <string name="remove_from_library">Fjern frå bibliotek</string>
-    <string name="manga_info_full_title_label">Tittel</string>
     <string name="manga_info_expand">Meir</string>
     <string name="snack_add_to_library">Legg manga til i bibliotek\?</string>
     <string name="manga_info_collapse">Mindre</string>

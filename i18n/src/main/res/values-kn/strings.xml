@@ -36,7 +36,6 @@
     <string name="action_webview_forward">ಮುಂದೆ</string>
     <string name="action_webview_back">ಹಿಂದೆ</string>
     <string name="action_restore">ಮರುಸ್ಥಾಪಿಸಿ</string>
-    <string name="action_create">ರಚಿಸಿ</string>
     <string name="action_open_log">ಲಾಗ್ ತೆರೆಯಿರಿ</string>
     <string name="action_undo">ರದ್ದುಗೊಳಿಸಿ</string>
     <string name="action_reset">ಮರುಹೊಂದಿಸಿ</string>
@@ -77,7 +76,6 @@
     <string name="action_add">ಸೇರಿಸಿ</string>
     <string name="action_edit">ತಿದ್ದು</string>
     <string name="action_update_library">ಗ್ರಂಥಾಲಯ ನವೀಕರಿಸಿ</string>
-    <string name="action_update">ನವೀಕರಿಸಿ</string>
     <string name="action_delete">ತೆಗೆದು ಹಾಕು</string>
     <string name="action_remove_bookmark">ಅಧ್ಯಾಯದ ಬುಕ್‌ಮಾರ್ಕ್ ತೆಗೆದುಹಾಕಿ</string>
     <string name="action_bookmark">ಬುಕ್ ಮಾರ್ಕ್ ಅಧ್ಯಾಯ</string>
@@ -320,7 +318,6 @@
     <string name="pref_category_for_this_series">ಈ ಸರಣಿಗಾಗಿ</string>
     <string name="confirm_set_image_as_cover">ಈ ಚಿತ್ರವನ್ನು ಕವರ್ ಆರ್ಟ್ ಆಗಿ ಬಳಸುವುದೇ\?</string>
     <string name="decode_image_error">ಈ ಚಿತ್ರವನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಲಿಲ್ಲ</string>
-    <string name="no_previous_chapter">ಹಿಂದಿನ ಅಧ್ಯಾಯ ಕಂಡುಬಂದಿಲ್ಲ</string>
     <string name="no_next_chapter">ಮುಂದಿನ ಅಧ್ಯಾಯ ಕಂಡುಬಂದಿಲ್ಲ</string>
     <string name="chapter_progress">ಪುಟ: %1$d</string>
     <string name="cover_updated">ಕವರ್ ನವೀಕರಿಸಲಾಗಿದೆ</string>
@@ -331,8 +328,6 @@
     <string name="dialog_with_checkbox_remove_description">ಇದು ಈ ಅಧ್ಯಾಯದ ಓದುವ ದಿನಾಂಕವನ್ನು ತೆಗೆದುಹಾಕುತ್ತದೆ. ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ\?</string>
     <string name="snack_categories_deleted">ವರ್ಗಗಳನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
     <string name="error_category_exists">ಈ ಹೆಸರಿನ ವರ್ಗವು ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ!</string>
-    <string name="error_invalid_date_supplied">ಅಮಾನ್ಯ ದಿನಾಂಕವನ್ನು ಒದಗಿಸಲಾಗಿದೆ</string>
-    <string name="track_author">ಲೇಖಕ</string>
     <string name="track_type">ಮಾದರಿ</string>
     <string name="track_start_date">ಪ್ರಾರಂಭಿಸಲಾಗಿದೆ</string>
     <string name="track_status">ಸ್ಥಿತಿ</string>
@@ -348,7 +343,6 @@
     <string name="reading">ಓದುತ್ತಿರುವ</string>
     <string name="add_tracking">ಟ್ರ್ಯಾಕಿಂಗ್ ಸೇರಿಸಿ</string>
     <string name="manga_tracking_tab">ಟ್ರ್ಯಾಕಿಂಗ್</string>
-    <string name="invalid_download_dir">ಡೌನ್‌ಲೋಡ್ ಸ್ಥಳ ಅಮಾನ್ಯವಾಗಿದೆ</string>
     <string name="confirm_delete_chapters">ಆಯ್ದ ಅಧ್ಯಾಯಗಳನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ\?</string>
     <string name="download_unread">ಓದದ</string>
     <string name="download_all">ಎಲ್ಲಾ</string>
@@ -360,7 +354,6 @@
     <string name="manga_download">ಡೌನ್‌ಲೋಡ್</string>
     <string name="sort_by_number">ಅಧ್ಯಾಯದ ಸಂಖ್ಯೆಯ ಪ್ರಕಾರ</string>
     <string name="sort_by_source">ಮೂಲದ ಪ್ರಕಾರ</string>
-    <string name="sorting_mode">ವಿಂಗಡಿಸುವ ರೀತಿ</string>
     <string name="show_chapter_number">ಅಧ್ಯಾಯ ಸಂಖ್ಯೆ</string>
     <string name="show_title">ಮೂಲ ಶೀರ್ಷಿಕೆ</string>
     <string name="chapter_paused">ವಿರಾಮಗೊಳಿಸಲಾಗಿದೆ</string>
@@ -376,15 +369,12 @@
     <string name="manga_info_expand">ಹೆಚ್ಚು</string>
     <string name="manga_removed_library">ಗ್ರಂಥಾಲಯದಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ</string>
     <string name="manga_added_library">ಗ್ರಂಥಾಲಯಕ್ಕೆ ಸೇರಿಸಲಾಗಿದೆ</string>
-    <string name="manga_info_full_title_label">ಶೀರ್ಷಿಕೆ</string>
     <string name="remove_from_library">ಗ್ರಂಥಾಲಯದಿಂದ ತೆಗೆದುಹಾಕಿ</string>
     <string name="in_library">ಗ್ರಂಥಾಲಯದಲ್ಲಿರುವ</string>
     <string name="add_to_library">ಗ್ರಂಥಾಲಯಕ್ಕೆ ಸೇರಿಸಿ</string>
     <string name="licensed">ಪರವಾನಗಿ ಪಡೆದ</string>
     <string name="unknown">ಗೊತ್ತಿರದ</string>
     <string name="ongoing">ಪ್ರಗತಿಯಲ್ಲಿರುವ</string>
-    <string name="description">ವಿವರಣೆ</string>
-    <string name="manga_not_in_db">ಈ ಮಾಂಗಾವನ್ನು ಡೇಟಾಬೇಸ್‌ನಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ.</string>
     <string name="local_source_help_guide">ಲೋಕಲ್ ಮೂಲದ ಮಾರ್ಗದರ್ಶಿ</string>
     <string name="browse">ಬ್ರೌಸ್</string>
     <string name="latest">ಹೊಸದಾದ</string>
@@ -399,7 +389,6 @@
     <string name="local_source_badge">ಲೋಕಲ್</string>
     <string name="updating_category">ವರ್ಗವನ್ನು ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ</string>
     <string name="unknown_error">ಅಜ್ಞಾತ ದೋಷ</string>
-    <string name="invalid_login">ಲಾಗ್ ಇನ್ ಆಗಲಿಲ್ಲ</string>
     <string name="logout_success">ನೀವು ಈಗ ಲಾಗ್ ಔಟ್ ಆಗಿದ್ದೀರಿ</string>
     <string name="logout">ಲಾಗ್ ಔಟ್</string>
     <string name="logout_title">%1$s ನಿಂದ ಲಾಗ್ ಔಟ್ ಆಗುವುದೇ\?</string>
@@ -453,7 +442,6 @@
     <string name="backup_restore_missing_sources">ಕಾಣೆಯಾದ ಮೂಲಗಳು:</string>
     <string name="invalid_backup_file_missing_manga">ಬ್ಯಾಕಪ್ ಯಾವುದೇ ಮಾಂಗಾವನ್ನು ಹೊಂದಿಲ್ಲ.</string>
     <string name="invalid_backup_file">ಬ್ಯಾಕಪ್ ಫೈಲ್ ಅಮಾನ್ಯವಾಗಿದೆ</string>
-    <string name="tracker_not_logged_in">ಲಾಗ್ ಇನ್ ಆಗಿಲ್ಲ: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">ಗ್ರಂಥಾಲಯವನ್ನು ನವೀಕರಿಸುವಾಗ ಹೊಸ ಕವರ್ ಮತ್ತು ವಿವರಗಳಿಗಾಗಿ ಪರಿಶೀಲಿಸಿ</string>
     <string name="pref_library_update_refresh_metadata">ಮೆಟಾಡೇಟಾವನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ರಿಫ್ರೆಶ್ ಮಾಡಿ</string>
     <string name="action_migrate">ಮೂಲ ಸ್ಥಳಾಂತರ</string>
@@ -488,7 +476,6 @@
     <string name="label_network">ಅಡ್ವಾನ್ಸ್ಡ್ ಸೆಕ್ಷನ್</string>
     <string name="pref_category_reading_mode">ಓದುವ ಮೊಡ್</string>
     <string name="pref_category_theme">ಜನರಲ್ ಸೆಲೆಕ್ಷನ್</string>
-    <string name="action_download_unread">ಓದದಿರುವ ಅಧ್ಯಾಯಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
     <string name="action_sort_date_added">ಹಾಕಿದ್ದ ದಿನಾಂಕ</string>
     <plurals name="num_trackers">
         <item quantity="one">1 ಟ್ರಾಕರ್</item>

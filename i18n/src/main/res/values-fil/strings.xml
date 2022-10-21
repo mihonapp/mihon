@@ -4,7 +4,6 @@
     <string name="action_webview_forward">Umabante</string>
     <string name="action_webview_back">Bumalik</string>
     <string name="action_restore">I-restore</string>
-    <string name="action_create">Gawin</string>
     <string name="action_open_log">Buksan ang log</string>
     <string name="action_undo">I-undo</string>
     <string name="action_reset">I-reset</string>
@@ -51,7 +50,6 @@
     <string name="action_edit">Isaayos</string>
     <string name="action_disable_all">Isara lahat</string>
     <string name="action_enable_all">Buksan lahat</string>
-    <string name="action_update">I-update</string>
     <string name="action_update_library">I-update ang Aklatan</string>
     <string name="action_delete">Burahin</string>
     <string name="action_remove_bookmark">Wag na\'ng tandaan</string>
@@ -251,7 +249,6 @@
     <string name="invalid_backup_file_missing_manga">Walang manga ang backup.</string>
     <string name="invalid_backup_file">Invalid na backup</string>
     <string name="backup_created">Nai-backup na</string>
-    <string name="tracker_not_logged_in">Di naka-login: %1$s</string>
     <string name="pref_backup_slots">Dami ng backup</string>
     <string name="pref_backup_interval">Dalas ng pag-backup</string>
     <string name="pref_backup_service_category">Kusang mag-backup</string>
@@ -271,7 +268,6 @@
     <string name="third_to_last">Pangatlo sa huling nabasa</string>
     <string name="pref_category_reading_mode">Pagbasa</string>
     <string name="pref_category_theme">Tema</string>
-    <string name="action_download_unread">I-download ang mga babasahin</string>
     <string name="action_sort_date_added">Petsa dinagdag</string>
     <string name="tapping_inverted_both">Pareho</string>
     <string name="tapping_inverted_vertical">Patayo</string>
@@ -343,7 +339,6 @@
     <string name="pref_category_for_this_series">Para sa seryeng ito</string>
     <string name="confirm_set_image_as_cover">Gamiting cover ang larawang ito\?</string>
     <string name="decode_image_error">Di mai-load ang larawan</string>
-    <string name="no_previous_chapter">Di makita ang nakaraang kabanata</string>
     <string name="no_next_chapter">Di makita ang susunod na kabanata</string>
     <string name="chapter_progress">Pahina: %1$d</string>
     <string name="cover_updated">Napalitan na ang cover</string>
@@ -354,8 +349,6 @@
     <string name="dialog_with_checkbox_remove_description">Tatanggalin nito ang petsa ng pagbasa sa kabanatang ito. Sigurado ka ba\?</string>
     <string name="snack_categories_deleted">Binura na ang mga kategorya</string>
     <string name="error_category_exists">Mayroong kapangalan ang kategoryang ito!</string>
-    <string name="error_invalid_date_supplied">Invalid ang binigay na petsa</string>
-    <string name="track_author">May-akda</string>
     <string name="track_type">Uri</string>
     <string name="track_start_date">Sinimulan</string>
     <string name="track_status">Estado</string>
@@ -371,7 +364,6 @@
     <string name="reading">Pagbabasa</string>
     <string name="add_tracking">Magdagdag ng tracker</string>
     <string name="manga_tracking_tab">Pagta-track</string>
-    <string name="invalid_download_dir">Invalid na lugar ng paglalagyan</string>
     <string name="confirm_delete_chapters">Sigurado ka bang gusto mong burahin ang (mga) piniling kabanata\?</string>
     <string name="download_unread">Babasahin</string>
     <string name="download_all">Lahat</string>
@@ -384,7 +376,6 @@
     <string name="sort_by_upload_date">Base sa petsa ng pag-upload</string>
     <string name="sort_by_number">Base sa bilang</string>
     <string name="sort_by_source">Base sa source</string>
-    <string name="sorting_mode">Pag-ayos</string>
     <string name="show_title">Pangalan ng source</string>
     <string name="show_chapter_number">Kabanata</string>
     <string name="chapter_paused">Nakahinto</string>
@@ -404,7 +395,6 @@
     <string name="manga_info_collapse">Bawasan</string>
     <string name="manga_removed_library">Tinanggal sa Aklatan</string>
     <string name="manga_added_library">Dinagdag sa Aklatan</string>
-    <string name="manga_info_full_title_label">Pamagat</string>
     <string name="remove_from_library">Tanggalin sa Aklatan</string>
     <string name="in_library">Nasa Aklatan</string>
     <string name="add_to_library">Idagdag sa Aklatan</string>
@@ -413,8 +403,6 @@
     <string name="unknown_author">Di alam ang may-akda</string>
     <string name="unknown">Di alam</string>
     <string name="ongoing">Patuloy</string>
-    <string name="description">Paglalarawan</string>
-    <string name="manga_not_in_db">Tinanggal na ang manga na ito mula sa database.</string>
     <string name="local_source_help_guide">Gabay sa Lokal na Source</string>
     <string name="browse">Maghanap</string>
     <string name="latest">Pinakabago</string>
@@ -432,7 +420,6 @@
     <string name="local_source_badge">Lokal</string>
     <string name="updating_category">Ina-update ang kategorya</string>
     <string name="unknown_error">Di matukoy na error</string>
-    <string name="invalid_login">Di makapag-login</string>
     <string name="logout_success">Naka-logout ka na</string>
     <string name="logout">Mag-logout</string>
     <string name="logout_title">Mag-logout sa %1$s\?</string>
@@ -547,10 +534,10 @@
     <string name="action_order_by_upload_date">Petsa in-upload</string>
     <string name="action_filter_tracked">Sinundan</string>
     <string name="right_and_left_nav">Kaliwa at Kanan</string>
-    <string name="pref_dual_page_split">Hatiin sa dalawang pahina</string>
+    <string name="pref_dual_page_split">Hatiin sa dalawa ang malapad na pahina</string>
     <string name="action_display_show_number_of_items">Ipakita ang dami</string>
-    <string name="pref_dual_page_invert_summary">Kung sakaling hindi sumasakto sa direksyon ng pagbasa ang paglalagay ng hati</string>
-    <string name="pref_dual_page_invert">Baligtarin ang paglagay ng hati</string>
+    <string name="pref_dual_page_invert_summary">Kung sakaling hindi sumasakto ang direksyon ng hating pahina</string>
+    <string name="pref_dual_page_invert">Pag baliktarin ang hinating pahina</string>
     <string name="backup_restore_content_full">Ire-restore ang mga datos mula sa backup.
 \n
 \nKailangan mong i-install muli ang mga nawawalang extension at mag-login muli sa mga tracker pagkatapos para magamit ang mga ito.</string>
@@ -679,7 +666,6 @@
     <string name="publishing_finished">Tapos na\'ng mailathala</string>
     <string name="on_hiatus">Naka-hiatus</string>
     <string name="cancelled">Kinansela</string>
-    <string name="backup_restore_invalid_uri">Error: bakanteng URI</string>
     <string name="action_faq_and_guides">Mga Madalas Itanong at Gabay</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Ipakita ang manga</string>
@@ -693,7 +679,7 @@
 \n
 \nGusto mo pa rin bang magpatuloy\?</string>
     <string name="pref_landscape_zoom">Mag-zoom sa pahigang larawan</string>
-    <string name="pref_navigate_pan">Gumalaw para mag-pan</string>
+    <string name="pref_navigate_pan">I-pan ang malapad na larawan kapag nag-tap</string>
     <string name="learn_more">Matuto pa</string>
     <string name="channel_skipped">Nilaktawan</string>
     <string name="notification_update_error">Nabigo ang %1$d (na) update</string>
@@ -761,11 +747,24 @@
         <item quantity="other">Susunod na %d (na) kabanatang di pa nabasa</item>
     </plurals>
     <string name="multi_lang">Marami</string>
-    <string name="remove_manga">Tatanggalin mo na ang manga na ito mula sa Aklatan mo</string>
+    <string name="remove_manga">Tatanggalin mo na ang \"%s\" mula sa iyong aklatan</string>
     <string name="updates_last_update_info">Huling na-update ang Aklatan noong: %1$s</string>
     <string name="pref_long_strip_split">Hatiin ang mga matatangkad na larawan (BETA)</string>
     <string name="popular">Sikat</string>
     <string name="missing_storage_permission">Hindi binigay ang mga permiso sa storage</string>
     <string name="skipped_reason_not_always_update">Nilaktawan dahil hindi kailangan ang pag-update sa serye</string>
     <string name="action_search_hint">Maghanap…</string>
+    <string name="pref_reader_summary">Paraan ng pagbasa, pagpapakita, nabigasyon</string>
+    <string name="pref_downloads_summary">Kusang pag-download, i-download agad</string>
+    <string name="pref_tracking_summary">Isahang pagsabay ng progress, karagdagang pagsabay</string>
+    <string name="pref_appearance_summary">Tema, Ayos ng petsa at oras</string>
+    <string name="pref_backup_summary">Manu-mano at kusang backups</string>
+    <string name="pref_security_summary">Lock ng app, bantayan ang screen</string>
+    <string name="pref_advanced_summary">Itambak ang mga crash log, pag-o-optimisa sa baterya</string>
+    <string name="pref_library_summary">Mga kategorya, panlahatang update</string>
+    <string name="pref_browse_summary">Mga source, extension, panlahatang paghanap</string>
+    <string name="crash_screen_description">Nagkaroon ang %s ng di-inaasahang error. Paki-screenshot ang error, itambak ang mga crash log, at ibahagi sa support channel sa Discord.</string>
+    <string name="crash_screen_title">Isang di-inaasahang error ang naganap</string>
+    <string name="pref_general_summary">Wika ng App, mga abiso</string>
+    <string name="crash_screen_restart_application">Buksan muli ang app</string>
 </resources>

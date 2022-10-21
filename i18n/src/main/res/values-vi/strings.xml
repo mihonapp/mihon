@@ -26,7 +26,6 @@
     <string name="action_bookmark">Đánh dấu chương</string>
     <string name="action_remove_bookmark">Bỏ đánh dấu chương</string>
     <string name="action_delete">Xóa</string>
-    <string name="action_update">Cập nhật</string>
     <string name="action_update_library">Cập nhật thư viện</string>
     <string name="action_edit">Sửa</string>
     <string name="action_add">Thêm</string>
@@ -152,16 +151,13 @@
     <string name="password">Mật khẩu</string>
     <string name="login">Đăng nhập</string>
     <string name="login_success">Đăng nhập thành công</string>
-    <string name="invalid_login">Lỗi đăng nhập</string>
     <string name="unknown_error">Lỗi không xác định</string>
     <!-- Library fragment -->
     <string name="updating_category">Cập nhật danh mục</string>
     <!-- Catalogue fragment -->
     <string name="no_more_results">Không có thêm kết quả nào</string>
     <!-- Manga activity -->
-    <string name="manga_not_in_db">Truyện này đã bị xóa khỏi cơ sở dữ liệu.</string>
     <!-- Manga info fragment -->
-    <string name="description">Mô tả</string>
     <string name="ongoing">Đang tiến hành</string>
     <string name="unknown">Không rõ</string>
     <string name="licensed">Đã được mua bản quyền</string>
@@ -173,7 +169,6 @@
     <string name="chapter_paused">Đã tạm dừng</string>
     <string name="show_title">Tiêu đề nguồn</string>
     <string name="show_chapter_number">Số chương</string>
-    <string name="sorting_mode">Sắp xếp</string>
     <string name="sort_by_source">Theo nguồn truyện</string>
     <string name="sort_by_number">Theo số chương</string>
     <string name="manga_download">Tải xuống</string>
@@ -210,7 +205,6 @@
     <string name="cover_updated">Đã cập nhật ảnh bìa</string>
     <string name="chapter_progress">Trang: %1$d</string>
     <string name="no_next_chapter">Không tìm thấy chương kế tiếp</string>
-    <string name="no_previous_chapter">Không tìm thấy chương trước</string>
     <string name="decode_image_error">Loạt ảnh hiện không thể được tải lên</string>
     <string name="confirm_set_image_as_cover">Bạn có chắc muốn đặt ảnh này làm ảnh bìa?</string>
     <!-- Backup fragment -->
@@ -257,7 +251,6 @@
     <string name="action_global_search">Tìm kiếm toàn bộ</string>
     <string name="action_display_download_badge">Tải các chương</string>
     <string name="action_open_log">Nhật ký mở</string>
-    <string name="action_create">Tạo</string>
     <string name="action_restore">Khôi phục</string>
     <string name="app_not_available">Ứng dụng không có sẵn</string>
     <string name="update_weekly">Mỗi tuần</string>
@@ -306,7 +299,6 @@
     <string name="action_global_search_hint">Tìm kiếm toàn bộ…</string>
     <string name="latest">Mới nhất</string>
     <string name="browse">Duyệt</string>
-    <string name="manga_info_full_title_label">Tiêu đề</string>
     <string name="manga_added_library">Đã thêm vào thư viện</string>
     <string name="manga_removed_library">Đã xóa khỏi thư viện</string>
     <string name="delete_downloads_for_manga">Muốn xóa các chương đã tải\?</string>
@@ -319,7 +311,6 @@
     <string name="track_status">Trạng thái</string>
     <string name="track_start_date">Đã bắt đầu</string>
     <string name="track_type">Loại</string>
-    <string name="track_author">Tác giả</string>
     <string name="transition_finished">Đã đọc xong:</string>
     <string name="transition_current">Đang đọc:</string>
     <string name="transition_next">Chương kế:</string>
@@ -359,7 +350,6 @@
     <string name="notification_check_updates">Kiểm tra các chương cập nhật mới</string>
     <string name="updating_library">Đang cập nhật thư viện</string>
     <string name="paused">Đã tạm ngưng</string>
-    <string name="invalid_download_dir">Đường dẫn tải xuống không hợp lệ</string>
     <string name="http_error_hint">Kiểm tra trang web bằng WebView</string>
     <string name="logout_success">Bạn đã đăng xuất</string>
     <string name="logout">Đăng xuất tài khoản</string>
@@ -413,7 +403,6 @@
     <string name="unlock_app">Mở Khoá Tachiyomi</string>
     <string name="label_sources">Nguồn</string>
     <string name="label_more">Thêm</string>
-    <string name="tracker_not_logged_in">Chưa đăng nhập: %1$s</string>
     <string name="pref_search_pinned_sources_only">Chỉ bao gồm các nguồn được ghim</string>
     <string name="tracking_info">Đồng bộ một chiều để cập nhật tiến trình chương trong các dịch vụ theo dõi. Thiết lập theo dõi cho các truyện riêng lẻ từ các nút theo dõi.</string>
     <string name="webtoon_side_padding_25">25%</string>
@@ -442,7 +431,6 @@
     <string name="action_start">Bắt đầu</string>
     <string name="action_disable_all">Tắt tất cả</string>
     <string name="action_enable_all">Bật tất cả</string>
-    <string name="action_download_unread">Tải các chương chưa đọc</string>
     <string name="action_sort_date_added">Ngày thêm</string>
     <string name="confirm_exit">Nhấn trở lại lần nữa để thoát</string>
     <string name="invalid_backup_file_missing_manga">Backup không chứa manga nào.</string>
@@ -506,7 +494,6 @@
     <string name="viewer">Chế độ đọc</string>
     <string name="pref_category_for_this_series">Dành cho phần truyện này</string>
     <string name="share_page_info">%1$s:%2$s,trang %3$d</string>
-    <string name="error_invalid_date_supplied">Ngày tháng không hợp lệ</string>
     <string name="add_tracking">Thêm theo dõi</string>
     <plurals name="num_trackers">
         <item quantity="other">%d bộ theo dõi</item>
@@ -701,7 +688,6 @@
     <string name="on_hiatus">Đang tạm ngưng</string>
     <string name="library_errors_help">Để được trợ giúp về cách sửa lỗi cập nhật thư viện, hãy xem %1$s</string>
     <string name="save_chapter_as_cbz">Lưu dưới dạng lưu trữ CBZ</string>
-    <string name="backup_restore_invalid_uri">Lỗi: URI trống</string>
     <string name="action_faq_and_guides">Câu Hỏi Thờng Gặp và Hướng Dẫn</string>
     <string name="pref_update_only_started">Chưa bắt đầu đọc</string>
     <string name="notification_update_skipped">%1$d cập nhật được bỏ qua</string>
@@ -788,4 +774,10 @@
     <string name="pref_long_strip_split">Tách các ảnh cao (BETA)</string>
     <string name="multi_lang">Đa Ngôn Ngữ</string>
     <string name="skipped_reason_not_always_update">Bỏ qua vì loạt truyện không cần cập nhật</string>
+    <string name="action_search_hint">Tìm kiếm…</string>
+    <string name="pref_general_summary">Ngôn ngữ ứng dụng, thông báo</string>
+    <string name="pref_appearance_summary">Chủ đề, kiểu hiển thị ngày &amp; giờ</string>
+    <string name="pref_library_summary">Danh mục, cập nhật toàn bộ</string>
+    <string name="pref_reader_summary">Dạng đọc, hiển thị, điều hướng</string>
+    <string name="pref_downloads_summary">Tự động tải xuống, tải xuống trước</string>
 </resources>

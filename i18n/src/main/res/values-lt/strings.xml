@@ -116,7 +116,6 @@
     <string name="action_webview_forward">Į priekį</string>
     <string name="action_webview_back">Atgal</string>
     <string name="action_restore">Atkurti</string>
-    <string name="action_create">Kurti</string>
     <string name="action_show_errors">Paspausti klaidų rodymui</string>
     <string name="action_open_log">Atidaryti ataskaitą</string>
     <string name="action_reset">Įkelti iš naujo</string>
@@ -172,11 +171,9 @@
     <string name="action_disable_all">Išjungti visus</string>
     <string name="action_enable_all">Įjungti visus</string>
     <string name="action_update_library">Naujinti biblioteką</string>
-    <string name="action_update">Naujinti</string>
     <string name="action_delete">Ištrinti</string>
     <string name="action_remove_bookmark">Pašalinti skyrių iš žymių</string>
     <string name="action_bookmark">Išsaugoti skyrių į žymes</string>
-    <string name="action_download_unread">Atsisiųsti neskaitytus skyrius</string>
     <string name="action_download">Atsisiųsti</string>
     <string name="action_mark_previous_as_read">Žymėti pastarąjį, kaip skaitytą</string>
     <string name="action_mark_as_unread">Žymėti, kaip neskaitytą</string>
@@ -363,7 +360,6 @@
     <string name="pref_remove_bookmarked_chapters">Leisti naikinti žymėtus skyrius</string>
     <string name="fifth_to_last">Penktas nuo paskutinio skaityto</string>
     <string name="pref_category_auto_download">Automatinis atsisiuntimas</string>
-    <string name="backup_restore_invalid_uri">Klaida: tuščias URI</string>
     <string name="pref_backup_service_category">Automatinės atsarginės kopijos</string>
     <string name="pref_backup_slots">Maksimalus atsarginių kopijų skaičius</string>
     <string name="backup_created">Sukurta atsarginė kopija</string>
@@ -454,7 +450,6 @@
     <string name="dialog_with_checkbox_reset">Iš naujo nustatyti visus šios mangos skyrius</string>
     <string name="cover_updated">Atnaujintas viršelis</string>
     <string name="logout_success">Dabar esate atsijungęs</string>
-    <string name="invalid_login">Nepavyko prisijungti</string>
     <string name="set_as_cover">Nustatyti kaip viršelį</string>
     <string name="chapter_paused">Pristabdyta</string>
     <string name="source_not_installed">Šaltinis neįdiegtas: %1$s</string>
@@ -463,7 +458,6 @@
     <string name="track_started_reading_date">Pradžios data</string>
     <string name="display_mode_chapter">Skyrius %1$s</string>
     <string name="chapter_error">Klaida</string>
-    <string name="sorting_mode">Rūšiavimo režimas</string>
     <string name="login_success">Prisijungęs</string>
     <string name="unknown_error">Nežinoma klaida</string>
     <string name="downloaded_chapters">Atsisiųsti skyriai</string>
@@ -473,7 +467,6 @@
     <string name="chapter_downloading_progress">Atsisiunčiama (%1$d / %2$d)</string>
     <string name="show_chapter_number">Skyriaus numeris</string>
     <string name="track_finished_reading_date">Baigimo data</string>
-    <string name="track_author">Autorius</string>
     <string name="show_title">Šaltinio pavadinimas</string>
     <string name="local_source_badge">Vietinis</string>
     <string name="manga_from_library">Manga iš bibliotekos</string>
@@ -481,7 +474,6 @@
     <string name="dialog_with_checkbox_remove_description">Tai pašalins šio skyriaus skaitymo datą. Ar tu tuo tikras\?</string>
     <string name="logout_title">Atsijungti nuo %1$s\?</string>
     <string name="source_unsupported">Šaltinis nepalaikomas</string>
-    <string name="error_invalid_date_supplied">Pateikta netinkama data</string>
     <string name="logout">Atsijungti</string>
     <string name="delete_category">Ištrinti kategoriją</string>
     <string name="action_sort_unread_count">Neskaitytų skaičius</string>
@@ -512,7 +504,6 @@
     <string name="split_tall_images">Automatiškai padalinti aukšti vaizdai</string>
     <string name="tracking_info">Vienpusė sinchronizacija, skirta skaitymo progresui stebėjimo paslaugose atnaujinti. Nustatykite atskirą manga įrašų sekimą iš jų sekimo mygtuko.</string>
     <string name="pref_create_backup_summ">Galima naudoti dabartinei bibliotekai atkurti</string>
-    <string name="tracker_not_logged_in">Neprisijungta: %1$s</string>
     <string name="pref_webtoon_side_padding">Šoninis spaudinėjimas</string>
     <string name="empty_backup_error">Nėra bibliotekos įrašų, kurių atsargines kopijas būtų galima sukurti</string>
     <string name="clear_database_confirmation">Ar tikrai\? Perskaityti skyriai ir nebibliotekinė mangos progresas bus prarastas</string>
@@ -655,7 +646,6 @@
     <string name="ongoing">Vykdoma</string>
     <string name="manga_added_library">Įtraukta į biblioteką</string>
     <string name="manga_cover">Viršelis</string>
-    <string name="invalid_download_dir">Netinkama atsisiuntimo vieta</string>
     <string name="pinned_sources">Prisegtas</string>
     <string name="email">El. pašto adresas</string>
     <string name="badges_header">Žymės</string>
@@ -679,8 +669,6 @@
     <string name="other_source">Kita</string>
     <string name="licensed">Licencijuotas</string>
     <string name="delete_downloads_for_manga">Ištrinti atsisiųstus skyrius\?</string>
-    <string name="manga_not_in_db">Ši manga buvo pašalinta iš duomenų bazės.</string>
-    <string name="description">Aprašas</string>
     <string name="unknown">Nežinoma</string>
     <string name="unknown_author">Nežinomas autorius</string>
     <string name="unknown_status">Nežinoma būsena</string>
@@ -694,7 +682,6 @@
     <string name="pref_incognito_mode">Inkognito režimas</string>
     <string name="browse">Naršyti</string>
     <string name="on_hiatus">Publikavimas pristabdytas</string>
-    <string name="manga_info_full_title_label">Antraštė</string>
     <string name="sort_by_number">Pagal skyriaus numerį</string>
     <string name="manga_info_expand">Daugiau</string>
     <string name="also_set_chapter_settings_for_library">Taip pat taikyti visoms mano bibliotekoje esančioms mangoms</string>
@@ -757,7 +744,6 @@
     <string name="migration_help_guide">Šaltinio perkėlimo vadovas</string>
     <string name="cant_open_last_read_chapter">Nepavyko atidaryti paskutinio skaityto skyriaus</string>
     <string name="chapter_progress">Puslapis: %1$d</string>
-    <string name="no_previous_chapter">Ankstesnis skyrius nerastas</string>
     <string name="transition_next">Kitas:</string>
     <string name="loader_rar5_error">RARv5 formatas nepalaikomas</string>
     <string name="source_filter_empty_screen">Įdiegtų šaltinių nerasta</string>
@@ -778,4 +764,12 @@
     <string name="auto_download_while_reading">Automatinis atsisiuntimas beskaitant</string>
     <string name="skipped_reason_not_always_update">Praleista, nes serijai nereikia atnaujinimų</string>
     <string name="missing_storage_permission">Nesuteikti saugojimo leidimai</string>
+    <string name="pref_downloads_summary">Automatinis atsisiuntimas, atsisiuntimas į priekį</string>
+    <string name="pref_backup_summary">Rankinės ir automatinės atsarginės kopijos</string>
+    <string name="pref_security_summary">Programos užraktas, saugus ekranas</string>
+    <string name="pref_general_summary">Programos kalba, pranešimai</string>
+    <string name="pref_appearance_summary">Tema, datos ir laiko formatas</string>
+    <string name="pref_reader_summary">Skaitymo režimas, rodymas, navigacija</string>
+    <string name="pref_tracking_summary">Vienpusis progreso sinchronizavimas, patobulintas sinchronizavimas</string>
+    <string name="pref_browse_summary">Šaltiniai, plėtiniai, visuotinė paieška</string>
 </resources>

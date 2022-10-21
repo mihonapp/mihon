@@ -36,7 +36,6 @@
     <string name="action_mark_as_read">既読にする</string>
     <string name="action_mark_as_unread">未読にする</string>
     <string name="action_delete">削除する</string>
-    <string name="action_update">更新</string>
     <string name="action_update_library">ライブラリを更新する</string>
     <string name="action_edit">編集</string>
     <string name="action_add_category">カテゴリを追加</string>
@@ -56,7 +55,6 @@
     <string name="action_save">保存</string>
     <string name="action_reset">リセット</string>
     <string name="action_open_log">ログを開く</string>
-    <string name="action_create">作成</string>
     <string name="action_restore">リストア</string>
     <string name="loading">読み込み中…</string>
     <string name="app_not_available">アプリは利用不可</string>
@@ -195,7 +193,6 @@
     <string name="pref_refresh_library_tracking">追跡情報を更新</string>
     <string name="pref_refresh_library_tracking_summary">同期サービスでステータス、評価と最後に読んだ章を更新</string>
     <string name="pref_acra_summary">バグの修正などに役立ちます。個人情報を送信しません</string>
-    <string name="invalid_login">ログインできませんでした</string>
     <string name="unknown_error">不明なエラー</string>
     <string name="updating_category">カテゴリーを更新中</string>
     <string name="local_source_badge">ローカル</string>
@@ -203,13 +200,10 @@
     <string name="action_global_search_hint">グローバル検索…</string>
     <string name="latest">最近の更新</string>
     <string name="browse">ブラウズ</string>
-    <string name="manga_not_in_db">このマンガはデータベースから削除されました。</string>
-    <string name="description">説明</string>
     <string name="ongoing">連載中</string>
     <string name="unknown">不明</string>
     <string name="licensed">ライセンス済み</string>
     <string name="remove_from_library">ライブラリから削除</string>
-    <string name="manga_info_full_title_label">タイトル</string>
     <string name="manga_added_library">ライブラリに追加しました</string>
     <string name="manga_removed_library">ライブラリから削除しました</string>
     <string name="delete_downloads_for_manga">ダウンロードした章を削除してもよろしいですか？</string>
@@ -221,7 +215,6 @@
     <string name="chapter_paused">一時停止済み</string>
     <string name="show_title">ソースタイトル</string>
     <string name="show_chapter_number">章の数</string>
-    <string name="sorting_mode">並べ替えモード</string>
     <string name="sort_by_source">ソースに基づいた順</string>
     <string name="sort_by_number">章番号順</string>
     <string name="manga_download">ダウンロード</string>
@@ -245,7 +238,6 @@
     <string name="track_status">ステータス</string>
     <string name="track_start_date">開始済み</string>
     <string name="track_type">タイプ</string>
-    <string name="track_author">作者</string>
     <string name="error_category_exists">この名前が既に存在しています！</string>
     <string name="snack_categories_deleted">カテゴリーが削除されました</string>
     <string name="dialog_with_checkbox_remove_description">この章の読書日時を削除してもよろしいですか？</string>
@@ -257,7 +249,6 @@
     <string name="cover_updated">カバーとして設定しました</string>
     <string name="chapter_progress">ページ：%1$d</string>
     <string name="no_next_chapter">次の章が見つかりません</string>
-    <string name="no_previous_chapter">前の章が見つかりません</string>
     <string name="decode_image_error">画像をロードできませんでした</string>
     <string name="confirm_set_image_as_cover">カバーとして設定しますか？</string>
     <string name="migration_dialog_what_to_include">移行するデータを選択</string>
@@ -310,7 +301,6 @@
     <string name="action_webview_forward">次へ</string>
     <string name="action_webview_refresh">再ロード</string>
     <string name="pref_category_library">ライブラリ</string>
-    <string name="invalid_download_dir">ダウンロード場所が無効です</string>
     <string name="ext_obsolete">廃止済み</string>
     <string name="obsolete_extension_message">この拡張機能は利用不可になりました。</string>
     <string name="pref_date_format">日付形式</string>
@@ -376,7 +366,6 @@
     <string name="backup_restore_missing_sources">ソースがありません：</string>
     <string name="invalid_backup_file_missing_manga">バックアップにはマンガが含まれていません。</string>
     <string name="invalid_backup_file">バックアップファイルは無効です</string>
-    <string name="tracker_not_logged_in">%1$sにログインしていません</string>
     <string name="pref_search_pinned_sources_only">ピン留め済みのソースのみで検索</string>
     <string name="pref_enable_automatic_extension_updates">拡張機能の更新を確認</string>
     <string name="tracking_info">一方同期の追跡サービスにある章の読書進捗を更新します。個別のマンガの「同期」ボタンで追跡サービスを設定してください。</string>
@@ -433,7 +422,6 @@
     <string name="notification_check_updates">新しい章を確認中</string>
     <string name="updating_library">ライブラリを更新中</string>
     <string name="viewer">ビューアモード</string>
-    <string name="error_invalid_date_supplied">無効な日付です</string>
     <string name="manga_info_collapse">詳細を非表示</string>
     <string name="channel_ext_updates">拡張機能の更新</string>
     <string name="information_cloudflare_bypass_failure">Cloudflareをバイパスできませんでした</string>
@@ -475,7 +463,6 @@
     <string name="pref_read_with_tapping_inverted">タップでのページめくりを反転</string>
     <string name="updated_version">v%1$sに更新しました</string>
     <string name="whats_new">更新情報</string>
-    <string name="action_download_unread">未読の章をダウンロード</string>
     <string name="pref_category_reading_mode">読み方</string>
     <string name="channel_complete">完了</string>
     <string name="channel_progress">プログレス</string>
@@ -668,7 +655,6 @@
     <string name="cancelled">キャンセル済み</string>
     <string name="on_hiatus">休載中</string>
     <string name="action_faq_and_guides">よくあるご質問とガイド</string>
-    <string name="backup_restore_invalid_uri">エラー：URIは空です</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">マンガを表示</string>
     <string name="action_display_cover_only_grid">表紙グリッド</string>

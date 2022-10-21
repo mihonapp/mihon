@@ -42,7 +42,6 @@
     <string name="transition_finished">تمام شده:</string>
     <string name="viewer">حالت خواندن</string>
     <string name="confirm_set_image_as_cover">این عکس، به عنوان عکس روی جلد تنظیم شود؟</string>
-    <string name="no_previous_chapter">قسمت قبلی یافت نشد</string>
     <string name="no_next_chapter">قسمت بعدی یافت نشد</string>
     <string name="chapter_progress">صفحه: %1$d</string>
     <string name="cover_updated">عکس روی جلد بروزرسانی شد</string>
@@ -53,8 +52,6 @@
     <string name="dialog_with_checkbox_remove_description">با این کار تاریخ خواندن این قسمت حذف می شود. مطمئنید؟</string>
     <string name="snack_categories_deleted">دسته بندی ها حذف شدند</string>
     <string name="error_category_exists">دسته بندی با این نام قبلا ساخته شده است!</string>
-    <string name="error_invalid_date_supplied">تاریخ نامعتبر وارد شد</string>
-    <string name="track_author">نویسنده</string>
     <string name="track_type">نوع</string>
     <string name="track_start_date">شروع شده</string>
     <string name="track_status">وضعیت</string>
@@ -69,7 +66,6 @@
     <string name="reading">درحال خواندن(Reading)</string>
     <string name="add_tracking">اضافه کردن ردیابی</string>
     <string name="manga_tracking_tab">ردیابی</string>
-    <string name="invalid_download_dir">مکان دانلود نامعتبر است</string>
     <string name="confirm_delete_chapters">آیا مطمئنید که می خواهید قسمت های انتخاب شده را حذف کنید؟</string>
     <string name="download_unread">خوانده نشده</string>
     <string name="download_all">همه</string>
@@ -83,7 +79,6 @@
     <string name="track">ردیابی</string>
     <string name="sort_by_source">بر اساس عنوان منبع</string>
     <string name="sort_by_number">بر اساس شماره قسمت</string>
-    <string name="sorting_mode">حالت مرتب سازی</string>
     <string name="show_chapter_number">شماره قسمت</string>
     <string name="show_title">عنوان منبع</string>
     <string name="chapter_paused">متوقف</string>
@@ -99,7 +94,6 @@
     <string name="manga_info_expand">نمایش اطلاعات بیشتر</string>
     <string name="manga_removed_library">از کتابخانه حذف شد</string>
     <string name="manga_added_library">به کتابخانه اضافه شد</string>
-    <string name="manga_info_full_title_label">عنوان</string>
     <string name="remove_from_library">حذف از کتابخانه</string>
     <string name="in_library">در کتابخانه</string>
     <string name="pref_refresh_library_tracking_summary">وضعیت خواندن، امتیاز و آخرین قسمت خوانده شده را از سایت خدمات ردیابی آپدیت می‌کند</string>
@@ -133,8 +127,6 @@
     <string name="licensed">مجوزدار</string>
     <string name="unknown">نامعلوم</string>
     <string name="ongoing">در حال پخش</string>
-    <string name="description">توضیحات</string>
-    <string name="manga_not_in_db">این مانگا از پایگاه داده حذف شده است.</string>
     <string name="local_source_help_guide">راهنمای منبع محلی</string>
     <string name="browse">مرور</string>
     <string name="latest">جدیدترین</string>
@@ -148,7 +140,6 @@
     <string name="no_more_results">نتیجه بیشتری یافت نشد</string>
     <string name="tabs_header">تب ها</string>
     <string name="badges_header">تعداد</string>
-    <string name="tracker_not_logged_in">وارد سیستم نشده اید: %1$s</string>
     <string name="pref_backup_slots">حداکثر تعداد نسخه‌های پشتیبان</string>
     <string name="pref_backup_interval">زمان پشتیبان گیری</string>
     <string name="pref_backup_service_category">پشتیبان گیری خودکار</string>
@@ -335,7 +326,6 @@
     <string name="action_webview_forward">رو به جلو</string>
     <string name="action_webview_back">بازگشت</string>
     <string name="action_restore">بازیابی</string>
-    <string name="action_create">ایجاد کردن</string>
     <string name="action_open_log">بازکردن log</string>
     <string name="action_undo">خنثی کردن (Undo)</string>
     <string name="action_reset">از اول</string>
@@ -375,7 +365,6 @@
     <string name="local_source_badge">محلی</string>
     <string name="updating_category">درحال به روز رسانی دسته بندی ها</string>
     <string name="unknown_error">خطای ناشناخته</string>
-    <string name="invalid_login">ورود به سیستم ناموفق بود</string>
     <string name="logout_success">شما خارج شدید</string>
     <string name="logout">خروج</string>
     <string name="logout_title">از%1$s خارج می شوید؟</string>
@@ -440,7 +429,6 @@
     <string name="action_disable_all">غیر فعال کردن همه</string>
     <string name="action_enable_all">فعال کردن همه</string>
     <string name="action_update_library">آپدیت کتابخانه</string>
-    <string name="action_update">آپدیت</string>
     <string name="action_delete">پاک کردن</string>
     <string name="action_remove_bookmark">حذف نشانک قسمت</string>
     <string name="action_download">دانلود شود</string>
@@ -492,7 +480,6 @@
     <string name="pref_category_reading_mode">حالت خواندن</string>
     <string name="pref_category_theme">تم</string>
     <string name="action_disable">غیرفعال کردن</string>
-    <string name="action_download_unread">دانلود قسمت‌های خوانده‌نشده</string>
     <string name="action_sort_date_added">تاریخ اضافه شدن</string>
     <string name="updated_version">به نسخه v%1$s آپدیت شد</string>
     <string name="action_search_settings">جست و جوی تنضیمات</string>

@@ -47,11 +47,9 @@
     <string name="action_disable_all">Адключыць усе</string>
     <string name="action_enable_all">Ўключыць усе</string>
     <string name="action_update_library">Абнавіць бібліятэку</string>
-    <string name="action_update">Абнавіць</string>
     <string name="action_delete">Выдаліць</string>
     <string name="action_remove_bookmark">Зняць закладку з часткi</string>
     <string name="action_bookmark">Закладка часткi</string>
-    <string name="action_download_unread">Скачаць непрачытаныя часткi</string>
     <string name="action_download">Скачаць</string>
     <string name="action_mark_previous_as_read">Пазначыць папярэдняе як прачытанае</string>
     <string name="action_mark_as_unread">Пазначыць як непрачытанае</string>
@@ -193,7 +191,6 @@
     <string name="action_webview_forward">Наперад</string>
     <string name="action_webview_back">Назад</string>
     <string name="action_restore">Аднавіць</string>
-    <string name="action_create">Ствараць</string>
     <string name="action_show_errors">Паказваць памылкі</string>
     <string name="action_open_log">Адкрыць часопіс</string>
     <string name="action_undo">Адмяніць</string>

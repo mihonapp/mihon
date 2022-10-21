@@ -34,7 +34,6 @@
     <string name="action_bookmark">Προσθήκη σελιδοδείκτη κεφαλαίου</string>
     <string name="action_remove_bookmark">Κατάργηση σελιδοδείκτη κεφαλαίου</string>
     <string name="action_delete">Διαγραφή</string>
-    <string name="action_update">Ενημέρωση</string>
     <string name="action_update_library">Ενημέρωση βιβλιοθήκης</string>
     <string name="action_edit">Επεξεργασία</string>
     <string name="action_add">Προσθήκη</string>
@@ -64,7 +63,6 @@
     <string name="action_reset">Επαναφορά</string>
     <string name="action_undo">Αναίρεση</string>
     <string name="action_open_log">Άνοιγμα αρχείου καταγραφής</string>
-    <string name="action_create">Δημιουργία</string>
     <string name="action_restore">Επαναφορά</string>
     <string name="loading">Φόρτωση…</string>
     <string name="app_not_available">Μη διαθέσιμη εφαρμογή</string>
@@ -194,7 +192,6 @@
     <string name="password">Κωδικός πρόσβασης</string>
     <string name="login">Σύνδεση</string>
     <string name="login_success">Συνδεθήκατε επιτυχώς</string>
-    <string name="invalid_login">Δεν ήταν δυνατή η σύνδεση</string>
     <string name="unknown_error">Άγνωστο σφάλμα</string>
     <string name="updating_category">Ενημέρωση κατηγορίας</string>
     <string name="local_source_badge">Τοπικό</string>
@@ -204,13 +201,10 @@
     <string name="action_global_search_hint">Καθολική αναζήτηση…</string>
     <string name="latest">Νεότερα</string>
     <string name="browse">Περιήγηση</string>
-    <string name="manga_not_in_db">Αυτό το manga έχει αφαιρεθεί από τη βάση δεδομένων.</string>
-    <string name="description">Περιγραφή</string>
     <string name="ongoing">Σε εξέλιξη</string>
     <string name="unknown">Άγνωστο</string>
     <string name="licensed">Αδειοδοτημένο</string>
     <string name="remove_from_library">Κατάργηση από τη βιβλιοθήκη</string>
-    <string name="manga_info_full_title_label">Τίτλος</string>
     <string name="manga_added_library">Προστέθηκε στη βιβλιοθήκη</string>
     <string name="manga_removed_library">Αφαιρέθηκε από τη βιβλιοθήκη</string>
     <string name="delete_downloads_for_manga">Να διαγραφούν τα κεφάλαια που έχουν ληφθεί;</string>
@@ -223,7 +217,6 @@
     <string name="chapter_paused">Παύση</string>
     <string name="show_title">Τίτλος πηγής</string>
     <string name="show_chapter_number">Αριθμός κεφαλαίου</string>
-    <string name="sorting_mode">Λειτουργία ταξινόμησης</string>
     <string name="sort_by_source">Με βάση την πηγή</string>
     <string name="sort_by_number">Ανά αριθμό κεφαλαίου</string>
     <string name="manga_download">Λήψη</string>
@@ -248,7 +241,6 @@
     <string name="track_status">Κατάσταση</string>
     <string name="track_start_date">Ξεκίνησε</string>
     <string name="track_type">Τύπος</string>
-    <string name="track_author">Συγγραφέας</string>
     <string name="error_category_exists">Μια κατηγορία με αυτό το όνομα υπάρχει ήδη!</string>
     <string name="snack_categories_deleted">Οι κατηγορίες διαγράφηκαν</string>
     <string name="dialog_with_checkbox_remove_description">Αυτό θα αφαιρέσει την ημερομηνία ανάγνωσης αυτού του κεφαλαίου. Είστε σίγουροι;</string>
@@ -260,7 +252,6 @@
     <string name="cover_updated">Το εξώφυλλο ενημερώθηκε</string>
     <string name="chapter_progress">Σελίδα: %1$d</string>
     <string name="no_next_chapter">Το επόμενο κεφάλαιο δεν βρέθηκε</string>
-    <string name="no_previous_chapter">Το προηγούμενο κεφάλαιο δεν βρέθηκε</string>
     <string name="decode_image_error">Δεν ήταν δυνατή η φόρτωση της εικόνας</string>
     <string name="confirm_set_image_as_cover">Χρησιμοποιήστε αυτήν την εικόνα ως εξώφυλλο;</string>
     <string name="transition_finished">Διαβασμένο:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Μπροστά</string>
     <string name="action_webview_refresh">Ανανέωση</string>
     <string name="pref_category_library">Βιβλιοθήκη</string>
-    <string name="invalid_download_dir">Μη έγκυρη θέση λήψης</string>
     <string name="ext_obsolete">Απαρχαιωμένο</string>
     <string name="obsolete_extension_message">Αυτή η επέκταση δεν είναι πλέον διαθέσιμη.</string>
     <string name="label_more">Περισσότερα</string>
@@ -344,7 +334,6 @@
     <string name="notification_check_updates">Έλεγχος για νέα κεφάλαια</string>
     <string name="recent_manga_time">Κεφ. %1$s - %2$s</string>
     <string name="updating_library">Ενημέρωση βιβλιοθήκης</string>
-    <string name="error_invalid_date_supplied">Η ημερομηνία που δόθηκε δεν είναι έγκυρη</string>
     <string name="paused">Σε παύση</string>
     <string name="manga_info_collapse">Λιγότερα</string>
     <string name="manga_info_expand">Περισσότερα</string>
@@ -453,7 +442,6 @@
     <string name="backup_restore_missing_sources">Πηγές που λείπουν:</string>
     <string name="invalid_backup_file_missing_manga">Το αντίγραφο ασφαλείας δεν περιέχει manga.</string>
     <string name="invalid_backup_file">Μη έγκυρο αρχείο αντιγράφου ασφαλείας</string>
-    <string name="tracker_not_logged_in">Δεν έχετε συνδεθεί: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Έλεγχος για νέο εξώφυλλο και λεπτομέρειες κατά την ενημέρωση της βιβλιοθήκης</string>
     <string name="pref_library_update_refresh_metadata">Αυτόματη ανανέωση μεταδεδομένων</string>
     <string name="action_migrate">Μεταφορά</string>
@@ -484,7 +472,6 @@
     <string name="unknown_author">Άγνωστος συγγραφέας</string>
     <string name="updated_version">Ενημερώθηκε σε v%1$s</string>
     <string name="whats_new">Τι νέο υπάρχει</string>
-    <string name="action_download_unread">Λήψη μη αναγνωσμένων κεφαλαίων</string>
     <string name="download_insufficient_space">Δεν ήταν δυνατή η λήψη κεφαλαίων λόγω χαμηλού αποθηκευτικού χώρου</string>
     <string name="action_global_search_query">Αναζήτηση του \"%1$s\" καθολικά</string>
     <string name="pref_category_reading_mode">Λειτουργία ανάγνωσης</string>
@@ -680,7 +667,6 @@
     <string name="on_hiatus">Σε αναστολή</string>
     <string name="publishing_finished">Η έκδοσή ολοκληρώθηκε</string>
     <string name="action_faq_and_guides">Συχνές ερωτήσεις και οδηγοί</string>
-    <string name="backup_restore_invalid_uri">Σφάλμα: κενό URI</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Εμφάνιση manga</string>
     <string name="pref_landscape_zoom">Ζουμ οριζόντιας εικόνας</string>
@@ -768,4 +754,18 @@
     <string name="missing_storage_permission">Δεν έχουν χορηγηθεί δικαιώματα αποθήκευσης</string>
     <string name="skipped_reason_not_always_update">Παραλείφθηκε επειδή η σειρά δεν απαιτεί ενημερώσεις</string>
     <string name="action_search_hint">Αναζήτηση…</string>
+    <string name="pref_browse_summary">Πηγές, επεκτάσεις, καθολική αναζήτηση</string>
+    <string name="crash_screen_title">Προέκυψε ένα μη αναμενόμενο σφάλμα</string>
+    <string name="pref_general_summary">Γλώσσα εφαρμογής, ειδοποιήσεις</string>
+    <string name="pref_appearance_summary">Θέμα, μορφή ημερομηνίας και ώρας</string>
+    <string name="pref_library_summary">Κατηγορίες, καθολική ενημέρωση</string>
+    <string name="pref_reader_summary">Λειτουργία ανάγνωσης, οθόνη, πλοήγηση</string>
+    <string name="pref_tracking_summary">Μονόδρομος συγχρονισμός προόδου, ενισχυμένος συγχρονισμός</string>
+    <string name="pref_backup_summary">Χειροκίνητα &amp; αυτόματα αντίγραφα ασφαλείας</string>
+    <string name="pref_security_summary">Κλείδωμα εφαρμογής, ασφαλής οθόνη</string>
+    <string name="crash_screen_restart_application">Επανεκκίνηση της εφαρμογής</string>
+    <string name="pref_downloads_summary">Αυτόματη λήψη, λήψη εκ των προτέρων</string>
+    <string name="pref_advanced_summary">Αρχεία καταγραφής σφαλμάτων, βελτιστοποιήσεις μπαταρίας</string>
+    <string name="crash_screen_description">Το %s αντιμετώπισε ένα μη αναμενόμενο σφάλμα. Σας προτείνουμε να κάνετε στιγμιότυπο οθόνης αυτού του μηνύματος, να αποθηκεύσετε τα αρχεία καταγραφής σφαλμάτων και, στη συνέχεια να το μοιραστείτε στο κανάλι υποστήριξης μας στο Discord.</string>
+    <string name="unknown_title">Άγνωστος τίτλος</string>
 </resources>

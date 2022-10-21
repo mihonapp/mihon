@@ -34,7 +34,6 @@
     <string name="action_bookmark">Kapitel bokmärke</string>
     <string name="action_remove_bookmark">Radera kapitel bokmärke</string>
     <string name="action_delete">Radera</string>
-    <string name="action_update">Uppdatera</string>
     <string name="action_update_library">Uppdatera biblioteket</string>
     <string name="action_edit">Redigera</string>
     <string name="action_add">Lägg till</string>
@@ -64,7 +63,6 @@
     <string name="action_reset">Återställ</string>
     <string name="action_undo">Ånga</string>
     <string name="action_open_log">Öppna logg</string>
-    <string name="action_create">Skapa</string>
     <string name="action_restore">Återställ</string>
     <string name="loading">Laddar…</string>
     <string name="app_not_available">Applikationen är inte tillgänglig</string>
@@ -194,7 +192,6 @@
     <string name="password">Lösenord</string>
     <string name="login">Logga in</string>
     <string name="login_success">Inloggad</string>
-    <string name="invalid_login">Inloggningsfel</string>
     <string name="unknown_error">Okänt fel</string>
     <string name="updating_category">Uppdaterar kategori</string>
     <string name="local_source_badge">Lokal</string>
@@ -204,13 +201,10 @@
     <string name="action_global_search_hint">Global sökning…</string>
     <string name="latest">Senaste</string>
     <string name="browse">Bläddra</string>
-    <string name="manga_not_in_db">Denna manga has tagits bort från databasen.</string>
-    <string name="description">Beskrivning</string>
     <string name="ongoing">Pågående</string>
     <string name="unknown">Okänd</string>
     <string name="licensed">Licensierad</string>
     <string name="remove_from_library">Ta bort från biblioteket</string>
-    <string name="manga_info_full_title_label">Titel</string>
     <string name="manga_added_library">Lades till i biblioteket</string>
     <string name="manga_removed_library">Togs bort från biblioteket</string>
     <string name="delete_downloads_for_manga">Ta bort nedladdade kapitel\?</string>
@@ -223,7 +217,6 @@
     <string name="chapter_paused">Pausad</string>
     <string name="show_title">Källtitel</string>
     <string name="show_chapter_number">Kapitelnummer</string>
-    <string name="sorting_mode">Sorteringsläge</string>
     <string name="sort_by_source">Efter källa</string>
     <string name="sort_by_number">Efter kapitelnummer</string>
     <string name="manga_download">Ladda ner</string>
@@ -248,7 +241,6 @@
     <string name="track_status">Status</string>
     <string name="track_start_date">Startad</string>
     <string name="track_type">Typ</string>
-    <string name="track_author">Författare</string>
     <string name="error_category_exists">En kategori med detta namn finns redan!</string>
     <string name="snack_categories_deleted">Kategorier raderade</string>
     <string name="dialog_with_checkbox_remove_description">Detta kommer att ta bort läs datumet för detta kapitel. Är du säker\?</string>
@@ -260,7 +252,6 @@
     <string name="cover_updated">Omslag uppdaterad</string>
     <string name="chapter_progress">Sida: %1$d</string>
     <string name="no_next_chapter">Nästa kapitel kunde inte hittas</string>
-    <string name="no_previous_chapter">Föregående kapitel kunde inte hittas</string>
     <string name="decode_image_error">Bilden kunde inte laddas</string>
     <string name="confirm_set_image_as_cover">Sätt bild som omslag\?</string>
     <string name="transition_finished">Färdig:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Framåt</string>
     <string name="action_webview_refresh">Uppdatera</string>
     <string name="pref_category_library">Bibliotek</string>
-    <string name="invalid_download_dir">Ogiltig nedladdningsplats</string>
     <string name="ext_obsolete">Obsolet</string>
     <string name="obsolete_extension_message">Detta tillägg är inte längre tillgänglig.</string>
     <string name="pref_date_format">Datumformat</string>
@@ -411,7 +401,6 @@
     <string name="confirm_exit">Tryck tillbaka igen för att gå ur</string>
     <string name="information_webview_required">WebView krävs för Tachiyomi</string>
     <string name="recent_manga_time">Kapitel %1$s - %2$s</string>
-    <string name="error_invalid_date_supplied">Ogiltigt datum har angetts</string>
     <string name="local_source_help_guide">Lokal källa guide</string>
     <string name="last_used_source">Senast använd</string>
     <string name="check_for_updates">Sök efter uppdateringar</string>
@@ -451,7 +440,6 @@
     <string name="backup_restore_missing_sources">Saknade källor:</string>
     <string name="invalid_backup_file_missing_manga">Säkerhetskopian innehåller ingen manga.</string>
     <string name="invalid_backup_file">Ogiltig säkerhetskopia</string>
-    <string name="tracker_not_logged_in">Inte inloggad: %1$s</string>
     <string name="unofficial_extension_message">Detta tillägg kommer inte från den officiella Tachiyomi-tilläggslistan.</string>
     <string name="ext_unofficial">Inofficiell</string>
     <string name="pref_library_update_refresh_metadata_summary">Sök efter nytt omslag och detaljer när du uppdaterar biblioteket</string>
@@ -488,7 +476,6 @@
     <string name="whats_new">Vad är nytt</string>
     <string name="pref_category_reading_mode">Läsläge</string>
     <string name="pref_category_theme">Tema</string>
-    <string name="action_download_unread">Ladda ner olästa kapitel</string>
     <string name="action_sort_date_added">Datum tillagd</string>
     <string name="channel_complete">Färdig</string>
     <string name="channel_progress">Förlopp</string>
@@ -670,7 +657,6 @@
     <string name="pref_auto_clear_chapter_cache">Rensa kapitelcache när appen stängs</string>
     <string name="clear_database_source_item_count">%1$d manga i databasen som inte är biblioteksmanga</string>
     <string name="database_clean">Rengör databasen</string>
-    <string name="backup_restore_invalid_uri">Fel: tom URI</string>
     <string name="library_errors_help">För hjälp med att åtgärda fel i biblioteksuppdateringar, se %1$s</string>
     <string name="pref_library_update_manga_restriction">Hoppa över att uppdatera titlar</string>
     <string name="cancelled">Avbruten</string>

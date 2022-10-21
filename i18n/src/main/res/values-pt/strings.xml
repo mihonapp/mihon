@@ -21,7 +21,6 @@
     <string name="action_mark_previous_as_read">Marcar anteriores como lidos</string>
     <string name="action_download">Transferir</string>
     <string name="action_delete">Eliminar</string>
-    <string name="action_update">Atualizar</string>
     <string name="action_update_library">Atualizar biblioteca</string>
     <string name="action_edit">Editar</string>
     <string name="action_add_category">Adicionar categoria</string>
@@ -132,13 +131,11 @@
     <string name="password">Palavra-passe</string>
     <string name="login">Iniciar sessão</string>
     <string name="login_success">Sessão iniciada</string>
-    <string name="invalid_login">Não foi possível iniciar sessão</string>
     <string name="unknown_error">Erro desconhecido</string>
     <!-- Library fragment -->
     <string name="updating_category">A atualizar categoria</string>
     <!-- Catalogue fragment -->
     <!-- Manga info fragment -->
-    <string name="description">Descrição</string>
     <string name="ongoing">Em curso</string>
     <string name="unknown">Desconhecido</string>
     <string name="licensed">Licenciado</string>
@@ -149,7 +146,6 @@
     <string name="chapter_error">Erro</string>
     <string name="show_title">Título da fonte</string>
     <string name="show_chapter_number">Número do capítulo</string>
-    <string name="sorting_mode">Modo de ordenação</string>
     <string name="sort_by_source">Por fonte</string>
     <string name="sort_by_number">Por número de capítulo</string>
     <string name="manga_download">Transferir</string>
@@ -175,7 +171,6 @@
     <!-- Reader activity -->
     <string name="chapter_progress">Página: %1$d</string>
     <string name="no_next_chapter">Capítulo seguinte não encontrado</string>
-    <string name="no_previous_chapter">Capítulo anterior não encontrado</string>
     <string name="decode_image_error">Não foi possível carregar a imagem</string>
     <!-- Backup fragment -->
     <!-- Recent manga fragment -->
@@ -226,7 +221,6 @@
     <string name="action_share">Partilhar</string>
     <string name="action_save">Guardar</string>
     <string name="action_undo">Anular</string>
-    <string name="action_create">Criar</string>
     <string name="update_weekly">Semanalmente</string>
     <string name="action_restore">Restaurar</string>
     <string name="app_not_available">App não disponível</string>
@@ -292,8 +286,6 @@
     <string name="action_global_search_hint">Pesquisa global…</string>
     <string name="latest">Mais recente</string>
     <string name="browse">Navegar</string>
-    <string name="manga_not_in_db">Este mangá foi removido da base de dados.</string>
-    <string name="manga_info_full_title_label">Título</string>
     <string name="manga_added_library">Adicionado à biblioteca</string>
     <string name="manga_removed_library">Removido da biblioteca</string>
     <string name="delete_downloads_for_manga">Eliminar capítulos transferidos\?</string>
@@ -307,7 +299,6 @@
     <string name="track_status">Estado</string>
     <string name="track_start_date">Começado</string>
     <string name="track_type">Tipo</string>
-    <string name="track_author">Autor</string>
     <string name="error_category_exists">Já existe uma categoria com este nome!</string>
     <string name="snack_categories_deleted">Categorias eliminadas</string>
     <string name="snack_add_to_library">Adicionar mangá a biblioteca\?</string>
@@ -346,7 +337,6 @@
     <string name="action_webview_forward">Avançar</string>
     <string name="action_webview_refresh">Recarregar</string>
     <string name="pref_category_library">Biblioteca</string>
-    <string name="invalid_download_dir">Localização de transferência inválida</string>
     <string name="ext_obsolete">Obsoleto</string>
     <string name="obsolete_extension_message">Esta extensão já não está disponível.</string>
     <string name="pref_date_format">Formato da data</string>
@@ -448,7 +438,6 @@
     <string name="label_downloaded_only">Apenas transferidos</string>
     <string name="information_webview_required">WebView é necessária para Tachiyomi</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
-    <string name="error_invalid_date_supplied">Data fornecida inválida</string>
     <string name="add_tracking">Adicionar à monitorização</string>
     <string name="manga_info_collapse">Menos</string>
     <string name="manga_info_expand">Mais</string>
@@ -494,7 +483,6 @@
     <string name="backup_restore_missing_sources">Fontes em falta:</string>
     <string name="invalid_backup_file_missing_manga">Cópia de segurança não contém qualquer mangá.</string>
     <string name="invalid_backup_file">Ficheiro de cópia de segurança invalido</string>
-    <string name="tracker_not_logged_in">Sessão não iniciada: %1$s</string>
     <string name="pref_show_reading_mode">Mostrar modo de leitura</string>
     <string name="ext_unofficial">Não oficial</string>
     <string name="pref_library_update_refresh_metadata_summary">Procurar nova capa e detalhes quando a biblioteca atualizar</string>
@@ -523,7 +511,6 @@
     <string name="label_network">Rede</string>
     <string name="updated_version">Atualizado para v%1$s</string>
     <string name="whats_new">Novidades</string>
-    <string name="action_download_unread">Transferir capítulos não lidos</string>
     <string name="download_insufficient_space">Não foi possível transferir capítulos devido a falta de espaço de armazenamento</string>
     <string name="action_global_search_query">Procurar por \"%1$s\" globalmente</string>
     <string name="pref_category_reading_mode">Modo de leitura</string>
@@ -738,7 +725,6 @@
 \nAinda deseja continuar\?</string>
     <string name="empty_backup_error">Sem entradas na biblioteca para fazer cópia de segurança</string>
     <string name="pref_update_only_started">Que não começaram a ser lidos</string>
-    <string name="backup_restore_invalid_uri">Erro: URI vazio</string>
     <string name="pref_clear_webview_data">Limpar dados do WebView</string>
     <string name="webview_data_deleted">Dados do WebView limpos</string>
     <string name="rotation_reverse_portrait">Vertical invertido</string>

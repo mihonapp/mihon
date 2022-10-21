@@ -26,7 +26,6 @@
     <string name="action_bookmark">Dodaj zakładkę</string>
     <string name="action_remove_bookmark">Usuń zakładkę</string>
     <string name="action_delete">Usuń</string>
-    <string name="action_update">Aktualizuj</string>
     <string name="action_update_library">Aktualizuj bibliotekę</string>
     <string name="action_edit">Edytuj</string>
     <string name="action_add">Dodaj</string>
@@ -54,7 +53,6 @@
     <string name="action_share">Udostępnij</string>
     <string name="action_save">Zapisz</string>
     <string name="action_undo">Cofnij</string>
-    <string name="action_create">Utwórz</string>
     <string name="action_restore">Przywróć</string>
     <string name="loading">Ładowanie…</string>
     <string name="app_not_available">Aplikacja niedostępna</string>
@@ -88,7 +86,6 @@
     <string name="cover_updated">Okładka zaktualizowana</string>
     <string name="chapter_progress">Strona: %1$d</string>
     <string name="no_next_chapter">Nie znaleziono następnego rozdziału</string>
-    <string name="no_previous_chapter">Nie znaleziono poprzedniego rozdziału</string>
     <string name="notification_new_chapters">Znaleziono nowe rozdziały</string>
     <string name="file_select_cover">Wybierz okładkę</string>
     <string name="update_check_confirm">Pobierz</string>
@@ -111,11 +108,8 @@
     <string name="username">Nazwa użytkownika</string>
     <string name="password">Hasło</string>
     <string name="login">Zaloguj się</string>
-    <string name="invalid_login">Nie udało się zalogować</string>
     <string name="unknown_error">Nieznany błąd</string>
     <string name="updating_category">Aktualizowanie kategorii</string>
-    <string name="description">Opis</string>
-    <string name="manga_not_in_db">Ta manga została usunięta z bazy danych.</string>
     <string name="no_more_results">Nie znaleziono więcej wyników</string>
     <string name="action_open_log">Otwórz log</string>
     <string name="show_title">Tytuł</string>
@@ -221,7 +215,6 @@
     <string name="licensed">Licencjonowane</string>
     <string name="delete_downloads_for_manga">Usunąć pobrane rozdziały?</string>
     <string name="chapter_downloading_progress">Pobieranie (%1$d/%2$d)</string>
-    <string name="sorting_mode">Tryb sortowania</string>
     <string name="sort_by_source">Według źródła</string>
     <string name="sort_by_number">Według numeru rozdziału</string>
     <string name="manga_tracking_tab">Śledzenie</string>
@@ -263,7 +256,6 @@
     <string name="double_tap_anim_speed_0">Bez animacji</string>
     <string name="double_tap_anim_speed_normal">Normalna</string>
     <string name="double_tap_anim_speed_fast">Szybka</string>
-    <string name="manga_info_full_title_label">Tytuł</string>
     <string name="manga_added_library">Dodano do biblioteki</string>
     <string name="manga_removed_library">Usunięto z biblioteki</string>
     <string name="label_migration">Migracja</string>
@@ -290,7 +282,6 @@
     <string name="track_status">Status</string>
     <string name="track_start_date">Rozpoczęto</string>
     <string name="track_type">Typ</string>
-    <string name="track_author">Autor</string>
     <string name="transition_finished">Przeczytany:</string>
     <string name="transition_current">Obecny:</string>
     <string name="transition_next">Następny:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Dalej</string>
     <string name="action_webview_refresh">Odśwież</string>
     <string name="pref_category_library">Biblioteka</string>
-    <string name="invalid_download_dir">Nieprawidłowa lokalizacja pobierania</string>
     <string name="ext_obsolete">Przestarzałe</string>
     <string name="obsolete_extension_message">To rozszerzenie nie jest już dostępne.</string>
     <string name="pref_date_format">Format daty</string>
@@ -371,7 +361,6 @@
     <string name="notification_chapters_single">Rozdział %1$s</string>
     <string name="updating_library">Aktualizowanie biblioteki</string>
     <string name="pref_category_for_this_series">Dla tej serii</string>
-    <string name="error_invalid_date_supplied">Podano nieprawidłową datę</string>
     <string name="manga_info_collapse">Mniej</string>
     <string name="add_to_library">Dodaj do biblioteki</string>
     <string name="http_error_hint">Sprawdź stronę w WebView</string>
@@ -469,7 +458,6 @@
     <string name="backup_restore_missing_sources">Brakujące źródła:</string>
     <string name="invalid_backup_file_missing_manga">Kopia zapasowa nie zawiera żadnych mang.</string>
     <string name="invalid_backup_file">Nieprawidłowy plik kopii zapasowej</string>
-    <string name="tracker_not_logged_in">Nie zalogowano do: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Sprawdź, czy są nowe okładki i opisy podczas aktualizowania biblioteki</string>
     <string name="pref_library_update_refresh_metadata">Automatycznie odświeżaj metadane</string>
     <string name="action_display_comfortable_grid">Wygodna siatka</string>
@@ -506,7 +494,6 @@
     <string name="whats_new">Co nowego</string>
     <string name="pref_category_reading_mode">Tryb czytania</string>
     <string name="pref_category_theme">Motyw</string>
-    <string name="action_download_unread">Pobierz nieprzeczytane rozdziały</string>
     <string name="action_sort_date_added">Po dacie dodania</string>
     <string name="action_search_settings">Ustawienia szukania</string>
     <string name="spen_next_page">Następna strona</string>
@@ -704,7 +691,6 @@
     <string name="pref_library_update_manga_restriction">Pomiń aktualizowanie tytułów</string>
     <string name="pref_update_only_completely_read">Posiada nieprzeczytane rozdziały</string>
     <string name="action_faq_and_guides">FAQ i poradniki</string>
-    <string name="backup_restore_invalid_uri">Błąd: pusty URI</string>
     <string name="pref_update_only_started">Brak przeczytanych rozdziałów</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_landscape_zoom">Przybliżaj poziome obrazy</string>

@@ -7,15 +7,15 @@
     <string name="track">ট্র্যাকিং</string>
     <string name="history">ইতিহাস</string>
     <string name="label_settings">সেটিংস</string>
-    <string name="label_download_queue">ডাউনলোড ক্রম</string>
-    <string name="label_library">সংগ্রহশালা</string>
+    <string name="label_download_queue">ডাউনলোড সারি</string>
+    <string name="label_library">লাইব্রেরি</string>
     <string name="label_recent_manga">ইতিহাস</string>
-    <string name="label_recent_updates">হালনাগাদ সমূহ</string>
+    <string name="label_recent_updates">হালনাগাদসমূহ</string>
     <string name="label_backup">ব্যাকআপ এবং পুনরুদ্ধার</string>
     <string name="action_settings">সেটিংস</string>
     <string name="action_filter">বিশোধন</string>
     <string name="action_filter_downloaded">ডাউনলোড হয়েছে</string>
-    <string name="action_filter_bookmarked">বুকমার্ক ক্রীত</string>
+    <string name="action_filter_bookmarked">বুকমার্ককৃত</string>
     <string name="action_filter_unread">অপঠিত</string>
     <string name="action_filter_empty">ফিল্টার সরান</string>
     <string name="action_sort_alpha">বর্ণানুক্রমে</string>
@@ -31,7 +31,6 @@
     <string name="action_bookmark">বুকমার্ক অধ্যায়</string>
     <string name="action_remove_bookmark">বুকমার্ক সরান</string>
     <string name="action_delete">মুছুন</string>
-    <string name="action_update">হালনাগাদ</string>
     <string name="action_update_library">সংগ্রহশালা হালনাগাদ</string>
     <string name="action_edit">সম্পাদন করুন</string>
     <string name="action_add">যোগ করুন</string>
@@ -61,7 +60,6 @@
     <string name="action_reset">পুন:স্থাপন</string>
     <string name="action_undo">পূর্বাবস্থায় ফিরুন</string>
     <string name="action_open_log">লগ খুলুন</string>
-    <string name="action_create">তৈরি করুন</string>
     <string name="action_restore">পুনরুদ্ধার করুন</string>
     <string name="loading">লোড হচ্ছে…</string>
     <string name="app_not_available">অ্যাপটি অনুপলব্ধ</string>
@@ -84,7 +82,7 @@
     <string name="all">সব</string>
     <string name="pref_library_update_restriction">নিজেথেকে আপডেটের সীমাবদ্ধতা</string>
     <string name="charging">চার্জ হচ্ছে</string>
-    <string name="pref_update_only_non_completed">কেবল চলমান মাংগা হালনাগাদ করুন</string>
+    <string name="pref_update_only_non_completed">\"সম্পূর্ন\" শর্তসহিত</string>
     <string name="pref_auto_update_manga_sync">পড়ার পরে অগ্রগতি আপডেট করুন</string>
     <string name="default_category">সাধারণ বিভাগ</string>
     <string name="default_category_summary">সর্বদা জিজ্ঞাসা করুন</string>
@@ -171,7 +169,6 @@
     <string name="password">গোপন শব্দ</string>
     <string name="login">প্রবেশ করুন</string>
     <string name="login_success">প্রবেশ হয়েছে</string>
-    <string name="invalid_login">প্রবেশ সফল হয়নি</string>
     <string name="unknown_error">অজানা ত্রুটি</string>
     <string name="updating_category">বিভাগের হালনাগাদ হচ্ছে</string>
     <string name="local_source_badge">স্থানীয়</string>
@@ -181,8 +178,6 @@
     <string name="action_global_search_hint">সার্বজনীন খোঁজ…</string>
     <string name="latest">সর্বশেষ</string>
     <string name="browse">অনুসন্ধান</string>
-    <string name="manga_not_in_db">এই মাংগাটি ডাটাবেজ থেকে সরিয়ে ফেলা হয়েছে।</string>
-    <string name="description">বিবরণ</string>
     <string name="ongoing">চলমান</string>
     <string name="unknown">অজানা</string>
     <string name="licensed">লাইসেন্সকৃত</string>
@@ -194,7 +189,6 @@
     <string name="chapter_paused">থেমে আছে</string>
     <string name="show_title">উৎস শিরোনাম</string>
     <string name="show_chapter_number">অধ্যায় নাম্বার</string>
-    <string name="sorting_mode">সাজানোর রূপ</string>
     <string name="sort_by_source">উৎস অনুযায়ী</string>
     <string name="sort_by_number">অধ্যায়ের নাম্বার অনুযায়ী</string>
     <string name="manga_download">ডাউনলোড</string>
@@ -224,7 +218,6 @@
     <string name="cover_updated">প্রচ্ছদ আপডেট হয়েছে</string>
     <string name="chapter_progress">পৃষ্ঠা: %1$d</string>
     <string name="no_next_chapter">পরবর্তী অধ্যায় খুঁজে পাওয়া যায়নি</string>
-    <string name="no_previous_chapter">আগের অধ্যায় খুঁজে পাওয়া যায়নি</string>
     <string name="decode_image_error">ছবিটি লোড করা যাচ্ছে না</string>
     <string name="confirm_set_image_as_cover">এই চিত্রটি কভার আর্ট হিসাবে ব্যবহার করবেন\?</string>
     <string name="download_queue_error">অধ্যায়গুলি ডাউনলোড করা যায়নি। ডাউনলোড বিভাগে আপনি আবার চেষ্টা করতে পারেন</string>
@@ -274,7 +267,6 @@
     <string name="double_tap_anim_speed_0">এনিমেশন নেই</string>
     <string name="double_tap_anim_speed_normal">সাধারণ</string>
     <string name="double_tap_anim_speed_fast">দ্রুত</string>
-    <string name="manga_info_full_title_label">শিরোনাম</string>
     <string name="manga_added_library">সংগ্রহশালায় যোগ করা হয়েছে</string>
     <string name="manga_removed_library">সংগ্রহশালা থেকে অপসারণ করা হয়েছে</string>
     <string name="copied_to_clipboard">ক্লিপবোর্ডে কপি হয়েছে:
@@ -290,7 +282,6 @@
     <string name="track_status">স্থিতি</string>
     <string name="track_start_date">শুরু হয়েছে</string>
     <string name="track_type">ধরণ</string>
-    <string name="track_author">লেখক</string>
     <string name="transition_finished">শেষ:</string>
     <string name="transition_current">বর্তমান:</string>
     <string name="transition_next">পরবর্তী:</string>
@@ -300,7 +291,7 @@
     <string name="transition_pages_loading">পৃষ্ঠা লোড হচ্ছে …</string>
     <string name="transition_pages_error">পৃষ্ঠাগুলো লোড করতে ব্যর্থ হয়েছে: %1$s</string>
     <string name="pref_read_with_long_tap">দীর্ঘ ট্যাপে দেখান</string>
-    <string name="action_open_in_web_view">ওয়েবভিউতে খুলুন</string>
+    <string name="action_open_in_web_view">WebView তে খুলুন</string>
     <string name="pref_true_color">৩২-বিট রং</string>
     <string name="pref_skip_read_chapters">পঠিত অধ্যায়গুলো এড়িয়ে যান</string>
     <string name="pref_color_filter_mode">রঙ ফিল্টার মিশ্রন মোড</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">অগ্রবর্তী</string>
     <string name="action_webview_refresh">রেফ্রেস করুন</string>
     <string name="pref_category_library">সংগ্রহশালা</string>
-    <string name="invalid_download_dir">অকার্যকর ডাউনলোড অবস্থান</string>
     <string name="ext_obsolete">অচল</string>
     <string name="obsolete_extension_message">এই এক্সটেনশন আর উপলব্ধ নয়।</string>
     <string name="email">ইমেল ঠিকানা</string>
@@ -365,7 +355,6 @@
     <string name="action_view_chapters">অধ্যায়গুলি দেখুন</string>
     <string name="action_disable_all">সব অক্ষম করুন</string>
     <string name="action_enable_all">সব সক্রিয় করুন</string>
-    <string name="action_download_unread">অপঠিত অধ্যায়গুলি ডাউনলোড করুন</string>
     <string name="pref_library_update_refresh_metadata">মেটাডাটা সয়ংক্রিয়ভাবে হালনাগাদ করুন</string>
     <string name="pref_category_library_update">ব্যাপক আপডেট</string>
     <string name="secure_screen_summary">অ্যাপ পাল্টানোর সময় অ্যাপের কন্টেন্ট লুকান ও স্ক্রিনসট ব্লক করুন</string>
@@ -386,7 +375,6 @@
     <string name="backup_restore_missing_sources">উৎস অনুপলব্ধ:</string>
     <string name="invalid_backup_file_missing_manga">ব্যাকআপে কোনো মাংগা নেই।</string>
     <string name="invalid_backup_file">ব্যাকআপ ফাইল গ্রহণযোগ্য নয়</string>
-    <string name="tracker_not_logged_in">লগড ইন নয়: %1$s</string>
     <string name="pref_search_pinned_sources_only">শুধু আটকানো উৎস যোগ করুন</string>
     <string name="pref_enable_automatic_extension_updates">এক্সটেনশনের হালনাগাদ সমূহ</string>
     <string name="pref_remove_bookmarked_chapters">বুকমার্ক করা অধ্যায়গুলি মুছে ফেলার অনুমতি দিন</string>
@@ -473,7 +461,6 @@
     <string name="viewer">পঠন ধরন</string>
     <string name="pref_category_for_this_series">এই সিরিজের জন্য</string>
     <string name="share_page_info">%1$s: %2$s, পৃষ্ঠা %3$d</string>
-    <string name="error_invalid_date_supplied">অবৈধ তারিখ সরবরাহ করা হয়েছে</string>
     <string name="paused">বিরতি</string>
     <string name="add_tracking">ট্র্যাকিং যোগ করুন</string>
     <plurals name="num_trackers">
@@ -498,7 +485,7 @@
     <string name="http_error_hint">ওয়েবসাইটটি ওয়েবভিউতে পরীক্ষা করুন</string>
     <string name="tabs_header">ট্যাব গুলি</string>
     <string name="badges_header">প্রতীক গুলি</string>
-    <string name="downloaded_chapters">ডাউনলোড করা অধ্যায়গুলি</string>
+    <string name="downloaded_chapters">ডাউনলোড করা অধ্যায়</string>
     <string name="manga_from_library">লাইব্রেরীর মাঙ্গা</string>
     <string name="logout_success">আপনি এখন প্রস্থান করেছেন</string>
     <string name="logout">প্রস্থান</string>
@@ -659,7 +646,7 @@
     <string name="help_translate">অনুবাদে সাহায্য করুন</string>
     <string name="ext_installer_shizuku_unavailable_dialog">এক্সটেনশন ইনস্টলার হিসাবে Shizuku ব্যবহার করতে Shizuku ইনস্টল করুন এবং শুরু করুন।</string>
     <string name="pref_tablet_ui_mode">তাব্লেত উই</string>
-    <string name="action_sort_count">সর্বমোট মঙ্গা</string>
+    <string name="action_sort_count">মোট মাঙ্গা</string>
     <string name="label_warning">সতর্কতা</string>
     <string name="action_display_language_badge">ভাষা</string>
     <string name="update_72hour">প্রতি ৩ দিন</string>
@@ -679,5 +666,43 @@
     <string name="notification_update_error">%1$d আপডেট(গুলি) ব্যর্থ হয়েছে</string>
     <string name="publishing_finished">সম্পূর্ণ প্রকাশিত</string>
     <string name="action_filter_started">শুরু করা হয়েছে</string>
-    <string name="action_sort_last_manga_update">সর্বশেষ মাঙা হালনাগাদ</string>
+    <string name="action_sort_last_manga_update">সর্বশেষ মাঙ্গা হালনাগাদ</string>
+    <string name="delete_category_confirmation">আপনি কি \"%s\" বিভাগটি মুছে ফেলতে চান\?</string>
+    <string name="appwidget_updates_description">সম্প্রতি আপনার হালনাগাদকৃত মাঙ্গা দেখুন</string>
+    <string name="are_you_sure">আপনি কি নিশ্চিত\?</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">পরবর্তী অপঠিত অধ্যায়</item>
+        <item quantity="other">পরবর্তী %d টি অপঠিত অধ্যায়</item>
+    </plurals>
+    <string name="action_sort_unread_count">অপঠিত সংখ্যা</string>
+    <string name="action_remove_everything">সবকিছু মুছুন</string>
+    <string name="action_show_manga">মাঙ্গা দেখান</string>
+    <string name="delete_category">বিভাগ মুছুন</string>
+    <string name="theme_lavender">ল্যাভেণ্ডার</string>
+    <string name="action_search_hint">খুঁজুন…</string>
+    <string name="action_display_cover_only_grid">শুধু প্রচ্ছদসহ গ্রিড</string>
+    <string name="action_move_to_top_all_for_series">সিরিজ কে উপরে তুলুন</string>
+    <string name="action_close">বন্ধ</string>
+    <string name="complete_list">লিস্ট সম্পূর্ন করুন</string>
+    <string name="unfinished_list">অসম্পূর্ণ তালিকা</string>
+    <string name="on_hold_list">স্থগিত তালিকা</string>
+    <string name="auto_download_while_reading">পড়ার সময় সয়ংক্রিয়ভাবে ডাউনলোড</string>
+    <string name="pref_update_only_completely_read">অপঠিত অধ্যায়সহ</string>
+    <string name="pref_library_update_manga_restriction">শিরোনামসমুহ হালনাগাদ এড়িয়ে যান</string>
+    <string name="download_notifier_split_failed">ডাউনলোড করা চিত্র বিভক্ত করা যায়নি</string>
+    <string name="channel_skipped">এড়িয়ে যাওয়া</string>
+    <string name="pref_update_only_started">যেগুলো শুরু করা হয়নি</string>
+    <string name="webview_data_deleted">ওয়েবভিউ ডাটা মুছা হয়েছে</string>
+    <string name="split_tall_images">লম্বা চিত্র বিভক্ত</string>
+    <string name="split_tall_images_summary">পঠন কর্মক্ষমতা উন্নত করে</string>
+    <string name="pref_clear_webview_data">ওয়েবভিইউ ডাটা মুছুন</string>
+    <string name="multi_lang">বহু</string>
+    <string name="action_faq_and_guides">FAQ এবং নির্দেশনা</string>
+    <string name="pref_general_summary">অ্যাপ ভাষা, বিজ্ঞপ্তি</string>
+    <string name="pref_library_summary">বিভাগসমূহ, সার্বজনীন হালনাগাদ</string>
+    <string name="pref_app_language">অ্যাপ ভাষা</string>
+    <string name="pref_appearance_summary">থিম,সময় ও তারিখের ধরন</string>
+    <string name="pref_reader_summary">পঠনের ধরন, ডিসপ্লে,নেভিগেশন</string>
+    <string name="pref_backup_summary">ম্যানুয়াল ও সয়ংক্রিয় ব্যাকআপ</string>
+    <string name="pref_security_summary">অ্যাপ লক,নিরাপদ পর্দা</string>
 </resources>

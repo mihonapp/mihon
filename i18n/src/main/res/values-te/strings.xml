@@ -22,11 +22,9 @@
     <string name="action_disable_all">అన్నిటిని అచైతన్న పరుచుము</string>
     <string name="action_enable_all">అన్నిటిని చైతన్న పరుచుము</string>
     <string name="action_update_library">గ్రంథాలయాన్ని నవీకరించుము</string>
-    <string name="action_update">నవీకరించుము</string>
     <string name="action_delete">తొలగించుము</string>
     <string name="action_remove_bookmark">అధ్యాయ గుర్తు చిహ్నాన్ని తొలగించుము</string>
     <string name="action_bookmark">అధ్యాయమును గుర్తు పెట్టుకొనుము</string>
-    <string name="action_download_unread">చదవని అధ్యాయాలను దిగుమతి చేయుము</string>
     <string name="action_download">దిగుమతి</string>
     <string name="action_mark_previous_as_read">దీని మునుపటివాటికి చదివినట్లు గుర్తును పెట్టుము</string>
     <string name="action_mark_as_unread">చదవనట్లు గుర్తును పెట్టుము</string>
@@ -109,7 +107,6 @@
     <string name="action_save">భద్రపరుచుము</string>
     <string name="action_reset">పునః స్థాపించుము</string>
     <string name="action_open_log">విషయ చిట్టాను తెరువుము</string>
-    <string name="action_create">సృష్టించుము</string>
     <string name="action_restore">పునఃస్థాపనను చేయుము</string>
     <string name="action_webview_back">వెనుకకు</string>
     <string name="action_webview_forward">ముందుకు</string>

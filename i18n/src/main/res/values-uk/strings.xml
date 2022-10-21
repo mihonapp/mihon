@@ -34,7 +34,6 @@
     <string name="action_bookmark">Закладка глави</string>
     <string name="action_remove_bookmark">Видалити закладку глави</string>
     <string name="action_delete">Видалити</string>
-    <string name="action_update">Оновити</string>
     <string name="action_update_library">Оновити бібліотеку</string>
     <string name="action_edit">Редагувати</string>
     <string name="action_add">Додати</string>
@@ -64,7 +63,6 @@
     <string name="action_reset">Скинути</string>
     <string name="action_undo">Скасувати</string>
     <string name="action_open_log">Відкрити лог</string>
-    <string name="action_create">Створити</string>
     <string name="action_restore">Відновити</string>
     <string name="loading">Завантаження…</string>
     <string name="app_not_available">Програма не відповідає</string>
@@ -194,7 +192,6 @@
     <string name="password">Пароль</string>
     <string name="login">Логін</string>
     <string name="login_success">Вхід успішний</string>
-    <string name="invalid_login">Помилка авторизації</string>
     <string name="unknown_error">Невідома помилка</string>
     <string name="updating_category">Оновлення категорії</string>
     <string name="local_source_badge">Локальна</string>
@@ -204,13 +201,10 @@
     <string name="action_global_search_hint">Глобальний пошук…</string>
     <string name="latest">Остання</string>
     <string name="browse">Огляд</string>
-    <string name="manga_not_in_db">Ця манга була видалена з бази даних.</string>
-    <string name="description">Опис</string>
     <string name="ongoing">Онгоінг</string>
     <string name="unknown">Невідомо</string>
     <string name="licensed">Ліцензовано</string>
     <string name="remove_from_library">Видалити з бібліотеки</string>
-    <string name="manga_info_full_title_label">Заголовок</string>
     <string name="manga_added_library">Додати до бібліотеки</string>
     <string name="manga_removed_library">Видалено з бібліотеки</string>
     <string name="delete_downloads_for_manga">Видаляти завантажені глави\?</string>
@@ -223,7 +217,6 @@
     <string name="chapter_paused">Пауза</string>
     <string name="show_title">Назва джерела</string>
     <string name="show_chapter_number">Номер глави</string>
-    <string name="sorting_mode">Метод сортування</string>
     <string name="sort_by_source">За каталогом</string>
     <string name="sort_by_number">За номером глави</string>
     <string name="manga_download">Завантажити</string>
@@ -248,7 +241,6 @@
     <string name="track_status">Статус</string>
     <string name="track_start_date">Розпочато</string>
     <string name="track_type">Тип</string>
-    <string name="track_author">Автор</string>
     <string name="error_category_exists">Категорія з таким іменем вже існує!</string>
     <string name="snack_categories_deleted">Категорію видалено</string>
     <string name="dialog_with_checkbox_remove_description">Ця дія видалить дату прочитання глави. Ви впевнені\?</string>
@@ -260,7 +252,6 @@
     <string name="cover_updated">Обкладинку оновлено</string>
     <string name="chapter_progress">Сторінка %1$d</string>
     <string name="no_next_chapter">Наступну главу не знайдено</string>
-    <string name="no_previous_chapter">Попередню главу не знайдено</string>
     <string name="decode_image_error">Зображення не може бути завантажене</string>
     <string name="confirm_set_image_as_cover">Ви бажаєте встановити цю картинку як обкладинку\?</string>
     <string name="transition_finished">Завершено:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Вперед</string>
     <string name="action_webview_refresh">Оновити</string>
     <string name="pref_category_library">Бібліотека</string>
-    <string name="invalid_download_dir">Недійсне місце завантаження</string>
     <string name="ext_obsolete">Застарілий</string>
     <string name="obsolete_extension_message">Це розширення більше не доступне.</string>
     <string name="pref_date_format">Формат дати</string>
@@ -466,7 +456,6 @@
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
     <string name="invalid_backup_file_missing_manga">Бекап не містить жодної манги.</string>
     <string name="invalid_backup_file">Невірний файл резервної копії</string>
-    <string name="tracker_not_logged_in">Не зареєстровано в: %1$s</string>
     <string name="pref_search_pinned_sources_only">Включати тільки закріплені джерела</string>
     <string name="tracking_info">Одностороння синхронізація для оновлення прогресу глави в службах стеження. Налаштуйте для окремих записів манги з допомогою кнопки \"Стеження\".</string>
     <string name="action_display_show_tabs">Показувати вкладки категорій</string>
@@ -474,7 +463,6 @@
     <string name="recent_manga_time">Гл. %1$s - %2$s</string>
     <string name="viewer">Режим читання</string>
     <string name="pref_category_for_this_series">Для цієї серії</string>
-    <string name="error_invalid_date_supplied">Вказано невірну дату</string>
     <string name="page_list_empty_error">Сторінки не знайдено</string>
     <string name="action_disable_all">Вимкнути все</string>
     <string name="action_enable_all">Увімкнути все</string>
@@ -500,7 +488,6 @@
     <string name="label_network">Мережа</string>
     <string name="updated_version">Оновлено до v%1$s</string>
     <string name="whats_new">Що новенького</string>
-    <string name="action_download_unread">Завантажити непрочитані глави</string>
     <string name="download_insufficient_space">Не вдалось завантажити глави через нестачу місця в сховищі</string>
     <string name="action_global_search_query">Шукати для \"%1$s\" глобально</string>
     <string name="pref_category_reading_mode">Режим читання</string>
@@ -568,9 +555,9 @@
     <string name="action_filter_tracked">Відслідковуваний</string>
     <string name="action_display_show_number_of_items">Показати кількість об\'єктів</string>
     <string name="right_and_left_nav">Праворуч та ліворуч</string>
-    <string name="pref_dual_page_split">Подвійний поділ сторінки</string>
-    <string name="pref_dual_page_invert_summary">Якщо двосторінкове розміщення не відповідає напрямку читання</string>
-    <string name="pref_dual_page_invert">Інвертувати двосторінковий поділ</string>
+    <string name="pref_dual_page_split">Розділення широких сторінок</string>
+    <string name="pref_dual_page_invert_summary">Якщо розділення широких сторінок, не відповідає напрямку читання</string>
+    <string name="pref_dual_page_invert">Інвертувати розділення широких сторінок</string>
     <string name="backup_restore_content_full">Дані з файлу резервної копії буде відновлено.
 \n
 \nВам потрібно встановити розширення яких бракує та увійти в сервіси відстежування для їх використання.</string>
@@ -692,7 +679,7 @@
     <string name="extension_api_error">Не вдалося отримати список розширень</string>
     <string name="pref_auto_clear_chapter_cache">Очищати кеш глав при закритті додатку</string>
     <string name="clear_database_source_item_count">%1$d небібліотечний комікс у базі даних</string>
-    <string name="database_clean">Очищення бази даних</string>
+    <string name="database_clean">Немає чого очищувати</string>
     <string name="privacy_policy">Політика конфіденційності</string>
     <string name="pref_library_update_manga_restriction">Пропускати оновлення</string>
     <string name="pref_update_only_completely_read">Є непрочитані глави</string>
@@ -705,7 +692,6 @@
     <string name="action_filter_started">Розпочато</string>
     <string name="action_display_cover_only_grid">Сітка тільки з обкладинками</string>
     <string name="pref_update_only_started">Серія не почата</string>
-    <string name="backup_restore_invalid_uri">Помилка: порожній URI</string>
     <string name="action_faq_and_guides">Довідка та FAQ</string>
     <string name="action_move_to_top_all_for_series">Перемістити серію на початок</string>
     <string name="rotation_reverse_portrait">Портретна навпаки</string>
@@ -757,7 +743,7 @@
     <string name="ext_info_language">Мова</string>
     <string name="ext_info_age_rating">Вікові обмеження</string>
     <string name="download_notifier_split_page_path_not_found">Не вдалось знайти шлях сторінки %d</string>
-    <string name="pref_navigate_pan">Перейти до панорамування</string>
+    <string name="pref_navigate_pan">Панорамування широких зображень при тицянні</string>
     <string name="pref_landscape_zoom">Збільшити горизонтальне зображення</string>
     <string name="action_close">Закрити</string>
     <string name="update_check_open">Відкрити на GitHub</string>
@@ -783,11 +769,26 @@
     </plurals>
     <string name="download_ahead">Завантажувати наперед</string>
     <string name="download_ahead_info">Працює тільки на мангу збережену в бібліотеці, якщо поточна глава, та наступна за нею вже завантажені</string>
-    <string name="remove_manga">Ви збираєтесь видалити цю мангу з вашої бібліотеки</string>
+    <string name="remove_manga">Ви збираєтесь видалити \"%s\" з вашої бібліотеки</string>
     <string name="theme_tidalwave">Приливна Хвиля</string>
     <string name="are_you_sure">Ви впевнені\?</string>
     <string name="update_already_running">Оновлення вже розпочато</string>
     <string name="error_user_agent_string_blank">Рядок User agent не може бути пустим</string>
     <string name="popular">Популярне</string>
     <string name="auto_download_while_reading">Автоматичне завантаження під час читання</string>
+    <string name="crash_screen_description">%s зіткнулось з непередбачуваною помилкою. Ми пропонуємо вам, зробити скріншот цього повідомлення, завантажити журнал помилок та поділитись ними з нами на нашому каналі підтримки в Discord.</string>
+    <string name="pref_general_summary">Мова додатку, сповіщення</string>
+    <string name="pref_appearance_summary">Тема, формат дати та часу</string>
+    <string name="pref_library_summary">Категорії, глобальне оновлення</string>
+    <string name="pref_reader_summary">Режим читання, відображення, навігація</string>
+    <string name="pref_downloads_summary">Автоматичне завантаження, завантаження наперед</string>
+    <string name="pref_tracking_summary">Одностороння синхронізація прогресу, розширена синхронізація</string>
+    <string name="pref_browse_summary">Джерела, розширення, глобальний пошук</string>
+    <string name="pref_backup_summary">Ручне та автоматичне резервування</string>
+    <string name="pref_security_summary">Блокування додатку, захист екрану</string>
+    <string name="pref_advanced_summary">Вивантаження журнала з помилками, оптимізація батареї</string>
+    <string name="crash_screen_title">Сталась неочікувана помилка</string>
+    <string name="crash_screen_restart_application">Перезапустити додаток</string>
+    <string name="skipped_reason_not_always_update">Пропущено, оскільки серія не потребує оновлень</string>
+    <string name="action_search_hint">Шукати…</string>
 </resources>

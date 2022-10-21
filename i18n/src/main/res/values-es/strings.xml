@@ -21,7 +21,6 @@
     <string name="action_mark_previous_as_read">Marcar anteriores como leídos</string>
     <string name="action_download">Descargar</string>
     <string name="action_delete">Eliminar</string>
-    <string name="action_update">Actualizar</string>
     <string name="action_update_library">Actualizar biblioteca</string>
     <string name="action_edit">Editar</string>
     <string name="action_add_category">Añadir categoría</string>
@@ -127,13 +126,11 @@
     <string name="password">Contraseña</string>
     <string name="login">Iniciar sesión</string>
     <string name="login_success">Conectado</string>
-    <string name="invalid_login">No se pudo iniciar sesión</string>
     <string name="unknown_error">Error desconocido</string>
     <!-- Library fragment -->
     <string name="updating_category">Actualizando categoría</string>
     <!-- Catalogue fragment -->
     <!-- Manga info fragment -->
-    <string name="description">Descripción</string>
     <string name="ongoing">En publicación</string>
     <string name="unknown">Desconocido</string>
     <string name="licensed">Con licencia</string>
@@ -144,7 +141,6 @@
     <string name="chapter_error">Error</string>
     <string name="show_title">Título de la fuente</string>
     <string name="show_chapter_number">Número de capítulo</string>
-    <string name="sorting_mode">Modo al ordenar</string>
     <string name="sort_by_source">Por fuente</string>
     <string name="sort_by_number">Por número de capítulos</string>
     <string name="sort_by_upload_date">Por fecha de subida</string>
@@ -171,7 +167,6 @@
     <!-- Reader activity -->
     <string name="chapter_progress">Pág: %1$d</string>
     <string name="no_next_chapter">Siguiente capítulo no encontrado</string>
-    <string name="no_previous_chapter">Capítulo anterior no encontrado</string>
     <string name="decode_image_error">No se pudo cargar la imagen</string>
     <!-- Backup fragment -->
     <!-- Recent manga fragment -->
@@ -224,7 +219,6 @@
     <string name="action_reset">Restablecer</string>
     <string name="action_undo">Deshacer</string>
     <string name="action_open_log">Abrir registro</string>
-    <string name="action_create">Crear</string>
     <string name="action_restore">Restaurar</string>
     <string name="app_not_available">Aplicación no disponible</string>
     <string name="update_weekly">Semanales</string>
@@ -262,7 +256,6 @@
     <string name="pref_refresh_library_tracking_summary">Actualiza estados, puntuaciones y últimos capítulos leídos desde tus servicios de seguimiento</string>
     <string name="no_more_results">No hay más resultados</string>
     <string name="local_source">Fuente local</string>
-    <string name="manga_not_in_db">Este manga se ha eliminado de la base de datos.</string>
     <string name="delete_downloads_for_manga">¿Eliminar los capítulos descargados\?</string>
     <string name="chapter_paused">Pausado</string>
     <string name="manga_tracking_tab">Seguimiento</string>
@@ -311,7 +304,6 @@
 \n
 \nAl confiar en este certificado aceptas estos riesgos.</string>
     <string name="double_tap_anim_speed_0">Sin animación</string>
-    <string name="manga_info_full_title_label">Título</string>
     <string name="manga_added_library">Añadido a biblioteca</string>
     <string name="manga_removed_library">Quitado de biblioteca</string>
     <string name="copied_to_clipboard">Copiado en portapapeles:
@@ -323,7 +315,6 @@
     <string name="track_status">Estado</string>
     <string name="track_start_date">Empezado</string>
     <string name="track_type">Tipo</string>
-    <string name="track_author">Autor</string>
     <string name="transition_finished">Finalizado:</string>
     <string name="transition_current">Actual:</string>
     <string name="transition_pages_loading">Cargando páginas…</string>
@@ -348,7 +339,6 @@
     <string name="action_webview_forward">Adelante</string>
     <string name="action_webview_refresh">Actualizar</string>
     <string name="pref_category_library">Biblioteca</string>
-    <string name="invalid_download_dir">La carpeta de descargas no existe</string>
     <string name="ext_obsolete">Obsoleto</string>
     <string name="obsolete_extension_message">Esta extensión ya no está disponible.</string>
     <string name="pref_date_format">Formato de fecha</string>
@@ -457,7 +447,6 @@
     <string name="creating_backup_error">No se han podido respaldar los datos</string>
     <string name="backup_in_progress">La copia de seguridad ya está en curso</string>
     <string name="restore_duration">%02d min, %02d seg</string>
-    <string name="error_invalid_date_supplied">La fecha indicada no es correcta</string>
     <string name="last_used_source">Usado recientemente</string>
     <string name="check_for_updates">Buscar actualizaciones</string>
     <string name="local_source_help_guide">Guía de fuente local</string>
@@ -492,7 +481,6 @@
     <string name="backup_restore_missing_sources">Fuentes que faltan:</string>
     <string name="invalid_backup_file_missing_manga">La copia de respaldo no contiene ningún manga.</string>
     <string name="invalid_backup_file">El archivo de copia de respaldo no es correcto</string>
-    <string name="tracker_not_logged_in">No has iniciado sesión: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprobar si hay una nueva portada y detalles al actualizar la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Actualizar automáticamente los metadatos</string>
     <string name="action_display_comfortable_grid">Rejilla amplia</string>
@@ -524,7 +512,6 @@
     <string name="unknown_author">Autor desconocido</string>
     <string name="updated_version">Actualizado a v%1$s</string>
     <string name="whats_new">Qué hay de nuevo</string>
-    <string name="action_download_unread">Descargar capítulos sin leer</string>
     <string name="download_insufficient_space">No se pudo descargar ningún capítulo, queda muy poco espacio</string>
     <string name="action_global_search_query">Buscar por «%1$s» en todas las fuentes</string>
     <string name="pref_category_reading_mode">Modo de lectura</string>
@@ -723,7 +710,6 @@
     <string name="publishing_finished">Serie terminada</string>
     <string name="cancelled">Cancelada</string>
     <string name="action_faq_and_guides">Guías y soluciones</string>
-    <string name="backup_restore_invalid_uri">Error: dirección URI vacía</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostrar manga</string>
     <string name="pref_navigate_pan">Desplazarse por el resto de la página antes de cambiar</string>
@@ -812,4 +798,18 @@
     <string name="missing_storage_permission">No se han concedido los permisos de almacenamiento</string>
     <string name="skipped_reason_not_always_update">Saltando, porque este manga no necesita actualizarse</string>
     <string name="action_search_hint">Buscar…</string>
+    <string name="pref_tracking_summary">Sincroniza tu progreso de lectura; unidireccional o mejorada</string>
+    <string name="pref_downloads_summary">Descargas automáticas y por adelantado</string>
+    <string name="pref_library_summary">Categorías y actualizaciones generales</string>
+    <string name="crash_screen_description">%s se ha cerrado por un problema inesperado. Te sugerimos que hagas una captura de pantalla de lo que ves, vuelques todos registros de depuración y que nos los envíes a nuestro canal de apoyo en Discord, en inglés.</string>
+    <string name="pref_reader_summary">Modos de lectura, apariencia y navegación</string>
+    <string name="pref_general_summary">Idioma de la interfaz y notificaciones</string>
+    <string name="pref_appearance_summary">Temas de colores y formatos de fecha</string>
+    <string name="pref_advanced_summary">Volcar datos del cuelgue y estado de ahorro de batería</string>
+    <string name="pref_security_summary">Pantalla segura y bloqueo de la aplicación</string>
+    <string name="pref_backup_summary">Copias de respaldo manuales y automáticas</string>
+    <string name="pref_browse_summary">Fuentes, extensiones y búsqueda global</string>
+    <string name="crash_screen_title">Tenemos un problema</string>
+    <string name="crash_screen_restart_application">Reiniciar la aplicación</string>
+    <string name="unknown_title">Título desconocido</string>
 </resources>

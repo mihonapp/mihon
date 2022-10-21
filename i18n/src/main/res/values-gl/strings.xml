@@ -169,7 +169,6 @@
     <string name="action_webview_forward">Adiante</string>
     <string name="action_webview_back">Atrás</string>
     <string name="action_restore">Restaurar</string>
-    <string name="action_create">Crear</string>
     <string name="action_open_log">Abrir rexistro</string>
     <string name="action_undo">Desfacer</string>
     <string name="action_reset">Resetear</string>
@@ -217,11 +216,9 @@
     <string name="action_disable_all">Deshabilitar todos</string>
     <string name="action_enable_all">Habilitar todos</string>
     <string name="action_update_library">Actualizar biblioteca</string>
-    <string name="action_update">Actualizar</string>
     <string name="action_delete">Eliminar</string>
     <string name="action_remove_bookmark">Quitar marcador</string>
     <string name="action_bookmark">Engadir marcador</string>
-    <string name="action_download_unread">Descargar capítulos sen ler</string>
     <string name="action_download">Descargar</string>
     <string name="action_mark_previous_as_read">Marcar anteriores como lidos</string>
     <string name="action_mark_as_unread">Marcar como non lido</string>
@@ -262,7 +259,6 @@
     <string name="label_backup">Copia de seguridade</string>
     <string name="manga">Manga</string>
     <string name="chapter_not_found">Capítulo non atopado</string>
-    <string name="description">Descripción</string>
     <string name="completed">Completado</string>
     <string name="title">Título</string>
     <string name="licensed">Licenciado</string>

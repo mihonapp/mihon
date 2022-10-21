@@ -23,7 +23,6 @@
     <string name="action_bookmark">북마크</string>
     <string name="action_remove_bookmark">북마크 제거</string>
     <string name="action_delete">삭제</string>
-    <string name="action_update">업데이트</string>
     <string name="action_update_library">서재 업데이트</string>
     <string name="action_edit">편집</string>
     <string name="action_add">추가</string>
@@ -58,7 +57,6 @@
     <string name="action_reset">리셋</string>
     <string name="action_undo">되돌리기</string>
     <string name="action_open_log">로그 열기</string>
-    <string name="action_create">만들기</string>
     <string name="action_restore">복구하기</string>
     <string name="loading">로딩 중…</string>
     <string name="app_not_available">앱 이용 불가</string>
@@ -168,17 +166,14 @@
     <string name="password">비밀번호</string>
     <string name="login">로그인</string>
     <string name="login_success">로그인 성공</string>
-    <string name="invalid_login">로그인 오류</string>
     <string name="unknown_error">알 수 없는 오류</string>
     <string name="updating_category">카테고리 업데이트중</string>
     <string name="no_more_results">더이상 결과 없음</string>
     <string name="action_global_search_hint">전역 검색…</string>
     <string name="latest">최신</string>
-    <string name="description">설명</string>
     <string name="ongoing">연재중</string>
     <string name="unknown">알 수 없음</string>
     <string name="remove_from_library">서재에서 제거</string>
-    <string name="manga_info_full_title_label">제목</string>
     <string name="manga_added_library">서재에 추가되었습니다</string>
     <string name="manga_removed_library">서재에서 제거되었습니다</string>
     <string name="delete_downloads_for_manga">다운로드된 회차를 삭제하시겠습니까\?</string>
@@ -188,7 +183,6 @@
     <string name="chapter_error">오류</string>
     <string name="chapter_paused">일시중지됨</string>
     <string name="show_chapter_number">회차 번호</string>
-    <string name="sorting_mode">정렬 모드</string>
     <string name="sort_by_source">소스 기준</string>
     <string name="sort_by_number">회차 번호 기준</string>
     <string name="manga_download">다운로드</string>
@@ -203,7 +197,6 @@
     <string name="title">제목</string>
     <string name="status">상태</string>
     <string name="track_status">상태</string>
-    <string name="track_author">저자</string>
     <string name="snack_categories_deleted">카테고리 삭제됨</string>
     <string name="dialog_with_checkbox_remove_description">이 회차의 읽은 기록을 삭제합니다. 계속하시겠습니까\?</string>
     <string name="dialog_with_checkbox_reset">모든 회차 기록 삭제</string>
@@ -214,7 +207,6 @@
     <string name="cover_updated">표지 업데이트됨</string>
     <string name="chapter_progress">페이지: %1$d</string>
     <string name="no_next_chapter">다음 화가 없습니다</string>
-    <string name="no_previous_chapter">이전 화가 없습니다</string>
     <string name="decode_image_error">이미지를 로드할 수 없습니다</string>
     <string name="confirm_set_image_as_cover">이 이미지를 표지로 사용합니까\?</string>
     <string name="transition_finished">완료:</string>
@@ -273,7 +265,6 @@
     <string name="local_source">로컬 저장소</string>
     <string name="other_source">기타</string>
     <string name="browse">찾아보기</string>
-    <string name="manga_not_in_db">이 만화는 데이터베이스에서 제거되었습니다.</string>
     <string name="licensed">판권작</string>
     <string name="copied_to_clipboard">클립보드에 복사됨:
 \n%1$s</string>
@@ -320,7 +311,6 @@
     <string name="channel_complete">완료</string>
     <string name="confirm_set_chapter_settings">현재 설정을 기본값으로 설정하시겠습니까\?</string>
     <string name="chapter_settings">회차 설정</string>
-    <string name="invalid_download_dir">유효하지 않은 다운로드 위치</string>
     <string name="error_sharing_cover">표지 이미지 공유 오류</string>
     <string name="error_saving_cover">표지 이미지 저장 오류</string>
     <string name="cover_saved">표지 이미지 저장</string>
@@ -390,7 +380,6 @@
     <string name="tapping_inverted_none">없음</string>
     <string name="automatic_background">자동</string>
     <string name="kindlish_nav">Kindle식</string>
-    <string name="action_download_unread">읽지 않은 회차 다운로드</string>
     <string name="pref_cutout_short">빈 공간 채우기</string>
     <string name="pref_always_show_chapter_transition">회차 변경 항상 표시</string>
     <string name="unknown_author">작가 미상</string>
@@ -501,7 +490,6 @@
     <string name="categorized_display_settings">카테고리 별 표시/정렬 설정</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Shizuku를 확장기능 인스톨러로 사용하려면 Shizuku를 먼저 설치해 주세요.</string>
     <string name="ext_update_all">전부 업데이트</string>
-    <string name="backup_restore_invalid_uri">에러: 빈 URI</string>
     <string name="invalid_backup_file_missing_manga">백업에 만화가 포함되어있지 않습니다.</string>
     <string name="pref_dump_crash_logs_summary">개발자와 공유할 수 있는 오류 로그 파일을 생성합니다</string>
     <string name="crash_log_saved">오류 로그가 저장되었습니다</string>
@@ -533,7 +521,6 @@
     </plurals>
     <string name="add_tracking">트래커 추가</string>
     <string name="paused">일시정지</string>
-    <string name="error_invalid_date_supplied">잘못된 날짜입니다</string>
     <string name="myanimelist_relogin">MAL에 다시 로그인해 주세요</string>
     <string name="loader_not_implemented_error">소스를 찾을 수 없습니다</string>
     <string name="page_list_empty_error">페이지를 찾을 수 없습니다</string>
@@ -597,7 +584,6 @@
     <string name="pref_category_theme">테마</string>
     <string name="theme_midnightdusk">황혼</string>
     <string name="ext_obsolete">지원 종료</string>
-    <string name="tracker_not_logged_in">로그인 불가: %1$s</string>
     <string name="no_results_found">검색 결과가 없습니다</string>
     <string name="pref_dual_page_invert_summary">넓은 페이지 분할 시 배치가 읽는 방향과 다를 경우</string>
     <string name="ext_nsfw_short">19금</string>
@@ -701,8 +687,8 @@
     <string name="pref_duplicate_pinned_sources_summary">해당 언어 그룹에서 고정된 소스 반복</string>
     <string name="action_close">닫다</string>
     <string name="battery_not_low">배터리가 부족하지 않을 때</string>
-    <string name="pref_clear_webview_data">웹뷰 데이터 지우기</string>
-    <string name="webview_data_deleted">웹뷰 데이터 삭제됨</string>
+    <string name="pref_clear_webview_data">WebView 데이터 지우기</string>
+    <string name="webview_data_deleted">WebView 데이터 삭제됨</string>
     <string name="split_tall_images">큰 이미지 분할</string>
     <string name="split_tall_images_summary">리더 성능 향상</string>
     <string name="ext_info_version">버전</string>
@@ -741,7 +727,7 @@
     <string name="update_already_running">업데이트가 이미 실행 중입니다</string>
     <string name="error_user_agent_string_blank">사용자 에이전트 문자열은 비워 둘 수 없습니다</string>
     <string name="download_ahead">미리 다운로드</string>
-    <string name="multi_lang">다수의</string>
+    <string name="multi_lang">다언어</string>
     <string name="pref_long_strip_split">긴 이미지 분할 (BETA)</string>
     <string name="remove_manga">서재에서 \"%s\"을(를) 제거하려고 합니다</string>
     <string name="missing_storage_permission">저장공간 사용 권한이 없음</string>
@@ -755,4 +741,18 @@
     <string name="are_you_sure">정말로 실행합니까\?</string>
     <string name="skipped_reason_not_always_update">만화에 업데이트가 필요하지 않음으로 건너뜀</string>
     <string name="action_search_hint">검색…</string>
+    <string name="pref_general_summary">앱 언어, 알림</string>
+    <string name="pref_library_summary">카테고리, 전역 업데이트</string>
+    <string name="pref_reader_summary">읽기 모드, 디스플레이, 네비게이션</string>
+    <string name="pref_tracking_summary">단방향 진행 동기화, 향상된 동기화</string>
+    <string name="pref_browse_summary">소스, 확장기능, 전역 검색</string>
+    <string name="pref_backup_summary">수동 및 자동 백업</string>
+    <string name="pref_security_summary">앱 잠금, 스크린 보안</string>
+    <string name="pref_advanced_summary">오류 로그 덤프, 배터리 최적화</string>
+    <string name="pref_appearance_summary">테마, 날짜 및 시간 형식</string>
+    <string name="pref_downloads_summary">자동 다운로드, 미리 다운로드</string>
+    <string name="crash_screen_title">예기치 않은 오류가 발생했습니다</string>
+    <string name="crash_screen_restart_application">애플리케이션 재시작</string>
+    <string name="crash_screen_description">%s에 예기치 않은 오류가 발생했습니다. 이 메시지를 스크린샷으로 찍고, 충돌 로그를 덤프 한 다음 공식 디스코드 채널에 공유하는 것을 추천합니다.</string>
+    <string name="unknown_title">알 수 없는 제목</string>
 </resources>

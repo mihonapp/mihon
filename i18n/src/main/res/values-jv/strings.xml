@@ -2,15 +2,12 @@
 <resources>
     <string name="update_check_notification_download_in_progress">Ndonlot…</string>
     <string name="update_check_confirm">Donlot</string>
-    <string name="track_author">Panganggit</string>
     <string name="track_type">Jinis</string>
     <string name="title">Judhul</string>
     <string name="no_chapters_error">Ora ditemokake bab</string>
     <string name="download_all">Kabeh</string>
     <string name="manga_download">Donlot</string>
     <string name="display_mode_chapter">bab %1$s</string>
-    <string name="manga_info_full_title_label">Judhul</string>
-    <string name="description">Katrangan</string>
     <string name="other_source">Liyane</string>
     <string name="local_source_badge">Lokal</string>
     <string name="password">Sandhi</string>
@@ -52,7 +49,6 @@
     <string name="pref_category_theme">Tema</string>
     <string name="pref_category_downloads">Donlot</string>
     <string name="action_webview_back">Bali</string>
-    <string name="action_create">Gawe</string>
     <string name="action_open_log">Mbukak log</string>
     <string name="action_save">Simpen</string>
     <string name="action_move_to_bottom">Pindhah paling ngisor</string>
@@ -74,9 +70,7 @@
     <string name="action_edit">Sunting</string>
     <string name="action_disable_all">Pateni kabeh</string>
     <string name="action_enable_all">Aktifke kabeh</string>
-    <string name="action_update">Nganyari</string>
     <string name="action_delete">Mbusak</string>
-    <string name="action_download_unread">Donlot bab durung diwaca</string>
     <string name="action_download">Donlot</string>
     <string name="action_select_inverse">Pilih kuwalik</string>
     <string name="action_select_all">Pilih kabeh</string>

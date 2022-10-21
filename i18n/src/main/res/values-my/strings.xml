@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_restore">ပြန်ရယူသည်</string>
-    <string name="action_create">ပြုလုပ်သည်</string>
     <string name="action_open_log">Log ဖွင့်သည်</string>
     <string name="action_undo">အရင်အတိုင်း</string>
     <string name="action_reset">ပြန်စသည်</string>
@@ -54,11 +53,9 @@
     <string name="action_disable_all">အားလုံးပိတ်</string>
     <string name="action_enable_all">အားလုံးဖွင့်</string>
     <string name="action_update_library">စာအုပ်စင်ကိုအပ်ဒိပ်လုပ်သည်</string>
-    <string name="action_update">အပ်ဒိပ်</string>
     <string name="action_delete">ဖျက်သည်</string>
     <string name="action_remove_bookmark">အခန်းကိုစာညှပ်ဖြုတ်သည်</string>
     <string name="action_bookmark">အခန်းကိုစာညှပ်မှတ်သည်</string>
-    <string name="action_download_unread">မဖတ်ရသေးသောအခန်းများဒေါင်းလုဒ်ဆွဲရန်</string>
     <string name="action_download">ဒေါင်းလုဒ်</string>
     <string name="action_mark_previous_as_read">နောက်ရှိအားလုံးကိုဖတ်ပြီးသတ်မှတ်သည်</string>
     <string name="action_mark_as_unread">မဖတ်ရသေးဟုသည်မှတ်သည်</string>

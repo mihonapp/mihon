@@ -4,7 +4,6 @@
     <string name="picture_saved">Irudia gorde da</string>
     <string name="channel_errors">Erroreak</string>
     <string name="unknown_error">Akats ezezaguna</string>
-    <string name="description">Deskribapena</string>
     <string name="ongoing">Argitaratzen</string>
     <string name="unknown">Ezezaguna</string>
     <string name="updating_library">Liburutegia eguneratzen</string>
@@ -104,7 +103,6 @@
     <string name="backup_in_progress">Babeskopia abian da dagoeneko</string>
     <string name="channel_progress">Aurrerapena</string>
     <string name="logout">Saioa itxi</string>
-    <string name="invalid_login">Ezin izan da saioa hasi</string>
     <string name="logout_success">Saioa itxi da</string>
     <string name="exclude">Baztertu: %s</string>
     <string name="ext_update_all">Eguneratu guztiak</string>
@@ -159,7 +157,6 @@
     <string name="no_pinned_sources">Ez duzu iturri ainguraturik</string>
     <string name="local_invalid_format">Kapituluaren formatu baliogabea</string>
     <string name="date">Data</string>
-    <string name="manga_not_in_db">Manga hau datu-basetik kendu da.</string>
     <string name="unknown_author">Egile ezezaguna</string>
     <string name="unknown_status">Egoera ezezaguna</string>
     <string name="delete_downloads_for_manga">Deskargatutako kapituluak ezabatu nahi dituzu\?</string>
@@ -167,18 +164,15 @@
 \n%1$s</string>
     <string name="chapter_paused">Gelditurik</string>
     <string name="show_chapter_number">Kapituluaren zenbakia</string>
-    <string name="sorting_mode">Ordenatzeko modua</string>
     <string name="custom_download">Deskargatu kopuru pertsonalizatua</string>
     <string name="download_1">Hurrengo kapitulua</string>
     <string name="download_5">Hurrengo 5 kapituluak</string>
     <string name="download_unread">Irakurri gabea</string>
     <string name="manga_cover">Azala</string>
     <string name="set_chapter_settings_as_default">Ezarri lehenetsia bezala</string>
-    <string name="error_invalid_date_supplied">Data baliogabea eman da</string>
     <string name="error_no_match">Ez da aurkitu</string>
     <string name="chapter_progress">%1$d orrialdea</string>
     <string name="no_next_chapter">Ez da hurrengo kapitulua aurkitu</string>
-    <string name="no_previous_chapter">Ez da aurreko kapitulua aurkitu</string>
     <string name="decode_image_error">Irudia ezin izan da kargatu</string>
     <string name="viewer">Irakurketa modua</string>
     <string name="transition_current">Oraingoa:</string>
@@ -197,10 +191,8 @@
     <string name="updated_version">v%1$s-ra eguneratua</string>
     <string name="login_success">Saioa hasia</string>
     <string name="logout_title">Itxi saioa %1$s-n\?</string>
-    <string name="manga_info_full_title_label">Titulua</string>
     <string name="manga_added_library">Liburutegira gehitua</string>
     <string name="confirm_delete_chapters">Ziur hautatutako kapituluak ezabatu nahi dituzula\?</string>
-    <string name="invalid_download_dir">Deskarga kokapen baliogabea</string>
     <string name="track_finished_reading_date">Bukaera-data</string>
     <string name="track_started_reading_date">Hasiera-data</string>
     <string name="dialog_with_checkbox_remove_description">Honek kapitulu honen irakurketa-data kenduko du. Ziur zaude\?</string>
@@ -227,7 +219,6 @@
     <string name="track_status">Egoera</string>
     <string name="track_type">Mota</string>
     <string name="track_start_date">Hasia</string>
-    <string name="track_author">Egilea</string>
     <string name="custom_filter">Iragazki pertsonalizatua</string>
     <string name="snack_categories_deleted">Kategoriak ezabatuak</string>
     <string name="dialog_with_checkbox_reset">Berrezarri manga honen kapitulu guztiak</string>
@@ -313,7 +304,6 @@
     <string name="double_tap_anim_speed_0">Animaziorik ez</string>
     <string name="pref_category_reading_mode">Irakurketa modua</string>
     <string name="pref_enable_automatic_extension_updates">Egiaztatu luzapenen eguneraketak</string>
-    <string name="tracker_not_logged_in">Ez da saioa hasi %1$s-n</string>
     <string name="label_network">Sarea</string>
     <string name="pref_remove_exclude_categories">Baztertutako kategoriak</string>
     <string name="second_to_last">Azkenaurreko irakurritako kapitulua</string>
@@ -417,12 +407,10 @@
     <string name="action_mark_as_unread">Markatu irakurri gabea bezala</string>
     <string name="action_mark_previous_as_read">Markatu aurrekoak irakurriak bezala</string>
     <string name="action_download">Deskargatu</string>
-    <string name="action_download_unread">Deskargatu irakurri gabeko kapituluak</string>
     <string name="action_bookmark">Jarri laster-marka kapituluari</string>
     <string name="cancel_all_for_series">Utzi alde batera argitalpen honetako guztiak</string>
     <string name="action_remove_bookmark">Kendu laster-marka kapituluari</string>
     <string name="action_delete">Ezabatu</string>
-    <string name="action_update">Eguneratu</string>
     <string name="action_update_library">Eguneratu liburutegia</string>
     <string name="action_enable_all">Gaitu guztiak</string>
     <string name="action_disable_all">Desgaitu guztiak</string>
@@ -546,7 +534,6 @@
     <string name="action_reset">Erreseteatu</string>
     <string name="action_undo">Desegin</string>
     <string name="action_open_log">Ireki erregistroa</string>
-    <string name="action_create">Sortu</string>
     <string name="action_restore">Berrezarri</string>
     <string name="action_webview_back">Atzera</string>
     <string name="action_webview_forward">Aurrera</string>
@@ -681,7 +668,6 @@
     <string name="pref_library_update_restriction">Eguneraketa automatikoentzako gailuaren murrizketak</string>
     <string name="action_faq_and_guides">Ohiko galderak eta gidak</string>
     <string name="webtoon_side_padding_5">%5</string>
-    <string name="backup_restore_invalid_uri">Errorea: URI-a hutsik</string>
     <string name="action_show_manga">Manga erakutsi</string>
     <string name="skipped_reason_not_caught_up">Saltatu egin da irakurri gabeko kapituluak daudelako</string>
     <string name="pref_update_only_started">Kapitulurik irakurri gabe</string>

@@ -30,7 +30,6 @@
     <string name="action_sort_date_added">சேர்க்கப்பட்ட தேதி</string>
     <string name="action_search">தேடுதல்</string>
     <string name="action_global_search">மொத்த தேடுதல்</string>
-    <string name="action_update">புதுப்பிப்புகள்</string>
     <string name="history">வரலாறு</string>
     <string name="action_update_library">நூலகத்தைப் புதுப்பிக்கவும்</string>
     <string name="action_add_category">பிரிவை சேர்க்கவும்</string>
@@ -62,7 +61,6 @@
     <string name="action_mark_as_unread">படிக்காததாக குறித்து வை</string>
     <string name="action_mark_previous_as_read">சம்பத்தை பிடித்ததாக குறித்து வை</string>
     <string name="action_download">பதிவிறக்கம்</string>
-    <string name="action_download_unread">படிக்காதவற்றை பதிவிறக்கவும்</string>
     <string name="action_bookmark">அலகை குறித்து வை</string>
     <string name="action_enable_all">அனைத்தையும் இயக்கு</string>
     <string name="action_disable_all">அனைத்தையும் இயக்காதே</string>

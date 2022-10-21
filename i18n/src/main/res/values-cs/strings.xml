@@ -41,7 +41,6 @@
     <string name="action_share">Sdílet</string>
     <string name="action_save">Uložit</string>
     <string name="action_undo">Zpět</string>
-    <string name="action_create">Vytvořit</string>
     <string name="action_restore">Obnovit</string>
     <string name="loading">Načítání…</string>
     <string name="app_not_available">Aplikace není k dispozici</string>
@@ -95,15 +94,11 @@
     <string name="password">Heslo</string>
     <string name="login">Přihlásit se</string>
     <string name="login_success">Přihlášení proběhlo úspěšně</string>
-    <string name="invalid_login">Chyba při přihlašování</string>
     <string name="unknown_error">Neznámá chyba</string>
     <string name="no_more_results">Žádné další výsledky</string>
     <string name="action_global_search_hint">Globální vyhledávání…</string>
-    <string name="manga_not_in_db">Manga byla odstraněna z databáze.</string>
-    <string name="description">Popis</string>
     <string name="ongoing">Vycházející</string>
     <string name="remove_from_library">Odstranit z knihovny</string>
-    <string name="manga_info_full_title_label">Název</string>
     <string name="manga_added_library">Přidáno do knihovny</string>
     <string name="manga_removed_library">Odstraněno z knihovny</string>
     <string name="delete_downloads_for_manga">Smazat stažené kapitoly\?</string>
@@ -128,14 +123,12 @@
     <string name="score">Skóre</string>
     <string name="title">Název</string>
     <string name="track_type">Typ</string>
-    <string name="track_author">Autor</string>
     <string name="dialog_with_checkbox_reset">Restartovat všechny kapitoly mangy</string>
     <string name="snack_add_to_library">Přidat mangu do knihovny\?</string>
     <string name="picture_saved">Obrázek uložen</string>
     <string name="custom_filter">Vlastní filtr</string>
     <string name="chapter_progress">Stránka: %1$d</string>
     <string name="no_next_chapter">Další kapitola nenalezena</string>
-    <string name="no_previous_chapter">Předchozí kapitola nenalezena</string>
     <string name="decode_image_error">Obrázek nemohl být načten</string>
     <string name="transition_finished">Dokončeno:</string>
     <string name="transition_current">Aktuální:</string>
@@ -170,7 +163,6 @@
     <string name="action_sort_total">Celkem kapitol</string>
     <string name="action_bookmark">Založit kapitolu</string>
     <string name="action_remove_bookmark">Odstranit záložku</string>
-    <string name="action_update">Aktualizovat</string>
     <string name="action_update_library">Aktualizovat knihovnu</string>
     <string name="action_rename_category">Přejmenovat kategorii</string>
     <string name="action_move_category">Vybrat kategorie</string>
@@ -256,7 +248,6 @@
     <string name="licensed">Licencovaný</string>
     <string name="copied_to_clipboard">Zkopírováno do schránky:
 \n%1$s</string>
-    <string name="sorting_mode">Režim seřazení</string>
     <string name="sort_by_number">Podle čísla kapitoly</string>
     <string name="custom_download">Stažení vlastního počtu</string>
     <string name="manga_tracking_tab">Sledování</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Vpřed</string>
     <string name="action_webview_refresh">Obnovit</string>
     <string name="pref_category_library">Knihovna</string>
-    <string name="invalid_download_dir">Neplatná lokace stahování</string>
     <string name="ext_obsolete">Zastaralý</string>
     <string name="obsolete_extension_message">Tohle rozšíření již není dostupné.</string>
     <string name="logout">Odhlásit se</string>
@@ -344,7 +334,6 @@
     <string name="action_oldest">Nejstarší</string>
     <string name="action_newest">Nejnovější</string>
     <string name="action_view_chapters">Zobrazit kapitoly</string>
-    <string name="action_download_unread">Stáhnout nepřečtené kapitoly</string>
     <string name="action_sort_latest_chapter">Poslední kapitola</string>
     <string name="unlock_app">Odemknout Tachiyomi</string>
     <string name="add_tracking">Přidat sledování</string>
@@ -537,7 +526,6 @@
     <string name="pref_show_reading_mode">Ukazovat režim čtení</string>
     <string name="pref_category_for_this_series">Pro tuto sérii</string>
     <string name="share_page_info">%1$s: %2$s, strana %3$d</string>
-    <string name="error_invalid_date_supplied">Zadáno neplatné datum</string>
     <plurals name="num_trackers">
         <item quantity="one">%d sledovač</item>
         <item quantity="few">%d sledovače</item>
@@ -568,7 +556,6 @@
     <string name="action_display_unread_badge">Nepřečtené kapitoly</string>
     <string name="update_check_eol">Tato verze systému Android již není podporována</string>
     <string name="clipboard_copy_error">Kopírování do schránky se nezdařilo</string>
-    <string name="tracker_not_logged_in">Nejsi přihlášen/a: %1$s</string>
     <string name="vertical_plus_viewer">Průběžné vertikální</string>
     <string name="edge_nav">Okraj</string>
     <string name="pref_read_with_tapping_inverted">Invertovat oblasti dotyku</string>
@@ -687,7 +674,6 @@
     <string name="pref_update_only_completely_read">S nepřečtenými kapitolami</string>
     <string name="database_clean">Nic k vyčištění</string>
     <string name="save_chapter_as_cbz">Uložit jako CBZ archiv</string>
-    <string name="backup_restore_invalid_uri">Chyba: prázdná URI</string>
     <string name="library_errors_help">Nápovědu k tomu, jak opravit chyby při aktualizaci knihovny, viz %1$s</string>
     <string name="action_faq_and_guides">FAQ a Návody</string>
     <string name="publishing_finished">Zveřejnění dokončeno</string>
@@ -781,4 +767,17 @@
     <string name="missing_storage_permission">Nebyla udělena oprávnění k úložišti</string>
     <string name="skipped_reason_not_always_update">Přeskočeno, protože série nevyžaduje aktualizace</string>
     <string name="action_search_hint">Vyhledat…</string>
+    <string name="pref_general_summary">Jazyk aplikace, oznámení</string>
+    <string name="pref_reader_summary">Režim čtení, displej, navigace</string>
+    <string name="pref_tracking_summary">Jednosměrná synchronizace postupu, rozšířená synchronizace</string>
+    <string name="pref_appearance_summary">Téma, formát data a času</string>
+    <string name="pref_library_summary">Kategorie, globální aktualizace</string>
+    <string name="pref_downloads_summary">Automatické stahování, stahování dopředu</string>
+    <string name="pref_browse_summary">Zdroje, rozšíření, globální vyhledávání</string>
+    <string name="pref_security_summary">Zámek aplikace, zabezpečená obrazovka</string>
+    <string name="pref_advanced_summary">Výpis protokolů selhání, optimalizace baterie</string>
+    <string name="crash_screen_description">%s narazil na neočekávanou chybu. Doporučujeme vám pořídit snímek obrazovky, vypsat protokoly o selhání a poté je sdílet v našem kanálu podpory na Discordu.</string>
+    <string name="crash_screen_restart_application">Restartujte aplikaci</string>
+    <string name="pref_backup_summary">Ruční a automatické zálohování</string>
+    <string name="crash_screen_title">Došlo k neočekávané chybě</string>
 </resources>

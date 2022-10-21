@@ -29,7 +29,6 @@
     <string name="action_bookmark">Grāmatzīme</string>
     <string name="action_remove_bookmark">Noņemt grāmatzīmi</string>
     <string name="action_delete">Dzēst</string>
-    <string name="action_update">Atjaunināt</string>
     <string name="action_update_library">Atjaunināt bibliotēku</string>
     <string name="action_edit">Rediģēt</string>
     <string name="action_add">Pievienot</string>
@@ -58,7 +57,6 @@
     <string name="action_reset">Sākt no jauna</string>
     <string name="action_undo">atraisīt</string>
     <string name="action_open_log">Atvērt žurnālfailu</string>
-    <string name="action_create">Izveidot</string>
     <string name="action_restore">Atjaunot</string>
     <string name="loading">Ieladēšana…</string>
     <string name="app_not_available">Programma nav pieejama</string>
@@ -115,7 +113,6 @@
     <string name="action_view_chapters">Skatīt nodaļas</string>
     <string name="action_disable_all">Atspējot visu</string>
     <string name="action_enable_all">Iespējot visu</string>
-    <string name="action_download_unread">Lejupielādēt neizlasītās nodaļas</string>
     <string name="action_select_inverse">Atlasiet apgrieztu</string>
     <string name="action_global_search">Globālā meklēšana</string>
     <string name="action_sort_date_added">Pievienošanas datums</string>
@@ -182,7 +179,6 @@
     <string name="licensed">Licencēts</string>
     <string name="unknown">Nezināms</string>
     <string name="ongoing">Vēl turpinās</string>
-    <string name="description">Apraksts</string>
     <string name="title">Nosaukums</string>
     <string name="pref_category_delete_chapters">Izdzēst nodaļas</string>
     <string name="pref_download_directory">Lejuplādes vieta</string>
@@ -490,8 +486,6 @@
     <string name="requires_app_restart">Lai stātos spēkā, ir nepieciešama lietotnes restartēšana</string>
     <string name="action_track">Sekot</string>
     <string name="enhanced_services">Uzlabotie pakalpojumi</string>
-    <string name="tracker_not_logged_in">Nav pieteicies: %1$s</string>
-    <string name="backup_restore_invalid_uri">Kļūda: tukšs URI</string>
     <string name="help_translate">Palīdzi tulkot</string>
     <string name="pref_enable_acra">Sūtīt avārijas ziņojumus</string>
     <string name="cache_deleted">Kešatmiņa nodzēsta. %1$d faili ir izdzēsti</string>
@@ -522,7 +516,6 @@
     <string name="http_error_hint">Pārbaudīt tīmekļa vietni šeit: WebView</string>
     <string name="other_source">Citi</string>
     <string name="logout_success">Tagad jūs esat izrakstījies</string>
-    <string name="invalid_login">Nevarēja pieteikties</string>
     <string name="tabs_header">Cilnes</string>
     <string name="local_source">Lokālais avots</string>
     <string name="browse">Pārlūkot</string>
@@ -547,7 +540,6 @@
     <string name="chapter_error">Kļūda</string>
     <string name="chapter_paused">Pārtraukts</string>
     <string name="download_all">Visu</string>
-    <string name="error_invalid_date_supplied">Norādīts nederīgs datums</string>
     <string name="library_errors_help">Lai uzzinātu, kā novērst bibliotēkas atjaunināšanas kļūdas, skatiet %1$s</string>
     <string name="transition_current">Pašreizējais:</string>
     <string name="page_list_empty_error">Lapas nav atrastas</string>
@@ -591,7 +583,6 @@
     <string name="download_notifier_split_page_path_not_found">Nevar atrast lapas %d faila ceļu</string>
     <string name="channel_complete">Pabeigts</string>
     <string name="channel_errors">Kļūdas</string>
-    <string name="manga_info_full_title_label">Nosaukums</string>
     <string name="myanimelist_relogin">Lūdzu, piesakieties MAL vēlreiz</string>
     <string name="dialog_with_checkbox_remove_description">Tiks noņemts šīs nodaļas lasīšanas datums. Vai esi pārliecināts\?</string>
     <string name="viewer">Lasīšanas režīms</string>
@@ -635,7 +626,6 @@
     <string name="clipboard_copy_error">Neizdevās kopēt uz starpliktuvi</string>
     <string name="description_placeholder">Nav apraksta</string>
     <string name="show_chapter_number">Nodaļas numurs</string>
-    <string name="sorting_mode">Kārtošanas režīms</string>
     <string name="sort_by_source">Pēc avota</string>
     <string name="sort_by_number">Pēc nodaļas numura</string>
     <string name="manga_download">Lejuplādēt</string>
@@ -648,7 +638,6 @@
     <string name="picture_saved">Attēls saglabāts</string>
     <string name="error_saving_picture">Kļūda, saglabājot attēlu</string>
     <string name="cover_updated">Vāks atjaunināts</string>
-    <string name="no_previous_chapter">Iepriekšējā nodaļa nav atrasta</string>
     <string name="not_installed">Nav instalēts</string>
     <string name="notification_updating">Bibliotēkas atjaunināšana... (%1$d/%2$d)</string>
     <string name="notification_size_warning">Daudz atjauninājumi kaitē avotiem un var izraisīt lēnākus atjauninājumus un arī lielāku akumulatora lietojumu. Pieskarieties, lai uzzinātu vairāk.</string>
@@ -720,7 +709,6 @@
     <string name="track_started_reading_date">Sākuma datums</string>
     <string name="track_finished_reading_date">Pabeigšanas datums</string>
     <string name="track_type">Tips</string>
-    <string name="track_author">Autors</string>
     <string name="source_unsupported">Avots netiek atbalstīts</string>
     <string name="error_no_match">Neizdevās atrast</string>
     <string name="custom_filter">Pielāgots filtrs</string>
@@ -741,11 +729,9 @@
     <string name="confirm_manga_add_duplicate">Jums bibliotēkā ir ieraksts ar tādu pašu nosaukumu, bet no cita avota (%1$s)
 \n
 \nVai joprojām vēlaties turpināt\?</string>
-    <string name="manga_not_in_db">Šī manga ir izņemta no datu bāzes.</string>
     <string name="sort_by_upload_date">Pēc augšupielādes datuma</string>
     <string name="update_check_notification_download_error">Lejupielādēt kļūdu</string>
     <string name="confirm_delete_chapters">Vai esat pārliecināts, ka vēlaties dzēst atlasītās nodaļas\?</string>
-    <string name="invalid_download_dir">Nederīga lejupielādes vieta</string>
     <string name="chapter_settings">Nodaļu iestatījumi</string>
     <string name="migration_selection_prompt">Izvēlieties avotu, no kura migrēt</string>
     <string name="download_queue_error">Nevarēja lejupielādēt nodaļas. Varat mēģināt vēlreiz lejupielādes sadaļā</string>

@@ -52,7 +52,6 @@
     <string name="action_download">බාගත</string>
     <string name="action_remove_bookmark">පිටු සලකුණු පරිච්ඡේදය ඉවත් කරන්න</string>
     <string name="action_delete">මකන්න</string>
-    <string name="action_update">යාවත්කාලීන කරන්න(Update)</string>
     <string name="action_enable_all">සියල්ල සබල කරන්න(Enable all)</string>
     <string name="action_edit">සංස්කරණය කරන්න</string>
     <string name="action_edit_categories">කාණ්ඩ සංස්කරණය කරන්න</string>
@@ -67,7 +66,6 @@
     <string name="action_move_category">කාණ්ඩ සකසන්න</string>
     <string name="action_edit_cover">කවරය සංස්කරණය කරන්න</string>
     <string name="action_remove">ඉවත් කරන්න</string>
-    <string name="action_download_unread">නොකියවූ පරිච්ඡේද බාගන්න</string>
     <string name="action_search_settings">සෙවුම් සැකසුම්</string>
     <string name="action_select_all">සියල්ල තෝරන්න</string>
     <string name="action_bookmark">පිටු සලකුණු පරිච්ඡේදය</string>

@@ -27,7 +27,6 @@
     <string name="action_mark_as_unread">ทำเครื่องหมายว่ายังไม่ได้อ่าน</string>
     <string name="action_download">ดาวน์โหลด</string>
     <string name="action_delete">ลบ</string>
-    <string name="action_update">อัปเดต</string>
     <string name="action_update_library">อัปเดตคลัง</string>
     <string name="action_edit">แก้ไข</string>
     <string name="action_add">เพิ่ม</string>
@@ -45,7 +44,6 @@
     <string name="action_install">ติดตั้ง</string>
     <string name="action_save">บันทึก</string>
     <string name="action_reset">รีเซ็ต</string>
-    <string name="action_create">สร้าง</string>
     <string name="loading">กำลังโหลด…</string>
     <string name="pref_category_general">ทั่วไป</string>
     <string name="pref_category_reader">ตัวอ่าน</string>
@@ -195,7 +193,6 @@
     <string name="password">รหัสผ่าน</string>
     <string name="login">ลงชื่อเข้าใช้</string>
     <string name="login_success">ลงชื่อเข้าใช้แล้ว</string>
-    <string name="invalid_login">ไม่สามารถเข้าสู่ระบบได้</string>
     <string name="unknown_error">ข้อผิดพลาดที่ไม่รู้จัก</string>
     <string name="updating_category">กำลังอัปเดตหมวดหมู่</string>
     <string name="local_source_badge">ภายในเครื่อง</string>
@@ -205,13 +202,10 @@
     <string name="action_global_search_hint">ค้นหาทั้งหมด…</string>
     <string name="latest">ล่าสุด</string>
     <string name="browse">เรียกดู</string>
-    <string name="manga_not_in_db">มังงะนี้ถูกนำออกจากฐานข้อมูลแล้ว</string>
-    <string name="description">รายละเอียด</string>
     <string name="ongoing">ยังไม่จบ</string>
     <string name="unknown">ไม่ระบุ</string>
     <string name="licensed">มีลิขสิทธิ์แล้ว</string>
     <string name="remove_from_library">นำออกจากคลัง</string>
-    <string name="manga_info_full_title_label">ชื่อเรื่อง</string>
     <string name="manga_added_library">เพิ่มไปยังคลังแล้ว</string>
     <string name="manga_removed_library">นำออกจากคลังแล้ว</string>
     <string name="delete_downloads_for_manga">ลบตอนที่ดาวน์โหลดแล้วหรือไม่\?</string>
@@ -224,7 +218,6 @@
     <string name="chapter_paused">หยุดชั่วคราว</string>
     <string name="show_title">ชื่อตามแหล่งที่มา</string>
     <string name="show_chapter_number">หมายเลขตอน</string>
-    <string name="sorting_mode">โหมดการจัดเรียง</string>
     <string name="sort_by_source">ตามแหล่งที่มา</string>
     <string name="sort_by_number">ตามหมายเลขตอน</string>
     <string name="manga_download">ดาวน์โหลด</string>
@@ -258,7 +251,6 @@
     <string name="track_status">สถานะ</string>
     <string name="track_start_date">เริ่มแล้ว</string>
     <string name="track_type">ประเภท</string>
-    <string name="track_author">ผู้แต่ง</string>
     <string name="error_category_exists">หมวดหมู่ที่มีชื่อนี้มีอยู่แล้ว!</string>
     <string name="snack_categories_deleted">หมวดหมู่ถูกลบแล้ว</string>
     <string name="dialog_with_checkbox_remove_description">การดำเนินการนี้จะลบวันที่อ่านของตอนนี้ คุณแน่ใจไหม\?</string>
@@ -270,7 +262,6 @@
     <string name="cover_updated">อัปเดตปกแล้ว</string>
     <string name="chapter_progress">หน้า: %1$d</string>
     <string name="no_next_chapter">ไม่พบตอนถัดไป</string>
-    <string name="no_previous_chapter">ไม่พบตอนก่อนหน้านี้</string>
     <string name="decode_image_error">ไม่สามารถโหลดรูปภาพได้</string>
     <string name="confirm_set_image_as_cover">ใช้ภาพนี้เป็นรูปปก\?</string>
     <string name="transition_finished">อ่านจบแล้ว:</string>
@@ -411,7 +402,6 @@
     <string name="action_view_chapters">ดูตอน</string>
     <string name="action_disable_all">ปิดใช้งานทั้งหมด</string>
     <string name="action_enable_all">เปิดใช้งานทั้งหมด</string>
-    <string name="action_download_unread">ดาวน์โหลดตอนที่ยังไม่ได้อ่าน</string>
     <string name="action_select_inverse">สลับการเลือก</string>
     <string name="action_search_settings">ตั้งค่าการค้นหา</string>
     <string name="action_sort_date_added">วันที่เพิ่ม</string>
@@ -452,7 +442,6 @@
     <string name="pref_category_for_this_series">สำหรับเรื่องนี้</string>
     <string name="share_page_info">%1$s: %2$s, หน้า %3$d</string>
     <string name="myanimelist_relogin">กรุณาเข้าสู่ระบบ MAL อีกครั้ง</string>
-    <string name="error_invalid_date_supplied">วันที่ระบุไม่ถูกต้อง</string>
     <string name="track_finished_reading_date">วันที่อ่านจบ</string>
     <string name="track_started_reading_date">วันที่เริ่มอ่าน</string>
     <string name="paused">หยุดชั่วคราว</string>
@@ -465,7 +454,6 @@
     <string name="also_set_chapter_settings_for_library">นําไปใช้กับมังงะทั้งหมดในคลังด้วย</string>
     <string name="confirm_set_chapter_settings">แน่ใจหรือไม่ว่าต้องการบันทึกการตั้งค่าเหล่านี้เป็นค่าเริ่มต้น\?</string>
     <string name="chapter_settings">การตั้งค่าตอน</string>
-    <string name="invalid_download_dir">ตําแหน่งการดาวน์โหลดไม่ถูกต้อง</string>
     <string name="sort_by_upload_date">ตามวันที่อัปโหลด</string>
     <string name="clipboard_copy_error">ไม่สามารถคัดลอกไปยังคลิปบอร์ด</string>
     <plurals name="manga_num_chapters">
@@ -532,7 +520,6 @@
     <string name="backup_restore_missing_sources">แหล่งที่มาที่หายไป:</string>
     <string name="invalid_backup_file_missing_manga">แฟ้มสํารองข้อมูลไม่มีมังงะใด ๆ</string>
     <string name="invalid_backup_file">ข้อมูลสำรองไม่ถูกต้อง</string>
-    <string name="tracker_not_logged_in">ไม่ได้เข้าสู่ระบบ: %1$s</string>
     <string name="pref_search_pinned_sources_only">เฉพาะแหล่งที่มาที่ตรึงไว้เท่านั้น</string>
     <string name="pref_enable_automatic_extension_updates">ตรวจสอบการอัปเดตส่วนขยาย</string>
     <string name="tracking_info">ซิงค์ทางเดียวเพื่ออัปเดตความคืบหน้าของตอนกับบริการการติดตาม ตั้งค่าการติดตามรายการมังงะในแต่ละรายการได้จากปุ่มติดตาม</string>
@@ -667,7 +654,6 @@
     <string name="publishing_finished">เผยแพร่จบแล้ว</string>
     <string name="cancelled">ถูกยกเลิก</string>
     <string name="on_hiatus">อยู่ระหว่างพัก</string>
-    <string name="backup_restore_invalid_uri">เกิดข้อผิดพลาด: URI ว่างเปล่า</string>
     <string name="action_faq_and_guides">คำถามที่พบบ่อยและคู่มือ</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_navigate_pan">แพนหน้ากว้างเมื่อแตะ</string>
@@ -755,4 +741,14 @@
     <string name="missing_storage_permission">ไม่ได้รับการอนุญาตให้ใช้งานที่จัดเก็บ</string>
     <string name="action_search_hint">ค้นหา…</string>
     <string name="skipped_reason_not_always_update">ถูกข้ามเนื่องจากเรื่องไม่จำเป็นต้องถูกอัปเดต</string>
+    <string name="pref_general_summary">ภาษาของแอป, การแจ้งเตือน</string>
+    <string name="pref_appearance_summary">ธีม, รูปแบบวันที่และเวลา</string>
+    <string name="pref_library_summary">หมวดหมู่, การอัปเดตคลัง</string>
+    <string name="pref_reader_summary">โหมดการอ่าน, การแสดงผล, การนำทาง</string>
+    <string name="pref_downloads_summary">การดาวน์โหลดอัตโนมัติ, การดาวน์โหลดล่วงหน้า</string>
+    <string name="pref_tracking_summary">การประมวลผลซิงก์ทางเดียง, เสริมการวิงก์</string>
+    <string name="pref_browse_summary">แหล่งที่มา, ส่วนขยาย, การค้นหาทั้งหมด</string>
+    <string name="pref_backup_summary">การสำรองข้อมูลด้วยตนเองและอัตโนมัติ</string>
+    <string name="pref_security_summary">การล็อกแอป, หน้าจอความปลอดภัย</string>
+    <string name="pref_advanced_summary">ดัมพ์บันทึกข้อขัดข้อง, การเพิ่มประสิทธิภาพแบตเตอรี่</string>
 </resources>

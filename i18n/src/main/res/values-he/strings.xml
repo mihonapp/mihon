@@ -69,7 +69,6 @@
     <string name="transition_finished">סיים:</string>
     <string name="confirm_set_image_as_cover">האם להשתמש בתמונה זו כציור כריכה\?</string>
     <string name="decode_image_error">לא ניתן היה לפענח את התמונה</string>
-    <string name="no_previous_chapter">הפרק הקודם לא נמצא</string>
     <string name="no_next_chapter">הפרק הבא לא נמצא</string>
     <string name="chapter_progress">עמוד: %1$d</string>
     <string name="set_as_cover">הגדר ככריכה</string>
@@ -80,7 +79,6 @@
     <string name="dialog_with_checkbox_remove_description">פעולה זו תסיר את התאריך הקריאה של פרק זה. האם אתה בטוח\?</string>
     <string name="snack_categories_deleted">הקטגוריות נמחקו</string>
     <string name="error_category_exists">קטגוריה עם שם זה כבר קיימת!</string>
-    <string name="track_author">מחבר</string>
     <string name="track_type">סוג</string>
     <string name="track_start_date">הותחל</string>
     <string name="track_status">סטטוס</string>
@@ -93,7 +91,6 @@
     <string name="on_hold">בהמתנה</string>
     <string name="dropped">הושמט</string>
     <string name="completed">הושלם</string>
-    <string name="invalid_download_dir">מיקום ההורדה לא חוקי</string>
     <string name="confirm_delete_chapters">האם אתה בטוח שברצונך למחוק את הפרקים שנבחרו\?</string>
     <string name="download_unread">לא נקרא</string>
     <string name="download_all">הכל</string>
@@ -104,7 +101,6 @@
     <string name="custom_download">הורד כמות מותאמת אישית</string>
     <string name="sort_by_number">לפי מספר פרק</string>
     <string name="sort_by_source">לפי מקור</string>
-    <string name="sorting_mode">מצב מיון</string>
     <string name="show_chapter_number">מספר פרק</string>
     <string name="show_title">כותרת</string>
     <string name="chapter_paused">מושהה</string>
@@ -117,11 +113,8 @@
     <string name="manga_added_library">נוסף לספרייה</string>
     <string name="remove_from_library">הסר מהספרייה</string>
     <string name="manga_removed_library">הוסר מהספרייה</string>
-    <string name="manga_info_full_title_label">כותרת</string>
     <string name="unknown">לא ידוע</string>
     <string name="ongoing">נמשך</string>
-    <string name="description">תיאור</string>
-    <string name="manga_not_in_db">מנגה זו הוסרה ממסד הנתונים.</string>
     <string name="latest">המאוחר ביותר</string>
     <string name="action_global_search_hint">חיפוש גלובלי…</string>
     <string name="other_source">אחר</string>
@@ -132,7 +125,6 @@
     <string name="local_source_badge">מקומי</string>
     <string name="updating_category">מעדכן קטגוריה</string>
     <string name="unknown_error">שגיאה לא ידועה</string>
-    <string name="invalid_login">לא יכול להתחבר</string>
     <string name="logout_success">אתה עכשיו מנותק</string>
     <string name="logout">התנתק</string>
     <string name="logout_title">התנתק מ-%1$s\?</string>
@@ -202,7 +194,6 @@
     <string name="action_webview_forward">קדימה</string>
     <string name="action_webview_back">חזרה</string>
     <string name="action_restore">שיחזור</string>
-    <string name="action_create">צור</string>
     <string name="action_undo">בטל פעולה אחרונה</string>
     <string name="action_reset">איפוס</string>
     <string name="action_save">שמור</string>
@@ -334,7 +325,6 @@
     <string name="action_add">הוסף</string>
     <string name="action_edit">ערוך</string>
     <string name="action_update_library">עדכן ספרייה</string>
-    <string name="action_update">עדכון</string>
     <string name="action_delete">מחק</string>
     <string name="action_remove_bookmark">בטל סימון פרק</string>
     <string name="action_bookmark">סמן פרק</string>
@@ -404,7 +394,6 @@
     <string name="action_desc">יורד</string>
     <string name="label_warning">אזהרה</string>
     <string name="confirm_lock_change">אימות לאישור השינוי</string>
-    <string name="action_download_unread">הורד פרקים שלא נקראו</string>
     <string name="pref_category_reader">מצב קריאה</string>
     <string name="pref_category_tracking">מעקב</string>
     <string name="pref_category_theme">נושא</string>
@@ -534,8 +523,6 @@
     <string name="invalid_backup_file">קובץ גיבוי לא תקין</string>
     <string name="invalid_backup_file_missing_manga">הגיבוי לא מכיל שום מנגה.</string>
     <string name="pref_search_pinned_sources_only">כלול רק מקורות נעוצים</string>
-    <string name="tracker_not_logged_in">לא מחובר ל: %1$s</string>
-    <string name="backup_restore_invalid_uri">שגיאה: URI ריק</string>
     <string name="action_track">מעקב</string>
     <string name="pref_auto_clear_chapter_cache">נקה את זיכרון המטמון של הפרקים כשהאפליקציה נסגרת</string>
     <string name="clear_database_source_item_count">יש %1$d מנגה שנמצאות במסד הנתונים אבל לא בספרייה</string>

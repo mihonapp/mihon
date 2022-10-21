@@ -12,9 +12,7 @@
     <string name="zoom_start_left">ବାମ</string>
     <string name="zoom_start_right">ଡାହାଣ</string>
     <string name="version">ସଂସ୍କରଣ</string>
-    <string name="description">ବର୍ଣ୍ଣନା</string>
     <string name="in_library">ଲାଇବ୍ରେରୀରେ</string>
-    <string name="manga_info_full_title_label">ଆଖ୍ୟା</string>
     <string name="copied_to_clipboard">କ୍ଲିପବୋର୍ଡରେ କପି କରିନିଆଗଲା:
 \n%1$s</string>
     <string name="manga_cover">ମଲାଟ</string>
@@ -117,7 +115,6 @@
     <string name="error_saving_picture">ଚିତ୍ର ସଞ୍ଚୟ କରିବାରେ ତ୍ରୁଟି</string>
     <string name="track_status">ସ୍ଥିତି</string>
     <string name="track_start_date">ଆରମ୍ଭ କରିଛନ୍ତି</string>
-    <string name="track_author">ଲେଖକ</string>
     <string name="track_type">ପ୍ରକାର</string>
     <string name="notification_cover_update_failed">ମଲାଟ ଅପଡେଟ୍ କରିବାରେ ବିଫଳ ହେଲା</string>
     <string name="cover_saved">ମଲାଟ ସଞ୍ଚୟ କରାଗଲା</string>
@@ -138,7 +135,6 @@
     <string name="chapter_progress">ପୃଷ୍ଠା: %1$d</string>
     <string name="pref_library_update_refresh_metadata_summary">ଲାଇବ୍ରେରୀ ଅପଡେଟ୍ କଲାବେଳେ ନୂଆ ମଲାଟ ଏବଂ ବିବରଣୀ ପରଖନ୍ତୁ</string>
     <string name="pref_refresh_library_covers">ଲାଇବ୍ରେରୀରେ ଥିବା ମାଙ୍ଗାଗୁଡ଼ିକର ମଲାଟ ସତେଜ କରନ୍ତୁ</string>
-    <string name="error_invalid_date_supplied">ଅବୈଧ ତାରିଖ ପ୍ରଦାନ କରିଛନ୍ତି</string>
     <string name="dropped">ଛାଡ଼ିଦେଇଛନ୍ତି</string>
     <string name="cover_updated">ମଲାଟ ଅପଡେଟ୍ କରାଗଲା</string>
     <string name="confirm_set_image_as_cover">ଏଇ ପ୍ରତିଛବିଟିକୁ ମଲାଟ ଚିତ୍ରକଳା ଭାବରେ ବ୍ୟବହାର କରିବେ କି\?</string>
@@ -146,7 +142,6 @@
     <string name="action_display_show_tabs">ବର୍ଗ ଟ୍ୟାବଗୁଡ଼ିକ ଦେଖାଅ</string>
     <string name="pref_category_general">ସାଧାରଣ</string>
     <string name="action_rename_category">ବର୍ଗର ନାମ ବଦଳାନ୍ତୁ</string>
-    <string name="sorting_mode">ସଜାଇବା ମୋଡ୍</string>
     <string name="sort_by_upload_date">ଅପଲୋଡ୍ ତାରିଖ ଅନୁଯାୟୀ</string>
     <string name="action_undo">ପୂର୍ବବତ୍</string>
     <string name="default_category">ଡିଫଲ୍ଟ ବର୍ଗ</string>

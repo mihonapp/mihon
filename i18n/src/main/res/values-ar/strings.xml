@@ -30,7 +30,6 @@
     <string name="action_bookmark">احفظ الفصل كإشارة مرجعية</string>
     <string name="action_remove_bookmark">إزالة الإشارة المرجعية</string>
     <string name="action_delete">حذف</string>
-    <string name="action_update">تحديث</string>
     <string name="action_update_library">تحديث المكتبة</string>
     <string name="action_edit">تعديل</string>
     <string name="action_add">أضف</string>
@@ -59,7 +58,6 @@
     <string name="action_reset">إعادة تعيين</string>
     <string name="action_undo">تراجع</string>
     <string name="action_open_log">فتح السجل</string>
-    <string name="action_create">إنشاء</string>
     <string name="action_restore">إستعادة</string>
     <string name="loading">جار التحميل…</string>
     <string name="app_not_available">التطبيق غير متوفر</string>
@@ -170,7 +168,6 @@
     <string name="password">كلمة المرور</string>
     <string name="login">تسجيل الدخول</string>
     <string name="login_success">تم تسجيل الدخول</string>
-    <string name="invalid_login">فشل تسجيل الدخول</string>
     <string name="unknown_error">خطأ غير معروف</string>
     <string name="updating_category">جار تحديث الفئة</string>
     <string name="no_more_results">لا يوجد نتائج أخرى</string>
@@ -179,8 +176,6 @@
     <string name="action_global_search_hint">البحث الشامل…</string>
     <string name="latest">اﻷخيرة</string>
     <string name="browse">تصفّح</string>
-    <string name="manga_not_in_db">تمت إزالة هذه المانجا من قاعدة البيانات.</string>
-    <string name="description">الوصف</string>
     <string name="ongoing">مُستمرّة</string>
     <string name="unknown">غير معروف</string>
     <string name="licensed">مُرخّصة</string>
@@ -192,7 +187,6 @@
     <string name="chapter_paused">متوقّف</string>
     <string name="show_title">عنوان المصدر</string>
     <string name="show_chapter_number">رقم الفصل</string>
-    <string name="sorting_mode">وضع الفرز</string>
     <string name="sort_by_source">حسب المصدر</string>
     <string name="sort_by_number">حسب رقم الفصل</string>
     <string name="manga_download">تنزيل</string>
@@ -222,7 +216,6 @@
     <string name="cover_updated">تم تحديث صورة الغلاف</string>
     <string name="chapter_progress">الصفحة: %1$d</string>
     <string name="no_next_chapter">لم يتم العثور على الفصل التالي</string>
-    <string name="no_previous_chapter">لم يتم العثور على الفصل السابق</string>
     <string name="decode_image_error">تعذّر تحميل الصورة</string>
     <string name="confirm_set_image_as_cover">هل تريد تعيين هذه الصورة كغلاف؟</string>
     <string name="download_queue_error">فشل تنزيل الفصول. يمكنك إعادة المحاولة في قسم التنزيلات</string>
@@ -274,7 +267,6 @@
     <string name="double_tap_anim_speed_normal">طبيعي</string>
     <string name="double_tap_anim_speed_fast">سريع</string>
     <string name="local_source_badge">محلّي</string>
-    <string name="manga_info_full_title_label">العنوان</string>
     <string name="manga_added_library">تم الإضافة إلى المكتبة</string>
     <string name="manga_removed_library">تم الإزالة من المكتبة</string>
     <string name="copied_to_clipboard">نُسخ إلى الحافظة:
@@ -286,7 +278,6 @@
     <string name="track_status">الحالة</string>
     <string name="track_start_date">تم البدء فيها</string>
     <string name="track_type">النوع</string>
-    <string name="track_author">المؤلف</string>
     <string name="migration_dialog_what_to_include">اختر بيانات لتضمينها</string>
     <string name="migrate">ترحيل</string>
     <string name="copy">نسخ</string>
@@ -300,7 +291,7 @@
     <string name="transition_pages_loading">جار تحميل الصّفحات…</string>
     <string name="transition_pages_error">فشل تحميل الصّفحات: %1$s</string>
     <string name="pref_read_with_long_tap">إظهار عند النقر لفترة طويلة</string>
-    <string name="action_open_in_web_view">افتح في WebView</string>
+    <string name="action_open_in_web_view">فتح في WebView</string>
     <string name="pref_true_color">ألوان 32bit</string>
     <string name="pref_skip_read_chapters">تخطي الفصول المقروءة</string>
     <string name="filter_mode_overlay">التراكب</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">تقدم</string>
     <string name="action_webview_refresh">تحديث</string>
     <string name="pref_category_library">المكتبة</string>
-    <string name="invalid_download_dir">موقع تنزيل غير صالح</string>
     <string name="label_more">المزيد</string>
     <string name="unlock_app">افتح Tachiyomi</string>
     <string name="action_move_to_top">نقل إلى الأعلى</string>
@@ -421,7 +411,6 @@
     <string name="updating_library">يجري تحديث المكتبة</string>
     <string name="viewer">وضع القراءة</string>
     <string name="pref_category_for_this_series">القسم الخاص بهذه السلسلة</string>
-    <string name="error_invalid_date_supplied">التاريخ الذي أدخلته غير صالح</string>
     <string name="paused">متوقّف</string>
     <string name="add_tracking">إضافة تتبع</string>
     <string name="manga_info_collapse">أقل</string>
@@ -472,7 +461,6 @@
     <string name="backup_restore_missing_sources">المصادر المفقودة:</string>
     <string name="invalid_backup_file_missing_manga">النسخة الإحتياطية لا تحتوي على أيّة مانجا.</string>
     <string name="invalid_backup_file">ملف النسخ الاحتياطي غير صالح</string>
-    <string name="tracker_not_logged_in">لم يتم تسجيل الدخول: %1$s</string>
     <string name="tracking_info">مزامنة أحاديّة لتحديث تقدم الفصول في خدمات التتبع. قم بإعداد التتبع الخاص بمانجا محدّدة من زر التتبع الخاص بها.</string>
     <string name="unofficial_extension_message">هذه الإضافة ليست من قائمة إضافات Tachiyomi الرسميّة.</string>
     <string name="ext_unofficial">غير رسمي</string>
@@ -512,7 +500,6 @@
     <string name="ext_nsfw_warning">بعض المصادر من هذا الامتداد قد تحتوى على محتوى للبالغين (+18)</string>
     <string name="ext_nsfw_short">محتوى غير لائق</string>
     <string name="parental_controls_info">هذا لا يمنع الإضافات غير الرسمية أو التي تم وضع علامة عليها بشكل غير صحيح من إظهار محتوى غير لائق داخل التطبيق.</string>
-    <string name="action_download_unread">تنزيل الفصول غير المقروءة</string>
     <string name="tapping_inverted_both">كليهما</string>
     <string name="tapping_inverted_vertical">عمودي</string>
     <string name="tapping_inverted_horizontal">أفقي</string>
@@ -727,7 +714,6 @@
     <string name="extension_api_error">فشل الحصول على قائمة الملحقات</string>
     <string name="ext_installer_shizuku_unavailable_dialog">قم بتثبيت \"Shizuku\" لاستخدامه كمثبت ملحق.</string>
     <string name="download_queue_size_warning">تحذير: التحميلات كبيرة الحجم والعدد يمكن أن تؤدي إلى تباطؤ المصادر و/أو ان تقوم المصادر بحظر Tachiyomi۔ اضغط لمعرفة المزيد۔</string>
-    <string name="backup_restore_invalid_uri">خطأ: URI فارغ</string>
     <string name="action_faq_and_guides">الاسئله الشائعه والأدلة</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">أظهر المانجا</string>
@@ -820,4 +806,17 @@
     <string name="missing_storage_permission">لم يتم منح أذن التخزين</string>
     <string name="action_search_hint">بحث…</string>
     <string name="skipped_reason_not_always_update">تم التخطي لأن السلسلة لا تتطلب تحديثات</string>
+    <string name="crash_screen_description">%s واجه خطأ غير متوقع. نقترح عليك أخد لقطة شاشة لهذه الرسالة، وتفريغ سجلات التعطل ، ثم مشاركتها في قناة الدعم الخاصة بنا على Discord.</string>
+    <string name="crash_screen_title">حدث خطأ غير متوقع</string>
+    <string name="crash_screen_restart_application">أعد تشغيل التطبيق</string>
+    <string name="pref_general_summary">لغة التطبيق، الإشعارات</string>
+    <string name="pref_appearance_summary">مظهر، التاريخ والوقت</string>
+    <string name="pref_library_summary">الفئات، التحديث العالمي</string>
+    <string name="pref_reader_summary">وضع القراءة، العرض، التنقل</string>
+    <string name="pref_downloads_summary">التحميل التلقائي، التحميل مقدما</string>
+    <string name="pref_tracking_summary">تزامن التقدم أحادي الاتجاه، مزامنة محسّنة</string>
+    <string name="pref_browse_summary">المصادر، الامتدادات، البحث العالمي</string>
+    <string name="pref_backup_summary">النسخ الاحتياطي اليدوي والآلي</string>
+    <string name="pref_security_summary">قفل التطبيق، شاشة آمنة</string>
+    <string name="pref_advanced_summary">تفريغ سجلات الأعطال وتحسينات البطارية</string>
 </resources>

@@ -30,7 +30,6 @@
     <string name="cover_updated">Kansikuva päivitetty</string>
     <string name="chapter_progress">Sivu: %1$d</string>
     <string name="no_next_chapter">Seuraavaa lukua ei löydy</string>
-    <string name="no_previous_chapter">Aiempaa lukua ei löydy</string>
     <string name="decode_image_error">Kuvaa ei voitu ladata</string>
     <string name="confirm_set_image_as_cover">Käytetäänkö tätä kuvaa kansikuvana\?</string>
     <string name="transition_finished">Valmistunut:</string>
@@ -82,7 +81,6 @@
     <string name="action_search">Haku</string>
     <string name="action_select_all">Valitse kaikki</string>
     <string name="action_delete">Poista</string>
-    <string name="action_update">Päivitä</string>
     <string name="action_update_library">Päivitä kirjasto</string>
     <string name="action_edit">Muokkaa</string>
     <string name="action_add">Lisää</string>
@@ -111,7 +109,6 @@
     <string name="action_reset">Resetoi</string>
     <string name="action_undo">Kumoa</string>
     <string name="action_open_log">Avaa loki</string>
-    <string name="action_create">Luo</string>
     <string name="action_restore">Palauta</string>
     <string name="loading">Ladataan…</string>
     <string name="app_not_available">Sovellus ei ole saatavilla</string>
@@ -240,7 +237,6 @@
     <string name="password">Salasana</string>
     <string name="login">Kirjaudu</string>
     <string name="login_success">Kirjauduttu sisään</string>
-    <string name="invalid_login">Kirjautuminen epäonnistui</string>
     <string name="unknown_error">Tuntematon virhe</string>
     <string name="updating_category">Päivitetään kategoriaa</string>
     <string name="local_source_badge">Paikallinen</string>
@@ -256,7 +252,6 @@
     <string name="chapter_paused">Pysäytetty</string>
     <string name="show_title">Nimike</string>
     <string name="show_chapter_number">Luvun numero</string>
-    <string name="sorting_mode">Lajittelutila</string>
     <string name="sort_by_source">Lähteen mukaan</string>
     <string name="sort_by_number">Luvun numeron mukaan</string>
     <string name="manga_download">Lataa</string>
@@ -269,7 +264,6 @@
     <string name="track_status">Tila</string>
     <string name="track_start_date">Aloitettu</string>
     <string name="track_type">Tyyppi</string>
-    <string name="track_author">Kirjailija</string>
     <string name="error_category_exists">Tämän niminen kategoria on jo olemassa!</string>
     <string name="snack_categories_deleted">Kategoriat poistettu</string>
     <string name="pref_create_backup">Luo varmuuskopio</string>
@@ -279,13 +273,10 @@
     <string name="other_source">Muut</string>
     <string name="latest">Viimeisimmät</string>
     <string name="browse">Selaa</string>
-    <string name="manga_not_in_db">Tämä sarja poistettiin tietokannasta.</string>
-    <string name="description">Kuvaus</string>
     <string name="ongoing">Jatkuva</string>
     <string name="unknown">Tuntematon</string>
     <string name="licensed">Lisensoitu</string>
     <string name="remove_from_library">Poista kirjastosta</string>
-    <string name="manga_info_full_title_label">Nimike</string>
     <string name="manga_added_library">Lisätty kirjastoon</string>
     <string name="manga_removed_library">Poistettu kirjastosta</string>
     <string name="custom_download">Lataa muokautettu määrä</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Eteenpäin</string>
     <string name="action_webview_refresh">Päivitä</string>
     <string name="pref_category_library">Kirjasto</string>
-    <string name="invalid_download_dir">Virheellinen latauskansio</string>
     <string name="ext_obsolete">Vanhentunut</string>
     <string name="obsolete_extension_message">Tämä laajennus ei ole enää saatavilla.</string>
     <string name="pref_date_format">Päivämäärän muoto</string>
@@ -413,7 +403,6 @@
     <string name="pref_webtoon_side_padding">Sivuntäyttö</string>
     <string name="licenses">Avoimen lähdekoodin lisenssit</string>
     <string name="recent_manga_time">Luku. %1$s - %2$s</string>
-    <string name="error_invalid_date_supplied">Annettu päivämäärä ei kelpaa</string>
     <string name="manga_info_collapse">Vähemmän</string>
     <string name="manga_info_expand">Enemmän</string>
     <string name="pinned_sources">Kiinnitetyt</string>
@@ -453,7 +442,6 @@
     <string name="backup_restore_missing_sources">Puuttuvat lähteet:</string>
     <string name="invalid_backup_file_missing_manga">Varmuuskopio ei sisällä mangaa.</string>
     <string name="invalid_backup_file">Virheellinen varmuuskopio</string>
-    <string name="tracker_not_logged_in">Et ole kirjautunut sisään: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Tarkista uusi kansi ja tiedot päivitettäessä kirjastoa</string>
     <string name="pref_library_update_refresh_metadata">Päivitä metatiedot automaattisesti</string>
     <string name="action_migrate">Siirrä</string>
@@ -484,7 +472,6 @@
     <string name="unknown_author">Tuntematon tekijä</string>
     <string name="updated_version">Päivitetty versioon v%1$s</string>
     <string name="whats_new">Mitä uutta</string>
-    <string name="action_download_unread">Lataa lukemattomat luvut</string>
     <string name="download_insufficient_space">Lukuja ei voitu ladata vähäisen tallennustilan vuoksi</string>
     <string name="action_global_search_query">Etsi \"%1$s\" globaalisesti</string>
     <string name="pref_category_reading_mode">Lukutila</string>
@@ -652,7 +639,6 @@
     <string name="ext_install_service_notif">Asennetaan laajennusta…</string>
     <string name="ext_installer_pref">Asentaja</string>
     <string name="action_remove_everything">Poista kaikki</string>
-    <string name="backup_restore_invalid_uri">Virhe: tyhjä URI</string>
     <string name="action_sort_last_manga_update">Viimeisin manga päivitys</string>
     <string name="action_sort_unread_count">Lukemattomien määrä</string>
     <string name="delete_category">Poista kategoria</string>

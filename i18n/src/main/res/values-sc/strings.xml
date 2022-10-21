@@ -34,7 +34,6 @@
     <string name="action_bookmark">Annanghe su capìtulu a sos sinnalibros</string>
     <string name="action_remove_bookmark">Boga su capìtulu dae sos sinnalibros</string>
     <string name="action_delete">Iscantzella</string>
-    <string name="action_update">Agiorna</string>
     <string name="action_update_library">Agiorna sa biblioteca</string>
     <string name="action_edit">Modìfica</string>
     <string name="action_add">Annanghe</string>
@@ -64,7 +63,6 @@
     <string name="action_reset">Torra a impostare</string>
     <string name="action_undo">Iscontza</string>
     <string name="action_open_log">Aberi su registru</string>
-    <string name="action_create">Crea</string>
     <string name="action_restore">Riprìstina</string>
     <string name="loading">Carrighende…</string>
     <string name="app_not_available">Aplicatzione non disponìbile</string>
@@ -195,7 +193,6 @@
     <string name="password">Crae de intrada</string>
     <string name="login">Intra</string>
     <string name="login_success">Ses intradu</string>
-    <string name="invalid_login">Intrada fallida</string>
     <string name="unknown_error">Errore disconnotu</string>
     <string name="updating_category">Agiornende sa categoria</string>
     <string name="local_source_badge">Locale</string>
@@ -205,13 +202,10 @@
     <string name="action_global_search_hint">Chirca globale…</string>
     <string name="latest">Ùrtimos</string>
     <string name="browse">Esplora</string>
-    <string name="manga_not_in_db">Custu manga est istadu bogadu dae sa base de datos.</string>
-    <string name="description">Descritzione</string>
     <string name="ongoing">In cursu</string>
     <string name="unknown">Disconnotu</string>
     <string name="licensed">Cuntzessu in litzèntzia</string>
     <string name="remove_from_library">Boga dae sa biblioteca</string>
-    <string name="manga_info_full_title_label">Tìtulu</string>
     <string name="manga_added_library">Annantu a sa biblioteca</string>
     <string name="manga_removed_library">Bogadu dae sa biblioteca</string>
     <string name="delete_downloads_for_manga">Iscantzellare sos capìtulos iscarrigados\?</string>
@@ -224,7 +218,6 @@
     <string name="chapter_paused">In pàusa</string>
     <string name="show_title">Tìtulu de sa fonte</string>
     <string name="show_chapter_number">Nùmeru de capìtulu</string>
-    <string name="sorting_mode">Modalidade de ordinamentu</string>
     <string name="sort_by_source">Pro mitza</string>
     <string name="sort_by_number">Pro nùmeru de capìtulu</string>
     <string name="manga_download">Iscàrriga</string>
@@ -249,7 +242,6 @@
     <string name="track_status">Istadu</string>
     <string name="track_start_date">Incumintzadu</string>
     <string name="track_type">Casta</string>
-    <string name="track_author">Autore</string>
     <string name="error_category_exists">Esistit giai una categoria cun custu nùmene!</string>
     <string name="snack_categories_deleted">Categorias iscantzelladas</string>
     <string name="dialog_with_checkbox_remove_description">Custu at a bogare sa data de leghidura de custu capìtulu. Seguru ses\?</string>
@@ -261,7 +253,6 @@
     <string name="cover_updated">Cobertedda agiornada</string>
     <string name="chapter_progress">Pàgina: %1$d</string>
     <string name="no_next_chapter">Capìtulu imbeniente no agatadu</string>
-    <string name="no_previous_chapter">Capìtulu antepostu no agatadu</string>
     <string name="decode_image_error">No est istadu possìbile carrigare s\'immàgine</string>
     <string name="confirm_set_image_as_cover">Cheres impostare custa immàgine comente cobertedda\?</string>
     <string name="transition_finished">Acabadu:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">In antis</string>
     <string name="action_webview_refresh">Annoa</string>
     <string name="pref_category_library">Biblioteca</string>
-    <string name="invalid_download_dir">Cartella de iscarrigamentu non vàlida</string>
     <string name="ext_obsolete">Obsoleta</string>
     <string name="obsolete_extension_message">Cust\'estensione no est prus a disponimentu.</string>
     <string name="pref_date_format">Formadu de sa data</string>
@@ -414,7 +404,6 @@
     <string name="confirm_exit">Incarca in segus torra pro essire</string>
     <string name="label_downloaded_only">Iscarrigados ebbia</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
-    <string name="error_invalid_date_supplied">Sa data frunida no est vàlida</string>
     <string name="last_used_source">Ùrtima impreada</string>
     <string name="check_for_updates">Chirca agiornamentos</string>
     <string name="restoring_backup_canceled">Riprìstinu annulladu</string>
@@ -453,7 +442,6 @@
     <string name="backup_restore_missing_sources">Mitzas chi mancant:</string>
     <string name="invalid_backup_file_missing_manga">Sa còpia de seguresa non tenet perunu manga.</string>
     <string name="invalid_backup_file">Documentu de sa còpia de seguresa non vàlidu</string>
-    <string name="tracker_not_logged_in">No intradu in su contu de: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Verìfica si b\'est una cobertedda noa o bi sunt detàllios noos cando agiornas sa biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Annoa automaticamente sos metadatos</string>
     <string name="action_migrate">Tràmuda</string>
@@ -484,7 +472,6 @@
     <string name="unknown_author">Autore disconnotu</string>
     <string name="updated_version">Agiornadu a v%1$s</string>
     <string name="whats_new">Ite b\'at de nou</string>
-    <string name="action_download_unread">Iscàrriga sos capìtulos non lèghidos</string>
     <string name="download_insufficient_space">Iscarrigamentu de sos capìtulos fallidu pro neghe de su pagu ispàtziu lìberu in su discu</string>
     <string name="action_global_search_query">Chirca «%1$s» globalmente</string>
     <string name="pref_category_reading_mode">Modalidade de leghidura</string>
@@ -680,7 +667,6 @@
     <string name="publishing_finished">Publicatzione acabada</string>
     <string name="on_hiatus">In pàusa</string>
     <string name="cancelled">Annullada</string>
-    <string name="backup_restore_invalid_uri">Errore: URI bòidu</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Ammustra su manga</string>
     <string name="pref_landscape_zoom">Ismànnia s\'immàgine in orizontale</string>
@@ -768,4 +754,17 @@
     <string name="missing_storage_permission">Permissu de archiviatzione non cuntzessu</string>
     <string name="skipped_reason_not_always_update">Brincadu ca sa sèrie non tenet bisòngiu de agiornamentos</string>
     <string name="action_search_hint">Chirca…</string>
+    <string name="crash_screen_description">%s at tentu un\'errore non prevìdidu. Ti cussigiamus de sarvare un\'ischermada de custu messàgiu, iscarrigare sos registros de sas serraduras anòmalas e de cumpartzire totu custu in su canale de suportu nostru de Discord.</string>
+    <string name="crash_screen_restart_application">Torra a allùghere s\'aplicatzione</string>
+    <string name="pref_general_summary">Limba de s\'aplicatzione, notìficas</string>
+    <string name="pref_appearance_summary">Tema, data e formadu de s\'ora</string>
+    <string name="pref_library_summary">Categorias, agiornamentos globales</string>
+    <string name="pref_reader_summary">Modalidade de leghidura, aspetu, navigatzione</string>
+    <string name="pref_downloads_summary">Iscarrigamentu automàticu, iscarrigamentu antitzipadu</string>
+    <string name="pref_tracking_summary">Sincronizatzione uni-diretzionale de avantzamentu, sincronizatzione megiorada</string>
+    <string name="pref_browse_summary">Fontes, estensiones, chirca globale</string>
+    <string name="pref_backup_summary">Còpias de seguresa manuales e globales</string>
+    <string name="pref_security_summary">Blocu de s\'aplicatzione, ischermu seguru</string>
+    <string name="pref_advanced_summary">Registros de serraduras anòmalas, otimizatziones de sa bateria</string>
+    <string name="crash_screen_title">B\'at àpidu un\'errore imprevistu</string>
 </resources>

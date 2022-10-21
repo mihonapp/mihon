@@ -23,7 +23,6 @@
     <string name="action_mark_as_unread">वाचले नाही अशी खुण करा</string>
     <string name="action_download">डाउनलोड</string>
     <string name="action_delete">हटवा</string>
-    <string name="action_update">अद्यतनित करा</string>
     <string name="pref_true_color">३२-बिट रंग</string>
     <string name="black_background">काळा</string>
     <string name="channel_common">सामान्य</string>
@@ -47,7 +46,6 @@
     <string name="label_library">संग्रहालय</string>
     <string name="label_download_queue">डाऊनलोड रांग</string>
     <string name="action_restore">पुनर्संचयित करा</string>
-    <string name="action_create">बनवा</string>
     <string name="action_open_log">लॉग उघडा</string>
     <string name="action_undo">पूर्ववत करा</string>
     <string name="action_reset">रीसेट करा</string>

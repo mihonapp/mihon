@@ -26,7 +26,6 @@
     <string name="action_bookmark">Hoofdstuk toevoegen aan bladwijzers</string>
     <string name="action_remove_bookmark">Hoofdstuk verwijderen uit bladwijzers</string>
     <string name="action_delete">Verwijderen</string>
-    <string name="action_update">Bijwerken</string>
     <string name="action_edit">Bewerken</string>
     <string name="action_add">Toevoegen</string>
     <string name="action_add_category">Categorie toevoegen</string>
@@ -56,7 +55,6 @@
     <string name="action_reset">Opnieuw instellen</string>
     <string name="action_undo">Ongedaan maken</string>
     <string name="action_open_log">Open log</string>
-    <string name="action_create">Aanmaken</string>
     <string name="action_restore">Herstellen</string>
     <string name="loading">Laden…</string>
     <string name="pref_category_general">Algemeen</string>
@@ -138,8 +136,6 @@
     <string name="updating_category">Categorie bijwerken</string>
     <string name="no_more_results">Geen verdere resultaten</string>
     <string name="local_source">Lokale bron</string>
-    <string name="manga_not_in_db">Deze manga is verwijderd uit de database.</string>
-    <string name="description">Beschrijving</string>
     <string name="unknown">Onbekend</string>
     <string name="remove_from_library">Verwijderen uit bibliotheek</string>
     <string name="display_mode_chapter">Hoofdstuk %1$s</string>
@@ -148,7 +144,6 @@
     <string name="chapter_paused">Gepauzeerd</string>
     <string name="show_title">Brontitel</string>
     <string name="show_chapter_number">Hoofdstuknummer</string>
-    <string name="sorting_mode">Sorteermodus</string>
     <string name="sort_by_source">Op bron</string>
     <string name="sort_by_number">Op hoofdstuknummer</string>
     <string name="manga_download">Downloaden</string>
@@ -173,7 +168,6 @@
     <string name="cover_updated">Omslagfoto bijgewerkt</string>
     <string name="chapter_progress">Pagina: %1$d</string>
     <string name="no_next_chapter">Volgend hoofdstuk niet gevonden</string>
-    <string name="no_previous_chapter">Vorig hoofdstuk niet gevonden</string>
     <string name="confirm_set_image_as_cover">Deze afbeelding als omslagfoto gebruiken\?</string>
     <string name="notification_new_chapters">Nieuwe hoofdstukken gevonden</string>
     <string name="notification_first_add_to_library">Voeg de manga eerst aan je bibliotheek toe voordat je dit doet</string>
@@ -241,7 +235,6 @@
     <string name="update_check_notification_download_error">Fout bij het downloaden</string>
     <string name="action_filter_bookmarked">Met bladwijzer</string>
     <string name="login_success">Ingelogd</string>
-    <string name="invalid_login">Kon niet inloggen</string>
     <string name="licensed">Gelicenseerd</string>
     <string name="plan_to_read">Van plan te lezen</string>
     <string name="action_global_search">Globaal zoeken</string>
@@ -276,7 +269,6 @@
     <string name="double_tap_anim_speed_0">Geen animatie</string>
     <string name="double_tap_anim_speed_normal">Normaal</string>
     <string name="double_tap_anim_speed_fast">Snel</string>
-    <string name="manga_info_full_title_label">Titel</string>
     <string name="manga_added_library">Toegevoegd aan bibliotheek</string>
     <string name="manga_removed_library">Verwijderd uit bibliotheek</string>
     <string name="copied_to_clipboard">Gekopieerd naar het klembord:
@@ -288,7 +280,6 @@
     <string name="track_status">Status</string>
     <string name="track_start_date">Gestart</string>
     <string name="track_type">Soort</string>
-    <string name="track_author">Auteur</string>
     <string name="transition_finished">Afgerond:</string>
     <string name="transition_current">Huidige:</string>
     <string name="transition_next">Volgende:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Vooruit</string>
     <string name="action_webview_refresh">Vernieuwen</string>
     <string name="pref_category_library">Bibliotheek</string>
-    <string name="invalid_download_dir">Ongeldige downloadlocatie</string>
     <string name="ext_obsolete">Verouderd</string>
     <string name="obsolete_extension_message">Deze extensie is niet meer beschikbaar.</string>
     <string name="pref_date_format">Datumformaat</string>
@@ -387,7 +377,6 @@
     <string name="notification_check_updates">Zoeken naar nieuwe hoofdstukken</string>
     <string name="recent_manga_time">Hfst. %1$s - %2$s</string>
     <string name="updating_library">Bibliotheek bijwerken</string>
-    <string name="error_invalid_date_supplied">Ongeldige datum opgegeven</string>
     <string name="add_tracking">Tracking toevoegen</string>
     <string name="manga_info_collapse">Minder</string>
     <string name="manga_info_expand">Meer</string>
@@ -458,7 +447,6 @@
     <string name="backup_restore_missing_sources">Missende bronnen:</string>
     <string name="invalid_backup_file_missing_manga">Back-up bevat geen manga.</string>
     <string name="invalid_backup_file">Ongeldig backupbestand</string>
-    <string name="tracker_not_logged_in">Niet ingelogd: %1$s</string>
     <string name="pref_show_reading_mode_summary">Laat huidige modus kort zien als lezer geopend wordt</string>
     <string name="pref_show_reading_mode">Toon leesmodus</string>
     <string name="pref_library_update_refresh_metadata">Metadata automatisch bijwerken</string>
@@ -488,7 +476,6 @@
     <string name="whats_new">Wat is er nieuw</string>
     <string name="pref_category_reading_mode">Leesmodus</string>
     <string name="pref_category_theme">Thema</string>
-    <string name="action_download_unread">Ongelezen hoofdstukken downloaden</string>
     <string name="action_sort_date_added">Datum toegevoegd</string>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
@@ -679,7 +666,6 @@
     <string name="publishing_finished">Uitgave voltooid</string>
     <string name="cancelled">Geannuleerd</string>
     <string name="on_hiatus">Gepauzeerd</string>
-    <string name="backup_restore_invalid_uri">Fout: lege URI</string>
     <string name="action_faq_and_guides">Veelgestelde vragen en handleidingen</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="confirm_manga_add_duplicate">Je hebt een manga in je bibliotheek met dezelfde naam maar van een andere bron (%1$s).

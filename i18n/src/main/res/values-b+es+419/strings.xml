@@ -24,7 +24,6 @@
     <string name="action_add">Agregar</string>
     <string name="action_edit">Editar</string>
     <string name="action_update_library">Actualizar Biblioteca</string>
-    <string name="action_update">Actualizar</string>
     <string name="action_delete">Borrar</string>
     <string name="action_download">Descargar</string>
     <string name="action_mark_previous_as_read">Marcar anteriores como leído</string>
@@ -85,7 +84,6 @@
     <string name="action_edit_cover">Editar portada</string>
     <string name="action_disable_all">Desactivar todo</string>
     <string name="action_enable_all">Activar todo</string>
-    <string name="action_download_unread">Descargar capítulos no leídos</string>
     <string name="pref_restore_backup">Restaurar copia de seguridad</string>
     <string name="pref_create_backup_summ">Se puede utilizar para restaurar la biblioteca actual</string>
     <string name="pref_create_backup">Crear copia de seguridad</string>
@@ -272,7 +270,6 @@
     <string name="action_webview_forward">Adelante</string>
     <string name="action_webview_back">Atrás</string>
     <string name="action_restore">Restaurar</string>
-    <string name="action_create">Crear</string>
     <string name="action_open_log">Abrir registro</string>
     <string name="action_newest">Más nuevo</string>
     <string name="action_sort">Ordenar</string>
@@ -305,7 +302,6 @@
     <string name="invalid_backup_file_missing_manga">La copia de seguridad no contiene ningún manga.</string>
     <string name="invalid_backup_file">Archivo de copia de seguridad invalido</string>
     <string name="backup_created">Copia de seguridad creada</string>
-    <string name="tracker_not_logged_in">No esta registrado en: %1$s</string>
     <string name="pref_backup_slots">Máximo de copias de seguridad</string>
     <string name="pref_backup_interval">Frecuencia de respaldo</string>
     <string name="pref_backup_service_category">Copias de seguridad automáticas</string>
@@ -341,7 +337,6 @@
     <string name="local_source_badge">Local</string>
     <string name="updating_category">Actualizando categoría</string>
     <string name="unknown_error">Error desconocido</string>
-    <string name="invalid_login">No se pudo iniciar sesión</string>
     <string name="logout_success">Has cerrado sesión</string>
     <string name="logout">Cerrar sesión</string>
     <string name="logout_title">¿Cerrar sesión de %1$s\?</string>
@@ -365,7 +360,6 @@
     <string name="whats_new">Qué hay de nuevo</string>
     <string name="version">Versión</string>
     <string name="website">Sitio web</string>
-    <string name="manga_not_in_db">Este manga ha sido removido de la base de datos.</string>
     <string name="local_source_help_guide">Guía de fuente local</string>
     <string name="browse">Explorar</string>
     <string name="latest">Recientes</string>
@@ -380,7 +374,6 @@
     <string name="reading">Leyendo</string>
     <string name="add_tracking">Añadir seguimiento</string>
     <string name="manga_tracking_tab">Seguimiento</string>
-    <string name="invalid_download_dir">Directorio de descarga inválido</string>
     <string name="confirm_delete_chapters">¿Estás seguro de que deseas eliminar los capítulos seleccionados\?</string>
     <string name="download_unread">No leídos</string>
     <string name="download_all">Todo</string>
@@ -391,7 +384,6 @@
     <string name="manga_download">Descargar</string>
     <string name="sort_by_upload_date">Por fecha de subida</string>
     <string name="sort_by_source">Por fuente</string>
-    <string name="sorting_mode">Modo de ordenado</string>
     <string name="show_chapter_number">Número de capítulo</string>
     <string name="show_title">Título de la fuente</string>
     <string name="chapter_paused">Pausado</string>
@@ -411,7 +403,6 @@
     <string name="manga_info_expand">Más</string>
     <string name="manga_removed_library">Eliminado de la biblioteca</string>
     <string name="manga_added_library">Añadido a la biblioteca</string>
-    <string name="manga_info_full_title_label">Título</string>
     <string name="remove_from_library">Eliminar de la biblioteca</string>
     <string name="in_library">En biblioteca</string>
     <string name="add_to_library">Añadir a biblioteca</string>
@@ -420,7 +411,6 @@
     <string name="unknown_author">Autor desconocido</string>
     <string name="unknown">Desconocido</string>
     <string name="ongoing">En curso</string>
-    <string name="description">Descripción</string>
     <string name="update_check_no_new_updates">No hay nuevas actualizaciones disponibles</string>
     <string name="update_check_confirm">Descargar</string>
     <string name="file_select_backup">Seleccione el archivo de copia de seguridad</string>
@@ -465,7 +455,6 @@
     <string name="pref_category_for_this_series">Para esta serie</string>
     <string name="confirm_set_image_as_cover">¿Usar esta imagen como portada\?</string>
     <string name="decode_image_error">La imagen no se pudo cargar</string>
-    <string name="no_previous_chapter">Capítulo anterior no encontrado</string>
     <string name="no_next_chapter">Capítulo siguiente no encontrado</string>
     <string name="chapter_progress">Página: %1$d</string>
     <string name="cover_updated">Portada actualizada</string>
@@ -476,8 +465,6 @@
     <string name="dialog_with_checkbox_remove_description">Esto eliminará la fecha de lectura de este capítulo. ¿Estás seguro\?</string>
     <string name="snack_categories_deleted">Categorías eliminadas</string>
     <string name="error_category_exists">¡Ya existe una categoría con este nombre!</string>
-    <string name="error_invalid_date_supplied">La fecha indicada es invalida</string>
-    <string name="track_author">Autor</string>
     <string name="track_type">Tipo</string>
     <string name="track_start_date">Iniciado</string>
     <string name="track_status">Estado</string>
@@ -690,7 +677,6 @@
     <string name="pref_landscape_zoom">Ampliar imagen horizontal</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_update_only_started">Que no han sido iniciados</string>
-    <string name="backup_restore_invalid_uri">Error: URI vacío</string>
     <string name="skipped_reason_completed">Omitido porque la serie está completa</string>
     <string name="skipped_reason_not_caught_up">Omitido porque hay capítulos sin leer</string>
     <string name="skipped_reason_not_started">Omitido porque no hay capítulos leídos</string>

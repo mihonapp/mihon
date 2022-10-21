@@ -29,11 +29,9 @@
     <string name="action_disable_all">Malŝalti ĉiujn</string>
     <string name="action_enable_all">Ŝalti ĉiujn</string>
     <string name="action_update_library">Ĝisdatigi bibliotekon</string>
-    <string name="action_update">Ĝisdatigi</string>
     <string name="action_delete">Forigi</string>
     <string name="action_remove_bookmark">Mallegosigni ĉapitron</string>
     <string name="action_bookmark">Legosigni ĉapitron</string>
-    <string name="action_download_unread">Elŝuti nelegitajn ĉapitrojn</string>
     <string name="action_download">Elŝuti</string>
     <string name="action_mark_as_unread">Marki kiel nelegita</string>
     <string name="action_mark_as_read">Marki kiel legita</string>
@@ -77,7 +75,6 @@
     <string name="pref_category_downloads">Elŝutoj</string>
     <string name="pref_category_reader">Legilo</string>
     <string name="pref_category_library">Biblioteko</string>
-    <string name="action_create">Krei</string>
     <string name="action_undo">Malfari</string>
     <string name="action_save">Konservi</string>
     <string name="action_share">Konigi</string>
@@ -123,7 +120,6 @@
     <string name="update_24hour">Ĉiutage</string>
     <string name="invalid_backup_file">Nevalida savkopia dosiero</string>
     <string name="backup_created">Savkopio kreita</string>
-    <string name="tracker_not_logged_in">Ne ensalutita en: %1$s</string>
     <string name="pref_backup_directory">Savkopiejo</string>
     <string name="pref_create_backup">Krei savkopion</string>
     <string name="pref_download_new">Elŝuti novajn ĉapitrojn</string>
@@ -284,14 +280,12 @@
     <string name="transition_current">Aktuala:</string>
     <string name="transition_finished">Finita:</string>
     <string name="viewer">Legada reĝimo</string>
-    <string name="no_previous_chapter">Antaŭa ĉapitro ne trovita</string>
     <string name="no_next_chapter">Sekva ĉapitro ne trovita</string>
     <string name="chapter_progress">Paĝo: %1$d</string>
     <string name="share_page_info">%1$s: %2$s, paĝo %3$d</string>
     <string name="picture_saved">Bildo konservita</string>
     <string name="snack_categories_deleted">Kategorioj forigitaj</string>
     <string name="error_category_exists">Kategorio kun ĉi tiu nomo jam ekzistas!</string>
-    <string name="track_author">Aŭtoro</string>
     <string name="track_type">Speco</string>
     <string name="track_status">Stato</string>
     <string name="status">Stato</string>
@@ -310,7 +304,6 @@
     <string name="no_chapters_error">Neniu ĉapitro trovita</string>
     <string name="set_chapter_settings_as_default">Agordi kiel defaŭlta</string>
     <string name="chapter_settings">Ĉapitrajn agordojn</string>
-    <string name="invalid_download_dir">Nevalida elŝuta loko</string>
     <string name="confirm_delete_chapters">Ĉu vi certe volas forigi elektitajn ĉapitrojn\?</string>
     <string name="download_unread">Nelegitajn</string>
     <string name="download_all">Ĉiujn</string>
@@ -323,7 +316,6 @@
     <string name="sort_by_upload_date">Laŭ laŝutita dato</string>
     <string name="sort_by_number">Laŭ ĉapitra numero</string>
     <string name="sort_by_source">Laŭ fonto</string>
-    <string name="sorting_mode">Ordiga reĝimo</string>
     <string name="show_chapter_number">Ĉapitra numero</string>
     <string name="show_title">Fonta titolo</string>
     <string name="chapter_paused">Paŭzigita</string>
@@ -339,14 +331,11 @@
     <string name="manga_info_collapse">Malpli</string>
     <string name="manga_info_expand">Pli</string>
     <string name="manga_removed_library">Forigita de biblioteko</string>
-    <string name="manga_info_full_title_label">Titolo</string>
     <string name="remove_from_library">Forigi de biblioteko</string>
     <string name="unknown_status">Nekonata stato</string>
     <string name="unknown_author">Nekonata aŭtoro</string>
     <string name="unknown">Nekonata</string>
     <string name="ongoing">Okazanta</string>
-    <string name="description">Priskribo</string>
-    <string name="manga_not_in_db">Forigis ĉi tiun mangaon de la datumbazo.</string>
     <string name="no_pinned_sources">Vi ne havas alpinglitajn fontojn</string>
     <string name="latest">Lastaj</string>
     <string name="action_global_search_query">Serĉi por \"%1$s\" ĉie</string>
@@ -360,7 +349,6 @@
     <string name="badges_header">Ŝildoj</string>
     <string name="manga_from_library">Mangao de biblioteko</string>
     <string name="unknown_error">Nekonata eraro</string>
-    <string name="invalid_login">Ne povis ensaluti</string>
     <string name="logout_success">Vi nun estas elsalutita</string>
     <string name="logout">Elsaluti</string>
     <string name="logout_title">Elsaluti el %1$s\?</string>
@@ -541,7 +529,6 @@
     <string name="migration_dialog_what_to_include">Elekti datumon por inkluzivi</string>
     <string name="transition_pages_loading">Ŝargas paĝojn…</string>
     <string name="set_as_cover">Agordi kiel kovrilo</string>
-    <string name="error_invalid_date_supplied">Nevalida dato provizita</string>
     <string name="error_sharing_cover">Eraro dumo kovrila kunigado</string>
     <string name="error_saving_cover">Eraro dum kovrila konservado</string>
     <string name="notification_incognito_text">Malŝalti privatan reĝimon</string>

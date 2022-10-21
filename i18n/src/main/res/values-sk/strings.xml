@@ -35,7 +35,6 @@
     <string name="action_bookmark">Záložka kapitoly</string>
     <string name="action_remove_bookmark">Odstrániť záložku kapitoly</string>
     <string name="action_delete">Vymazať</string>
-    <string name="action_update">Aktualizovať</string>
     <string name="action_update_library">Aktualizovať knižnicu</string>
     <string name="action_edit">Upraviť</string>
     <string name="action_add">Pridať</string>
@@ -66,7 +65,6 @@
     <string name="action_reset">Reset</string>
     <string name="action_undo">Krok späť</string>
     <string name="action_open_log">Otvoriť log</string>
-    <string name="action_create">Vytvoriť</string>
     <string name="action_restore">Obnoviť</string>
     <string name="loading">Načítava sa…</string>
     <string name="app_not_available">Aplikácia nedostupná</string>
@@ -211,7 +209,6 @@
     <string name="password">Heslo</string>
     <string name="login">Prihlásenie</string>
     <string name="login_success">Prihlásený</string>
-    <string name="invalid_login">Nepodarilo sa prihlásiť</string>
     <string name="unknown_error">Neznáma chyba</string>
     <string name="updating_category">Aktualizuje sa kategória</string>
     <string name="local_source_badge">Lokálny</string>
@@ -221,13 +218,10 @@
     <string name="action_global_search_hint">Globálne vyhľadávanie…</string>
     <string name="latest">Najnovší</string>
     <string name="browse">Prehľadávať</string>
-    <string name="manga_not_in_db">Táto manga bola odstránená z databázy.</string>
-    <string name="description">Popis</string>
     <string name="ongoing">Pokračujúci</string>
     <string name="unknown">Neznámy</string>
     <string name="licensed">Licencovaný</string>
     <string name="remove_from_library">Odstrániť z knižnice</string>
-    <string name="manga_info_full_title_label">Názov</string>
     <string name="manga_added_library">Pridané do knižnice</string>
     <string name="manga_removed_library">Odstránené z knižnice</string>
     <string name="delete_downloads_for_manga">Odstrániť stiahnuté kapitoly\?</string>
@@ -240,7 +234,6 @@
     <string name="chapter_paused">Pozastavené</string>
     <string name="show_title">Názov zdroja</string>
     <string name="show_chapter_number">Číslo kapitoly</string>
-    <string name="sorting_mode">Režim triedenia</string>
     <string name="sort_by_source">Podľa zdroja</string>
     <string name="sort_by_number">Podľa čísla kapitoly</string>
     <string name="manga_download">Stiahnuť</string>
@@ -265,7 +258,6 @@
     <string name="track_status">Stav</string>
     <string name="track_start_date">Zahájeno</string>
     <string name="track_type">Typ</string>
-    <string name="track_author">Autor</string>
     <string name="error_category_exists">Kategória s týmto názvom už existuje!</string>
     <string name="snack_categories_deleted">Kategórie boli odstránené</string>
     <string name="dialog_with_checkbox_remove_description">Týmto sa odstráni dátum prečítania tejto kapitoly. Si si istý\?</string>
@@ -277,7 +269,6 @@
     <string name="cover_updated">Obal bol aktualizovaný</string>
     <string name="chapter_progress">Strana: %1$d</string>
     <string name="no_next_chapter">Ďalšia kapitola nebola nájdená</string>
-    <string name="no_previous_chapter">Predchádzajúca kapitola nebola nájdená</string>
     <string name="decode_image_error">Obrázok sa nepodarilo načítať</string>
     <string name="confirm_set_image_as_cover">Chcete použiť tento obrázok ako obal\?</string>
     <string name="transition_finished">Dokončená:</string>
@@ -318,7 +309,6 @@
     <string name="channel_common">Bežný</string>
     <string name="no_results_found">Neboli nájdené žiadne výsledky</string>
     <string name="migration_selection_prompt">Vyberte zdroj zo ktorého chcete migrovat</string>
-    <string name="invalid_download_dir">Neplatný adresár sťahovania</string>
     <string name="action_sort_latest_chapter">Najnovšia kapitola</string>
     <string name="action_view_chapters">Zobraziť kapitoly</string>
     <string name="action_cancel_all">Zrušiť všetky</string>
@@ -341,7 +331,6 @@
     <string name="hide_notification_content">Skryť obsah upozornení</string>
     <string name="action_disable_all">Zakázať všetko</string>
     <string name="action_enable_all">Povoliť všetko</string>
-    <string name="action_download_unread">Stiahnuť neprečítané kapitoly</string>
     <string name="action_select_inverse">Vyberte inverzne</string>
     <string name="action_search_settings">Hľadať v nastaveniach</string>
     <string name="action_sort_date_added">Dátum pridaný</string>
@@ -506,7 +495,6 @@
     <string name="popular">Populárne</string>
     <string name="reading_list">Zoznam čítania</string>
     <string name="track_finished_reading_date">Dátum ukončenia</string>
-    <string name="error_invalid_date_supplied">Zadaný neplatný dátum</string>
     <string name="updates_last_update_info">Posledná aktualizácia knižnice: %1$s</string>
     <string name="appwidget_updates_description">Pozrite si svoju nedávno aktualizovanú mangu</string>
     <string name="pref_hide_threshold">Citlivosť pre skrytie ponuky pri posúvaní</string>
@@ -578,7 +566,6 @@
     <string name="pref_viewer_nav">Dotykové zóny</string>
     <string name="pref_landscape_zoom">Priblížiť obrázok na šírku</string>
     <string name="pref_category_reading">Čítanie</string>
-    <string name="backup_restore_invalid_uri">Chyba: prázdná URI</string>
     <string name="pref_category_for_this_series">Pre túto sériu</string>
     <string name="pref_webtoon_side_padding">Bočné odsadenie</string>
     <string name="pref_category_auto_download">Automatické sťahovanie</string>
@@ -620,7 +607,6 @@
     <string name="kindlish_nav">Podobné Kindl-u</string>
     <string name="pref_lowest">Najnižšie</string>
     <string name="categorized_display_settings">Nastavenia triedenia a zobrazenia pre jednotlivé kategórie</string>
-    <string name="tracker_not_logged_in">Neprihlásený: %1$s</string>
     <string name="backup_restore_missing_sources">Chýbajúce zdroje:</string>
     <string name="pref_verbose_logging_summary">Výpis podrobných logov do systémových logov (znižuje výkon aplikácie)</string>
     <string name="network_not_metered">Iba v nemeranej sieti</string>

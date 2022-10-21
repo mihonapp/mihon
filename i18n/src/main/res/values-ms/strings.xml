@@ -31,7 +31,6 @@
     <string name="action_bookmark">Penanda bab</string>
     <string name="action_remove_bookmark">Buang penanda bab</string>
     <string name="action_delete">Padam</string>
-    <string name="action_update">Kemas kini</string>
     <string name="action_update_library">Kemas kini pustaka</string>
     <string name="action_edit">Ubah</string>
     <string name="action_add">Tambah</string>
@@ -60,7 +59,6 @@
     <string name="action_reset">Set semula</string>
     <string name="action_undo">Batal</string>
     <string name="action_open_log">Buka log</string>
-    <string name="action_create">Buat</string>
     <string name="action_restore">Kembalikan ke asal</string>
     <string name="loading">Muat…</string>
     <string name="app_not_available">Aplikasi tidak tersedia</string>
@@ -170,7 +168,6 @@
     <string name="password">Kata laluan</string>
     <string name="login">Log masuk</string>
     <string name="login_success">Log masuk berjaya</string>
-    <string name="invalid_login">Log masuk gagal</string>
     <string name="unknown_error">Ralat tidak diketahui</string>
     <string name="updating_category">mengemaskinikan kategori</string>
     <string name="local_source_badge">Setempat</string>
@@ -180,8 +177,6 @@
     <string name="action_global_search_hint">Carian keseluruhan…</string>
     <string name="latest">Terkini</string>
     <string name="browse">Semak imbas</string>
-    <string name="manga_not_in_db">Manga ini telah dikeluarkan daripada pangkalan data.</string>
-    <string name="description">Keterangan</string>
     <string name="ongoing">Berterusan</string>
     <string name="unknown">Tidak diketahui</string>
     <string name="licensed">Berlesen</string>
@@ -193,7 +188,6 @@
     <string name="chapter_paused">Ditangguh</string>
     <string name="show_title">Tajuk sumber</string>
     <string name="show_chapter_number">Nombor bab</string>
-    <string name="sorting_mode">Mod susunan</string>
     <string name="sort_by_source">Mengikut sumber</string>
     <string name="sort_by_number">Mengikut nombor bab</string>
     <string name="manga_download">Muat turun</string>
@@ -224,7 +218,6 @@
     <string name="cover_updated">Muka hadapan dikemas kini</string>
     <string name="chapter_progress">Muka surat: %1$d</string>
     <string name="no_next_chapter">Bab seterusnya tidak dijumpai</string>
-    <string name="no_previous_chapter">Bab sebelumnya tidak dijumpai</string>
     <string name="decode_image_error">Imej tidak dapat dimuatkan</string>
     <string name="confirm_set_image_as_cover">Guna imej ini sebagai muka hadapan\?</string>
     <string name="download_queue_error">Memuat turun bab tidak berjaya. Anda boleh mencuba lagi di bahagian muat turun</string>
@@ -278,7 +271,6 @@
     <string name="double_tap_anim_speed_0">Tiada animasi</string>
     <string name="double_tap_anim_speed_normal">Biasa</string>
     <string name="double_tap_anim_speed_fast">Laju</string>
-    <string name="manga_info_full_title_label">Tajuk</string>
     <string name="manga_added_library">Ditambah ke pustaka</string>
     <string name="manga_removed_library">Dibuang dari pustaka</string>
     <string name="copied_to_clipboard">Disalin ke papan keratan:
@@ -290,7 +282,6 @@
     <string name="track_status">Status</string>
     <string name="track_start_date">Bermula</string>
     <string name="track_type">Jenis</string>
-    <string name="track_author">Pengarang</string>
     <string name="transition_finished">Selesai:</string>
     <string name="transition_current">Sekarang:</string>
     <string name="transition_next">Seterusnya:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Ke depan</string>
     <string name="action_webview_refresh">Segar semula</string>
     <string name="pref_category_library">Pustaka</string>
-    <string name="invalid_download_dir">Lokasi muat turun tidak sah</string>
     <string name="ext_obsolete">Usang</string>
     <string name="obsolete_extension_message">Sambungan ini tidak lagi ada.</string>
     <string name="pref_date_format">Format tarikh</string>
@@ -392,7 +382,6 @@
     <string name="webtoon_side_padding_10">10%</string>
     <string name="information_webview_required">WebView diperlukan untuk Tachiyomi</string>
     <string name="recent_manga_time">Bab %1$s - %2$s</string>
-    <string name="error_invalid_date_supplied">Tarikh dimasukkan tidak sah</string>
     <string name="add_tracking">Tambah penjejakan</string>
     <string name="manga_info_collapse">Tutup</string>
     <string name="manga_info_expand">Buka</string>
@@ -443,7 +432,6 @@
     <string name="backup_restore_missing_sources">Tiada sumber:</string>
     <string name="invalid_backup_file_missing_manga">Sandaran tidak mengandungi apa-apa siri.</string>
     <string name="invalid_backup_file">Fail sandaran tidak sah</string>
-    <string name="tracker_not_logged_in">Tidak log masuk: %1$s</string>
     <string name="unofficial_extension_message">Sambungan ini bukan daripada senarai sambungan Tachiyomi yang rasmi.</string>
     <string name="ext_unofficial">Tidak rasmi</string>
     <string name="pref_library_update_refresh_metadata_summary">Semak muka hadapan dan tentang baharu bila mengemaskini pustaka</string>
@@ -464,7 +452,7 @@
         <item quantity="other">Jumlah bab: %1$s</item>
     </plurals>
     <string name="action_disable">Matikan</string>
-    <string name="requires_app_restart">Mula semula diperlukan untuk berkesan</string>
+    <string name="requires_app_restart">Mulakan semula aplikasi diperlukan untuk berkesan</string>
     <string name="label_network">Rangkaian</string>
     <string name="tapping_inverted_both">Kedua-dua</string>
     <string name="tapping_inverted_vertical">Mod atas bawah</string>
@@ -473,7 +461,6 @@
     <string name="pref_read_with_tapping_inverted">Songsangkan zon ketik</string>
     <string name="unknown_status">Status tidak diketahui</string>
     <string name="unknown_author">Pengarang tidak diketahui</string>
-    <string name="action_download_unread">Muat turun bab belum dibaca</string>
     <string name="updated_version">Dikemas kini ke v%1$s</string>
     <string name="whats_new">Apa yang terbaharu</string>
     <string name="action_sort_date_added">Tarikh ditambah</string>
@@ -668,7 +655,6 @@
     <string name="publishing_finished">Penerbitan selesai</string>
     <string name="on_hiatus">Dalam hiatus</string>
     <string name="action_faq_and_guides">Soalan Lazim dan Panduan</string>
-    <string name="backup_restore_invalid_uri">Ralat: tiada URI</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Tunjuk manga</string>
     <string name="action_filter_started">Mula</string>
@@ -755,4 +741,18 @@
     <string name="missing_storage_permission">Kebenaran storan tidak diberikan</string>
     <string name="skipped_reason_not_always_update">Dilangkau kerana siri tidak memerlukan kemas kini</string>
     <string name="action_search_hint">Cari…</string>
+    <string name="pref_general_summary">Bahasa aplikasi, notifikasi</string>
+    <string name="pref_appearance_summary">Tema, tarikh &amp; format masa</string>
+    <string name="pref_library_summary">Kategori, Kemas kini keseluruhan</string>
+    <string name="pref_reader_summary">Mod membaca, paparan, navigasi</string>
+    <string name="pref_downloads_summary">Muat turun automatik, muat turun maju</string>
+    <string name="pref_tracking_summary">Sinkron kemajuan satu hala, pertingkat sinkron</string>
+    <string name="pref_backup_summary">Manual &amp; sandaran automatik</string>
+    <string name="pref_advanced_summary">Kumpulan log kerosakan, pengoptimuman bateri</string>
+    <string name="pref_security_summary">Kekunci aplikasi, skrin keselamatan</string>
+    <string name="crash_screen_title">Ralat Tidak Dijangka Berlaku</string>
+    <string name="crash_screen_restart_application">Mulakan semula aplikasi</string>
+    <string name="pref_browse_summary">Sumber, sambungan, carian keseluruhan</string>
+    <string name="crash_screen_description">%s mengalami ralat tidak dijangka. Kami mencadangkan anda untuk tangkapan skrin mesej ini, mengumpulkan log kerosakan, dan kemudian mengongsi ia pada Discord kami di saluran bantuan.</string>
+    <string name="unknown_title">Tajuk tidak diketahui</string>
 </resources>

@@ -33,7 +33,6 @@
     <string name="action_bookmark">將章節加上書籤</string>
     <string name="action_remove_bookmark">將章節移除書籤</string>
     <string name="action_delete">刪除</string>
-    <string name="action_update">更新</string>
     <string name="action_update_library">更新書櫃</string>
     <string name="action_edit">編輯</string>
     <string name="action_add">新增</string>
@@ -63,7 +62,6 @@
     <string name="action_save">儲存</string>
     <string name="action_reset">重設</string>
     <string name="action_undo">復原</string>
-    <string name="action_create">建立</string>
     <string name="action_restore">還原</string>
     <string name="loading">正在載入…</string>
     <string name="app_not_available">應用程式無法使用</string>
@@ -136,7 +134,6 @@
     <string name="password">密碼</string>
     <string name="login">登入</string>
     <string name="login_success">已登入</string>
-    <string name="invalid_login">登入失敗</string>
     <string name="manga_added_library">已收藏至書櫃</string>
     <string name="manga_removed_library">已從書櫃中移除</string>
     <string name="copied_to_clipboard">已複製至剪貼簿：
@@ -219,18 +216,15 @@
     <string name="local_source">本機來源</string>
     <string name="other_source">其他</string>
     <string name="browse">探索</string>
-    <string name="description">簡介</string>
     <string name="ongoing">連載中</string>
     <string name="unknown">不明</string>
     <string name="licensed">已授權</string>
     <string name="remove_from_library">移出書櫃</string>
-    <string name="manga_info_full_title_label">標題</string>
     <string name="delete_downloads_for_manga">刪除下載的章節？</string>
     <string name="display_mode_chapter">第 %1$s 章</string>
     <string name="chapter_downloading_progress">正在下載 (%1$d/%2$d)</string>
     <string name="show_title">來源標題</string>
     <string name="show_chapter_number">章節編號</string>
-    <string name="sorting_mode">排序依據</string>
     <string name="sort_by_source">遵循來源</string>
     <string name="sort_by_number">章節編號</string>
     <string name="download_1">後 1 章</string>
@@ -261,7 +255,6 @@
     <string name="error_category_exists">已有名稱相同的類別！</string>
     <string name="chapter_progress">第 %1$d 頁</string>
     <string name="no_next_chapter">找不到下一章</string>
-    <string name="no_previous_chapter">找不到前一章</string>
     <string name="transition_finished">已閱畢：</string>
     <string name="transition_next">接下來：</string>
     <string name="notification_new_chapters">發現新章節</string>
@@ -290,14 +283,12 @@
     <string name="pref_refresh_library_tracking">更新閱讀歷程</string>
     <string name="pref_refresh_library_tracking_summary">與歷程平台同步處理閱讀狀態、評分以及進度</string>
     <string name="latest">新上架</string>
-    <string name="manga_not_in_db">該漫畫已從資料庫中移除。</string>
     <string name="manga_tracking_tab">歷程</string>
     <string name="reading">閱讀中</string>
     <string name="plan_to_read">準備讀</string>
     <string name="repeating">重溫中</string>
     <string name="track_start_date">創刊</string>
     <string name="track_type">類型</string>
-    <string name="track_author">作者</string>
     <string name="dialog_with_checkbox_remove_description">此章節的閱讀日期將被清除，你確定嗎？</string>
     <string name="transition_current">目前章節：</string>
     <string name="transition_previous">上一章：</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">下一頁</string>
     <string name="action_webview_refresh">重新整理</string>
     <string name="pref_category_library">書櫃</string>
-    <string name="invalid_download_dir">無效的下載位置</string>
     <string name="ext_obsolete">過舊</string>
     <string name="obsolete_extension_message">這個擴充套件已無法使用。</string>
     <string name="theme_light">關閉</string>
@@ -449,7 +439,6 @@
         <item quantity="other">歷時 %1$s，出現 %2$s 個錯誤</item>
     </plurals>
     <string name="restore_duration">%02d 分 %02d 秒</string>
-    <string name="error_invalid_date_supplied">輸入的日期無效</string>
     <string name="unofficial_extension_message">這個擴充套件不是由 Tachiyomi 所提供。</string>
     <string name="ext_unofficial">非官方</string>
     <string name="recent_manga_time">第 %1$s 章 - %2$s</string>
@@ -465,7 +454,6 @@
     <string name="whats_new">更新日誌</string>
     <string name="unknown_status">連載狀態不明</string>
     <string name="unknown_author">佚名</string>
-    <string name="action_download_unread">下載未讀章節</string>
     <string name="action_global_search_query">在所有範圍內搜尋「%1$s」</string>
     <string name="download_insufficient_space">由於儲存空間不足，無法下載章節</string>
     <string name="updated_version">已更新至 v%1$s</string>
@@ -476,7 +464,6 @@
     <string name="pref_category_theme">主題</string>
     <string name="action_sort_date_added">收藏日期</string>
     <string name="loader_not_implemented_error">找不到來源</string>
-    <string name="tracker_not_logged_in">尚未登入：%1$s</string>
     <string name="no_pinned_sources">你尚未釘選任何來源</string>
     <string name="page_list_empty_error">沒有任何頁面</string>
     <string name="backup_restore_missing_sources">未安裝擴充套件：</string>
@@ -668,7 +655,6 @@
     <string name="cancelled">已取消</string>
     <string name="publishing_finished">出版完畢</string>
     <string name="action_faq_and_guides">常見問題與指南</string>
-    <string name="backup_restore_invalid_uri">錯誤：URI 空白</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">顯示漫畫</string>
     <string name="pref_landscape_zoom">縮放橫向圖片</string>
@@ -755,4 +741,17 @@
     <string name="missing_storage_permission">未被授予儲存空間權限</string>
     <string name="skipped_reason_not_always_update">由於叢書無須更新，因此略過</string>
     <string name="action_search_hint">搜尋…</string>
+    <string name="pref_reader_summary">閱讀模式、檢視、導覽</string>
+    <string name="pref_general_summary">應用程式語言、通知</string>
+    <string name="pref_appearance_summary">主題、日期格式</string>
+    <string name="pref_downloads_summary">自動下載、預先下載</string>
+    <string name="pref_tracking_summary">單向進度同步、增強式同步</string>
+    <string name="pref_backup_summary">手動備份、自動備份</string>
+    <string name="pref_security_summary">上鎖應用程式、防窺畫面</string>
+    <string name="pref_advanced_summary">傾印當機記錄、電池效能最佳化</string>
+    <string name="crash_screen_restart_application">重新啟動應用程式</string>
+    <string name="crash_screen_title">發生意外錯誤</string>
+    <string name="crash_screen_description">「%s」發生了未預期的錯誤。我們建議你擷取此畫面、傾印當機記錄並分享至我們位於 Discord 上的 support 頻道。</string>
+    <string name="pref_library_summary">類別、全域更新</string>
+    <string name="pref_browse_summary">來源、擴充套件、全域搜尋</string>
 </resources>

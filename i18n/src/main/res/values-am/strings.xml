@@ -78,7 +78,6 @@
     <string name="action_webview_forward">ወደፊት</string>
     <string name="action_webview_back">ተመለስ</string>
     <string name="action_restore">እነበረበት መልስ</string>
-    <string name="action_create">ፍጠር</string>
     <string name="action_open_log">መዝገብ ይክፈቱ</string>
     <string name="action_undo">ቀልብስ</string>
     <string name="action_reset">ዳግም አስጀምር</string>
@@ -126,11 +125,9 @@
     <string name="action_disable_all">ሁሉንም ያሰናክሉ</string>
     <string name="action_enable_all">ሁሉንም አንቃ</string>
     <string name="action_update_library">ቤተ-መጽሐፍት ያዘምኑ</string>
-    <string name="action_update">ኣዘምን</string>
     <string name="action_delete">ደምስስ</string>
     <string name="action_remove_bookmark">የደንበኝነት ምዝገባ ምልክት ያድርጉበት</string>
     <string name="action_bookmark">ዕልባት</string>
-    <string name="action_download_unread">ያልተነበቡ ምዕራፎችን ያውርዱ</string>
     <string name="action_download">አውርድ</string>
     <string name="action_mark_previous_as_read">የቀደመውን እንደተነበበ ምልክት ያድርጉበት</string>
     <string name="action_mark_as_unread">እንዳልተነበበ ምልክት ያድርጉ</string>
@@ -270,7 +267,6 @@
     <string name="color_filter_g_value">ኣ</string>
     <string name="invalid_backup_file">ልክ ያልሆነ የመጠባበቂያ ፋይል</string>
     <string name="backup_created">ምትኬ ተፈጥሯል</string>
-    <string name="tracker_not_logged_in">አልገባም%1$s</string>
     <string name="pref_backup_slots">ከፍተኛ መጠባበቂያዎች</string>
     <string name="pref_backup_interval">የመጠባበቂያ ድግግሞሽ</string>
     <string name="pref_backup_service_category">ራስ-ሰር መጠባበቂያዎች</string>

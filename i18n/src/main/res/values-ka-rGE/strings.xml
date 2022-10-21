@@ -32,7 +32,6 @@
     <string name="action_bookmark">მონიშნული</string>
     <string name="action_remove_bookmark">მონიშვნის მოხსნა</string>
     <string name="action_delete">წაშლა</string>
-    <string name="action_update">განახლება</string>
     <string name="action_update_library">ბიბლიოთეკის განახლება</string>
     <string name="action_edit">რედაქტირება</string>
     <string name="action_add">დამატება</string>
@@ -71,7 +70,6 @@
     <string name="action_reset">გადატვირთვა</string>
     <string name="action_undo">გაუქმება</string>
     <string name="action_open_log">ლოგის გახსნა</string>
-    <string name="action_create">შექმნა</string>
     <string name="action_restore">აღდგენა</string>
     <string name="action_webview_back">უკან</string>
     <string name="action_webview_forward">წინ</string>
@@ -207,7 +205,6 @@
     <string name="pref_backup_service_category">ავტომატურად რეზერვის შექმნა</string>
     <string name="pref_backup_interval">რეზერვის შექმნის სიხშირე</string>
     <string name="pref_backup_slots">მაქსიმალური რეზერვი</string>
-    <string name="tracker_not_logged_in">არ არის შესული: %1$s</string>
     <string name="backup_created">რეზერვი შექმნილია</string>
     <string name="invalid_backup_file">არასწორი სარეზერვო ფაილი</string>
     <string name="invalid_backup_file_missing_manga">რეზერვი არ შეიცავს არცერთ მანგას.</string>
@@ -253,7 +250,6 @@
     <string name="logout_title">გამოვიდე %1$s-დან?</string>
     <string name="logout">გამოსვლა</string>
     <string name="logout_success">გამოსვლა წარმატებით მოხერხდა</string>
-    <string name="invalid_login">შესვლა ვერ მოხერხდა</string>
     <string name="unknown_error">დაფიქსირდა უცნობი შეცდომა</string>
     <string name="updating_category">კატეგორია ახლდება</string>
     <string name="local_source_badge">ლოკალური</string>
@@ -268,15 +264,12 @@
     <string name="action_global_search_hint">გლობალური ძებნა…</string>
     <string name="latest">უკანასკნელი</string>
     <string name="browse">დათვალიერება</string>
-    <string name="manga_not_in_db">მანგა წაიშალა მონაცემთა ბაზიდან</string>
-    <string name="description">აღწერა</string>
     <string name="ongoing">მიმდინარე</string>
     <string name="unknown">უცნობი</string>
     <string name="licensed">ლიცენზირებული</string>
     <string name="add_to_library">ბიბლიოთეკაში დამატება</string>
     <string name="in_library">ბიბლიოთეკაშია</string>
     <string name="remove_from_library">ბიბლიოთეკიდან წაშლა</string>
-    <string name="manga_info_full_title_label">სათაური</string>
     <string name="manga_added_library">დამატებულია ბიბლიოთეკაში</string>
     <string name="manga_removed_library">წაშლილია ბიბლიოთეკიდან</string>
     <string name="manga_info_expand">მეტი ინფორმაციის ჩვენება</string>
@@ -292,7 +285,6 @@
     <string name="chapter_paused">დაპაუზებულია</string>
     <string name="show_title">წყაროს სათაური</string>
     <string name="show_chapter_number">თავის ნომერი</string>
-    <string name="sorting_mode">დალაგების რეჟიმი</string>
     <string name="sort_by_source">წყაროს მიხედვით</string>
     <string name="sort_by_number">თავის ნომრის მიხედვით</string>
     <string name="sort_by_upload_date">თარიღის მიხედვით</string>
@@ -305,7 +297,6 @@
     <string name="download_custom">მანუალური</string>
     <string name="download_unread">წაუკითხავი</string>
     <string name="confirm_delete_chapters">დარწმუნებული ხართ რომ გსურთ არჩეული თავების წაშლა?</string>
-    <string name="invalid_download_dir">არასწორი გადმოწერის ლოკაცია</string>
     <string name="manga_tracking_tab">თვალტყურის დევნება</string>
     <string name="add_tracking">თვალი ადევნე</string>
     <string name="reading">ვკითხულობ</string>
@@ -321,15 +312,12 @@
     <string name="track_status">სტატუსი</string>
     <string name="track_start_date">დაიწყო</string>
     <string name="track_type">ტიპი</string>
-    <string name="track_author">ავტორი</string>
-    <string name="error_invalid_date_supplied">არასწორი თარიღი</string>
     <string name="error_category_exists">კატეგორია მოცემული სახელით უკვე არსებობს!</string>
     <string name="snack_categories_deleted">კატეგორიები წაიშალა</string>
     <string name="dialog_with_checkbox_remove_description">ეს წაშლის ამ თავის წაკითხვის თარიღს. დარწმუნებული ხართ?</string>
     <string name="picture_saved">სურათი შენახულია</string>
     <string name="chapter_progress">გვერდი: %1$d</string>
     <string name="no_next_chapter">შემდეგი თავი ვერ მოიძებნა</string>
-    <string name="no_previous_chapter">წინა თავი ვერ მოიძებნა</string>
     <string name="decode_image_error">სურათის გადმოტვირთვა ვერ მოხერხდა</string>
     <string name="pref_category_for_this_series">ამ სერიებისთვის</string>
     <string name="viewer">კითხვის რეჟიმი</string>
@@ -489,7 +477,6 @@
     <string name="action_disable">გამორთვა</string>
     <string name="action_start">დაწყება</string>
     <string name="action_sort_date_added">დამატების თარიღი</string>
-    <string name="action_download_unread">გადმოიწეროს წაუკითხავი თავები</string>
     <string name="ext_nsfw_warning">შეიძლება შეიჩაცდეს უცენზურო(18+) კონტენტს</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">მონიშნული თავების წაშლა</string>

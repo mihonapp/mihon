@@ -28,7 +28,6 @@
     <string name="action_bookmark">Lesezeichen setzen</string>
     <string name="action_remove_bookmark">Lesezeichen entfernen</string>
     <string name="action_delete">Löschen</string>
-    <string name="action_update">Aktualisieren</string>
     <string name="action_update_library">Bibliothek aktualisieren</string>
     <string name="action_edit">Bearbeiten</string>
     <string name="action_add">Hinzufügen</string>
@@ -57,7 +56,6 @@
     <string name="action_reset">Zurücksetzen</string>
     <string name="action_undo">Rückgängig machen</string>
     <string name="action_open_log">Protokoll öffnen</string>
-    <string name="action_create">Erstellen</string>
     <string name="action_restore">Wiederherstellen</string>
     <string name="loading">Wird geladen …</string>
     <string name="app_not_available">App nicht verfügbar</string>
@@ -109,7 +107,7 @@
     <string name="scale_type_fit_height">Vertikal ausfüllen</string>
     <string name="scale_type_original_size">Orginalgröße</string>
     <string name="scale_type_smart_fit">Intelligentes Ausfüllen</string>
-    <string name="pref_zoom_start">Zoom Anfangsposition</string>
+    <string name="pref_zoom_start">Anfangsposition des Zooms</string>
     <string name="zoom_start_automatic">Automatisch</string>
     <string name="zoom_start_left">Links</string>
     <string name="zoom_start_right">Rechts</string>
@@ -167,13 +165,10 @@
     <string name="password">Passwort</string>
     <string name="login">Anmelden</string>
     <string name="login_success">Angemeldet</string>
-    <string name="invalid_login">Anmeldung fehlgeschlagen</string>
     <string name="unknown_error">Unbekannter Fehler</string>
     <string name="updating_category">Kategorie wird aktualisiert</string>
     <string name="no_more_results">Keine weiteren Ergebnisse</string>
     <string name="local_source">Lokale Quelle</string>
-    <string name="manga_not_in_db">Dieser Manga wurde aus der Datenbank entfernt.</string>
-    <string name="description">Beschreibung</string>
     <string name="ongoing">Fortlaufend</string>
     <string name="unknown">Unbekannt</string>
     <string name="licensed">Lizenziert</string>
@@ -185,7 +180,6 @@
     <string name="chapter_paused">Pausiert</string>
     <string name="show_title">Quellentitel</string>
     <string name="show_chapter_number">Kapitelnummer</string>
-    <string name="sorting_mode">Sortiere nach</string>
     <string name="sort_by_source">Quelle</string>
     <string name="sort_by_number">Kapitelnummer</string>
     <string name="manga_download">Herunterladen</string>
@@ -215,7 +209,6 @@
     <string name="cover_updated">Vorschaubild geändert</string>
     <string name="chapter_progress">Seite: %1$d</string>
     <string name="no_next_chapter">Nächstes Kapitel nicht gefunden</string>
-    <string name="no_previous_chapter">Vorheriges Kapitel nicht gefunden</string>
     <string name="decode_image_error">Das Bild konnte nicht geladen werden</string>
     <string name="confirm_set_image_as_cover">Dieses Bild als Vorschaubild setzen\?</string>
     <string name="download_queue_error">Fehler beim Herunterladen der Kapitel. Du kannst es in der Downloadsektion erneut versuchen</string>
@@ -270,7 +263,6 @@
     <string name="double_tap_anim_speed_0">Keine Animation</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Schnell</string>
-    <string name="manga_info_full_title_label">Titel</string>
     <string name="manga_added_library">Zur Bibliothek hinzugefügt</string>
     <string name="manga_removed_library">Aus der Bibliothek entfernt</string>
     <string name="copied_to_clipboard">In die Zwischenablage kopiert:
@@ -290,7 +282,6 @@
     <string name="track_status">Status</string>
     <string name="track_start_date">Angefangen</string>
     <string name="track_type">Typ</string>
-    <string name="track_author">Autor</string>
     <string name="transition_finished">Beendet:</string>
     <string name="transition_current">Aktuell:</string>
     <string name="transition_next">Als Nächstes:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Vorwärts</string>
     <string name="action_webview_refresh">Aktualisieren</string>
     <string name="pref_category_library">Bibliothek</string>
-    <string name="invalid_download_dir">Ungültiger Speicherort</string>
     <string name="ext_obsolete">Veraltet</string>
     <string name="obsolete_extension_message">Diese Erweiterung ist nicht länger verfügbar.</string>
     <string name="pref_date_format">Datumsformat</string>
@@ -419,7 +409,6 @@
     <string name="restoring_backup_canceled">Wiederherstellung abgebrochen</string>
     <string name="restore_in_progress">Wiederherstellung wird bereits durchgeführt</string>
     <string name="backup_in_progress">Sicherung wird bereits durchgeführt</string>
-    <string name="error_invalid_date_supplied">Ungültiges Datum angegeben</string>
     <string name="check_for_updates">Nach Aktualisierungen suchen</string>
     <string name="last_used_source">Zuletzt genutzt</string>
     <string name="local_source_help_guide">Anleitung für lokale Quellen</string>
@@ -453,7 +442,6 @@
     <string name="backup_restore_missing_sources">Fehlende Quellen:</string>
     <string name="invalid_backup_file_missing_manga">Sicherung beinhaltet keinerlei Manga.</string>
     <string name="invalid_backup_file">Ungültige Sicherungsdatei</string>
-    <string name="tracker_not_logged_in">Nicht angemeldet: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Auf neue Cover und Details überprüfen, wenn die Bibliothek aktualisiert wird</string>
     <string name="pref_library_update_refresh_metadata">Metadaten automatisch aktualisieren</string>
     <string name="action_migrate">Migrieren</string>
@@ -482,7 +470,6 @@
     <string name="tapping_inverted_none">–</string>
     <string name="unknown_status">Unbekannter Status</string>
     <string name="unknown_author">Unbekannter Autor</string>
-    <string name="action_download_unread">Ungelesene Kapitel herunterladen</string>
     <string name="updated_version">Auf v%1$s aktualisiert</string>
     <string name="whats_new">Was ist neu</string>
     <string name="download_insufficient_space">Herunterladen von Kapiteln aufgrund von zu wenig Speicherplatz nicht möglich</string>
@@ -618,7 +605,7 @@
     <string name="theme_greenapple">Grüner Apfel</string>
     <string name="pref_app_theme">App-Design</string>
     <string name="enhanced_services">Erweiterte Anbieter</string>
-    <string name="enhanced_tracking_info">Anbieter, die für bestimmte Quellen erweiterte Features anbieten. Manga werden automatisch getrackt, wenn sie deiner Bibliothek hinzugefügt werden.</string>
+    <string name="enhanced_tracking_info">Anbieter, die für bestimmte Quellen erweiterte Funktionen anbieten. Manga werden automatisch getrackt, wenn sie deiner Bibliothek hinzugefügt werden.</string>
     <string name="tracker_komga_warning">Dieser Tracker ist nur mit der Komga-Quelle kompatibel.</string>
     <string name="theme_monet">Dynamisch</string>
     <string name="label_background_activity">Hintergrundaktivität</string>
@@ -680,7 +667,6 @@
     <string name="on_hiatus">Unterbrochen</string>
     <string name="publishing_finished">Veröffentlichung abgeschlossen</string>
     <string name="action_faq_and_guides">Häufige Fragen und Leitfäden</string>
-    <string name="backup_restore_invalid_uri">Fehler: leerer URI</string>
     <string name="webtoon_side_padding_5">5 %</string>
     <string name="action_show_manga">Manga anzeigen</string>
     <string name="confirm_manga_add_duplicate">In deiner Bibliothek existiert ein Eintrag mit dem gleichen Namen, aber aus einer anderen Quelle (%1$s).
@@ -768,4 +754,18 @@
     <string name="missing_storage_permission">Speicherberechtigungen nicht erteilt</string>
     <string name="skipped_reason_not_always_update">Übersprungen, da die Serie keine Aktualisierung benötigt</string>
     <string name="action_search_hint">Suchen…</string>
+    <string name="pref_general_summary">App-Sprache, Benachrichtigungen</string>
+    <string name="pref_appearance_summary">Thema, Datums- und Zeitformat</string>
+    <string name="pref_reader_summary">Lesemodus, Anzeige, Navigation</string>
+    <string name="pref_downloads_summary">Automatische Downloads, im Voraus herunterladen</string>
+    <string name="pref_library_summary">Kategorien, globale Aktualisierungen</string>
+    <string name="crash_screen_restart_application">Anwendung neustarten</string>
+    <string name="pref_tracking_summary">Einweg-Synchronisation, erweiterte Synchronisation</string>
+    <string name="pref_browse_summary">Quellen, Erweiterungen, globale Suche</string>
+    <string name="crash_screen_title">Ein unerwarteter Fehler ist aufgetreten</string>
+    <string name="pref_advanced_summary">Absturzprotokolle ausgeben, Akkuverbrauch-Optimierung</string>
+    <string name="pref_backup_summary">Manuelle und automatische Sicherungen</string>
+    <string name="crash_screen_description">%s ist auf einen unerwarteten Fehler gestoßen. Wir empfehlen dir, einen Screenshot von dieser Nachricht zu machen, die Absturzprotokolle auszugeben und sie dann in unserem Support-Kanal auf Discord zu teilen.</string>
+    <string name="pref_security_summary">App-Sperre, sicherer Bildschirm</string>
+    <string name="unknown_title">Unbekannter Titel</string>
 </resources>

@@ -34,7 +34,6 @@
     <string name="action_bookmark">Bölümü işaretle</string>
     <string name="action_remove_bookmark">Bölümün işaretini kaldır</string>
     <string name="action_delete">Sil</string>
-    <string name="action_update">Güncelle</string>
     <string name="action_update_library">Kitaplığı güncelle</string>
     <string name="action_edit">Düzenle</string>
     <string name="action_add">Ekle</string>
@@ -64,7 +63,6 @@
     <string name="action_reset">Sıfırla</string>
     <string name="action_undo">Geri al</string>
     <string name="action_open_log">Günlüğü aç</string>
-    <string name="action_create">Oluştur</string>
     <string name="action_restore">Geri yükle</string>
     <string name="loading">Yükleniyor…</string>
     <string name="app_not_available">Uygulama yok</string>
@@ -194,7 +192,6 @@
     <string name="password">Parola</string>
     <string name="login">Giriş</string>
     <string name="login_success">Giriş yapıldı</string>
-    <string name="invalid_login">Giriş yapılamadı</string>
     <string name="unknown_error">Bilinmeyen hata</string>
     <string name="updating_category">Kategori güncelleniyor</string>
     <string name="local_source_badge">Yerel</string>
@@ -204,13 +201,10 @@
     <string name="action_global_search_hint">Genel arama…</string>
     <string name="latest">En son</string>
     <string name="browse">Göz at</string>
-    <string name="manga_not_in_db">Bu manga veritabanından kaldırıldı.</string>
-    <string name="description">Açıklama</string>
     <string name="ongoing">Devam ediyor</string>
     <string name="unknown">Bilinmiyor</string>
     <string name="licensed">Lisanslı</string>
     <string name="remove_from_library">Kitaplıktan kaldır</string>
-    <string name="manga_info_full_title_label">Başlık</string>
     <string name="manga_added_library">Kitaplığa eklendi</string>
     <string name="manga_removed_library">Kitaplıktan kaldırıldı</string>
     <string name="delete_downloads_for_manga">İndirilen bölümler silinsin mi?</string>
@@ -223,7 +217,6 @@
     <string name="chapter_paused">Duraklatıldı</string>
     <string name="show_title">Kaynak başlığı</string>
     <string name="show_chapter_number">Bölüm numarası</string>
-    <string name="sorting_mode">Sıralama kipi</string>
     <string name="sort_by_source">Kaynağa göre</string>
     <string name="sort_by_number">Bölüm numarasına göre</string>
     <string name="manga_download">İndir</string>
@@ -248,7 +241,6 @@
     <string name="track_status">Durum</string>
     <string name="track_start_date">Başlama</string>
     <string name="track_type">Tür</string>
-    <string name="track_author">Yazar</string>
     <string name="error_category_exists">Bu adla bir kategori zaten var!</string>
     <string name="snack_categories_deleted">Kategoriler silindi</string>
     <string name="dialog_with_checkbox_remove_description">Bu, bu bölümün okunma tarihini kaldıracak. Emin misiniz?</string>
@@ -260,7 +252,6 @@
     <string name="cover_updated">Kapak güncellendi</string>
     <string name="chapter_progress">Sayfa: %1$d</string>
     <string name="no_next_chapter">Sonraki bölüm bulunamadı</string>
-    <string name="no_previous_chapter">Önceki bölüm bulunamadı</string>
     <string name="decode_image_error">Görsel yüklenemedi</string>
     <string name="confirm_set_image_as_cover">Bu görsel kapak resmi olarak kullanılsın mı\?</string>
     <string name="migration_dialog_what_to_include">Eklenecek veriyi seç</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">İleri</string>
     <string name="action_webview_refresh">Yenile</string>
     <string name="pref_category_library">Kitaplık</string>
-    <string name="invalid_download_dir">Geçersiz indirme konumu</string>
     <string name="ext_obsolete">Eski</string>
     <string name="obsolete_extension_message">Bu uzantı artık kullanılamaz.</string>
     <string name="pref_date_format">Tarih biçimi</string>
@@ -416,7 +406,6 @@
     <string name="recent_manga_time">Böl. %1$s - %2$s</string>
     <string name="restoring_backup_error">Yedek geri yüklenemedi</string>
     <string name="creating_backup_error">Yedekleme başarısız</string>
-    <string name="error_invalid_date_supplied">Geçersiz tarih belirtildi</string>
     <string name="restoring_backup_canceled">Geri yükleme iptal edildi</string>
     <string name="restore_in_progress">Geri yükleme zaten devam ediyor</string>
     <string name="backup_in_progress">Yedekleme zaten devam ediyor</string>
@@ -453,7 +442,6 @@
     <string name="backup_restore_missing_sources">Eksik kaynaklar:</string>
     <string name="invalid_backup_file_missing_manga">Yedek bir manga içermiyor.</string>
     <string name="invalid_backup_file">Geçersiz yedekleme dosyası</string>
-    <string name="tracker_not_logged_in">Giriş yapılmadı: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Kitaplığı güncellerken yeni kapağı ve ayrıntıları denetle</string>
     <string name="pref_library_update_refresh_metadata">Üst veriyi kendiliğinden yenile</string>
     <string name="action_migrate">Taşın</string>
@@ -482,7 +470,6 @@
     <string name="tapping_inverted_horizontal">Yatay</string>
     <string name="unknown_status">Bilinmeyen durum</string>
     <string name="unknown_author">Bilinmeyen yazar</string>
-    <string name="action_download_unread">Okunmayan bölümleri indir</string>
     <string name="updated_version">v%1$s sürümüne güncellendi</string>
     <string name="whats_new">Yenilikler</string>
     <string name="download_insufficient_space">Saklama alanı az olduğundan bölümler indirilemedi</string>
@@ -685,7 +672,6 @@
     <string name="library_errors_help">Kitaplık güncelleme hatalarının nasıl düzeltileceği konusunda yardım için bkz. %1$s</string>
     <string name="action_filter_started">Başlanılan</string>
     <string name="action_display_cover_only_grid">Sadece-kapak ızgara</string>
-    <string name="backup_restore_invalid_uri">Hata: boş URI</string>
     <string name="action_faq_and_guides">SSS ve Kılavuzlar</string>
     <string name="pref_update_only_completely_read">Okunmayan bölüm(ler)i olan</string>
     <string name="pref_update_only_started">Bu başlamadı</string>
@@ -768,4 +754,17 @@
     <string name="missing_storage_permission">Depolama izinleri verilmedi</string>
     <string name="skipped_reason_not_always_update">Seri güncelleme gerektirmediği için atlandı</string>
     <string name="action_search_hint">Ara…</string>
+    <string name="pref_backup_summary">Elle ve otomatik yedeklemeler</string>
+    <string name="pref_security_summary">Uygulama kilidi, güvenli ekran</string>
+    <string name="pref_advanced_summary">Çökme günlükleri dökümü, pil iyileştirmeleri</string>
+    <string name="pref_general_summary">Uygulama dili, bildirimler</string>
+    <string name="pref_library_summary">Kategoriler, genel güncelleme</string>
+    <string name="pref_browse_summary">Kaynaklar, uzantılar, genel arama</string>
+    <string name="pref_downloads_summary">Otomatik indir, önceden indir</string>
+    <string name="pref_reader_summary">Okuma kipi, görüntüleme, gezinme</string>
+    <string name="pref_appearance_summary">Tema, tarih ve saat biçimi</string>
+    <string name="pref_tracking_summary">Tek yönlü ilerleme eşitlemesi, gelişmiş eşitleme</string>
+    <string name="crash_screen_restart_application">Uygulamayı yeniden başlat</string>
+    <string name="crash_screen_title">Beklenmeyen Bir Hata Oluştu</string>
+    <string name="crash_screen_description">%s beklenmeyen bir hatayla karşılaştı. Bu mesajın ekran görüntüsünü ve çökme günlüklerinin dökümünü almanızı, ardından Discord\'daki destek kanalımızda paylaşmanızı öneririz.</string>
 </resources>

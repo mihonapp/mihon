@@ -34,7 +34,6 @@
     <string name="action_bookmark">Marca el capítol</string>
     <string name="action_remove_bookmark">Desmarca el capítol</string>
     <string name="action_delete">Suprimeix</string>
-    <string name="action_update">Actualitza</string>
     <string name="action_update_library">Actualitza la biblioteca</string>
     <string name="action_edit">Edita</string>
     <string name="action_add">Afegeix</string>
@@ -64,7 +63,6 @@
     <string name="action_reset">Reinicia</string>
     <string name="action_undo">Desfés</string>
     <string name="action_open_log">Obre el registre</string>
-    <string name="action_create">Crea</string>
     <string name="action_restore">Restaura</string>
     <string name="loading">S\'està carregant…</string>
     <string name="app_not_available">Aplicació no disponible</string>
@@ -194,7 +192,6 @@
     <string name="password">Contrasenya</string>
     <string name="login">Inicia la sessió</string>
     <string name="login_success">S\'ha iniciat la sessió</string>
-    <string name="invalid_login">No s\'ha pogut iniciar la sessió</string>
     <string name="unknown_error">S\'ha produït un error desconegut</string>
     <string name="updating_category">S\'està actualitzant la categoria</string>
     <string name="local_source_badge">Local</string>
@@ -204,13 +201,10 @@
     <string name="action_global_search_hint">Cerca global…</string>
     <string name="latest">Recents</string>
     <string name="browse">Explora</string>
-    <string name="manga_not_in_db">Aquest manga s\'ha eliminat de la base de dades.</string>
-    <string name="description">Descripció</string>
     <string name="ongoing">En curs</string>
     <string name="unknown">Desconegut</string>
     <string name="licensed">Llicenciat</string>
     <string name="remove_from_library">Elimina de la biblioteca</string>
-    <string name="manga_info_full_title_label">Títol</string>
     <string name="manga_added_library">S\'ha afegit a la biblioteca</string>
     <string name="manga_removed_library">S\'ha eliminat de la biblioteca</string>
     <string name="delete_downloads_for_manga">Voleu suprimir els capítols baixats\?</string>
@@ -223,7 +217,6 @@
     <string name="chapter_paused">Pausat</string>
     <string name="show_title">Títol de la font</string>
     <string name="show_chapter_number">Número de capítol</string>
-    <string name="sorting_mode">Mode d\'ordenació</string>
     <string name="sort_by_source">Per font</string>
     <string name="sort_by_number">Per número de capítol</string>
     <string name="manga_download">Baixa</string>
@@ -248,7 +241,6 @@
     <string name="track_status">Estat</string>
     <string name="track_start_date">Començat</string>
     <string name="track_type">Tipus</string>
-    <string name="track_author">Autor</string>
     <string name="error_category_exists">Ja hi ha una categoria amb aquest nom!</string>
     <string name="snack_categories_deleted">S\'han suprimit les categories</string>
     <string name="dialog_with_checkbox_remove_description">S\'eliminarà la data de lectura d\'aquest capítol. N\'esteu segur\?</string>
@@ -260,7 +252,6 @@
     <string name="cover_updated">S\'ha actualitzat la portada</string>
     <string name="chapter_progress">Pàgina: %1$d</string>
     <string name="no_next_chapter">No s\'ha trobat el capítol següent</string>
-    <string name="no_previous_chapter">No s\'ha trobat el capítol anterior</string>
     <string name="decode_image_error">No s\'ha pogut carregar la imatge</string>
     <string name="confirm_set_image_as_cover">Voleu fer servir aquesta imatge com a portada\?</string>
     <string name="transition_finished">Finalitzat:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Endavant</string>
     <string name="action_webview_refresh">Actualitza</string>
     <string name="pref_category_library">Biblioteca</string>
-    <string name="invalid_download_dir">La ubicació de baixada és invàlida</string>
     <string name="ext_obsolete">Obsoleta</string>
     <string name="obsolete_extension_message">Aquesta extensió ja no està disponible.</string>
     <string name="pref_date_format">Format de data</string>
@@ -419,7 +409,6 @@
     <string name="restoring_backup_canceled">S\'ha cancel·lat la restauració</string>
     <string name="restore_in_progress">Ja s\'està fent una restauració</string>
     <string name="backup_in_progress">Ja s\'està fent una còpia de seguretat</string>
-    <string name="error_invalid_date_supplied">S\'ha indicat una data invàlida</string>
     <string name="local_source_help_guide">Guia de fonts locals</string>
     <string name="last_used_source">Utilitzada per darrer cop</string>
     <string name="check_for_updates">Comprova si hi ha actualitzacions</string>
@@ -453,7 +442,6 @@
     <string name="backup_restore_missing_sources">Manquen fonts:</string>
     <string name="invalid_backup_file_missing_manga">La còpia de seguretat no conté cap manga.</string>
     <string name="invalid_backup_file">Fitxer de còpia de seguretat invàlid</string>
-    <string name="tracker_not_logged_in">Sessió no iniciada: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprova si hi ha noves portades o detalls en actualitzar la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Refresca les metadades automàticament</string>
     <string name="action_display_comfortable_grid">Graella confortable</string>
@@ -488,7 +476,6 @@
     <string name="pref_category_theme">Tema</string>
     <string name="action_disable">Desactiva</string>
     <string name="action_start">Inicia</string>
-    <string name="action_download_unread">Baixa els capítols no llegits</string>
     <string name="action_sort_date_added">Data d\'incorporació</string>
     <plurals name="num_trackers">
         <item quantity="one">%d seguidor</item>
@@ -670,7 +657,6 @@
     <string name="pref_library_update_show_tab_badge">Mostra el comptador de no llegits a la icona d\'actualitzacions</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="save_chapter_as_cbz">Desa com a arxiu CBZ</string>
-    <string name="backup_restore_invalid_uri">Error: URI buida</string>
     <string name="backup_info">És molt recomanable activar les còpies de seguretat automàtiques. També n\'hauríeu de desar còpies en altres llocs.</string>
     <string name="database_clean">Buidatge de la base de dades</string>
     <string name="pref_verbose_logging_summary">Imprimeix registres detallats al registre del sistema (redueix el rendiment de l\'aplicació)</string>

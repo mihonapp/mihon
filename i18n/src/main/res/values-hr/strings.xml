@@ -96,7 +96,6 @@
     <string name="label_more">Više</string>
     <string name="name">Ime</string>
     <string name="action_restore">Obnovi</string>
-    <string name="action_create">Stvori</string>
     <string name="action_open_log">Otvori zapisnik</string>
     <string name="action_undo">Poništi</string>
     <string name="action_reset">Obnovi</string>
@@ -136,7 +135,6 @@
     <string name="action_add">Dodaj</string>
     <string name="action_edit">Uredi</string>
     <string name="action_update_library">Aktualiziraj biblioteku</string>
-    <string name="action_update">Aktualiziraj</string>
     <string name="action_delete">Izbriši</string>
     <string name="action_remove_bookmark">Ukloni zabilješku poglavlja</string>
     <string name="action_bookmark">Zabilježi poglavlje</string>
@@ -298,7 +296,6 @@
     <string name="pref_category_for_this_series">Za ovaj serijal</string>
     <string name="confirm_set_image_as_cover">Ovu sliku koristiti kao naslovnicu\?</string>
     <string name="decode_image_error">Nije bilo moguće učitati sliku</string>
-    <string name="no_previous_chapter">Prethodno poglavlje nije pronađeno</string>
     <string name="no_next_chapter">Sljedeće poglavlje nije pronađeno</string>
     <string name="chapter_progress">Stranica: %1$d</string>
     <string name="cover_updated">Naslovnica aktualizirana</string>
@@ -309,8 +306,6 @@
     <string name="dialog_with_checkbox_remove_description">Ovo će ukloniti datum čitanja ovog poglavlja. Je li to stvarno želiš\?</string>
     <string name="snack_categories_deleted">Izbrisane kategorije</string>
     <string name="error_category_exists">Kategorija s ovim imenom već postoji!</string>
-    <string name="error_invalid_date_supplied">Naveden je neispravan datum</string>
-    <string name="track_author">Autor</string>
     <string name="track_type">Vrsta</string>
     <string name="track_start_date">Započeto</string>
     <string name="track_status">Stanje</string>
@@ -326,7 +321,6 @@
     <string name="reading">Čitanje</string>
     <string name="add_tracking">Dodaj praćenje</string>
     <string name="manga_tracking_tab">Praćenje</string>
-    <string name="invalid_download_dir">Neispravno mjesto za preuzimanja</string>
     <string name="confirm_delete_chapters">Stvarno želiš izbrisati odabrana poglavlja\?</string>
     <string name="download_unread">Nepročitano</string>
     <string name="download_all">Sve</string>
@@ -338,7 +332,6 @@
     <string name="manga_download">Preuzmi</string>
     <string name="sort_by_number">Po broju poglavlja</string>
     <string name="sort_by_source">Po izvoru</string>
-    <string name="sorting_mode">Modus razvrstavanja</string>
     <string name="show_chapter_number">Broj poglavlja</string>
     <string name="show_title">Naslov izvora</string>
     <string name="chapter_paused">Zaustavljeno</string>
@@ -354,15 +347,12 @@
     <string name="manga_info_expand">Više</string>
     <string name="manga_removed_library">Uklonjeno iz biblioteke</string>
     <string name="manga_added_library">Dodano u biblioteku</string>
-    <string name="manga_info_full_title_label">Naslov</string>
     <string name="remove_from_library">Ukloni iz biblioteke</string>
     <string name="in_library">U biblioteci</string>
     <string name="add_to_library">Dodaj u biblioteku</string>
     <string name="licensed">Licencirano</string>
     <string name="unknown">Nepoznat</string>
     <string name="ongoing">Nastavljajući</string>
-    <string name="description">Opis</string>
-    <string name="manga_not_in_db">Ovaj je manga uklonjen iz baze podataka.</string>
     <string name="local_source_help_guide">Vodič za lokalni izvor</string>
     <string name="browse">Pretraži</string>
     <string name="latest">Najnoviji</string>
@@ -377,7 +367,6 @@
     <string name="local_source_badge">Lokalno</string>
     <string name="updating_category">Ažuriranje kategorije</string>
     <string name="unknown_error">Nepoznata greška</string>
-    <string name="invalid_login">Prijava nije moguća</string>
     <string name="logout_success">Odjava uspjela</string>
     <string name="logout">Odjava</string>
     <string name="logout_title">Odjaviti se iz %1$s\?</string>
@@ -457,7 +446,6 @@
     <string name="backup_restore_missing_sources">Nedostaju izvori:</string>
     <string name="invalid_backup_file_missing_manga">Sigurnosna kopija ne sadrži nijedan manga.</string>
     <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije</string>
-    <string name="tracker_not_logged_in">Neprijavljeno: %1$s</string>
     <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
     <string name="unofficial_extension_message">Ovo proširenje nije sa službenog popisa Tachiyomi proširenja.</string>
     <string name="ext_unofficial">Neslužbeno</string>
@@ -491,7 +479,6 @@
     <string name="pref_read_with_tapping_inverted">Preokreni područja za dodirivanje</string>
     <string name="unknown_status">Nepoznato stanje</string>
     <string name="unknown_author">Nepoznat autor</string>
-    <string name="action_download_unread">Preuzmi nepročitana poglavlja</string>
     <string name="updated_version">Aktualizirano na v%1$s</string>
     <string name="whats_new">Što je novo</string>
     <string name="download_insufficient_space">Neuspjelo preuzimanje poglavlja zbog nedovoljne memorije</string>
@@ -694,7 +681,6 @@
     <string name="action_faq_and_guides">ČPP i vodiči</string>
     <string name="action_show_manga">Prikaži manga</string>
     <string name="action_display_cover_only_grid">Samo naslovnice</string>
-    <string name="backup_restore_invalid_uri">Greška: prazan URL</string>
     <string name="webtoon_side_padding_5">5 %</string>
     <string name="confirm_manga_add_duplicate">U biblioteci imaš unos s istim imenom ali iz drugog izvora (%1$s).
 \n

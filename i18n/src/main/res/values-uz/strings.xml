@@ -13,11 +13,9 @@
     <string name="action_disable_all">Hammasini õchirish</string>
     <string name="action_enable_all">Hammasini yoqish</string>
     <string name="action_update_library">Bibliotekani yangilash</string>
-    <string name="action_update">Yangilash</string>
     <string name="action_delete">Õchirish</string>
     <string name="action_remove_bookmark">Belgini olib tashlash</string>
     <string name="action_bookmark">Xatchõp</string>
-    <string name="action_download_unread">Õqilmagan bõlimlarni yuklash</string>
     <string name="action_download">Yuklash</string>
     <string name="action_mark_previous_as_read">Oldingisini õqilgan deb belgilash</string>
     <string name="action_mark_as_unread">Õqilmagan deb belgilash</string>

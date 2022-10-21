@@ -34,7 +34,6 @@
     <string name="action_bookmark">Marchează Capitolul</string>
     <string name="action_remove_bookmark">Demarcați capitolul</string>
     <string name="action_delete">Șterge</string>
-    <string name="action_update">Actualizează</string>
     <string name="action_update_library">Actualizează biblioteca</string>
     <string name="action_edit">Modifică</string>
     <string name="action_add">Adaugă</string>
@@ -63,7 +62,6 @@
     <string name="action_reset">Resetează</string>
     <string name="action_undo">Anulează</string>
     <string name="action_open_log">Deschide jurnal</string>
-    <string name="action_create">Creează</string>
     <string name="action_restore">Restaurează</string>
     <string name="loading">Se încarcă…</string>
     <string name="app_not_available">Aplicația nu este accesibilă</string>
@@ -194,7 +192,6 @@
     <string name="password">Parolă</string>
     <string name="login">Autentificare</string>
     <string name="login_success">Autentificat</string>
-    <string name="invalid_login">Nu s-a putut face autentificarea</string>
     <string name="unknown_error">Eroare necunoscută</string>
     <string name="updating_category">Categorie in curs de actualizare</string>
     <string name="local_source_badge">Local</string>
@@ -204,13 +201,10 @@
     <string name="action_global_search_hint">Căutare globală…</string>
     <string name="latest">Cel mai recent</string>
     <string name="browse">Caută</string>
-    <string name="manga_not_in_db">Acest manga a fost eliminat din baza de date.</string>
-    <string name="description">Descriere</string>
     <string name="ongoing">În desfășurare</string>
     <string name="unknown">Necunoscut</string>
     <string name="licensed">Licențiat</string>
     <string name="remove_from_library">Elimină din bibliotecă</string>
-    <string name="manga_info_full_title_label">Titlu</string>
     <string name="manga_added_library">Adăugat la bibliotecă</string>
     <string name="manga_removed_library">Eliminat din bibliotecă</string>
     <string name="delete_downloads_for_manga">Ștergeți capitolele descărcate\?</string>
@@ -223,7 +217,6 @@
     <string name="chapter_paused">Întrerupt</string>
     <string name="show_title">Titlul sursei</string>
     <string name="show_chapter_number">Numărul capitolului</string>
-    <string name="sorting_mode">Mod de sortare</string>
     <string name="sort_by_source">După sursă</string>
     <string name="sort_by_number">După numărul capitolului</string>
     <string name="manga_download">Descarcă</string>
@@ -248,7 +241,6 @@
     <string name="track_status">Status</string>
     <string name="track_start_date">Început</string>
     <string name="track_type">Tip</string>
-    <string name="track_author">Autor</string>
     <string name="error_category_exists">O categorie cu acest nume deja există!</string>
     <string name="snack_categories_deleted">Categoriile au fost șterse</string>
     <string name="dialog_with_checkbox_remove_description">Acest lucru va șterge data citirii acestui capitol. Ești sigur\?</string>
@@ -260,7 +252,6 @@
     <string name="cover_updated">Copertă actualizată</string>
     <string name="chapter_progress">Pagina: %1$d</string>
     <string name="no_next_chapter">Capitolul următor nu a fost găsit</string>
-    <string name="no_previous_chapter">Capitolul precedent nu a fost găsit</string>
     <string name="decode_image_error">Imaginea nu a putut să fie încărcată</string>
     <string name="confirm_set_image_as_cover">Folosiți această imagine ca și copertă\?</string>
     <string name="transition_finished">Terminat:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Înainte</string>
     <string name="action_webview_refresh">Actualizați</string>
     <string name="pref_category_library">Biblioteca</string>
-    <string name="invalid_download_dir">Locație de descărcare nevalidă</string>
     <string name="ext_obsolete">Învechit</string>
     <string name="obsolete_extension_message">Această extensie nu mai este disponibilă.</string>
     <string name="pref_date_format">Formatul datei</string>
@@ -421,7 +411,6 @@
     <string name="pref_confirm_exit">Confirmare ieșire</string>
     <string name="confirm_exit">Apăsați din nou pentru a ieși</string>
     <string name="label_downloaded_only">Doar descărcate</string>
-    <string name="error_invalid_date_supplied">Data furnizată este invalidă</string>
     <string name="restoring_backup_canceled">Restaurare anulată</string>
     <string name="restore_in_progress">Restaurarea este deja în curs de desfășurare</string>
     <string name="backup_in_progress">Crearea copiei de rezervă este deja în curs de desfășurare</string>
@@ -463,7 +452,6 @@
     <string name="action_migrate">Migrează</string>
     <string name="label_data">Date</string>
     <string name="invalid_backup_file">Fișierul de rezerva este invalid</string>
-    <string name="tracker_not_logged_in">Nu ești autentificat: %1$s</string>
     <string name="unofficial_extension_message">Aceasta extensie nu face parte din lista oficială de extensii Tachiyomi.</string>
     <string name="ext_unofficial">Neoficial</string>
     <string name="page_list_empty_error">Nu s-au găsit pagini</string>
@@ -493,7 +481,6 @@
     <string name="unknown_author">Autor necunoscut</string>
     <string name="updated_version">Actualizat la v%1$s</string>
     <string name="whats_new">Ce este nou</string>
-    <string name="action_download_unread">Descărcați capitolele necitite</string>
     <string name="download_insufficient_space">Nu s-au putut descărca capitole din cauza spațiului de stocare redus</string>
     <string name="action_global_search_query">Căutați „%1$s” la nivel global</string>
     <string name="pref_category_reading_mode">Mod citire</string>
@@ -621,7 +608,6 @@
     <string name="delete_category">Ștergeți categoria</string>
     <string name="pref_inverted_colors">Inversate</string>
     <string name="enhanced_services">Servicii îmbunătățite</string>
-    <string name="backup_restore_invalid_uri">Eroare: URI gol</string>
     <string name="webview_data_deleted">Datele WebView au fost șterse</string>
     <string name="about_dont_kill_my_app">Unii producători au restricții suplimentare privind aplicațiile care opresc serviciile de fundal. Acest site web conține mai multe informații despre cum să le rezolvați.</string>
     <string name="database_clean">Nimic de curățat</string>

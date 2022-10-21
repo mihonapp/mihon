@@ -9,7 +9,6 @@
     <string name="history">تۆماری ڕابردوو</string>
     <string name="unlock_app">بکەرەوەTachiyomi</string>
     <string name="confirm_lock_change">دڵنیابوونەوە تا گۆڕانکاری بکرێت</string>
-    <string name="action_download_unread">داونلۆدی چاپتەری نەخوێندراو</string>
     <string name="action_mark_previous_as_read">ئاماژەکردنی پێشوو وەک خوێندراو</string>
     <string name="action_bookmark">نیشانکردنی چاپتەر</string>
     <string name="action_update_library">نوێکردنەوەی کۆکراوەکان</string>
@@ -53,7 +52,6 @@
     <string name="action_download">داونلۆد</string>
     <string name="information_empty_category">هیچ کاتیگۆرییەکت نییە. دەست بنێ بە دوگمەی زیادە تا کاتیگۆرییەک بۆ ڕێکخستنی تۆماری ڕابردووت درووست بکەیت.</string>
     <string name="action_delete">سڕینەوە</string>
-    <string name="action_update">نوێکردنەوە</string>
     <string name="confirm_exit">دووبارە گەڕانەوە بکە بۆ چوونە دەرەوە</string>
     <string name="information_no_recent">هێج نوێکارییەک نییە لەم دواییانەدا</string>
     <string name="label_sources">سەرچاوەکان</string>
@@ -90,7 +88,6 @@
     <string name="action_reset">دووبارە سازکردنەوە</string>
     <string name="action_undo">پەشیمان بوونەوە</string>
     <string name="action_open_log">کردنەوەی تۆمار</string>
-    <string name="action_create">درووستکردن</string>
     <string name="action_restore">گەڕاندنەوە</string>
     <string name="action_webview_back">گەڕانەوە</string>
     <string name="action_webview_forward">بەرەو پێشەوە</string>

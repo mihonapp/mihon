@@ -26,7 +26,6 @@
     <string name="action_bookmark">Aggiungi segnalibro</string>
     <string name="action_remove_bookmark">Rimuovi segnalibro</string>
     <string name="action_delete">Cancella</string>
-    <string name="action_update">Aggiorna</string>
     <string name="action_update_library">Aggiorna libreria</string>
     <string name="action_edit">Modifica</string>
     <string name="action_add_category">Aggiungi categoria</string>
@@ -148,15 +147,12 @@
     <string name="password">Password</string>
     <string name="login">Accedi</string>
     <string name="login_success">Accesso riuscito</string>
-    <string name="invalid_login">Impossibile accedere</string>
     <string name="unknown_error">Errore sconosciuto</string>
     <!-- Library fragment -->
     <string name="updating_category">Aggiornamento categoria</string>
     <!-- Catalogue fragment -->
     <!-- Manga activity -->
-    <string name="manga_not_in_db">Questo manga è stato rimosso dal database.</string>
     <!-- Manga info fragment -->
-    <string name="description">Descrizione</string>
     <string name="ongoing">In corso</string>
     <string name="unknown">Sconosciuto</string>
     <string name="licensed">Concesso in licenza</string>
@@ -167,7 +163,6 @@
     <string name="chapter_error">Errore</string>
     <string name="show_title">Titolo della fonte</string>
     <string name="show_chapter_number">Numero del capitolo</string>
-    <string name="sorting_mode">Modalità di ordinamento</string>
     <string name="sort_by_source">Per fonte</string>
     <string name="sort_by_number">Per numero di capitolo</string>
     <string name="manga_download">Scarica</string>
@@ -200,7 +195,6 @@
     <string name="cover_updated">Copertina aggiornata</string>
     <string name="chapter_progress">Pagina: %1$d</string>
     <string name="no_next_chapter">Capitolo successivo non trovato</string>
-    <string name="no_previous_chapter">Capitolo precedente non trovato</string>
     <string name="decode_image_error">Non è stato possibile caricare l\'immagine</string>
     <string name="confirm_set_image_as_cover">Usare questa immagine come copertina\?</string>
     <!-- Backup fragment -->
@@ -242,7 +236,6 @@
     <string name="action_add">Aggiungi</string>
     <string name="action_undo">Annulla</string>
     <string name="action_open_log">Apri registro</string>
-    <string name="action_create">Crea</string>
     <string name="action_restore">Ripristina</string>
     <string name="app_not_available">App non disponibile</string>
     <string name="update_weekly">Ogni settimana</string>
@@ -305,7 +298,6 @@
     <string name="action_global_search_hint">Ricerca globale…</string>
     <string name="latest">Ultimi</string>
     <string name="browse">Sfoglia</string>
-    <string name="manga_info_full_title_label">Titolo</string>
     <string name="manga_added_library">Aggiunto alla libreria</string>
     <string name="manga_removed_library">Rimosso dalla libreria</string>
     <string name="copied_to_clipboard">Copiato negli appunti:
@@ -317,7 +309,6 @@
     <string name="track_status">Stato</string>
     <string name="track_start_date">Iniziato</string>
     <string name="track_type">Tipo</string>
-    <string name="track_author">Autore</string>
     <string name="snack_categories_deleted">Categorie rimosse</string>
     <string name="migration_dialog_what_to_include">Seleziona i dati da includere</string>
     <string name="migrate">Migra</string>
@@ -349,7 +340,6 @@
     <string name="action_webview_forward">Avanti</string>
     <string name="action_webview_refresh">Aggiorna</string>
     <string name="pref_category_library">Libreria</string>
-    <string name="invalid_download_dir">Posizione di download invalida</string>
     <string name="ext_obsolete">Obsoleta</string>
     <string name="obsolete_extension_message">Questa estensione non è più disponibile.</string>
     <string name="pref_date_format">Formato data</string>
@@ -444,7 +434,6 @@
     <string name="action_unpin">Sblocca</string>
     <string name="action_select_inverse">Inverti selezione</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
-    <string name="error_invalid_date_supplied">Data indicata invalida</string>
     <string name="manga_info_collapse">Meno</string>
     <string name="manga_info_expand">Altro</string>
     <string name="licenses">Licenze open source</string>
@@ -495,7 +484,6 @@
     <string name="backup_restore_missing_sources">Fonti mancanti:</string>
     <string name="invalid_backup_file_missing_manga">Il backup non contiene nessun manga.</string>
     <string name="invalid_backup_file">File di backup invalido</string>
-    <string name="tracker_not_logged_in">Non hai effettuato l\'accesso: %1$s</string>
     <string name="unofficial_extension_message">Questa estensione non è presente nella lista ufficiale delle estensioni di Tachiyomi.</string>
     <string name="ext_unofficial">Non ufficiale</string>
     <string name="pref_library_update_refresh_metadata_summary">Controlla nuove copertine e descrizioni durante l\'aggiornamento della libreria</string>
@@ -526,7 +514,6 @@
     <string name="pref_show_reading_mode">Mostra modalità di lettura</string>
     <string name="action_disable">Disabilita</string>
     <string name="action_start">Inizia</string>
-    <string name="action_download_unread">Scarica capitoli non letti</string>
     <string name="action_global_search_query">Ricerca «%1$s» globalmente</string>
     <string name="download_insufficient_space">Impossibile scaricare i capitoli a causa dello spazio di archiviazione insufficiente</string>
     <string name="pref_category_reading_mode">Modalità di lettura</string>
@@ -725,7 +712,6 @@
     <string name="on_hiatus">In pausa</string>
     <string name="publishing_finished">Pubblicazione terminata</string>
     <string name="action_faq_and_guides">Domande frequenti e guide</string>
-    <string name="backup_restore_invalid_uri">Errore: URI vuoto</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostra manga</string>
     <string name="pref_navigate_pan">Scorri le pagine larghe toccando</string>
@@ -814,4 +800,17 @@
     <string name="missing_storage_permission">Autorizzazioni per l\'archiviazione non concesse</string>
     <string name="skipped_reason_not_always_update">Saltato perché la serie non richiede aggiornamenti</string>
     <string name="action_search_hint">Ricerca…</string>
+    <string name="pref_general_summary">Lingua dell\'app, notifiche</string>
+    <string name="pref_appearance_summary">Tema, formato data e ora</string>
+    <string name="crash_screen_description">%s ha riscontrato un errore imprevisto. Ti suggeriamo di fare uno screenshot di questo messaggio, scaricare i registri degli arresti anomali e condividerli nel nostro canale di supporto su Discord.</string>
+    <string name="pref_library_summary">Categorie, aggiornamenti globali</string>
+    <string name="pref_downloads_summary">Download automatico, download anticipato</string>
+    <string name="pref_browse_summary">Fonti, estensioni, ricerca globale</string>
+    <string name="pref_reader_summary">Modalità di lettura, aspetto, navigazione</string>
+    <string name="pref_tracking_summary">Sincronizzazione unidirezionale avanzamenti, sincronizzazione migliorata</string>
+    <string name="pref_backup_summary">Backup manuali e automatici</string>
+    <string name="pref_security_summary">Blocco app, schermo protetto</string>
+    <string name="pref_advanced_summary">Registro arresti anomali, ottimizzazioni batteria</string>
+    <string name="crash_screen_title">Si è verificato un errore imprevisto</string>
+    <string name="crash_screen_restart_application">Riavvia l\'applicazione</string>
 </resources>

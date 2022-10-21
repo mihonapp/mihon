@@ -2,7 +2,6 @@
 <resources>
     <string name="label_download_queue">កំពុងទាញយក</string>
     <string name="action_search_settings">ស្វែងរកក្នុងការកំណត់</string>
-    <string name="action_download_unread">ទាញយកភាគដែលមិនទាន់បានអាន</string>
     <string name="chapters">ភាគ</string>
     <string name="label_warning">បំរាម</string>
     <string name="action_filter_unread">មិនទាន់អាន</string>
@@ -86,7 +85,6 @@
     <string name="action_menu">កន្លែងកំណត់</string>
     <string name="action_mark_previous_as_read">បញ្ចាក់ភាគមុនថាបានអាន</string>
     <string name="action_delete">លុប</string>
-    <string name="action_update">ធ្វើបច្ចុប្បន្នភាព</string>
     <string name="action_sort_latest_chapter">ភាគថ្មីបំផុត</string>
     <string name="action_search">ស្វែងរក</string>
     <string name="action_select_all">ជ្រើសទាំងអស់</string>
@@ -115,7 +113,6 @@
     <string name="action_undo">ត្រឡប់វាវិញ</string>
     <string name="action_open_log">បើកlog</string>
     <string name="action_show_errors">ប៉ះដើម្បីមើលលម្អិត</string>
-    <string name="action_create">បង្កើត</string>
     <string name="action_restore">restore</string>
     <string name="action_webview_back">ត្រឡប់</string>
     <string name="action_start_downloading_now">ចាប់ផ្ដើមទាញយកឥឡូវនេះ</string>
@@ -189,7 +186,6 @@
     <string name="update_24hour">រាល់ថ្ងៃ</string>
     <string name="pref_category_library_update">ការធ្វើបច្ចុប្បន្នភាពសកល</string>
     <string name="title">ចំណងជើង</string>
-    <string name="description">សង្ខេបរឿង</string>
     <string name="completed">Concluído</string>
     <string name="ongoing">កំពុងតែចេញផ្សាយ</string>
     <string name="default_category">ថ្នាក់ធម្មតា</string>

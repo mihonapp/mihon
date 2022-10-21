@@ -31,7 +31,6 @@
     <string name="action_bookmark">बुकमार्क अध्याय</string>
     <string name="action_remove_bookmark">अध्याय बुकमार्क हटाये</string>
     <string name="action_delete">हटाये</string>
-    <string name="action_update">अद्यतन</string>
     <string name="action_update_library">अद्यतन पुस्तकालय</string>
     <string name="action_edit">संपादित करें</string>
     <string name="action_add">जोड़े</string>
@@ -61,7 +60,6 @@
     <string name="action_reset">फिर से स्थापित करे</string>
     <string name="action_undo">पूर्ववत् करें</string>
     <string name="action_open_log">लॉग खोले</string>
-    <string name="action_create">सर्जन करना</string>
     <string name="action_restore">पुनःस्थापन करे</string>
     <string name="loading">लोड हो रहा है…</string>
     <string name="app_not_available">ऐप उपलब्ध नहीं</string>
@@ -171,7 +169,6 @@
     <string name="password">पासवर्ड</string>
     <string name="login">लॉग इन करें</string>
     <string name="login_success">लॉग इन किया गया</string>
-    <string name="invalid_login">लॉग इन नहीं कर सका</string>
     <string name="unknown_error">अज्ञात त्रुटि</string>
     <string name="updating_category">श्रेणी अपडेट कर रहा है</string>
     <string name="local_source_badge">लोकल</string>
@@ -181,8 +178,6 @@
     <string name="action_global_search_hint">वैश्विक खोज …</string>
     <string name="latest">नवीनतम</string>
     <string name="browse">ब्राउज</string>
-    <string name="manga_not_in_db">इस मंगा को डाटाबेस से हटा दिया गया है।</string>
-    <string name="description">विवरण</string>
     <string name="ongoing">चल रही है</string>
     <string name="unknown">अज्ञात</string>
     <string name="licensed">लाइसेंस प्राप्त</string>
@@ -194,7 +189,6 @@
     <string name="chapter_paused">रोके गए</string>
     <string name="show_title">स्रोत शीर्षक</string>
     <string name="show_chapter_number">अध्याय संख्या</string>
-    <string name="sorting_mode">छंटनी मोड</string>
     <string name="sort_by_source">स्रोत से</string>
     <string name="sort_by_number">अध्याय संख्या से</string>
     <string name="manga_download">डाउनलोड</string>
@@ -224,7 +218,6 @@
     <string name="cover_updated">कवर अपडेट किया गया</string>
     <string name="chapter_progress">पृष्ठ: %1$d</string>
     <string name="no_next_chapter">अगले अध्याय नहीं मिला</string>
-    <string name="no_previous_chapter">पिछला अध्याय नहीं मिला</string>
     <string name="decode_image_error">छवि को लोड नहीं कर पायें</string>
     <string name="confirm_set_image_as_cover">कवर कला के रूप में इस छवि का उपयोग करें\?</string>
     <string name="download_queue_error">अध्याय डाउनलोड नहीं कर सका। आप डाउनलोड अनुभाग में फिर से कोशिश कर सकते हैं</string>
@@ -274,7 +267,6 @@
     <string name="double_tap_anim_speed_0">कोई एनीमेशन नहीं</string>
     <string name="double_tap_anim_speed_normal">साधारण</string>
     <string name="double_tap_anim_speed_fast">तेज</string>
-    <string name="manga_info_full_title_label">शीर्षक</string>
     <string name="manga_added_library">पुस्तकालय में जोड़ा गया</string>
     <string name="manga_removed_library">लाइब्रेरी से निकाला गया</string>
     <string name="copied_to_clipboard">क्लिपबोर्ड पर नकल:
@@ -290,7 +282,6 @@
     <string name="track_status">स्थिति</string>
     <string name="track_start_date">शुरू कर दिया है</string>
     <string name="track_type">प्रकार</string>
-    <string name="track_author">लेखक</string>
     <string name="transition_finished">समाप्त:</string>
     <string name="transition_current">प्रचलित:</string>
     <string name="transition_next">अगला:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">आगे की ओर</string>
     <string name="action_webview_refresh">रीफ़्रेश करें</string>
     <string name="pref_category_library">पुस्तकालय</string>
-    <string name="invalid_download_dir">अमान्य डाउनलोड निर्देशिका</string>
     <string name="ext_obsolete">अप्रचलित</string>
     <string name="obsolete_extension_message">यह एक्सटेंशन अब उपलब्ध नहीं है।</string>
     <string name="pref_date_format">दिनांक स्वरूप</string>
@@ -419,7 +409,6 @@
     <string name="restoring_backup_canceled">पुनर्स्थापना रद्द की गई</string>
     <string name="restore_in_progress">पुनर्स्थापना पहले से ही प्रगति पर है</string>
     <string name="backup_in_progress">बैकप पहले से ही प्रगति में है</string>
-    <string name="error_invalid_date_supplied">अमान्य दिनांक को आपूर्ति की गई</string>
     <string name="last_used_source">आखरी इस्त्तमाल किया गया</string>
     <string name="check_for_updates">अद्यतन के लिए जाँच</string>
     <string name="local_source_help_guide">स्थानीय स्रोत गाइड</string>
@@ -453,7 +442,6 @@
     <string name="backup_restore_missing_sources">अनुपलब्ध स्रोत:</string>
     <string name="invalid_backup_file_missing_manga">बैकअप में कोई मंगा नहीं होता है।</string>
     <string name="invalid_backup_file">अमान्य बैकअप फ़ाइल</string>
-    <string name="tracker_not_logged_in">लॉग इन नहीं है: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">लाइब्रेरी को अपडेट करते समय नए कवर और विवरण की जांच करें</string>
     <string name="pref_library_update_refresh_metadata">मेटाडेटा को स्वचालित रूप से ताज़ा करें</string>
     <string name="action_migrate">प्रवास</string>
@@ -482,7 +470,6 @@
     <string name="unknown_status">अज्ञात स्थिति</string>
     <string name="unknown_author">अज्ञात लेखक</string>
     <string name="requires_app_restart">प्रभावी होने के लिए एप्लिकेशन पुनरारंभ की आवश्यकता होती है</string>
-    <string name="action_download_unread">अपठित अध्याय डाउनलोड करें</string>
     <string name="whats_new">नया क्या है</string>
     <string name="download_insufficient_space">कम संग्रहण स्थान के कारण अध्याय डाउनलोड नहीं कर सके</string>
     <string name="action_global_search_query">विश्व स्तर पर \"%1$s\" के लिए खोजें</string>
@@ -676,7 +663,6 @@
     <string name="privacy_policy">गोपनीयता नीति</string>
     <string name="library_errors_help">लाइब्रेरी अपडेट त्रुटियों को ठीक करने के तरीके पर सहायता के लिए, %1$s देखें</string>
     <string name="extension_api_error">एक्सटेंशन सूची प्राप्त करने में विफल</string>
-    <string name="backup_restore_invalid_uri">त्रुटि: खाली यू॰आर॰ऐ</string>
     <string name="action_faq_and_guides">सामान्य प्रश्नोत्तर और मार्गदर्शन</string>
     <string name="cancelled">रद्द किया गया</string>
     <string name="on_hiatus">अंतराल पर है</string>

@@ -36,9 +36,7 @@
     <string name="action_mark_as_read">पठितमिति अङ्कयतु</string>
     <string name="action_mark_as_unread">अपठितमिति अङ्कयतु</string>
     <string name="action_download">अवतारयतु</string>
-    <string name="action_download_unread">अपठितानि अवतारयतु</string>
     <string name="action_bookmark">अध्यायम् अङ्कयतु</string>
-    <string name="action_update">नवीकरोतु</string>
     <string name="action_update_library">ग्रन्थालयं नवीकरोतु</string>
     <string name="action_enable_all">सर्वाणि सशक्तं करोतु</string>
     <string name="action_edit">सम्पादयतु</string>
@@ -112,7 +110,6 @@
     <string name="action_reset">पुनःस्थापयतु</string>
     <string name="action_undo">अपाकरोतु</string>
     <string name="action_show_errors">विवरणानि द्रष्टुं स्पृशतु</string>
-    <string name="action_create">निर्मातु</string>
     <string name="action_restore">समाददातु</string>
     <string name="action_webview_refresh">नवीकरोतु</string>
     <string name="action_start_downloading_now">अवारोपणम् अधुना आरभताम्</string>
@@ -372,7 +369,6 @@
     <string name="pref_backup_directory">प्रतिलेखनस्थलम्</string>
     <string name="pref_backup_service_category">स्वयङ्कृतप्रतिलेखनम्</string>
     <string name="pref_backup_interval">प्रतिलेखनस्य आवर्तनता</string>
-    <string name="tracker_not_logged_in">न अन्तर्गतम् - %1$s</string>
     <string name="pref_backup_slots">अधिकतमप्रतिलेखनानि</string>
     <string name="backup_in_progress">प्रतिलेखनं पूर्वमेव प्रगतौ अस्ति</string>
     <string name="restore_duration">%02d निमेषाः %02d क्षणाः च</string>
@@ -389,7 +385,6 @@
     <string name="restore_miui_warning">यदि MIUI वृद्धिकरणम् अशक्तं कृतं तर्हि प्रतिलेखनम्/प्रतिसंस्कारः क्रियां युक्तं न कुर्यात्।</string>
     <string name="backup_info">स्वयङ्कृतप्रतिलेखनानि अतीव निर्दिशितानि। त्वया अन्यस्थानेषु अपि प्रतिकृतीनां स्थापनम् उचितं भविष्यति॥</string>
     <string name="pref_restore_backup_summ">प्रतिलेखनसञ्चिकायाः ग्रन्थालयं समाददातु</string>
-    <string name="backup_restore_invalid_uri">दोषः - रिक्तं यू॰आर॰ऐ</string>
     <string name="backup_created">प्रतिलेखनं निर्मितम्</string>
     <string name="invalid_backup_file">अनाप्ता प्रतिलेखनसञ्चिका</string>
     <string name="invalid_backup_file_missing_manga">प्रतिलेखने काऽपि माङ्गा नास्ति।</string>
@@ -404,7 +399,6 @@
     <string name="browse">गवेषयतु</string>
     <string name="website">जालस्थानम्</string>
     <string name="version">संस्करणम्</string>
-    <string name="manga_info_full_title_label">शीर्षकम्</string>
     <string name="cancelled">अलोप्यत</string>
     <string name="manga_info_expand">अधिकम्</string>
     <string name="manga_info_collapse">न्यूनम्</string>
@@ -421,7 +415,6 @@
     <string name="track_status">स्थितिः</string>
     <string name="track_start_date">आरब्धम्</string>
     <string name="track_type">प्रकारः</string>
-    <string name="description">वर्णनम्</string>
     <string name="download_all">सर्वाणि</string>
     <string name="paused">विरमितम्</string>
     <string name="username">उपयोक्तृनाम</string>
@@ -447,7 +440,6 @@
     <string name="unread">अपठितम्</string>
     <string name="reading">पठति</string>
     <string name="completed">समापितम्</string>
-    <string name="track_author">लेखकः</string>
     <string name="migrate">स्थानान्तरगमनम्</string>
     <string name="copy">प्रतिलेखं करोतु</string>
     <string name="update_check_confirm">अवतारयतु</string>
@@ -517,7 +509,6 @@
     <string name="local_filter_order_by">क्रमेण</string>
     <string name="unknown_author">अज्ञातलेखकः</string>
     <string name="unknown_status">अज्ञातस्थितिः</string>
-    <string name="sorting_mode">विन्यासदशा</string>
     <string name="chapter_settings">अध्यायसमायोजनानि</string>
     <string name="notification_incognito_text">प्रच्छन्ननामदशां अशक्तं करोतु</string>
     <string name="manga_from_library">ग्रन्थालयात् माङ्गा</string>
@@ -583,7 +574,6 @@
     <string name="update_check_look_for_updates">नवीकरणेभ्यः अवेक्षते…</string>
     <string name="pref_navigate_pan">पुटान्तरे प्लवतु</string>
     <string name="pref_landscape_zoom">अनुप्रस्थचित्रं सर्पकं करोतु</string>
-    <string name="invalid_download_dir">अवारोपणस्थानम् अनाप्तम्</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">एकाय शीर्षकाय</item>
         <item quantity="other">द्वाभ्यां शीर्षकाभ्याम्</item>
@@ -596,16 +586,13 @@
     <string name="error_sharing_cover">मुखचित्रप्रसारणे दोषः</string>
     <string name="sort_by_number">अध्यायसङ्ख्यया</string>
     <string name="pref_incognito_mode_summary">पठनचरित्रं विरमिष्यति</string>
-    <string name="error_invalid_date_supplied">अनाप्ततिथिः दत्तः</string>
     <string name="error_no_match">समः न लभ्यः</string>
     <string name="migration_help_guide">मूलस्य सङ्क्रमणमार्गदर्शनम्</string>
     <string name="notification_updating">ग्रन्थालयं नवीकरोमि… (%1$d/%2$d)</string>
     <string name="action_global_search_query">\"%1$s\" कृते सार्वत्रिकेण अवेक्षताम्</string>
     <string name="login_title">%1$s प्रति अन्तर्गच्छतु</string>
     <string name="logout_title">%1$s इतः बहिर्गच्छानि किम्</string>
-    <string name="invalid_login">अन्तर्गन्तुं न अशक्नोम्</string>
     <string name="http_error_hint">जालस्थानं वेबव्यू-तन्त्रांशे मार्गतु</string>
-    <string name="no_previous_chapter">पूर्वाध्यायः न लभ्यः</string>
     <string name="source_not_installed">मूलं न प्रतिष्ठापितम् - %1$s</string>
     <string name="snack_add_to_library">माङ्गां ग्रन्थालये योजयानि किम्</string>
     <string name="notification_cover_update_failed">मुखचित्रनवीकरणम् अनुत्तीर्णम्</string>
@@ -643,7 +630,6 @@
     <string name="myanimelist_relogin">कृपया MAL-अन्ते पुनः अन्तर्गच्छतु</string>
     <string name="information_webview_required">टाचीयोमेः कृते वेब्-व्यू-तन्त्रांशः अपेक्षितः</string>
     <string name="information_cloudflare_bypass_failure">क्लौड्-फ़्लेर्व्यवस्थायाः अतिक्रमणम् अनुत्तीर्णम्</string>
-    <string name="manga_not_in_db">एषा माङ्गा दत्तनिधेः निष्कृतम्।</string>
     <string name="download_insufficient_space">साधनसङ्ग्रहे आवश्यकरिक्तस्थानं न अस्ति इति कारणात् अध्यायानाम् अवारोपणं न शक्नुयात्</string>
     <string name="pref_verbose_logging_summary">संविधावृत्तलेखं प्रति अतिविस्तीर्णवृत्तलेखान् मुद्रयतु (अनुप्रयोगप्रवृत्तिम् अल्पयति)</string>
     <string name="download_notifier_unknown_error">यादृच्छिकदोषकारणात् अध्यायस्य अवारोपणम् न शक्नुयात्</string>

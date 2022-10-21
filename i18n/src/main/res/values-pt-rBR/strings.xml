@@ -30,7 +30,6 @@
     <string name="action_bookmark">Adicionar capítulo aos favoritos</string>
     <string name="action_remove_bookmark">Remover capítulo dos favoritos</string>
     <string name="action_delete">Remover</string>
-    <string name="action_update">Atualizar</string>
     <string name="action_update_library">Atualizar biblioteca</string>
     <string name="action_edit">Editar</string>
     <string name="action_add">Adicionar</string>
@@ -59,7 +58,6 @@
     <string name="action_reset">Redefinir</string>
     <string name="action_undo">Desfazer</string>
     <string name="action_open_log">Abrir registro de eventos</string>
-    <string name="action_create">Criar</string>
     <string name="action_restore">Restaurar</string>
     <string name="loading">Carregando…</string>
     <string name="app_not_available">Aplicativo indisponível</string>
@@ -169,13 +167,10 @@
     <string name="password">Senha</string>
     <string name="login">Fazer login</string>
     <string name="login_success">Login realizado</string>
-    <string name="invalid_login">Não foi possível realizar o login</string>
     <string name="unknown_error">Erro desconhecido</string>
     <string name="updating_category">Atualizando categoria</string>
     <string name="no_more_results">Não há mais resultados</string>
     <string name="local_source">Fonte local</string>
-    <string name="manga_not_in_db">Este mangá foi removido do banco de dados.</string>
-    <string name="description">Descrição</string>
     <string name="ongoing">Em andamento</string>
     <string name="unknown">Desconhecido</string>
     <string name="licensed">Licenciado</string>
@@ -187,7 +182,6 @@
     <string name="chapter_paused">Pausado</string>
     <string name="show_title">Título da fonte</string>
     <string name="show_chapter_number">Número do capítulo</string>
-    <string name="sorting_mode">Modo de ordenação</string>
     <string name="sort_by_source">Pela fonte</string>
     <string name="sort_by_number">Pelo número do capítulo</string>
     <string name="manga_download">Fazer download</string>
@@ -217,7 +211,6 @@
     <string name="cover_updated">Capa atualizada</string>
     <string name="chapter_progress">Página: %1$d</string>
     <string name="no_next_chapter">Próximo capítulo não encontrado</string>
-    <string name="no_previous_chapter">Capítulo anterior não encontrado</string>
     <string name="decode_image_error">A imagem não pôde ser carregada</string>
     <string name="confirm_set_image_as_cover">Usar esta imagem como capa\?</string>
     <string name="download_queue_error">Não foi possível fazer o download dos capítulos. Você pode tentar novamente na seção de downloads</string>
@@ -274,7 +267,6 @@
     <string name="double_tap_anim_speed_0">Sem animação</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Rápida</string>
-    <string name="manga_info_full_title_label">Título</string>
     <string name="manga_added_library">Adicionado à biblioteca</string>
     <string name="manga_removed_library">Removido da biblioteca</string>
     <string name="copied_to_clipboard">Copiado para a área de transferência:
@@ -290,7 +282,6 @@
     <string name="track_status">Estado</string>
     <string name="track_start_date">Começado</string>
     <string name="track_type">Tipo</string>
-    <string name="track_author">Autor</string>
     <string name="transition_finished">Concluído:</string>
     <string name="transition_current">Atual:</string>
     <string name="transition_next">Próximo:</string>
@@ -318,7 +309,6 @@
     <string name="obsolete_extension_message">Esta extensão não está mais disponível.</string>
     <string name="no_results_found">Nenhum resultado encontrado</string>
     <string name="migration_selection_prompt">Selecione uma fonte da qual migrar</string>
-    <string name="invalid_download_dir">Local de download inválido</string>
     <string name="pref_date_format">Formato de data</string>
     <string name="pref_category_library_update">Atualização global</string>
     <string name="logout_title">Desconectar de %1$s\?</string>
@@ -424,7 +414,6 @@
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
     <string name="restoring_backup_canceled">Restauração cancelada</string>
     <string name="restoring_backup_error">Falha ao restaurar o backup</string>
-    <string name="error_invalid_date_supplied">Data inválida fornecida</string>
     <string name="last_used_source">Última utilizada</string>
     <string name="check_for_updates">Procurar por atualizações</string>
     <string name="local_source_help_guide">Guia sobre a fonte local</string>
@@ -461,7 +450,6 @@
     <string name="backup_restore_missing_sources">Fontes faltando:</string>
     <string name="invalid_backup_file_missing_manga">O backup não possui nenhum mangá.</string>
     <string name="invalid_backup_file">Arquivo de backup inválido</string>
-    <string name="tracker_not_logged_in">Login não realizado: %1$s</string>
     <string name="pref_library_update_refresh_metadata_summary">Verifica por novas capas e detalhes durante a atualização da biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Atualizar os metadados automaticamente</string>
     <string name="action_migrate">Migrar</string>
@@ -491,7 +479,6 @@
     <string name="pref_read_with_tapping_inverted">Inverter as zonas de toque</string>
     <string name="unknown_status">Estado desconhecido</string>
     <string name="unknown_author">Autor desconhecido</string>
-    <string name="action_download_unread">Fazer download de capítulos não lidos</string>
     <string name="updated_version">Atualizado para v%1$s</string>
     <string name="whats_new">O que há de novo</string>
     <string name="download_insufficient_space">Não foi possível fazer o download dos capítulos devido ao pouco espaço de armazenamento</string>
@@ -692,7 +679,6 @@
     <string name="cancelled">Cancelado</string>
     <string name="on_hiatus">Em hiato</string>
     <string name="action_faq_and_guides">FAQ e Guias</string>
-    <string name="backup_restore_invalid_uri">Erro: URI vazia</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostrar o mangá</string>
     <string name="confirm_manga_add_duplicate">Você tem um item na sua biblioteca com o mesmo nome, mas de uma fonte diferente (%1$s).
@@ -781,4 +767,18 @@
     <string name="missing_storage_permission">Permissões de armazenamento não concedidas</string>
     <string name="skipped_reason_not_always_update">Pulado porque a série não requer atualizações</string>
     <string name="action_search_hint">Pesquisar…</string>
+    <string name="pref_general_summary">Idioma do aplicativo, notificações</string>
+    <string name="pref_appearance_summary">Tema, formato de data e hora</string>
+    <string name="pref_library_summary">Categorias, atualização global</string>
+    <string name="pref_reader_summary">Modo de leitura, exibição, navegação</string>
+    <string name="pref_downloads_summary">Download automático, download a frente</string>
+    <string name="pref_tracking_summary">Sincronização de progresso unidirecional, sincronização aprimorada</string>
+    <string name="pref_browse_summary">Fontes, extensões, pesquisa global</string>
+    <string name="pref_backup_summary">Backups manuais e automáticos</string>
+    <string name="pref_security_summary">Bloqueio do aplicativo, tela segura</string>
+    <string name="pref_advanced_summary">Exportar registros de travamento, otimizações de bateria</string>
+    <string name="crash_screen_title">Ocorreu um erro inesperado</string>
+    <string name="crash_screen_restart_application">Reiniciar o aplicativo</string>
+    <string name="crash_screen_description">%s teve um erro inesperado. Nós sugerimos que você capture a tela com essa mensagem, exporte os registros de travamento e então compartilhá-los no nosso canal de suporte no Discord.</string>
+    <string name="unknown_title">Título desconhecido</string>
 </resources>

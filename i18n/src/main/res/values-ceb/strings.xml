@@ -47,7 +47,6 @@
     <string name="action_filter">Pagsala</string>
     <string name="label_help">Tabang</string>
     <string name="label_warning">Pasidaan</string>
-    <string name="action_download_unread">I-download ang wala pa mabasa nga mga kapitulo</string>
     <string name="action_sort_latest_chapter">Pinakabag-o nga kapitulo</string>
     <string name="action_filter_empty">Kuhaa ang filter</string>
     <string name="action_sort_last_manga_update">Katapusan nga update sa manga</string>
@@ -65,7 +64,6 @@
     <string name="action_bookmark">Bookmark nga kapitulo</string>
     <string name="action_remove_bookmark">Unbookmark nga kapitulo</string>
     <string name="action_delete">Pagtangtang</string>
-    <string name="action_update">Update</string>
     <string name="action_enable_all">I-enable ang tanan</string>
     <string name="action_add">Idugang</string>
     <string name="action_add_category">Idugang ang kategorya</string>
@@ -182,7 +180,6 @@
     <string name="action_move_to_top">Ibalhin sa ibabaw</string>
     <string name="action_move_to_top_all_for_series">Ibalhin ang serye sa ibabaw</string>
     <string name="action_show_errors">I-tap aron makita ang mga detalye</string>
-    <string name="action_create">Paghimo</string>
     <string name="action_faq_and_guides">FAQ ug mga Giya</string>
     <string name="action_asc">Pagsaka</string>
     <string name="action_share">Ipaambit</string>
@@ -402,7 +399,6 @@
     <string name="pref_backup_slots">Maximum nga pag-backup</string>
     <string name="backup_created">Gihimo ang backup</string>
     <string name="pref_backup_interval">Kadaghanon sa pag-backup</string>
-    <string name="backup_restore_invalid_uri">Sayop: walay sulod nga URI</string>
     <string name="invalid_backup_file">Dili balido nga backup file</string>
     <string name="invalid_backup_file_missing_manga">Ang backup walay bisan unsang manga.</string>
     <string name="backup_restore_missing_sources">Nawala nga mga tinubdan:</string>
@@ -425,7 +421,6 @@
     <string name="restore_completed">Nakompleto ang pag-uli</string>
     <string name="creating_backup">Paghimo og backup</string>
     <string name="pref_backup_service_category">Awtomatikong pag-backup</string>
-    <string name="tracker_not_logged_in">Wala naka-log in: %1$s</string>
     <string name="backup_restore_missing_trackers">Ang mga tracker wala naka-log in:</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Nabuhat sa %1$s nga adunay %2$s nga sayup</item>
@@ -503,7 +498,6 @@
     <string name="login_success">Naka-log in</string>
     <string name="login_title">Login sa %1$s</string>
     <string name="email">Email Address</string>
-    <string name="invalid_login">Dili maka log in</string>
     <string name="unknown_error">Wala mailhi nga sayup</string>
     <string name="username">Username</string>
 </resources>

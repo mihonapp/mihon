@@ -61,7 +61,6 @@
     <string name="status">Állapot</string>
     <string name="chapter_progress">%1$d oldal</string>
     <string name="no_next_chapter">Nem található a következő fejezet</string>
-    <string name="no_previous_chapter">Nem található az előző fejezet</string>
     <string name="download_notifier_no_network">A hálózat nem érhető el</string>
     <string name="label_download_queue">Letöltési sor</string>
     <string name="label_library">Könyvtár</string>
@@ -82,7 +81,6 @@
     <string name="action_bookmark">A fejezet könyvjelzőzése</string>
     <string name="action_remove_bookmark">A fejezet eltávolítása a könyvjelzők közül</string>
     <string name="action_delete">Törlés</string>
-    <string name="action_update">Frissítés</string>
     <string name="action_update_library">Könyvtár frissítése</string>
     <string name="action_edit">Szerkesztés</string>
     <string name="action_add">Hozzáadás</string>
@@ -103,7 +101,6 @@
     <string name="action_select_all">Összes kijelölése</string>
     <string name="action_cancel">Mégse</string>
     <string name="action_open_log">Napló megnyitása</string>
-    <string name="action_create">Létrehozás</string>
     <string name="action_restore">Visszaállítás</string>
     <string name="app_not_available">Az app nem elérhető</string>
     <string name="pref_auto_update_manga_sync">Olvasás után a fejezetek haladásának frissítése</string>
@@ -179,7 +176,6 @@
     <string name="scale_type_original_size">Eredeti méret</string>
     <string name="last_read_chapter">Utoljára olvasott fejezet</string>
     <string name="lock_never">Soha</string>
-    <string name="manga_not_in_db">Ez a manga el lett távolítva az adatbázisból.</string>
     <string name="login">Bejelentkezés</string>
     <string name="manga_info_expand">Több</string>
     <string name="manga_info_collapse">Kevesebb</string>
@@ -198,7 +194,6 @@
     <string name="pref_category_theme">Téma</string>
     <string name="action_move_to_bottom">Ugrás legalulra</string>
     <string name="action_move_to_top">Ugrás legfelülre</string>
-    <string name="action_download_unread">Olvasatlan fejezetek letöltése</string>
     <string name="action_search_settings">Keresési beállítások</string>
     <string name="action_sort_date_added">Dátum hozzáadva</string>
     <string name="untrusted_extension">Nem megbízható bővítmény</string>
@@ -226,7 +221,6 @@
     <string name="unknown_status">Ismeretlen állapot</string>
     <string name="unknown_author">Ismeretlen szerző</string>
     <string name="unknown">Ismeretlen</string>
-    <string name="description">Leírás</string>
     <string name="login_success">Bejelentkezve</string>
     <string name="remove_from_library">Eltávolítás a könyvtárból</string>
     <string name="in_library">Könyvtárban</string>
@@ -263,7 +257,6 @@
     <string name="custom_filter">Egyedi szűrő</string>
     <string name="manga_removed_library">Eltávolítva a könyvtárból</string>
     <string name="manga_added_library">Könyvtárhoz adva</string>
-    <string name="manga_info_full_title_label">Cím</string>
     <string name="spen_next_page">Következő oldal</string>
     <string name="channel_errors">Hibák</string>
     <string name="channel_complete">Befejezve</string>
@@ -288,7 +281,6 @@
     <string name="notification_chapters_single_and_more">A(z) %1$s. fejezet és %2$d egyéb fejezetek</string>
     <string name="share_page_info">%1$s:%2$s, %3$d. oldal</string>
     <string name="repeating">Újraolvasás</string>
-    <string name="invalid_download_dir">Érvénytelen letöltési hely</string>
     <string name="confirm_delete_chapters">Biztosan törölni akarja a kijelölt fejezeteket\?</string>
     <string name="download_unread">Olvasatlan</string>
     <string name="download_all">Összes</string>
@@ -304,7 +296,6 @@
     <string name="downloaded_chapters">Letöltött fejezetek</string>
     <string name="updating_category">Kategóriák frissítése</string>
     <string name="unknown_error">Ismeretlen hiba</string>
-    <string name="invalid_login">Sikertelen bejelentkezés</string>
     <string name="logout_success">Mostmár ki van jelentkezve</string>
     <string name="logout">Kijelentkezés</string>
     <string name="password">Jelszó</string>
@@ -489,7 +480,6 @@
     <string name="local_source">Helyi forrás</string>
     <string name="latest">Legújabb</string>
     <string name="date">Dátum</string>
-    <string name="error_invalid_date_supplied">Megadott adat helytelen</string>
     <string name="clear_history_confirmation">Biztos benne\? Minden előzmény elvész.</string>
     <string name="delete_category">Kategória törlése</string>
     <string name="action_faq_and_guides">Gyakori kérdések és Útmutatók</string>
@@ -527,7 +517,6 @@
     <string name="download_insufficient_space">Nem lehetett letölteni kevés tárhely miatt</string>
     <string name="pref_backup_directory">Biztonsági mentés helye</string>
     <string name="pref_backup_slots">Maximális biztonsági mentések száma</string>
-    <string name="tracker_not_logged_in">Nincs belépve: %1$s</string>
     <string name="creating_backup">Biztonsági mentés létrehozása</string>
     <string name="creating_backup_error">Biztonsági mentés sikertelen</string>
     <string name="pref_clear_cookies">Sütik törlése</string>
@@ -622,7 +611,6 @@
     <string name="save_chapter_as_cbz">Mentés CBZ archívumkén</string>
     <string name="theme_lavender">Levendula</string>
     <string name="pref_clear_webview_data">WebView adatok törlése</string>
-    <string name="backup_restore_invalid_uri">Hiba: üres URI</string>
     <string name="pref_dump_crash_logs_summary">Feljegyzi a hibát egy fájlba, hogy meg lehessen osztani a fejlesztővel</string>
     <string name="invalid_backup_file_missing_manga">A biztonsági mentés nem tartalmaz mangát.</string>
     <string name="restoring_backup_canceled">Megszakított helyreállítás</string>
@@ -665,7 +653,6 @@
     <string name="battery_not_low">Ha nem alacsony az akkumulátor tözöttség</string>
     <string name="rotation_reverse_portrait">Fordított álló</string>
     <string name="paused">Megállítva</string>
-    <string name="track_author">Szerző</string>
     <string name="reading_list">Olvasási lista</string>
     <string name="wish_list">Kívánságlista</string>
     <string name="complete_list">Teljes lista</string>
@@ -728,7 +715,6 @@
 \n
 \nAkarja folytatni\?</string>
     <string name="show_title">Forrás címe</string>
-    <string name="sorting_mode">Rendezési mód</string>
     <string name="sort_by_source">Forrás szerint</string>
     <string name="sort_by_number">Fejezetek száma szerint</string>
     <string name="library_errors_help">Könyvtárfrissítési hibák kijavításához sgítségért, tekintese meg %1$s</string>

@@ -16,7 +16,6 @@
     <string name="action_mark_as_unread">Markér som ulæst</string>
     <string name="action_mark_previous_as_read">Markér tidligere som læst</string>
     <string name="action_download">Download</string>
-    <string name="action_download_unread">Download ulæste kapitler</string>
     <string name="action_bookmark">Bogmærk kapitel</string>
     <string name="action_enable_all">Aktivér alt</string>
     <string name="action_edit">Rediger</string>
@@ -56,7 +55,6 @@
     <string name="action_menu">Menu</string>
     <string name="action_sort_date_added">Dato tilføjet</string>
     <string name="action_select_all">Vælg alt</string>
-    <string name="action_update">Opdater</string>
     <string name="action_search_settings">Søge indstillinger</string>
     <string name="action_update_library">Opdater bibliotek</string>
     <string name="action_add_category">Tilføj kategori</string>
@@ -117,7 +115,6 @@
     <string name="action_newest">Nyeste</string>
     <string name="action_desc">Faldende</string>
     <string name="action_show_errors">Tryk for at se detaljer</string>
-    <string name="action_create">Opret</string>
     <string name="action_restore">Gendan</string>
     <string name="action_webview_back">Tilbage</string>
     <string name="action_webview_refresh">Genindlæs</string>
@@ -233,7 +230,6 @@
     <string name="unknown_error">Ukendt fejl</string>
     <string name="internal_error">InternalError: Tjek nedbrudslogfiler for yderligere information</string>
     <string name="logout_success">Du er nu logget ud</string>
-    <string name="invalid_login">Kunne ikke logge ind</string>
     <string name="login_success">Logget ind</string>
     <string name="logout_title">Log af %1$s\?</string>
     <string name="add_to_library">Tilføj til bibliotek</string>

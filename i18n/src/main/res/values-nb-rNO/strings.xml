@@ -32,7 +32,6 @@
     <string name="action_bookmark">Bokmerk kapittel</string>
     <string name="action_remove_bookmark">Fjern bokmerke</string>
     <string name="action_delete">Slett</string>
-    <string name="action_update">Oppdater</string>
     <string name="action_update_library">Oppdater bibliotek</string>
     <string name="action_edit">Rediger</string>
     <string name="action_add">Legg til</string>
@@ -61,7 +60,6 @@
     <string name="action_reset">Tilbakestill</string>
     <string name="action_undo">Angre</string>
     <string name="action_open_log">Åpne logg</string>
-    <string name="action_create">Opprett</string>
     <string name="action_restore">Gjenopprett</string>
     <string name="loading">Laster…</string>
     <string name="app_not_available">Program ikke tilgjengelig</string>
@@ -189,7 +187,6 @@
     <string name="password">Passord</string>
     <string name="login">Logg inn</string>
     <string name="login_success">Innlogget</string>
-    <string name="invalid_login">Kunne ikke logge inn</string>
     <string name="unknown_error">Ukjent feil</string>
     <string name="updating_category">Oppdaterer kategori</string>
     <string name="local_source_badge">Lokal</string>
@@ -199,13 +196,10 @@
     <string name="action_global_search_hint">Globalt søk…</string>
     <string name="latest">Seneste</string>
     <string name="browse">Utforsk</string>
-    <string name="manga_not_in_db">Denne mangaen har blitt fjernet fra databasen.</string>
-    <string name="description">Beskrivelse</string>
     <string name="ongoing">Pågående</string>
     <string name="unknown">Ukjent</string>
     <string name="licensed">Lisensiert</string>
     <string name="remove_from_library">Fjern fra bibliotek</string>
-    <string name="manga_info_full_title_label">Tittel</string>
     <string name="manga_added_library">Lagt til i biblioteket</string>
     <string name="manga_removed_library">Fjernet fra bibliotek</string>
     <string name="delete_downloads_for_manga">Slett nedlastede kapittel\?</string>
@@ -218,7 +212,6 @@
     <string name="chapter_paused">Pauset</string>
     <string name="show_title">Kildetittel</string>
     <string name="show_chapter_number">Kapittelnummer</string>
-    <string name="sorting_mode">Sorteringsmodus</string>
     <string name="sort_by_source">Etter kilde</string>
     <string name="sort_by_number">Etter kapittelnummer</string>
     <string name="manga_download">Last ned</string>
@@ -243,7 +236,6 @@
     <string name="track_status">Status</string>
     <string name="track_start_date">Startet</string>
     <string name="track_type">Type</string>
-    <string name="track_author">Forfatter</string>
     <string name="error_category_exists">En kategori ved dette navnet finnes allerede!</string>
     <string name="snack_categories_deleted">Kategorier slettet</string>
     <string name="dialog_with_checkbox_remove_description">Lesningsdato for dette kapittelet vil bli fjernet. Er du sikker\?</string>
@@ -255,7 +247,6 @@
     <string name="cover_updated">Omslag oppdatert</string>
     <string name="chapter_progress">Side: %1$d</string>
     <string name="no_next_chapter">Fant ikke neste kapittel</string>
-    <string name="no_previous_chapter">Fant ikke forrige kapittel</string>
     <string name="decode_image_error">Bildet kunne ikke lastes inn</string>
     <string name="transition_finished">Fullført:</string>
     <string name="transition_current">Nåværende:</string>
@@ -316,7 +307,6 @@
     <string name="action_webview_forward">Fram</string>
     <string name="action_webview_refresh">Gjenoppfrisk</string>
     <string name="pref_category_library">Bibliotek</string>
-    <string name="invalid_download_dir">Ugyldig nedlastingsmappe</string>
     <string name="ext_obsolete">Foreldet</string>
     <string name="obsolete_extension_message">Denne utvidelsen er ikke lenger tilgjengelig.</string>
     <string name="pref_date_format">Datoformat</string>
@@ -383,7 +373,6 @@
     <string name="confirm_exit">Trykk \"Tilbake\" igjen for å avslutte</string>
     <string name="label_downloaded_only">Kun nedlastet</string>
     <string name="ext_unofficial">Uoffisiell</string>
-    <string name="error_invalid_date_supplied">Ugyldig dato angitt</string>
     <string name="viewer">Lesemodus</string>
     <string name="information_cloudflare_bypass_failure">Klarte ikke bypassere Cloudflare</string>
     <string name="updating_library">Oppdaterer bibliotek</string>
@@ -444,7 +433,6 @@
         <item quantity="one">Gjort på %1$s med %2$s feil</item>
         <item quantity="other">Gjort på %1$s med %2$s feil</item>
     </plurals>
-    <string name="tracker_not_logged_in">Ikke logget inn: %1$s</string>
     <string name="pref_search_pinned_sources_only">Inkluder bare festede kilder</string>
     <string name="pref_show_reading_mode">Vis lesemodus</string>
     <string name="unofficial_extension_message">Denne utvidelsen kommer ikke fra den offisielle Tachiyomi-utvidelseslisten.</string>
@@ -462,7 +450,6 @@
     <string name="pref_library_update_refresh_metadata">Gjenoppfrisk metadata automatisk</string>
     <string name="pref_category_display">Skjerm</string>
     <string name="pref_category_theme">Drakt</string>
-    <string name="action_download_unread">Last ned uleste kapittel</string>
     <string name="action_sort_date_added">Dato lagt til</string>
     <string name="ext_updates_pending">Oppdateringer som venter</string>
     <string name="pref_category_reading_mode">Lesemodus</string>
@@ -665,7 +652,6 @@
     <string name="update_72hour">Hver 3. dag</string>
     <string name="connected_to_wifi">Bare på Wi-Fi</string>
     <string name="action_show_manga">Vis manga</string>
-    <string name="backup_restore_invalid_uri">Feil: tom URI</string>
     <string name="privacy_policy">Personvernerklæring</string>
     <string name="publishing_finished">Ferdig publisert</string>
     <string name="webtoon_side_padding_5">5%</string>

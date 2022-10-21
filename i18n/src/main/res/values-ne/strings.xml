@@ -17,7 +17,6 @@
     <string name="action_webview_forward">अगाडि</string>
     <string name="action_webview_back">पछाडि</string>
     <string name="action_restore">पुनर्स्थापना गर्नुहोस्</string>
-    <string name="action_create">सिर्जना गर्नुहोस्</string>
     <string name="action_open_log">लग खोल्नुहोस्</string>
     <string name="action_undo">पूर्ववत गर्नुहोस्</string>
     <string name="action_reset">रिसेट गर्नुहोस्</string>
@@ -67,11 +66,9 @@
     <string name="action_disable_all">सबैलाई अस्वीकार गर्नुहोस्</string>
     <string name="action_enable_all">सबैलाई स्वीकार गर्नुहोस्</string>
     <string name="action_update_library">पुस्तकालय अपडेट गर्नुहोस्</string>
-    <string name="action_update">अपडेट</string>
     <string name="action_delete">हटाउनुहोस्</string>
     <string name="action_remove_bookmark">अध्याय अनबुकमार्क गर्नुहोस्</string>
     <string name="action_bookmark">अध्याय बुकमार्क गर्नुहोस्</string>
-    <string name="action_download_unread">नपढिएका अध्यायहरू डाउनलोड गर्नुहोस्</string>
     <string name="action_download">डाउनलोड</string>
     <string name="action_mark_previous_as_read">पढिसकेको भनेर अंकित गर्नुहोस्</string>
     <string name="action_mark_as_unread">नपढिएको चिन्ह लगाउनुहोस्</string>
@@ -207,7 +204,6 @@
     <string name="download_queue_error">अध्यायहरू डाउनलोड गर्न सकिएन। तपाईं डाउनलोड कतारमा फेरि प्रयास गर्न सक्नुहुन्छ</string>
     <string name="ext_uninstall">स्थापना रद्द गर्नुहोस्</string>
     <string name="third_to_last">तेस्रो अन्तिम अध्याय</string>
-    <string name="invalid_login">लगइन गर्न सकिएन</string>
     <string name="portrait">पोर्ट्रेट</string>
     <string name="pref_color_filter_mode">रङ फिल्टर मिश्रण मोड</string>
     <string name="default_category_summary">सधैं सोध्नुहोस्</string>
@@ -370,7 +366,6 @@
     <string name="scale_type_fit_width">फिट चौडाइ</string>
     <string name="services">सेवाहरू</string>
     <string name="invalid_backup_file">अवैध ब्याकअप फाइल</string>
-    <string name="tracker_not_logged_in">लगइन गरिएको छैन: %1$s</string>
     <string name="backup_created">ब्याकअप सिर्जना गरियो</string>
     <string name="backup_restore_content_full">ब्याकअप फाइलबाट डाटा पुनर्स्थापित हुनेछ।
 \n
@@ -488,7 +483,6 @@
     <string name="latest">पछिल्लो</string>
     <string name="local_filter_order_by">द्वारा अर्डर गर्नुहोस्</string>
     <string name="date">मिति</string>
-    <string name="manga_not_in_db">यो माङ्गा डाटाबेसबाट हटाइएको छ।</string>
     <string name="login_title">%1$s मा लग इन गर्नुहोस्</string>
     <string name="pref_refresh_library_covers">पुस्तकालय का माङ्गा कभरहरू ताजा गर्नुहोस्</string>
     <string name="notification_incognito_text">इन्कोग्निटो मोड असक्षम गर्नुहोस्</string>
@@ -524,7 +518,6 @@
     <string name="last_used_source">पछिल्लो पटक प्रयोग गरेको</string>
     <string name="action_global_search_hint">ग्लोबल खोज…</string>
     <string name="local_source_help_guide">लोकल स्रोत गाइड</string>
-    <string name="description">विवरण</string>
     <string name="ongoing">जारी छ</string>
     <string name="unknown_status">अज्ञात स्थिति</string>
     <string name="licensed">इजाजतपत्र प्राप्त</string>
@@ -544,7 +537,6 @@
     <string name="on_hiatus">हायटसमा छ</string>
     <string name="add_to_library">पुस्तकालयमा राख्नुहोस</string>
     <string name="manga_added_library">पुस्तकालयमा राखियो</string>
-    <string name="manga_info_full_title_label">शिर्षक</string>
     <string name="in_library">पुस्तकालयमा छ</string>
     <string name="completed">समाप्त</string>
     <string name="manga_removed_library">पुस्तकालयबाट हटाइयो</string>
@@ -571,7 +563,6 @@
     <string name="chapter_downloading_progress">डाउनलोड गर्दै (%1$d/%2$d)</string>
     <string name="sort_by_number">अध्याय संख्या द्वारा</string>
     <string name="sort_by_upload_date">अपलोड मिति द्वारा</string>
-    <string name="track_author">लेखक</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d अध्याय छोड्दै, या त स्रोत सँग छैन वा यसलाई फिल्टर गरिएको छ</item>
         <item quantity="other">%d अध्यायहरू छोड्दै, या त स्रोत सँग छैन वा तिनिहरू फिल्टर आउट गरिएका छन्</item>
@@ -581,7 +572,6 @@
     <string name="error_saving_cover">कभर बचत गर्न असफल</string>
     <string name="action_display_cover_only_grid">कभर-मात्र ग्रिड</string>
     <string name="webtoon_side_padding_5">५%</string>
-    <string name="sorting_mode">क्रमबद्ध मोड</string>
     <string name="error_sharing_cover">कभर साझा गर्न असफल</string>
     <string name="confirm_delete_chapters">के तपाईँले चयन गर्नुभएको अध्यायहरू हटाउन चाहनुहुन्छ\?</string>
     <string name="chapter_settings">अध्याय सेटिङ</string>
@@ -615,7 +605,6 @@
     <string name="track_status">स्थिति</string>
     <string name="picture_saved">फोटो सेभ भयो</string>
     <string name="action_show_manga">माङ्गा देखाउनुहोस्</string>
-    <string name="backup_restore_invalid_uri">त्रुटि: खाली URI</string>
     <string name="unread">नपढिएको</string>
     <string name="paused">रोकिएको</string>
     <string name="transition_no_next">अर्को अध्याय छैन</string>
@@ -640,7 +629,6 @@
 \nके तपाई पक्का हुनुहुन्छ\?</string>
     <string name="action_filter_started">सुरु गरिएको</string>
     <string name="track_type">प्रकार</string>
-    <string name="error_invalid_date_supplied">अवैध मितिको आपूर्ति</string>
     <string name="no_next_chapter">अर्को अध्याय भेटिएन</string>
     <string name="transition_previous">पहिलेको:</string>
     <string name="dropped">छोडिसकेको</string>
@@ -648,7 +636,6 @@
     <string name="plan_to_read">पढ्ने योजना</string>
     <string name="custom_filter">कस्टम फिल्टर</string>
     <string name="set_as_cover">कभरको रूपमा सेट गर्नुहोस्</string>
-    <string name="no_previous_chapter">पहिलेको अध्याय भेटिएन</string>
     <string name="chapter_progress">पृष्ट : %1$d</string>
     <string name="migrate">स्थानान्तरण</string>
     <string name="action_faq_and_guides">बारम्बार सोधिएका प्रश्न उत्तर र गाइडहरू</string>
@@ -659,7 +646,6 @@
     <string name="download_5">अर्को ५ अध्यायहरू</string>
     <string name="download_10">अर्को १० अध्यायहरू</string>
     <string name="download_custom">कस्टम</string>
-    <string name="invalid_download_dir">अवैध डाउनलोड स्थान</string>
     <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा ताचियोमीलाई अवरुद्घ गर्न सक्नेछ।</string>
     <string name="notification_updating">पुस्तकालय अपडेट गर्दै...(%1$d/%2$d)</string>
     <string name="tracker_komga_warning">यो ट्रयाकर कोग्मामा कोस्रोत सँग मात्र चलाउन मिल्छ!</string>
@@ -701,4 +687,12 @@
     <string name="notification_update_skipped">%1$d अपडेट(हरू) छोडियो</string>
     <string name="disabled_nav">अक्षम</string>
     <string name="library_errors_help">पुस्तकालय अपडेट त्रुटिहरू कसरी समाधान गर्ने भन्ने बारे मद्दतको लागि, %1$s हेर्नुहोस्</string>
+    <string name="action_sort_unread_count">अपठित संख्या</string>
+    <string name="action_close">बन्द</string>
+    <string name="pref_library_summary">वर्गहरु, ग्लोबल अपडेट</string>
+    <string name="action_sort_last_manga_update">पछिल्लो माङ्गा अपडेट</string>
+    <string name="delete_category_confirmation">के तपाई \"%s\" वर्ग हटाउन चाहनु हुन्छ\?</string>
+    <string name="delete_category">वर्ग हटाउनुहोस्</string>
+    <string name="action_search_hint">खोज्नु…</string>
+    <string name="action_remove_everything">सबै हटाउनुहोस्</string>
 </resources>
