@@ -343,6 +343,8 @@ class SettingsBackupScreen : SearchableSettings {
         backupPreferences: BackupPreferences,
     ): Preference.PreferenceGroup {
         val context = LocalContext.current
+        val backupIntervalPref = backupPreferences.backupInterval()
+        val backupInterval by backupIntervalPref.collectAsState()
         val backupDirPref = backupPreferences.backupsDirectory()
         val backupDir by backupDirPref.collectAsState()
         val pickBackupLocation = rememberLauncherForActivityResult(
@@ -363,9 +365,10 @@ class SettingsBackupScreen : SearchableSettings {
             title = stringResource(R.string.pref_backup_service_category),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
-                    pref = backupPreferences.backupInterval(),
+                    pref = backupIntervalPref,
                     title = stringResource(R.string.pref_backup_interval),
                     entries = mapOf(
+                        0 to stringResource(R.string.off),
                         6 to stringResource(R.string.update_6hour),
                         12 to stringResource(R.string.update_12hour),
                         24 to stringResource(R.string.update_24hour),
@@ -379,6 +382,7 @@ class SettingsBackupScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(R.string.pref_backup_directory),
+                    enabled = backupInterval != 0,
                     subtitle = remember(backupDir) {
                         (UniFile.fromUri(context, backupDir.toUri())?.filePath)?.let {
                             "$it/automatic"
@@ -394,6 +398,7 @@ class SettingsBackupScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = backupPreferences.numberOfBackups(),
+                    enabled = backupInterval != 0,
                     title = stringResource(R.string.pref_backup_slots),
                     entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
                 ),
