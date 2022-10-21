@@ -9,6 +9,7 @@ import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocal
 import eu.kanade.tachiyomi.source.model.SChapter
@@ -22,6 +23,7 @@ import java.util.TreeSet
 
 class SyncChaptersWithSource(
     private val downloadManager: DownloadManager = Injekt.get(),
+    private val downloadProvider: DownloadProvider = Injekt.get(),
     private val chapterRepository: ChapterRepository = Injekt.get(),
     private val shouldUpdateDbChapter: ShouldUpdateDbChapter = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
@@ -105,13 +107,11 @@ class SyncChaptersWithSource(
                 toAdd.add(toAddChapter)
             } else {
                 if (shouldUpdateDbChapter.await(dbChapter, chapter)) {
-                    downloadManager.run {
-                        val shouldRenameChapter = provider.isChapterDirNameChanged(dbChapter, chapter) &&
-                            isChapterDownloaded(dbChapter.name, dbChapter.scanlator, manga.title, manga.source)
+                    val shouldRenameChapter = downloadProvider.isChapterDirNameChanged(dbChapter, chapter) &&
+                        downloadManager.isChapterDownloaded(dbChapter.name, dbChapter.scanlator, manga.title, manga.source)
 
-                        if (shouldRenameChapter) {
-                            renameChapter(source, manga, dbChapter.toDbChapter(), chapter.toDbChapter())
-                        }
+                    if (shouldRenameChapter) {
+                        downloadManager.renameChapter(source, manga, dbChapter.toDbChapter(), chapter.toDbChapter())
                     }
                     var toChangeChapter = dbChapter.copy(
                         name = chapter.name,

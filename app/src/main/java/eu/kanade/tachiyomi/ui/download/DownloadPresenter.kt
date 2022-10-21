@@ -17,9 +17,6 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import uy.kohesive.injekt.injectLazy
 
-/**
- * Presenter of [DownloadController].
- */
 class DownloadPresenter : BasePresenter<DownloadController>() {
 
     val downloadManager: DownloadManager by injectLazy()

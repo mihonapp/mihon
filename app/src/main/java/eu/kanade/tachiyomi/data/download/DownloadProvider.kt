@@ -14,7 +14,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import eu.kanade.domain.chapter.model.Chapter as DomainChapter
 
 /**
@@ -23,9 +24,10 @@ import eu.kanade.domain.chapter.model.Chapter as DomainChapter
  *
  * @param context the application context.
  */
-class DownloadProvider(private val context: Context) {
-
-    private val downloadPreferences: DownloadPreferences by injectLazy()
+class DownloadProvider(
+    private val context: Context,
+    downloadPreferences: DownloadPreferences = Injekt.get(),
+) {
 
     private val scope = MainScope()
 

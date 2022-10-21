@@ -21,15 +21,10 @@ import java.util.concurrent.TimeUnit
  * directory checking is expensive and it slows down the app. The cache is invalidated by the time
  * defined in [renewInterval] as we don't have any control over the filesystem and the user can
  * delete the folders at any time without the app noticing.
- *
- * @param context the application context.
- * @param provider the downloads directories provider.
- * @param sourceManager the source manager.
- * @param downloadPreferences the preferences of the app.
  */
 class DownloadCache(
     private val context: Context,
-    private val provider: DownloadProvider,
+    private val provider: DownloadProvider = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
 ) {

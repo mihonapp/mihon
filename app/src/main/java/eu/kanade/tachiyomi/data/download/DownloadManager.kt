@@ -25,25 +25,15 @@ import uy.kohesive.injekt.api.get
  * This class is used to manage chapter downloads in the application. It must be instantiated once
  * and retrieved through dependency injection. You can use this class to queue new chapters or query
  * downloaded chapters.
- *
- * @param context the application context.
  */
 class DownloadManager(
     private val context: Context,
+    private val provider: DownloadProvider = Injekt.get(),
+    private val cache: DownloadCache = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
 ) {
-
-    /**
-     * Downloads provider, used to retrieve the folders where the chapters are or should be stored.
-     */
-    val provider = DownloadProvider(context)
-
-    /**
-     * Cache of downloaded chapters.
-     */
-    private val cache = DownloadCache(context, provider)
 
     /**
      * Downloader whose only task is to download chapters.
