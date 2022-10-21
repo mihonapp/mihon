@@ -38,7 +38,11 @@ abstract class WebViewInterceptor(private val context: Context) : Interceptor {
             return@lazy
         }
 
-        WebSettings.getDefaultUserAgent(context)
+        try {
+            WebSettings.getDefaultUserAgent(context)
+        } catch (_: Exception) {
+            // Avoid some crashes like when Chrome/WebView is being updated.
+        }
     }
 
     abstract fun shouldIntercept(response: Response): Boolean
