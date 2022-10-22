@@ -18,5 +18,5 @@ data class Category(
 }
 
 internal fun List<Category>.anyWithName(name: String): Boolean {
-    return any { name.equals(it.name, ignoreCase = true) }
+    return any { name == it.name }
 }
