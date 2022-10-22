@@ -51,8 +51,9 @@ import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.DeviceUtil
-import eu.kanade.tachiyomi.util.system.isDevFlavor
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
+import eu.kanade.tachiyomi.util.system.isPreviewBuildType
+import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
@@ -83,7 +84,7 @@ class SettingsAdvancedScreen : SearchableSettings {
                 pref = basePreferences.acraEnabled(),
                 title = stringResource(R.string.pref_enable_acra),
                 subtitle = stringResource(R.string.pref_acra_summary),
-                enabled = !isDevFlavor,
+                enabled = isPreviewBuildType || isReleaseBuildType,
             ),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(R.string.pref_dump_crash_logs),

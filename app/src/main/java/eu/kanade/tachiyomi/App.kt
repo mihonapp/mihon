@@ -43,7 +43,8 @@ import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
-import eu.kanade.tachiyomi.util.system.isDevFlavor
+import eu.kanade.tachiyomi.util.system.isPreviewBuildType
+import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notification
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -199,7 +200,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
     }
 
     private fun setupAcra() {
-        if (isDevFlavor.not()) {
+        if (isPreviewBuildType || isReleaseBuildType) {
             initAcra {
                 buildConfigClass = BuildConfig::class.java
                 excludeMatchingSharedPreferencesKeys = listOf(".*username.*", ".*password.*", ".*token.*")
