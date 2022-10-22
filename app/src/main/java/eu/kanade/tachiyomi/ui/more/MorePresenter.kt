@@ -32,7 +32,7 @@ class MorePresenter(
         presenterScope.launchIO {
             combine(
                 DownloadService.isRunning,
-                downloadManager.queue.getUpdatedAsFlow(),
+                downloadManager.queue.updatedFlow(),
             ) { isRunning, downloadQueue -> Pair(isRunning, downloadQueue.size) }
                 .collectLatest { (isDownloading, downloadQueueSize) ->
                     val pendingDownloadExists = downloadQueueSize != 0

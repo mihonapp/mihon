@@ -78,13 +78,13 @@ class DownloadQueue(
         .startWith(getActiveDownloads())
         .onBackpressureBuffer()
 
-    fun getStatusAsFlow(): Flow<Download> = getStatusObservable().asFlow()
+    fun statusFlow(): Flow<Download> = getStatusObservable().asFlow()
 
     private fun getUpdatedObservable(): Observable<List<Download>> = updatedRelay.onBackpressureBuffer()
         .startWith(Unit)
         .map { this }
 
-    fun getUpdatedAsFlow(): Flow<List<Download>> = getUpdatedObservable().asFlow()
+    fun updatedFlow(): Flow<List<Download>> = getUpdatedObservable().asFlow()
 
     private fun setPagesFor(download: Download) {
         if (download.status == Download.State.DOWNLOADED || download.status == Download.State.ERROR) {
@@ -111,7 +111,7 @@ class DownloadQueue(
             .filter { it.status == Download.State.DOWNLOADING }
     }
 
-    fun getProgressAsFlow(): Flow<Download> = getProgressObservable().asFlow()
+    fun progressFlow(): Flow<Download> = getProgressObservable().asFlow()
 
     private fun setPagesSubject(pages: List<Page>?, subject: PublishSubject<Int>?) {
         pages?.forEach { it.setStatusSubject(subject) }

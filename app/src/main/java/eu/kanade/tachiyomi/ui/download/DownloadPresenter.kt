@@ -34,7 +34,7 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
         super.onCreate(savedState)
 
         presenterScope.launch {
-            downloadQueue.getUpdatedAsFlow()
+            downloadQueue.updatedFlow()
                 .catch { error -> logcat(LogPriority.ERROR, error) }
                 .map { downloads ->
                     downloads
@@ -49,9 +49,9 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
         }
     }
 
-    fun getDownloadStatusFlow() = downloadQueue.getStatusAsFlow()
+    fun getDownloadStatusFlow() = downloadQueue.statusFlow()
 
-    fun getDownloadProgressFlow() = downloadQueue.getProgressAsFlow()
+    fun getDownloadProgressFlow() = downloadQueue.progressFlow()
 
     /**
      * Pauses the download queue.

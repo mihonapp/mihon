@@ -18,6 +18,7 @@ import eu.kanade.domain.updates.model.UpdatesWithRelations
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.updates.UpdatesState
 import eu.kanade.presentation.updates.UpdatesStateImpl
+import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -27,11 +28,12 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.logcat
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -50,6 +52,7 @@ class UpdatesPresenter(
     private val getManga: GetManga = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
+    private val downloadCache: DownloadCache = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
     basePreferences: BasePreferences = Injekt.get(),
     uiPreferences: UiPreferences = Injekt.get(),
@@ -70,12 +73,6 @@ class UpdatesPresenter(
     // First and last selected index in list
     private val selectedPositions: Array<Int> = arrayOf(-1, -1)
 
-    /**
-     * Subscription to observe download status changes.
-     */
-    private var observeDownloadsStatusJob: Job? = null
-    private var observeDownloadsPageJob: Job? = null
-
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
@@ -86,10 +83,11 @@ class UpdatesPresenter(
                 add(Calendar.MONTH, -3)
             }
 
-            observeDownloads()
-
-            getUpdates.subscribe(calendar)
-                .distinctUntilChanged()
+            combine(
+                getUpdates.subscribe(calendar).distinctUntilChanged(),
+                downloadCache.changes,
+            ) { updates, _ -> updates }
+                .debounce(500) // Avoid crashes due to LazyColumn rendering
                 .catch {
                     logcat(LogPriority.ERROR, it)
                     _events.send(Event.InternalError)
@@ -97,6 +95,26 @@ class UpdatesPresenter(
                 .collectLatest { updates ->
                     state.items = updates.toUpdateItems()
                     state.isLoading = false
+                }
+        }
+
+        presenterScope.launchIO {
+            downloadManager.queue.statusFlow()
+                .catch { error -> logcat(LogPriority.ERROR, error) }
+                .collect {
+                    withUIContext {
+                        updateDownloadState(it)
+                    }
+                }
+        }
+
+        presenterScope.launchIO {
+            downloadManager.queue.progressFlow()
+                .catch { error -> logcat(LogPriority.ERROR, error) }
+                .collect {
+                    withUIContext {
+                        updateDownloadState(it)
+                    }
                 }
         }
     }
@@ -123,30 +141,6 @@ class UpdatesPresenter(
                     downloadProgressProvider = { activeDownload?.progress ?: 0 },
                 )
             }
-    }
-
-    private suspend fun observeDownloads() {
-        observeDownloadsStatusJob?.cancel()
-        observeDownloadsStatusJob = presenterScope.launchIO {
-            downloadManager.queue.getStatusAsFlow()
-                .catch { error -> logcat(LogPriority.ERROR, error) }
-                .collect {
-                    withUIContext {
-                        updateDownloadState(it)
-                    }
-                }
-        }
-
-        observeDownloadsPageJob?.cancel()
-        observeDownloadsPageJob = presenterScope.launchIO {
-            downloadManager.queue.getProgressAsFlow()
-                .catch { error -> logcat(LogPriority.ERROR, error) }
-                .collect {
-                    withUIContext {
-                        updateDownloadState(it)
-                    }
-                }
-        }
     }
 
     /**

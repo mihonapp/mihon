@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withTimeout
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 /**
@@ -305,9 +306,9 @@ class DownloadCache(
      * Returns a new map containing only the key entries of [transform] that are not null.
      */
     private inline fun <K, V, R> Map<out K, V>.mapNotNullKeys(transform: (Map.Entry<K?, V>) -> R?): MutableMap<R, V> {
-        val destination = LinkedHashMap<R, V>()
-        forEach { element -> transform(element)?.let { destination[it] = element.value } }
-        return destination
+        val mutableMap = ConcurrentHashMap<R, V>()
+        forEach { element -> transform(element)?.let { mutableMap[it] = element.value } }
+        return mutableMap
     }
 }
 
