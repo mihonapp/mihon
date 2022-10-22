@@ -226,9 +226,9 @@ fun BrowseSourceContent(
     val getErrorMessage: (LoadState.Error) -> String = { state ->
         when {
             state.error is NoResultsException -> context.getString(R.string.no_results_found)
-            state.error.message == null -> ""
-            state.error.message!!.startsWith("HTTP error") -> "${state.error.message}: ${context.getString(R.string.http_error_hint)}"
-            else -> state.error.message!!
+            state.error.message.isNullOrEmpty() -> ""
+            state.error.message.orEmpty().startsWith("HTTP error") -> "${state.error.message}: ${context.getString(R.string.http_error_hint)}"
+            else -> state.error.message.orEmpty()
         }
     }
 
