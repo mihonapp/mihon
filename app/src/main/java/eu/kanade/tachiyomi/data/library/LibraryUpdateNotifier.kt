@@ -157,10 +157,6 @@ class LibraryUpdateNotifier(private val context: Context) {
      * @param updates a list of manga with new updates.
      */
     fun showUpdateNotifications(updates: List<Pair<Manga, Array<Chapter>>>) {
-        if (updates.isEmpty()) {
-            return
-        }
-
         NotificationManagerCompat.from(context).apply {
             // Parent group notification
             notify(
