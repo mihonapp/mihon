@@ -255,29 +255,12 @@ class UpdatesPresenter(
     fun deleteChapters(updatesItem: List<UpdatesItem>) {
         presenterScope.launchNonCancellable {
             val groupedUpdates = updatesItem.groupBy { it.update.mangaId }.values
-            val deletedIds = groupedUpdates.flatMap { updates ->
+            groupedUpdates.flatMap { updates ->
                 val mangaId = updates.first().update.mangaId
                 val manga = getManga.await(mangaId) ?: return@flatMap emptyList()
                 val source = sourceManager.get(manga.source) ?: return@flatMap emptyList()
                 val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId)?.toDbChapter() }
                 downloadManager.deleteChapters(chapters, manga, source).mapNotNull { it.id }
-            }
-
-            val deletedUpdates = items.filter {
-                deletedIds.contains(it.update.chapterId)
-            }
-            if (deletedUpdates.isEmpty()) return@launchNonCancellable
-
-            // TODO: Don't do this fake status update
-            state.items = state.items.toMutableList().apply {
-                deletedUpdates.forEach { deletedUpdate ->
-                    val modifiedIndex = indexOf(deletedUpdate)
-                    val item = removeAt(modifiedIndex).copy(
-                        downloadStateProvider = { Download.State.NOT_DOWNLOADED },
-                        downloadProgressProvider = { 0 },
-                    )
-                    add(modifiedIndex, item)
-                }
             }
         }
     }

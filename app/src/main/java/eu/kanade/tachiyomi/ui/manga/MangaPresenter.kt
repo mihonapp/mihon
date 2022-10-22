@@ -666,28 +666,13 @@ class MangaPresenter(
      */
     fun deleteChapters(chapters: List<DomainChapter>) {
         presenterScope.launchNonCancellable {
-            val chapters2 = chapters.map { it.toDbChapter() }
             try {
-                updateSuccessState { successState ->
-                    val deletedIds = downloadManager
-                        .deleteChapters(chapters2, successState.manga, successState.source)
-                        .map { it.id }
-                    val deletedChapters = successState.chapters.filter { deletedIds.contains(it.chapter.id) }
-                    if (deletedChapters.isEmpty()) return@updateSuccessState successState
-
-                    // TODO: Don't do this fake status update
-                    val newChapters = successState.chapters.toMutableList().apply {
-                        deletedChapters.forEach {
-                            val index = indexOf(it)
-                            val toAdd = removeAt(index)
-                                .copy(
-                                    downloadState = Download.State.NOT_DOWNLOADED,
-                                    downloadProgress = 0,
-                                )
-                            add(index, toAdd)
-                        }
-                    }
-                    successState.copy(chapters = newChapters)
+                successState?.let { state ->
+                    downloadManager.deleteChapters(
+                        chapters.map { it.toDbChapter() },
+                        state.manga,
+                        state.source,
+                    )
                 }
             } catch (e: Throwable) {
                 logcat(LogPriority.ERROR, e)
