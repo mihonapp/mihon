@@ -254,14 +254,15 @@ class UpdatesPresenter(
      */
     fun deleteChapters(updatesItem: List<UpdatesItem>) {
         presenterScope.launchNonCancellable {
-            val groupedUpdates = updatesItem.groupBy { it.update.mangaId }.values
-            groupedUpdates.flatMap { updates ->
-                val mangaId = updates.first().update.mangaId
-                val manga = getManga.await(mangaId) ?: return@flatMap emptyList()
-                val source = sourceManager.get(manga.source) ?: return@flatMap emptyList()
-                val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId)?.toDbChapter() }
-                downloadManager.deleteChapters(chapters, manga, source).mapNotNull { it.id }
-            }
+            updatesItem
+                .groupBy { it.update.mangaId }
+                .entries
+                .forEach { (mangaId, updates) ->
+                    val manga = getManga.await(mangaId) ?: return@forEach
+                    val source = sourceManager.get(manga.source) ?: return@forEach
+                    val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId)?.toDbChapter() }
+                    downloadManager.deleteChapters(chapters, manga, source)
+                }
         }
     }
 
