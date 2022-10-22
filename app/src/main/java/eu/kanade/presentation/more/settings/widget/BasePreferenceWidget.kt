@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 internal fun BasePreferenceWidget(
@@ -89,7 +90,7 @@ internal fun Modifier.highlightBackground(highlighted: Boolean): Modifier = comp
     LaunchedEffect(Unit) {
         if (highlighted) {
             highlightFlag = true
-            delay(3000)
+            delay(3.seconds)
             highlightFlag = false
         }
     }

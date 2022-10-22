@@ -48,6 +48,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Date
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun UpdateScreen(
@@ -135,7 +136,7 @@ private fun UpdateScreenContent(
             scope.launch {
                 // Fake refresh status but hide it after a second as it's a long running task
                 isRefreshing = true
-                delay(1000)
+                delay(1.seconds)
                 isRefreshing = false
             }
         },

@@ -25,6 +25,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Cache where we dump the downloads directory from the filesystem. This class is needed because
@@ -243,13 +244,13 @@ class DownloadCache(
             var sources = getSources()
 
             // Try to wait until extensions and sources have loaded
-            withTimeout(30000L) {
+            withTimeout(30.seconds) {
                 while (!extensionManager.isInitialized) {
-                    delay(2000L)
+                    delay(2.seconds)
                 }
 
                 while (sources.isEmpty()) {
-                    delay(2000L)
+                    delay(2.seconds)
                     sources = getSources()
                 }
             }

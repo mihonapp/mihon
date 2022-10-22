@@ -15,6 +15,7 @@ import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
 import eu.kanade.presentation.more.settings.widget.PreferenceGroupHeader
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Preference Screen composable which contains a list of [Preference] items
@@ -33,7 +34,7 @@ fun PreferenceScreen(
         LaunchedEffect(Unit) {
             val i = items.findHighlightedIndex(highlightKey)
             if (i >= 0) {
-                delay(500)
+                delay(0.5.seconds)
                 state.animateScrollToItem(i)
             }
             SearchableSettings.highlightKey = null

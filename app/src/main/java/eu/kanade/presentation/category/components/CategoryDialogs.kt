@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import eu.kanade.domain.category.model.Category
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun CategoryCreateDialog(
@@ -58,7 +59,7 @@ fun CategoryCreateDialog(
 
     LaunchedEffect(focusRequester) {
         // TODO: https://issuetracker.google.com/issues/204502668
-        delay(100)
+        delay(0.1.seconds)
         focusRequester.requestFocus()
     }
 }
@@ -106,7 +107,7 @@ fun CategoryRenameDialog(
 
     LaunchedEffect(focusRequester) {
         // TODO: https://issuetracker.google.com/issues/204502668
-        delay(100)
+        delay(0.1.seconds)
         focusRequester.requestFocus()
     }
 }

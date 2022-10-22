@@ -25,6 +25,7 @@ import eu.kanade.presentation.library.LibraryState
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun LibraryContent(
@@ -95,7 +96,7 @@ fun LibraryContent(
                 scope.launch {
                     // Fake refresh status but hide it after a second as it's a long running task
                     isRefreshing = true
-                    delay(1000)
+                    delay(1.seconds)
                     isRefreshing = false
                 }
             },
