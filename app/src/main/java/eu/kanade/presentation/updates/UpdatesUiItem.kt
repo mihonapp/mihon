@@ -52,7 +52,7 @@ import java.util.Date
 fun LazyListScope.updatesLastUpdatedItem(
     lastUpdated: Long,
 ) {
-    item(key = "last_updated") {
+    item(key = "updates-lastUpdated") {
         val time = remember(lastUpdated) {
             DateUtils.getRelativeTimeSpanString(lastUpdated, Date().time, DateUtils.MINUTE_IN_MILLIS)
         }
@@ -92,8 +92,8 @@ fun LazyListScope.updatesUiItems(
         },
         key = {
             when (it) {
-                is UpdatesUiModel.Header -> it.hashCode()
-                is UpdatesUiModel.Item -> "updates-${it.item.update.chapterId}"
+                is UpdatesUiModel.Header -> "updatesHeader-${it.hashCode()}"
+                is UpdatesUiModel.Item -> "updates-${it.item.update.mangaId}-${it.item.update.chapterId}"
             }
         },
     ) { item ->

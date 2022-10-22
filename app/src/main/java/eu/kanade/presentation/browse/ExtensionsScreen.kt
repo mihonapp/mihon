@@ -119,14 +119,14 @@ private fun ExtensionContent(
             items = state.items,
             contentType = {
                 when (it) {
+                    is ExtensionUiModel.Header -> "header"
                     is ExtensionUiModel.Item -> "item"
-                    else -> "header"
                 }
             },
             key = {
                 when (it) {
                     is ExtensionUiModel.Header -> "extensionHeader-${it.hashCode()}"
-                    is ExtensionUiModel.Item -> "extension-${it.extension.hashCode()}"
+                    is ExtensionUiModel.Item -> "extension-${it.hashCode()}"
                 }
             },
         ) { item ->
