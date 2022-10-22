@@ -671,7 +671,6 @@
     <string name="pref_relative_time_short">Cortas (Hoy, ayer)</string>
     <string name="pref_relative_format">Marcas de tiempo relativas</string>
     <string name="pref_category_timestamps">Marcas de tiempo</string>
-    <string name="pref_category_navigation">Navegación</string>
     <string name="theme_tealturquoise">Azul marino y turquesa</string>
     <string name="pref_category_appearance">Apariencia</string>
     <string name="confirm_lock_change">Identifícate para confirmar el cambio</string>
@@ -812,4 +811,5 @@
     <string name="crash_screen_title">Tenemos un problema</string>
     <string name="crash_screen_restart_application">Reiniciar la aplicación</string>
     <string name="unknown_title">Título desconocido</string>
+    <string name="invalid_location">Ubicación incorrecta: %s</string>
 </resources>

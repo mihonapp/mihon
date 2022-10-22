@@ -642,7 +642,6 @@
     <string name="pref_category_timestamps">Data e hora</string>
     <string name="pref_category_appearance">Aparência</string>
     <string name="action_track">Monitorar</string>
-    <string name="pref_category_navigation">Navegação</string>
     <string name="getting_started_guide">Guia de introdução</string>
     <string name="pref_tablet_ui_mode">Interface de tablet</string>
     <string name="pref_remove_exclude_categories">Categorias ignoradas</string>
@@ -781,4 +780,6 @@
     <string name="crash_screen_restart_application">Reiniciar o aplicativo</string>
     <string name="crash_screen_description">%s teve um erro inesperado. Nós sugerimos que você capture a tela com essa mensagem, exporte os registros de travamento e então compartilhá-los no nosso canal de suporte no Discord.</string>
     <string name="unknown_title">Título desconhecido</string>
+    <string name="invalid_location">Local inválido: %s</string>
+    <string name="error_user_agent_string_invalid">Valor de user agent inválido</string>
 </resources>

@@ -609,7 +609,6 @@
     <string name="alignment_center">কেন্দ্র</string>
     <string name="alignment_top">শীর্ষ</string>
     <string name="pref_side_nav_icon_alignment">সাইড নেভিগেশন আইকন সারিবদ্ধকরণ</string>
-    <string name="pref_category_navigation">নেভিগেশন</string>
     <string name="pref_dark_theme_pure_black">বিশুদ্ধ কালো অন্ধকার মোড</string>
     <string name="theme_yotsuba">চার পাতা</string>
     <string name="theme_yinyang">ইয়িন এবং ইয়াং</string>

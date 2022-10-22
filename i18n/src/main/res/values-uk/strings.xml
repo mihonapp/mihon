@@ -652,7 +652,6 @@
     <string name="pref_category_timestamps">Часові мітки</string>
     <string name="pref_category_appearance">Вигляд</string>
     <string name="action_track">Доріжка</string>
-    <string name="pref_category_navigation">Навігація</string>
     <string name="getting_started_guide">Посібник з початку роботи</string>
     <string name="pref_tablet_ui_mode">Планшетний інтерфейс</string>
     <string name="help_translate">Допомогти з перекладом</string>

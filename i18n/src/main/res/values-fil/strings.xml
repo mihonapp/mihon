@@ -630,7 +630,6 @@
     <string name="confirm_lock_change">Patotohanan para makumpirma ang pagbabago</string>
     <string name="label_default">Ipaubaya</string>
     <string name="action_track">Sundan</string>
-    <string name="pref_category_navigation">Nabigasyon</string>
     <string name="getting_started_guide">Gabay sa Pagsisimula</string>
     <string name="pref_tablet_ui_mode">Pang-tablet na UI</string>
     <string name="help_translate">Tumulong sa pagsalin</string>

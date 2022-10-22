@@ -136,7 +136,6 @@
     <string name="theme_tealturquoise">Teal ug Turquoise</string>
     <string name="theme_yinyang">Yin ug Yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
-    <string name="pref_category_navigation">Nabigasyon</string>
     <string name="pref_date_format">Pormat sa petsa</string>
     <string name="lock_with_biometrics">Kinahanglan nga ablihan</string>
     <string name="lock_when_idle">I-lock kung walay trabaho</string>

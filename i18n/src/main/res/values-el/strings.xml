@@ -630,7 +630,6 @@
     <string name="pref_category_timestamps">Χρονικές ενδείξεις</string>
     <string name="pref_category_appearance">Εμφάνιση</string>
     <string name="action_track">Παρακολούθηση</string>
-    <string name="pref_category_navigation">Πλοήγηση</string>
     <string name="getting_started_guide">Οδηγός για τα πρώτα βήματα</string>
     <string name="pref_tablet_ui_mode">Διεπαφή χρήστη tablet</string>
     <string name="pref_remove_exclude_categories">Εξαιρούμενες κατηγορίες</string>
@@ -768,4 +767,6 @@
     <string name="pref_advanced_summary">Αρχεία καταγραφής σφαλμάτων, βελτιστοποιήσεις μπαταρίας</string>
     <string name="crash_screen_description">Το %s αντιμετώπισε ένα μη αναμενόμενο σφάλμα. Σας προτείνουμε να κάνετε στιγμιότυπο οθόνης αυτού του μηνύματος, να αποθηκεύσετε τα αρχεία καταγραφής σφαλμάτων και, στη συνέχεια να το μοιραστείτε στο κανάλι υποστήριξης μας στο Discord.</string>
     <string name="unknown_title">Άγνωστος τίτλος</string>
+    <string name="invalid_location">Μη έγκυρη τοποθεσία: %s</string>
+    <string name="error_user_agent_string_invalid">Μη έγκυρη συμβολοσειρά πράκτορα χρήστη</string>
 </resources>

@@ -676,7 +676,6 @@
     <string name="pref_relative_time_long">طويل (القصير، +منذ كم يوم)</string>
     <string name="pref_relative_format">الوقت النسبي</string>
     <string name="pref_category_timestamps">الوقت</string>
-    <string name="pref_category_navigation">التنقل</string>
     <string name="theme_tealturquoise">ازرق مخضر و فيروز</string>
     <string name="pref_category_appearance">المظهر</string>
     <string name="getting_started_guide">دليل البدء</string>

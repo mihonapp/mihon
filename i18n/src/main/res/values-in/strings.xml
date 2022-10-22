@@ -613,7 +613,6 @@
     <string name="getting_started_guide">Panduan awal mulai</string>
     <string name="action_track">Lacak</string>
     <string name="pref_category_timestamps">Stempel waktu</string>
-    <string name="pref_category_navigation">Navigasi</string>
     <string name="theme_tealturquoise">Teal &amp; Pirus</string>
     <string name="pref_category_appearance">Penampilan</string>
     <string name="confirm_lock_change">Autentikasi untuk mengonfirmasi perubahan</string>
@@ -754,4 +753,6 @@
     <string name="pref_advanced_summary">Buat log kerusakan, pengoptimalan baterai</string>
     <string name="crash_screen_title">Terjadi Kesalahan Yang Tak Terduga</string>
     <string name="crash_screen_restart_application">Mulai ulang aplikasi</string>
+    <string name="invalid_location">Lokasi tidak valid: %s</string>
+    <string name="unknown_title">Judul tidak diketahui</string>
 </resources>

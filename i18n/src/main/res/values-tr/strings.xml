@@ -630,7 +630,6 @@
     <string name="pref_category_timestamps">Zaman damgaları</string>
     <string name="pref_category_appearance">Görünüm</string>
     <string name="action_track">İzle</string>
-    <string name="pref_category_navigation">Gezinme</string>
     <string name="getting_started_guide">Başlangıç kılavuzu</string>
     <string name="pref_tablet_ui_mode">Tablet arayüzü</string>
     <string name="pref_remove_exclude_categories">İstenmeyen kategoriler</string>
@@ -767,4 +766,7 @@
     <string name="crash_screen_restart_application">Uygulamayı yeniden başlat</string>
     <string name="crash_screen_title">Beklenmeyen Bir Hata Oluştu</string>
     <string name="crash_screen_description">%s beklenmeyen bir hatayla karşılaştı. Bu mesajın ekran görüntüsünü ve çökme günlüklerinin dökümünü almanızı, ardından Discord\'daki destek kanalımızda paylaşmanızı öneririz.</string>
+    <string name="unknown_title">Bilinmeyen başlık</string>
+    <string name="invalid_location">Geçersiz konum: %s</string>
+    <string name="error_user_agent_string_invalid">Geçersiz kullanıcı aracısı dizgesi</string>
 </resources>

@@ -355,7 +355,6 @@
     </plurals>
     <string name="secure_screen">Zabezpečená obrazovka</string>
     <string name="action_show_errors">Ťuknutím zobrazíte podrobnosti</string>
-    <string name="pref_category_navigation">Navigácia</string>
     <string name="theme_system">Podľa systému</string>
     <string name="theme_tako">Tako</string>
     <string name="action_show_manga">Zobraziť mangu</string>

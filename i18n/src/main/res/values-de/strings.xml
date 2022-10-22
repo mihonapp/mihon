@@ -194,7 +194,7 @@
     <string name="completed">Abgeschlossen</string>
     <string name="dropped">Abgebrochen</string>
     <string name="on_hold">Pausiert</string>
-    <string name="plan_to_read">Plane ich zu lesen</string>
+    <string name="plan_to_read">Plane ich zu Lesen</string>
     <string name="score">Bewertung</string>
     <string name="title">Titel</string>
     <string name="status">Status</string>
@@ -629,7 +629,6 @@
     <string name="pref_category_appearance">Erscheinungsbild</string>
     <string name="confirm_lock_change">Authentifiziere dich, um die Änderungen zu bestätigen</string>
     <string name="label_default">Standard</string>
-    <string name="pref_category_navigation">Navigation</string>
     <string name="action_track">Tracken</string>
     <string name="getting_started_guide">Leitfaden für den Einstieg</string>
     <string name="pref_tablet_ui_mode">Tablet-Benutzeroberfläche</string>
@@ -764,8 +763,10 @@
     <string name="pref_browse_summary">Quellen, Erweiterungen, globale Suche</string>
     <string name="crash_screen_title">Ein unerwarteter Fehler ist aufgetreten</string>
     <string name="pref_advanced_summary">Absturzprotokolle ausgeben, Akkuverbrauch-Optimierung</string>
-    <string name="pref_backup_summary">Manuelle und automatische Sicherungen</string>
+    <string name="pref_backup_summary">Manuelle und automatische Datensicherungen</string>
     <string name="crash_screen_description">%s ist auf einen unerwarteten Fehler gestoßen. Wir empfehlen dir, einen Screenshot von dieser Nachricht zu machen, die Absturzprotokolle auszugeben und sie dann in unserem Support-Kanal auf Discord zu teilen.</string>
     <string name="pref_security_summary">App-Sperre, sicherer Bildschirm</string>
     <string name="unknown_title">Unbekannter Titel</string>
+    <string name="invalid_location">Ungültiger Speicherort: %s</string>
+    <string name="error_user_agent_string_invalid">Ungültiger User-Agent-Text</string>
 </resources>

@@ -620,7 +620,6 @@
     <string name="pref_tablet_ui_mode">平板電腦介面</string>
     <string name="getting_started_guide">入門指南</string>
     <string name="action_track">新增</string>
-    <string name="pref_category_navigation">導覽</string>
     <string name="help_translate">協助翻譯</string>
     <string name="pref_remove_exclude_categories">排除的類別</string>
     <string name="ext_app_info">程式資訊</string>
@@ -754,4 +753,7 @@
     <string name="crash_screen_description">「%s」發生了未預期的錯誤。我們建議你擷取此畫面、傾印當機記錄並分享至我們位於 Discord 上的 support 頻道。</string>
     <string name="pref_library_summary">類別、全域更新</string>
     <string name="pref_browse_summary">來源、擴充套件、全域搜尋</string>
+    <string name="invalid_location">無效的位置：%s</string>
+    <string name="unknown_title">未知的標題</string>
+    <string name="error_user_agent_string_invalid">無效的使用者代理字串</string>
 </resources>

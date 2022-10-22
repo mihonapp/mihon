@@ -658,7 +658,6 @@
         <item quantity="other">Há %1$d dias</item>
     </plurals>
     <string name="relative_time_today">Hoje</string>
-    <string name="pref_category_navigation">Navegação</string>
     <string name="theme_monet">Dinâmico</string>
     <string name="label_warning">Aviso</string>
     <string name="confirm_lock_change">Autentifique-se para confirmar a mudança</string>

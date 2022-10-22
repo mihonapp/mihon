@@ -291,7 +291,7 @@
     <string name="download_notifier_no_network">Peruna connessione de retza disponìbile</string>
     <string name="download_notifier_download_paused">Iscarrigamentu in pàusa</string>
     <string name="channel_common">Comunu</string>
-    <string name="action_open_in_web_view">Aberi in sa vista web</string>
+    <string name="action_open_in_web_view">Aberi in WebView</string>
     <string name="pref_true_color">Colore a 32 bit</string>
     <string name="pref_skip_read_chapters">Brinca sos capìtulos marcados comente lèghidos</string>
     <string name="pref_color_filter_mode">Modalidade de fusione de su filtru colore</string>
@@ -376,7 +376,7 @@
         <item quantity="other">B\'ant agiornamentos disponìbiles pro %d estensiones</item>
     </plurals>
     <string name="channel_ext_updates">Agiornamentos de sas estensiones</string>
-    <string name="http_error_hint">Verìfica su situ web cun sa visualizatzione web</string>
+    <string name="http_error_hint">Verìfica su situ web cun WebView</string>
     <string name="updating_library">Agiornende sa biblioteca</string>
     <string name="pref_category_reading">Leghende</string>
     <string name="pref_skip_filtered_chapters">Brinca sos capìtulos filtrados</string>
@@ -630,7 +630,6 @@
     <string name="pref_category_timestamps">Marcas temporales</string>
     <string name="pref_category_appearance">Aparèntzia</string>
     <string name="action_track">Arrasta</string>
-    <string name="pref_category_navigation">Navigatzione</string>
     <string name="getting_started_guide">Ghia pro incumintzare</string>
     <string name="pref_tablet_ui_mode">Modalidade pro tauleddas</string>
     <string name="help_translate">Agiuda a bortare</string>
@@ -767,4 +766,7 @@
     <string name="pref_security_summary">Blocu de s\'aplicatzione, ischermu seguru</string>
     <string name="pref_advanced_summary">Registros de serraduras anòmalas, otimizatziones de sa bateria</string>
     <string name="crash_screen_title">B\'at àpidu un\'errore imprevistu</string>
+    <string name="invalid_location">Positzione non vàlida: %s</string>
+    <string name="unknown_title">Tìtulu disconnotu</string>
+    <string name="error_user_agent_string_invalid">Istringa de agente de utente non vàlida</string>
 </resources>

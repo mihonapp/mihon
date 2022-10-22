@@ -676,7 +676,6 @@
     <string name="pref_category_appearance">Apparence</string>
     <string name="label_default">Par défaut</string>
     <string name="action_track">Suivre</string>
-    <string name="pref_category_navigation">Navigation</string>
     <string name="getting_started_guide">Guide de démarrage</string>
     <string name="pref_tablet_ui_mode">Mode tablette</string>
     <string name="help_translate">Aider à traduire</string>

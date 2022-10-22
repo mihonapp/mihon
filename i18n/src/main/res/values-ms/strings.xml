@@ -618,7 +618,6 @@
     <string name="pref_category_appearance">Tampilan</string>
     <string name="pref_category_timestamps">Cap Masa</string>
     <string name="action_track">Jejak</string>
-    <string name="pref_category_navigation">Navigasi</string>
     <string name="getting_started_guide">Panduan penggunaan</string>
     <string name="pref_tablet_ui_mode">UI tablet</string>
     <string name="pref_remove_exclude_categories">Kategori dikecualikan</string>
@@ -647,7 +646,7 @@
     <string name="clear_database_source_item_count">%1$d manga bukan pustaka dalam pangkalan data</string>
     <string name="extension_api_error">Gagal mendapatkan senarai sambungan</string>
     <string name="privacy_policy">Dasar privasi</string>
-    <string name="pref_library_update_manga_restriction">Langkau mengemas kini judul</string>
+    <string name="pref_library_update_manga_restriction">Langkau mengemas kini tajuk</string>
     <string name="pref_update_only_completely_read">Dengan bab yang belum dibaca</string>
     <string name="library_errors_help">Untuk bantuan cara menyelesaikan ralat kemas kini pustaka, lihat %1$s</string>
     <string name="save_chapter_as_cbz">Simpan sebagai arkib CBZ</string>
@@ -755,4 +754,6 @@
     <string name="pref_browse_summary">Sumber, sambungan, carian keseluruhan</string>
     <string name="crash_screen_description">%s mengalami ralat tidak dijangka. Kami mencadangkan anda untuk tangkapan skrin mesej ini, mengumpulkan log kerosakan, dan kemudian mengongsi ia pada Discord kami di saluran bantuan.</string>
     <string name="unknown_title">Tajuk tidak diketahui</string>
+    <string name="invalid_location">Lokasi tidak sah: %s</string>
+    <string name="error_user_agent_string_invalid">Rentetan ejen pengguna tidak sah</string>
 </resources>

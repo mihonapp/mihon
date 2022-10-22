@@ -654,7 +654,6 @@
     <string name="backup_info">Kopie záloh by jste také měli uchovat na více místech.</string>
     <string name="action_sort_count">Celkem mangy</string>
     <string name="action_select_inverse">Vybrat obráceně</string>
-    <string name="pref_category_navigation">Navigace</string>
     <string name="action_display_language_badge">Jazyk</string>
     <string name="update_72hour">Každé 3 dny</string>
     <string name="connected_to_wifi">Jen na Wi-Fi</string>
@@ -780,4 +779,7 @@
     <string name="crash_screen_restart_application">Restartujte aplikaci</string>
     <string name="pref_backup_summary">Ruční a automatické zálohování</string>
     <string name="crash_screen_title">Došlo k neočekávané chybě</string>
+    <string name="invalid_location">Neplatné umístění: %s</string>
+    <string name="unknown_title">Neznámý titul</string>
+    <string name="error_user_agent_string_invalid">Neplatný řetězec uživatelského agenta</string>
 </resources>

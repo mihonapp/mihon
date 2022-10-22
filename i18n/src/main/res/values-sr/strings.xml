@@ -444,7 +444,6 @@
     <string name="action_asc">Rastuće</string>
     <string name="pref_side_nav_icon_alignment">Poravnanje ikone bočne navigacije</string>
     <string name="label_default">Подразумевано</string>
-    <string name="pref_category_navigation">Navigacija</string>
     <string name="action_start_downloading_now">Покрени преузимање одмах</string>
     <string name="pref_relative_time_long">Dugo (Kratko+, pre n dana)</string>
     <string name="action_display_show_number_of_items">Prikaži broj stavki</string>

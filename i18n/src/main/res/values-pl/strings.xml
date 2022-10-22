@@ -638,7 +638,6 @@
     <string name="label_background_activity">Aktywność w tle</string>
     <string name="action_track">Śledź</string>
     <string name="pref_category_timestamps">Znaczniki czasowe</string>
-    <string name="pref_category_navigation">Nawigacja</string>
     <string name="pref_category_appearance">Wygląd</string>
     <string name="confirm_lock_change">Autoryzuj, aby potwierdzić zmianę</string>
     <string name="label_default">Domyślny</string>

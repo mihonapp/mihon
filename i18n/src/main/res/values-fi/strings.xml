@@ -607,7 +607,6 @@
     <string name="alignment_top">Päällimmäinen</string>
     <string name="pref_side_nav_icon_alignment">Sivunavigaation kuvakkeiden kohdistus</string>
     <string name="pref_dark_theme_pure_black">Täysin musta pimeätila</string>
-    <string name="pref_category_navigation">Navigaatio</string>
     <string name="pref_update_only_started">Ei lukemattomia lukuja</string>
     <string name="pref_relative_format">Suhteelliset aikamerkit</string>
     <string name="pref_relative_time_short">Lyhyt (tänään, eilen)</string>

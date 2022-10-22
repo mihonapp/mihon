@@ -213,7 +213,7 @@
     <string name="delete_downloads_for_manga">Удалить загруженные главы\?</string>
     <string name="download_notifier_download_paused">Загрузка приостановлена</string>
     <string name="history">История</string>
-    <string name="local_source">Локальный источник</string>
+    <string name="local_source">Персональный источник</string>
     <string name="manga">Манга</string>
     <string name="no_more_results">Больше нет результатов</string>
     <string name="pref_backup_directory">Папка резервной копии</string>
@@ -238,7 +238,7 @@
     <string name="pref_read_with_volume_keys_inverted">Клавиши громкости наоборот</string>
     <string name="action_global_search">Искать глобально</string>
     <string name="action_display_download_badge">Загруженные главы</string>
-    <string name="local_source_badge">Локально</string>
+    <string name="local_source_badge">Персональное</string>
     <string name="other_source">Другое</string>
     <string name="action_global_search_hint">Искать глобально…</string>
     <string name="latest">Последняя</string>
@@ -414,7 +414,7 @@
     <string name="website">Сайт</string>
     <string name="pref_confirm_exit">Подтверждать выход</string>
     <string name="recent_manga_time">Гл. %1$s - %2$s</string>
-    <string name="local_source_help_guide">Руководство по локальному источнику</string>
+    <string name="local_source_help_guide">Руководство по персональному источнику</string>
     <string name="last_used_source">Последний использованный источник</string>
     <string name="downloaded_only_summary">Включает фильтр «Загружено» для всей библиотеки</string>
     <string name="check_for_updates">Проверить обновления</string>
@@ -600,7 +600,7 @@
     <string name="pref_library_update_refresh_trackers_summary">Обновлять отслеживание при обновлении библиотеки</string>
     <string name="pref_library_update_refresh_trackers">Обновлять отслеживание</string>
     <string name="restrictions">Ограничения: %s</string>
-    <string name="action_display_local_badge">Локальные серии</string>
+    <string name="action_display_local_badge">Персональные серии</string>
     <string name="off">Выключено</string>
     <string name="on">Включено</string>
     <string name="pref_side_nav_icon_alignment">Выравнивание значков боковой навигации</string>
@@ -655,7 +655,6 @@
     <string name="pref_category_appearance">Отображение</string>
     <string name="getting_started_guide">Руководство по началу работы с приложением</string>
     <string name="action_track">Отслеживать</string>
-    <string name="pref_category_navigation">Навигация</string>
     <string name="pref_tablet_ui_mode">Планшетный интерфейс</string>
     <string name="pref_remove_exclude_categories">Исключённые категории</string>
     <string name="help_translate">Помочь с переводом</string>
@@ -794,4 +793,6 @@
     <string name="crash_screen_title">Возникла непредвиденная ошибка</string>
     <string name="crash_screen_description">%s столкнулось с непредвиденной ошибкой. Мы рекомендуем сделать скриншот этого сообщения, выгрузить журнал с ошибками и после поделиться этим журналом/скиншотом в нашем Discord сервере в канале поддержки.</string>
     <string name="unknown_title">Неизвестное название</string>
+    <string name="invalid_location">Недопустимое расположение: %s</string>
+    <string name="error_user_agent_string_invalid">Недопустимый параметр user agent</string>
 </resources>

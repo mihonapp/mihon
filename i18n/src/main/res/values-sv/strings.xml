@@ -631,7 +631,6 @@
     <string name="label_default">Standard</string>
     <string name="getting_started_guide">Komma igång guide</string>
     <string name="action_track">Spår</string>
-    <string name="pref_category_navigation">Navigering</string>
     <string name="pref_tablet_ui_mode">Tablettgränssnitt</string>
     <string name="help_translate">Hjälp till med översättning</string>
     <string name="pref_remove_exclude_categories">Uteslutna kategorier</string>

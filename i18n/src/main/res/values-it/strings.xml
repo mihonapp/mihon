@@ -6,7 +6,7 @@
     <string name="label_download_queue">Coda download</string>
     <string name="label_library">Libreria</string>
     <string name="label_recent_manga">Cronologia</string>
-    <string name="label_recent_updates">Aggiornamenti</string>
+    <string name="label_recent_updates">Novità</string>
     <string name="label_backup">Backup e ripristino</string>
     <!-- Actions -->
     <string name="action_settings">Impostazioni</string>
@@ -220,7 +220,7 @@
     <!--Content Description-->
     <!-- Information Text -->
     <string name="information_no_downloads">Nessun download</string>
-    <string name="information_no_recent">Nessun aggiornamento recente</string>
+    <string name="information_no_recent">Nessuna novità recente</string>
     <string name="information_no_recent_manga">Nessuna lettura recente</string>
     <string name="information_empty_library">La tua libreria è vuota</string>
     <!-- Download Notification -->
@@ -675,7 +675,6 @@
     <string name="pref_category_timestamps">Data e Ora</string>
     <string name="pref_category_appearance">Aspetto</string>
     <string name="action_track">Traccia</string>
-    <string name="pref_category_navigation">Navigazione</string>
     <string name="getting_started_guide">Guida introduttiva</string>
     <string name="pref_tablet_ui_mode">Interfaccia tablet</string>
     <string name="pref_remove_exclude_categories">Categorie escluse</string>
@@ -774,14 +773,14 @@
     <string name="internal_error">Errore Interno: Controllare i registri dei crash per ulteriori informazioni</string>
     <string name="delete_category_confirmation">Vuoi eliminare la categoria «%s»\?</string>
     <string name="delete_category">Elimina categoria</string>
-    <string name="pref_reset_user_agent_string">Ripristina la stringa user agent del browser</string>
-    <string name="pref_user_agent_string">Stringa user agent predefinita del browser</string>
+    <string name="pref_reset_user_agent_string">Ripristina la stringa «user agent» del browser</string>
+    <string name="pref_user_agent_string">Stringa «user agent» del browser</string>
     <string name="action_remove_everything">Rimuovi tutto</string>
     <string name="loader_rar5_error">Il formato RARv5 non è supportato</string>
     <string name="appwidget_unavailable_locked">Widget non disponibile quando il blocco app è attivo</string>
     <string name="appwidget_updates_description">Vedi i manga aggiornati di recente</string>
     <string name="update_already_running">È già in corso un aggiornamento</string>
-    <string name="error_user_agent_string_blank">La sringa user agent non può essere vuota</string>
+    <string name="error_user_agent_string_blank">La sringa «user agent» non può essere vuota</string>
     <string name="theme_tidalwave">Maremoto</string>
     <string name="download_ahead">Scarica i prossimi</string>
     <plurals name="next_unread_chapters">
@@ -813,4 +812,7 @@
     <string name="pref_advanced_summary">Registro arresti anomali, ottimizzazioni batteria</string>
     <string name="crash_screen_title">Si è verificato un errore imprevisto</string>
     <string name="crash_screen_restart_application">Riavvia l\'applicazione</string>
+    <string name="invalid_location">Posizione invalida: %s</string>
+    <string name="unknown_title">Titolo sconosciuto</string>
+    <string name="error_user_agent_string_invalid">Stringa «user agent» non valida</string>
 </resources>

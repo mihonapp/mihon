@@ -616,7 +616,6 @@
     <string name="pref_remove_exclude_categories">除外されるカテゴリー</string>
     <string name="pref_hide_threshold">メニューを自動非表示するスクロール量</string>
     <string name="pref_category_timestamps">タイムスタンプ</string>
-    <string name="pref_category_navigation">ナビゲーション</string>
     <string name="theme_tealturquoise">青緑&amp;土耳古石</string>
     <string name="pref_category_appearance">外観</string>
     <string name="confirm_lock_change">認証を行って変更を確認してください</string>

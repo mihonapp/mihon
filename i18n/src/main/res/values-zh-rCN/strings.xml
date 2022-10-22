@@ -58,7 +58,7 @@
     <string name="action_save">保存</string>
     <string name="action_reset">重置</string>
     <string name="action_undo">撤销</string>
-    <string name="track">进度管理</string>
+    <string name="track">进度记录</string>
     <string name="label_migration">迁移</string>
     <string name="action_mark_previous_as_read">标记之前章节为已读</string>
     <string name="action_open_log">打开日志</string>
@@ -69,7 +69,7 @@
     <string name="pref_category_general">通用</string>
     <string name="pref_category_reader">阅读</string>
     <string name="pref_category_downloads">下载</string>
-    <string name="pref_category_tracking">进度管理</string>
+    <string name="pref_category_tracking">进度记录</string>
     <string name="pref_category_advanced">高级</string>
     <string name="pref_category_about">关于</string>
     <string name="pref_library_columns">书架界面网格</string>
@@ -182,8 +182,8 @@
     <string name="pref_clear_database_summary">删除未添加到书架的漫画记录</string>
     <string name="clear_database_confirmation">你确定吗？不在书架中的漫画的已读章节和进度将会丢失</string>
     <string name="clear_database_completed">数据已删除</string>
-    <string name="pref_refresh_library_tracking">刷新追踪进度</string>
-    <string name="pref_refresh_library_tracking_summary">从追踪服务中更新漫画的阅读状态，评分以及阅读进度</string>
+    <string name="pref_refresh_library_tracking">更新进度记录</string>
+    <string name="pref_refresh_library_tracking_summary">从记录平台更新阅读状态、评分和进度</string>
     <string name="version">版本</string>
     <string name="pref_enable_acra">发送错误报告</string>
     <string name="pref_acra_summary">协助我们修复错误，发送的错误报告不包含个人敏感信息</string>
@@ -228,7 +228,7 @@
     <string name="download_all">全部</string>
     <string name="download_unread">下载未读</string>
     <string name="confirm_delete_chapters">你确定删除所选章节吗？</string>
-    <string name="manga_tracking_tab">追踪</string>
+    <string name="manga_tracking_tab">进度记录</string>
     <string name="reading">阅读中</string>
     <string name="completed">已完结</string>
     <string name="dropped">已放弃</string>
@@ -239,7 +239,7 @@
     <string name="title">标题</string>
     <string name="status">状态</string>
     <string name="track_status">状态</string>
-    <string name="track_start_date">已开始</string>
+    <string name="track_start_date">连载开始</string>
     <string name="track_type">类型</string>
     <string name="error_category_exists">已存在同名分类！</string>
     <string name="snack_categories_deleted">分类已删除</string>
@@ -387,7 +387,7 @@
     <string name="pref_webtoon_side_padding">侧边填充</string>
     <string name="vertical_plus_viewer">从上到下（连续）</string>
     <string name="action_select_inverse">反选</string>
-    <string name="add_tracking">添加追踪进度</string>
+    <string name="add_tracking">添加进度记录</string>
     <string name="information_webview_required">Tachiyomi 依赖于 WebView</string>
     <string name="manga_info_collapse">收起</string>
     <string name="manga_info_expand">展开</string>
@@ -426,7 +426,7 @@
     <string name="pref_true_color_summary">减少色带，但可能会影响性能</string>
     <string name="action_display_unread_badge">未读章节</string>
     <string name="pref_refresh_library_covers">刷新书架封面</string>
-    <string name="tracking_info">将阅读进度上传到进度管理平台。在漫画页点击“进度管理”按钮即可设置。</string>
+    <string name="tracking_info">将阅读进度上传到进度记录平台。在漫画页点击“进度记录”按钮即可设置。</string>
     <string name="unofficial_extension_message">此插件不是由官方 Tachiyomi 所提供。</string>
     <string name="ext_unofficial">非官方</string>
     <string name="sort_by_upload_date">按上传日期</string>
@@ -468,7 +468,7 @@
     <string name="pref_category_theme">主题</string>
     <string name="action_sort_date_added">添加日期</string>
     <plurals name="num_trackers">
-        <item quantity="other">%d 个追踪源</item>
+        <item quantity="other">%d 个记录平台</item>
     </plurals>
     <string name="pref_read_with_tapping_inverted">反转点按区域</string>
     <string name="no_pinned_sources">你尚未置顶任意图源</string>
@@ -476,7 +476,7 @@
     <string name="channel_progress">进度</string>
     <string name="download_notifier_download_finish">下载完毕</string>
     <string name="channel_errors">错误</string>
-    <string name="backup_restore_missing_trackers">尚未登录的追踪源：</string>
+    <string name="backup_restore_missing_trackers">尚未登录进度记录平台：</string>
     <string name="pref_remove_bookmarked_chapters">允许删除已添加书签的章节</string>
     <string name="pref_category_delete_chapters">删除章节</string>
     <string name="ext_nsfw_warning">来自此插件的图源可能包含 NSFW (18+) 内容</string>
@@ -512,8 +512,8 @@
     <string name="kindlish_nav">Kindle 样式</string>
     <string name="l_nav">L 样式</string>
     <string name="channel_crash_logs">崩溃日志</string>
-    <string name="track_finished_reading_date">阅毕日期</string>
-    <string name="track_started_reading_date">启阅日期</string>
+    <string name="track_finished_reading_date">阅读完毕日期</string>
+    <string name="track_started_reading_date">开始阅读日期</string>
     <string name="crash_log_saved">崩溃日志已保存</string>
     <string name="pref_dump_crash_logs_summary">将错误日志保存到文件中，以便分享给开发者</string>
     <string name="pref_dump_crash_logs">导出崩溃日志</string>
@@ -521,7 +521,7 @@
     <string name="action_asc">升序</string>
     <string name="action_order_by_chapter_number">按章节编号</string>
     <string name="action_order_by_upload_date">按上传日期</string>
-    <string name="action_filter_tracked">已添加进度管理</string>
+    <string name="action_filter_tracked">已记录进度</string>
     <string name="action_display_show_number_of_items">显示漫画数目</string>
     <string name="right_and_left_nav">左右样式</string>
     <string name="pref_dual_page_split">拆分双页</string>
@@ -529,7 +529,7 @@
     <string name="pref_dual_page_invert_summary">拆分双页的顺序与阅读方向不符时可以开启</string>
     <string name="backup_restore_content_full">即将还原备份文件中的数据。
 \n
-\n随后请重新安装所有缺失的插件并重新登录追踪服务。</string>
+\n随后请重新安装所有缺失的插件并重新登录进度记录平台。</string>
     <string name="nav_zone_right">右</string>
     <string name="nav_zone_left">左</string>
     <string name="nav_zone_next">下页</string>
@@ -564,8 +564,8 @@
     <string name="local_filter_order_by">排序依据</string>
     <string name="local_invalid_format">无效的章节格式</string>
     <string name="chapter_not_found">未找到章节</string>
-    <string name="pref_library_update_refresh_trackers_summary">更新书架时一并更新进度管理平台</string>
-    <string name="pref_library_update_refresh_trackers">自动更新进度管理</string>
+    <string name="pref_library_update_refresh_trackers_summary">更新书架时一并更新进度记录平台</string>
+    <string name="pref_library_update_refresh_trackers">自动更新进度记录</string>
     <string name="restrictions">限制：%s</string>
     <string name="action_display_local_badge">本地漫画</string>
     <string name="off">关闭</string>
@@ -579,7 +579,7 @@
     <string name="alignment_top">顶部</string>
     <string name="pref_side_nav_icon_alignment">侧边导航图标位置</string>
     <string name="categorized_display_settings">单独设置每个分类的排序和显示</string>
-    <string name="tracking_guide">进度管理指南</string>
+    <string name="tracking_guide">进度记录指南</string>
     <string name="information_empty_category_dialog">你还没有任何分类。</string>
     <string name="action_start_downloading_now">立即开始下载</string>
     <string name="notification_updating">正在更新书架…（%1$d/%2$d）</string>
@@ -593,7 +593,7 @@
     <string name="theme_midnightdusk">午夜幽暗</string>
     <string name="theme_greenapple">青苹果</string>
     <string name="pref_app_theme">应用主题</string>
-    <string name="tracker_komga_warning">此追踪源仅与 Komga 图源兼容。</string>
+    <string name="tracker_komga_warning">此平台只有 Komga 图源才能使用。</string>
     <string name="enhanced_tracking_info">为特定图源提供增强功能。漫画在添加到书架时会自动同步进度。</string>
     <string name="enhanced_services">增强服务</string>
     <string name="theme_monet">动态</string>
@@ -617,8 +617,7 @@
     <string name="label_default">默认</string>
     <string name="pref_category_timestamps">时间戳</string>
     <string name="pref_category_appearance">外观</string>
-    <string name="action_track">添加进度管理</string>
-    <string name="pref_category_navigation">导航栏</string>
+    <string name="action_track">记录进度</string>
     <string name="getting_started_guide">入门指南</string>
     <string name="pref_tablet_ui_mode">平板用户界面</string>
     <string name="pref_remove_exclude_categories">排除的分类</string>
@@ -755,4 +754,6 @@
     <string name="pref_browse_summary">图源・插件・全局搜索</string>
     <string name="pref_reader_summary">阅读模式・显示・翻页</string>
     <string name="unknown_title">未知标题</string>
+    <string name="invalid_location">无效位置：%s</string>
+    <string name="error_user_agent_string_invalid">User Agent 字符串无效</string>
 </resources>

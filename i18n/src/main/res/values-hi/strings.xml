@@ -591,7 +591,6 @@
     <string name="rotation_landscape">परिदृश्य</string>
     <string name="action_sort_count">कुल किताबें</string>
     <string name="theme_midnightdusk">मिडनाइट डस्क</string>
-    <string name="pref_category_navigation">मार्गदर्शन</string>
     <string name="pref_relative_time_short">लघु (आज, कल)</string>
     <string name="pref_relative_time_long">लंबा (लघु+, n दिन पहले)</string>
     <string name="recently">हाल ही में</string>

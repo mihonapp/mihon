@@ -366,7 +366,6 @@
     <string name="alignment_center">Közép</string>
     <string name="alignment_top">Fent</string>
     <string name="pref_side_nav_icon_alignment">Oldalsó navigációs ikon illeszkedés</string>
-    <string name="pref_category_navigation">Navigálás</string>
     <string name="pref_dark_theme_pure_black">Teljesen fekete sötét mód</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Jin és Jang</string>

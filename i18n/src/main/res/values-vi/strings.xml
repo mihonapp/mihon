@@ -633,7 +633,6 @@
     <string name="about_dont_kill_my_app">Một vài nhà sản xuất có các hạn chế về việc chạy ngầm của ứng dụng có thể gây dừng hiện thị dịch vụ nền. Xem thêm ở địa chỉ này để sửa chữa chúng.</string>
     <string name="pref_relative_format">Dấu thời gian liên quan</string>
     <string name="pref_category_timestamps">Dấu thời gian</string>
-    <string name="pref_category_navigation">Thanh điều hướng</string>
     <string name="theme_tealturquoise">Chủ đề: Xanh lam &amp; Xanh ngọc</string>
     <string name="pref_category_appearance">Giao diện</string>
     <string name="confirm_lock_change">Xác nhận thay đổi</string>

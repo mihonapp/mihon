@@ -147,7 +147,6 @@
     <string name="theme_yinyang">Yin-yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Kulsort</string>
-    <string name="pref_category_navigation">Navigation</string>
     <string name="pref_side_nav_icon_alignment">Justering af sidenavigationsikon</string>
     <string name="alignment_top">Top</string>
     <string name="alignment_center">Midte</string>

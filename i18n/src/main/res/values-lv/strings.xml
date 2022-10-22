@@ -239,7 +239,6 @@
     </plurals>
     <string name="pref_library_update_manga_restriction">Izlaist sēriju atjaunināšanu</string>
     <string name="action_faq_and_guides">Biežāk uzdotie jautājumi un rokasgrāmatas</string>
-    <string name="pref_category_navigation">Navigācija</string>
     <string name="pref_side_nav_icon_alignment">Sāna navigācijas ikonu līdzināšana</string>
     <string name="action_close">Aizvērt</string>
     <string name="alignment_bottom">Apakšpuse</string>

@@ -622,7 +622,6 @@
     <string name="theme_yinyang">Ying i yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Mode fosc negre pur</string>
-    <string name="pref_category_navigation">Navegació</string>
     <string name="pref_category_timestamps">Marques de temps</string>
     <string name="pref_relative_format">Marques de temps relatives</string>
     <string name="update_72hour">Cada 3 dies</string>
