@@ -48,13 +48,19 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesItem
 import java.text.DateFormat
 import java.util.Date
+import kotlin.time.Duration.Companion.minutes
 
 fun LazyListScope.updatesLastUpdatedItem(
     lastUpdated: Long,
 ) {
     item(key = "updates-lastUpdated") {
         val time = remember(lastUpdated) {
-            DateUtils.getRelativeTimeSpanString(lastUpdated, Date().time, DateUtils.MINUTE_IN_MILLIS)
+            val now = Date().time
+            if (now - lastUpdated < 1.minutes.inWholeMilliseconds) {
+                null
+            } else {
+                DateUtils.getRelativeTimeSpanString(lastUpdated, now, DateUtils.MINUTE_IN_MILLIS)
+            }
         }
 
         Box(
@@ -63,7 +69,11 @@ fun LazyListScope.updatesLastUpdatedItem(
                 .padding(horizontal = horizontalPadding, vertical = 8.dp),
         ) {
             Text(
-                text = stringResource(R.string.updates_last_update_info, time),
+                text = if (time.isNullOrEmpty()) {
+                    stringResource(R.string.updates_last_update_info, stringResource(R.string.updates_last_update_info_just_now))
+                } else {
+                    stringResource(R.string.updates_last_update_info, time)
+                },
                 style = LocalTextStyle.current.copy(
                     fontStyle = FontStyle.Italic,
                 ),
