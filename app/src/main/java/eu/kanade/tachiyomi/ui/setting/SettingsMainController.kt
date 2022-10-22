@@ -6,9 +6,10 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.with
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.os.bundleOf
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.ScreenTransition
@@ -19,8 +20,8 @@ import eu.kanade.presentation.more.settings.screen.SettingsGeneralScreen
 import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.LocalRouter
-import eu.kanade.presentation.util.calculateWindowWidthSizeClass
 import eu.kanade.tachiyomi.ui.base.controller.BasicFullComposeController
+import eu.kanade.tachiyomi.util.system.isTabletUi
 
 class SettingsMainController(bundle: Bundle = bundleOf()) : BasicFullComposeController(bundle) {
 
@@ -39,8 +40,9 @@ class SettingsMainController(bundle: Bundle = bundleOf()) : BasicFullComposeCont
     @Composable
     override fun ComposeContent() {
         CompositionLocalProvider(LocalRouter provides router) {
-            val widthSizeClass = calculateWindowWidthSizeClass()
-            if (widthSizeClass == WindowWidthSizeClass.Compact) {
+            val configuration = LocalConfiguration.current
+            val isTabletUi = remember { configuration.isTabletUi() } // won't survive config change
+            if (!isTabletUi) {
                 Navigator(
                     screen = if (toBackupScreen) {
                         SettingsBackupScreen()

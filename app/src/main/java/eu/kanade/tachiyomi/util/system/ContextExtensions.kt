@@ -50,8 +50,6 @@ import java.io.File
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-private const val TABLET_UI_MIN_SCREEN_WIDTH_DP = 720
-
 /**
  * Copies a string to clipboard
  *
@@ -263,28 +261,46 @@ fun Context.createFileInCacheDir(name: String): File {
     return file
 }
 
-/**
- * We consider anything with a width of >= 720dp as a tablet, i.e. with layouts in layout-sw720dp.
- */
-fun Context.isTablet(): Boolean {
-    return resources.configuration.smallestScreenWidthDp >= TABLET_UI_MIN_SCREEN_WIDTH_DP
+private const val TABLET_UI_REQUIRED_SCREEN_WIDTH_DP = 720
+
+// some tablets have screen width like 711dp = 1600px / 2.25
+private const val TABLET_UI_MIN_SCREEN_WIDTH_PORTRAIT_DP = 700
+
+// make sure icons on the nav rail fit
+private const val TABLET_UI_MIN_SCREEN_WIDTH_LANDSCAPE_DP = 600
+
+fun Context.isTabletUi(): Boolean {
+    return resources.configuration.isTabletUi()
 }
 
+fun Configuration.isTabletUi(): Boolean {
+    return smallestScreenWidthDp >= TABLET_UI_REQUIRED_SCREEN_WIDTH_DP
+}
+
+fun Configuration.isAutoTabletUiAvailable(): Boolean {
+    return smallestScreenWidthDp >= TABLET_UI_MIN_SCREEN_WIDTH_LANDSCAPE_DP
+}
+
+// TODO: move the logic to `isTabletUi()` when main activity is rewritten in Compose
 fun Context.prepareTabletUiContext(): Context {
     val configuration = resources.configuration
     val expected = when (Injekt.get<UiPreferences>().tabletUiMode().get()) {
-        TabletUiMode.AUTOMATIC -> isTablet()
+        TabletUiMode.AUTOMATIC ->
+            configuration.smallestScreenWidthDp >= when (configuration.orientation) {
+                Configuration.ORIENTATION_PORTRAIT -> TABLET_UI_MIN_SCREEN_WIDTH_PORTRAIT_DP
+                else -> TABLET_UI_MIN_SCREEN_WIDTH_LANDSCAPE_DP
+            }
         TabletUiMode.ALWAYS -> true
         TabletUiMode.LANDSCAPE -> configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         TabletUiMode.NEVER -> false
     }
-    if (configuration.smallestScreenWidthDp >= TABLET_UI_MIN_SCREEN_WIDTH_DP != expected) {
+    if (configuration.isTabletUi() != expected) {
         val overrideConf = Configuration()
         overrideConf.setTo(configuration)
         overrideConf.smallestScreenWidthDp = if (expected) {
-            overrideConf.smallestScreenWidthDp.coerceAtLeast(TABLET_UI_MIN_SCREEN_WIDTH_DP)
+            overrideConf.smallestScreenWidthDp.coerceAtLeast(TABLET_UI_REQUIRED_SCREEN_WIDTH_DP)
         } else {
-            overrideConf.smallestScreenWidthDp.coerceAtMost(TABLET_UI_MIN_SCREEN_WIDTH_DP - 1)
+            overrideConf.smallestScreenWidthDp.coerceAtMost(TABLET_UI_REQUIRED_SCREEN_WIDTH_DP - 1)
         }
         return createConfigurationContext(overrideConf)
     }

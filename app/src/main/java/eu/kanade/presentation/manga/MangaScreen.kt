@@ -30,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -72,7 +71,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaScreenState
 fun MangaScreen(
     state: MangaScreenState.Success,
     snackbarHostState: SnackbarHostState,
-    windowWidthSizeClass: WindowWidthSizeClass,
+    isTabletUi: Boolean,
     onBackClicked: () -> Unit,
     onChapterClicked: (Chapter) -> Unit,
     onDownloadChapter: ((List<ChapterItem>, ChapterDownloadAction) -> Unit)?,
@@ -105,7 +104,7 @@ fun MangaScreen(
     onAllChapterSelected: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
 ) {
-    if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
+    if (!isTabletUi) {
         MangaScreenSmallImpl(
             state = state,
             snackbarHostState = snackbarHostState,
@@ -136,7 +135,6 @@ fun MangaScreen(
     } else {
         MangaScreenLargeImpl(
             state = state,
-            windowWidthSizeClass = windowWidthSizeClass,
             snackbarHostState = snackbarHostState,
             onBackClicked = onBackClicked,
             onChapterClicked = onChapterClicked,
@@ -308,7 +306,7 @@ private fun MangaScreenSmallImpl(
                         contentType = MangaScreenItem.INFO_BOX,
                     ) {
                         MangaInfoBox(
-                            windowWidthSizeClass = WindowWidthSizeClass.Compact,
+                            isTabletUi = false,
                             appBarPadding = topPadding,
                             title = state.manga.title,
                             author = state.manga.author,
@@ -373,7 +371,6 @@ private fun MangaScreenSmallImpl(
 @Composable
 fun MangaScreenLargeImpl(
     state: MangaScreenState.Success,
-    windowWidthSizeClass: WindowWidthSizeClass,
     snackbarHostState: SnackbarHostState,
     onBackClicked: () -> Unit,
     onChapterClicked: (Chapter) -> Unit,
@@ -505,7 +502,7 @@ fun MangaScreenLargeImpl(
                             .verticalScroll(rememberScrollState()),
                     ) {
                         MangaInfoBox(
-                            windowWidthSizeClass = windowWidthSizeClass,
+                            isTabletUi = true,
                             appBarPadding = contentPadding.calculateTopPadding(),
                             title = state.manga.title,
                             author = state.manga.author,

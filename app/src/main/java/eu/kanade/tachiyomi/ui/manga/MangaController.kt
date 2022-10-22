@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.os.bundleOf
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
@@ -25,7 +26,6 @@ import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.DownloadCustomAmountDialog
-import eu.kanade.presentation.util.calculateWindowWidthSizeClass
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -52,6 +52,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.system.isTabletUi
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
@@ -112,10 +113,13 @@ class MangaController : FullComposeController<MangaPresenter> {
         val isHttpSource = remember { successState.source is HttpSource }
         val scope = rememberCoroutineScope()
 
+        val configuration = LocalConfiguration.current
+        val isTabletUi = remember { configuration.isTabletUi() } // won't survive config change
+
         MangaScreen(
             state = successState,
             snackbarHostState = snackbarHostState,
-            windowWidthSizeClass = calculateWindowWidthSizeClass(),
+            isTabletUi = isTabletUi,
             onBackClicked = router::popCurrentController,
             onChapterClicked = this::openChapter,
             onDownloadChapter = this::onDownloadChapters.takeIf { !successState.source.isLocalOrStub() },

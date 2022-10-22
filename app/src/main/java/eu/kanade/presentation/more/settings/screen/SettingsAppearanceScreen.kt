@@ -13,12 +13,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.system.isTablet
+import eu.kanade.tachiyomi.util.system.isAutoTabletUiAvailable
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.merge
@@ -40,7 +42,7 @@ class SettingsAppearanceScreen : SearchableSettings {
 
         return listOf(
             getThemeGroup(context = context, uiPreferences = uiPreferences),
-            getNavigationGroup(context = context, uiPreferences = uiPreferences),
+            getDisplayGroup(context = context, uiPreferences = uiPreferences),
             getTimestampGroup(uiPreferences = uiPreferences),
         )
     }
@@ -99,18 +101,38 @@ class SettingsAppearanceScreen : SearchableSettings {
     }
 
     @Composable
-    private fun getNavigationGroup(
+    private fun getDisplayGroup(
         context: Context,
         uiPreferences: UiPreferences,
     ): Preference.PreferenceGroup {
+        val tabletUiModePref = uiPreferences.tabletUiMode()
+        val tabletUiMode by tabletUiModePref.collectAsState()
+
+        val isTabletUiAvailable = remember(tabletUiMode) { // won't survive config change
+            when (tabletUiMode) {
+                TabletUiMode.AUTOMATIC -> context.resources.configuration.isAutoTabletUiAvailable()
+                TabletUiMode.NEVER -> false
+                else -> true
+            }
+        }
+
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.pref_category_navigation),
-            enabled = remember(context) { context.isTablet() },
+            title = stringResource(R.string.pref_category_display),
             preferenceItems = listOf(
+                Preference.PreferenceItem.ListPreference(
+                    pref = tabletUiModePref,
+                    title = stringResource(R.string.pref_tablet_ui_mode),
+                    entries = TabletUiMode.values().associateWith { stringResource(it.titleResId) },
+                    onValueChanged = {
+                        context.toast(R.string.requires_app_restart)
+                        true
+                    },
+                ),
                 Preference.PreferenceItem.ListPreference(
                     pref = uiPreferences.sideNavIconAlignment(),
                     title = stringResource(R.string.pref_side_nav_icon_alignment),
                     subtitle = "%s",
+                    enabled = isTabletUiAvailable,
                     entries = mapOf(
                         0 to stringResource(R.string.alignment_top),
                         1 to stringResource(R.string.alignment_center),

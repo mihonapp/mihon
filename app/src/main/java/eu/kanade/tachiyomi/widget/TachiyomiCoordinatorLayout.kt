@@ -14,7 +14,7 @@ import androidx.core.view.isVisible
 import androidx.customview.view.AbsSavedState
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
-import eu.kanade.tachiyomi.util.system.isTablet
+import eu.kanade.tachiyomi.util.system.isTabletUi
 import eu.kanade.tachiyomi.util.view.findChild
 
 /**
@@ -48,7 +48,7 @@ class TachiyomiCoordinatorLayout @JvmOverloads constructor(
     ) {
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed)
         // Disable elevation overlay when tabs are visible
-        if (context.isTablet().not()) {
+        if (context.isTabletUi().not()) {
             if (target is ComposeView) {
                 val scrollCondition = if (type == ViewCompat.TYPE_NON_TOUCH) {
                     dyUnconsumed >= 0

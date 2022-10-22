@@ -166,7 +166,6 @@ dependencies {
     implementation(compose.activity)
     implementation(compose.foundation)
     implementation(compose.material3.core)
-    implementation(compose.material3.windowsizeclass)
     implementation(compose.material3.adapter)
     implementation(compose.material.icons)
     implementation(compose.animation)
@@ -324,7 +323,6 @@ tasks {
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
-            "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",

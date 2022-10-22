@@ -65,7 +65,7 @@ import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.getThemeColor
-import eu.kanade.tachiyomi.util.system.isTablet
+import eu.kanade.tachiyomi.util.system.isTabletUi
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
@@ -610,7 +610,7 @@ class MainActivity : BaseActivity() {
         binding.appbar.isVisible = !isComposeController
         binding.controllerContainer.enableScrollingBehavior(!isComposeController)
 
-        if (!isTablet()) {
+        if (!isTabletUi()) {
             // Save lift state
             if (isPush) {
                 if (router.backstackSize > 1) {

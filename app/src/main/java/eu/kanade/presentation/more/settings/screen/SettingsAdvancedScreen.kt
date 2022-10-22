@@ -27,8 +27,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.repository.MangaRepository
-import eu.kanade.domain.ui.UiPreferences
-import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
@@ -110,7 +108,6 @@ class SettingsAdvancedScreen : SearchableSettings {
             getNetworkGroup(networkPreferences = networkPreferences),
             getLibraryGroup(),
             getExtensionsGroup(basePreferences = basePreferences),
-            getDisplayGroup(),
         )
     }
 
@@ -385,26 +382,6 @@ class SettingsAdvancedScreen : SearchableSettings {
                         } else {
                             true
                         }
-                    },
-                ),
-            ),
-        )
-    }
-
-    @Composable
-    private fun getDisplayGroup(): Preference.PreferenceGroup {
-        val context = LocalContext.current
-        val uiPreferences = remember { Injekt.get<UiPreferences>() }
-        return Preference.PreferenceGroup(
-            title = stringResource(R.string.pref_category_display),
-            preferenceItems = listOf(
-                Preference.PreferenceItem.ListPreference(
-                    pref = uiPreferences.tabletUiMode(),
-                    title = stringResource(R.string.pref_tablet_ui_mode),
-                    entries = TabletUiMode.values().associateWith { stringResource(it.titleResId) },
-                    onValueChanged = {
-                        context.toast(R.string.requires_app_restart)
-                        true
                     },
                 ),
             ),

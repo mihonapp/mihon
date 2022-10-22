@@ -43,7 +43,6 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -88,7 +87,7 @@ private val whitespaceLineRegex = Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTIL
 @Composable
 fun MangaInfoBox(
     modifier: Modifier = Modifier,
-    windowWidthSizeClass: WindowWidthSizeClass,
+    isTabletUi: Boolean,
     appBarPadding: Dp,
     title: String,
     author: String?,
@@ -123,7 +122,7 @@ fun MangaInfoBox(
 
         // Manga & source info
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-            if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
+            if (!isTabletUi) {
                 MangaAndSourceTitlesSmall(
                     appBarPadding = appBarPadding,
                     coverDataProvider = coverDataProvider,
