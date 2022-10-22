@@ -17,53 +17,57 @@ import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import java.util.Date
 
 interface SecureActivityDelegate {
     fun registerSecureActivity(activity: AppCompatActivity)
 
     companion object {
-        fun onApplicationCreated() {
-            val lockDelay = Injekt.get<SecurityPreferences>().lockAppAfter().get()
-            if (lockDelay <= 0) {
-                // Restore always active/on start app lock
-                // Delayed lock will be restored later on activity resume
-                lockState = LockState.ACTIVE
-            }
-        }
+        /**
+         * Set to true if we need the first activity to authenticate.
+         *
+         * Always require unlock if app is killed.
+         */
+        var requireUnlock = true
 
         fun onApplicationStopped() {
             val preferences = Injekt.get<SecurityPreferences>()
             if (!preferences.useAuthenticator().get()) return
-            if (lockState != LockState.ACTIVE) {
-                preferences.lastAppClosed().set(Date().time)
-            }
+
             if (!AuthenticatorUtil.isAuthenticating) {
-                val lockAfter = preferences.lockAppAfter().get()
-                lockState = if (lockAfter > 0) {
-                    LockState.PENDING
-                } else if (lockAfter == -1) {
-                    // Never lock on idle
-                    LockState.INACTIVE
-                } else {
-                    LockState.ACTIVE
+                // Return if app is closed in locked state
+                if (requireUnlock) return
+                // Save app close time if lock is delayed
+                if (preferences.lockAppAfter().get() > 0) {
+                    preferences.lastAppClosed().set(System.currentTimeMillis())
                 }
             }
         }
 
+        /**
+         * Checks if unlock is needed when app comes foreground.
+         */
+        fun onApplicationStart() {
+            val preferences = Injekt.get<SecurityPreferences>()
+            if (!preferences.useAuthenticator().get()) return
+
+            val lastClosedPref = preferences.lastAppClosed()
+
+            // `requireUnlock` can be true on process start or if app was closed in locked state
+            if (!AuthenticatorUtil.isAuthenticating && !requireUnlock) {
+                requireUnlock = when (val lockDelay = preferences.lockAppAfter().get()) {
+                    -1 -> false // Never
+                    0 -> true // Always
+                    else -> lastClosedPref.get() + lockDelay * 60_000 <= System.currentTimeMillis()
+                }
+            }
+
+            lastClosedPref.delete()
+        }
+
         fun unlock() {
-            lockState = LockState.INACTIVE
-            Injekt.get<SecurityPreferences>().lastAppClosed().delete()
+            requireUnlock = false
         }
     }
-}
-
-private var lockState = LockState.INACTIVE
-
-private enum class LockState {
-    INACTIVE,
-    PENDING,
-    ACTIVE,
 }
 
 class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObserver {
@@ -100,32 +104,11 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
     private fun setAppLock() {
         if (!securityPreferences.useAuthenticator().get()) return
         if (activity.isAuthenticationSupported()) {
-            updatePendingLockStatus()
-            if (!isAppLocked()) return
+            if (!SecureActivityDelegate.requireUnlock) return
             activity.startActivity(Intent(activity, UnlockActivity::class.java))
             activity.overridePendingTransition(0, 0)
         } else {
             securityPreferences.useAuthenticator().set(false)
         }
-    }
-
-    private fun updatePendingLockStatus() {
-        val lastClosedPref = securityPreferences.lastAppClosed()
-        val lockDelay = 60000 * securityPreferences.lockAppAfter().get()
-        if (lastClosedPref.isSet() && lockDelay > 0) {
-            // Restore pending status in case app was killed
-            lockState = LockState.PENDING
-        }
-        if (lockState != LockState.PENDING) {
-            return
-        }
-        if (Date().time >= lastClosedPref.get() + lockDelay) {
-            // Activate lock after delay
-            lockState = LockState.ACTIVE
-        }
-    }
-
-    private fun isAppLocked(): Boolean {
-        return lockState == LockState.ACTIVE
     }
 }

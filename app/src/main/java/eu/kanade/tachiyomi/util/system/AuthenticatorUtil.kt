@@ -76,11 +76,6 @@ object AuthenticatorUtil {
                     activity?.toast(errString.toString())
                     cont.resume(false)
                 }
-
-                override fun onAuthenticationFailed(activity: FragmentActivity?) {
-                    super.onAuthenticationFailed(activity)
-                    cont.resume(false)
-                }
             },
         )
     }
@@ -134,16 +129,6 @@ object AuthenticatorUtil {
             activity: FragmentActivity?,
             result: BiometricPrompt.AuthenticationResult,
         ) {
-            isAuthenticating = false
-        }
-
-        /**
-         * Called when an authentication attempt by the user has been rejected.
-         *
-         * @param activity The activity that is currently hosting the prompt.
-         */
-        @CallSuper
-        override fun onAuthenticationFailed(activity: FragmentActivity?) {
             isAuthenticating = false
         }
     }
