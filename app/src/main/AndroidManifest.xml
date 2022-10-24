@@ -65,7 +65,7 @@
         <activity
             android:process=":error_handler"
             android:name=".crash.CrashActivity"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity
             android:name=".ui.main.DeepLinkActivity"
