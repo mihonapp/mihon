@@ -163,6 +163,7 @@ dependencies {
     implementation(project(":source-api"))
 
     // Compose
+    implementation(platform(compose.bom))
     implementation(compose.activity)
     implementation(compose.foundation)
     implementation(compose.material3.core)
