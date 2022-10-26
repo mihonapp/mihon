@@ -10,16 +10,18 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.withTimeout
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -41,10 +43,8 @@ class DownloadCache(
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
 ) {
 
-    // This is just a mechanism of notifying consumers of updates to the cache, the value itself
-    // is meaningless.
-    private val _state: MutableStateFlow<Long> = MutableStateFlow(0L)
-    val changes = _state.asStateFlow()
+    private val _changes: Channel<Unit> = Channel(Channel.UNLIMITED)
+    val changes = _changes.receiveAsFlow().onStart { emit(Unit) }
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -300,7 +300,9 @@ class DownloadCache(
     }
 
     private fun notifyChanges() {
-        _state.value += 1
+        scope.launchNonCancellable {
+            _changes.send(Unit)
+        }
     }
 
     /**
