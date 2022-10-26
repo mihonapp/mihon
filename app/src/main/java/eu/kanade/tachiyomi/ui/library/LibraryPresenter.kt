@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastAny
+import androidx.compose.ui.util.fastMap
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.PreferenceMutableState
@@ -610,14 +611,14 @@ class LibraryPresenter(
     fun toggleRangeSelection(manga: LibraryManga) {
         state.selection = selection.toMutableList().apply {
             val lastSelected = lastOrNull()
-            if (lastSelected == null || lastSelected.category != manga.category) {
+            if (lastSelected?.category != manga.category) {
                 add(manga)
                 return@apply
             }
-            val items = (loadedManga[manga.category] ?: emptyList()).map { it.libraryManga }
+            val items = loadedManga[manga.category].orEmpty().fastMap { it.libraryManga }
             val lastMangaIndex = items.indexOf(lastSelected)
             val curMangaIndex = items.indexOf(manga)
-            val selectedIds = map { it.id }
+            val selectedIds = fastMap { it.id }
             val newSelections = when (lastMangaIndex >= curMangaIndex + 1) {
                 true -> items.subList(curMangaIndex, lastMangaIndex)
                 false -> items.subList(lastMangaIndex, curMangaIndex + 1)
@@ -627,17 +628,25 @@ class LibraryPresenter(
     }
 
     fun selectAll(index: Int) {
-        val category = categories[index]
-        val items = loadedManga[category.id] ?: emptyList()
         state.selection = state.selection.toMutableList().apply {
-            addAll(items.filterNot { it.libraryManga in selection }.map { it.libraryManga })
+            val categoryId = categories[index].id
+            val items = loadedManga[categoryId].orEmpty().fastMap { it.libraryManga }
+            val selectedIds = fastMap { it.id }
+            val newSelections = items.filterNot { it.id in selectedIds }
+            addAll(newSelections)
         }
     }
 
     fun invertSelection(index: Int) {
-        val category = categories[index]
-        val items = (loadedManga[category.id] ?: emptyList()).map { it.libraryManga }
-        state.selection = items.filterNot { it in selection }
+        state.selection = selection.toMutableList().apply {
+            val categoryId = categories[index].id
+            val items = loadedManga[categoryId].orEmpty().fastMap { it.libraryManga }
+            val selectedIds = fastMap { it.id }
+            val (toRemove, toAdd) = items.partition { it.id in selectedIds }
+            val toRemoveIds = toRemove.fastMap { it.id }
+            removeAll { it.id in toRemoveIds }
+            addAll(toAdd)
+        }
     }
 
     private fun <T, U, R> Observable<T>.combineLatest(o2: Observable<U>, combineFn: (T, U) -> R): Observable<R> {
