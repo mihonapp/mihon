@@ -205,7 +205,7 @@ class DownloadCache(
     fun removeManga(manga: Manga) {
         val sourceDir = rootDownloadsDir.sourceDirs[manga.source] ?: return
         val mangaDirName = provider.getMangaDirName(manga.title)
-        if (mangaDirName in sourceDir.mangaDirs) {
+        if (sourceDir.mangaDirs.containsKey(mangaDirName)) {
             sourceDir.mangaDirs -= mangaDirName
         }
 
@@ -271,9 +271,8 @@ class DownloadCache(
                         val mangaDirs = sourceDir.dir.listFiles().orEmpty()
                             .filterNot { it.name.isNullOrBlank() }
                             .associate { it.name!! to MangaDirectory(it) }
-                            .toMutableMap()
 
-                        sourceDir.mangaDirs = mangaDirs
+                        sourceDir.mangaDirs = ConcurrentHashMap(mangaDirs)
 
                         mangaDirs.values.forEach { mangaDir ->
                             val chapterDirs = mangaDir.dir.listFiles().orEmpty()
@@ -308,7 +307,7 @@ class DownloadCache(
     /**
      * Returns a new map containing only the key entries of [transform] that are not null.
      */
-    private inline fun <K, V, R> Map<out K, V>.mapNotNullKeys(transform: (Map.Entry<K?, V>) -> R?): MutableMap<R, V> {
+    private inline fun <K, V, R> Map<out K, V>.mapNotNullKeys(transform: (Map.Entry<K?, V>) -> R?): ConcurrentHashMap<R, V> {
         val mutableMap = ConcurrentHashMap<R, V>()
         forEach { element -> transform(element)?.let { mutableMap[it] = element.value } }
         return mutableMap
@@ -320,7 +319,7 @@ class DownloadCache(
  */
 private class RootDirectory(
     val dir: UniFile,
-    var sourceDirs: MutableMap<Long, SourceDirectory> = mutableMapOf(),
+    var sourceDirs: ConcurrentHashMap<Long, SourceDirectory> = ConcurrentHashMap(),
 )
 
 /**
@@ -328,7 +327,7 @@ private class RootDirectory(
  */
 private class SourceDirectory(
     val dir: UniFile,
-    var mangaDirs: MutableMap<String, MangaDirectory> = mutableMapOf(),
+    var mangaDirs: ConcurrentHashMap<String, MangaDirectory> = ConcurrentHashMap(),
 )
 
 /**

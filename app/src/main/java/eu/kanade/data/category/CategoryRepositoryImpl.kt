@@ -52,7 +52,7 @@ class CategoryRepositoryImpl(
     }
 
     override suspend fun updatePartial(updates: List<CategoryUpdate>) {
-        handler.await(true) {
+        handler.await(inTransaction = true) {
             for (update in updates) {
                 updatePartialBlocking(update)
             }
