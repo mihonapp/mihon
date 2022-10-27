@@ -243,7 +243,7 @@ class SettingsBackupScreen : SearchableSettings {
                     AlertDialog(
                         onDismissRequest = onDismissRequest,
                         title = { Text(text = stringResource(R.string.invalid_backup_file)) },
-                        text = { Text(text = err.message) },
+                        text = { Text(text = "${err.uri}\n\n${err.message}") },
                         dismissButton = {
                             TextButton(
                                 onClick = {
@@ -308,7 +308,7 @@ class SettingsBackupScreen : SearchableSettings {
                 val results = try {
                     BackupFileValidator().validate(context, it)
                 } catch (e: Exception) {
-                    error = InvalidRestore(e.message.toString())
+                    error = InvalidRestore(it, e.message.toString())
                     return@rememberLauncherForActivityResult
                 }
 
@@ -415,5 +415,6 @@ private data class MissingRestoreComponents(
 )
 
 data class InvalidRestore(
+    val uri: Uri,
     val message: String,
 )
