@@ -79,11 +79,10 @@ class SearchPresenter(
         return GlobalSearchItem(source, results, source.id == manga.source)
     }
 
-    override fun networkToLocalManga(sManga: SManga, sourceId: Long): eu.kanade.tachiyomi.data.database.models.Manga {
+    override suspend fun networkToLocalManga(sManga: SManga, sourceId: Long): Manga {
         val localManga = super.networkToLocalManga(sManga, sourceId)
         // For migration, displayed title should always match source rather than local DB
-        localManga.title = sManga.title
-        return localManga
+        return localManga.copy(title = sManga.title)
     }
 
     fun migrateManga(prevManga: Manga, manga: Manga, replace: Boolean) {

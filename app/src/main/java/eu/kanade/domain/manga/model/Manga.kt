@@ -232,6 +232,21 @@ fun Manga.toMangaUpdate(): MangaUpdate {
     )
 }
 
+fun SManga.toDomainManga(): Manga {
+    return Manga.create().copy(
+        url = url,
+        title = title,
+        artist = artist,
+        author = author,
+        description = description,
+        genre = getGenres(),
+        status = status.toLong(),
+        thumbnailUrl = thumbnail_url,
+        updateStrategy = update_strategy,
+        initialized = initialized,
+    )
+}
+
 fun Manga.isLocal(): Boolean = source == LocalSource.ID
 
 fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {
