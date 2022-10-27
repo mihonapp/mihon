@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.EmptyScreen
-import eu.kanade.presentation.components.LazyColumn
+import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.presentation.components.Scaffold
@@ -70,7 +70,7 @@ private fun SourceFilterContent(
     state: ExtensionFilterState,
     onClickLang: (String) -> Unit,
 ) {
-    LazyColumn(
+    FastScrollLazyColumn(
         contentPadding = contentPadding,
     ) {
         items(

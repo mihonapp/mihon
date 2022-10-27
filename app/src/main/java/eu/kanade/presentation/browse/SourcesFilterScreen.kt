@@ -14,10 +14,10 @@ import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.browse.components.BaseSourceItem
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.EmptyScreen
+import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.presentation.components.Scaffold
-import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.source.FilterUiModel
 import eu.kanade.tachiyomi.ui.browse.source.SourcesFilterPresenter
@@ -76,7 +76,7 @@ private fun SourcesFilterContent(
     onClickLang: (String) -> Unit,
     onClickSource: (Source) -> Unit,
 ) {
-    ScrollbarLazyColumn(
+    FastScrollLazyColumn(
         contentPadding = contentPadding,
     ) {
         items(
@@ -95,14 +95,12 @@ private fun SourcesFilterContent(
             },
         ) { model ->
             when (model) {
-                is FilterUiModel.Header -> {
-                    SourcesFilterHeader(
-                        modifier = Modifier.animateItemPlacement(),
-                        language = model.language,
-                        enabled = model.enabled,
-                        onClickItem = onClickLang,
-                    )
-                }
+                is FilterUiModel.Header -> SourcesFilterHeader(
+                    modifier = Modifier.animateItemPlacement(),
+                    language = model.language,
+                    enabled = model.enabled,
+                    onClickItem = onClickLang,
+                )
                 is FilterUiModel.Item -> SourcesFilterItem(
                     modifier = Modifier.animateItemPlacement(),
                     source = model.source,

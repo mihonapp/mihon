@@ -7,10 +7,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.RelativeDateHeader
-import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.history.HistoryUiModel
-import eu.kanade.presentation.util.plus
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.text.DateFormat
@@ -27,7 +26,7 @@ fun HistoryContent(
     val relativeTime: Int = remember { preferences.relativeTime().get() }
     val dateFormat: DateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
 
-    ScrollbarLazyColumn(
+    FastScrollLazyColumn(
         contentPadding = contentPadding,
     ) {
         items(
