@@ -16,8 +16,6 @@ class UiPreferences(
     private val preferenceStore: PreferenceStore,
 ) {
 
-    fun sideNavIconAlignment() = preferenceStore.getInt("pref_side_nav_icon_alignment", 0)
-
     fun themeMode() = preferenceStore.getEnum(
         "pref_theme_mode_key",
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { ThemeMode.SYSTEM } else { ThemeMode.LIGHT },

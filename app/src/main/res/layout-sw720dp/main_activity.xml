@@ -63,7 +63,8 @@
             android:paddingTop="?attr/actionBarSize"
             app:elevation="1dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/main_nav" />
+            app:menu="@menu/main_nav"
+            app:menuGravity="center" />
 
         <eu.kanade.tachiyomi.widget.TachiyomiChangeHandlerFrameLayout
             android:id="@+id/controller_container"
