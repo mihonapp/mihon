@@ -180,8 +180,7 @@ class ExtensionManager(
                 mutInstalledExtensions[index] = installedExt.copy(isObsolete = true)
                 changed = true
             } else if (availableExt != null) {
-                val hasUpdate = !installedExt.isUnofficial &&
-                    availableExt.versionCode > installedExt.versionCode
+                val hasUpdate = installedExt.updateExists(availableExt)
 
                 if (installedExt.hasUpdate != hasUpdate) {
                     mutInstalledExtensions[index] = installedExt.copy(hasUpdate = hasUpdate)
@@ -347,11 +346,18 @@ class ExtensionManager(
      * Extension method to set the update field of an installed extension.
      */
     private fun Extension.Installed.withUpdateCheck(): Extension.Installed {
-        val availableExt = _availableExtensionsFlow.value.find { it.pkgName == pkgName }
-        if (!isUnofficial && availableExt != null && availableExt.versionCode > versionCode) {
-            return copy(hasUpdate = true)
+        return if (updateExists()) {
+            copy(hasUpdate = true)
+        } else {
+            this
         }
-        return this
+    }
+
+    private fun Extension.Installed.updateExists(availableExtension: Extension.Available? = null): Boolean {
+        val availableExt = availableExtension ?: _availableExtensionsFlow.value.find { it.pkgName == pkgName }
+        if (isUnofficial || availableExt == null) return false
+
+        return (availableExt.versionCode > versionCode || availableExt.libVersion > libVersion)
     }
 
     private fun updatePendingUpdatesCount() {

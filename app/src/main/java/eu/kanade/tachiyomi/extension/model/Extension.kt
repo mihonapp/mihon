@@ -10,6 +10,7 @@ sealed class Extension {
     abstract val pkgName: String
     abstract val versionName: String
     abstract val versionCode: Long
+    abstract val libVersion: Double
     abstract val lang: String?
     abstract val isNsfw: Boolean
     abstract val hasReadme: Boolean
@@ -20,6 +21,7 @@ sealed class Extension {
         override val pkgName: String,
         override val versionName: String,
         override val versionCode: Long,
+        override val libVersion: Double,
         override val lang: String,
         override val isNsfw: Boolean,
         override val hasReadme: Boolean,
@@ -37,6 +39,7 @@ sealed class Extension {
         override val pkgName: String,
         override val versionName: String,
         override val versionCode: Long,
+        override val libVersion: Double,
         override val lang: String,
         override val isNsfw: Boolean,
         override val hasReadme: Boolean,
@@ -51,6 +54,7 @@ sealed class Extension {
         override val pkgName: String,
         override val versionName: String,
         override val versionCode: Long,
+        override val libVersion: Double,
         val signatureHash: String,
         override val lang: String? = null,
         override val isNsfw: Boolean = false,
