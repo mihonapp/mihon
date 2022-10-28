@@ -11,11 +11,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastMap
-import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.PreferenceMutableState
-import eu.kanade.core.util.asFlow
-import eu.kanade.core.util.asObservable
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
@@ -32,7 +29,7 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.model.isLocal
-import eu.kanade.domain.track.interactor.GetTracks
+import eu.kanade.domain.track.interactor.GetTracksPerManga
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.library.LibraryState
 import eu.kanade.presentation.library.LibraryStateImpl
@@ -49,16 +46,16 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.text.Collator
@@ -79,7 +76,7 @@ typealias LibraryMap = Map<Long, List<LibraryItem>>
 class LibraryPresenter(
     private val state: LibraryStateImpl = LibraryState() as LibraryStateImpl,
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
-    private val getTracks: GetTracks = Injekt.get(),
+    private val getTracksPerManga: GetTracksPerManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
@@ -111,15 +108,8 @@ class LibraryPresenter(
     val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
     val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
 
-    /**
-     * Relay used to apply the UI filters to the last emission of the library.
-     */
-    private val filterTriggerRelay = BehaviorRelay.create(Unit)
-
-    /**
-     * Relay used to apply the selected sorting method to the last emission of the library.
-     */
-    private val sortTriggerRelay = BehaviorRelay.create(Unit)
+    private val _filterChanges: Channel<Unit> = Channel(Int.MAX_VALUE)
+    private val filterChanges = _filterChanges.receiveAsFlow().onStart { emit(Unit) }
 
     private var librarySubscription: Job? = null
 
@@ -141,18 +131,14 @@ class LibraryPresenter(
          */
         if (librarySubscription == null || librarySubscription!!.isCancelled) {
             librarySubscription = presenterScope.launchIO {
-                getLibraryFlow().asObservable()
-                    .combineLatest(getFilterObservable()) { lib, tracks ->
-                        lib.copy(mangaMap = applyFilters(lib.mangaMap, tracks))
-                    }
-                    .combineLatest(sortTriggerRelay.observeOn(Schedulers.io())) { lib, _ ->
-                        lib.copy(mangaMap = applySort(lib.categories, lib.mangaMap))
-                    }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .asFlow()
+                combine(getLibraryFlow(), getTracksPerManga.subscribe(), filterChanges) { library, tracks, _ ->
+                    library.mangaMap
+                        .applyFilters(tracks)
+                        .applySort(library.categories)
+                }
                     .collectLatest {
                         state.isLoading = false
-                        loadedManga = it.mangaMap
+                        loadedManga = it
                     }
             }
         }
@@ -160,21 +146,24 @@ class LibraryPresenter(
 
     /**
      * Applies library filters to the given map of manga.
-     *
-     * @param map the map to filter.
      */
-    private fun applyFilters(map: LibraryMap, trackMap: Map<Long, Map<Long, Boolean>>): LibraryMap {
+    private fun LibraryMap.applyFilters(trackMap: Map<Long, List<Long>>): LibraryMap {
         val downloadedOnly = preferences.downloadedOnly().get()
         val filterDownloaded = libraryPreferences.filterDownloaded().get()
         val filterUnread = libraryPreferences.filterUnread().get()
         val filterStarted = libraryPreferences.filterStarted().get()
         val filterBookmarked = libraryPreferences.filterBookmarked().get()
         val filterCompleted = libraryPreferences.filterCompleted().get()
-        val loggedInServices = trackManager.services.filter { trackService -> trackService.isLogged }
+
+        val loggedInTrackServices = trackManager.services.filter { trackService -> trackService.isLogged }
             .associate { trackService ->
-                Pair(trackService.id, libraryPreferences.filterTracking(trackService.id.toInt()).get())
+                trackService.id to libraryPreferences.filterTracking(trackService.id.toInt()).get()
             }
-        val isNotAnyLoggedIn = !loggedInServices.values.any()
+        val isNotLoggedInAnyTrack = loggedInTrackServices.isEmpty()
+
+        val excludedTracks = loggedInTrackServices.mapNotNull { if (it.value == State.EXCLUDE.value) it.key else null }
+        val includedTracks = loggedInTrackServices.mapNotNull { if (it.value == State.INCLUDE.value) it.key else null }
+        val trackFiltersIsIgnored = includedTracks.isEmpty() && excludedTracks.isEmpty()
 
         val filterFnDownloaded: (LibraryItem) -> Boolean = downloaded@{ item ->
             if (!downloadedOnly && filterDownloaded == State.IGNORE.value) return@downloaded true
@@ -237,25 +226,21 @@ class LibraryPresenter(
         }
 
         val filterFnTracking: (LibraryItem) -> Boolean = tracking@{ item ->
-            if (isNotAnyLoggedIn) return@tracking true
+            if (isNotLoggedInAnyTrack || trackFiltersIsIgnored) return@tracking true
 
-            val trackedManga = trackMap[item.libraryManga.manga.id]
+            val mangaTracks = trackMap[item.libraryManga.id].orEmpty()
 
-            val containsExclude = loggedInServices.filterValues { it == State.EXCLUDE.value }
-            val containsInclude = loggedInServices.filterValues { it == State.INCLUDE.value }
+            val exclude = mangaTracks.filter { it in excludedTracks }
+            val include = mangaTracks.filter { it in includedTracks }
 
-            if (!containsExclude.any() && !containsInclude.any()) return@tracking true
-
-            val exclude = trackedManga?.filterKeys { containsExclude.containsKey(it) }?.values ?: emptyList()
-            val include = trackedManga?.filterKeys { containsInclude.containsKey(it) }?.values ?: emptyList()
-
-            if (containsInclude.any() && containsExclude.any()) {
-                return@tracking if (exclude.isNotEmpty()) !exclude.any() else include.any()
+            // TODO: Simplify the filter logic
+            if (includedTracks.isNotEmpty() && excludedTracks.isNotEmpty()) {
+                return@tracking if (exclude.isNotEmpty()) false else include.isNotEmpty()
             }
 
-            if (containsExclude.any()) return@tracking !exclude.any()
+            if (excludedTracks.isNotEmpty()) return@tracking exclude.isEmpty()
 
-            if (containsInclude.any()) return@tracking include.any()
+            if (includedTracks.isNotEmpty()) return@tracking include.isNotEmpty()
 
             return@tracking false
         }
@@ -271,15 +256,13 @@ class LibraryPresenter(
                 )
         }
 
-        return map.mapValues { entry -> entry.value.filter(filterFn) }
+        return this.mapValues { entry -> entry.value.filter(filterFn) }
     }
 
     /**
      * Applies library sorting to the given map of manga.
-     *
-     * @param map the map to sort.
      */
-    private fun applySort(categories: List<Category>, map: LibraryMap): LibraryMap {
+    private fun LibraryMap.applySort(categories: List<Category>): LibraryMap {
         val sortModes = categories.associate { it.id to it.sort }
 
         val locale = Locale.getDefault()
@@ -321,7 +304,7 @@ class LibraryPresenter(
             }
         }
 
-        return map.mapValues { entry ->
+        return this.mapValues { entry ->
             val comparator = if (sortModes[entry.key]!!.isAscending) {
                 Comparator(sortFn)
             } else {
@@ -374,47 +357,10 @@ class LibraryPresenter(
     }
 
     /**
-     * Get the tracked manga from the database and checks if the filter gets changed
-     *
-     * @return an observable of tracked manga.
-     */
-    private fun getFilterObservable(): Observable<Map<Long, Map<Long, Boolean>>> {
-        return filterTriggerRelay.observeOn(Schedulers.io())
-            .combineLatest(getTracksFlow().asObservable().observeOn(Schedulers.io())) { _, tracks -> tracks }
-    }
-
-    /**
-     * Get the tracked manga from the database
-     *
-     * @return an observable of tracked manga.
-     */
-    private fun getTracksFlow(): Flow<Map<Long, Map<Long, Boolean>>> {
-        // TODO: Move this to domain/data layer
-        return getTracks.subscribe()
-            .map { tracks ->
-                tracks
-                    .groupBy { it.mangaId }
-                    .mapValues { tracksForMangaId ->
-                        // Check if any of the trackers is logged in for the current manga id
-                        tracksForMangaId.value.associate {
-                            Pair(it.syncId, trackManager.getService(it.syncId)?.isLogged ?: false)
-                        }
-                    }
-            }
-    }
-
-    /**
      * Requests the library to be filtered.
      */
-    fun requestFilterUpdate() {
-        filterTriggerRelay.call(Unit)
-    }
-
-    /**
-     * Requests the library to be sorted.
-     */
-    fun requestSortUpdate() {
-        sortTriggerRelay.call(Unit)
+    suspend fun requestFilterUpdate() = withIOContext {
+        _filterChanges.send(Unit)
     }
 
     /**
@@ -432,9 +378,9 @@ class LibraryPresenter(
      */
     suspend fun getCommonCategories(mangas: List<Manga>): Collection<Category> {
         if (mangas.isEmpty()) return emptyList()
-        return mangas.toSet()
-            .map { getCategories.await(it.id) }
-            .reduce { set1, set2 -> set1.intersect(set2).toMutableList() }
+        return mangas
+            .map { getCategories.await(it.id).toSet() }
+            .reduce { set1, set2 -> set1.intersect(set2) }
     }
 
     /**
@@ -444,9 +390,9 @@ class LibraryPresenter(
      */
     suspend fun getMixCategories(mangas: List<Manga>): Collection<Category> {
         if (mangas.isEmpty()) return emptyList()
-        val mangaCategories = mangas.toSet().map { getCategories.await(it.id) }
-        val common = mangaCategories.reduce { set1, set2 -> set1.intersect(set2).toMutableList() }
-        return mangaCategories.flatten().distinct().subtract(common).toMutableList()
+        val mangaCategories = mangas.map { getCategories.await(it.id).toSet() }
+        val common = mangaCategories.reduce { set1, set2 -> set1.intersect(set2) }
+        return mangaCategories.flatten().distinct().subtract(common)
     }
 
     /**
@@ -524,10 +470,10 @@ class LibraryPresenter(
      */
     fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
         presenterScope.launchNonCancellable {
-            mangaList.map { manga ->
+            mangaList.forEach { manga ->
                 val categoryIds = getCategories.await(manga.id)
                     .map { it.id }
-                    .subtract(removeCategories)
+                    .subtract(removeCategories.toSet())
                     .plus(addCategories)
                     .toList()
 
@@ -647,10 +593,6 @@ class LibraryPresenter(
             removeAll { it.id in toRemoveIds }
             addAll(toAdd)
         }
-    }
-
-    private fun <T, U, R> Observable<T>.combineLatest(o2: Observable<U>, combineFn: (T, U) -> R): Observable<R> {
-        return Observable.combineLatest(this, o2, combineFn)
     }
 
     sealed class Dialog {

@@ -25,6 +25,7 @@ import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.cancel
 
@@ -126,7 +127,6 @@ class LibraryController(
         settingsSheet = LibrarySettingsSheet(router) { group ->
             when (group) {
                 is LibrarySettingsSheet.Filter.FilterGroup -> onFilterChanged()
-                is LibrarySettingsSheet.Sort.SortGroup -> onSortChanged()
                 else -> {} // Handled via different mechanisms
             }
         }
@@ -152,12 +152,10 @@ class LibraryController(
     }
 
     private fun onFilterChanged() {
-        presenter.requestFilterUpdate()
-        activity?.invalidateOptionsMenu()
-    }
-
-    private fun onSortChanged() {
-        presenter.requestSortUpdate()
+        viewScope.launchUI {
+            presenter.requestFilterUpdate()
+            activity?.invalidateOptionsMenu()
+        }
     }
 
     fun search(query: String) {
@@ -180,7 +178,7 @@ class LibraryController(
      * Clear all of the manga currently selected, and
      * invalidate the action mode to revert the top toolbar
      */
-    fun clearSelection() {
+    private fun clearSelection() {
         presenter.clearSelection()
     }
 
