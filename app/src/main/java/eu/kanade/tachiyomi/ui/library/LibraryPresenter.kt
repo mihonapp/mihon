@@ -331,7 +331,7 @@ class LibraryPresenter(
                 .map { libraryManga ->
                     // Display mode based on user preference: take it from global library setting or category
                     LibraryItem(libraryManga).apply {
-                        downloadCount = if (downloadBadgePref || filterDownloadedPref == State.INCLUDE.value) {
+                        downloadCount = if (downloadBadgePref || filterDownloadedPref != State.IGNORE.value) {
                             downloadManager.getDownloadCount(libraryManga.manga).toLong()
                         } else {
                             0
