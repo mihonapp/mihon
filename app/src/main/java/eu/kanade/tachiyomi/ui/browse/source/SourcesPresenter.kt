@@ -16,8 +16,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -39,11 +39,11 @@ class SourcesPresenter(
     fun onCreate() {
         presenterScope.launchIO {
             getEnabledSources.subscribe()
-                .debounce(500) // Avoid crashes due to LazyColumn rendering
                 .catch { exception ->
                     logcat(LogPriority.ERROR, exception)
                     _events.send(Event.FailedFetchingSources)
                 }
+                .stateIn(presenterScope)
                 .collectLatest(::collectLatestSources)
         }
     }

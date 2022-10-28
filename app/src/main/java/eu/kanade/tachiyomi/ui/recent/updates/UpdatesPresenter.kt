@@ -33,9 +33,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
@@ -87,11 +87,11 @@ class UpdatesPresenter(
                 getUpdates.subscribe(calendar).distinctUntilChanged(),
                 downloadCache.changes,
             ) { updates, _ -> updates }
-                .debounce(500) // Avoid crashes due to LazyColumn rendering
                 .catch {
                     logcat(LogPriority.ERROR, it)
                     _events.send(Event.InternalError)
                 }
+                .stateIn(presenterScope)
                 .collectLatest { updates ->
                     state.items = updates.toUpdateItems()
                     state.isLoading = false

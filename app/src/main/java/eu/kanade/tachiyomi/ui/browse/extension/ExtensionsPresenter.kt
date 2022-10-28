@@ -20,9 +20,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -116,7 +116,7 @@ class ExtensionsPresenter(
 
                 items
             }
-                .debounce(500) // Avoid crashes due to LazyColumn rendering
+                .stateIn(presenterScope)
                 .collectLatest {
                     state.isLoading = false
                     state.items = it

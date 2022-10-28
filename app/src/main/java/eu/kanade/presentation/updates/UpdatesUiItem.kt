@@ -118,10 +118,9 @@ fun LazyListScope.updatesUiItems(
             }
             is UpdatesUiModel.Item -> {
                 val updatesItem = item.item
-                val update = updatesItem.update
                 UpdatesUiItem(
                     modifier = Modifier.animateItemPlacement(),
-                    update = update,
+                    update = updatesItem.update,
                     selected = updatesItem.selected,
                     onLongClick = {
                         onUpdateSelected(updatesItem, !updatesItem.selected, true, true)
