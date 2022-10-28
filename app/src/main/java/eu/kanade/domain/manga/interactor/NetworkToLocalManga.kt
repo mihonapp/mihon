@@ -11,7 +11,7 @@ class NetworkToLocalManga(
         val localManga = getManga(manga.url, sourceId)
         return when {
             localManga == null -> {
-                val id = insertManga(manga)
+                val id = insertManga(manga.copy(source = sourceId))
                 manga.copy(id = id!!)
             }
             !localManga.favorite -> {
