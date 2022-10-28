@@ -27,7 +27,12 @@ class SetReadStatus(
     }
 
     suspend fun await(read: Boolean, vararg chapters: Chapter): Result = withNonCancellableContext {
-        val chaptersToUpdate = chapters.filterNot { it.read == read }
+        val chaptersToUpdate = chapters.filter {
+            when (read) {
+                true -> !it.read
+                false -> it.read || it.lastPageRead > 0
+            }
+        }
         if (chaptersToUpdate.isEmpty()) {
             return@withNonCancellableContext Result.NoChapters
         }
