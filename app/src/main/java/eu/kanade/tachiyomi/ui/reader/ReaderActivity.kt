@@ -66,6 +66,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
+import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.preference.toggle
 import eu.kanade.tachiyomi.util.system.applySystemAnimatorScale
 import eu.kanade.tachiyomi.util.system.createReaderThemeContext
@@ -275,6 +276,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_open_in_web_view -> {
+                openChapterInWebview()
+            }
             R.id.action_bookmark -> {
                 presenter.bookmarkCurrentChapter(true)
                 invalidateOptionsMenu()
@@ -663,6 +667,15 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         binding.readerContainer.addView(loadingIndicator)
 
         startPostponedEnterTransition()
+    }
+
+    private fun openChapterInWebview() {
+        val manga = presenter.manga ?: return
+        val source = presenter.getSource() ?: return
+        val url = presenter.getChapterUrl() ?: return
+
+        val intent = WebViewActivity.newIntent(this, url, source.id, manga.title)
+        startActivity(intent)
     }
 
     private fun showReadingModeToast(mode: Int) {

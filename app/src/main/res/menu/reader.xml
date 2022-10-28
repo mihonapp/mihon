@@ -16,4 +16,11 @@
         app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_open_in_web_view"
+        android:icon="@drawable/ic_webview_24dp"
+        android:title="@string/action_open_in_web_view"
+        app:iconTint="?attr/colorOnSurface"
+        app:showAsAction="ifRoom" />
+
 </menu>
