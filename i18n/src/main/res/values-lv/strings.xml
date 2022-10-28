@@ -239,14 +239,10 @@
     </plurals>
     <string name="pref_library_update_manga_restriction">Izlaist sēriju atjaunināšanu</string>
     <string name="action_faq_and_guides">Biežāk uzdotie jautājumi un rokasgrāmatas</string>
-    <string name="pref_side_nav_icon_alignment">Sāna navigācijas ikonu līdzināšana</string>
     <string name="action_close">Aizvērt</string>
-    <string name="alignment_bottom">Apakšpuse</string>
     <string name="pref_category_timestamps">Laikspiedols</string>
     <string name="pref_relative_format">Relatīvais laikspiedols</string>
     <string name="pref_category_library_update">Globāls atjauninājums</string>
-    <string name="alignment_top">Augšpuse</string>
-    <string name="alignment_center">Centrs</string>
     <string name="pref_relative_time_short">Īss (Šodien, Vakar)</string>
     <string name="pref_relative_time_long">Garš (Īss+, pirms n dienām)</string>
     <string name="parental_controls_info">Šis neliedz neoficiāliem vai, iespējams, nepareizi atzīmētiem paplašinājumiem parādīties NSFW (18+) saturu lietotnē.</string>

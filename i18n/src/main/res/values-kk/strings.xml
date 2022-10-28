@@ -51,7 +51,6 @@
     <string name="action_display_list">Тізім</string>
     <string name="action_display_unread_badge">Оқылмаған тараулар</string>
     <string name="action_display_download_badge">Жүктелген тараулар</string>
-    <string name="pref_side_nav_icon_alignment">Бүйірлік шарлау белгішесін туралау</string>
     <string name="secure_screen">Қолданба экранын қорғау</string>
     <string name="battery_not_low">Батарея қуаты аз емес кезінде</string>
     <string name="pref_app_theme">Қолданба кейпі</string>
@@ -76,7 +75,6 @@
     <string name="theme_yotsuba">Ёцуба</string>
     <string name="theme_tealturquoise">Ақшыл және көгілдір</string>
     <string name="pref_dark_theme_pure_black">Таза қара қараңғы режим</string>
-    <string name="alignment_top">Жоғарғы</string>
     <string name="theme_yinyang">Инь және Йянь</string>
     <string name="relative_time_today">Бүгін</string>
     <string name="update_never">Өшірулі</string>
@@ -160,8 +158,8 @@
     <string name="action_reorganize_by">Қайта реттеу</string>
     <string name="action_order_by_upload_date">Жүктелген күні бойынша</string>
     <string name="action_order_by_chapter_number">Тарау нөмірі бойынша</string>
-    <string name="action_newest">Ең жаңа</string>
-    <string name="action_oldest">Ең ескі</string>
+    <string name="action_newest">Жаңарақ</string>
+    <string name="action_oldest">Ескірек</string>
     <string name="action_asc">Артуы бойынша</string>
     <string name="action_desc">Кемуі бойынша</string>
     <string name="action_move_to_top">Басына оралу</string>
@@ -183,8 +181,6 @@
     <string name="loading">Жүктелуде…</string>
     <string name="app_not_available">Қолданба қолжетімсіз</string>
     <string name="pref_category_general">Жалпы</string>
-    <string name="alignment_center">Орталық</string>
-    <string name="alignment_bottom">Төменгі</string>
     <string name="pref_relative_time_short">Қысқа (бүгін, кеше)</string>
     <string name="pref_date_format">Дата пішімі</string>
     <string name="pref_confirm_exit">Шығуды растау</string>
@@ -584,7 +580,7 @@
     <string name="unread">Оқылмаған</string>
     <string name="updating_library">Кітапхана жаңаруда</string>
     <string name="cant_open_last_read_chapter">Ақырғы оқылған тарау ашылмай тұр</string>
-    <string name="updates_last_update_info">Кітапхананың ақырғы жаңаруы: %1$s</string>
+    <string name="updates_last_update_info">Кітапхананың ақырғы жаңаруы: %s</string>
     <string name="loader_not_implemented_error">Дереккөз табылмады</string>
     <string name="loader_rar5_error">RARv5 пішімі қолжетімсіз</string>
     <plurals name="manga_num_chapters">
@@ -766,4 +762,8 @@
     <string name="transition_no_next">Келесі тарау жоқ</string>
     <string name="transition_no_previous">Алдыңғы тарау жоқ</string>
     <string name="transition_pages_error">Беттер жүктелінбеді: %1$s</string>
+    <string name="unknown_title">Атауы белгісіз</string>
+    <string name="invalid_location">Жарамсыз орын: %s</string>
+    <string name="updates_last_update_info_just_now">Жаңа ғана</string>
+    <string name="error_user_agent_string_invalid">User agent жолы жарамсыз</string>
 </resources>

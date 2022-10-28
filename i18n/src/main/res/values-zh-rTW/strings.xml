@@ -575,9 +575,6 @@
     <string name="error_saving_cover">儲存封面時發生錯誤</string>
     <string name="cover_saved">已儲存封面</string>
     <string name="manga_cover">封面</string>
-    <string name="alignment_bottom">底端</string>
-    <string name="alignment_center">置中</string>
-    <string name="alignment_top">頂端</string>
     <string name="action_start_downloading_now">立刻開始下載</string>
     <string name="notification_updating">正在更新書櫃… (%1$d/%2$d)</string>
     <string name="tracker_komga_warning">該歷程平台僅相容於 Komga 來源。</string>
@@ -588,7 +585,6 @@
     <string name="enhanced_services">增強服務</string>
     <string name="tracking_guide">歷程平台說明</string>
     <string name="categorized_display_settings">獨立各類別的排序和檢視設定</string>
-    <string name="pref_side_nav_icon_alignment">側邊導覽圖示對齊</string>
     <string name="pref_dark_theme_pure_black">純黑深色模式</string>
     <string name="theme_yotsuba">四葉</string>
     <string name="theme_yinyang">陰陽</string>

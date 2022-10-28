@@ -468,9 +468,6 @@
     <string name="lock_when_idle">Ŝlosi kiam senokupas</string>
     <string name="pref_relative_format">Relativaj tempindikoj</string>
     <string name="pref_category_timestamps">Tempindikoj</string>
-    <string name="alignment_bottom">Sube</string>
-    <string name="alignment_center">Centre</string>
-    <string name="alignment_top">Supre</string>
     <string name="pref_dark_theme_pure_black">Klara nigra</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_midnightdusk">Meznokta Vesperiĝo</string>

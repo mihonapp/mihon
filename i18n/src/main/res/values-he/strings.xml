@@ -371,9 +371,6 @@
     <string name="label_default">ברירת המחדל</string>
     <string name="pref_app_theme">ערכת הנושא של האפליקציה</string>
     <string name="action_start_downloading_now">התחל להוריד עכשיו</string>
-    <string name="alignment_top">חלק עליון</string>
-    <string name="alignment_center">חלק אמצעי</string>
-    <string name="alignment_bottom">חלק תחתון</string>
     <string name="action_pin">נעץ</string>
     <string name="secure_screen">מסך מאובטח</string>
     <string name="pref_library_columns">פריטים לשורה</string>
@@ -421,7 +418,6 @@
     <string name="action_show_errors">לחץ כדי לראות פרטים</string>
     <string name="pref_category_appearance">מראה</string>
     <string name="theme_midnightdusk">דמדומי חצות</string>
-    <string name="pref_side_nav_icon_alignment">יישור סמלי ניווט בצד</string>
     <string name="theme_tako">טאקו</string>
     <string name="pref_library_update_refresh_metadata">רענן נתונים באופן אוטומטי</string>
     <string name="action_filter_tracked">במעקב</string>

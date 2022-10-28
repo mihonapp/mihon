@@ -605,10 +605,6 @@
     <string name="pref_relative_time_short">সংক্ষিপ্ত (আজ, গতকাল)</string>
     <string name="pref_relative_format">আপেক্ষিক টাইমস্ট্যাম্প</string>
     <string name="pref_category_timestamps">টাইমস্ট্যাম্প</string>
-    <string name="alignment_bottom">নীচে</string>
-    <string name="alignment_center">কেন্দ্র</string>
-    <string name="alignment_top">শীর্ষ</string>
-    <string name="pref_side_nav_icon_alignment">সাইড নেভিগেশন আইকন সারিবদ্ধকরণ</string>
     <string name="pref_dark_theme_pure_black">বিশুদ্ধ কালো অন্ধকার মোড</string>
     <string name="theme_yotsuba">চার পাতা</string>
     <string name="theme_yinyang">ইয়িন এবং ইয়াং</string>

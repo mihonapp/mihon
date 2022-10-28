@@ -291,7 +291,7 @@
     <string name="download_notifier_download_paused">Baixada pausada</string>
     <string name="channel_common">General</string>
     <string name="pref_read_with_long_tap">Mostra amb un toc llarg</string>
-    <string name="action_open_in_web_view">Obre en una visualització web</string>
+    <string name="action_open_in_web_view">Obre en una WebView</string>
     <string name="pref_true_color">Color de 32 bits</string>
     <string name="pref_skip_read_chapters">Omet capítols marcats com a llegits</string>
     <string name="pref_color_filter_mode">Mode de mescla del filtre de color</string>
@@ -376,7 +376,7 @@
         <item quantity="other">Hi ha actualitzacions de %d extensions</item>
     </plurals>
     <string name="channel_ext_updates">Actualitzacions d\'extensions</string>
-    <string name="http_error_hint">Comproveu el lloc web en una visualització web</string>
+    <string name="http_error_hint">Comproveu el lloc web en una WebView</string>
     <string name="updating_library">S\'està actualitzant la biblioteca</string>
     <string name="pref_category_reading">Lectura</string>
     <string name="pref_skip_filtered_chapters">Omet els capítols filtrats</string>
@@ -535,9 +535,9 @@
     <string name="action_filter_tracked">En seguiment</string>
     <string name="action_display_show_number_of_items">Mostra el nombre d\'elements</string>
     <string name="right_and_left_nav">A la dreta i a l\'esquerra</string>
-    <string name="pref_dual_page_split">Dividit a doble pàgina</string>
-    <string name="pref_dual_page_invert_summary">Si la ubicació de la divisió a doble pàgina no encaixa amb la direcció de lectura</string>
-    <string name="pref_dual_page_invert">Inverteix la ubicació de la divisió a doble pàgina</string>
+    <string name="pref_dual_page_split">Divideix les pàgines amples</string>
+    <string name="pref_dual_page_invert_summary">Si la ubicació de les pàgines amples dividides no encaixa amb la direcció de lectura</string>
+    <string name="pref_dual_page_invert">Inverteix la ubicació de la divisió de pàgines</string>
     <string name="backup_restore_content_full">Es restauraran les dades del fitxer de còpia de seguretat.
 \n
 \nCaldrà que instal·leu les extensions que manquin i que després inicieu la sessió als serveis de seguiment per a utilitzar-los.</string>
@@ -586,10 +586,6 @@
     <string name="on">Activat</string>
     <string name="categorized_display_settings">Opcions de visualització i ordenació per categoria</string>
     <string name="restrictions">Restriccions: %s</string>
-    <string name="alignment_bottom">A baix</string>
-    <string name="alignment_center">Centrada</string>
-    <string name="alignment_top">A dalt</string>
-    <string name="pref_side_nav_icon_alignment">Alineació de la icona de navegació lateral</string>
     <string name="action_display_local_badge">Manga local</string>
     <string name="pref_lowest">La més baixa</string>
     <string name="pref_low">Baixa</string>
@@ -656,8 +652,8 @@
     <string name="pref_library_update_show_tab_badge">Mostra el comptador de no llegits a la icona d\'actualitzacions</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="save_chapter_as_cbz">Desa com a arxiu CBZ</string>
-    <string name="backup_info">És molt recomanable activar les còpies de seguretat automàtiques. També n\'hauríeu de desar còpies en altres llocs.</string>
-    <string name="database_clean">Buidatge de la base de dades</string>
+    <string name="backup_info">També hauríeu de desar còpies de les còpies de seguretat en altres llocs.</string>
+    <string name="database_clean">No hi ha res que calgui buidar</string>
     <string name="pref_verbose_logging_summary">Imprimeix registres detallats al registre del sistema (redueix el rendiment de l\'aplicació)</string>
     <string name="publishing_finished">Publicació finalitzada</string>
     <string name="on_hiatus">En pausa</string>
@@ -672,7 +668,7 @@
     <string name="confirm_manga_add_duplicate">Teniu un element a la vostra biblioteca amb el mateix nom però d\'una font diferent (%1$s).
 \n
 \nVoleu continuar igualment\?</string>
-    <string name="pref_navigate_pan">Navega per a desplaçar</string>
+    <string name="pref_navigate_pan">Fes panoràmiques les imatges amples en fer un toc</string>
     <string name="action_display_cover_only_grid">Graella només a la portada</string>
     <string name="action_filter_started">Començats</string>
     <string name="pref_update_only_started">Que no s\'hagin començat</string>
@@ -737,4 +733,37 @@
     <string name="update_already_running">Ja s\'està executant una actualització</string>
     <string name="theme_tidalwave">Tsunami</string>
     <string name="error_user_agent_string_blank">La cadena de l\'agent d\'usuari no pot estar buida</string>
+    <string name="pref_appearance_summary">Tema, formats de data i hora</string>
+    <string name="pref_library_summary">Categories i actualitzacions globals</string>
+    <string name="are_you_sure">N\'esteu segur\?</string>
+    <string name="invalid_location">Ubicació invàlida: %s</string>
+    <string name="auto_download_while_reading">Baixa automàticament mentre es llegeix</string>
+    <string name="download_ahead_info">Només funciona en elements de la biblioteca i si el capítol actual i el següent ja estan baixats</string>
+    <string name="crash_screen_title">S\'ha produït un error inesperat</string>
+    <string name="crash_screen_description">S\'ha produït un error inesperat al %s. Us suggerim que feu una captura de pantalla d\'aquest missatge, bolqueu els registres d\'errors i els compartiu amb el nostre canal d\'assistència al Discord.</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">El següent capítol no llegit</item>
+        <item quantity="other">Els següents %d capítols no llegits</item>
+    </plurals>
+    <string name="missing_storage_permission">No s\'han concedit permisos d\'emmagatzematge</string>
+    <string name="popular">Popular</string>
+    <string name="pref_backup_summary">Còpies de seguretat automàtiques i manuals</string>
+    <string name="pref_reader_summary">Mode de lectura, visualització i navegació</string>
+    <string name="pref_downloads_summary">Baixades automàtiques i per avançat</string>
+    <string name="multi_lang">Múltiples</string>
+    <string name="error_user_agent_string_invalid">La cadena d\'agent d\'usuari no és vàlida</string>
+    <string name="unknown_title">Títol desconegut</string>
+    <string name="updates_last_update_info_just_now">Ara mateix</string>
+    <string name="download_ahead">Baixa per avançat</string>
+    <string name="pref_general_summary">Llengua de l\'aplicació i notificacions</string>
+    <string name="pref_tracking_summary">Sincronització en un sentit o millorada</string>
+    <string name="pref_browse_summary">Fonts, extensions i cerca global</string>
+    <string name="pref_security_summary">Blocatge de l\'aplicació i mode discret</string>
+    <string name="pref_advanced_summary">Bolcatge de registres d\'errors i optimitzacions de la bateria</string>
+    <string name="crash_screen_restart_application">Reinicia l\'aplicació</string>
+    <string name="skipped_reason_not_always_update">S\'ha omès perquè no cal actualitzar la sèrie</string>
+    <string name="remove_manga">Suprimireu «%s» de la vostra biblioteca</string>
+    <string name="pref_long_strip_split">Divideix les imatges altes (BETA)</string>
+    <string name="action_search_hint">Cerca…</string>
+    <string name="updates_last_update_info">Biblioteca actualitzada per darrer cop: %s</string>
 </resources>

@@ -524,9 +524,9 @@
     <string name="l_nav">L形</string>
     <string name="action_desc">降順</string>
     <string name="action_asc">昇順</string>
-    <string name="pref_dual_page_invert_summary">分割されたワイドページの配置が読む方向と一致しない場合</string>
+    <string name="pref_dual_page_invert_summary">分割された幅広いページの配置が読む方向と一致しない場合は有効にしてください</string>
     <string name="pref_dual_page_invert">分割ページの配置を反転</string>
-    <string name="pref_dual_page_split">ワイド ページの分割</string>
+    <string name="pref_dual_page_split">幅広いページの分割</string>
     <string name="backup_restore_content_full">バックアップファイルからデータを復旧します。
 \n
 \n後で手動で必要な拡張機能をインストールし、使用したい追跡サービスにログインしてください。</string>
@@ -573,10 +573,6 @@
     <string name="pref_library_update_refresh_trackers_summary">ライブラリを更新時、トラッカーも更新する</string>
     <string name="pref_library_update_refresh_trackers">トラッカーを自動でリロード</string>
     <string name="restrictions">制限：%s</string>
-    <string name="alignment_bottom">底</string>
-    <string name="alignment_center">センター</string>
-    <string name="alignment_top">トップ</string>
-    <string name="pref_side_nav_icon_alignment">サイド ナビ アイコンの整列</string>
     <string name="cancel_all_for_series">このシリーズの全項目をキャンセル</string>
     <string name="action_display_local_badge">ローカル マンガ</string>
     <string name="rotation_landscape">横向き</string>
@@ -666,7 +662,7 @@
     <string name="pref_landscape_zoom">横長の画像をズーム</string>
     <string name="skipped_reason_completed">完結済みの為スキップしました</string>
     <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
-    <string name="pref_navigate_pan">タップ時にワイド画像をパンする</string>
+    <string name="pref_navigate_pan">タップで幅広い画像を左右に移動</string>
     <string name="notification_update_skipped">%1$d件の更新がスキップされました</string>
     <string name="learn_more">タップでもっと詳しく</string>
     <string name="channel_skipped">スキップ済み</string>
@@ -733,11 +729,28 @@
     <string name="download_ahead_info">現在のと次の章は既にダウンロード済みの場合のみ、そしてライブラリの項目にのみ有効です</string>
     <string name="are_you_sure">本当に実行しますか？</string>
     <string name="multi_lang">多言語</string>
-    <string name="updates_last_update_info">前回のライブラリ更新：%1$s</string>
+    <string name="updates_last_update_info">前回のライブラリ更新：%s</string>
     <string name="pref_long_strip_split">長い画像の分割（BETA）</string>
     <string name="remove_manga">ライブラリから「%s」を削除しようとしています</string>
     <string name="popular">人気</string>
     <string name="missing_storage_permission">ストレージ権限を持っていません</string>
     <string name="skipped_reason_not_always_update">シリーズは更新を必要としないため、スキップされました</string>
-    <string name="action_search_hint">探す…</string>
+    <string name="action_search_hint">検索…</string>
+    <string name="crash_screen_description">%sでは予期せぬエラーが発生しました。お手数ですが、このメッセージのスクリーンショットを作成し、クラッシュ ログをダンプして、Discord のサポート チャネルで共有するようお願い致します。</string>
+    <string name="invalid_location">無効な場所: %s</string>
+    <string name="unknown_title">不明なタイトル</string>
+    <string name="error_user_agent_string_invalid">ユーザー エージェント文字列が無効です</string>
+    <string name="crash_screen_title">予期せぬエラーが発生しました</string>
+    <string name="updates_last_update_info_just_now">ちょうど今</string>
+    <string name="crash_screen_restart_application">アプリケーションを再起動</string>
+    <string name="pref_general_summary">アプリの言語、通知</string>
+    <string name="pref_reader_summary">ビューアモード、表示、ナビゲーション</string>
+    <string name="pref_downloads_summary">自動ダウンロード、事前ダウンロード</string>
+    <string name="pref_tracking_summary">一方同期、高度な同期</string>
+    <string name="pref_browse_summary">ソース、拡張機能、グローバル検索</string>
+    <string name="pref_backup_summary">手動および自動バックアップ</string>
+    <string name="pref_security_summary">アプリロック、セキュア画面</string>
+    <string name="pref_advanced_summary">クラッシュ ログのダンプ、バッテリーの最適化</string>
+    <string name="pref_appearance_summary">テーマ、日付と時刻の形式</string>
+    <string name="pref_library_summary">カテゴリ、グローバル アップデート</string>
 </resources>

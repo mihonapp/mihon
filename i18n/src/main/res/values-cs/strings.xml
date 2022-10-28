@@ -595,10 +595,6 @@
     <string name="off">Vypnuto</string>
     <string name="on">Zapnuto</string>
     <string name="categorized_display_settings">Nastavení zobrazení a řazení pro jednotlivé kategorie</string>
-    <string name="alignment_bottom">Dole</string>
-    <string name="alignment_center">Ve Středu</string>
-    <string name="alignment_top">Nahoře</string>
-    <string name="pref_side_nav_icon_alignment">Zarovnání ikony boční navigace</string>
     <string name="information_empty_category_dialog">Nemáte žádné kategorie.</string>
     <string name="action_start_downloading_now">Začít stahovat nyní</string>
     <string name="notification_updating">Aktualizuji knihovnu… (%1$d / %2$d)</string>
@@ -761,7 +757,7 @@
     <string name="remove_manga">Chystáte se odstranit \"%s\" ze své knihovny</string>
     <string name="multi_lang">Multi</string>
     <string name="pref_long_strip_split">Rozdělit vysoké obrázky (BETA)</string>
-    <string name="updates_last_update_info">Poslední aktualizace knihovny: %1$s</string>
+    <string name="updates_last_update_info">Poslední aktualizace knihovny: %s</string>
     <string name="popular">Populární</string>
     <string name="missing_storage_permission">Nebyla udělena oprávnění k úložišti</string>
     <string name="skipped_reason_not_always_update">Přeskočeno, protože série nevyžaduje aktualizace</string>
@@ -782,4 +778,5 @@
     <string name="invalid_location">Neplatné umístění: %s</string>
     <string name="unknown_title">Neznámý titul</string>
     <string name="error_user_agent_string_invalid">Neplatný řetězec uživatelského agenta</string>
+    <string name="updates_last_update_info_just_now">Právě teď</string>
 </resources>

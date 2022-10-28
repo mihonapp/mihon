@@ -152,10 +152,6 @@
     <string name="theme_tealturquoise">టీల్ మరియు మణి</string>
     <string name="theme_yotsuba">యోట్సూబ</string>
     <string name="pref_dark_theme_pure_black">స్వచ్ఛమైన నలుపు వీక్షణ</string>
-    <string name="pref_side_nav_icon_alignment">ప్రక్క మార్గదర్శన చిహ్న యోజనము</string>
-    <string name="alignment_top">పైన</string>
-    <string name="alignment_center">మధ్య</string>
-    <string name="alignment_bottom">క్రింద</string>
     <string name="pref_category_timestamps">సమయ ముద్రణలు</string>
     <string name="pref_relative_format">సంబంధిత సమయ ముద్రణలు</string>
     <string name="pref_confirm_exit">నిష్రమణమును నిర్ధారించుము</string>

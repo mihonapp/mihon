@@ -585,10 +585,6 @@
     <string name="error_saving_cover">B\'at àpidu un\'errore sarvende sa cobertedda</string>
     <string name="cover_saved">Cobertedda sarvada</string>
     <string name="manga_cover">Cobertedda</string>
-    <string name="alignment_bottom">In bassu</string>
-    <string name="alignment_center">In su tzentru</string>
-    <string name="alignment_top">In artu</string>
-    <string name="pref_side_nav_icon_alignment">Alliniamentu de s\'icona de navigatzione laterale</string>
     <string name="tracking_guide">Ghia pro s\'arrastamentu</string>
     <string name="categorized_display_settings">Impostatziones de ordinamentu e visualizatzione pro categoria</string>
     <string name="information_empty_category_dialog">Non tenes galu peruna categoria.</string>
@@ -748,7 +744,7 @@
     <string name="remove_manga">As a bogare \"%s\" dae sa biblioteca tua</string>
     <string name="multi_lang">Mùltiplas</string>
     <string name="pref_long_strip_split">Partzi sas immàgines artas (BETA)</string>
-    <string name="updates_last_update_info">Ùrtimu agiornamentu de sa biblioteca: %1$s</string>
+    <string name="updates_last_update_info">Ùrtimu agiornamentu de sa biblioteca: %s</string>
     <string name="popular">Populare</string>
     <string name="missing_storage_permission">Permissu de archiviatzione non cuntzessu</string>
     <string name="skipped_reason_not_always_update">Brincadu ca sa sèrie non tenet bisòngiu de agiornamentos</string>
@@ -769,4 +765,5 @@
     <string name="invalid_location">Positzione non vàlida: %s</string>
     <string name="unknown_title">Tìtulu disconnotu</string>
     <string name="error_user_agent_string_invalid">Istringa de agente de utente non vàlida</string>
+    <string name="updates_last_update_info_just_now">Como como</string>
 </resources>

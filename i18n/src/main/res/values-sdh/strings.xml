@@ -164,10 +164,6 @@
     <string name="theme_yinyang">ین و یانگ</string>
     <string name="theme_yotsuba">یۆتسوبا</string>
     <string name="pref_dark_theme_pure_black">دۆخی ڕەشی پوخت</string>
-    <string name="pref_side_nav_icon_alignment">ڕیزبەندی ئایکۆنەکانی ناڤیگەشنی تەنیشت</string>
-    <string name="alignment_top">سەرەوە</string>
-    <string name="alignment_center">ناوەڕاست</string>
-    <string name="alignment_bottom">خوارەوە</string>
     <string name="pref_category_timestamps">تۆماری کات</string>
     <string name="pref_relative_format">تۆماری کاتی ڕێژەیی</string>
     <string name="pref_relative_time_short">کورت (ئەمڕۆ، دوێنێ)</string>
@@ -259,4 +255,14 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_always_show_chapter_transition">هەمیشە تێپەڕینی چاپتەر پیشان بدە</string>
+    <string name="off">کوژاوە</string>
+    <string name="on">پێکراو</string>
+    <string name="action_show_manga">نیشاندانی مانگا</string>
+    <string name="action_sort_last_manga_update">کۆتانوێکردنەوەی مانگا</string>
+    <string name="action_sort_unread_count">ژمارەی نەخوێندراوە</string>
+    <string name="delete_category">ڕەشکردنەوەی بەش</string>
+    <string name="action_filter_started">دەستپێکراو</string>
+    <string name="action_remove_everything">لادانی هەمووشتێك</string>
+    <string name="action_search_hint">گەڕان…</string>
+    <string name="delete_category_confirmation">\?ڕەشبکەیتەوە \"%s\"ئایا ئەتەوێ کە بەشی</string>
 </resources>

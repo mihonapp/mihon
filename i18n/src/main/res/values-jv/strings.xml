@@ -192,7 +192,6 @@
     <string name="theme_monet">Dinamis</string>
     <string name="theme_greenapple">Ijo apel</string>
     <string name="action_faq_and_guides">Takon jawab lan panduan</string>
-    <string name="alignment_bottom">Ngisor</string>
     <string name="pref_category_timestamps">Stempel wektu</string>
     <string name="pref_relative_time_short">Cendhak (Dina iki, Wingi)</string>
     <string name="pref_relative_time_long">Dawa(Cendhak+, n dina kang rumiyin)</string>
@@ -223,8 +222,6 @@
     <string name="theme_yinyang">Yin lan Yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Mode ireng banget</string>
-    <string name="alignment_top">Dhuwur</string>
-    <string name="alignment_center">Tengah</string>
     <string name="hide_notification_content">Umpetake konten notifikasi</string>
     <string name="secure_screen">Amanaken layar</string>
     <string name="update_72hour">Saben 3 dinten</string>
@@ -280,7 +277,6 @@
     <string name="pref_category_library_update">Updatean umum</string>
     <string name="pref_library_update_interval">Updatean otomatis</string>
     <string name="lock_with_biometrics">Mbutuhake mbukak kunci</string>
-    <string name="pref_side_nav_icon_alignment">Alignment lambang pandhu arah sisih</string>
     <string name="pref_library_update_refresh_metadata">Nganyari metadata otomatis</string>
     <string name="network_not_metered">Jaringan gak kebates tok</string>
     <string name="pref_library_update_manga_restriction">Lewati updatean judul</string>

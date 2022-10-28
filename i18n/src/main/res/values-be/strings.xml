@@ -157,10 +157,6 @@
     <string name="lock_with_biometrics">Патрабаваць разблакоўку</string>
     <string name="pref_category_security">Бяспека</string>
     <string name="pref_manage_notifications">Кіраванне апавяшчэннямі</string>
-    <string name="alignment_bottom">Панізе</string>
-    <string name="alignment_center">Пасярэдзіне</string>
-    <string name="alignment_top">Паверсе</string>
-    <string name="pref_side_nav_icon_alignment">Выраўноўванне значкоў бакавой навігацыі</string>
     <string name="pref_confirm_exit">Пацвярджаць выхад</string>
     <string name="pref_date_format">Фармат даты</string>
     <string name="pref_dark_theme_pure_black">Чысты чорны цёмны рэжым</string>

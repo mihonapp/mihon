@@ -81,10 +81,6 @@
     <string name="pref_relative_time_short">Trumpi(Šiandien,Vakar)</string>
     <string name="pref_relative_format">Reliatyvūs laiko štampai</string>
     <string name="pref_category_timestamps">Laiko štampai</string>
-    <string name="alignment_bottom">Apačioje</string>
-    <string name="alignment_center">Viduryje</string>
-    <string name="alignment_top">Viršuje</string>
-    <string name="pref_side_nav_icon_alignment">Šoninės navigacijos ikonų išdėstymas</string>
     <string name="pref_dark_theme_pure_black">Visiškai juodas tamsus režimas</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Jin ir Jang</string>
@@ -207,8 +203,8 @@
     <string name="pref_double_tap_anim_speed">Dvigubo paspaudimo animacijos greitis</string>
     <string name="pref_page_transitions">Puslapių perėjimų animacijos</string>
     <string name="pref_cutout_short">Parodyti turinį iškirptoje zonoje</string>
-    <string name="pref_dual_page_invert_summary">Jeigu dvigubų puslapių pozicijos nesutampa su skaitymo kryptimi</string>
-    <string name="pref_dual_page_invert">Apkeisti dvigubų puslapių padėtis</string>
+    <string name="pref_dual_page_invert_summary">Jeigu perskirtų puslapių pozicijos nesutampa su skaitymo kryptimi</string>
+    <string name="pref_dual_page_invert">Apkeisti perskirtų puslapių padėtį</string>
     <string name="pref_dual_page_split">Perskirti plačius puslapius</string>
     <string name="pref_show_navigation_mode_summary">Trumpai parodyti skaitytuvą, kai atidarytas</string>
     <string name="pref_fullscreen">Pilno ekrano rėžimas</string>
@@ -487,7 +483,7 @@
     <string name="battery_not_low">Kai baterija nėra išsikrovusi</string>
     <string name="action_move_to_top_all_for_series">Perkelti seriją į viršų</string>
     <string name="backup_restore_missing_trackers">Sekimo priemonės, neprijungtos prie:</string>
-    <string name="split_tall_images_summary">Pagerina skaitomumą padalijant aukštus atsisiųstus vaizdus.</string>
+    <string name="split_tall_images_summary">Pagerina skaitytuvo našumą</string>
     <string name="pref_duplicate_pinned_sources">Rodyti pasikartojančius prisegtus šaltinius</string>
     <string name="pref_duplicate_pinned_sources_summary">Pakartokite prisegtus šaltinius atitinkamose kalbų grupėse</string>
     <string name="ext_info_language">Kalba</string>
@@ -497,7 +493,7 @@
     <string name="edge_nav">Kraštas</string>
     <string name="disabled_nav">Išjungtas</string>
     <string name="enhanced_tracking_info">Paslaugos turinčios patobulintas funkcijas, kurios teikia konkretus šaltiniai. Manga automatiškai stebimos, kai įtraukiamos į jūsų biblioteką.</string>
-    <string name="pref_navigate_pan">Navigacija paspaudimu</string>
+    <string name="pref_navigate_pan">Bakstelėdami slinkti plačius vaizdus</string>
     <string name="pref_landscape_zoom">Priartinti horizontalų vaizdą</string>
     <string name="ext_info_version">Versija</string>
     <string name="split_tall_images">Automatiškai padalinti aukšti vaizdai</string>
@@ -570,7 +566,7 @@
     <string name="download_notifier_title_error">Klaida</string>
     <string name="download_notifier_text_only_wifi">Nėra „Wi-Fi“ ryšio</string>
     <string name="channel_progress">Progresas</string>
-    <string name="backup_in_progress">Atsarginė kopija kuriama</string>
+    <string name="backup_in_progress">Atsarginė jau kopija kuriama</string>
     <string name="download_queue_size_warning">Įspėjimas: dėl didelių masinių atsisiuntimų šaltiniai gali tapti lėtesni ir (arba) jie blokuoti \"Tachiyomi\". Bakstelėkite , jei norite sužinoti daugiau.</string>
     <string name="update_check_fdroid_migration_info">Nauja versija pasiekiama oficialiuose leidiniuose. Bakstelėkite , kad sužinotumėte, kaip pereiti iš neoficialių \"F-Droid\" leidinių.</string>
     <string name="pref_disable_battery_optimization">Išjungti akumuliatoriaus optimizavimą</string>
@@ -650,7 +646,7 @@
     <string name="badges_header">Žymės</string>
     <string name="http_error_hint">Patikrinkite svetainę \"WebView\" aplinkoje</string>
     <string name="action_global_search_hint">Pasaulinė paieška…</string>
-    <string name="latest">Naujausias</string>
+    <string name="latest">Naujausia</string>
     <string name="local_source_help_guide">Vietos šaltinių vadovas</string>
     <string name="cover_saved">Viršelis išsaugotas</string>
     <string name="no_chapters_error">Skyrių nerasta</string>
@@ -717,9 +713,9 @@
     </plurals>
     <string name="title">Pavadinimas</string>
     <plurals name="num_trackers">
-        <item quantity="one">Vienas stebėjimo įrenginys</item>
+        <item quantity="one">%d stebėjimo įrenginys</item>
         <item quantity="few">%d stebėjimo įrenginiai</item>
-        <item quantity="other">%d stebėjimo įrenginiai</item>
+        <item quantity="other">%d stebėjimo įrenginių</item>
     </plurals>
     <string name="error_saving_picture">Klaidą išsaugojant paveikslą</string>
     <string name="status">Būsena</string>
@@ -756,7 +752,7 @@
     <string name="pref_long_strip_split">Perskirti aukštus paveikslėlius (BETA versija)</string>
     <string name="error_user_agent_string_blank">Vartotojo agento eilutė negali būti tuščia</string>
     <string name="update_already_running">Atnaujinimas jau vykdomas</string>
-    <string name="updates_last_update_info">Biblioteka paskutinį kartą atnaujinta: %1$s</string>
+    <string name="updates_last_update_info">Biblioteka paskutinį kartą atnaujinta: %s</string>
     <string name="remove_manga">Ketinate pašalinti „%s“ iš bibliotekos</string>
     <string name="download_ahead_info">Veikia tik bibliotekoje esantiems įrašams ir tik tada, jei jau atsisiųstas dabartinis ir kitas skyrius</string>
     <string name="download_ahead">Atsisiųsti į priekį</string>
@@ -771,4 +767,16 @@
     <string name="pref_reader_summary">Skaitymo režimas, rodymas, navigacija</string>
     <string name="pref_tracking_summary">Vienpusis progreso sinchronizavimas, patobulintas sinchronizavimas</string>
     <string name="pref_browse_summary">Šaltiniai, plėtiniai, visuotinė paieška</string>
+    <string name="pref_library_summary">Kategorijos, visuotinis atnaujinimas</string>
+    <string name="multi_lang">Kelių kalbų</string>
+    <string name="pref_advanced_summary">Eksportuoti gedimų žurnalus, akumuliatoriaus optimizavimą</string>
+    <string name="invalid_location">Netinkama vieta: %s</string>
+    <string name="error_user_agent_string_invalid">Netinkama naudotojo agento eilutė</string>
+    <string name="unknown_title">Nežinomas pavadinimas</string>
+    <string name="updates_last_update_info_just_now">Ką tik</string>
+    <string name="crash_screen_description">%s susidūrė su netikėta klaida. Siūlome padaryti šio pranešimo ekrano nuotrauką, išsisaugoti gedimų žurnalus ir pasidalyti tuo mūsų „Discord“ palaikymo kanale.</string>
+    <string name="are_you_sure">Ar esate tikri\?</string>
+    <string name="popular">Populiaru</string>
+    <string name="crash_screen_title">Įvyko netikėta klaida</string>
+    <string name="crash_screen_restart_application">Iš naujo paleiskite programą</string>
 </resources>

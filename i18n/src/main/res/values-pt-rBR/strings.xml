@@ -596,10 +596,6 @@
     <string name="error_saving_cover">Erro ao salvar a capa</string>
     <string name="cover_saved">Capa salva</string>
     <string name="manga_cover">Capa</string>
-    <string name="alignment_bottom">Inferior</string>
-    <string name="alignment_center">Centro</string>
-    <string name="alignment_top">Superior</string>
-    <string name="pref_side_nav_icon_alignment">Alinhamento dos ícones de navegação lateral</string>
     <string name="categorized_display_settings">Configurações por categoria para ordenação e visualização</string>
     <string name="tracking_guide">Guia sobre o monitoramento</string>
     <string name="information_empty_category_dialog">Você não tem categorias ainda.</string>
@@ -760,7 +756,7 @@
     <string name="are_you_sure">Você tem certeza\?</string>
     <string name="multi_lang">Múltiplas</string>
     <string name="pref_long_strip_split">Dividir imagens compridas (BETA)</string>
-    <string name="updates_last_update_info">Última atualização da biblioteca: %1$s</string>
+    <string name="updates_last_update_info">Última atualização da biblioteca: %s</string>
     <string name="remove_manga">Você está prestes a remover \"%s\" de sua biblioteca</string>
     <string name="popular">Popular</string>
     <string name="missing_storage_permission">Permissões de armazenamento não concedidas</string>
@@ -782,4 +778,5 @@
     <string name="unknown_title">Título desconhecido</string>
     <string name="invalid_location">Local inválido: %s</string>
     <string name="error_user_agent_string_invalid">Valor de user agent inválido</string>
+    <string name="updates_last_update_info_just_now">Agora</string>
 </resources>

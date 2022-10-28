@@ -574,7 +574,7 @@
     <string name="pref_true_color_summary">Giảm lỗi hiện sai dải màu, nhưng có thể ảnh hưởng đến hiệu suất</string>
     <string name="pref_dual_page_invert_summary">Nếu vị trí của phần tách trang kép không khớp với hướng đọc</string>
     <string name="pref_dual_page_invert">Đảo vị trí tách trang kép</string>
-    <string name="pref_dual_page_split">Chia đôi trang</string>
+    <string name="pref_dual_page_split">Chia các trang đôi</string>
     <string name="pref_show_navigation_mode_summary">Hiển thị ngắn gọn các vùng chạm khi trình đọc được mở</string>
     <string name="pref_show_navigation_mode">Hiển thị lớp phủ khu vực nhấn</string>
     <string name="exclude">Loại trừ:%s</string>
@@ -608,10 +608,6 @@
     <string name="pref_library_update_refresh_trackers_summary">Cập nhật theo dõi khi cập nhật thư viện</string>
     <string name="pref_library_update_refresh_trackers">Tự động làm mới theo dõi</string>
     <string name="restrictions">Hạn chế: %s</string>
-    <string name="alignment_bottom">Cuối</string>
-    <string name="alignment_center">Giữa</string>
-    <string name="alignment_top">Trên</string>
-    <string name="pref_side_nav_icon_alignment">Căn chỉnh biểu tượng điều hướng bên cạnh</string>
     <string name="tracker_komga_warning">Trình theo dõi này chỉ tương thích với nguồn Komga.</string>
     <string name="notification_updating">Cập nhật thư viện… (%1$d/%2$d)</string>
     <string name="information_empty_category_dialog">Người dùng chưa có danh mục.</string>
@@ -779,4 +775,9 @@
     <string name="pref_library_summary">Danh mục, cập nhật toàn bộ</string>
     <string name="pref_reader_summary">Dạng đọc, hiển thị, điều hướng</string>
     <string name="pref_downloads_summary">Tự động tải xuống, tải xuống trước</string>
+    <string name="pref_backup_summary">Sao lưu thủ công &amp; tự động</string>
+    <string name="pref_security_summary">Khoá ứng dụng, bảo vệ màn hình</string>
+    <string name="pref_advanced_summary">Tệp báo lỗi tạm, tối ưu hoá pin</string>
+    <string name="pref_tracking_summary">Đồng bộ tiến trình đọc, đồng bộ nâng cao</string>
+    <string name="pref_browse_summary">Nguồn, tiện ích, tìm kiếm toàn bộ</string>
 </resources>

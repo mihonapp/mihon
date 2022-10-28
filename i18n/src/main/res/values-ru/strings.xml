@@ -603,14 +603,10 @@
     <string name="action_display_local_badge">Персональные серии</string>
     <string name="off">Выключено</string>
     <string name="on">Включено</string>
-    <string name="pref_side_nav_icon_alignment">Выравнивание значков боковой навигации</string>
     <string name="error_sharing_cover">Ошибка отправки обложки</string>
     <string name="error_saving_cover">Ошибка сохранения обложки</string>
     <string name="cover_saved">Обложка сохранена</string>
     <string name="manga_cover">Обложка</string>
-    <string name="alignment_bottom">По низу</string>
-    <string name="alignment_center">По центру</string>
-    <string name="alignment_top">По верху</string>
     <string name="categorized_display_settings">Каждая категория имеет собственные настройки</string>
     <string name="tracking_guide">Руководство по отслеживанию</string>
     <string name="information_empty_category_dialog">Ваша библиотека не имеет категорий.</string>
@@ -774,7 +770,7 @@
     <string name="multi_lang">Многоязычное</string>
     <string name="remove_manga">Вы собираетесь удалить «%s» из вашей библиотеки</string>
     <string name="pref_long_strip_split">Разделять длинные изображения (БЕТА)</string>
-    <string name="updates_last_update_info">Последнее обновление библиотеки: %1$s</string>
+    <string name="updates_last_update_info">Последнее обновление библиотеки: %s</string>
     <string name="popular">Популярное</string>
     <string name="missing_storage_permission">Не предоставлены разрешения на хранение</string>
     <string name="skipped_reason_not_always_update">Пропущено, т.к серия не нуждается в обновлении</string>
@@ -795,4 +791,5 @@
     <string name="unknown_title">Неизвестное название</string>
     <string name="invalid_location">Недопустимое расположение: %s</string>
     <string name="error_user_agent_string_invalid">Недопустимый параметр user agent</string>
+    <string name="updates_last_update_info_just_now">Только что</string>
 </resources>

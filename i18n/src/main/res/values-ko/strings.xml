@@ -143,7 +143,7 @@
     <string name="pref_backup_service_category">자동 백업</string>
     <string name="pref_backup_interval">백업 주기</string>
     <string name="pref_backup_slots">최대 백업</string>
-    <string name="backup_created">백업</string>
+    <string name="backup_created">백업 생성됨</string>
     <string name="restore_completed">복원 완료</string>
     <string name="restoring_backup">백업 복원중</string>
     <string name="creating_backup">백업 생성중</string>
@@ -341,7 +341,7 @@
     <string name="restoring_backup_canceled">복원 취소</string>
     <string name="creating_backup_error">백업 실패</string>
     <string name="restore_duration">%02d분 %02d초</string>
-    <string name="invalid_backup_file">부적합한 백업 파일</string>
+    <string name="invalid_backup_file">잘못된 백업 파일</string>
     <string name="pref_enable_automatic_extension_updates">확장 프로그램 업데이트 확인</string>
     <string name="pref_category_auto_download">자동 다운로드</string>
     <string name="pref_remove_bookmarked_chapters">북마크 표시된 회차 삭제 허용</string>
@@ -489,7 +489,7 @@
     <string name="categorized_display_settings">카테고리 별 표시/정렬 설정</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Shizuku를 확장기능 인스톨러로 사용하려면 Shizuku를 먼저 설치해 주세요.</string>
     <string name="ext_update_all">전부 업데이트</string>
-    <string name="invalid_backup_file_missing_manga">백업에 만화가 포함되어있지 않습니다.</string>
+    <string name="invalid_backup_file_missing_manga">백업에 만화가 포함되어 있지 않습니다.</string>
     <string name="pref_dump_crash_logs_summary">개발자와 공유할 수 있는 오류 로그 파일을 생성합니다</string>
     <string name="crash_log_saved">오류 로그가 저장되었습니다</string>
     <string name="privacy_policy">개인정보 보호 정책</string>
@@ -655,10 +655,6 @@
     <string name="theme_tako">문어</string>
     <string name="theme_yinyang">음과 양</string>
     <string name="theme_yotsuba">요츠바</string>
-    <string name="pref_side_nav_icon_alignment">네비게이션 아이콘 정렬</string>
-    <string name="alignment_top">위</string>
-    <string name="alignment_center">중앙</string>
-    <string name="alignment_bottom">아래</string>
     <string name="pref_category_nsfw_content">19금 소스</string>
     <string name="pref_show_nsfw_source">소스 또는 확장기능 목록에 보이기</string>
     <string name="parental_controls_info">오류 또는 잘못된 분류로 인하여 19금 콘텐츠가 표시될 가능성이 있습니다.</string>
@@ -707,7 +703,7 @@
     <string name="unfinished_list">미완성된 목록</string>
     <string name="empty_screen">와...이거 좀 어색하네</string>
     <string name="custom_cover">맞춤 표지</string>
-    <string name="ext_info_age_rating">연령 관람등급</string>
+    <string name="ext_info_age_rating">연령 등급</string>
     <string name="action_remove_everything">다 제거하기</string>
     <string name="pref_reset_viewer_flags_success">모든 뷰어 설정을 초기화했습니다</string>
     <string name="pref_user_agent_string">기본 사용자 에이전트 문자열</string>
@@ -726,7 +722,7 @@
     <string name="update_already_running">업데이트가 이미 실행 중입니다</string>
     <string name="error_user_agent_string_blank">사용자 에이전트 문자열은 비워 둘 수 없습니다</string>
     <string name="download_ahead">미리 다운로드</string>
-    <string name="multi_lang">다중 언어</string>
+    <string name="multi_lang">다언어</string>
     <string name="pref_long_strip_split">긴 이미지 분할 (BETA)</string>
     <string name="remove_manga">서재에서 \"%s\"을(를) 제거하려고 합니다</string>
     <string name="missing_storage_permission">저장공간 사용 권한이 없음</string>
@@ -734,7 +730,7 @@
         <item quantity="other">읽지 않은 다음 %d 회차</item>
     </plurals>
     <string name="auto_download_while_reading">읽을 때 자동 다운로드</string>
-    <string name="updates_last_update_info">마지막 서재 업데이트: %1$s</string>
+    <string name="updates_last_update_info">마지막 서재 업데이트: %s</string>
     <string name="download_ahead_info">만화가 내 서재에 추가되어 있고, 현재 회차와 다음 회차가 이미 다운로드된 경우에만 작동됩니다</string>
     <string name="popular">인기</string>
     <string name="are_you_sure">정말로 실행합니까\?</string>
@@ -756,4 +752,5 @@
     <string name="unknown_title">알 수 없는 제목</string>
     <string name="invalid_location">잘못된 위치: %s</string>
     <string name="error_user_agent_string_invalid">잘못된 사용자 에이전트 문자열</string>
+    <string name="updates_last_update_info_just_now">방금</string>
 </resources>

@@ -585,10 +585,6 @@
     <string name="error_saving_cover">Fehler beim Speichern des Covers</string>
     <string name="cover_saved">Cover gespeichert</string>
     <string name="manga_cover">Cover</string>
-    <string name="alignment_bottom">Unten</string>
-    <string name="alignment_center">Mitte</string>
-    <string name="alignment_top">Oben</string>
-    <string name="pref_side_nav_icon_alignment">Seitennavigation Icon-Ausrichtung</string>
     <string name="categorized_display_settings">Sortierungs- und Anzeigeeinstellungen pro Kategorie</string>
     <string name="tracking_guide">Tracking-Anleitung</string>
     <string name="information_empty_category_dialog">Du hast noch keine Kategorien.</string>
@@ -748,7 +744,7 @@
     <string name="pref_long_strip_split">Hohe Bilder aufteilen (BETA)</string>
     <string name="remove_manga">Du bist gerade dabei, „%s“ aus deiner Bibliothek zu entfernen</string>
     <string name="multi_lang">Mehrere Sprachen</string>
-    <string name="updates_last_update_info">Letzte Aktualisierung der Bibliothek: %1$s</string>
+    <string name="updates_last_update_info">Bibliothek zuletzt aktualisiert: %s</string>
     <string name="popular">Beliebt</string>
     <string name="missing_storage_permission">Speicherberechtigungen nicht erteilt</string>
     <string name="skipped_reason_not_always_update">Übersprungen, da die Serie keine Aktualisierung benötigt</string>
@@ -769,4 +765,5 @@
     <string name="unknown_title">Unbekannter Titel</string>
     <string name="invalid_location">Ungültiger Speicherort: %s</string>
     <string name="error_user_agent_string_invalid">Ungültiger User-Agent-Text</string>
+    <string name="updates_last_update_info_just_now">Gerade eben</string>
 </resources>

@@ -632,10 +632,6 @@
     <string name="tracking_guide">Guia de monitorização</string>
     <string name="categorized_display_settings">Configurações por categoria para ordenação e exibição</string>
     <string name="restrictions">Restrições: %s</string>
-    <string name="alignment_bottom">Fundo</string>
-    <string name="alignment_center">Centro</string>
-    <string name="alignment_top">Topo</string>
-    <string name="pref_side_nav_icon_alignment">Alinhamento dos ícones de navegação lateral</string>
     <string name="pref_dark_theme_pure_black">Modo escuro preto puro</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="action_display_local_badge">Mangás locais</string>

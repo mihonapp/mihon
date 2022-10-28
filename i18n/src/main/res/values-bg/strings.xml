@@ -553,8 +553,6 @@
     <string name="local_filter_order_by">Нареди по</string>
     <string name="chapter_settings">Настройки за главите</string>
     <string name="action_start_downloading_now">Започни изтеглянето сега</string>
-    <string name="pref_side_nav_icon_alignment">Подравняване на страничната навигационна икона</string>
-    <string name="alignment_center">Средна част</string>
     <string name="ext_install_service_notif">Инсталиране на разширение…</string>
     <string name="ext_installer_legacy">Стара версия</string>
     <string name="ext_installer_pref">Инсталатор</string>
@@ -594,7 +592,6 @@
         <item quantity="one">Вчера</item>
         <item quantity="other">Преди %1$d дни</item>
     </plurals>
-    <string name="alignment_top">Горна част</string>
     <string name="manga_cover">Корица</string>
     <string name="label_warning">Предупреждение</string>
     <string name="confirm_lock_change">Удостоверете, за да потвърдите промяната</string>
@@ -660,7 +657,6 @@
     <string name="spen_previous_page">Предишна страница</string>
     <string name="spen_next_page">Следваща страница</string>
     <string name="action_display_language_badge">Език</string>
-    <string name="alignment_bottom">Долна част</string>
     <string name="pref_show_nsfw_source">Показвай в списъка с източници и разширения</string>
     <string name="recently">Скорошни</string>
     <string name="relative_time_today">Днес</string>

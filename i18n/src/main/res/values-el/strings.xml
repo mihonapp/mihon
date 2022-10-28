@@ -585,10 +585,6 @@
     <string name="error_saving_cover">Σφάλμα αποθήκευσης εξωφύλλου</string>
     <string name="cover_saved">Το εξώφυλλο αποθηκεύτηκε</string>
     <string name="manga_cover">Εξώφυλλο</string>
-    <string name="alignment_bottom">Κάτω</string>
-    <string name="alignment_center">Κέντρο</string>
-    <string name="alignment_top">Πάνω</string>
-    <string name="pref_side_nav_icon_alignment">Στοίχιση εικονιδίων πλευρικής πλοήγησης</string>
     <string name="categorized_display_settings">Ρυθμίσεις για ταξινόμηση και εμφάνιση ανά κατηγορία</string>
     <string name="tracking_guide">Οδηγός tracking</string>
     <string name="information_empty_category_dialog">Δεν έχετε κατηγορίες ακόμα.</string>
@@ -748,7 +744,7 @@
     <string name="pref_long_strip_split">Διαχωρισμός ψηλών εικόνων (BETA)</string>
     <string name="multi_lang">Πολλαπλό</string>
     <string name="popular">Δημοφιλή</string>
-    <string name="updates_last_update_info">Τελευταία ενημέρωση βιβλιοθήκης: %1$s</string>
+    <string name="updates_last_update_info">Τελευταία ενημέρωση βιβλιοθήκης: %s</string>
     <string name="remove_manga">Πρόκειται να αφαιρέσετε το \"%s\" από τη βιβλιοθήκη σας</string>
     <string name="missing_storage_permission">Δεν έχουν χορηγηθεί δικαιώματα αποθήκευσης</string>
     <string name="skipped_reason_not_always_update">Παραλείφθηκε επειδή η σειρά δεν απαιτεί ενημερώσεις</string>
@@ -769,4 +765,5 @@
     <string name="unknown_title">Άγνωστος τίτλος</string>
     <string name="invalid_location">Μη έγκυρη τοποθεσία: %s</string>
     <string name="error_user_agent_string_invalid">Μη έγκυρη συμβολοσειρά πράκτορα χρήστη</string>
+    <string name="updates_last_update_info_just_now">Μόλις τώρα</string>
 </resources>

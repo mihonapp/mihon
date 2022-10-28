@@ -578,16 +578,12 @@
     <string name="chapter_not_found">Hindi makita ang kabanata</string>
     <string name="source_unsupported">Di suportado ang source</string>
     <string name="unread">Di pa nabasa</string>
-    <string name="alignment_center">Gitna</string>
-    <string name="pref_side_nav_icon_alignment">Hilera ng nabigasyon sa gilid</string>
     <string name="error_sharing_cover">Di maibahagi ang cover</string>
     <string name="error_saving_cover">Di ma-save ang cover</string>
     <string name="cover_saved">Na-save na ang cover</string>
     <string name="manga_cover">Cover</string>
     <string name="off">Patayin</string>
     <string name="on">Buksan</string>
-    <string name="alignment_bottom">Baba</string>
-    <string name="alignment_top">Taas</string>
     <string name="action_display_local_badge">Lokal na manga</string>
     <string name="categorized_display_settings">Pagpapakita kada kategorya</string>
     <string name="information_empty_category_dialog">Wala ka pang kategorya.</string>

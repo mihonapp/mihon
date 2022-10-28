@@ -541,10 +541,6 @@
     <string name="pref_dual_page_invert_summary">यदि दोहरे पृष्ठ विभाजन की नियुक्ति पढ़ने की दिशा से मेल नहीं खाती है</string>
     <string name="pref_dual_page_invert">दोहरे पृष्ठ विभाजन प्लेसमेंट को पलटना</string>
     <string name="pref_dual_page_split">दोहरी पृष्ठ विभाजन</string>
-    <string name="alignment_bottom">नीचे</string>
-    <string name="alignment_center">मध्य</string>
-    <string name="alignment_top">ऊपर</string>
-    <string name="pref_side_nav_icon_alignment">साइड नेविगेशन आइकन अलाइनमेंट</string>
     <string name="action_start_downloading_now">अभी डाउनलोड करना शुरू करें</string>
     <string name="action_show_errors">विवरण देखने के लिए टैप करें</string>
     <string name="cancel_all_for_series">इस श्रृंखला के लिए सभी रद्द करें</string>

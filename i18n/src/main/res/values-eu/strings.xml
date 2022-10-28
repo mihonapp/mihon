@@ -555,10 +555,6 @@
     <string name="theme_yinyang">Yin eta Yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Beltz hutseko modu iluna</string>
-    <string name="pref_side_nav_icon_alignment">Alboko nabigazio-ikonoaren lerrokatzea</string>
-    <string name="alignment_top">Goian</string>
-    <string name="alignment_center">Erdian</string>
-    <string name="alignment_bottom">Behean</string>
     <string name="pref_category_timestamps">Denbora-zigiluak</string>
     <string name="pref_relative_format">Denbora-zigilu erlatiboak</string>
     <string name="update_never">Itzali</string>

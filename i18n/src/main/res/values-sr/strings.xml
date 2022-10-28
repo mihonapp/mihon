@@ -426,7 +426,6 @@
     <string name="pref_library_update_refresh_metadata">Аутоматски освежи метаподатке</string>
     <string name="parental_controls_info">Ovo ne sprečava nezvanične ili potencijalno pogrešno označene dodatke da prikažu sadržaj za odrasle (18+) unutar aplikacije.</string>
     <string name="action_filter_tracked">Zapraćeno</string>
-    <string name="alignment_bottom">Dole</string>
     <string name="pref_category_timestamps">Oznake za vreme</string>
     <string name="pref_relative_format">Relativne oznake za vreme</string>
     <string name="pref_relative_time_short">Kratko (Danas, Juče)</string>
@@ -442,7 +441,6 @@
     <string name="theme_greenapple">Zelena Jabuka</string>
     <string name="theme_yotsuba">Jocuba</string>
     <string name="action_asc">Rastuće</string>
-    <string name="pref_side_nav_icon_alignment">Poravnanje ikone bočne navigacije</string>
     <string name="label_default">Подразумевано</string>
     <string name="action_start_downloading_now">Покрени преузимање одмах</string>
     <string name="pref_relative_time_long">Dugo (Kratko+, pre n dana)</string>
@@ -458,8 +456,6 @@
     <string name="theme_tealturquoise">Plavozelena i Tirkizna</string>
     <string name="theme_yinyang">Jin i Jang</string>
     <string name="pref_dark_theme_pure_black">Potpuno crna tamna tema</string>
-    <string name="alignment_top">Gore</string>
-    <string name="alignment_center">Sredina</string>
     <string name="pref_category_nsfw_content">NSFW - извори за одрасле (18+)</string>
     <string name="pref_show_nsfw_source">Прикажи на изворима и листи додатака</string>
     <plurals name="relative_time">

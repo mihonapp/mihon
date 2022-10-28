@@ -586,10 +586,6 @@
     <string name="categorized_display_settings">Instellingen per categorie voor sorteren en weergeven</string>
     <string name="pref_library_update_refresh_trackers_summary">Trackers bijwerken bij het bijwerken van de bibliotheek</string>
     <string name="pref_library_update_refresh_trackers">Trackers automatisch vernieuwen</string>
-    <string name="alignment_bottom">Onderkant</string>
-    <string name="alignment_center">Midden</string>
-    <string name="alignment_top">Bovenkant</string>
-    <string name="pref_side_nav_icon_alignment">Uitlijning zijnavigatiepictogram</string>
     <string name="action_display_local_badge">Lokale manga</string>
     <string name="information_empty_category_dialog">Er zijn nog geen categorieën.</string>
     <string name="action_start_downloading_now">Begin nu met downloaden</string>

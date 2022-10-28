@@ -588,9 +588,5 @@
     <string name="pref_library_update_refresh_trackers_summary">ಲೈಬ್ರರಿಯನ್ನು ನವೀಕರಿಸುವಾಗ ಟ್ರ್ಯಾಕರ್‌ಗಳನ್ನು ನವೀಕರಿಸಿ</string>
     <string name="pref_library_update_refresh_trackers">ಟ್ರ್ಯಾಕರ್‌ಗಳನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ರಿಫ್ರೆಶ್ ಮಾಡಿ</string>
     <string name="restrictions">ನಿರ್ಬಂಧಗಳು: %s</string>
-    <string name="alignment_bottom">ಕೆಳಗೆ</string>
-    <string name="alignment_center">ಮಧ್ಯ</string>
-    <string name="alignment_top">ಮೇಲೆ</string>
-    <string name="pref_side_nav_icon_alignment">ಸೈಡ್ ನ್ಯಾವಿಗೇಶನ್ ಐಕಾನ್ ಹೊಂದಾಣಿಕೆ</string>
     <string name="action_start_downloading_now">ಈಗಲೇ ಡೌನ್‌ಲೋಡ್ ಪ್ರಾರಂಭಿಸಿ</string>
 </resources>

@@ -585,10 +585,6 @@
     <string name="error_saving_cover">Det gick inte att spara omslaget</string>
     <string name="cover_saved">Omslaget har sparats</string>
     <string name="manga_cover">Omslag</string>
-    <string name="alignment_bottom">Botten</string>
-    <string name="alignment_center">Mitten</string>
-    <string name="alignment_top">Topp</string>
-    <string name="pref_side_nav_icon_alignment">Justering av sidonavigeringsikon</string>
     <string name="tracking_guide">Spårningsguide</string>
     <string name="categorized_display_settings">Inställningar per kategori för sortering och visning</string>
     <string name="information_empty_category_dialog">Du har inga kategorier ännu.</string>
@@ -742,12 +738,18 @@
     <string name="multi_lang">Multi</string>
     <string name="error_user_agent_string_blank">Strängen för användaragent kan inte vara tom</string>
     <string name="are_you_sure">Är du säker\?</string>
-    <string name="updates_last_update_info">Biblioteket uppdaterades senast: %1$s</string>
+    <string name="updates_last_update_info">Biblioteket uppdaterades senast: %s</string>
     <string name="popular">Populära</string>
-    <string name="remove_manga">Du är på väg att ta bort den här mangan från ditt bibliotek</string>
+    <string name="remove_manga">Du är på väg att ta bort \"%s\" från ditt bibliotek</string>
     <string name="download_ahead">Ladda ner i förväg</string>
     <string name="theme_tidalwave">Tidvattenvåg</string>
     <string name="download_ahead_info">Fungerar endast för poster i biblioteket och om det aktuella kapitlet och nästa kapitel redan har laddats ner</string>
     <string name="pref_long_strip_split">Dela stora bilder (BETA)</string>
     <string name="auto_download_while_reading">Automatisk nedladdning under läsning</string>
+    <string name="pref_library_summary">Kategorier, global uppdatering</string>
+    <string name="pref_reader_summary">Läsläge, skärmvisning, navigering</string>
+    <string name="error_user_agent_string_invalid">Ogiltig sträng för användaragent</string>
+    <string name="unknown_title">Okänd titel</string>
+    <string name="updates_last_update_info_just_now">Just nu</string>
+    <string name="action_search_hint">Sök…</string>
 </resources>

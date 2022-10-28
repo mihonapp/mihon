@@ -619,10 +619,6 @@
     <string name="pref_relative_time_short">Corto (Hoy, Ayer)</string>
     <string name="pref_relative_format">Marcas de tiempo importantes</string>
     <string name="pref_category_timestamps">Marca de tiempo</string>
-    <string name="alignment_bottom">Abajo</string>
-    <string name="alignment_center">Centro</string>
-    <string name="alignment_top">Arriba</string>
-    <string name="pref_side_nav_icon_alignment">Alineación del icono de navegación lateral</string>
     <string name="pref_dark_theme_pure_black">Modo oscuro con negro puro</string>
     <string name="theme_yotsuba">Tema Yotsuba</string>
     <string name="theme_yinyang">Yin y Yang</string>

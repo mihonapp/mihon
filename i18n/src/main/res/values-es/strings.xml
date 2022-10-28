@@ -613,9 +613,6 @@
     <string name="pref_dark_theme_pure_black">Modo oscuro negro puro</string>
     <string name="theme_tako">Tako</string>
     <string name="restrictions">Restricciones: %s</string>
-    <string name="alignment_bottom">Inferior</string>
-    <string name="alignment_center">Centrada</string>
-    <string name="alignment_top">Superior</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin y yang</string>
     <string name="theme_greenapple">Manzana verde</string>
@@ -649,7 +646,6 @@
     <string name="categorized_display_settings">Hacer que cada categoría tenga sus propios ajustes de ordenar y mostrar</string>
     <string name="pref_library_update_refresh_trackers_summary">Actualizar los servicios de seguimiento al actualizar la biblioteca</string>
     <string name="pref_library_update_refresh_trackers">Actualizar automáticamente los servicios de seguimiento</string>
-    <string name="pref_side_nav_icon_alignment">Alineación del icono de navegación lateral</string>
     <string name="label_background_activity">Actividad en segundo plano</string>
     <string name="action_track">Seguir</string>
     <string name="getting_started_guide">Guía de introducción</string>
@@ -790,7 +786,7 @@
     </plurals>
     <string name="are_you_sure">¿Estás seguro\?</string>
     <string name="pref_long_strip_split">Separar imágenes más altas que anchas (en desarrollo)</string>
-    <string name="updates_last_update_info">La biblioteca se actualizó: %1$s</string>
+    <string name="updates_last_update_info">La biblioteca se actualizó: %s</string>
     <string name="remove_manga">Estás a punto de borrar «%s» de tu biblioteca</string>
     <string name="popular">Popular</string>
     <string name="multi_lang">Multi</string>
@@ -812,4 +808,6 @@
     <string name="crash_screen_restart_application">Reiniciar la aplicación</string>
     <string name="unknown_title">Título desconocido</string>
     <string name="invalid_location">Ubicación incorrecta: %s</string>
+    <string name="updates_last_update_info_just_now">Ahora mismo</string>
+    <string name="error_user_agent_string_invalid">El nombre de agente de usuario no vale</string>
 </resources>

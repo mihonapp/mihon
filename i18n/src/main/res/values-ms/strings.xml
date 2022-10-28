@@ -575,10 +575,6 @@
     <string name="cover_saved">Muka hadapan disimpan</string>
     <string name="manga_cover">Muka hadapan</string>
     <string name="categorized_display_settings">Tetapan setiap kategori untuk susunan dan paparan</string>
-    <string name="pref_side_nav_icon_alignment">Penyejajaran ikon navigasi sisi</string>
-    <string name="alignment_bottom">Bawah</string>
-    <string name="alignment_center">Tengah</string>
-    <string name="alignment_top">Atas</string>
     <string name="tracking_guide">Panduan penjejakan</string>
     <string name="information_empty_category_dialog">Anda belum mempunyai kategori.</string>
     <string name="action_start_downloading_now">Mula memuat turun sekarang</string>
@@ -733,7 +729,7 @@
     </plurals>
     <string name="are_you_sure">Adakah anda pasti\?</string>
     <string name="multi_lang">Pelbagai</string>
-    <string name="updates_last_update_info">Terakhir pustaka dikemas kini: %1$s</string>
+    <string name="updates_last_update_info">Terakhir pustaka dikemas kini: %s</string>
     <string name="remove_manga">Anda akan membuang \"%s\" ini dariapda pustaka anda</string>
     <string name="pref_long_strip_split">Pisah imej panjang (BETA)</string>
     <string name="popular">Popular</string>
@@ -756,4 +752,5 @@
     <string name="unknown_title">Tajuk tidak diketahui</string>
     <string name="invalid_location">Lokasi tidak sah: %s</string>
     <string name="error_user_agent_string_invalid">Rentetan ejen pengguna tidak sah</string>
+    <string name="updates_last_update_info_just_now">Sebentar tadi</string>
 </resources>

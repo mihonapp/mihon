@@ -196,15 +196,11 @@
     <string name="pref_category_security">Seguridad</string>
     <string name="pref_show_nsfw_source">Ipakita sa mga tinubdan ug mga lista sa mga extension</string>
     <string name="pref_dark_theme_pure_black">Purong itom nga dark mode</string>
-    <string name="alignment_top">Ibabaw</string>
     <string name="pref_confirm_exit">Kumpirma ang paggawas</string>
-    <string name="pref_side_nav_icon_alignment">Pag-align sa icon sa nabigasyon sa kilid</string>
-    <string name="alignment_center">Sentro</string>
     <string name="pref_category_timestamps">Mga timestamp</string>
     <string name="pref_relative_format">Relatibo nga mga timestamp</string>
     <string name="pref_relative_time_short">Mubo (Karon, Kagahapon)</string>
     <string name="parental_controls_info">Dili kini makapugong sa dili opisyal o posibleng sayop nga gi-flag nga mga extension gikan sa pag-surf sa NSFW (18+) nga sulod sulod sa app.</string>
-    <string name="alignment_bottom">Ubos</string>
     <string name="lock_always">Kanunay</string>
     <string name="secure_screen_summary">Ang luwas nga screen nagtago sa mga sulod sa app sa dihang nagbalhin-balhin og mga app ug nag-block sa mga screenshot</string>
     <string name="pref_library_update_interval">Awtomatikong mga update</string>

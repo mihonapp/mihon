@@ -586,10 +586,6 @@
     <string name="cover_saved">Kapak kaydedildi</string>
     <string name="manga_cover">Kapak</string>
     <string name="categorized_display_settings">Kategori bazında sıralama ve görüntüleme ayarları</string>
-    <string name="alignment_bottom">Altta</string>
-    <string name="alignment_center">Ortala</string>
-    <string name="alignment_top">Üstte</string>
-    <string name="pref_side_nav_icon_alignment">Yan gezinti simgesi hizalaması</string>
     <string name="tracking_guide">İzleme kılavuzu</string>
     <string name="information_empty_category_dialog">Henüz bir kategoriniz yok.</string>
     <string name="action_start_downloading_now">Şimdi indirmeye başla</string>
@@ -746,7 +742,7 @@
     <string name="download_ahead_info">Yalnızca kitaplıktaki girdilerde ve geçerli bölüm ile bir sonraki bölüm zaten indirildiyse çalışır</string>
     <string name="are_you_sure">Emin misiniz\?</string>
     <string name="remove_manga">\"%s\"yi kitaplığınızdan kaldırmak üzeresiniz</string>
-    <string name="updates_last_update_info">Kitaplık son güncelleme zamanı: %1$s</string>
+    <string name="updates_last_update_info">Kitaplık son güncelleme zamanı: %s</string>
     <string name="multi_lang">Çoklu</string>
     <string name="pref_long_strip_split">Uzun görselleri böl (BETA)</string>
     <string name="popular">Popüler</string>
@@ -769,4 +765,5 @@
     <string name="unknown_title">Bilinmeyen başlık</string>
     <string name="invalid_location">Geçersiz konum: %s</string>
     <string name="error_user_agent_string_invalid">Geçersiz kullanıcı aracısı dizgesi</string>
+    <string name="updates_last_update_info_just_now">Şimdi</string>
 </resources>

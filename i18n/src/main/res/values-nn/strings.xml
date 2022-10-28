@@ -100,8 +100,6 @@
     <string name="action_webview_forward">Fram</string>
     <string name="action_display_list">Liste</string>
     <string name="pref_app_theme">App tema</string>
-    <string name="alignment_top">Topp</string>
-    <string name="alignment_bottom">Botn</string>
     <string name="pref_category_timestamps">Tidsstemplar</string>
     <string name="pref_relative_format">Relative tidsstemplar</string>
     <string name="pref_relative_time_short">Stutt (i dag, i går)</string>

@@ -139,10 +139,6 @@
     <string name="theme_tealturquoise">បៃតងខ្ចី</string>
     <string name="theme_yinyang">យីងនិងយ៉ាង</string>
     <string name="pref_dark_theme_pure_black">ខ្មៅដិត</string>
-    <string name="pref_side_nav_icon_alignment">ស៉ារ៉េអាយខុនខាង</string>
-    <string name="alignment_top">លើ</string>
-    <string name="alignment_center">កណ្ដាល</string>
-    <string name="alignment_bottom">ចុង</string>
     <string name="pref_category_timestamps">timestamps</string>
     <string name="pref_relative_format">relative timestamps</string>
     <string name="pref_date_format">ទម្រង់ថ្ងៃខែ</string>

@@ -574,10 +574,6 @@
     <string name="error_saving_cover">保存封面时出错</string>
     <string name="cover_saved">封面已保存</string>
     <string name="manga_cover">封面</string>
-    <string name="alignment_bottom">底部</string>
-    <string name="alignment_center">居中</string>
-    <string name="alignment_top">顶部</string>
-    <string name="pref_side_nav_icon_alignment">侧边导航图标位置</string>
     <string name="categorized_display_settings">单独设置每个分类的排序和显示</string>
     <string name="tracking_guide">进度记录指南</string>
     <string name="information_empty_category_dialog">你还没有任何分类。</string>
@@ -619,7 +615,7 @@
     <string name="pref_category_appearance">外观</string>
     <string name="action_track">记录进度</string>
     <string name="getting_started_guide">入门指南</string>
-    <string name="pref_tablet_ui_mode">平板用户界面</string>
+    <string name="pref_tablet_ui_mode">平板界面</string>
     <string name="pref_remove_exclude_categories">排除的分类</string>
     <string name="help_translate">协助翻译</string>
     <string name="ext_app_info">应用信息</string>
@@ -734,7 +730,7 @@
     <string name="are_you_sure">你确定吗？</string>
     <string name="pref_long_strip_split">分割长图 (测试版)</string>
     <string name="multi_lang">多语言</string>
-    <string name="updates_last_update_info">书架更新于：%1$s</string>
+    <string name="updates_last_update_info">书架更新于：%s</string>
     <string name="remove_manga">即将从书架中删除“%s”。</string>
     <string name="popular">热门</string>
     <string name="missing_storage_permission">未授予存储权限</string>
@@ -743,17 +739,18 @@
     <string name="crash_screen_title">发生了意外错误</string>
     <string name="crash_screen_description">%s 发生了意外错误。建议你将此信息截图，导出崩溃日志，并在 Discord #support 频道或者 GitHub 上反馈。</string>
     <string name="crash_screen_restart_application">重启应用</string>
-    <string name="pref_appearance_summary">主题・日期格式</string>
-    <string name="pref_general_summary">应用语言・通知</string>
-    <string name="pref_library_summary">分类・全局更新</string>
-    <string name="pref_downloads_summary">自动下载・预先下载</string>
-    <string name="pref_tracking_summary">阅读进度上传・增强同步</string>
-    <string name="pref_advanced_summary">导出崩溃日志・电池优化</string>
-    <string name="pref_backup_summary">手动备份・自动备份</string>
-    <string name="pref_security_summary">应用锁・隐私界面</string>
-    <string name="pref_browse_summary">图源・插件・全局搜索</string>
-    <string name="pref_reader_summary">阅读模式・显示・翻页</string>
+    <string name="pref_appearance_summary">主题 • 日期格式</string>
+    <string name="pref_general_summary">应用语言 • 通知</string>
+    <string name="pref_library_summary">分类 • 全局更新</string>
+    <string name="pref_downloads_summary">自动下载 • 预先下载</string>
+    <string name="pref_tracking_summary">阅读进度上传 • 增强同步</string>
+    <string name="pref_advanced_summary">导出崩溃日志 • 电池优化</string>
+    <string name="pref_backup_summary">手动备份 • 自动备份</string>
+    <string name="pref_security_summary">应用锁 • 隐私界面</string>
+    <string name="pref_browse_summary">图源 • 插件 • 全局搜索</string>
+    <string name="pref_reader_summary">阅读模式 • 显示 • 翻页</string>
     <string name="unknown_title">未知标题</string>
     <string name="invalid_location">无效位置：%s</string>
     <string name="error_user_agent_string_invalid">User Agent 字符串无效</string>
+    <string name="updates_last_update_info_just_now">刚才</string>
 </resources>

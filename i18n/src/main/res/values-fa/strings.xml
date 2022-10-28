@@ -548,7 +548,6 @@
     <string name="channel_skipped">رد شده</string>
     <string name="action_sort_last_manga_update">آخرین به‌روزرسانی مانگا</string>
     <string name="action_sort_unread_count">تعداد نخوانده‌ها</string>
-    <string name="alignment_bottom">پایین</string>
     <string name="skipped_reason_completed">به دلیل کامل‌بودن سری، رد شد</string>
     <string name="action_display_local_badge">مانگای محلی</string>
     <string name="action_display_show_number_of_items">نمایش تعداد موارد</string>
@@ -563,8 +562,6 @@
     <string name="action_show_manga">نمایش مانگا</string>
     <string name="cancel_all_for_series">لغو همه برای این سری</string>
     <string name="pref_dark_theme_pure_black">حالت تاریک مشکی خالص</string>
-    <string name="alignment_top">بالا</string>
-    <string name="alignment_center">مرکز</string>
     <string name="action_close">بستن</string>
     <string name="pref_app_theme">تم برنامه</string>
     <string name="theme_monet">پویا</string>
@@ -630,7 +627,6 @@
     <string name="pref_viewer_nav">مناطق قابل لمس</string>
     <string name="on">روشن</string>
     <string name="theme_tako">تاکو</string>
-    <string name="pref_side_nav_icon_alignment">تنظیم مکان آیکون جهت‌یابی بغل</string>
     <string name="off">خاموش</string>
     <string name="pref_show_navigation_mode">مناطق قابل لمس را نشان بده</string>
     <string name="ext_installer_shizuku_unavailable_dialog">برای استفاده از Shizuku به عنوان یک نصب‌کننده‌ی افزونه، آن را نصب و اجرا کنید.</string>

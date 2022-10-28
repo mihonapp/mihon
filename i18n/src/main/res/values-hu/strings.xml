@@ -316,8 +316,8 @@
     <string name="exclude">Tiltott: %s</string>
     <string name="include">Kedvelt: %s</string>
     <string name="none">Semmi</string>
-    <string name="pref_download_new_categories_details">Manga tiltott kategóriákban nem lesz letöltve, még akkor is ha kedvelt kategóriában van.</string>
-    <string name="pref_library_update_categories_details">Manga a tiltott kategóriákban nem lesznek frissítve, még akkor is ha kedvelt kategóriákban vannak.</string>
+    <string name="pref_download_new_categories_details">Mangák a tiltott kategóriákban nem lesznek letöltve, még akkor se, ha a kedvelt kategóriában is vannak.</string>
+    <string name="pref_library_update_categories_details">Mangák a tiltott kategóriákban nem lesznek frissítve, még akkor se, ha a kedvelt kategóriákban is vannak.</string>
     <string name="secure_screen">Biztonságos képernyő</string>
     <string name="lock_when_idle">Zárás tétlen állapotban</string>
     <string name="lock_with_biometrics">Biometrikus zár</string>
@@ -362,10 +362,6 @@
     <string name="pref_relative_time_short">Rövid (Ma, Holnap)</string>
     <string name="pref_relative_format">Mától függő (relatív) időbélyegek</string>
     <string name="pref_category_timestamps">Időbélyegek</string>
-    <string name="alignment_bottom">Lent</string>
-    <string name="alignment_center">Közép</string>
-    <string name="alignment_top">Fent</string>
-    <string name="pref_side_nav_icon_alignment">Oldalsó navigációs ikon illeszkedés</string>
     <string name="pref_dark_theme_pure_black">Teljesen fekete sötét mód</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Jin és Jang</string>
@@ -734,4 +730,7 @@
     <string name="loader_rar5_error">RARv5 formátum nem támogatót</string>
     <string name="appwidget_updates_description">Lásd nemrég frissített mangádat</string>
     <string name="appwidget_unavailable_locked">Widget nem elérhető amikor az alkalmazás zárolva van</string>
+    <string name="pref_general_summary">Alkalmazás nyelve, értesítések</string>
+    <string name="pref_appearance_summary">Téma, dátum és idő formátuma</string>
+    <string name="action_search_hint">Keresés…</string>
 </resources>

@@ -636,10 +636,6 @@
     <string name="theme_yinyang">หยินหยาง</string>
     <string name="theme_yotsuba">โยทซึบะ</string>
     <string name="pref_dark_theme_pure_black">โหมดมืดดำสนิท</string>
-    <string name="alignment_top">บน</string>
-    <string name="alignment_center">ตรงกลาง</string>
-    <string name="alignment_bottom">ล่าง</string>
-    <string name="pref_side_nav_icon_alignment">ตำแหน่งไอคอนแถบนำทางด้านข้าง</string>
     <string name="pref_category_timestamps">การประทับเวลา</string>
     <string name="pref_relative_format">การประทับเวลาเชิงสัมพัทธ์</string>
     <string name="pref_relative_time_short">สั้น (วันนี้, เมื่อวาน)</string>
@@ -734,7 +730,7 @@
     <string name="are_you_sure">แน่ใจแล้วใช่หรือไม่\?</string>
     <string name="multi_lang">หลายภาษา</string>
     <string name="pref_long_strip_split">แบ่งภาพสูงยาว (เบตา)</string>
-    <string name="updates_last_update_info">อัปเดตคลังล่าสุด: %1$s</string>
+    <string name="updates_last_update_info">อัปเดตคลังล่าสุด: %s</string>
     <string name="remove_manga">คุณกำลังจะนำ \"%s\" ออกจากคลัง</string>
     <string name="popular">ยอดนิยม</string>
     <string name="missing_storage_permission">ไม่ได้รับการอนุญาตให้ใช้งานที่จัดเก็บ</string>
@@ -755,4 +751,6 @@
     <string name="invalid_location">ตำแหน่งไม่ถูกต้อง: %s</string>
     <string name="unknown_title">ไม่ทราบชื่อเรื่อง</string>
     <string name="crash_screen_restart_application">เริ่มแอปพลิเคชันใหม่</string>
+    <string name="updates_last_update_info_just_now">เมื่อสักครู่</string>
+    <string name="error_user_agent_string_invalid">สตริงตัวแทนผู้ใช้ไม่ถูกต้อง</string>
 </resources>

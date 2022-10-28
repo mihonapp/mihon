@@ -147,10 +147,6 @@
     <string name="theme_yinyang">Yin-yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Kulsort</string>
-    <string name="pref_side_nav_icon_alignment">Justering af sidenavigationsikon</string>
-    <string name="alignment_top">Top</string>
-    <string name="alignment_center">Midte</string>
-    <string name="alignment_bottom">Bund</string>
     <string name="pref_category_timestamps">Tidsstempler</string>
     <string name="pref_relative_time_long">Lang (Kort+, n dage siden)</string>
     <string name="pref_date_format">Dato format</string>

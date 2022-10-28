@@ -580,7 +580,6 @@
     <string name="getting_started_guide">Aloitusopas</string>
     <string name="download_queue_size_warning">Varoitus: massalataukset voivat johtaa siihen, että lähteet muuttuvat hitaammiksi käyttää ja/tai ne estävät Tachiyomin käytön. Napauta saadaksesi lisätietoja.</string>
     <string name="pref_library_update_show_tab_badge">Näytä lukemattomien määrä päivitys ikoneissa</string>
-    <string name="alignment_center">Keskimmäinen</string>
     <string name="pref_library_update_refresh_trackers_summary">Päivitä seurantapalvelimet kirjaston päivityksen yhteydessä</string>
     <plurals name="relative_time">
         <item quantity="one">Eilen</item>
@@ -590,7 +589,6 @@
     <string name="action_display_cover_only_grid">Kansikuva ruudukko</string>
     <string name="theme_monet">Dynaaminen</string>
     <string name="theme_greenapple">Vihreä omena</string>
-    <string name="alignment_bottom">Alin</string>
     <string name="recently">Viimeaikoina</string>
     <string name="label_default">Oletus</string>
     <string name="action_filter_started">Aloitettu</string>
@@ -604,8 +602,6 @@
     <string name="pref_category_appearance">Ulkonäkö</string>
     <string name="theme_tealturquoise">Sinivihreä ja turkoosi</string>
     <string name="theme_yotsuba">Yotsuba</string>
-    <string name="alignment_top">Päällimmäinen</string>
-    <string name="pref_side_nav_icon_alignment">Sivunavigaation kuvakkeiden kohdistus</string>
     <string name="pref_dark_theme_pure_black">Täysin musta pimeätila</string>
     <string name="pref_update_only_started">Ei lukemattomia lukuja</string>
     <string name="pref_relative_format">Suhteelliset aikamerkit</string>

@@ -142,10 +142,6 @@
     <string name="pref_app_theme">अनुप्रयोगस्य दृश्यशैली</string>
     <string name="theme_tako">टाकोशैली</string>
     <string name="theme_yotsuba">योट्सूबः</string>
-    <string name="pref_side_nav_icon_alignment">पक्षमार्गणचित्रकस्य योजनम्</string>
-    <string name="alignment_top">उपरि</string>
-    <string name="alignment_center">मध्यः</string>
-    <string name="alignment_bottom">अधः</string>
     <string name="pref_category_timestamps">समयमुद्राः</string>
     <string name="pref_relative_format">सम्बन्धकसमयमुद्राः</string>
     <string name="pref_relative_time_short">लघु (अद्य श्वः च)</string>
