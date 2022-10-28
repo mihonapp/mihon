@@ -1,28 +1,22 @@
 package eu.kanade.presentation.browse.components
 
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.presentation.components.Badge
-import eu.kanade.presentation.components.MangaCover
-import eu.kanade.presentation.library.components.MangaGridComfortableText
-import eu.kanade.presentation.library.components.MangaGridCover
+import eu.kanade.presentation.components.CommonMangaItemDefaults
+import eu.kanade.presentation.components.MangaComfortableGridItem
 import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 
@@ -37,9 +31,9 @@ fun BrowseSourceComfortableGrid(
 ) {
     LazyVerticalGrid(
         columns = columns,
-        contentPadding = PaddingValues(8.dp, 4.dp) + contentPadding,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = contentPadding + PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(CommonMangaItemDefaults.GridVerticalSpacer),
+        horizontalArrangement = Arrangement.spacedBy(CommonMangaItemDefaults.GridHorizontalSpacer),
     ) {
         if (mangaList.loadState.prepend is LoadState.Loading) {
             item(span = { GridItemSpan(maxLineSpan) }) {
@@ -71,36 +65,22 @@ fun BrowseSourceComfortableGridItem(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = onClick,
 ) {
-    val overlayColor = MaterialTheme.colorScheme.background.copy(alpha = 0.66f)
-    Column(
-        modifier = Modifier
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongClick,
-            ),
-    ) {
-        MangaGridCover(
-            cover = {
-                MangaCover.Book(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .drawWithContent {
-                            drawContent()
-                            if (manga.favorite) {
-                                drawRect(overlayColor)
-                            }
-                        },
-                    data = manga.thumbnailUrl,
-                )
-            },
-            badgesStart = {
-                if (manga.favorite) {
-                    Badge(text = stringResource(R.string.in_library))
-                }
-            },
-        )
-        MangaGridComfortableText(
-            text = manga.title,
-        )
-    }
+    MangaComfortableGridItem(
+        title = manga.title,
+        coverData = MangaCover(
+            mangaId = manga.id,
+            sourceId = manga.source,
+            isMangaFavorite = manga.favorite,
+            url = manga.thumbnailUrl,
+            lastModified = manga.coverLastModified,
+        ),
+        coverAlpha = if (manga.favorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,
+        coverBadgeStart = {
+            if (manga.favorite) {
+                Badge(text = stringResource(R.string.in_library))
+            }
+        },
+        onLongClick = onLongClick,
+        onClick = onClick,
+    )
 }

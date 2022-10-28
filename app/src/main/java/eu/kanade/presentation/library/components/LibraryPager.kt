@@ -72,9 +72,10 @@ fun LibraryPager(
                     onGlobalSearchClicked = onGlobalSearchClicked,
                 )
             }
-            LibraryDisplayMode.CompactGrid -> {
+            LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
                 LibraryCompactGrid(
                     items = library,
+                    showTitle = displayMode is LibraryDisplayMode.CompactGrid,
                     showDownloadBadges = showDownloadBadges,
                     showUnreadBadges = showUnreadBadges,
                     showLocalBadges = showLocalBadges,
@@ -90,22 +91,6 @@ fun LibraryPager(
             }
             LibraryDisplayMode.ComfortableGrid -> {
                 LibraryComfortableGrid(
-                    items = library,
-                    showDownloadBadges = showDownloadBadges,
-                    showUnreadBadges = showUnreadBadges,
-                    showLocalBadges = showLocalBadges,
-                    showLanguageBadges = showLanguageBadges,
-                    columns = columns,
-                    contentPadding = contentPadding,
-                    selection = selectedManga,
-                    onClick = onClickManga,
-                    onLongClick = onLongClickManga,
-                    searchQuery = searchQuery,
-                    onGlobalSearchClicked = onGlobalSearchClicked,
-                )
-            }
-            LibraryDisplayMode.CoverOnlyGrid -> {
-                LibraryCoverOnlyGrid(
                     items = library,
                     showDownloadBadges = showDownloadBadges,
                     showUnreadBadges = showUnreadBadges,
