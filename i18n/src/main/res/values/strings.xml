@@ -46,10 +46,10 @@
     <!-- reserved for #4048 -->
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
-    <string name="action_sort_count">Total manga</string>
+    <string name="action_sort_count">Total entries</string>
     <string name="action_sort_total">Total chapters</string>
     <string name="action_sort_last_read">Last read</string>
-    <string name="action_sort_last_manga_update">Last manga update</string>
+    <string name="action_sort_last_manga_update">Last update check</string>
     <string name="action_sort_unread_count">Unread count</string>
     <string name="action_sort_latest_chapter">Latest chapter</string>
     <string name="action_sort_chapter_fetch_date">Chapter fetch date</string>
@@ -90,7 +90,7 @@
     <string name="action_start">Start</string>
     <string name="action_resume">Resume</string>
     <string name="action_open_in_browser">Open in browser</string>
-    <string name="action_show_manga">Show manga</string>
+    <string name="action_show_manga">Show entry</string>
     <!-- Do not translate "WebView" -->
     <string name="action_open_in_web_view">Open in WebView</string>
     <string name="action_web_view" translatable="false">WebView</string>
@@ -103,7 +103,7 @@
     <string name="action_display_cover_only_grid">Cover-only grid</string>
     <string name="action_display_download_badge">Downloaded chapters</string>
     <string name="action_display_unread_badge">Unread chapters</string>
-    <string name="action_display_local_badge">Local manga</string>
+    <string name="action_display_local_badge">Local source</string>
     <string name="action_display_language_badge">Language</string>
     <string name="action_display_show_tabs">Show category tabs</string>
     <string name="action_display_show_number_of_items">Show number of items</string>
@@ -260,7 +260,7 @@
         <item quantity="one">%d category</item>
         <item quantity="other">%d categories</item>
     </plurals>
-    <string name="pref_library_update_categories_details">Manga in excluded categories will not be updated even if they are also in included categories.</string>
+    <string name="pref_library_update_categories_details">Entries in excluded categories will not be updated even if they are also in included categories.</string>
     <string name="all">All</string>
     <string name="none">None</string>
     <string name="include">Include: %s</string>
@@ -341,7 +341,7 @@
     <string name="pref_reader_actions">Actions</string>
     <string name="pref_read_with_long_tap">Show on long tap</string>
     <string name="pref_create_folder_per_manga">Save pages into separate folders</string>
-    <string name="pref_create_folder_per_manga_summary">Creates folders according to manga title</string>
+    <string name="pref_create_folder_per_manga_summary">Creates folders according to entries\' titles</string>
     <string name="pref_reader_theme">Background color</string>
     <string name="white_background">White</string>
     <string name="gray_background">Gray</string>
@@ -426,7 +426,7 @@
     <string name="fifth_to_last">Fifth to last read chapter</string>
     <string name="pref_category_auto_download">Auto-download</string>
     <string name="pref_download_new">Download new chapters</string>
-    <string name="pref_download_new_categories_details">Manga in excluded categories will not be downloaded even if they are also in included categories.</string>
+    <string name="pref_download_new_categories_details">Entries in excluded categories will not be downloaded even if they are also in included categories.</string>
     <string name="download_ahead">Download ahead</string>
     <string name="auto_download_while_reading">Auto download while reading</string>
     <plurals name="next_unread_chapters">
@@ -442,9 +442,9 @@
     <string name="tracking_guide">Tracking guide</string>
     <string name="pref_auto_update_manga_sync">Update progress after reading</string>
     <string name="services">Services</string>
-    <string name="tracking_info">One-way sync to update the chapter progress in tracking services. Set up tracking for individual manga entries from their tracking button.</string>
+    <string name="tracking_info">One-way sync to update the chapter progress in tracking services. Set up tracking for individual entries from their tracking button.</string>
     <string name="enhanced_services">Enhanced services</string>
-    <string name="enhanced_tracking_info">Services that provide enhanced features for specific sources. Manga are automatically tracked when added to your library.</string>
+    <string name="enhanced_tracking_info">Services that provide enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
     <string name="action_track">Track</string>
 
       <!-- Browse section -->
@@ -464,7 +464,7 @@
     <string name="pref_backup_slots">Maximum backups</string>
     <string name="backup_created">Backup created</string>
     <string name="invalid_backup_file">Invalid backup file</string>
-    <string name="invalid_backup_file_missing_manga">Backup does not contain any manga.</string>
+    <string name="invalid_backup_file_missing_manga">Backup does not contain any library entries.</string>
     <string name="backup_restore_missing_sources">Missing sources:</string>
     <string name="backup_restore_missing_trackers">Trackers not logged into:</string>
     <string name="backup_restore_content_full">Data from the backup file will be restored.\n\nYou will need to install any missing extensions and log in to tracking services afterwards to use them.</string>
@@ -504,9 +504,9 @@
     <string name="cache_delete_error">Error occurred while clearing</string>
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app close</string>
     <string name="pref_clear_database">Clear database</string>
-    <string name="pref_clear_database_summary">Delete history for manga that are not saved in your library</string>
-    <string name="clear_database_source_item_count">%1$d non-library manga in database</string>
-    <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library manga will be lost</string>
+    <string name="pref_clear_database_summary">Delete history for entries that are not saved in your library</string>
+    <string name="clear_database_source_item_count">%1$d non-library entries in database</string>
+    <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library entries will be lost</string>
     <string name="clear_database_completed">Entries deleted</string>
     <string name="database_clean">Nothing to clear</string>
     <string name="pref_clear_webview_data">Clear WebView data</string>
@@ -551,7 +551,7 @@
     <string name="pref_incognito_mode">Incognito mode</string>
     <string name="pref_incognito_mode_summary">Pauses reading history</string>
     <string name="notification_incognito_text">Disable incognito mode</string>
-    <string name="downloaded_only_summary">Filters all manga in your library</string>
+    <string name="downloaded_only_summary">Filters all entries in your library</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s remaining</item>
         <item quantity="other">%1$s remaining</item>
@@ -573,7 +573,7 @@
     <!-- Library fragment -->
     <string name="updating_category">Updating category</string>
     <string name="local_source_badge">Local</string>
-    <string name="manga_from_library">Manga from library</string>
+    <string name="manga_from_library">From library</string>
     <string name="downloaded_chapters">Downloaded chapters</string>
     <string name="badges_header">Badges</string>
     <string name="tabs_header">Tabs</string>
@@ -628,7 +628,7 @@
     <string name="copied_to_clipboard">Copied to clipboard:\n%1$s</string>
     <string name="clipboard_copy_error">Failed to copy to clipboard</string>
     <string name="source_not_installed">Source not installed: %1$s</string>
-    <string name="snack_add_to_library">Add manga to library?</string>
+    <string name="snack_add_to_library">Add to library?</string>
     <string name="description_placeholder">No description</string>
 
     <!-- Manga chapters fragment -->
@@ -657,7 +657,7 @@
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
     <string name="chapter_settings">Chapter settings</string>
     <string name="confirm_set_chapter_settings">Are you sure you want to save these settings as default?</string>
-    <string name="also_set_chapter_settings_for_library">Also apply to all manga in my library</string>
+    <string name="also_set_chapter_settings_for_library">Also apply to all entries in my library</string>
     <string name="set_chapter_settings_as_default">Set as default</string>
     <string name="no_chapters_error">No chapters found</string>
     <string name="are_you_sure">Are you sure?</string>
@@ -709,7 +709,7 @@
 
     <!-- Dialog option with checkbox view -->
     <string name="dialog_with_checkbox_remove_description">This will remove the read date of this chapter. Are you sure?</string>
-    <string name="dialog_with_checkbox_reset">Reset all chapters for this manga</string>
+    <string name="dialog_with_checkbox_reset">Reset all chapters for this entry</string>
 
     <!-- Image notifier -->
     <string name="picture_saved">Picture saved</string>
@@ -804,7 +804,7 @@
     <string name="notification_update_skipped">%1$d update(s) skipped</string>
     <string name="learn_more">Tap to learn more</string>
     <string name="notification_cover_update_failed">Failed to update cover</string>
-    <string name="notification_first_add_to_library">Please add the manga to your library before doing this</string>
+    <string name="notification_first_add_to_library">Please add the entry to your library before doing this</string>
     <string name="library_errors_help">For help on how to fix library update errors, see %1$s</string>
     <string name="skipped_reason_completed">Skipped because series is complete</string>
     <string name="skipped_reason_not_caught_up">Skipped because there are unread chapters</string>
@@ -880,7 +880,7 @@
     <string name="spen_next_page">Next page</string>
 
     <!-- App widget -->
-    <string name="appwidget_updates_description">See your recently updated manga</string>
+    <string name="appwidget_updates_description">See your recently updated library entries</string>
     <string name="appwidget_unavailable_locked">Widget not available when app lock is enabled</string>
     <string name="remove_manga">You are about to remove \"%s\" from your library</string>
 </resources>
