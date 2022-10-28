@@ -1,5 +1,6 @@
 package eu.kanade.presentation.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
@@ -8,8 +9,8 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -26,19 +27,24 @@ fun Pill(
 ) {
     androidx.compose.material3.Surface(
         modifier = modifier
-            .requiredWidth(IntrinsicSize.Max)
-            .padding(start = 4.dp)
-            .clip(RoundedCornerShape(100)),
+            .padding(start = 4.dp),
+        shape = RoundedCornerShape(100),
         color = color,
         contentColor = contentColor,
         tonalElevation = elevation,
     ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(6.dp, 1.dp),
-            fontSize = fontSize,
-            maxLines = 1,
-            softWrap = false,
-        )
+        Box(
+            modifier = Modifier
+                .requiredWidth(IntrinsicSize.Max)
+                .padding(6.dp, 1.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = text,
+                fontSize = fontSize,
+                maxLines = 1,
+                softWrap = false,
+            )
+        }
     }
 }
