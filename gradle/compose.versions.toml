@@ -4,7 +4,7 @@ compose-bom = "2022.10.00"
 accompanist = "0.27.0"
 
 [libraries]
-activity = "androidx.activity:activity-compose:1.6.0"
+activity = "androidx.activity:activity-compose:1.6.1"
 bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 foundation = { module = "androidx.compose.foundation:foundation" }
 animation = { module = "androidx.compose.animation:animation" }
