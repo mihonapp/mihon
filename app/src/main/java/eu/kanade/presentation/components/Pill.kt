@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,7 +27,7 @@ fun Pill(
     androidx.compose.material3.Surface(
         modifier = modifier
             .padding(start = 4.dp),
-        shape = RoundedCornerShape(100),
+        shape = MaterialTheme.shapes.extraLarge,
         color = color,
         contentColor = contentColor,
         tonalElevation = elevation,

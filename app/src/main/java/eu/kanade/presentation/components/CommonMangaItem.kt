@@ -225,7 +225,7 @@ private fun GridItemSelectable(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(MaterialTheme.shapes.small)
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,

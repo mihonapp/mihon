@@ -158,7 +158,7 @@ fun AppThemePreviewItem(
                     .padding(end = 4.dp)
                     .background(
                         color = MaterialTheme.colorScheme.onSurface,
-                        shape = RoundedCornerShape(9.dp),
+                        shape = MaterialTheme.shapes.small,
                     ),
             )
 
@@ -182,7 +182,7 @@ fun AppThemePreviewItem(
                 .padding(start = 8.dp, top = 2.dp)
                 .background(
                     color = dividerColor,
-                    shape = RoundedCornerShape(9.dp),
+                    shape = MaterialTheme.shapes.small,
                 )
                 .fillMaxWidth(0.5f)
                 .aspectRatio(MangaCover.Book.ratio),
@@ -242,7 +242,7 @@ fun AppThemePreviewItem(
                             .weight(1f)
                             .background(
                                 color = MaterialTheme.colorScheme.onSurface,
-                                shape = RoundedCornerShape(9.dp),
+                                shape = MaterialTheme.shapes.small,
                             ),
                     )
                 }

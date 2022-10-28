@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
@@ -45,7 +44,7 @@ fun TrackingPreferenceWidget(
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .background(color = Color(logoColor), shape = RoundedCornerShape(8.dp))
+                    .background(color = Color(logoColor), shape = MaterialTheme.shapes.small)
                     .padding(4.dp),
                 contentAlignment = Alignment.Center,
             ) {
