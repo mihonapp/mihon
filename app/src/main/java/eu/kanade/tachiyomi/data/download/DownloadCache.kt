@@ -48,6 +48,8 @@ class DownloadCache(
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
+    private val notifier by lazy { DownloadNotifier(context) }
+
     /**
      * The interval after which this cache should be invalidated. 1 hour shouldn't cause major
      * issues, as the cache is only used for UI feedback.
@@ -241,56 +243,62 @@ class DownloadCache(
         }
 
         renewalJob = scope.launchIO {
-            var sources = getSources()
+            try {
+                notifier.onCacheProgress()
 
-            // Try to wait until extensions and sources have loaded
-            withTimeout(30.seconds) {
-                while (!extensionManager.isInitialized) {
-                    delay(2.seconds)
-                }
+                var sources = getSources()
 
-                while (sources.isEmpty()) {
-                    delay(2.seconds)
-                    sources = getSources()
-                }
-            }
+                // Try to wait until extensions and sources have loaded
+                withTimeout(30.seconds) {
+                    while (!extensionManager.isInitialized) {
+                        delay(2.seconds)
+                    }
 
-            val sourceDirs = rootDownloadsDir.dir.listFiles().orEmpty()
-                .associate { it.name to SourceDirectory(it) }
-                .mapNotNullKeys { entry ->
-                    sources.find {
-                        provider.getSourceDirName(it).equals(entry.key, ignoreCase = true)
-                    }?.id
-                }
-
-            rootDownloadsDir.sourceDirs = sourceDirs
-
-            sourceDirs.values
-                .map { sourceDir ->
-                    async {
-                        val mangaDirs = sourceDir.dir.listFiles().orEmpty()
-                            .filterNot { it.name.isNullOrBlank() }
-                            .associate { it.name!! to MangaDirectory(it) }
-
-                        sourceDir.mangaDirs = ConcurrentHashMap(mangaDirs)
-
-                        mangaDirs.values.forEach { mangaDir ->
-                            val chapterDirs = mangaDir.dir.listFiles().orEmpty()
-                                .mapNotNull { chapterDir ->
-                                    chapterDir.name
-                                        ?.replace(".cbz", "")
-                                        ?.takeUnless { it.endsWith(Downloader.TMP_DIR_SUFFIX) }
-                                }
-                                .toMutableSet()
-
-                            mangaDir.chapterDirs = chapterDirs
-                        }
+                    while (sources.isEmpty()) {
+                        delay(2.seconds)
+                        sources = getSources()
                     }
                 }
-                .awaitAll()
 
-            lastRenew = System.currentTimeMillis()
-            notifyChanges()
+                val sourceDirs = rootDownloadsDir.dir.listFiles().orEmpty()
+                    .associate { it.name to SourceDirectory(it) }
+                    .mapNotNullKeys { entry ->
+                        sources.find {
+                            provider.getSourceDirName(it).equals(entry.key, ignoreCase = true)
+                        }?.id
+                    }
+
+                rootDownloadsDir.sourceDirs = sourceDirs
+
+                sourceDirs.values
+                    .map { sourceDir ->
+                        async {
+                            val mangaDirs = sourceDir.dir.listFiles().orEmpty()
+                                .filterNot { it.name.isNullOrBlank() }
+                                .associate { it.name!! to MangaDirectory(it) }
+
+                            sourceDir.mangaDirs = ConcurrentHashMap(mangaDirs)
+
+                            mangaDirs.values.forEach { mangaDir ->
+                                val chapterDirs = mangaDir.dir.listFiles().orEmpty()
+                                    .mapNotNull { chapterDir ->
+                                        chapterDir.name
+                                            ?.replace(".cbz", "")
+                                            ?.takeUnless { it.endsWith(Downloader.TMP_DIR_SUFFIX) }
+                                    }
+                                    .toMutableSet()
+
+                                mangaDir.chapterDirs = chapterDirs
+                            }
+                        }
+                    }
+                    .awaitAll()
+
+                lastRenew = System.currentTimeMillis()
+                notifyChanges()
+            } finally {
+                notifier.dismissCacheProgress()
+            }
         }
     }
 

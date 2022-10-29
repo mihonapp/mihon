@@ -45,6 +45,17 @@ internal class DownloadNotifier(private val context: Context) {
         }
     }
 
+    private val cacheNotificationBuilder by lazy {
+        context.notificationBuilder(Notifications.CHANNEL_DOWNLOADER_CACHE) {
+            setSmallIcon(R.drawable.ic_tachi)
+            setContentTitle(context.getString(R.string.download_notifier_cache_renewal))
+            setProgress(100, 100, true)
+            setOngoing(true)
+            setAutoCancel(false)
+            setOnlyAlertOnce(true)
+        }
+    }
+
     /**
      * Status of download. Used for correct notification icon.
      */
@@ -232,5 +243,15 @@ internal class DownloadNotifier(private val context: Context) {
         // Reset download information
         errorThrown = true
         isDownloading = false
+    }
+
+    fun onCacheProgress() {
+        with(cacheNotificationBuilder) {
+            show(Notifications.ID_DOWNLOAD_CACHE)
+        }
+    }
+
+    fun dismissCacheProgress() {
+        context.notificationManager.cancel(Notifications.ID_DOWNLOAD_CACHE)
     }
 }
