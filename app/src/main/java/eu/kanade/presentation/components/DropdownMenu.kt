@@ -27,7 +27,7 @@ fun DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
         modifier = modifier.sizeIn(minWidth = 196.dp, maxWidth = 196.dp),
-        offset = DpOffset(8.dp, (-8).dp),
+        offset = DpOffset(8.dp, (-56).dp),
         properties = properties,
         content = content,
     )
