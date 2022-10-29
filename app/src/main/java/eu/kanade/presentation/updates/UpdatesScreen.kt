@@ -143,7 +143,7 @@ private fun UpdateScreenContent(
             if (presenter.lastUpdated > 0L) {
                 updatesLastUpdatedItem(presenter.lastUpdated)
             }
-            
+
             updatesUiItems(
                 uiModels = presenter.uiModels,
                 selectionMode = presenter.selectionMode,
