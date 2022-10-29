@@ -122,12 +122,12 @@ fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: Progre
 }
 
 inline fun <reified T> Response.parseAs(): T {
-    return internalParseAs(this, typeOf<T>())
+    return internalParseAs(typeOf<T>(), this)
 }
 
 @Suppress("UNCHECKED_CAST")
 @OptIn(ExperimentalSerializationApi::class)
-fun <T> internalParseAs(response: Response, type: KType): T {
+fun <T> internalParseAs(type: KType, response: Response): T {
     val deserializer = serializer(type) as KSerializer<T>
     return response.body.source().use {
         Injekt.get<Json>().decodeFromBufferedSource(deserializer, it)
