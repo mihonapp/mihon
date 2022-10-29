@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="?selectableItemBackgroundBorderless"
-                android:contentDescription="@string/label_more"
+                android:contentDescription="@string/abc_action_menu_overflow_description"
                 android:padding="8dp"
                 android:src="@drawable/ic_more_vert_24" />
 

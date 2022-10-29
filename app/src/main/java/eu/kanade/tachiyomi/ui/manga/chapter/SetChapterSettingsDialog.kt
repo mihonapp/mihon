@@ -48,7 +48,7 @@ class SetChapterSettingsDialog(bundle: Bundle? = null) : DialogController(bundle
 
                 activity?.toast(R.string.chapter_settings_updated)
             }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(R.string.action_cancel, null)
             .create()
     }
 

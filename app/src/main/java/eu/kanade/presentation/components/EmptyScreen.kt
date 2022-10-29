@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HelpOutline
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -187,12 +187,12 @@ private fun WithActionPreview() {
                 actions = listOf(
                     EmptyScreenAction(
                         stringResId = R.string.action_retry,
-                        icon = Icons.Default.Refresh,
+                        icon = Icons.Outlined.Refresh,
                         onClick = {},
                     ),
                     EmptyScreenAction(
                         stringResId = R.string.getting_started_guide,
-                        icon = Icons.Default.HelpOutline,
+                        icon = Icons.Outlined.HelpOutline,
                         onClick = {},
                     ),
                 ),

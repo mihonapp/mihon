@@ -192,7 +192,7 @@ class SettingsBackupScreen : SearchableSettings {
             },
             dismissButton = {
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(android.R.string.cancel))
+                    Text(text = stringResource(R.string.action_cancel))
                 }
             },
             confirmButton = {
@@ -252,7 +252,7 @@ class SettingsBackupScreen : SearchableSettings {
                                     onDismissRequest()
                                 },
                             ) {
-                                Text(text = stringResource(R.string.copy))
+                                Text(text = stringResource(android.R.string.copy))
                             }
                         },
                         confirmButton = {

@@ -59,7 +59,7 @@ class LibraryUpdateNotifier(private val context: Context) {
             setLargeIcon(notificationBitmap)
             setOngoing(true)
             setOnlyAlertOnce(true)
-            addAction(R.drawable.ic_close_24dp, context.getString(android.R.string.cancel), cancelIntent)
+            addAction(R.drawable.ic_close_24dp, context.getString(R.string.action_cancel), cancelIntent)
         }
     }
 

@@ -48,7 +48,7 @@ class SetTrackStatusDialog<T> : DialogController
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 listener.setStatus(item, selectedIndex)
             }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(R.string.action_cancel, null)
             .create()
     }
 

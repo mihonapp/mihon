@@ -12,11 +12,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,7 +53,7 @@ fun AppBar(
     subtitle: String? = null,
     // Up button
     navigateUp: (() -> Unit)? = null,
-    navigationIcon: ImageVector = Icons.Default.ArrowBack,
+    navigationIcon: ImageVector = Icons.Outlined.ArrowBack,
     // Menu
     actions: @Composable RowScope.() -> Unit = {},
     // Action mode
@@ -105,7 +103,7 @@ fun AppBar(
     titleContent: @Composable () -> Unit,
     // Up button
     navigateUp: (() -> Unit)? = null,
-    navigationIcon: ImageVector = Icons.Default.ArrowBack,
+    navigationIcon: ImageVector = Icons.Outlined.ArrowBack,
     // Menu
     actions: @Composable RowScope.() -> Unit = {},
     // Action mode
@@ -125,7 +123,7 @@ fun AppBar(
                 if (isActionMode) {
                     IconButton(onClick = onCancelActionMode) {
                         Icon(
-                            imageVector = Icons.Default.Close,
+                            imageVector = Icons.Outlined.Close,
                             contentDescription = stringResource(R.string.action_cancel),
                         )
                     }
@@ -200,7 +198,7 @@ fun AppBarActions(
     val overflowActions = actions.filterIsInstance<AppBar.OverflowAction>()
     if (overflowActions.isNotEmpty()) {
         IconButton(onClick = { showMenu = !showMenu }) {
-            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.label_more))
+            Icon(Icons.Outlined.MoreVert, contentDescription = stringResource(R.string.abc_action_menu_overflow_description))
         }
 
         DropdownMenu(

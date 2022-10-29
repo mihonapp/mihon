@@ -18,8 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.tachiyomi.R
 
 @Composable
 fun CategoryListItem(
@@ -64,10 +66,10 @@ fun CategoryListItem(
             }
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onRename) {
-                Icon(imageVector = Icons.Outlined.Edit, contentDescription = "")
+                Icon(imageVector = Icons.Outlined.Edit, contentDescription = stringResource(R.string.action_rename_category))
             }
             IconButton(onClick = onDelete) {
-                Icon(imageVector = Icons.Outlined.Delete, contentDescription = "")
+                Icon(imageVector = Icons.Outlined.Delete, contentDescription = stringResource(R.string.action_delete))
             }
         }
     }

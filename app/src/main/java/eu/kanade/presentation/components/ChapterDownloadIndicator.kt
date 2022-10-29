@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.outlined.ArrowDownward
+import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -78,7 +78,7 @@ private fun NotDownloadedIndicator(
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_download_chapter_24dp),
-            contentDescription = null,
+            contentDescription = stringResource(R.string.manga_download),
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -148,7 +148,7 @@ private fun DownloadingIndicator(
             )
         }
         Icon(
-            imageVector = Icons.Default.ArrowDownward,
+            imageVector = Icons.Outlined.ArrowDownward,
             contentDescription = null,
             modifier = ArrowModifier,
             tint = arrowColor,
@@ -172,7 +172,7 @@ private fun DownloadedIndicator(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            imageVector = Icons.Default.CheckCircle,
+            imageVector = Icons.Filled.CheckCircle,
             contentDescription = null,
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -204,8 +204,8 @@ private fun ErrorIndicator(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            imageVector = Icons.Default.ErrorOutline,
-            contentDescription = null,
+            imageVector = Icons.Outlined.ErrorOutline,
+            contentDescription = stringResource(R.string.chapter_error),
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.error,
         )

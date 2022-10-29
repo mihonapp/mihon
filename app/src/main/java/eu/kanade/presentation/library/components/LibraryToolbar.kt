@@ -150,10 +150,10 @@ fun LibrarySelectionToolbar(
         titleContent = { Text(text = "${state.selection.size}") },
         actions = {
             IconButton(onClick = onClickSelectAll) {
-                Icon(Icons.Outlined.SelectAll, contentDescription = "search")
+                Icon(Icons.Outlined.SelectAll, contentDescription = stringResource(R.string.action_select_all))
             }
             IconButton(onClick = onClickInvertSelection) {
-                Icon(Icons.Outlined.FlipToBack, contentDescription = "invert")
+                Icon(Icons.Outlined.FlipToBack, contentDescription = stringResource(R.string.action_select_inverse))
             }
         },
         isActionMode = true,

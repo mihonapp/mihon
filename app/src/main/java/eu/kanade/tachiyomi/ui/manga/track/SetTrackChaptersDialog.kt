@@ -59,7 +59,7 @@ class SetTrackChaptersDialog<T> : DialogController
                 np.clearFocus()
                 listener.setChaptersRead(item, np.value)
             }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(R.string.action_cancel, null)
             .create()
     }
 

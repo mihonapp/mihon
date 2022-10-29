@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.minimumTouchTargetSize
+import eu.kanade.tachiyomi.R
 
 @Composable
 fun MultiSelectListPreferenceWidget(
@@ -98,7 +99,7 @@ fun MultiSelectListPreferenceWidget(
             },
             dismissButton = {
                 TextButton(onClick = { showDialog(false) }) {
-                    Text(text = stringResource(android.R.string.cancel))
+                    Text(text = stringResource(R.string.action_cancel))
                 }
             },
         )

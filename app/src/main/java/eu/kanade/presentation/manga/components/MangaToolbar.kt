@@ -5,13 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.FlipToBack
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.SelectAll
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.FilterList
+import androidx.compose.material.icons.outlined.FlipToBack
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -71,7 +71,7 @@ fun MangaToolbar(
             navigationIcon = {
                 IconButton(onClick = onBackClicked) {
                     Icon(
-                        imageVector = if (isActionMode) Icons.Default.Close else Icons.Default.ArrowBack,
+                        imageVector = if (isActionMode) Icons.Outlined.Close else Icons.Outlined.ArrowBack,
                         contentDescription = stringResource(R.string.abc_action_bar_up_description),
                     )
                 }
@@ -80,13 +80,13 @@ fun MangaToolbar(
                 if (isActionMode) {
                     IconButton(onClick = onSelectAll) {
                         Icon(
-                            imageVector = Icons.Default.SelectAll,
+                            imageVector = Icons.Outlined.SelectAll,
                             contentDescription = stringResource(R.string.action_select_all),
                         )
                     }
                     IconButton(onClick = onInvertSelection) {
                         Icon(
-                            imageVector = Icons.Default.FlipToBack,
+                            imageVector = Icons.Outlined.FlipToBack,
                             contentDescription = stringResource(R.string.action_select_inverse),
                         )
                     }
@@ -161,7 +161,7 @@ fun MangaToolbar(
                         Box {
                             IconButton(onClick = { onMoreExpanded(!moreExpanded) }) {
                                 Icon(
-                                    imageVector = Icons.Default.MoreVert,
+                                    imageVector = Icons.Outlined.MoreVert,
                                     contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
                                 )
                             }

@@ -37,7 +37,7 @@ fun DownloadCustomAmountDialog(
         onDismissRequest = onDismissRequest,
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(android.R.string.cancel))
+                Text(text = stringResource(R.string.action_cancel))
             }
         },
         confirmButton = {
@@ -62,13 +62,13 @@ fun DownloadCustomAmountDialog(
                     onClick = { setAmount(amount - 10) },
                     enabled = amount > 0,
                 ) {
-                    Icon(imageVector = Icons.Outlined.KeyboardDoubleArrowLeft, contentDescription = "")
+                    Icon(imageVector = Icons.Outlined.KeyboardDoubleArrowLeft, contentDescription = "-10")
                 }
                 IconButton(
                     onClick = { setAmount(amount - 1) },
                     enabled = amount > 0,
                 ) {
-                    Icon(imageVector = Icons.Outlined.ChevronLeft, contentDescription = "")
+                    Icon(imageVector = Icons.Outlined.ChevronLeft, contentDescription = "-1")
                 }
                 OutlinedTextField(
                     modifier = Modifier.weight(1f),
@@ -81,13 +81,13 @@ fun DownloadCustomAmountDialog(
                     onClick = { setAmount(amount + 1) },
                     enabled = amount < maxAmount,
                 ) {
-                    Icon(imageVector = Icons.Outlined.ChevronRight, contentDescription = "")
+                    Icon(imageVector = Icons.Outlined.ChevronRight, contentDescription = "+1")
                 }
                 IconButton(
                     onClick = { setAmount(amount + 10) },
                     enabled = amount < maxAmount,
                 ) {
-                    Icon(imageVector = Icons.Outlined.KeyboardDoubleArrowRight, contentDescription = "")
+                    Icon(imageVector = Icons.Outlined.KeyboardDoubleArrowRight, contentDescription = "+10")
                 }
             }
         },

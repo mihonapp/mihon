@@ -45,6 +45,7 @@ import eu.kanade.presentation.components.DIVIDER_ALPHA
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.secondaryItemAlpha
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 
@@ -168,8 +169,8 @@ fun AppThemePreviewItem(
             ) {
                 if (selected) {
                     Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
+                        imageVector = Icons.Filled.CheckCircle,
+                        contentDescription = stringResource(R.string.selected),
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 }

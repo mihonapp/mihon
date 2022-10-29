@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.window.DialogProperties
+import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -71,7 +72,7 @@ fun EditTextPreferenceWidget(
             },
             dismissButton = {
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(android.R.string.cancel))
+                    Text(text = stringResource(R.string.action_cancel))
                 }
             },
         )

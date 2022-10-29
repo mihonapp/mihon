@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -71,7 +71,7 @@ class SettingsTrackingScreen : SearchableSettings {
         val uriHandler = LocalUriHandler.current
         IconButton(onClick = { uriHandler.openUri("https://tachiyomi.org/help/guides/tracking/") }) {
             Icon(
-                imageVector = Icons.Default.HelpOutline,
+                imageVector = Icons.Outlined.HelpOutline,
                 contentDescription = stringResource(R.string.tracking_guide),
             )
         }
@@ -199,7 +199,7 @@ class SettingsTrackingScreen : SearchableSettings {
                     )
                     IconButton(onClick = onDismissRequest) {
                         Icon(
-                            imageVector = Icons.Default.Close,
+                            imageVector = Icons.Outlined.Close,
                             contentDescription = stringResource(R.string.action_close),
                         )
                     }
@@ -227,9 +227,9 @@ class SettingsTrackingScreen : SearchableSettings {
                             IconButton(onClick = { hidePassword = !hidePassword }) {
                                 Icon(
                                     imageVector = if (hidePassword) {
-                                        Icons.Default.Visibility
+                                        Icons.Filled.Visibility
                                     } else {
-                                        Icons.Default.VisibilityOff
+                                        Icons.Filled.VisibilityOff
                                     },
                                     contentDescription = null,
                                 )
@@ -317,7 +317,7 @@ class SettingsTrackingScreen : SearchableSettings {
                         modifier = Modifier.weight(1f),
                         onClick = onDismissRequest,
                     ) {
-                        Text(text = stringResource(android.R.string.cancel))
+                        Text(text = stringResource(R.string.action_cancel))
                     }
                     Button(
                         modifier = Modifier.weight(1f),

@@ -47,7 +47,7 @@ fun SourceIcon(
     when {
         source.isStub && icon == null -> {
             Image(
-                imageVector = Icons.Default.Warning,
+                imageVector = Icons.Filled.Warning,
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
                 modifier = modifier.then(defaultModifier),
@@ -104,7 +104,7 @@ fun ExtensionIcon(
             }
         }
         is Extension.Untrusted -> Image(
-            imageVector = Icons.Default.Dangerous,
+            imageVector = Icons.Filled.Dangerous,
             contentDescription = null,
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
             modifier = modifier.then(defaultModifier),

@@ -72,7 +72,7 @@ fun MangaChapterListItem(
                 var textHeight by remember { mutableStateOf(0) }
                 if (bookmark) {
                     Icon(
-                        imageVector = Icons.Default.Bookmark,
+                        imageVector = Icons.Filled.Bookmark,
                         contentDescription = stringResource(R.string.action_filter_bookmarked),
                         modifier = Modifier
                             .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp }),

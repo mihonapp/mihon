@@ -17,8 +17,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -95,8 +95,8 @@ class SettingsSearchScreen : Screen {
                             if (canPop) {
                                 IconButton(onClick = navigator::pop) {
                                     Icon(
-                                        imageVector = Icons.Default.ArrowBack,
-                                        contentDescription = null,
+                                        imageVector = Icons.Outlined.ArrowBack,
+                                        contentDescription = stringResource(R.string.abc_action_bar_up_description),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
@@ -131,7 +131,7 @@ class SettingsSearchScreen : Screen {
                             if (textFieldValue.text.isNotEmpty()) {
                                 IconButton(onClick = { textFieldValue = TextFieldValue() }) {
                                     Icon(
-                                        imageVector = Icons.Default.Close,
+                                        imageVector = Icons.Outlined.Close,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )

@@ -273,7 +273,7 @@ private fun MangaScreenSmallImpl(
                         }
                         Text(text = stringResource(id))
                     },
-                    icon = { Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null) },
+                    icon = { Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null) },
                     onClick = onContinueReading,
                     expanded = chapterListState.isScrollingUp() || chapterListState.isScrolledToEnd(),
                     modifier = Modifier
@@ -486,7 +486,7 @@ fun MangaScreenLargeImpl(
                             }
                             Text(text = stringResource(id))
                         },
-                        icon = { Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null) },
+                        icon = { Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null) },
                         onClick = onContinueReading,
                         expanded = chapterListState.isScrollingUp() || chapterListState.isScrolledToEnd(),
                         modifier = Modifier

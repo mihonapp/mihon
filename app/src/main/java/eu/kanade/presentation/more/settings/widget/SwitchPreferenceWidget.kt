@@ -44,7 +44,7 @@ private fun SwitchPreferenceWidgetPreview() {
                 SwitchPreferenceWidget(
                     title = "Text preference with icon",
                     subtitle = "Text preference summary",
-                    icon = Icons.Default.Preview,
+                    icon = Icons.Filled.Preview,
                     checked = true,
                     onCheckedChanged = {},
                 )

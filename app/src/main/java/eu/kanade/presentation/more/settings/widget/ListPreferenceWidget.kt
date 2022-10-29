@@ -25,6 +25,7 @@ import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.util.isScrolledToEnd
 import eu.kanade.presentation.util.isScrolledToStart
 import eu.kanade.presentation.util.minimumTouchTargetSize
+import eu.kanade.tachiyomi.R
 
 @Composable
 fun <T> ListPreferenceWidget(
@@ -72,7 +73,7 @@ fun <T> ListPreferenceWidget(
             },
             confirmButton = {
                 TextButton(onClick = { showDialog(false) }) {
-                    Text(text = stringResource(android.R.string.cancel))
+                    Text(text = stringResource(R.string.action_cancel))
                 }
             },
         )

@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -368,7 +368,7 @@ private fun ExtensionItemActions(
         } else {
             IconButton(onClick = { onClickItemCancel(extension) }) {
                 Icon(
-                    imageVector = Icons.Default.Close,
+                    imageVector = Icons.Outlined.Close,
                     contentDescription = stringResource(R.string.action_cancel),
                 )
             }

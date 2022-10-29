@@ -23,18 +23,18 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AttachMoney
-import androidx.compose.material.icons.filled.Block
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.Public
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.AttachMoney
+import androidx.compose.material.icons.outlined.Block
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Done
+import androidx.compose.material.icons.outlined.DoneAll
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
@@ -173,7 +173,7 @@ fun MangaActionRow(
             } else {
                 stringResource(R.string.add_to_library)
             },
-            icon = if (favorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+            icon = if (favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
             color = if (favorite) MaterialTheme.colorScheme.primary else defaultActionButtonColor,
             onClick = onAddToLibraryClicked,
             onLongClick = onEditCategory,
@@ -185,7 +185,7 @@ fun MangaActionRow(
                 } else {
                     pluralStringResource(id = R.plurals.num_trackers, count = trackingCount, trackingCount)
                 },
-                icon = if (trackingCount == 0) Icons.Default.Sync else Icons.Default.Done,
+                icon = if (trackingCount == 0) Icons.Outlined.Sync else Icons.Outlined.Done,
                 color = if (trackingCount == 0) defaultActionButtonColor else MaterialTheme.colorScheme.primary,
                 onClick = onTrackingClicked,
             )
@@ -193,7 +193,7 @@ fun MangaActionRow(
         if (onWebViewClicked != null) {
             MangaActionButton(
                 title = stringResource(R.string.action_web_view),
-                icon = Icons.Default.Public,
+                icon = Icons.Outlined.Public,
                 color = defaultActionButtonColor,
                 onClick = onWebViewClicked,
             )
@@ -345,13 +345,13 @@ private fun MangaAndSourceTitlesLarge(
         ) {
             Icon(
                 imageVector = when (status) {
-                    SManga.ONGOING.toLong() -> Icons.Default.Schedule
-                    SManga.COMPLETED.toLong() -> Icons.Default.DoneAll
-                    SManga.LICENSED.toLong() -> Icons.Default.AttachMoney
-                    SManga.PUBLISHING_FINISHED.toLong() -> Icons.Default.Done
-                    SManga.CANCELLED.toLong() -> Icons.Default.Close
-                    SManga.ON_HIATUS.toLong() -> Icons.Default.Pause
-                    else -> Icons.Default.Block
+                    SManga.ONGOING.toLong() -> Icons.Outlined.Schedule
+                    SManga.COMPLETED.toLong() -> Icons.Outlined.DoneAll
+                    SManga.LICENSED.toLong() -> Icons.Outlined.AttachMoney
+                    SManga.PUBLISHING_FINISHED.toLong() -> Icons.Outlined.Done
+                    SManga.CANCELLED.toLong() -> Icons.Outlined.Close
+                    SManga.ON_HIATUS.toLong() -> Icons.Outlined.Pause
+                    else -> Icons.Outlined.Block
                 },
                 contentDescription = null,
                 modifier = Modifier
@@ -375,7 +375,7 @@ private fun MangaAndSourceTitlesLarge(
                 DotSeparatorText()
                 if (isStubSource) {
                     Icon(
-                        imageVector = Icons.Default.Warning,
+                        imageVector = Icons.Filled.Warning,
                         contentDescription = null,
                         modifier = Modifier
                             .padding(end = 4.dp)
@@ -478,13 +478,13 @@ private fun MangaAndSourceTitlesSmall(
             ) {
                 Icon(
                     imageVector = when (status) {
-                        SManga.ONGOING.toLong() -> Icons.Default.Schedule
-                        SManga.COMPLETED.toLong() -> Icons.Default.DoneAll
-                        SManga.LICENSED.toLong() -> Icons.Default.AttachMoney
-                        SManga.PUBLISHING_FINISHED.toLong() -> Icons.Default.Done
-                        SManga.CANCELLED.toLong() -> Icons.Default.Close
-                        SManga.ON_HIATUS.toLong() -> Icons.Default.Pause
-                        else -> Icons.Default.Block
+                        SManga.ONGOING.toLong() -> Icons.Outlined.Schedule
+                        SManga.COMPLETED.toLong() -> Icons.Outlined.DoneAll
+                        SManga.LICENSED.toLong() -> Icons.Outlined.AttachMoney
+                        SManga.PUBLISHING_FINISHED.toLong() -> Icons.Outlined.Done
+                        SManga.CANCELLED.toLong() -> Icons.Outlined.Close
+                        SManga.ON_HIATUS.toLong() -> Icons.Outlined.Pause
+                        else -> Icons.Outlined.Block
                     },
                     contentDescription = null,
                     modifier = Modifier
@@ -508,7 +508,7 @@ private fun MangaAndSourceTitlesSmall(
                     DotSeparatorText()
                     if (isStubSource) {
                         Icon(
-                            imageVector = Icons.Default.Warning,
+                            imageVector = Icons.Filled.Warning,
                             contentDescription = null,
                             modifier = Modifier
                                 .padding(end = 4.dp)

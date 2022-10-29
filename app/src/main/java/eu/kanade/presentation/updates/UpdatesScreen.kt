@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FlipToBack
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.SelectAll
+import androidx.compose.material.icons.outlined.FlipToBack
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -215,7 +215,7 @@ private fun UpdatesAppBar(
         actions = {
             IconButton(onClick = onUpdateLibrary) {
                 Icon(
-                    imageVector = Icons.Default.Refresh,
+                    imageVector = Icons.Outlined.Refresh,
                     contentDescription = stringResource(R.string.action_update_library),
                 )
             }
@@ -225,13 +225,13 @@ private fun UpdatesAppBar(
         actionModeActions = {
             IconButton(onClick = onSelectAll) {
                 Icon(
-                    imageVector = Icons.Default.SelectAll,
+                    imageVector = Icons.Outlined.SelectAll,
                     contentDescription = stringResource(R.string.action_select_all),
                 )
             }
             IconButton(onClick = onInvertSelection) {
                 Icon(
-                    imageVector = Icons.Default.FlipToBack,
+                    imageVector = Icons.Outlined.FlipToBack,
                     contentDescription = stringResource(R.string.action_select_inverse),
                 )
             }

@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -48,13 +48,13 @@ fun WebViewScreen(
                     title = state.pageTitle ?: initialTitle,
                     subtitle = state.content.getCurrentUrl(),
                     navigateUp = onNavigateUp,
-                    navigationIcon = Icons.Default.Close,
+                    navigationIcon = Icons.Outlined.Close,
                     actions = {
                         AppBarActions(
                             listOf(
                                 AppBar.Action(
                                     title = stringResource(R.string.action_webview_back),
-                                    icon = Icons.Default.ArrowBack,
+                                    icon = Icons.Outlined.ArrowBack,
                                     onClick = {
                                         if (navigator.canGoBack) {
                                             navigator.navigateBack()
@@ -64,7 +64,7 @@ fun WebViewScreen(
                                 ),
                                 AppBar.Action(
                                     title = stringResource(R.string.action_webview_forward),
-                                    icon = Icons.Default.ArrowForward,
+                                    icon = Icons.Outlined.ArrowForward,
                                     onClick = {
                                         if (navigator.canGoForward) {
                                             navigator.navigateForward()

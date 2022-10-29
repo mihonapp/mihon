@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.Share
@@ -63,7 +63,7 @@ fun MangaCoverDialog(
             ) {
                 IconButton(onClick = onDismissRequest) {
                     Icon(
-                        imageVector = Icons.Default.Close,
+                        imageVector = Icons.Outlined.Close,
                         contentDescription = stringResource(R.string.action_close),
                     )
                 }

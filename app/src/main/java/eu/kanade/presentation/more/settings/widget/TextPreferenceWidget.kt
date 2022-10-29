@@ -67,7 +67,7 @@ private fun TextPreferenceWidgetPreview() {
                 TextPreferenceWidget(
                     title = "Text preference with icon",
                     subtitle = "Text preference summary",
-                    icon = Icons.Default.Preview,
+                    icon = Icons.Filled.Preview,
                     onPreferenceClick = {},
                 )
                 TextPreferenceWidget(

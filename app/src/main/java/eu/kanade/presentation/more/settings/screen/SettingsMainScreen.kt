@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ChromeReaderMode
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.CollectionsBookmark
@@ -98,7 +98,7 @@ object SettingsMainScreen : Screen {
                         navigationIcon = {
                             IconButton(onClick = backPress::invoke) {
                                 Icon(
-                                    imageVector = Icons.Default.ArrowBack,
+                                    imageVector = Icons.Outlined.ArrowBack,
                                     contentDescription = stringResource(R.string.abc_action_bar_up_description),
                                 )
                             }

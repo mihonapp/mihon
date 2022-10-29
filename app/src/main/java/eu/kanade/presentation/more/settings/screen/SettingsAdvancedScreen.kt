@@ -345,7 +345,7 @@ class SettingsAdvancedScreen : SearchableSettings {
                 text = { Text(text = stringResource(R.string.ext_installer_shizuku_unavailable_dialog)) },
                 dismissButton = {
                     TextButton(onClick = dismiss) {
-                        Text(text = stringResource(android.R.string.cancel))
+                        Text(text = stringResource(R.string.action_cancel))
                     }
                 },
                 confirmButton = {

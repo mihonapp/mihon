@@ -2,7 +2,7 @@ package eu.kanade.presentation.library
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HelpOutline
+import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -79,7 +79,7 @@ fun LibraryScreen(
                 actions = listOf(
                     EmptyScreenAction(
                         stringResId = R.string.getting_started_guide,
-                        icon = Icons.Default.HelpOutline,
+                        icon = Icons.Outlined.HelpOutline,
                         onClick = { handler.openUri("https://tachiyomi.org/help/guides/getting-started") },
                     ),
                 ),

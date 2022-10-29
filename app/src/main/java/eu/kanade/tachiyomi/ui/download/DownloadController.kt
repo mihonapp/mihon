@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -152,7 +152,7 @@ class DownloadController :
                                 IconButton(onClick = { onExpanded(!expanded) }) {
                                     Icon(
                                         imageVector = Icons.Outlined.MoreVert,
-                                        contentDescription = stringResource(R.string.label_more),
+                                        contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
                                     )
                                 }
                                 CascadeDropdownMenu(
@@ -234,9 +234,9 @@ class DownloadController :
                         },
                         icon = {
                             val icon = if (isRunning) {
-                                Icons.Default.Pause
+                                Icons.Outlined.Pause
                             } else {
-                                Icons.Default.PlayArrow
+                                Icons.Filled.PlayArrow
                             }
                             Icon(imageVector = icon, contentDescription = null)
                         },
