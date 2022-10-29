@@ -329,6 +329,19 @@ tasks {
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
             "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
         )
+
+        if (project.findProperty("tachiyomi.enableComposeCompilerMetrics") == "true") {
+            kotlinOptions.freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+                    project.buildDir.absolutePath + "/compose_metrics"
+            )
+            kotlinOptions.freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+                    project.buildDir.absolutePath + "/compose_metrics"
+            )
+        }
     }
 
     preBuild {
