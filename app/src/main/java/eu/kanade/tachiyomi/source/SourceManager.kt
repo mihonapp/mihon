@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
+import java.util.concurrent.ConcurrentHashMap
 
 class SourceManager(
     private val context: Context,
@@ -31,7 +32,7 @@ class SourceManager(
 
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
 
-    private var sourcesMap = emptyMap<Long, Source>()
+    private var sourcesMap = ConcurrentHashMap<Long, Source>()
         set(value) {
             field = value
             sourcesMapFlow.value = field
@@ -39,7 +40,7 @@ class SourceManager(
 
     private val sourcesMapFlow = MutableStateFlow(sourcesMap)
 
-    private val stubSourcesMap = mutableMapOf<Long, StubSource>()
+    private val stubSourcesMap = ConcurrentHashMap<Long, StubSource>()
 
     val catalogueSources: Flow<List<CatalogueSource>> = sourcesMapFlow.map { it.values.filterIsInstance<CatalogueSource>() }
     val onlineSources: Flow<List<HttpSource>> = catalogueSources.map { sources -> sources.filterIsInstance<HttpSource>() }
@@ -48,7 +49,7 @@ class SourceManager(
         scope.launch {
             extensionManager.installedExtensionsFlow
                 .collectLatest { extensions ->
-                    val mutableMap = mutableMapOf<Long, Source>(LocalSource.ID to LocalSource(context))
+                    val mutableMap = ConcurrentHashMap<Long, Source>(mapOf(LocalSource.ID to LocalSource(context)))
                     extensions.forEach { extension ->
                         extension.sources.forEach {
                             mutableMap[it.id] = it
