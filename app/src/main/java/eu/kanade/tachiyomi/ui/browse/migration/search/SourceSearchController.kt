@@ -29,10 +29,6 @@ class SourceSearchController(
 
     @Composable
     override fun ComposeContent() {
-        // LocalContext is not a first available to us when we try access it
-        // Decoupling from BrowseSourceController is needed
-        val context = applicationContext!!
-
         SourceSearchScreen(
             presenter = presenter,
             navigateUp = { router.popCurrentController() },
@@ -46,8 +42,10 @@ class SourceSearchController(
             },
             onWebViewClick = f@{
                 val source = presenter.source as? HttpSource ?: return@f
-                val intent = WebViewActivity.newIntent(context, source.baseUrl, source.id, source.name)
-                context.startActivity(intent)
+                activity?.let { context ->
+                    val intent = WebViewActivity.newIntent(context, source.baseUrl, source.id, source.name)
+                    context.startActivity(intent)
+                }
             },
         )
 

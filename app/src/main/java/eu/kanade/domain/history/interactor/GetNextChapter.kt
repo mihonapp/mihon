@@ -21,8 +21,8 @@ class GetNextChapter(
     }
 
     suspend fun await(mangaId: Long, chapterId: Long): Chapter? {
-        val chapter = getChapter.await(chapterId)!!
-        val manga = getManga.await(mangaId)!!
+        val chapter = getChapter.await(chapterId) ?: return null
+        val manga = getManga.await(mangaId) ?: return null
 
         if (!chapter.read) return chapter
 

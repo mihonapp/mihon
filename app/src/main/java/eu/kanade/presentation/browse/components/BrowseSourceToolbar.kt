@@ -33,7 +33,7 @@ import eu.kanade.tachiyomi.source.LocalSource
 @Composable
 fun BrowseSourceToolbar(
     state: BrowseSourceState,
-    source: CatalogueSource,
+    source: CatalogueSource?,
     displayMode: LibraryDisplayMode,
     onDisplayModeChange: (LibraryDisplayMode) -> Unit,
     navigateUp: () -> Unit,
@@ -44,7 +44,7 @@ fun BrowseSourceToolbar(
 ) {
     if (state.searchQuery == null) {
         BrowseSourceRegularToolbar(
-            title = if (state.isUserQuery) state.currentFilter.query else source.name,
+            title = if (state.isUserQuery) state.currentFilter.query else source?.name.orEmpty(),
             isLocalSource = source is LocalSource,
             displayMode = displayMode,
             onDisplayModeChange = onDisplayModeChange,
