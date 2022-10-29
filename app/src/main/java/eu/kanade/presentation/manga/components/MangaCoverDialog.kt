@@ -24,11 +24,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.updatePadding
@@ -82,9 +85,15 @@ fun MangaCoverDialog(
                 }
                 if (onEditClick != null) {
                     Box {
-                        val (expanded, onExpand) = remember { mutableStateOf(false) }
+                        var expanded by remember { mutableStateOf(false) }
                         IconButton(
-                            onClick = { if (isCustomCover) onExpand(true) else onEditClick(EditCoverAction.EDIT) },
+                            onClick = {
+                                if (isCustomCover) {
+                                    expanded = true
+                                } else {
+                                    onEditClick(EditCoverAction.EDIT)
+                                }
+                            },
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Edit,
@@ -93,20 +102,21 @@ fun MangaCoverDialog(
                         }
                         DropdownMenu(
                             expanded = expanded,
-                            onDismissRequest = { onExpand(false) },
+                            onDismissRequest = { expanded = false },
+                            offset = DpOffset(8.dp, 0.dp),
                         ) {
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(R.string.action_edit)) },
                                 onClick = {
                                     onEditClick(EditCoverAction.EDIT)
-                                    onExpand(false)
+                                    expanded = false
                                 },
                             )
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(R.string.action_delete)) },
                                 onClick = {
                                     onEditClick(EditCoverAction.DELETE)
-                                    onExpand(false)
+                                    expanded = false
                                 },
                             )
                         }

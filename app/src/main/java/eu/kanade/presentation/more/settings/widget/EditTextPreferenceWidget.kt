@@ -28,18 +28,18 @@ fun EditTextPreferenceWidget(
     value: String,
     onConfirm: suspend (String) -> Boolean,
 ) {
-    val (isDialogShown, showDialog) = remember { mutableStateOf(false) }
+    var isDialogShown by remember { mutableStateOf(false) }
 
     TextPreferenceWidget(
         title = title,
         subtitle = subtitle?.format(value),
         icon = icon,
-        onPreferenceClick = { showDialog(true) },
+        onPreferenceClick = { isDialogShown = true },
     )
 
     if (isDialogShown) {
         val scope = rememberCoroutineScope()
-        val onDismissRequest = { showDialog(false) }
+        val onDismissRequest = { isDialogShown = false }
         var textFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
             mutableStateOf(TextFieldValue(value))
         }

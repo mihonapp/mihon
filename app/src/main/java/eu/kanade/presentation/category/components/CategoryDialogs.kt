@@ -6,8 +6,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -22,7 +24,7 @@ fun CategoryCreateDialog(
     onDismissRequest: () -> Unit,
     onCreate: (String) -> Unit,
 ) {
-    val (name, onNameChange) = remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
 
     AlertDialog(
@@ -48,7 +50,7 @@ fun CategoryCreateDialog(
                 modifier = Modifier
                     .focusRequester(focusRequester),
                 value = name,
-                onValueChange = onNameChange,
+                onValueChange = { name = it },
                 label = {
                     Text(text = stringResource(R.string.name))
                 },
@@ -70,7 +72,7 @@ fun CategoryRenameDialog(
     onRename: (String) -> Unit,
     category: Category,
 ) {
-    val (name, onNameChange) = remember { mutableStateOf(category.name) }
+    var name by remember { mutableStateOf(category.name) }
     val focusRequester = remember { FocusRequester() }
 
     AlertDialog(
@@ -96,7 +98,7 @@ fun CategoryRenameDialog(
                 modifier = Modifier
                     .focusRequester(focusRequester),
                 value = name,
-                onValueChange = onNameChange,
+                onValueChange = { name = it },
                 label = {
                     Text(text = stringResource(R.string.name))
                 },

@@ -11,8 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,13 +32,13 @@ fun MultiSelectListPreferenceWidget(
     values: Set<String>,
     onValuesChange: (Set<String>) -> Unit,
 ) {
-    val (isDialogShown, showDialog) = remember { mutableStateOf(false) }
+    var isDialogShown by remember { mutableStateOf(false) }
 
     TextPreferenceWidget(
         title = preference.title,
         subtitle = preference.subtitleProvider(values, preference.entries),
         icon = preference.icon,
-        onPreferenceClick = { showDialog(true) },
+        onPreferenceClick = { isDialogShown = true },
     )
 
     if (isDialogShown) {
@@ -46,7 +48,7 @@ fun MultiSelectListPreferenceWidget(
                 .toMutableStateList()
         }
         AlertDialog(
-            onDismissRequest = { showDialog(false) },
+            onDismissRequest = { isDialogShown = false },
             title = { Text(text = preference.title) },
             text = {
                 LazyColumn {
@@ -91,14 +93,14 @@ fun MultiSelectListPreferenceWidget(
                 TextButton(
                     onClick = {
                         onValuesChange(selected.toMutableSet())
-                        showDialog(false)
+                        isDialogShown = false
                     },
                 ) {
                     Text(text = stringResource(android.R.string.ok))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDialog(false) }) {
+                TextButton(onClick = { isDialogShown = false }) {
                     Text(text = stringResource(R.string.action_cancel))
                 }
             },

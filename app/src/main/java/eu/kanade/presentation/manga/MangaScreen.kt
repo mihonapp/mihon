@@ -35,6 +35,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -410,7 +411,7 @@ fun MangaScreenLargeImpl(
     val chapters = remember(state) { state.processedChapters.toList() }
 
     val insetPadding = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues()
-    val (topBarHeight, onTopBarHeightChanged) = remember { mutableStateOf(0) }
+    var topBarHeight by remember { mutableStateOf(0) }
     SwipeRefresh(
         refreshing = state.isRefreshingData,
         onRefresh = onRefresh,
@@ -436,7 +437,7 @@ fun MangaScreenLargeImpl(
             modifier = Modifier.padding(insetPadding),
             topBar = {
                 MangaToolbar(
-                    modifier = Modifier.onSizeChanged { onTopBarHeightChanged(it.height) },
+                    modifier = Modifier.onSizeChanged { topBarHeight = it.height },
                     title = state.manga.title,
                     titleAlphaProvider = { if (chapters.any { it.selected }) 1f else 0f },
                     backgroundAlphaProvider = { 1f },

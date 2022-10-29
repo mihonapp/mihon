@@ -22,8 +22,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
@@ -157,15 +159,15 @@ fun MangaToolbar(
                     }
 
                     if (onClickEditCategory != null && onClickMigrate != null) {
-                        val (moreExpanded, onMoreExpanded) = remember { mutableStateOf(false) }
+                        var moreExpanded by remember { mutableStateOf(false) }
                         Box {
-                            IconButton(onClick = { onMoreExpanded(!moreExpanded) }) {
+                            IconButton(onClick = { moreExpanded = !moreExpanded }) {
                                 Icon(
                                     imageVector = Icons.Outlined.MoreVert,
                                     contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
                                 )
                             }
-                            val onDismissRequest = { onMoreExpanded(false) }
+                            val onDismissRequest = { moreExpanded = false }
                             DropdownMenu(
                                 expanded = moreExpanded,
                                 onDismissRequest = onDismissRequest,

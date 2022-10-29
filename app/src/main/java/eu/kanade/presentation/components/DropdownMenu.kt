@@ -22,6 +22,7 @@ fun DropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    offset: DpOffset = DpOffset(8.dp, (-56).dp),
     properties: PopupProperties = PopupProperties(focusable = true),
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -29,7 +30,7 @@ fun DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
         modifier = modifier.sizeIn(minWidth = 196.dp, maxWidth = 196.dp),
-        offset = DpOffset(8.dp, (-56).dp),
+        offset = offset,
         properties = properties,
         content = content,
     )

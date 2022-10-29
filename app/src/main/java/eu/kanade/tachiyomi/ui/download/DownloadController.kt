@@ -147,9 +147,9 @@ class DownloadController :
                     navigateUp = router::popCurrentController,
                     actions = {
                         if (downloadList.isNotEmpty()) {
-                            val (expanded, onExpanded) = remember { mutableStateOf(false) }
+                            var expanded by remember { mutableStateOf(false) }
                             Box {
-                                IconButton(onClick = { onExpanded(!expanded) }) {
+                                IconButton(onClick = { expanded = !expanded }) {
                                     Icon(
                                         imageVector = Icons.Outlined.MoreVert,
                                         contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
@@ -157,7 +157,7 @@ class DownloadController :
                                 }
                                 CascadeDropdownMenu(
                                     expanded = expanded,
-                                    onDismissRequest = { onExpanded(false) },
+                                    onDismissRequest = { expanded = false },
                                 ) {
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(R.string.action_reorganize_by)) },
@@ -169,14 +169,14 @@ class DownloadController :
                                                         text = { Text(text = stringResource(R.string.action_newest)) },
                                                         onClick = {
                                                             reorderQueue({ it.download.chapter.date_upload }, true)
-                                                            onExpanded(false)
+                                                            expanded = false
                                                         },
                                                     )
                                                     DropdownMenuItem(
                                                         text = { Text(text = stringResource(R.string.action_oldest)) },
                                                         onClick = {
                                                             reorderQueue({ it.download.chapter.date_upload }, false)
-                                                            onExpanded(false)
+                                                            expanded = false
                                                         },
                                                     )
                                                 },
@@ -188,14 +188,14 @@ class DownloadController :
                                                         text = { Text(text = stringResource(R.string.action_asc)) },
                                                         onClick = {
                                                             reorderQueue({ it.download.chapter.chapter_number }, false)
-                                                            onExpanded(false)
+                                                            expanded = false
                                                         },
                                                     )
                                                     DropdownMenuItem(
                                                         text = { Text(text = stringResource(R.string.action_desc)) },
                                                         onClick = {
                                                             reorderQueue({ it.download.chapter.chapter_number }, true)
-                                                            onExpanded(false)
+                                                            expanded = false
                                                         },
                                                     )
                                                 },
@@ -206,7 +206,7 @@ class DownloadController :
                                         text = { Text(text = stringResource(R.string.action_cancel_all)) },
                                         onClick = {
                                             presenter.clearQueue(context)
-                                            onExpanded(false)
+                                            expanded = false
                                         },
                                     )
                                 }
