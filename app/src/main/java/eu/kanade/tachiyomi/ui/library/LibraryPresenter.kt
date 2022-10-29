@@ -119,12 +119,9 @@ class LibraryPresenter(
         subscribeLibrary()
     }
 
-    /**
-     * Subscribes to library if needed.
-     */
     fun subscribeLibrary() {
         /**
-         * TODO: Move this to a coroutine world
+         * TODO:
          * - Move filter and sort to getMangaForCategory and only filter and sort the current display category instead of whole library as some has 5000+ items in the library
          * - Create new db view and new query to just fetch the current category save as needed to instance variable
          * - Fetch badges to maps and retrieve as needed instead of fetching all of them at once
@@ -325,13 +322,18 @@ class LibraryPresenter(
             getLibraryManga.subscribe(),
             libraryPreferences.downloadBadge().changes(),
             libraryPreferences.filterDownloaded().changes(),
+            preferences.downloadedOnly().changes(),
             downloadCache.changes,
-        ) { libraryMangaList, downloadBadgePref, filterDownloadedPref, _ ->
+        ) { libraryMangaList, downloadBadgePref, filterDownloadedPref, downloadedOnly, _ ->
             libraryMangaList
                 .map { libraryManga ->
+                    val needsDownloadCounts = downloadBadgePref ||
+                        filterDownloadedPref != State.IGNORE.value ||
+                        downloadedOnly
+
                     // Display mode based on user preference: take it from global library setting or category
                     LibraryItem(libraryManga).apply {
-                        downloadCount = if (downloadBadgePref || filterDownloadedPref != State.IGNORE.value) {
+                        downloadCount = if (needsDownloadCounts) {
                             downloadManager.getDownloadCount(libraryManga.manga).toLong()
                         } else {
                             0
