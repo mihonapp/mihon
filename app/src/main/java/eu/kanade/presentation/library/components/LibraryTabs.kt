@@ -10,11 +10,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.PagerState
 import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.Divider
+import eu.kanade.presentation.components.PagerState
 import eu.kanade.presentation.components.TabIndicator
 import eu.kanade.presentation.components.TabText
 import kotlinx.coroutines.launch

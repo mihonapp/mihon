@@ -176,8 +176,6 @@ dependencies {
     implementation(compose.accompanist.webview)
     implementation(compose.accompanist.swiperefresh)
     implementation(compose.accompanist.flowlayout)
-    implementation(compose.accompanist.pager.core)
-    implementation(compose.accompanist.pager.indicators)
     implementation(compose.accompanist.permissions)
 
     implementation(androidx.paging.runtime)
