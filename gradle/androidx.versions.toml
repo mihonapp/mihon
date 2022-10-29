@@ -26,7 +26,7 @@ work-runtime = "androidx.work:work-runtime-ktx:2.6.0"
 guava = "com.google.guava:guava:31.1-android"
 
 paging-runtime = "androidx.paging:paging-runtime:3.1.1"
-paging-compose = "androidx.paging:paging-compose:1.0.0-alpha16"
+paging-compose = "androidx.paging:paging-compose:1.0.0-alpha17"
 
 sqlite = "androidx.sqlite:sqlite-framework:2.2.0"
 
