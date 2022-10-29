@@ -560,7 +560,7 @@
     <string name="clipboard_copy_error">Bigong makopya sa clipboard</string>
     <string name="rotation_landscape">Pahiga</string>
     <string name="rotation_portrait">Patayo</string>
-    <string name="pref_create_folder_per_manga_summary">Gumagawa ng mga folder ayon sa pamagat ng manga</string>
+    <string name="pref_create_folder_per_manga_summary">Gumagawa ng mga folder ayon sa pamagat ng tala</string>
     <string name="pref_create_folder_per_manga">I-save ang mga pahina sa folder nila</string>
     <string name="pref_reader_actions">Gawain</string>
     <string name="rotation_type">Pag-ikot</string>
@@ -762,4 +762,8 @@
     <string name="crash_screen_title">Isang di-inaasahang error ang naganap</string>
     <string name="pref_general_summary">Wika ng App, mga abiso</string>
     <string name="crash_screen_restart_application">Buksan muli ang app</string>
+    <string name="invalid_location">Hindi wastong lokasyon: %s</string>
+    <string name="unknown_title">Di tiyak na pamagat</string>
+    <string name="error_user_agent_string_invalid">Hindi wastong user agent</string>
+    <string name="updates_last_update_info_just_now">Ngayon lang</string>
 </resources>

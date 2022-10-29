@@ -535,7 +535,7 @@
     <string name="action_filter_tracked">Spåras</string>
     <string name="right_and_left_nav">Höger och Vänster</string>
     <string name="action_display_show_number_of_items">Visa antal objekt</string>
-    <string name="pref_dual_page_split">Delning av dubbelsidor</string>
+    <string name="pref_dual_page_split">Delning av breda sidor</string>
     <string name="backup_restore_content_full">Data från säkerhetskopian återställs.
 \n
 \nDu måste installera eventuella tillägg som saknas och logga in på spårningstjänster efteråt för att kunna använda dem.</string>
@@ -543,8 +543,8 @@
     <string name="nav_zone_left">Vänster</string>
     <string name="nav_zone_next">Nästa</string>
     <string name="nav_zone_prev">Föregående</string>
-    <string name="pref_dual_page_invert_summary">Om placeringen av dubbelsidesdelningen inte matchar läsriktningen</string>
-    <string name="pref_dual_page_invert">Invertera dubbelsidig delad placering</string>
+    <string name="pref_dual_page_invert_summary">Om placeringen av delning av breda sidor inte matchar läsriktningen</string>
+    <string name="pref_dual_page_invert">Invertera placering av delad sida</string>
     <string name="pref_show_navigation_mode_summary">Visa kort när läsaren öppnas</string>
     <string name="pref_show_navigation_mode">Visa överlägg för tryckzoner</string>
     <string name="pref_dns_over_https">DNS över HTTPS (DoH)</string>
@@ -638,7 +638,7 @@
     <string name="action_sort_count">Total manga</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installera och starta Shizuku för att använda Shizuku som tilläggsinstallationsprogram.</string>
     <string name="pref_verbose_logging_summary">Skriv ut utförliga loggar till systemloggen (minskar appprestanda)</string>
-    <string name="backup_info">Automatisk säkerhetskopiering rekommenderas starkt. Du bör också förvara kopior på andra ställen.</string>
+    <string name="backup_info">Du bör också förvara säkerhetskopiorna på andra ställen.</string>
     <string name="pref_verbose_logging">Omfattande loggning</string>
     <string name="label_warning">Varning</string>
     <string name="action_display_language_badge">Språk</string>
@@ -651,7 +651,7 @@
     <string name="channel_app_updates">Appuppdateringar</string>
     <string name="pref_auto_clear_chapter_cache">Rensa kapitelcache när appen stängs</string>
     <string name="clear_database_source_item_count">%1$d manga i databasen som inte är biblioteksmanga</string>
-    <string name="database_clean">Rengör databasen</string>
+    <string name="database_clean">Inget att rensa</string>
     <string name="library_errors_help">För hjälp med att åtgärda fel i biblioteksuppdateringar, se %1$s</string>
     <string name="pref_library_update_manga_restriction">Hoppa över att uppdatera titlar</string>
     <string name="cancelled">Avbruten</string>
@@ -667,7 +667,7 @@
     <string name="action_filter_started">Startad</string>
     <string name="action_display_cover_only_grid">Endast omslags-rutnät</string>
     <string name="pref_update_only_started">Som inte har startats</string>
-    <string name="pref_navigate_pan">Navigera till pan</string>
+    <string name="pref_navigate_pan">Panorera breda sidor med tryck</string>
     <string name="confirm_manga_add_duplicate">Du har en post i ditt bibliotek med samma namn men från en annan källa (%1$s).
 \n
 \nVill du fortfarande fortsätta\?</string>
@@ -752,4 +752,18 @@
     <string name="unknown_title">Okänd titel</string>
     <string name="updates_last_update_info_just_now">Just nu</string>
     <string name="action_search_hint">Sök…</string>
+    <string name="pref_downloads_summary">Automatisk nedladdning, ladda ned i förväg</string>
+    <string name="pref_tracking_summary">Envägs synkronisering av framfart, förbättrad synkronisering</string>
+    <string name="pref_backup_summary">Manuell och automatisk säkerhetskopiering</string>
+    <string name="invalid_location">Ogiltig plats: %s</string>
+    <string name="missing_storage_permission">Lagrings rättigheter inte tillagda</string>
+    <string name="skipped_reason_not_always_update">Hoppat över för att serien inte behöver uppdateras</string>
+    <string name="crash_screen_description">%s stötte på ett oväntat fel. Vi förslår att du tar en skärmdump av det här meddelandet, dumpar fel loggarna, och delar det i vår support kanal på Discord.</string>
+    <string name="pref_general_summary">Appspråk, notifikationer</string>
+    <string name="pref_appearance_summary">Tema, datum och tids format</string>
+    <string name="pref_browse_summary">Källor, tillägg, global sökning</string>
+    <string name="crash_screen_restart_application">Starta om applikationen</string>
+    <string name="crash_screen_title">Ett oväntat fel inträffade</string>
+    <string name="pref_advanced_summary">Dumpa krasch logg, batterioptimering</string>
+    <string name="pref_security_summary">Applikations lås, säkerhetsskärm</string>
 </resources>

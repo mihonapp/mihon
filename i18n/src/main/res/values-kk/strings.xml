@@ -46,7 +46,7 @@
         <item quantity="one">Кеше</item>
         <item quantity="other">%1$d күн бұрын</item>
     </plurals>
-    <string name="action_sort_last_manga_update">Соңғы маңга жаңартуы</string>
+    <string name="action_sort_last_manga_update">Соңғы жаңартуды тексеру</string>
     <string name="action_sort_unread_count">Оқылмаған тараулар</string>
     <string name="action_display_list">Тізім</string>
     <string name="action_display_unread_badge">Оқылмаған тараулар</string>
@@ -105,11 +105,11 @@
     <string name="action_filter_started">Басталған</string>
     <string name="action_filter_empty">Сүзгіні алып тастау</string>
     <string name="action_sort_alpha">Әліпби бойынша</string>
-    <string name="action_sort_count">Маңга саны</string>
+    <string name="action_sort_count">Түгел жазбалар</string>
     <string name="action_sort_total">Тараулар саны</string>
     <string name="action_sort_last_read">Соңғы оқылған</string>
     <string name="action_sort_latest_chapter">Соңғы тарау</string>
-    <string name="action_sort_chapter_fetch_date">Тараудың келген күні</string>
+    <string name="action_sort_chapter_fetch_date">Тараудың келген күні бойынша</string>
     <string name="action_sort_date_added">Қосылған күні</string>
     <string name="action_search">Іздеу</string>
     <string name="action_search_settings">Баптауларды іздеу</string>
@@ -140,11 +140,11 @@
     <string name="action_remove">Жою</string>
     <string name="action_start">Бастау</string>
     <string name="action_open_in_browser">Браузерде ашу</string>
-    <string name="action_show_manga">Маңганы көрсету</string>
+    <string name="action_show_manga">Жазбаны көрсету</string>
     <string name="action_open_in_web_view">WebView-де ашу</string>
     <string name="action_migrate">Көшу</string>
     <string name="action_display_mode">Бейнебет режимі</string>
-    <string name="action_display_local_badge">Локалды маңга</string>
+    <string name="action_display_local_badge">Локалды дереккөз</string>
     <string name="action_display_language_badge">Тіл</string>
     <string name="action_display_show_tabs">Санат қойындыларын көрсету</string>
     <string name="action_display_show_number_of_items">Элементтер санын көрсету</string>
@@ -227,7 +227,7 @@
     <string name="action_display_cover_only_grid">Атаусыз кесте</string>
     <string name="pref_library_update_show_tab_badge">Жаңартулар белгішесінде оқылмағандар санын көрсету</string>
     <string name="pref_library_update_refresh_metadata">Метадеректерді автоматты түрде жаңарту</string>
-    <string name="pref_library_update_categories_details">Шығарылған санаттардағы маңгалар енгізілген санаттарда болса да жаңартылмайды.</string>
+    <string name="pref_library_update_categories_details">Шығарылған санаттардағы жазбалар енгізілген санаттарда болса да жаңартылмайды.</string>
     <string name="all">Барлығы</string>
     <string name="none">Ешқайсы</string>
     <string name="exclude">Шығару: %s</string>
@@ -289,12 +289,12 @@
     <string name="download_notifier_title_error">Қателік</string>
     <string name="pref_category_reading">Оқылуда</string>
     <string name="recent_manga_time">Тарау %1$s - %2$s</string>
-    <string name="pref_skip_read_chapters">Оқылған деп белгіленген тарауларды өткізіп жіберу</string>
+    <string name="pref_skip_read_chapters">Оқылды деп белгіленген тарауларды өткізіп жіберу</string>
     <string name="delete_category_confirmation">«%s» деген санатты жойғыңыз келеді ме\?</string>
     <string name="delete_category">Санатты жою</string>
     <string name="internal_error">Ішкі қателік: Қосымша ақпарат алу үшін қателіктер тіркеуін тексеріңіз</string>
     <string name="theme_lavender">Лаванда</string>
-    <string name="pref_skip_filtered_chapters">Сүзгіленген тарауларлы өткізіп жіберу</string>
+    <string name="pref_skip_filtered_chapters">Сүзілген тарауларлы өткізіп жіберу</string>
     <string name="action_remove_everything">Барлығын жою</string>
     <string name="filter_mode_overlay">Қабаттасу</string>
     <string name="filter_mode_multiply">Көбейту</string>
@@ -307,7 +307,7 @@
     <string name="scale_type_fit_width">Ені бойынша</string>
     <string name="scale_type_original_size">Бастапқы мөлшері</string>
     <string name="rotation_reverse_portrait">Кері портрет</string>
-    <string name="pref_create_folder_per_manga_summary">Бумаларды маңга атауына сәйкес жасау</string>
+    <string name="pref_create_folder_per_manga_summary">Бумаларды жазбалар атауына сәйкес жасау</string>
     <string name="rotation_landscape">Көлденең</string>
     <string name="pref_webtoon_side_padding">Бүйірлік шегініс</string>
     <string name="color_filter_r_value">Қ</string>
@@ -331,7 +331,7 @@
     <string name="backup_restore_missing_sources">Жоқ дереккөздер:</string>
     <string name="save_chapter_as_cbz">CBZ архивы ретінде сақтау</string>
     <string name="label_data">Дерек</string>
-    <string name="pref_clear_chapter_cache">Тарау кэшін тазалау</string>
+    <string name="pref_clear_chapter_cache">Тарау кешің тазалау</string>
     <string name="disabled_nav">Өшірулі</string>
     <string name="label_network">Желі</string>
     <string name="cookies_cleared">Куки тазартылды</string>
@@ -359,10 +359,10 @@
     <string name="pref_lowest">Ең төмен</string>
     <string name="pref_category_delete_chapters">Тарауларды жою</string>
     <string name="disabled">Өшірулі</string>
-    <string name="last_read_chapter">Соңғы тарауды оқу</string>
-    <string name="second_to_last">Екіншіден соңғы оқылған тарау</string>
-    <string name="third_to_last">Үшіншіден соңғы оқылған тарау</string>
-    <string name="fourth_to_last">Төртіншіден соңғы оқылған тарау</string>
+    <string name="last_read_chapter">Соңғы оқылған тарау</string>
+    <string name="second_to_last">Соңғыдан бұрын оқылған тарау</string>
+    <string name="third_to_last">Соңғы оқылғаннан үшінші тарау</string>
+    <string name="fourth_to_last">Соңғы оқылғаннан төртінші тарау</string>
     <string name="services">Қызметтер</string>
     <string name="pref_create_backup">Сақтық көшірме жасау</string>
     <string name="pref_create_folder_per_manga">Беттерді бөлек бумаларға сақтау</string>
@@ -375,10 +375,10 @@
     <string name="double_tap_anim_speed_fast">Жылдам</string>
     <string name="zoom_start_automatic">Автоматты</string>
     <string name="pref_category_reading_mode">Оқу режимі</string>
-    <string name="fifth_to_last">Бесіншіден соңғы оқылған тарау</string>
+    <string name="fifth_to_last">Соңғы оқылғаннан бесінші тарау</string>
     <string name="pref_category_auto_download">Авто-жүктеу</string>
     <string name="pref_download_new">Жаңа тарауларды жүктеу</string>
-    <string name="pref_download_new_categories_details">Саналмайтын санаттардағы маңга саналатын санаттарда болса да жүктелмейді.</string>
+    <string name="pref_download_new_categories_details">Саналмайтын санаттардағы жазбалар саналатын санаттарда болса да жүктелмейді.</string>
     <string name="enhanced_services">Күшейтілген қызметтер</string>
     <string name="multi_lang">Көп</string>
     <string name="tapping_inverted_horizontal">Көлденең</string>
@@ -428,8 +428,8 @@
     <string name="missing_storage_permission">Жадыға рұқсаттар берілмеді</string>
     <string name="downloaded_chapters">Жүктелген тараулар</string>
     <string name="pinned_sources">Бекітілген</string>
-    <string name="invalid_backup_file_missing_manga">Сақтық көшірмеде маңга жоқ.</string>
-    <string name="clear_database_source_item_count">Кітапханадағы емес %1$d маңга дерекқорда</string>
+    <string name="invalid_backup_file_missing_manga">Сақтық көшірмеде кітапхана жазбалары жоқ.</string>
+    <string name="clear_database_source_item_count">Кітапханадағы емес %1$d жазбалар дерекқорда</string>
     <string name="restore_miui_warning">MIUI өңтайландыруы қосылып тұрмаса сақтық көшірмесі / Қалыпқа келтіру дұрыс істемеуі мүмкін.</string>
     <string name="pref_enable_automatic_extension_updates">Кеңейтулердің жаңартуларын тексеру</string>
     <string name="pref_dump_crash_logs_summary">Қателіктер тіркеуін әзірлеушілерге жіберу үшін файлға сақтайды</string>
@@ -445,13 +445,13 @@
     <string name="pref_enable_acra">Қателіктер туралы есептерді жіберу</string>
     <string name="no_pinned_sources">Сізде бекітілген дереккөздер жоқ</string>
     <string name="empty_backup_error">Кітапханада сақтайтын түк жоқ</string>
-    <string name="downloaded_only_summary">Кітапханаңыздағы барлық маңгаларды сүзеді</string>
+    <string name="downloaded_only_summary">Кітапханаңыздағы барлық жазбаларды сүзеді</string>
     <string name="cancelled">Күші жойылған</string>
     <string name="publishing_finished">Басылымы яқталды</string>
     <string name="add_to_library">Кітапханаға қосу</string>
     <string name="pref_refresh_library_tracking_summary">Бақылау қызметтері үшін күйді, рейтингті және соңғы оқылған тарауды жаңартады</string>
     <string name="pref_dump_crash_logs">Қателер тіркеуін түсіру</string>
-    <string name="clear_database_confirmation">Сенімдісіз бе\? Кітапханадағы емес маңгалардың оқылған тараулары мен прогрессі жоғалады</string>
+    <string name="clear_database_confirmation">Сенімдісіз бе\? Кітапханадағы емес жазбалардың оқылған тараулары мен прогрессі жоғалады</string>
     <string name="clear_database_completed">Жазбалар жойылды</string>
     <string name="database_clean">Тазалайтын түк жоқ</string>
     <string name="pref_refresh_library_covers">Туындылар мұқабасын жаңарту</string>
@@ -518,7 +518,7 @@
     <string name="logout_success">Сіз шығып кеттіңіз</string>
     <string name="updating_category">Санатты жаңарту</string>
     <string name="local_source_badge">Локал</string>
-    <string name="manga_from_library">Кітапханадағы маңга</string>
+    <string name="manga_from_library">Кітапханадан</string>
     <string name="badges_header">Белгілер</string>
     <string name="no_results_found">Нәтиже жоқ</string>
     <string name="local_source">Локал дереккөз</string>
@@ -528,7 +528,7 @@
     <string name="unknown_status">Белгісіз күй</string>
     <string name="licensed">Лицензаланған</string>
     <string name="on_hiatus">Үзілісте</string>
-    <string name="enhanced_tracking_info">Белгілі бір дереккөздер үшін жақсартылған мүмкіндіктерді қамтамасыз ететін қызметтер. Кітапханаға қосылған кезде маңга автоматты түрде бақыланады.</string>
+    <string name="enhanced_tracking_info">Белгілі бір дереккөздер үшін жақсартылған мүмкіндіктерді қамтамасыз ететін қызметтер. Кітапханаға қосылған кезде жазбалар автоматты түрде бақыланады.</string>
     <string name="pref_restore_backup">Сақтық көшірмеден қайтару</string>
     <string name="pref_search_pinned_sources_only">Тек бекітілген дереккөздер</string>
     <string name="pref_create_backup_summ">Қазіргі кітапхананы қалпына келтіру үшін қолдануға болады</string>
@@ -537,7 +537,7 @@
     <string name="creating_backup">Сақтық көшірмесін жасау</string>
     <string name="used_cache">Қолданылған: %1$s</string>
     <string name="cache_delete_error">Тазалауда қателік пайда болды</string>
-    <string name="pref_clear_database_summary">Кітапханада жоқ маңгалардың тарихын жою</string>
+    <string name="pref_clear_database_summary">Кітапханада жоқ жазбалардың тарихын жою</string>
     <string name="pref_clear_webview_data">WebView дерегін тазалау</string>
     <string name="webview_data_deleted">WebView дерегі тазаланды</string>
     <string name="about_dont_kill_my_app">Кейбір өндірушілерде аялық қызметтерді өшіретін қолданбаларға қосымша шектеулер бар. Бұл сайтта оны қалай түзетуге болатыны туралы толығырақ ақпарат бар.</string>
@@ -553,7 +553,7 @@
     <string name="source_filter_empty_screen">Орнатылған дереккөз табылмады</string>
     <string name="update_already_running">Жаңарту әлдеқашан қосылған</string>
     <string name="skipped_reason_not_caught_up">Оқылмаған тараулар бар болғандықтан өткізіп жіберілді</string>
-    <string name="display_mode_chapter">Тарау %1$s</string>
+    <string name="display_mode_chapter">%1$s-Тарау</string>
     <string name="download_1">Келесі тарау</string>
     <string name="custom_download">Жеке мөлшерде жүктеп алу</string>
     <string name="manga_tracking_tab">Бақылау</string>
@@ -635,7 +635,7 @@
     <string name="channel_common">Ортақ</string>
     <string name="channel_progress">Прогресс</string>
     <string name="channel_crash_logs">Қателіктер тіркеуі</string>
-    <string name="also_set_chapter_settings_for_library">Сонымен қоса кітапханадағы маңгаларға қолдану</string>
+    <string name="also_set_chapter_settings_for_library">Сонымен қоса кітапханадағы жазбаларға қолдану</string>
     <string name="chapter_settings">Тарау баптаулары</string>
     <string name="chapter_error">Қателік</string>
     <string name="chapter_paused">Тоқтатылды</string>
@@ -667,7 +667,7 @@
     <string name="chapter_progress">Бет: %1$d</string>
     <string name="confirm_set_image_as_cover">Осы суретті мұқаба ретінде қолданайық па\?</string>
     <string name="show_title">Дереккөз атауы</string>
-    <string name="dialog_with_checkbox_reset">Бұл маңга үшін түгел тарауларды қалпына келтіру</string>
+    <string name="dialog_with_checkbox_reset">Бұл жазба үшін түгел тарауларды қалпына келтіру</string>
     <string name="snack_categories_deleted">Санаттар жойылды</string>
     <string name="cover_updated">Мұқаба жаңартылды</string>
     <string name="skipped_reason_not_started">Оқитын тарау болмағандықтан өткізіп жіберілді</string>
@@ -680,7 +680,7 @@
     <string name="download_insufficient_space">Жадыда орын аз болғандықтан тараулар жүктелмеді</string>
     <string name="notification_check_updates">Жаңа тараулар бар ма екенін тексеру</string>
     <string name="notification_chapters_single_and_more">%1$s тарау мен %2$d</string>
-    <string name="notification_first_add_to_library">Бұны істер алдыңда маңганы кітапханаңызға қосыңыз</string>
+    <string name="notification_first_add_to_library">Бұны істер алдыңда жазбаны кітапханаңызға қосыңыз</string>
     <string name="skipped_reason_completed">Туынды аяқталған үшін өткізіп жіберілді</string>
     <string name="update_check_open">GitHub-та ашу</string>
     <string name="update_check_eol">Бұл Android нұсқасы қолжетімсіз</string>
@@ -697,7 +697,7 @@
     <string name="channel_ext_updates">Кеңейту жаңартулары</string>
     <string name="spen_previous_page">Алдыңғы бет</string>
     <string name="spen_next_page">Келесі бет</string>
-    <string name="appwidget_updates_description">Жақында жаңартылған маңгаларды қарау</string>
+    <string name="appwidget_updates_description">Жақында кітапханада жаңартылған жазбаларды қарау</string>
     <string name="remove_manga">\"%s\"ті кітапханадан жойғай тұрсыз</string>
     <string name="skipped_reason_not_always_update">Туындыға жаңарту керек жоқ болғандықтан өткізіп жіберіледі</string>
     <string name="update_check_notification_download_in_progress">Жүктелуде…</string>
@@ -721,7 +721,7 @@
     <string name="copy">Көшіру</string>
     <string name="empty_screen">Қателік пайда болды</string>
     <string name="notification_updating">Кітапхананы жаңарту… (%1$d/%2$d)</string>
-    <string name="download_notifier_downloader_title">Жүктеп алушы</string>
+    <string name="download_notifier_downloader_title">Жүктеуіш</string>
     <string name="file_picker_error">Файл таңдайтын қолданба табылмады</string>
     <string name="update_check_fdroid_migration_info">Жаңа нұсқа Tachiyomi сайтында қолжетімді. F-Droid қолданбасының бейресми нұсқасынан көшуді білу үшін басыңыз.</string>
     <string name="complete_list">Оқылғандар Тізімі</string>

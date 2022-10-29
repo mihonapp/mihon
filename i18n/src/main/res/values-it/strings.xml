@@ -133,8 +133,8 @@
     <string name="pref_clear_cookies">Cancella cookie</string>
     <string name="cookies_cleared">Cookie cancellati</string>
     <string name="pref_clear_database">Pulisci database</string>
-    <string name="pref_clear_database_summary">Elimina la cronologia dei manga che non sono presenti nella libreria</string>
-    <string name="clear_database_confirmation">Sei sicuro\? I capitoli letti e i progressi di lettura di elementi fuori dalla libreria verranno persi</string>
+    <string name="pref_clear_database_summary">Elimina la cronologia delle voci che non sono presenti nella libreria</string>
+    <string name="clear_database_confirmation">Sei sicuro\? I capitoli letti e i progressi di lettura di voci fuori dalla libreria verranno persi</string>
     <string name="clear_database_completed">Elementi eliminati</string>
     <!-- About section -->
     <string name="version">Versione</string>
@@ -186,7 +186,7 @@
     <string name="error_category_exists">Esiste già una categoria con questo nome!</string>
     <!-- Dialog remove recently view -->
     <string name="dialog_with_checkbox_remove_description">Questo rimuoverà la data lettura di questo capitolo. Sei sicuro\?</string>
-    <string name="dialog_with_checkbox_reset">Reimposta tutti i capitoli di questo manga</string>
+    <string name="dialog_with_checkbox_reset">Reimposta tutti i capitoli di questa voce</string>
     <!-- Image notifier -->
     <string name="picture_saved">Immagine salvata</string>
     <!-- Reader activity -->
@@ -204,7 +204,7 @@
     <!-- Library update service notifications -->
     <string name="notification_new_chapters">Nuovi capitoli trovati</string>
     <string name="notification_cover_update_failed">Impossibile aggiornare la copertina</string>
-    <string name="notification_first_add_to_library">Prima di compiere questa azione per favore aggiungi il manga alla libreria</string>
+    <string name="notification_first_add_to_library">Prima di compiere questa azione per favore aggiungi la voce alla libreria</string>
     <!-- File Picker Titles -->
     <string name="file_select_cover">Seleziona immagine di copertina</string>
     <string name="file_select_backup">Seleziona file di backup</string>
@@ -265,7 +265,7 @@
     <string name="delete_downloads_for_manga">Eliminare i capitoli scaricati?</string>
     <string name="chapter_paused">In pausa</string>
     <string name="manga_tracking_tab">Tracking</string>
-    <string name="snack_add_to_library">Aggiungere manga alla libreria\?</string>
+    <string name="snack_add_to_library">Aggiungere alla libreria\?</string>
     <string name="download_notifier_download_paused">Download in pausa</string>
     <string name="label_migration">Migra</string>
     <string name="label_extensions">Estensioni</string>
@@ -456,7 +456,7 @@
         <item quantity="many">%1$s rimanenti</item>
         <item quantity="other">%1$s rimanenti</item>
     </plurals>
-    <string name="downloaded_only_summary">Filtra tutti i manga nella tua libreria</string>
+    <string name="downloaded_only_summary">Filtra tutte le voci nella tua libreria</string>
     <string name="check_for_updates">Controlla aggiornamenti</string>
     <string name="battery_optimization_setting_activity_not_found">Impossibile aprire le impostazioni del dispositivo</string>
     <string name="pref_refresh_library_covers">Aggiorna le copertine della libreria</string>
@@ -467,7 +467,7 @@
     </plurals>
     <string name="restore_duration">%02d min, %02d sec</string>
     <string name="pref_search_pinned_sources_only">Includi solo le fonti fissate</string>
-    <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento del capitolo sui servizi di tracking. Imposta il tracking per i singoli manga dai loro pulsanti di tracking.</string>
+    <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento del capitolo sui servizi di tracking. Imposta il tracking per le singole voci dai loro pulsanti di tracking.</string>
     <string name="pref_true_color_summary">Riduce il banding, ma potrebbe influire sulle prestazioni</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoria</item>
@@ -482,7 +482,7 @@
     <string name="badges_header">Etichette</string>
     <string name="label_data">Dati</string>
     <string name="backup_restore_missing_sources">Fonti mancanti:</string>
-    <string name="invalid_backup_file_missing_manga">Il backup non contiene nessun manga.</string>
+    <string name="invalid_backup_file_missing_manga">Il backup non contiene alcuna voce di libreria.</string>
     <string name="invalid_backup_file">File di backup invalido</string>
     <string name="unofficial_extension_message">Questa estensione non è presente nella lista ufficiale delle estensioni di Tachiyomi.</string>
     <string name="ext_unofficial">Non ufficiale</string>
@@ -544,12 +544,12 @@
     <string name="chapter_settings_updated">Impostazioni predefinite dei capitoli aggiornate</string>
     <string name="share_page_info">%1$s: %2$s, pagina %3$d</string>
     <string name="set_chapter_settings_as_default">Imposta come predefinito</string>
-    <string name="also_set_chapter_settings_for_library">Applica anche a tutti i manga nella mia libreria</string>
+    <string name="also_set_chapter_settings_for_library">Applica anche a tutte le voci nella mia libreria</string>
     <string name="confirm_set_chapter_settings">Sei sicuro di voler salvare queste impostazioni come predefinite\?</string>
     <string name="chapter_settings">Impostazioni del capitolo</string>
     <string name="action_search_settings">Ricerca impostazioni</string>
     <string name="downloaded_chapters">Capitoli scaricati</string>
-    <string name="manga_from_library">Manga dalla libreria</string>
+    <string name="manga_from_library">Dalla libreria</string>
     <string name="pref_incognito_mode_summary">Sospendi cronologia di lettura</string>
     <string name="pref_incognito_mode">Modalità incognito</string>
     <string name="pref_clear_history">Svuota cronologia</string>
@@ -592,10 +592,10 @@
     <string name="pref_category_auto_download">Download automatico</string>
     <string name="nav_zone_next">Successivo</string>
     <string name="nav_zone_prev">Precedente</string>
-    <string name="pref_download_new_categories_details">I manga che si trovano in categorie escluse non saranno scaricati nonostante si trovino anche in categorie incluse.</string>
+    <string name="pref_download_new_categories_details">Le voci che si trovano in categorie escluse non saranno scaricate nonostante si trovino anche in categorie incluse.</string>
     <string name="nav_zone_right">Destra</string>
     <string name="nav_zone_left">Sinistra</string>
-    <string name="pref_library_update_categories_details">I manga in categorie escluse non saranno aggiornati nonostante si trovino anche in categorie incluse.</string>
+    <string name="pref_library_update_categories_details">Le voci in categorie escluse non saranno aggiornati nonostante si trovino anche in categorie incluse.</string>
     <string name="pref_dns_over_https">DNS su HTTPS (DoH)</string>
     <string name="pref_show_navigation_mode">Mostra sovrapposizione con zone di tocco</string>
     <string name="pref_show_navigation_mode_summary">Mostra brevemente quando il lettore viene aperto</string>
@@ -607,7 +607,7 @@
     <string name="rotation_landscape">Orizzontale</string>
     <string name="rotation_portrait">Verticale</string>
     <string name="automatic_background">Automatico</string>
-    <string name="pref_create_folder_per_manga_summary">Crea cartelle in base al titolo del manga</string>
+    <string name="pref_create_folder_per_manga_summary">Crea cartelle in base ai titoli delle voci</string>
     <string name="cancel_all_for_series">Annulla tutti per questa serie</string>
     <string name="pref_create_folder_per_manga">Salva pagine in cartelle separate</string>
     <string name="pref_reader_actions">Azioni</string>
@@ -626,7 +626,7 @@
     <string name="information_empty_category_dialog">Non hai ancora nessuna categoria.</string>
     <string name="on">Attivato</string>
     <string name="restrictions">Restrizioni: %s</string>
-    <string name="action_display_local_badge">Manga locali</string>
+    <string name="action_display_local_badge">Fonte locale</string>
     <string name="manga_cover">Copertina</string>
     <string name="local_invalid_format">Formato capitolo non valido</string>
     <string name="tracking_guide">Guida al tracking</string>
@@ -666,7 +666,7 @@
     <string name="label_default">Predefinita</string>
     <string name="label_background_activity">Attività in secondo piano</string>
     <string name="restore_miui_warning">Le funzioni di backup e ripristino potrebbero non funzionare correttamente se le ottimizzazioni MIUI sono disabilitate.</string>
-    <string name="enhanced_tracking_info">Servizi che offrono funzioni migliorate per fonti specifiche. I manga sono tracciati automaticamente quando aggiunti alla libreria.</string>
+    <string name="enhanced_tracking_info">Servizi che offrono funzioni migliorate per fonti specifiche. Le voci sono tracciate automaticamente quando aggiunte alla libreria.</string>
     <string name="enhanced_services">Servizi migliorati</string>
     <string name="pref_category_timestamps">Data e Ora</string>
     <string name="pref_category_appearance">Aspetto</string>
@@ -681,7 +681,7 @@
     <string name="ext_installer_legacy">Legacy</string>
     <string name="ext_installer_pref">Installatore</string>
     <string name="ext_install_service_notif">Installazione dell\'estensione…</string>
-    <string name="action_sort_count">Manga totali</string>
+    <string name="action_sort_count">Voci totali</string>
     <string name="pref_verbose_logging_summary">Salva i registri dettagliati nel registro di sistema (riduce le prestazioni dell\'app)</string>
     <string name="pref_verbose_logging">Registrazione dettagliata</string>
     <string name="action_display_language_badge">Lingua</string>
@@ -695,7 +695,7 @@
     <string name="ext_update_all">Aggiorna tutto</string>
     <string name="channel_app_updates">Aggiornamenti dell\'applicazione</string>
     <string name="pref_auto_clear_chapter_cache">Cancella la cache capitoli alla chiusura dell\'app</string>
-    <string name="clear_database_source_item_count">%1$d manga non presenti in libreria nel database</string>
+    <string name="clear_database_source_item_count">%1$d voci non presenti in libreria nel database</string>
     <string name="database_clean">Niente da Pulire</string>
     <string name="extension_api_error">Impossibile ottenere l\'elenco estensioni</string>
     <string name="privacy_policy">Politica sulla privacy</string>
@@ -708,7 +708,7 @@
     <string name="publishing_finished">Pubblicazione terminata</string>
     <string name="action_faq_and_guides">Domande frequenti e guide</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="action_show_manga">Mostra manga</string>
+    <string name="action_show_manga">Mostra voce</string>
     <string name="pref_navigate_pan">Scorri le pagine larghe toccando</string>
     <string name="pref_landscape_zoom">Ingrandisci le immagini orizzontali</string>
     <string name="confirm_manga_add_duplicate">Hai un elemento nella libreria con lo stesso nome ma da un altra fonte (%1$s).
@@ -740,7 +740,7 @@
     <string name="source_filter_empty_screen">Nessuna fonte installata trovata</string>
     <string name="source_empty_screen">Nessuna fonte trovata</string>
     <string name="action_sort_unread_count">Conteggio non letti</string>
-    <string name="action_sort_last_manga_update">Ultimo aggiornamento dei manga</string>
+    <string name="action_sort_last_manga_update">Ultimo aggiornamento</string>
     <string name="split_tall_images_summary">Migliora le prestazioni del lettore</string>
     <string name="split_tall_images">Dividi le immagini troppo alte</string>
     <string name="download_notifier_split_page_not_found">Pagina %d non trovata durante la divisione</string>
@@ -774,7 +774,7 @@
     <string name="action_remove_everything">Rimuovi tutto</string>
     <string name="loader_rar5_error">Il formato RARv5 non è supportato</string>
     <string name="appwidget_unavailable_locked">Widget non disponibile quando il blocco app è attivo</string>
-    <string name="appwidget_updates_description">Vedi i manga aggiornati di recente</string>
+    <string name="appwidget_updates_description">Vedi le voci aggiornate di recente</string>
     <string name="update_already_running">È già in corso un aggiornamento</string>
     <string name="error_user_agent_string_blank">La sringa «user agent» non può essere vuota</string>
     <string name="theme_tidalwave">Maremoto</string>

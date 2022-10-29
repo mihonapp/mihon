@@ -155,9 +155,9 @@
     <string name="pref_clear_cookies">Hapus cookies</string>
     <string name="cookies_cleared">Cookies dihapuskan</string>
     <string name="pref_clear_database">Hapus pangkalan data</string>
-    <string name="pref_clear_database_summary">Hapus sejarah manga yang tidak disimpan di dalam pustaka</string>
-    <string name="clear_database_confirmation">Adakah anda pasti\? Bab dibaca dan kemajuan manga bukan-pustaka akan hilang</string>
-    <string name="clear_database_completed">Pangkalan data dihapuskan</string>
+    <string name="pref_clear_database_summary">Hapus sejarah entri yang tidak disimpan di dalam pustaka</string>
+    <string name="clear_database_confirmation">Adakah anda pasti\? Bab dibaca dan kemajuan entri bukan-pustaka akan hilang</string>
+    <string name="clear_database_completed">Entri dihapuskan</string>
     <string name="pref_refresh_library_tracking">Segar semula penjejakan</string>
     <string name="pref_refresh_library_tracking_summary">Kemas kini status, skor dan bab terakhir dibaca dari perkhidmatan penjejakan</string>
     <string name="version">Versi</string>
@@ -209,8 +209,8 @@
     <string name="error_category_exists">Kategori dengan nama ini sudah wujud!</string>
     <string name="snack_categories_deleted">Kategori dipadam</string>
     <string name="dialog_with_checkbox_remove_description">Tarikh bacaan bab ini akan dipadam. Adakah anda pasti?</string>
-    <string name="dialog_with_checkbox_reset">Set semula semua bab bagi manga ini</string>
-    <string name="snack_add_to_library">Tambah manga ke pustaka\?</string>
+    <string name="dialog_with_checkbox_reset">Set semula semua bab bagi entri ini</string>
+    <string name="snack_add_to_library">Tambah ke pustaka\?</string>
     <string name="action_display_download_badge">Bab dimuat turun</string>
     <string name="picture_saved">Gambar disimpan</string>
     <string name="custom_filter">Tapisan tersuai</string>
@@ -223,7 +223,7 @@
     <string name="download_queue_error">Memuat turun bab tidak berjaya. Anda boleh mencuba lagi di bahagian muat turun</string>
     <string name="notification_new_chapters">Bab baharu dijumpai</string>
     <string name="notification_cover_update_failed">Gagal untuk kemas kini muka hadapan</string>
-    <string name="notification_first_add_to_library">Mohon tambahkan manga ke pustaka sebelum melakukan ini</string>
+    <string name="notification_first_add_to_library">Sila tambahkan entri ke pustaka sebelum melakukan ini</string>
     <string name="file_select_cover">Pilih imej muka hadapan</string>
     <string name="file_select_backup">Pilih fail sandaran</string>
     <string name="update_check_confirm">Muat turun</string>
@@ -408,7 +408,7 @@
     <string name="check_for_updates">Semak untuk kemas kini</string>
     <string name="local_source_help_guide">Panduan penggunaan sumber setempat</string>
     <string name="restore_duration">%02d minit, %02d saat</string>
-    <string name="downloaded_only_summary">Tapis semua manga di dalam pustaka anda</string>
+    <string name="downloaded_only_summary">Tapis semua entri di dalam pustaka anda</string>
     <plurals name="download_queue_summary">
         <item quantity="other">%1$s baki</item>
     </plurals>
@@ -425,12 +425,12 @@
         <item quantity="other">Selesai dalam %1$s dengan %2$s ralat</item>
     </plurals>
     <string name="action_display_unread_badge">Bab belum dibaca</string>
-    <string name="tracking_info">Sinkron satu hala untuk kemas kini bab kemajuan dalam sistem penjejakan. Sediakan penjejakan untuk penyertaan manga persendirian dari butang penjejakan mereka.</string>
+    <string name="tracking_info">Sinkron satu hala untuk kemas kini bab kemajuan dalam sistem penjejakan. Sediakan penjejakan untuk entri individu daripada butang penjejakan mereka.</string>
     <string name="pref_refresh_library_covers">Segar semula muka hadapan pustaka</string>
     <string name="sort_by_upload_date">Mengikut tarikh muat naik</string>
     <string name="label_data">Data</string>
     <string name="backup_restore_missing_sources">Tiada sumber:</string>
-    <string name="invalid_backup_file_missing_manga">Sandaran tidak mengandungi apa-apa siri.</string>
+    <string name="invalid_backup_file_missing_manga">Sandaran tidak mengandungi apa-apa entri pustaka.</string>
     <string name="invalid_backup_file">Fail sandaran tidak sah</string>
     <string name="unofficial_extension_message">Sambungan ini bukan daripada senarai sambungan Tachiyomi yang rasmi.</string>
     <string name="ext_unofficial">Tidak rasmi</string>
@@ -488,13 +488,13 @@
     <string name="no_chapters_error">Tiada bab dijumpai</string>
     <string name="chapter_settings_updated">Tetapan bab lalai dikemas kini</string>
     <string name="set_chapter_settings_as_default">Tetapkan sebagai lalai</string>
-    <string name="also_set_chapter_settings_for_library">Gunakan juga untuk semua manga dalam pustaka</string>
+    <string name="also_set_chapter_settings_for_library">Gunakan juga untuk semua entri dalam pustaka</string>
     <string name="confirm_set_chapter_settings">Adakah anda pasti ingin simpan tetapan ini sebagai lalai\?</string>
     <string name="chapter_settings">Tetapan bab</string>
     <string name="share_page_info">%1$s: %2$s, muka surat %3$d</string>
     <string name="action_search_settings">Carian tetapan</string>
     <string name="downloaded_chapters">Bab dimuat turun</string>
-    <string name="manga_from_library">Manga dari pustaka</string>
+    <string name="manga_from_library">Dari pustaka</string>
     <string name="pref_incognito_mode_summary">Menjeda sejarah membaca</string>
     <string name="pref_incognito_mode">Mod inkognito</string>
     <string name="pref_clear_history">Padamkan sejarah</string>
@@ -541,8 +541,8 @@
     <string name="exclude">Kecuali: %s</string>
     <string name="include">Hanya: %s</string>
     <string name="none">Tiada</string>
-    <string name="pref_library_update_categories_details">Manga di dalam kategori berkecuali tidak akan dikemas kini walaupun ianya ada di dalam kategori hanya.</string>
-    <string name="pref_download_new_categories_details">Manga di dalam kategori berkecuali tidak akan dimuat turun walaupun ianya ada di dalam kategori hanya.</string>
+    <string name="pref_library_update_categories_details">Entri di dalam kategori berkecuali tidak akan dikemas kini walaupun ianya ada di dalam kategori hanya.</string>
+    <string name="pref_download_new_categories_details">Entri di dalam kategori berkecuali tidak akan dimuat turun walaupun ianya ada di dalam kategori hanya.</string>
     <string name="pref_category_auto_download">Muat turun automatik</string>
     <string name="action_show_errors">Ketik untuk lihat butiran</string>
     <string name="update_check_eol">Versi Android ini tidak lagi disokong</string>
@@ -550,7 +550,7 @@
     <string name="rotation_landscape">Landskap</string>
     <string name="rotation_portrait">Potret</string>
     <string name="pref_reader_actions">Tindakan</string>
-    <string name="pref_create_folder_per_manga_summary">Mencipta folder mengikut tajuk manga</string>
+    <string name="pref_create_folder_per_manga_summary">Mencipta folder mengikut tajuk entri</string>
     <string name="pref_create_folder_per_manga">Simpan muka surat ke folder berasingan</string>
     <string name="rotation_type">Jenis putaran skrin</string>
     <string name="pref_grayscale">Skala kelabu</string>
@@ -567,7 +567,7 @@
     <string name="pref_library_update_refresh_trackers_summary">Kemas kini penjejak ketika mengemaskini pustaka</string>
     <string name="pref_library_update_refresh_trackers">Segar semula penjejak secara automatik</string>
     <string name="restrictions">Sekatan: %s</string>
-    <string name="action_display_local_badge">Manga setempat</string>
+    <string name="action_display_local_badge">Sumber setempat</string>
     <string name="off">Mati</string>
     <string name="on">Hidup</string>
     <string name="error_sharing_cover">Ralat berkongsi muka hadapan</string>
@@ -586,7 +586,7 @@
     <string name="theme_greenapple">Epal Hijau</string>
     <string name="theme_monet">Dinamik</string>
     <string name="pref_app_theme">Tema aplikasi</string>
-    <string name="enhanced_tracking_info">Perkidmatan yang menyediakan fungsi yang dipertingkatkan untuk sumber tertentu. Manga akan dijejaki secara automatik apabila ditambahkan ke pustaka.</string>
+    <string name="enhanced_tracking_info">Perkidmatan yang menyediakan fungsi yang dipertingkatkan untuk sumber tertentu. Entri akan dijejaki secara automatik apabila ditambahkan ke pustaka.</string>
     <string name="notification_updating">Mengemaskini pustaka… (%1$d/%2$d)</string>
     <string name="tracker_komga_warning">Penjejak ini cuma boleh digunakan dengan sumber Komga.</string>
     <string name="restore_miui_warning">Sandaran/memulih mungkin tidak berfungsi dengan betul jika pengoptimuman MIUI dinyahaktifkan.</string>
@@ -624,7 +624,7 @@
     <string name="ext_installer_shizuku_stopped">Shizuku tidak dijalankan</string>
     <string name="ext_installer_pref">Pemasang</string>
     <string name="ext_install_service_notif">Memasang sambungan…</string>
-    <string name="action_sort_count">Jumlah manga</string>
+    <string name="action_sort_count">Jumlah entri</string>
     <string name="pref_verbose_logging">Pengelogan berjela-jela</string>
     <string name="pref_verbose_logging_summary">Cetak log berjela ke log sistem (mengurangkan prestasi aplikasi)</string>
     <string name="label_warning">Amaran</string>
@@ -639,7 +639,7 @@
     <string name="channel_app_updates">Kemas kini aplikasi</string>
     <string name="pref_auto_clear_chapter_cache">Hapus cache bab apabila menutup aplikasi</string>
     <string name="database_clean">Tiada apa untuk dibersihkan</string>
-    <string name="clear_database_source_item_count">%1$d manga bukan pustaka dalam pangkalan data</string>
+    <string name="clear_database_source_item_count">%1$d entri bukan pustaka dalam pangkalan data</string>
     <string name="extension_api_error">Gagal mendapatkan senarai sambungan</string>
     <string name="privacy_policy">Dasar privasi</string>
     <string name="pref_library_update_manga_restriction">Langkau mengemas kini tajuk</string>
@@ -651,7 +651,7 @@
     <string name="on_hiatus">Dalam hiatus</string>
     <string name="action_faq_and_guides">Soalan Lazim dan Panduan</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="action_show_manga">Tunjuk manga</string>
+    <string name="action_show_manga">Tunjuk entri</string>
     <string name="action_filter_started">Mula</string>
     <string name="confirm_manga_add_duplicate">Anda mempunyai entri yang mempunyai nama yang sama tetapi daripada sumber yang berlainan (%1$s).
 \n
@@ -683,7 +683,7 @@
     <string name="source_filter_empty_screen">Tiada sumber dipasang ditemui</string>
     <string name="source_empty_screen">Tiada sumber ditemui</string>
     <string name="action_sort_unread_count">Kiraan belum dibaca</string>
-    <string name="action_sort_last_manga_update">Kemas kini manga terakhir</string>
+    <string name="action_sort_last_manga_update">Semakan kemas kini terakhir</string>
     <string name="split_tall_images">Memisah imej yang tinggi</string>
     <string name="split_tall_images_summary">Meningkatkan prestasi pembaca</string>
     <string name="download_notifier_split_page_not_found">Muka surat %d tidak dijumpai ketika memisah</string>
@@ -717,7 +717,7 @@
     <string name="action_remove_everything">Buang semuanya</string>
     <string name="loader_rar5_error">Format RARv5 tidak disokong</string>
     <string name="appwidget_unavailable_locked">Widget tidak tersedia apabila kekunci apl digunakan</string>
-    <string name="appwidget_updates_description">Lihat kemas kini manga terkini anda</string>
+    <string name="appwidget_updates_description">Lihat kemas kini entri pustaka terkini anda</string>
     <string name="update_already_running">Kemas kini sedang berjalan</string>
     <string name="error_user_agent_string_blank">Untaian ejen pengguna tidak boleh kosong</string>
     <string name="auto_download_while_reading">Muat turun automatik semasa membaca</string>

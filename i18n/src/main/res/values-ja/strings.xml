@@ -145,7 +145,7 @@
     <string name="pref_clear_chapter_cache">チャプタキャッシュをクリア</string>
     <string name="cache_delete_error">消去中にエラーが発生しました</string>
     <string name="pref_clear_database">データベースをクリア</string>
-    <string name="pref_clear_database_summary">ライブラリにないマンガの履歴を削除</string>
+    <string name="pref_clear_database_summary">ライブラリにない項目の履歴を削除</string>
     <string name="version">バージョン</string>
     <string name="pref_enable_acra">クラッシュレポートを送信する</string>
     <string name="login_title">%1$sにログイン</string>
@@ -188,7 +188,7 @@
     <string name="cache_deleted">キャッシュを削除しました。%1$d件のファイルは削除されました</string>
     <string name="pref_clear_cookies">Cookiesを削除</string>
     <string name="cookies_cleared">Cookiesを削除しました</string>
-    <string name="clear_database_confirmation">データベースをクリアしてもよろしいですか？ライブラリにない漫画の読んだ章と読書進捗はすべて失われます</string>
+    <string name="clear_database_confirmation">データベースをクリアしてもよろしいですか？ライブラリにない項目の読んだ章と読書進捗はすべて失われます</string>
     <string name="clear_database_completed">エントリーを削除しました</string>
     <string name="pref_refresh_library_tracking">追跡情報を更新</string>
     <string name="pref_refresh_library_tracking_summary">同期サービスでステータス、評価と最後に読んだ章を更新</string>
@@ -241,8 +241,8 @@
     <string name="error_category_exists">この名前が既に存在しています！</string>
     <string name="snack_categories_deleted">カテゴリーが削除されました</string>
     <string name="dialog_with_checkbox_remove_description">この章の読書日時を削除してもよろしいですか？</string>
-    <string name="dialog_with_checkbox_reset">このマンガの章をすべてリセット</string>
-    <string name="snack_add_to_library">マンガをライブラリに追加しますか？</string>
+    <string name="dialog_with_checkbox_reset">この項目の章をすべてリセット</string>
+    <string name="snack_add_to_library">ライブラリに追加しますか？</string>
     <string name="picture_saved">画像を保存しました</string>
     <string name="custom_filter">カスタム フィルタ</string>
     <string name="set_as_cover">カバーとして設定</string>
@@ -257,7 +257,7 @@
     <string name="download_queue_error">章のダウンロードに失敗しました。「ダウンロード」にて再試行してください</string>
     <string name="notification_new_chapters">新しい章が見つかりました</string>
     <string name="notification_cover_update_failed">カバーを更新できませんでした</string>
-    <string name="notification_first_add_to_library">まずはマンガをライブラリに追加してください</string>
+    <string name="notification_first_add_to_library">まずは項目をライブラリに追加してください</string>
     <string name="file_select_cover">カバー画像を選択</string>
     <string name="file_select_backup">バックアップファイルを選択</string>
     <string name="update_check_confirm">ダウンロード</string>
@@ -343,7 +343,7 @@
     <plurals name="download_queue_summary">
         <item quantity="other">残り%1$s件</item>
     </plurals>
-    <string name="downloaded_only_summary">ライブラリにあるマンガはフィルターされます</string>
+    <string name="downloaded_only_summary">ライブラリにある項目はフィルターされます</string>
     <string name="label_downloaded_only">ダウンロード済みのみ</string>
     <string name="check_for_updates">更新を確認</string>
     <string name="licenses">オープンソースライセンス</string>
@@ -364,11 +364,11 @@
     </plurals>
     <string name="restore_duration">%02d分%02d秒</string>
     <string name="backup_restore_missing_sources">ソースがありません：</string>
-    <string name="invalid_backup_file_missing_manga">バックアップにはマンガが含まれていません。</string>
+    <string name="invalid_backup_file_missing_manga">バックアップにはライブラリの項目が含まれません。</string>
     <string name="invalid_backup_file">バックアップファイルは無効です</string>
     <string name="pref_search_pinned_sources_only">ピン留め済みのソースのみで検索</string>
     <string name="pref_enable_automatic_extension_updates">拡張機能の更新を確認</string>
-    <string name="tracking_info">一方同期の追跡サービスにある章の読書進捗を更新します。個別のマンガの「同期」ボタンで追跡サービスを設定してください。</string>
+    <string name="tracking_info">一方同期の追跡サービスにある章の読書進捗を更新します。個別の項目の「同期」ボタンで追跡サービスを設定してください。</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_15">15%</string>
@@ -489,12 +489,12 @@
     <string name="chapter_settings_updated">デフォルトの章設定を更新しました</string>
     <string name="share_page_info">%1$s：%2$s、第%3$dページ</string>
     <string name="set_chapter_settings_as_default">デフォルトとして設定</string>
-    <string name="also_set_chapter_settings_for_library">ライブラリにあるすべてのマンガにも適用</string>
+    <string name="also_set_chapter_settings_for_library">ライブラリにあるすべての項目にも適用</string>
     <string name="confirm_set_chapter_settings">デフォルト設定として保存しますか？</string>
     <string name="chapter_settings">章の設定</string>
     <string name="action_search_settings">検索設定</string>
     <string name="downloaded_chapters">ダウンロードした章の数</string>
-    <string name="manga_from_library">ライブラリからのマンガ</string>
+    <string name="manga_from_library">ライブラリ内から</string>
     <string name="pref_incognito_mode_summary">閲覧履歴の記録を一時停止します</string>
     <string name="pref_incognito_mode">シークレット モード</string>
     <string name="pref_clear_history">履歴を全消去</string>
@@ -537,12 +537,12 @@
     <string name="pref_show_navigation_mode_summary">ビューアが立ち上がるとしばらく表示します</string>
     <string name="pref_show_navigation_mode">タップ可能なゾーンを表示</string>
     <string name="pref_dns_over_https">DNS over HTTPS（DoH）</string>
-    <string name="pref_download_new_categories_details">含まれているカテゴリーに入っていても、除外対象カテゴリーにあるマンガは更新されません。</string>
+    <string name="pref_download_new_categories_details">含まれているカテゴリーに入っていても、除外対象カテゴリーにある項目は更新されません。</string>
     <string name="pref_category_auto_download">自動ダウンロード</string>
     <string name="exclude">下記を除外：%s</string>
     <string name="include">下記を含む：%s</string>
     <string name="none">なし</string>
-    <string name="pref_library_update_categories_details">含まれているカテゴリーに入っていても、除外対象カテゴリーにあるマンガは更新されません。</string>
+    <string name="pref_library_update_categories_details">含まれているカテゴリーに入っていても、除外対象カテゴリーにある項目は更新されません。</string>
     <string name="action_show_errors">タップで詳細を表示</string>
     <string name="action_sort_chapter_fetch_date">章の取得された日付順</string>
     <string name="information_empty_category_dialog">まだカテゴリを登録していません。</string>
@@ -563,7 +563,7 @@
     <string name="tracking_guide">追跡ガイド</string>
     <string name="rotation_type">回転モード</string>
     <string name="automatic_background">自動</string>
-    <string name="pref_create_folder_per_manga_summary">マンガタイトルに基づいてフォルダを作成</string>
+    <string name="pref_create_folder_per_manga_summary">項目のタイトルに基づいてフォルダを作成</string>
     <string name="pref_create_folder_per_manga">別々のフォルダにページを保存</string>
     <string name="pref_reader_actions">操作</string>
     <string name="pref_grayscale">グレースケール</string>
@@ -574,7 +574,7 @@
     <string name="pref_library_update_refresh_trackers">トラッカーを自動でリロード</string>
     <string name="restrictions">制限：%s</string>
     <string name="cancel_all_for_series">このシリーズの全項目をキャンセル</string>
-    <string name="action_display_local_badge">ローカル マンガ</string>
+    <string name="action_display_local_badge">ローカル ソース</string>
     <string name="rotation_landscape">横向き</string>
     <string name="rotation_portrait">縦向き</string>
     <string name="pref_dark_theme_pure_black">真っ黒モード</string>
@@ -621,10 +621,10 @@
     <string name="ext_app_info">アプリの情報</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Shizukuを拡張機能インストーラーとして使用するには、Shizukuをインストールして起動してください。</string>
     <string name="ext_installer_shizuku_stopped">Shizukuは実行中ではありません</string>
-    <string name="action_sort_count">漫画の総数</string>
+    <string name="action_sort_count">項目数</string>
     <string name="ext_install_service_notif">拡張機能をインストール中…</string>
     <string name="enhanced_services">高度なサービス</string>
-    <string name="enhanced_tracking_info">特定ソース専用の高度な機能を提供するサービスです。漫画はライブラリに追加される時、自動で追跡され始めます。</string>
+    <string name="enhanced_tracking_info">特定ソース専用の高度な機能を提供するサービスです。項目はライブラリに追加される時、自動で追跡され始めます。</string>
     <string name="backup_info">ほかの場所にもバックアップのコピーを保管してください。</string>
     <string name="pref_verbose_logging_summary">システムログにverboseログを出力（アプリのパフォーマンスが低下します）</string>
     <string name="notification_size_warning">大規模のアップデートはソースに有害で、ソースを遅くし、電池の消耗を増加する可能性があります。詳しくはタップでご覧ください。</string>
@@ -637,7 +637,7 @@
     <string name="pref_library_update_show_tab_badge">更新アイコンで未読カウンターを表示</string>
     <string name="ext_update_all">全て更新</string>
     <string name="channel_app_updates">アプリ更新</string>
-    <string name="clear_database_source_item_count">データベースにはライブラリにない%1$d件のマンガがあります</string>
+    <string name="clear_database_source_item_count">データベースにはライブラリにない項目は%1$d件あります</string>
     <string name="pref_auto_clear_chapter_cache">アプリ終了時に章のキャッシュを消去</string>
     <string name="database_clean">消去できるものはありませんでした</string>
     <string name="extension_api_error">拡張機能リストを取得できませんでした</string>
@@ -651,7 +651,7 @@
     <string name="on_hiatus">休載中</string>
     <string name="action_faq_and_guides">よくあるご質問とガイド</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="action_show_manga">マンガを表示</string>
+    <string name="action_show_manga">項目を表示</string>
     <string name="action_display_cover_only_grid">表紙グリッド</string>
     <string name="action_filter_started">開始済み</string>
     <string name="pref_update_only_started">読み始めていない</string>
@@ -682,7 +682,7 @@
     <string name="pref_duplicate_pinned_sources_summary">各言語グループでもピン留め済みのソースを重複して表示します</string>
     <string name="source_empty_screen">ソースが見つかりません</string>
     <string name="source_filter_empty_screen">インストール済みのソースが見つかりません</string>
-    <string name="action_sort_last_manga_update">前回の漫画更新</string>
+    <string name="action_sort_last_manga_update">前回の更新確認</string>
     <string name="action_sort_unread_count">未読の章数</string>
     <string name="split_tall_images">長い画像を分割</string>
     <string name="split_tall_images_summary">ビューアのパフォーマンスを改善します</string>
@@ -716,7 +716,7 @@
     <string name="pref_reset_user_agent_string">デフォルトのユーザーエージェント文字列をリセットする</string>
     <string name="action_remove_everything">全て除去</string>
     <string name="loader_rar5_error">フォーマットRARv5は未対応です</string>
-    <string name="appwidget_updates_description">最近更新されたマンガを見る</string>
+    <string name="appwidget_updates_description">最近更新されたライブラリの項目を見る</string>
     <string name="appwidget_unavailable_locked">アプリロックがONの時、ウィジェットは利用できません</string>
     <string name="update_already_running">アップデートはすでに進行中です</string>
     <string name="error_user_agent_string_blank">ユーザーエージェント文字列を入力してください</string>
