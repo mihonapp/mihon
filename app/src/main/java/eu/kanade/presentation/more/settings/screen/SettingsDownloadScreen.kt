@@ -10,7 +10,6 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -27,7 +26,6 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.widget.TriStateListDialog
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -101,9 +99,11 @@ class SettingsDownloadScreen : SearchableSettings {
         return Preference.PreferenceItem.ListPreference(
             pref = currentDirPref,
             title = stringResource(R.string.pref_download_directory),
-            subtitle = remember(currentDir) {
-                UniFile.fromUri(context, currentDir.toUri())?.filePath
-            } ?: stringResource(R.string.invalid_location, currentDir),
+            subtitleProvider = { value, _ ->
+                remember(value) {
+                    UniFile.fromUri(context, value.toUri())?.filePath
+                } ?: stringResource(R.string.invalid_location, value)
+            },
             entries = mapOf(
                 defaultDirPair,
                 customDirEntryKey to stringResource(R.string.custom_dir),
@@ -173,25 +173,10 @@ class SettingsDownloadScreen : SearchableSettings {
         downloadPreferences: DownloadPreferences,
         categories: () -> List<Category>,
     ): Preference.PreferenceItem.MultiSelectListPreference {
-        val none = stringResource(R.string.none)
-        val pref = downloadPreferences.removeExcludeCategories()
-        val entries = categories().associate { it.id.toString() to it.visualName }
-        val subtitle by produceState(initialValue = "") {
-            pref.changes()
-                .stateIn(this)
-                .collect { mutable ->
-                    value = mutable
-                        .mapNotNull { id -> entries[id] }
-                        .sortedBy { entries.values.indexOf(it) }
-                        .joinToString()
-                        .ifEmpty { none }
-                }
-        }
         return Preference.PreferenceItem.MultiSelectListPreference(
-            pref = pref,
+            pref = downloadPreferences.removeExcludeCategories(),
             title = stringResource(R.string.pref_remove_exclude_categories),
-            subtitle = subtitle,
-            entries = entries,
+            entries = categories().associate { it.id.toString() to it.visualName },
         )
     }
 

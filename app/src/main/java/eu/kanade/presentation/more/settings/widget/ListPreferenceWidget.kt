@@ -39,7 +39,7 @@ fun <T> ListPreferenceWidget(
 
     TextPreferenceWidget(
         title = title,
-        subtitle = subtitle?.format(entries[value]),
+        subtitle = subtitle,
         icon = icon,
         onPreferenceClick = { showDialog(true) },
     )

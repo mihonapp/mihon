@@ -33,7 +33,7 @@ fun MultiSelectListPreferenceWidget(
 
     TextPreferenceWidget(
         title = preference.title,
-        subtitle = preference.subtitle,
+        subtitle = preference.subtitleProvider(values, preference.entries),
         icon = preference.icon,
         onPreferenceClick = { showDialog(true) },
     )

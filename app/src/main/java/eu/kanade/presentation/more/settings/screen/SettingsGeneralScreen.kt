@@ -72,7 +72,6 @@ class SettingsGeneralScreen : SearchableSettings {
                 Preference.PreferenceItem.BasicListPreference(
                     value = currentLanguage,
                     title = stringResource(R.string.pref_app_language),
-                    subtitle = "%s",
                     entries = langs,
                     onValueChanged = { newValue ->
                         currentLanguage = newValue
