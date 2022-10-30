@@ -68,12 +68,13 @@ fun LibraryContent(
 
         if (isLibraryEmpty.not() && showPageTabs && categories.size > 1) {
             LibraryTabs(
-                state = pagerState,
                 categories = categories,
+                currentPageIndex = pagerState.currentPage,
                 showMangaCount = showMangaCount,
                 getNumberOfMangaForCategory = getNumberOfMangaForCategory,
                 isDownloadOnly = isDownloadOnly,
                 isIncognitoMode = isIncognitoMode,
+                onTabItemClick = { scope.launch { pagerState.animateScrollToPage(it) } },
             )
         }
 

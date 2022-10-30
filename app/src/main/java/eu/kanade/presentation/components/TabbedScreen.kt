@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
@@ -80,9 +81,8 @@ fun TabbedScreen(
                     Tab(
                         selected = state.currentPage == index,
                         onClick = { scope.launch { state.animateScrollToPage(index) } },
-                        text = {
-                            TabText(stringResource(tab.titleRes), tab.badgeNumber, state.currentPage == index)
-                        },
+                        text = { TabText(text = stringResource(tab.titleRes), badgeCount = tab.badgeNumber) },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }

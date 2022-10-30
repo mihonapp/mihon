@@ -30,17 +30,13 @@ fun TabIndicator(currentTabPosition: TabPosition) {
 fun TabText(
     text: String,
     badgeCount: Int? = null,
-    isCurrentPage: Boolean,
 ) {
     val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = text,
-            color = if (isCurrentPage) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-        )
+        Text(text = text)
         if (badgeCount != null) {
             Pill(
                 text = "$badgeCount",
