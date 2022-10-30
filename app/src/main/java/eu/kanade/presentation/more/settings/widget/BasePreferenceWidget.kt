@@ -44,43 +44,42 @@ internal fun BasePreferenceWidget(
     widget: @Composable (() -> Unit)? = null,
 ) {
     val highlighted = LocalPreferenceHighlighted.current
-    Box(modifier = Modifier.highlightBackground(highlighted)) {
-        Row(
-            modifier = modifier
-                .sizeIn(minHeight = 56.dp)
-                .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
+    Row(
+        modifier = modifier
+            .highlightBackground(highlighted)
+            .sizeIn(minHeight = 56.dp)
+            .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (icon != null) {
+            Box(
+                modifier = Modifier.padding(start = PrefsHorizontalPadding, end = 8.dp),
+                content = { icon() },
+            )
+        }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = PrefsVerticalPadding),
         ) {
-            if (icon != null) {
-                Box(
-                    modifier = Modifier.padding(start = PrefsHorizontalPadding, end = 8.dp),
-                    content = { icon() },
+            if (!title.isNullOrBlank()) {
+                Text(
+                    modifier = Modifier.padding(horizontal = PrefsHorizontalPadding),
+                    text = title,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = TitleFontSize,
                 )
             }
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(vertical = PrefsVerticalPadding),
-            ) {
-                if (!title.isNullOrBlank()) {
-                    Text(
-                        modifier = Modifier.padding(horizontal = PrefsHorizontalPadding),
-                        text = title,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 2,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontSize = TitleFontSize,
-                    )
-                }
-                subcomponent?.invoke(this)
-            }
-            if (widget != null) {
-                Box(
-                    modifier = Modifier.padding(end = PrefsHorizontalPadding),
-                    content = { widget() },
-                )
-            }
+            subcomponent?.invoke(this)
+        }
+        if (widget != null) {
+            Box(
+                modifier = Modifier.padding(end = PrefsHorizontalPadding),
+                content = { widget() },
+            )
         }
     }
 }

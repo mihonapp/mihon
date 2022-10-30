@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SwitchPreferenceWidget(
+    modifier: Modifier = Modifier,
     title: String,
     subtitle: String? = null,
     icon: ImageVector? = null,
@@ -21,6 +22,7 @@ fun SwitchPreferenceWidget(
     onCheckedChanged: (Boolean) -> Unit,
 ) {
     TextPreferenceWidget(
+        modifier = modifier,
         title = title,
         subtitle = subtitle,
         icon = icon,

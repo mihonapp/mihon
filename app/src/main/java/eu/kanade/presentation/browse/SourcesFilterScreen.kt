@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -16,8 +15,8 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.components.PreferenceRow
 import eu.kanade.presentation.components.Scaffold
+import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.source.FilterUiModel
 import eu.kanade.tachiyomi.ui.browse.source.SourcesFilterPresenter
@@ -119,13 +118,11 @@ private fun SourcesFilterHeader(
     enabled: Boolean,
     onClickItem: (String) -> Unit,
 ) {
-    PreferenceRow(
+    SwitchPreferenceWidget(
         modifier = modifier,
         title = LocaleHelper.getSourceDisplayName(language, LocalContext.current),
-        action = {
-            Switch(checked = enabled, onCheckedChange = null)
-        },
-        onClick = { onClickItem(language) },
+        checked = enabled,
+        onCheckedChanged = { onClickItem(language) },
     )
 }
 
