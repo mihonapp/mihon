@@ -1,5 +1,8 @@
 package eu.kanade.presentation.more
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudOff
@@ -43,7 +46,9 @@ fun MoreScreen(
 
     ScrollbarLazyColumn(
         modifier = Modifier.statusBarsPadding(),
-        contentPadding = TachiyomiBottomNavigationView.withBottomNavPadding(),
+        contentPadding = TachiyomiBottomNavigationView.withBottomNavPadding(
+            WindowInsets.navigationBars.asPaddingValues(),
+        ),
     ) {
         item {
             LogoHeader()
