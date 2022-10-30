@@ -1,13 +1,11 @@
 package eu.kanade.presentation.category.components
 
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.ExtendedFloatingActionButton
 import eu.kanade.presentation.util.isScrolledToEnd
@@ -23,8 +21,6 @@ fun CategoryFloatingActionButton(
         text = { Text(text = stringResource(R.string.action_add)) },
         icon = { Icon(imageVector = Icons.Outlined.Add, contentDescription = "") },
         onClick = onCreate,
-        modifier = Modifier
-            .navigationBarsPadding(),
         expanded = lazyListState.isScrollingUp() || lazyListState.isScrolledToEnd(),
     )
 }

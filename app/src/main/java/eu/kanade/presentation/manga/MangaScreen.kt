@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -214,8 +213,6 @@ private fun MangaScreenSmallImpl(
     BackHandler(onBack = internalOnBackPressed)
 
     Scaffold(
-        modifier = Modifier
-            .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
         topBar = {
             val firstVisibleItemIndex by remember {
                 derivedStateOf { chapterListState.firstVisibleItemIndex }
@@ -277,8 +274,6 @@ private fun MangaScreenSmallImpl(
                     icon = { Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null) },
                     onClick = onContinueReading,
                     expanded = chapterListState.isScrollingUp() || chapterListState.isScrolledToEnd(),
-                    modifier = Modifier
-                        .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()),
                 )
             }
         },
@@ -291,14 +286,18 @@ private fun MangaScreenSmallImpl(
             enabled = chapters.none { it.selected },
             indicatorPadding = contentPadding,
         ) {
+            val layoutDirection = LocalLayoutDirection.current
             VerticalFastScroller(
                 listState = chapterListState,
                 topContentPadding = topPadding,
+                endContentPadding = contentPadding.calculateEndPadding(layoutDirection),
             ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxHeight(),
                     state = chapterListState,
                     contentPadding = PaddingValues(
+                        start = contentPadding.calculateStartPadding(layoutDirection),
+                        end = contentPadding.calculateEndPadding(layoutDirection),
                         bottom = contentPadding.calculateBottomPadding(),
                     ),
                 ) {
@@ -434,7 +433,6 @@ fun MangaScreenLargeImpl(
         BackHandler(onBack = internalOnBackPressed)
 
         Scaffold(
-            modifier = Modifier.padding(insetPadding),
             topBar = {
                 MangaToolbar(
                     modifier = Modifier.onSizeChanged { topBarHeight = it.height },
@@ -490,13 +488,15 @@ fun MangaScreenLargeImpl(
                         icon = { Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null) },
                         onClick = onContinueReading,
                         expanded = chapterListState.isScrollingUp() || chapterListState.isScrolledToEnd(),
-                        modifier = Modifier
-                            .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()),
                     )
                 }
             },
         ) { contentPadding ->
             TwoPanelBox(
+                modifier = Modifier.padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection),
+                ),
                 startContent = {
                     Column(
                         modifier = Modifier
