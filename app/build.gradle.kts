@@ -113,7 +113,6 @@ android {
             "META-INF/README.md",
             "META-INF/NOTICE",
             "META-INF/*.kotlin_module",
-            "META-INF/*.version",
         ))
     }
 
@@ -295,6 +294,11 @@ androidComponents {
         if (variantBuilder.buildType == "benchmark") {
             variantBuilder.enable = variantBuilder.productFlavors.containsAll(listOf("default" to "dev"))
         }
+    }
+    onVariants(selector().withFlavor("default" to "standard")) {
+        // Only excluding in standard flavor because this breaks
+        // Layout Inspector's Compose tree
+        it.packaging.resources.excludes.add("META-INF/*.version")
     }
 }
 
