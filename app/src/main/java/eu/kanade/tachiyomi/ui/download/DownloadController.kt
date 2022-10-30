@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -52,6 +50,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.ExtendedFloatingActionButton
+import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.components.Pill
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.tachiyomi.R
@@ -61,7 +60,6 @@ import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
 import eu.kanade.tachiyomi.util.lang.launchUI
-import me.saket.cascade.CascadeDropdownMenu
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -147,69 +145,69 @@ class DownloadController :
                     navigateUp = router::popCurrentController,
                     actions = {
                         if (downloadList.isNotEmpty()) {
-                            var expanded by remember { mutableStateOf(false) }
-                            Box {
-                                IconButton(onClick = { expanded = !expanded }) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.MoreVert,
-                                        contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
-                                    )
-                                }
-                                CascadeDropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false },
-                                ) {
-                                    DropdownMenuItem(
-                                        text = { Text(text = stringResource(R.string.action_reorganize_by)) },
-                                        children = {
-                                            DropdownMenuItem(
-                                                text = { Text(text = stringResource(R.string.action_order_by_upload_date)) },
-                                                children = {
-                                                    DropdownMenuItem(
-                                                        text = { Text(text = stringResource(R.string.action_newest)) },
-                                                        onClick = {
-                                                            reorderQueue({ it.download.chapter.date_upload }, true)
-                                                            expanded = false
-                                                        },
-                                                    )
-                                                    DropdownMenuItem(
-                                                        text = { Text(text = stringResource(R.string.action_oldest)) },
-                                                        onClick = {
-                                                            reorderQueue({ it.download.chapter.date_upload }, false)
-                                                            expanded = false
-                                                        },
-                                                    )
-                                                },
-                                            )
-                                            DropdownMenuItem(
-                                                text = { Text(text = stringResource(R.string.action_order_by_chapter_number)) },
-                                                children = {
-                                                    DropdownMenuItem(
-                                                        text = { Text(text = stringResource(R.string.action_asc)) },
-                                                        onClick = {
-                                                            reorderQueue({ it.download.chapter.chapter_number }, false)
-                                                            expanded = false
-                                                        },
-                                                    )
-                                                    DropdownMenuItem(
-                                                        text = { Text(text = stringResource(R.string.action_desc)) },
-                                                        onClick = {
-                                                            reorderQueue({ it.download.chapter.chapter_number }, true)
-                                                            expanded = false
-                                                        },
-                                                    )
-                                                },
-                                            )
-                                        },
-                                    )
-                                    DropdownMenuItem(
-                                        text = { Text(text = stringResource(R.string.action_cancel_all)) },
-                                        onClick = {
-                                            presenter.clearQueue(context)
-                                            expanded = false
-                                        },
-                                    )
-                                }
+                            OverflowMenu { closeMenu ->
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(R.string.action_reorganize_by)) },
+                                    children = {
+                                        DropdownMenuItem(
+                                            text = { Text(text = stringResource(R.string.action_order_by_upload_date)) },
+                                            children = {
+                                                DropdownMenuItem(
+                                                    text = { Text(text = stringResource(R.string.action_newest)) },
+                                                    onClick = {
+                                                        reorderQueue(
+                                                            { it.download.chapter.date_upload },
+                                                            true,
+                                                        )
+                                                        closeMenu()
+                                                    },
+                                                )
+                                                DropdownMenuItem(
+                                                    text = { Text(text = stringResource(R.string.action_oldest)) },
+                                                    onClick = {
+                                                        reorderQueue(
+                                                            { it.download.chapter.date_upload },
+                                                            false,
+                                                        )
+                                                        closeMenu()
+                                                    },
+                                                )
+                                            },
+                                        )
+                                        DropdownMenuItem(
+                                            text = { Text(text = stringResource(R.string.action_order_by_chapter_number)) },
+                                            children = {
+                                                DropdownMenuItem(
+                                                    text = { Text(text = stringResource(R.string.action_asc)) },
+                                                    onClick = {
+                                                        reorderQueue(
+                                                            { it.download.chapter.chapter_number },
+                                                            false,
+                                                        )
+                                                        closeMenu()
+                                                    },
+                                                )
+                                                DropdownMenuItem(
+                                                    text = { Text(text = stringResource(R.string.action_desc)) },
+                                                    onClick = {
+                                                        reorderQueue(
+                                                            { it.download.chapter.chapter_number },
+                                                            true,
+                                                        )
+                                                        closeMenu()
+                                                    },
+                                                )
+                                            },
+                                        )
+                                    },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(R.string.action_cancel_all)) },
+                                    onClick = {
+                                        presenter.clearQueue(context)
+                                        closeMenu()
+                                    },
+                                )
                             }
                         }
                     },

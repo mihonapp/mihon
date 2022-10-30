@@ -1,14 +1,12 @@
 package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FlipToBack
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.DropdownMenuItem
@@ -19,10 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -32,7 +26,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.components.DropdownMenu
+import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.components.Pill
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.library.LibraryState
@@ -137,34 +131,21 @@ fun LibraryRegularToolbar(
             IconButton(onClick = onClickFilter) {
                 Icon(Icons.Outlined.FilterList, contentDescription = stringResource(R.string.action_filter), tint = filterTint)
             }
-            var moreExpanded by remember { mutableStateOf(false) }
-            Box {
-                IconButton(onClick = { moreExpanded = !moreExpanded }) {
-                    Icon(
-                        imageVector = Icons.Outlined.MoreVert,
-                        contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
-                    )
-                }
-                val onDismissRequest = { moreExpanded = false }
-                DropdownMenu(
-                    expanded = moreExpanded,
-                    onDismissRequest = onDismissRequest,
-                ) {
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(R.string.pref_category_library_update)) },
-                        onClick = {
-                            onClickRefresh()
-                            onDismissRequest()
-                        },
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(R.string.action_open_random_manga)) },
-                        onClick = {
-                            onClickOpenRandomManga()
-                            onDismissRequest()
-                        },
-                    )
-                }
+            OverflowMenu { closeMenu ->
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(R.string.pref_category_library_update)) },
+                    onClick = {
+                        onClickRefresh()
+                        closeMenu()
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(R.string.action_open_random_manga)) },
+                    onClick = {
+                        onClickOpenRandomManga()
+                        closeMenu()
+                    },
+                )
             }
         },
         incognitoMode = incognitoMode,

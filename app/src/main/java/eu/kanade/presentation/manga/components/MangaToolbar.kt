@@ -8,7 +8,6 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FlipToBack
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -20,10 +19,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
@@ -31,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DropdownMenu
+import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.theme.active
 import eu.kanade.tachiyomi.R
@@ -157,46 +155,33 @@ fun MangaToolbar(
                     }
 
                     if (onClickEditCategory != null || onClickMigrate != null || onClickShare != null) {
-                        var moreExpanded by remember { mutableStateOf(false) }
-                        Box {
-                            IconButton(onClick = { moreExpanded = !moreExpanded }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.MoreVert,
-                                    contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
+                        OverflowMenu { closeMenu ->
+                            if (onClickEditCategory != null) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(R.string.action_edit_categories)) },
+                                    onClick = {
+                                        onClickEditCategory()
+                                        closeMenu()
+                                    },
                                 )
                             }
-                            val onDismissRequest = { moreExpanded = false }
-                            DropdownMenu(
-                                expanded = moreExpanded,
-                                onDismissRequest = onDismissRequest,
-                            ) {
-                                if (onClickEditCategory != null) {
-                                    DropdownMenuItem(
-                                        text = { Text(text = stringResource(R.string.action_edit_categories)) },
-                                        onClick = {
-                                            onClickEditCategory()
-                                            onDismissRequest()
-                                        },
-                                    )
-                                }
-                                if (onClickMigrate != null) {
-                                    DropdownMenuItem(
-                                        text = { Text(text = stringResource(R.string.action_migrate)) },
-                                        onClick = {
-                                            onClickMigrate()
-                                            onDismissRequest()
-                                        },
-                                    )
-                                }
-                                if (onClickShare != null) {
-                                    DropdownMenuItem(
-                                        text = { Text(text = stringResource(R.string.action_share)) },
-                                        onClick = {
-                                            onClickShare()
-                                            onDismissRequest()
-                                        },
-                                    )
-                                }
+                            if (onClickMigrate != null) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(R.string.action_migrate)) },
+                                    onClick = {
+                                        onClickMigrate()
+                                        closeMenu()
+                                    },
+                                )
+                            }
+                            if (onClickShare != null) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(R.string.action_share)) },
+                                    onClick = {
+                                        onClickShare()
+                                        closeMenu()
+                                    },
+                                )
                             }
                         }
                     }
