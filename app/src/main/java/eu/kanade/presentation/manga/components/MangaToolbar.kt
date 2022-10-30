@@ -156,7 +156,7 @@ fun MangaToolbar(
                         Icon(Icons.Outlined.FilterList, contentDescription = stringResource(R.string.action_filter), tint = filterTint)
                     }
 
-                    if (onClickEditCategory != null && onClickMigrate != null) {
+                    if (onClickEditCategory != null || onClickMigrate != null || onClickShare != null) {
                         var moreExpanded by remember { mutableStateOf(false) }
                         Box {
                             IconButton(onClick = { moreExpanded = !moreExpanded }) {
@@ -170,20 +170,24 @@ fun MangaToolbar(
                                 expanded = moreExpanded,
                                 onDismissRequest = onDismissRequest,
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.action_edit_categories)) },
-                                    onClick = {
-                                        onClickEditCategory()
-                                        onDismissRequest()
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.action_migrate)) },
-                                    onClick = {
-                                        onClickMigrate()
-                                        onDismissRequest()
-                                    },
-                                )
+                                if (onClickEditCategory != null) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(R.string.action_edit_categories)) },
+                                        onClick = {
+                                            onClickEditCategory()
+                                            onDismissRequest()
+                                        },
+                                    )
+                                }
+                                if (onClickMigrate != null) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(R.string.action_migrate)) },
+                                        onClick = {
+                                            onClickMigrate()
+                                            onDismissRequest()
+                                        },
+                                    )
+                                }
                                 if (onClickShare != null) {
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(R.string.action_share)) },
