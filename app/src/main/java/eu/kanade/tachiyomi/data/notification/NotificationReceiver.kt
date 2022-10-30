@@ -271,11 +271,9 @@ class NotificationReceiver : BroadcastReceiver() {
      */
     private fun downloadChapters(chapterUrls: Array<String>, mangaId: Long) {
         launchIO {
-            val manga = getManga.await(mangaId)
+            val manga = getManga.await(mangaId) ?: return@launchIO
             val chapters = chapterUrls.mapNotNull { getChapter.await(it, mangaId)?.toDbChapter() }
-            if (manga != null && chapters.isNotEmpty()) {
-                downloadManager.downloadChapters(manga, chapters)
-            }
+            downloadManager.downloadChapters(manga, chapters)
         }
     }
 

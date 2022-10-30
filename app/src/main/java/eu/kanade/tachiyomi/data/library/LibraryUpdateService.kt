@@ -415,8 +415,7 @@ class LibraryUpdateService(
     private fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
         // We don't want to start downloading while the library is updating, because websites
         // may don't like it and they could ban the user.
-        val dbChapters = chapters.map { it.toDbChapter() }
-        downloadManager.downloadChapters(manga, dbChapters, false)
+        downloadManager.downloadChapters(manga, chapters.map { it.toDbChapter() }, false)
     }
 
     /**

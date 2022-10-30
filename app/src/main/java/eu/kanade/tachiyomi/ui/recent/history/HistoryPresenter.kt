@@ -11,7 +11,7 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.history.interactor.DeleteAllHistory
 import eu.kanade.domain.history.interactor.GetHistory
-import eu.kanade.domain.history.interactor.GetNextChapter
+import eu.kanade.domain.history.interactor.GetNextUnreadChapters
 import eu.kanade.domain.history.interactor.RemoveHistoryById
 import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
 import eu.kanade.domain.history.model.HistoryWithRelations
@@ -37,7 +37,7 @@ import java.util.Date
 class HistoryPresenter(
     private val state: HistoryStateImpl = HistoryState() as HistoryStateImpl,
     private val getHistory: GetHistory = Injekt.get(),
-    private val getNextChapter: GetNextChapter = Injekt.get(),
+    private val getNextUnreadChapters: GetNextUnreadChapters = Injekt.get(),
     private val deleteAllHistory: DeleteAllHistory = Injekt.get(),
     private val removeHistoryById: RemoveHistoryById = Injekt.get(),
     private val removeHistoryByMangaId: RemoveHistoryByMangaId = Injekt.get(),
@@ -94,7 +94,7 @@ class HistoryPresenter(
 
     fun getNextChapterForManga(mangaId: Long, chapterId: Long) {
         presenterScope.launchIO {
-            val chapter = getNextChapter.await(mangaId, chapterId)
+            val chapter = getNextUnreadChapters.await(mangaId, chapterId).firstOrNull()
             _events.send(if (chapter != null) Event.OpenChapter(chapter) else Event.NoNextChapterFound)
         }
     }
@@ -111,7 +111,7 @@ class HistoryPresenter(
 
     fun resumeLastChapterRead() {
         presenterScope.launchIO {
-            val chapter = getNextChapter.await()
+            val chapter = getNextUnreadChapters.await()
             _events.send(if (chapter != null) Event.OpenChapter(chapter) else Event.NoNextChapterFound)
         }
     }
