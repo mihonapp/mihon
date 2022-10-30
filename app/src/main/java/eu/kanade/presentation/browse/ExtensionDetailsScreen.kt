@@ -4,8 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.util.DisplayMetrics
-import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -56,6 +54,7 @@ import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
+import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TrailingWidgetBuffer
 import eu.kanade.presentation.util.horizontalPadding
@@ -193,20 +192,6 @@ private fun ExtensionDetails(
             }
         }
     }
-}
-
-@Composable
-private fun WarningBanner(@StringRes textRes: Int) {
-    Text(
-        text = stringResource(textRes),
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.error)
-            .padding(16.dp),
-        color = MaterialTheme.colorScheme.onError,
-        style = MaterialTheme.typography.bodyMedium,
-        textAlign = TextAlign.Center,
-    )
 }
 
 @Composable

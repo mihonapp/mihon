@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.vectorResource
 import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.ScrollbarLazyColumn
+import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.R
@@ -35,6 +37,7 @@ import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
 @Composable
 fun MoreScreen(
     presenter: MorePresenter,
+    isFDroid: Boolean,
     onClickDownloadQueue: () -> Unit,
     onClickCategories: () -> Unit,
     onClickBackupAndRestore: () -> Unit,
@@ -50,6 +53,17 @@ fun MoreScreen(
             WindowInsets.navigationBars.asPaddingValues(),
         ),
     ) {
+        if (isFDroid) {
+            item {
+                WarningBanner(
+                    textRes = R.string.fdroid_warning,
+                    modifier = Modifier.clickable {
+                        uriHandler.openUri("https://tachiyomi.org/help/faq/#how-do-i-migrate-from-the-f-droid-version")
+                    },
+                )
+            }
+        }
+
         item {
             LogoHeader()
         }

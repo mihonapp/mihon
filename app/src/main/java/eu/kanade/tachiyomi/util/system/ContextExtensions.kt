@@ -39,6 +39,7 @@ import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.TabletUiMode
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
@@ -393,8 +394,8 @@ fun Context.isPackageInstalled(packageName: String): Boolean {
     }
 }
 
-fun Context.getInstallerPackageName(): String? {
-    return try {
+fun Context.isInstalledFromFDroid(): Boolean {
+    val installerPackageName = try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             packageManager.getInstallSourceInfo(packageName).installingPackageName
         } else {
@@ -404,6 +405,10 @@ fun Context.getInstallerPackageName(): String? {
     } catch (e: Exception) {
         null
     }
+
+    return installerPackageName == "org.fdroid.fdroid" ||
+        // F-Droid builds typically disable the updater
+        (!BuildConfig.INCLUDE_UPDATER && !isDevFlavor)
 }
 
 fun Context.getApplicationIcon(pkgName: String): Drawable? {

@@ -1,5 +1,6 @@
 package eu.kanade.presentation.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
+
+@Composable
+fun WarningBanner(
+    @StringRes textRes: Int,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = stringResource(textRes),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.error)
+            .padding(16.dp),
+        color = MaterialTheme.colorScheme.onError,
+        style = MaterialTheme.typography.bodyMedium,
+        textAlign = TextAlign.Center,
+    )
+}
 
 @Composable
 fun AppStateBanners(
