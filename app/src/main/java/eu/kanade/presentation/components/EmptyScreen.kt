@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastFirstOrNull
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
@@ -100,9 +101,9 @@ fun EmptyScreen(
         modifier = modifier.fillMaxSize(),
     ) { measurables, constraints ->
         val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
-        val facePlaceable = measurables.first { it.layoutId == "face" }
+        val facePlaceable = measurables.fastFirstOrNull { it.layoutId == "face" }!!
             .measure(looseConstraints)
-        val actionsPlaceable = measurables.firstOrNull { it.layoutId == "actions" }
+        val actionsPlaceable = measurables.fastFirstOrNull { it.layoutId == "actions" }
             ?.measure(looseConstraints)
 
         layout(constraints.maxWidth, constraints.maxHeight) {

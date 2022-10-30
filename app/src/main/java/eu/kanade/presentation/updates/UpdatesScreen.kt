@@ -21,6 +21,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.util.fastAll
+import androidx.compose.ui.util.fastAny
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.EmptyScreen
@@ -241,24 +243,24 @@ private fun UpdatesBottomBar(
         modifier = Modifier.fillMaxWidth(),
         onBookmarkClicked = {
             onMultiBookmarkClicked.invoke(selected, true)
-        }.takeIf { selected.any { !it.update.bookmark } },
+        }.takeIf { selected.fastAny { !it.update.bookmark } },
         onRemoveBookmarkClicked = {
             onMultiBookmarkClicked.invoke(selected, false)
-        }.takeIf { selected.all { it.update.bookmark } },
+        }.takeIf { selected.fastAll { it.update.bookmark } },
         onMarkAsReadClicked = {
             onMultiMarkAsReadClicked(selected, true)
-        }.takeIf { selected.any { !it.update.read } },
+        }.takeIf { selected.fastAny { !it.update.read } },
         onMarkAsUnreadClicked = {
             onMultiMarkAsReadClicked(selected, false)
-        }.takeIf { selected.any { it.update.read } },
+        }.takeIf { selected.fastAny { it.update.read } },
         onDownloadClicked = {
             onDownloadChapter(selected, ChapterDownloadAction.START)
         }.takeIf {
-            selected.any { it.downloadStateProvider() != Download.State.DOWNLOADED }
+            selected.fastAny { it.downloadStateProvider() != Download.State.DOWNLOADED }
         },
         onDeleteClicked = {
             onMultiDeleteClicked(selected)
-        }.takeIf { selected.any { it.downloadStateProvider() == Download.State.DOWNLOADED } },
+        }.takeIf { selected.fastAny { it.downloadStateProvider() == Download.State.DOWNLOADED } },
     )
 }
 

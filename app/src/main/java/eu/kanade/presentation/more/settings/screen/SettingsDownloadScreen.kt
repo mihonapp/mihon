@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.util.fastMap
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.category.interactor.GetCategories
@@ -204,8 +205,8 @@ class SettingsDownloadScreen : SearchableSettings {
                 itemLabel = { it.visualName },
                 onDismissRequest = { showDialog = false },
                 onValueChanged = { newIncluded, newExcluded ->
-                    downloadNewChapterCategoriesPref.set(newIncluded.map { it.id.toString() }.toSet())
-                    downloadNewChapterCategoriesExcludePref.set(newExcluded.map { it.id.toString() }.toSet())
+                    downloadNewChapterCategoriesPref.set(newIncluded.fastMap { it.id.toString() }.toSet())
+                    downloadNewChapterCategoriesExcludePref.set(newExcluded.fastMap { it.id.toString() }.toSet())
                     showDialog = false
                 },
             )

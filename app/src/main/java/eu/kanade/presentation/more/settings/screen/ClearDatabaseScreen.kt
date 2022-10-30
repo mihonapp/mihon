@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastMap
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -240,14 +241,14 @@ private class ClearDatabaseScreenModel : StateScreenModel<ClearDatabaseScreenMod
 
     fun selectAll() = mutableState.update { state ->
         if (state !is State.Ready) return@update state
-        state.copy(selection = state.items.map { it.id })
+        state.copy(selection = state.items.fastMap { it.id })
     }
 
     fun invertSelection() = mutableState.update { state ->
         if (state !is State.Ready) return@update state
         state.copy(
             selection = state.items
-                .map { it.id }
+                .fastMap { it.id }
                 .filterNot { it in state.selection },
         )
     }

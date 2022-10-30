@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.util.fastAll
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.library.model.display
 import eu.kanade.domain.manga.model.isLocal
@@ -62,7 +63,7 @@ fun LibraryScreen(
                 onChangeCategoryClicked = onChangeCategoryClicked,
                 onMarkAsReadClicked = onMarkAsReadClicked,
                 onMarkAsUnreadClicked = onMarkAsUnreadClicked,
-                onDownloadClicked = onDownloadClicked.takeIf { presenter.selection.none { it.manga.isLocal() } },
+                onDownloadClicked = onDownloadClicked.takeIf { presenter.selection.fastAll { !it.manga.isLocal() } },
                 onDeleteClicked = onDeleteClicked,
             )
         },

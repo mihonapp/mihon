@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.util.fastMap
 import androidx.core.content.ContextCompat
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.bluelinelabs.conductor.Router
@@ -124,9 +125,9 @@ class SettingsLibraryScreen : SearchableSettings {
 
         // For default category
         val ids = listOf(libraryPreferences.defaultCategory().defaultValue()) +
-            allCategories.map { it.id.toInt() }
+            allCategories.fastMap { it.id.toInt() }
         val labels = listOf(stringResource(R.string.default_category_summary)) +
-            allCategories.map { it.visualName(context) }
+            allCategories.fastMap { it.visualName(context) }
 
         return Preference.PreferenceGroup(
             title = stringResource(R.string.categories),
