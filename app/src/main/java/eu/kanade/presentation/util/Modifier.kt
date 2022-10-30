@@ -29,7 +29,7 @@ fun Modifier.selectedBackground(isSelected: Boolean): Modifier = composed {
     }
 }
 
-fun Modifier.secondaryItemAlpha(): Modifier = this.alpha(.78f)
+fun Modifier.secondaryItemAlpha(): Modifier = this.alpha(SecondaryItemAlpha)
 
 fun Modifier.clickableNoIndication(
     onLongClick: (() -> Unit)? = null,

@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.ChapterDownloadIndicator
 import eu.kanade.presentation.util.ReadItemAlpha
+import eu.kanade.presentation.util.SecondaryItemAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 
@@ -67,6 +68,7 @@ fun MangaChapterListItem(
                 MaterialTheme.colorScheme.onSurface
             }
             val textAlpha = remember(read) { if (read) ReadItemAlpha else 1f }
+            val textSubtitleAlpha = remember(read) { if (read) ReadItemAlpha else SecondaryItemAlpha }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 var textHeight by remember { mutableStateOf(0) }
@@ -91,7 +93,7 @@ fun MangaChapterListItem(
                 )
             }
             Spacer(modifier = Modifier.height(6.dp))
-            Row(modifier = Modifier.alpha(textAlpha)) {
+            Row(modifier = Modifier.alpha(textSubtitleAlpha)) {
                 ProvideTextStyle(
                     value = MaterialTheme.typography.bodyMedium
                         .copy(color = textColor, fontSize = 12.sp),

@@ -12,3 +12,4 @@ val verticalPadding = vertical
 val topPaddingValues = PaddingValues(top = vertical)
 
 const val ReadItemAlpha = .38f
+const val SecondaryItemAlpha = .78f
