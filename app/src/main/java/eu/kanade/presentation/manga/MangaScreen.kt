@@ -500,7 +500,8 @@ fun MangaScreenLargeImpl(
                 startContent = {
                     Column(
                         modifier = Modifier
-                            .verticalScroll(rememberScrollState()),
+                            .verticalScroll(rememberScrollState())
+                            .padding(bottom = contentPadding.calculateBottomPadding()),
                     ) {
                         MangaInfoBox(
                             isTabletUi = true,
