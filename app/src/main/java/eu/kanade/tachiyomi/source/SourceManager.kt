@@ -32,13 +32,7 @@ class SourceManager(
 
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
 
-    private var sourcesMap = ConcurrentHashMap<Long, Source>()
-        set(value) {
-            field = value
-            sourcesMapFlow.value = field
-        }
-
-    private val sourcesMapFlow = MutableStateFlow(sourcesMap)
+    private val sourcesMapFlow = MutableStateFlow(ConcurrentHashMap<Long, Source>())
 
     private val stubSourcesMap = ConcurrentHashMap<Long, StubSource>()
 
@@ -56,7 +50,7 @@ class SourceManager(
                             registerStubSource(it.toSourceData())
                         }
                     }
-                    sourcesMap = mutableMap
+                    sourcesMapFlow.value = mutableMap
                 }
         }
 
@@ -72,18 +66,18 @@ class SourceManager(
     }
 
     fun get(sourceKey: Long): Source? {
-        return sourcesMap[sourceKey]
+        return sourcesMapFlow.value[sourceKey]
     }
 
     fun getOrStub(sourceKey: Long): Source {
-        return sourcesMap[sourceKey] ?: stubSourcesMap.getOrPut(sourceKey) {
+        return sourcesMapFlow.value[sourceKey] ?: stubSourcesMap.getOrPut(sourceKey) {
             runBlocking { createStubSource(sourceKey) }
         }
     }
 
-    fun getOnlineSources() = sourcesMap.values.filterIsInstance<HttpSource>()
+    fun getOnlineSources() = sourcesMapFlow.value.values.filterIsInstance<HttpSource>()
 
-    fun getCatalogueSources() = sourcesMap.values.filterIsInstance<CatalogueSource>()
+    fun getCatalogueSources() = sourcesMapFlow.value.values.filterIsInstance<CatalogueSource>()
 
     fun getStubSources(): List<StubSource> {
         val onlineSourceIds = getOnlineSources().map { it.id }

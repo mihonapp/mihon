@@ -131,7 +131,7 @@ open class BrowseSourcePresenter(
                 .map {
                     it.map { sManga ->
                         withIOContext {
-                            networkToLocalManga.await(sManga.toDomainManga(), sourceId)
+                            networkToLocalManga.await(sManga.toDomainManga(sourceId))
                         }
                     }
                 }

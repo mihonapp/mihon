@@ -260,6 +260,6 @@ open class GlobalSearchPresenter(
      * @return a manga from the database.
      */
     protected open suspend fun networkToLocalManga(sManga: SManga, sourceId: Long): DomainManga {
-        return networkToLocalManga.await(sManga.toDomainManga(), sourceId)
+        return networkToLocalManga.await(sManga.toDomainManga(sourceId))
     }
 }

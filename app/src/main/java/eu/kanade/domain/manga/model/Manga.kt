@@ -232,7 +232,7 @@ fun Manga.toMangaUpdate(): MangaUpdate {
     )
 }
 
-fun SManga.toDomainManga(): Manga {
+fun SManga.toDomainManga(sourceId: Long): Manga {
     return Manga.create().copy(
         url = url,
         title = title,
@@ -244,6 +244,7 @@ fun SManga.toDomainManga(): Manga {
         thumbnailUrl = thumbnail_url,
         updateStrategy = update_strategy,
         initialized = initialized,
+        source = sourceId,
     )
 }
 

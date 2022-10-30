@@ -7,11 +7,11 @@ class NetworkToLocalManga(
     private val mangaRepository: MangaRepository,
 ) {
 
-    suspend fun await(manga: Manga, sourceId: Long): Manga {
-        val localManga = getManga(manga.url, sourceId)
+    suspend fun await(manga: Manga): Manga {
+        val localManga = getManga(manga.url, manga.source)
         return when {
             localManga == null -> {
-                val id = insertManga(manga, sourceId)
+                val id = insertManga(manga)
                 manga.copy(id = id!!)
             }
             !localManga.favorite -> {
@@ -29,7 +29,7 @@ class NetworkToLocalManga(
         return mangaRepository.getMangaByUrlAndSourceId(url, sourceId)
     }
 
-    private suspend fun insertManga(manga: Manga, sourceId: Long): Long? {
-        return mangaRepository.insert(manga.copy(source = sourceId))
+    private suspend fun insertManga(manga: Manga): Long? {
+        return mangaRepository.insert(manga)
     }
 }
