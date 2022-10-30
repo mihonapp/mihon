@@ -2,6 +2,7 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -39,7 +40,10 @@ fun LibraryList(
     ) {
         item {
             if (searchQuery.isNullOrEmpty().not()) {
-                TextButton(onClick = onGlobalSearchClicked) {
+                TextButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onGlobalSearchClicked,
+                ) {
                     Text(
                         text = stringResource(R.string.action_global_search_query, searchQuery!!),
                         modifier = Modifier.zIndex(99f),
