@@ -72,6 +72,7 @@
     <string name="action_disable_all">Disable all</string>
     <string name="action_edit">Edit</string>
     <string name="action_add">Add</string>
+    <string name="action_open_random_manga">Open random entry</string>
     <string name="action_add_category">Add category</string>
     <string name="action_edit_categories">Edit categories</string>
     <string name="action_rename_category">Rename category</string>
@@ -842,6 +843,7 @@
     <string name="information_no_recent">No recent updates</string>
     <string name="information_no_recent_manga">Nothing read recently</string>
     <string name="information_empty_library">Your library is empty</string>
+    <string name="information_no_entries_found">No entries found in this category</string>
     <string name="getting_started_guide">Getting started guide</string>
     <string name="information_empty_category">You have no categories. Tap the plus button to create one for organizing your library.</string>
     <string name="information_empty_category_dialog">You don\'t have any categories yet.</string>

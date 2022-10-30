@@ -36,6 +36,7 @@ fun LibraryScreen(
     onClickInvertSelection: () -> Unit,
     onClickFilter: () -> Unit,
     onClickRefresh: (Category?) -> Boolean,
+    onClickOpenRandomManga: () -> Unit,
 ) {
     Scaffold(
         topBar = { scrollBehavior ->
@@ -51,6 +52,7 @@ fun LibraryScreen(
                 onClickInvertSelection = onClickInvertSelection,
                 onClickFilter = onClickFilter,
                 onClickRefresh = { onClickRefresh(null) },
+                onClickOpenRandomManga = onClickOpenRandomManga,
                 scrollBehavior = scrollBehavior.takeIf { !tabVisible }, // For scroll overlay when no tab
             )
         },

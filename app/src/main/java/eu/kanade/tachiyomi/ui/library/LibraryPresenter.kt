@@ -526,7 +526,7 @@ class LibraryPresenter(
 
     @Composable
     fun getMangaForCategory(page: Int): List<LibraryItem> {
-        val unfiltered = remember(categories, loadedManga) {
+        val unfiltered = remember(categories, loadedManga, page) {
             val categoryId = categories.getOrNull(page)?.id ?: -1
             loadedManga[categoryId] ?: emptyList()
         }

@@ -43,6 +43,8 @@ class LibraryController(
     @Composable
     override fun ComposeContent() {
         val context = LocalContext.current
+        val getMangaForCategory = presenter.getMangaForCategory(page = presenter.activeCategory)
+
         LibraryScreen(
             presenter = presenter,
             onMangaClicked = ::openManga,
@@ -59,6 +61,14 @@ class LibraryController(
                 val started = LibraryUpdateService.start(context, it)
                 context.toast(if (started) R.string.updating_category else R.string.update_already_running)
                 started
+            },
+            onClickOpenRandomManga = {
+                val items = getMangaForCategory.map { it.libraryManga.manga.id }
+                if (getMangaForCategory.isNotEmpty()) {
+                    openManga(items.random())
+                } else {
+                    context.toast(R.string.information_no_entries_found)
+                }
             },
             onClickInvertSelection = { presenter.invertSelection(presenter.activeCategory) },
             onClickSelectAll = { presenter.selectAll(presenter.activeCategory) },
