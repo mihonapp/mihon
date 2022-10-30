@@ -1,6 +1,5 @@
 package eu.kanade.presentation.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
@@ -13,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,8 +35,11 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -215,15 +219,22 @@ fun AppBarActions(
     }
 }
 
+/**
+ * @param searchEnabled Set to false if you don't want to show search action.
+ * @param searchQuery If null, use normal toolbar.
+ * @param placeholderText If null, [R.string.action_search_hint] is used.
+ */
 @Composable
 fun SearchToolbar(
-    searchQuery: String,
-    onChangeSearchQuery: (String) -> Unit,
+    titleContent: @Composable () -> Unit = {},
+    navigateUp: (() -> Unit)? = null,
+    searchEnabled: Boolean = true,
+    searchQuery: String?,
+    onChangeSearchQuery: (String?) -> Unit,
     placeholderText: String? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    onClickCloseSearch: () -> Unit,
-    onClickResetSearch: () -> Unit,
+    onSearch: (String) -> Unit = {},
+    onClickCloseSearch: () -> Unit = { onChangeSearchQuery(null) },
+    actions: @Composable RowScope.() -> Unit = {},
     incognitoMode: Boolean = false,
     downloadedOnlyMode: Boolean = false,
     scrollBehavior: TopAppBarScrollBehavior? = null,
@@ -231,9 +242,15 @@ fun SearchToolbar(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     val focusRequester = remember { FocusRequester() }
+    var searchClickCount by remember { mutableStateOf(0) }
 
     AppBar(
         titleContent = {
+            if (searchQuery == null) return@AppBar titleContent()
+
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val focusManager = LocalFocusManager.current
+
             BasicTextField(
                 value = searchQuery,
                 onValueChange = onChangeSearchQuery,
@@ -245,8 +262,14 @@ fun SearchToolbar(
                     fontWeight = FontWeight.Normal,
                     fontSize = 18.sp,
                 ),
-                keyboardOptions = keyboardOptions,
-                keyboardActions = keyboardActions,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        onSearch(searchQuery)
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                    },
+                ),
                 singleLine = true,
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
                 visualTransformation = visualTransformation,
@@ -260,7 +283,7 @@ fun SearchToolbar(
                         visualTransformation = visualTransformation,
                         interactionSource = interactionSource,
                         placeholder = {
-                            if (!placeholderText.isNullOrEmpty()) {
+                            (placeholderText ?: stringResource(R.string.action_search_hint)).let { placeholderText ->
                                 Text(
                                     modifier = Modifier.secondaryItemAlpha(),
                                     text = placeholderText,
@@ -277,22 +300,41 @@ fun SearchToolbar(
                 },
             )
         },
-        navigationIcon = Icons.Outlined.ArrowBack,
-        navigateUp = onClickCloseSearch,
+        navigateUp = if (searchQuery == null) navigateUp else onClickCloseSearch,
         actions = {
-            AnimatedVisibility(visible = searchQuery.isNotEmpty()) {
-                IconButton(onClick = onClickResetSearch) {
-                    Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.action_reset))
+            key("search") {
+                val onClick = {
+                    searchClickCount++
+                    onChangeSearchQuery("")
+                }
+
+                if (!searchEnabled) {
+                    // Don't show search action
+                } else if (searchQuery == null) {
+                    IconButton(onClick) {
+                        Icon(Icons.Outlined.Search, contentDescription = stringResource(R.string.action_search))
+                    }
+                } else if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick) {
+                        Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.action_reset))
+                    }
                 }
             }
+
+            key("actions") { actions() }
         },
         isActionMode = false,
         downloadedOnlyMode = downloadedOnlyMode,
         incognitoMode = incognitoMode,
         scrollBehavior = scrollBehavior,
     )
-    LaunchedEffect(focusRequester) {
-        focusRequester.requestFocus()
+    LaunchedEffect(searchClickCount) {
+        if (searchQuery == null) return@LaunchedEffect
+        try {
+            focusRequester.requestFocus()
+        } catch (_: Throwable) {
+            // TextField is gone
+        }
     }
 }
 

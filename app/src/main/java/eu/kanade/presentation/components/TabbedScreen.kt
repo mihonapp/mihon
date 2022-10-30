@@ -26,7 +26,6 @@ fun TabbedScreen(
     tabs: List<TabContent>,
     startIndex: Int? = null,
     searchQuery: String? = null,
-    @StringRes placeholderRes: Int? = null,
     onChangeSearchQuery: (String?) -> Unit = {},
     incognitoMode: Boolean,
     downloadedOnlyMode: Boolean,
@@ -42,28 +41,16 @@ fun TabbedScreen(
 
     Scaffold(
         topBar = {
-            if (searchQuery == null) {
-                AppBar(
-                    title = stringResource(titleRes),
-                    actions = {
-                        AppBarActions(tabs[state.currentPage].actions)
-                    },
-                )
-            } else {
-                SearchToolbar(
-                    searchQuery = searchQuery,
-                    placeholderText = placeholderRes?.let { stringResource(it) },
-                    onChangeSearchQuery = {
-                        onChangeSearchQuery(it)
-                    },
-                    onClickCloseSearch = {
-                        onChangeSearchQuery(null)
-                    },
-                    onClickResetSearch = {
-                        onChangeSearchQuery("")
-                    },
-                )
-            }
+            val tab = tabs[state.currentPage]
+            val searchEnabled = tab.searchEnabled
+
+            SearchToolbar(
+                titleContent = { AppBarTitle(stringResource(titleRes)) },
+                searchEnabled = searchEnabled,
+                searchQuery = if (searchEnabled) searchQuery else null,
+                onChangeSearchQuery = onChangeSearchQuery,
+                actions = { AppBarActions(tab.actions) },
+            )
         },
     ) { contentPadding ->
         Column(
@@ -108,6 +95,7 @@ fun TabbedScreen(
 data class TabContent(
     @StringRes val titleRes: Int,
     val badgeNumber: Int? = null,
+    val searchEnabled: Boolean = false,
     val actions: List<AppBar.Action> = emptyList(),
     val content: @Composable (contentPadding: PaddingValues) -> Unit,
 )

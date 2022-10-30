@@ -6,12 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.collectAsLazyPagingItems
 import eu.kanade.domain.manga.model.Manga
-import eu.kanade.presentation.browse.components.BrowseSourceSearchToolbar
 import eu.kanade.presentation.components.Scaffold
-import eu.kanade.tachiyomi.R
+import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourcePresenter
 import eu.kanade.tachiyomi.ui.more.MoreController
@@ -38,13 +36,11 @@ fun SourceSearchScreen(
 
     Scaffold(
         topBar = { scrollBehavior ->
-            BrowseSourceSearchToolbar(
+            SearchToolbar(
                 searchQuery = presenter.searchQuery ?: "",
-                onSearchQueryChanged = { presenter.searchQuery = it },
-                placeholderText = stringResource(R.string.action_search_hint),
-                navigateUp = navigateUp,
-                onResetClick = { presenter.searchQuery = "" },
-                onSearchClick = { presenter.search(it) },
+                onChangeSearchQuery = { presenter.searchQuery = it },
+                onClickCloseSearch = navigateUp,
+                onSearch = { presenter.search(it) },
                 scrollBehavior = scrollBehavior,
             )
         },

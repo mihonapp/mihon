@@ -163,6 +163,7 @@ open class BrowseSourcePresenter(
         Filter.valueOf(query ?: "").let {
             if (it !is Filter.UserInput) {
                 state.currentFilter = it
+                state.searchQuery = null
                 return
             }
         }

@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -21,13 +20,8 @@ fun extensionsTab(
 ) = TabContent(
     titleRes = R.string.label_extensions,
     badgeNumber = presenter.updates.takeIf { it > 0 },
+    searchEnabled = true,
     actions = listOf(
-        AppBar.Action(
-            title = stringResource(R.string.action_search),
-            icon = Icons.Outlined.Search,
-            onClick = { presenter.search("") },
-        ),
-
         AppBar.Action(
             title = stringResource(R.string.action_filter),
             icon = Icons.Outlined.Translate,

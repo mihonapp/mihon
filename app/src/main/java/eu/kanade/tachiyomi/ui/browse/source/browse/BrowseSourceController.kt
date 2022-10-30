@@ -119,11 +119,7 @@ open class BrowseSourceController(bundle: Bundle) :
 
     private fun navigateUp() {
         when {
-            presenter.searchQuery != null -> presenter.searchQuery = null
-            presenter.isUserQuery -> {
-                val (_, filters) = presenter.currentFilter as BrowseSourcePresenter.Filter.UserInput
-                presenter.search(query = "", filters = filters)
-            }
+            !presenter.isUserQuery && presenter.searchQuery != null -> presenter.searchQuery = null
             else -> router.popCurrentController()
         }
     }
