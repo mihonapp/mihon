@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppStateBanners
+import eu.kanade.presentation.components.DownloadDropdownMenu
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.manga.DownloadAction
@@ -99,53 +100,11 @@ fun MangaToolbar(
                                 )
                             }
                             val onDismissRequest = { onDownloadExpanded(false) }
-                            DropdownMenu(
+                            DownloadDropdownMenu(
                                 expanded = downloadExpanded,
                                 onDismissRequest = onDismissRequest,
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.download_1)) },
-                                    onClick = {
-                                        onClickDownload(DownloadAction.NEXT_1_CHAPTER)
-                                        onDismissRequest()
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.download_5)) },
-                                    onClick = {
-                                        onClickDownload(DownloadAction.NEXT_5_CHAPTERS)
-                                        onDismissRequest()
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.download_10)) },
-                                    onClick = {
-                                        onClickDownload(DownloadAction.NEXT_10_CHAPTERS)
-                                        onDismissRequest()
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.download_custom)) },
-                                    onClick = {
-                                        onClickDownload(DownloadAction.CUSTOM)
-                                        onDismissRequest()
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.download_unread)) },
-                                    onClick = {
-                                        onClickDownload(DownloadAction.UNREAD_CHAPTERS)
-                                        onDismissRequest()
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.download_all)) },
-                                    onClick = {
-                                        onClickDownload(DownloadAction.ALL_CHAPTERS)
-                                        onDismissRequest()
-                                    },
-                                )
-                            }
+                                onDownloadClicked = onClickDownload,
+                            )
                         }
                     }
 

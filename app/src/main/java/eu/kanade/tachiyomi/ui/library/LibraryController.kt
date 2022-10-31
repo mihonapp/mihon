@@ -15,6 +15,8 @@ import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.presentation.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.DeleteLibraryMangaDialog
 import eu.kanade.presentation.library.LibraryScreen
+import eu.kanade.presentation.manga.DownloadAction
+import eu.kanade.presentation.manga.components.DownloadCustomAmountDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
@@ -54,7 +56,7 @@ class LibraryController(
             onChangeCategoryClicked = ::showMangaCategoriesDialog,
             onMarkAsReadClicked = { markReadStatus(true) },
             onMarkAsUnreadClicked = { markReadStatus(false) },
-            onDownloadClicked = ::downloadUnreadChapters,
+            onDownloadClicked = ::runDownloadChapterAction,
             onDeleteClicked = ::showDeleteMangaDialog,
             onClickFilter = ::showSettingsSheet,
             onClickRefresh = {
@@ -97,6 +99,16 @@ class LibraryController(
                     onDismissRequest = onDismissRequest,
                     onConfirm = { deleteManga, deleteChapter ->
                         presenter.removeMangas(dialog.manga.map { it.toDbManga() }, deleteManga, deleteChapter)
+                        presenter.clearSelection()
+                    },
+                )
+            }
+            is LibraryPresenter.Dialog.DownloadCustomAmount -> {
+                DownloadCustomAmountDialog(
+                    maxAmount = dialog.max,
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { amount ->
+                        presenter.downloadUnreadChapters(dialog.manga, amount)
                         presenter.clearSelection()
                     },
                 )
@@ -218,9 +230,22 @@ class LibraryController(
         }
     }
 
-    private fun downloadUnreadChapters() {
-        val mangaList = presenter.selection.toList()
-        presenter.downloadUnreadChapters(mangaList.map { it.manga })
+    private fun runDownloadChapterAction(action: DownloadAction) {
+        val mangas = presenter.selection.map { it.manga }.toList()
+        when (action) {
+            DownloadAction.NEXT_1_CHAPTER -> presenter.downloadUnreadChapters(mangas, 1)
+            DownloadAction.NEXT_5_CHAPTERS -> presenter.downloadUnreadChapters(mangas, 5)
+            DownloadAction.NEXT_10_CHAPTERS -> presenter.downloadUnreadChapters(mangas, 10)
+            DownloadAction.UNREAD_CHAPTERS -> presenter.downloadUnreadChapters(mangas, null)
+            DownloadAction.CUSTOM -> {
+                presenter.dialog = LibraryPresenter.Dialog.DownloadCustomAmount(
+                    mangas,
+                    presenter.selection.maxOf { it.unreadCount }.toInt(),
+                )
+                return
+            }
+            else -> {}
+        }
         presenter.clearSelection()
     }
 

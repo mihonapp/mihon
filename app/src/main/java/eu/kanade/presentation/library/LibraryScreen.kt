@@ -18,6 +18,7 @@ import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
+import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibraryPresenter
 import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
@@ -30,7 +31,7 @@ fun LibraryScreen(
     onChangeCategoryClicked: () -> Unit,
     onMarkAsReadClicked: () -> Unit,
     onMarkAsUnreadClicked: () -> Unit,
-    onDownloadClicked: () -> Unit,
+    onDownloadClicked: (DownloadAction) -> Unit,
     onDeleteClicked: () -> Unit,
     onClickUnselectAll: () -> Unit,
     onClickSelectAll: () -> Unit,
