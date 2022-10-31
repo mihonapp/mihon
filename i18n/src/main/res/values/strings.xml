@@ -244,7 +244,7 @@
     <string name="battery_not_low">When battery not low</string>
     <string name="restrictions">Restrictions: %s</string>
 
-    <string name="pref_library_update_manga_restriction">Skip updating titles</string>
+    <string name="pref_library_update_manga_restriction">Skip updating entries</string>
     <string name="pref_update_only_completely_read">With unread chapter(s)</string>
     <string name="pref_update_only_non_completed">With \"Completed\" status</string>
     <string name="pref_update_only_started">That haven\'t been started</string>
@@ -342,7 +342,7 @@
     <string name="pref_reader_actions">Actions</string>
     <string name="pref_read_with_long_tap">Show on long tap</string>
     <string name="pref_create_folder_per_manga">Save pages into separate folders</string>
-    <string name="pref_create_folder_per_manga_summary">Creates folders according to entries\' titles</string>
+    <string name="pref_create_folder_per_manga_summary">Creates folders according to entries\' title</string>
     <string name="pref_reader_theme">Background color</string>
     <string name="white_background">White</string>
     <string name="gray_background">Gray</string>
@@ -788,8 +788,8 @@
     <string name="notification_size_warning">Large updates harm sources and may lead to slower updates and also increased battery usage. Tap to learn more.</string>
     <string name="notification_new_chapters">New chapters found</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">For %d title</item>
-        <item quantity="other">For %d titles</item>
+        <item quantity="one">For %d entry</item>
+        <item quantity="other">For %d entries</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d new chapter</item>
