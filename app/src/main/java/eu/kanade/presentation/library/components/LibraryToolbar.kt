@@ -77,7 +77,6 @@ fun LibraryRegularToolbar(
     scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
-    val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
     SearchToolbar(
         titleContent = {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -99,9 +98,11 @@ fun LibraryRegularToolbar(
         searchQuery = searchQuery,
         onChangeSearchQuery = onChangeSearchQuery,
         actions = {
+            val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
             IconButton(onClick = onClickFilter) {
                 Icon(Icons.Outlined.FilterList, contentDescription = stringResource(R.string.action_filter), tint = filterTint)
             }
+
             OverflowMenu { closeMenu ->
                 DropdownMenuItem(
                     text = { Text(text = stringResource(R.string.pref_category_library_update)) },
