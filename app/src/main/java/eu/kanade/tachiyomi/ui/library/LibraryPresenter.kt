@@ -17,10 +17,9 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
-import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SetReadStatus
-import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.toDbChapter
+import eu.kanade.domain.history.interactor.GetNextUnreadChapters
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.library.model.LibrarySort
 import eu.kanade.domain.library.model.sort
@@ -40,13 +39,11 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.lang.withIOContext
@@ -81,7 +78,7 @@ class LibraryPresenter(
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
     private val getTracksPerManga: GetTracksPerManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
-    private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
+    private val getNextUnreadChapters: GetNextUnreadChapters = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
@@ -404,25 +401,6 @@ class LibraryPresenter(
         return mangaCategories.flatten().distinct().subtract(common)
     }
 
-    fun shouldDownloadChapter(manga: Manga, chapter: Chapter): Boolean {
-        val activeDownload = downloadManager.queue.find { chapter.id == it.chapter.id }
-        val downloaded = downloadManager.isChapterDownloaded(chapter.name, chapter.scanlator, manga.title, manga.source)
-        val state = when {
-            activeDownload != null -> activeDownload.status
-            downloaded -> Download.State.DOWNLOADED
-            else -> Download.State.NOT_DOWNLOADED
-        }
-        return state == Download.State.NOT_DOWNLOADED
-    }
-
-    suspend fun getNotDownloadedUnreadChapters(manga: Manga): List<Chapter> {
-        return getChapterByMangaId.await(manga.id)
-            .filter { chapter ->
-                !chapter.read && shouldDownloadChapter(manga, chapter)
-            }
-            .sortedWith(getChapterSort(manga, sortDescending = false))
-    }
-
     /**
      * Queues the amount specified of unread chapters from the list of mangas given.
      *
@@ -432,10 +410,19 @@ class LibraryPresenter(
     fun downloadUnreadChapters(mangas: List<Manga>, amount: Int?) {
         presenterScope.launchNonCancellable {
             mangas.forEach { manga ->
-                val chapters = getNotDownloadedUnreadChapters(manga)
+                val chapters = getNextUnreadChapters.await(manga.id)
+                    .filterNot { chapter ->
+                        downloadManager.queue.any { chapter.id == it.chapter.id } ||
+                            downloadManager.isChapterDownloaded(
+                                chapter.name,
+                                chapter.scanlator,
+                                manga.title,
+                                manga.source,
+                            )
+                    }
                     .let { if (amount != null) it.take(amount) else it }
-                    .map { it.toDbChapter() }
-                downloadManager.downloadChapters(manga, chapters)
+
+                downloadManager.downloadChapters(manga, chapters.map { it.toDbChapter() })
             }
         }
     }

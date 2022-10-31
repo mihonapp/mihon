@@ -9,7 +9,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -174,6 +173,7 @@ private fun RowScope.Button(
     toConfirm: Boolean,
     onLongClick: () -> Unit,
     onClick: () -> Unit,
+    content: (@Composable () -> Unit)? = null,
 ) {
     val animatedWeight by animateFloatAsState(if (toConfirm) 2f else 1f)
     Column(
@@ -205,6 +205,7 @@ private fun RowScope.Button(
                 style = MaterialTheme.typography.labelSmall,
             )
         }
+        content?.invoke()
     }
 }
 
@@ -274,15 +275,14 @@ fun LibraryBottomActionMenu(
                     )
                 }
                 if (onDownloadClicked != null) {
-                    Box {
-                        var downloadExpanded by remember { mutableStateOf(false) }
-                        this@Row.Button(
-                            title = stringResource(R.string.action_download),
-                            icon = Icons.Outlined.Download,
-                            toConfirm = confirm[3],
-                            onLongClick = { onLongClickItem(3) },
-                            onClick = { downloadExpanded = !downloadExpanded },
-                        )
+                    var downloadExpanded by remember { mutableStateOf(false) }
+                    Button(
+                        title = stringResource(R.string.action_download),
+                        icon = Icons.Outlined.Download,
+                        toConfirm = confirm[3],
+                        onLongClick = { onLongClickItem(3) },
+                        onClick = { downloadExpanded = !downloadExpanded },
+                    ) {
                         val onDismissRequest = { downloadExpanded = false }
                         DownloadDropdownMenu(
                             expanded = downloadExpanded,

@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DownloadDropdownMenu
-import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.theme.active
