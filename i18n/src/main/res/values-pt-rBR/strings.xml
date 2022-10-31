@@ -223,7 +223,7 @@
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
     <string name="update_check_look_for_updates">Procurando por atualizações…</string>
     <string name="update_check_notification_download_in_progress">Fazendo download…</string>
-    <string name="update_check_notification_download_complete">Toque para instalar</string>
+    <string name="update_check_notification_download_complete">Toque para instalar a atualização</string>
     <string name="update_check_notification_download_error">Erro ao fazer download</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
     <string name="information_no_downloads">Nenhum download</string>
@@ -306,7 +306,7 @@
     <string name="action_webview_refresh">Recarregar</string>
     <string name="pref_category_library">Biblioteca</string>
     <string name="ext_obsolete">Obsoleta</string>
-    <string name="obsolete_extension_message">Esta extensão não está mais disponível.</string>
+    <string name="obsolete_extension_message">Esta extensão não está mais disponível. Ela pode não funcionar corretamente e pode causar problemas no aplicativo. É recomendado desinstalá-la.</string>
     <string name="no_results_found">Nenhum resultado encontrado</string>
     <string name="migration_selection_prompt">Selecione uma fonte da qual migrar</string>
     <string name="pref_date_format">Formato de data</string>
@@ -364,9 +364,9 @@
     <string name="email">Endereço de email</string>
     <string name="pref_always_show_chapter_transition">Sempre mostrar a transição entre capítulos</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Para %d título</item>
-        <item quantity="many">Para %d títulos</item>
-        <item quantity="other">Para %d títulos</item>
+        <item quantity="one">Para %d item</item>
+        <item quantity="many">Para %d itens</item>
+        <item quantity="other">Para %d itens</item>
     </plurals>
     <string name="action_menu">Menu</string>
     <string name="action_reorganize_by">Reordenar</string>
@@ -667,7 +667,7 @@
     <string name="extension_api_error">Erro ao obter a lista de extensões</string>
     <string name="privacy_policy">Política de privacidade</string>
     <string name="pref_update_only_completely_read">Com capítulos não lidos</string>
-    <string name="pref_library_update_manga_restriction">Pular a atualização de títulos</string>
+    <string name="pref_library_update_manga_restriction">Pular a atualização de itens</string>
     <string name="library_errors_help">Para obter ajuda sobre como corrigir erros de atualização da biblioteca, veja %1$s</string>
     <string name="save_chapter_as_cbz">Salvar como arquivo CBZ</string>
     <string name="publishing_finished">Publicação finalizada</string>
@@ -781,4 +781,8 @@
     <string name="updates_last_update_info_just_now">Agora</string>
     <string name="download_notifier_cache_renewal">Indexando os downloads</string>
     <string name="channel_downloader_cache">Cache de downloads</string>
+    <string name="action_open_random_manga">Abrir um item aleatório</string>
+    <string name="information_no_entries_found">Nenhum item encontrado nesta categoria</string>
+    <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente.
+\nToque para saber mais.</string>
 </resources>

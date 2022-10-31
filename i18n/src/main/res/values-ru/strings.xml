@@ -185,7 +185,7 @@
     <string name="update_check_confirm">Загрузить</string>
     <string name="update_check_look_for_updates">Поиск обновлений…</string>
     <string name="update_check_no_new_updates">Нет обновлений</string>
-    <string name="update_check_notification_download_complete">Нажмите для установки</string>
+    <string name="update_check_notification_download_complete">Нажмите для установки обновления</string>
     <string name="update_check_notification_download_error">Ошибка загрузки</string>
     <string name="update_check_notification_download_in_progress">Загрузка…</string>
     <string name="update_check_notification_update_available">Доступно обновление!</string>
@@ -308,7 +308,7 @@
     <string name="action_webview_refresh">Обновить</string>
     <string name="pref_category_library">Библиотека</string>
     <string name="ext_obsolete">Устарело</string>
-    <string name="obsolete_extension_message">Это расширение больше недоступно.</string>
+    <string name="obsolete_extension_message">Это расширение больше недоступно. Оно может работать неправильно, а также вызвать проблемы с приложением. Рекомендуется его удалить.</string>
     <string name="pref_date_format">Формат даты</string>
     <string name="pref_category_library_update">Глобальное обновление</string>
     <string name="logout_title">Выйти из %1$s\?</string>
@@ -358,10 +358,10 @@
         <item quantity="other">%1$d новых глав</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Для %d серии</item>
-        <item quantity="few">Для %d серий</item>
-        <item quantity="many">Для %d серий</item>
-        <item quantity="other">Для %d серий</item>
+        <item quantity="one">Для %d записи</item>
+        <item quantity="few">Для %d записей</item>
+        <item quantity="many">Для %d записей</item>
+        <item quantity="other">Для %d записей</item>
     </plurals>
     <string name="notification_check_updates">Проверка наличия новых глав</string>
     <string name="updating_library">Обновление библиотеки</string>
@@ -582,7 +582,7 @@
     <string name="clipboard_copy_error">Не удалось скопировать в буфер обмена</string>
     <string name="rotation_landscape">Альбомная</string>
     <string name="rotation_portrait">Портретная</string>
-    <string name="pref_create_folder_per_manga_summary">Создавать папки в соответствии с названиями записей</string>
+    <string name="pref_create_folder_per_manga_summary">Создавать папки в соответствии с названием записей</string>
     <string name="pref_create_folder_per_manga">Сохранять страницы в отдельные папки</string>
     <string name="pref_reader_actions">Действия</string>
     <string name="rotation_type">Ориентация</string>
@@ -679,7 +679,7 @@
     <string name="extension_api_error">Не удалось получить список расширений</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="pref_update_only_completely_read">Есть непрочитанные главы</string>
-    <string name="pref_library_update_manga_restriction">Пропускать обновления</string>
+    <string name="pref_library_update_manga_restriction">Пропускать обновления записей</string>
     <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки нажать %1$s</string>
     <string name="save_chapter_as_cbz">Сохранить как архив CBZ</string>
     <string name="cancelled">Отменено</string>
@@ -792,4 +792,10 @@
     <string name="invalid_location">Недопустимое расположение: %s</string>
     <string name="error_user_agent_string_invalid">Недопустимый параметр user agent</string>
     <string name="updates_last_update_info_just_now">Только что</string>
+    <string name="download_notifier_cache_renewal">Индексирование загрузок</string>
+    <string name="channel_downloader_cache">Кэш загрузок</string>
+    <string name="information_no_entries_found">В этой категории нет записей</string>
+    <string name="action_open_random_manga">Открыть случайную запись</string>
+    <string name="fdroid_warning">Сборки F-Droid официально не поддерживаются.
+\nНажмите, чтобы узнать больше.</string>
 </resources>

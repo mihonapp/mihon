@@ -167,15 +167,15 @@
     <string name="backup_choice">Hva ønsker du å sikkerhetskopiere\?</string>
     <string name="restoring_backup">Gjenoppretter sikkerhetskopi</string>
     <string name="creating_backup">Oppretter sikkerhetskopi</string>
-    <string name="pref_clear_chapter_cache">Tøm kapittelhurtiglager</string>
+    <string name="pref_clear_chapter_cache">Tøm kapittelhurtigbuffer</string>
     <string name="used_cache">Brukt: %1$s</string>
-    <string name="cache_deleted">Hurtiglager tømt. %1$d filer har blitt slettet</string>
+    <string name="cache_deleted">Hurtigbuffer tømt. %1$d filer har blitt slettet</string>
     <string name="cache_delete_error">Feil oppstod under opprensing</string>
     <string name="pref_clear_cookies">Tøm informasjonskapsler</string>
     <string name="cookies_cleared">Informasjonskapsler slettet</string>
     <string name="pref_clear_database">Tøm database</string>
-    <string name="pref_clear_database_summary">Slett historikk for manga som ikke er lagret i biblioteket ditt</string>
-    <string name="clear_database_confirmation">Er du sikker\? Leste kapitler og framdrift for manga som ikke er i biblioteket vil gå tapt</string>
+    <string name="pref_clear_database_summary">Slett historikk for oppføringer som ikke er lagret i biblioteket ditt</string>
+    <string name="clear_database_confirmation">Er du sikker\? Leste kapitler og framdrift for oppføringer som ikke er i biblioteket vil gå tapt</string>
     <string name="clear_database_completed">Oppføringer slettet</string>
     <string name="pref_refresh_library_tracking">Oppdater sporing</string>
     <string name="pref_refresh_library_tracking_summary">Oppdaterer status, poengsum og sist leste kapittel fra sporingstjenestene</string>
@@ -239,8 +239,8 @@
     <string name="error_category_exists">En kategori ved dette navnet finnes allerede!</string>
     <string name="snack_categories_deleted">Kategorier slettet</string>
     <string name="dialog_with_checkbox_remove_description">Lesningsdato for dette kapittelet vil bli fjernet. Er du sikker\?</string>
-    <string name="dialog_with_checkbox_reset">Tilbakestill alle kapittel for denne mangaen</string>
-    <string name="snack_add_to_library">Legg manga til i bibliotek\?</string>
+    <string name="dialog_with_checkbox_reset">Tilbakestill alle kapittel for denne oppføringen</string>
+    <string name="snack_add_to_library">Legg til i bibliotek\?</string>
     <string name="picture_saved">Bilde lagret</string>
     <string name="custom_filter">Egendefinert filter</string>
     <string name="set_as_cover">Sett som omslag</string>
@@ -276,13 +276,13 @@
     <string name="pager_viewer">Sider</string>
     <string name="confirm_set_image_as_cover">Bruk dette bildet som omslag\?</string>
     <string name="download_queue_error">Kunne ikke laste ned kapitler. Du kan prøve igjen i nedlastingsdelen</string>
-    <string name="notification_first_add_to_library">Legg til mangaen i biblioteket ditt før du gjør dette</string>
+    <string name="notification_first_add_to_library">Legg til oppføringen i biblioteket ditt før du gjør dette</string>
     <string name="file_select_cover">Velg omslagsbilde</string>
     <string name="file_select_backup">Velg sikkerhetskopifil</string>
     <string name="update_check_no_new_updates">Ingen nye oppdateringer tilgjengelige</string>
     <string name="update_check_look_for_updates">Ser etter oppdateringer…</string>
     <string name="update_check_notification_download_in_progress">Laster ned…</string>
-    <string name="update_check_notification_download_complete">Nedlasting ferdig</string>
+    <string name="update_check_notification_download_complete">Trykk for å installere oppdatering</string>
     <string name="update_check_notification_download_error">Feil ved nedlasting</string>
     <string name="update_check_notification_update_available">Ny versjon tilgjengelig!</string>
     <string name="information_no_downloads">Ingen nedlastinger</string>
@@ -308,7 +308,7 @@
     <string name="action_webview_refresh">Gjenoppfrisk</string>
     <string name="pref_category_library">Bibliotek</string>
     <string name="ext_obsolete">Foreldet</string>
-    <string name="obsolete_extension_message">Denne utvidelsen er ikke lenger tilgjengelig.</string>
+    <string name="obsolete_extension_message">Denne utvidelsen er ikke lengre tilgjengelig. Den fungerer kankje ikke som den skal og kan forårsake problemer med appen. Avinstallering anbefales.</string>
     <string name="pref_date_format">Datoformat</string>
     <string name="pref_category_library_update">Global oppdatering</string>
     <string name="logout_title">Logg ut fra %1$s\?</string>
@@ -400,8 +400,8 @@
         <item quantity="other">%1$d nye kapitler</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">For %d tittel</item>
-        <item quantity="other">For %d titler</item>
+        <item quantity="one">For %d oppføring</item>
+        <item quantity="other">For %d oppføringer</item>
     </plurals>
     <string name="notification_check_updates">Søker etter nye kapitler</string>
     <string name="loader_not_implemented_error">Kilden ikke funnet</string>
@@ -419,7 +419,7 @@
         <item quantity="one">%1$s gjenstående</item>
         <item quantity="other">%1$s gjenstående</item>
     </plurals>
-    <string name="downloaded_only_summary">Filtrerer alt manga i biblioteket ditt</string>
+    <string name="downloaded_only_summary">Filtrerer alle oppføringer i biblioteket ditt</string>
     <string name="check_for_updates">Se etter oppdateringer</string>
     <string name="battery_optimization_setting_activity_not_found">Kunne ikke åpne enhetens innstillinger</string>
     <string name="battery_optimization_disabled">Batterioptimalisering er allerede deaktivert</string>
@@ -492,7 +492,7 @@
     </plurals>
     <string name="notification_chapters_multiple">Kapitler %1$s</string>
     <string name="download_insufficient_space">Ikke nok lagringsplass til å laste ned kapitler</string>
-    <string name="also_set_chapter_settings_for_library">Anvend også for all manga i biblioteket</string>
+    <string name="also_set_chapter_settings_for_library">Anvend også for allle oppføringer i biblioteket</string>
     <string name="action_global_search_query">Søk etter \"%1$s\" globalt</string>
     <string name="updated_version">Oppdatert til v%1$s</string>
     <string name="licenses">Friprog-lisenser</string>
@@ -500,8 +500,8 @@
     <string name="pref_disable_battery_optimization_summary">Hjelper med oppdatering og sikkerhetskopiering av biblioteket</string>
     <string name="pref_refresh_library_covers">Gjenoppfrisk mangaomslag i biblioteket</string>
     <string name="backup_restore_missing_trackers">Sporingstjenester ikke logget inn i:</string>
-    <string name="invalid_backup_file_missing_manga">Sikkerhetskopi inneholder ingen manga.</string>
-    <string name="tracking_info">Enveissynkronisering for å oppdatere kapittelfremdrift i sporingstjenester. Sett opp sporing for individuelle mangaer med sporingsknappen på sidene til mangaene.</string>
+    <string name="invalid_backup_file_missing_manga">Sikkerhetskopi inneholder ingen bibliotekoppføringer.</string>
+    <string name="tracking_info">Enveissynkronisering for å oppdatere kapittelfremdrift i sporingstjenester. Sett opp sporing for individuelle oppføringer med sporingsknappen.</string>
     <string name="pref_true_color_summary">Reduserer sjattering, men koster ytelse</string>
     <string name="pref_webtoon_side_padding">Sidepolstring</string>
     <string name="spen_next_page">Neste side</string>
@@ -516,7 +516,7 @@
     <string name="track_finished_reading_date">Sluttdato</string>
     <string name="track_started_reading_date">Startdato</string>
     <string name="downloaded_chapters">Nedlastede kapitler</string>
-    <string name="manga_from_library">Manga fra biblioteket</string>
+    <string name="manga_from_library">Fra biblioteket</string>
     <string name="pref_incognito_mode_summary">Setter lesehistorikken på pause</string>
     <string name="pref_incognito_mode">Inkognitomodus</string>
     <string name="crash_log_saved">Feillogger lagret</string>
@@ -552,16 +552,16 @@
     <string name="exclude">Eksluder: %s</string>
     <string name="include">Inkluder: %s</string>
     <string name="action_sort_chapter_fetch_date">Dato hentet</string>
-    <string name="pref_download_new_categories_details">Manga i utelukkede kategorier vil ikke bli nedlastet selv om de også er i inkluderte kategorier.</string>
+    <string name="pref_download_new_categories_details">Oppføringer i utelukkede kategorier vil ikke bli nedlastet selv om de også er i inkluderte kategorier.</string>
     <string name="pref_category_auto_download">Last ned automatisk</string>
-    <string name="pref_library_update_categories_details">Manga i utelukkede kategorier vil ikke bli oppdatert selv om de også er i inkluderte kategorier.</string>
+    <string name="pref_library_update_categories_details">Oppførninger i utelukkede kategorier vil ikke bli oppdatert selv om de også er i inkluderte kategorier.</string>
     <string name="action_show_errors">Trykk for å se detaljer</string>
     <string name="clipboard_copy_error">Kunne ikke kopiere til utklippstavlen</string>
     <string name="update_check_eol">Denne Android-versjonen støttes ikke lenger</string>
     <string name="rotation_landscape">Liggende</string>
     <string name="rotation_portrait">Stående</string>
     <string name="rotation_type">Rotasjonstype</string>
-    <string name="pref_create_folder_per_manga_summary">Oppretter mapper i henhold til manga-tittel</string>
+    <string name="pref_create_folder_per_manga_summary">Oppretter mapper i henhold til oppføringenes tittel</string>
     <string name="pref_create_folder_per_manga">Lagre sider i egne mapper</string>
     <string name="pref_reader_actions">Handlinger</string>
     <string name="pref_library_update_refresh_trackers">Oppdater trackere automatisk</string>
@@ -613,7 +613,7 @@
     <string name="label_default">Standard</string>
     <string name="about_dont_kill_my_app">Noen produsenter har ytterligere appbegrensninger som dreper bakgrunnstjenester. Denne nettsiden har mer info om hvordan det kan fikses.</string>
     <string name="restore_miui_warning">Sikkerhetskopier/gjenoppretting kan krangle hvis MIUI-optimalisering er avskrudd.</string>
-    <string name="enhanced_tracking_info">Tjenester som gir forbedrede funksjoner for spesifikke ressurser. Det holdes automatisk øye med manga når den legges til i biblioteket ditt.</string>
+    <string name="enhanced_tracking_info">Tjenester som gir forbedredet funksjoner for spesifikke kilder. Det holdes automatisk øye med oppføringer når de legges til i biblioteket ditt.</string>
     <string name="pref_tablet_ui_mode">Nettbrettsgrensesnitt</string>
     <string name="pref_hide_threshold">Følsomhet for å skjule menyen når du ruller</string>
     <string name="categorized_display_settings">Innstillinger per kategori for sortering og visning</string>
@@ -623,7 +623,7 @@
     <string name="theme_strawberrydaiquiri">Jordbær-Daiquiri</string>
     <string name="theme_midnightdusk">Midnattsskumring</string>
     <string name="theme_greenapple">Grønt eple</string>
-    <string name="action_display_local_badge">Lokal manga</string>
+    <string name="action_display_local_badge">Lokal kilde</string>
     <string name="error_no_match">Ingen treff funnet</string>
     <string name="tracker_komga_warning">Denne trackeren er kun kompatibel med Komga-kilder.</string>
     <string name="notification_incognito_text">Skru av inkognito-modus</string>
@@ -636,7 +636,7 @@
     <string name="ext_installer_pref">Installatør</string>
     <string name="ext_install_service_notif">Installerer utvidelse …</string>
     <string name="ext_app_info">Programinfo</string>
-    <string name="action_sort_count">Mangaantall</string>
+    <string name="action_sort_count">Totalt antall oppføringer</string>
     <string name="action_display_language_badge">Språk</string>
     <string name="pref_verbose_logging">Sirlig loggføring</string>
     <string name="pref_verbose_logging_summary">Skriv utfyllende logg til systemloggen (reduserer programytelse)</string>
@@ -646,7 +646,7 @@
     <string name="channel_app_updates">Appoppdateringer</string>
     <string name="update_72hour">Hver 3. dag</string>
     <string name="connected_to_wifi">Bare på Wi-Fi</string>
-    <string name="action_show_manga">Vis manga</string>
+    <string name="action_show_manga">Vis oppføring</string>
     <string name="privacy_policy">Personvernerklæring</string>
     <string name="publishing_finished">Ferdig publisert</string>
     <string name="webtoon_side_padding_5">5%</string>
@@ -656,7 +656,7 @@
     <string name="save_chapter_as_cbz">Lagre som CBZ-arkiv</string>
     <string name="ext_update_all">Oppdater alle</string>
     <string name="action_faq_and_guides">FAQ og guider</string>
-    <string name="pref_library_update_manga_restriction">Hopp over oppdateringer av titler</string>
+    <string name="pref_library_update_manga_restriction">Hopp over å oppdatere oppføringer</string>
     <string name="database_clean">Ingenting å fjerne</string>
     <string name="skipped_reason_not_caught_up">Hoppet over fordi det er uleste kapitler</string>
     <string name="pref_library_update_show_tab_badge">Vis antall uleste på oppdateringsikonet</string>
@@ -671,11 +671,11 @@
     <string name="pref_update_only_started">Som ikke er påbegynt</string>
     <string name="pref_landscape_zoom">Zoom landskapsbilde</string>
     <string name="pref_navigate_pan">Panorer brede bilder ved å trykke</string>
-    <string name="clear_database_source_item_count">%1$d ikke-bibliotek manga i databasen</string>
+    <string name="clear_database_source_item_count">%1$d ikke-bibliotek oppføringer i databasen</string>
     <string name="action_move_to_top_all_for_series">Flytt serien til toppen</string>
     <string name="extension_api_error">Kunne ikke hente utvidelseslisten</string>
     <string name="rotation_reverse_portrait">Omvendt portrett</string>
-    <string name="pref_auto_clear_chapter_cache">Tøm kapittelbufferen ved lukking av appen</string>
+    <string name="pref_auto_clear_chapter_cache">Tøm kapittel hurtigbufferen ved lukking av appen</string>
     <string name="notification_update_error">%1$d oppdatering(er) mislyktes</string>
     <string name="notification_update_skipped">%1$d oppdatering(er) hoppet over</string>
     <string name="learn_more">Trykk for å finne ut mer</string>
@@ -726,7 +726,7 @@
     <string name="download_ahead">Last ned i forkant</string>
     <string name="pref_reset_user_agent_string">Tilbakestill standard streng for brukeragent</string>
     <string name="reading_list">Leseliste</string>
-    <string name="action_sort_last_manga_update">Siste manga-oppdatering</string>
+    <string name="action_sort_last_manga_update">Siste oppdateringssjekk</string>
     <string name="pref_reset_viewer_flags_error">Kunne ikke tilbakestille leserinnstillingene</string>
     <string name="multi_lang">Multi</string>
     <string name="auto_download_while_reading">Last ned automatisk mens du leser</string>
@@ -751,7 +751,7 @@
     <string name="ext_info_version">Versjon</string>
     <string name="custom_cover">Tilpasset omslag</string>
     <string name="popular">Populært</string>
-    <string name="appwidget_updates_description">Se dine nyligt oppdaterte manga</string>
+    <string name="appwidget_updates_description">Se de nylig oppdaterte biblotekoppføringene dine</string>
     <string name="appwidget_unavailable_locked">Moduler er ikke tilgjengelig når applås er aktivert</string>
     <string name="pref_user_agent_string">Standard streng for brukeragent</string>
     <string name="pref_general_summary">Appspråk, varslinger</string>
@@ -766,4 +766,10 @@
     <string name="source_filter_empty_screen">Ingen installert kilde funnet</string>
     <string name="not_installed">Ikke installert</string>
     <string name="updates_last_update_info_just_now">Akkurat nå</string>
+    <string name="download_notifier_cache_renewal">Indeksering av nedlastinger</string>
+    <string name="channel_downloader_cache">Nedlastnings hurtigbuffer</string>
+    <string name="fdroid_warning">F-Droid-bygg er ikke offisielt støttet.
+\nTrykk for å finne ut mer.</string>
+    <string name="information_no_entries_found">Fant ingen oppføringer i denne kategorien</string>
+    <string name="action_open_random_manga">Åpne tilfeldig oppføring</string>
 </resources>

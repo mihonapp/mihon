@@ -214,7 +214,7 @@
     <string name="update_check_look_for_updates">Ricerca aggiornamenti…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Download in corso…</string>
-    <string name="update_check_notification_download_complete">Tocca per installare</string>
+    <string name="update_check_notification_download_complete">Tocca per installare l\'aggiornamento</string>
     <string name="update_check_notification_download_error">Errore di scaricamento</string>
     <string name="update_check_notification_update_available">Nuova versione disponibile!</string>
     <!--Content Description-->
@@ -341,7 +341,7 @@
     <string name="action_webview_refresh">Aggiorna</string>
     <string name="pref_category_library">Libreria</string>
     <string name="ext_obsolete">Obsoleta</string>
-    <string name="obsolete_extension_message">Questa estensione non è più disponibile.</string>
+    <string name="obsolete_extension_message">Questa estensione non è più disponibile. Potrebbe non funzionare correttamente e causare problemi con l\'app. Si consiglia di disinstallarla.</string>
     <string name="pref_date_format">Formato data</string>
     <string name="pref_category_library_update">Aggiornamenti globali</string>
     <string name="logout_title">Disconnettersi da %1$s\?</string>
@@ -812,4 +812,10 @@
     <string name="unknown_title">Titolo sconosciuto</string>
     <string name="error_user_agent_string_invalid">Stringa «user agent» non valida</string>
     <string name="updates_last_update_info_just_now">Proprio adesso</string>
+    <string name="channel_downloader_cache">Cache di download</string>
+    <string name="download_notifier_cache_renewal">Indicizzazione dei download</string>
+    <string name="action_open_random_manga">Apri una voce casuale</string>
+    <string name="information_no_entries_found">Nessuna voce trovata in questa categoria</string>
+    <string name="fdroid_warning">Le versioni F-Droid non sono ufficialmente supportate.
+\nToccare per saperne di più.</string>
 </resources>

@@ -672,4 +672,12 @@
 \n
 \nJarraitu nahi duzu\?</string>
     <string name="action_filter_started">Hasia</string>
+    <string name="ext_info_version">Bertsioa</string>
+    <string name="multi_lang">Multi</string>
+    <string name="delete_category">Ezabatu kategoria</string>
+    <string name="action_close">Itxi</string>
+    <string name="pref_app_language">App hizkuntza</string>
+    <string name="battery_not_low">Bateria baxu ez dagoenean</string>
+    <string name="ext_info_language">Hizkuntza</string>
+    <string name="action_search_hint">Bilatu…</string>
 </resources>

@@ -211,7 +211,7 @@
     <string name="ext_nsfw_warning">Šaltiniuose gali būti N18 turinio</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="unofficial_extension_message">Šis plėtinys nėra iš oficialaus Tachiyomi sąrašo.</string>
-    <string name="obsolete_extension_message">Šis plėtinys nebėra prieinamas.</string>
+    <string name="obsolete_extension_message">Šis plėtinys nebėra prieinamas. Plėtinys gali veikti netinkamai arba sukelti problemas programėlėje. Rekomenduojama išdiegti plėtinį.</string>
     <string name="untrusted_extension_message">Šis plėtinys buvo pasirašytas nepatikimu sertifikatu ir nebuvo aktyvuotas.
 \n
 \nPlėtinys, su negeranoriškais ketinimais, gali perskaityti prisijungimo duomenys patalpintus Tachiyomi arba gali paleisti kenkėjišką kodą.
@@ -260,7 +260,7 @@
     <string name="pref_reader_actions">Veiksmai</string>
     <string name="pref_read_with_long_tap">Parodyti ilgiau paspaudus</string>
     <string name="pref_create_folder_per_manga">Išsaugoti puslapius atskiruose aplankuose</string>
-    <string name="pref_create_folder_per_manga_summary">Kurti aplankus pagal įrašų pavadinimus</string>
+    <string name="pref_create_folder_per_manga_summary">Sukuria aplankus pagal įrašo pavadinimą</string>
     <string name="pref_reader_theme">Fono spalva</string>
     <string name="nav_zone_prev">Ankstesnis</string>
     <string name="gray_background">Pilka</string>
@@ -328,7 +328,7 @@
     <string name="pref_show_navigation_mode">Rodyti lietimui jautrias zonas</string>
     <string name="label_warning">Įspėjimas</string>
     <string name="action_faq_and_guides">DUK ir vadovai</string>
-    <string name="pref_library_update_manga_restriction">Praleisti atnaujinimus</string>
+    <string name="pref_library_update_manga_restriction">Praleisti įrašų atnaujinimą</string>
     <string name="update_72hour">Kas 3 dienas</string>
     <string name="connected_to_wifi">Kai naudojamas Wi-Fi</string>
     <string name="ext_updates_pending">Yra naujinių</string>
@@ -423,7 +423,7 @@
     <string name="transition_pages_error">Nepavyko įkelti puslapių: %1$s</string>
     <string name="transition_previous">Ankstesnis:</string>
     <string name="update_check_confirm">Parsisiųsti</string>
-    <string name="update_check_notification_download_complete">Bakstelėkite, kad įdiegtumėte</string>
+    <string name="update_check_notification_download_complete">Bakstelėkite, kad įdiegtumėte atnaujinimą</string>
     <string name="update_check_eol">Ši \"Android\" versija nebepalaikoma</string>
     <string name="update_check_no_new_updates">Naujų atnaujinimų nėra</string>
     <string name="update_check_look_for_updates">Ieškoma naujinimų…</string>
@@ -549,9 +549,9 @@
     <string name="pref_dump_crash_logs">Išmeskite strigčių žurnalus</string>
     <string name="download_queue_error">Nepavyko atsisiųsti skyrių. Galite pabandyti dar kartą atsisiųsti</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Dėl %d pavadinimo</item>
-        <item quantity="few">Dėl %d pavadinimų</item>
-        <item quantity="other">Dėl %d pavadinimo</item>
+        <item quantity="one">%d įrašui</item>
+        <item quantity="few">%d įrašams</item>
+        <item quantity="other">%d įrašų</item>
     </plurals>
     <string name="pref_user_agent_string">Numatytoji vartotojo agento eilutė</string>
     <string name="not_installed">Neįdiegtas</string>
@@ -683,7 +683,7 @@
     <string name="set_chapter_settings_as_default">Nustatyti kaip numatytąjį</string>
     <string name="manga_tracking_tab">Sekimas</string>
     <string name="licenses">Atvirojo kodo licencijos</string>
-    <string name="label_downloaded_only">Rodyti atsisiųstus</string>
+    <string name="label_downloaded_only">Rodyti tik atsisiųstus</string>
     <string name="pref_incognito_mode_summary">Pristabdo skaitymo istoriją</string>
     <string name="notification_incognito_text">Išjungti inkognito režimą</string>
     <string name="downloaded_only_summary">Filtruoja visus įrašus jūsų bibliotekoje</string>
@@ -779,4 +779,10 @@
     <string name="popular">Populiaru</string>
     <string name="crash_screen_title">Įvyko netikėta klaida</string>
     <string name="crash_screen_restart_application">Iš naujo paleiskite programą</string>
+    <string name="channel_downloader_cache">Atsisiuntimų talpykla</string>
+    <string name="download_notifier_cache_renewal">Indeksuojami atsisiuntimai</string>
+    <string name="fdroid_warning">F-Droid versijos oficialiai nepalaikomos.
+\nBakstelėkite, kad sužinotumėte daugiau.</string>
+    <string name="information_no_entries_found">Šioje kategorijoje įrašų nerasta</string>
+    <string name="action_open_random_manga">Atverti atsitiktinį įrašą</string>
 </resources>

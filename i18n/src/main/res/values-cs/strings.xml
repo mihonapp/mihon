@@ -145,7 +145,7 @@
     <string name="update_check_confirm">Stáhnout</string>
     <string name="update_check_no_new_updates">Žádné nové aktualizace</string>
     <string name="update_check_look_for_updates">Hledání aktualizací…</string>
-    <string name="update_check_notification_download_complete">Klepnutím nainstalujte</string>
+    <string name="update_check_notification_download_complete">Klepnutím nainstalujte aktualizaci</string>
     <string name="update_check_notification_download_error">Chyba při stahování</string>
     <string name="update_check_notification_update_available">Dostupná aktualizace!</string>
     <string name="information_no_recent">Žádné nedávné aktualizace</string>
@@ -308,7 +308,7 @@
     <string name="action_webview_refresh">Obnovit</string>
     <string name="pref_category_library">Knihovna</string>
     <string name="ext_obsolete">Zastaralý</string>
-    <string name="obsolete_extension_message">Tohle rozšíření již není dostupné.</string>
+    <string name="obsolete_extension_message">Toto rozšíření již není k dispozici. Nemusí fungovat správně a může způsobit problémy s aplikací. Doporučujeme jej odinstalovat.</string>
     <string name="logout">Odhlásit se</string>
     <string name="pref_date_format">Formát data</string>
     <string name="pref_category_library_update">Globální aktualizace</string>
@@ -488,9 +488,9 @@
         <item quantity="other">%1$d nových kapitol</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Pro %d titul</item>
-        <item quantity="few">Pro %d tituly</item>
-        <item quantity="other">Pro %d titulů</item>
+        <item quantity="one">Pro %d položku</item>
+        <item quantity="few">Pro %d položky</item>
+        <item quantity="other">Pro %d položek</item>
     </plurals>
     <string name="notification_check_updates">Hledám nové kapitoly</string>
     <string name="download_insufficient_space">Nelze stáhnout kapitoly kvůli nedostatku místa</string>
@@ -567,7 +567,7 @@
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
     <string name="rotation_type">Typ otočení</string>
-    <string name="pref_create_folder_per_manga_summary">Vytváří složky podle názvů položek</string>
+    <string name="pref_create_folder_per_manga_summary">Vytváří složky podle názvu položky</string>
     <string name="pref_create_folder_per_manga">Uložit stránky do samostatných složek</string>
     <string name="pref_reader_actions">Akce</string>
     <string name="nav_zone_right">Vpravo</string>
@@ -660,12 +660,12 @@
     <string name="pref_verbose_logging_summary">Vypisovat podrobné informace do systémového protokolu (sníží výkon aplikace)</string>
     <string name="channel_app_updates">Aktualizace aplikace</string>
     <string name="notification_size_warning">Varování: velké aktualizace poškozují zdroje a můžou vést k pomalejším aktualizacím a zvýšenému využití baterie. Klepnutím se dozvíte více.</string>
-    <string name="pref_auto_clear_chapter_cache">Vymazat cache kapitol při zavření aplikace</string>
+    <string name="pref_auto_clear_chapter_cache">Vymazat mezipaměť kapitol při zavření aplikace</string>
     <string name="extension_api_error">Chyba v získání seznamu rozšíření</string>
     <string name="privacy_policy">Zásady ochrany osobních údajů</string>
     <string name="clear_database_source_item_count">%1$d neknihovní záznamy v databázi</string>
     <string name="pref_true_color_summary">Snižuje pruhování barev, ale může mít vliv na výkon</string>
-    <string name="pref_library_update_manga_restriction">Přeskočit aktualizaci titulů</string>
+    <string name="pref_library_update_manga_restriction">Přeskočit aktualizování položek</string>
     <string name="pref_update_only_completely_read">S nepřečtenými kapitolami</string>
     <string name="database_clean">Nic k vyčištění</string>
     <string name="save_chapter_as_cbz">Uložit jako CBZ archiv</string>
@@ -779,4 +779,10 @@
     <string name="unknown_title">Neznámý titul</string>
     <string name="error_user_agent_string_invalid">Neplatný řetězec uživatelského agenta</string>
     <string name="updates_last_update_info_just_now">Právě teď</string>
+    <string name="download_notifier_cache_renewal">Indexování stažených souborů</string>
+    <string name="channel_downloader_cache">Stáhnout mezipaměť</string>
+    <string name="information_no_entries_found">V této kategorii nebyly nalezeny žádné položky</string>
+    <string name="action_open_random_manga">Otevřít náhodnou položku</string>
+    <string name="fdroid_warning">F-Droid sestavení nejsou oficiálně podporovány.
+\nKlepnutím zobrazíte další informace.</string>
 </resources>

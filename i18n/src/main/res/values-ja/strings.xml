@@ -264,7 +264,7 @@
     <string name="update_check_no_new_updates">新しいバージョンがありません</string>
     <string name="update_check_look_for_updates">アップデートを確認中…</string>
     <string name="update_check_notification_download_in_progress">ダウンロード中…</string>
-    <string name="update_check_notification_download_complete">タップでインストール</string>
+    <string name="update_check_notification_download_complete">タップでアップデートをインストール</string>
     <string name="update_check_notification_download_error">ダウンロード中にエラー発生</string>
     <string name="update_check_notification_update_available">アップデート利用可能！</string>
     <string name="information_no_downloads">ダウンロードがありません</string>
@@ -302,7 +302,7 @@
     <string name="action_webview_refresh">再ロード</string>
     <string name="pref_category_library">ライブラリ</string>
     <string name="ext_obsolete">廃止済み</string>
-    <string name="obsolete_extension_message">この拡張機能は利用不可になりました。</string>
+    <string name="obsolete_extension_message">この拡張機能は利用不可になったため、正常に機能しなかったり、アプリでエラーを起こしたりする恐れがあります。アンインストールすることをお勧めします。</string>
     <string name="pref_date_format">日付形式</string>
     <string name="pref_category_library_update">グローバルアップデート</string>
     <string name="logout_title">%1$sからログアウトしますか？</string>
@@ -431,7 +431,7 @@
     <string name="notification_chapters_single_and_more">第%1$s章とその他%2$d章</string>
     <string name="notification_chapters_multiple">第%1$s章</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="other">%d件のタイトル</item>
+        <item quantity="other">%d件の項目</item>
     </plurals>
     <string name="recent_manga_time">第%1$s章 - %2$s</string>
     <string name="page_list_empty_error">ページが見つかりません</string>
@@ -642,7 +642,7 @@
     <string name="database_clean">消去できるものはありませんでした</string>
     <string name="extension_api_error">拡張機能リストを取得できませんでした</string>
     <string name="privacy_policy">プライバシーポリシー</string>
-    <string name="pref_library_update_manga_restriction">タイトル更新のスキップ</string>
+    <string name="pref_library_update_manga_restriction">項目更新のスキップ</string>
     <string name="pref_update_only_completely_read">未読の章あり</string>
     <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください</string>
     <string name="save_chapter_as_cbz">CBZアーカイブとして保存</string>
@@ -753,4 +753,10 @@
     <string name="pref_advanced_summary">クラッシュ ログのダンプ、バッテリーの最適化</string>
     <string name="pref_appearance_summary">テーマ、日付と時刻の形式</string>
     <string name="pref_library_summary">カテゴリ、グローバル アップデート</string>
+    <string name="channel_downloader_cache">ダウンロード キャッシュ</string>
+    <string name="action_open_random_manga">おまかせ閲覧</string>
+    <string name="information_no_entries_found">このカテゴリに項目がありません</string>
+    <string name="download_notifier_cache_renewal">ダウンロードのインデックスを作成しています</string>
+    <string name="fdroid_warning">F-Droidビルドは正式にサポートされていません。
+\n詳細はタップしてご覧ください。</string>
 </resources>

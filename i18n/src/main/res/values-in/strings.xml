@@ -523,7 +523,7 @@
     <string name="action_display_show_number_of_items">Tampilkan jumlah item</string>
     <string name="none">Kosong</string>
     <string name="action_show_errors">Ketuk untuk melihat detail</string>
-    <string name="action_sort_chapter_fetch_date">Tanggal pengambilan bab</string>
+    <string name="action_sort_chapter_fetch_date">Tanggal bab dimasukkan</string>
     <string name="pref_reader_actions">Aksi</string>
     <string name="nav_zone_right">Kanan</string>
     <string name="nav_zone_left">Kiri</string>
@@ -682,7 +682,7 @@
     <string name="pref_duplicate_pinned_sources_summary">Ulang sumber ditandai pada kelompok bahasa masing-masing</string>
     <string name="source_filter_empty_screen">Sumber yang diinstal tidak ditemukan</string>
     <string name="source_empty_screen">Tidak ada sumber yang ditemukan</string>
-    <string name="action_sort_last_manga_update">Pembaruan manga terakhir</string>
+    <string name="action_sort_last_manga_update">Pembaruan terakhir</string>
     <string name="action_sort_unread_count">Jumlah belum dibaca</string>
     <string name="split_tall_images">Membagi gambar panjang</string>
     <string name="split_tall_images_summary">Meningkatkan kinerja pembaca</string>

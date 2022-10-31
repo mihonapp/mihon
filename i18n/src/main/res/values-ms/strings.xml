@@ -230,7 +230,7 @@
     <string name="update_check_no_new_updates">Tiada versi baharu tersedia</string>
     <string name="update_check_look_for_updates">Mencari versi baharu…</string>
     <string name="update_check_notification_download_in_progress">Memuat turun…</string>
-    <string name="update_check_notification_download_complete">Ketik untuk memasang</string>
+    <string name="update_check_notification_download_complete">Ketik untuk memasang kemas kini</string>
     <string name="update_check_notification_download_error">Ralat muat turun</string>
     <string name="update_check_notification_update_available">Versi baharu boleh didapati!</string>
     <string name="information_no_downloads">Tiada muat turun</string>
@@ -308,7 +308,7 @@
     <string name="action_webview_refresh">Segar semula</string>
     <string name="pref_category_library">Pustaka</string>
     <string name="ext_obsolete">Usang</string>
-    <string name="obsolete_extension_message">Sambungan ini tidak lagi ada.</string>
+    <string name="obsolete_extension_message">Sambungan ini tidak lagi ada. Ia mungkin tidak berfungsi dengan betul dan boleh menyebabkan masalah dengan aplikasi. Mengenyahpasang adalah disarankan.</string>
     <string name="pref_date_format">Format tarikh</string>
     <string name="pref_category_library_update">Kemas kini keseluruhan</string>
     <string name="logout_title">Log keluar daripada %1$s\?</string>
@@ -753,4 +753,10 @@
     <string name="invalid_location">Lokasi tidak sah: %s</string>
     <string name="error_user_agent_string_invalid">Rentetan ejen pengguna tidak sah</string>
     <string name="updates_last_update_info_just_now">Sebentar tadi</string>
+    <string name="action_open_random_manga">Buka entri rawak</string>
+    <string name="information_no_entries_found">Tiada entri dijumpai di kategori ini</string>
+    <string name="download_notifier_cache_renewal">Mengindeks muat turun</string>
+    <string name="channel_downloader_cache">Muat turun cache</string>
+    <string name="fdroid_warning">Binaan F-Droid tidak disokong secara rasmi.
+\nKetik untuk mengetahui lebih lanjut.</string>
 </resources>

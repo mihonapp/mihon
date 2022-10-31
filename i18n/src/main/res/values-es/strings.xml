@@ -184,7 +184,7 @@
     <string name="update_check_look_for_updates">Buscando actualizaciones…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Descargando…</string>
-    <string name="update_check_notification_download_complete">Toca aquí para instalar</string>
+    <string name="update_check_notification_download_complete">Toca aquí para instalar la actualización</string>
     <string name="update_check_notification_download_error">Error de descarga</string>
     <string name="update_check_notification_update_available">¡Nueva versión disponible!</string>
     <!--Content Description-->
@@ -340,7 +340,7 @@
     <string name="action_webview_refresh">Actualizar</string>
     <string name="pref_category_library">Biblioteca</string>
     <string name="ext_obsolete">Obsoleto</string>
-    <string name="obsolete_extension_message">Esta extensión ya no está disponible.</string>
+    <string name="obsolete_extension_message">Esta extensión ya no está disponible. Puede que no funcione bien y te cause problemas con el resto de la aplicación, te recomendamos desinstalarla.</string>
     <string name="pref_date_format">Formato de fecha</string>
     <string name="pref_category_library_update">Actualización global</string>
     <string name="logout">Cerrar sesión</string>
@@ -810,4 +810,9 @@
     <string name="invalid_location">Ubicación incorrecta: %s</string>
     <string name="updates_last_update_info_just_now">Ahora mismo</string>
     <string name="error_user_agent_string_invalid">El nombre de agente de usuario no vale</string>
+    <string name="download_notifier_cache_renewal">Reindexando descargas</string>
+    <string name="channel_downloader_cache">Caché de descargas</string>
+    <string name="action_open_random_manga">Abrir manga al azar</string>
+    <string name="information_no_entries_found">No se ha encontrado ningún manga en esta categoría</string>
+    <string name="fdroid_warning">No damos soporte oficial a las versiones de F-Droid. Toca para más información.</string>
 </resources>

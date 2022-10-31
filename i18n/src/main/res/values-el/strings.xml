@@ -5,7 +5,7 @@
     <string name="manga">Manga</string>
     <string name="chapters">Κεφάλαια</string>
     <string name="track">Tracking</string>
-    <string name="history">Ιστορία</string>
+    <string name="history">Ιστορικό</string>
     <string name="label_settings">Ρυθμίσεις</string>
     <string name="label_download_queue">Ουρά λήψεων</string>
     <string name="label_library">Βιβλιοθήκη</string>
@@ -169,7 +169,7 @@
     <string name="pref_backup_slots">Μέγιστα αντίγραφα ασφαλείας</string>
     <string name="backup_created">Δημιουργήθηκε αντίγραφο ασφαλείας</string>
     <string name="restore_completed">Η επαναφορά ολοκληρώθηκε</string>
-    <string name="backup_choice">Τι θέλετε να κάνετε backup;</string>
+    <string name="backup_choice">Τι αντίγραφο ασφαλείας θέλετε να δημιουργήσετε;</string>
     <string name="restoring_backup">Επαναφορά αντιγράφων ασφαλείας</string>
     <string name="creating_backup">Δημιουργία αντιγράφων ασφαλείας</string>
     <string name="pref_clear_chapter_cache">Καθάρισμα προσωρινής μνήμης κεφαλαίου</string>
@@ -179,8 +179,8 @@
     <string name="pref_clear_cookies">Διαγραφή cookies</string>
     <string name="cookies_cleared">Τα cookies διαγράφηκαν</string>
     <string name="pref_clear_database">Καθαρισμός βάσης δεδομένων</string>
-    <string name="pref_clear_database_summary">Διαγραφή ιστορικού για manga που δεν είναι αποθηκευμένα στη βιβλιοθήκη σας</string>
-    <string name="clear_database_confirmation">Είστε σίγουροι; Τα διαβασμένα κεφάλαια και η πρόοδος των manga εκτός βιβλιοθήκης θα χαθεί</string>
+    <string name="pref_clear_database_summary">Διαγραφή ιστορικού για καταχωρήσεις που δεν έχουν αποθηκευτεί στη βιβλιοθήκη σας</string>
+    <string name="clear_database_confirmation">Είστε σίγουροι; Τα διαβασμένα κεφάλαια και η πρόοδος των καταχωρήσεων εκτός βιβλιοθήκης θα χαθούν</string>
     <string name="clear_database_completed">Οι καταχωρίσεις διαγράφηκαν</string>
     <string name="pref_refresh_library_tracking">Ανανέωση tracking</string>
     <string name="pref_refresh_library_tracking_summary">Ενημερώνει κατάσταση, βαθμολογία και τελευταίο αναγνωσμένο κεφάλαιο από τις υπηρεσίες παρακολούθησης</string>
@@ -244,8 +244,8 @@
     <string name="error_category_exists">Μια κατηγορία με αυτό το όνομα υπάρχει ήδη!</string>
     <string name="snack_categories_deleted">Οι κατηγορίες διαγράφηκαν</string>
     <string name="dialog_with_checkbox_remove_description">Αυτό θα αφαιρέσει την ημερομηνία ανάγνωσης αυτού του κεφαλαίου. Είστε σίγουροι;</string>
-    <string name="dialog_with_checkbox_reset">Επαναφορά όλων των κεφαλαίων για αυτό το manga</string>
-    <string name="snack_add_to_library">Προσθήκη manga στη βιβλιοθήκη;</string>
+    <string name="dialog_with_checkbox_reset">Επαναφορά όλων των κεφαλαίων για αυτήν την καταχώρηση</string>
+    <string name="snack_add_to_library">Προσθήκη στη βιβλιοθήκη;</string>
     <string name="picture_saved">Η εικόνα αποθηκεύτηκε</string>
     <string name="custom_filter">Προσαρμοσμένο φίλτρο</string>
     <string name="set_as_cover">Ορισμός ως εξώφυλλο</string>
@@ -268,14 +268,14 @@
     <string name="download_queue_error">Δεν ήταν δυνατή η λήψη κεφαλαίων. Μπορείτε να δοκιμάσετε ξανά στο τμήμα λήψεων</string>
     <string name="notification_new_chapters">Βρέθηκαν νέα κεφάλαια</string>
     <string name="notification_cover_update_failed">Δεν ήταν δυνατή η ενημέρωση του εξώφυλλου</string>
-    <string name="notification_first_add_to_library">Παρακαλώ προσθέστε το manga στη βιβλιοθήκη σας πριν κάνετε κάτι τέτοιο</string>
+    <string name="notification_first_add_to_library">Παρακαλώ προσθέστε την καταχώρηση στη βιβλιοθήκη σας πριν το κάνετε αυτό</string>
     <string name="file_select_cover">Επιλέξτε εικόνα εξωφύλλου</string>
     <string name="file_select_backup">Επιλέξτε αρχείο αντιγράφου ασφαλείας</string>
     <string name="update_check_confirm">Λήψη</string>
     <string name="update_check_no_new_updates">Δεν υπάρχουν διαθέσιμες νέες ενημερώσεις</string>
     <string name="update_check_look_for_updates">Αναζήτηση για ενημερώσεις…</string>
     <string name="update_check_notification_download_in_progress">Γίνεται λήψη…</string>
-    <string name="update_check_notification_download_complete">Πατήστε για εγκατάσταση</string>
+    <string name="update_check_notification_download_complete">Πατήστε για να εγκαταστήσετε την ενημέρωση</string>
     <string name="update_check_notification_download_error">Σφάλμα λήψης</string>
     <string name="update_check_notification_update_available">Υπάρχει διαθέσιμη ενημέρωση!</string>
     <string name="information_no_downloads">Δεν υπάρχουν λήψεις</string>
@@ -308,7 +308,7 @@
     <string name="action_webview_refresh">Ανανέωση</string>
     <string name="pref_category_library">Βιβλιοθήκη</string>
     <string name="ext_obsolete">Απαρχαιωμένο</string>
-    <string name="obsolete_extension_message">Αυτή η επέκταση δεν είναι πλέον διαθέσιμη.</string>
+    <string name="obsolete_extension_message">Αυτή η επέκταση δεν είναι πλέον διαθέσιμη. Ενδέχεται να μη λειτουργεί σωστά και μπορεί να προκαλέσει προβλήματα με την εφαρμογή. Συνιστάται η απεγκατάσταση της.</string>
     <string name="label_more">Περισσότερα</string>
     <string name="last_used_source">Χρησιμοποιήθηκε τελευταία</string>
     <string name="add_tracking">Προσθήκη tracking</string>
@@ -413,7 +413,7 @@
         <item quantity="one">Κεφάλαια %1$s και 1 ακόμη</item>
         <item quantity="other">Κεφάλαια %1$s και %2$d ακόμη</item>
     </plurals>
-    <string name="downloaded_only_summary">Φιλτράρει όλα τα manga στη βιβλιοθήκη σας</string>
+    <string name="downloaded_only_summary">Φιλτράρει όλες τις καταχωρήσεις στη βιβλιοθήκη σας</string>
     <string name="pref_search_pinned_sources_only">Να περιέχονται μόνο καρφιτσωμένες πηγές</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s που απομένει</item>
@@ -433,14 +433,14 @@
         <item quantity="other">Έγινε σε %1$s με %2$s σφάλματα</item>
     </plurals>
     <string name="action_display_unread_badge">Μη αναγνωσμένα κεφάλαια</string>
-    <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις manga από το κουμπί παρακολούθησης τους.</string>
+    <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις από το κουμπί παρακολούθησης τους.</string>
     <string name="pref_refresh_library_covers">Ανανέωση εξώφυλλων βιβλιοθήκης</string>
     <string name="unofficial_extension_message">Αυτή η επέκταση δεν προέρχεται από την επίσημη λίστα επεκτάσεων Tachiyomi.</string>
     <string name="ext_unofficial">Ανεπίσημη</string>
     <string name="sort_by_upload_date">Από ημερομηνία μεταφόρτωσης</string>
     <string name="label_data">Δεδομένα</string>
     <string name="backup_restore_missing_sources">Πηγές που λείπουν:</string>
-    <string name="invalid_backup_file_missing_manga">Το αντίγραφο ασφαλείας δεν περιέχει manga.</string>
+    <string name="invalid_backup_file_missing_manga">Το αντίγραφο ασφαλείας δεν περιέχει καταχωρήσεις βιβλιοθήκης.</string>
     <string name="invalid_backup_file">Μη έγκυρο αρχείο αντιγράφου ασφαλείας</string>
     <string name="pref_library_update_refresh_metadata_summary">Έλεγχος για νέο εξώφυλλο και λεπτομέρειες κατά την ενημέρωση της βιβλιοθήκης</string>
     <string name="pref_library_update_refresh_metadata">Αυτόματη ανανέωση μεταδεδομένων</string>
@@ -499,17 +499,17 @@
     <string name="no_chapters_error">Δεν βρέθηκαν κεφάλαια</string>
     <string name="chapter_settings_updated">Ενημερώθηκαν οι προεπιλεγμένες ρυθμίσεις κεφαλαίου</string>
     <string name="set_chapter_settings_as_default">Ορισμός ως προεπιλογής</string>
-    <string name="also_set_chapter_settings_for_library">Εφαρμογή επίσης σε όλα τα manga στη βιβλιοθήκη μου</string>
+    <string name="also_set_chapter_settings_for_library">Εφαρμογή επίσης για όλες τις καταχωρήσεις στη βιβλιοθήκη μου</string>
     <string name="confirm_set_chapter_settings">Είστε σίγουροι ότι θέλετε να αποθηκεύσετε αυτές τις ρυθμίσεις ως προεπιλεγμένες;</string>
     <string name="chapter_settings">Ρυθμίσεις κεφαλαίου</string>
     <string name="share_page_info">%1$s: %2$s, σελίδα %3$d</string>
     <string name="action_search_settings">Αναζήτηση ρυθμίσεων</string>
     <string name="downloaded_chapters">Κεφάλαια που έχουν ληφθεί</string>
-    <string name="manga_from_library">Manga από τη βιβλιοθήκη</string>
+    <string name="manga_from_library">Από βιβλιοθήκη</string>
     <string name="pref_incognito_mode_summary">Παύει το ιστορικό ανάγνωσης</string>
     <string name="pref_incognito_mode">Λειτουργία ανώνυμης περιήγησης</string>
     <string name="pref_clear_history">Διαγραφή ιστορικού</string>
-    <string name="clear_history_confirmation">Είστε σίγουροι\? Όλο το ιστορικό θα χαθεί.</string>
+    <string name="clear_history_confirmation">Είστε σίγουροι; Όλο το ιστορικό θα χαθεί.</string>
     <string name="clear_history_completed">Το ιστορικό διαγράφηκε</string>
     <string name="spen_next_page">Επόμενη σελίδα</string>
     <string name="spen_previous_page">Προηγούμενη σελίδα</string>
@@ -552,15 +552,15 @@
     <string name="include">Συμπερίληψη: %s</string>
     <string name="none">Κανένα</string>
     <string name="action_sort_chapter_fetch_date">Ημερομηνία ανάκτησης κεφαλαίου</string>
-    <string name="pref_download_new_categories_details">Τα Manga σε εξαιρούμενες κατηγορίες δεν θα ληφθούν ακόμα κι αν ανήκουν και σε κατηγορίες που περιλαμβάνονται.</string>
+    <string name="pref_download_new_categories_details">Οι καταχωρήσεις σε εξαιρούμενες κατηγορίες δε θα ληφθούν ακόμη και αν βρίσκονται επίσης σε κατηγορίες που περιλαμβάνονται.</string>
     <string name="pref_category_auto_download">Αυτόματη λήψη</string>
-    <string name="pref_library_update_categories_details">Τα manga στις αποκλεισμένες κατηγορίες δεν θα ενημερώνονται ακόμη και αν βρίσκονται επίσης στις συμπεριλαμβανόμενες κατηγορίες.</string>
+    <string name="pref_library_update_categories_details">Οι καταχωρίσεις σε εξαιρούμενες κατηγορίες δε θα ενημερώνονται ακόμη και αν περιλαμβάνονται επίσης σε κατηγορίες που περιλαμβάνονται.</string>
     <string name="action_show_errors">Πατήστε για να δείτε λεπτομέρειες</string>
     <string name="update_check_eol">Αυτή η έκδοση Android δεν υποστηρίζεται πλέον</string>
     <string name="clipboard_copy_error">Απέτυχε η αντιγραφή στο πρόχειρο</string>
     <string name="rotation_landscape">Οριζόντια</string>
     <string name="rotation_portrait">Κατακόρυφα</string>
-    <string name="pref_create_folder_per_manga_summary">Δημιουργεί φακέλους σύμφωνα με τον τίτλο manga</string>
+    <string name="pref_create_folder_per_manga_summary">Δημιουργεί φακέλους σύμφωνα με τους τίτλους των καταχωρήσεων</string>
     <string name="pref_create_folder_per_manga">Αποθήκευση σελίδων σε ξεχωριστούς φακέλους</string>
     <string name="pref_reader_actions">Ενέργειες</string>
     <string name="rotation_type">Τύπος περιστροφής</string>
@@ -578,7 +578,7 @@
     <string name="local_invalid_format">Μη έγκυρη μορφή κεφαλαίου</string>
     <string name="chapter_not_found">Το κεφάλαιο δε βρέθηκε</string>
     <string name="restrictions">Περιορισμοί: %s</string>
-    <string name="action_display_local_badge">Τοπικά manga</string>
+    <string name="action_display_local_badge">Τοπική πηγή</string>
     <string name="off">Απενεργοποιημένο</string>
     <string name="on">Ενεργοποιημένο</string>
     <string name="error_sharing_cover">Σφάλμα κοινής χρήσης του εξωφύλλου</string>
@@ -600,7 +600,7 @@
     <string name="theme_yinyang">Γιν και Γιανγκ</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Φράουλα Daiquiri</string>
-    <string name="enhanced_tracking_info">Υπηρεσίες που παρέχουν βελτιωμένες δυνατότητες για συγκεκριμένες πηγές. Τα manga παρακολουθούνται αυτόματα όταν προστίθεται στη βιβλιοθήκη σας.</string>
+    <string name="enhanced_tracking_info">Υπηρεσίες που παρέχουν βελτιωμένες δυνατότητες για συγκεκριμένες πηγές. Οι καταχωρήσεις παρακολουθούνται αυτόματα όταν προστίθενται στη βιβλιοθήκη σας.</string>
     <string name="tracker_komga_warning">Αυτό το tracker είναι συμβατό μόνο με την πηγή Komga.</string>
     <string name="enhanced_services">Βελτιωμένες υπηρεσίες</string>
     <string name="theme_monet">Δυναμικό</string>
@@ -636,7 +636,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Εγκαταστήστε και ξεκινήστε το Shizuku για να χρησιμοποιήσετε το Shizuku ως πρόγραμμα εγκατάστασης επεκτάσεων.</string>
     <string name="ext_installer_shizuku_stopped">Το Shizuku δεν τρέχει</string>
     <string name="ext_installer_legacy">Παλαιό</string>
-    <string name="action_sort_count">Σύνολο manga</string>
+    <string name="action_sort_count">Σύνολο καταχωρήσεων</string>
     <string name="pref_verbose_logging">Λεπτομερής καταγραφή</string>
     <string name="pref_verbose_logging_summary">Εκτύπωση λεπτομερών αρχείων καταγραφής στο αρχείο καταγραφής συστήματος (μειώνει την απόδοση της εφαρμογής)</string>
     <string name="action_display_language_badge">Γλώσσα</string>
@@ -650,7 +650,7 @@
     <string name="ext_update_all">Ενημέρωση όλων</string>
     <string name="channel_app_updates">Ενημερώσεις εφαρμογής</string>
     <string name="pref_auto_clear_chapter_cache">Εκκαθάριση της προσωρινής μνήμης κεφαλαίων στο κλείσιμο της εφαρμογής</string>
-    <string name="clear_database_source_item_count">%1$d manga εκτός βιβλιοθήκης στη βάση δεδομένων</string>
+    <string name="clear_database_source_item_count">%1$d καταχωρήσεις εκτός βιβλιοθήκης στη βάση δεδομένων</string>
     <string name="database_clean">Τίποτα προς εκκαθάριση</string>
     <string name="extension_api_error">Απέτυχε η λήψη λίστας επεκτάσεων</string>
     <string name="privacy_policy">Πολιτική απορρήτου</string>
@@ -663,7 +663,7 @@
     <string name="publishing_finished">Η έκδοσή ολοκληρώθηκε</string>
     <string name="action_faq_and_guides">Συχνές ερωτήσεις και οδηγοί</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="action_show_manga">Εμφάνιση manga</string>
+    <string name="action_show_manga">Εμφάνιση καταχώρισης</string>
     <string name="pref_landscape_zoom">Ζουμ οριζόντιας εικόνας</string>
     <string name="confirm_manga_add_duplicate">Έχετε μια καταχώρηση στη βιβλιοθήκη σας με το ίδιο όνομα αλλά από διαφορετική πηγή (%1$s).
 \n
@@ -694,7 +694,7 @@
     <string name="battery_not_low">Όταν η μπαταρία δεν είναι χαμηλή</string>
     <string name="source_filter_empty_screen">Δε βρέθηκε εγκατεστημένη πηγή</string>
     <string name="action_sort_unread_count">Αριθμός μη αναγνωσμένων</string>
-    <string name="action_sort_last_manga_update">Τελευταία ενημέρωση manga</string>
+    <string name="action_sort_last_manga_update">Τελευταίος έλεγχος ενημέρωσης</string>
     <string name="source_empty_screen">Δε βρέθηκε πηγή</string>
     <string name="split_tall_images">Διαχωρισμός ψηλών εικόνων</string>
     <string name="split_tall_images_summary">Βελτιώνει την απόδοση του αναγνώστη</string>
@@ -728,7 +728,7 @@
     <string name="pref_reset_user_agent_string">Επαναφορά προεπιλεγμένης συμβολοσειράς πράκτορα χρήστη</string>
     <string name="action_remove_everything">Καταργήστε τα πάντα</string>
     <string name="loader_rar5_error">Η μορφή RARv5 δεν υποστηρίζεται</string>
-    <string name="appwidget_updates_description">Δείτε τα πρόσφατα ενημερωμένα manga σας</string>
+    <string name="appwidget_updates_description">Δείτε τις πρόσφατα ενημερωμένες καταχωρήσεις της βιβλιοθήκης σας</string>
     <string name="appwidget_unavailable_locked">Το widget δεν είναι διαθέσιμο όταν είναι ενεργοποιημένο το κλείδωμα εφαρμογών</string>
     <string name="update_already_running">Εκτελείται ήδη μια ενημέρωση</string>
     <string name="error_user_agent_string_blank">Η συμβολοσειρά πράκτορα χρήστη δεν μπορεί να είναι κενή</string>
@@ -766,4 +766,10 @@
     <string name="invalid_location">Μη έγκυρη τοποθεσία: %s</string>
     <string name="error_user_agent_string_invalid">Μη έγκυρη συμβολοσειρά πράκτορα χρήστη</string>
     <string name="updates_last_update_info_just_now">Μόλις τώρα</string>
+    <string name="download_notifier_cache_renewal">Λήψεις ευρετηρίου</string>
+    <string name="channel_downloader_cache">Προσωρινή μνήμη λήψεων</string>
+    <string name="fdroid_warning">Οι εκδόσεις F-Droid δεν υποστηρίζονται επίσημα.
+\nΠατήστε για να μάθετε περισσότερα.</string>
+    <string name="action_open_random_manga">Άνοιγμα τυχαίας καταχώρησης</string>
+    <string name="information_no_entries_found">Δε βρέθηκαν καταχωρήσεις σε αυτή την κατηγορία</string>
 </resources>

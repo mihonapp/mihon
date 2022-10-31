@@ -267,7 +267,7 @@
     <string name="update_check_no_new_updates">Yeni güncelleme yok</string>
     <string name="update_check_look_for_updates">Güncellemeler aranıyor…</string>
     <string name="update_check_notification_download_in_progress">İndiriliyor…</string>
-    <string name="update_check_notification_download_complete">Kurmak için dokunun</string>
+    <string name="update_check_notification_download_complete">Güncellemeyi kurmak için dokunun</string>
     <string name="update_check_notification_download_error">İndirme hatası</string>
     <string name="update_check_notification_update_available">Yeni sürüm var!</string>
     <string name="information_no_downloads">İndirme yok</string>
@@ -308,7 +308,7 @@
     <string name="action_webview_refresh">Yenile</string>
     <string name="pref_category_library">Kitaplık</string>
     <string name="ext_obsolete">Eski</string>
-    <string name="obsolete_extension_message">Bu uzantı artık kullanılamaz.</string>
+    <string name="obsolete_extension_message">Bu uzantı artık kullanılamıyor. Düzgün çalışmayabilir ve uygulamada sorunlara neden olabilir. Kaldırılması tavsiye edilir.</string>
     <string name="pref_date_format">Tarih biçimi</string>
     <string name="pref_category_library_update">Genel güncelleme</string>
     <string name="logout_title">%1$s \'den çıkılsın mı\?</string>
@@ -361,8 +361,8 @@
     <string name="email">Eposta adresi</string>
     <string name="pref_always_show_chapter_transition">Bölüm geçişini her zaman göster</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">%d başlık için</item>
-        <item quantity="other">%d başlık için</item>
+        <item quantity="one">%d girdi için</item>
+        <item quantity="other">%d girdi için</item>
     </plurals>
     <string name="action_menu">Menü</string>
     <string name="action_reorganize_by">Yeniden sırala</string>
@@ -561,7 +561,7 @@
     <string name="rotation_landscape">Yatay</string>
     <string name="rotation_portrait">Dikey</string>
     <string name="rotation_type">Döndürme türü</string>
-    <string name="pref_create_folder_per_manga_summary">Klasörleri girdilerin başlıklarına göre oluşturur</string>
+    <string name="pref_create_folder_per_manga_summary">Girdilerin başlığına göre klasörler oluşturur</string>
     <string name="pref_create_folder_per_manga">Sayfaları ayrı klasörlere kaydet</string>
     <string name="pref_reader_actions">Eylemler</string>
     <string name="pref_grayscale">Gri tonlama</string>
@@ -653,7 +653,7 @@
     <string name="clear_database_source_item_count">Veri tabanında %1$d kitaplık dışı girdi</string>
     <string name="database_clean">Temizlenecek bir şey yok</string>
     <string name="extension_api_error">Uzantı listesi alınamadı</string>
-    <string name="pref_library_update_manga_restriction">Başlıkları güncellemeyi atla</string>
+    <string name="pref_library_update_manga_restriction">Girdileri güncellemeyi atla</string>
     <string name="save_chapter_as_cbz">CBZ arşivi olarak kaydet</string>
     <string name="publishing_finished">Yayımı tamamlandı</string>
     <string name="privacy_policy">Gizlilik politikası</string>
@@ -766,4 +766,10 @@
     <string name="invalid_location">Geçersiz konum: %s</string>
     <string name="error_user_agent_string_invalid">Geçersiz kullanıcı aracısı dizgesi</string>
     <string name="updates_last_update_info_just_now">Şimdi</string>
+    <string name="download_notifier_cache_renewal">İndirilenler dizinleniyor</string>
+    <string name="channel_downloader_cache">İndirme önbelleği</string>
+    <string name="action_open_random_manga">Rastgele girdi aç</string>
+    <string name="information_no_entries_found">Bu kategoride girdi bulunamadı</string>
+    <string name="fdroid_warning">F-Droid derlemeleri resmi olarak desteklenmemektedir.
+\nDaha fazla bilgi edinmek için dokunun.</string>
 </resources>

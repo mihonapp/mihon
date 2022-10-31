@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Nom</string>
     <string name="categories">Categories</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Mangues</string>
     <string name="chapters">Capítols</string>
     <string name="track">En seguiment</string>
     <string name="history">Historial</string>
@@ -69,7 +69,7 @@
     <string name="pref_category_general">General</string>
     <string name="pref_category_reader">Lector</string>
     <string name="pref_category_downloads">Baixades</string>
-    <string name="pref_category_tracking">En seguiment</string>
+    <string name="pref_category_tracking">Seguiment</string>
     <string name="pref_category_advanced">Avançat</string>
     <string name="pref_category_about">Quant a</string>
     <string name="pref_library_columns">Elements per fila</string>
@@ -85,7 +85,7 @@
     <string name="all">Tot</string>
     <string name="pref_library_update_restriction">Restriccions del dispositiu per a les actualitzacions automàtiques</string>
     <string name="charging">Quan s\'estigui carregant</string>
-    <string name="pref_update_only_non_completed">Amb l\'estat «Completada»</string>
+    <string name="pref_update_only_non_completed">Amb l\'estat «Completat»</string>
     <string name="pref_auto_update_manga_sync">Actualitza el progrés després de llegir</string>
     <string name="default_category">Categoria per defecte</string>
     <string name="default_category_summary">Demana-ho sempre</string>
@@ -94,7 +94,7 @@
     <string name="ext_pending">Pendent</string>
     <string name="ext_downloading">S\'està baixant</string>
     <string name="ext_installing">S\'està instal·lant</string>
-    <string name="ext_installed">Instal·lada</string>
+    <string name="ext_installed">Instal·lades</string>
     <string name="ext_trust">Confia-hi</string>
     <string name="ext_untrusted">No és de confiança</string>
     <string name="ext_uninstall">Desinstal·la</string>
@@ -179,8 +179,8 @@
     <string name="pref_clear_cookies">Esborra les galetes</string>
     <string name="cookies_cleared">S\'han esborrat les galetes</string>
     <string name="pref_clear_database">Buida la base de dades</string>
-    <string name="pref_clear_database_summary">Suprimeix l\'historial del manga que no sigui a la biblioteca</string>
-    <string name="clear_database_confirmation">N\'esteu segur\? Es perdrà el progrés i els capítols llegits del manga que no sigui a la biblioteca</string>
+    <string name="pref_clear_database_summary">Suprimeix l\'historial dels elements que no siguin a la biblioteca</string>
+    <string name="clear_database_confirmation">N\'esteu segur\? Es perdrà el progrés i els capítols llegits dels elements que no siguin a la biblioteca</string>
     <string name="clear_database_completed">S\'han suprimit les entrades</string>
     <string name="pref_refresh_library_tracking">Refresca el seguiment</string>
     <string name="pref_refresh_library_tracking_summary">Actualitza l\'estat, la puntuació i el darrer capítol llegit dels serveis de seguiment</string>
@@ -244,8 +244,8 @@
     <string name="error_category_exists">Ja hi ha una categoria amb aquest nom!</string>
     <string name="snack_categories_deleted">S\'han suprimit les categories</string>
     <string name="dialog_with_checkbox_remove_description">S\'eliminarà la data de lectura d\'aquest capítol. N\'esteu segur\?</string>
-    <string name="dialog_with_checkbox_reset">Reinicia tots els capítols d\'aquest manga</string>
-    <string name="snack_add_to_library">Voleu afegir el manga a la biblioteca\?</string>
+    <string name="dialog_with_checkbox_reset">Reinicia tots els capítols d\'aquest element</string>
+    <string name="snack_add_to_library">Voleu afegir-lo a la biblioteca\?</string>
     <string name="picture_saved">S\'ha desat la imatge</string>
     <string name="custom_filter">Filtre personalitzat</string>
     <string name="set_as_cover">Defineix com a portada</string>
@@ -268,14 +268,14 @@
     <string name="download_queue_error">No s\'han pogut baixar els capítols. Podeu tornar-ho a provar a la secció de baixades</string>
     <string name="notification_new_chapters">S\'han trobat nous capítols</string>
     <string name="notification_cover_update_failed">No s\'ha pogut actualitzar la portada</string>
-    <string name="notification_first_add_to_library">Afegiu el manga a la vostra biblioteca abans de fer això</string>
+    <string name="notification_first_add_to_library">Afegiu l\'element a la vostra biblioteca abans de fer això</string>
     <string name="file_select_cover">Seleccioneu la imatge de portada</string>
     <string name="file_select_backup">Seleccioneu el fitxer de còpia de seguretat</string>
     <string name="update_check_confirm">Baixa</string>
     <string name="update_check_no_new_updates">No hi ha cap nova actualització disponible</string>
     <string name="update_check_look_for_updates">S\'estan cercant actualitzacions…</string>
     <string name="update_check_notification_download_in_progress">S\'està baixant…</string>
-    <string name="update_check_notification_download_complete">Premeu per a instal·lar</string>
+    <string name="update_check_notification_download_complete">Premeu per a instal·lar l\'actualització</string>
     <string name="update_check_notification_download_error">Error de baixada</string>
     <string name="update_check_notification_update_available">Nova versió disponible!</string>
     <string name="information_no_downloads">No hi ha baixades</string>
@@ -302,13 +302,13 @@
     <string name="filter_mode_darken">Crema / Enfosqueix</string>
     <string name="label_help">Ajuda</string>
     <string name="no_results_found">No s\'ha trobat cap resultat</string>
-    <string name="migration_selection_prompt">Seleccioneu un origen del qual vulgueu migrar</string>
+    <string name="migration_selection_prompt">Seleccioneu una font a migrar</string>
     <string name="action_webview_back">Endarrere</string>
     <string name="action_webview_forward">Endavant</string>
     <string name="action_webview_refresh">Actualitza</string>
     <string name="pref_category_library">Biblioteca</string>
     <string name="ext_obsolete">Obsoleta</string>
-    <string name="obsolete_extension_message">Aquesta extensió ja no està disponible.</string>
+    <string name="obsolete_extension_message">Aquesta extensió ja no està disponible. És possible que no funcioni correctament i pot causar problemes a l\'aplicació. És recomanable que la desinstal·leu.</string>
     <string name="pref_date_format">Format de data</string>
     <string name="pref_category_library_update">Actualització global</string>
     <string name="logout_title">Voleu tancar la sessió a %1$s\?</string>
@@ -361,8 +361,8 @@
     <string name="email">Adreça electrònica</string>
     <string name="pref_always_show_chapter_transition">Mostra sempre la transició de capítol</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Per a %d títol</item>
-        <item quantity="other">Per a %d títols</item>
+        <item quantity="one">Per a %d element</item>
+        <item quantity="other">Per a %d elements</item>
     </plurals>
     <string name="action_menu">Menú</string>
     <string name="action_reorganize_by">Reordena</string>
@@ -382,7 +382,7 @@
     <string name="pref_skip_filtered_chapters">Omet els capítols filtrats</string>
     <string name="label_sources">Fonts</string>
     <string name="action_select_inverse">Inverteix la selecció</string>
-    <string name="pinned_sources">Fixat</string>
+    <string name="pinned_sources">Fixades</string>
     <string name="action_pin">Fixa</string>
     <string name="add_tracking">Segueix</string>
     <string name="webtoon_side_padding_25">25%</string>
@@ -410,10 +410,10 @@
     <string name="restore_in_progress">Ja s\'està fent una restauració</string>
     <string name="backup_in_progress">Ja s\'està fent una còpia de seguretat</string>
     <string name="local_source_help_guide">Guia de fonts locals</string>
-    <string name="last_used_source">Utilitzada per darrer cop</string>
+    <string name="last_used_source">Utilitzada per darrera vegada</string>
     <string name="check_for_updates">Comprova si hi ha actualitzacions</string>
     <string name="restore_duration">%02d min i %02d s</string>
-    <string name="downloaded_only_summary">Filtra tot el manga de la vostra biblioteca</string>
+    <string name="downloaded_only_summary">Filtra tots els elements de la vostra biblioteca</string>
     <plurals name="download_queue_summary">
         <item quantity="one">En resta %1$s</item>
         <item quantity="other">En resten %1$s</item>
@@ -433,14 +433,14 @@
         <item quantity="other">%d categories</item>
     </plurals>
     <string name="action_display_unread_badge">Capítols no llegits</string>
-    <string name="tracking_info">Sincronització unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment. Configureu el seguiment d\'entrades individuals de manga al seu botó de seguiment.</string>
+    <string name="tracking_info">La sincronització és unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment. Configureu el seguiment d\'elements individuals al seu botó de seguiment.</string>
     <string name="pref_refresh_library_covers">Refresca les portades de la biblioteca</string>
     <string name="unofficial_extension_message">Aquesta extensió no pertany a la llista d\'extensions oficials del Tachiyomi.</string>
     <string name="ext_unofficial">No oficial</string>
     <string name="sort_by_upload_date">Per data de pujada</string>
     <string name="label_data">Dades</string>
     <string name="backup_restore_missing_sources">Manquen fonts:</string>
-    <string name="invalid_backup_file_missing_manga">La còpia de seguretat no conté cap manga.</string>
+    <string name="invalid_backup_file_missing_manga">La còpia de seguretat no conté cap element de la biblioteca.</string>
     <string name="invalid_backup_file">Fitxer de còpia de seguretat invàlid</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprova si hi ha noves portades o detalls en actualitzar la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Refresca les metadades automàticament</string>
@@ -499,13 +499,13 @@
     <string name="no_chapters_error">No s\'ha trobat cap capítol</string>
     <string name="chapter_settings_updated">S\'ha actualitzat la configuració per defecte dels capítols</string>
     <string name="set_chapter_settings_as_default">Estableix com a per defecte</string>
-    <string name="also_set_chapter_settings_for_library">Aplica-ho també a tot el manga de la biblioteca</string>
+    <string name="also_set_chapter_settings_for_library">Aplica-ho també a tots els elements de la biblioteca</string>
     <string name="confirm_set_chapter_settings">Esteu segur que voleu desar aquesta configuració com a configuració per defecte\?</string>
     <string name="chapter_settings">Configuració dels capítols</string>
     <string name="share_page_info">%1$s: %2$s, pàgina %3$d</string>
     <string name="action_search_settings">Configuració de la cerca</string>
     <string name="downloaded_chapters">Capítols baixats</string>
-    <string name="manga_from_library">Manga de la biblioteca</string>
+    <string name="manga_from_library">De la biblioteca</string>
     <string name="clear_history_confirmation">N’esteu segur\? Es perdrà tot l’historial.</string>
     <string name="pref_incognito_mode_summary">Pausa l\'historial de lectura</string>
     <string name="pref_incognito_mode">Mode d\'incògnit</string>
@@ -548,8 +548,8 @@
     <string name="clipboard_copy_error">No s\'ha pogut copiar al porta-retalls</string>
     <string name="notification_incognito_text">Desactiva el mode d\'incògnit</string>
     <string name="pref_dns_over_https">DNS sobre HTTPS (DoH)</string>
-    <string name="pref_download_new_categories_details">El manga de les categories excloses no es baixarà encara que també sigui a les categories incloses.</string>
-    <string name="pref_library_update_categories_details">El manga de les categories excloses no s\'actualitzarà encara que també sigui a les categories incloses.</string>
+    <string name="pref_download_new_categories_details">Els elements de les categories excloses no es baixaran encara que també siguin a les categories incloses.</string>
+    <string name="pref_library_update_categories_details">Els elements de les categories excloses no s\'actualitzaran encara que també siguin a les categories incloses.</string>
     <string name="pref_category_auto_download">Baixada automàtica</string>
     <string name="rotation_landscape">Horitzontal</string>
     <string name="rotation_portrait">Vertical</string>
@@ -559,7 +559,7 @@
     <string name="nav_zone_next">Següent</string>
     <string name="nav_zone_prev">Anterior</string>
     <string name="automatic_background">Automàtic</string>
-    <string name="pref_create_folder_per_manga_summary">Crea carpetes segons el títol del manga</string>
+    <string name="pref_create_folder_per_manga_summary">Crea carpetes segons el títol dels elements</string>
     <string name="pref_create_folder_per_manga">Desa les pàgines en carpetes separades</string>
     <string name="pref_reader_actions">Accions</string>
     <string name="pref_grayscale">Escala de grisos</string>
@@ -570,7 +570,7 @@
     <string name="none">Cap</string>
     <string name="action_show_errors">Premeu per a veure\'n els detalls</string>
     <string name="cancel_all_for_series">Cancel·la-ho tot per a aquesta sèrie</string>
-    <string name="action_sort_chapter_fetch_date">Data d\'obtenció del capítol</string>
+    <string name="action_sort_chapter_fetch_date">Data d\'obtenció dels capítols</string>
     <string name="date">Data</string>
     <string name="local_filter_order_by">Ordena per</string>
     <string name="local_invalid_format">El format del capítol no és vàlid</string>
@@ -586,7 +586,7 @@
     <string name="on">Activat</string>
     <string name="categorized_display_settings">Opcions de visualització i ordenació per categoria</string>
     <string name="restrictions">Restriccions: %s</string>
-    <string name="action_display_local_badge">Manga local</string>
+    <string name="action_display_local_badge">Font local</string>
     <string name="pref_lowest">La més baixa</string>
     <string name="pref_low">Baixa</string>
     <string name="pref_high">Alta</string>
@@ -606,7 +606,7 @@
     <string name="theme_greenapple">Verd poma</string>
     <string name="pref_category_appearance">Aparença</string>
     <string name="action_start_downloading_now">Inicia la baixada ara</string>
-    <string name="action_sort_count">Nombre total de manga</string>
+    <string name="action_sort_count">Nombre total d\'elements</string>
     <string name="pref_app_theme">Tema de l\'aplicació</string>
     <string name="theme_monet">Dinàmic</string>
     <string name="recently">Recentment</string>
@@ -640,14 +640,14 @@
     <string name="ext_installer_pref">Instal·lador</string>
     <string name="ext_installer_legacy">Antic</string>
     <string name="pref_auto_clear_chapter_cache">Buida la memòria cau de capítols en tancar l\'aplicació</string>
-    <string name="enhanced_tracking_info">Serveix que proporcionen funcionalitats millorades per a fonts específiques. El manga se segueix automàticament en afegir-lo a la vostra biblioteca.</string>
+    <string name="enhanced_tracking_info">Aquests serveis proporcionen funcionalitats millorades per a fonts específiques. Els elements se segueixen automàticament en afegir-los a la vostra biblioteca.</string>
     <string name="about_dont_kill_my_app">Alguns fabricants tenen restriccions addicionals per a les aplicacions que finalitzen els serveis en segon pla. Aquest lloc web té més informació de com solucionar-ho.</string>
-    <string name="clear_database_source_item_count">Hi ha %1$d manga que no és a la biblioteca a la base de dades</string>
+    <string name="clear_database_source_item_count">Hi ha %1$d elements a la base de dades que no són a la biblioteca</string>
     <string name="cancelled">Cancel·lada</string>
     <string name="library_errors_help">Per a obtenir ajuda per a resoldre errors d\'actualització de la biblioteca, vegeu %1$s</string>
     <string name="extension_api_error">No s\'ha pogut obtenir la llista d\'extensions</string>
     <string name="action_faq_and_guides">PMF i guies</string>
-    <string name="pref_library_update_manga_restriction">Omet les actualitzacions dels títols</string>
+    <string name="pref_library_update_manga_restriction">Omet les actualitzacions dels elements</string>
     <string name="pref_update_only_completely_read">Amb capítols no llegits</string>
     <string name="pref_library_update_show_tab_badge">Mostra el comptador de no llegits a la icona d\'actualitzacions</string>
     <string name="webtoon_side_padding_5">5%</string>
@@ -664,7 +664,7 @@
     <string name="download_queue_size_warning">Advertència: Les baixades massa grosses poden fer que les fonts es tornin més lentes i/o bloquin el Tachiyomi. Premeu per a obtenir-ne més informació.</string>
     <string name="notification_size_warning">Les actualitzacions grosses perjudiquen les fonts i poden implicar actualitzacions més lentes i un augment en l\'ús de bateria. Premeu per a obtenir-ne més informació.</string>
     <string name="pref_landscape_zoom">Amplia la imatge en horitzontal</string>
-    <string name="action_show_manga">Mostra el manga</string>
+    <string name="action_show_manga">Mostra l\'element</string>
     <string name="confirm_manga_add_duplicate">Teniu un element a la vostra biblioteca amb el mateix nom però d\'una font diferent (%1$s).
 \n
 \nVoleu continuar igualment\?</string>
@@ -695,7 +695,7 @@
     <string name="source_filter_empty_screen">No s\'ha trobat cap font instal·lada</string>
     <string name="source_empty_screen">No s\'ha trobat cap font</string>
     <string name="action_sort_unread_count">Nombre de no llegits</string>
-    <string name="action_sort_last_manga_update">Darrera actualització de manga</string>
+    <string name="action_sort_last_manga_update">Darrera comprovació d\'actualitzacions</string>
     <string name="split_tall_images">Divideix les imatges altes</string>
     <string name="split_tall_images_summary">Millora el rendiment del lector</string>
     <string name="download_notifier_split_page_not_found">No s\'ha trobat la pàgina %d en dividir</string>
@@ -728,7 +728,7 @@
     <string name="pref_reset_user_agent_string">Restableix la cadena d\'agent d\'usuari per defecte</string>
     <string name="appwidget_unavailable_locked">El widget no està disponible quan hi ha activat el blocatge de l\'aplicació</string>
     <string name="loader_rar5_error">El format RARv5 no està suportat</string>
-    <string name="appwidget_updates_description">Vegeu els vostres mangues actualitzats recentment</string>
+    <string name="appwidget_updates_description">Vegeu els elements de la biblioteca actualitzats recentment</string>
     <string name="action_remove_everything">Elimina-ho tot</string>
     <string name="update_already_running">Ja s\'està executant una actualització</string>
     <string name="theme_tidalwave">Tsunami</string>
@@ -746,7 +746,7 @@
         <item quantity="other">Els següents %d capítols no llegits</item>
     </plurals>
     <string name="missing_storage_permission">No s\'han concedit permisos d\'emmagatzematge</string>
-    <string name="popular">Popular</string>
+    <string name="popular">Populars</string>
     <string name="pref_backup_summary">Còpies de seguretat automàtiques i manuals</string>
     <string name="pref_reader_summary">Mode de lectura, visualització i navegació</string>
     <string name="pref_downloads_summary">Baixades automàtiques i per avançat</string>
@@ -765,5 +765,11 @@
     <string name="remove_manga">Suprimireu «%s» de la vostra biblioteca</string>
     <string name="pref_long_strip_split">Divideix les imatges altes (BETA)</string>
     <string name="action_search_hint">Cerca…</string>
-    <string name="updates_last_update_info">Biblioteca actualitzada per darrer cop: %s</string>
+    <string name="updates_last_update_info">Biblioteca actualitzada per darrera vegada: %s</string>
+    <string name="download_notifier_cache_renewal">S\'estan indexant les baixades</string>
+    <string name="channel_downloader_cache">Memòria cau de baixades</string>
+    <string name="action_open_random_manga">Obre un element aleatori</string>
+    <string name="fdroid_warning">Les compilacions de F-Droid no tenen assistència oficial.
+\nPremeu per a obtenir-ne més informació.</string>
+    <string name="information_no_entries_found">No s\'ha trobat cap element en aquesta categoria</string>
 </resources>

@@ -276,7 +276,7 @@
     <string name="update_check_no_new_updates">Non bi sunt agiornamentos disponìbiles noos</string>
     <string name="update_check_look_for_updates">Chirchende agiornamentos…</string>
     <string name="update_check_notification_download_in_progress">Iscarrighende…</string>
-    <string name="update_check_notification_download_complete">Toca pro installare</string>
+    <string name="update_check_notification_download_complete">Toca pro installare s\'agiornamentu</string>
     <string name="update_check_notification_download_error">Errore de iscarrigamentu</string>
     <string name="update_check_notification_update_available">Versione noa a disponimentu!</string>
     <string name="information_no_downloads">Perunu iscarrigamentu</string>
@@ -308,7 +308,7 @@
     <string name="action_webview_refresh">Annoa</string>
     <string name="pref_category_library">Biblioteca</string>
     <string name="ext_obsolete">Obsoleta</string>
-    <string name="obsolete_extension_message">Cust\'estensione no est prus a disponimentu.</string>
+    <string name="obsolete_extension_message">Custa estensione no est prus a disponimentu. Diat pòdere non funtzionare prus comente si tocat e causare problemas cun s\'aplicatzione. Ti cussigiamus de la disinstallare.</string>
     <string name="pref_date_format">Formadu de sa data</string>
     <string name="pref_category_library_update">Agiornamentu globale</string>
     <string name="logout_title">Essire dae %1$s\?</string>
@@ -768,4 +768,6 @@
     <string name="updates_last_update_info_just_now">Como como</string>
     <string name="download_notifier_cache_renewal">Inditzizende sos iscarrigamentos</string>
     <string name="channel_downloader_cache">Memòria temporànea de iscarrigamentu</string>
+    <string name="action_open_random_manga">Aberi un\'elementu a casu</string>
+    <string name="information_no_entries_found">Perunu elementu atzapadu in custa categoria</string>
 </resources>

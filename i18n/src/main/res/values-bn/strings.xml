@@ -661,7 +661,7 @@
     <string name="notification_update_error">%1$d আপডেট(গুলি) ব্যর্থ হয়েছে</string>
     <string name="publishing_finished">সম্পূর্ণ প্রকাশিত</string>
     <string name="action_filter_started">শুরু করা হয়েছে</string>
-    <string name="action_sort_last_manga_update">সর্বশেষ মাঙ্গা হালনাগাদ</string>
+    <string name="action_sort_last_manga_update">সর্বশেষ হালনাগাদ চেক</string>
     <string name="delete_category_confirmation">আপনি কি \"%s\" বিভাগটি মুছে ফেলতে চান\?</string>
     <string name="appwidget_updates_description">সম্প্রতি আপনার হালনাগাদকৃত মাঙ্গা দেখুন</string>
     <string name="are_you_sure">আপনি কি নিশ্চিত\?</string>
