@@ -32,10 +32,12 @@ SELECT *
 FROM mangas
 WHERE _id = :id;
 
+-- TODO: this should ideally never really have more than 1 result
 getMangaByUrlAndSource:
 SELECT *
 FROM mangas
-WHERE url = :url AND source = :source;
+WHERE url = :url AND source = :source
+LIMIT 1;
 
 getFavorites:
 SELECT *
