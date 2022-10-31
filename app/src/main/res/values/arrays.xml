@@ -64,6 +64,7 @@
         <item>@string/rotation_landscape</item>
         <item>@string/rotation_force_portrait</item>
         <item>@string/rotation_force_landscape</item>
+        <item>@string/rotation_reverse_portrait</item>
     </string-array>
 
     <string-array name="color_filter_modes">
