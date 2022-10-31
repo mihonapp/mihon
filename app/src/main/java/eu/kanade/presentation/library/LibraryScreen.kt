@@ -6,6 +6,8 @@ import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.util.fastAll
 import eu.kanade.domain.category.model.Category
@@ -40,6 +42,8 @@ fun LibraryScreen(
     onClickRefresh: (Category?) -> Boolean,
     onClickOpenRandomManga: () -> Unit,
 ) {
+    val haptic = LocalHapticFeedback.current
+
     Scaffold(
         topBar = { scrollBehavior ->
             val title by presenter.getToolbarTitle()
@@ -101,7 +105,10 @@ fun LibraryScreen(
             onChangeCurrentPage = { presenter.activeCategory = it },
             onMangaClicked = onMangaClicked,
             onToggleSelection = { presenter.toggleSelection(it) },
-            onToggleRangeSelection = { presenter.toggleRangeSelection(it) },
+            onToggleRangeSelection = {
+                presenter.toggleRangeSelection(it)
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            },
             onRefresh = onClickRefresh,
             onGlobalSearchClicked = onGlobalSearchClicked,
             getNumberOfMangaForCategory = { presenter.getMangaCountForCategory(it) },

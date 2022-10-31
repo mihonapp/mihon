@@ -26,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -239,9 +241,14 @@ private fun Modifier.commonClickable(
     onLongClick: () -> Unit,
     onClick: () -> Unit,
 ) = composed {
+    val haptic = LocalHapticFeedback.current
+
     this.combinedClickable(
         enabled = enabled,
-        onLongClick = onLongClick,
+        onLongClick = {
+            onLongClick()
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        },
         onClick = onClick,
         role = Role.Button,
         interactionSource = remember { MutableInteractionSource() },
