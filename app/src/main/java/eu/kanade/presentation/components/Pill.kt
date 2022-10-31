@@ -42,7 +42,6 @@ fun Pill(
                 text = text,
                 fontSize = fontSize,
                 maxLines = 1,
-                softWrap = false,
             )
         }
     }
