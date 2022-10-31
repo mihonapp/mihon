@@ -46,6 +46,7 @@ fun MangaChapterListItem(
     read: Boolean,
     bookmark: Boolean,
     selected: Boolean,
+    downloadIndicatorEnabled: Boolean,
     downloadStateProvider: () -> Download.State,
     downloadProgressProvider: () -> Int,
     onLongClick: () -> Unit,
@@ -129,6 +130,7 @@ fun MangaChapterListItem(
         // Download view
         if (onDownloadClick != null) {
             ChapterDownloadIndicator(
+                enabled = downloadIndicatorEnabled,
                 modifier = Modifier.padding(start = 4.dp),
                 downloadStateProvider = downloadStateProvider,
                 downloadProgressProvider = downloadProgressProvider,

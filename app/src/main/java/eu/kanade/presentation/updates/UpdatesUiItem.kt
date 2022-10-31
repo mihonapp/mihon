@@ -135,6 +135,7 @@ fun LazyListScope.updatesUiItems(
                     onDownloadChapter = {
                         if (selectionMode.not()) onDownloadChapter(listOf(updatesItem), it)
                     },
+                    downloadIndicatorEnabled = selectionMode.not(),
                     downloadStateProvider = updatesItem.downloadStateProvider,
                     downloadProgressProvider = updatesItem.downloadProgressProvider,
                 )
@@ -153,6 +154,7 @@ fun UpdatesUiItem(
     onClickCover: () -> Unit,
     onDownloadChapter: (ChapterDownloadAction) -> Unit,
     // Download Indicator
+    downloadIndicatorEnabled: Boolean,
     downloadStateProvider: () -> Download.State,
     downloadProgressProvider: () -> Int,
 ) {
@@ -225,6 +227,7 @@ fun UpdatesUiItem(
             }
         }
         ChapterDownloadIndicator(
+            enabled = downloadIndicatorEnabled,
             modifier = Modifier.padding(start = 4.dp),
             downloadStateProvider = downloadStateProvider,
             downloadProgressProvider = downloadProgressProvider,

@@ -43,26 +43,41 @@ enum class ChapterDownloadAction {
 
 @Composable
 fun ChapterDownloadIndicator(
+    enabled: Boolean,
     modifier: Modifier = Modifier,
     downloadStateProvider: () -> Download.State,
     downloadProgressProvider: () -> Int,
     onClick: (ChapterDownloadAction) -> Unit,
 ) {
     when (val downloadState = downloadStateProvider()) {
-        Download.State.NOT_DOWNLOADED -> NotDownloadedIndicator(modifier = modifier, onClick = onClick)
+        Download.State.NOT_DOWNLOADED -> NotDownloadedIndicator(
+            enabled = enabled,
+            modifier = modifier,
+            onClick = onClick,
+        )
         Download.State.QUEUE, Download.State.DOWNLOADING -> DownloadingIndicator(
+            enabled = enabled,
             modifier = modifier,
             downloadState = downloadState,
             downloadProgressProvider = downloadProgressProvider,
             onClick = onClick,
         )
-        Download.State.DOWNLOADED -> DownloadedIndicator(modifier = modifier, onClick = onClick)
-        Download.State.ERROR -> ErrorIndicator(modifier = modifier, onClick = onClick)
+        Download.State.DOWNLOADED -> DownloadedIndicator(
+            enabled = enabled,
+            modifier = modifier,
+            onClick = onClick,
+        )
+        Download.State.ERROR -> ErrorIndicator(
+            enabled = enabled,
+            modifier = modifier,
+            onClick = onClick,
+        )
     }
 }
 
 @Composable
 private fun NotDownloadedIndicator(
+    enabled: Boolean,
     modifier: Modifier = Modifier,
     onClick: (ChapterDownloadAction) -> Unit,
 ) {
@@ -70,6 +85,7 @@ private fun NotDownloadedIndicator(
         modifier = modifier
             .size(IconButtonTokens.StateLayerSize)
             .commonClickable(
+                enabled = enabled,
                 onLongClick = { onClick(ChapterDownloadAction.START_NOW) },
                 onClick = { onClick(ChapterDownloadAction.START) },
             )
@@ -87,6 +103,7 @@ private fun NotDownloadedIndicator(
 
 @Composable
 private fun DownloadingIndicator(
+    enabled: Boolean,
     modifier: Modifier = Modifier,
     downloadState: Download.State,
     downloadProgressProvider: () -> Int,
@@ -97,6 +114,7 @@ private fun DownloadingIndicator(
         modifier = modifier
             .size(IconButtonTokens.StateLayerSize)
             .commonClickable(
+                enabled = enabled,
                 onLongClick = { onClick(ChapterDownloadAction.CANCEL) },
                 onClick = { isMenuExpanded = true },
             ),
@@ -158,6 +176,7 @@ private fun DownloadingIndicator(
 
 @Composable
 private fun DownloadedIndicator(
+    enabled: Boolean,
     modifier: Modifier = Modifier,
     onClick: (ChapterDownloadAction) -> Unit,
 ) {
@@ -166,6 +185,7 @@ private fun DownloadedIndicator(
         modifier = modifier
             .size(IconButtonTokens.StateLayerSize)
             .commonClickable(
+                enabled = enabled,
                 onLongClick = { onClick(ChapterDownloadAction.DELETE) },
                 onClick = { isMenuExpanded = true },
             ),
@@ -191,6 +211,7 @@ private fun DownloadedIndicator(
 
 @Composable
 private fun ErrorIndicator(
+    enabled: Boolean,
     modifier: Modifier = Modifier,
     onClick: (ChapterDownloadAction) -> Unit,
 ) {
@@ -198,6 +219,7 @@ private fun ErrorIndicator(
         modifier = modifier
             .size(IconButtonTokens.StateLayerSize)
             .commonClickable(
+                enabled = enabled,
                 onLongClick = { onClick(ChapterDownloadAction.START) },
                 onClick = { onClick(ChapterDownloadAction.START) },
             ),
@@ -213,10 +235,12 @@ private fun ErrorIndicator(
 }
 
 private fun Modifier.commonClickable(
+    enabled: Boolean,
     onLongClick: () -> Unit,
     onClick: () -> Unit,
 ) = composed {
     this.combinedClickable(
+        enabled = enabled,
         onLongClick = onLongClick,
         onClick = onClick,
         role = Role.Button,

@@ -354,6 +354,7 @@ private fun MangaScreenSmallImpl(
                         contentType = MangaScreenItem.CHAPTER_HEADER,
                     ) {
                         ChapterHeader(
+                            enabled = chapters.fastAll { !it.selected },
                             chapterCount = chapters.size,
                             onClick = onFilterClicked,
                         )
@@ -553,6 +554,7 @@ fun MangaScreenLargeImpl(
                                 contentType = MangaScreenItem.CHAPTER_HEADER,
                             ) {
                                 ChapterHeader(
+                                    enabled = chapters.fastAll { !it.selected },
                                     chapterCount = chapters.size,
                                     onClick = onFilterButtonClicked,
                                 )
@@ -634,6 +636,7 @@ private fun LazyListScope.sharedChapterItems(
             read = chapterItem.chapter.read,
             bookmark = chapterItem.chapter.bookmark,
             selected = chapterItem.selected,
+            downloadIndicatorEnabled = chapters.fastAll { !it.selected },
             downloadStateProvider = { chapterItem.downloadState },
             downloadProgressProvider = { chapterItem.downloadProgress },
             onLongClick = {

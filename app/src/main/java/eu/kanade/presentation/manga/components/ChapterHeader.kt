@@ -16,13 +16,17 @@ import eu.kanade.tachiyomi.R
 
 @Composable
 fun ChapterHeader(
+    enabled: Boolean,
     chapterCount: Int?,
     onClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(
+                enabled = enabled,
+                onClick = onClick,
+            )
             .padding(horizontal = 16.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
