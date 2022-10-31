@@ -375,7 +375,11 @@ abstract class HttpSource : CatalogueSource {
      * @return url of the chapter
      */
     open fun getChapterUrl(chapter: SChapter): String {
-        return pageListRequest(chapter).url.toString()
+        return if (chapter.url.startsWith("http")) {
+            chapter.url
+        } else {
+            baseUrl + chapter.url
+        }
     }
 
     /**
