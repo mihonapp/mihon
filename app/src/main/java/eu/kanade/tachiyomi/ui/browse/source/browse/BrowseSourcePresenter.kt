@@ -156,8 +156,6 @@ open class BrowseSourcePresenter(
     fun reset() {
         val source = source ?: return
         state.filters = source.getFilterList()
-        if (currentFilter !is Filter.UserInput) return
-        state.currentFilter = (currentFilter as Filter.UserInput).copy(filters = state.filters)
     }
 
     fun search(query: String? = null, filters: FilterList? = null) {
