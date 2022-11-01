@@ -225,6 +225,7 @@ private fun DetailsHeader(
             Text(
                 text = extension.name,
                 style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
             )
 
             val strippedPkgName = extension.pkgName.substringAfter("eu.kanade.tachiyomi.extension.")
