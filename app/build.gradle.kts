@@ -59,6 +59,7 @@ android {
         named("debug") {
             versionNameSuffix = "-${getCommitCount()}"
             applicationIdSuffix = ".debug"
+            isPseudoLocalesEnabled = true
         }
         named("release") {
             isShrinkResources = true
