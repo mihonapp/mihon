@@ -100,7 +100,8 @@ android {
             dimension = "default"
         }
         create("dev") {
-            resourceConfigurations.addAll(listOf("en", "xxhdpi"))
+            // Include pseudolocales: https://developer.android.com/guide/topics/resources/pseudolocales
+            resourceConfigurations.addAll(listOf("en", "en_XA", "ar_XB", "xxhdpi"))
             dimension = "default"
         }
     }
