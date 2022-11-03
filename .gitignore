@@ -11,3 +11,6 @@
 /build
 *.apk
 app/**/output.json
+
+# Unnecessary file
+*.swp
