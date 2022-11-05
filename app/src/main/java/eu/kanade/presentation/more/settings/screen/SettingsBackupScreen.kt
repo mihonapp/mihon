@@ -33,10 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.google.accompanist.permissions.rememberPermissionState
@@ -55,6 +53,7 @@ import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.BackupRestoreService
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.util.system.DeviceUtil
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
 import uy.kohesive.injekt.Injekt
@@ -239,7 +238,6 @@ class SettingsBackupScreen : SearchableSettings {
             val onDismissRequest = { error = null }
             when (val err = error) {
                 is InvalidRestore -> {
-                    val clipboard = LocalClipboardManager.current
                     AlertDialog(
                         onDismissRequest = onDismissRequest,
                         title = { Text(text = stringResource(R.string.invalid_backup_file)) },
@@ -247,8 +245,7 @@ class SettingsBackupScreen : SearchableSettings {
                         dismissButton = {
                             TextButton(
                                 onClick = {
-                                    clipboard.setText(AnnotatedString(err.message))
-                                    context.toast(R.string.copied_to_clipboard)
+                                    context.copyToClipboard(err.message, err.message)
                                     onDismissRequest()
                                 },
                             ) {
