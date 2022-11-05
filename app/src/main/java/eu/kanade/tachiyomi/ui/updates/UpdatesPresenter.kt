@@ -274,51 +274,52 @@ class UpdatesPresenter(
         fromLongPress: Boolean = false,
     ) {
         state.items = items.toMutableList().apply {
-            val modifiedIndex = indexOfFirst { it == item }
-            if (modifiedIndex < 0) return@apply
+            val selectedIndex = indexOfFirst { it.update.chapterId == item.update.chapterId }
+            if (selectedIndex < 0) return@apply
 
-            val oldItem = get(modifiedIndex)
-            if (oldItem.selected == selected) return@apply
+            val selectedItem = get(selectedIndex)
+            if (selectedItem.selected == selected) return@apply
 
             val firstSelection = none { it.selected }
-            var newItem = removeAt(modifiedIndex).copy(selected = selected)
-            add(modifiedIndex, newItem)
+            set(selectedIndex, selectedItem.copy(selected = selected))
 
             if (selected && userSelected && fromLongPress) {
                 if (firstSelection) {
-                    selectedPositions[0] = modifiedIndex
-                    selectedPositions[1] = modifiedIndex
+                    selectedPositions[0] = selectedIndex
+                    selectedPositions[1] = selectedIndex
                 } else {
                     // Try to select the items in-between when possible
                     val range: IntRange
-                    if (modifiedIndex < selectedPositions[0]) {
-                        range = modifiedIndex + 1 until selectedPositions[0]
-                        selectedPositions[0] = modifiedIndex
-                    } else if (modifiedIndex > selectedPositions[1]) {
-                        range = (selectedPositions[1] + 1) until modifiedIndex
-                        selectedPositions[1] = modifiedIndex
+                    if (selectedIndex < selectedPositions[0]) {
+                        range = selectedIndex + 1 until selectedPositions[0]
+                        selectedPositions[0] = selectedIndex
+                    } else if (selectedIndex > selectedPositions[1]) {
+                        range = (selectedPositions[1] + 1) until selectedIndex
+                        selectedPositions[1] = selectedIndex
                     } else {
                         // Just select itself
                         range = IntRange.EMPTY
                     }
 
                     range.forEach {
-                        newItem = removeAt(it).copy(selected = true)
-                        add(it, newItem)
+                        val inbetweenItem = get(it)
+                        if (!inbetweenItem.selected) {
+                            set(it, inbetweenItem.copy(selected = true))
+                        }
                     }
                 }
             } else if (userSelected && !fromLongPress) {
                 if (!selected) {
-                    if (modifiedIndex == selectedPositions[0]) {
+                    if (selectedIndex == selectedPositions[0]) {
                         selectedPositions[0] = indexOfFirst { it.selected }
-                    } else if (modifiedIndex == selectedPositions[1]) {
+                    } else if (selectedIndex == selectedPositions[1]) {
                         selectedPositions[1] = indexOfLast { it.selected }
                     }
                 } else {
-                    if (modifiedIndex < selectedPositions[0]) {
-                        selectedPositions[0] = modifiedIndex
-                    } else if (modifiedIndex > selectedPositions[1]) {
-                        selectedPositions[1] = modifiedIndex
+                    if (selectedIndex < selectedPositions[0]) {
+                        selectedPositions[0] = selectedIndex
+                    } else if (selectedIndex > selectedPositions[1]) {
+                        selectedPositions[1] = selectedIndex
                     }
                 }
             }
