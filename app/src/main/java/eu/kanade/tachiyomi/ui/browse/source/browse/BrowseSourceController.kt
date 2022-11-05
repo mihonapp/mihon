@@ -5,7 +5,9 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.core.os.bundleOf
 import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.browse.BrowseSourceScreen
@@ -50,6 +52,7 @@ open class BrowseSourceController(bundle: Bundle) :
     override fun ComposeContent() {
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
+        val haptic = LocalHapticFeedback.current
 
         BrowseSourceScreen(
             presenter = presenter,
@@ -64,6 +67,7 @@ open class BrowseSourceController(bundle: Bundle) :
                         duplicateManga != null -> presenter.dialog = Dialog.AddDuplicateManga(manga, duplicateManga)
                         else -> presenter.addFavorite(manga)
                     }
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 }
             },
             onWebViewClick = f@{
