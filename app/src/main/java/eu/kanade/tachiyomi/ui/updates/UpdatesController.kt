@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent.updates
+package eu.kanade.tachiyomi.ui.updates
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +26,7 @@ class UpdatesController :
                 (activity as? MainActivity)?.moveToStartScreen()
             },
         )
+
         LaunchedEffect(presenter.selectionMode) {
             (activity as? MainActivity)?.showBottomNav(presenter.selectionMode.not())
         }

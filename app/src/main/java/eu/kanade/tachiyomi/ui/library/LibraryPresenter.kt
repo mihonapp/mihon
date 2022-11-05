@@ -19,7 +19,7 @@ import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.model.toDbChapter
-import eu.kanade.domain.history.interactor.GetNextUnreadChapters
+import eu.kanade.domain.history.interactor.GetNextChapters
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.library.model.LibrarySort
 import eu.kanade.domain.library.model.sort
@@ -78,7 +78,7 @@ class LibraryPresenter(
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
     private val getTracksPerManga: GetTracksPerManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
-    private val getNextUnreadChapters: GetNextUnreadChapters = Injekt.get(),
+    private val getNextChapters: GetNextChapters = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
@@ -410,7 +410,7 @@ class LibraryPresenter(
     fun downloadUnreadChapters(mangas: List<Manga>, amount: Int?) {
         presenterScope.launchNonCancellable {
             mangas.forEach { manga ->
-                val chapters = getNextUnreadChapters.await(manga.id)
+                val chapters = getNextChapters.await(manga.id)
                     .filterNot { chapter ->
                         downloadManager.queue.any { chapter.id == it.chapter.id } ||
                             downloadManager.isChapterDownloaded(

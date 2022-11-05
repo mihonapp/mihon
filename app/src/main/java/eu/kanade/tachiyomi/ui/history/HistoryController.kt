@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent.history
+package eu.kanade.tachiyomi.ui.history
 
 import androidx.compose.runtime.Composable
 import eu.kanade.presentation.history.HistoryScreen

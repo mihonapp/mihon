@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent.updates
+package eu.kanade.tachiyomi.ui.updates
 
 import android.os.Bundle
 import androidx.compose.runtime.Immutable
@@ -47,13 +47,13 @@ import java.util.Date
 
 class UpdatesPresenter(
     private val state: UpdatesStateImpl = UpdatesState() as UpdatesStateImpl,
+    private val sourceManager: SourceManager = Injekt.get(),
+    private val downloadManager: DownloadManager = Injekt.get(),
+    private val downloadCache: DownloadCache = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val getUpdates: GetUpdates = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val downloadManager: DownloadManager = Injekt.get(),
-    private val downloadCache: DownloadCache = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
     basePreferences: BasePreferences = Injekt.get(),
     uiPreferences: UiPreferences = Injekt.get(),

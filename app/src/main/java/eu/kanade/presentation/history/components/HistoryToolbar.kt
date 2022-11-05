@@ -10,8 +10,8 @@ import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.recent.history.HistoryPresenter
-import eu.kanade.tachiyomi.ui.recent.history.HistoryState
+import eu.kanade.tachiyomi.ui.history.HistoryPresenter
+import eu.kanade.tachiyomi.ui.history.HistoryState
 
 @Composable
 fun HistoryToolbar(

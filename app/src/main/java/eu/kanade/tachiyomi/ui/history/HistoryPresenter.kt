@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent.history
+package eu.kanade.tachiyomi.ui.history
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -9,11 +9,9 @@ import androidx.compose.runtime.setValue
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.model.Chapter
-import eu.kanade.domain.history.interactor.DeleteAllHistory
 import eu.kanade.domain.history.interactor.GetHistory
-import eu.kanade.domain.history.interactor.GetNextUnreadChapters
-import eu.kanade.domain.history.interactor.RemoveHistoryById
-import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
+import eu.kanade.domain.history.interactor.GetNextChapters
+import eu.kanade.domain.history.interactor.RemoveHistory
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.history.HistoryUiModel
 import eu.kanade.tachiyomi.R
@@ -37,10 +35,8 @@ import java.util.Date
 class HistoryPresenter(
     private val state: HistoryStateImpl = HistoryState() as HistoryStateImpl,
     private val getHistory: GetHistory = Injekt.get(),
-    private val getNextUnreadChapters: GetNextUnreadChapters = Injekt.get(),
-    private val deleteAllHistory: DeleteAllHistory = Injekt.get(),
-    private val removeHistoryById: RemoveHistoryById = Injekt.get(),
-    private val removeHistoryByMangaId: RemoveHistoryByMangaId = Injekt.get(),
+    private val getNextChapters: GetNextChapters = Injekt.get(),
+    private val removeHistory: RemoveHistory = Injekt.get(),
     preferences: BasePreferences = Injekt.get(),
 ) : BasePresenter<HistoryController>(), HistoryState by state {
 
@@ -48,7 +44,6 @@ class HistoryPresenter(
     val events: Flow<Event> = _events.receiveAsFlow()
 
     val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
-
     val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
 
     @Composable
@@ -80,39 +75,42 @@ class HistoryPresenter(
             }
     }
 
-    fun removeFromHistory(history: HistoryWithRelations) {
-        presenterScope.launchIO {
-            removeHistoryById.await(history)
-        }
-    }
-
-    fun removeAllFromHistory(mangaId: Long) {
-        presenterScope.launchIO {
-            removeHistoryByMangaId.await(mangaId)
-        }
-    }
-
     fun getNextChapterForManga(mangaId: Long, chapterId: Long) {
         presenterScope.launchIO {
-            val chapter = getNextUnreadChapters.await(mangaId, chapterId).firstOrNull()
-            _events.send(if (chapter != null) Event.OpenChapter(chapter) else Event.NoNextChapterFound)
-        }
-    }
-
-    fun deleteAllHistory() {
-        presenterScope.launchIO {
-            val result = deleteAllHistory.await()
-            if (!result) return@launchIO
-            withUIContext {
-                view?.activity?.toast(R.string.clear_history_completed)
-            }
+            sendNextChapterEvent(getNextChapters.await(mangaId, chapterId, onlyUnread = false))
         }
     }
 
     fun resumeLastChapterRead() {
         presenterScope.launchIO {
-            val chapter = getNextUnreadChapters.await()
-            _events.send(if (chapter != null) Event.OpenChapter(chapter) else Event.NoNextChapterFound)
+            sendNextChapterEvent(getNextChapters.await(onlyUnread = false))
+        }
+    }
+
+    private suspend fun sendNextChapterEvent(chapters: List<Chapter>) {
+        val chapter = chapters.firstOrNull()
+        _events.send(if (chapter != null) Event.OpenChapter(chapter) else Event.NoNextChapterFound)
+    }
+
+    fun removeFromHistory(history: HistoryWithRelations) {
+        presenterScope.launchIO {
+            removeHistory.await(history)
+        }
+    }
+
+    fun removeAllFromHistory(mangaId: Long) {
+        presenterScope.launchIO {
+            removeHistory.await(mangaId)
+        }
+    }
+
+    fun removeAllHistory() {
+        presenterScope.launchIO {
+            val result = removeHistory.awaitAll()
+            if (!result) return@launchIO
+            withUIContext {
+                view?.activity?.toast(R.string.clear_history_completed)
+            }
         }
     }
 

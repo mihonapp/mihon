@@ -35,10 +35,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.ui.recent.updates.UpdatesItem
-import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter
-import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter.Dialog
-import eu.kanade.tachiyomi.ui.recent.updates.UpdatesPresenter.Event
+import eu.kanade.tachiyomi.ui.updates.UpdatesItem
+import eu.kanade.tachiyomi.ui.updates.UpdatesPresenter
+import eu.kanade.tachiyomi.ui.updates.UpdatesPresenter.Dialog
+import eu.kanade.tachiyomi.ui.updates.UpdatesPresenter.Event
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
 import kotlinx.coroutines.delay

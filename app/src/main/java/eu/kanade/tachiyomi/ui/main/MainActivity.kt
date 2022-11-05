@@ -52,13 +52,13 @@ import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.download.DownloadController
+import eu.kanade.tachiyomi.ui.history.HistoryController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.more.NewUpdateDialogController
-import eu.kanade.tachiyomi.ui.recent.history.HistoryController
-import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
+import eu.kanade.tachiyomi.ui.updates.UpdatesController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.preference.asHotFlow

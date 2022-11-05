@@ -16,10 +16,10 @@ import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
 import eu.kanade.presentation.history.components.HistoryToolbar
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.history.HistoryPresenter
+import eu.kanade.tachiyomi.ui.history.HistoryPresenter.Dialog
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.ui.recent.history.HistoryPresenter
-import eu.kanade.tachiyomi.ui.recent.history.HistoryPresenter.Dialog
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
 import kotlinx.coroutines.flow.collectLatest
@@ -88,7 +88,7 @@ fun HistoryScreen(
             HistoryDeleteAllDialog(
                 onDismissRequest = onDismissRequest,
                 onDelete = {
-                    presenter.deleteAllHistory()
+                    presenter.removeAllHistory()
                 },
             )
         }

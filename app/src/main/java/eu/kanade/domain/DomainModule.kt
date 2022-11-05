@@ -32,11 +32,9 @@ import eu.kanade.domain.download.interactor.DeleteDownload
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
-import eu.kanade.domain.history.interactor.DeleteAllHistory
 import eu.kanade.domain.history.interactor.GetHistory
-import eu.kanade.domain.history.interactor.GetNextUnreadChapters
-import eu.kanade.domain.history.interactor.RemoveHistoryById
-import eu.kanade.domain.history.interactor.RemoveHistoryByMangaId
+import eu.kanade.domain.history.interactor.GetNextChapters
+import eu.kanade.domain.history.interactor.RemoveHistory
 import eu.kanade.domain.history.interactor.UpsertHistory
 import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
@@ -94,7 +92,7 @@ class DomainModule : InjektModule {
         addFactory { GetLibraryManga(get()) }
         addFactory { GetMangaWithChapters(get(), get()) }
         addFactory { GetManga(get()) }
-        addFactory { GetNextUnreadChapters(get(), get(), get()) }
+        addFactory { GetNextChapters(get(), get(), get()) }
         addFactory { ResetViewerFlags(get()) }
         addFactory { SetMangaChapterFlags(get()) }
         addFactory { SetMangaDefaultChapterFlags(get(), get(), get()) }
@@ -119,11 +117,9 @@ class DomainModule : InjektModule {
         addFactory { SyncChaptersWithTrackServiceTwoWay(get(), get()) }
 
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }
-        addFactory { DeleteAllHistory(get()) }
         addFactory { GetHistory(get()) }
         addFactory { UpsertHistory(get()) }
-        addFactory { RemoveHistoryById(get()) }
-        addFactory { RemoveHistoryByMangaId(get()) }
+        addFactory { RemoveHistory(get()) }
 
         addFactory { DeleteDownload(get(), get()) }
 
