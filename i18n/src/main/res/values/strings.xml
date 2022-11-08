@@ -108,6 +108,7 @@
     <string name="action_display_language_badge">Language</string>
     <string name="action_display_show_tabs">Show category tabs</string>
     <string name="action_display_show_number_of_items">Show number of items</string>
+    <string name="action_display_show_continue_reading_button">Show continue reading button</string>
     <string name="action_disable">Disable</string>
     <string name="action_pin">Pin</string>
     <string name="action_unpin">Unpin</string>
@@ -579,6 +580,7 @@
     <string name="downloaded_chapters">Downloaded chapters</string>
     <string name="badges_header">Badges</string>
     <string name="tabs_header">Tabs</string>
+    <string name="other_header">Other</string>
 
     <!-- Catalogue fragment -->
     <!-- missing prompt after Compose rewrite #7901 -->

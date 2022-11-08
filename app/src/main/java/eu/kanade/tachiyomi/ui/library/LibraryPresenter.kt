@@ -17,7 +17,9 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
+import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SetReadStatus
+import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.history.interactor.GetNextChapters
 import eu.kanade.domain.library.model.LibraryManga
@@ -44,6 +46,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.lang.withIOContext
@@ -76,9 +79,10 @@ typealias LibraryMap = Map<Long, List<LibraryItem>>
 class LibraryPresenter(
     private val state: LibraryStateImpl = LibraryState() as LibraryStateImpl,
     private val getLibraryManga: GetLibraryManga = Injekt.get(),
-    private val getTracksPerManga: GetTracksPerManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
+    private val getTracksPerManga: GetTracksPerManga = Injekt.get(),
     private val getNextChapters: GetNextChapters = Injekt.get(),
+    private val getChaptersByMangaId: GetChapterByMangaId = Injekt.get(),
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
@@ -104,6 +108,8 @@ class LibraryPresenter(
     val showLanguageBadges by libraryPreferences.languageBadge().asState()
 
     var activeCategory: Int by libraryPreferences.lastUsedCategory().asState()
+
+    val showContinueReadingButton by libraryPreferences.showContinueReadingButton().asState()
 
     val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
     val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
@@ -387,6 +393,10 @@ class LibraryPresenter(
         return mangas
             .map { getCategories.await(it.id).toSet() }
             .reduce { set1, set2 -> set1.intersect(set2) }
+    }
+
+    suspend fun getNextUnreadChapter(manga: Manga): Chapter? {
+        return getChaptersByMangaId.await(manga.id).getNextUnread(manga, downloadManager)
     }
 
     /**

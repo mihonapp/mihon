@@ -18,11 +18,13 @@ fun LibraryComfortableGrid(
     showUnreadBadges: Boolean,
     showLocalBadges: Boolean,
     showLanguageBadges: Boolean,
+    showContinueReadingButton: Boolean,
     columns: Int,
     contentPadding: PaddingValues,
     selection: List<LibraryManga>,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
+    onClickContinueReading: (LibraryManga) -> Unit,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
 ) {
@@ -65,8 +67,10 @@ fun LibraryComfortableGrid(
                         item = libraryItem,
                     )
                 },
+                showContinueReadingButton = showContinueReadingButton,
                 onLongClick = { onLongClick(libraryItem.libraryManga) },
                 onClick = { onClick(libraryItem.libraryManga) },
+                onClickContinueReading = { onClickContinueReading(libraryItem.libraryManga) },
             )
         }
     }

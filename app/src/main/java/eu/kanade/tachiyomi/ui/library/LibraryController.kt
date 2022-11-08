@@ -9,6 +9,8 @@ import androidx.compose.ui.platform.LocalContext
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import eu.kanade.core.prefs.CheckboxState
+import eu.kanade.domain.chapter.model.Chapter
+import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.domain.manga.model.toDbManga
@@ -26,6 +28,7 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.toast
@@ -50,6 +53,7 @@ class LibraryController(
         LibraryScreen(
             presenter = presenter,
             onMangaClicked = ::openManga,
+            onContinueReadingClicked = ::continueReading,
             onGlobalSearchClicked = {
                 router.pushController(GlobalSearchController(presenter.searchQuery))
             },
@@ -194,6 +198,19 @@ class LibraryController(
         presenter.onOpenManga()
 
         router.pushController(MangaController(mangaId))
+    }
+
+    private fun continueReading(libraryManga: LibraryManga) {
+        viewScope.launchIO {
+            val chapter = presenter.getNextUnreadChapter(libraryManga.manga)
+            if (chapter != null) openChapter(chapter)
+        }
+    }
+
+    private fun openChapter(chapter: Chapter) {
+        activity?.run {
+            startActivity(ReaderActivity.newIntent(this, chapter.mangaId, chapter.id))
+        }
     }
 
     /**

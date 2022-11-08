@@ -16,6 +16,7 @@ import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
+import eu.kanade.domain.chapter.model.applyFilters
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.library.service.LibraryPreferences
@@ -23,8 +24,6 @@ import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
 import eu.kanade.domain.manga.interactor.GetMangaWithChapters
 import eu.kanade.domain.manga.interactor.SetMangaChapterFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
-import eu.kanade.domain.manga.model.TriStateFilter
-import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.DeleteTrack
 import eu.kanade.domain.track.interactor.GetTracks
@@ -45,6 +44,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
+import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.lang.toRelativeString
@@ -579,13 +579,7 @@ class MangaPresenter(
      */
     fun getNextUnreadChapter(): DomainChapter? {
         val successState = successState ?: return null
-        return successState.processedChapters.map { it.chapter }.let { chapters ->
-            if (successState.manga.sortDescending()) {
-                chapters.findLast { !it.read }
-            } else {
-                chapters.find { !it.read }
-            }
-        }
+        return successState.chapters.getNextUnread(successState.manga)
     }
 
     fun getUnreadChapters(): List<DomainChapter> {
@@ -1092,40 +1086,6 @@ sealed class MangaScreenState {
 
         val processedChapters: Sequence<ChapterItem>
             get() = chapters.applyFilters(manga)
-
-        /**
-         * Applies the view filters to the list of chapters obtained from the database.
-         * @return an observable of the list of chapters filtered and sorted.
-         */
-        private fun List<ChapterItem>.applyFilters(manga: DomainManga): Sequence<ChapterItem> {
-            val isLocalManga = manga.isLocal()
-            val unreadFilter = manga.unreadFilter
-            val downloadedFilter = manga.downloadedFilter
-            val bookmarkedFilter = manga.bookmarkedFilter
-            return asSequence()
-                .filter { (chapter) ->
-                    when (unreadFilter) {
-                        TriStateFilter.DISABLED -> true
-                        TriStateFilter.ENABLED_IS -> !chapter.read
-                        TriStateFilter.ENABLED_NOT -> chapter.read
-                    }
-                }
-                .filter { (chapter) ->
-                    when (bookmarkedFilter) {
-                        TriStateFilter.DISABLED -> true
-                        TriStateFilter.ENABLED_IS -> chapter.bookmark
-                        TriStateFilter.ENABLED_NOT -> !chapter.bookmark
-                    }
-                }
-                .filter {
-                    when (downloadedFilter) {
-                        TriStateFilter.DISABLED -> true
-                        TriStateFilter.ENABLED_IS -> it.isDownloaded || isLocalManga
-                        TriStateFilter.ENABLED_NOT -> !it.isDownloaded && !isLocalManga
-                    }
-                }
-                .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
-        }
     }
 }
 

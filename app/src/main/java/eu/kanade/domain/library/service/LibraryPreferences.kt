@@ -32,6 +32,8 @@ class LibraryPreferences(
 
     fun autoUpdateTrackers() = preferenceStore.getBoolean("auto_update_trackers", false)
 
+    fun showContinueReadingButton() = preferenceStore.getBoolean("display_continue_reading_button", false)
+
     // region Filter
 
     fun filterDownloaded() = preferenceStore.getInt("pref_filter_library_downloaded", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)

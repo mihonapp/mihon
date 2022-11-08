@@ -37,6 +37,7 @@ fun LibraryContent(
     showMangaCount: Boolean,
     onChangeCurrentPage: (Int) -> Unit,
     onMangaClicked: (Long) -> Unit,
+    onContinueReadingClicked: (LibraryManga) -> Unit,
     onToggleSelection: (LibraryManga) -> Unit,
     onToggleRangeSelection: (LibraryManga) -> Unit,
     onRefresh: (Category?) -> Boolean,
@@ -49,6 +50,7 @@ fun LibraryContent(
     showUnreadBadges: Boolean,
     showLocalBadges: Boolean,
     showLanguageBadges: Boolean,
+    showContinueReadingButton: Boolean,
     isDownloadOnly: Boolean,
     isIncognitoMode: Boolean,
 ) {
@@ -88,6 +90,9 @@ fun LibraryContent(
         val onLongClickManga = { manga: LibraryManga ->
             onToggleRangeSelection(manga)
         }
+        val onClickContinueReading = { manga: LibraryManga ->
+            onContinueReadingClicked(manga)
+        }
 
         SwipeRefresh(
             refreshing = isRefreshing,
@@ -115,8 +120,10 @@ fun LibraryContent(
                 showUnreadBadges = showUnreadBadges,
                 showLocalBadges = showLocalBadges,
                 showLanguageBadges = showLanguageBadges,
+                showContinueReadingButton = showContinueReadingButton,
                 onClickManga = onClickManga,
                 onLongClickManga = onLongClickManga,
+                onClickContinueReading = onClickContinueReading,
                 onGlobalSearchClicked = onGlobalSearchClicked,
                 searchQuery = state.searchQuery,
             )
