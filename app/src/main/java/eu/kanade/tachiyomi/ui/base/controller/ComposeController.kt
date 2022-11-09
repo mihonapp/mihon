@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.databinding.ComposeControllerBinding
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import nucleus.presenter.Presenter
@@ -21,7 +23,9 @@ abstract class FullComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
 
         binding.root.apply {
             setComposeContent {
-                ComposeContent()
+                CompositionLocalProvider(LocalRouter provides router) {
+                    ComposeContent()
+                }
             }
         }
     }
@@ -52,7 +56,9 @@ abstract class BasicFullComposeController(bundle: Bundle? = null) :
 
         binding.root.apply {
             setComposeContent {
-                ComposeContent()
+                CompositionLocalProvider(LocalRouter provides router) {
+                    ComposeContent()
+                }
             }
         }
     }

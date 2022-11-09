@@ -9,6 +9,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.ViewPropertyAnimator
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
@@ -26,6 +28,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.applySystemAnimatorScale
 import eu.kanade.tachiyomi.util.system.pxToDp
+import kotlin.math.max
 
 class TachiyomiBottomNavigationView @JvmOverloads constructor(
     context: Context,
@@ -171,6 +174,22 @@ class TachiyomiBottomNavigationView @JvmOverloads constructor(
                 top = origin.calculateTopPadding(),
                 end = origin.calculateEndPadding(layoutDirection),
                 bottom = max(origin.calculateBottomPadding(), bottomNavPadding),
+            )
+        }
+
+        /**
+         * @see withBottomNavPadding
+         */
+        @ReadOnlyComposable
+        @Composable
+        fun withBottomNavInset(origin: WindowInsets): WindowInsets {
+            val density = LocalDensity.current
+            val layoutDirection = LocalLayoutDirection.current
+            return WindowInsets(
+                left = origin.getLeft(density, layoutDirection),
+                top = origin.getTop(density),
+                right = origin.getRight(density, layoutDirection),
+                bottom = max(origin.getBottom(density), with(density) { bottomNavPadding.roundToPx() }),
             )
         }
     }

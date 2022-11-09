@@ -34,3 +34,5 @@ class PreferenceMutableState<T>(
         return { preference.set(it) }
     }
 }
+
+fun <T> Preference<T>.asState(scope: CoroutineScope) = PreferenceMutableState(this, scope)
