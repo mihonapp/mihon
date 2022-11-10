@@ -165,11 +165,6 @@
         <item name="cornerSize">@dimen/card_radius</item>
     </style>
 
-    <style name="ThemeOverlay.Tachiyomi.Dialog.Fullscreen" parent="ThemeOverlay.Material3">
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowAnimationStyle">@style/Animation.Tachiyomi.Dialog</item>
-    </style>
-
     <style name="Animation.Tachiyomi.Dialog" parent="Animation.AppCompat.Dialog">
         <item name="android:windowEnterAnimation">@anim/fade_in_short</item>
         <item name="android:windowExitAnimation">@anim/fade_out_short</item>

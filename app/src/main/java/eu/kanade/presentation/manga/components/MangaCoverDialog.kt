@@ -22,6 +22,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.view.updatePadding
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -50,124 +54,134 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 fun MangaCoverDialog(
     coverDataProvider: () -> Manga,
     isCustomCover: Boolean,
+    snackbarHostState: SnackbarHostState,
     onShareClick: () -> Unit,
     onSaveClick: () -> Unit,
     onEditClick: ((EditCoverAction) -> Unit)?,
     onDismissRequest: () -> Unit,
 ) {
-    Scaffold(
-        bottomBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
-                    .padding(horizontal = 4.dp, vertical = 4.dp)
-                    .navigationBarsPadding(),
-            ) {
-                IconButton(onClick = onDismissRequest) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = stringResource(R.string.action_close),
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = onShareClick) {
-                    Icon(
-                        imageVector = Icons.Outlined.Share,
-                        contentDescription = stringResource(R.string.action_share),
-                    )
-                }
-                IconButton(onClick = onSaveClick) {
-                    Icon(
-                        imageVector = Icons.Outlined.Save,
-                        contentDescription = stringResource(R.string.action_save),
-                    )
-                }
-                if (onEditClick != null) {
-                    Box {
-                        var expanded by remember { mutableStateOf(false) }
-                        IconButton(
-                            onClick = {
-                                if (isCustomCover) {
-                                    expanded = true
-                                } else {
-                                    onEditClick(EditCoverAction.EDIT)
-                                }
-                            },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Edit,
-                                contentDescription = stringResource(R.string.action_edit_cover),
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                            offset = DpOffset(8.dp, 0.dp),
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(R.string.action_edit)) },
-                                onClick = {
-                                    onEditClick(EditCoverAction.EDIT)
-                                    expanded = false
-                                },
-                            )
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(R.string.action_delete)) },
-                                onClick = {
-                                    onEditClick(EditCoverAction.DELETE)
-                                    expanded = false
-                                },
-                            )
-                        }
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false, // Doesn't work https://issuetracker.google.com/issues/246909281
+        ),
+    ) {
+        Scaffold(
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            bottomBar = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
+                        .padding(horizontal = 4.dp, vertical = 4.dp)
+                        .navigationBarsPadding(),
+                ) {
+                    IconButton(onClick = onDismissRequest) {
+                        Icon(
+                            imageVector = Icons.Outlined.Close,
+                            contentDescription = stringResource(R.string.action_close),
+                        )
                     }
-                }
-            }
-        },
-    ) { contentPadding ->
-        val statusBarPaddingPx = WindowInsets.systemBars.getTop(LocalDensity.current)
-        val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.background)
-                .clickableNoIndication(onClick = onDismissRequest),
-        ) {
-            AndroidView(
-                factory = {
-                    ReaderPageImageView(it).apply {
-                        onViewClicked = onDismissRequest
-                        clipToPadding = false
-                        clipChildren = false
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(onClick = onShareClick) {
+                        Icon(
+                            imageVector = Icons.Outlined.Share,
+                            contentDescription = stringResource(R.string.action_share),
+                        )
                     }
-                },
-                update = { view ->
-                    val request = ImageRequest.Builder(view.context)
-                        .data(coverDataProvider())
-                        .size(Size.ORIGINAL)
-                        .target { drawable ->
-                            // Copy bitmap in case it came from memory cache
-                            // Because SSIV needs to thoroughly read the image
-                            val copy = (drawable as? BitmapDrawable)?.let {
-                                val config = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    Bitmap.Config.HARDWARE
-                                } else {
-                                    Bitmap.Config.ARGB_8888
-                                }
-                                BitmapDrawable(
-                                    view.context.resources,
-                                    it.bitmap.copy(config, false),
+                    IconButton(onClick = onSaveClick) {
+                        Icon(
+                            imageVector = Icons.Outlined.Save,
+                            contentDescription = stringResource(R.string.action_save),
+                        )
+                    }
+                    if (onEditClick != null) {
+                        Box {
+                            var expanded by remember { mutableStateOf(false) }
+                            IconButton(
+                                onClick = {
+                                    if (isCustomCover) {
+                                        expanded = true
+                                    } else {
+                                        onEditClick(EditCoverAction.EDIT)
+                                    }
+                                },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Edit,
+                                    contentDescription = stringResource(R.string.action_edit_cover),
                                 )
-                            } ?: drawable
-                            view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
+                            }
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                                offset = DpOffset(8.dp, 0.dp),
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(R.string.action_edit)) },
+                                    onClick = {
+                                        onEditClick(EditCoverAction.EDIT)
+                                        expanded = false
+                                    },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(R.string.action_delete)) },
+                                    onClick = {
+                                        onEditClick(EditCoverAction.DELETE)
+                                        expanded = false
+                                    },
+                                )
+                            }
                         }
-                        .build()
-                    view.context.imageLoader.enqueue(request)
+                    }
+                }
+            },
+        ) { contentPadding ->
+            val statusBarPaddingPx = WindowInsets.systemBars.getTop(LocalDensity.current)
+            val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .clickableNoIndication(onClick = onDismissRequest),
+            ) {
+                AndroidView(
+                    factory = {
+                        ReaderPageImageView(it).apply {
+                            onViewClicked = onDismissRequest
+                            clipToPadding = false
+                            clipChildren = false
+                        }
+                    },
+                    update = { view ->
+                        val request = ImageRequest.Builder(view.context)
+                            .data(coverDataProvider())
+                            .size(Size.ORIGINAL)
+                            .target { drawable ->
+                                // Copy bitmap in case it came from memory cache
+                                // Because SSIV needs to thoroughly read the image
+                                val copy = (drawable as? BitmapDrawable)?.let {
+                                    val config = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        Bitmap.Config.HARDWARE
+                                    } else {
+                                        Bitmap.Config.ARGB_8888
+                                    }
+                                    BitmapDrawable(
+                                        view.context.resources,
+                                        it.bitmap.copy(config, false),
+                                    )
+                                } ?: drawable
+                                view.setImage(copy, ReaderPageImageView.Config(zoomDuration = 500))
+                            }
+                            .build()
+                        view.context.imageLoader.enqueue(request)
 
-                    view.updatePadding(top = statusBarPaddingPx, bottom = bottomPaddingPx)
-                },
-                modifier = Modifier.fillMaxSize(),
-            )
+                        view.updatePadding(top = statusBarPaddingPx, bottom = bottomPaddingPx)
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 }

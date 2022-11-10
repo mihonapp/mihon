@@ -11,6 +11,7 @@ leakcanary = "2.9.1"
 voyager = "1.0.0-rc06"
 
 [libraries]
+desugar = "com.android.tools:desugar_jdk_libs:1.2.2"
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
 google-services-gradle = "com.google.gms:google-services:4.3.14"
 
@@ -62,6 +63,8 @@ photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
 cascade = "me.saket.cascade:cascade-compose:2.0.0-beta1"
+numberpicker = "com.chargemap.compose:numberpicker:1.0.3"
+wheelpicker = "com.github.commandiron:WheelPickerCompose:1.0.11"
 
 conductor-core = { module = "com.bluelinelabs:conductor", version.ref = "conductor_version" }
 conductor-support-preference = { module = "com.github.tachiyomiorg:conductor-support-preference", version.ref = "conductor_version" }
@@ -92,8 +95,6 @@ junit = "org.junit.jupiter:junit-jupiter:5.9.1"
 
 voyager-navigator = { module = "ca.gosyer:voyager-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "ca.gosyer:voyager-transitions", version.ref = "voyager" }
-
-numberpicker= "com.chargemap.compose:numberpicker:1.0.3"
 
 [bundles]
 reactivex = ["rxandroid", "rxjava", "rxrelay"]
