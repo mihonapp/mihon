@@ -1,9 +1,6 @@
 [versions]
 agp_version = "7.3.1"
 lifecycle_version = "2.5.1"
-espresso = "3.4.0"
-macrobenchmark = "1.1.0"
-test = "1.1.3"
 
 [libraries]
 annotation = "androidx.annotation:annotation:1.5.0"
@@ -30,10 +27,10 @@ paging-compose = "androidx.paging:paging-compose:1.0.0-alpha17"
 
 sqlite = "androidx.sqlite:sqlite-framework:2.2.0"
 
-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "macrobenchmark" }
-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "test" }
-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "test" }
+benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.1.1"
+test-ext = "androidx.test.ext:junit-ktx:1.1.4"
+test-espresso-core = "androidx.test.espresso:espresso-core:3.4.0"
+test-uiautomator = "androidx.test.uiautomator:uiautomator:1.1.3"
 
 [bundles]
 lifecycle = ["lifecycle-common", "lifecycle-process", "lifecycle-runtimektx"]
