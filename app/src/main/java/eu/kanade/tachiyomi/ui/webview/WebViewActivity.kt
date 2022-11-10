@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.core.net.toUri
 import eu.kanade.presentation.webview.WebViewScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -13,6 +14,7 @@ import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -58,11 +60,7 @@ class WebViewActivity : BaseActivity() {
 
     private fun shareWebpage(url: String) {
         try {
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, url)
-            }
-            startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
+            startActivity(url.toUri().toShareIntent(this, type = "text/plain"))
         } catch (e: Exception) {
             toast(e.message)
         }
