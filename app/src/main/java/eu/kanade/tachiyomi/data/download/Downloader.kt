@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
 import com.hippo.unifile.UniFile
-import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.toDbChapter
@@ -90,11 +89,6 @@ class Downloader(
      * Relay to send a list of downloads to the downloader.
      */
     private val downloadsRelay = PublishRelay.create<List<Download>>()
-
-    /**
-     * Relay to subscribe to the downloader status.
-     */
-    val runningRelay: BehaviorRelay<Boolean> = BehaviorRelay.create(false)
 
     /**
      * Whether the downloader is running.
@@ -197,10 +191,8 @@ class Downloader(
     private fun initializeSubscriptions() {
         if (isRunning) return
         isRunning = true
-        runningRelay.call(true)
 
         subscriptions.clear()
-
         subscriptions += downloadsRelay.concatMapIterable { it }
             // Concurrently download from 5 different sources
             .groupBy { it.source }
@@ -232,7 +224,6 @@ class Downloader(
     private fun destroySubscriptions() {
         if (!isRunning) return
         isRunning = false
-        runningRelay.call(false)
 
         subscriptions.clear()
     }

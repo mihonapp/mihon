@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
-import com.hippo.unifile.UniFile
-import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.download.service.DownloadPreferences
@@ -51,12 +49,6 @@ class DownloadManager(
      */
     val queue: DownloadQueue
         get() = downloader.queue
-
-    /**
-     * Subject for subscribing to downloader status.
-     */
-    val runningRelay: BehaviorRelay<Boolean>
-        get() = downloader.runningRelay
 
     /**
      * Tells the downloader to begin downloads.
@@ -167,16 +159,7 @@ class DownloadManager(
      * @return an observable containing the list of pages from the chapter.
      */
     fun buildPageList(source: Source, manga: Manga, chapter: Chapter): Observable<List<Page>> {
-        return buildPageList(provider.findChapterDir(chapter.name, chapter.scanlator, manga.title, source))
-    }
-
-    /**
-     * Builds the page list of a downloaded chapter.
-     *
-     * @param chapterDir the file where the chapter is downloaded.
-     * @return an observable containing the list of pages from the chapter.
-     */
-    private fun buildPageList(chapterDir: UniFile?): Observable<List<Page>> {
+        val chapterDir = provider.findChapterDir(chapter.name, chapter.scanlator, manga.title, source)
         return Observable.fromCallable {
             val files = chapterDir?.listFiles().orEmpty()
                 .filter { "image" in it.type.orEmpty() }

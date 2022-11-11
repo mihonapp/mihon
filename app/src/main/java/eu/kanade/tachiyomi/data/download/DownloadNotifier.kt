@@ -33,12 +33,6 @@ internal class DownloadNotifier(private val context: Context) {
         }
     }
 
-    private val completeNotificationBuilder by lazy {
-        context.notificationBuilder(Notifications.CHANNEL_DOWNLOADER_COMPLETE) {
-            setAutoCancel(false)
-        }
-    }
-
     private val errorNotificationBuilder by lazy {
         context.notificationBuilder(Notifications.CHANNEL_DOWNLOADER_ERROR) {
             setAutoCancel(false)
@@ -167,25 +161,10 @@ internal class DownloadNotifier(private val context: Context) {
     }
 
     /**
-     *  This function shows a notification to inform download tasks are done.
+     * Resets the state once downloads are completed.
      */
     fun onComplete() {
         dismissProgress()
-
-        if (!errorThrown) {
-            // Create notification
-            with(completeNotificationBuilder) {
-                setContentTitle(context.getString(R.string.download_notifier_downloader_title))
-                setContentText(context.getString(R.string.download_notifier_download_finish))
-                setSmallIcon(android.R.drawable.stat_sys_download_done)
-                clearActions()
-                setAutoCancel(true)
-                setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
-                setProgress(0, 0, false)
-
-                show(Notifications.ID_DOWNLOAD_CHAPTER_COMPLETE)
-            }
-        }
 
         // Reset states to default
         errorThrown = false
