@@ -43,6 +43,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.system.isDevFlavor
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import kotlinx.serialization.json.Json
+import nl.adaptivity.xmlutil.XmlDeclMode
+import nl.adaptivity.xmlutil.core.XmlVersion
 import nl.adaptivity.xmlutil.serialization.UnknownChildHandler
 import nl.adaptivity.xmlutil.serialization.XML
 import uy.kohesive.injekt.api.InjektModule
@@ -106,6 +108,9 @@ class AppModule(val app: Application) : InjektModule {
             XML {
                 unknownChildHandler = UnknownChildHandler { _, _, _, _, _ -> emptyList() }
                 autoPolymorphic = true
+                xmlDeclMode = XmlDeclMode.Charset
+                indent = 4
+                xmlVersion = XmlVersion.XML10
             }
         }
 

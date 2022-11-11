@@ -269,6 +269,16 @@ class LocalSource(
             .joinToString(", ") { it.trim() }
             .takeIf { it.isNotEmpty() }
             ?.let { manga.artist = it }
+
+        manga.status = when (comicInfo.publishingStatusTachiyomi?.value) {
+            "Ongoing" -> SManga.ONGOING
+            "Completed" -> SManga.COMPLETED
+            "Licensed" -> SManga.LICENSED
+            "Publishing finished" -> SManga.PUBLISHING_FINISHED
+            "Cancelled" -> SManga.CANCELLED
+            "On hiatus" -> SManga.ON_HIATUS
+            else -> SManga.UNKNOWN
+        }
     }
 
     @Serializable
