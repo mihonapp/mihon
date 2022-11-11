@@ -48,7 +48,7 @@ object CommonMangaItemDefaults {
     const val BrowseFavoriteCoverAlpha = 0.34f
 }
 
-private val ContinueReadingButtonSize = 38.dp
+private val ContinueReadingButtonSize = 32.dp
 private const val GridSelectedCoverAlpha = 0.76f
 
 /**
@@ -119,10 +119,10 @@ private fun BoxScope.CoverTextOverlay(
             .fillMaxWidth()
             .align(Alignment.BottomCenter),
     )
-    val endPadding = if (showContinueReadingButton) ContinueReadingButtonSize else 8.dp
+    val endPadding = if (showContinueReadingButton) ContinueReadingButtonSize else 0.dp
     GridItemTitle(
         modifier = Modifier
-            .padding(start = 8.dp, top = 8.dp, end = endPadding, bottom = 8.dp)
+            .padding(start = 8.dp, top = 8.dp, end = endPadding + 8.dp, bottom = 8.dp)
             .align(Alignment.BottomStart),
         title = title,
         style = MaterialTheme.typography.titleSmall.copy(
@@ -355,25 +355,25 @@ fun MangaListItem(
 private fun BoxScope.ContinueReadingButton(
     onClickContinueReading: () -> Unit,
 ) {
-    FilledIconButton(
-        onClick = {
-            onClickContinueReading()
-        },
+    Box(
         modifier = Modifier
-            .size(ContinueReadingButtonSize)
-            .padding(3.dp)
-            .align(Alignment.BottomEnd),
-        shape = MaterialTheme.shapes.small,
-        colors = IconButtonDefaults.filledIconButtonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = contentColorFor(MaterialTheme.colorScheme.primaryContainer),
-        ),
+            .align(Alignment.BottomEnd)
+            .padding(horizontal = 4.dp, vertical = 8.dp),
     ) {
-        Icon(
-            imageVector = Icons.Filled.PlayArrow,
-            contentDescription = "",
-            modifier = Modifier
-                .size(15.dp),
-        )
+        FilledIconButton(
+            onClick = onClickContinueReading,
+            modifier = Modifier.size(ContinueReadingButtonSize),
+            shape = MaterialTheme.shapes.small,
+            colors = IconButtonDefaults.filledIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
+                contentColor = contentColorFor(MaterialTheme.colorScheme.primaryContainer),
+            ),
+        ) {
+            Icon(
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = "",
+                modifier = Modifier.size(16.dp),
+            )
+        }
     }
 }
