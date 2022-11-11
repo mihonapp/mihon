@@ -30,16 +30,6 @@ class SettingsBrowseScreen : SearchableSettings {
         val preferences = remember { Injekt.get<BasePreferences>() }
         return listOf(
             Preference.PreferenceGroup(
-                title = stringResource(R.string.label_sources),
-                preferenceItems = listOf(
-                    Preference.PreferenceItem.SwitchPreference(
-                        pref = sourcePreferences.duplicatePinnedSources(),
-                        title = stringResource(R.string.pref_duplicate_pinned_sources),
-                        subtitle = stringResource(R.string.pref_duplicate_pinned_sources_summary),
-                    ),
-                ),
-            ),
-            Preference.PreferenceGroup(
                 title = stringResource(R.string.label_extensions),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.SwitchPreference(

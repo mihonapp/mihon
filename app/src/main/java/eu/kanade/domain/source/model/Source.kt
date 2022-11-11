@@ -33,7 +33,6 @@ data class Source(
     val key: () -> String = {
         when {
             isUsedLast -> "$id-lastused"
-            Pin.Forced in pin -> "$id-forced"
             else -> "$id"
         }
     }
@@ -43,7 +42,6 @@ sealed class Pin(val code: Int) {
     object Unpinned : Pin(0b00)
     object Pinned : Pin(0b01)
     object Actual : Pin(0b10)
-    object Forced : Pin(0b100)
 }
 
 inline fun Pins(builder: Pins.PinsBuilder.() -> Unit = {}): Pins {

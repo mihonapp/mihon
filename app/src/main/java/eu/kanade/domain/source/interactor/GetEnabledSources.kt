@@ -23,7 +23,6 @@ class GetEnabledSources(
             preferences.lastUsedSource().changes(),
             repository.getSources(),
         ) { pinnedSourceIds, enabledLanguages, disabledSources, lastUsedSource, sources ->
-            val duplicatePins = preferences.duplicatePinnedSources().get()
             sources
                 .filter { it.lang in enabledLanguages || it.id == LocalSource.ID }
                 .filterNot { it.id.toString() in disabledSources }
@@ -34,10 +33,6 @@ class GetEnabledSources(
                     val toFlatten = mutableListOf(source)
                     if (source.id == lastUsedSource) {
                         toFlatten.add(source.copy(isUsedLast = true, pin = source.pin - Pin.Actual))
-                    }
-                    if (duplicatePins && Pin.Pinned in source.pin) {
-                        toFlatten[0] = toFlatten[0].copy(pin = source.pin + Pin.Forced)
-                        toFlatten.add(source.copy(pin = source.pin - Pin.Actual))
                     }
                     toFlatten
                 }
