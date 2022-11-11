@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.core.util.mapNotNullKeys
+import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.model.Manga
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager

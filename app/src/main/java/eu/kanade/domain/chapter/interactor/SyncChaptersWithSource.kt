@@ -4,7 +4,6 @@ import eu.kanade.data.chapter.CleanupChapterName
 import eu.kanade.data.chapter.NoChaptersException
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.toChapterUpdate
-import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
@@ -111,7 +110,7 @@ class SyncChaptersWithSource(
                         downloadManager.isChapterDownloaded(dbChapter.name, dbChapter.scanlator, manga.title, manga.source)
 
                     if (shouldRenameChapter) {
-                        downloadManager.renameChapter(source, manga, dbChapter.toDbChapter(), chapter.toDbChapter())
+                        downloadManager.renameChapter(source, manga, dbChapter, chapter)
                     }
                     var toChangeChapter = dbChapter.copy(
                         name = chapter.name,

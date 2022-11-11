@@ -12,7 +12,6 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.model.hasCustomCover
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.tachiyomi.core.preference.Preference
@@ -189,7 +188,7 @@ class SearchPresenter(
         // Update custom cover (recheck if custom cover exists)
         if (migrateCustomCover && prevManga.hasCustomCover()) {
             @Suppress("BlockingMethodInNonBlockingContext")
-            coverCache.setCustomCoverToCache(manga.toDbManga(), coverCache.getCustomCoverFile(prevManga.id).inputStream())
+            coverCache.setCustomCoverToCache(manga, coverCache.getCustomCoverFile(prevManga.id).inputStream())
         }
 
         updateManga.await(

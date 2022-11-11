@@ -19,7 +19,6 @@ import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
-import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
@@ -289,7 +288,7 @@ class MangaInfoScreenModel(
                 // Remove from library
                 if (updateManga.awaitUpdateFavorite(manga.id, false)) {
                     // Remove covers and update last modified in db
-                    if (manga.toDbManga().removeCovers() > 0) {
+                    if (manga.removeCovers() != manga) {
                         updateManga.awaitUpdateCoverLastModified(manga.id)
                     }
                     withUIContext { onRemoved() }
@@ -689,7 +688,7 @@ class MangaInfoScreenModel(
      */
     private fun downloadChapters(chapters: List<Chapter>) {
         val manga = successState?.manga ?: return
-        downloadManager.downloadChapters(manga, chapters.map { it.toDbChapter() })
+        downloadManager.downloadChapters(manga, chapters)
         toggleAllSelection(false)
     }
 
@@ -717,7 +716,7 @@ class MangaInfoScreenModel(
             try {
                 successState?.let { state ->
                     downloadManager.deleteChapters(
-                        chapters.map { it.toDbChapter() },
+                        chapters,
                         state.manga,
                         state.source,
                     )

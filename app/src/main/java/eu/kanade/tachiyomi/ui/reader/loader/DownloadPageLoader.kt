@@ -4,6 +4,7 @@ import android.app.Application
 import android.net.Uri
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.manga.model.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
@@ -47,7 +48,7 @@ class DownloadPageLoader(
     }
 
     private fun getPagesFromDirectory(): Observable<List<ReaderPage>> {
-        return downloadManager.buildPageList(source, manga, chapter.chapter)
+        return downloadManager.buildPageList(source, manga, chapter.chapter.toDomainChapter()!!)
             .map { pages ->
                 pages.map { page ->
                     ReaderPage(page.index, page.url, page.imageUrl) {

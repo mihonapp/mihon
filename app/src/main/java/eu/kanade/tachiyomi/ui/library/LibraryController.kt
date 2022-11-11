@@ -13,7 +13,6 @@ import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.isLocal
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.presentation.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.DeleteLibraryMangaDialog
 import eu.kanade.presentation.library.LibraryScreen
@@ -102,7 +101,7 @@ class LibraryController(
                     containsLocalManga = dialog.manga.any(Manga::isLocal),
                     onDismissRequest = onDismissRequest,
                     onConfirm = { deleteManga, deleteChapter ->
-                        presenter.removeMangas(dialog.manga.map { it.toDbManga() }, deleteManga, deleteChapter)
+                        presenter.removeMangas(dialog.manga, deleteManga, deleteChapter)
                         presenter.clearSelection()
                     },
                 )

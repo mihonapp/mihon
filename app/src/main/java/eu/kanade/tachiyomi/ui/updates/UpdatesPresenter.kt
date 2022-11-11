@@ -9,7 +9,6 @@ import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
-import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.ui.UiPreferences
@@ -242,7 +241,7 @@ class UpdatesPresenter(
                 val manga = getManga.await(mangaId) ?: continue
                 // Don't download if source isn't available
                 sourceManager.get(manga.source) ?: continue
-                val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId)?.toDbChapter() }
+                val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
                 downloadManager.downloadChapters(manga, chapters)
             }
         }
@@ -261,7 +260,7 @@ class UpdatesPresenter(
                 .forEach { (mangaId, updates) ->
                     val manga = getManga.await(mangaId) ?: return@forEach
                     val source = sourceManager.get(manga.source) ?: return@forEach
-                    val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId)?.toDbChapter() }
+                    val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
                     downloadManager.deleteChapters(chapters, manga, source)
                 }
         }

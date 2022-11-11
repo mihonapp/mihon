@@ -1,12 +1,11 @@
 package eu.kanade.tachiyomi.data.cache
 
 import android.content.Context
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
-import eu.kanade.domain.manga.model.Manga as DomainManga
 
 /**
  * Class used to create cover cache.
@@ -76,7 +75,7 @@ class CoverCache(private val context: Context) {
     fun deleteFromCache(manga: Manga, deleteCustomCover: Boolean = false): Int {
         var deleted = 0
 
-        getCoverFile(manga.thumbnail_url)?.let {
+        getCoverFile(manga.thumbnailUrl)?.let {
             if (it.exists() && it.delete()) ++deleted
         }
 
@@ -85,20 +84,6 @@ class CoverCache(private val context: Context) {
         }
 
         return deleted
-    }
-
-    fun deleteFromCache(manga: DomainManga, deleteCustomCover: Boolean = false): Int {
-        var amountDeleted = 0
-
-        getCoverFile(manga.thumbnailUrl)?.let {
-            if (it.exists() && it.delete()) amountDeleted++
-        }
-
-        if (deleteCustomCover && deleteCustomCover(manga.id)) {
-            amountDeleted++
-        }
-
-        return amountDeleted
     }
 
     /**

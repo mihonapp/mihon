@@ -4,10 +4,11 @@ import android.content.Context
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.domain.category.interactor.GetCategories
+import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Chapter
+import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.source.Source
@@ -218,7 +219,7 @@ class DownloadManager(
      */
     fun getChapterDownloadOrNull(chapter: Chapter): Download? {
         return downloader.queue
-            .firstOrNull { it.chapter.id == chapter.id && it.chapter.manga_id == chapter.manga_id }
+            .firstOrNull { it.chapter.id == chapter.id && it.chapter.manga_id == chapter.mangaId }
     }
 
     /**
@@ -236,7 +237,7 @@ class DownloadManager(
      * @param download the download to cancel.
      */
     fun deletePendingDownload(download: Download) {
-        deleteChapters(listOf(download.chapter), download.manga, download.source, true)
+        deleteChapters(listOf(download.chapter.toDomainChapter()!!), download.manga, download.source, true)
     }
 
     fun deletePendingDownloads(vararg downloads: Download) {
@@ -244,7 +245,7 @@ class DownloadManager(
         downloadsByManga.map { entry ->
             val manga = entry.value.first().manga
             val source = entry.value.first().source
-            deleteChapters(entry.value.map { it.chapter }, manga, source, true)
+            deleteChapters(entry.value.map { it.chapter.toDomainChapter()!! }, manga, source, true)
         }
     }
 

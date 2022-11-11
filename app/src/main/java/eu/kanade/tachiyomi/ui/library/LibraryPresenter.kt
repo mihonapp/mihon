@@ -20,7 +20,6 @@ import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.model.Chapter
-import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.history.interactor.GetNextChapters
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.library.model.LibrarySort
@@ -38,7 +37,6 @@ import eu.kanade.presentation.library.LibraryStateImpl
 import eu.kanade.presentation.library.components.LibraryToolbarTitle
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -64,7 +62,6 @@ import uy.kohesive.injekt.api.get
 import java.text.Collator
 import java.util.Collections
 import java.util.Locale
-import eu.kanade.tachiyomi.data.database.models.Manga as DbManga
 
 /**
  * Class containing library information.
@@ -432,7 +429,7 @@ class LibraryPresenter(
                     }
                     .let { if (amount != null) it.take(amount) else it }
 
-                downloadManager.downloadChapters(manga, chapters.map { it.toDbChapter() })
+                downloadManager.downloadChapters(manga, chapters)
             }
         }
     }
@@ -460,7 +457,7 @@ class LibraryPresenter(
      * @param deleteFromLibrary whether to delete manga from library.
      * @param deleteChapters whether to delete downloaded chapters.
      */
-    fun removeMangas(mangaList: List<DbManga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
+    fun removeMangas(mangaList: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
         presenterScope.launchNonCancellable {
             val mangaToDelete = mangaList.distinctBy { it.id }
 
@@ -469,7 +466,7 @@ class LibraryPresenter(
                     it.removeCovers(coverCache)
                     MangaUpdate(
                         favorite = false,
-                        id = it.id!!,
+                        id = it.id,
                     )
                 }
                 updateManga.awaitAll(toDelete)
@@ -479,7 +476,7 @@ class LibraryPresenter(
                 mangaToDelete.forEach { manga ->
                     val source = sourceManager.get(manga.source) as? HttpSource
                     if (source != null) {
-                        downloadManager.deleteManga(manga.toDomainManga()!!, source)
+                        downloadManager.deleteManga(manga, source)
                     }
                 }
             }

@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
 import androidx.core.content.edit
+import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.manga.model.Manga
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -181,11 +181,11 @@ class DownloadPendingDeleter(context: Context) {
      * Returns a chapter model from a chapter entry.
      */
     private fun ChapterEntry.toModel(): Chapter {
-        return Chapter.create().also {
-            it.id = id
-            it.url = url
-            it.name = name
-            it.scanlator = scanlator
-        }
+        return Chapter.create().copy(
+            id = id,
+            url = url,
+            name = name,
+            scanlator = scanlator,
+        )
     }
 }

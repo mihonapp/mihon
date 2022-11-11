@@ -4,11 +4,12 @@ import android.content.Context
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
+import eu.kanade.domain.chapter.model.Chapter
+import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
@@ -256,7 +257,7 @@ class Downloader(
                 // Filter out those already downloaded.
                 .filter { provider.findChapterDir(it.name, it.scanlator, manga.title, source) == null }
                 // Add chapters to queue from the start.
-                .sortedByDescending { it.source_order }
+                .sortedByDescending { it.sourceOrder }
         }
 
         // Runs in main thread (synchronization needed).
@@ -264,7 +265,7 @@ class Downloader(
             // Filter out those already enqueued.
             .filter { chapter -> queue.none { it.chapter.id == chapter.id } }
             // Create a download for each one.
-            .map { Download(source, manga, it) }
+            .map { Download(source, manga, it.toDbChapter()) }
 
         if (chaptersToQueue.isNotEmpty()) {
             queue.addAll(chaptersToQueue)

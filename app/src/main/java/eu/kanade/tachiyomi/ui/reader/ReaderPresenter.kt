@@ -23,6 +23,7 @@ import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -479,7 +480,7 @@ class ReaderPresenter(
                 .take(amount)
             downloadManager.downloadChapters(
                 manga.toDomainManga()!!,
-                chaptersToDownload.map { it.toDbChapter() },
+                chaptersToDownload,
             )
         }
     }
@@ -489,7 +490,7 @@ class ReaderPresenter(
      * if setting is enabled and [currentChapter] is queued for download
      */
     private fun deleteChapterFromDownloadQueue(currentChapter: ReaderChapter): Download? {
-        return downloadManager.getChapterDownloadOrNull(currentChapter.chapter)?.apply {
+        return downloadManager.getChapterDownloadOrNull(currentChapter.chapter.toDomainChapter()!!)?.apply {
             downloadManager.deletePendingDownload(this)
         }
     }
@@ -874,7 +875,7 @@ class ReaderPresenter(
         val manga = manga ?: return
 
         presenterScope.launchNonCancellable {
-            downloadManager.enqueueDeleteChapters(listOf(chapter.chapter), manga.toDomainManga()!!)
+            downloadManager.enqueueDeleteChapters(listOf(chapter.chapter.toDomainChapter()!!), manga.toDomainManga()!!)
         }
     }
 

@@ -12,7 +12,6 @@ import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.UpdateChapter
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.toChapterUpdate
-import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.model.Manga
@@ -253,7 +252,7 @@ class NotificationReceiver : BroadcastReceiver() {
                         if (manga != null) {
                             val source = sourceManager.get(manga.source)
                             if (source != null) {
-                                downloadManager.deleteChapters(listOf(it.toDbChapter()), manga, source)
+                                downloadManager.deleteChapters(listOf(it), manga, source)
                             }
                         }
                     }
@@ -272,7 +271,7 @@ class NotificationReceiver : BroadcastReceiver() {
     private fun downloadChapters(chapterUrls: Array<String>, mangaId: Long) {
         launchIO {
             val manga = getManga.await(mangaId) ?: return@launchIO
-            val chapters = chapterUrls.mapNotNull { getChapter.await(it, mangaId)?.toDbChapter() }
+            val chapters = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
             downloadManager.downloadChapters(manga, chapters)
         }
     }

@@ -4,7 +4,6 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.isLocal
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.SManga
@@ -46,11 +45,11 @@ class UpdateManga(
                 !manualFetch && localManga.thumbnailUrl == remoteManga.thumbnail_url -> null
                 localManga.isLocal() -> Date().time
                 localManga.hasCustomCover(coverCache) -> {
-                    coverCache.deleteFromCache(localManga.toDbManga(), false)
+                    coverCache.deleteFromCache(localManga, false)
                     null
                 }
                 else -> {
-                    coverCache.deleteFromCache(localManga.toDbManga(), false)
+                    coverCache.deleteFromCache(localManga, false)
                     Date().time
                 }
             }

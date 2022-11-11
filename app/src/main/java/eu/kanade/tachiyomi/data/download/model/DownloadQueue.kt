@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.data.download.model
 
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.core.util.asFlow
+import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.manga.model.Manga
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.download.DownloadStore
 import eu.kanade.tachiyomi.source.model.Page
 import kotlinx.coroutines.flow.Flow

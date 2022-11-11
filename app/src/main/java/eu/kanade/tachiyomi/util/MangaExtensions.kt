@@ -3,24 +3,21 @@ package eu.kanade.tachiyomi.util
 import android.content.Context
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.isLocal
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.toDomainManga
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.InputStream
 import java.util.Date
-import eu.kanade.domain.manga.model.Manga as DomainManga
 
 /**
  * Call before updating [Manga.thumbnail_url] to ensure old cover can be cleared from cache
  */
-fun DomainManga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSameUrl: Boolean): DomainManga {
+fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSameUrl: Boolean): Manga {
     // Never refresh covers if the new url is null, as the current url has possibly become invalid
     val newUrl = remoteManga.thumbnail_url ?: return this
 
@@ -44,20 +41,16 @@ fun DomainManga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, ref
     }
 }
 
-fun Manga.removeCovers(coverCache: CoverCache = Injekt.get()): Int {
-    if (toDomainManga()!!.isLocal()) return 0
-
-    cover_last_modified = Date().time
-    return coverCache.deleteFromCache(this, true)
-}
-
-fun DomainManga.removeCovers(coverCache: CoverCache = Injekt.get()): DomainManga {
+fun Manga.removeCovers(coverCache: CoverCache = Injekt.get()): Manga {
     if (isLocal()) return this
-    coverCache.deleteFromCache(this, true)
-    return copy(coverLastModified = Date().time)
+    return if (coverCache.deleteFromCache(this, true) > 0) {
+        return copy(coverLastModified = Date().time)
+    } else {
+        this
+    }
 }
 
-fun DomainManga.shouldDownloadNewChapters(dbCategories: List<Long>, preferences: DownloadPreferences): Boolean {
+fun Manga.shouldDownloadNewChapters(dbCategories: List<Long>, preferences: DownloadPreferences): Boolean {
     if (!favorite) return false
 
     val categories = dbCategories.ifEmpty { listOf(0L) }
@@ -82,7 +75,7 @@ fun DomainManga.shouldDownloadNewChapters(dbCategories: List<Long>, preferences:
     return categories.any { it in includedCategories }
 }
 
-suspend fun DomainManga.editCover(
+suspend fun Manga.editCover(
     context: Context,
     stream: InputStream,
     updateManga: UpdateManga = Injekt.get(),
@@ -92,7 +85,7 @@ suspend fun DomainManga.editCover(
         LocalSource.updateCover(context, toSManga(), stream)
         updateManga.awaitUpdateCoverLastModified(id)
     } else if (favorite) {
-        coverCache.setCustomCoverToCache(toDbManga(), stream)
+        coverCache.setCustomCoverToCache(this, stream)
         updateManga.awaitUpdateCoverLastModified(id)
     }
 }
