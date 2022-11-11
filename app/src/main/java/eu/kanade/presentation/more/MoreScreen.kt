@@ -14,8 +14,6 @@ import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SettingsBackupRestore
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
@@ -31,12 +29,15 @@ import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.more.DownloadQueueState
 import eu.kanade.tachiyomi.ui.more.MoreController
-import eu.kanade.tachiyomi.ui.more.MorePresenter
 import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
 
 @Composable
 fun MoreScreen(
-    presenter: MorePresenter,
+    downloadQueueStateProvider: () -> DownloadQueueState,
+    downloadedOnly: Boolean,
+    onDownloadedOnlyChange: (Boolean) -> Unit,
+    incognitoMode: Boolean,
+    onIncognitoModeChange: (Boolean) -> Unit,
     isFDroid: Boolean,
     onClickDownloadQueue: () -> Unit,
     onClickCategories: () -> Unit,
@@ -45,7 +46,6 @@ fun MoreScreen(
     onClickAbout: () -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
-    val downloadQueueState by presenter.downloadQueueState.collectAsState()
 
     ScrollbarLazyColumn(
         modifier = Modifier.statusBarsPadding(),
@@ -70,8 +70,8 @@ fun MoreScreen(
 
         item {
             AppStateBanners(
-                downloadedOnlyMode = presenter.downloadedOnly.value,
-                incognitoMode = presenter.incognitoMode.value,
+                downloadedOnlyMode = downloadedOnly,
+                incognitoMode = incognitoMode,
             )
         }
 
@@ -80,8 +80,8 @@ fun MoreScreen(
                 title = stringResource(R.string.label_downloaded_only),
                 subtitle = stringResource(R.string.downloaded_only_summary),
                 icon = Icons.Outlined.CloudOff,
-                checked = presenter.downloadedOnly.value,
-                onCheckedChanged = { presenter.downloadedOnly.value = it },
+                checked = downloadedOnly,
+                onCheckedChanged = onDownloadedOnlyChange,
             )
         }
         item {
@@ -89,20 +89,21 @@ fun MoreScreen(
                 title = stringResource(R.string.pref_incognito_mode),
                 subtitle = stringResource(R.string.pref_incognito_mode_summary),
                 icon = ImageVector.vectorResource(R.drawable.ic_glasses_24dp),
-                checked = presenter.incognitoMode.value,
-                onCheckedChanged = { presenter.incognitoMode.value = it },
+                checked = incognitoMode,
+                onCheckedChanged = onIncognitoModeChange,
             )
         }
 
         item { Divider() }
 
         item {
+            val downloadQueueState = downloadQueueStateProvider()
             TextPreferenceWidget(
                 title = stringResource(R.string.label_download_queue),
                 subtitle = when (downloadQueueState) {
                     DownloadQueueState.Stopped -> null
                     is DownloadQueueState.Paused -> {
-                        val pending = (downloadQueueState as DownloadQueueState.Paused).pending
+                        val pending = downloadQueueState.pending
                         if (pending == 0) {
                             stringResource(R.string.paused)
                         } else {
@@ -116,7 +117,7 @@ fun MoreScreen(
                         }
                     }
                     is DownloadQueueState.Downloading -> {
-                        val pending = (downloadQueueState as DownloadQueueState.Downloading).pending
+                        val pending = downloadQueueState.pending
                         pluralStringResource(id = R.plurals.download_queue_summary, count = pending, pending)
                     }
                 },
