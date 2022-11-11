@@ -63,7 +63,6 @@ photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
 cascade = "me.saket.cascade:cascade-compose:2.0.0-beta1"
-numberpicker = "com.chargemap.compose:numberpicker:1.0.3"
 wheelpicker = "com.github.commandiron:WheelPickerCompose:1.0.11"
 
 conductor-core = { module = "com.bluelinelabs:conductor", version.ref = "conductor_version" }

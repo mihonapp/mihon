@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="MinMaxNumberPicker">
-        <attr name="min" format="integer"/>
-        <attr name="max" format="integer"/>
-    </declare-styleable>
-
     <declare-styleable name="MaterialSpinnerView">
         <attr name="title" format="reference|string"/>
         <attr name="android:entries"/>

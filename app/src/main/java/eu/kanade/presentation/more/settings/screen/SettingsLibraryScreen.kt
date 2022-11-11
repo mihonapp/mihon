@@ -1,13 +1,15 @@
 package eu.kanade.presentation.more.settings.screen
 
-import android.content.Context
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,15 +23,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastMap
 import androidx.core.content.ContextCompat
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.bluelinelabs.conductor.Router
-import com.chargemap.compose.numberpicker.NumberPicker
+import com.commandiron.wheel_picker_compose.WheelPicker
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.ResetCategoryFlags
 import eu.kanade.domain.category.model.Category
@@ -78,7 +83,6 @@ class SettingsLibraryScreen : SearchableSettings {
 
     @Composable
     private fun getDisplayGroup(libraryPreferences: LibraryPreferences): Preference.PreferenceGroup {
-        val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val portraitColumns by libraryPreferences.portraitColumns().stateIn(scope).collectAsState()
         val landscapeColumns by libraryPreferences.landscapeColumns().stateIn(scope).collectAsState()
@@ -102,8 +106,8 @@ class SettingsLibraryScreen : SearchableSettings {
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(R.string.pref_library_columns),
-                    subtitle = "${stringResource(R.string.portrait)}: ${getColumnValue(context, portraitColumns)}, " +
-                        "${stringResource(R.string.landscape)}: ${getColumnValue(context, landscapeColumns)}",
+                    subtitle = "${stringResource(R.string.portrait)}: ${getColumnValue(portraitColumns)}, " +
+                        "${stringResource(R.string.landscape)}: ${getColumnValue(landscapeColumns)}",
                     onClick = { showDialog = true },
                 ),
             ),
@@ -273,7 +277,6 @@ class SettingsLibraryScreen : SearchableSettings {
         onDismissRequest: () -> Unit,
         onValueChanged: (portrait: Int, landscape: Int) -> Unit,
     ) {
-        val context = LocalContext.current
         var portraitValue by rememberSaveable { mutableStateOf(initialPortrait) }
         var landscapeValue by rememberSaveable { mutableStateOf(initialLandscape) }
 
@@ -281,48 +284,30 @@ class SettingsLibraryScreen : SearchableSettings {
             onDismissRequest = onDismissRequest,
             title = { Text(text = stringResource(R.string.pref_library_columns)) },
             text = {
-                Row {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
+                Column {
+                    Row {
                         Text(
+                            modifier = Modifier.weight(1f),
                             text = stringResource(R.string.portrait),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
                             style = MaterialTheme.typography.labelMedium,
                         )
-                        NumberPicker(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clipToBounds(),
-                            value = portraitValue,
-                            onValueChange = { portraitValue = it },
-                            range = 0..10,
-                            label = { getColumnValue(context, it) },
-                            dividersColor = MaterialTheme.colorScheme.primary,
-                            textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface),
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
                         Text(
+                            modifier = Modifier.weight(1f),
                             text = stringResource(R.string.landscape),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
                             style = MaterialTheme.typography.labelMedium,
                         )
-                        NumberPicker(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clipToBounds(),
-                            value = landscapeValue,
-                            onValueChange = { landscapeValue = it },
-                            range = 0..10,
-                            label = { getColumnValue(context, it) },
-                            dividersColor = MaterialTheme.colorScheme.primary,
-                            textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface),
-                        )
                     }
+                    LibraryColumnsPicker(
+                        modifier = Modifier.fillMaxWidth(),
+                        portraitValue = portraitValue,
+                        onPortraitChange = { portraitValue = it },
+                        landscapeValue = landscapeValue,
+                        onLandscapeChange = { landscapeValue = it },
+                    )
                 }
             },
             dismissButton = {
@@ -338,9 +323,78 @@ class SettingsLibraryScreen : SearchableSettings {
         )
     }
 
-    private fun getColumnValue(context: Context, value: Int): String {
+    @Composable
+    private fun LibraryColumnsPicker(
+        modifier: Modifier = Modifier,
+        portraitValue: Int,
+        onPortraitChange: (Int) -> Unit,
+        landscapeValue: Int,
+        onLandscapeChange: (Int) -> Unit,
+    ) {
+        BoxWithConstraints(
+            modifier = modifier,
+            contentAlignment = Alignment.Center,
+        ) {
+            Surface(
+                modifier = Modifier.size(maxWidth, maxHeight / 3),
+                shape = MaterialTheme.shapes.large,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+            ) {}
+
+            val size = DpSize(width = maxWidth / 2, height = 128.dp)
+            Row {
+                WheelPicker(
+                    size = size,
+                    count = 10,
+                    startIndex = portraitValue,
+                    onScrollFinished = {
+                        onPortraitChange(it)
+                        null
+                    },
+                ) { index, snappedIndex ->
+                    ColumnPickerLabel(index = index, snappedIndex = snappedIndex)
+                }
+                WheelPicker(
+                    size = size,
+                    count = 10,
+                    startIndex = landscapeValue,
+                    onScrollFinished = {
+                        onLandscapeChange(it)
+                        null
+                    },
+                ) { index, snappedIndex ->
+                    ColumnPickerLabel(index = index, snappedIndex = snappedIndex)
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ColumnPickerLabel(
+        index: Int,
+        snappedIndex: Int,
+    ) {
+        Text(
+            modifier = Modifier.alpha(
+                when (snappedIndex) {
+                    index + 1 -> 0.2f
+                    index -> 1f
+                    index - 1 -> 0.2f
+                    else -> 0.2f
+                },
+            ),
+            text = getColumnValue(index),
+            style = MaterialTheme.typography.titleMedium,
+            maxLines = 1,
+        )
+    }
+
+    @Composable
+    @ReadOnlyComposable
+    private fun getColumnValue(value: Int): String {
         return if (value == 0) {
-            context.getString(R.string.label_default)
+            stringResource(R.string.label_default)
         } else {
             value.toString()
         }

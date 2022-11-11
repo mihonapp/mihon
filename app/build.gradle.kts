@@ -173,6 +173,7 @@ dependencies {
     implementation(compose.foundation)
     implementation(compose.material3.core)
     implementation(compose.material3.adapter)
+    implementation(compose.material.core)
     implementation(compose.material.icons)
     implementation(compose.animation)
     implementation(compose.animation.graphics)
@@ -269,7 +270,6 @@ dependencies {
     implementation(libs.markwon)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.cascade)
-    implementation(libs.numberpicker)
     implementation(libs.bundles.voyager)
     implementation(libs.wheelpicker)
 
