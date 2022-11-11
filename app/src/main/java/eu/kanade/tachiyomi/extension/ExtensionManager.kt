@@ -73,7 +73,7 @@ class ExtensionManager(
     private val _availableExtensionsFlow = MutableStateFlow(emptyList<Extension.Available>())
     val availableExtensionsFlow = _availableExtensionsFlow.asStateFlow()
 
-    private var availableExtensionsSourcesData: Map<Long, SourceData> = mapOf()
+    private var availableExtensionsSourcesData: Map<Long, SourceData> = emptyMap()
 
     private fun setupAvailableExtensionsSourcesDataMap(extensions: List<Extension.Available>) {
         if (extensions.isEmpty()) return

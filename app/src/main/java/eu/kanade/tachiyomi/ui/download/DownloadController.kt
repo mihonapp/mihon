@@ -475,7 +475,7 @@ class DownloadController :
                         ?.filterIsInstance<DownloadItem>()
                         ?.map(DownloadItem::download)
                         ?.partition { item.download.manga.id == it.manga.id }
-                        ?: Pair(listOf(), listOf())
+                        ?: Pair(emptyList(), emptyList())
                     presenter.reorder(selectedSeries + otherSeries)
                 }
                 R.id.cancel_download -> {

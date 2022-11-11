@@ -13,7 +13,7 @@ private const val listOfStringsSeparator = ", "
 val listOfStringsAdapter = object : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String) =
         if (databaseValue.isEmpty()) {
-            listOf()
+            emptyList()
         } else {
             databaseValue.split(listOfStringsSeparator)
         }

@@ -1,5 +1,7 @@
 package eu.kanade.core.util
 
+import java.util.concurrent.ConcurrentHashMap
+
 fun <T : R, R : Any> List<T>.insertSeparators(
     generator: (T?, T?) -> R?,
 ): List<R> {
@@ -13,4 +15,13 @@ fun <T : R, R : Any> List<T>.insertSeparators(
         separator?.let { newList.add(it) }
     }
     return newList
+}
+
+/**
+ * Returns a new map containing only the key entries of [transform] that are not null.
+ */
+inline fun <K, V, R> Map<out K, V>.mapNotNullKeys(transform: (Map.Entry<K?, V>) -> R?): ConcurrentHashMap<R, V> {
+    val mutableMap = ConcurrentHashMap<R, V>()
+    forEach { element -> transform(element)?.let { mutableMap[it] = element.value } }
+    return mutableMap
 }

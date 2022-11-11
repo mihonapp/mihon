@@ -1,6 +1,19 @@
 package eu.kanade.tachiyomi.data.track.shikimori
 
 import eu.kanade.tachiyomi.data.database.models.Track
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class OAuth(
+    val access_token: String,
+    val token_type: String,
+    val created_at: Long,
+    val expires_in: Long,
+    val refresh_token: String?,
+)
+
+// Access token lives 1 day
+fun OAuth.isExpired() = (System.currentTimeMillis() / 1000) > (created_at + expires_in - 3600)
 
 fun Track.toShikimoriStatus() = when (status) {
     Shikimori.READING -> "watching"

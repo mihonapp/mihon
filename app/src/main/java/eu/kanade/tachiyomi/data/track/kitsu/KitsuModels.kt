@@ -4,6 +4,7 @@ import androidx.annotation.CallSuper
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.int
@@ -92,6 +93,17 @@ class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
         else -> throw Exception("Unknown status")
     }
 }
+
+@Serializable
+data class OAuth(
+    val access_token: String,
+    val token_type: String,
+    val created_at: Long,
+    val expires_in: Long,
+    val refresh_token: String?,
+)
+
+fun OAuth.isExpired() = (System.currentTimeMillis() / 1000) > (created_at + expires_in - 3600)
 
 fun Track.toKitsuStatus() = when (status) {
     Kitsu.READING -> "current"

@@ -4,6 +4,7 @@ import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.serialization.Serializable
 import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -71,6 +72,16 @@ data class ALUserManga(
         else -> throw NotImplementedError("Unknown status: $list_status")
     }
 }
+
+@Serializable
+data class OAuth(
+    val access_token: String,
+    val token_type: String,
+    val expires: Long,
+    val expires_in: Long,
+)
+
+fun OAuth.isExpired() = System.currentTimeMillis() > expires
 
 fun Track.toAnilistStatus() = when (status) {
     Anilist.READING -> "CURRENT"
