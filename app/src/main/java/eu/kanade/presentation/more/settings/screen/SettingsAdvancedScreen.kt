@@ -31,6 +31,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -186,6 +187,11 @@ class SettingsAdvancedScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPreferences.autoClearChapterCache(),
                     title = stringResource(R.string.pref_auto_clear_chapter_cache),
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(R.string.pref_invalidate_download_cache),
+                    subtitle = stringResource(R.string.pref_invalidate_download_cache_summary),
+                    onClick = { Injekt.get<DownloadCache>().invalidateCache() },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(R.string.pref_clear_database),
