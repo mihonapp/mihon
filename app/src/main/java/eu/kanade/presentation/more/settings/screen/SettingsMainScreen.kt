@@ -84,39 +84,34 @@ object SettingsMainScreen : Screen {
         Scaffold(
             topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState),
             topBar = { scrollBehavior ->
-                // https://issuetracker.google.com/issues/249688556
-                MaterialTheme(
-                    colorScheme = MaterialTheme.colorScheme.copy(surface = containerColor),
-                ) {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = stringResource(R.string.label_settings),
-                                modifier = Modifier.padding(start = 8.dp),
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(R.string.label_settings),
+                            modifier = Modifier.padding(start = 8.dp),
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = backPress::invoke) {
+                            Icon(
+                                imageVector = Icons.Outlined.ArrowBack,
+                                contentDescription = stringResource(R.string.abc_action_bar_up_description),
                             )
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = backPress::invoke) {
-                                Icon(
-                                    imageVector = Icons.Outlined.ArrowBack,
-                                    contentDescription = stringResource(R.string.abc_action_bar_up_description),
-                                )
-                            }
-                        },
-                        actions = {
-                            AppBarActions(
-                                listOf(
-                                    AppBar.Action(
-                                        title = stringResource(R.string.action_search),
-                                        icon = Icons.Outlined.Search,
-                                        onClick = { navigator.navigate(SettingsSearchScreen(), twoPane) },
-                                    ),
+                        }
+                    },
+                    actions = {
+                        AppBarActions(
+                            listOf(
+                                AppBar.Action(
+                                    title = stringResource(R.string.action_search),
+                                    icon = Icons.Outlined.Search,
+                                    onClick = { navigator.navigate(SettingsSearchScreen(), twoPane) },
                                 ),
-                            )
-                        },
-                        scrollBehavior = scrollBehavior,
-                    )
-                }
+                            ),
+                        )
+                    },
+                    scrollBehavior = scrollBehavior,
+                )
             },
             containerColor = containerColor,
             content = { contentPadding ->
