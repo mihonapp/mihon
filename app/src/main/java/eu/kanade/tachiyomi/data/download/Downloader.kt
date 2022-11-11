@@ -6,21 +6,14 @@ import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.download.service.DownloadPreferences
+import eu.kanade.domain.manga.model.COMIC_INFO_FILE
 import eu.kanade.domain.manga.model.ComicInfo
-import eu.kanade.domain.manga.model.ComicInfoGenre
-import eu.kanade.domain.manga.model.ComicInfoPenciller
-import eu.kanade.domain.manga.model.ComicInfoPublishingStatusTachiyomi
-import eu.kanade.domain.manga.model.ComicInfoSeries
-import eu.kanade.domain.manga.model.ComicInfoSummary
-import eu.kanade.domain.manga.model.ComicInfoTitle
-import eu.kanade.domain.manga.model.ComicInfoTranslator
-import eu.kanade.domain.manga.model.ComicInfoWeb
-import eu.kanade.domain.manga.model.ComicInfoWriter
 import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.getComicInfo
 import eu.kanade.domain.track.interactor.GetTracks
-import eu.kanade.domain.track.model.Track
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
@@ -28,8 +21,6 @@ import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.Page
-import eu.kanade.tachiyomi.source.model.SChapter
-import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.fetchAllImageUrlsFromPageList
 import eu.kanade.tachiyomi.util.lang.RetryWithDelay
@@ -42,7 +33,6 @@ import eu.kanade.tachiyomi.util.storage.saveTo
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
@@ -537,8 +527,6 @@ class Downloader(
         // Ensure that the chapter folder has all the images.
         val downloadedImages = tmpDir.listFiles().orEmpty().filterNot { it.name!!.endsWith(".tmp") || (it.name!!.contains("__") && !it.name!!.contains("__001.jpg")) }
 
-        createComicInfoFile(tmpDir, download.manga, download.chapter)
-
         download.status = if (downloadedImages.size == download.pages!!.size) {
             // Only rename the directory if it's downloaded.
             if (downloadPreferences.saveChaptersAsCBZ().get()) {
@@ -549,8 +537,7 @@ class Downloader(
             cache.addChapter(dirname, mangaDir, download.manga)
 
             DiskUtil.createNoMediaFile(tmpDir, context)
-
-            createComicInfoFile(mangaDir, download.manga, download.chapter)
+            createComicInfoFile(mangaDir, download.manga, download.chapter.toDomainChapter()!!)
 
             Download.State.DOWNLOADED
         } else {
@@ -602,47 +589,15 @@ class Downloader(
     private fun createComicInfoFile(
         dir: UniFile,
         manga: Manga,
-        chapter: SChapter,
+        chapter: Chapter,
     ) {
-        File("${dir.filePath}/ComicInfo.xml").outputStream().also {
+        File("${dir.filePath}/$COMIC_INFO_FILE").outputStream().also {
             // Force overwrite old file
             (it as? FileOutputStream)?.channel?.truncate(0)
-        }.use { it.write(getComicInfo(manga, chapter)) }
-    }
-
-    /**
-     * returns a ByteArray containing the Manga Metadata of the chapter to download in ComicInfo.xml format
-     *
-     * @param manga the manga of the chapter to download.
-     * @param chapter the name of the chapter to download
-     */
-    private fun getComicInfo(manga: Manga, chapter: SChapter): ByteArray {
-        val track: Track? = runBlocking { getTracks.await(manga.id).firstOrNull() }
-        val comicInfo = ComicInfo(
-            title = ComicInfoTitle(chapter.name),
-            series = ComicInfoSeries(manga.title),
-            summary = manga.description?.let { ComicInfoSummary(it) },
-            writer = manga.author?.let { ComicInfoWriter(it) },
-            penciller = manga.artist?.let { ComicInfoPenciller(it) },
-            translator = chapter.scanlator?.let { ComicInfoTranslator(it) },
-            genre = manga.genre?.let { ComicInfoGenre(it.joinToString()) },
-            web = track?.remoteUrl?.let { ComicInfoWeb(it) },
-            publishingStatusTachiyomi = when (manga.status) {
-                SManga.ONGOING.toLong() -> ComicInfoPublishingStatusTachiyomi("Ongoing")
-                SManga.COMPLETED.toLong() -> ComicInfoPublishingStatusTachiyomi("Completed")
-                SManga.LICENSED.toLong() -> ComicInfoPublishingStatusTachiyomi("Licensed")
-                SManga.PUBLISHING_FINISHED.toLong() -> ComicInfoPublishingStatusTachiyomi("Publishing finished")
-                SManga.CANCELLED.toLong() -> ComicInfoPublishingStatusTachiyomi("Cancelled")
-                SManga.ON_HIATUS.toLong() -> ComicInfoPublishingStatusTachiyomi("On hiatus")
-                else -> ComicInfoPublishingStatusTachiyomi("Unknown")
-            },
-            inker = null,
-            colorist = null,
-            letterer = null,
-            coverArtist = null,
-            tags = null,
-        )
-        return xml.encodeToString(ComicInfo.serializer(), comicInfo).toByteArray()
+        }.use {
+            val comicInfo = getComicInfo(manga, chapter)
+            it.write(xml.encodeToString(ComicInfo.serializer(), comicInfo).toByteArray())
+        }
     }
 
     /**

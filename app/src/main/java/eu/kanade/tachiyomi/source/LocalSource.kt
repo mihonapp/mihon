@@ -3,7 +3,9 @@ package eu.kanade.tachiyomi.source
 import android.content.Context
 import com.github.junrar.Archive
 import com.hippo.unifile.UniFile
+import eu.kanade.domain.manga.model.COMIC_INFO_FILE
 import eu.kanade.domain.manga.model.ComicInfo
+import eu.kanade.domain.manga.model.ComicInfoPublishingStatusMap
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
@@ -270,15 +272,7 @@ class LocalSource(
             .takeIf { it.isNotEmpty() }
             ?.let { manga.artist = it }
 
-        manga.status = when (comicInfo.publishingStatusTachiyomi?.value) {
-            "Ongoing" -> SManga.ONGOING
-            "Completed" -> SManga.COMPLETED
-            "Licensed" -> SManga.LICENSED
-            "Publishing finished" -> SManga.PUBLISHING_FINISHED
-            "Cancelled" -> SManga.CANCELLED
-            "On hiatus" -> SManga.ON_HIATUS
-            else -> SManga.UNKNOWN
-        }
+        manga.status = ComicInfoPublishingStatusMap.toSMangaValue(comicInfo.publishingStatusTachiyomi?.value)
     }
 
     @Serializable
@@ -492,4 +486,3 @@ class LocalSource(
 }
 
 private val SUPPORTED_ARCHIVE_TYPES = listOf("zip", "cbz", "rar", "cbr", "epub")
-private val COMIC_INFO_FILE = "ComicInfo.xml"
