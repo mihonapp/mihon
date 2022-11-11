@@ -1,20 +1,17 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
 import androidx.compose.runtime.Composable
-import eu.kanade.presentation.browse.ExtensionFilterScreen
-import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
+import androidx.compose.runtime.CompositionLocalProvider
+import cafe.adriel.voyager.navigator.Navigator
+import eu.kanade.presentation.util.LocalRouter
+import eu.kanade.tachiyomi.ui.base.controller.BasicFullComposeController
 
-class ExtensionFilterController : FullComposeController<ExtensionFilterPresenter>() {
-
-    override fun createPresenter() = ExtensionFilterPresenter()
+class ExtensionFilterController : BasicFullComposeController() {
 
     @Composable
     override fun ComposeContent() {
-        ExtensionFilterScreen(
-            navigateUp = router::popCurrentController,
-            presenter = presenter,
-        )
+        CompositionLocalProvider(LocalRouter provides router) {
+            Navigator(screen = ExtensionFilterScreen())
+        }
     }
 }
-
-data class FilterUiModel(val lang: String, val enabled: Boolean)
