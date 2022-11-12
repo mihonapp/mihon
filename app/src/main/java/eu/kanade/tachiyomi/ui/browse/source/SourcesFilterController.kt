@@ -1,30 +1,17 @@
 package eu.kanade.tachiyomi.ui.browse.source
 
 import androidx.compose.runtime.Composable
-import eu.kanade.domain.source.model.Source
-import eu.kanade.presentation.browse.SourcesFilterScreen
-import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
+import androidx.compose.runtime.CompositionLocalProvider
+import cafe.adriel.voyager.navigator.Navigator
+import eu.kanade.presentation.util.LocalRouter
+import eu.kanade.tachiyomi.ui.base.controller.BasicFullComposeController
 
-class SourceFilterController : FullComposeController<SourcesFilterPresenter>() {
-
-    override fun createPresenter(): SourcesFilterPresenter = SourcesFilterPresenter()
+class SourceFilterController : BasicFullComposeController() {
 
     @Composable
     override fun ComposeContent() {
-        SourcesFilterScreen(
-            navigateUp = router::popCurrentController,
-            presenter = presenter,
-            onClickLang = { language ->
-                presenter.toggleLanguage(language)
-            },
-            onClickSource = { source ->
-                presenter.toggleSource(source)
-            },
-        )
+        CompositionLocalProvider(LocalRouter provides router) {
+            Navigator(screen = SourcesFilterScreen())
+        }
     }
-}
-
-sealed class FilterUiModel {
-    data class Header(val language: String, val enabled: Boolean) : FilterUiModel()
-    data class Item(val source: Source, val enabled: Boolean) : FilterUiModel()
 }

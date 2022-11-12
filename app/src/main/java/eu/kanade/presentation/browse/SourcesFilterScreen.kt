@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -14,24 +13,19 @@ import eu.kanade.presentation.browse.components.BaseSourceItem
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.FastScrollLazyColumn
-import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.browse.source.FilterUiModel
-import eu.kanade.tachiyomi.ui.browse.source.SourcesFilterPresenter
+import eu.kanade.tachiyomi.ui.browse.source.SourcesFilterState
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SourcesFilterScreen(
     navigateUp: () -> Unit,
-    presenter: SourcesFilterPresenter,
-    onClickLang: (String) -> Unit,
+    state: SourcesFilterState.Success,
+    onClickLanguage: (String) -> Unit,
     onClickSource: (Source) -> Unit,
 ) {
-    val context = LocalContext.current
     Scaffold(
         topBar = { scrollBehavior ->
             AppBar(
@@ -41,69 +35,55 @@ fun SourcesFilterScreen(
             )
         },
     ) { contentPadding ->
-        when {
-            presenter.isLoading -> LoadingScreen()
-            presenter.isEmpty -> EmptyScreen(
+        if (state.isEmpty) {
+            EmptyScreen(
                 textResource = R.string.source_filter_empty_screen,
                 modifier = Modifier.padding(contentPadding),
             )
-            else -> {
-                SourcesFilterContent(
-                    contentPadding = contentPadding,
-                    state = presenter,
-                    onClickLang = onClickLang,
-                    onClickSource = onClickSource,
-                )
-            }
+            return@Scaffold
         }
-    }
-    LaunchedEffect(Unit) {
-        presenter.events.collectLatest { event ->
-            when (event) {
-                SourcesFilterPresenter.Event.FailedFetchingLanguages -> {
-                    context.toast(R.string.internal_error)
-                }
-            }
-        }
+        SourcesFilterContent(
+            contentPadding = contentPadding,
+            state = state,
+            onClickLanguage = onClickLanguage,
+            onClickSource = onClickSource,
+        )
     }
 }
 
 @Composable
 private fun SourcesFilterContent(
     contentPadding: PaddingValues,
-    state: SourcesFilterState,
-    onClickLang: (String) -> Unit,
+    state: SourcesFilterState.Success,
+    onClickLanguage: (String) -> Unit,
     onClickSource: (Source) -> Unit,
 ) {
     FastScrollLazyColumn(
         contentPadding = contentPadding,
     ) {
-        items(
-            items = state.items,
-            contentType = {
-                when (it) {
-                    is FilterUiModel.Header -> "header"
-                    is FilterUiModel.Item -> "item"
-                }
-            },
-            key = {
-                when (it) {
-                    is FilterUiModel.Header -> it.hashCode()
-                    is FilterUiModel.Item -> "source-filter-${it.source.key()}"
-                }
-            },
-        ) { model ->
-            when (model) {
-                is FilterUiModel.Header -> SourcesFilterHeader(
+        state.items.forEach { (language, sources) ->
+            val enabled = language in state.enabledLanguages
+            item(
+                key = language.hashCode(),
+                contentType = "source-filter-header",
+            ) {
+                SourcesFilterHeader(
                     modifier = Modifier.animateItemPlacement(),
-                    language = model.language,
-                    enabled = model.enabled,
-                    onClickItem = onClickLang,
+                    language = language,
+                    enabled = enabled,
+                    onClickItem = onClickLanguage,
                 )
-                is FilterUiModel.Item -> SourcesFilterItem(
+            }
+            if (!enabled) return@forEach
+            items(
+                items = sources,
+                key = { "source-filter-${it.key()}" },
+                contentType = { "source-filter-item" },
+            ) { source ->
+                SourcesFilterItem(
                     modifier = Modifier.animateItemPlacement(),
-                    source = model.source,
-                    enabled = model.enabled,
+                    source = source,
+                    enabled = "${source.id}" !in state.disabledSources,
                     onClickItem = onClickSource,
                 )
             }
