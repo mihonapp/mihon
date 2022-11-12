@@ -475,7 +475,6 @@
     <string name="updating_library">ग्रन्थालयं नवीकरोति</string>
     <string name="pref_clear_history">चरित्रं मार्जयतु</string>
     <string name="download_notifier_download_paused">अवारोपणं विरमितम्</string>
-    <string name="download_notifier_download_finish">अवारोपणं समापितम्</string>
     <string name="channel_errors">दोषाः</string>
     <string name="label_downloaded_only">अवारोपितानि एव</string>
     <string name="channel_progress">प्रगतिः</string>
@@ -632,7 +631,6 @@
     <string name="clear_history_confirmation">त्वं निश्चितं किम् \? चरित्रं सर्वं लुप्तं भविष्यति।</string>
     <string name="update_check_eol">एतत् आण्ड्रायिड्-संस्करणम् अधुना न भरितम्</string>
     <string name="information_webview_outdated">इतोऽपि उत्तमतरसङ्गतिं प्रप्तुं कृपया वेब्-व्यू-अनुप्रयोगं नवीकरोतु</string>
-    <string name="tracker_komga_warning">अयं ट्राकर्तन्त्रांशः Komga-मूलेन सह एव सङ्गतः अस्ति।</string>
     <string name="downloaded_only_summary">तव ग्रन्थालये सर्वाः माङ्गाः शोधनीकरोति</string>
     <string name="pref_clear_database_summary">तव ग्रन्थालये न रक्षितानां माङ्गानां चरित्रं नाशय</string>
     <string name="confirm_delete_chapters">त्वं निश्चितरूपेण सङ्गृहीतान् अध्यायान् नाशयितुम् इच्छसि किम् \?</string>

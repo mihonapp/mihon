@@ -206,7 +206,7 @@
     <string name="ext_uninstall">Жою</string>
     <string name="ext_update">Жаңарту</string>
     <string name="ext_pending">Күтілуде</string>
-    <string name="obsolete_extension_message">Бұл кеңейту енді қолжетімсіз.</string>
+    <string name="obsolete_extension_message">Бұл кеңейту енді қолжетімсіз. Ол дұрыс жұмыс істемеуі немесе қолданбада ақаулық тудыруы мүмкін. Оны жойып тастауға кеңес береміз.</string>
     <string name="ext_installer_pref">Орнатушы</string>
     <string name="ext_installer_legacy">Әдепкі қалпы</string>
     <string name="ext_installer_shizuku_stopped">Shizuku қосылмаған</string>
@@ -260,7 +260,7 @@
     <string name="pref_relative_time_long">Ұзақ (Қысқа+, n күн бұрын)</string>
     <string name="extension_api_error">Кеңейтулер тізімін алу сәтсіз өтті</string>
     <string name="pref_cutout_short">Мазмұнды кесу аймағында көрсету</string>
-    <string name="pref_library_update_manga_restriction">Туындыларды жаңартуды өткізіп жіберу</string>
+    <string name="pref_library_update_manga_restriction">Жазбаларды жаңартуды өткізіп жіберу</string>
     <string name="pref_update_only_started">Бұл басталған жоқ</string>
     <string name="pref_library_update_refresh_metadata_summary">Кітапхананы жаңарту кезінде жаңа мұқаба мен мәліметтерді тексеру</string>
     <string name="pref_library_update_refresh_trackers_summary">Кітапхананы жаңарту кезінде трекерлерді жаңарту</string>
@@ -327,7 +327,6 @@
     <string name="pref_remove_after_marked_as_read">Қолмен оқылған деп белгіленгеннен кейін</string>
     <string name="pref_remove_after_read">Оқығаннан кейін автоматты түрде жою</string>
     <string name="pref_remove_bookmarked_chapters">Бетбелгіленген тарауларды жоюға рұқсат беру</string>
-    <string name="pref_duplicate_pinned_sources">Қайталанған бекітілген дереккөздерді көрсету</string>
     <string name="backup_restore_missing_sources">Жоқ дереккөздер:</string>
     <string name="save_chapter_as_cbz">CBZ архивы ретінде сақтау</string>
     <string name="label_data">Дерек</string>
@@ -469,7 +468,6 @@
     <string name="date">Күн</string>
     <string name="ongoing">Шығып жатыр</string>
     <string name="restore_in_progress">Қалпына келтіру әлдеқашан орындалуда</string>
-    <string name="pref_duplicate_pinned_sources_summary">Бекітілген дереккөздерді тілдер топтарына қарай қайталау</string>
     <string name="pref_backup_slots">Максималды сақтық көшірмелері</string>
     <string name="backup_choice">Сақтық көшірмесіне нені қалайсыз\?</string>
     <string name="restoring_backup">Сақтық көшірмесін қалпына келтіру</string>
@@ -557,7 +555,6 @@
     <string name="download_1">Келесі тарау</string>
     <string name="custom_download">Жеке мөлшерде жүктеп алу</string>
     <string name="manga_tracking_tab">Бақылау</string>
-    <string name="tracker_komga_warning">Бұл бақылау сервисі тек Komga дереккөзімен сәйкес.</string>
     <string name="add_tracking">Бақылау қосу</string>
     <string name="dropped">Тасталған</string>
     <string name="on_hold">Кейінге қалған</string>
@@ -568,7 +565,6 @@
     <string name="information_webview_required">Tachiyomi-ны қолдану үшін WebView керек</string>
     <string name="chapter_settings_updated">Әдепкі тарау параметрлері жаңартылды</string>
     <string name="download_notifier_no_network">Желі байланысы жоқ</string>
-    <string name="download_notifier_download_finish">Жүктеп алу аяқталды</string>
     <string name="information_empty_category_dialog">Сіздің кітапханаңызда санаттар жоқ.</string>
     <string name="reading">Оқылуда</string>
     <string name="no_chapters_error">Тараулар жоқ</string>
@@ -677,7 +673,7 @@
     <string name="crash_screen_description">%s күтпеген қателікке тап болды. Сізге осы хатты скриншотқа түсіріп, қателіктер тіркеуін сақтап алып, оны біздің Discord арнамыздағы көмек қойындысына жіберуіңізге кеңес береміз.</string>
     <string name="crash_screen_restart_application">Қолданбаны өшіріп қосу</string>
     <string name="download_queue_error">Тараулар жүктелмеді. Жүктеулер кезегіне барып, сол жерден байқап көре аласыз</string>
-    <string name="download_insufficient_space">Жадыда орын аз болғандықтан тараулар жүктелмеді</string>
+    <string name="download_insufficient_space">Жадта орын аз болғандықтан тараулар жүктелмейді</string>
     <string name="notification_check_updates">Жаңа тараулар бар ма екенін тексеру</string>
     <string name="notification_chapters_single_and_more">%1$s тарау мен %2$d</string>
     <string name="notification_first_add_to_library">Бұны істер алдыңда жазбаны кітапханаңызға қосыңыз</string>
@@ -702,7 +698,7 @@
     <string name="skipped_reason_not_always_update">Туындыға жаңарту керек жоқ болғандықтан өткізіп жіберіледі</string>
     <string name="update_check_notification_download_in_progress">Жүктелуде…</string>
     <string name="update_check_notification_download_error">Жүктеу қателігі</string>
-    <string name="update_check_notification_download_complete">Орнату үшін басыңыз</string>
+    <string name="update_check_notification_download_complete">Жаңартуды орнату үшін басыңыз</string>
     <string name="channel_errors">Қателіктер</string>
     <string name="download_notifier_split_failed">Жүктелген бет бөлінбеді</string>
     <string name="unfinished_list">Аяқталмағандар Тізімі</string>
@@ -740,8 +736,8 @@
     <string name="custom_filter">Жеке сүзгі</string>
     <string name="notification_size_warning">Көп жаңалтулар саны дереккөздер жұмысын баяулата және батарея жұмысын өтімін көбейте алады. Көбірек білу үшін басыңыз.</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">%d туындысы үшін</item>
-        <item quantity="other">%d туындысы үшін</item>
+        <item quantity="one">%d жазбасы үшін</item>
+        <item quantity="other">%d жазбасы үшін</item>
     </plurals>
     <string name="notification_chapters_single">%1$s-Тарау</string>
     <string name="download_queue_size_warning">Ескерту: Көп жүктеулер саны дереккөздер жұмысын баяулата алады және/немесе Tachiyomi бұғатталына алады. Толығырақ оқу үшін басыңыз.</string>
@@ -766,4 +762,10 @@
     <string name="invalid_location">Жарамсыз орын: %s</string>
     <string name="updates_last_update_info_just_now">Жаңа ғана</string>
     <string name="error_user_agent_string_invalid">User agent жолы жарамсыз</string>
+    <string name="information_no_entries_found">Бұл санатта жазба жоқ</string>
+    <string name="action_open_random_manga">Кездейсоқ жазбаны ашу</string>
+    <string name="fdroid_warning">F-Droid құрастыруларына ресми түрде қолдау көрсетілмейді.
+\nТолығырақ білу үшін басыңыз.</string>
+    <string name="download_notifier_cache_renewal">Жүктеулерді индекстеу</string>
+    <string name="channel_downloader_cache">Жүктеулер кэші</string>
 </resources>

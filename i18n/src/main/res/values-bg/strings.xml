@@ -504,7 +504,6 @@
     <string name="channel_errors">Грешки</string>
     <string name="channel_complete">Готово</string>
     <string name="channel_progress">Прогрес</string>
-    <string name="download_notifier_download_finish">Изтеглянето е завършено</string>
     <string name="download_insufficient_space">Главите не можаха да бъдат изтеглени поради недостатъчно място</string>
     <plurals name="num_trackers">
         <item quantity="one">1 тракер</item>
@@ -643,7 +642,6 @@
     <string name="confirm_set_chapter_settings">Сигурни ли сте, че искате да наложите тези настройки\?</string>
     <string name="also_set_chapter_settings_for_library">Също приложи към всяка манга в библиотеката ми</string>
     <string name="set_chapter_settings_as_default">Направи по подразбиране</string>
-    <string name="tracker_komga_warning">Този тракер е съвместим само с източника Komga.</string>
     <string name="track_started_reading_date">Дата на започване</string>
     <string name="pref_clear_history">Изчисти историята</string>
     <string name="clear_history_completed">Историята изтрита</string>
@@ -738,8 +736,6 @@
     <string name="download_notifier_split_failed">Изтегленото изображение не можа да бъде разделено</string>
     <string name="appwidget_updates_description">Виж наскоро обновената манга</string>
     <string name="download_notifier_split_page_path_not_found">Не можа да бъде намерен файловият път на страница %d</string>
-    <string name="pref_duplicate_pinned_sources">Показвай дубликати на закачените източници</string>
-    <string name="pref_duplicate_pinned_sources_summary">Повтаряй закачените източници в дадените езикови групи</string>
     <string name="action_sort_last_manga_update">Последно обновяване</string>
     <string name="pref_clear_webview_data">Изчисти данните на WebView</string>
     <string name="empty_screen">Това е неудобно</string>

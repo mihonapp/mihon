@@ -260,7 +260,6 @@
     <string name="channel_complete">ተጠናቀቀ</string>
     <string name="channel_progress">እድገት</string>
     <string name="channel_common">የተለመደ</string>
-    <string name="download_notifier_download_finish">ማውረድ ተጠናቅቋል</string>
     <string name="download_notifier_download_paused">ማውረድ ለአፍታ ቆሟል</string>
     <string name="color_filter_r_value">ቀ</string>
     <string name="color_filter_b_value">ቢ</string>

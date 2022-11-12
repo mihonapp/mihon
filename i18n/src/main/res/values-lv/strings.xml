@@ -416,8 +416,6 @@
     <string name="pref_create_backup_summ">Var izmantot, lai atjaunotu pašreizējo bibliotēku</string>
     <string name="split_tall_images_summary">Uzlabo lasītāja veiktspēju, sadalot garus lejupielādētus attēlus.</string>
     <string name="enhanced_tracking_info">Pakalpojumi, kas nodrošina uzlabotus līdzekļus konkrētiem avotiem. Pievienojot bibliotēkai, manga tiks automātiski izsekota.</string>
-    <string name="pref_duplicate_pinned_sources">Rādīt dublētus piespraustos avotus</string>
-    <string name="pref_duplicate_pinned_sources_summary">Vēlreiz rādīt piespraustos avotus atbilstošajās valodu grupās</string>
     <string name="pref_create_backup">Izveidot dublējumu</string>
     <string name="pref_backup_directory">Dublējuma atrašanās vieta</string>
     <string name="invalid_backup_file">Nederīgs dublējuma fails</string>
@@ -566,7 +564,6 @@
     <string name="dialog_with_checkbox_reset">Atiestatīt visas šīs mangas nodaļas</string>
     <string name="unknown_status">Nezināms statuss</string>
     <string name="publishing_finished">Publicēšana pabeigta</string>
-    <string name="tracker_komga_warning">Šis sekotājs ir saderīgs tikai ar Komga avotu.</string>
     <string name="manga_tracking_tab">Izsekošana</string>
     <plurals name="num_trackers">
         <item quantity="zero">%d izsekotāju</item>
@@ -667,7 +664,6 @@
     <string name="channel_app_updates">Lietotnes atjauninājumi</string>
     <string name="update_check_notification_update_available">Ir pieejama jauna versija!</string>
     <string name="chapter_settings_updated">Atjaunināti noklusējuma nodaļu iestatījumi</string>
-    <string name="download_notifier_download_finish">Lejupielāde pabeigta</string>
     <string name="pref_landscape_zoom">Palielināt ainavas attēlu</string>
     <string name="spen_next_page">Nākošā lapa</string>
     <string name="pref_navigate_pan">Pārslēgt lapu, kamēr pietuvināts</string>

@@ -361,8 +361,8 @@
     <string name="email">Indiritzu de posta eletrònica</string>
     <string name="pref_always_show_chapter_transition">Ammustra semper sa transitzione de capìtulu</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Pro %d tìtulu</item>
-        <item quantity="other">Pro %d tìtulos</item>
+        <item quantity="one">Pro %d elementu</item>
+        <item quantity="other">Pro %d elementos</item>
     </plurals>
     <string name="action_menu">Menù</string>
     <string name="action_reorganize_by">Riòrdina</string>
@@ -484,7 +484,6 @@
     <string name="no_pinned_sources">Non tenes mitzas apicadas</string>
     <string name="channel_complete">Acabada</string>
     <string name="channel_progress">Progressu</string>
-    <string name="download_notifier_download_finish">Iscarrigamentu acabadu</string>
     <string name="channel_errors">Errores</string>
     <string name="backup_restore_missing_trackers">Arrastadores a sos cales no as fatu atzessu:</string>
     <string name="pref_remove_bookmarked_chapters">Permite s\'iscantzelladura de sos capìtulos cun sinnalibros</string>
@@ -591,7 +590,6 @@
     <string name="action_start_downloading_now">Incumintza a iscarrigare como</string>
     <string name="theme_tako">Tako</string>
     <string name="notification_updating">Agiornende sa biblioteca… (%1$d/%2$d)</string>
-    <string name="tracker_komga_warning">Custu arrastadore est cumpatìbile petzi cun sa fonte Komga.</string>
     <string name="restore_miui_warning">Sa còpia de seguresa e su riprìstinu diant pòdere non funtzionare comente si tocat si s\'otimizatzione MIUI est disabilitada.</string>
     <string name="enhanced_tracking_info">Servìtzios chi frunint funtzionalidades avantzadas pro fontes ispetzìficas. Sos elementos benint arrastados in manera automàtica cando los annanghes a sa biblioteca tua.</string>
     <string name="enhanced_services">Servìtzios avantzados</string>
@@ -656,7 +654,7 @@
     <string name="privacy_policy">Polìtica de riservadesa</string>
     <string name="save_chapter_as_cbz">Sarva comente archìviu CBZ</string>
     <string name="library_errors_help">Pro tènnere un\'agiudu pro acontzare sos errores de agiornamentu de sa biblioteca pòmpia·ti %1$s</string>
-    <string name="pref_library_update_manga_restriction">Brinca sos agiornamentos de sèries</string>
+    <string name="pref_library_update_manga_restriction">Brinca sos agiornamentos de sos elementos</string>
     <string name="pref_update_only_completely_read">Cun capìtulos non lèghidos</string>
     <string name="action_faq_and_guides">PF e ghias</string>
     <string name="publishing_finished">Publicatzione acabada</string>
@@ -690,8 +688,6 @@
     <string name="webview_data_deleted">Datos de WebView isboidados</string>
     <string name="action_close">Serra</string>
     <string name="battery_not_low">Cando sa bateria no est bassa</string>
-    <string name="pref_duplicate_pinned_sources">Ammustra sas fontes apicadas dòpias</string>
-    <string name="pref_duplicate_pinned_sources_summary">Repite sas fontes apicadas in sos grupos de limbas rispetivos</string>
     <string name="action_sort_last_manga_update">Ùrtimu agiornamentu</string>
     <string name="action_sort_unread_count">Contu de non lèghidos</string>
     <string name="source_empty_screen">Peruna fonte agatada</string>
@@ -770,4 +766,6 @@
     <string name="channel_downloader_cache">Memòria temporànea de iscarrigamentu</string>
     <string name="action_open_random_manga">Aberi un\'elementu a casu</string>
     <string name="information_no_entries_found">Perunu elementu atzapadu in custa categoria</string>
+    <string name="fdroid_warning">Sas versiones de F-Droid non sunt prus suportadas in manera ufitziale.
+\nToca pro nde ischire de prus.</string>
 </resources>

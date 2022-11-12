@@ -471,7 +471,6 @@
     <string name="channel_progress">進度</string>
     <string name="channel_errors">錯誤</string>
     <string name="channel_complete">作業完成</string>
-    <string name="download_notifier_download_finish">下載完成</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">即使啟用監護限制，還是可能有漏網之魚。使用者仍可藉由非官方或未正確標幟的擴充套件在本應用程式中瀏覽未滿十八歲之人不宜觀賞的內容。</string>
     <string name="ext_nsfw_warning">來自此擴充套件的來源可能包含未滿十八歲之人不宜觀賞的內容</string>
@@ -577,7 +576,6 @@
     <string name="manga_cover">封面</string>
     <string name="action_start_downloading_now">立刻開始下載</string>
     <string name="notification_updating">正在更新書櫃… (%1$d/%2$d)</string>
-    <string name="tracker_komga_warning">該歷程平台僅相容於 Komga 來源。</string>
     <string name="about_dont_kill_my_app">部分裝置製造商設有額外的應用程式限制來終止背景服務。此網站提供了修復這項問題的詳細資訊。</string>
     <string name="label_background_activity">背景活動</string>
     <string name="restore_miui_warning">若停用 MIUI 最佳化，備份與還原可能無法正確執行。</string>
@@ -678,8 +676,6 @@
     <string name="webview_data_deleted">已清除 WebView 資料</string>
     <string name="action_close">關閉</string>
     <string name="battery_not_low">電量充足時</string>
-    <string name="pref_duplicate_pinned_sources">重複顯示釘選來源</string>
-    <string name="pref_duplicate_pinned_sources_summary">將來源同時釘選於「已釘選」及其所屬的語言分組</string>
     <string name="source_empty_screen">找不到來源</string>
     <string name="source_filter_empty_screen">找不到已安裝的來源</string>
     <string name="action_sort_last_manga_update">上次檢查更新日期</string>
@@ -759,4 +755,10 @@
     <string name="information_no_entries_found">類別沒有作品</string>
     <string name="fdroid_warning">F-Droid 的組建未被正式支援。
 \n輕觸以瞭解詳情。</string>
+    <string name="action_display_show_continue_reading_button">顯示繼續閱讀按鈕</string>
+    <string name="other_header">其他</string>
+    <string name="track_remove_date_conf_title">移除日期？</string>
+    <string name="track_remove_finish_date_conf_text">從「%s」移除你先前輸入的閱讀完畢日期</string>
+    <string name="track_remove_start_date_conf_text">從「%s」移除你先前輸入的開始閱讀日期</string>
+    <string name="pref_invalidate_download_cache">清除下載快取</string>
 </resources>

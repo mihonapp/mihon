@@ -395,7 +395,6 @@
     <string name="snack_add_to_library">Manga liburutegira gehitu\?</string>
     <string name="file_select_backup">Hautatu babeskopia fitxategia</string>
     <string name="notification_cover_update_failed">Ezin izan da azala eguneratu</string>
-    <string name="download_notifier_download_finish">Deskarga bukatua</string>
     <string name="pref_library_update_manga_restriction">Saltatu eguneraketak</string>
     <string name="action_sort_date_added">Gehiketa data</string>
     <string name="action_search">Bilatu</string>
@@ -632,7 +631,6 @@
     <string name="pref_library_update_show_tab_badge">Erakutsi irakurri gabekoen kopurua Eguneraketak ikonoan</string>
     <string name="extension_api_error">Ezin izan da luzapenen zerrenda lortu</string>
     <string name="pref_library_update_refresh_metadata_summary">Bilatu azal eta xehetasun berriak liburutegia eguneratzean</string>
-    <string name="tracker_komga_warning">Jarraitzaile hau Komga iturriarekin bakarrik da bateragarria.</string>
     <string name="pref_library_update_categories_details">Baztertutako kategorietako mangak ez dira eguneratuko, sarturiko kategorietan egon arren.</string>
     <string name="pref_hide_threshold">Pantaila mugitzean menua ezkutatzeko sentikortasuna</string>
     <string name="clear_database_source_item_count">Liburutegian ez dauden %1$d manga datubasean</string>

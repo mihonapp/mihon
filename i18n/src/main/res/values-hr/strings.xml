@@ -494,7 +494,6 @@
     <string name="no_pinned_sources">Nemaš označenih izvora</string>
     <string name="channel_complete">Gotovo</string>
     <string name="channel_progress">Napredak</string>
-    <string name="download_notifier_download_finish">Preuzimanje gotovo</string>
     <string name="channel_errors">Greške</string>
     <string name="pref_remove_bookmarked_chapters">Dozvoli brisanje označenih poglavlja</string>
     <string name="pref_category_delete_chapters">Izbriši poglavlja</string>
@@ -643,7 +642,6 @@
     <string name="clear_database_source_item_count">Broj manga u bazi odataka koje nisu u zbirci: %1$d</string>
     <string name="pref_verbose_logging">Opširno zapisivanje</string>
     <string name="pref_verbose_logging_summary">Ispiši opširan zapis u zapisnik sustava (smanjuje performanse aplikacije)</string>
-    <string name="tracker_komga_warning">Ovaj način pračenja je kompatibilan samo s izvorom Komga.</string>
     <string name="notification_updating">Aktualiziranje zbirke … (%1$d/%2$d)</string>
     <string name="backup_info">Čuvaj sigurnosne kopije i na drugim mjestima.</string>
     <string name="pref_tablet_ui_mode">Korisničko sučelje tableta</string>

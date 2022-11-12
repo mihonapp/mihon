@@ -501,7 +501,6 @@
     <string name="channel_errors">Błędy</string>
     <string name="channel_complete">Ukończone</string>
     <string name="channel_progress">Postęp</string>
-    <string name="download_notifier_download_finish">Pobieranie ukończone</string>
     <string name="chapter_settings_updated">Zaktualizowano domyślne ustawienia rozdziałów</string>
     <string name="migration_help_guide">Instrukcja przenoszenia źródeł</string>
     <plurals name="missing_chapters_warning">
@@ -639,7 +638,6 @@
     <string name="label_default">Domyślny</string>
     <string name="getting_started_guide">Wprowadzenie - poradnik</string>
     <string name="help_translate">Pomóż tłumaczyć</string>
-    <string name="tracker_komga_warning">Ten tracker jest kompatybilny tylko ze źródłem Komga.</string>
     <string name="pref_tablet_ui_mode">Wymuś UI dla tabletu</string>
     <string name="pref_remove_exclude_categories">Wykluczone kategorie</string>
     <string name="pref_lowest">Najniższe</string>
@@ -742,8 +740,6 @@
     <string name="download_notifier_split_page_not_found">Strona %d nie została znaleziona podczas podziału</string>
     <string name="ext_info_age_rating">Oznaczenie wiekowe</string>
     <string name="rotation_reverse_portrait">Do góry nogami</string>
-    <string name="pref_duplicate_pinned_sources">Pokaż zduplikowane przypięte źródła</string>
-    <string name="pref_duplicate_pinned_sources_summary">Duplikuj przypięte rozszerzenia w ich grupach językowych</string>
     <string name="download_notifier_split_page_path_not_found">Nie można było znaleźć ścieżki %d strony</string>
     <string name="pref_user_agent_string">Domyślny user agent string</string>
     <string name="pref_reset_user_agent_string">Zresetuj domyślny user agent string</string>

@@ -484,7 +484,6 @@
     <string name="no_pinned_sources">Sinulla ei ole kiinnitettyjä lähteitä</string>
     <string name="channel_complete">Valmis</string>
     <string name="channel_progress">Edistyminen</string>
-    <string name="download_notifier_download_finish">Lataus valmis</string>
     <string name="channel_errors">Virheet</string>
     <string name="backup_restore_missing_trackers">Seurantapalvelimet joihin et ole kirjautunut sisään:</string>
     <string name="pref_remove_bookmarked_chapters">Poista kirjanmerkityt luvut</string>
@@ -717,7 +716,6 @@
     <string name="cover_saved">Kansikuva tallennettu</string>
     <string name="error_saving_cover">Virhe tallentaessa kansikuvaa</string>
     <string name="notification_update_skipped">%1$d päivitys(tä) ohitettu</string>
-    <string name="tracker_komga_warning">Tämä seurantapalvelu on yhteensopiva vain Komga-lähteen kanssa.</string>
     <string name="loader_rar5_error">RARv5-muoto ei ole tuettu</string>
     <string name="skipped_reason_not_caught_up">Ohitettu, koska sarjassa on luettomia lukuja</string>
     <string name="skipped_reason_not_always_update">Ohitettu, koska sarja ei vaadi päivityksiä</string>

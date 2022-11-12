@@ -358,7 +358,7 @@
     <string name="email">Alamat e-mel</string>
     <string name="pref_always_show_chapter_transition">Sentiasa tunjuk peralihan bab</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="other">Untuk %d tajuk</item>
+        <item quantity="other">Untuk entri %d</item>
     </plurals>
     <string name="action_menu">Menu</string>
     <string name="action_reorganize_by">Susun semula</string>
@@ -472,7 +472,6 @@
         <item quantity="other">%d penjejak</item>
     </plurals>
     <string name="no_pinned_sources">Tiada sumber yang disematkan</string>
-    <string name="download_notifier_download_finish">Muat turun selesai</string>
     <string name="channel_progress">Kemajuan</string>
     <string name="channel_complete">Selesai</string>
     <string name="channel_errors">Ralat</string>
@@ -588,7 +587,6 @@
     <string name="pref_app_theme">Tema aplikasi</string>
     <string name="enhanced_tracking_info">Perkidmatan yang menyediakan fungsi yang dipertingkatkan untuk sumber tertentu. Entri akan dijejaki secara automatik apabila ditambahkan ke pustaka.</string>
     <string name="notification_updating">Mengemaskini pustaka… (%1$d/%2$d)</string>
-    <string name="tracker_komga_warning">Penjejak ini cuma boleh digunakan dengan sumber Komga.</string>
     <string name="restore_miui_warning">Sandaran/memulih mungkin tidak berfungsi dengan betul jika pengoptimuman MIUI dinyahaktifkan.</string>
     <string name="about_dont_kill_my_app">Sesetengah pengeluar ada sekatan tambahan pada aplikasi yang akan menghentikan perkidmatan latar belakang. Laman web ini ada maklumat cara membaikinya.</string>
     <string name="enhanced_services">Pertingkat perkhidmatan</string>
@@ -642,7 +640,7 @@
     <string name="clear_database_source_item_count">%1$d entri bukan pustaka dalam pangkalan data</string>
     <string name="extension_api_error">Gagal mendapatkan senarai sambungan</string>
     <string name="privacy_policy">Dasar privasi</string>
-    <string name="pref_library_update_manga_restriction">Langkau mengemas kini tajuk</string>
+    <string name="pref_library_update_manga_restriction">Langkau mengemas kini entri</string>
     <string name="pref_update_only_completely_read">Dengan bab yang belum dibaca</string>
     <string name="library_errors_help">Untuk bantuan cara menyelesaikan ralat kemas kini pustaka, lihat %1$s</string>
     <string name="save_chapter_as_cbz">Simpan sebagai arkib CBZ</string>
@@ -677,9 +675,7 @@
     <string name="pref_clear_webview_data">Hapus data WebView</string>
     <string name="webview_data_deleted">Data WebView dihapuskan</string>
     <string name="action_close">Tutup</string>
-    <string name="pref_duplicate_pinned_sources_summary">Ulang sumber yang disematkan dalam kumpulan bahasa masing-masing</string>
     <string name="battery_not_low">Apabila bateri tidak lemah</string>
-    <string name="pref_duplicate_pinned_sources">Tunjuk pendua sumber yang disematkan</string>
     <string name="source_filter_empty_screen">Tiada sumber dipasang ditemui</string>
     <string name="source_empty_screen">Tiada sumber ditemui</string>
     <string name="action_sort_unread_count">Kiraan belum dibaca</string>
@@ -716,7 +712,7 @@
     <string name="pref_reset_user_agent_string">Set semula untaian ejen pengguna lalai</string>
     <string name="action_remove_everything">Buang semuanya</string>
     <string name="loader_rar5_error">Format RARv5 tidak disokong</string>
-    <string name="appwidget_unavailable_locked">Widget tidak tersedia apabila kekunci apl digunakan</string>
+    <string name="appwidget_unavailable_locked">Widget tidak tersedia apabila kekunci aplikasi digunakan</string>
     <string name="appwidget_updates_description">Lihat kemas kini entri pustaka terkini anda</string>
     <string name="update_already_running">Kemas kini sedang berjalan</string>
     <string name="error_user_agent_string_blank">Untaian ejen pengguna tidak boleh kosong</string>
@@ -759,4 +755,10 @@
     <string name="channel_downloader_cache">Muat turun cache</string>
     <string name="fdroid_warning">Binaan F-Droid tidak disokong secara rasmi.
 \nKetik untuk mengetahui lebih lanjut.</string>
+    <string name="action_display_show_continue_reading_button">Tunjuk butang sambung membaca</string>
+    <string name="other_header">Lain-lain</string>
+    <string name="pref_invalidate_download_cache">Membatalkan cache muat turun</string>
+    <string name="track_remove_date_conf_title">Buang tarikh\?</string>
+    <string name="track_remove_start_date_conf_text">Ini akan membuang tarikh mula yang dipilih oleh anda sebelum ini dari %s</string>
+    <string name="track_remove_finish_date_conf_text">Ini akan membuang tarikh selesai yang dipilih oleh anda sebelum ini dari %s</string>
 </resources>

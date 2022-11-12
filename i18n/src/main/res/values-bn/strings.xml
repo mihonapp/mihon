@@ -429,7 +429,6 @@
     <string name="channel_errors">ত্রুটিসমূহ</string>
     <string name="channel_complete">সম্পূর্ণ</string>
     <string name="channel_progress">অগ্রগতি</string>
-    <string name="download_notifier_download_finish">ডাউনলোড সম্পন্ন হয়েছে</string>
     <string name="information_webview_outdated">অনুগ্রহ করে উন্নততর সামঞ্জস্যতার জন্য ওয়েবভিউ অ্যাপটি হালনাগাদ করুন</string>
     <string name="information_webview_required">টাচিয়ামির জন্য ওয়েবভিউ প্রয়োজন</string>
     <string name="information_cloudflare_bypass_failure">ক্লাউডফ্লেয়ার বাইপাস করতে ব্যর্থ</string>
@@ -537,7 +536,6 @@
     <string name="error_no_match">পাওয়া যায়নি</string>
     <string name="source_unsupported">উৎস সমর্থিত নয়</string>
     <string name="unread">অপঠিত</string>
-    <string name="tracker_komga_warning">এই ট্র্যাকারটি কেবল কমগা উৎসের সাথে সামঞ্জস্যপূর্ণ।</string>
     <string name="error_sharing_cover">কভার শেয়ার করার সময় ত্রুটি</string>
     <string name="error_saving_cover">কভার সংরক্ষণে ত্রুটি</string>
     <string name="cover_saved">কভার সংরক্ষিত</string>
@@ -700,4 +698,6 @@
     <string name="pref_reader_summary">পঠনের ধরন, ডিসপ্লে,নেভিগেশন</string>
     <string name="pref_backup_summary">ম্যানুয়াল ও সয়ংক্রিয় ব্যাকআপ</string>
     <string name="pref_security_summary">অ্যাপ লক,নিরাপদ পর্দা</string>
+    <string name="loader_rar5_error">RARv5 ধরন সমর্থিত নয়</string>
+    <string name="skipped_reason_not_caught_up">অপঠিত অধ্যায় থাকায় এড়িয়ে যাওয়া হয়েছে</string>
 </resources>

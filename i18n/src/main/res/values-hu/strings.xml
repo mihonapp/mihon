@@ -490,7 +490,6 @@
     <string name="no_results_found">Nincs találat</string>
     <string name="action_global_search_hint">Globális keresés…</string>
     <string name="sort_by_upload_date">Feltöltési dátum szerint</string>
-    <string name="tracker_komga_warning">Ez a tracker csak a Komga forrással kompatibilis.</string>
     <string name="dialog_with_checkbox_remove_description">Ez eltávolítja a fejezet olvasási dátumát. Biztos benne\?</string>
     <string name="pref_update_only_completely_read">Csak a befejezett fejezeteket()</string>
     <string name="delete_category_confirmation">Törölni akarja a %s kategóriát \?</string>
@@ -644,7 +643,6 @@
     <string name="downloaded_only_summary">Szűri a könyvtár összes tartalmát</string>
     <string name="error_sharing_cover">Hiba a fedlap megosztása közben</string>
     <string name="action_close">Bezár</string>
-    <string name="pref_duplicate_pinned_sources">Többször megjelenő források megjelenítése</string>
     <string name="battery_not_low">Ha nem alacsony az akkumulátor tözöttség</string>
     <string name="rotation_reverse_portrait">Fordított álló</string>
     <string name="paused">Megállítva</string>
@@ -675,7 +673,6 @@
     <string name="disabled_nav">Kikapcsolva</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="enhanced_tracking_info">Szolgáltatások, melyek fejlett funkciókat kínálnak. A manga automatikusan könyvtárhoz lesz adva és frissítve lesz.</string>
-    <string name="pref_duplicate_pinned_sources_summary">Ismételje meg a rögzített forrásokat a megfelelő nyelvi csoportokban</string>
     <string name="pref_search_pinned_sources_only">Csak kitűzött forrásokból</string>
     <string name="pref_create_backup">Biztonsági mentés készítése</string>
     <string name="pref_create_backup_summ">Felhasználható az aktuális könyvtár visszaállítására</string>
@@ -714,7 +711,6 @@
     <string name="sort_by_number">Fejezetek száma szerint</string>
     <string name="library_errors_help">Könyvtárfrissítési hibák kijavításához sgítségért, tekintese meg %1$s</string>
     <string name="skipped_reason_completed">Átugorva, mivel a sorozat befejeződött</string>
-    <string name="download_notifier_download_finish">Letöltés befejeződött</string>
     <string name="download_notifier_split_page_not_found">%d oldal nem található felosztás közben</string>
     <string name="download_notifier_split_page_path_not_found">Nem található az útvonal a %d-ik oldalhoz</string>
     <string name="download_notifier_split_failed">Nem sikerült a letöltött képet felosztani</string>

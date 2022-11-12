@@ -484,7 +484,6 @@
     <string name="no_pinned_sources">Je hebt geen vastgepinde bronnen</string>
     <string name="channel_complete">Voltooid</string>
     <string name="channel_progress">Voortgang</string>
-    <string name="download_notifier_download_finish">Download voltooid</string>
     <string name="channel_errors">Fouten</string>
     <string name="backup_restore_missing_trackers">Niet-ingelogde trackers:</string>
     <string name="pref_remove_bookmarked_chapters">Verwijderen van hoofdstukken met bladwijzers toestaan</string>
@@ -600,7 +599,6 @@
     <string name="theme_midnightdusk">Nachtschemering</string>
     <string name="theme_greenapple">Groene Appel</string>
     <string name="pref_app_theme">Appthema</string>
-    <string name="tracker_komga_warning">Deze tracker werkt alleen met de Komga-bron.</string>
     <string name="enhanced_tracking_info">Diensten die uitgebreidere functionaliteit bieden voor bepaalde bronnen. Het tracken van manga gebeurt automatisch wanneer je deze toevoegt aan je bibliotheek.</string>
     <string name="enhanced_services">Verbeterde diensten</string>
     <string name="theme_monet">Dynamisch</string>
@@ -713,8 +711,6 @@
     <string name="action_sort_unread_count">Ongelezen aantal</string>
     <string name="download_ahead_info">Werkt alleen bij vermeldingen in de bibliotheek en als het huidige hoofdstuk en het volgende al gedownload zijn</string>
     <string name="pref_user_agent_string">Standaard \'user-agent-string\'</string>
-    <string name="pref_duplicate_pinned_sources">Laat gedupliceerde vastgezette bronnen zien</string>
-    <string name="pref_duplicate_pinned_sources_summary">Herhaal vastgezetten bronnen in hun respectieve taal groepen</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Volgende ongelezen hoofdstuk</item>
         <item quantity="other">Volgende aantal %d ongelezen hoofdstukken</item>

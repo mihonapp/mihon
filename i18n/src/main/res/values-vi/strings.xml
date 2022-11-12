@@ -477,7 +477,6 @@
     <string name="channel_complete">Hoàn thành</string>
     <string name="channel_progress">Quá trình</string>
     <string name="information_webview_required">Tachiyomi yêu cầu phải có WebView</string>
-    <string name="download_notifier_download_finish">Tải xuống hoàn tất</string>
     <string name="update_check_eol">Phiên bản Android này không còn được hỗ trợ</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="other">Chương %1$s và %2$d</item>
@@ -608,7 +607,6 @@
     <string name="pref_library_update_refresh_trackers_summary">Cập nhật theo dõi khi cập nhật thư viện</string>
     <string name="pref_library_update_refresh_trackers">Tự động làm mới theo dõi</string>
     <string name="restrictions">Hạn chế: %s</string>
-    <string name="tracker_komga_warning">Trình theo dõi này chỉ tương thích với nguồn Komga.</string>
     <string name="notification_updating">Cập nhật thư viện… (%1$d/%2$d)</string>
     <string name="information_empty_category_dialog">Người dùng chưa có danh mục.</string>
     <string name="restore_miui_warning">Tính năng tối ưu hóa của MIUI phải được bật lên để việc sao lưu/khôi phục hoạt động tốt.</string>
@@ -707,9 +705,7 @@
     <string name="update_check_fdroid_migration_info">Một phiên bản mới sẵn sàng từ mục phát hành chính thức. Nhấn để học cách kết hợp các mục phát hành không chính thức từ F-Droid.</string>
     <string name="error_saving_picture">Lỗi khi lưu ảnh</string>
     <string name="action_close">Đóng</string>
-    <string name="pref_duplicate_pinned_sources">Hiện các nguồn bản sao được đính</string>
     <string name="battery_not_low">Khi pin không quá ít</string>
-    <string name="pref_duplicate_pinned_sources_summary">Các nguồn được đính sẽ lặp lại trong các nhóm ngôn ngữ tương ướng của chúng</string>
     <string name="source_filter_empty_screen">Không có nguồn đã cài tìm thấy</string>
     <string name="source_empty_screen">Không có nguồn nào được tìm thấy</string>
     <string name="update_check_open">Mở trên GitHub</string>

@@ -2,9 +2,9 @@
 <resources>
     <string name="name">Όνομα</string>
     <string name="categories">Κατηγορίες</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Καταχωρήσεις βιβλιοθήκης</string>
     <string name="chapters">Κεφάλαια</string>
-    <string name="track">Tracking</string>
+    <string name="track">Παρακολούθηση</string>
     <string name="history">Ιστορικό</string>
     <string name="label_settings">Ρυθμίσεις</string>
     <string name="label_download_queue">Ουρά λήψεων</string>
@@ -69,7 +69,7 @@
     <string name="pref_category_general">Γενικά</string>
     <string name="pref_category_reader">Αναγνώστης</string>
     <string name="pref_category_downloads">Λήψεις</string>
-    <string name="pref_category_tracking">Tracking</string>
+    <string name="pref_category_tracking">Παρακολούθηση</string>
     <string name="pref_category_advanced">Για προχωρημένους</string>
     <string name="pref_category_about">Περί</string>
     <string name="pref_library_columns">Στοιχεία ανά σειρά</string>
@@ -228,7 +228,7 @@
     <string name="download_all">Όλα</string>
     <string name="download_unread">Αδιάβαστα</string>
     <string name="confirm_delete_chapters">Είστε βέβαιοι ότι θέλετε να διαγράψετε τα επιλεγμένα κεφάλαια;</string>
-    <string name="manga_tracking_tab">Tracking</string>
+    <string name="manga_tracking_tab">Παρακολούθηση</string>
     <string name="reading">Ανάγνωση</string>
     <string name="completed">Ολοκληρωμένο</string>
     <string name="dropped">Παραλείφθηκε</string>
@@ -288,7 +288,7 @@
     <string name="download_notifier_unknown_error">Το κεφάλαιο δεν μπορούσε να ληφθεί λόγο μη αναμενόμενου σφάλματος</string>
     <string name="download_notifier_text_only_wifi">Δεν υπάρχει διαθέσιμη σύνδεση Wi-Fi</string>
     <string name="download_notifier_no_network">Δεν υπάρχει διαθέσιμη σύνδεση δικτύου</string>
-    <string name="download_notifier_download_paused">Λήψη σε παύση</string>
+    <string name="download_notifier_download_paused">Λήψεις σε παύση</string>
     <string name="channel_common">Κοινό</string>
     <string name="pref_read_with_long_tap">Εμφάνιση με παρατεταμένο πάτημα</string>
     <string name="action_open_in_web_view">Άνοιγμα στο WebView</string>
@@ -328,8 +328,8 @@
         <item quantity="other">%1$d νέα κεφάλαια</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Για %d τίτλο</item>
-        <item quantity="other">Για %d τίτλους</item>
+        <item quantity="one">Για %d καταχώριση</item>
+        <item quantity="other">Για %d καταχωρίσεις</item>
     </plurals>
     <string name="notification_check_updates">Έλεγχος για νέα κεφάλαια</string>
     <string name="recent_manga_time">Κεφ. %1$s - %2$s</string>
@@ -478,13 +478,12 @@
     <string name="pref_category_theme">Θέμα</string>
     <string name="action_sort_date_added">Ημερομηνία προσθήκης</string>
     <plurals name="num_trackers">
-        <item quantity="one">%d tracker</item>
-        <item quantity="other">%d trackers</item>
+        <item quantity="one">%d ιχνηλάτης</item>
+        <item quantity="other">%d ιχνηλάτες</item>
     </plurals>
     <string name="no_pinned_sources">Δεν έχετε καρφιτσωμένες πηγές</string>
     <string name="channel_complete">Ολοκληρωμένο</string>
     <string name="channel_progress">Η λήψη ολοκληρώθηκε</string>
-    <string name="download_notifier_download_finish">Η λήψη ολοκληρώθηκε</string>
     <string name="channel_errors">Σφάλματα</string>
     <string name="backup_restore_missing_trackers">Trackers που δεν έχουν συνδεθεί:</string>
     <string name="pref_category_delete_chapters">Διαγραφή κεφαλαίων</string>
@@ -560,7 +559,7 @@
     <string name="clipboard_copy_error">Απέτυχε η αντιγραφή στο πρόχειρο</string>
     <string name="rotation_landscape">Οριζόντια</string>
     <string name="rotation_portrait">Κατακόρυφα</string>
-    <string name="pref_create_folder_per_manga_summary">Δημιουργεί φακέλους σύμφωνα με τους τίτλους των καταχωρήσεων</string>
+    <string name="pref_create_folder_per_manga_summary">Δημιουργεί φακέλους σύμφωνα με τον τίτλο των καταχωρήσεων</string>
     <string name="pref_create_folder_per_manga">Αποθήκευση σελίδων σε ξεχωριστούς φακέλους</string>
     <string name="pref_reader_actions">Ενέργειες</string>
     <string name="rotation_type">Τύπος περιστροφής</string>
@@ -601,7 +600,6 @@
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Φράουλα Daiquiri</string>
     <string name="enhanced_tracking_info">Υπηρεσίες που παρέχουν βελτιωμένες δυνατότητες για συγκεκριμένες πηγές. Οι καταχωρήσεις παρακολουθούνται αυτόματα όταν προστίθενται στη βιβλιοθήκη σας.</string>
-    <string name="tracker_komga_warning">Αυτό το tracker είναι συμβατό μόνο με την πηγή Komga.</string>
     <string name="enhanced_services">Βελτιωμένες υπηρεσίες</string>
     <string name="theme_monet">Δυναμικό</string>
     <string name="label_background_activity">Δραστηριότητα παρασκηνίου</string>
@@ -654,7 +652,7 @@
     <string name="database_clean">Τίποτα προς εκκαθάριση</string>
     <string name="extension_api_error">Απέτυχε η λήψη λίστας επεκτάσεων</string>
     <string name="privacy_policy">Πολιτική απορρήτου</string>
-    <string name="pref_library_update_manga_restriction">Παράλειψη ενημέρωσης τίτλων</string>
+    <string name="pref_library_update_manga_restriction">Παράλειψη ενημέρωσης καταχωρήσεων</string>
     <string name="pref_update_only_completely_read">Με αδιάβαστο(α) κεφάλαιο(α)</string>
     <string name="library_errors_help">Για βοήθεια σχετικά με τον τρόπο διόρθωσης σφαλμάτων ενημέρωσης βιβλιοθήκης, ανατρέξτε στο %1$s</string>
     <string name="save_chapter_as_cbz">Αποθήκευση ως αρχείο CBZ</string>
@@ -689,8 +687,6 @@
     <string name="webview_data_deleted">Τα δεδομένα WebView διαγράφηκαν</string>
     <string name="pref_clear_webview_data">Διαγραφή δεδομένων WebView</string>
     <string name="action_close">Κλείσιμο</string>
-    <string name="pref_duplicate_pinned_sources">Εμφάνιση διπλότυπων καρφιτσωμένων πηγών</string>
-    <string name="pref_duplicate_pinned_sources_summary">Επανάληψη των καρφιτσωμένων πηγών στις αντίστοιχες γλωσσικές ομάδες τους</string>
     <string name="battery_not_low">Όταν η μπαταρία δεν είναι χαμηλή</string>
     <string name="source_filter_empty_screen">Δε βρέθηκε εγκατεστημένη πηγή</string>
     <string name="action_sort_unread_count">Αριθμός μη αναγνωσμένων</string>
@@ -767,9 +763,16 @@
     <string name="error_user_agent_string_invalid">Μη έγκυρη συμβολοσειρά πράκτορα χρήστη</string>
     <string name="updates_last_update_info_just_now">Μόλις τώρα</string>
     <string name="download_notifier_cache_renewal">Λήψεις ευρετηρίου</string>
-    <string name="channel_downloader_cache">Προσωρινή μνήμη λήψεων</string>
+    <string name="channel_downloader_cache">Ευρετηρίαση</string>
     <string name="fdroid_warning">Οι εκδόσεις F-Droid δεν υποστηρίζονται επίσημα.
 \nΠατήστε για να μάθετε περισσότερα.</string>
     <string name="action_open_random_manga">Άνοιγμα τυχαίας καταχώρησης</string>
     <string name="information_no_entries_found">Δε βρέθηκαν καταχωρήσεις σε αυτή την κατηγορία</string>
+    <string name="other_header">Άλλο</string>
+    <string name="action_display_show_continue_reading_button">Εμφάνιση κουμπιού συνέχισης ανάγνωσης</string>
+    <string name="track_remove_date_conf_title">Κατάργηση ημερομηνίας;</string>
+    <string name="track_remove_finish_date_conf_text">Αυτό θα καταργήσει την ημερομηνία λήξης που επιλέξατε προηγουμένως από το %s</string>
+    <string name="track_remove_start_date_conf_text">Αυτό θα καταργήσει την ημερομηνία έναρξης που επιλέξατε προηγουμένως από το %s</string>
+    <string name="pref_invalidate_download_cache">Επανευρετηρίαση λήψεων</string>
+    <string name="enhanced_tracking_warning">Αυτός ο ιχνηλάτης είναι συμβατός μόνο με την πηγή %1$s.</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="categories">Kategorie</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Záznamy v knihovně</string>
     <string name="chapters">Kapitoly</string>
     <string name="history">Historie</string>
     <string name="label_settings">Nastavení</string>
@@ -464,7 +464,6 @@
     <string name="channel_errors">Chyby</string>
     <string name="channel_complete">Dokončeno</string>
     <string name="channel_progress">Postup</string>
-    <string name="download_notifier_download_finish">Stahování dokončeno</string>
     <string name="chapter_settings_updated">Výchozí nastavení kapitol aktualizováno</string>
     <string name="information_webview_outdated">Prosím aktualizujte aplikaci WebView pro lepší kompatibilitu</string>
     <string name="information_webview_required">Je nutné mít nainstalovanou aplikaci WebView</string>
@@ -598,10 +597,9 @@
     <string name="information_empty_category_dialog">Nemáte žádné kategorie.</string>
     <string name="action_start_downloading_now">Začít stahovat nyní</string>
     <string name="notification_updating">Aktualizuji knihovnu… (%1$d / %2$d)</string>
-    <string name="tracker_komga_warning">Tento sledovač je kompatibilní pouze se zdrojem Komga.</string>
     <string name="about_dont_kill_my_app">Někteří výrobci používají další omezení aplikací, která vypíná služby na pozadí. Na této webové stránce najdete další informace o tom, jak to opravit.</string>
     <string name="restore_miui_warning">Pokud je MIUI optimalizace vypnutá, zálohování/obnovování nemusí fungovat správně.</string>
-    <string name="enhanced_tracking_info">Služby, které poskytují rozšířené funkce pro konkrétní zdroje. Položky jsou po přidání do knihovny automaticky sledovány.</string>
+    <string name="enhanced_tracking_info">Služby, které poskytují rozšířené funkce pro konkrétní zdroje. Záznamy jsou po přidání do knihovny automaticky sledovány.</string>
     <string name="enhanced_services">Rozšířené služby</string>
     <string name="tracking_guide">Návod ke sledování</string>
     <string name="pref_dark_theme_pure_black">Čistě černý tmavý režim</string>
@@ -702,7 +700,6 @@
     <string name="rotation_reverse_portrait">Obrácené na výšku</string>
     <string name="pref_clear_webview_data">Vyčistit data WebView</string>
     <string name="webview_data_deleted">Data z WebView vyčištěna</string>
-    <string name="pref_duplicate_pinned_sources_summary">Opakovat připnuté zdroje v jejich příslušných jazykových skupinách</string>
     <string name="reading_list">Seznam četby</string>
     <string name="wish_list">Seznam přání</string>
     <string name="network_not_metered">Pouze na neměřené síti</string>
@@ -712,7 +709,6 @@
     <string name="complete_list">Seznam dokončených</string>
     <string name="on_hold_list">Seznam pozastavených</string>
     <string name="unfinished_list">Seznam nedokončených</string>
-    <string name="pref_duplicate_pinned_sources">Zobrazit duplicitní připnuté zdroje</string>
     <string name="ext_info_language">Jazyk</string>
     <string name="ext_info_age_rating">Věkové hodnocení</string>
     <string name="ext_info_version">Verze</string>
@@ -780,9 +776,16 @@
     <string name="error_user_agent_string_invalid">Neplatný řetězec uživatelského agenta</string>
     <string name="updates_last_update_info_just_now">Právě teď</string>
     <string name="download_notifier_cache_renewal">Indexování stažených souborů</string>
-    <string name="channel_downloader_cache">Stáhnout mezipaměť</string>
+    <string name="channel_downloader_cache">Indexování</string>
     <string name="information_no_entries_found">V této kategorii nebyly nalezeny žádné položky</string>
     <string name="action_open_random_manga">Otevřít náhodnou položku</string>
     <string name="fdroid_warning">F-Droid sestavení nejsou oficiálně podporovány.
 \nKlepnutím zobrazíte další informace.</string>
+    <string name="other_header">Ostatní</string>
+    <string name="action_display_show_continue_reading_button">Zobrazit tlačítko pokračovat ve čtení</string>
+    <string name="track_remove_date_conf_title">Odstranit datum\?</string>
+    <string name="track_remove_finish_date_conf_text">Tím se odstraní dříve vybrané datum ukončení z %s</string>
+    <string name="track_remove_start_date_conf_text">Tím se odstraní dříve vybrané datum zahájení z %s</string>
+    <string name="pref_invalidate_download_cache">Přeindexovat stahování</string>
+    <string name="enhanced_tracking_warning">Tento sledovač je kompatibilní pouze se zdrojem %1$s.</string>
 </resources>

@@ -484,7 +484,6 @@
     <string name="no_pinned_sources">कोई पिन किया हुआ सोर्स नही है</string>
     <string name="channel_complete">पूर्ण</string>
     <string name="channel_progress">प्रगती</string>
-    <string name="download_notifier_download_finish">डाउनलोड सम्पन्न हुआ</string>
     <string name="channel_errors">त्रुटियाँ</string>
     <string name="backup_restore_missing_trackers">ट्रैकर्स में लॉग इन नहीं किया गया:</string>
     <string name="pref_remove_bookmarked_chapters">बुकमार्क किए गए अध्यायों को हटाने की अनुमति दें</string>
@@ -636,7 +635,6 @@
     <string name="error_sharing_cover">कवर पेज साझा करने में त्रुटि</string>
     <string name="update_check_eol">यह एंड्राइड संस्करण अब समर्थित नहीं है</string>
     <string name="getting_started_guide">प्रारंभिक मार्गदर्शन</string>
-    <string name="tracker_komga_warning">यह ट्रैकर केवल Komga स्रोत के साथ संगत है।</string>
     <string name="pref_show_navigation_mode_summary">रीडर खोले जाने पर थोड़ी देर दिखाएं</string>
     <string name="categorized_display_settings">सॉर्ट और डिस्प्ले के लिए प्रति-श्रेणी सेटिंग्स</string>
     <string name="pref_library_update_show_tab_badge">अपडेट आइकन पर अपठित संख्या दिखाएं</string>
@@ -694,8 +692,6 @@
     <string name="download_notifier_split_page_not_found">पेज %d हिस्से करते वक्त नहीं मिला</string>
     <string name="action_close">बंद करे</string>
     <string name="pref_clear_webview_data">वेबव्यू डाटा साफ करें</string>
-    <string name="pref_duplicate_pinned_sources">एक जैसे पिन किए गए स्रोत दिखाएँ</string>
-    <string name="pref_duplicate_pinned_sources_summary">उनके संबंधित भाषा समूहों में पिन किए गए स्रोतों को फिर से दिखाएं</string>
     <string name="download_notifier_split_page_path_not_found">चित्र %d का फ़ाइल पथ नहीं खोजा जा सका</string>
     <string name="empty_backup_error">बैकअप करने के लिए कोई पुस्तकालय प्रविष्टि नहीं</string>
     <string name="update_check_fdroid_migration_info">एक नया संस्करण आधिकारिक रिलीज के द्वारा उपलब्ध है। अनौपचारिक F-Droid रिलीज से माइग्रेट करने का तरीका जानने के लिए यह टैप करें ।</string>

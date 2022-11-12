@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="name">Emri</string>
+    <string name="label_more">Më tepër</string>
+    <string name="label_settings">Cilësimet</string>
+    <string name="label_download_queue">Radha e shkarkimeve</string>
+    <string name="label_library">Libraria</string>
+    <string name="label_recent_updates">Përditësimet</string>
+    <string name="information_no_downloads">S\'ka shkarkime</string>
+    <string name="label_recent_manga">Historia</string>
+    <string name="label_sources">Burimet</string>
+    <string name="label_backup">Ruaj dhe rikthe</string>
+    <string name="label_migration">Shpërngulu</string>
+    <string name="label_extensions">Shtesa</string>
+    <string name="label_extension_info">Të dhënat e shtesës</string>
+    <string name="label_help">Ndihmë</string>
+    <string name="information_no_recent">S\'ka përditësime të reja</string>
+</resources>

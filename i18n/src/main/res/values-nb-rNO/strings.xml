@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Navn</string>
     <string name="categories">Kategorier</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Bibliotekoppføringer</string>
     <string name="chapters">Kapittel</string>
     <string name="history">Historikk</string>
     <string name="label_settings">Innstillinger</string>
@@ -295,7 +295,7 @@
     <string name="download_notifier_unknown_error">Kunne ikke laste ned kapittel grunnet uventet feil</string>
     <string name="download_notifier_text_only_wifi">Ingen trådløstilkobling tilgjengelig</string>
     <string name="download_notifier_no_network">Ingen nettverkstilkobling tilgjengelig</string>
-    <string name="download_notifier_download_paused">Nedlasting pauset</string>
+    <string name="download_notifier_download_paused">Nedlastinger pauset</string>
     <string name="pref_color_filter_mode">Blandingsmodus for fargefilter</string>
     <string name="filter_mode_overlay">Overlegg</string>
     <string name="filter_mode_multiply">Multiplisere</string>
@@ -459,7 +459,6 @@
     <string name="notification_chapters_single_and_more">Kapittel %1$s og %2$d til</string>
     <string name="no_pinned_sources">Du har ingen festede kilder</string>
     <string name="channel_progress">Framdrift</string>
-    <string name="download_notifier_download_finish">Nedlastet</string>
     <string name="pref_remove_bookmarked_chapters">Tillat sletting av bokmerkede kapitler</string>
     <string name="pref_category_delete_chapters">Slett kapittel</string>
     <string name="ext_nsfw_warning">Kan inneholde innhold for 18+</string>
@@ -625,7 +624,6 @@
     <string name="theme_greenapple">Grønt eple</string>
     <string name="action_display_local_badge">Lokal kilde</string>
     <string name="error_no_match">Ingen treff funnet</string>
-    <string name="tracker_komga_warning">Denne trackeren er kun kompatibel med Komga-kilder.</string>
     <string name="notification_incognito_text">Skru av inkognito-modus</string>
     <string name="help_translate">Bistå oversettelsen</string>
     <string name="pref_library_update_refresh_trackers_summary">Oppdater trackere ved oppdatering av bibliotek</string>
@@ -687,8 +685,6 @@
     <string name="error_saving_picture">Feil ved lagring av bilde</string>
     <string name="update_check_open">Åpne på GitHub</string>
     <string name="action_close">Lukk</string>
-    <string name="pref_duplicate_pinned_sources">Vis dupliserte festede kilder</string>
-    <string name="pref_duplicate_pinned_sources_summary">Gjenta festede kilder i sine respektive språkgrupper</string>
     <string name="pref_clear_webview_data">Slett WebView data</string>
     <string name="webview_data_deleted">WebView data slettet</string>
     <string name="battery_not_low">Batteri er ikke lavt</string>
@@ -767,9 +763,16 @@
     <string name="not_installed">Ikke installert</string>
     <string name="updates_last_update_info_just_now">Akkurat nå</string>
     <string name="download_notifier_cache_renewal">Indeksering av nedlastinger</string>
-    <string name="channel_downloader_cache">Nedlastnings hurtigbuffer</string>
+    <string name="channel_downloader_cache">Indeksering</string>
     <string name="fdroid_warning">F-Droid-bygg er ikke offisielt støttet.
 \nTrykk for å finne ut mer.</string>
     <string name="information_no_entries_found">Fant ingen oppføringer i denne kategorien</string>
     <string name="action_open_random_manga">Åpne tilfeldig oppføring</string>
+    <string name="action_display_show_continue_reading_button">Vis fortsett å lese-knappen</string>
+    <string name="other_header">Annet</string>
+    <string name="track_remove_date_conf_title">Fjerne dato\?</string>
+    <string name="track_remove_start_date_conf_text">Dette vil fjerne den tidligere valgte startdatoen fra %s</string>
+    <string name="track_remove_finish_date_conf_text">Dette vil fjerne den tidligere valgte sluttdatoen fra %s</string>
+    <string name="pref_invalidate_download_cache">Reindekser nedlastinger</string>
+    <string name="enhanced_tracking_warning">Denne trackeren er kun kompatibel med %1$s-kilden.</string>
 </resources>

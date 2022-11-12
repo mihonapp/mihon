@@ -16,7 +16,7 @@
     <string name="action_filter">Фильтрация</string>
     <string name="action_filter_bookmarked">В закладках</string>
     <string name="action_filter_downloaded">Загружено</string>
-    <string name="action_filter_empty">Убрать фильтр</string>
+    <string name="action_filter_empty">Удалить фильтр</string>
     <string name="action_filter_unread">Не прочитано</string>
     <string name="action_install">Установить</string>
     <string name="action_mark_as_read">Пометить как «Прочитано»</string>
@@ -28,7 +28,7 @@
     <string name="action_pause">Пауза</string>
     <string name="action_previous_chapter">Предыдущая глава</string>
     <string name="action_remove">Удалить</string>
-    <string name="action_remove_bookmark">Убрать закладку</string>
+    <string name="action_remove_bookmark">Удалить закладку</string>
     <string name="action_rename_category">Переименовать категорию</string>
     <string name="action_reset">Сбросить</string>
     <string name="action_resume">Продолжить</string>
@@ -139,7 +139,7 @@
     <string name="pref_fullscreen">Полноэкранный режим</string>
     <string name="pref_image_scale_type">Масштабирование</string>
     <string name="pref_keep_screen_on">Не выключать экран</string>
-    <string name="pref_library_columns">Количество серий</string>
+    <string name="pref_library_columns">Количество записей</string>
     <string name="pref_library_update_interval">Автоматические обновления</string>
     <string name="pref_library_update_restriction">Ограничения обновлений для устройства</string>
     <string name="pref_read_with_volume_keys">Клавиши громкости</string>
@@ -149,11 +149,11 @@
     <string name="pref_remove_after_read">Удалять после прочтения</string>
     <string name="pref_rotation_type">Ориентация по умолчанию</string>
     <string name="pref_show_page_number">Номер страницы</string>
-    <string name="pref_update_only_non_completed">Серия завершена</string>
+    <string name="pref_update_only_non_completed">Запись завершена</string>
     <string name="pref_viewer_type">Режим чтения</string>
     <string name="pref_zoom_start">Стартовая позиция увеличения</string>
     <string name="reading">Читаю</string>
-    <string name="remove_from_library">Убрать из библиотеки</string>
+    <string name="remove_from_library">Удалить из библиотеки</string>
     <string name="right_to_left_viewer">Справа налево</string>
     <string name="rotation_force_landscape">Заблокированная альбомная</string>
     <string name="rotation_force_portrait">Заблокированная портретная</string>
@@ -211,10 +211,10 @@
     <string name="default_category">Основная категория</string>
     <string name="default_category_summary">Спрашивать</string>
     <string name="delete_downloads_for_manga">Удалить загруженные главы\?</string>
-    <string name="download_notifier_download_paused">Загрузка приостановлена</string>
+    <string name="download_notifier_download_paused">Загрузки приостановлены</string>
     <string name="history">История</string>
     <string name="local_source">Персональный источник</string>
-    <string name="manga">Манга</string>
+    <string name="manga">Записи библиотеки</string>
     <string name="no_more_results">Больше нет результатов</string>
     <string name="pref_backup_directory">Папка резервной копии</string>
     <string name="pref_backup_interval">Частота резервных копий</string>
@@ -337,7 +337,7 @@
     </plurals>
     <string name="secure_screen">Защита экрана приложения</string>
     <string name="ext_updates_pending">Доступны обновления</string>
-    <string name="pref_cutout_short">Отображать содержимое в вырезанной области</string>
+    <string name="pref_cutout_short">Показывать содержимое в вырезанной области</string>
     <string name="information_cloudflare_bypass_failure">Не удалось обойти Cloudflare</string>
     <string name="information_webview_outdated">Пожалуйста, обновите WebView для лучшей совместимости</string>
     <string name="channel_new_chapters">Обновления глав</string>
@@ -432,7 +432,7 @@
         <item quantity="other">Осталось %1$s глав</item>
     </plurals>
     <string name="viewer">Режим чтения</string>
-    <string name="pref_category_for_this_series">Для этой серии</string>
+    <string name="pref_category_for_this_series">Для этой записи</string>
     <string name="gray_background">Серый</string>
     <string name="pref_true_color_summary">Уменьшает полосатость, но может влиять на производительность</string>
     <plurals name="num_categories">
@@ -442,7 +442,7 @@
         <item quantity="other">%d категорий</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Не удалось открыть настройки устройства</string>
-    <string name="pref_refresh_library_covers">Обновить обложки серий</string>
+    <string name="pref_refresh_library_covers">Обновить обложки записей</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Выполнено за %1$s с %2$s ошибкой</item>
         <item quantity="few">Выполнено за %1$s с %2$s ошибками</item>
@@ -464,12 +464,12 @@
     <string name="action_migrate">Перенести</string>
     <string name="tabs_header">Вкладки</string>
     <string name="badges_header">Значки</string>
-    <string name="action_display_show_tabs">Вкладки категорий</string>
+    <string name="action_display_show_tabs">Показать вкладки категорий</string>
     <string name="page_list_empty_error">Страницы не найдены</string>
     <string name="action_enable_all">Включить всё</string>
     <string name="action_disable_all">Отключить всё</string>
-    <string name="pref_show_reading_mode_summary">Ненадолго отобразить режим чтения при открытии читалки</string>
-    <string name="pref_show_reading_mode">Отобразить режим чтения</string>
+    <string name="pref_show_reading_mode_summary">Ненадолго показать режим чтения при открытии читалки</string>
+    <string name="pref_show_reading_mode">Показать режим чтения</string>
     <string name="action_start">Начать</string>
     <string name="loader_not_implemented_error">Источник не найден</string>
     <string name="action_disable">Отключить</string>
@@ -494,7 +494,7 @@
     <string name="action_global_search_query">Искать «%1$s» глобально</string>
     <string name="pref_category_reading_mode">Режим чтения</string>
     <string name="pref_category_theme">Тема</string>
-    <string name="action_sort_date_added">Последнее добавление серии</string>
+    <string name="action_sort_date_added">Последнее добавление записи</string>
     <plurals name="num_trackers">
         <item quantity="one">%d отслеживание</item>
         <item quantity="few">%d отслеживания</item>
@@ -502,7 +502,6 @@
         <item quantity="other">%d отслеживаний</item>
     </plurals>
     <string name="no_pinned_sources">У вас нет закреплённых источников</string>
-    <string name="download_notifier_download_finish">Загрузка завершена</string>
     <string name="channel_complete">Завершено</string>
     <string name="channel_progress">Прогресс</string>
     <string name="channel_errors">Ошибки</string>
@@ -537,7 +536,7 @@
     <string name="spen_previous_page">Предыдущая страница</string>
     <string name="migration_help_guide">Руководство по переносу источников</string>
     <string name="pref_category_nsfw_content">Источники NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Отобразить в списке источников и расширений</string>
+    <string name="pref_show_nsfw_source">Показывать в списке источников и расширений</string>
     <string name="file_picker_error">Приложение для выбора файлов не найдено</string>
     <string name="myanimelist_relogin">Пожалуйста, авторизуйтесь в MyAnimeList снова</string>
     <string name="pref_viewer_nav">Зоны касания</string>
@@ -555,7 +554,7 @@
     <string name="action_order_by_chapter_number">Номер главы</string>
     <string name="action_order_by_upload_date">Дата загрузки</string>
     <string name="action_filter_tracked">Отслеживается</string>
-    <string name="action_display_show_number_of_items">Количество серий</string>
+    <string name="action_display_show_number_of_items">Показывать количество записей</string>
     <string name="right_and_left_nav">Справа и слева</string>
     <string name="pref_dual_page_split">Разделение широких страниц</string>
     <string name="pref_dual_page_invert">Разделение широких страниц наоборот</string>
@@ -567,7 +566,7 @@
     <string name="nav_zone_right">Справа</string>
     <string name="nav_zone_next">Следующая</string>
     <string name="nav_zone_prev">Предыдущая</string>
-    <string name="pref_show_navigation_mode_summary">Ненадолго отобразить при начале чтения</string>
+    <string name="pref_show_navigation_mode_summary">Ненадолго показать при начале чтения</string>
     <string name="pref_show_navigation_mode">Наложение зон касания</string>
     <string name="pref_dns_over_https">DNS по HTTPS (DoH)</string>
     <string name="none">Нет</string>
@@ -589,7 +588,7 @@
     <string name="pref_grayscale">Оттенки серого</string>
     <string name="notification_incognito_text">Выключить режим инкогнито</string>
     <string name="automatic_background">Автоматически</string>
-    <string name="cancel_all_for_series">Отменить всё для этой серии</string>
+    <string name="cancel_all_for_series">Отменить всё для этой записи</string>
     <string name="error_no_match">Совпадений не найдено</string>
     <string name="source_unsupported">Источник не поддерживается</string>
     <string name="unread">Не прочитано</string>
@@ -624,7 +623,6 @@
     <string name="restore_miui_warning">Резервная копия/Восстановление может не работать должным образом, если отключена «Оптимизация MIUI».</string>
     <string name="enhanced_tracking_info">Сервисы, предоставляющие расширенные возможности для определённых источников. Записи будут автоматически отслеживаться при добавлении в библиотеку.</string>
     <string name="enhanced_services">Расширенные сервисы</string>
-    <string name="tracker_komga_warning">Этот сервис отслеживания совместим только с источником Komga.</string>
     <string name="theme_monet">Динамическая</string>
     <string name="label_background_activity">Фоновая активность</string>
     <string name="pref_lowest">Самая низкая</string>
@@ -688,23 +686,23 @@
     <string name="action_faq_and_guides">Руководства и FAQ</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Показать запись</string>
-    <string name="confirm_manga_add_duplicate">В вашей библиотеке есть серия с таким же названием, но из другого источника (%1$s).
+    <string name="confirm_manga_add_duplicate">В вашей библиотеке есть запись с таким же названием, но из другого источника (%1$s).
 \n
 \nВы по-прежнему хотите продолжить\?</string>
     <string name="action_display_cover_only_grid">Сетка без названия</string>
     <string name="pref_navigate_pan">Панорамирование широких изображений при касании</string>
     <string name="pref_landscape_zoom">Увеличивать изображение по горизонтали</string>
     <string name="action_filter_started">Начато</string>
-    <string name="pref_update_only_started">Серия не начата</string>
-    <string name="skipped_reason_completed">Пропущено, т.к серия завершена</string>
+    <string name="pref_update_only_started">Запись не начата</string>
+    <string name="skipped_reason_completed">Пропущено, т.к запись завершена</string>
     <string name="skipped_reason_not_caught_up">Пропущено, т.к есть непрочитанные главы</string>
-    <string name="skipped_reason_not_started">Пропущено, т.к серия не начата</string>
+    <string name="skipped_reason_not_started">Пропущено, т.к запись не начата</string>
     <string name="learn_more">Нажать для подробностей</string>
     <string name="channel_skipped">Пропущено</string>
     <string name="notification_update_error">%1$d обновление(ий) не удалось</string>
     <string name="notification_update_skipped">%1$d обновления(ий) пропущено</string>
     <string name="rotation_reverse_portrait">Портретная наоборот</string>
-    <string name="action_move_to_top_all_for_series">Переместить серию в начало</string>
+    <string name="action_move_to_top_all_for_series">Переместить запись в начало</string>
     <string name="disabled_nav">Отключено</string>
     <string name="update_check_fdroid_migration_info">Новая версия доступна на оф. странице Tachiyomi. Нажмите, чтобы узнать, как перенестись с неофициальной версии из F-Droid.</string>
     <string name="error_saving_picture">Не удалось сохранить изображение</string>
@@ -713,8 +711,6 @@
     <string name="webview_data_deleted">Данные WebView очищены</string>
     <string name="pref_clear_webview_data">Очистить данные WebView</string>
     <string name="action_close">Закрыть</string>
-    <string name="pref_duplicate_pinned_sources_summary">Повторять прикреплённые источники в соответствии с их языковыми группами</string>
-    <string name="pref_duplicate_pinned_sources">Отображать дублированные приклеплённые источники</string>
     <string name="battery_not_low">Когда батарея заряжена</string>
     <string name="source_filter_empty_screen">Не найдено установленных источников</string>
     <string name="source_empty_screen">Не найдено источников</string>
@@ -724,8 +720,8 @@
     <string name="download_notifier_split_page_not_found">Страница %d не найдена, при разделении</string>
     <string name="split_tall_images_summary">Улучшает производительность читалки</string>
     <string name="download_notifier_split_page_path_not_found">Путь к файлам страницы %d не найден</string>
-    <string name="pref_reset_viewer_flags">Сбросить настройки читалки для каждой серии</string>
-    <string name="pref_reset_viewer_flags_summary">Сбрасывает режим чтения и ориентацию для всех серий</string>
+    <string name="pref_reset_viewer_flags">Сбросить настройки читалки для каждой записи</string>
+    <string name="pref_reset_viewer_flags_summary">Сбрасывает режим чтения и ориентацию для всех записей</string>
     <string name="pref_reset_viewer_flags_success">Все настройки читалки сброшены</string>
     <string name="pref_reset_viewer_flags_error">Не удалось сбросить настройки читалки</string>
     <string name="download_notifier_split_failed">Не удалось разделить загруженное изображение</string>
@@ -773,7 +769,7 @@
     <string name="updates_last_update_info">Последнее обновление библиотеки: %s</string>
     <string name="popular">Популярное</string>
     <string name="missing_storage_permission">Не предоставлены разрешения на хранение</string>
-    <string name="skipped_reason_not_always_update">Пропущено, т.к серия не нуждается в обновлении</string>
+    <string name="skipped_reason_not_always_update">Пропущено, т.к запись не нуждается в обновлении</string>
     <string name="action_search_hint">Искать…</string>
     <string name="crash_screen_restart_application">Перезапустить приложение</string>
     <string name="pref_general_summary">Язык приложения, уведомления</string>
@@ -793,9 +789,16 @@
     <string name="error_user_agent_string_invalid">Недопустимый параметр user agent</string>
     <string name="updates_last_update_info_just_now">Только что</string>
     <string name="download_notifier_cache_renewal">Индексирование загрузок</string>
-    <string name="channel_downloader_cache">Кэш загрузок</string>
+    <string name="channel_downloader_cache">Индексирование</string>
     <string name="information_no_entries_found">В этой категории нет записей</string>
     <string name="action_open_random_manga">Открыть случайную запись</string>
     <string name="fdroid_warning">Сборки F-Droid официально не поддерживаются.
 \nНажмите, чтобы узнать больше.</string>
+    <string name="other_header">Другое</string>
+    <string name="action_display_show_continue_reading_button">Кнопка «Продолжить чтение»</string>
+    <string name="track_remove_finish_date_conf_text">Это удалит ранее выбранную дату окончания из %s</string>
+    <string name="track_remove_date_conf_title">Удалить дату\?</string>
+    <string name="track_remove_start_date_conf_text">Это удалит ранее выбранную дату начала из %s</string>
+    <string name="pref_invalidate_download_cache">Переиндексировать загрузки</string>
+    <string name="enhanced_tracking_warning">Этот сервис отслеживания совместим только с источником %1$s.</string>
 </resources>

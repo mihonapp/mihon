@@ -634,7 +634,6 @@
     <string name="notification_update_skipped">%1$d עדכונים דולגו</string>
     <string name="update_check_eol">גרסת האנדרואיד הזאת כבר לא נתמכת</string>
     <string name="information_webview_required">WebView נצרך ל-Tachiyomi</string>
-    <string name="download_notifier_download_finish">ההורדה הושלמה</string>
     <string name="action_display_cover_only_grid">רשת רק של הכריכות</string>
     <string name="action_open_log">פתח את יומן האירועים</string>
     <string name="notification_update_error">%1$d עדכונים נכשלו</string>
@@ -674,7 +673,6 @@
     <string name="ext_info_language">שפה</string>
     <string name="pref_color_filter_mode">פילטר צבע משתלב</string>
     <string name="filter_mode_multiply">להכפיל</string>
-    <string name="pref_duplicate_pinned_sources">הראה מקורות שמורים כפולים</string>
     <string name="delete_category">מחק קטגוריה</string>
     <string name="disabled_nav">הגבלה</string>
     <string name="ext_installer_legacy">מורשת</string>

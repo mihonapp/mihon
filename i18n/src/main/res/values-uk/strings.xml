@@ -179,8 +179,8 @@
     <string name="pref_clear_cookies">Очистити реп`яшки</string>
     <string name="cookies_cleared">Реп`яшки очищено</string>
     <string name="pref_clear_database">Очистити базу даних</string>
-    <string name="pref_clear_database_summary">Видалити історію для манги, котра не знаходиться в вашій бібліотеці</string>
-    <string name="clear_database_confirmation">Ви впевнені\? Прочитані глави і прогрес не бібліотечної манги будуть втрачені</string>
+    <string name="pref_clear_database_summary">Видалити історію для записів, котрі не знаходяться в вашій бібліотеці</string>
+    <string name="clear_database_confirmation">Ви впевнені\? Прочитані глави і прогрес не бібліотечних записів будуть втрачені</string>
     <string name="clear_database_completed">Дані видалено</string>
     <string name="pref_refresh_library_tracking">Оновити відстеження</string>
     <string name="pref_refresh_library_tracking_summary">Оновити стан, рахунок і останню главу з каталогів що відстежуються</string>
@@ -244,8 +244,8 @@
     <string name="error_category_exists">Категорія з таким іменем вже існує!</string>
     <string name="snack_categories_deleted">Категорію видалено</string>
     <string name="dialog_with_checkbox_remove_description">Ця дія видалить дату прочитання глави. Ви впевнені\?</string>
-    <string name="dialog_with_checkbox_reset">Скинути усі глави для цієї манги</string>
-    <string name="snack_add_to_library">Додати мангу до бібліотеки\?</string>
+    <string name="dialog_with_checkbox_reset">Скинути усі глави для цього запису</string>
+    <string name="snack_add_to_library">Додати до бібліотеки\?</string>
     <string name="picture_saved">Картинку збережено</string>
     <string name="custom_filter">Користувацький фільтр</string>
     <string name="set_as_cover">Встановити як обкладинку</string>
@@ -268,14 +268,14 @@
     <string name="download_queue_error">Сталась помилка при завантаженні глав. Спробуйте ще раз у розділі завантаження</string>
     <string name="notification_new_chapters">Знайдено нові глави</string>
     <string name="notification_cover_update_failed">Не вдалось оновити обкладинку</string>
-    <string name="notification_first_add_to_library">Будь ласка, додайте мангу до своєї бібліотеки перед тим як робити це</string>
+    <string name="notification_first_add_to_library">Будь ласка, додайте запис до своєї бібліотеки перед тим як робити це</string>
     <string name="file_select_cover">Вибрати обкладинку</string>
     <string name="file_select_backup">Виберіть файл резервної копії</string>
     <string name="update_check_confirm">Завантажити</string>
     <string name="update_check_no_new_updates">Оновлень не виявлено</string>
     <string name="update_check_look_for_updates">Перевірити оновлення…</string>
     <string name="update_check_notification_download_in_progress">Завантаження в процесі…</string>
-    <string name="update_check_notification_download_complete">Тицьніть для встановлення</string>
+    <string name="update_check_notification_download_complete">Тицьніть для встановлення оновлення</string>
     <string name="update_check_notification_download_error">Помилка завантаження</string>
     <string name="update_check_notification_update_available">Доступна нова версія!</string>
     <string name="information_no_downloads">Немає завантажень</string>
@@ -308,7 +308,7 @@
     <string name="action_webview_refresh">Оновити</string>
     <string name="pref_category_library">Бібліотека</string>
     <string name="ext_obsolete">Застарілий</string>
-    <string name="obsolete_extension_message">Це розширення більше не доступне.</string>
+    <string name="obsolete_extension_message">Це розширення більше не доступне. Воно може працювати невірно, а також викликати проблеми з додатком. Рекомендується його видалити.</string>
     <string name="pref_date_format">Формат дати</string>
     <string name="pref_category_library_update">Глобальне оновлення</string>
     <string name="logout_title">Вихід із %1$s\?</string>
@@ -366,10 +366,10 @@
     <string name="email">Електропошта</string>
     <string name="pref_always_show_chapter_transition">Завжди показувати перехід глави</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Для %d тайтлу</item>
-        <item quantity="few">Для %d тайтлів</item>
-        <item quantity="many">Для %d тайтлів</item>
-        <item quantity="other">Для %d тайтлів</item>
+        <item quantity="one">Для %d запису</item>
+        <item quantity="few">Для %d записів</item>
+        <item quantity="many">Для %d записів</item>
+        <item quantity="other">Для %d записів</item>
     </plurals>
     <string name="action_menu">Меню</string>
     <string name="action_reorganize_by">Переупорядкувати</string>
@@ -436,7 +436,7 @@
         <item quantity="many">%1$s залишилось</item>
         <item quantity="other">%1$s залишилось</item>
     </plurals>
-    <string name="downloaded_only_summary">Фільтрувати усю мангу в вашій бібліотеці</string>
+    <string name="downloaded_only_summary">Фільтрувати усі записи в вашій бібліотеці</string>
     <string name="check_for_updates">Перевірити оновлення</string>
     <string name="battery_optimization_setting_activity_not_found">Не вдалось відкрити налаштування пристрою</string>
     <string name="pref_refresh_library_covers">Оновити обкладинки в бібліотеці</string>
@@ -454,10 +454,10 @@
     </plurals>
     <string name="restore_duration">%02d хв, %02d сек</string>
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
-    <string name="invalid_backup_file_missing_manga">Бекап не містить жодної манги.</string>
+    <string name="invalid_backup_file_missing_manga">Бекап не містить жодних записів бібліотеки.</string>
     <string name="invalid_backup_file">Невірний файл резервної копії</string>
     <string name="pref_search_pinned_sources_only">Включати тільки закріплені джерела</string>
-    <string name="tracking_info">Одностороння синхронізація для оновлення прогресу глави в службах стеження. Налаштуйте для окремих записів манги з допомогою кнопки \"Стеження\".</string>
+    <string name="tracking_info">Одностороння синхронізація для оновлення прогресу глави в службах стеження. Налаштуйте для окремих записів з допомогою кнопки \"Стеження\".</string>
     <string name="action_display_show_tabs">Показувати вкладки категорій</string>
     <string name="action_display_comfortable_grid">Зручна сітка</string>
     <string name="recent_manga_time">Гл. %1$s - %2$s</string>
@@ -503,7 +503,6 @@
     <string name="channel_errors">Помилки</string>
     <string name="channel_complete">Завершено</string>
     <string name="channel_progress">Поступ</string>
-    <string name="download_notifier_download_finish">Завантаження завершено</string>
     <string name="backup_restore_missing_trackers">Трекери не авторизовано:</string>
     <string name="pref_remove_bookmarked_chapters">Дозволити видалення глав з закладок</string>
     <string name="pref_category_delete_chapters">Видалити глави</string>
@@ -520,11 +519,11 @@
     <string name="chapter_settings_updated">Оновлено налаштування глави за замовчуванням</string>
     <string name="share_page_info">%1$s: %2$s, сторінка %3$d</string>
     <string name="set_chapter_settings_as_default">За замовчуванням</string>
-    <string name="also_set_chapter_settings_for_library">Також застосувати для усієї манги в моїй бібліотеці</string>
+    <string name="also_set_chapter_settings_for_library">Також застосувати для усіх записів в моїй бібліотеці</string>
     <string name="confirm_set_chapter_settings">Ви впевнені, що бажаєте зберегти ці налаштування за замовчуванням\?</string>
     <string name="chapter_settings">Налаштування глави</string>
     <string name="downloaded_chapters">Завантажені глави</string>
-    <string name="manga_from_library">Манга з бібліотеки</string>
+    <string name="manga_from_library">З бібліотеки</string>
     <string name="action_search_settings">Налаштування пошуку</string>
     <string name="pref_incognito_mode_summary">Призупиняє історію читання</string>
     <string name="pref_incognito_mode">Режим інкогніто</string>
@@ -568,12 +567,12 @@
     <string name="pref_show_navigation_mode_summary">Короткочасно відобразити, коли читалку відкрито</string>
     <string name="pref_show_navigation_mode">Оверлей зон дотику</string>
     <string name="pref_dns_over_https">DNS поверх HTTPS (DoH)</string>
-    <string name="pref_download_new_categories_details">Мангу в виключених категоріях не буде завантажено, навіть якщо вона також знаходиться у включених категоріях.</string>
+    <string name="pref_download_new_categories_details">Записи в виключених категоріях не буде завантажено, навіть якщо вона також знаходиться у включених категоріях.</string>
     <string name="pref_category_auto_download">Автозавантаження</string>
     <string name="exclude">Виключати: %s</string>
     <string name="include">Включати: %s</string>
     <string name="none">Ніхто</string>
-    <string name="pref_library_update_categories_details">Мангу в виключених категоріях не буде оновлено, навіть якщо вона також знаходиться у включених категоріях.</string>
+    <string name="pref_library_update_categories_details">Записи в виключених категоріях не буде оновлено, навіть якщо вони також знаходяться у включених категоріях.</string>
     <string name="action_sort_chapter_fetch_date">Дата отримання глави</string>
     <string name="action_show_errors">Тицьніть для перегляду подробиць</string>
     <string name="update_check_eol">Ця версія Android більше не підтримується</string>
@@ -581,7 +580,7 @@
     <string name="rotation_landscape">Альбомна</string>
     <string name="rotation_portrait">Портретна</string>
     <string name="rotation_type">Тип орієнтації</string>
-    <string name="pref_create_folder_per_manga_summary">Створювати теки в відповідності до назви манги</string>
+    <string name="pref_create_folder_per_manga_summary">Створювати теки в відповідності до назви записів</string>
     <string name="pref_create_folder_per_manga">Зберігати сторінки до окремих тек</string>
     <string name="pref_reader_actions">Дії</string>
     <string name="pref_grayscale">Відтінки сірого</string>
@@ -606,14 +605,13 @@
     <string name="pref_library_update_refresh_trackers_summary">Оновлювати відстежуване при оновлені бібліотеки</string>
     <string name="pref_library_update_refresh_trackers">Автоматично оновлювати відстежуване</string>
     <string name="restrictions">Обмеження %s</string>
-    <string name="action_display_local_badge">Локальна манга</string>
+    <string name="action_display_local_badge">Локальне джерело</string>
     <string name="information_empty_category_dialog">У вашій бібліотеці ще немає категорій.</string>
     <string name="notification_updating">Оновлення бібліотеки... (%1$d/%2$d)</string>
-    <string name="tracker_komga_warning">Цей трекер сумісний тільки з джерелом Komga.</string>
     <string name="about_dont_kill_my_app">У деяких виробників є додаткові обмеження, котрі вбивають фонові сервіси. На цьому сайті більше інформації з приводу того, як це виправити.</string>
     <string name="label_background_activity">Фонова активність</string>
     <string name="restore_miui_warning">Резервування/Відновлення можуть не працювати належним чином, у випадку, якщо вимкнено Оптимізацію MIUI.</string>
-    <string name="enhanced_tracking_info">Сервіси, які надають розширені можливості для певних джерел. Манга буде автоматично відстежуватись при додаванні до бібліотеки.</string>
+    <string name="enhanced_tracking_info">Сервіси, які надають розширені можливості для певних джерел. Записи будуть автоматично відстежуватись при додаванні до бібліотеки.</string>
     <string name="enhanced_services">Розширені сервіси</string>
     <string name="pref_lowest">Найнижча</string>
     <string name="pref_low">Низька</string>
@@ -654,7 +652,7 @@
     <string name="ext_installer_pref">Встановлювач</string>
     <string name="ext_installer_shizuku_stopped">Shizuku не запущений</string>
     <string name="pref_remove_exclude_categories">Виключені категорії</string>
-    <string name="action_sort_count">За кількістю манги</string>
+    <string name="action_sort_count">Всього записів</string>
     <string name="ext_install_service_notif">Встановлюю розширення…</string>
     <string name="ext_app_info">Про додаток</string>
     <string name="ext_installer_legacy">Спадок</string>
@@ -673,17 +671,17 @@
     <string name="connected_to_wifi">Тільки через Wi-Fi</string>
     <string name="extension_api_error">Не вдалося отримати список розширень</string>
     <string name="pref_auto_clear_chapter_cache">Очищати кеш глав при закритті додатку</string>
-    <string name="clear_database_source_item_count">%1$d небібліотечний комікс у базі даних</string>
+    <string name="clear_database_source_item_count">%1$d небібліотечний записів у базі даних</string>
     <string name="database_clean">Немає чого очищувати</string>
     <string name="privacy_policy">Політика конфіденційності</string>
-    <string name="pref_library_update_manga_restriction">Пропускати оновлення</string>
+    <string name="pref_library_update_manga_restriction">Пропускати оновлення записів</string>
     <string name="pref_update_only_completely_read">Є непрочитані глави</string>
     <string name="save_chapter_as_cbz">Зберегти архів як CBZ</string>
     <string name="library_errors_help">Для допомоги в виправленні помилок оновлення бібліотеки, дивіться %1$s</string>
     <string name="publishing_finished">Публікація завершена</string>
     <string name="cancelled">Відмінено</string>
     <string name="on_hiatus">На хіатусі</string>
-    <string name="action_show_manga">Показати серію</string>
+    <string name="action_show_manga">Показати запис</string>
     <string name="action_filter_started">Розпочато</string>
     <string name="action_display_cover_only_grid">Сітка тільки з обкладинками</string>
     <string name="pref_update_only_started">Серія не почата</string>
@@ -712,12 +710,11 @@
     <string name="complete_list">Прочитано</string>
     <string name="on_hold_list">Відкладено</string>
     <string name="unfinished_list">Не закінчено</string>
-    <string name="action_sort_last_manga_update">Останні оновлення манги</string>
+    <string name="action_sort_last_manga_update">Остання перевірка оновлень</string>
     <string name="action_sort_unread_count">Кількість непрочитаного</string>
     <string name="pref_reset_viewer_flags_summary">Скидує режим читання та орієнтацію всіх серій</string>
     <string name="theme_lavender">Лаванда</string>
     <string name="description_placeholder">Без опису</string>
-    <string name="pref_duplicate_pinned_sources_summary">Повторювати прикліплені джерела, у відповідності з їх мовними групами</string>
     <string name="pref_reset_viewer_flags">Скинути налаштування читалки для кожної серії</string>
     <string name="pref_reset_viewer_flags_success">Скидання всіх налаштувань</string>
     <string name="custom_cover">Користувацька обкладинка</string>
@@ -729,7 +726,6 @@
     <string name="source_filter_empty_screen">Встановлених джерел не знайдено</string>
     <string name="source_empty_screen">Джерел не знайдено</string>
     <string name="disabled_nav">Вимкнено</string>
-    <string name="pref_duplicate_pinned_sources">Відображати дубльовані закріплені джерела</string>
     <string name="learn_more">Тицьніть задля подробиць</string>
     <string name="cant_open_last_read_chapter">Не вдається відкрити останню прочитану главу</string>
     <string name="pref_app_language">Мова додатку</string>
@@ -746,7 +742,7 @@
     <string name="internal_error">InternalError: Перевірте журнал халеп задля додаткової інформації</string>
     <string name="delete_category_confirmation">Чи бажаєте ви видалити категорію \"%s\"\?</string>
     <string name="delete_category">Видалити категорію</string>
-    <string name="appwidget_updates_description">Переглянути нещодавно оновлені серії</string>
+    <string name="appwidget_updates_description">Переглянути нещодавно оновлені записи бібліотеки</string>
     <string name="appwidget_unavailable_locked">Віджет не доступний при ввімкненому блокуванні додатку</string>
     <string name="pref_user_agent_string">User agent за замовчуванням</string>
     <string name="action_remove_everything">Видалити все</string>
@@ -790,4 +786,10 @@
     <string name="unknown_title">Невідомий тайтл</string>
     <string name="updates_last_update_info_just_now">Тільки що</string>
     <string name="error_user_agent_string_invalid">Невірне значення user agent</string>
+    <string name="action_open_random_manga">Відкрити випадковий запис</string>
+    <string name="information_no_entries_found">В цій категорії немає записів</string>
+    <string name="download_notifier_cache_renewal">Індексування завантажень</string>
+    <string name="channel_downloader_cache">Кеш завантажень</string>
+    <string name="fdroid_warning">Збірки F-Droid офіційно не підтримуються.
+\nТицьніть для того, щоб дізнатись більше.</string>
 </resources>

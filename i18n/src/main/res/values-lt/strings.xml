@@ -197,7 +197,7 @@
     <string name="pref_crop_borders">Apkarpyti kraštus</string>
     <string name="pref_true_color_summary">Sumažina spalvų gradientą, bet daro įtaką našumui</string>
     <string name="pref_true_color">32-bitų spalva</string>
-    <string name="pref_show_reading_mode_summary">Trupai parodyti dabartinį rėžimą, kai skaitiniai yra atidaryti</string>
+    <string name="pref_show_reading_mode_summary">Trumpai parodyti dabartinį rėžimą, kai skaitiniai yra atidaryti</string>
     <string name="pref_show_reading_mode">Parodyti skaitymo rėžimą</string>
     <string name="pref_show_page_number">Parodyti puslapio numerį</string>
     <string name="pref_double_tap_anim_speed">Dvigubo paspaudimo animacijos greitis</string>
@@ -484,8 +484,6 @@
     <string name="action_move_to_top_all_for_series">Perkelti seriją į viršų</string>
     <string name="backup_restore_missing_trackers">Sekimo priemonės, neprijungtos prie:</string>
     <string name="split_tall_images_summary">Pagerina skaitytuvo našumą</string>
-    <string name="pref_duplicate_pinned_sources">Rodyti pasikartojančius prisegtus šaltinius</string>
-    <string name="pref_duplicate_pinned_sources_summary">Pakartokite prisegtus šaltinius atitinkamose kalbų grupėse</string>
     <string name="ext_info_language">Kalba</string>
     <string name="ext_info_age_rating">Amžiaus reitingas</string>
     <string name="rotation_reverse_portrait">Apverstas portretas</string>
@@ -528,7 +526,6 @@
     <string name="cookies_cleared">Slapukai išvalyti</string>
     <string name="label_data">Duomenys</string>
     <string name="clear_database_source_item_count">%1$d nebibliotekiniai įrašai duomenų bazėje</string>
-    <string name="download_notifier_download_finish">Atsisiuntimas baigtas</string>
     <string name="restoring_backup_error">Nepavyko atkurti atsarginės kopijos</string>
     <string name="label_network">Tinklas</string>
     <string name="backup_choice">Ką norite įtraukti į atsarginę kopiją\?</string>
@@ -593,7 +590,7 @@
     <string name="pref_clear_webview_data">Išvalyti \"WebView\" duomenis</string>
     <string name="pref_refresh_library_covers">Atnaujinti bibliotekos viršelius</string>
     <string name="pref_refresh_library_tracking">Atnaujinti stebėjimą</string>
-    <string name="pref_reset_viewer_flags_summary">Iš naujo nustati visų serijų skaitymo režimą ir orientaciją</string>
+    <string name="pref_reset_viewer_flags_summary">Iš naujo nustatyti visų serijų skaitymo režimą ir orientaciją</string>
     <string name="pref_reset_viewer_flags_success">Visų skaitytuvo nustatymų nustatymas iš naujo</string>
     <string name="pref_reset_viewer_flags_error">Nepavyko atstatyti skaitytuvo nustatymų</string>
     <string name="crash_log_saved">Išsaugoti strigčių žurnalai</string>
@@ -700,7 +697,6 @@
     <string name="error_sharing_cover">Įvyko klaida bendrinant viršelį</string>
     <string name="chapter_settings">Skyriaus nustatymai</string>
     <string name="confirm_set_chapter_settings">Ar tikrai norite išsaugoti šiuos nustatymus kaip numatytuosius\?</string>
-    <string name="tracker_komga_warning">Šis sekimo įrenginys suderinamas tik su \"Komga\" šaltiniu.</string>
     <string name="add_tracking">Pridėti stebėjimą</string>
     <string name="unread">Neskaityta</string>
     <string name="on_hold">Sulaikytas</string>
@@ -785,4 +781,9 @@
 \nBakstelėkite, kad sužinotumėte daugiau.</string>
     <string name="information_no_entries_found">Šioje kategorijoje įrašų nerasta</string>
     <string name="action_open_random_manga">Atverti atsitiktinį įrašą</string>
+    <string name="other_header">Kita</string>
+    <string name="action_display_show_continue_reading_button">Rodyti mygtuką „Tęsti” skaitymą</string>
+    <string name="track_remove_finish_date_conf_text">Tai pašalins jūsų anksčiau pasirinktą pabaigos datą iš %s</string>
+    <string name="track_remove_date_conf_title">Pašalinti datą\?</string>
+    <string name="track_remove_start_date_conf_text">Tai pašalins jūsų anksčiau pasirinktą pradžios datą iš %s</string>
 </resources>

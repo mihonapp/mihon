@@ -344,7 +344,6 @@
     <string name="pref_download_new_categories_details">Ang manga sa wala iapil nga mga kategorya dili ma-download bisan kung naa usab sila sa mga gilakip nga kategorya.</string>
     <string name="save_chapter_as_cbz">I-save ingon CBZ archive</string>
     <string name="tracking_guide">Giya sa pagsubay</string>
-    <string name="pref_duplicate_pinned_sources_summary">Balika ang gipin nga mga tinubdan sa ilang tagsa-tagsa ka grupo sa pinulongan</string>
     <string name="pref_enable_automatic_extension_updates">Susiha ang mga update sa extension</string>
     <string name="network_not_metered">Lamang sa ummetered network</string>
     <string name="ext_info_language">Pinulongan sa Extension</string>
@@ -376,7 +375,6 @@
     <string name="fourth_to_last">Ika-upat hangtod sa kataposang pagbasa sa kapitulo</string>
     <string name="pref_download_new">Pag-download sa bag-ong mga kapitulo</string>
     <string name="enhanced_tracking_info">Mga serbisyo nga naghatag dugang nga mga bahin alang sa piho nga mga gigikanan. Awtomatikong gisubay ang Manga kon idugang sa imong librarya.</string>
-    <string name="pref_duplicate_pinned_sources">Ipakita ang mga duplicate nga gi-pin nga mga tinubdan</string>
     <string name="tracking_info">Usa ka paagi nga pag-sync aron ma-update ang pag-uswag sa kapitulo sa mga serbisyo sa pagsubay. I-set up ang tracking para sa indibidwal nga manga entries gikan sa ilang tracking button.</string>
     <string name="enhanced_services">Gipalambo nga mga serbisyo</string>
     <string name="pref_auto_update_manga_sync">Ang pag-uswag sa pag-update pagkahuman sa pagbasa</string>

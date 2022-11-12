@@ -643,7 +643,6 @@
     <string name="download_custom">कस्टम</string>
     <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा ताचियोमीलाई अवरुद्घ गर्न सक्नेछ।</string>
     <string name="notification_updating">पुस्तकालय अपडेट गर्दै...(%1$d/%2$d)</string>
-    <string name="tracker_komga_warning">यो ट्रयाकर कोग्मामा कोस्रोत सँग मात्र चलाउन मिल्छ!</string>
     <string name="manga_tracking_tab">ट्र्याकिङ</string>
     <string name="add_tracking">ट्रयाक गर्नुहोस्</string>
     <string name="reading">पढ्दै</string>
@@ -658,7 +657,6 @@
     <string name="chapter_settings_updated">पूर्वनिर्धारित अध्याय सेटिङहरू अपडेट गरियो</string>
     <string name="channel_skipped">छोडियो</string>
     <string name="spen_next_page">अर्को पृष्ट</string>
-    <string name="download_notifier_download_finish">डाउनलोड पूरा भयो</string>
     <string name="channel_progress">प्रगति</string>
     <string name="channel_complete">पूरा</string>
     <string name="channel_app_updates">एप अपडेटहरु</string>

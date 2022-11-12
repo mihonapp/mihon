@@ -385,7 +385,6 @@
     <string name="ext_nsfw_warning">18+ контент баар буолуон сөп</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Ити официальнайа суох эбэтэр сыыһа бэлиэтэммит 18+ контенны эбиликкж киирэрин тохтоппот.</string>
-    <string name="download_notifier_download_finish">Хачайдааһын бүттэ</string>
     <string name="custom_filter">Туттааччы биилтирэ</string>
     <string name="picture_saved">Хартыыҥка оннунан хаалла</string>
     <string name="dialog_with_checkbox_reset">Бу маанга бары түһүмэхтэрин түһэрии</string>

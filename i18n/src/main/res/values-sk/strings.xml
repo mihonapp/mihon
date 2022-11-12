@@ -509,11 +509,9 @@
     <string name="download_ahead_info">Funguje iba na položkách v knižnici a ak je aktuálna kapitola a nasledujúca kapitola už stiahnutá</string>
     <string name="unknown_status">Neznámy stav</string>
     <string name="on_hiatus">Prestávka</string>
-    <string name="tracker_komga_warning">Tento sledovač je kompatibilný iba so zdrojom Komga.</string>
     <string name="add_tracking">Pridať sledovanie</string>
     <string name="unfinished_list">Nedokončený zoznam</string>
     <string name="information_empty_category_dialog">Zatiaľ nemáte žiadne kategórie.</string>
-    <string name="download_notifier_download_finish">Sťahovanie dokončené</string>
     <string name="ext_info_age_rating">Vekové hodnotenie</string>
     <string name="date">Dátum</string>
     <string name="pref_true_color_summary">Znižuje pruhovanie farieb, ale môže ovplyvniť výkon</string>
@@ -564,7 +562,6 @@
     <string name="pref_category_for_this_series">Pre túto sériu</string>
     <string name="pref_webtoon_side_padding">Bočné odsadenie</string>
     <string name="pref_category_auto_download">Automatické sťahovanie</string>
-    <string name="pref_duplicate_pinned_sources_summary">Opakovať pripnuté zdroje v ich príslušných jazykových skupinách</string>
     <string name="source_empty_screen">Nenašiel sa žiadny zdroj</string>
     <string name="download_notifier_split_failed">Stiahnutý obrázok sa nepodarilo rozdeliť</string>
     <string name="channel_progress">Priebeh</string>
@@ -622,7 +619,6 @@
     <string name="tapping_inverted_vertical">Vertikálne</string>
     <string name="backup_restore_missing_trackers">Sledovače, do ktorých nie ste prihlásení:</string>
     <string name="pref_dns_over_https">DNS cez HTTPS (DoH)</string>
-    <string name="pref_duplicate_pinned_sources">Zobraziť duplicitné pripnuté zdroje</string>
     <string name="invalid_backup_file">Neplatný záložný súbor</string>
     <string name="restore_duration">%02d min., %02d s</string>
     <string name="multi_lang">Viacjazyčné</string>

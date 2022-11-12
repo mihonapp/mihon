@@ -424,7 +424,7 @@
         <item quantity="other">소요 시간: %1$s, 발생한 오류: %2$s</item>
     </plurals>
     <string name="notification_updating">서재 업데이트 중… (%1$d/%2$d)</string>
-    <string name="pref_library_update_manga_restriction">만화 업데이트 건너뛰기</string>
+    <string name="pref_library_update_manga_restriction">항목 업데이트 건너뛰기</string>
     <string name="secure_screen_summary">스크린 보안이 활성화될 경우 스크린샷이 비활성화되며 화면 전환 시 내용이 숨겨집니다</string>
     <string name="in_library">서재에 추가됨</string>
     <string name="action_migrate">데이터 이전</string>
@@ -514,7 +514,6 @@
     <string name="manga_info_expand">상세정보 표시</string>
     <string name="manga_info_collapse">상세정보 숨김</string>
     <string name="clipboard_copy_error">클립보드로 복사에 실패하였습니다</string>
-    <string name="tracker_komga_warning">이 트래커는 Komga 소스에만 호환됩니다.</string>
     <plurals name="num_trackers">
         <item quantity="other">%d개의 트래커</item>
     </plurals>
@@ -572,7 +571,6 @@
     <string name="cancelled">취소됨</string>
     <string name="no_chapters_error">검색된 회차가 없습니다</string>
     <string name="source_unsupported">지원되지 않는 소스입니다</string>
-    <string name="download_notifier_download_finish">다운로드 완료</string>
     <string name="spen_previous_page">이전 페이지</string>
     <string name="action_show_manga">항목 표시</string>
     <string name="action_desc">내림차순</string>
@@ -628,7 +626,7 @@
     <string name="track_started_reading_date">읽기 시작한 날짜</string>
     <string name="track_finished_reading_date">다 읽은 날짜</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="other">%d개의 만화</item>
+        <item quantity="other">%d개의 항목</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="other">%1$d개의 새로운 회차</item>
@@ -678,8 +676,6 @@
     <string name="source_filter_empty_screen">설치된 소스를 찾을 수 없습니다</string>
     <string name="action_sort_last_manga_update">마지막 업데이트 확인</string>
     <string name="action_sort_unread_count">읽지 않은 수</string>
-    <string name="pref_duplicate_pinned_sources">중복된 고정 소스 표시</string>
-    <string name="pref_duplicate_pinned_sources_summary">해당 언어 그룹에서 고정된 소스 반복</string>
     <string name="action_close">닫다</string>
     <string name="battery_not_low">배터리가 부족하지 않을 때</string>
     <string name="pref_clear_webview_data">WebView 데이터 지우기</string>
@@ -759,4 +755,10 @@
     <string name="information_no_entries_found">이 카테고리에 항목이 없습니다</string>
     <string name="fdroid_warning">F-Droid 빌드는 공식적으로 지원되지 않습니다.
 \n자세히 알아보려면 탭하세요.</string>
+    <string name="action_display_show_continue_reading_button">계속 읽기 버튼 표시</string>
+    <string name="track_remove_finish_date_conf_text">%s에서 이전에 선택한 완료 날짜가 제거됩니다</string>
+    <string name="pref_invalidate_download_cache">다운로드 캐시 무효화</string>
+    <string name="other_header">기타</string>
+    <string name="track_remove_date_conf_title">날짜를 제거 하시겠습니까\?</string>
+    <string name="track_remove_start_date_conf_text">%s에서 이전에 선택한 시작 날짜가 제거됩니다</string>
 </resources>

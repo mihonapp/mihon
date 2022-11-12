@@ -524,7 +524,6 @@
     <string name="no_pinned_sources">Você não possui fontes fixadas</string>
     <string name="channel_complete">Completo</string>
     <string name="channel_progress">Progresso</string>
-    <string name="download_notifier_download_finish">Transferência concluída</string>
     <string name="channel_errors">Erros</string>
     <string name="backup_restore_missing_trackers">Monitorizadores sem sessão iniciada:</string>
     <string name="pref_remove_bookmarked_chapters">Permitir a eliminação de capítulos marcados</string>
@@ -676,7 +675,6 @@
     <string name="notification_size_warning">Grandes atualizações prejudicam as fontes e podem levar a atualizações lentas e ainda ao aumento do uso da bateria. Toque para saber mais.</string>
     <string name="library_errors_help">Para obter ajuda sobre como corrigir erros de atualização da biblioteca, veja %1$s</string>
     <string name="pref_auto_clear_chapter_cache">Limpar a cache de capítulos ao fechar a app</string>
-    <string name="tracker_komga_warning">Este serviço de monitorização só é compatível com a fonte Komga.</string>
     <string name="pref_update_only_completely_read">Com capítulo(s) não lidos</string>
     <string name="pref_hide_threshold">Sensibilidade para ocultar menu ao deslocar</string>
     <string name="pref_high">Alta</string>
@@ -733,8 +731,6 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="update_check_open">Abrir no GitHub</string>
     <string name="error_saving_picture">Erro ao guardar a imagem</string>
-    <string name="pref_duplicate_pinned_sources">Mostrar fontes fixadas duplicadas</string>
-    <string name="pref_duplicate_pinned_sources_summary">Repita as fontes fixadas nos seus respetivos grupos de idiomas</string>
     <string name="action_sort_last_manga_update">Última mangá atualizada</string>
     <string name="action_sort_unread_count">Contagem de não lidos</string>
     <string name="split_tall_images">Dividir imagens altas</string>

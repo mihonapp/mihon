@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Nome</string>
     <string name="categories">Categorias</string>
-    <string name="manga">Mangás</string>
+    <string name="manga">Itens da biblioteca</string>
     <string name="chapters">Capítulos</string>
     <string name="track">Monitoramento</string>
     <string name="history">Histórico</string>
@@ -235,7 +235,7 @@
     <string name="download_notifier_unknown_error">Não foi possível realizar o download do capítulo devido a um erro inesperado</string>
     <string name="download_notifier_text_only_wifi">Conexão Wi-Fi indisponível</string>
     <string name="download_notifier_no_network">Conexão à rede indisponível</string>
-    <string name="download_notifier_download_paused">Download pausado</string>
+    <string name="download_notifier_download_paused">Downloads pausados</string>
     <string name="action_global_search">Pesquisa global</string>
     <string name="other_source">Outras</string>
     <string name="action_global_search_hint">Pesquisa global…</string>
@@ -492,7 +492,6 @@
         <item quantity="other">%d monitoradores</item>
     </plurals>
     <string name="no_pinned_sources">Você não tem fontes fixadas</string>
-    <string name="download_notifier_download_finish">Download concluído</string>
     <string name="channel_progress">Andamento</string>
     <string name="channel_complete">Concluído</string>
     <string name="channel_errors">Erros</string>
@@ -613,7 +612,6 @@
     <string name="pref_app_theme">Tema do aplicativo</string>
     <string name="enhanced_tracking_info">Serviços que oferecem recursos aprimorados para fontes específicas. Os itens são automaticamente monitorados quando adicionados em sua biblioteca.</string>
     <string name="enhanced_services">Serviços aprimorados</string>
-    <string name="tracker_komga_warning">Este serviço de monitoramento só é compatível com a fonte Komga.</string>
     <string name="theme_monet">Dinâmico</string>
     <string name="label_background_activity">Atividade em segundo plano</string>
     <string name="pref_lowest">Mais baixa</string>
@@ -701,8 +699,6 @@
     <string name="pref_clear_webview_data">Limpar os dados da WebView</string>
     <string name="webview_data_deleted">Dados da WebView limpos</string>
     <string name="action_close">Fechar</string>
-    <string name="pref_duplicate_pinned_sources">Mostrar fontes fixadas duplicadas</string>
-    <string name="pref_duplicate_pinned_sources_summary">Repete as fontes fixadas em seus respectivos grupos de idioma</string>
     <string name="battery_not_low">Quando a bateria não está fraca</string>
     <string name="source_filter_empty_screen">Nenhuma fonte instalada foi encontrada</string>
     <string name="source_empty_screen">Nenhuma fonte encontrada</string>
@@ -754,7 +750,7 @@
         <item quantity="other">Próximos %d capítulos não lidos</item>
     </plurals>
     <string name="are_you_sure">Você tem certeza\?</string>
-    <string name="multi_lang">Múltiplas</string>
+    <string name="multi_lang">Múltiplos</string>
     <string name="pref_long_strip_split">Dividir imagens compridas (BETA)</string>
     <string name="updates_last_update_info">Última atualização da biblioteca: %s</string>
     <string name="remove_manga">Você está prestes a remover \"%s\" de sua biblioteca</string>
@@ -780,9 +776,16 @@
     <string name="error_user_agent_string_invalid">Valor de user agent inválido</string>
     <string name="updates_last_update_info_just_now">Agora</string>
     <string name="download_notifier_cache_renewal">Indexando os downloads</string>
-    <string name="channel_downloader_cache">Cache de downloads</string>
+    <string name="channel_downloader_cache">Indexando</string>
     <string name="action_open_random_manga">Abrir um item aleatório</string>
     <string name="information_no_entries_found">Nenhum item encontrado nesta categoria</string>
     <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente.
 \nToque para saber mais.</string>
+    <string name="action_display_show_continue_reading_button">Mostrar o botão de continuar a leitura</string>
+    <string name="other_header">Outros</string>
+    <string name="track_remove_date_conf_title">Remover data\?</string>
+    <string name="track_remove_start_date_conf_text">Isto irá remover sua data de início selecionada anteriormente no %s</string>
+    <string name="track_remove_finish_date_conf_text">Isto irá remover sua data de término selecionada anteriormente no %s</string>
+    <string name="pref_invalidate_download_cache">Reindexar os downloads</string>
+    <string name="enhanced_tracking_warning">Este monitorador é compatível somente com a fonte %1$s.</string>
 </resources>

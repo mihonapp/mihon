@@ -338,7 +338,7 @@
     <string name="no_results_found">Aucun résultat trouvé</string>
     <string name="migration_selection_prompt">Sélectionnez une source depuis laquelle migrer</string>
     <string name="pref_category_library">Bibliothèque</string>
-    <string name="obsolete_extension_message">Cette extension n’est plus disponible.</string>
+    <string name="obsolete_extension_message">Cette extension n\'est plus disponible. Elle peut ne pas fonctionner correctement et causer des problèmes avec l\'application. Il est recommandé de la désinstaller.</string>
     <string name="pref_date_format">Format de date</string>
     <string name="pref_category_library_update">Mises à jour</string>
     <string name="action_webview_back">Précédent</string>
@@ -398,9 +398,9 @@
     <string name="email">Adresse courriel</string>
     <string name="pref_always_show_chapter_transition">Toujours afficher la transition entre les chapitres</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Pour %d titre</item>
-        <item quantity="many">Pour %d titres</item>
-        <item quantity="other">Pour %d titres</item>
+        <item quantity="one">Pour %d entrée</item>
+        <item quantity="many">Pour %d entrées</item>
+        <item quantity="other">Pour %d entrées</item>
     </plurals>
     <string name="action_menu">Menu</string>
     <string name="action_reorganize_by">Réorganiser</string>
@@ -528,7 +528,6 @@
     <string name="no_pinned_sources">Vous n\'avez aucune source épinglée</string>
     <string name="channel_complete">Compléter</string>
     <string name="channel_progress">Progression</string>
-    <string name="download_notifier_download_finish">Téléchargement terminé</string>
     <string name="channel_errors">Erreurs</string>
     <string name="backup_restore_missing_trackers">Traceurs non connectés :</string>
     <string name="pref_remove_bookmarked_chapters">Permettre la suppression des chapitres marqués d\'un marque-page</string>
@@ -635,7 +634,6 @@
     <string name="information_empty_category_dialog">Vous n\'avez pas encore de catégories.</string>
     <string name="action_start_downloading_now">Commencer à télécharger</string>
     <string name="notification_updating">Mise à jour de la bibliothèque… (%1$d/%2$d)</string>
-    <string name="tracker_komga_warning">Ce traqueur est uniquement compatible avec la source Komga.</string>
     <string name="restore_miui_warning">La sauvegarde/restauration peut ne pas fonctionner correctement si l\'optimisation MIUI est désactivée.</string>
     <string name="enhanced_tracking_info">Services qui fournissent des fonctionnalités améliorées pour des sources spécifiques. Les entrées sont automatiquement suivies lorsqu\'elles sont ajoutées à votre bibliothèque.</string>
     <string name="enhanced_services">Services avancés</string>
@@ -736,8 +734,6 @@
     <string name="webview_data_deleted">Données WebView effacées</string>
     <string name="action_close">Fermer</string>
     <string name="battery_not_low">Quand la batterie n\'est pas faible</string>
-    <string name="pref_duplicate_pinned_sources_summary">Répéter les sources épinglées dans leurs groupes linguistiques respectifs</string>
-    <string name="pref_duplicate_pinned_sources">Afficher les sources épinglées en double</string>
     <string name="source_filter_empty_screen">Aucune source installée trouvée</string>
     <string name="action_sort_last_manga_update">Dernière mise à jour</string>
     <string name="action_sort_unread_count">Nombre de non-lus</string>
@@ -813,4 +809,15 @@
     <string name="error_user_agent_string_invalid">Chaîne d\'agent utilisateur invalide</string>
     <string name="unknown_title">Titre inconnu</string>
     <string name="updates_last_update_info_just_now">À l\'instant</string>
+    <string name="action_open_random_manga">Ouvrir une entrée au hasard</string>
+    <string name="fdroid_warning">Les versions de F-Droid ne sont pas officiellement prises en charge.
+\nAppuyez pour en savoir plus.</string>
+    <string name="information_no_entries_found">Aucune entrée trouvée dans cette catégorie</string>
+    <string name="download_notifier_cache_renewal">Indexation des téléchargements</string>
+    <string name="channel_downloader_cache">Cache de téléchargement</string>
+    <string name="action_display_show_continue_reading_button">Afficher le bouton Continuer la lecture</string>
+    <string name="track_remove_start_date_conf_text">Ceci supprimera la date de début que vous avez précédemment sélectionnée dans la base de données de %s</string>
+    <string name="other_header">Autre</string>
+    <string name="track_remove_date_conf_title">Retirer la date \?</string>
+    <string name="track_remove_finish_date_conf_text">Ceci supprimera la date de fin que vous aviez précédemment sélectionnée dans la base de données de %s</string>
 </resources>

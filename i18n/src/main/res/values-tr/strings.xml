@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Ad</string>
     <string name="categories">Kategoriler</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Kitaplık girdileri</string>
     <string name="chapters">Bölümler</string>
     <string name="track">İzleme</string>
     <string name="history">Geçmiş</string>
@@ -280,7 +280,7 @@
     <string name="download_notifier_unknown_error">Bölüm, beklenmeyen hata sonucu indirilemedi</string>
     <string name="download_notifier_text_only_wifi">Wi-Fi bağlantısı yok</string>
     <string name="download_notifier_no_network">Ağ bağlantısı yok</string>
-    <string name="download_notifier_download_paused">İndirme duraklatıldı</string>
+    <string name="download_notifier_download_paused">İndirmeler duraklatıldı</string>
     <string name="channel_common">Genel</string>
     <string name="transition_finished">Biten:</string>
     <string name="transition_current">Şu anki:</string>
@@ -484,7 +484,6 @@
     <string name="no_pinned_sources">Sabitlenmiş kaynağınız yok</string>
     <string name="channel_complete">Tamamlandı</string>
     <string name="channel_progress">İlerleme</string>
-    <string name="download_notifier_download_finish">İndirme tamamlandı</string>
     <string name="channel_errors">Hatalar</string>
     <string name="backup_restore_missing_trackers">İzleyiciler giriş yapmadı:</string>
     <string name="pref_remove_bookmarked_chapters">İşaretli bölümleri silmeye izin ver</string>
@@ -590,7 +589,6 @@
     <string name="information_empty_category_dialog">Henüz bir kategoriniz yok.</string>
     <string name="action_start_downloading_now">Şimdi indirmeye başla</string>
     <string name="notification_updating">Kitaplık güncelleniyor… (%1$d/%2$d)</string>
-    <string name="tracker_komga_warning">Bu izleyici yalnızca Komga kaynağıyla uyumludur.</string>
     <string name="about_dont_kill_my_app">Bazı üreticilerin arka plan hizmetlerini öldüren ek uygulama kısıtlamaları vardır. Bu web sitesinde nasıl düzeltileceği hakkında daha fazla bilgi al.</string>
     <string name="restore_miui_warning">Yedekleme/geri yükleme, MIUI Optimizasyonu devre dışıysa düzgün çalışmayabilir.</string>
     <string name="enhanced_tracking_info">Belirli kaynaklar için gelişmiş özellikler sağlayan hizmetler. Girdiler, kitaplığınıza eklendiğinde otomatik olarak izlenir.</string>
@@ -689,8 +687,6 @@
     <string name="webview_data_deleted">WebView verileri temizlendi</string>
     <string name="pref_clear_webview_data">WebView verilerini temizle</string>
     <string name="action_close">Kapat</string>
-    <string name="pref_duplicate_pinned_sources">Yinelenen sabitlenmiş kaynakları göster</string>
-    <string name="pref_duplicate_pinned_sources_summary">Sabitlenen kaynakları ilgili dil gruplarında tekrarla</string>
     <string name="battery_not_low">Pil düşük olmadığında</string>
     <string name="source_filter_empty_screen">Kurulu kaynak bulunamadı</string>
     <string name="source_empty_screen">Kaynak bulunamadı</string>
@@ -767,9 +763,16 @@
     <string name="error_user_agent_string_invalid">Geçersiz kullanıcı aracısı dizgesi</string>
     <string name="updates_last_update_info_just_now">Şimdi</string>
     <string name="download_notifier_cache_renewal">İndirilenler dizinleniyor</string>
-    <string name="channel_downloader_cache">İndirme önbelleği</string>
+    <string name="channel_downloader_cache">Dizinleme</string>
     <string name="action_open_random_manga">Rastgele girdi aç</string>
     <string name="information_no_entries_found">Bu kategoride girdi bulunamadı</string>
     <string name="fdroid_warning">F-Droid derlemeleri resmi olarak desteklenmemektedir.
 \nDaha fazla bilgi edinmek için dokunun.</string>
+    <string name="action_display_show_continue_reading_button">Okumaya devam et düğmesini göster</string>
+    <string name="other_header">Diğer</string>
+    <string name="track_remove_date_conf_title">Tarih kaldırılsın mı\?</string>
+    <string name="track_remove_start_date_conf_text">Bu, daha önce seçtiğiniz %s başlangıç tarihini kaldıracak</string>
+    <string name="track_remove_finish_date_conf_text">Bu, daha önce seçtiğiniz %s bitiş tarihini kaldıracak</string>
+    <string name="pref_invalidate_download_cache">İndirmeleri yeniden dizinle</string>
+    <string name="enhanced_tracking_warning">Bu izleyici yalnızca %1$s kaynağı ile uyumludur.</string>
 </resources>

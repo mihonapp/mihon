@@ -257,7 +257,7 @@
     <string name="pref_page_transitions">انمیشن‌های تغییر صفحه</string>
     <string name="pref_fullscreen">تمام صفحه</string>
     <string name="unofficial_extension_message">این افزونه در لیست افزونه‌های رسمی تاچیومی نیست.</string>
-    <string name="obsolete_extension_message">این افزونه دیگر موجود نیست.</string>
+    <string name="obsolete_extension_message">این افزونه دیگر در دسترس نیست. ممکن است به درستی کار نکند و باعث ایجاد مشکلاتی در برنامه شود. حذف نصب آن توصیه می شود.</string>
     <string name="untrusted_extension_message">این افزونه با یک گواهی نامطمئن امضا شده است و فعال نشده است.
 \n
 \nیک افزونه مخرب می تواند هر گونه طلاعات ورود به سیستم ذخیره شده تاچیومی را بخواند یا کدهای دلخواه(احتمالا خطرناک) را اجرا کند.
@@ -458,7 +458,6 @@
     <string name="channel_errors">خطاها</string>
     <string name="channel_complete">تکمیل شده</string>
     <string name="channel_progress">پیشرفت</string>
-    <string name="download_notifier_download_finish">دانلود تکمیل شد</string>
     <string name="download_insufficient_space">به دلیل فضای کم دیسک امکان دانلود قسمت ها وجود ندارد</string>
     <string name="loader_not_implemented_error">منبع یافت نشد</string>
     <plurals name="num_trackers">
@@ -522,11 +521,11 @@
     <string name="nav_zone_right">راست</string>
     <string name="ext_installer_legacy">قدیمی</string>
     <string name="ext_installer_pref">نصب کننده</string>
-    <string name="pref_create_folder_per_manga_summary">ساخت پوشه بر اساس نام مانگا</string>
+    <string name="pref_create_folder_per_manga_summary">ساخت پوشه بر اساس عنوان ورودی</string>
     <string name="action_filter_started">شروع شده</string>
     <string name="ext_update_all">آپدیت همگی</string>
     <string name="label_background_activity">فعالیت در پس زمینه</string>
-    <string name="action_sort_count">کل مانگاها</string>
+    <string name="action_sort_count">مجموع ورودی ها</string>
     <string name="label_default">پیش فرض</string>
     <string name="action_filter_tracked">دنبال شده</string>
     <string name="pref_create_folder_per_manga">ذخیره صفحات در پوشه های جداگانه</string>
@@ -542,14 +541,14 @@
     <string name="getting_started_guide">راهنمای شروع</string>
     <string name="information_empty_category_dialog">شما هنوز هیچ دسته‌بندی ندارید.</string>
     <string name="channel_app_updates">بروزرسانی برنامه</string>
-    <string name="pref_navigate_pan">هدایت به پن</string>
+    <string name="pref_navigate_pan">هنگام ضربه زدن تصاویر را عریض کنید</string>
     <string name="pref_landscape_zoom">بزرگنمایی تصویر چشم انداز</string>
     <string name="update_check_fdroid_migration_info">نسخه جدیدی از نسخه‌های رسمی موجود است. برای یادگیری نحوه انتقال از نسخه‌های غیررسمی اف دروید، ضربه بزنید.</string>
     <string name="channel_skipped">رد شده</string>
-    <string name="action_sort_last_manga_update">آخرین به‌روزرسانی مانگا</string>
+    <string name="action_sort_last_manga_update">بررسی آخرین به روزرسانی</string>
     <string name="action_sort_unread_count">تعداد نخوانده‌ها</string>
     <string name="skipped_reason_completed">به دلیل کامل‌بودن سری، رد شد</string>
-    <string name="action_display_local_badge">مانگای محلی</string>
+    <string name="action_display_local_badge">منبع محلی</string>
     <string name="action_display_show_number_of_items">نمایش تعداد موارد</string>
     <string name="action_desc">نزولی</string>
     <string name="pref_category_appearance">ظاهر</string>
@@ -559,7 +558,7 @@
     <string name="action_asc">صعودی</string>
     <string name="action_display_language_badge">زبان</string>
     <string name="action_faq_and_guides">پرسش و پاسخ‌های متداول و راهنمایی‌ها</string>
-    <string name="action_show_manga">نمایش مانگا</string>
+    <string name="action_show_manga">نمایش ورودی</string>
     <string name="cancel_all_for_series">لغو همه برای این سری</string>
     <string name="pref_dark_theme_pure_black">حالت تاریک مشکی خالص</string>
     <string name="action_close">بستن</string>
@@ -589,7 +588,7 @@
     <string name="pref_library_update_show_tab_badge">تعداد خوانده‌نشده را بر روی آیکون به‌روزرسانی نشان بده</string>
     <string name="pref_library_update_refresh_trackers">ردیاب‌ها را به طور خودکار تازه کن</string>
     <string name="battery_not_low">هنگامی که باتری کم نیست</string>
-    <string name="pref_library_update_manga_restriction">تیترهای در حال به‌روزرسانی را رد کن</string>
+    <string name="pref_library_update_manga_restriction">از به‌روزرسانی ورودی‌ها صرف‌نظر کنید</string>
     <string name="recently">اخیراً</string>
     <string name="relative_time_today">امروز</string>
     <string name="update_72hour">هر 3 روز</string>
@@ -597,7 +596,7 @@
     <string name="pref_library_update_refresh_trackers_summary">به‌روزرسانی ردیاب‌ها هنگام به‌روزرسانی کتابخانه</string>
     <string name="categorized_display_settings">تنظیمات بر اساس دسته‌بندی برای ترتیب و نمایش</string>
     <string name="ext_app_info">اطلاعات برنامه</string>
-    <string name="pref_dual_page_invert">معکوس کردن جای دو صفحه‌ی جدا</string>
+    <string name="pref_dual_page_invert">معکوس کردن جای دو صفحه‌ی تقسیم شده</string>
     <string name="nav_zone_next">بعدی</string>
     <string name="ext_installer_shizuku_stopped">Shizuku در حال اجرا نمی‌باشد</string>
     <string name="pref_show_navigation_mode_summary">یک لحظه هنگام باز شدن متن‌خوان نمایش بده</string>
@@ -611,8 +610,8 @@
     <string name="pref_highest">بالاترین</string>
     <string name="pref_remove_exclude_categories">دسته‌بندی‌های محذوف</string>
     <string name="pref_high">بالا</string>
-    <string name="pref_dual_page_split">دو صفحه جدا</string>
-    <string name="pref_dual_page_invert_summary">اگر قرارگیری دو صفحه‌ی جدا با جهت خوانش تطابق ندارد</string>
+    <string name="pref_dual_page_split">تقسیم صفحات عریض</string>
+    <string name="pref_dual_page_invert_summary">اگر محل قرارگیری صفحات عریض تقسیم شده با حالت خواندن مطابقت نداشته باشد</string>
     <string name="pref_grayscale">سیاه و سفید</string>
     <string name="pref_inverted_colors">معکوس‌شده</string>
     <string name="pref_reader_actions">اقدامات</string>
@@ -638,10 +637,35 @@
     <string name="none">هیچ‌کدام</string>
     <string name="include">شامل: %s</string>
     <string name="exclude">بدون: %s</string>
-    <string name="pref_library_update_categories_details">مانگاهایی که در دسته‌بندی های حذف‌شده هستند، حتی اگر هم‌زمان در دسته‌بندی های مشمول باشند به‌روزرسانی نمی‌شوند.</string>
+    <string name="pref_library_update_categories_details">ورودی هایی که در دسته‌بندی های حذف‌شده هستند، حتی اگر هم‌زمان در دسته‌بندی های مشمول باشند به‌روزرسانی نمی‌شوند.</string>
     <string name="save_chapter_as_cbz">ذخیره به عنوان فایل آرشیو CBZ</string>
     <string name="split_tall_images">نصف کردن خودکار عکس های بلند</string>
     <string name="publishing_finished">انتشار به پایان رسید</string>
     <string name="local_invalid_format">قالب فصل نامعتبر است</string>
     <string name="cancelled">لغو شد</string>
+    <string name="pref_security_summary">قفل برنامه، صفحه امن</string>
+    <string name="pref_advanced_summary">گزارش‌های خرابی، بهینه‌سازی باتری</string>
+    <string name="theme_lavender">ارغوانی</string>
+    <string name="theme_tidalwave">تم جزر و مدی</string>
+    <string name="pref_app_language">زبان برنامه</string>
+    <string name="invalid_location">مکان نامعتبر: %s</string>
+    <string name="pref_download_new_categories_details">ورودی ها در دسته بندی های حذف شده حتی اگر در دسته بندی های در نظر گرفته شده نیز باشند، دانلود نخواهند شد.</string>
+    <string name="pref_general_summary">زبان برنامه، اعلان ها</string>
+    <string name="pref_appearance_summary">قالب تم، تاریخ و زمان</string>
+    <string name="pref_library_summary">دسته‌ها، به روز رسانی سراسری</string>
+    <string name="pref_reader_summary">حالت خواندن، نمایش، نوار وضعیت</string>
+    <string name="pref_tracking_summary">همگام سازی پیشرفت یک طرفه، همگام سازی پیشرفته</string>
+    <string name="multi_lang">چند</string>
+    <string name="delete_category_confirmation">آیا می خواهید دسته \"%s\" را حذف کنید؟</string>
+    <string name="delete_category">حذف دسته</string>
+    <string name="pref_long_strip_split">تقسیم تصاویر بلند (آزمایشی)</string>
+    <string name="download_ahead">بارگیری شود</string>
+    <string name="auto_download_while_reading">دانلود خودکار در حین خواندن</string>
+    <string name="action_search_hint">جستجو…</string>
+    <string name="action_open_random_manga">باز کردن ورودی تصادفی</string>
+    <string name="action_remove_everything">حذف همه‌چیز</string>
+    <string name="internal_error">خطای داخلی: برای اطلاعات بیشتر گزارش خطا را بررسی کنید</string>
+    <string name="pref_downloads_summary">دانلود خودکار، دانلود از قبل</string>
+    <string name="pref_browse_summary">منابع، برنامه های افزودنی، جستجوی سراسری</string>
+    <string name="pref_backup_summary">پشتیبان گیری دستی و خودکار</string>
 </resources>

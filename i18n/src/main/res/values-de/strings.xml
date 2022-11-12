@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Name</string>
     <string name="categories">Kategorien</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Bibliothekseinträge</string>
     <string name="chapters">Kapitel</string>
     <string name="history">Verlauf</string>
     <string name="label_settings">Einstellungen</string>
@@ -233,7 +233,7 @@
     <string name="download_notifier_unknown_error">Kapitel konnte aufgrund eines unerwarteten Fehlers nicht heruntergeladen werden</string>
     <string name="download_notifier_text_only_wifi">Keine WLAN-Verbindung verfügbar</string>
     <string name="download_notifier_no_network">Kein Netzwerk verfügbar</string>
-    <string name="download_notifier_download_paused">Download pausiert</string>
+    <string name="download_notifier_download_paused">Downloads pausiert</string>
     <string name="track">Tracking</string>
     <string name="label_recent_updates">Neues</string>
     <string name="action_global_search">Globale Suche</string>
@@ -412,7 +412,7 @@
     <string name="check_for_updates">Nach Aktualisierungen suchen</string>
     <string name="last_used_source">Zuletzt genutzt</string>
     <string name="local_source_help_guide">Anleitung für lokale Quellen</string>
-    <string name="restore_duration">%02d Min., %02d Sek.</string>
+    <string name="restore_duration">%02d min, %02d s</string>
     <string name="downloaded_only_summary">Filtert alle Einträge in deiner Bibliothek</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s verbleibend</item>
@@ -482,7 +482,6 @@
         <item quantity="other">%d Tracker</item>
     </plurals>
     <string name="no_pinned_sources">Du hast keine angehefteten Quellen</string>
-    <string name="download_notifier_download_finish">Download abgeschlossen</string>
     <string name="channel_complete">Abgeschlossen</string>
     <string name="channel_progress">Fortschritt</string>
     <string name="channel_errors">Fehler</string>
@@ -602,7 +601,6 @@
     <string name="pref_app_theme">App-Design</string>
     <string name="enhanced_services">Erweiterte Anbieter</string>
     <string name="enhanced_tracking_info">Anbieter, die für bestimmte Quellen erweiterte Funktionen anbieten. Einträge werden automatisch getrackt, wenn sie deiner Bibliothek hinzugefügt werden.</string>
-    <string name="tracker_komga_warning">Dieser Tracker ist nur mit der Komga-Quelle kompatibel.</string>
     <string name="theme_monet">Dynamisch</string>
     <string name="label_background_activity">Hintergrundaktivität</string>
     <string name="pref_lowest">Niedrigste</string>
@@ -690,8 +688,6 @@
     <string name="webview_data_deleted">WebView-Daten gelöscht</string>
     <string name="action_close">Schließen</string>
     <string name="battery_not_low">Wenn der Akkustand nicht niedrig ist</string>
-    <string name="pref_duplicate_pinned_sources_summary">Angeheftete Quellen in ihren jeweiligen Sprachgruppen wiederholen</string>
-    <string name="pref_duplicate_pinned_sources">Doppelte angeheftete Quellen anzeigen</string>
     <string name="source_filter_empty_screen">Keine installierte Quelle gefunden</string>
     <string name="source_empty_screen">Keine Quelle gefunden</string>
     <string name="action_sort_unread_count">Ungelesenenanzahl</string>
@@ -766,10 +762,17 @@
     <string name="invalid_location">Ungültiger Speicherort: %s</string>
     <string name="error_user_agent_string_invalid">Ungültiger User-Agent-Text</string>
     <string name="updates_last_update_info_just_now">Gerade eben</string>
-    <string name="channel_downloader_cache">Download-Zwischenspeicher</string>
+    <string name="channel_downloader_cache">Indizierung</string>
     <string name="download_notifier_cache_renewal">Downloads werden indiziert</string>
     <string name="action_open_random_manga">Zufälligen Eintrag öffnen</string>
     <string name="information_no_entries_found">Keine Einträge in dieser Kategorie gefunden</string>
     <string name="fdroid_warning">F-Droid-Builds werden nicht offiziell unterstützt.
 \nTippe, um mehr zu erfahren.</string>
+    <string name="action_display_show_continue_reading_button">Weiterlesen-Button anzeigen</string>
+    <string name="other_header">Andere</string>
+    <string name="pref_invalidate_download_cache">Downloads neu indizieren</string>
+    <string name="track_remove_date_conf_title">Datum entfernen\?</string>
+    <string name="track_remove_start_date_conf_text">Dies wird dein zuvor gewähltes Startdatum von %s entfernen</string>
+    <string name="track_remove_finish_date_conf_text">Dies wird dein zuvor gewähltes Enddatum von %s entfernen</string>
+    <string name="enhanced_tracking_warning">Dieser Tracker ist nur mit der %1$s-Quelle kompatibel.</string>
 </resources>

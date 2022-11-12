@@ -288,7 +288,7 @@
     <string name="download_notifier_unknown_error">No s\'ha pogut baixar el capítol a causa d\'un error inesperat</string>
     <string name="download_notifier_text_only_wifi">No hi ha cap connexió Wi-Fi disponible</string>
     <string name="download_notifier_no_network">No hi ha cap connexió de xarxa disponible</string>
-    <string name="download_notifier_download_paused">Baixada pausada</string>
+    <string name="download_notifier_download_paused">Baixades pausades</string>
     <string name="channel_common">General</string>
     <string name="pref_read_with_long_tap">Mostra amb un toc llarg</string>
     <string name="action_open_in_web_view">Obre en una WebView</string>
@@ -482,7 +482,6 @@
         <item quantity="other">%d seguidors</item>
     </plurals>
     <string name="no_pinned_sources">No teniu cap origen fixat</string>
-    <string name="download_notifier_download_finish">Baixada completada</string>
     <string name="channel_complete">Completada</string>
     <string name="channel_progress">Progrés</string>
     <string name="channel_errors">Errors</string>
@@ -657,7 +656,6 @@
     <string name="pref_verbose_logging_summary">Imprimeix registres detallats al registre del sistema (redueix el rendiment de l\'aplicació)</string>
     <string name="publishing_finished">Publicació finalitzada</string>
     <string name="on_hiatus">En pausa</string>
-    <string name="tracker_komga_warning">Aquest seguidor només és compatible amb la font de Komga.</string>
     <string name="channel_app_updates">Actualitzacions de l\'aplicació</string>
     <string name="action_track">Segueix</string>
     <string name="ext_app_info">Informació de l\'aplicació</string>
@@ -689,8 +687,6 @@
     <string name="pref_clear_webview_data">Neteja les dades del WebView</string>
     <string name="webview_data_deleted">S\'han netejat les dades del WebView</string>
     <string name="action_close">Tanca</string>
-    <string name="pref_duplicate_pinned_sources">Mostra les fonts fixades duplicades</string>
-    <string name="pref_duplicate_pinned_sources_summary">Repeteix les fonts fixades a llurs grups de llengua</string>
     <string name="battery_not_low">Quan la bateria no sigui baixa</string>
     <string name="source_filter_empty_screen">No s\'ha trobat cap font instal·lada</string>
     <string name="source_empty_screen">No s\'ha trobat cap font</string>
@@ -772,4 +768,10 @@
     <string name="fdroid_warning">Les compilacions de F-Droid no tenen assistència oficial.
 \nPremeu per a obtenir-ne més informació.</string>
     <string name="information_no_entries_found">No s\'ha trobat cap element en aquesta categoria</string>
+    <string name="action_display_show_continue_reading_button">Mostra el botó per a continuar llegint</string>
+    <string name="other_header">Altres</string>
+    <string name="pref_invalidate_download_cache">Invalida la memòria cau de baixades</string>
+    <string name="track_remove_finish_date_conf_text">S\'eliminarà la data de finalització seleccionada de %s</string>
+    <string name="track_remove_date_conf_title">Voleu eliminar-ne la data\?</string>
+    <string name="track_remove_start_date_conf_text">S\'eliminarà la data d\'inici seleccionada de %s</string>
 </resources>
