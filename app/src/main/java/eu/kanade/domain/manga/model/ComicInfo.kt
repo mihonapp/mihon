@@ -12,11 +12,11 @@ const val COMIC_INFO_FILE = "ComicInfo.xml"
 /**
  * Creates a ComicInfo instance based on the manga and chapter metadata.
  */
-fun getComicInfo(manga: Manga, chapter: Chapter): ComicInfo {
+fun getComicInfo(manga: Manga, chapter: Chapter, chapterUrl: String): ComicInfo {
     return ComicInfo(
         title = ComicInfo.Title(chapter.name),
         series = ComicInfo.Series(manga.title),
-        web = ComicInfo.Web(manga.url),
+        web = ComicInfo.Web(chapterUrl),
         summary = manga.description?.let { ComicInfo.Summary(it) },
         writer = manga.author?.let { ComicInfo.Writer(it) },
         penciller = manga.artist?.let { ComicInfo.Penciller(it) },

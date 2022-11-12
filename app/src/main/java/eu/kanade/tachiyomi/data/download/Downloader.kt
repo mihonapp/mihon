@@ -537,7 +537,14 @@ class Downloader(
             cache.addChapter(dirname, mangaDir, download.manga)
 
             DiskUtil.createNoMediaFile(tmpDir, context)
-            createComicInfoFile(mangaDir, download.manga, download.chapter.toDomainChapter()!!)
+
+            val chapterUrl = download.source.getChapterUrl(download.chapter)
+            createComicInfoFile(
+                mangaDir,
+                download.manga,
+                download.chapter.toDomainChapter()!!,
+                chapterUrl,
+            )
 
             Download.State.DOWNLOADED
         } else {
@@ -583,19 +590,21 @@ class Downloader(
      * Creates a ComicInfo.xml file inside the given directory.
      *
      * @param dir the directory in which the ComicInfo file will be generated.
-     * @param manga the manga of the chapter to download.
-     * @param chapter the chapter to download
+     * @param manga the manga.
+     * @param chapter the chapter.
+     * @param chapterUrl the resolved URL for the chapter.
      */
     private fun createComicInfoFile(
         dir: UniFile,
         manga: Manga,
         chapter: Chapter,
+        chapterUrl: String,
     ) {
         File("${dir.filePath}/$COMIC_INFO_FILE").outputStream().also {
             // Force overwrite old file
             (it as? FileOutputStream)?.channel?.truncate(0)
         }.use {
-            val comicInfo = getComicInfo(manga, chapter)
+            val comicInfo = getComicInfo(manga, chapter, chapterUrl)
             it.write(xml.encodeToString(ComicInfo.serializer(), comicInfo).toByteArray())
         }
     }
