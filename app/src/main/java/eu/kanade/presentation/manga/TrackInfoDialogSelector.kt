@@ -50,7 +50,7 @@ fun TrackStatusSelector(
 ) {
     BaseSelector(
         contentPadding = contentPadding,
-        title = stringResource(id = R.string.status),
+        title = stringResource(R.string.status),
         content = {
             val state = rememberLazyListState()
             ScrollbarLazyColumn(state = state) {
@@ -100,7 +100,7 @@ fun TrackChapterSelector(
 ) {
     BaseSelector(
         contentPadding = contentPadding,
-        title = stringResource(id = R.string.chapters),
+        title = stringResource(R.string.chapters),
         content = {
             WheelTextPicker(
                 modifier = Modifier.align(Alignment.Center),
@@ -128,7 +128,7 @@ fun TrackScoreSelector(
 ) {
     BaseSelector(
         contentPadding = contentPadding,
-        title = stringResource(id = R.string.score),
+        title = stringResource(R.string.score),
         content = {
             WheelTextPicker(
                 modifier = Modifier.align(Alignment.Center),
@@ -185,7 +185,7 @@ fun TrackDateSelector(
         thirdButton = if (onRemove != null) {
             {
                 TextButton(onClick = onRemove) {
-                    Text(text = stringResource(id = R.string.action_remove))
+                    Text(text = stringResource(R.string.action_remove))
                 }
             }
         } else {
@@ -224,10 +224,10 @@ private fun BaseSelector(
                     Spacer(modifier = Modifier.weight(1f))
                 }
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(id = android.R.string.cancel))
+                    Text(text = stringResource(android.R.string.cancel))
                 }
                 TextButton(onClick = onConfirm) {
-                    Text(text = stringResource(id = android.R.string.ok))
+                    Text(text = stringResource(android.R.string.ok))
                 }
             }
         },

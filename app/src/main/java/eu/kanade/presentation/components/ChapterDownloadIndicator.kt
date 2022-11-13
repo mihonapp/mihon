@@ -95,7 +95,7 @@ private fun NotDownloadedIndicator(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_download_chapter_24dp),
+            painter = painterResource(R.drawable.ic_download_chapter_24dp),
             contentDescription = stringResource(R.string.manga_download),
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,

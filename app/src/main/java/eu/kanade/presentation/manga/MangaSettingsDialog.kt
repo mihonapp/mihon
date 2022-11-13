@@ -208,12 +208,12 @@ private fun SetAsDefaultDialog(
     var optionalChecked by rememberSaveable { mutableStateOf(false) }
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(id = R.string.chapter_settings)) },
+        title = { Text(text = stringResource(R.string.chapter_settings)) },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Text(text = stringResource(id = R.string.confirm_set_chapter_settings))
+                Text(text = stringResource(R.string.confirm_set_chapter_settings))
 
                 Row(
                     modifier = Modifier
@@ -227,13 +227,13 @@ private fun SetAsDefaultDialog(
                         checked = optionalChecked,
                         onCheckedChange = null,
                     )
-                    Text(text = stringResource(id = R.string.also_set_chapter_settings_for_library))
+                    Text(text = stringResource(R.string.also_set_chapter_settings_for_library))
                 }
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(id = android.R.string.cancel))
+                Text(text = stringResource(android.R.string.cancel))
             }
         },
         confirmButton = {
@@ -242,7 +242,7 @@ private fun SetAsDefaultDialog(
                     onConfirmed(optionalChecked)
                 },
             ) {
-                Text(text = stringResource(id = android.R.string.ok))
+                Text(text = stringResource(android.R.string.ok))
             }
         },
     )
@@ -257,7 +257,7 @@ private fun MoreMenu(
         IconButton(onClick = { expanded = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(id = R.string.label_more),
+                contentDescription = stringResource(R.string.label_more),
             )
         }
         DropdownMenu(
@@ -292,17 +292,17 @@ private fun FilterPage(
             .verticalScroll(rememberScrollState()),
     ) {
         FilterPageItem(
-            label = stringResource(id = R.string.action_filter_downloaded),
+            label = stringResource(R.string.action_filter_downloaded),
             state = downloadFilter,
             onClick = onDownloadFilterChanged,
         )
         FilterPageItem(
-            label = stringResource(id = R.string.action_filter_unread),
+            label = stringResource(R.string.action_filter_unread),
             state = unreadFilter,
             onClick = onUnreadFilterChanged,
         )
         FilterPageItem(
-            label = stringResource(id = R.string.action_filter_bookmarked),
+            label = stringResource(R.string.action_filter_bookmarked),
             state = bookmarkedFilter,
             onClick = onBookmarkedFilterChanged,
         )
@@ -372,17 +372,17 @@ private fun SortPage(
         }
 
         SortPageItem(
-            label = stringResource(id = R.string.sort_by_source),
+            label = stringResource(R.string.sort_by_source),
             statusIcon = arrowIcon.takeIf { sortingMode == Manga.CHAPTER_SORTING_SOURCE },
             onClick = { onItemSelected(Manga.CHAPTER_SORTING_SOURCE) },
         )
         SortPageItem(
-            label = stringResource(id = R.string.sort_by_number),
+            label = stringResource(R.string.sort_by_number),
             statusIcon = arrowIcon.takeIf { sortingMode == Manga.CHAPTER_SORTING_NUMBER },
             onClick = { onItemSelected(Manga.CHAPTER_SORTING_NUMBER) },
         )
         SortPageItem(
-            label = stringResource(id = R.string.sort_by_upload_date),
+            label = stringResource(R.string.sort_by_upload_date),
             statusIcon = arrowIcon.takeIf { sortingMode == Manga.CHAPTER_SORTING_UPLOAD_DATE },
             onClick = { onItemSelected(Manga.CHAPTER_SORTING_UPLOAD_DATE) },
         )
@@ -432,12 +432,12 @@ private fun DisplayPage(
             .verticalScroll(rememberScrollState()),
     ) {
         DisplayPageItem(
-            label = stringResource(id = R.string.show_title),
+            label = stringResource(R.string.show_title),
             selected = displayMode == Manga.CHAPTER_DISPLAY_NAME,
             onClick = { onItemSelected(Manga.CHAPTER_DISPLAY_NAME) },
         )
         DisplayPageItem(
-            label = stringResource(id = R.string.show_chapter_number),
+            label = stringResource(R.string.show_chapter_number),
             selected = displayMode == Manga.CHAPTER_DISPLAY_NUMBER,
             onClick = { onItemSelected(Manga.CHAPTER_DISPLAY_NUMBER) },
         )

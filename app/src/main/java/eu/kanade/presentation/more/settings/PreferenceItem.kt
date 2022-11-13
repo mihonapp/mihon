@@ -156,9 +156,7 @@ internal fun PreferenceItem(
                     .collectAsState()
                 item.service.run {
                     TrackingPreferenceWidget(
-                        title = item.title,
-                        logoRes = getLogo(),
-                        logoColor = getLogoColor(),
+                        service = this,
                         checked = uName.isNotEmpty(),
                         onClick = { if (isLogged) item.logout() else item.login() },
                     )

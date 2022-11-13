@@ -23,7 +23,7 @@ fun PreferenceScaffold(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = titleRes)) },
+                title = { Text(text = stringResource(titleRes)) },
                 navigationIcon = {
                     if (onBackPressed != null) {
                         IconButton(onClick = onBackPressed) {

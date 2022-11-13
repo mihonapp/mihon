@@ -244,7 +244,7 @@ class LocalSource(
         val comicInfo = AndroidXmlReader(stream, StandardCharsets.UTF_8.name()).use {
             xml.decodeFromReader<ComicInfo>(it)
         }
-        
+
         manga.copyFromComicInfo(comicInfo)
     }
 

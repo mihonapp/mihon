@@ -427,9 +427,9 @@ private data class TrackDateSelectorScreen(
         TrackDateSelector(
             contentPadding = LocalNavigatorContentPadding.current,
             title = if (start) {
-                stringResource(id = R.string.track_started_reading_date)
+                stringResource(R.string.track_started_reading_date)
             } else {
-                stringResource(id = R.string.track_finished_reading_date)
+                stringResource(R.string.track_finished_reading_date)
             },
             selection = state.selection,
             onSelectionChange = sm::setSelection,
@@ -509,7 +509,7 @@ private data class TrackDateRemoverScreen(
             },
             title = {
                 Text(
-                    text = stringResource(id = R.string.track_remove_date_conf_title),
+                    text = stringResource(R.string.track_remove_date_conf_title),
                     textAlign = TextAlign.Center,
                 )
             },
@@ -517,9 +517,9 @@ private data class TrackDateRemoverScreen(
                 val serviceName = stringResource(sm.getServiceNameRes())
                 Text(
                     text = if (start) {
-                        stringResource(id = R.string.track_remove_start_date_conf_text, serviceName)
+                        stringResource(R.string.track_remove_start_date_conf_text, serviceName)
                     } else {
-                        stringResource(id = R.string.track_remove_finish_date_conf_text, serviceName)
+                        stringResource(R.string.track_remove_finish_date_conf_text, serviceName)
                     },
                 )
             },
@@ -529,7 +529,7 @@ private data class TrackDateRemoverScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                 ) {
                     TextButton(onClick = navigator::pop) {
-                        Text(text = stringResource(id = android.R.string.cancel))
+                        Text(text = stringResource(android.R.string.cancel))
                     }
                     FilledTonalButton(
                         onClick = { sm.removeDate(); navigator.popUntilRoot() },
@@ -538,7 +538,7 @@ private data class TrackDateRemoverScreen(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
                         ),
                     ) {
-                        Text(text = stringResource(id = R.string.action_remove))
+                        Text(text = stringResource(R.string.action_remove))
                     }
                 }
             },

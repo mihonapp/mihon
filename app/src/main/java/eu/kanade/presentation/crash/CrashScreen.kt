@@ -72,7 +72,7 @@ fun CrashScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(text = stringResource(id = R.string.pref_dump_crash_logs))
+                    Text(text = stringResource(R.string.pref_dump_crash_logs))
                 }
                 OutlinedButton(
                     onClick = onRestartClick,
@@ -102,7 +102,7 @@ fun CrashScreen(
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
-                text = stringResource(R.string.crash_screen_description, stringResource(id = R.string.app_name)),
+                text = stringResource(R.string.crash_screen_description, stringResource(R.string.app_name)),
                 modifier = Modifier
                     .padding(vertical = MaterialTheme.padding.small),
             )

@@ -62,7 +62,7 @@ fun SourceIcon(
         }
         else -> {
             Image(
-                painter = painterResource(id = R.mipmap.ic_local_source),
+                painter = painterResource(R.mipmap.ic_local_source),
                 contentDescription = null,
                 modifier = modifier.then(defaultModifier),
             )

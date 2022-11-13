@@ -165,7 +165,7 @@ fun TrackServiceSearch(
                         .fillMaxWidth(),
                     elevation = ButtonDefaults.elevatedButtonElevation(),
                 ) {
-                    Text(text = stringResource(id = R.string.action_track))
+                    Text(text = stringResource(R.string.action_track))
                 }
             }
         },
@@ -206,7 +206,7 @@ fun TrackServiceSearch(
                 EmptyScreen(
                     modifier = Modifier.padding(innerPadding),
                     message = queryResult.exceptionOrNull()?.message
-                        ?: stringResource(id = R.string.unknown_error),
+                        ?: stringResource(R.string.unknown_error),
                 )
             }
         }
@@ -264,19 +264,19 @@ private fun SearchResultItem(
                     )
                     if (type.isNotBlank()) {
                         SearchResultItemDetails(
-                            title = stringResource(id = R.string.track_type),
+                            title = stringResource(R.string.track_type),
                             text = type,
                         )
                     }
                     if (startDate.isNotBlank()) {
                         SearchResultItemDetails(
-                            title = stringResource(id = R.string.track_start_date),
+                            title = stringResource(R.string.track_start_date),
                             text = startDate,
                         )
                     }
                     if (status.isNotBlank()) {
                         SearchResultItemDetails(
-                            title = stringResource(id = R.string.track_status),
+                            title = stringResource(R.string.track_status),
                             text = status,
                         )
                     }
