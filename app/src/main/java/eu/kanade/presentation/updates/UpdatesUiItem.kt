@@ -40,7 +40,7 @@ import eu.kanade.presentation.components.ChapterDownloadIndicator
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.util.ReadItemAlpha
-import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -65,7 +65,7 @@ fun LazyListScope.updatesLastUpdatedItem(
         Box(
             modifier = Modifier
                 .animateItemPlacement()
-                .padding(horizontal = horizontalPadding, vertical = 8.dp),
+                .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         ) {
             Text(
                 text = if (time.isNullOrEmpty()) {
@@ -169,7 +169,7 @@ fun UpdatesUiItem(
                 },
             )
             .height(56.dp)
-            .padding(horizontal = horizontalPadding),
+            .padding(horizontal = MaterialTheme.padding.medium),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         MangaCover.Square(
@@ -181,7 +181,7 @@ fun UpdatesUiItem(
         )
         Column(
             modifier = Modifier
-                .padding(horizontal = horizontalPadding)
+                .padding(horizontal = MaterialTheme.padding.medium)
                 .weight(1f),
         ) {
             val bookmark = remember(update.bookmark) { update.bookmark }

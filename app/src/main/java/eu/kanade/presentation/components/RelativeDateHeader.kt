@@ -8,8 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.util.lang.toRelativeString
 import java.text.DateFormat
 import java.util.Date
@@ -24,7 +23,7 @@ fun RelativeDateHeader(
     val context = LocalContext.current
     Text(
         modifier = modifier
-            .padding(horizontal = horizontalPadding, vertical = 8.dp),
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         text = remember {
             date.toRelativeString(
                 context,

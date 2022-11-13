@@ -14,13 +14,14 @@ import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.kanade.domain.category.model.Category
-import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 
 @Composable
@@ -41,14 +42,18 @@ fun CategoryListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onRename() }
-                .padding(start = horizontalPadding, top = horizontalPadding, end = horizontalPadding),
+                .padding(
+                    start = MaterialTheme.padding.medium,
+                    top = MaterialTheme.padding.medium,
+                    end = MaterialTheme.padding.medium,
+                ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(imageVector = Icons.Outlined.Label, contentDescription = "")
             Text(
                 text = category.name,
                 modifier = Modifier
-                    .padding(start = horizontalPadding),
+                    .padding(start = MaterialTheme.padding.medium),
             )
         }
         Row {

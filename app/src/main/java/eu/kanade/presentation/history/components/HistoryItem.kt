@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.components.MangaCover
-import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import java.text.DecimalFormat
@@ -42,7 +42,7 @@ fun HistoryItem(
         modifier = modifier
             .clickable(onClick = onClickResume)
             .height(HISTORY_ITEM_HEIGHT)
-            .padding(horizontal = horizontalPadding, vertical = 8.dp),
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         MangaCover.Book(
@@ -53,7 +53,7 @@ fun HistoryItem(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = horizontalPadding, end = 8.dp),
+                .padding(start = MaterialTheme.padding.medium, end = MaterialTheme.padding.small),
         ) {
             val textStyle = MaterialTheme.typography.bodyMedium
             Text(

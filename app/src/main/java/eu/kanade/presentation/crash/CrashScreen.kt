@@ -32,8 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.util.horizontalPadding
-import eu.kanade.presentation.util.verticalPadding
+import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import kotlinx.coroutines.launch
@@ -62,8 +61,8 @@ fun CrashScreen(
                         )
                     }
                     .padding(WindowInsets.navigationBars.asPaddingValues())
-                    .padding(horizontal = horizontalPadding, vertical = verticalPadding),
-                verticalArrangement = Arrangement.spacedBy(verticalPadding),
+                    .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             ) {
                 Button(
                     onClick = {
@@ -89,7 +88,7 @@ fun CrashScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
                 .padding(top = 56.dp)
-                .padding(horizontal = horizontalPadding),
+                .padding(horizontal = MaterialTheme.padding.medium),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Icon(
@@ -105,11 +104,11 @@ fun CrashScreen(
             Text(
                 text = stringResource(R.string.crash_screen_description, stringResource(id = R.string.app_name)),
                 modifier = Modifier
-                    .padding(vertical = verticalPadding),
+                    .padding(vertical = MaterialTheme.padding.small),
             )
             Box(
                 modifier = Modifier
-                    .padding(vertical = verticalPadding)
+                    .padding(vertical = MaterialTheme.padding.small)
                     .clip(MaterialTheme.shapes.small)
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surfaceVariant),
@@ -117,7 +116,7 @@ fun CrashScreen(
                 Text(
                     text = exception.toString(),
                     modifier = Modifier
-                        .padding(all = verticalPadding),
+                        .padding(all = MaterialTheme.padding.small),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }

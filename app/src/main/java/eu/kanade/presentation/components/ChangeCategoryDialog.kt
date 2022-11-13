@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.runtime.Composable
@@ -23,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.category.visualName
-import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 
 @Composable
@@ -123,7 +124,7 @@ fun ChangeCategoryDialog(
 
                         Text(
                             text = checkbox.value.visualName,
-                            modifier = Modifier.padding(horizontal = horizontalPadding),
+                            modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
                         )
                     }
                 }

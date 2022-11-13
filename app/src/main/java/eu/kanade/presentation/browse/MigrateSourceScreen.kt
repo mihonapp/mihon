@@ -34,10 +34,10 @@ import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.components.Scroller.STICKY_HEADER_KEY_PREFIX
 import eu.kanade.presentation.theme.header
-import eu.kanade.presentation.util.horizontalPadding
+import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.secondaryItemAlpha
-import eu.kanade.presentation.util.topPaddingValues
+import eu.kanade.presentation.util.topSmallPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrationSourcesPresenter
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -84,13 +84,13 @@ private fun MigrateSourceList(
     onToggleSortingDirection: () -> Unit,
 ) {
     ScrollbarLazyColumn(
-        contentPadding = contentPadding + topPaddingValues,
+        contentPadding = contentPadding + topSmallPaddingValues,
     ) {
         stickyHeader(key = STICKY_HEADER_KEY_PREFIX) {
             Row(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(start = horizontalPadding),
+                    .padding(start = MaterialTheme.padding.medium),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -152,7 +152,7 @@ private fun MigrateSourceItem(
         content = { _, sourceLangString ->
             Column(
                 modifier = Modifier
-                    .padding(horizontal = horizontalPadding)
+                    .padding(horizontal = MaterialTheme.padding.medium)
                     .weight(1f),
             ) {
                 Text(
