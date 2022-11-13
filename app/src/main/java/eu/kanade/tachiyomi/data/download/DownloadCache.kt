@@ -284,10 +284,17 @@ class DownloadCache(
 
                             mangaDirs.values.forEach { mangaDir ->
                                 val chapterDirs = mangaDir.dir.listFiles().orEmpty()
-                                    .mapNotNull { chapterDir ->
-                                        chapterDir.name
-                                            ?.replace(".cbz", "")
-                                            ?.takeUnless { it.endsWith(Downloader.TMP_DIR_SUFFIX) }
+                                    .mapNotNull {
+                                        when {
+                                            // Ignore incomplete downloads
+                                            it.name?.endsWith(Downloader.TMP_DIR_SUFFIX) == true -> null
+                                            // Folder of images
+                                            it.isDirectory -> it.name
+                                            // CBZ files
+                                            it.isFile && it.name?.endsWith(".cbz") == true -> it.name!!.replace(".cbz", "")
+                                            // Anything else is irrelevant
+                                            else -> null
+                                        }
                                     }
                                     .toMutableSet()
 
