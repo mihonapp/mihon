@@ -12,25 +12,54 @@ const val COMIC_INFO_FILE = "ComicInfo.xml"
 /**
  * Creates a ComicInfo instance based on the manga and chapter metadata.
  */
-fun getComicInfo(manga: Manga, chapter: Chapter, chapterUrl: String): ComicInfo {
-    return ComicInfo(
-        title = ComicInfo.Title(chapter.name),
-        series = ComicInfo.Series(manga.title),
-        web = ComicInfo.Web(chapterUrl),
-        summary = manga.description?.let { ComicInfo.Summary(it) },
-        writer = manga.author?.let { ComicInfo.Writer(it) },
-        penciller = manga.artist?.let { ComicInfo.Penciller(it) },
-        translator = chapter.scanlator?.let { ComicInfo.Translator(it) },
-        genre = manga.genre?.let { ComicInfo.Genre(it.joinToString()) },
-        publishingStatusTachiyomi = ComicInfo.PublishingStatusTachiyomi(
-            ComicInfoPublishingStatusMap.toComicInfoValue(manga.status),
-        ),
-        inker = null,
-        colorist = null,
-        letterer = null,
-        coverArtist = null,
-        tags = null,
+fun getComicInfo(manga: Manga, chapter: Chapter, chapterUrl: String) = ComicInfo(
+    title = ComicInfo.Title(chapter.name),
+    series = ComicInfo.Series(manga.title),
+    web = ComicInfo.Web(chapterUrl),
+    summary = manga.description?.let { ComicInfo.Summary(it) },
+    writer = manga.author?.let { ComicInfo.Writer(it) },
+    penciller = manga.artist?.let { ComicInfo.Penciller(it) },
+    translator = chapter.scanlator?.let { ComicInfo.Translator(it) },
+    genre = manga.genre?.let { ComicInfo.Genre(it.joinToString()) },
+    publishingStatus = ComicInfo.PublishingStatusTachiyomi(
+        ComicInfoPublishingStatus.toComicInfoValue(manga.status),
+    ),
+    inker = null,
+    colorist = null,
+    letterer = null,
+    coverArtist = null,
+    tags = null,
+)
+
+fun SManga.copyFromComicInfo(comicInfo: ComicInfo) {
+    comicInfo.series?.let { title = it.value }
+    comicInfo.writer?.let { author = it.value }
+    comicInfo.summary?.let { description = it.value }
+
+    listOfNotNull(
+        comicInfo.genre?.value,
+        comicInfo.tags?.value,
     )
+        .flatMap { it.split(", ") }
+        .distinct()
+        .joinToString(", ") { it.trim() }
+        .takeIf { it.isNotEmpty() }
+        ?.let { genre = it }
+
+    listOfNotNull(
+        comicInfo.penciller?.value,
+        comicInfo.inker?.value,
+        comicInfo.colorist?.value,
+        comicInfo.letterer?.value,
+        comicInfo.coverArtist?.value,
+    )
+        .flatMap { it.split(", ") }
+        .distinct()
+        .joinToString(", ") { it.trim() }
+        .takeIf { it.isNotEmpty() }
+        ?.let { artist = it }
+
+    status = ComicInfoPublishingStatus.toSMangaValue(comicInfo.publishingStatus?.value)
 }
 
 @Serializable
@@ -49,7 +78,7 @@ data class ComicInfo(
     val genre: Genre?,
     val tags: Tags?,
     val web: Web?,
-    val publishingStatusTachiyomi: PublishingStatusTachiyomi?,
+    val publishingStatus: PublishingStatusTachiyomi?,
 ) {
     @Suppress("UNUSED")
     @XmlElement(false)
@@ -119,7 +148,7 @@ data class ComicInfo(
     data class PublishingStatusTachiyomi(@XmlValue(true) val value: String = "")
 }
 
-enum class ComicInfoPublishingStatusMap(
+private enum class ComicInfoPublishingStatus(
     val comicInfoValue: String,
     val sMangaModelValue: Int,
 ) {
@@ -129,17 +158,18 @@ enum class ComicInfoPublishingStatusMap(
     PUBLISHING_FINISHED("Publishing finished", SManga.PUBLISHING_FINISHED),
     CANCELLED("Cancelled", SManga.CANCELLED),
     ON_HIATUS("On hiatus", SManga.ON_HIATUS),
+    UNKNOWN("Unknown", SManga.UNKNOWN),
     ;
 
     companion object {
         fun toComicInfoValue(value: Long): String {
             return values().firstOrNull { it.sMangaModelValue == value.toInt() }?.comicInfoValue
-                ?: "Unknown"
+                ?: UNKNOWN.comicInfoValue
         }
 
         fun toSMangaValue(value: String?): Int {
             return values().firstOrNull { it.comicInfoValue == value }?.sMangaModelValue
-                ?: SManga.UNKNOWN
+                ?: UNKNOWN.sMangaModelValue
         }
     }
 }

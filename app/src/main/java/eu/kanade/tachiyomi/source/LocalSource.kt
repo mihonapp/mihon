@@ -5,7 +5,7 @@ import com.github.junrar.Archive
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.manga.model.COMIC_INFO_FILE
 import eu.kanade.domain.manga.model.ComicInfo
-import eu.kanade.domain.manga.model.ComicInfoPublishingStatusMap
+import eu.kanade.domain.manga.model.copyFromComicInfo
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
@@ -244,35 +244,8 @@ class LocalSource(
         val comicInfo = AndroidXmlReader(stream, StandardCharsets.UTF_8.name()).use {
             xml.decodeFromReader<ComicInfo>(it)
         }
-
-        comicInfo.series?.let { manga.title = it.value }
-        comicInfo.writer?.let { manga.author = it.value }
-        comicInfo.summary?.let { manga.description = it.value }
-
-        listOfNotNull(
-            comicInfo.genre?.value,
-            comicInfo.tags?.value,
-        )
-            .flatMap { it.split(", ") }
-            .distinct()
-            .joinToString(", ") { it.trim() }
-            .takeIf { it.isNotEmpty() }
-            ?.let { manga.genre = it }
-
-        listOfNotNull(
-            comicInfo.penciller?.value,
-            comicInfo.inker?.value,
-            comicInfo.colorist?.value,
-            comicInfo.letterer?.value,
-            comicInfo.coverArtist?.value,
-        )
-            .flatMap { it.split(", ") }
-            .distinct()
-            .joinToString(", ") { it.trim() }
-            .takeIf { it.isNotEmpty() }
-            ?.let { manga.artist = it }
-
-        manga.status = ComicInfoPublishingStatusMap.toSMangaValue(comicInfo.publishingStatusTachiyomi?.value)
+        
+        manga.copyFromComicInfo(comicInfo)
     }
 
     @Serializable
