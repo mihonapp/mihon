@@ -54,6 +54,7 @@ import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.presentation.util.runOnEnterKeyPressed
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.isLTR
 
@@ -108,7 +109,8 @@ class SettingsSearchScreen : Screen {
                                 onValueChange = { textFieldValue = it },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .focusRequester(focusRequester),
+                                    .focusRequester(focusRequester)
+                                    .runOnEnterKeyPressed(action = focusManager::clearFocus),
                                 textStyle = MaterialTheme.typography.bodyLarge
                                     .copy(color = MaterialTheme.colorScheme.onSurface),
                                 singleLine = true,

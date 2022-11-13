@@ -44,6 +44,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import eu.kanade.presentation.util.runOnEnterKeyPressed
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 
@@ -251,25 +252,26 @@ fun SearchToolbar(
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusManager = LocalFocusManager.current
 
+            val searchAndClearFocus: () -> Unit = {
+                onSearch(searchQuery)
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            }
+
             BasicTextField(
                 value = searchQuery,
                 onValueChange = onChangeSearchQuery,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester),
+                    .focusRequester(focusRequester)
+                    .runOnEnterKeyPressed(action = searchAndClearFocus),
                 textStyle = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Normal,
                     fontSize = 18.sp,
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(
-                    onSearch = {
-                        onSearch(searchQuery)
-                        focusManager.clearFocus()
-                        keyboardController?.hide()
-                    },
-                ),
+                keyboardActions = KeyboardActions(onSearch = { searchAndClearFocus() }),
                 singleLine = true,
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
                 visualTransformation = visualTransformation,

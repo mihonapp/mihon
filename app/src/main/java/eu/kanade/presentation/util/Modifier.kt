@@ -10,6 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.layout.LayoutModifier
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.MeasureResult
@@ -41,6 +44,22 @@ fun Modifier.clickableNoIndication(
         onLongClick = onLongClick,
         onClick = onClick,
     )
+}
+
+/**
+ * For TextField, the provided [action] will be invoked when
+ * physical enter key is pressed.
+ *
+ * Naturally, the TextField should be set to single line only.
+ */
+fun Modifier.runOnEnterKeyPressed(action: () -> Unit): Modifier = this.onPreviewKeyEvent {
+    when (it.key) {
+        Key.Enter, Key.NumPadEnter -> {
+            action()
+            true
+        }
+        else -> false
+    }
 }
 
 @Suppress("ModifierInspectorInfo")
