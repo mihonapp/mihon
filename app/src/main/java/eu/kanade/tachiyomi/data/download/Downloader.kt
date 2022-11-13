@@ -10,7 +10,6 @@ import eu.kanade.domain.manga.model.COMIC_INFO_FILE
 import eu.kanade.domain.manga.model.ComicInfo
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.getComicInfo
-import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
@@ -45,7 +44,6 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.util.zip.CRC32
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -71,7 +69,6 @@ class Downloader(
     private val sourceManager: SourceManager = Injekt.get(),
     private val chapterCache: ChapterCache = Injekt.get(),
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
-    private val getTracks: GetTracks = Injekt.get(),
 ) {
 
     /**
@@ -527,6 +524,14 @@ class Downloader(
         // Ensure that the chapter folder has all the images.
         val downloadedImages = tmpDir.listFiles().orEmpty().filterNot { it.name!!.endsWith(".tmp") || (it.name!!.contains("__") && !it.name!!.contains("__001.jpg")) }
 
+        val chapterUrl = download.source.getChapterUrl(download.chapter)
+        createComicInfoFile(
+            tmpDir,
+            download.manga,
+            download.chapter.toDomainChapter()!!,
+            chapterUrl,
+        )
+
         download.status = if (downloadedImages.size == download.pages!!.size) {
             // Only rename the directory if it's downloaded.
             if (downloadPreferences.saveChaptersAsCBZ().get()) {
@@ -537,14 +542,6 @@ class Downloader(
             cache.addChapter(dirname, mangaDir, download.manga)
 
             DiskUtil.createNoMediaFile(tmpDir, context)
-
-            val chapterUrl = download.source.getChapterUrl(download.chapter)
-            createComicInfoFile(
-                mangaDir,
-                download.manga,
-                download.chapter.toDomainChapter()!!,
-                chapterUrl,
-            )
 
             Download.State.DOWNLOADED
         } else {
@@ -600,12 +597,12 @@ class Downloader(
         chapter: Chapter,
         chapterUrl: String,
     ) {
-        File("${dir.filePath}/$COMIC_INFO_FILE").outputStream().also {
-            // Force overwrite old file
-            (it as? FileOutputStream)?.channel?.truncate(0)
-        }.use {
-            val comicInfo = getComicInfo(manga, chapter, chapterUrl)
-            it.write(xml.encodeToString(ComicInfo.serializer(), comicInfo).toByteArray())
+        val comicInfo = getComicInfo(manga, chapter, chapterUrl)
+        val comicInfoString = xml.encodeToString(ComicInfo.serializer(), comicInfo)
+        // Remove the old file
+        dir.findFile(COMIC_INFO_FILE)?.delete()
+        dir.createFile(COMIC_INFO_FILE).openOutputStream().use {
+            it.write(comicInfoString.toByteArray())
         }
     }
 
