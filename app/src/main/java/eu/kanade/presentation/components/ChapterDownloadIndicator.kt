@@ -188,7 +188,7 @@ private fun DownloadedIndicator(
             .size(IconButtonTokens.StateLayerSize)
             .commonClickable(
                 enabled = enabled,
-                onLongClick = { onClick(ChapterDownloadAction.DELETE) },
+                onLongClick = { isMenuExpanded = true },
                 onClick = { isMenuExpanded = true },
             ),
         contentAlignment = Alignment.Center,
