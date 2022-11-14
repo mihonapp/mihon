@@ -8,6 +8,7 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.mapAsCheckboxState
+import eu.kanade.core.util.addOrRemove
 import eu.kanade.data.chapter.NoChaptersException
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
@@ -84,6 +85,7 @@ class MangaInfoScreenModel(
     basePreferences: BasePreferences = Injekt.get(),
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val uiPreferences: UiPreferences = Injekt.get(),
     private val trackManager: TrackManager = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
@@ -120,6 +122,7 @@ class MangaInfoScreenModel(
         get() = successState?.processedChapters
 
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
+    private val selectedChapterIds: HashSet<Long> = HashSet()
 
     /**
      * Helper function to update the UI state only if it's currently in success state
@@ -141,7 +144,6 @@ class MangaInfoScreenModel(
 
     init {
         val toChapterItemsParams: List<Chapter>.(manga: Manga) -> List<ChapterItem> = { manga ->
-            val uiPreferences = Injekt.get<UiPreferences>()
             toChapterItems(
                 context = context,
                 manga = manga,
@@ -529,6 +531,7 @@ class MangaInfoScreenModel(
                         it + 1,
                     )
                 },
+                selected = chapter.id in selectedChapterIds,
             )
         }
     }
@@ -832,51 +835,54 @@ class MangaInfoScreenModel(
     ) {
         updateSuccessState { successState ->
             val newChapters = successState.processedChapters.toMutableList().apply {
-                val modifiedIndex = successState.processedChapters.indexOfFirst { it == item }
-                if (modifiedIndex < 0) return@apply
+                val selectedIndex = successState.processedChapters.indexOfFirst { it.chapter.id == item.chapter.id }
+                if (selectedIndex < 0) return@apply
 
-                val oldItem = get(modifiedIndex)
-                if ((oldItem.selected && selected) || (!oldItem.selected && !selected)) return@apply
+                val selectedItem = get(selectedIndex)
+                if ((selectedItem.selected && selected) || (!selectedItem.selected && !selected)) return@apply
 
                 val firstSelection = none { it.selected }
-                var newItem = removeAt(modifiedIndex)
-                add(modifiedIndex, newItem.copy(selected = selected))
+                set(selectedIndex, selectedItem.copy(selected = selected))
+                selectedChapterIds.addOrRemove(item.chapter.id, selected)
 
                 if (selected && userSelected && fromLongPress) {
                     if (firstSelection) {
-                        selectedPositions[0] = modifiedIndex
-                        selectedPositions[1] = modifiedIndex
+                        selectedPositions[0] = selectedIndex
+                        selectedPositions[1] = selectedIndex
                     } else {
                         // Try to select the items in-between when possible
                         val range: IntRange
-                        if (modifiedIndex < selectedPositions[0]) {
-                            range = modifiedIndex + 1 until selectedPositions[0]
-                            selectedPositions[0] = modifiedIndex
-                        } else if (modifiedIndex > selectedPositions[1]) {
-                            range = (selectedPositions[1] + 1) until modifiedIndex
-                            selectedPositions[1] = modifiedIndex
+                        if (selectedIndex < selectedPositions[0]) {
+                            range = selectedIndex + 1 until selectedPositions[0]
+                            selectedPositions[0] = selectedIndex
+                        } else if (selectedIndex > selectedPositions[1]) {
+                            range = (selectedPositions[1] + 1) until selectedIndex
+                            selectedPositions[1] = selectedIndex
                         } else {
                             // Just select itself
                             range = IntRange.EMPTY
                         }
 
                         range.forEach {
-                            newItem = removeAt(it)
-                            add(it, newItem.copy(selected = true))
+                            val inbetweenItem = get(it)
+                            if (!inbetweenItem.selected) {
+                                selectedChapterIds.add(inbetweenItem.chapter.id)
+                                set(it, inbetweenItem.copy(selected = true))
+                            }
                         }
                     }
                 } else if (userSelected && !fromLongPress) {
                     if (!selected) {
-                        if (modifiedIndex == selectedPositions[0]) {
+                        if (selectedIndex == selectedPositions[0]) {
                             selectedPositions[0] = indexOfFirst { it.selected }
-                        } else if (modifiedIndex == selectedPositions[1]) {
+                        } else if (selectedIndex == selectedPositions[1]) {
                             selectedPositions[1] = indexOfLast { it.selected }
                         }
                     } else {
-                        if (modifiedIndex < selectedPositions[0]) {
-                            selectedPositions[0] = modifiedIndex
-                        } else if (modifiedIndex > selectedPositions[1]) {
-                            selectedPositions[1] = modifiedIndex
+                        if (selectedIndex < selectedPositions[0]) {
+                            selectedPositions[0] = selectedIndex
+                        } else if (selectedIndex > selectedPositions[1]) {
+                            selectedPositions[1] = selectedIndex
                         }
                     }
                 }
@@ -888,6 +894,7 @@ class MangaInfoScreenModel(
     fun toggleAllSelection(selected: Boolean) {
         updateSuccessState { successState ->
             val newChapters = successState.chapters.map {
+                selectedChapterIds.addOrRemove(it.chapter.id, selected)
                 it.copy(selected = selected)
             }
             selectedPositions[0] = -1
@@ -899,6 +906,7 @@ class MangaInfoScreenModel(
     fun invertSelection() {
         updateSuccessState { successState ->
             val newChapters = successState.chapters.map {
+                selectedChapterIds.addOrRemove(it.chapter.id, !it.selected)
                 it.copy(selected = !it.selected)
             }
             selectedPositions[0] = -1

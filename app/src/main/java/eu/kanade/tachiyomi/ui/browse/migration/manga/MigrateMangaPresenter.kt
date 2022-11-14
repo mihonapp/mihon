@@ -31,8 +31,8 @@ class MigrateMangaPresenter(
         presenterScope.launchIO {
             getFavorites
                 .subscribe(sourceId)
-                .catch { exception ->
-                    logcat(LogPriority.ERROR, exception)
+                .catch {
+                    logcat(LogPriority.ERROR, it)
                     _events.send(Event.FailedFetchingFavorites)
                 }
                 .map { list ->

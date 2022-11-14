@@ -32,8 +32,8 @@ class MigrationSourcesPresenter(
     fun onCreate() {
         presenterScope.launchIO {
             getSourcesWithFavoriteCount.subscribe()
-                .catch { exception ->
-                    logcat(LogPriority.ERROR, exception)
+                .catch {
+                    logcat(LogPriority.ERROR, it)
                     _channel.send(Event.FailedFetchingSourcesWithCount)
                 }
                 .collectLatest { sources ->

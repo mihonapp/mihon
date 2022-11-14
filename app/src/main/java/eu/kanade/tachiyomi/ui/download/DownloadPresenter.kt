@@ -35,7 +35,7 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
 
         presenterScope.launch {
             downloadQueue.updatedFlow()
-                .catch { error -> logcat(LogPriority.ERROR, error) }
+                .catch { logcat(LogPriority.ERROR, it) }
                 .map { downloads ->
                     downloads
                         .groupBy { it.source }

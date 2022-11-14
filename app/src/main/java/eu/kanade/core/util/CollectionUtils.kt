@@ -25,3 +25,11 @@ inline fun <K, V, R> Map<out K, V>.mapNotNullKeys(transform: (Map.Entry<K?, V>) 
     forEach { element -> transform(element)?.let { mutableMap[it] = element.value } }
     return mutableMap
 }
+
+fun <E> HashSet<E>.addOrRemove(value: E, shouldAdd: Boolean) {
+    if (shouldAdd) {
+        add(value)
+    } else {
+        remove(value)
+    }
+}
