@@ -247,21 +247,27 @@ class DownloadManager(
             getChaptersToDelete(chapters, manga)
         }
 
-        launchIO {
-            removeFromDownloadQueue(filteredChapters)
+        if (filteredChapters.isNotEmpty()) {
+            launchIO {
+                removeFromDownloadQueue(filteredChapters)
 
-            val chapterDirs = provider.findChapterDirs(filteredChapters, manga, source)
-            chapterDirs.forEach { it.delete() }
-            cache.removeChapters(filteredChapters, manga)
+                val (mangaDir, chapterDirs) = provider.findChapterDirs(filteredChapters, manga, source)
+                chapterDirs.forEach { it.delete() }
+                cache.removeChapters(filteredChapters, manga)
 
-            // Delete manga directory if empty
-            if (cache.getDownloadCount(manga) == 0) {
-                chapterDirs.firstOrNull()?.parentFile?.delete()
-                cache.removeManga(manga)
+                // Delete manga directory if empty
+                if (mangaDir?.listFiles()?.isEmpty() == true) {
+                    mangaDir.delete()
+                    cache.removeManga(manga)
+
+                    // Delete source directory if empty
+                    val sourceDir = provider.findSourceDir(source)
+                    if (sourceDir?.listFiles()?.isEmpty() == true) {
+                        sourceDir.delete()
+                        cache.removeSource(source)
+                    }
+                }
             }
-
-            // Delete source directory if empty
-            cache.removeSourceIfEmpty(source)
         }
 
         return filteredChapters
@@ -334,13 +340,13 @@ class DownloadManager(
         if (capitalizationChanged) {
             val tempName = newName + "_tmp"
             if (oldFolder.renameTo(tempName).not()) {
-                logcat(LogPriority.ERROR) { "Could not rename source download folder: ${oldFolder.name}." }
+                logcat(LogPriority.ERROR) { "Failed to rename source download folder: ${oldFolder.name}." }
                 return
             }
         }
 
         if (oldFolder.renameTo(newName).not()) {
-            logcat(LogPriority.ERROR) { "Could not rename source download folder: ${oldFolder.name}." }
+            logcat(LogPriority.ERROR) { "Failed to rename source download folder: ${oldFolder.name}." }
         }
     }
 

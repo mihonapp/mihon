@@ -8,16 +8,18 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
  * Class used to keep a list of chapters for future deletion.
  *
  * @param context the application context.
  */
-class DownloadPendingDeleter(context: Context) {
-
-    private val json: Json by injectLazy()
+class DownloadPendingDeleter(
+    context: Context,
+    private val json: Json = Injekt.get(),
+) {
 
     /**
      * Preferences used to store the list of chapters to delete.
@@ -121,6 +123,36 @@ class DownloadPendingDeleter(context: Context) {
     }
 
     /**
+     * Returns a manga entry from a manga model.
+     */
+    private fun Manga.toEntry() = MangaEntry(id, url, title, source)
+
+    /**
+     * Returns a chapter entry from a chapter model.
+     */
+    private fun Chapter.toEntry() = ChapterEntry(id, url, name, scanlator)
+
+    /**
+     * Returns a manga model from a manga entry.
+     */
+    private fun MangaEntry.toModel() = Manga.create().copy(
+        url = url,
+        title = title,
+        source = source,
+        id = id,
+    )
+
+    /**
+     * Returns a chapter model from a chapter entry.
+     */
+    private fun ChapterEntry.toModel() = Chapter.create().copy(
+        id = id,
+        url = url,
+        name = name,
+        scanlator = scanlator,
+    )
+
+    /**
      * Class used to save an entry of chapters with their manga into preferences.
      */
     @Serializable
@@ -150,42 +182,4 @@ class DownloadPendingDeleter(context: Context) {
         val title: String,
         val source: Long,
     )
-
-    /**
-     * Returns a manga entry from a manga model.
-     */
-    private fun Manga.toEntry(): MangaEntry {
-        return MangaEntry(id, url, title, source)
-    }
-
-    /**
-     * Returns a chapter entry from a chapter model.
-     */
-    private fun Chapter.toEntry(): ChapterEntry {
-        return ChapterEntry(id!!, url, name, scanlator)
-    }
-
-    /**
-     * Returns a manga model from a manga entry.
-     */
-    private fun MangaEntry.toModel(): Manga {
-        return Manga.create().copy(
-            url = url,
-            title = title,
-            source = source,
-            id = id,
-        )
-    }
-
-    /**
-     * Returns a chapter model from a chapter entry.
-     */
-    private fun ChapterEntry.toModel(): Chapter {
-        return Chapter.create().copy(
-            id = id,
-            url = url,
-            name = name,
-            scanlator = scanlator,
-        )
-    }
 }

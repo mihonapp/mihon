@@ -104,9 +104,9 @@ class DownloadProvider(
      * @param manga the manga of the chapter.
      * @param source the source of the chapter.
      */
-    fun findChapterDirs(chapters: List<Chapter>, manga: Manga, source: Source): List<UniFile> {
-        val mangaDir = findMangaDir(manga.title, source) ?: return emptyList()
-        return chapters.mapNotNull { chapter ->
+    fun findChapterDirs(chapters: List<Chapter>, manga: Manga, source: Source): Pair<UniFile?, List<UniFile>> {
+        val mangaDir = findMangaDir(manga.title, source) ?: return null to emptyList()
+        return mangaDir to chapters.mapNotNull { chapter ->
             getValidChapterDirNames(chapter.name, chapter.scanlator).asSequence()
                 .mapNotNull { mangaDir.findFile(it) }
                 .firstOrNull()

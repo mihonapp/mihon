@@ -214,12 +214,8 @@ class DownloadCache(
     }
 
     @Synchronized
-    fun removeSourceIfEmpty(source: Source) {
-        val sourceDir = provider.findSourceDir(source)
-        if (sourceDir?.listFiles()?.isEmpty() == true) {
-            sourceDir.delete()
-            rootDownloadsDir.sourceDirs -= source.id
-        }
+    fun removeSource(source: Source) {
+        rootDownloadsDir.sourceDirs -= source.id
 
         notifyChanges()
     }
