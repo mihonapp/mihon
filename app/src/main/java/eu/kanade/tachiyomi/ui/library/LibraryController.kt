@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.cancel
 
@@ -193,16 +194,18 @@ class LibraryController(
     }
 
     private fun openManga(mangaId: Long) {
-        // Notify the presenter a manga is being opened.
         presenter.onOpenManga()
-
         router.pushController(MangaController(mangaId))
     }
 
     private fun continueReading(libraryManga: LibraryManga) {
         viewScope.launchIO {
             val chapter = presenter.getNextUnreadChapter(libraryManga.manga)
-            if (chapter != null) openChapter(chapter)
+            if (chapter != null) {
+                openChapter(chapter)
+            } else {
+                withUIContext { activity?.toast(R.string.no_next_chapter) }
+            }
         }
     }
 
