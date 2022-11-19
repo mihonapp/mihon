@@ -47,6 +47,7 @@ import eu.kanade.tachiyomi.util.system.isPreviewBuildType
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.notification
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -167,6 +168,11 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
             crossfade((300 * this@App.animatorDurationScale).toInt())
             allowRgb565(getSystemService<ActivityManager>()!!.isLowRamDevice)
             if (networkPreferences.verboseLogging().get()) logger(DebugLogger())
+
+            // Coil spawns a new thread for every image load by default
+            fetcherDispatcher(Dispatchers.IO.limitedParallelism(8))
+            decoderDispatcher(Dispatchers.IO.limitedParallelism(2))
+            transformationDispatcher(Dispatchers.IO.limitedParallelism(2))
         }.build()
     }
 
