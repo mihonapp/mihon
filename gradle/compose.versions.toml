@@ -1,7 +1,7 @@
 [versions]
-compiler = "1.3.2"
+compiler = "1.4.0-alpha02"
 compose-bom = "2022.11.00"
-accompanist = "0.27.0"
+accompanist = "0.27.1"
 
 [libraries]
 activity = "androidx.activity:activity-compose:1.6.1"
@@ -13,7 +13,7 @@ ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 ui-util = { module = "androidx.compose.ui:ui-util" }
 
 material3-core = { module = "androidx.compose.material3:material3" }
-material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.0.21"
+material3-adapter = "com.google.android.material:compose-theme-adapter-3:1.1.0"
 material-icons = { module = "androidx.compose.material:material-icons-extended" }
 
 # Here until M3's swipeable became public https://issuetracker.google.com/issues/234640556
