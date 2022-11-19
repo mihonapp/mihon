@@ -9,7 +9,7 @@
     <string name="history">Istorija</string>
     <string name="track">Sekimas</string>
     <string name="chapters">Skyriai</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Bibliotekos įrašai</string>
     <string name="categories">Kategorijos</string>
     <string name="information_empty_category">Neturite jokių kategorijų. Paspauskite pliuso simbolį, kad sukurtumėte kategoriją jūsų bibliotekos organizavimui.</string>
     <string name="information_empty_library">Jūsų biblioteka tuščia</string>
@@ -775,7 +775,7 @@
     <string name="popular">Populiaru</string>
     <string name="crash_screen_title">Įvyko netikėta klaida</string>
     <string name="crash_screen_restart_application">Iš naujo paleiskite programą</string>
-    <string name="channel_downloader_cache">Atsisiuntimų talpykla</string>
+    <string name="channel_downloader_cache">Indeksavimas</string>
     <string name="download_notifier_cache_renewal">Indeksuojami atsisiuntimai</string>
     <string name="fdroid_warning">F-Droid versijos oficialiai nepalaikomos.
 \nBakstelėkite, kad sužinotumėte daugiau.</string>
@@ -786,4 +786,6 @@
     <string name="track_remove_finish_date_conf_text">Tai pašalins jūsų anksčiau pasirinktą pabaigos datą iš %s</string>
     <string name="track_remove_date_conf_title">Pašalinti datą\?</string>
     <string name="track_remove_start_date_conf_text">Tai pašalins jūsų anksčiau pasirinktą pradžios datą iš %s</string>
+    <string name="enhanced_tracking_warning">Šis sekimo įrenginys suderinamas tik su %1$s šaltiniu.</string>
+    <string name="pref_invalidate_download_cache">Perindeksuoti atsisiuntimus</string>
 </resources>

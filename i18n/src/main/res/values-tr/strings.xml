@@ -773,6 +773,6 @@
     <string name="track_remove_date_conf_title">Tarih kaldırılsın mı\?</string>
     <string name="track_remove_start_date_conf_text">Bu, daha önce seçtiğiniz %s başlangıç tarihini kaldıracak</string>
     <string name="track_remove_finish_date_conf_text">Bu, daha önce seçtiğiniz %s bitiş tarihini kaldıracak</string>
-    <string name="pref_invalidate_download_cache">İndirmeleri yeniden dizinle</string>
+    <string name="pref_invalidate_download_cache">İndirmeler dizinini geçersiz kıl</string>
     <string name="enhanced_tracking_warning">Bu izleyici yalnızca %1$s kaynağı ile uyumludur.</string>
 </resources>

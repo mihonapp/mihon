@@ -352,9 +352,9 @@
         <item quantity="other">第 %1$s 章及另外 %2$d 章</item>
     </plurals>
     <string name="notification_check_updates">正在检查新章节</string>
-    <string name="pref_disable_battery_optimization">禁用电池优化</string>
+    <string name="pref_disable_battery_optimization">关闭电池优化</string>
     <string name="pref_disable_battery_optimization_summary">有助于后台更新书架和备份</string>
-    <string name="battery_optimization_disabled">电池优化已被禁用</string>
+    <string name="battery_optimization_disabled">电池优化已被关闭</string>
     <string name="email">电子邮件地址</string>
     <string name="pref_always_show_chapter_transition">始终显示章节间的过渡页面</string>
     <plurals name="notification_new_chapters_summary">
@@ -442,13 +442,13 @@
     <string name="badges_header">标记</string>
     <string name="action_display_show_tabs">显示分类标签</string>
     <string name="page_list_empty_error">没有找到页面</string>
-    <string name="action_disable_all">全部禁用</string>
+    <string name="action_disable_all">全部关闭</string>
     <string name="action_enable_all">全部启用</string>
     <string name="pref_show_reading_mode_summary">开始阅读时，短暂显示当前阅读模式</string>
     <string name="pref_show_reading_mode">阅读模式提示</string>
     <string name="action_start">开始阅读</string>
     <string name="loader_not_implemented_error">未找到图源</string>
-    <string name="action_disable">禁用</string>
+    <string name="action_disable">关闭</string>
     <plurals name="manga_num_chapters">
         <item quantity="other">共 %1$s 章</item>
     </plurals>
@@ -553,7 +553,7 @@
     <string name="pref_reader_actions">操作菜单</string>
     <string name="rotation_type">屏幕方向</string>
     <string name="pref_grayscale">灰度</string>
-    <string name="notification_incognito_text">禁用无痕模式</string>
+    <string name="notification_incognito_text">关闭无痕模式</string>
     <string name="automatic_background">自动</string>
     <string name="cancel_all_for_series">取消此作品</string>
     <string name="error_no_match">未找到匹配项</string>
@@ -579,7 +579,7 @@
     <string name="action_start_downloading_now">立即开始下载</string>
     <string name="notification_updating">正在更新书架…（%1$d/%2$d）</string>
     <string name="about_dont_kill_my_app">部分制造商会设置额外的应用限制来杀死后台服务。此网站提供了更多有关修复此问题的信息。</string>
-    <string name="restore_miui_warning">如果 MIUI 优化被禁用，备份/还原可能无法正常工作。</string>
+    <string name="restore_miui_warning">如果 MIUI 优化被关闭，备份/还原可能无法正常工作。</string>
     <string name="pref_dark_theme_pure_black">纯黑深色模式</string>
     <string name="theme_yotsuba">四叶草</string>
     <string name="theme_yinyang">阴阳</string>
@@ -757,7 +757,7 @@
 \n点按了解更多。</string>
     <string name="action_display_show_continue_reading_button">显示继续阅读按钮</string>
     <string name="other_header">其他</string>
-    <string name="pref_invalidate_download_cache">重新建立下载索引</string>
+    <string name="pref_invalidate_download_cache">清除下载索引</string>
     <string name="track_remove_date_conf_title">要删除日期吗？</string>
     <string name="track_remove_start_date_conf_text">将会删除之前在 %s 中标记的开始日期</string>
     <string name="track_remove_finish_date_conf_text">将会删除之前在 %s 中标记的结束日期</string>

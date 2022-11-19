@@ -770,7 +770,7 @@
 \nTippe, um mehr zu erfahren.</string>
     <string name="action_display_show_continue_reading_button">Weiterlesen-Button anzeigen</string>
     <string name="other_header">Andere</string>
-    <string name="pref_invalidate_download_cache">Downloads neu indizieren</string>
+    <string name="pref_invalidate_download_cache">Index der Downloads invalidieren</string>
     <string name="track_remove_date_conf_title">Datum entfernen\?</string>
     <string name="track_remove_start_date_conf_text">Dies wird dein zuvor gewähltes Startdatum von %s entfernen</string>
     <string name="track_remove_finish_date_conf_text">Dies wird dein zuvor gewähltes Enddatum von %s entfernen</string>

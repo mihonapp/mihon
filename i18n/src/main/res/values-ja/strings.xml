@@ -2,7 +2,7 @@
 <resources>
     <string name="name">名前</string>
     <string name="categories">カテゴリー</string>
-    <string name="manga">漫画</string>
+    <string name="manga">ライブラリの項目</string>
     <string name="chapters">章</string>
     <string name="history">履歴</string>
     <string name="label_settings">設定</string>
@@ -749,7 +749,7 @@
     <string name="pref_advanced_summary">クラッシュ ログのダンプ、バッテリーの最適化</string>
     <string name="pref_appearance_summary">テーマ、日付と時刻の形式</string>
     <string name="pref_library_summary">カテゴリ、グローバル アップデート</string>
-    <string name="channel_downloader_cache">ダウンロード キャッシュ</string>
+    <string name="channel_downloader_cache">ダウンロードのインデックス</string>
     <string name="action_open_random_manga">おまかせ閲覧</string>
     <string name="information_no_entries_found">このカテゴリに項目がありません</string>
     <string name="download_notifier_cache_renewal">ダウンロードのインデックスを作成しています</string>
@@ -758,7 +758,8 @@
     <string name="action_display_show_continue_reading_button">続きを読むボタンを表示</string>
     <string name="other_header">その他</string>
     <string name="track_remove_date_conf_title">日付を削除しますか？</string>
-    <string name="pref_invalidate_download_cache">ダウンロードキャッシュを消去</string>
+    <string name="pref_invalidate_download_cache">ダウンロードのインデックスを消去</string>
     <string name="track_remove_finish_date_conf_text">%sで指定された終了日付を消去します</string>
     <string name="track_remove_start_date_conf_text">%sで指定された開始日付を消去します</string>
+    <string name="enhanced_tracking_warning">このトラッカーはソース「%1$s」のみで使用できます。</string>
 </resources>

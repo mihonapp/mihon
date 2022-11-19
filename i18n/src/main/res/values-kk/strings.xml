@@ -10,7 +10,7 @@
     <string name="label_extension_info">Кеңейту ақпары</string>
     <string name="label_help">Көмек</string>
     <string name="categories">Санаттар</string>
-    <string name="manga">Маңга</string>
+    <string name="manga">Кітапхана жазбалары</string>
     <string name="chapters">Тараулар</string>
     <string name="track">Бақылау</string>
     <string name="label_migration">Көшу</string>
@@ -187,7 +187,7 @@
     <string name="pref_manage_notifications">Хабарландыруларды басқару</string>
     <string name="pref_category_security">Қауіпсіздік</string>
     <string name="lock_with_biometrics">Биометриямен бұғаттау</string>
-    <string name="lock_when_idle">Бос режимде блоктау</string>
+    <string name="lock_when_idle">Әрекетсіз болғанда бұғаттау</string>
     <string name="lock_always">Әрдайым</string>
     <string name="lock_never">Ешқашан</string>
     <string name="hide_notification_content">Хабарландыру мазмұның жасыру</string>
@@ -242,7 +242,7 @@
     <string name="pref_show_navigation_mode_summary">Оқыма ашылғаннан кейін қысқаша көрсету</string>
     <string name="pref_dual_page_split">Қең беттерді бөлу</string>
     <string name="pref_show_page_number">Бет нөмірін көрсету</string>
-    <string name="pref_color_filter_mode">Түс фильтрін араластыру режимі</string>
+    <string name="pref_color_filter_mode">Жарықты сүзу режимі</string>
     <string name="pref_update_only_completely_read">Оқылмаған тарау(лар)мен</string>
     <string name="pref_update_only_non_completed">«Аяқталған» күйімен</string>
     <plurals name="num_categories">
@@ -434,7 +434,7 @@
     <string name="pref_dump_crash_logs_summary">Қателіктер тіркеуін әзірлеушілерге жіберу үшін файлға сақтайды</string>
     <string name="pref_disable_battery_optimization_summary">Аялық кітапхананың жаңартуымен және сақтық көшірмесіне көмектеседі</string>
     <string name="battery_optimization_disabled">Баттареяның оңтайландыруы әлдеқашан өшірілу</string>
-    <string name="notification_incognito_text">Инкогнито түрін өшіру</string>
+    <string name="notification_incognito_text">Инкогнито режимін өшіру</string>
     <string name="pref_verbose_logging_summary">Жан-жақты тіркеуді жүйелі тіркеуге жазу (қолданба өнімділігін азайтады)</string>
     <string name="email">Электрондық пошта мекенжайы</string>
     <string name="logout">Шығу</string>
@@ -490,7 +490,7 @@
     <string name="chapter_not_found">Тарау табылмады</string>
     <string name="action_track">Бақылау</string>
     <string name="pref_tablet_ui_mode">Планшетті интерфейс</string>
-    <string name="pref_incognito_mode">Инкогнито түрі</string>
+    <string name="pref_incognito_mode">Инкогнито режимі</string>
     <string name="tabs_header">Қойындылар</string>
     <string name="no_more_results">Басқа нәтиже жоқ</string>
     <string name="username">Пайдаланушының есімі</string>
@@ -731,7 +731,7 @@
     <string name="plan_to_read">Жоспарланған</string>
     <string name="migration_help_guide">Дереккөздерді тасымалдау нұсқаулары</string>
     <string name="download_notifier_text_only_wifi">Wi-Fi байланысы жоқ</string>
-    <string name="download_notifier_download_paused">Жүктеп алу тоқтатылды</string>
+    <string name="download_notifier_download_paused">Жүктеулер тоқтатылды</string>
     <string name="appwidget_unavailable_locked">Биометриялық бұғаттау қосылып тұрғанда виджет қолжетімді емес</string>
     <string name="custom_filter">Жеке сүзгі</string>
     <string name="notification_size_warning">Көп жаңалтулар саны дереккөздер жұмысын баяулата және батарея жұмысын өтімін көбейте алады. Көбірек білу үшін басыңыз.</string>
@@ -767,5 +767,12 @@
     <string name="fdroid_warning">F-Droid құрастыруларына ресми түрде қолдау көрсетілмейді.
 \nТолығырақ білу үшін басыңыз.</string>
     <string name="download_notifier_cache_renewal">Жүктеулерді индекстеу</string>
-    <string name="channel_downloader_cache">Жүктеулер кэші</string>
+    <string name="channel_downloader_cache">Индекстеу</string>
+    <string name="action_display_show_continue_reading_button">«Оқуды жалғастыру» батырмасы</string>
+    <string name="other_header">Басқа</string>
+    <string name="track_remove_finish_date_conf_text">Бұл %s ішінен бұрын таңдалған аяқталу күнін жояды</string>
+    <string name="enhanced_tracking_warning">Бұл бақылау қызметі тек %1$s дереккөзімен үйлесімді.</string>
+    <string name="track_remove_start_date_conf_text">Бұл бұрын таңдалған басталу күнін %s ішінен жояды</string>
+    <string name="track_remove_date_conf_title">Күнің жоямыз ба\?</string>
+    <string name="pref_invalidate_download_cache">Жүктеулер индексін тазалау</string>
 </resources>

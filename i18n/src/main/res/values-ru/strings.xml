@@ -799,6 +799,6 @@
     <string name="track_remove_finish_date_conf_text">Это удалит ранее выбранную дату окончания из %s</string>
     <string name="track_remove_date_conf_title">Удалить дату\?</string>
     <string name="track_remove_start_date_conf_text">Это удалит ранее выбранную дату начала из %s</string>
-    <string name="pref_invalidate_download_cache">Переиндексировать загрузки</string>
+    <string name="pref_invalidate_download_cache">Очистить индекс загрузок</string>
     <string name="enhanced_tracking_warning">Этот сервис отслеживания совместим только с источником %1$s.</string>
 </resources>

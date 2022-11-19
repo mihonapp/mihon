@@ -731,7 +731,7 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="update_check_open">Abrir no GitHub</string>
     <string name="error_saving_picture">Erro ao guardar a imagem</string>
-    <string name="action_sort_last_manga_update">Última mangá atualizada</string>
+    <string name="action_sort_last_manga_update">Último mangá atualizado</string>
     <string name="action_sort_unread_count">Contagem de não lidos</string>
     <string name="split_tall_images">Dividir imagens altas</string>
     <string name="split_tall_images_summary">Melhora o desempenho do leitor</string>
@@ -788,4 +788,10 @@
     <string name="skipped_reason_not_always_update">Ignorado porque a série não requer atualizações</string>
     <string name="action_search_hint">Pesquisar…</string>
     <string name="missing_storage_permission">Permissões de armazenamento não concedidas</string>
+    <string name="action_display_show_continue_reading_button">Exibir botão de \"continuar lendo\"</string>
+    <string name="pref_general_summary">Linguagem do aplicativo, notificações</string>
+    <string name="pref_appearance_summary">Tema, data e formato de hora</string>
+    <string name="pref_library_summary">Categorias, atualização de mangás</string>
+    <string name="pref_reader_summary">Modo leitura, exibir, navegação</string>
+    <string name="action_open_random_manga">Abrir mangá aleatório</string>
 </resources>

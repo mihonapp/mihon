@@ -773,6 +773,6 @@
     <string name="track_remove_date_conf_title">Fjerne dato\?</string>
     <string name="track_remove_start_date_conf_text">Dette vil fjerne den tidligere valgte startdatoen fra %s</string>
     <string name="track_remove_finish_date_conf_text">Dette vil fjerne den tidligere valgte sluttdatoen fra %s</string>
-    <string name="pref_invalidate_download_cache">Reindekser nedlastinger</string>
+    <string name="pref_invalidate_download_cache">Rydd ut nedlastingsindeksen</string>
     <string name="enhanced_tracking_warning">Denne trackeren er kun kompatibel med %1$s-kilden.</string>
 </resources>

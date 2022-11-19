@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Nùmene</string>
     <string name="categories">Categorias</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Elementos de sa biblioteca</string>
     <string name="chapters">Capìtulos</string>
     <string name="track">Arrastamentu</string>
     <string name="history">Cronologia</string>
@@ -289,7 +289,7 @@
     <string name="download_notifier_unknown_error">Iscarrigamentu de su capìtulu fallidu pro more de un\'errore imprevistu</string>
     <string name="download_notifier_text_only_wifi">Peruna connessione Wi-Fi disponìbile</string>
     <string name="download_notifier_no_network">Peruna connessione de retza disponìbile</string>
-    <string name="download_notifier_download_paused">Iscarrigamentu in pàusa</string>
+    <string name="download_notifier_download_paused">Iscarrigamentos in pàusa</string>
     <string name="channel_common">Comunu</string>
     <string name="action_open_in_web_view">Aberi in WebView</string>
     <string name="pref_true_color">Colore a 32 bit</string>
@@ -763,9 +763,16 @@
     <string name="error_user_agent_string_invalid">Istringa de agente de utente non vàlida</string>
     <string name="updates_last_update_info_just_now">Como como</string>
     <string name="download_notifier_cache_renewal">Inditzizende sos iscarrigamentos</string>
-    <string name="channel_downloader_cache">Memòria temporànea de iscarrigamentu</string>
+    <string name="channel_downloader_cache">Inditzizende</string>
     <string name="action_open_random_manga">Aberi un\'elementu a casu</string>
     <string name="information_no_entries_found">Perunu elementu atzapadu in custa categoria</string>
     <string name="fdroid_warning">Sas versiones de F-Droid non sunt prus suportadas in manera ufitziale.
 \nToca pro nde ischire de prus.</string>
+    <string name="action_display_show_continue_reading_button">Ammustra su butone pro sighire a lèghere</string>
+    <string name="other_header">Àteru</string>
+    <string name="track_remove_date_conf_title">Bogare sa data\?</string>
+    <string name="pref_invalidate_download_cache">Invàlida s\'ìnditze de sos iscarrigamentos</string>
+    <string name="enhanced_tracking_warning">Custu arrastadore est cumpatìbile petzi cun sa fonte %1$s.</string>
+    <string name="track_remove_start_date_conf_text">Custu at a bogare sa data de incumintzu seletzionada in antis dae %s</string>
+    <string name="track_remove_finish_date_conf_text">Custu at a bogare sa data de fine seletzionada in antis dae %s</string>
 </resources>

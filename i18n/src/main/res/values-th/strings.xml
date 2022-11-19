@@ -2,7 +2,7 @@
 <resources>
     <string name="name">ชื่อ</string>
     <string name="categories">หมวดหมู่</string>
-    <string name="manga">มังงะ</string>
+    <string name="manga">รายการคลัง</string>
     <string name="chapters">ตอน</string>
     <string name="track">ติดตาม</string>
     <string name="history">ประวัติ</string>
@@ -749,7 +749,7 @@
     <string name="crash_screen_restart_application">เริ่มแอปพลิเคชันใหม่</string>
     <string name="updates_last_update_info_just_now">เมื่อสักครู่</string>
     <string name="error_user_agent_string_invalid">สตริงตัวแทนผู้ใช้ไม่ถูกต้อง</string>
-    <string name="channel_downloader_cache">แคชการดาวน์โหลด</string>
+    <string name="channel_downloader_cache">ทำดัชนี</string>
     <string name="action_open_random_manga">สุ่มเปิดรายการ</string>
     <string name="fdroid_warning">บิลด์ F-Droid ไม่ได้ถูกรองรับอย่างเป็นทางการ
 \nแตะเพื่อเรียนรู้เพิ่มเติม</string>
@@ -757,4 +757,9 @@
     <string name="download_notifier_cache_renewal">กำลังทำดัชนีการดาวน์โหลด</string>
     <string name="action_display_show_continue_reading_button">แสดงปุ่มอ่านต่อ</string>
     <string name="other_header">อื่น ๆ</string>
+    <string name="pref_invalidate_download_cache">ดัชนีการดาวน์โหลดไม่ถูกต้อง</string>
+    <string name="enhanced_tracking_warning">ตัวติดตามนี้ใช้งานได้เฉพาะกับแหล่งที่มา %1$s</string>
+    <string name="track_remove_start_date_conf_text">การกระทำนี้จะเป็นการนำวันที่เริ่มอ่านของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
+    <string name="track_remove_finish_date_conf_text">การกระทำนี้จะเป็นการนำวันที่อ่านจบของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
+    <string name="track_remove_date_conf_title">นำวันที่ออก\?</string>
 </resources>

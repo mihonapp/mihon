@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="categories">類別</string>
-    <string name="manga">漫畫</string>
+    <string name="manga">藏書</string>
     <string name="chapters">章節</string>
     <string name="history">記錄</string>
     <string name="label_settings">設定</string>
@@ -749,7 +749,7 @@
     <string name="unknown_title">未知的標題</string>
     <string name="error_user_agent_string_invalid">無效的使用者代理字串</string>
     <string name="updates_last_update_info_just_now">剛剛</string>
-    <string name="channel_downloader_cache">下載快取</string>
+    <string name="channel_downloader_cache">正在建立索引</string>
     <string name="download_notifier_cache_renewal">正在建立下載索引</string>
     <string name="action_open_random_manga">隨機開卷</string>
     <string name="information_no_entries_found">類別沒有作品</string>
@@ -760,5 +760,6 @@
     <string name="track_remove_date_conf_title">移除日期？</string>
     <string name="track_remove_finish_date_conf_text">從「%s」移除你先前輸入的閱讀完畢日期</string>
     <string name="track_remove_start_date_conf_text">從「%s」移除你先前輸入的開始閱讀日期</string>
-    <string name="pref_invalidate_download_cache">清除下載快取</string>
+    <string name="pref_invalidate_download_cache">重新建立下載索引</string>
+    <string name="enhanced_tracking_warning">該平台僅與來源「%1$s」相容。</string>
 </resources>

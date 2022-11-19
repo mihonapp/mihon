@@ -239,7 +239,7 @@
     <string name="snack_categories_deleted">Catégories supprimées</string>
     <string name="action_undo">Annuler</string>
     <string name="categories">Catégories</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Entrées de la bibliothèque</string>
     <string name="history">Historique</string>
     <string name="app_not_available">Application indisponible</string>
     <string name="update_weekly">Chaque semaine</string>
@@ -814,10 +814,12 @@
 \nAppuyez pour en savoir plus.</string>
     <string name="information_no_entries_found">Aucune entrée trouvée dans cette catégorie</string>
     <string name="download_notifier_cache_renewal">Indexation des téléchargements</string>
-    <string name="channel_downloader_cache">Cache de téléchargement</string>
+    <string name="channel_downloader_cache">Indexation</string>
     <string name="action_display_show_continue_reading_button">Afficher le bouton Continuer la lecture</string>
     <string name="track_remove_start_date_conf_text">Ceci supprimera la date de début que vous avez précédemment sélectionnée dans la base de données de %s</string>
     <string name="other_header">Autre</string>
     <string name="track_remove_date_conf_title">Retirer la date \?</string>
     <string name="track_remove_finish_date_conf_text">Ceci supprimera la date de fin que vous aviez précédemment sélectionnée dans la base de données de %s</string>
+    <string name="pref_invalidate_download_cache">Invalider l\'index des téléchargements</string>
+    <string name="enhanced_tracking_warning">Ce tracker est uniquement compatible avec la source %1$s.</string>
 </resources>

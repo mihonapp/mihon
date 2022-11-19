@@ -2,7 +2,7 @@
 <resources>
     <string name="name">이름</string>
     <string name="categories">카테고리</string>
-    <string name="manga">만화</string>
+    <string name="manga">서재 항목</string>
     <string name="chapters">회차</string>
     <string name="track">동기화</string>
     <string name="label_backup">백업 및 복원</string>
@@ -749,7 +749,7 @@
     <string name="invalid_location">잘못된 위치: %s</string>
     <string name="error_user_agent_string_invalid">잘못된 사용자 에이전트 문자열</string>
     <string name="updates_last_update_info_just_now">방금</string>
-    <string name="channel_downloader_cache">캐시 다운로드</string>
+    <string name="channel_downloader_cache">인덱싱</string>
     <string name="download_notifier_cache_renewal">다운로드 인덱싱</string>
     <string name="action_open_random_manga">무작위 항목 열기</string>
     <string name="information_no_entries_found">이 카테고리에 항목이 없습니다</string>
@@ -757,8 +757,9 @@
 \n자세히 알아보려면 탭하세요.</string>
     <string name="action_display_show_continue_reading_button">계속 읽기 버튼 표시</string>
     <string name="track_remove_finish_date_conf_text">%s에서 이전에 선택한 완료 날짜가 제거됩니다</string>
-    <string name="pref_invalidate_download_cache">다운로드 캐시 무효화</string>
+    <string name="pref_invalidate_download_cache">다운로드 다시 인덱싱</string>
     <string name="other_header">기타</string>
     <string name="track_remove_date_conf_title">날짜를 제거 하시겠습니까\?</string>
     <string name="track_remove_start_date_conf_text">%s에서 이전에 선택한 시작 날짜가 제거됩니다</string>
+    <string name="enhanced_tracking_warning">이 트래커는 %1$s 소스와만 호환됩니다.</string>
 </resources>
