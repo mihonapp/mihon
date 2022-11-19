@@ -490,8 +490,8 @@ class ReaderPresenter(
      * if setting is enabled and [currentChapter] is queued for download
      */
     private fun deleteChapterFromDownloadQueue(currentChapter: ReaderChapter): Download? {
-        return downloadManager.getChapterDownloadOrNull(currentChapter.chapter.toDomainChapter()!!)?.apply {
-            downloadManager.deletePendingDownload(this)
+        return downloadManager.getChapterDownloadOrNull(currentChapter.chapter.toDomainChapter()!!)?.also {
+            downloadManager.deletePendingDownloads(listOf(it))
         }
     }
 

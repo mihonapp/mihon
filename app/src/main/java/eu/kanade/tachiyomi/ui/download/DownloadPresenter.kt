@@ -72,11 +72,7 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
         downloadManager.reorderQueue(downloads)
     }
 
-    fun cancelDownload(download: Download) {
-        downloadManager.deletePendingDownload(download)
-    }
-
     fun cancelDownloads(downloads: List<Download>) {
-        downloadManager.deletePendingDownloads(*downloads.toTypedArray())
+        downloadManager.deletePendingDownloads(downloads)
     }
 }

@@ -214,22 +214,9 @@ class DownloadManager(
         return cache.getDownloadCount(manga)
     }
 
-    /**
-     * Calls delete chapter, which deletes a temp download.
-     *
-     * @param download the download to cancel.
-     */
-    fun deletePendingDownload(download: Download) {
-        deleteChapters(listOf(download.chapter.toDomainChapter()!!), download.manga, download.source, true)
-    }
-
-    fun deletePendingDownloads(vararg downloads: Download) {
-        val downloadsByManga = downloads.groupBy { it.manga.id }
-        downloadsByManga.map { entry ->
-            val manga = entry.value.first().manga
-            val source = entry.value.first().source
-            deleteChapters(entry.value.map { it.chapter.toDomainChapter()!! }, manga, source, true)
-        }
+    fun deletePendingDownloads(downloads: List<Download>) {
+        val domainChapters = downloads.map { it.chapter.toDomainChapter()!! }
+        removeFromDownloadQueue(domainChapters)
     }
 
     /**
@@ -238,14 +225,9 @@ class DownloadManager(
      * @param chapters the list of chapters to delete.
      * @param manga the manga of the chapters.
      * @param source the source of the chapters.
-     * @param isCancelling true if it's simply cancelling a download
      */
-    fun deleteChapters(chapters: List<Chapter>, manga: Manga, source: Source, isCancelling: Boolean = false): List<Chapter> {
-        val filteredChapters = if (isCancelling) {
-            chapters
-        } else {
-            getChaptersToDelete(chapters, manga)
-        }
+    fun deleteChapters(chapters: List<Chapter>, manga: Manga, source: Source) {
+        val filteredChapters = getChaptersToDelete(chapters, manga)
 
         if (filteredChapters.isNotEmpty()) {
             launchIO {
@@ -269,8 +251,6 @@ class DownloadManager(
                 }
             }
         }
-
-        return filteredChapters
     }
 
     private fun removeFromDownloadQueue(chapters: List<Chapter>) {

@@ -658,7 +658,7 @@ class MangaInfoScreenModel(
 
     fun cancelDownload(chapterId: Long) {
         val activeDownload = downloadManager.queue.find { chapterId == it.chapter.id } ?: return
-        downloadManager.deletePendingDownload(activeDownload)
+        downloadManager.deletePendingDownloads(listOf(activeDownload))
         updateDownloadState(activeDownload.apply { status = Download.State.NOT_DOWNLOADED })
     }
 

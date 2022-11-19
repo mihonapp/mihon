@@ -479,7 +479,7 @@ class DownloadController :
                     presenter.reorder(selectedSeries + otherSeries)
                 }
                 R.id.cancel_download -> {
-                    presenter.cancelDownload(item.download)
+                    presenter.cancelDownloads(listOf(item.download))
                 }
                 R.id.cancel_series -> {
                     val allDownloadsForSeries = adapter?.currentItems
