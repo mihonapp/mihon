@@ -13,6 +13,10 @@ import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastMap
 import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.PreferenceMutableState
+import eu.kanade.core.util.fastFilter
+import eu.kanade.core.util.fastFilterNot
+import eu.kanade.core.util.fastMapNotNull
+import eu.kanade.core.util.fastPartition
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
@@ -155,7 +159,7 @@ class LibraryPresenter(
         val filterBookmarked = libraryPreferences.filterBookmarked().get()
         val filterCompleted = libraryPreferences.filterCompleted().get()
 
-        val loggedInTrackServices = trackManager.services.filter { trackService -> trackService.isLogged }
+        val loggedInTrackServices = trackManager.services.fastFilter { trackService -> trackService.isLogged }
             .associate { trackService ->
                 trackService.id to libraryPreferences.filterTracking(trackService.id.toInt()).get()
             }
@@ -230,8 +234,8 @@ class LibraryPresenter(
 
             val mangaTracks = trackMap[item.libraryManga.id].orEmpty()
 
-            val exclude = mangaTracks.filter { it in excludedTracks }
-            val include = mangaTracks.filter { it in includedTracks }
+            val exclude = mangaTracks.fastFilter { it in excludedTracks }
+            val include = mangaTracks.fastFilter { it in includedTracks }
 
             // TODO: Simplify the filter logic
             if (includedTracks.isNotEmpty() && excludedTracks.isNotEmpty()) {
@@ -256,7 +260,7 @@ class LibraryPresenter(
                 )
         }
 
-        return this.mapValues { entry -> entry.value.filter(filterFn) }
+        return this.mapValues { entry -> entry.value.fastFilter(filterFn) }
     }
 
     /**
@@ -355,7 +359,7 @@ class LibraryPresenter(
 
         return combine(getCategories.subscribe(), libraryMangasFlow) { categories, libraryManga ->
             val displayCategories = if (libraryManga.isNotEmpty() && libraryManga.containsKey(0).not()) {
-                categories.filterNot { it.isSystemCategory }
+                categories.fastFilterNot { it.isSystemCategory }
             } else {
                 categories
             }
@@ -418,7 +422,7 @@ class LibraryPresenter(
         presenterScope.launchNonCancellable {
             mangas.forEach { manga ->
                 val chapters = getNextChapters.await(manga.id)
-                    .filterNot { chapter ->
+                    .fastFilterNot { chapter ->
                         downloadManager.queue.any { chapter.id == it.chapter.id } ||
                             downloadManager.isChapterDownloaded(
                                 chapter.name,
@@ -542,12 +546,20 @@ class LibraryPresenter(
 
     @Composable
     fun getMangaForCategory(page: Int): List<LibraryItem> {
-        val unfiltered = remember(categories, loadedManga, page) {
-            val categoryId = categories.getOrNull(page)?.id ?: -1
+        val categoryId = remember(categories, page) {
+            categories.getOrNull(page)?.id ?: -1
+        }
+        val unfiltered = remember(loadedManga, categoryId) {
             loadedManga[categoryId] ?: emptyList()
         }
         return remember(unfiltered, searchQuery) {
-            if (searchQuery.isNullOrBlank()) unfiltered else unfiltered.filter { it.filter(searchQuery!!) }
+            if (searchQuery.isNullOrBlank()) {
+                queriedMangaMap.clear()
+                unfiltered
+            } else {
+                unfiltered.fastFilter { it.matches(searchQuery!!) }
+                    .also { queriedMangaMap[categoryId] = it }
+            }
         }
     }
 
@@ -566,6 +578,20 @@ class LibraryPresenter(
     }
 
     /**
+     * Map is cleared out via [getMangaForCategory] when [searchQuery] is null or blank
+     */
+    private val queriedMangaMap: MutableMap<Long, List<LibraryItem>> = mutableMapOf()
+
+    /**
+     * Used by select all, inverse and range selection.
+     *
+     * If current query is empty then we get manga list from [loadedManga] otherwise from [queriedMangaMap]
+     */
+    private fun getMangaForCategoryWithQuery(categoryId: Long, query: String?): List<LibraryItem> {
+        return if (query.isNullOrBlank()) loadedManga[categoryId].orEmpty() else queriedMangaMap[categoryId].orEmpty()
+    }
+
+    /**
      * Selects all mangas between and including the given manga and the last pressed manga from the
      * same category as the given manga
      */
@@ -576,16 +602,22 @@ class LibraryPresenter(
                 add(manga)
                 return@apply
             }
-            val items = loadedManga[manga.category].orEmpty().apply {
-                if (searchQuery.isNullOrBlank()) toList() else filter { it.filter(searchQuery!!) }
-            }.fastMap { it.libraryManga }
+
+            val items = getMangaForCategoryWithQuery(manga.category, searchQuery)
+                .fastMap { it.libraryManga }
             val lastMangaIndex = items.indexOf(lastSelected)
             val curMangaIndex = items.indexOf(manga)
+
             val selectedIds = fastMap { it.id }
-            val newSelections = when (lastMangaIndex >= curMangaIndex + 1) {
-                true -> items.subList(curMangaIndex, lastMangaIndex)
-                false -> items.subList(lastMangaIndex, curMangaIndex + 1)
-            }.filterNot { it.id in selectedIds }
+            val selectionRange = when {
+                lastMangaIndex < curMangaIndex -> IntRange(lastMangaIndex, curMangaIndex)
+                curMangaIndex < lastMangaIndex -> IntRange(curMangaIndex, lastMangaIndex)
+                // We shouldn't reach this point
+                else -> return@apply
+            }
+            val newSelections = selectionRange.mapNotNull { index ->
+                items[index].takeUnless { it.id in selectedIds }
+            }
             addAll(newSelections)
         }
     }
@@ -593,11 +625,12 @@ class LibraryPresenter(
     fun selectAll(index: Int) {
         state.selection = state.selection.toMutableList().apply {
             val categoryId = categories.getOrNull(index)?.id ?: -1
-            val items = loadedManga[categoryId].orEmpty().apply {
-                if (searchQuery.isNullOrBlank()) toList() else filter { it.filter(searchQuery!!) }
-            }.fastMap { it.libraryManga }
             val selectedIds = fastMap { it.id }
-            val newSelections = items.filterNot { it.id in selectedIds }
+            val newSelections = getMangaForCategoryWithQuery(categoryId, searchQuery)
+                .fastMapNotNull { item ->
+                    item.libraryManga.takeUnless { it.id in selectedIds }
+                }
+
             addAll(newSelections)
         }
     }
@@ -605,11 +638,9 @@ class LibraryPresenter(
     fun invertSelection(index: Int) {
         state.selection = selection.toMutableList().apply {
             val categoryId = categories[index].id
-            val items = loadedManga[categoryId].orEmpty().apply {
-                if (searchQuery.isNullOrBlank()) toList() else filter { it.filter(searchQuery!!) }
-            }.fastMap { it.libraryManga }
+            val items = getMangaForCategoryWithQuery(categoryId, searchQuery).fastMap { it.libraryManga }
             val selectedIds = fastMap { it.id }
-            val (toRemove, toAdd) = items.partition { it.id in selectedIds }
+            val (toRemove, toAdd) = items.fastPartition { it.id in selectedIds }
             val toRemoveIds = toRemove.fastMap { it.id }
             removeAll { it.id in toRemoveIds }
             addAll(toAdd)
