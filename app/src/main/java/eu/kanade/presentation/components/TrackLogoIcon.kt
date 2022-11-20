@@ -13,14 +13,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.util.clickableNoIndication
 import eu.kanade.tachiyomi.data.track.TrackService
 
 @Composable
 fun TrackLogoIcon(
     service: TrackService,
+    onClick: (() -> Unit)? = null,
 ) {
+    val modifier = if (onClick != null) {
+        Modifier.clickableNoIndication(onClick = onClick)
+    } else {
+        Modifier
+    }
+
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(48.dp)
             .background(color = Color(service.getLogoColor()), shape = MaterialTheme.shapes.medium)
             .padding(4.dp),

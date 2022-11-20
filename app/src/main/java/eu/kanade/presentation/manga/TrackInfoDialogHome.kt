@@ -3,6 +3,7 @@ package eu.kanade.presentation.manga
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -43,6 +45,7 @@ import eu.kanade.presentation.components.VerticalDivider
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import java.text.DateFormat
 
 private const val UnsetStatusTextAlpha = 0.5F
@@ -133,16 +136,25 @@ private fun TrackInfoItem(
     onOpenInBrowser: () -> Unit,
     onRemoved: () -> Unit,
 ) {
+    val context = LocalContext.current
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TrackLogoIcon(service)
+            TrackLogoIcon(
+                service = service,
+                onClick = onOpenInBrowser,
+            )
             Box(
                 modifier = Modifier
                     .height(48.dp)
                     .weight(1f)
-                    .clickable(onClick = onNewSearch)
+                    .combinedClickable(
+                        onClick = onNewSearch,
+                        onLongClick = {
+                            context.copyToClipboard(title, title)
+                        },
+                    )
                     .padding(start = 16.dp),
                 contentAlignment = Alignment.CenterStart,
             ) {
