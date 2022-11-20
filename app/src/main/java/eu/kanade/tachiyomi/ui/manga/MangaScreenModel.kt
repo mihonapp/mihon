@@ -46,6 +46,7 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.isLocal
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
@@ -496,14 +497,24 @@ class MangaInfoScreenModel(
         dateRelativeTime: Int,
         dateFormat: DateFormat,
     ): List<ChapterItem> {
+        val isLocal = manga.isLocal()
         return map { chapter ->
-            val activeDownload = downloadManager.queue.find { chapter.id == it.chapter.id }
-            val downloaded = downloadManager.isChapterDownloaded(chapter.name, chapter.scanlator, manga.title, manga.source)
+            val activeDownload = if (isLocal) {
+                null
+            } else {
+                downloadManager.queue.find { chapter.id == it.chapter.id }
+            }
+            val downloaded = if (isLocal) {
+                true
+            } else {
+                downloadManager.isChapterDownloaded(chapter.name, chapter.scanlator, manga.title, manga.source)
+            }
             val downloadState = when {
                 activeDownload != null -> activeDownload.status
                 downloaded -> Download.State.DOWNLOADED
                 else -> Download.State.NOT_DOWNLOADED
             }
+
             ChapterItem(
                 chapter = chapter,
                 downloadState = downloadState,
