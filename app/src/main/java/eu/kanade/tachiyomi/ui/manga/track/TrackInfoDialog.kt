@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -79,7 +78,6 @@ import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 
 data class TrackInfoDialogHomeScreen(
     private val mangaId: Long,
@@ -462,8 +460,8 @@ private data class TrackDateSelectorScreen(
 
         fun setDate() {
             coroutineScope.launchNonCancellable {
-                val millis = state.value.selection.atStartOfDay()
-                    .toInstant(ZoneOffset.UTC)
+                val millis = state.value.selection.atStartOfDay(ZoneId.systemDefault())
+                    .toInstant()
                     .toEpochMilli()
                 if (start) {
                     service.setRemoteStartDate(track, millis)
