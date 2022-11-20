@@ -89,14 +89,14 @@ class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: Att
         }
     }
 
-    inline fun <reified T : Enum<T>> bindToPreference(pref: Preference<T>) {
-        val enumConstants = T::class.java.enumConstants
+    fun <T : Enum<T>> bindToPreference(pref: Preference<T>, clazz: Class<T>) {
+        val enumConstants = clazz.enumConstants
         enumConstants?.indexOf(pref.get())?.let { setSelection(it) }
 
-        val popup = makeSettingsPopup(pref)
-        setOnTouchListener(popup.dragToOpenListener)
+        popup = makeSettingsPopup(pref, clazz)
+        setOnTouchListener(popup?.dragToOpenListener)
         setOnClickListener {
-            popup.show()
+            popup?.show()
         }
     }
 
@@ -111,11 +111,11 @@ class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: Att
         }
     }
 
-    inline fun <reified T : Enum<T>> makeSettingsPopup(preference: Preference<T>): PopupMenu {
+    private fun <T : Enum<T>> makeSettingsPopup(preference: Preference<T>, clazz: Class<T>): PopupMenu {
         return createPopupMenu { pos ->
             onItemSelectedListener?.invoke(pos)
 
-            val enumConstants = T::class.java.enumConstants
+            val enumConstants = clazz.enumConstants
             enumConstants?.get(pos)?.let { enumValue -> preference.set(enumValue) }
         }
     }
