@@ -159,6 +159,7 @@ object Notifications {
                     setName(context.getString(R.string.channel_downloader_cache))
                     setGroup(GROUP_DOWNLOADER)
                     setShowBadge(false)
+                    setSound(null, null)
                 },
                 buildNotificationChannel(CHANNEL_BACKUP_RESTORE_PROGRESS, IMPORTANCE_LOW) {
                     setName(context.getString(R.string.channel_progress))

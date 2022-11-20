@@ -222,6 +222,7 @@ class DownloadCache(
 
     fun invalidateCache() {
         lastRenew = 0L
+        renewalJob?.cancel()
     }
 
     /**
@@ -242,70 +243,67 @@ class DownloadCache(
         }
 
         renewalJob = scope.launchIO {
-            try {
-                notifier.onCacheProgress()
+            notifier.onCacheProgress()
 
-                var sources = getSources()
+            var sources = getSources()
 
-                // Try to wait until extensions and sources have loaded
-                withTimeout(30.seconds) {
-                    while (!extensionManager.isInitialized) {
-                        delay(2.seconds)
-                    }
-
-                    while (sources.isEmpty()) {
-                        delay(2.seconds)
-                        sources = getSources()
-                    }
+            // Try to wait until extensions and sources have loaded
+            withTimeout(30.seconds) {
+                while (!extensionManager.isInitialized) {
+                    delay(2.seconds)
                 }
 
-                val sourceDirs = rootDownloadsDir.dir.listFiles().orEmpty()
-                    .associate { it.name to SourceDirectory(it) }
-                    .mapNotNullKeys { entry ->
-                        sources.find {
-                            provider.getSourceDirName(it).equals(entry.key, ignoreCase = true)
-                        }?.id
-                    }
+                while (sources.isEmpty()) {
+                    delay(2.seconds)
+                    sources = getSources()
+                }
+            }
 
-                rootDownloadsDir.sourceDirs = sourceDirs
+            val sourceDirs = rootDownloadsDir.dir.listFiles().orEmpty()
+                .associate { it.name to SourceDirectory(it) }
+                .mapNotNullKeys { entry ->
+                    sources.find {
+                        provider.getSourceDirName(it).equals(entry.key, ignoreCase = true)
+                    }?.id
+                }
 
-                sourceDirs.values
-                    .map { sourceDir ->
-                        async {
-                            val mangaDirs = sourceDir.dir.listFiles().orEmpty()
-                                .filterNot { it.name.isNullOrBlank() }
-                                .associate { it.name!! to MangaDirectory(it) }
+            rootDownloadsDir.sourceDirs = sourceDirs
 
-                            sourceDir.mangaDirs = ConcurrentHashMap(mangaDirs)
+            sourceDirs.values
+                .map { sourceDir ->
+                    async {
+                        val mangaDirs = sourceDir.dir.listFiles().orEmpty()
+                            .filterNot { it.name.isNullOrBlank() }
+                            .associate { it.name!! to MangaDirectory(it) }
 
-                            mangaDirs.values.forEach { mangaDir ->
-                                val chapterDirs = mangaDir.dir.listFiles().orEmpty()
-                                    .mapNotNull {
-                                        when {
-                                            // Ignore incomplete downloads
-                                            it.name?.endsWith(Downloader.TMP_DIR_SUFFIX) == true -> null
-                                            // Folder of images
-                                            it.isDirectory -> it.name
-                                            // CBZ files
-                                            it.isFile && it.name?.endsWith(".cbz") == true -> it.name!!.replace(".cbz", "")
-                                            // Anything else is irrelevant
-                                            else -> null
-                                        }
+                        sourceDir.mangaDirs = ConcurrentHashMap(mangaDirs)
+
+                        mangaDirs.values.forEach { mangaDir ->
+                            val chapterDirs = mangaDir.dir.listFiles().orEmpty()
+                                .mapNotNull {
+                                    when {
+                                        // Ignore incomplete downloads
+                                        it.name?.endsWith(Downloader.TMP_DIR_SUFFIX) == true -> null
+                                        // Folder of images
+                                        it.isDirectory -> it.name
+                                        // CBZ files
+                                        it.isFile && it.name?.endsWith(".cbz") == true -> it.name!!.replace(".cbz", "")
+                                        // Anything else is irrelevant
+                                        else -> null
                                     }
-                                    .toMutableSet()
+                                }
+                                .toMutableSet()
 
-                                mangaDir.chapterDirs = chapterDirs
-                            }
+                            mangaDir.chapterDirs = chapterDirs
                         }
                     }
-                    .awaitAll()
+                }
+                .awaitAll()
 
-                lastRenew = System.currentTimeMillis()
-                notifyChanges()
-            } finally {
-                notifier.dismissCacheProgress()
-            }
+            lastRenew = System.currentTimeMillis()
+            notifyChanges()
         }
+        renewalJob?.invokeOnCompletion { notifier.dismissCacheProgress() }
     }
 
     private fun getSources(): List<Source> {
