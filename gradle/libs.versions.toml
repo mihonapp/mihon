@@ -36,7 +36,7 @@ unifile = "com.github.tachiyomiorg:unifile:17bec43"
 junrar = "com.github.junrar:junrar:7.5.4"
 
 sqlitektx = "androidx.sqlite:sqlite-ktx:2.3.0-beta02"
-sqlite-android = "com.github.requery:sqlite-android:3.36.0"
+sqlite-android = "com.github.requery:sqlite-android:3.39.2"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.0"
 
