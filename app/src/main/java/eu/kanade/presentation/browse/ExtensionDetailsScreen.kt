@@ -38,19 +38,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import eu.kanade.domain.extension.interactor.ExtensionSourceItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DIVIDER_ALPHA
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.EmptyScreen
-import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.components.WarningBanner
@@ -60,18 +59,22 @@ import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
-import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsPresenter
-import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionSourceItem
+import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsState
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 @Composable
 fun ExtensionDetailsScreen(
     navigateUp: () -> Unit,
-    presenter: ExtensionDetailsPresenter,
+    state: ExtensionDetailsState,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
+    onClickWhatsNew: () -> Unit,
+    onClickReadme: () -> Unit,
+    onClickEnableAll: () -> Unit,
+    onClickDisableAll: () -> Unit,
+    onClickClearCookies: () -> Unit,
+    onClickUninstall: () -> Unit,
+    onClickSource: (sourceId: Long) -> Unit,
 ) {
-    val uriHandler = LocalUriHandler.current
-
     Scaffold(
         topBar = { scrollBehavior ->
             AppBar(
@@ -80,19 +83,19 @@ fun ExtensionDetailsScreen(
                 actions = {
                     AppBarActions(
                         actions = buildList {
-                            if (presenter.extension?.isUnofficial == false) {
+                            if (state.extension?.isUnofficial == false) {
                                 add(
                                     AppBar.Action(
                                         title = stringResource(R.string.whats_new),
                                         icon = Icons.Outlined.History,
-                                        onClick = { uriHandler.openUri(presenter.getChangelogUrl()) },
+                                        onClick = onClickWhatsNew,
                                     ),
                                 )
                                 add(
                                     AppBar.Action(
                                         title = stringResource(R.string.action_faq_and_guides),
                                         icon = Icons.Outlined.HelpOutline,
-                                        onClick = { uriHandler.openUri(presenter.getReadmeUrl()) },
+                                        onClick = onClickReadme,
                                     ),
                                 )
                             }
@@ -100,15 +103,15 @@ fun ExtensionDetailsScreen(
                                 listOf(
                                     AppBar.OverflowAction(
                                         title = stringResource(R.string.action_enable_all),
-                                        onClick = { presenter.toggleSources(true) },
+                                        onClick = onClickEnableAll,
                                     ),
                                     AppBar.OverflowAction(
                                         title = stringResource(R.string.action_disable_all),
-                                        onClick = { presenter.toggleSources(false) },
+                                        onClick = onClickDisableAll,
                                     ),
                                     AppBar.OverflowAction(
                                         title = stringResource(R.string.pref_clear_cookies),
-                                        onClick = { presenter.clearCookies() },
+                                        onClick = onClickClearCookies,
                                     ),
                                 ),
                             )
@@ -119,77 +122,86 @@ fun ExtensionDetailsScreen(
             )
         },
     ) { paddingValues ->
-        ExtensionDetails(paddingValues, presenter, onClickSourcePreferences)
+
+        if (state.extension == null) {
+            EmptyScreen(
+                textResource = R.string.empty_screen,
+                modifier = Modifier.padding(paddingValues),
+            )
+            return@Scaffold
+        }
+
+        ExtensionDetails(
+            contentPadding = paddingValues,
+            extension = state.extension,
+            sources = state.sources,
+            onClickSourcePreferences = onClickSourcePreferences,
+            onClickUninstall = onClickUninstall,
+            onClickSource = onClickSource,
+        )
     }
 }
 
 @Composable
 private fun ExtensionDetails(
     contentPadding: PaddingValues,
-    presenter: ExtensionDetailsPresenter,
+    extension: Extension.Installed,
+    sources: List<ExtensionSourceItem>,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
+    onClickUninstall: () -> Unit,
+    onClickSource: (sourceId: Long) -> Unit,
 ) {
-    when {
-        presenter.isLoading -> LoadingScreen()
-        presenter.extension == null -> EmptyScreen(
-            textResource = R.string.empty_screen,
-            modifier = Modifier.padding(contentPadding),
-        )
-        else -> {
-            val context = LocalContext.current
-            val extension = presenter.extension
-            var showNsfwWarning by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    var showNsfwWarning by remember { mutableStateOf(false) }
 
-            ScrollbarLazyColumn(
-                contentPadding = contentPadding,
-            ) {
-                when {
-                    extension.isUnofficial ->
-                        item {
-                            WarningBanner(R.string.unofficial_extension_message)
-                        }
-                    extension.isObsolete ->
-                        item {
-                            WarningBanner(R.string.obsolete_extension_message)
-                        }
-                }
-
+    ScrollbarLazyColumn(
+        contentPadding = contentPadding,
+    ) {
+        when {
+            extension.isUnofficial ->
                 item {
-                    DetailsHeader(
-                        extension = extension,
-                        onClickUninstall = { presenter.uninstallExtension() },
-                        onClickAppInfo = {
-                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                data = Uri.fromParts("package", extension.pkgName, null)
-                                context.startActivity(this)
-                            }
-                        },
-                        onClickAgeRating = {
-                            showNsfwWarning = true
-                        },
-                    )
+                    WarningBanner(R.string.unofficial_extension_message)
                 }
-
-                items(
-                    items = presenter.sources,
-                    key = { it.source.id },
-                ) { source ->
-                    SourceSwitchPreference(
-                        modifier = Modifier.animateItemPlacement(),
-                        source = source,
-                        onClickSourcePreferences = onClickSourcePreferences,
-                        onClickSource = { presenter.toggleSource(it) },
-                    )
+            extension.isObsolete ->
+                item {
+                    WarningBanner(R.string.obsolete_extension_message)
                 }
-            }
-            if (showNsfwWarning) {
-                NsfwWarningDialog(
-                    onClickConfirm = {
-                        showNsfwWarning = false
-                    },
-                )
-            }
         }
+
+        item {
+            DetailsHeader(
+                extension = extension,
+                onClickUninstall = onClickUninstall,
+                onClickAppInfo = {
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", extension.pkgName, null)
+                        context.startActivity(this)
+                    }
+                },
+                onClickAgeRating = {
+                    showNsfwWarning = true
+                },
+            )
+        }
+
+        items(
+            items = sources,
+            key = { it.source.id },
+        ) { source ->
+            SourceSwitchPreference(
+                modifier = Modifier.animateItemPlacement(),
+                source = source,
+                onClickSourcePreferences = onClickSourcePreferences,
+                onClickSource = onClickSource,
+            )
+        }
+    }
+    if (showNsfwWarning) {
+        NsfwWarningDialog(
+            onClickConfirm = {
+                showNsfwWarning = false
+            },
+        )
     }
 }
 

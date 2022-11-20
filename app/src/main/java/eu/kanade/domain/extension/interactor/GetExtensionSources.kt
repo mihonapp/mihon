@@ -3,7 +3,6 @@ package eu.kanade.domain.extension.interactor
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionSourceItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -30,3 +29,9 @@ class GetExtensionSources(
         }
     }
 }
+
+data class ExtensionSourceItem(
+    val source: Source,
+    val enabled: Boolean,
+    val labelAsName: Boolean,
+)
