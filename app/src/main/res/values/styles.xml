@@ -152,24 +152,6 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <!--================-->
-    <!--Shape Appearance-->
-    <!--================-->
-    <style name="ShapeAppearanceOverlay.MaterialCardView.Tracker" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">8dp</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay.Cover" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">@dimen/card_radius</item>
-    </style>
-
-    <style name="Animation.Tachiyomi.Dialog" parent="Animation.AppCompat.Dialog">
-        <item name="android:windowEnterAnimation">@anim/fade_in_short</item>
-        <item name="android:windowExitAnimation">@anim/fade_out_short</item>
-    </style>
-
     <!--===========-->
     <!--Preferences-->
     <!--===========-->
