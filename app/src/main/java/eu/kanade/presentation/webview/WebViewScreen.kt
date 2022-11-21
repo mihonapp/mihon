@@ -4,6 +4,7 @@ import android.content.pm.ApplicationInfo
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -125,7 +126,9 @@ fun WebViewScreen(
 
         WebView(
             state = state,
-            modifier = Modifier.padding(contentPadding),
+            modifier = Modifier
+                .padding(contentPadding)
+                .fillMaxSize(),
             navigator = navigator,
             onCreated = { webView ->
                 webView.setDefaultSettings()
