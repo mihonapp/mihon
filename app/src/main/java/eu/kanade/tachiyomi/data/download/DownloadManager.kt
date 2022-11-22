@@ -239,16 +239,29 @@ class DownloadManager(
 
                 // Delete manga directory if empty
                 if (mangaDir?.listFiles()?.isEmpty() == true) {
-                    mangaDir.delete()
-                    cache.removeManga(manga)
-
-                    // Delete source directory if empty
-                    val sourceDir = provider.findSourceDir(source)
-                    if (sourceDir?.listFiles()?.isEmpty() == true) {
-                        sourceDir.delete()
-                        cache.removeSource(source)
-                    }
+                    deleteManga(manga, source)
                 }
+            }
+        }
+    }
+
+    /**
+     * Deletes the directory of a downloaded manga.
+     *
+     * @param manga the manga to delete.
+     * @param source the source of the manga.
+     */
+    fun deleteManga(manga: Manga, source: Source) {
+        launchIO {
+            downloader.queue.remove(manga)
+            provider.findMangaDir(manga.title, source)?.delete()
+            cache.removeManga(manga)
+
+            // Delete source directory if empty
+            val sourceDir = provider.findSourceDir(source)
+            if (sourceDir?.listFiles()?.isEmpty() == true) {
+                sourceDir.delete()
+                cache.removeSource(source)
             }
         }
     }
@@ -268,20 +281,6 @@ class DownloadManager(
             } else if (downloader.queue.isNotEmpty()) {
                 downloader.start()
             }
-        }
-    }
-
-    /**
-     * Deletes the directory of a downloaded manga.
-     *
-     * @param manga the manga to delete.
-     * @param source the source of the manga.
-     */
-    fun deleteManga(manga: Manga, source: Source) {
-        launchIO {
-            downloader.queue.remove(manga)
-            provider.findMangaDir(manga.title, source)?.delete()
-            cache.removeManga(manga)
         }
     }
 
