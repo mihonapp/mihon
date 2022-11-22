@@ -61,6 +61,7 @@ import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 
@@ -101,6 +102,7 @@ class MangaScreen(
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             },
             onWebViewClicked = { openMangaInWebView(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
+            onWebViewLongClicked = { copyMangaUrl(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onTrackingClicked = screenModel::showTrackDialog.takeIf { successState.trackingAvailable },
             onTagClicked = { performGenreSearch(router, it, screenModel.source!!) },
             onFilterButtonClicked = screenModel::showSettingsDialog,
@@ -325,5 +327,15 @@ class MangaScreen(
     private fun migrateManga(router: Router, manga: Manga) {
         val controller = SearchController(manga)
         router.pushController(controller)
+    }
+
+    /**
+     * Copy Manga URL to Clipboard
+     */
+    private fun copyMangaUrl(context: Context, manga_: Manga?, source_: Source?) {
+        val manga = manga_ ?: return
+        val source = source_ as? HttpSource ?: return
+        val url = source.getMangaUrl(manga.toSManga())
+        context.copyToClipboard(url, url)
     }
 }

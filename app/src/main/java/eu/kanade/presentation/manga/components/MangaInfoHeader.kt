@@ -162,6 +162,7 @@ fun MangaActionRow(
     trackingCount: Int,
     onAddToLibraryClicked: () -> Unit,
     onWebViewClicked: (() -> Unit)?,
+    onWebViewLongClicked: (() -> Unit)?,
     onTrackingClicked: (() -> Unit)?,
     onEditCategory: (() -> Unit)?,
 ) {
@@ -196,6 +197,7 @@ fun MangaActionRow(
                 icon = Icons.Outlined.Public,
                 color = defaultActionButtonColor,
                 onClick = onWebViewClicked,
+                onLongClick = onWebViewLongClicked,
             )
         }
     }
