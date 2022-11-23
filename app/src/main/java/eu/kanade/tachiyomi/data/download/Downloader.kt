@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.storage.DiskUtil
+import eu.kanade.tachiyomi.util.storage.DiskUtil.NOMEDIA_FILE
 import eu.kanade.tachiyomi.util.storage.saveTo
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.system.logcat
@@ -389,7 +390,7 @@ class Downloader(
         tmpFile?.delete()
 
         // Try to find the image file.
-        val imageFile = tmpDir.listFiles()!!.find { it.name!!.startsWith("$filename.") || it.name!!.contains("${filename}__001") }
+        val imageFile = tmpDir.listFiles()?.firstOrNull { it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001") }
 
         // If the image is already downloaded, do nothing. Otherwise download from network
         val pageObservable = when {
@@ -496,8 +497,8 @@ class Downloader(
         val imageFile = tmpDir.listFiles()?.firstOrNull { it.name.orEmpty().startsWith(filenamePrefix) }
             ?: throw Error(context.getString(R.string.download_notifier_split_page_not_found, page.number))
 
-        // check if the original page was previously splitted before then skip.
-        if (imageFile.name!!.contains("__")) return true
+        // Check if the original page was previously splitted before then skip.
+        if (imageFile.name.orEmpty().startsWith("${filenamePrefix}__")) return true
 
         return try {
             ImageUtil.splitTallImage(tmpDir, imageFile, filenamePrefix)
@@ -521,18 +522,30 @@ class Downloader(
         tmpDir: UniFile,
         dirname: String,
     ) {
-        // Ensure that the chapter folder has all the images.
-        val downloadedImages = tmpDir.listFiles().orEmpty().filterNot { it.name!!.endsWith(".tmp") || (it.name!!.contains("__") && !it.name!!.contains("__001.jpg")) }
+        // Page list hasn't been initialized
+        val downloadPageCount = download.pages?.size ?: return
+        // Ensure that all pages has been downloaded
+        if (download.downloadedImages < downloadPageCount) return
+        // Ensure that the chapter folder has all the pages.
+        val downloadedImagesCount = tmpDir.listFiles().orEmpty().count {
+            val fileName = it.name.orEmpty()
+            when {
+                fileName in listOf(COMIC_INFO_FILE, NOMEDIA_FILE) -> false
+                fileName.endsWith(".tmp") -> false
+                // Only count the first split page and not the others
+                fileName.contains("__") && !fileName.endsWith("__001.jpg") -> false
+                else -> true
+            }
+        }
 
-        val chapterUrl = download.source.getChapterUrl(download.chapter)
-        createComicInfoFile(
-            tmpDir,
-            download.manga,
-            download.chapter.toDomainChapter()!!,
-            chapterUrl,
-        )
-
-        download.status = if (downloadedImages.size == download.pages!!.size) {
+        download.status = if (downloadedImagesCount == downloadPageCount) {
+            val chapterUrl = download.source.getChapterUrl(download.chapter)
+            createComicInfoFile(
+                tmpDir,
+                download.manga,
+                download.chapter.toDomainChapter()!!,
+                chapterUrl,
+            )
             // Only rename the directory if it's downloaded.
             if (downloadPreferences.saveChaptersAsCBZ().get()) {
                 archiveChapter(mangaDir, dirname, tmpDir)
