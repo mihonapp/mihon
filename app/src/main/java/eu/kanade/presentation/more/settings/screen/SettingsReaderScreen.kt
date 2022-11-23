@@ -21,7 +21,7 @@ import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class SettingsReaderScreen : SearchableSettings {
+object SettingsReaderScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable

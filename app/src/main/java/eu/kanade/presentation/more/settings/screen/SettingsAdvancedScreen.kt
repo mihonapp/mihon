@@ -68,7 +68,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
 
-class SettingsAdvancedScreen : SearchableSettings {
+object SettingsAdvancedScreen : SearchableSettings {
     @ReadOnlyComposable
     @Composable
     @StringRes

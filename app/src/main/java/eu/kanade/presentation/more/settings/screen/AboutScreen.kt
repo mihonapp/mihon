@@ -52,7 +52,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
-class AboutScreen : Screen {
+object AboutScreen : Screen {
 
     @Composable
     override fun Content() {
@@ -199,56 +199,54 @@ class AboutScreen : Screen {
         }
     }
 
-    companion object {
-        fun getVersionName(withBuildDate: Boolean): String {
-            return when {
-                BuildConfig.DEBUG -> {
-                    "Debug ${BuildConfig.COMMIT_SHA}".let {
-                        if (withBuildDate) {
-                            "$it (${getFormattedBuildTime()})"
-                        } else {
-                            it
-                        }
+    fun getVersionName(withBuildDate: Boolean): String {
+        return when {
+            BuildConfig.DEBUG -> {
+                "Debug ${BuildConfig.COMMIT_SHA}".let {
+                    if (withBuildDate) {
+                        "$it (${getFormattedBuildTime()})"
+                    } else {
+                        it
                     }
                 }
-                BuildConfig.PREVIEW -> {
-                    "Preview r${BuildConfig.COMMIT_COUNT}".let {
-                        if (withBuildDate) {
-                            "$it (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
-                        } else {
-                            "$it (${BuildConfig.COMMIT_SHA})"
-                        }
+            }
+            BuildConfig.PREVIEW -> {
+                "Preview r${BuildConfig.COMMIT_COUNT}".let {
+                    if (withBuildDate) {
+                        "$it (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
+                    } else {
+                        "$it (${BuildConfig.COMMIT_SHA})"
                     }
                 }
-                else -> {
-                    "Stable ${BuildConfig.VERSION_NAME}".let {
-                        if (withBuildDate) {
-                            "$it (${getFormattedBuildTime()})"
-                        } else {
-                            it
-                        }
+            }
+            else -> {
+                "Stable ${BuildConfig.VERSION_NAME}".let {
+                    if (withBuildDate) {
+                        "$it (${getFormattedBuildTime()})"
+                    } else {
+                        it
                     }
                 }
             }
         }
+    }
 
-        private fun getFormattedBuildTime(): String {
-            return try {
-                val inputDf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.US)
-                inputDf.timeZone = TimeZone.getTimeZone("UTC")
-                val buildTime = inputDf.parse(BuildConfig.BUILD_TIME)
+    private fun getFormattedBuildTime(): String {
+        return try {
+            val inputDf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.US)
+            inputDf.timeZone = TimeZone.getTimeZone("UTC")
+            val buildTime = inputDf.parse(BuildConfig.BUILD_TIME)
 
-                val outputDf = DateFormat.getDateTimeInstance(
-                    DateFormat.MEDIUM,
-                    DateFormat.SHORT,
-                    Locale.getDefault(),
-                )
-                outputDf.timeZone = TimeZone.getDefault()
+            val outputDf = DateFormat.getDateTimeInstance(
+                DateFormat.MEDIUM,
+                DateFormat.SHORT,
+                Locale.getDefault(),
+            )
+            outputDf.timeZone = TimeZone.getDefault()
 
-                buildTime!!.toDateTimestampString(UiPreferences.dateFormat(Injekt.get<UiPreferences>().dateFormat().get()))
-            } catch (e: Exception) {
-                BuildConfig.BUILD_TIME
-            }
+            buildTime!!.toDateTimestampString(UiPreferences.dateFormat(Injekt.get<UiPreferences>().dateFormat().get()))
+        } catch (e: Exception) {
+            BuildConfig.BUILD_TIME
         }
     }
 }

@@ -282,16 +282,16 @@ private fun getLocalizedBreadcrumb(path: String, node: String?): String {
 }
 
 private val settingScreens = listOf(
-    SettingsGeneralScreen(),
-    SettingsAppearanceScreen(),
-    SettingsLibraryScreen(),
-    SettingsReaderScreen(),
-    SettingsDownloadScreen(),
-    SettingsTrackingScreen(),
-    SettingsBrowseScreen(),
-    SettingsBackupScreen(),
-    SettingsSecurityScreen(),
-    SettingsAdvancedScreen(),
+    SettingsGeneralScreen,
+    SettingsAppearanceScreen,
+    SettingsLibraryScreen,
+    SettingsReaderScreen,
+    SettingsDownloadScreen,
+    SettingsTrackingScreen,
+    SettingsBrowseScreen,
+    SettingsBackupScreen,
+    SettingsSecurityScreen,
+    SettingsAdvancedScreen,
 )
 
 private data class SettingsData(

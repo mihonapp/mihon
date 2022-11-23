@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class SettingsBrowseScreen : SearchableSettings {
+object SettingsBrowseScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable

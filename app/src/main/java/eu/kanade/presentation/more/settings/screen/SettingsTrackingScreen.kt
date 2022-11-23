@@ -59,7 +59,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class SettingsTrackingScreen : SearchableSettings {
+object SettingsTrackingScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable

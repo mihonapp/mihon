@@ -61,7 +61,7 @@ import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class SettingsLibraryScreen : SearchableSettings {
+object SettingsLibraryScreen : SearchableSettings {
 
     @Composable
     @ReadOnlyComposable

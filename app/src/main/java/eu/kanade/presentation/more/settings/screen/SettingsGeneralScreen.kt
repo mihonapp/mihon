@@ -25,7 +25,7 @@ import org.xmlpull.v1.XmlPullParser
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class SettingsGeneralScreen : SearchableSettings {
+object SettingsGeneralScreen : SearchableSettings {
 
     @Composable
     @ReadOnlyComposable

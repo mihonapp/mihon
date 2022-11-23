@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class SettingsBackupScreen : SearchableSettings {
+object SettingsBackupScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable

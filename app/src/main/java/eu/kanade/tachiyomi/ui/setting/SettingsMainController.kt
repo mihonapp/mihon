@@ -45,9 +45,9 @@ class SettingsMainController(bundle: Bundle = bundleOf()) : BasicFullComposeCont
             if (!isTabletUi) {
                 Navigator(
                     screen = if (toBackupScreen) {
-                        SettingsBackupScreen()
+                        SettingsBackupScreen
                     } else if (toAboutScreen) {
-                        AboutScreen()
+                        AboutScreen
                     } else {
                         SettingsMainScreen
                     },
@@ -63,11 +63,11 @@ class SettingsMainController(bundle: Bundle = bundleOf()) : BasicFullComposeCont
             } else {
                 Navigator(
                     screen = if (toBackupScreen) {
-                        SettingsBackupScreen()
+                        SettingsBackupScreen
                     } else if (toAboutScreen) {
-                        AboutScreen()
+                        AboutScreen
                     } else {
-                        SettingsGeneralScreen()
+                        SettingsGeneralScreen
                     },
                 ) {
                     TwoPanelBox(

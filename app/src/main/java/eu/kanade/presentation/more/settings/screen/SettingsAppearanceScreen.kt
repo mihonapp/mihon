@@ -27,7 +27,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
 
-class SettingsAppearanceScreen : SearchableSettings {
+object SettingsAppearanceScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable
