@@ -48,7 +48,7 @@ class CategoryScreenModel(
             when (createCategoryWithName.await(name)) {
                 is CreateCategoryWithName.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 CreateCategoryWithName.Result.NameAlreadyExistsError -> _events.send(CategoryEvent.CategoryWithNameAlreadyExists)
-                CreateCategoryWithName.Result.Success -> {}
+                else -> {}
             }
         }
     }
@@ -57,27 +57,25 @@ class CategoryScreenModel(
         coroutineScope.launch {
             when (deleteCategory.await(categoryId = categoryId)) {
                 is DeleteCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
-                DeleteCategory.Result.Success -> {}
+                else -> {}
             }
         }
     }
 
     fun moveUp(category: Category) {
         coroutineScope.launch {
-            when (reorderCategory.await(category, category.order - 1)) {
+            when (reorderCategory.moveUp(category)) {
                 is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
-                ReorderCategory.Result.Success -> {}
-                ReorderCategory.Result.Unchanged -> {}
+                else -> {}
             }
         }
     }
 
     fun moveDown(category: Category) {
         coroutineScope.launch {
-            when (reorderCategory.await(category, category.order + 1)) {
+            when (reorderCategory.moveDown(category)) {
                 is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
-                ReorderCategory.Result.Success -> {}
-                ReorderCategory.Result.Unchanged -> {}
+                else -> {}
             }
         }
     }
@@ -87,7 +85,7 @@ class CategoryScreenModel(
             when (renameCategory.await(category, name)) {
                 is RenameCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 RenameCategory.Result.NameAlreadyExistsError -> _events.send(CategoryEvent.CategoryWithNameAlreadyExists)
-                RenameCategory.Result.Success -> {}
+                else -> {}
             }
         }
     }

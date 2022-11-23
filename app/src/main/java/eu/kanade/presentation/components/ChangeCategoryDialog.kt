@@ -96,8 +96,7 @@ fun ChangeCategoryDialog(
                         val index = selection.indexOf(it)
                         if (index != -1) {
                             val mutableList = selection.toMutableList()
-                            mutableList.removeAt(index)
-                            mutableList.add(index, it.next())
+                            mutableList[index] = it.next()
                             selection = mutableList.toList()
                         }
                     }
