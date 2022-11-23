@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,15 +36,14 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.domain.updates.model.UpdatesWithRelations
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.ChapterDownloadIndicator
+import eu.kanade.presentation.components.ListGroupHeader
 import eu.kanade.presentation.components.MangaCover
-import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.util.ReadItemAlpha
 import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
-import java.text.DateFormat
 import java.util.Date
 import kotlin.time.Duration.Companion.minutes
 
@@ -73,9 +71,7 @@ fun LazyListScope.updatesLastUpdatedItem(
                 } else {
                     stringResource(R.string.updates_last_update_info, time)
                 },
-                style = LocalTextStyle.current.copy(
-                    fontStyle = FontStyle.Italic,
-                ),
+                fontStyle = FontStyle.Italic,
             )
         }
     }
@@ -88,8 +84,6 @@ fun LazyListScope.updatesUiItems(
     onClickCover: (UpdatesItem) -> Unit,
     onClickUpdate: (UpdatesItem) -> Unit,
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
-    relativeTime: Int,
-    dateFormat: DateFormat,
 ) {
     items(
         items = uiModels,
@@ -108,11 +102,9 @@ fun LazyListScope.updatesUiItems(
     ) { item ->
         when (item) {
             is UpdatesUiModel.Header -> {
-                RelativeDateHeader(
+                ListGroupHeader(
                     modifier = Modifier.animateItemPlacement(),
-                    date = item.date,
-                    relativeTime = relativeTime,
-                    dateFormat = dateFormat,
+                    text = item.date,
                 )
             }
             is UpdatesUiModel.Item -> {
@@ -130,11 +122,10 @@ fun LazyListScope.updatesUiItems(
                             else -> onClickUpdate(updatesItem)
                         }
                     },
-                    onClickCover = { if (selectionMode.not()) onClickCover(updatesItem) },
-                    onDownloadChapter = {
-                        if (selectionMode.not()) onDownloadChapter(listOf(updatesItem), it)
-                    },
-                    downloadIndicatorEnabled = selectionMode.not(),
+                    onClickCover = { onClickCover(updatesItem) }.takeIf { !selectionMode },
+                    onDownloadChapter = { action: ChapterDownloadAction ->
+                        onDownloadChapter(listOf(updatesItem), action)
+                    }.takeIf { !selectionMode },
                     downloadStateProvider = updatesItem.downloadStateProvider,
                     downloadProgressProvider = updatesItem.downloadProgressProvider,
                 )
@@ -150,10 +141,9 @@ fun UpdatesUiItem(
     selected: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    onClickCover: () -> Unit,
-    onDownloadChapter: (ChapterDownloadAction) -> Unit,
+    onClickCover: (() -> Unit)?,
+    onDownloadChapter: ((ChapterDownloadAction) -> Unit)?,
     // Download Indicator
-    downloadIndicatorEnabled: Boolean,
     downloadStateProvider: () -> Download.State,
     downloadProgressProvider: () -> Int,
 ) {
@@ -217,8 +207,8 @@ fun UpdatesUiItem(
                 Text(
                     text = update.chapterName,
                     maxLines = 1,
-                    style = MaterialTheme.typography.bodySmall
-                        .copy(color = secondaryTextColor),
+                    color = secondaryTextColor,
+                    style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis,
                     onTextLayout = { textHeight = it.size.height },
                     modifier = Modifier.alpha(textAlpha),
@@ -226,11 +216,11 @@ fun UpdatesUiItem(
             }
         }
         ChapterDownloadIndicator(
-            enabled = downloadIndicatorEnabled,
+            enabled = onDownloadChapter != null,
             modifier = Modifier.padding(start = 4.dp),
             downloadStateProvider = downloadStateProvider,
             downloadProgressProvider = downloadProgressProvider,
-            onClick = onDownloadChapter,
+            onClick = { onDownloadChapter?.invoke(it) },
         )
     }
 }

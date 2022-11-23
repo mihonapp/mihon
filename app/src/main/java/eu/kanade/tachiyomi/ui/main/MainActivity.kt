@@ -485,9 +485,8 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        // Updates screen has custom back handler
-        if (router.getControllerWithTag("${R.id.nav_updates}") != null) {
-            router.handleBack()
+        if (router.handleBack()) {
+            // A Router is consuming back press
             return
         }
         val backstackSize = router.backstackSize
@@ -495,12 +494,10 @@ class MainActivity : BaseActivity() {
         if (backstackSize == 1 && startScreen == null) {
             // Return to start screen
             moveToStartScreen()
-        } else if (startScreen != null && router.handleBack()) {
-            // Clear selection for Library screen
         } else if (shouldHandleExitConfirmation()) {
             // Exit confirmation (resets after 2 seconds)
             lifecycleScope.launchUI { resetExitConfirmation() }
-        } else if (backstackSize == 1 || !router.handleBack()) {
+        } else if (backstackSize == 1) {
             // Regular back (i.e. closing the app)
             if (libraryPreferences.autoClearChapterCache().get()) {
                 chapterCache.clear()

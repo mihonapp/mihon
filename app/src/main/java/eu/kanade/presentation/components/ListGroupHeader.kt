@@ -1,0 +1,27 @@
+package eu.kanade.presentation.components
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import eu.kanade.presentation.util.padding
+
+@Composable
+fun ListGroupHeader(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
+    Text(
+        text = text,
+        modifier = modifier
+            .padding(
+                horizontal = MaterialTheme.padding.medium,
+                vertical = MaterialTheme.padding.small,
+            ),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontWeight = FontWeight.SemiBold,
+        style = MaterialTheme.typography.bodyMedium,
+    )
+}
