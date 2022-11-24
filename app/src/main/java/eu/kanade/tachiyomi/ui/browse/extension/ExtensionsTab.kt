@@ -3,11 +3,14 @@ package eu.kanade.tachiyomi.ui.browse.extension
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import com.bluelinelabs.conductor.Router
+import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.ExtensionScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
+import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.base.controller.pushController
@@ -15,53 +18,41 @@ import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsControlle
 
 @Composable
 fun extensionsTab(
-    router: Router?,
-    presenter: ExtensionsPresenter,
-) = TabContent(
-    titleRes = R.string.label_extensions,
-    badgeNumber = presenter.updates.takeIf { it > 0 },
-    searchEnabled = true,
-    actions = listOf(
-        AppBar.Action(
-            title = stringResource(R.string.action_filter),
-            icon = Icons.Outlined.Translate,
-            onClick = { router?.pushController(ExtensionFilterController()) },
+    extensionsScreenModel: ExtensionsScreenModel,
+): TabContent {
+    val router = LocalRouter.currentOrThrow
+    val state by extensionsScreenModel.state.collectAsState()
+
+    return TabContent(
+        titleRes = R.string.label_extensions,
+        badgeNumber = state.updates.takeIf { it > 0 },
+        searchEnabled = true,
+        actions = listOf(
+            AppBar.Action(
+                title = stringResource(R.string.action_filter),
+                icon = Icons.Outlined.Translate,
+                onClick = { router.pushController(ExtensionFilterController()) },
+            ),
         ),
-    ),
-    content = { contentPadding ->
-        ExtensionScreen(
-            presenter = presenter,
-            contentPadding = contentPadding,
-            onLongClickItem = { extension ->
-                when (extension) {
-                    is Extension.Available -> presenter.installExtension(extension)
-                    else -> presenter.uninstallExtension(extension.pkgName)
-                }
-            },
-            onClickItemCancel = { extension ->
-                presenter.cancelInstallUpdateExtension(extension)
-            },
-            onClickUpdateAll = {
-                presenter.updateAllExtensions()
-            },
-            onInstallExtension = {
-                presenter.installExtension(it)
-            },
-            onOpenExtension = {
-                router?.pushController(ExtensionDetailsController(it.pkgName))
-            },
-            onTrustExtension = {
-                presenter.trustSignature(it.signatureHash)
-            },
-            onUninstallExtension = {
-                presenter.uninstallExtension(it.pkgName)
-            },
-            onUpdateExtension = {
-                presenter.updateExtension(it)
-            },
-            onRefresh = {
-                presenter.findAvailableExtensions()
-            },
-        )
-    },
-)
+        content = { contentPadding, _ ->
+            ExtensionScreen(
+                state = state,
+                contentPadding = contentPadding,
+                onLongClickItem = { extension ->
+                    when (extension) {
+                        is Extension.Available -> extensionsScreenModel.installExtension(extension)
+                        else -> extensionsScreenModel.uninstallExtension(extension.pkgName)
+                    }
+                },
+                onClickItemCancel = extensionsScreenModel::cancelInstallUpdateExtension,
+                onClickUpdateAll = extensionsScreenModel::updateAllExtensions,
+                onInstallExtension = extensionsScreenModel::installExtension,
+                onOpenExtension = { router.pushController(ExtensionDetailsController(it.pkgName)) },
+                onTrustExtension = { extensionsScreenModel.trustSignature(it.signatureHash) },
+                onUninstallExtension = { extensionsScreenModel.uninstallExtension(it.pkgName) },
+                onUpdateExtension = extensionsScreenModel::updateExtension,
+                onRefresh = extensionsScreenModel::findAvailableExtensions,
+            )
+        },
+    )
+}

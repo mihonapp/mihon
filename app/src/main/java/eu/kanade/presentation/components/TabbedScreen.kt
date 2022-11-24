@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +35,7 @@ fun TabbedScreen(
 ) {
     val scope = rememberCoroutineScope()
     val state = rememberPagerState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(startIndex) {
         if (startIndex != null) {
@@ -52,6 +56,7 @@ fun TabbedScreen(
                 actions = { AppBarActions(tab.actions) },
             )
         },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { contentPadding ->
         Column(
             modifier = Modifier.padding(
@@ -86,6 +91,7 @@ fun TabbedScreen(
                     TachiyomiBottomNavigationView.withBottomNavPadding(
                         PaddingValues(bottom = contentPadding.calculateBottomPadding()),
                     ),
+                    snackbarHostState,
                 )
             }
         }
@@ -97,5 +103,5 @@ data class TabContent(
     val badgeNumber: Int? = null,
     val searchEnabled: Boolean = false,
     val actions: List<AppBar.Action> = emptyList(),
-    val content: @Composable (contentPadding: PaddingValues) -> Unit,
+    val content: @Composable (contentPadding: PaddingValues, snackbarHostState: SnackbarHostState) -> Unit,
 )

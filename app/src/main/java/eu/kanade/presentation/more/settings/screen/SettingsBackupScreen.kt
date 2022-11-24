@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more.settings.screen
 
-import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -22,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +35,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import com.google.accompanist.permissions.rememberPermissionState
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.backup.service.BackupPreferences
 import eu.kanade.presentation.components.Divider
@@ -52,6 +49,7 @@ import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.BackupRestoreService
 import eu.kanade.tachiyomi.data.backup.models.Backup
+import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
@@ -70,21 +68,13 @@ object SettingsBackupScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val backupPreferences = Injekt.get<BackupPreferences>()
 
-        RequestStoragePermission()
+        DiskUtil.RequestStoragePermission()
 
         return listOf(
             getCreateBackupPref(),
             getRestoreBackupPref(),
             getAutomaticBackupGroup(backupPreferences = backupPreferences),
         )
-    }
-
-    @Composable
-    private fun RequestStoragePermission() {
-        val permissionState = rememberPermissionState(permission = Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        LaunchedEffect(Unit) {
-            permissionState.launchPermissionRequest()
-        }
     }
 
     @Composable

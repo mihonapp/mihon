@@ -39,35 +39,37 @@ import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.presentation.util.topSmallPaddingValues
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrationSourcesPresenter
+import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrateSourceState
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 
 @Composable
 fun MigrateSourceScreen(
-    presenter: MigrationSourcesPresenter,
+    state: MigrateSourceState,
     contentPadding: PaddingValues,
     onClickItem: (Source) -> Unit,
+    onToggleSortingDirection: () -> Unit,
+    onToggleSortingMode: () -> Unit,
 ) {
     val context = LocalContext.current
     when {
-        presenter.isLoading -> LoadingScreen()
-        presenter.isEmpty -> EmptyScreen(
+        state.isLoading -> LoadingScreen(modifier = Modifier.padding(contentPadding))
+        state.isEmpty -> EmptyScreen(
             textResource = R.string.information_empty_library,
             modifier = Modifier.padding(contentPadding),
         )
         else ->
             MigrateSourceList(
-                list = presenter.items,
+                list = state.items,
                 contentPadding = contentPadding,
                 onClickItem = onClickItem,
                 onLongClickItem = { source ->
                     val sourceId = source.id.toString()
                     context.copyToClipboard(sourceId, sourceId)
                 },
-                sortingMode = presenter.sortingMode,
-                onToggleSortingMode = { presenter.toggleSortingMode() },
-                sortingDirection = presenter.sortingDirection,
-                onToggleSortingDirection = { presenter.toggleSortingDirection() },
+                sortingMode = state.sortingMode,
+                onToggleSortingMode = onToggleSortingMode,
+                sortingDirection = state.sortingDirection,
+                onToggleSortingDirection = onToggleSortingDirection,
             )
     }
 }

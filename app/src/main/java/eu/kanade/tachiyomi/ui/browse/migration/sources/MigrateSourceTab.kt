@@ -3,22 +3,27 @@ package eu.kanade.tachiyomi.ui.browse.migration.sources
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import com.bluelinelabs.conductor.Router
+import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.MigrateSourceScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
+import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaController
 
 @Composable
-fun migrateSourcesTab(
-    router: Router?,
-    presenter: MigrationSourcesPresenter,
-): TabContent {
+fun Screen.migrateSourceTab(): TabContent {
     val uriHandler = LocalUriHandler.current
+    val router = LocalRouter.currentOrThrow
+    val screenModel = rememberScreenModel { MigrateSourceScreenModel() }
+    val state by screenModel.state.collectAsState()
 
     return TabContent(
         titleRes = R.string.label_migration,
@@ -31,18 +36,20 @@ fun migrateSourcesTab(
                 },
             ),
         ),
-        content = { contentPadding ->
+        content = { contentPadding, _ ->
             MigrateSourceScreen(
-                presenter = presenter,
+                state = state,
                 contentPadding = contentPadding,
                 onClickItem = { source ->
-                    router?.pushController(
+                    router.pushController(
                         MigrationMangaController(
                             source.id,
                             source.name,
                         ),
                     )
                 },
+                onToggleSortingDirection = screenModel::toggleSortingDirection,
+                onToggleSortingMode = screenModel::toggleSortingMode,
             )
         },
     )

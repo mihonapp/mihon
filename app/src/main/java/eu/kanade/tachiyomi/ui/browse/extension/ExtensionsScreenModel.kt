@@ -2,11 +2,10 @@ package eu.kanade.tachiyomi.ui.browse.extension
 
 import android.app.Application
 import androidx.annotation.StringRes
+import cafe.adriel.voyager.core.model.StateScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.source.service.SourcePreferences
-import eu.kanade.presentation.browse.ExtensionState
-import eu.kanade.presentation.browse.ExtensionsState
-import eu.kanade.presentation.browse.ExtensionsStateImpl
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -14,8 +13,6 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,26 +20,23 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class ExtensionsPresenter(
-    private val presenterScope: CoroutineScope,
-    private val state: ExtensionsStateImpl = ExtensionState() as ExtensionsStateImpl,
-    private val preferences: SourcePreferences = Injekt.get(),
+class ExtensionsScreenModel(
+    preferences: SourcePreferences = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensions: GetExtensionsByType = Injekt.get(),
-) : ExtensionsState by state {
+) : StateScreenModel<ExtensionsState>(ExtensionsState()) {
 
     private val _query: MutableStateFlow<String?> = MutableStateFlow(null)
     val query: StateFlow<String?> = _query.asStateFlow()
 
     private var _currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
 
-    fun onCreate() {
+    init {
         val context = Injekt.get<Application>()
         val extensionMapper: (Map<String, InstallStep>) -> ((Extension) -> ExtensionUiModel) = { map ->
             {
@@ -76,7 +70,7 @@ class ExtensionsPresenter(
             }
         }
 
-        presenterScope.launchIO {
+        coroutineScope.launchIO {
             combine(
                 _query,
                 _currentDownloads,
@@ -117,39 +111,44 @@ class ExtensionsPresenter(
 
                 items
             }
-                .onStart { delay(500) } // Defer to avoid crashing on initial render
                 .collectLatest {
-                    state.isLoading = false
-                    state.items = it
+                    mutableState.update { state ->
+                        state.copy(
+                            isLoading = false,
+                            items = it,
+                        )
+                    }
                 }
         }
 
-        presenterScope.launchIO { findAvailableExtensions() }
+        coroutineScope.launchIO { findAvailableExtensions() }
 
         preferences.extensionUpdatesCount().changes()
-            .onEach { state.updates = it }
-            .launchIn(presenterScope)
+            .onEach { mutableState.update { state -> state.copy(updates = it) } }
+            .launchIn(coroutineScope)
     }
 
     fun search(query: String?) {
-        presenterScope.launchIO {
+        coroutineScope.launchIO {
             _query.emit(query)
         }
     }
 
     fun updateAllExtensions() {
-        presenterScope.launchIO {
-            if (state.isEmpty) return@launchIO
-            state.items
-                .mapNotNull {
-                    when {
-                        it !is ExtensionUiModel.Item -> null
-                        it.extension !is Extension.Installed -> null
-                        !it.extension.hasUpdate -> null
-                        else -> it.extension
+        coroutineScope.launchIO {
+            with(state.value) {
+                if (isEmpty) return@launchIO
+                items
+                    .mapNotNull {
+                        when {
+                            it !is ExtensionUiModel.Item -> null
+                            it.extension !is Extension.Installed -> null
+                            !it.extension.hasUpdate -> null
+                            else -> it.extension
+                        }
                     }
-                }
-                .forEach { updateExtension(it) }
+                    .forEach { updateExtension(it) }
+            }
         }
     }
 
@@ -195,16 +194,25 @@ class ExtensionsPresenter(
     }
 
     fun findAvailableExtensions() {
-        presenterScope.launchIO {
-            state.isRefreshing = true
+        mutableState.update { it.copy(isRefreshing = true) }
+        coroutineScope.launchIO {
             extensionManager.findAvailableExtensions()
-            state.isRefreshing = false
         }
+        mutableState.update { it.copy(isRefreshing = false) }
     }
 
     fun trustSignature(signatureHash: String) {
         extensionManager.trustSignature(signatureHash)
     }
+}
+
+data class ExtensionsState(
+    val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false,
+    val items: List<ExtensionUiModel> = emptyList(),
+    val updates: Int = 0,
+) {
+    val isEmpty = items.isEmpty()
 }
 
 sealed interface ExtensionUiModel {
