@@ -9,19 +9,18 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.MigrateSourceScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaController
+import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaScreen
 
 @Composable
 fun Screen.migrateSourceTab(): TabContent {
     val uriHandler = LocalUriHandler.current
-    val router = LocalRouter.currentOrThrow
+    val navigator = LocalNavigator.currentOrThrow
     val screenModel = rememberScreenModel { MigrateSourceScreenModel() }
     val state by screenModel.state.collectAsState()
 
@@ -41,12 +40,7 @@ fun Screen.migrateSourceTab(): TabContent {
                 state = state,
                 contentPadding = contentPadding,
                 onClickItem = { source ->
-                    router.pushController(
-                        MigrationMangaController(
-                            source.id,
-                            source.name,
-                        ),
-                    )
+                    navigator.push(MigrationMangaScreen(source.id))
                 },
                 onToggleSortingDirection = screenModel::toggleSortingDirection,
                 onToggleSortingMode = screenModel::toggleSortingMode,
