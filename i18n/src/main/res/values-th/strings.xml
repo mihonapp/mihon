@@ -762,4 +762,5 @@
     <string name="track_remove_start_date_conf_text">การกระทำนี้จะเป็นการนำวันที่เริ่มอ่านของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
     <string name="track_remove_finish_date_conf_text">การกระทำนี้จะเป็นการนำวันที่อ่านจบของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
     <string name="track_remove_date_conf_title">นำวันที่ออก\?</string>
+    <string name="pref_invalidate_download_cache_summary">บังคับให้ตรวจสอบบทที่ดาวน์โหลดไว้</string>
 </resources>

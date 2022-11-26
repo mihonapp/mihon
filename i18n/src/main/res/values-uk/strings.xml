@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Ім\'я</string>
     <string name="categories">Категорії</string>
-    <string name="manga">Манґа</string>
+    <string name="manga">Записи бібліотеки</string>
     <string name="chapters">Глави</string>
     <string name="track">Відстеження</string>
     <string name="history">Історія</string>
@@ -789,7 +789,15 @@
     <string name="action_open_random_manga">Відкрити випадковий запис</string>
     <string name="information_no_entries_found">В цій категорії немає записів</string>
     <string name="download_notifier_cache_renewal">Індексування завантажень</string>
-    <string name="channel_downloader_cache">Кеш завантажень</string>
+    <string name="channel_downloader_cache">Індексування</string>
     <string name="fdroid_warning">Збірки F-Droid офіційно не підтримуються.
 \nТицьніть для того, щоб дізнатись більше.</string>
+    <string name="pref_invalidate_download_cache_summary">Змусити додаток повторно перевірити завантажені глави</string>
+    <string name="action_display_show_continue_reading_button">Показати кнопку продовження читання</string>
+    <string name="track_remove_date_conf_title">Видалити дату\?</string>
+    <string name="track_remove_start_date_conf_text">Це видалить раніше вибрану дату початку з %s</string>
+    <string name="track_remove_finish_date_conf_text">Це видалить раніше вибрану дату закінчення з %s</string>
+    <string name="other_header">Інше</string>
+    <string name="enhanced_tracking_warning">Цей трекер сумісний тільки з джерелом %1$s.</string>
+    <string name="pref_invalidate_download_cache">Очистити індекс завантажень</string>
 </resources>

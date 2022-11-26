@@ -775,4 +775,5 @@
     <string name="track_remove_date_conf_title">Voleu eliminar-ne la data\?</string>
     <string name="track_remove_start_date_conf_text">S\'eliminarà la data d\'inici seleccionada de %s</string>
     <string name="enhanced_tracking_warning">Aquest seguidor només és compatible amb la font %1$s.</string>
+    <string name="pref_invalidate_download_cache_summary">Força que l\'aplicació torni a comprovar els capítols baixats</string>
 </resources>

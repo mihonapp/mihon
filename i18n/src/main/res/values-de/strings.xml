@@ -775,4 +775,5 @@
     <string name="track_remove_start_date_conf_text">Dies wird dein zuvor gewähltes Startdatum von %s entfernen</string>
     <string name="track_remove_finish_date_conf_text">Dies wird dein zuvor gewähltes Enddatum von %s entfernen</string>
     <string name="enhanced_tracking_warning">Dieser Tracker ist nur mit der %1$s-Quelle kompatibel.</string>
+    <string name="pref_invalidate_download_cache_summary">App zwingen, heruntergeladene Kapitel erneut zu überprüfen</string>
 </resources>

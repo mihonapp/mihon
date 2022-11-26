@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Nama</string>
     <string name="categories">Kategori</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Entri pustaka</string>
     <string name="chapters">Bab-bab</string>
     <string name="track">Penjejakan</string>
     <string name="history">Sejarah</string>
@@ -752,13 +752,15 @@
     <string name="action_open_random_manga">Buka entri rawak</string>
     <string name="information_no_entries_found">Tiada entri dijumpai di kategori ini</string>
     <string name="download_notifier_cache_renewal">Mengindeks muat turun</string>
-    <string name="channel_downloader_cache">Muat turun cache</string>
+    <string name="channel_downloader_cache">Pengindeksan</string>
     <string name="fdroid_warning">Binaan F-Droid tidak disokong secara rasmi.
 \nKetik untuk mengetahui lebih lanjut.</string>
     <string name="action_display_show_continue_reading_button">Tunjuk butang sambung membaca</string>
     <string name="other_header">Lain-lain</string>
-    <string name="pref_invalidate_download_cache">Membatalkan cache muat turun</string>
+    <string name="pref_invalidate_download_cache">Membatalkan indeks muat turun</string>
     <string name="track_remove_date_conf_title">Buang tarikh\?</string>
     <string name="track_remove_start_date_conf_text">Ini akan membuang tarikh mula yang dipilih oleh anda sebelum ini dari %s</string>
     <string name="track_remove_finish_date_conf_text">Ini akan membuang tarikh selesai yang dipilih oleh anda sebelum ini dari %s</string>
+    <string name="pref_invalidate_download_cache_summary">Memaksa aplikasi untuk semak semula bab dimuat turun.</string>
+    <string name="enhanced_tracking_warning">Penjejak ini hanya boleh digunakan dengan sumber %1$s sahaja.</string>
 </resources>

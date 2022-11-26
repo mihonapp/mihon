@@ -762,4 +762,5 @@
     <string name="track_remove_start_date_conf_text">将会删除之前在 %s 中标记的开始日期</string>
     <string name="track_remove_finish_date_conf_text">将会删除之前在 %s 中标记的结束日期</string>
     <string name="enhanced_tracking_warning">此平台只有 %1$s 图源才能使用。</string>
+    <string name="pref_invalidate_download_cache_summary">强制重新扫描已下载的章节</string>
 </resources>

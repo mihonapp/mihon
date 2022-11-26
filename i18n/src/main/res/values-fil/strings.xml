@@ -52,7 +52,7 @@
     <string name="action_enable_all">Buksan lahat</string>
     <string name="action_update_library">I-update ang Aklatan</string>
     <string name="action_delete">Burahin</string>
-    <string name="action_remove_bookmark">I-unbookmark ang kabanata</string>
+    <string name="action_remove_bookmark">Huwag na\'ng tandaan</string>
     <string name="action_bookmark">Tandaan</string>
     <string name="action_download">I-download</string>
     <string name="action_mark_previous_as_read">Markahang nabasa ang (mga) nauna</string>
@@ -60,17 +60,17 @@
     <string name="action_mark_as_unread">Markahang babasahin</string>
     <string name="action_select_inverse">Baligtarin</string>
     <string name="action_select_all">Piliin lahat</string>
-    <string name="action_global_search">Panlahatang Paghanap</string>
+    <string name="action_global_search">Pangkalahatang Paghanap</string>
     <string name="action_search">Maghanap</string>
     <string name="action_sort_latest_chapter">Pinakabagong kabanata</string>
     <string name="action_sort_last_read">Huling binasa</string>
     <string name="action_sort_total">Dami ng kabanata</string>
     <string name="action_sort_alpha">Pa-alpabeto</string>
-    <string name="action_filter_empty">Tanggalin ang filter</string>
+    <string name="action_filter_empty">Tanggalin ang pansala</string>
     <string name="action_filter_unread">Babasahin</string>
     <string name="action_filter_bookmarked">Tinandaan</string>
     <string name="action_filter_downloaded">Na-download</string>
-    <string name="action_filter">I-filter</string>
+    <string name="action_filter">Pansala</string>
     <string name="action_menu">Menu</string>
     <string name="action_settings">Pagsasaayos</string>
     <string name="confirm_exit">Pindutin muli para umalis</string>
@@ -78,7 +78,7 @@
     <string name="history">Nakaraan</string>
     <string name="track">Tina-track</string>
     <string name="chapters">Mga Kabanata</string>
-    <string name="manga">Mga Laman ng Aklatan</string>
+    <string name="manga">Mga babasahin sa aklatan</string>
     <string name="categories">Kategorya</string>
     <string name="information_empty_category">Wala ka pang kategorya. Pindutin ang plus button para makagawa ka ng isa para maayos mo ang Aklatan mo.</string>
     <string name="information_empty_library">Bakante ang Aklatan mo</string>
@@ -276,7 +276,7 @@
     <string name="tapping_inverted_none">Wala</string>
     <string name="channel_new_chapters">Mga update sa kabanata</string>
     <string name="channel_common">Komon</string>
-    <string name="download_notifier_download_paused">Nakahinto ang pag-download</string>
+    <string name="download_notifier_download_paused">Nakahinto ang mga pag-download</string>
     <string name="download_notifier_no_network">Walang koneksyon sa Internet</string>
     <string name="download_notifier_text_only_wifi">Walang koneksyon sa Wifi</string>
     <string name="download_notifier_unknown_error">Di ma-download ang kabanata dahil sa isang di-inaasahang error</string>
@@ -312,8 +312,8 @@
         <item quantity="other">%1$d (na) bagong kabanata</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Para sa %d serye</item>
-        <item quantity="other">Para sa %d (na) serye</item>
+        <item quantity="one">Para sa %d na entry</item>
+        <item quantity="other">Para sa %d na mga entry</item>
     </plurals>
     <string name="notification_new_chapters">May mga bagong kabanata</string>
     <string name="notification_check_updates">Naghahanap ng mga bagong kabanata</string>
@@ -479,13 +479,13 @@
     <string name="restore_duration">%02d (na) min, %02d (na) seg</string>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
-        <item quantity="other">%d (na) tracker</item>
+        <item quantity="other">%d na tracker</item>
     </plurals>
     <string name="no_pinned_sources">Wala kang naka-pin na pinagkukunan</string>
     <string name="channel_complete">Tapos na</string>
     <string name="channel_errors">Mga error</string>
     <string name="channel_progress">Takbo</string>
-    <string name="backup_restore_missing_trackers">Di naka-login sa (mga) tracker:</string>
+    <string name="backup_restore_missing_trackers">Di naka-login sa mga tracker:</string>
     <string name="pref_remove_bookmarked_chapters">Burahin din ang may pananda</string>
     <string name="pref_category_delete_chapters">Magbura ng kabanata</string>
     <string name="parental_controls_info">Hindi nito naiiwasan ang pagpapakita ng mga NSFW (18+) sa mga di-opisyal o posibleng maling naka-flag na extension sa loob ng app.</string>
@@ -504,7 +504,7 @@
     <string name="chapter_settings">Pagsasaayos ng Kabanata</string>
     <string name="downloaded_chapters">Mga naka-download na kabanata</string>
     <string name="manga_from_library">Mula sa Aklatan</string>
-    <string name="action_search_settings">Maghanap sa mga setting</string>
+    <string name="action_search_settings">Ayos ng paghanap</string>
     <string name="pref_incognito_mode_summary">Hinihinto ang pagtala sa nakaraan</string>
     <string name="pref_incognito_mode">Nakatago</string>
     <string name="pref_clear_history">Linisin ang nakaraan</string>
@@ -553,7 +553,7 @@
     <string name="include">Kasama: %s</string>
     <string name="none">Wala</string>
     <string name="pref_library_update_categories_details">Hindi ia-update ang mga entry na nasa mga di kasamang kategorya kahit na nasa mga kasamang kategorya rin sila.</string>
-    <string name="action_sort_chapter_fetch_date">Petsa kinuha ang kabanata</string>
+    <string name="action_sort_chapter_fetch_date">Petsa ng pagkuha</string>
     <string name="action_show_errors">Pindutin para makita ang detalye</string>
     <string name="update_check_eol">Di na suportado ang bersyong ito ng Android</string>
     <string name="clipboard_copy_error">Bigong makopya sa clipboard</string>
@@ -763,16 +763,17 @@
     <string name="error_user_agent_string_invalid">Invalid na string ng user agent</string>
     <string name="updates_last_update_info_just_now">Ngayon lang</string>
     <string name="download_notifier_cache_renewal">Pag-index ng mga pag-download</string>
-    <string name="channel_downloader_cache">Nilalagyan ng Indise</string>
+    <string name="channel_downloader_cache">Cache ng mga na-download</string>
     <string name="information_no_entries_found">Walang mga entry ang nahanap sa kategoryang ito</string>
     <string name="action_open_random_manga">Buksan ang random na entry</string>
     <string name="fdroid_warning">Ang mga build ng F-Droid ay hindi opisyal na sinusuportahan.
 \nI-tap para matuto pa.</string>
-    <string name="action_display_show_continue_reading_button">Ipakita ang pindutan para sa pagpapatuloy ng pagbabasa</string>
-    <string name="track_remove_date_conf_title">Alisin ang petsa\?</string>
-    <string name="track_remove_start_date_conf_text">Aalisin nito ang lahat ng mga nauna mong napiling petsa ng pagsisimula magmula sa %s</string>
-    <string name="track_remove_finish_date_conf_text">Tatanggalin nito ang huling petsa ng katapusan na ipinili mo na nagsimula sa %s</string>
-    <string name="pref_invalidate_download_cache">Isawalang-bahala ang index ng mga na-download</string>
-    <string name="other_header">Iba pa</string>
-    <string name="enhanced_tracking_warning">Ang tracker na ito ay gumagana lamang sa %1$s source.</string>
+    <string name="action_display_show_continue_reading_button">Ipakita ang butones sa tuluyang pagbasa</string>
+    <string name="track_remove_date_conf_title">Tanggalin ang petsa\?</string>
+    <string name="track_remove_start_date_conf_text">Tatanggalin nito ang huling petsa na ipinili mo na simula sa %s</string>
+    <string name="track_remove_finish_date_conf_text">Aalisin nito ang lahat ng mga nauna mong napiling petsa ng kayarian magmula sa %s</string>
+    <string name="pref_invalidate_download_cache">Ipawalang-bisa ang indise ng downloads</string>
+    <string name="other_header">Iba</string>
+    <string name="enhanced_tracking_warning">Tumutugma lamang ang tracker kung ang pinanggalingan ay ang %1$s.</string>
+    <string name="pref_invalidate_download_cache_summary">Pilitin ang app na tingnan kung may naka-download</string>
 </resources>

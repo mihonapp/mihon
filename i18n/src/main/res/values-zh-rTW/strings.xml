@@ -760,6 +760,6 @@
     <string name="track_remove_date_conf_title">移除日期？</string>
     <string name="track_remove_finish_date_conf_text">從「%s」移除你先前輸入的閱讀完畢日期</string>
     <string name="track_remove_start_date_conf_text">從「%s」移除你先前輸入的開始閱讀日期</string>
-    <string name="pref_invalidate_download_cache">重新建立下載索引</string>
+    <string name="pref_invalidate_download_cache">清除下載索引</string>
     <string name="enhanced_tracking_warning">該平台僅與來源「%1$s」相容。</string>
 </resources>

@@ -821,4 +821,5 @@
     <string name="track_remove_start_date_conf_text">Verrà rimossa la data di inizio precedentemente selezionata da %s</string>
     <string name="pref_invalidate_download_cache">Invalida l\'indice dei download</string>
     <string name="enhanced_tracking_warning">Questo tracker è compatibile solo con la fonte %1$s.</string>
+    <string name="pref_invalidate_download_cache_summary">Forza l\'app a ricontrollare i capitoli scaricati</string>
 </resources>

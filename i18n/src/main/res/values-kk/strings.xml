@@ -56,7 +56,7 @@
     <string name="pref_app_theme">Қолданба кейпі</string>
     <string name="theme_monet">Динамикалық</string>
     <string name="theme_greenapple">Жасыл Алма</string>
-    <string name="theme_midnightdusk">Түн ортасы ымырт</string>
+    <string name="theme_midnightdusk">Ымырт</string>
     <string name="pref_category_tracking">Бақылау</string>
     <string name="pref_category_about">Ақпарат</string>
     <string name="action_close">Жабу</string>
@@ -65,22 +65,22 @@
     <string name="pref_category_reader">Оқыма</string>
     <string name="pref_category_downloads">Жүктеулер</string>
     <string name="pref_category_advanced">Толығырақ</string>
-    <string name="pref_category_theme">Қолданба нұсқасы</string>
-    <string name="pref_theme_mode">Күңгірт</string>
+    <string name="pref_category_theme">Кейіп</string>
+    <string name="pref_theme_mode">Қараңғы режим</string>
     <string name="theme_system">Жүйе бойынша</string>
     <string name="theme_light">Өшірулі</string>
     <string name="theme_dark">Қосулы</string>
-    <string name="theme_strawberrydaiquiri">Құлпынай дайкири</string>
+    <string name="theme_strawberrydaiquiri">Құлпынай Дайкири</string>
     <string name="theme_tako">Тако</string>
-    <string name="theme_yotsuba">Ёцуба</string>
-    <string name="theme_tealturquoise">Ақшыл және көгілдір</string>
-    <string name="pref_dark_theme_pure_black">Таза қара қараңғы режим</string>
-    <string name="theme_yinyang">Инь және Йянь</string>
+    <string name="theme_yotsuba">Йотсуба</string>
+    <string name="theme_tealturquoise">Қызғылт пен жасыл</string>
+    <string name="pref_dark_theme_pure_black">Қап-қараңғы режим</string>
+    <string name="theme_yinyang">Инь мен Йянь</string>
     <string name="relative_time_today">Бүгін</string>
     <string name="update_never">Өшірулі</string>
     <string name="update_6hour">Әр 6 сағат сайын</string>
     <string name="update_12hour">Әр 12 сағат сайын</string>
-    <string name="update_24hour">Күнде</string>
+    <string name="update_24hour">Күн сайын</string>
     <string name="update_48hour">Әр 2 күн сайын</string>
     <string name="update_72hour">Әр 3 күн сайын</string>
     <string name="update_weekly">Апта сайын</string>
@@ -182,7 +182,7 @@
     <string name="app_not_available">Қолданба қолжетімсіз</string>
     <string name="pref_category_general">Жалпы</string>
     <string name="pref_relative_time_short">Қысқа (бүгін, кеше)</string>
-    <string name="pref_date_format">Дата пішімі</string>
+    <string name="pref_date_format">Күн пішімі</string>
     <string name="pref_confirm_exit">Шығуды растау</string>
     <string name="pref_manage_notifications">Хабарландыруларды басқару</string>
     <string name="pref_category_security">Қауіпсіздік</string>
@@ -365,7 +365,7 @@
     <string name="services">Қызметтер</string>
     <string name="pref_create_backup">Сақтық көшірме жасау</string>
     <string name="pref_create_folder_per_manga">Беттерді бөлек бумаларға сақтау</string>
-    <string name="pref_reader_theme">Ая түсі</string>
+    <string name="pref_reader_theme">Түсқағаз</string>
     <string name="nav_zone_prev">Алдыңғ</string>
     <string name="scale_type_fit_height">Биіктігі бойынша</string>
     <string name="scale_type_smart_fit">Ақылды</string>
@@ -379,11 +379,11 @@
     <string name="pref_download_new">Жаңа тарауларды жүктеу</string>
     <string name="pref_download_new_categories_details">Саналмайтын санаттардағы жазбалар саналатын санаттарда болса да жүктелмейді.</string>
     <string name="enhanced_services">Күшейтілген қызметтер</string>
-    <string name="multi_lang">Көп</string>
+    <string name="multi_lang">Көптілді</string>
     <string name="tapping_inverted_horizontal">Көлденең</string>
     <string name="auto_download_while_reading">Оқығанда дағдылы жүктеу</string>
     <string name="download_ahead">Алдын ала жүктеу</string>
-    <string name="theme_tidalwave">Көтерілу толқыны</string>
+    <string name="theme_tidalwave">Көтерілу Толқыны</string>
     <string name="filter_mode_lighten">Жарық қылу</string>
     <string name="filter_mode_darken">Қараңғы қылу</string>
     <string name="pref_read_with_tapping_inverted">Басу аймағын терістету</string>
@@ -425,7 +425,7 @@
     <string name="login_success">Кірілді</string>
     <string name="logout_title">%1$s-ден шығасыз ба\?</string>
     <string name="missing_storage_permission">Жадыға рұқсаттар берілмеді</string>
-    <string name="downloaded_chapters">Жүктелген тараулар</string>
+    <string name="downloaded_chapters">Жүктелген тарауларды</string>
     <string name="pinned_sources">Бекітілген</string>
     <string name="invalid_backup_file_missing_manga">Сақтық көшірмеде кітапхана жазбалары жоқ.</string>
     <string name="clear_database_source_item_count">Кітапханадағы емес %1$d жазбалар дерекқорда</string>
@@ -468,7 +468,7 @@
     <string name="date">Күн</string>
     <string name="ongoing">Шығып жатыр</string>
     <string name="restore_in_progress">Қалпына келтіру әлдеқашан орындалуда</string>
-    <string name="pref_backup_slots">Максималды сақтық көшірмелері</string>
+    <string name="pref_backup_slots">Сақтық көшірме саны</string>
     <string name="backup_choice">Сақтық көшірмесіне нені қалайсыз\?</string>
     <string name="restoring_backup">Сақтық көшірмесін қалпына келтіру</string>
     <string name="backup_in_progress">Сақтық көшірмесі әлдеқашан орындалуда</string>
@@ -641,8 +641,8 @@
     <string name="not_installed">Орнатылмады</string>
     <string name="notification_chapters_multiple">%1$s Тарау</string>
     <string name="library_errors_help">Кітапхананы жаңарту қателіктерін жөндеу үшін %1$s</string>
-    <string name="pref_general_summary">Қолданба тілі, хабарландырулар</string>
-    <string name="pref_appearance_summary">Кейіп, күні мен уақыт форматы</string>
+    <string name="pref_general_summary">Қолданба тілі, мәлімдемелер</string>
+    <string name="pref_appearance_summary">Кейіп, күні мен уақыт пішімі</string>
     <string name="pref_library_summary">Санаттар, ауқымды жаңарту</string>
     <string name="pref_tracking_summary">Прогрессті біржақты синхрондау, кеңейтілген синхрондау</string>
     <string name="pref_backup_summary">Қолмен және автоматты сақтық көшірмелері</string>
@@ -775,4 +775,5 @@
     <string name="track_remove_start_date_conf_text">Бұл бұрын таңдалған басталу күнін %s ішінен жояды</string>
     <string name="track_remove_date_conf_title">Күнің жоямыз ба\?</string>
     <string name="pref_invalidate_download_cache">Жүктеулер индексін тазалау</string>
+    <string name="pref_invalidate_download_cache_summary">Қолданбаны жүктеп алынған тарауларды қайта тексеруге мәжбүрлейді</string>
 </resources>

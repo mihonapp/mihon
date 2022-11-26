@@ -822,4 +822,5 @@
     <string name="track_remove_finish_date_conf_text">Ceci supprimera la date de fin que vous aviez précédemment sélectionnée dans la base de données de %s</string>
     <string name="pref_invalidate_download_cache">Invalider l\'index des téléchargements</string>
     <string name="enhanced_tracking_warning">Ce tracker est uniquement compatible avec la source %1$s.</string>
+    <string name="pref_invalidate_download_cache_summary">Forcer l\'application à revérifier les chapitres téléchargés</string>
 </resources>

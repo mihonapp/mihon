@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Nume</string>
     <string name="categories">Categorii</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Intrări în bibliotecă</string>
     <string name="chapters">Capitole</string>
     <string name="track">Urmărind</string>
     <string name="history">Istoric</string>
@@ -778,8 +778,8 @@
     <string name="action_display_show_continue_reading_button">Afișați butonul de continuare a cititului</string>
     <string name="information_no_entries_found">Nu s-au găsit intrări în această categorie</string>
     <string name="track_remove_finish_date_conf_text">Acest lucru va elimina data de finalizare selectată anterior din %s</string>
-    <string name="channel_downloader_cache">Descărcați memoria cache</string>
-    <string name="pref_invalidate_download_cache">Invalidați memoria cache de descărcare</string>
+    <string name="channel_downloader_cache">Indexare</string>
+    <string name="pref_invalidate_download_cache">Indexul descărcărilor invalid</string>
     <string name="download_notifier_cache_renewal">Descărcări de indexare</string>
     <string name="other_header">Altele</string>
     <string name="track_remove_date_conf_title">Eliminați data\?</string>
@@ -787,4 +787,6 @@
     <string name="fdroid_warning">Versiunile F-Droid nu sunt acceptate oficial.
 \nApăsați pentru a afla mai multe.</string>
     <string name="action_open_random_manga">Deschideți aleatoriu</string>
+    <string name="pref_invalidate_download_cache_summary">Obligați aplicația să refacă verificarea capitolelor descărcate</string>
+    <string name="enhanced_tracking_warning">Acest tracker este compatibil numai cu sursa %1$s.</string>
 </resources>

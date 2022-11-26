@@ -775,4 +775,5 @@
     <string name="track_remove_finish_date_conf_text">Dette vil fjerne den tidligere valgte sluttdatoen fra %s</string>
     <string name="pref_invalidate_download_cache">Rydd ut nedlastingsindeksen</string>
     <string name="enhanced_tracking_warning">Denne trackeren er kun kompatibel med %1$s-kilden.</string>
+    <string name="pref_invalidate_download_cache_summary">Tving appen til å sjekke nedlastede kapitler på nytt</string>
 </resources>

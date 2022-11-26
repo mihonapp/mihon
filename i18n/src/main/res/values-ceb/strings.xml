@@ -493,4 +493,7 @@
     <string name="email">Email Address</string>
     <string name="unknown_error">Wala mailhi nga sayup</string>
     <string name="username">Username</string>
+    <string name="action_display_show_continue_reading_button">Ipakita ang buton sa pagpadayon sa pagbasa</string>
+    <string name="action_search_hint">Pangitaa…</string>
+    <string name="action_open_random_manga">Bukas nga random entry</string>
 </resources>

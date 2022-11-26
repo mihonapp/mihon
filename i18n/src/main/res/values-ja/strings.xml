@@ -762,4 +762,5 @@
     <string name="track_remove_finish_date_conf_text">%sで指定された終了日付を消去します</string>
     <string name="track_remove_start_date_conf_text">%sで指定された開始日付を消去します</string>
     <string name="enhanced_tracking_warning">このトラッカーはソース「%1$s」のみで使用できます。</string>
+    <string name="pref_invalidate_download_cache_summary">ダウンロードした章の再スキャンを強制</string>
 </resources>

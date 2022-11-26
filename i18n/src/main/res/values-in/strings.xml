@@ -233,7 +233,7 @@
     <string name="download_notifier_unknown_error">Terjadi kesalahan saat mengunduh bab</string>
     <string name="download_notifier_text_only_wifi">Tidak terhubung dengan Wi-Fi</string>
     <string name="download_notifier_no_network">Tidak ada koneksi jaringan yang tersedia</string>
-    <string name="download_notifier_download_paused">Pengunduhan dijeda</string>
+    <string name="download_notifier_download_paused">Unduhan dijeda</string>
     <string name="action_global_search">Pencarian Global</string>
     <string name="action_display_download_badge">Diunduh</string>
     <string name="local_source_badge">Lokal</string>
@@ -751,7 +751,7 @@
     <string name="updates_last_update_info_just_now">Baru saja</string>
     <string name="action_open_random_manga">Buka entri acak</string>
     <string name="download_notifier_cache_renewal">Mengindeks unduhan</string>
-    <string name="channel_downloader_cache">Unduh cache</string>
+    <string name="channel_downloader_cache">Pengindeksan</string>
     <string name="information_no_entries_found">Tidak ada entri yang ditemukan dalam kategori ini</string>
     <string name="fdroid_warning">Build F-Droid tidak didukung secara resmi.
 \n Ketuk untuk mempelajari lebih lanjut.</string>
@@ -759,5 +759,8 @@
     <string name="action_display_show_continue_reading_button">Tampilkan tombol lanjutkan membaca</string>
     <string name="enhanced_tracking_warning">Pelacak ini hanya tersedia untuk sumber %1$s.</string>
     <string name="track_remove_date_conf_title">Hapus tanggal\?</string>
-    <string name="pref_invalidate_download_cache">Indeks ulang unduhan</string>
+    <string name="pref_invalidate_download_cache">Membatalkan indeks unduhan</string>
+    <string name="pref_invalidate_download_cache_summary">Paksa aplikasi untuk mengecek ulang bab ter-unduh</string>
+    <string name="track_remove_start_date_conf_text">Ini akan menghapus tanggal mulai yang Anda pilih sebelumnya dari %s</string>
+    <string name="track_remove_finish_date_conf_text">Ini akan menghapus tanggal selesai yang Anda pilih sebelumnya dari %s</string>
 </resources>

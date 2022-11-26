@@ -788,4 +788,5 @@
     <string name="track_remove_start_date_conf_text">Tím se odstraní dříve vybrané datum zahájení z %s</string>
     <string name="pref_invalidate_download_cache">Zneplatnit index stahování</string>
     <string name="enhanced_tracking_warning">Tento sledovač je kompatibilní pouze se zdrojem %1$s.</string>
+    <string name="pref_invalidate_download_cache_summary">Vynutit aplikaci znovu zkontrolovat stažené kapitoly</string>
 </resources>

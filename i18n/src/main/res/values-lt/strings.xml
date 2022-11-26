@@ -787,5 +787,6 @@
     <string name="track_remove_date_conf_title">Pašalinti datą\?</string>
     <string name="track_remove_start_date_conf_text">Tai pašalins jūsų anksčiau pasirinktą pradžios datą iš %s</string>
     <string name="enhanced_tracking_warning">Šis sekimo įrenginys suderinamas tik su %1$s šaltiniu.</string>
-    <string name="pref_invalidate_download_cache">Perindeksuoti atsisiuntimus</string>
+    <string name="pref_invalidate_download_cache">Atsisiuntimų indekso panaikinimas</string>
+    <string name="pref_invalidate_download_cache_summary">Priversti programėlę iš naujo patikrinti atsisiųstus skyrius</string>
 </resources>
