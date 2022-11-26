@@ -6,21 +6,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.ExtensionScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
-import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsController
+import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreen
 
 @Composable
 fun extensionsTab(
     extensionsScreenModel: ExtensionsScreenModel,
 ): TabContent {
-    val router = LocalRouter.currentOrThrow
+    val navigator = LocalNavigator.currentOrThrow
     val state by extensionsScreenModel.state.collectAsState()
 
     return TabContent(
@@ -31,7 +30,7 @@ fun extensionsTab(
             AppBar.Action(
                 title = stringResource(R.string.action_filter),
                 icon = Icons.Outlined.Translate,
-                onClick = { router.pushController(ExtensionFilterController()) },
+                onClick = { navigator.push(ExtensionFilterScreen()) },
             ),
         ),
         content = { contentPadding, _ ->
@@ -47,7 +46,7 @@ fun extensionsTab(
                 onClickItemCancel = extensionsScreenModel::cancelInstallUpdateExtension,
                 onClickUpdateAll = extensionsScreenModel::updateAllExtensions,
                 onInstallExtension = extensionsScreenModel::installExtension,
-                onOpenExtension = { router.pushController(ExtensionDetailsController(it.pkgName)) },
+                onOpenExtension = { navigator.push(ExtensionDetailsScreen(it.pkgName)) },
                 onTrustExtension = { extensionsScreenModel.trustSignature(it.signatureHash) },
                 onUninstallExtension = { extensionsScreenModel.uninstallExtension(it.pkgName) },
                 onUpdateExtension = extensionsScreenModel::updateExtension,

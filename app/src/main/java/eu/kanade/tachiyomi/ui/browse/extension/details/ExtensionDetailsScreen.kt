@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.ExtensionDetailsScreen
 import eu.kanade.presentation.components.LoadingScreen
@@ -15,7 +16,7 @@ import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.ui.base.controller.pushController
 import kotlinx.coroutines.flow.collectLatest
 
-class ExtensionDetailsScreen(
+data class ExtensionDetailsScreen(
     private val pkgName: String,
 ) : Screen {
 
@@ -30,11 +31,12 @@ class ExtensionDetailsScreen(
             return
         }
 
+        val navigator = LocalNavigator.currentOrThrow
         val router = LocalRouter.currentOrThrow
         val uriHandler = LocalUriHandler.current
 
         ExtensionDetailsScreen(
-            navigateUp = router::popCurrentController,
+            navigateUp = navigator::pop,
             state = state,
             onClickSourcePreferences = { router.pushController(SourcePreferencesController(it)) },
             onClickWhatsNew = { uriHandler.openUri(screenModel.getChangelogUrl()) },
@@ -49,7 +51,7 @@ class ExtensionDetailsScreen(
         LaunchedEffect(Unit) {
             screenModel.events.collectLatest { event ->
                 if (event is ExtensionDetailsEvent.Uninstalled) {
-                    router.popCurrentController()
+                    navigator.pop()
                 }
             }
         }

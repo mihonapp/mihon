@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.browse.extension.details
 
 import android.content.Context
+import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.domain.extension.interactor.ExtensionSourceItem
@@ -14,11 +15,13 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import logcat.LogPriority
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -69,12 +72,13 @@ class ExtensionDetailsScreenModel(
                                     },
                                 ),
                             )
-                        }.collectLatest { sources ->
-                            mutableState.update {
-                                it.copy(
-                                    sources = sources,
-                                )
-                            }
+                        }
+                        .catch { throwable ->
+                            logcat(LogPriority.ERROR, throwable)
+                            mutableState.update { it.copy(_sources = emptyList()) }
+                        }
+                        .collectLatest { sources ->
+                            mutableState.update { it.copy(_sources = sources) }
                         }
                 }
             }
@@ -157,11 +161,15 @@ sealed class ExtensionDetailsEvent {
     object Uninstalled : ExtensionDetailsEvent()
 }
 
+@Immutable
 data class ExtensionDetailsState(
     val extension: Extension.Installed? = null,
-    val sources: List<ExtensionSourceItem> = emptyList(),
+    private val _sources: List<ExtensionSourceItem>? = null,
 ) {
 
+    val sources: List<ExtensionSourceItem>
+        get() = _sources ?: emptyList()
+
     val isLoading: Boolean
-        get() = sources.isEmpty()
+        get() = extension == null || _sources == null
 }
