@@ -32,8 +32,9 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastMap
 import androidx.core.content.ContextCompat
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.bluelinelabs.conductor.Router
 import com.commandiron.wheel_picker_compose.WheelPicker
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.ResetCategoryFlags
@@ -42,7 +43,6 @@ import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.widget.TriStateListDialog
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
@@ -54,8 +54,7 @@ import eu.kanade.tachiyomi.data.preference.MANGA_HAS_UNREAD
 import eu.kanade.tachiyomi.data.preference.MANGA_NON_COMPLETED
 import eu.kanade.tachiyomi.data.preference.MANGA_NON_READ
 import eu.kanade.tachiyomi.data.track.TrackManager
-import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.category.CategoryController
+import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import uy.kohesive.injekt.Injekt
@@ -76,7 +75,7 @@ object SettingsLibraryScreen : SearchableSettings {
 
         return mutableListOf(
             getDisplayGroup(libraryPreferences),
-            getCategoriesGroup(LocalRouter.currentOrThrow, allCategories, libraryPreferences),
+            getCategoriesGroup(LocalNavigator.currentOrThrow, allCategories, libraryPreferences),
             getGlobalUpdateGroup(allCategories, libraryPreferences),
         )
     }
@@ -116,7 +115,7 @@ object SettingsLibraryScreen : SearchableSettings {
 
     @Composable
     private fun getCategoriesGroup(
-        router: Router?,
+        navigator: Navigator,
         allCategories: List<Category>,
         libraryPreferences: LibraryPreferences,
     ): Preference.PreferenceGroup {
@@ -143,7 +142,7 @@ object SettingsLibraryScreen : SearchableSettings {
                         count = userCategoriesCount,
                         userCategoriesCount,
                     ),
-                    onClick = { router?.pushController(CategoryController()) },
+                    onClick = { navigator.push(CategoryScreen()) },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryPreferences.defaultCategory(),
