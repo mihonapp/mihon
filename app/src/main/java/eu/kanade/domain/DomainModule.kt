@@ -34,6 +34,7 @@ import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.history.interactor.GetHistory
 import eu.kanade.domain.history.interactor.GetNextChapters
+import eu.kanade.domain.history.interactor.GetTotalReadDuration
 import eu.kanade.domain.history.interactor.RemoveHistory
 import eu.kanade.domain.history.interactor.UpsertHistory
 import eu.kanade.domain.history.repository.HistoryRepository
@@ -120,6 +121,7 @@ class DomainModule : InjektModule {
         addFactory { GetHistory(get()) }
         addFactory { UpsertHistory(get()) }
         addFactory { RemoveHistory(get()) }
+        addFactory { GetTotalReadDuration(get()) }
 
         addFactory { DeleteDownload(get(), get()) }
 

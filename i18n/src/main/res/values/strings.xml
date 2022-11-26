@@ -23,12 +23,18 @@
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
     <string name="label_backup">Backup and restore</string>
+    <string name="label_stats">Statistics</string>
     <string name="label_migration">Migrate</string>
     <string name="label_extensions">Extensions</string>
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
     <string name="label_default">Default</string>
     <string name="label_warning">Warning</string>
+
+    <!-- Shared labels -->
+    <string name="label_started">Started</string>
+    <string name="label_local">Local</string>
+    <string name="label_downloaded">Downloaded</string>
 
     <string name="unlock_app">Unlock Tachiyomi</string>
     <string name="confirm_lock_change">Authenticate to confirm change</string>
@@ -38,11 +44,9 @@
     <string name="action_settings">Settings</string>
     <string name="action_menu">Menu</string>
     <string name="action_filter">Filter</string>
-    <string name="action_filter_downloaded">Downloaded</string>
     <string name="action_filter_bookmarked">Bookmarked</string>
     <string name="action_filter_tracked">Tracked</string>
     <string name="action_filter_unread">Unread</string>
-    <string name="action_filter_started">Started</string>
     <!-- reserved for #4048 -->
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
@@ -576,7 +580,6 @@
 
     <!-- Library fragment -->
     <string name="updating_category">Updating category</string>
-    <string name="local_source_badge">Local</string>
     <string name="manga_from_library">From library</string>
     <string name="downloaded_chapters">Downloaded chapters</string>
     <string name="badges_header">Badges</string>
@@ -699,7 +702,6 @@
     <string name="title">Title</string>
     <string name="status">Status</string>
     <string name="track_status">Status</string>
-    <string name="track_start_date">Started</string>
     <string name="track_started_reading_date">Start date</string>
     <string name="track_finished_reading_date">Finish date</string>
     <string name="track_type">Type</string>
@@ -782,6 +784,24 @@
     <string name="crash_screen_title">An Unexpected Error Occurred</string>
     <string name="crash_screen_description">%s ran into an unexpected error. We suggest you screenshot this message, dump the crash logs, and then share it in our support channel on Discord.</string>
     <string name="crash_screen_restart_application">Restart the application</string>
+
+    <!-- Stats screen -->
+    <string name="label_overview_section">Overview</string>
+    <string name="label_completed_titles">Completed entries</string>
+    <string name="label_read_duration">Read duration</string>
+    <string name="label_titles_section">Entries</string>
+    <string name="label_titles_in_global_update">In global update</string>
+    <string name="label_total_chapters">Total</string>
+    <string name="label_read_chapters">Read</string>
+    <string name="label_tracker_section">Trackers</string>
+    <string name="label_tracked_titles">Tracked entries</string>
+    <string name="label_mean_score">Mean score</string>
+    <string name="label_used">Used</string>
+    <string name="not_applicable">N/A</string>
+    <string name="day_short">%dd</string>
+    <string name="hour_short">%dh</string>
+    <string name="minute_short">%dm</string>
+    <string name="seconds_short">%ds</string>
 
     <!-- Downloads activity and service -->
     <string name="download_queue_error">Couldn\'t download chapters. You can try again in the downloads section</string>

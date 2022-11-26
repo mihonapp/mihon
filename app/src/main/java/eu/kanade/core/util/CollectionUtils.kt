@@ -44,7 +44,6 @@ fun <E> HashSet<E>.addOrRemove(value: E, shouldAdd: Boolean) {
  * access in an efficient way, and this method may actually be a lot slower. Only use for
  * collections that are created by code we control and are known to support random access.
  */
-@Suppress("BanInlineOptIn")
 @OptIn(ExperimentalContracts::class)
 inline fun <T> List<T>.fastFilter(predicate: (T) -> Boolean): List<T> {
     contract { callsInPlace(predicate) }
@@ -60,7 +59,6 @@ inline fun <T> List<T>.fastFilter(predicate: (T) -> Boolean): List<T> {
  * access in an efficient way, and this method may actually be a lot slower. Only use for
  * collections that are created by code we control and are known to support random access.
  */
-@Suppress("BanInlineOptIn")
 @OptIn(ExperimentalContracts::class)
 inline fun <T> List<T>.fastFilterNot(predicate: (T) -> Boolean): List<T> {
     contract { callsInPlace(predicate) }
@@ -77,7 +75,6 @@ inline fun <T> List<T>.fastFilterNot(predicate: (T) -> Boolean): List<T> {
  * access in an efficient way, and this method may actually be a lot slower. Only use for
  * collections that are created by code we control and are known to support random access.
  */
-@Suppress("BanInlineOptIn")
 @OptIn(ExperimentalContracts::class)
 inline fun <T, R> List<T>.fastMapNotNull(transform: (T) -> R?): List<R> {
     contract { callsInPlace(transform) }
@@ -97,7 +94,6 @@ inline fun <T, R> List<T>.fastMapNotNull(transform: (T) -> R?): List<R> {
  * access in an efficient way, and this method may actually be a lot slower. Only use for
  * collections that are created by code we control and are known to support random access.
  */
-@Suppress("BanInlineOptIn")
 @OptIn(ExperimentalContracts::class)
 inline fun <T> List<T>.fastPartition(predicate: (T) -> Boolean): Pair<List<T>, List<T>> {
     contract { callsInPlace(predicate) }
@@ -111,4 +107,42 @@ inline fun <T> List<T>.fastPartition(predicate: (T) -> Boolean): Pair<List<T>, L
         }
     }
     return Pair(first, second)
+}
+
+/**
+ * Returns the number of entries not matching the given [predicate].
+ *
+ * **Do not use for collections that come from public APIs**, since they may not support random
+ * access in an efficient way, and this method may actually be a lot slower. Only use for
+ * collections that are created by code we control and are known to support random access.
+ */
+@OptIn(ExperimentalContracts::class)
+inline fun <T> List<T>.fastCountNot(predicate: (T) -> Boolean): Int {
+    contract { callsInPlace(predicate) }
+    var count = size
+    fastForEach { if (predicate(it)) --count }
+    return count
+}
+
+/**
+ * Returns a list containing only elements from the given collection
+ * having distinct keys returned by the given [selector] function.
+ *
+ * Among elements of the given collection with equal keys, only the first one will be present in the resulting list.
+ * The elements in the resulting list are in the same order as they were in the source collection.
+ *
+ * **Do not use for collections that come from public APIs**, since they may not support random
+ * access in an efficient way, and this method may actually be a lot slower. Only use for
+ * collections that are created by code we control and are known to support random access.
+ */
+@OptIn(ExperimentalContracts::class)
+inline fun <T, K> List<T>.fastDistinctBy(selector: (T) -> K): List<T> {
+    contract { callsInPlace(selector) }
+    val set = HashSet<K>()
+    val list = ArrayList<T>()
+    fastForEach {
+        val key = selector(it)
+        if (set.add(key)) list.add(it)
+    }
+    return list
 }

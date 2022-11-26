@@ -10,6 +10,8 @@ interface HistoryRepository {
 
     suspend fun getLastHistory(): HistoryWithRelations?
 
+    suspend fun getTotalReadDuration(): Long
+
     suspend fun resetHistory(historyId: Long)
 
     suspend fun resetHistoryByMangaId(mangaId: Long)

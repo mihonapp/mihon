@@ -206,6 +206,13 @@ class DownloadManager(
     }
 
     /**
+     * Returns the amount of downloaded chapters.
+     */
+    fun getDownloadCount(): Int {
+        return cache.getTotalDownloadCount()
+    }
+
+    /**
      * Returns the amount of downloaded chapters for a manga.
      *
      * @param manga the manga to check.

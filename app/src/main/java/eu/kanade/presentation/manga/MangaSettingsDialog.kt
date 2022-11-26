@@ -292,7 +292,7 @@ private fun FilterPage(
             .verticalScroll(rememberScrollState()),
     ) {
         FilterPageItem(
-            label = stringResource(R.string.action_filter_downloaded),
+            label = stringResource(R.string.label_downloaded),
             state = downloadFilter,
             onClick = onDownloadFilterChanged,
         )

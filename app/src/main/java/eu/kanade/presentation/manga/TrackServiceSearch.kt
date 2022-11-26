@@ -270,7 +270,7 @@ private fun SearchResultItem(
                     }
                     if (startDate.isNotBlank()) {
                         SearchResultItemDetails(
-                            title = stringResource(R.string.track_start_date),
+                            title = stringResource(R.string.label_started),
                             text = startDate,
                         )
                     }

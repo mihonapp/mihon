@@ -11,6 +11,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
+import eu.kanade.domain.track.model.Track as DomainTrack
 
 class Anilist(private val context: Context, id: Long) : TrackService(id) {
 
@@ -92,6 +93,11 @@ class Anilist(private val context: Context, id: Long) : TrackService(id) {
             POINT_10_DECIMAL -> IntRange(0, 100).map { (it / 10f).toString() }
             else -> throw Exception("Unknown score type")
         }
+    }
+
+    override fun get10PointScore(track: DomainTrack): Float {
+        // Score is stored in 100 point format
+        return track.score / 10f
     }
 
     override fun indexToScore(index: Int): Float {

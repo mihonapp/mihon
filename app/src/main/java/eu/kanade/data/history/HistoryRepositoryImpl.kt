@@ -24,6 +24,10 @@ class HistoryRepositoryImpl(
         }
     }
 
+    override suspend fun getTotalReadDuration(): Long {
+        return handler.awaitOne { historyQueries.getReadDuration() }
+    }
+
     override suspend fun resetHistory(historyId: Long) {
         try {
             handler.await { historyQueries.resetHistoryById(historyId) }

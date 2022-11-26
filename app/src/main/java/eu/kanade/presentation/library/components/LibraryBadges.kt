@@ -31,7 +31,7 @@ fun LanguageBadge(
 ) {
     if (isLocal) {
         Badge(
-            text = stringResource(R.string.local_source_badge),
+            text = stringResource(R.string.label_local),
             color = MaterialTheme.colorScheme.tertiary,
             textColor = MaterialTheme.colorScheme.onTertiary,
         )

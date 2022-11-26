@@ -67,3 +67,7 @@ SET
     last_read = :readAt,
     time_read = time_read + :time_read
 WHERE chapter_id = :chapterId;
+
+getReadDuration:
+SELECT coalesce(sum(time_read), 0)
+FROM history;

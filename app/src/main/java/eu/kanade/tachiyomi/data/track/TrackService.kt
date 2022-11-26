@@ -24,6 +24,7 @@ import okhttp3.OkHttpClient
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
+import eu.kanade.domain.track.model.Track as DomainTrack
 
 abstract class TrackService(val id: Long) {
 
@@ -58,6 +59,11 @@ abstract class TrackService(val id: Long) {
     abstract fun getCompletionStatus(): Int
 
     abstract fun getScoreList(): List<String>
+
+    // TODO: Store all scores as 10 point in the future maybe?
+    open fun get10PointScore(track: DomainTrack): Float {
+        return track.score
+    }
 
     open fun indexToScore(index: Int): Float {
         return index.toFloat()
