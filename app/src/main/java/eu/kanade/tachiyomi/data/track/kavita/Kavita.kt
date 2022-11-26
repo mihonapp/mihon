@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.kavita
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -13,17 +12,19 @@ import eu.kanade.tachiyomi.data.track.NoLoginTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.security.MessageDigest
+import eu.kanade.domain.manga.model.Manga as DomainManga
+import eu.kanade.domain.track.model.Track as DomainTrack
 
 class Kavita(private val context: Context, id: Long) : TrackService(id), EnhancedTrackService, NoLoginTrackService {
-    var authentications: OAuth? = null
+
     companion object {
         const val UNREAD = 1
         const val READING = 2
         const val COMPLETED = 3
     }
+
+    var authentications: OAuth? = null
 
     private val interceptor by lazy { KavitaInterceptor(this) }
     val api by lazy { KavitaApi(client, interceptor) }
@@ -39,18 +40,18 @@ class Kavita(private val context: Context, id: Long) : TrackService(id), Enhance
 
     override fun getStatus(status: Int): String = with(context) {
         when (status) {
-            Kavita.UNREAD -> getString(R.string.unread)
-            Kavita.READING -> getString(R.string.reading)
-            Kavita.COMPLETED -> getString(R.string.completed)
+            UNREAD -> getString(R.string.unread)
+            READING -> getString(R.string.reading)
+            COMPLETED -> getString(R.string.completed)
             else -> ""
         }
     }
 
-    override fun getReadingStatus(): Int = Kavita.READING
+    override fun getReadingStatus(): Int = READING
 
     override fun getRereadingStatus(): Int = -1
 
-    override fun getCompletionStatus(): Int = Kavita.COMPLETED
+    override fun getCompletionStatus(): Int = COMPLETED
 
     override fun getScoreList(): List<String> = emptyList()
 
@@ -103,10 +104,10 @@ class Kavita(private val context: Context, id: Long) : TrackService(id), Enhance
             null
         }
 
-    override fun isTrackFrom(track: eu.kanade.domain.track.model.Track, manga: eu.kanade.domain.manga.model.Manga, source: Source?): Boolean =
+    override fun isTrackFrom(track: DomainTrack, manga: DomainManga, source: Source?): Boolean =
         track.remoteUrl == manga.url && source?.let { accept(it) } == true
 
-    override fun migrateTrack(track: eu.kanade.domain.track.model.Track, manga: eu.kanade.domain.manga.model.Manga, newSource: Source): eu.kanade.domain.track.model.Track? =
+    override fun migrateTrack(track: DomainTrack, manga: DomainManga, newSource: Source): DomainTrack? =
         if (accept(newSource)) {
             track.copy(remoteUrl = manga.url)
         } else {
@@ -118,13 +119,13 @@ class Kavita(private val context: Context, id: Long) : TrackService(id), Enhance
         for (sourceId in 1..3) {
             val authentication = oauth.authentications[sourceId - 1]
             val sourceSuffixID by lazy {
-                val key = "${"kavita_$sourceId"}/all/1" // Hardcoded versionID to 1
+                val key = "kavita_$sourceId/all/1" // Hardcoded versionID to 1
                 val bytes = MessageDigest.getInstance("MD5").digest(key.toByteArray())
                 (0..7).map { bytes[it].toLong() and 0xff shl 8 * (7 - it) }
                     .reduce(Long::or) and Long.MAX_VALUE
             }
             val preferences: SharedPreferences by lazy {
-                Injekt.get<Application>().getSharedPreferences("source_$sourceSuffixID", 0x0000)
+                context.getSharedPreferences("source_$sourceSuffixID", 0x0000)
             }
             val prefApiUrl = preferences.getString("APIURL", "")!!
             if (prefApiUrl.isEmpty()) {
@@ -133,7 +134,6 @@ class Kavita(private val context: Context, id: Long) : TrackService(id), Enhance
             }
             val prefApiKey = preferences.getString("APIKEY", "")!!
             val token = api.getNewToken(apiUrl = prefApiUrl, apiKey = prefApiKey)
-
             if (token.isNullOrEmpty()) {
                 // Source is not accessible. Skip
                 continue
