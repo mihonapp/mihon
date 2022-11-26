@@ -44,10 +44,10 @@ class DownloadCache(
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
 ) {
 
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     private val _changes: Channel<Unit> = Channel(Channel.UNLIMITED)
     val changes = _changes.receiveAsFlow().onStart { emit(Unit) }
-
-    private val scope = CoroutineScope(Dispatchers.IO)
 
     private val notifier by lazy { DownloadNotifier(context) }
 

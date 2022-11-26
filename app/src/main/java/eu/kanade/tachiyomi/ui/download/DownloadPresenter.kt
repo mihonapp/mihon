@@ -34,7 +34,7 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
         super.onCreate(savedState)
 
         presenterScope.launch {
-            downloadQueue.updatedFlow()
+            downloadQueue.updates
                 .catch { logcat(LogPriority.ERROR, it) }
                 .map { downloads ->
                     downloads
