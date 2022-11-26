@@ -5,16 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.Badge
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.library.LibraryItem
 
 @Composable
-fun DownloadsBadge(
-    enabled: Boolean,
-    item: LibraryItem,
-) {
-    if (enabled && item.downloadCount > 0) {
+fun DownloadsBadge(count: Int) {
+    if (count > 0) {
         Badge(
-            text = "${item.downloadCount}",
+            text = "$count",
             color = MaterialTheme.colorScheme.tertiary,
             textColor = MaterialTheme.colorScheme.onTertiary,
         )
@@ -22,30 +18,26 @@ fun DownloadsBadge(
 }
 
 @Composable
-fun UnreadBadge(
-    enabled: Boolean,
-    item: LibraryItem,
-) {
-    if (enabled && item.unreadCount > 0) {
-        Badge(text = "${item.unreadCount}")
+fun UnreadBadge(count: Int) {
+    if (count > 0) {
+        Badge(text = "$count")
     }
 }
 
 @Composable
 fun LanguageBadge(
-    showLanguage: Boolean,
-    showLocal: Boolean,
-    item: LibraryItem,
+    isLocal: Boolean,
+    sourceLanguage: String,
 ) {
-    if (showLocal && item.isLocal) {
+    if (isLocal) {
         Badge(
             text = stringResource(R.string.local_source_badge),
             color = MaterialTheme.colorScheme.tertiary,
             textColor = MaterialTheme.colorScheme.onTertiary,
         )
-    } else if (showLanguage && item.sourceLanguage.isNotEmpty()) {
+    } else if (sourceLanguage.isNotEmpty()) {
         Badge(
-            text = item.sourceLanguage.uppercase(),
+            text = sourceLanguage.uppercase(),
             color = MaterialTheme.colorScheme.tertiary,
             textColor = MaterialTheme.colorScheme.onTertiary,
         )

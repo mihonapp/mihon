@@ -15,17 +15,12 @@ import eu.kanade.tachiyomi.ui.library.LibraryItem
 fun LibraryCompactGrid(
     items: List<LibraryItem>,
     showTitle: Boolean,
-    showDownloadBadges: Boolean,
-    showUnreadBadges: Boolean,
-    showLocalBadges: Boolean,
-    showLanguageBadges: Boolean,
-    showContinueReadingButton: Boolean,
     columns: Int,
     contentPadding: PaddingValues,
     selection: List<LibraryManga>,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
-    onClickContinueReading: (LibraryManga) -> Unit,
+    onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
 ) {
@@ -52,26 +47,22 @@ fun LibraryCompactGrid(
                     lastModified = manga.coverLastModified,
                 ),
                 coverBadgeStart = {
-                    DownloadsBadge(
-                        enabled = showDownloadBadges,
-                        item = libraryItem,
-                    )
-                    UnreadBadge(
-                        enabled = showUnreadBadges,
-                        item = libraryItem,
-                    )
+                    DownloadsBadge(count = libraryItem.downloadCount.toInt())
+                    UnreadBadge(count = libraryItem.unreadCount.toInt())
                 },
                 coverBadgeEnd = {
                     LanguageBadge(
-                        showLanguage = showLanguageBadges,
-                        showLocal = showLocalBadges,
-                        item = libraryItem,
+                        isLocal = libraryItem.isLocal,
+                        sourceLanguage = libraryItem.sourceLanguage,
                     )
                 },
-                showContinueReadingButton = showContinueReadingButton,
                 onLongClick = { onLongClick(libraryItem.libraryManga) },
                 onClick = { onClick(libraryItem.libraryManga) },
-                onClickContinueReading = { onClickContinueReading(libraryItem.libraryManga) },
+                onClickContinueReading = if (onClickContinueReading != null) {
+                    { onClickContinueReading(libraryItem.libraryManga) }
+                } else {
+                    null
+                },
             )
         }
     }

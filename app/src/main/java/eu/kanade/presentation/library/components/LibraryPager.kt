@@ -27,15 +27,10 @@ fun LibraryPager(
     onGlobalSearchClicked: () -> Unit,
     getDisplayModeForPage: @Composable (Int) -> LibraryDisplayMode,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
-    getLibraryForPage: @Composable (Int) -> List<LibraryItem>,
-    showDownloadBadges: Boolean,
-    showUnreadBadges: Boolean,
-    showLocalBadges: Boolean,
-    showLanguageBadges: Boolean,
-    showContinueReadingButton: Boolean,
+    getLibraryForPage: (Int) -> List<LibraryItem>,
     onClickManga: (LibraryManga) -> Unit,
     onLongClickManga: (LibraryManga) -> Unit,
-    onClickContinueReading: (LibraryManga) -> Unit,
+    onClickContinueReading: ((LibraryManga) -> Unit)?,
 ) {
     HorizontalPager(
         count = pageCount,
@@ -62,11 +57,6 @@ fun LibraryPager(
             LibraryDisplayMode.List -> {
                 LibraryList(
                     items = library,
-                    showDownloadBadges = showDownloadBadges,
-                    showUnreadBadges = showUnreadBadges,
-                    showLocalBadges = showLocalBadges,
-                    showLanguageBadges = showLanguageBadges,
-                    showContinueReadingButton = showContinueReadingButton,
                     contentPadding = contentPadding,
                     selection = selectedManga,
                     onClick = onClickManga,
@@ -80,11 +70,6 @@ fun LibraryPager(
                 LibraryCompactGrid(
                     items = library,
                     showTitle = displayMode is LibraryDisplayMode.CompactGrid,
-                    showDownloadBadges = showDownloadBadges,
-                    showUnreadBadges = showUnreadBadges,
-                    showLocalBadges = showLocalBadges,
-                    showLanguageBadges = showLanguageBadges,
-                    showContinueReadingButton = showContinueReadingButton,
                     columns = columns,
                     contentPadding = contentPadding,
                     selection = selectedManga,
@@ -98,17 +83,12 @@ fun LibraryPager(
             LibraryDisplayMode.ComfortableGrid -> {
                 LibraryComfortableGrid(
                     items = library,
-                    showDownloadBadges = showDownloadBadges,
-                    showUnreadBadges = showUnreadBadges,
-                    showLocalBadges = showLocalBadges,
-                    showLanguageBadges = showLanguageBadges,
-                    showContinueReadingButton = showContinueReadingButton,
                     columns = columns,
                     contentPadding = contentPadding,
                     selection = selectedManga,
                     onClick = onClickManga,
-                    onClickContinueReading = onClickContinueReading,
                     onLongClick = onLongClickManga,
+                    onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
                 )

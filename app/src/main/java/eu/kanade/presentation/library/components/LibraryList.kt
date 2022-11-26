@@ -23,16 +23,11 @@ import eu.kanade.tachiyomi.ui.library.LibraryItem
 @Composable
 fun LibraryList(
     items: List<LibraryItem>,
-    showDownloadBadges: Boolean,
-    showUnreadBadges: Boolean,
-    showLocalBadges: Boolean,
-    showLanguageBadges: Boolean,
-    showContinueReadingButton: Boolean,
     contentPadding: PaddingValues,
     selection: List<LibraryManga>,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
-    onClickContinueReading: (LibraryManga) -> Unit,
+    onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
 ) {
@@ -41,13 +36,13 @@ fun LibraryList(
         contentPadding = contentPadding + PaddingValues(vertical = 8.dp),
     ) {
         item {
-            if (searchQuery.isNullOrEmpty().not()) {
+            if (!searchQuery.isNullOrEmpty()) {
                 TextButton(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onGlobalSearchClicked,
                 ) {
                     Text(
-                        text = stringResource(R.string.action_global_search_query, searchQuery!!),
+                        text = stringResource(R.string.action_global_search_query, searchQuery),
                         modifier = Modifier.zIndex(99f),
                     )
                 }
@@ -70,14 +65,20 @@ fun LibraryList(
                     lastModified = manga.coverLastModified,
                 ),
                 badge = {
-                    DownloadsBadge(enabled = showDownloadBadges, item = libraryItem)
-                    UnreadBadge(enabled = showUnreadBadges, item = libraryItem)
-                    LanguageBadge(showLanguage = showLanguageBadges, showLocal = showLocalBadges, item = libraryItem)
+                    DownloadsBadge(count = libraryItem.downloadCount.toInt())
+                    UnreadBadge(count = libraryItem.unreadCount.toInt())
+                    LanguageBadge(
+                        isLocal = libraryItem.isLocal,
+                        sourceLanguage = libraryItem.sourceLanguage,
+                    )
                 },
-                showContinueReadingButton = showContinueReadingButton,
                 onLongClick = { onLongClick(libraryItem.libraryManga) },
                 onClick = { onClick(libraryItem.libraryManga) },
-                onClickContinueReading = { onClickContinueReading(libraryItem.libraryManga) },
+                onClickContinueReading = if (onClickContinueReading != null) {
+                    { onClickContinueReading(libraryItem.libraryManga) }
+                } else {
+                    null
+                },
             )
         }
     }
