@@ -20,21 +20,13 @@ import eu.kanade.tachiyomi.util.system.notificationManager
  */
 class SaveImageNotifier(private val context: Context) {
 
-    /**
-     * Notification builder.
-     */
     private val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_COMMON)
-
-    /**
-     * Id of the notification.
-     */
-    private val notificationId: Int
-        get() = Notifications.ID_DOWNLOAD_IMAGE
+    private val notificationId: Int = Notifications.ID_DOWNLOAD_IMAGE
 
     /**
      * Called when image download/copy is complete.
      *
-     * @param file image file containing downloaded page image.
+     * @param uri image file containing downloaded page image.
      */
     fun onComplete(uri: Uri) {
         val request = ImageRequest.Builder(context)
@@ -51,6 +43,27 @@ class SaveImageNotifier(private val context: Context) {
             )
             .build()
         context.imageLoader.enqueue(request)
+    }
+
+    /**
+     * Clears the notification message.
+     */
+    fun onClear() {
+        context.notificationManager.cancel(notificationId)
+    }
+
+    /**
+     * Called on error while downloading image.
+     * @param error string containing error information.
+     */
+    fun onError(error: String?) {
+        // Create notification
+        with(notificationBuilder) {
+            setContentTitle(context.getString(R.string.download_notifier_title_error))
+            setContentText(error ?: context.getString(R.string.unknown_error))
+            setSmallIcon(android.R.drawable.ic_menu_report_image)
+        }
+        updateNotification()
     }
 
     private fun showCompleteNotification(uri: Uri, image: Bitmap) {
@@ -82,29 +95,8 @@ class SaveImageNotifier(private val context: Context) {
         }
     }
 
-    /**
-     * Clears the notification message.
-     */
-    fun onClear() {
-        context.notificationManager.cancel(notificationId)
-    }
-
     private fun updateNotification() {
         // Displays the progress bar on notification
         context.notificationManager.notify(notificationId, notificationBuilder.build())
-    }
-
-    /**
-     * Called on error while downloading image.
-     * @param error string containing error information.
-     */
-    fun onError(error: String?) {
-        // Create notification
-        with(notificationBuilder) {
-            setContentTitle(context.getString(R.string.download_notifier_title_error))
-            setContentText(error ?: context.getString(R.string.unknown_error))
-            setSmallIcon(android.R.drawable.ic_menu_report_image)
-        }
-        updateNotification()
     }
 }

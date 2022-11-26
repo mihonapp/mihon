@@ -197,7 +197,6 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param notificationId id of notification
      */
     private fun deleteImage(context: Context, path: String, notificationId: Int) {
-        // Dismiss notification
         dismissNotification(context, notificationId)
 
         // Delete file
