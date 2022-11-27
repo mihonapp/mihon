@@ -7,16 +7,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import nucleus.presenter.RxPresenter
-import rx.Observable
 
 open class BasePresenter<V> : RxPresenter<V>() {
 
     var presenterScope: CoroutineScope = MainScope()
-
-    /**
-     * Query from the view where applicable
-     */
-    var query: String = ""
 
     override fun onCreate(savedState: Bundle?) {
         try {
@@ -39,13 +33,4 @@ open class BasePresenter<V> : RxPresenter<V>() {
     }
 
     fun <T> Preference<T>.asState() = PreferenceMutableState(this, presenterScope)
-
-    /**
-     * Subscribes an observable with [deliverLatestCache] and adds it to the presenter's lifecycle
-     * subscription list.
-     *
-     * @param onNext function to execute when the observable emits an item.
-     * @param onError function to execute when the observable throws an error.
-     */
-    fun <T> Observable<T>.subscribeLatestCache(onNext: (V, T) -> Unit, onError: ((V, Throwable) -> Unit) = { _, _ -> }) = compose(deliverLatestCache<T>()).subscribe(split(onNext, onError)).apply { add(this) }
 }

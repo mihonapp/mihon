@@ -898,6 +898,15 @@ class ReaderPresenter(
      */
     private fun <T> Observable<T>.subscribeFirst(onNext: (ReaderActivity, T) -> Unit, onError: ((ReaderActivity, Throwable) -> Unit) = { _, _ -> }) = compose(deliverFirst<T>()).subscribe(split(onNext, onError)).apply { add(this) }
 
+    /**
+     * Subscribes an observable with [deliverLatestCache] and adds it to the presenter's lifecycle
+     * subscription list.
+     *
+     * @param onNext function to execute when the observable emits an item.
+     * @param onError function to execute when the observable throws an error.
+     */
+    private fun <T> Observable<T>.subscribeLatestCache(onNext: (ReaderActivity, T) -> Unit, onError: ((ReaderActivity, Throwable) -> Unit) = { _, _ -> }) = compose(deliverLatestCache<T>()).subscribe(split(onNext, onError)).apply { add(this) }
+
     companion object {
         // Safe theoretical max filename size is 255 bytes and 1 char = 2-4 bytes (UTF-8)
         private const val MAX_FILE_NAME_BYTES = 250

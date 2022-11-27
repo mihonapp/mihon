@@ -277,7 +277,7 @@ dependencies {
     implementation(libs.bundles.conductor)
 
     // FlowBinding
-    implementation(libs.bundles.flowbinding)
+    implementation(libs.flowbinding.android)
 
     // Logging
     implementation(libs.logcat)
