@@ -132,7 +132,7 @@ fun MigrateDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = stringResource(id = R.string.migration_dialog_what_to_include))
+            Text(text = stringResource(R.string.migration_dialog_what_to_include))
         },
         text = {
             Column {
@@ -155,7 +155,7 @@ fun MigrateDialog(
                         onDismissRequest()
                     },
                 ) {
-                    Text(text = stringResource(id = R.string.action_show_manga))
+                    Text(text = stringResource(R.string.action_show_manga))
                 }
                 TextButton(onClick = {
                     scope.launchIO {
@@ -165,7 +165,7 @@ fun MigrateDialog(
                         }
                     }
                 },) {
-                    Text(text = stringResource(id = R.string.copy))
+                    Text(text = stringResource(R.string.copy))
                 }
                 TextButton(onClick = {
                     scope.launchIO {
@@ -179,7 +179,7 @@ fun MigrateDialog(
                         }
                     }
                 },) {
-                    Text(text = stringResource(id = R.string.migrate))
+                    Text(text = stringResource(R.string.migrate))
                 }
             }
         },

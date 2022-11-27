@@ -35,7 +35,7 @@ fun GlobalSearchScreen(
     onLongClickItem: (Manga) -> Unit,
 ) {
     Scaffold(
-        topBar = {
+        topBar = { scrollBehavior ->
             GlobalSearchToolbar(
                 searchQuery = state.searchQuery,
                 progress = state.progress,
@@ -43,6 +43,7 @@ fun GlobalSearchScreen(
                 navigateUp = navigateUp,
                 onChangeSearchQuery = onChangeSearchQuery,
                 onSearch = onSearch,
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->
@@ -86,7 +87,7 @@ fun GlobalSearchContent(
                         is GlobalSearchItemResult.Success -> {
                             if (result.isEmpty) {
                                 Text(
-                                    text = stringResource(id = R.string.no_results_found),
+                                    text = stringResource(R.string.no_results_found),
                                     modifier = Modifier
                                         .padding(
                                             horizontal = MaterialTheme.padding.medium,

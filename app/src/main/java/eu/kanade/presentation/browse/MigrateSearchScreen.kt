@@ -29,7 +29,7 @@ fun MigrateSearchScreen(
     onLongClickItem: (Manga) -> Unit,
 ) {
     Scaffold(
-        topBar = {
+        topBar = { scrollBehavior ->
             GlobalSearchToolbar(
                 searchQuery = state.searchQuery,
                 progress = state.progress,
@@ -37,6 +37,7 @@ fun MigrateSearchScreen(
                 navigateUp = navigateUp,
                 onChangeSearchQuery = onChangeSearchQuery,
                 onSearch = onSearch,
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->
