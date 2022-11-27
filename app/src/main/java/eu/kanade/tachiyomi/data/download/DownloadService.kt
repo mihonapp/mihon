@@ -82,11 +82,11 @@ class DownloadService : Service() {
      */
     private lateinit var wakeLock: PowerManager.WakeLock
 
-    private lateinit var ioScope: CoroutineScope
+    private lateinit var scope: CoroutineScope
 
     override fun onCreate() {
         super.onCreate()
-        ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         startForeground(Notifications.ID_DOWNLOAD_CHAPTER_PROGRESS, getPlaceholderNotification())
         wakeLock = acquireWakeLock(javaClass.name)
         _isRunning.value = true
@@ -95,7 +95,7 @@ class DownloadService : Service() {
     }
 
     override fun onDestroy() {
-        ioScope?.cancel()
+        scope?.cancel()
         _isRunning.value = false
         downloadManager.stopDownloads()
         wakeLock.releaseIfHeld()
@@ -140,7 +140,7 @@ class DownloadService : Service() {
                     stopSelf()
                 }
             }
-            .launchIn(ioScope)
+            .launchIn(scope)
     }
 
     /**
@@ -158,7 +158,7 @@ class DownloadService : Service() {
             .catch {
                 // Ignore errors
             }
-            .launchIn(ioScope)
+            .launchIn(scope)
     }
 
     private fun PowerManager.WakeLock.releaseIfHeld() {

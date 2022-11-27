@@ -5,7 +5,6 @@ import android.os.Bundle
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,17 +14,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
-class DownloadPresenter : BasePresenter<DownloadController>() {
-
-    val downloadManager: DownloadManager by injectLazy()
-
-    /**
-     * Property to get the queue from the download manager.
-     */
-    private val downloadQueue: DownloadQueue
-        get() = downloadManager.queue
+class DownloadPresenter(
+    private val downloadManager: DownloadManager = Injekt.get(),
+) : BasePresenter<DownloadController>() {
 
     private val _state = MutableStateFlow(emptyList<DownloadHeaderItem>())
     val state = _state.asStateFlow()
@@ -34,7 +28,7 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
         super.onCreate(savedState)
 
         presenterScope.launch {
-            downloadQueue.updates
+            downloadManager.queue.updates
                 .catch { logcat(LogPriority.ERROR, it) }
                 .map { downloads ->
                     downloads
@@ -49,20 +43,13 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
         }
     }
 
-    fun getDownloadStatusFlow() = downloadQueue.statusFlow()
+    fun getDownloadStatusFlow() = downloadManager.queue.statusFlow()
+    fun getDownloadProgressFlow() = downloadManager.queue.progressFlow()
 
-    fun getDownloadProgressFlow() = downloadQueue.progressFlow()
-
-    /**
-     * Pauses the download queue.
-     */
     fun pauseDownloads() {
         downloadManager.pauseDownloads()
     }
 
-    /**
-     * Clears the download queue.
-     */
     fun clearQueue(context: Context) {
         DownloadService.stop(context)
         downloadManager.clearQueue()
@@ -72,7 +59,7 @@ class DownloadPresenter : BasePresenter<DownloadController>() {
         downloadManager.reorderQueue(downloads)
     }
 
-    fun cancelDownloads(downloads: List<Download>) {
-        downloadManager.deletePendingDownloads(downloads)
+    fun cancel(downloads: List<Download>) {
+        downloadManager.cancelQueuedDownloads(downloads)
     }
 }

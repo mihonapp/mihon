@@ -479,7 +479,7 @@ class DownloadController :
                     presenter.reorder(selectedSeries + otherSeries)
                 }
                 R.id.cancel_download -> {
-                    presenter.cancelDownloads(listOf(item.download))
+                    presenter.cancel(listOf(item.download))
                 }
                 R.id.cancel_series -> {
                     val allDownloadsForSeries = adapter?.currentItems
@@ -487,7 +487,7 @@ class DownloadController :
                         ?.filter { item.download.manga.id == it.download.manga.id }
                         ?.map(DownloadItem::download)
                     if (!allDownloadsForSeries.isNullOrEmpty()) {
-                        presenter.cancelDownloads(allDownloadsForSeries)
+                        presenter.cancel(allDownloadsForSeries)
                     }
                 }
             }

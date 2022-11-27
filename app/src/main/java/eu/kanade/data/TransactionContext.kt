@@ -107,16 +107,16 @@ private suspend fun CoroutineDispatcher.acquireTransactionThread(
         try {
             dispatch(EmptyCoroutineContext) {
                 runBlocking {
-                    // Thread acquired, resume coroutine.
+                    // Thread acquired, resume coroutine
                     continuation.resume(coroutineContext[ContinuationInterceptor]!!)
                     controlJob.join()
                 }
             }
         } catch (ex: RejectedExecutionException) {
-            // Couldn't acquire a thread, cancel coroutine.
+            // Couldn't acquire a thread, cancel coroutine
             continuation.cancel(
                 IllegalStateException(
-                    "Unable to acquire a thread to perform the database transaction.",
+                    "Unable to acquire a thread to perform the database transaction",
                     ex,
                 ),
             )
@@ -152,7 +152,7 @@ private class TransactionElement(
     fun release() {
         val count = referenceCount.decrementAndGet()
         if (count < 0) {
-            throw IllegalStateException("Transaction was never started or was already released.")
+            throw IllegalStateException("Transaction was never started or was already released")
         } else if (count == 0) {
             // Cancel the job that controls the transaction thread, causing it to be released.
             transactionThreadControlJob.cancel()

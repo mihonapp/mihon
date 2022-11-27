@@ -496,7 +496,7 @@ class LibraryScreenModel(
             mangas.forEach { manga ->
                 val chapters = getNextChapters.await(manga.id)
                     .fastFilterNot { chapter ->
-                        downloadManager.queue.any { chapter.id == it.chapter.id } ||
+                        downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
                             downloadManager.isChapterDownloaded(
                                 chapter.name,
                                 chapter.scanlator,

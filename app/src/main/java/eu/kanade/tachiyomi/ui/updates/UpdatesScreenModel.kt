@@ -116,7 +116,7 @@ class UpdatesScreenModel(
 
     private fun List<UpdatesWithRelations>.toUpdateItems(): List<UpdatesItem> {
         return this.map {
-            val activeDownload = downloadManager.queue.find { download -> it.chapterId == download.chapter.id }
+            val activeDownload = downloadManager.getQueuedDownloadOrNull(it.chapterId)
             val downloaded = downloadManager.isChapterDownloaded(
                 it.chapterName,
                 it.scanlator,
@@ -200,8 +200,8 @@ class UpdatesScreenModel(
     }
 
     private fun cancelDownload(chapterId: Long) {
-        val activeDownload = downloadManager.queue.find { chapterId == it.chapter.id } ?: return
-        downloadManager.deletePendingDownloads(listOf(activeDownload))
+        val activeDownload = downloadManager.getQueuedDownloadOrNull(chapterId) ?: return
+        downloadManager.cancelQueuedDownloads(listOf(activeDownload))
         updateDownloadState(activeDownload.apply { status = Download.State.NOT_DOWNLOADED })
     }
 

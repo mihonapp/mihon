@@ -100,7 +100,7 @@ class LibraryUpdateService(
 
     private lateinit var wakeLock: PowerManager.WakeLock
     private lateinit var notifier: LibraryUpdateNotifier
-    private var ioScope: CoroutineScope? = null
+    private var scope: CoroutineScope? = null
 
     private var mangaToUpdate: List<LibraryManga> = mutableListOf()
     private var updateJob: Job? = null
@@ -188,7 +188,7 @@ class LibraryUpdateService(
      */
     override fun onDestroy() {
         updateJob?.cancel()
-        ioScope?.cancel()
+        scope?.cancel()
         if (wakeLock.isHeld) {
             wakeLock.release()
         }
@@ -220,7 +220,7 @@ class LibraryUpdateService(
 
         // Unsubscribe from any previous subscription if needed
         updateJob?.cancel()
-        ioScope?.cancel()
+        scope?.cancel()
 
         // If this is a chapter update; set the last update time to now
         if (target == Target.CHAPTERS) {
@@ -236,8 +236,8 @@ class LibraryUpdateService(
             logcat(LogPriority.ERROR, exception)
             stopSelf(startId)
         }
-        ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-        updateJob = ioScope?.launch(handler) {
+        scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        updateJob = scope?.launch(handler) {
             when (target) {
                 Target.CHAPTERS -> updateChapterList()
                 Target.COVERS -> updateCovers()

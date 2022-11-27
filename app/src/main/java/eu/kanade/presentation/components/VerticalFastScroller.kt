@@ -196,7 +196,7 @@ private fun rememberColumnWidthSums(
 ) {
     { constraints ->
         require(constraints.maxWidth != Constraints.Infinity) {
-            "LazyVerticalGrid's width should be bound by parent."
+            "LazyVerticalGrid's width should be bound by parent"
         }
         val horizontalPadding = contentPadding.calculateStartPadding(LayoutDirection.Ltr) +
             contentPadding.calculateEndPadding(LayoutDirection.Ltr)

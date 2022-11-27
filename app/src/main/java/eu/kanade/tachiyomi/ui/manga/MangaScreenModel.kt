@@ -46,7 +46,6 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.isLocal
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
@@ -502,7 +501,7 @@ class MangaInfoScreenModel(
             val activeDownload = if (isLocal) {
                 null
             } else {
-                downloadManager.queue.find { chapter.id == it.chapter.id }
+                downloadManager.getQueuedDownloadOrNull(chapter.id)
             }
             val downloaded = if (isLocal) {
                 true
@@ -668,8 +667,8 @@ class MangaInfoScreenModel(
     }
 
     fun cancelDownload(chapterId: Long) {
-        val activeDownload = downloadManager.queue.find { chapterId == it.chapter.id } ?: return
-        downloadManager.deletePendingDownloads(listOf(activeDownload))
+        val activeDownload = downloadManager.getQueuedDownloadOrNull(chapterId) ?: return
+        downloadManager.cancelQueuedDownloads(listOf(activeDownload))
         updateDownloadState(activeDownload.apply { status = Download.State.NOT_DOWNLOADED })
     }
 
