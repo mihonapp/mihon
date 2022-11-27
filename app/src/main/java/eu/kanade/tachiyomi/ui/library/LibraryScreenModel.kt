@@ -10,6 +10,7 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.core.prefs.asState
+import eu.kanade.core.util.fastDistinctBy
 import eu.kanade.core.util.fastFilter
 import eu.kanade.core.util.fastFilterNot
 import eu.kanade.core.util.fastMapNotNull
@@ -750,7 +751,7 @@ class LibraryScreenModel(
         val libraryCount by lazy {
             library
                 .flatMap { (_, v) -> v }
-                .distinctBy { it.libraryManga.manga.id }
+                .fastDistinctBy { it.libraryManga.manga.id }
                 .size
         }
 

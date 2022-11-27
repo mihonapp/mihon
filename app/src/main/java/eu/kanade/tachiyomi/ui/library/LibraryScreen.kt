@@ -134,7 +134,7 @@ object LibraryScreen : Screen {
                 return@Scaffold
             }
 
-            if (state.searchQuery.isNullOrEmpty() && state.library.isEmpty()) {
+            if (state.searchQuery.isNullOrEmpty() && state.libraryCount == 0) {
                 val handler = LocalUriHandler.current
                 EmptyScreen(
                     textResource = R.string.information_empty_library,
@@ -156,7 +156,7 @@ object LibraryScreen : Screen {
                 selection = state.selection,
                 contentPadding = contentPadding,
                 currentPage = { screenModel.activeCategory },
-                isLibraryEmpty = state.library.isEmpty(),
+                isLibraryEmpty = state.libraryCount == 0,
                 showPageTabs = state.showCategoryTabs,
                 onChangeCurrentPage = { screenModel.activeCategory = it },
                 onMangaClicked = { router.openManga(it) },
