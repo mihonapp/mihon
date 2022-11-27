@@ -18,6 +18,8 @@ class Padding {
     val medium = 16.dp
 
     val small = 8.dp
+
+    val tiny = 4.dp
 }
 
 val MaterialTheme.padding: Padding

@@ -13,8 +13,7 @@ import eu.kanade.presentation.browse.MigrateMangaScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.browse.migration.search.SearchController
+import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
@@ -41,12 +40,8 @@ data class MigrationMangaScreen(
             navigateUp = navigator::pop,
             title = state.source!!.name,
             state = state,
-            onClickItem = {
-                router.pushController(SearchController(it.id))
-            },
-            onClickCover = {
-                navigator.push(MangaScreen(it.id))
-            },
+            onClickItem = { navigator.push(MigrateSearchScreen(it.id)) },
+            onClickCover = { navigator.push(MangaScreen(it.id)) },
         )
 
         LaunchedEffect(Unit) {

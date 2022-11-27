@@ -178,7 +178,7 @@ object LibraryScreen : Screen {
                 },
                 onRefresh = onClickRefresh,
                 onGlobalSearchClicked = {
-                    router.pushController(GlobalSearchController(screenModel.state.value.searchQuery))
+                    router.pushController(GlobalSearchController(screenModel.state.value.searchQuery ?: ""))
                 },
                 getNumberOfMangaForCategory = { state.getMangaCountForCategory(it) },
                 getDisplayModeForPage = { state.categories[it].display },

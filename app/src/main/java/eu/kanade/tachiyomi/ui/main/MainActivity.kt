@@ -461,7 +461,7 @@ class MainActivity : BaseActivity() {
                     if (router.backstackSize > 1) {
                         router.popToRoot()
                     }
-                    router.pushController(GlobalSearchController(query, filter))
+                    router.pushController(GlobalSearchController(query, filter ?: ""))
                 }
             }
             else -> {

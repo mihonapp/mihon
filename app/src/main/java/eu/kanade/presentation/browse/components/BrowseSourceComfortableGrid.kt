@@ -8,17 +8,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.MangaCover
-import eu.kanade.presentation.components.Badge
+import eu.kanade.presentation.browse.InLibraryBadge
 import eu.kanade.presentation.components.CommonMangaItemDefaults
 import eu.kanade.presentation.components.MangaComfortableGridItem
 import eu.kanade.presentation.util.plus
-import eu.kanade.tachiyomi.R
 
 @Composable
 fun BrowseSourceComfortableGrid(
@@ -76,9 +74,7 @@ fun BrowseSourceComfortableGridItem(
         ),
         coverAlpha = if (manga.favorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,
         coverBadgeStart = {
-            if (manga.favorite) {
-                Badge(text = stringResource(R.string.in_library))
-            }
+            InLibraryBadge(enabled = manga.favorite)
         },
         onLongClick = onLongClick,
         onClick = onClick,
