@@ -243,7 +243,7 @@ class DownloadManager(
 
                 // Delete manga directory if empty
                 if (mangaDir?.listFiles()?.isEmpty() == true) {
-                    deleteManga(manga, source)
+                    deleteManga(manga, source, removeQueued = false)
                 }
             }
         }
@@ -254,10 +254,13 @@ class DownloadManager(
      *
      * @param manga the manga to delete.
      * @param source the source of the manga.
+     * @param removeQueued whether to also remove queued downloads.
      */
-    fun deleteManga(manga: Manga, source: Source) {
+    fun deleteManga(manga: Manga, source: Source, removeQueued: Boolean = true) {
         launchIO {
-            queue.remove(manga)
+            if (removeQueued) {
+                queue.remove(manga)
+            }
             provider.findMangaDir(manga.title, source)?.delete()
             cache.removeManga(manga)
 
