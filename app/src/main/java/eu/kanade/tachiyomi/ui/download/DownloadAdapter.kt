@@ -7,18 +7,13 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 /**
  * Adapter storing a list of downloads.
  *
- * @param context the context of the fragment containing this adapter.
+ * @param downloadItemListener Listener called when an item of the list is released.
  */
-class DownloadAdapter(controller: DownloadController) : FlexibleAdapter<AbstractFlexibleItem<*>>(
+class DownloadAdapter(val downloadItemListener: DownloadItemListener) : FlexibleAdapter<AbstractFlexibleItem<*>>(
     null,
-    controller,
+    downloadItemListener,
     true,
 ) {
-
-    /**
-     * Listener called when an item of the list is released.
-     */
-    val downloadItemListener: DownloadItemListener = controller
 
     override fun shouldMove(fromPosition: Int, toPosition: Int): Boolean {
         // Don't let sub-items changing group
