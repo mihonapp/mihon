@@ -50,10 +50,6 @@ data class MigrationMangaScreen(
                     MigrationMangaEvent.FailedFetchingFavorites -> {
                         context.toast(R.string.internal_error)
                     }
-                    MigrationMangaEvent.FailedGettingSource -> {
-                        context.toast(R.string.loader_not_implemented_error)
-                        router.popCurrentController()
-                    }
                 }
             }
         }

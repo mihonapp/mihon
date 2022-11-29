@@ -32,21 +32,19 @@ class MigrationMangaScreenModel(
     init {
         coroutineScope.launch {
             mutableState.update { state ->
-                val source = sourceManager.get(sourceId)
-                if (source == null) {
-                    _events.send(MigrationMangaEvent.FailedGettingSource)
-                }
-                state.copy(source = source)
+                state.copy(source = sourceManager.getOrStub(sourceId))
             }
 
             getFavorites.subscribe(sourceId)
                 .catch {
                     logcat(LogPriority.ERROR, it)
                     _events.send(MigrationMangaEvent.FailedFetchingFavorites)
-                    mutableState.update { it.copy(titleList = emptyList()) }
+                    mutableState.update { state ->
+                        state.copy(titleList = emptyList())
+                    }
                 }
-                .map {
-                    it.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
+                .map { manga ->
+                    manga.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
                 }
                 .collectLatest { list ->
                     mutableState.update { it.copy(titleList = list) }
@@ -56,7 +54,6 @@ class MigrationMangaScreenModel(
 }
 
 sealed class MigrationMangaEvent {
-    object FailedGettingSource : MigrationMangaEvent()
     object FailedFetchingFavorites : MigrationMangaEvent()
 }
 
