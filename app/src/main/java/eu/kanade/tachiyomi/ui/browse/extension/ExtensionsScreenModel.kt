@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.update
 import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import kotlin.time.Duration.Companion.seconds
 
 class ExtensionsScreenModel(
     preferences: SourcePreferences = Injekt.get(),
@@ -194,11 +196,16 @@ class ExtensionsScreenModel(
     }
 
     fun findAvailableExtensions() {
-        mutableState.update { it.copy(isRefreshing = true) }
         coroutineScope.launchIO {
+            mutableState.update { it.copy(isRefreshing = true) }
+
             extensionManager.findAvailableExtensions()
+
+            // Fake slower refresh so it doesn't seem like it's not doing anything
+            delay(1.seconds)
+
+            mutableState.update { it.copy(isRefreshing = false) }
         }
-        mutableState.update { it.copy(isRefreshing = false) }
     }
 
     fun trustSignature(signatureHash: String) {
