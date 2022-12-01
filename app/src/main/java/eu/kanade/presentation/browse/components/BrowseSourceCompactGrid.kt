@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -17,11 +17,11 @@ import eu.kanade.presentation.browse.InLibraryBadge
 import eu.kanade.presentation.components.CommonMangaItemDefaults
 import eu.kanade.presentation.components.MangaCompactGridItem
 import eu.kanade.presentation.util.plus
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun BrowseSourceCompactGrid(
-    mangaList: LazyPagingItems<Manga>,
-    getMangaState: @Composable ((Manga) -> State<Manga>),
+    mangaList: LazyPagingItems<StateFlow<Manga>>,
     columns: GridCells,
     contentPadding: PaddingValues,
     onMangaClick: (Manga) -> Unit,
@@ -40,8 +40,7 @@ fun BrowseSourceCompactGrid(
         }
 
         items(mangaList.itemCount) { index ->
-            val initialManga = mangaList[index] ?: return@items
-            val manga by getMangaState(initialManga)
+            val manga by mangaList[index]?.collectAsState() ?: return@items
             BrowseSourceCompactGridItem(
                 manga = manga,
                 onClick = { onMangaClick(manga) },

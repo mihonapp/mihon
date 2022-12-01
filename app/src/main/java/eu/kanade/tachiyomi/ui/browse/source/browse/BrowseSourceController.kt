@@ -1,32 +1,18 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
 import android.os.Bundle
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.core.os.bundleOf
-import eu.kanade.domain.source.model.Source
-import eu.kanade.presentation.browse.BrowseSourceScreen
-import eu.kanade.presentation.browse.components.RemoveMangaDialog
-import eu.kanade.presentation.components.ChangeCategoryDialog
-import eu.kanade.presentation.components.DuplicateMangaDialog
-import eu.kanade.tachiyomi.source.CatalogueSource
-import eu.kanade.tachiyomi.source.model.Filter
-import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.base.controller.FullComposeController
-import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourcePresenter.Dialog
-import eu.kanade.tachiyomi.ui.category.CategoryController
-import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.webview.WebViewActivity
-import eu.kanade.tachiyomi.util.lang.launchIO
+import cafe.adriel.voyager.navigator.CurrentScreen
+import cafe.adriel.voyager.navigator.Navigator
+import eu.kanade.tachiyomi.ui.base.controller.BasicFullComposeController
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.launch
 
-open class BrowseSourceController(bundle: Bundle) :
-    FullComposeController<BrowseSourcePresenter>(bundle) {
+class BrowseSourceController(bundle: Bundle) : BasicFullComposeController(bundle) {
 
     constructor(sourceId: Long, query: String? = null) : this(
         bundleOf(
@@ -35,117 +21,27 @@ open class BrowseSourceController(bundle: Bundle) :
         ),
     )
 
-    constructor(source: CatalogueSource, query: String? = null) : this(source.id, query)
+    private val sourceId = args.getLong(SOURCE_ID_KEY)
+    private val initialQuery = args.getString(SEARCH_QUERY_KEY)
 
-    constructor(source: Source, query: String? = null) : this(source.id, query)
-
-    /**
-     * Sheet containing filter items.
-     */
-    protected var filterSheet: SourceFilterSheet? = null
-
-    override fun createPresenter(): BrowseSourcePresenter {
-        return BrowseSourcePresenter(args.getLong(SOURCE_ID_KEY), args.getString(SEARCH_QUERY_KEY))
-    }
+    private val queryEvent = Channel<BrowseSourceScreen.SearchType>()
 
     @Composable
     override fun ComposeContent() {
-        val scope = rememberCoroutineScope()
-        val context = LocalContext.current
-        val haptic = LocalHapticFeedback.current
+        Navigator(screen = BrowseSourceScreen(sourceId = sourceId, query = initialQuery)) { navigator ->
+            CurrentScreen()
 
-        BrowseSourceScreen(
-            presenter = presenter,
-            navigateUp = ::navigateUp,
-            openFilterSheet = { filterSheet?.show() },
-            onMangaClick = { router.pushController(MangaController(it.id, true)) },
-            onMangaLongClick = { manga ->
-                scope.launchIO {
-                    val duplicateManga = presenter.getDuplicateLibraryManga(manga)
-                    when {
-                        manga.favorite -> presenter.dialog = Dialog.RemoveManga(manga)
-                        duplicateManga != null -> presenter.dialog = Dialog.AddDuplicateManga(manga, duplicateManga)
-                        else -> presenter.addFavorite(manga)
+            LaunchedEffect(Unit) {
+                queryEvent.consumeAsFlow()
+                    .collectLatest {
+                        val screen = (navigator.lastItem as? BrowseSourceScreen)
+                        when (it) {
+                            is BrowseSourceScreen.SearchType.Genre -> screen?.searchGenre(it.txt)
+                            is BrowseSourceScreen.SearchType.Text -> screen?.search(it.txt)
+                        }
                     }
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                }
-            },
-            onWebViewClick = f@{
-                val source = presenter.source as? HttpSource ?: return@f
-                val intent = WebViewActivity.newIntent(context, source.baseUrl, source.id, source.name)
-                context.startActivity(intent)
-            },
-            incognitoMode = presenter.isIncognitoMode,
-            downloadedOnlyMode = presenter.isDownloadOnly,
-        )
-
-        val onDismissRequest = { presenter.dialog = null }
-        when (val dialog = presenter.dialog) {
-            null -> {}
-            is Dialog.Migrate -> {}
-            is Dialog.AddDuplicateManga -> {
-                DuplicateMangaDialog(
-                    onDismissRequest = onDismissRequest,
-                    onConfirm = { presenter.addFavorite(dialog.manga) },
-                    onOpenManga = { router.pushController(MangaController(dialog.duplicate.id)) },
-                    duplicateFrom = presenter.getSourceOrStub(dialog.duplicate),
-                )
-            }
-            is Dialog.RemoveManga -> {
-                RemoveMangaDialog(
-                    onDismissRequest = onDismissRequest,
-                    onConfirm = {
-                        presenter.changeMangaFavorite(dialog.manga)
-                    },
-                    mangaToRemove = dialog.manga,
-                )
-            }
-            is Dialog.ChangeMangaCategory -> {
-                ChangeCategoryDialog(
-                    initialSelection = dialog.initialSelection,
-                    onDismissRequest = onDismissRequest,
-                    onEditCategories = {
-                        router.pushController(CategoryController())
-                    },
-                    onConfirm = { include, _ ->
-                        presenter.changeMangaFavorite(dialog.manga)
-                        presenter.moveMangaToCategories(dialog.manga, include)
-                    },
-                )
             }
         }
-
-        BackHandler(onBack = ::navigateUp)
-
-        LaunchedEffect(presenter.filters) {
-            initFilterSheet()
-        }
-    }
-
-    private fun navigateUp() {
-        when {
-            !presenter.isUserQuery && presenter.searchQuery != null -> presenter.searchQuery = null
-            else -> router.popCurrentController()
-        }
-    }
-
-    open fun initFilterSheet() {
-        if (presenter.filters.isEmpty()) {
-            return
-        }
-
-        filterSheet = SourceFilterSheet(
-            activity!!,
-            onFilterClicked = {
-                presenter.search(filters = presenter.filters)
-            },
-            onResetClicked = {
-                presenter.reset()
-                filterSheet?.setFilters(presenter.filterItems)
-            },
-        )
-
-        filterSheet?.setFilters(presenter.filterItems)
     }
 
     /**
@@ -154,7 +50,7 @@ open class BrowseSourceController(bundle: Bundle) :
      * @param newQuery the new query.
      */
     fun searchWithQuery(newQuery: String) {
-        presenter.search(newQuery)
+        viewScope.launch { queryEvent.send(BrowseSourceScreen.SearchType.Text(newQuery)) }
     }
 
     /**
@@ -165,46 +61,9 @@ open class BrowseSourceController(bundle: Bundle) :
      * @param genreName the name of the genre
      */
     fun searchWithGenre(genreName: String) {
-        val defaultFilters = presenter.source!!.getFilterList()
-
-        var genreExists = false
-
-        filter@ for (sourceFilter in defaultFilters) {
-            if (sourceFilter is Filter.Group<*>) {
-                for (filter in sourceFilter.state) {
-                    if (filter is Filter<*> && filter.name.equals(genreName, true)) {
-                        when (filter) {
-                            is Filter.TriState -> filter.state = 1
-                            is Filter.CheckBox -> filter.state = true
-                            else -> {}
-                        }
-                        genreExists = true
-                        break@filter
-                    }
-                }
-            } else if (sourceFilter is Filter.Select<*>) {
-                val index = sourceFilter.values.filterIsInstance<String>()
-                    .indexOfFirst { it.equals(genreName, true) }
-
-                if (index != -1) {
-                    sourceFilter.state = index
-                    genreExists = true
-                    break
-                }
-            }
-        }
-
-        if (genreExists) {
-            filterSheet?.setFilters(defaultFilters.toItems())
-
-            presenter.search(filters = defaultFilters)
-        } else {
-            searchWithQuery(genreName)
-        }
-    }
-
-    protected companion object {
-        const val SOURCE_ID_KEY = "sourceId"
-        const val SEARCH_QUERY_KEY = "searchQuery"
+        viewScope.launch { queryEvent.send(BrowseSourceScreen.SearchType.Genre(genreName)) }
     }
 }
+
+private const val SOURCE_ID_KEY = "sourceId"
+private const val SEARCH_QUERY_KEY = "searchQuery"

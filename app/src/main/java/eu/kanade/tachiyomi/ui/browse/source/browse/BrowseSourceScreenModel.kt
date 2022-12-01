@@ -1,23 +1,22 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
+import android.content.Context
 import android.content.res.Configuration
-import android.os.Bundle
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import cafe.adriel.voyager.core.model.StateScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.core.prefs.CheckboxState
+import eu.kanade.core.prefs.asState
 import eu.kanade.core.prefs.mapAsCheckboxState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
@@ -39,8 +38,6 @@ import eu.kanade.domain.source.interactor.GetRemoteManga
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDomainTrack
-import eu.kanade.presentation.browse.BrowseSourceState
-import eu.kanade.presentation.browse.BrowseSourceStateImpl
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -48,9 +45,7 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
-import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.browse.source.filter.CheckboxItem
 import eu.kanade.tachiyomi.ui.browse.source.filter.CheckboxSectionItem
 import eu.kanade.tachiyomi.ui.browse.source.filter.GroupItem
@@ -70,19 +65,23 @@ import eu.kanade.tachiyomi.util.lang.withNonCancellableContext
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
+import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
 
-open class BrowseSourcePresenter(
+class BrowseSourceScreenModel(
     private val sourceId: Long,
-    searchQuery: String? = null,
-    private val state: BrowseSourceStateImpl = BrowseSourceState(searchQuery) as BrowseSourceStateImpl,
+    searchQuery: String?,
     private val sourceManager: SourceManager = Injekt.get(),
     preferences: BasePreferences = Injekt.get(),
     sourcePreferences: SourcePreferences = Injekt.get(),
@@ -99,86 +98,122 @@ open class BrowseSourcePresenter(
     private val updateManga: UpdateManga = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
     private val syncChaptersWithTrackServiceTwoWay: SyncChaptersWithTrackServiceTwoWay = Injekt.get(),
-) : BasePresenter<BrowseSourceController>(), BrowseSourceState by state {
+) : StateScreenModel<BrowseSourceScreenModel.State>(State(Filter.valueOf(searchQuery))) {
 
     private val loggedServices by lazy { Injekt.get<TrackManager>().services.filter { it.isLogged } }
 
-    var displayMode by sourcePreferences.sourceDisplayMode().asState()
+    var displayMode by sourcePreferences.sourceDisplayMode().asState(coroutineScope)
 
-    val isDownloadOnly: Boolean by preferences.downloadedOnly().asState()
-    val isIncognitoMode: Boolean by preferences.incognitoMode().asState()
+    val isDownloadOnly: Boolean by preferences.downloadedOnly().asState(coroutineScope)
+    val isIncognitoMode: Boolean by preferences.incognitoMode().asState(coroutineScope)
 
-    @Composable
-    fun getColumnsPreferenceForCurrentOrientation(): State<GridCells> {
-        val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-        return produceState<GridCells>(initialValue = GridCells.Adaptive(128.dp), isLandscape) {
-            (if (isLandscape) libraryPreferences.landscapeColumns() else libraryPreferences.portraitColumns())
-                .changes()
-                .collectLatest { columns ->
-                    value = if (columns == 0) GridCells.Adaptive(128.dp) else GridCells.Fixed(columns)
-                }
-        }
+    val source = sourceManager.get(sourceId) as CatalogueSource
+
+    /**
+     * Sheet containing filter items.
+     */
+    private var filterSheet: SourceFilterSheet? = null
+
+    init {
+        mutableState.update { it.copy(filters = source.getFilterList()) }
     }
 
-    @Composable
-    fun getMangaList(): Flow<PagingData<Manga>> {
-        return remember(currentFilter) {
-            Pager(
-                PagingConfig(pageSize = 25),
-            ) {
-                getRemoteManga.subscribe(sourceId, currentFilter.query, currentFilter.filters)
-            }.flow
-                .map {
-                    it.map { sManga ->
-                        withIOContext {
-                            networkToLocalManga.await(sManga.toDomainManga(sourceId))
-                        }
-                    }
-                }
-                .cachedIn(presenterScope)
-        }
+    fun getColumnsPreference(orientation: Int): GridCells {
+        val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE
+        val columns = if (isLandscape) {
+            libraryPreferences.landscapeColumns()
+        } else {
+            libraryPreferences.portraitColumns()
+        }.get()
+        return if (columns == 0) GridCells.Adaptive(128.dp) else GridCells.Fixed(columns)
     }
 
-    @Composable
-    fun getManga(initialManga: Manga): State<Manga> {
-        return produceState(initialValue = initialManga) {
-            getManga.subscribe(initialManga.url, initialManga.source)
-                .collectLatest { manga ->
-                    if (manga == null) return@collectLatest
-                    withIOContext {
-                        initializeManga(manga)
-                    }
-                    value = manga
+    fun getMangaListFlow(currentFilter: Filter): Flow<PagingData<StateFlow<Manga>>> {
+        return Pager(
+            PagingConfig(pageSize = 25),
+        ) {
+            getRemoteManga.subscribe(sourceId, currentFilter.query ?: "", currentFilter.filters)
+        }.flow
+            .map { pagingData ->
+                pagingData.map { sManga ->
+                    val dbManga = withIOContext { networkToLocalManga.await(sManga.toDomainManga(sourceId)) }
+                    getManga.subscribe(dbManga.url, dbManga.source)
+                        .filterNotNull()
+                        .onEach { initializeManga(it) }
+                        .stateIn(coroutineScope)
                 }
-        }
+            }
+            .cachedIn(coroutineScope)
     }
 
     fun reset() {
-        val source = source ?: return
-        state.filters = source.getFilterList()
+        mutableState.update { it.copy(filters = source.getFilterList()) }
     }
 
     fun search(query: String? = null, filters: FilterList? = null) {
-        Filter.valueOf(query ?: "").let {
+        Filter.valueOf(query).let {
             if (it !is Filter.UserInput) {
-                state.currentFilter = it
-                state.searchQuery = null
+                mutableState.update { state -> state.copy(currentFilter = it) }
                 return
             }
         }
 
-        val input: Filter.UserInput = if (currentFilter is Filter.UserInput) currentFilter as Filter.UserInput else Filter.UserInput()
-        state.currentFilter = input.copy(
-            query = query ?: input.query,
-            filters = filters ?: input.filters,
-        )
+        val input = if (state.value.currentFilter is Filter.UserInput) {
+            state.value.currentFilter as Filter.UserInput
+        } else {
+            Filter.UserInput()
+        }
+        mutableState.update {
+            it.copy(
+                currentFilter = input.copy(
+                    query = query ?: input.query,
+                    filters = filters ?: input.filters,
+                ),
+                toolbarQuery = query ?: input.query,
+            )
+        }
     }
 
-    override fun onCreate(savedState: Bundle?) {
-        super.onCreate(savedState)
+    fun searchGenre(genreName: String) {
+        val defaultFilters = source.getFilterList()
+        var genreExists = false
 
-        state.source = sourceManager.get(sourceId) as? CatalogueSource ?: return
-        state.filters = source!!.getFilterList()
+        filter@ for (sourceFilter in defaultFilters) {
+            if (sourceFilter is SourceModelFilter.Group<*>) {
+                for (filter in sourceFilter.state) {
+                    if (filter is SourceModelFilter<*> && filter.name.equals(genreName, true)) {
+                        when (filter) {
+                            is SourceModelFilter.TriState -> filter.state = 1
+                            is SourceModelFilter.CheckBox -> filter.state = true
+                            else -> {}
+                        }
+                        genreExists = true
+                        break@filter
+                    }
+                }
+            } else if (sourceFilter is SourceModelFilter.Select<*>) {
+                val index = sourceFilter.values.filterIsInstance<String>()
+                    .indexOfFirst { it.equals(genreName, true) }
+
+                if (index != -1) {
+                    sourceFilter.state = index
+                    genreExists = true
+                    break
+                }
+            }
+        }
+
+        mutableState.update {
+            val filter = if (genreExists) {
+                Filter.UserInput(filters = defaultFilters)
+            } else {
+                Filter.UserInput(query = genreName)
+            }
+            it.copy(
+                filters = defaultFilters,
+                currentFilter = filter,
+            )
+        }
     }
 
     /**
@@ -190,7 +225,7 @@ open class BrowseSourcePresenter(
         if (manga.thumbnailUrl != null || manga.initialized) return
         withNonCancellableContext {
             try {
-                val networkManga = source!!.getMangaDetails(manga.toSManga())
+                val networkManga = source.getMangaDetails(manga.toSManga())
                 val updatedManga = manga.copyFrom(networkManga)
                     .copy(initialized = true)
 
@@ -207,7 +242,7 @@ open class BrowseSourcePresenter(
      * @param manga the manga to update.
      */
     fun changeMangaFavorite(manga: Manga) {
-        presenterScope.launch {
+        coroutineScope.launch {
             var new = manga.copy(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
@@ -233,7 +268,7 @@ open class BrowseSourcePresenter(
     }
 
     fun addFavorite(manga: Manga) {
-        presenterScope.launch {
+        coroutineScope.launch {
             val categories = getCategories()
             val defaultCategoryId = libraryPreferences.defaultCategory().get()
             val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
@@ -256,7 +291,7 @@ open class BrowseSourcePresenter(
                 // Choose a category
                 else -> {
                     val preselectedIds = getCategories.await(manga.id).map { it.id }
-                    state.dialog = Dialog.ChangeMangaCategory(manga, categories.mapAsCheckboxState { it.id in preselectedIds })
+                    setDialog(Dialog.ChangeMangaCategory(manga, categories.mapAsCheckboxState { it.id in preselectedIds }))
                 }
             }
         }
@@ -265,7 +300,7 @@ open class BrowseSourcePresenter(
     private suspend fun autoAddTrack(manga: Manga) {
         loggedServices
             .filterIsInstance<EnhancedTrackService>()
-            .filter { it.accept(source!!) }
+            .filter { it.accept(source) }
             .forEach { service ->
                 try {
                     service.match(manga.toDbManga())?.let { track ->
@@ -303,7 +338,7 @@ open class BrowseSourcePresenter(
     }
 
     fun moveMangaToCategories(manga: Manga, categoryIds: List<Long>) {
-        presenterScope.launchIO {
+        coroutineScope.launchIO {
             setMangaCategories.await(
                 mangaId = manga.id,
                 categoryIds = categoryIds.toList(),
@@ -311,13 +346,43 @@ open class BrowseSourcePresenter(
         }
     }
 
-    sealed class Filter(open val query: String, open val filters: FilterList) {
+    fun openFilterSheet() {
+        filterSheet?.show()
+    }
+
+    fun setDialog(dialog: Dialog?) {
+        mutableState.update { it.copy(dialog = dialog) }
+    }
+
+    fun setToolbarQuery(query: String?) {
+        mutableState.update { it.copy(toolbarQuery = query) }
+    }
+
+    fun initFilterSheet(context: Context) {
+        val state = state.value
+        if (state.filters.isEmpty()) {
+            return
+        }
+
+        filterSheet = SourceFilterSheet(
+            context = context,
+            onFilterClicked = { search(filters = state.filters) },
+            onResetClicked = {
+                reset()
+                filterSheet?.setFilters(state.filterItems)
+            },
+        )
+
+        filterSheet?.setFilters(state.filterItems)
+    }
+
+    sealed class Filter(open val query: String?, open val filters: FilterList) {
         object Popular : Filter(query = GetRemoteManga.QUERY_POPULAR, filters = FilterList())
         object Latest : Filter(query = GetRemoteManga.QUERY_LATEST, filters = FilterList())
-        data class UserInput(override val query: String = "", override val filters: FilterList = FilterList()) : Filter(query = query, filters = filters)
+        data class UserInput(override val query: String? = null, override val filters: FilterList = FilterList()) : Filter(query = query, filters = filters)
 
         companion object {
-            fun valueOf(query: String): Filter {
+            fun valueOf(query: String?): Filter {
                 return when (query) {
                     GetRemoteManga.QUERY_POPULAR -> Popular
                     GetRemoteManga.QUERY_LATEST -> Latest
@@ -336,25 +401,40 @@ open class BrowseSourcePresenter(
         ) : Dialog()
         data class Migrate(val newManga: Manga) : Dialog()
     }
+
+    @Immutable
+    data class State(
+        val currentFilter: Filter,
+        val filters: FilterList = FilterList(),
+        val toolbarQuery: String? = null,
+        val dialog: Dialog? = null,
+    ) {
+        val filterItems = filters.toItems()
+        val isUserQuery = currentFilter is Filter.UserInput && !currentFilter.query.isNullOrEmpty()
+        val searchQuery = when (currentFilter) {
+            is Filter.UserInput -> currentFilter.query
+            Filter.Latest, Filter.Popular -> null
+        }
+    }
 }
 
-fun FilterList.toItems(): List<IFlexible<*>> {
+private fun FilterList.toItems(): List<IFlexible<*>> {
     return mapNotNull { filter ->
         when (filter) {
-            is Filter.Header -> HeaderItem(filter)
-            is Filter.Separator -> SeparatorItem(filter)
-            is Filter.CheckBox -> CheckboxItem(filter)
-            is Filter.TriState -> TriStateItem(filter)
-            is Filter.Text -> TextItem(filter)
-            is Filter.Select<*> -> SelectItem(filter)
-            is Filter.Group<*> -> {
+            is SourceModelFilter.Header -> HeaderItem(filter)
+            is SourceModelFilter.Separator -> SeparatorItem(filter)
+            is SourceModelFilter.CheckBox -> CheckboxItem(filter)
+            is SourceModelFilter.TriState -> TriStateItem(filter)
+            is SourceModelFilter.Text -> TextItem(filter)
+            is SourceModelFilter.Select<*> -> SelectItem(filter)
+            is SourceModelFilter.Group<*> -> {
                 val group = GroupItem(filter)
                 val subItems = filter.state.mapNotNull {
                     when (it) {
-                        is Filter.CheckBox -> CheckboxSectionItem(it)
-                        is Filter.TriState -> TriStateSectionItem(it)
-                        is Filter.Text -> TextSectionItem(it)
-                        is Filter.Select<*> -> SelectSectionItem(it)
+                        is SourceModelFilter.CheckBox -> CheckboxSectionItem(it)
+                        is SourceModelFilter.TriState -> TriStateSectionItem(it)
+                        is SourceModelFilter.Text -> TextSectionItem(it)
+                        is SourceModelFilter.Select<*> -> SelectSectionItem(it)
                         else -> null
                     }
                 }
@@ -362,7 +442,7 @@ fun FilterList.toItems(): List<IFlexible<*>> {
                 group.subItems = subItems
                 group
             }
-            is Filter.Sort -> {
+            is SourceModelFilter.Sort -> {
                 val group = SortGroup(filter)
                 val subItems = filter.values.map {
                     SortItem(it, group)

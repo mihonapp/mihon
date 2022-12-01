@@ -44,7 +44,7 @@ class GlobalSearchScreen(
                 if (!screenModel.incognitoMode.get()) {
                     screenModel.lastUsedSourceId.set(it.id)
                 }
-                router.pushController(BrowseSourceController(it, state.searchQuery))
+                router.pushController(BrowseSourceController(it.id, state.searchQuery))
             },
             onClickItem = { router.pushController(MangaController(it.id, true)) },
             onLongClickItem = { router.pushController(MangaController(it.id, true)) },

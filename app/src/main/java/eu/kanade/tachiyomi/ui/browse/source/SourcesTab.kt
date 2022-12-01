@@ -49,7 +49,7 @@ fun Screen.sourcesTab(): TabContent {
                 contentPadding = contentPadding,
                 onClickItem = { source, query ->
                     screenModel.onOpenSource(source)
-                    router.pushController(BrowseSourceController(source, query))
+                    router.pushController(BrowseSourceController(source.id, query))
                 },
                 onClickPin = screenModel::togglePin,
                 onLongClickItem = screenModel::showSourceDialog,
