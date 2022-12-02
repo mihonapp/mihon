@@ -12,8 +12,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.ExtensionDetailsScreen
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.util.LocalRouter
-import eu.kanade.tachiyomi.ui.base.controller.pushController
 import kotlinx.coroutines.flow.collectLatest
 
 data class ExtensionDetailsScreen(
@@ -32,13 +30,12 @@ data class ExtensionDetailsScreen(
         }
 
         val navigator = LocalNavigator.currentOrThrow
-        val router = LocalRouter.currentOrThrow
         val uriHandler = LocalUriHandler.current
 
         ExtensionDetailsScreen(
             navigateUp = navigator::pop,
             state = state,
-            onClickSourcePreferences = { router.pushController(SourcePreferencesController(it)) },
+            onClickSourcePreferences = { navigator.push(SourcePreferencesScreen(it)) },
             onClickWhatsNew = { uriHandler.openUri(screenModel.getChangelogUrl()) },
             onClickReadme = { uriHandler.openUri(screenModel.getReadmeUrl()) },
             onClickEnableAll = { screenModel.toggleSources(true) },
