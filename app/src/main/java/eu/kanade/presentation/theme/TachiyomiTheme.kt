@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import com.google.android.material.composethemeadapter3.createMdc3Theme
+import com.google.accompanist.themeadapter.material3.createMdc3Theme
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import uy.kohesive.injekt.api.get

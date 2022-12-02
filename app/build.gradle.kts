@@ -172,7 +172,6 @@ dependencies {
     implementation(compose.activity)
     implementation(compose.foundation)
     implementation(compose.material3.core)
-    implementation(compose.material3.adapter)
     implementation(compose.material.core)
     implementation(compose.material.icons)
     implementation(compose.animation)
@@ -183,6 +182,7 @@ dependencies {
     implementation(compose.accompanist.swiperefresh)
     implementation(compose.accompanist.flowlayout)
     implementation(compose.accompanist.permissions)
+    implementation(compose.accompanist.themeadapter)
 
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)
