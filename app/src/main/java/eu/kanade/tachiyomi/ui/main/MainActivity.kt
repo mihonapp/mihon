@@ -21,7 +21,6 @@ import androidx.core.view.isVisible
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.PreferenceDialogController
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
@@ -30,6 +29,7 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import dev.chrisbanes.insetter.applyInsetter
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.ui.UiPreferences
@@ -84,6 +84,7 @@ class MainActivity : BaseActivity() {
     private val sourcePreferences: SourcePreferences by injectLazy()
     private val libraryPreferences: LibraryPreferences by injectLazy()
     private val uiPreferences: UiPreferences by injectLazy()
+    private val preferences: BasePreferences by injectLazy()
 
     lateinit var binding: MainActivityBinding
 
@@ -565,15 +566,12 @@ class MainActivity : BaseActivity() {
             // Then we'll assume the top controller is the parent controller of this dialog
             val backstack = router.backstack
             internalTo = backstack.lastOrNull()?.controller
-            if (internalTo is DialogController || internalTo is PreferenceDialogController) {
+            if (internalTo is DialogController) {
                 internalTo = backstack.getOrNull(backstack.size - 2)?.controller ?: return
             }
         } else {
             // Ignore changes for normal transactions
             if (from is DialogController || internalTo is DialogController) {
-                return
-            }
-            if (from is PreferenceDialogController || internalTo is PreferenceDialogController) {
                 return
             }
         }

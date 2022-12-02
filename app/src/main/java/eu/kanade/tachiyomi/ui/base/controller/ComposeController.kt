@@ -9,37 +9,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.databinding.ComposeControllerBinding
 import eu.kanade.tachiyomi.util.view.setComposeContent
-import nucleus.presenter.Presenter
-
-abstract class FullComposeController<P : Presenter<*>>(bundle: Bundle? = null) :
-    NucleusController<ComposeControllerBinding, P>(bundle),
-    ComposeContentController {
-
-    override fun createBinding(inflater: LayoutInflater) =
-        ComposeControllerBinding.inflate(inflater)
-
-    override fun onViewCreated(view: View) {
-        super.onViewCreated(view)
-
-        binding.root.apply {
-            setComposeContent {
-                CompositionLocalProvider(LocalRouter provides router) {
-                    ComposeContent()
-                }
-            }
-        }
-    }
-
-    override fun handleBack(): Boolean {
-        val dispatcher = (activity as? OnBackPressedDispatcherOwner)?.onBackPressedDispatcher ?: return false
-        return if (dispatcher.hasEnabledCallbacks()) {
-            dispatcher.onBackPressed()
-            true
-        } else {
-            false
-        }
-    }
-}
 
 /**
  * Basic Compose controller without a presenter.

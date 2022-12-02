@@ -44,13 +44,17 @@ import com.google.android.material.slider.Slider
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import dev.chrisbanes.insetter.applyInsetter
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
-import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
+import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
+import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegateImpl
+import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
+import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegateImpl
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter.SetAsCoverResult.AddToLibraryFirst
@@ -74,6 +78,7 @@ import eu.kanade.tachiyomi.util.system.getThemeColor
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.logcat
+import eu.kanade.tachiyomi.util.system.prepareTabletUiContext
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.copy
@@ -87,6 +92,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
 import logcat.LogPriority
 import nucleus.factory.RequiresPresenter
+import nucleus.view.NucleusAppCompatActivity
 import uy.kohesive.injekt.injectLazy
 import kotlin.math.abs
 import kotlin.math.max
@@ -96,10 +102,12 @@ import kotlin.math.max
  * viewers, to which calls from the presenter or UI events are delegated.
  */
 @RequiresPresenter(ReaderPresenter::class)
-class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
+class ReaderActivity :
+    NucleusAppCompatActivity<ReaderPresenter>(),
+    SecureActivityDelegate by SecureActivityDelegateImpl(),
+    ThemingDelegate by ThemingDelegateImpl() {
 
     companion object {
-
         fun newIntent(context: Context, mangaId: Long?, chapterId: Long?): Intent {
             return Intent(context, ReaderActivity::class.java).apply {
                 putExtra("manga", mangaId)
@@ -116,6 +124,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     private val readerPreferences: ReaderPreferences by injectLazy()
+    private val preferences: BasePreferences by injectLazy()
 
     lateinit var binding: ReaderActivityBinding
 
@@ -155,10 +164,15 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     var isScrollingThroughPages = false
         private set
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(newBase.prepareTabletUiContext())
+    }
+
     /**
      * Called when the activity is created. Initializes the presenter and configuration.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyAppTheme(this)
         registerSecureActivity(this)
 
         // Setup shared element transitions
