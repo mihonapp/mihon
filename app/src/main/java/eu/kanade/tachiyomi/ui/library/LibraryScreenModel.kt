@@ -747,10 +747,11 @@ class LibraryScreenModel(
         val selectionMode = selection.isNotEmpty()
 
         val categories = library.keys.toList()
+        private val onlyDefaultCategory = categories.size == 1 && categories[0].isSystemCategory
 
         val libraryCount by lazy {
-            library
-                .flatMap { (_, v) -> v }
+            library.values
+                .flatten()
                 .fastDistinctBy { it.libraryManga.manga.id }
                 .size
         }
@@ -764,7 +765,7 @@ class LibraryScreenModel(
         }
 
         fun getMangaCountForCategory(category: Category): Int? {
-            return library[category]?.size?.takeIf { showMangaCount }
+            return if (showMangaCount) library[category]?.size else null
         }
 
         fun getToolbarTitle(
@@ -777,7 +778,11 @@ class LibraryScreenModel(
                 if (it.isSystemCategory) defaultCategoryTitle else it.name
             }
 
-            val title = if (showCategoryTabs && categories.size <= 1) categoryName else defaultTitle
+            val title = when {
+                showCategoryTabs && categories.size != 1 -> defaultTitle
+                libraryCount > 0 && !onlyDefaultCategory -> categoryName
+                else -> defaultTitle
+            }
             val count = when {
                 !showMangaCount -> null
                 !showCategoryTabs -> getMangaCountForCategory(category)
