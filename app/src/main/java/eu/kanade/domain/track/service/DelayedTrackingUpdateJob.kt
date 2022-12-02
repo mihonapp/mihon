@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.track.job
+package eu.kanade.domain.track.service
 
 import android.content.Context
 import androidx.work.BackoffPolicy
@@ -9,10 +9,10 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.domain.track.store.DelayedTrackingStore
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.logcat
@@ -25,7 +25,6 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
     CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val getManga = Injekt.get<GetManga>()
         val getTracks = Injekt.get<GetTracks>()
         val insertTrack = Injekt.get<InsertTrack>()
 
@@ -34,10 +33,11 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
 
         withIOContext {
             val tracks = delayedTrackingStore.getItems().mapNotNull {
-                val manga = getManga.await(it.mangaId) ?: return@withIOContext
-                getTracks.await(manga.id)
-                    .find { track -> track.id == it.trackId }
-                    ?.copy(lastChapterRead = it.lastChapterRead.toDouble())
+                val track = getTracks.awaitOne(it.trackId)
+                if (track == null) {
+                    delayedTrackingStore.remove(it.trackId)
+                }
+                track
             }
 
             tracks.forEach { track ->
@@ -47,7 +47,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
                         service.update(track.toDbTrack(), true)
                         insertTrack.await(track)
                     }
-                    delayedTrackingStore.remove(track)
+                    delayedTrackingStore.remove(track.id)
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e)
                 }

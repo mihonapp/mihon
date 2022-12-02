@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrackRepository {
 
+    suspend fun getTrackById(id: Long): Track?
+
     suspend fun getTracksByMangaId(mangaId: Long): List<Track>
 
     fun getTracksAsFlow(): Flow<List<Track>>

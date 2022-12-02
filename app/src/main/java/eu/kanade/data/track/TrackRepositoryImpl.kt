@@ -9,6 +9,10 @@ class TrackRepositoryImpl(
     private val handler: DatabaseHandler,
 ) : TrackRepository {
 
+    override suspend fun getTrackById(id: Long): Track? {
+        return handler.awaitOneOrNull { manga_syncQueries.getTrackById(id, trackMapper) }
+    }
+
     override suspend fun getTracksByMangaId(mangaId: Long): List<Track> {
         return handler.awaitList {
             manga_syncQueries.getTracksByMangaId(mangaId, trackMapper)

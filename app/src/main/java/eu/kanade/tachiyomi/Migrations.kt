@@ -36,7 +36,6 @@ object Migrations {
     /**
      * Performs a migration when the application is updated.
      *
-     * @param preferences Preferences of the application.
      * @return true if a migration is performed, false otherwise.
      */
     fun upgrade(
@@ -336,6 +335,16 @@ object Migrations {
                     prefs.edit {
                         val themeMode = prefs.getString(uiPreferences.themeMode().key(), null) ?: return@edit
                         putString(uiPreferences.themeMode().key(), themeMode.uppercase())
+                    }
+                }
+            }
+            if (oldVersion < 92) {
+                val trackingQueuePref = context.getSharedPreferences("tracking_queue", Context.MODE_PRIVATE)
+                trackingQueuePref.all.forEach {
+                    val (_, lastChapterRead) = it.value.toString().split(":")
+                    trackingQueuePref.edit {
+                        remove(it.key)
+                        putFloat(it.key, lastChapterRead.toFloat())
                     }
                 }
             }
