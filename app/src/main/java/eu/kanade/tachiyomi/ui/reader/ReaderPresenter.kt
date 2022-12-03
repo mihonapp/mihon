@@ -64,6 +64,11 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import nucleus.presenter.RxPresenter
@@ -74,7 +79,6 @@ import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
-import java.util.concurrent.TimeUnit
 import eu.kanade.domain.manga.model.Manga as DomainManga
 
 /**
@@ -134,9 +138,9 @@ class ReaderPresenter(
     private val viewerChaptersRelay = BehaviorRelay.create<ViewerChapters>()
 
     /**
-     * Relay used when loading prev/next chapter needed to lock the UI (with a dialog).
+     * Used when loading prev/next chapter needed to lock the UI (with a dialog).
      */
-    private val isLoadingAdjacentChapterRelay = BehaviorRelay.create<Boolean>()
+    private val isLoadingAdjacentChapterEvent = Channel<Boolean>()
 
     private var chapterToDownload: Download? = null
 
@@ -295,7 +299,11 @@ class ReaderPresenter(
 
         Observable.just(manga).subscribeLatestCache(ReaderActivity::setManga)
         viewerChaptersRelay.subscribeLatestCache(ReaderActivity::setChapters)
-        isLoadingAdjacentChapterRelay.subscribeLatestCache(ReaderActivity::setProgressDialog)
+        coroutineScope.launch {
+            isLoadingAdjacentChapterEvent.receiveAsFlow().collectLatest {
+                view?.setProgressDialog(it)
+            }
+        }
 
         // Read chapterList from an io thread because it's retrieved lazily and would block main.
         activeChapterSubscription?.unsubscribe()
@@ -377,8 +385,8 @@ class ReaderPresenter(
 
         activeChapterSubscription?.unsubscribe()
         activeChapterSubscription = getLoadObservable(loader, chapter)
-            .doOnSubscribe { isLoadingAdjacentChapterRelay.call(true) }
-            .doOnUnsubscribe { isLoadingAdjacentChapterRelay.call(false) }
+            .doOnSubscribe { coroutineScope.launch { isLoadingAdjacentChapterEvent.send(true) } }
+            .doOnUnsubscribe { coroutineScope.launch { isLoadingAdjacentChapterEvent.send(false) } }
             .subscribeFirst(
                 { view, _ ->
                     view.moveToPageIndex(0)
@@ -649,19 +657,21 @@ class ReaderPresenter(
             setMangaViewerFlags.awaitSetMangaReadingMode(manga.id!!.toLong(), readingModeType.toLong())
         }
 
-        Observable.timer(250, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-            .subscribeFirst({ view, _ ->
-                val currChapters = viewerChaptersRelay.value
-                if (currChapters != null) {
-                    // Save current page
-                    val currChapter = currChapters.currChapter
-                    currChapter.requestedPage = currChapter.chapter.last_page_read
+        coroutineScope.launchIO {
+            delay(250)
+            val currChapters = viewerChaptersRelay.value
+            if (currChapters != null) {
+                // Save current page
+                val currChapter = currChapters.currChapter
+                currChapter.requestedPage = currChapter.chapter.last_page_read
 
+                withUIContext {
                     // Emit manga and chapters to the new viewer
-                    view.setManga(manga)
-                    view.setChapters(currChapters)
+                    view?.setManga(manga)
+                    view?.setChapters(currChapters)
                 }
-            },)
+            }
+        }
     }
 
     /**
@@ -688,13 +698,13 @@ class ReaderPresenter(
 
         logcat(LogPriority.INFO) { "Manga orientation is ${manga.orientationType}" }
 
-        Observable.timer(250, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-            .subscribeFirst({ view, _ ->
-                val currChapters = viewerChaptersRelay.value
-                if (currChapters != null) {
-                    view.setOrientation(getMangaOrientationType())
-                }
-            },)
+        coroutineScope.launchIO {
+            delay(250)
+            val currChapters = viewerChaptersRelay.value
+            if (currChapters != null) {
+                withUIContext { view?.setOrientation(getMangaOrientationType()) }
+            }
+        }
     }
 
     /**
@@ -740,12 +750,12 @@ class ReaderPresenter(
                 )
                 withUIContext {
                     notifier.onComplete(uri)
-                    view!!.onSaveImageResult(SaveImageResult.Success(uri))
+                    view?.onSaveImageResult(SaveImageResult.Success(uri))
                 }
             }
         } catch (e: Throwable) {
             notifier.onError(e.message)
-            view!!.onSaveImageResult(SaveImageResult.Error(e))
+            view?.onSaveImageResult(SaveImageResult.Error(e))
         }
     }
 
@@ -776,7 +786,7 @@ class ReaderPresenter(
                     ),
                 )
                 withUIContext {
-                    view!!.onShareImageResult(uri, page)
+                    view?.onShareImageResult(uri, page)
                 }
             }
         } catch (e: Throwable) {
