@@ -1,9 +1,9 @@
 package eu.kanade.tachiyomi.ui.library
 
+import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import com.bluelinelabs.conductor.Router
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.SetDisplayModeForCategory
 import eu.kanade.domain.category.interactor.SetSortModeForCategory
@@ -28,11 +28,11 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 class LibrarySettingsSheet(
-    router: Router,
+    activity: Activity,
     private val trackManager: TrackManager = Injekt.get(),
     private val setDisplayModeForCategory: SetDisplayModeForCategory = Injekt.get(),
     private val setSortModeForCategory: SetSortModeForCategory = Injekt.get(),
-) : TabbedBottomSheetDialog(router.activity!!) {
+) : TabbedBottomSheetDialog(activity) {
 
     val filters: Filter
     private val sort: Sort
@@ -41,9 +41,9 @@ class LibrarySettingsSheet(
     val sheetScope = CoroutineScope(Job() + Dispatchers.IO)
 
     init {
-        filters = Filter(router.activity!!)
-        sort = Sort(router.activity!!)
-        display = Display(router.activity!!)
+        filters = Filter(activity)
+        sort = Sort(activity)
+        display = Display(activity)
     }
 
     /**

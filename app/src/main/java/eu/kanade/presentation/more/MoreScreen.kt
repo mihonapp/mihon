@@ -1,10 +1,7 @@
 package eu.kanade.presentation.more
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.GetApp
@@ -29,8 +26,7 @@ import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.more.DownloadQueueState
-import eu.kanade.tachiyomi.ui.more.MoreController
-import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
+import eu.kanade.tachiyomi.util.Constants
 
 @Composable
 fun MoreScreen(
@@ -50,10 +46,7 @@ fun MoreScreen(
     val uriHandler = LocalUriHandler.current
 
     ScrollbarLazyColumn(
-        modifier = Modifier.statusBarsPadding(),
-        contentPadding = TachiyomiBottomNavigationView.withBottomNavPadding(
-            WindowInsets.navigationBars.asPaddingValues(),
-        ),
+        modifier = Modifier.systemBarsPadding(),
     ) {
         if (isFDroid) {
             item {
@@ -169,7 +162,7 @@ fun MoreScreen(
             TextPreferenceWidget(
                 title = stringResource(R.string.label_help),
                 icon = Icons.Outlined.HelpOutline,
-                onPreferenceClick = { uriHandler.openUri(MoreController.URL_HELP) },
+                onPreferenceClick = { uriHandler.openUri(Constants.URL_HELP) },
             )
         }
     }

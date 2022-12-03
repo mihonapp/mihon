@@ -47,6 +47,7 @@ import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.EmptyScreen
@@ -54,7 +55,6 @@ import eu.kanade.presentation.components.ExtendedFloatingActionButton
 import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.components.Pill
 import eu.kanade.presentation.components.Scaffold
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
@@ -66,7 +66,7 @@ object DownloadQueueScreen : Screen {
     @Composable
     override fun Content() {
         val context = LocalContext.current
-        val router = LocalRouter.currentOrThrow
+        val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
         val screenModel = rememberScreenModel { DownloadQueueScreenModel() }
         val downloadList by screenModel.state.collectAsState()
@@ -121,7 +121,7 @@ object DownloadQueueScreen : Screen {
                             }
                         }
                     },
-                    navigateUp = router::popCurrentController,
+                    navigateUp = navigator::pop,
                     actions = {
                         if (downloadList.isNotEmpty()) {
                             OverflowMenu { closeMenu ->

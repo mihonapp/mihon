@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -88,9 +87,7 @@ fun TabbedScreen(
                 verticalAlignment = Alignment.Top,
             ) { page ->
                 tabs[page].content(
-                    TachiyomiBottomNavigationView.withBottomNavPadding(
-                        PaddingValues(bottom = contentPadding.calculateBottomPadding()),
-                    ),
+                    PaddingValues(bottom = contentPadding.calculateBottomPadding()),
                     snackbarHostState,
                 )
             }

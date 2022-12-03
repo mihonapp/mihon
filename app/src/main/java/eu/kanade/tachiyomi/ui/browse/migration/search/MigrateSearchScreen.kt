@@ -35,7 +35,6 @@ import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.presentation.browse.MigrateSearchScreen
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.preference.Preference
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
@@ -45,9 +44,7 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SChapter
-import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.migration.MigrationFlags
-import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
@@ -60,7 +57,6 @@ class MigrateSearchScreen(private val mangaId: Long) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val router = LocalRouter.currentOrThrow
         val screenModel = rememberScreenModel { MigrateSearchScreenModel(mangaId = mangaId) }
         val state by screenModel.state.collectAsState()
 
@@ -76,7 +72,7 @@ class MigrateSearchScreen(private val mangaId: Long) : Screen {
                 if (!screenModel.incognitoMode.get()) {
                     screenModel.lastUsedSourceId.set(it.id)
                 }
-                router.pushController(SourceSearchController(state.manga, it, state.searchQuery))
+                navigator.push(SourceSearchScreen(state.manga!!, it.id, state.searchQuery))
             },
             onClickItem = { screenModel.setDialog(MigrateSearchDialog.Migrate(it)) },
             onLongClickItem = { navigator.push(MangaScreen(it.id, true)) },
@@ -99,8 +95,7 @@ class MigrateSearchScreen(private val mangaId: Long) : Screen {
                             navigator.popUntil { navigator.items.contains(lastItem) }
                             navigator.push(MangaScreen(dialog.manga.id))
                         } else {
-                            navigator.pop()
-                            router.pushController(MangaController(dialog.manga.id))
+                            navigator.replace(MangaScreen(dialog.manga.id))
                         }
                     },
                 )

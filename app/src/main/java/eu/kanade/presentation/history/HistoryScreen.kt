@@ -5,7 +5,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -21,7 +20,6 @@ import eu.kanade.presentation.history.components.HistoryContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.history.HistoryScreenModel
 import eu.kanade.tachiyomi.ui.history.HistoryState
-import eu.kanade.tachiyomi.widget.TachiyomiBottomNavigationView
 import java.util.Date
 
 @Composable
@@ -55,7 +53,6 @@ fun HistoryScreen(
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        contentWindowInsets = TachiyomiBottomNavigationView.withBottomNavInset(ScaffoldDefaults.contentWindowInsets),
     ) { contentPadding ->
         state.list.let {
             if (it == null) {

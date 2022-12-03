@@ -1,34 +1,60 @@
 package eu.kanade.tachiyomi.ui.history
 
 import android.content.Context
+import androidx.compose.animation.graphics.res.animatedVectorResource
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.model.rememberScreenModel
-import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import cafe.adriel.voyager.navigator.tab.TabOptions
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
-import eu.kanade.presentation.util.LocalRouter
+import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.consumeAsFlow
 
-object HistoryScreen : Screen {
+object HistoryTab : Tab {
 
     private val snackbarHostState = SnackbarHostState()
 
+    private val resumeLastChapterReadEvent = Channel<Unit>()
+
+    override val options: TabOptions
+        @Composable
+        get() {
+            val isSelected = LocalTabNavigator.current.current.key == key
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_history_enter)
+            return TabOptions(
+                index = 2u,
+                title = stringResource(R.string.label_recent_manga),
+                icon = rememberAnimatedVectorPainter(image, isSelected),
+            )
+        }
+
+    override suspend fun onReselect(navigator: Navigator) {
+        resumeLastChapterReadEvent.send(Unit)
+    }
+
     @Composable
     override fun Content() {
-        val router = LocalRouter.currentOrThrow
+        val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
         val screenModel = rememberScreenModel { HistoryScreenModel() }
         val state by screenModel.state.collectAsState()
@@ -39,7 +65,7 @@ object HistoryScreen : Screen {
             incognitoMode = screenModel.isIncognitoMode,
             downloadedOnlyMode = screenModel.isDownloadOnly,
             onSearchQueryChange = screenModel::updateSearchQuery,
-            onClickCover = { router.pushController(MangaController(it)) },
+            onClickCover = { navigator.push(MangaScreen(it)) },
             onClickResume = screenModel::getNextChapterForManga,
             onDialogChange = screenModel::setDialog,
         )
@@ -82,6 +108,12 @@ object HistoryScreen : Screen {
                         snackbarHostState.showSnackbar(context.getString(R.string.clear_history_completed))
                     is HistoryScreenModel.Event.OpenChapter -> openChapter(context, e.chapter)
                 }
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            resumeLastChapterReadEvent.consumeAsFlow().collectLatest {
+                openChapter(context, screenModel.getNextChapter())
             }
         }
     }

@@ -48,7 +48,7 @@ import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.util.Constants
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.dpToPx
 import kotlinx.coroutines.MainScope
@@ -136,7 +136,7 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
                                 ) {
                                     val intent = Intent(LocalContext.current, MainActivity::class.java).apply {
                                         action = MainActivity.SHORTCUT_MANGA
-                                        putExtra(MangaController.MANGA_EXTRA, mangaId)
+                                        putExtra(Constants.MANGA_EXTRA, mangaId)
                                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 

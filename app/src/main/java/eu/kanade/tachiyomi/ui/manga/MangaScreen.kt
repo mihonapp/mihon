@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -28,7 +29,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
-import com.bluelinelabs.conductor.Router
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.hasCustomCover
@@ -43,31 +43,27 @@ import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.DownloadCustomAmountDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.util.LocalNavigatorContentPadding
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.base.controller.pushController
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
-import eu.kanade.tachiyomi.ui.history.HistoryController
-import eu.kanade.tachiyomi.ui.library.LibraryController
-import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.ui.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.launch
 
 class MangaScreen(
     private val mangaId: Long,
-    private val fromSource: Boolean = false,
+    val fromSource: Boolean = false,
 ) : Screen {
 
     override val key = uniqueScreenKey
@@ -75,9 +71,9 @@ class MangaScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val router = LocalRouter.currentOrThrow
         val context = LocalContext.current
         val haptic = LocalHapticFeedback.current
+        val scope = rememberCoroutineScope()
         val screenModel = rememberScreenModel { MangaInfoScreenModel(context, mangaId, fromSource) }
 
         val state by screenModel.state.collectAsState()
@@ -94,7 +90,7 @@ class MangaScreen(
             state = successState,
             snackbarHostState = screenModel.snackbarHostState,
             isTabletUi = isTabletUi(),
-            onBackClicked = router::popCurrentController,
+            onBackClicked = navigator::pop,
             onChapterClicked = { openChapter(context, it) },
             onDownloadChapter = screenModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
             onAddToLibraryClicked = {
@@ -104,11 +100,11 @@ class MangaScreen(
             onWebViewClicked = { openMangaInWebView(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onWebViewLongClicked = { copyMangaUrl(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onTrackingClicked = screenModel::showTrackDialog.takeIf { successState.trackingAvailable },
-            onTagClicked = { performGenreSearch(router, it, screenModel.source!!) },
+            onTagClicked = { scope.launch { performGenreSearch(navigator, it, screenModel.source!!) } },
             onFilterButtonClicked = screenModel::showSettingsDialog,
             onRefresh = screenModel::fetchAllFromSource,
             onContinueReading = { continueReading(context, screenModel.getNextUnreadChapter()) },
-            onSearch = { query, global -> performSearch(router, query, global) },
+            onSearch = { query, global -> scope.launch { performSearch(navigator, query, global) } },
             onCoverClicked = screenModel::showCoverDialog,
             onShareClicked = { shareManga(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onDownloadActionClicked = screenModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
@@ -268,33 +264,24 @@ class MangaScreen(
      *
      * @param query the search query to the parent controller
      */
-    private fun performSearch(router: Router, query: String, global: Boolean) {
+    private suspend fun performSearch(navigator: Navigator, query: String, global: Boolean) {
         if (global) {
-            router.pushController(GlobalSearchController(query))
+            navigator.push(GlobalSearchScreen(query))
             return
         }
 
-        if (router.backstackSize < 2) {
+        if (navigator.size < 2) {
             return
         }
 
-        when (val previousController = router.backstack[router.backstackSize - 2].controller) {
-            is LibraryController -> {
-                router.handleBack()
+        when (val previousController = navigator.items[navigator.size - 2]) {
+            is HomeScreen -> {
+                navigator.pop()
                 previousController.search(query)
             }
-            is UpdatesController,
-            is HistoryController,
-            -> {
-                // Manually navigate to LibraryController
-                router.handleBack()
-                (router.activity as MainActivity).setSelectedNavItem(R.id.nav_library)
-                val controller = router.getControllerWithTag(R.id.nav_library.toString()) as LibraryController
-                controller.search(query)
-            }
-            is BrowseSourceController -> {
-                router.handleBack()
-                previousController.searchWithQuery(query)
+            is BrowseSourceScreen -> {
+                navigator.pop()
+                previousController.search(query)
             }
         }
     }
@@ -304,20 +291,17 @@ class MangaScreen(
      *
      * @param genreName the search genre to the parent controller
      */
-    private fun performGenreSearch(router: Router, genreName: String, source: Source) {
-        if (router.backstackSize < 2) {
+    private suspend fun performGenreSearch(navigator: Navigator, genreName: String, source: Source) {
+        if (navigator.size < 2) {
             return
         }
 
-        val previousController = router.backstack[router.backstackSize - 2].controller
-
-        if (previousController is BrowseSourceController &&
-            source is HttpSource
-        ) {
-            router.handleBack()
-            previousController.searchWithGenre(genreName)
+        val previousController = navigator.items[navigator.size - 2]
+        if (previousController is BrowseSourceScreen && source is HttpSource) {
+            navigator.pop()
+            previousController.searchGenre(genreName)
         } else {
-            performSearch(router, genreName, global = false)
+            performSearch(navigator, genreName, global = false)
         }
     }
 

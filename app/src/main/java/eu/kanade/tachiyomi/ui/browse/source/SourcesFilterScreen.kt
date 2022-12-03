@@ -7,10 +7,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.SourcesFilterScreen
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.toast
 
@@ -18,7 +18,7 @@ class SourcesFilterScreen : Screen {
 
     @Composable
     override fun Content() {
-        val router = LocalRouter.currentOrThrow
+        val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { SourcesFilterScreenModel() }
         val state by screenModel.state.collectAsState()
 
@@ -31,7 +31,7 @@ class SourcesFilterScreen : Screen {
             val context = LocalContext.current
             LaunchedEffect(Unit) {
                 context.toast(R.string.internal_error)
-                router.popCurrentController()
+                navigator.pop()
             }
             return
         }
@@ -39,7 +39,7 @@ class SourcesFilterScreen : Screen {
         val successState = state as SourcesFilterState.Success
 
         SourcesFilterScreen(
-            navigateUp = router::popCurrentController,
+            navigateUp = navigator::pop,
             state = successState,
             onClickLanguage = screenModel::toggleLanguage,
             onClickSource = screenModel::toggleSource,

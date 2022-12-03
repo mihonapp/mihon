@@ -15,6 +15,7 @@ import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.presentation.history.HistoryUiModel
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.toDateKey
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -74,6 +75,10 @@ class HistoryScreenModel(
                     else -> null
                 }
             }
+    }
+
+    suspend fun getNextChapter(): Chapter? {
+        return withIOContext { getNextChapters.await(onlyUnread = false).firstOrNull() }
     }
 
     fun getNextChapterForManga(mangaId: Long, chapterId: Long) {

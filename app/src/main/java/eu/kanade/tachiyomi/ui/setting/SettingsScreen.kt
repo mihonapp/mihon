@@ -13,7 +13,6 @@ import eu.kanade.presentation.more.settings.screen.SettingsBackupScreen
 import eu.kanade.presentation.more.settings.screen.SettingsGeneralScreen
 import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
 import eu.kanade.presentation.util.LocalBackPress
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.presentation.util.Transition
 import eu.kanade.presentation.util.isTabletUi
 
@@ -24,15 +23,8 @@ class SettingsScreen private constructor(
 
     @Composable
     override fun Content() {
-        val router = LocalRouter.currentOrThrow
         val navigator = LocalNavigator.currentOrThrow
         if (!isTabletUi()) {
-            val back: () -> Unit = {
-                when {
-                    navigator.canPop -> navigator.pop()
-                    router.backstackSize > 1 -> router.handleBack()
-                }
-            }
             Navigator(
                 screen = if (toBackup) {
                     SettingsBackupScreen
@@ -42,7 +34,7 @@ class SettingsScreen private constructor(
                     SettingsMainScreen
                 },
                 content = {
-                    CompositionLocalProvider(LocalBackPress provides back) {
+                    CompositionLocalProvider(LocalBackPress provides navigator::pop) {
                         ScreenTransition(
                             navigator = it,
                             transition = { Transition.OneWayFade },
@@ -62,7 +54,7 @@ class SettingsScreen private constructor(
             ) {
                 TwoPanelBox(
                     startContent = {
-                        CompositionLocalProvider(LocalBackPress provides router::popCurrentController) {
+                        CompositionLocalProvider(LocalBackPress provides navigator::pop) {
                             SettingsMainScreen.Content(twoPane = true)
                         }
                     },

@@ -16,11 +16,14 @@
 
 package eu.kanade.presentation.components
 
+import androidx.compose.foundation.layout.MutableWindowInsets
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.withConsumedWindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScaffoldDefaults
@@ -31,6 +34,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -67,6 +71,7 @@ import kotlin.math.max
  * * Remove height constraint for expanded app bar
  * * Also take account of fab height when providing inner padding
  * * Fixes for fab and snackbar horizontal placements when [contentWindowInsets] is used
+ * * Handle consumed window insets
  *
  * @param modifier the [Modifier] to be applied to this scaffold
  * @param topBar top app bar of the screen, typically a [SmallTopAppBar]
@@ -103,9 +108,12 @@ fun Scaffold(
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit,
 ) {
+    // Tachiyomi: Handle consumed window insets
+    val remainingWindowInsets = remember { MutableWindowInsets() }
     androidx.compose.material3.Surface(
         modifier = Modifier
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
+            .withConsumedWindowInsets { remainingWindowInsets.insets = contentWindowInsets.exclude(it) }
             .then(modifier),
         color = containerColor,
         contentColor = contentColor,
@@ -116,7 +124,7 @@ fun Scaffold(
             bottomBar = bottomBar,
             content = content,
             snackbar = snackbarHost,
-            contentWindowInsets = contentWindowInsets,
+            contentWindowInsets = remainingWindowInsets,
             fab = floatingActionButton,
         )
     }

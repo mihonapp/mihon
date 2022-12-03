@@ -6,33 +6,44 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.ViewGroup
+import android.view.View
 import android.view.Window
 import android.widget.Toast
-import androidx.appcompat.view.ActionMode
+import androidx.activity.compose.BackHandler
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.animation.doOnEnd
-import androidx.core.graphics.ColorUtils
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
-import com.bluelinelabs.conductor.Conductor
-import com.bluelinelabs.conductor.Controller
-import com.bluelinelabs.conductor.ControllerChangeHandler
-import com.bluelinelabs.conductor.Router
-import com.bluelinelabs.conductor.RouterTransaction
-import com.google.android.material.navigation.NavigationBarView
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
+import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.transitions.ScreenTransition
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
-import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.domain.base.BasePreferences
+import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.presentation.util.Transition
+import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
@@ -40,39 +51,29 @@ import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
-import eu.kanade.tachiyomi.databinding.MainActivityBinding
-import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
+import eu.kanade.tachiyomi.data.updater.RELEASE_URL
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.ui.base.controller.ComposeContentController
-import eu.kanade.tachiyomi.ui.base.controller.DialogController
-import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.base.controller.setRoot
-import eu.kanade.tachiyomi.ui.browse.BrowseController
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
-import eu.kanade.tachiyomi.ui.download.DownloadController
-import eu.kanade.tachiyomi.ui.history.HistoryController
-import eu.kanade.tachiyomi.ui.library.LibraryController
-import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.more.MoreController
-import eu.kanade.tachiyomi.ui.more.NewUpdateDialogController
-import eu.kanade.tachiyomi.ui.setting.SettingsMainController
-import eu.kanade.tachiyomi.ui.updates.UpdatesController
-import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
-import eu.kanade.tachiyomi.util.preference.asHotFlow
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
+import eu.kanade.tachiyomi.ui.home.HomeScreen
+import eu.kanade.tachiyomi.ui.library.LibrarySettingsSheet
+import eu.kanade.tachiyomi.ui.library.LibraryTab
+import eu.kanade.tachiyomi.ui.manga.MangaScreen
+import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
+import eu.kanade.tachiyomi.util.Constants
 import eu.kanade.tachiyomi.util.system.dpToPx
-import eu.kanade.tachiyomi.util.system.getThemeColor
-import eu.kanade.tachiyomi.util.system.isTabletUi
 import eu.kanade.tachiyomi.util.system.logcat
+import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.setComposeContent
 import eu.kanade.tachiyomi.util.view.setNavigationBarTransparentCompat
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -86,23 +87,19 @@ class MainActivity : BaseActivity() {
     private val uiPreferences: UiPreferences by injectLazy()
     private val preferences: BasePreferences by injectLazy()
 
-    lateinit var binding: MainActivityBinding
-
-    private lateinit var router: Router
-
-    private val startScreenId = R.id.nav_library
-    private var isConfirmingExit: Boolean = false
     private var isHandlingShortcut: Boolean = false
-
-    /**
-     * App bar lift state for backstack
-     */
-    private val backstackLiftState = mutableMapOf<String, Boolean>()
 
     private val chapterCache: ChapterCache by injectLazy()
 
     // To be checked by splash screen. If true then splash screen will be removed.
     var ready = false
+
+    /**
+     * Sheet containing filter/sort/display items.
+     */
+    private var settingsSheet: LibrarySettingsSheet? = null
+
+    private lateinit var navigator: Navigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Prevent splash screen showing up on configuration changes
@@ -132,22 +129,72 @@ class MainActivity : BaseActivity() {
             false
         }
 
-        binding = MainActivityBinding.inflate(layoutInflater)
-
         // Do not let the launcher create a new activity http://stackoverflow.com/questions/16283079
         if (!isTaskRoot) {
             finish()
             return
         }
 
-        setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
-
         // Draw edge-to-edge
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        binding.bottomNav?.applyInsetter {
-            type(navigationBars = true) {
-                padding()
+
+        settingsSheet = LibrarySettingsSheet(this)
+        LibraryTab.openSettingsSheetEvent
+            .onEach(::showSettingsSheet)
+            .launchIn(lifecycleScope)
+
+        setComposeContent {
+            Navigator(
+                screen = HomeScreen,
+                disposeBehavior = NavigatorDisposeBehavior(disposeNestedNavigators = false, disposeSteps = true),
+            ) { navigator ->
+                if (navigator.size == 1) {
+                    ConfirmExit()
+                }
+
+                // Shows current screen
+                ScreenTransition(navigator = navigator, transition = { Transition.OneWayFade })
+
+                // Pop source-related screens when incognito mode is turned off
+                LaunchedEffect(Unit) {
+                    preferences.incognitoMode().changes()
+                        .drop(1)
+                        .onEach {
+                            if (!it) {
+                                val currentScreen = navigator.lastItem
+                                if (currentScreen is BrowseSourceScreen ||
+                                    (currentScreen is MangaScreen && currentScreen.fromSource)
+                                ) {
+                                    navigator.popUntilRoot()
+                                }
+                            }
+                        }
+                        .launchIn(this)
+                }
+
+                LaunchedEffect(navigator) {
+                    this@MainActivity.navigator = navigator
+                }
+
+                CheckForUpdate()
+            }
+
+            var showChangelog by remember { mutableStateOf(didMigration && !BuildConfig.DEBUG) }
+            if (showChangelog) {
+                AlertDialog(
+                    onDismissRequest = { showChangelog = false },
+                    title = { Text(text = stringResource(R.string.updated_version, BuildConfig.VERSION_NAME)) },
+                    dismissButton = {
+                        TextButton(onClick = { openInBrowser(RELEASE_URL) }) {
+                            Text(text = stringResource(R.string.whats_new))
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showChangelog = false }) {
+                            Text(text = stringResource(android.R.string.ok))
+                        }
+                    },
+                )
             }
         }
 
@@ -158,128 +205,62 @@ class MainActivity : BaseActivity() {
         }
         setSplashScreenExitAnimation(splashScreen)
 
-        nav.setOnItemSelectedListener { item ->
-            val id = item.itemId
-
-            val currentRoot = router.backstack.firstOrNull()
-            if (currentRoot?.tag()?.toIntOrNull() != id) {
-                when (id) {
-                    R.id.nav_library -> router.setRoot(LibraryController(), id)
-                    R.id.nav_updates -> router.setRoot(UpdatesController(), id)
-                    R.id.nav_history -> router.setRoot(HistoryController(), id)
-                    R.id.nav_browse -> router.setRoot(BrowseController(toExtensions = false), id)
-                    R.id.nav_more -> router.setRoot(MoreController(), id)
-                }
-            } else if (!isHandlingShortcut) {
-                when (id) {
-                    R.id.nav_library -> {
-                        val controller = router.getControllerWithTag(id.toString()) as? LibraryController
-                        controller?.showSettingsSheet()
-                    }
-                    R.id.nav_updates -> {
-                        if (router.backstackSize == 1) {
-                            router.pushController(DownloadController())
-                        }
-                    }
-                    R.id.nav_history -> {
-                        if (router.backstackSize == 1) {
-                            try {
-                                val historyController = router.backstack[0].controller as HistoryController
-                                historyController.resumeLastChapterRead()
-                            } catch (e: Exception) {
-                                toast(R.string.cant_open_last_read_chapter)
-                            }
-                        }
-                    }
-                    R.id.nav_more -> {
-                        if (router.backstackSize == 1) {
-                            router.pushController(SettingsMainController())
-                        }
-                    }
-                }
-            }
-            true
-        }
-
-        val container: ViewGroup = binding.controllerContainer
-        router = Conductor.attachRouter(this, container, savedInstanceState)
-            .setPopRootControllerMode(Router.PopRootControllerMode.NEVER)
-        router.addChangeListener(
-            object : ControllerChangeHandler.ControllerChangeListener {
-                override fun onChangeStarted(
-                    to: Controller?,
-                    from: Controller?,
-                    isPush: Boolean,
-                    container: ViewGroup,
-                    handler: ControllerChangeHandler,
-                ) {
-                    syncActivityViewWithController(to, from, isPush)
-                }
-
-                override fun onChangeCompleted(
-                    to: Controller?,
-                    from: Controller?,
-                    isPush: Boolean,
-                    container: ViewGroup,
-                    handler: ControllerChangeHandler,
-                ) {
-                }
-            },
-        )
-        if (!router.hasRootController()) {
-            // Set start screen
-            if (!handleIntentAction(intent)) {
-                moveToStartScreen()
-            }
-        }
-        syncActivityViewWithController()
-
-        binding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
-
         if (savedInstanceState == null) {
+            // Set start screen
+            lifecycleScope.launch { handleIntentAction(intent) }
+
             // Reset Incognito Mode on relaunch
             preferences.incognitoMode().set(false)
+        }
+    }
 
-            // Show changelog prompt on update
-            if (didMigration && !BuildConfig.DEBUG) {
-                WhatsNewDialogController().showDialog(router)
-            }
+    private fun showSettingsSheet(category: Category? = null) {
+        if (category != null) {
+            settingsSheet?.show(category)
         } else {
-            // Restore selected nav item
-            router.backstack.firstOrNull()?.tag()?.toIntOrNull()?.let {
-                nav.menu.findItem(it).isChecked = true
+            lifecycleScope.launch { LibraryTab.requestOpenSettingsSheet() }
+        }
+    }
+
+    @Composable
+    private fun ConfirmExit() {
+        val scope = rememberCoroutineScope()
+        val confirmExit by preferences.confirmExit().collectAsState()
+        var waitingConfirmation by remember { mutableStateOf(false) }
+        BackHandler(enabled = !waitingConfirmation && confirmExit) {
+            scope.launch {
+                waitingConfirmation = true
+                val toast = toast(R.string.confirm_exit, Toast.LENGTH_LONG)
+                delay(2.seconds)
+                toast.cancel()
+                waitingConfirmation = false
             }
         }
+    }
 
-        merge(libraryPreferences.showUpdatesNavBadge().changes(), libraryPreferences.unreadUpdatesCount().changes())
-            .onEach { setUnreadUpdatesBadge() }
-            .launchIn(lifecycleScope)
-
-        sourcePreferences.extensionUpdatesCount()
-            .asHotFlow { setExtensionsBadge() }
-            .launchIn(lifecycleScope)
-
-        preferences.downloadedOnly()
-            .asHotFlow { binding.downloadedOnly.isVisible = it }
-            .launchIn(lifecycleScope)
-
-        binding.incognitoMode.isVisible = preferences.incognitoMode().get()
-        preferences.incognitoMode().changes()
-            .drop(1)
-            .onEach {
-                binding.incognitoMode.isVisible = it
-
-                // Close BrowseSourceController and its MangaController child when incognito mode is disabled
-                if (!it) {
-                    val fg = router.backstack.lastOrNull()?.controller
-                    if (fg is BrowseSourceController || fg is MangaController && fg.fromSource) {
-                        router.popToRoot()
+    @Composable
+    private fun CheckForUpdate() {
+        val context = LocalContext.current
+        val navigator = LocalNavigator.currentOrThrow
+        LaunchedEffect(Unit) {
+            // App updates
+            if (BuildConfig.INCLUDE_UPDATER) {
+                try {
+                    val result = AppUpdateChecker().checkForUpdate(context)
+                    if (result is AppUpdateResult.NewUpdate) {
+                        val updateScreen = NewUpdateScreen(
+                            versionName = result.release.version,
+                            changelogInfo = result.release.info,
+                            releaseLink = result.release.releaseLink,
+                            downloadLink = result.release.getDownloadLink(),
+                        )
+                        navigator.push(updateScreen)
                     }
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e)
                 }
             }
-            .launchIn(lifecycleScope)
+        }
     }
 
     /**
@@ -289,16 +270,16 @@ class MainActivity : BaseActivity() {
      * after the animation is finished.
      */
     private fun setSplashScreenExitAnimation(splashScreen: SplashScreen?) {
+        val root = findViewById<View>(android.R.id.content)
         val setNavbarScrim = {
             // Make sure navigation bar is on bottom before we modify it
-            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            ViewCompat.setOnApplyWindowInsetsListener(root) { _, insets ->
                 if (insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom > 0) {
-                    val elevation = binding.bottomNav?.elevation ?: 0F
-                    window.setNavigationBarTransparentCompat(this@MainActivity, elevation)
+                    window.setNavigationBarTransparentCompat(this@MainActivity, 3.dpToPx.toFloat())
                 }
                 insets
             }
-            ViewCompat.requestApplyInsets(binding.root)
+            ViewCompat.requestApplyInsets(root)
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S && splashScreen != null) {
@@ -316,7 +297,7 @@ class MainActivity : BaseActivity() {
                     duration = SPLASH_EXIT_ANIM_DURATION
                     addUpdateListener { va ->
                         val value = va.animatedValue as Float
-                        binding.root.translationY = value * 16.dpToPx
+                        root.translationY = value * 16.dpToPx
                     }
                 }
 
@@ -344,69 +325,13 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onNewIntent(intent: Intent) {
-        if (!handleIntentAction(intent)) {
+        val handle = runBlocking { handleIntentAction(intent) }
+        if (!handle) {
             super.onNewIntent(intent)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        checkForUpdates()
-    }
-
-    private fun checkForUpdates() {
-        lifecycleScope.launchIO {
-            // App updates
-            if (BuildConfig.INCLUDE_UPDATER) {
-                try {
-                    val result = AppUpdateChecker().checkForUpdate(this@MainActivity)
-                    if (result is AppUpdateResult.NewUpdate) {
-                        NewUpdateDialogController(result).showDialog(router)
-                    }
-                } catch (e: Exception) {
-                    logcat(LogPriority.ERROR, e)
-                }
-            }
-
-            // Extension updates
-            try {
-                ExtensionGithubApi().checkForUpdates(
-                    this@MainActivity,
-                    fromAvailableExtensionList = true,
-                )?.let { pendingUpdates ->
-                    sourcePreferences.extensionUpdatesCount().set(pendingUpdates.size)
-                }
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e)
-            }
-        }
-    }
-
-    private fun setUnreadUpdatesBadge() {
-        val updates = if (libraryPreferences.showUpdatesNavBadge().get()) libraryPreferences.unreadUpdatesCount().get() else 0
-        if (updates > 0) {
-            nav.getOrCreateBadge(R.id.nav_updates).apply {
-                number = updates
-                setContentDescriptionQuantityStringsResource(R.plurals.notification_chapters_generic)
-            }
-        } else {
-            nav.removeBadge(R.id.nav_updates)
-        }
-    }
-
-    private fun setExtensionsBadge() {
-        val updates = sourcePreferences.extensionUpdatesCount().get()
-        if (updates > 0) {
-            nav.getOrCreateBadge(R.id.nav_browse).apply {
-                number = updates
-                setContentDescriptionQuantityStringsResource(R.plurals.update_check_notification_ext_updates)
-            }
-        } else {
-            nav.removeBadge(R.id.nav_browse)
-        }
-    }
-
-    private fun handleIntentAction(intent: Intent): Boolean {
+    private suspend fun handleIntentAction(intent: Intent): Boolean {
         val notificationId = intent.getIntExtra("notificationId", -1)
         if (notificationId > -1) {
             NotificationReceiver.dismissNotification(applicationContext, notificationId, intent.getIntExtra("groupId", 0))
@@ -415,32 +340,19 @@ class MainActivity : BaseActivity() {
         isHandlingShortcut = true
 
         when (intent.action) {
-            SHORTCUT_LIBRARY -> setSelectedNavItem(R.id.nav_library)
-            SHORTCUT_RECENTLY_UPDATED -> setSelectedNavItem(R.id.nav_updates)
-            SHORTCUT_RECENTLY_READ -> setSelectedNavItem(R.id.nav_history)
-            SHORTCUT_CATALOGUES -> setSelectedNavItem(R.id.nav_browse)
-            SHORTCUT_EXTENSIONS -> {
-                if (router.backstackSize > 1) {
-                    router.popToRoot()
-                }
-                setSelectedNavItem(R.id.nav_browse)
-                router.pushController(BrowseController(toExtensions = true))
-            }
+            SHORTCUT_LIBRARY -> HomeScreen.openTab(HomeScreen.Tab.Library())
+            SHORTCUT_RECENTLY_UPDATED -> HomeScreen.openTab(HomeScreen.Tab.Updates)
+            SHORTCUT_RECENTLY_READ -> HomeScreen.openTab(HomeScreen.Tab.History)
+            SHORTCUT_CATALOGUES -> HomeScreen.openTab(HomeScreen.Tab.Browse(false))
+            SHORTCUT_EXTENSIONS -> HomeScreen.openTab(HomeScreen.Tab.Browse(true))
             SHORTCUT_MANGA -> {
-                val extras = intent.extras ?: return false
-                val fgController = router.backstack.lastOrNull()?.controller as? MangaController
-                if (fgController?.mangaId != extras.getLong(MangaController.MANGA_EXTRA)) {
-                    router.popToRoot()
-                    setSelectedNavItem(R.id.nav_library)
-                    router.pushController(RouterTransaction.with(MangaController(extras)))
-                }
+                val idToOpen = intent.extras?.getLong(Constants.MANGA_EXTRA) ?: return false
+                navigator.popUntilRoot()
+                HomeScreen.openTab(HomeScreen.Tab.Library(idToOpen))
             }
             SHORTCUT_DOWNLOADS -> {
-                if (router.backstackSize > 1) {
-                    router.popToRoot()
-                }
-                setSelectedNavItem(R.id.nav_more)
-                router.pushController(DownloadController())
+                navigator.popUntilRoot()
+                HomeScreen.openTab(HomeScreen.Tab.More(toDownloads = true))
             }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {
                 // If the intent match the "standard" Android search intent
@@ -449,20 +361,16 @@ class MainActivity : BaseActivity() {
                 // Get the search query provided in extras, and if not null, perform a global search with it.
                 val query = intent.getStringExtra(SearchManager.QUERY) ?: intent.getStringExtra(Intent.EXTRA_TEXT)
                 if (query != null && query.isNotEmpty()) {
-                    if (router.backstackSize > 1) {
-                        router.popToRoot()
-                    }
-                    router.pushController(GlobalSearchController(query))
+                    navigator.popUntilRoot()
+                    navigator.push(GlobalSearchScreen(query))
                 }
             }
             INTENT_SEARCH -> {
                 val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
                 if (query != null && query.isNotEmpty()) {
-                    val filter = intent.getStringExtra(INTENT_SEARCH_FILTER)
-                    if (router.backstackSize > 1) {
-                        router.popToRoot()
-                    }
-                    router.pushController(GlobalSearchController(query, filter ?: ""))
+                    val filter = intent.getStringExtra(INTENT_SEARCH_FILTER) ?: ""
+                    navigator.popUntilRoot()
+                    navigator.push(GlobalSearchScreen(query, filter))
                 }
             }
             else -> {
@@ -476,166 +384,21 @@ class MainActivity : BaseActivity() {
         return true
     }
 
-    @Suppress("UNNECESSARY_SAFE_CALL")
     override fun onDestroy() {
+        settingsSheet?.sheetScope?.cancel()
+        settingsSheet = null
         super.onDestroy()
-
-        // Binding sometimes isn't actually instantiated yet somehow
-        nav?.setOnItemSelectedListener(null)
-        binding?.toolbar?.setNavigationOnClickListener(null)
     }
 
     override fun onBackPressed() {
-        if (router.handleBack()) {
-            // A Router is consuming back press
-            return
+        if (navigator.size == 1 &&
+            !onBackPressedDispatcher.hasEnabledCallbacks() &&
+            libraryPreferences.autoClearChapterCache().get()
+        ) {
+            chapterCache.clear()
         }
-        val backstackSize = router.backstackSize
-        val startScreen = router.getControllerWithTag("$startScreenId")
-        if (backstackSize == 1 && startScreen == null) {
-            // Return to start screen
-            moveToStartScreen()
-        } else if (shouldHandleExitConfirmation()) {
-            // Exit confirmation (resets after 2 seconds)
-            lifecycleScope.launchUI { resetExitConfirmation() }
-        } else if (backstackSize == 1) {
-            // Regular back (i.e. closing the app)
-            if (libraryPreferences.autoClearChapterCache().get()) {
-                chapterCache.clear()
-            }
-            super.onBackPressed()
-        }
+        super.onBackPressed()
     }
-
-    fun moveToStartScreen() {
-        setSelectedNavItem(startScreenId)
-    }
-
-    override fun onSupportActionModeStarted(mode: ActionMode) {
-        binding.appbar.apply {
-            tag = isTransparentWhenNotLifted
-            isTransparentWhenNotLifted = false
-        }
-        // Color taken from m3_appbar_background
-        window.statusBarColor = ColorUtils.compositeColors(
-            getColor(R.color.m3_appbar_overlay_color),
-            getThemeColor(R.attr.colorSurface),
-        )
-        super.onSupportActionModeStarted(mode)
-    }
-
-    override fun onSupportActionModeFinished(mode: ActionMode) {
-        binding.appbar.apply {
-            isTransparentWhenNotLifted = (tag as? Boolean) ?: false
-            tag = null
-        }
-        window.statusBarColor = getThemeColor(android.R.attr.statusBarColor)
-        super.onSupportActionModeFinished(mode)
-    }
-
-    private suspend fun resetExitConfirmation() {
-        isConfirmingExit = true
-        val toast = toast(R.string.confirm_exit, Toast.LENGTH_LONG)
-        delay(2.seconds)
-        toast.cancel()
-        isConfirmingExit = false
-    }
-
-    private fun shouldHandleExitConfirmation(): Boolean {
-        return router.backstackSize == 1 &&
-            router.getControllerWithTag("$startScreenId") != null &&
-            preferences.confirmExit().get() &&
-            !isConfirmingExit
-    }
-
-    fun setSelectedNavItem(itemId: Int) {
-        if (!isFinishing) {
-            nav.selectedItemId = itemId
-        }
-    }
-
-    private fun syncActivityViewWithController(
-        to: Controller? = null,
-        from: Controller? = null,
-        isPush: Boolean = true,
-    ) {
-        var internalTo = to
-
-        if (internalTo == null) {
-            // Should go here when the activity is recreated and dialog controller is on top of the backstack
-            // Then we'll assume the top controller is the parent controller of this dialog
-            val backstack = router.backstack
-            internalTo = backstack.lastOrNull()?.controller
-            if (internalTo is DialogController) {
-                internalTo = backstack.getOrNull(backstack.size - 2)?.controller ?: return
-            }
-        } else {
-            // Ignore changes for normal transactions
-            if (from is DialogController || internalTo is DialogController) {
-                return
-            }
-        }
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(router.backstackSize != 1)
-
-        // Always show appbar again when changing controllers
-        binding.appbar.setExpanded(true)
-
-        if ((from == null || from is RootController) && internalTo !is RootController) {
-            showNav(false)
-        }
-        if (internalTo is RootController) {
-            // Always show bottom nav again when returning to a RootController
-            showNav(true)
-        }
-
-        val isComposeController = internalTo is ComposeContentController
-        binding.appbar.isVisible = !isComposeController
-        binding.controllerContainer.enableScrollingBehavior(!isComposeController)
-
-        if (!isTabletUi()) {
-            // Save lift state
-            if (isPush) {
-                if (router.backstackSize > 1) {
-                    // Save lift state
-                    from?.let {
-                        backstackLiftState[it.instanceId] = binding.appbar.isLifted
-                    }
-                } else {
-                    backstackLiftState.clear()
-                }
-                binding.appbar.isLifted = false
-            } else {
-                internalTo?.let {
-                    binding.appbar.isLifted = backstackLiftState.getOrElse(it.instanceId) { false }
-                }
-                from?.let {
-                    backstackLiftState.remove(it.instanceId)
-                }
-            }
-        }
-    }
-
-    private fun showNav(visible: Boolean) {
-        showBottomNav(visible)
-        showSideNav(visible)
-    }
-
-    // Also used from some controllers to swap bottom nav with action toolbar
-    fun showBottomNav(visible: Boolean) {
-        if (visible) {
-            binding.bottomNav?.slideUp()
-        } else {
-            binding.bottomNav?.slideDown()
-        }
-    }
-
-    private fun showSideNav(visible: Boolean) {
-        binding.sideNav?.isVisible = visible
-    }
-
-    private val nav: NavigationBarView
-        get() = binding.bottomNav ?: binding.sideNav!!
 
     init {
         registerSecureActivity(this)

@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -26,17 +27,15 @@ import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.components.ExtendedFloatingActionButton
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SearchToolbar
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.base.controller.setRoot
-import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel
-import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.more.MoreController
+import eu.kanade.tachiyomi.ui.home.HomeScreen
+import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.Constants
+import kotlinx.coroutines.launch
 
 data class SourceSearchScreen(
     private val oldManga: Manga,
@@ -48,27 +47,20 @@ data class SourceSearchScreen(
     override fun Content() {
         val context = LocalContext.current
         val uriHandler = LocalUriHandler.current
-        val router = LocalRouter.currentOrThrow
         val navigator = LocalNavigator.currentOrThrow
+        val scope = rememberCoroutineScope()
 
         val screenModel = rememberScreenModel { BrowseSourceScreenModel(sourceId = sourceId, searchQuery = query) }
         val state by screenModel.state.collectAsState()
 
         val snackbarHostState = remember { SnackbarHostState() }
 
-        val navigateUp: () -> Unit = {
-            when {
-                navigator.canPop -> navigator.pop()
-                router.backstackSize > 1 -> router.popCurrentController()
-            }
-        }
-
         Scaffold(
             topBar = { scrollBehavior ->
                 SearchToolbar(
                     searchQuery = state.toolbarQuery ?: "",
                     onChangeSearchQuery = screenModel::setToolbarQuery,
-                    onClickCloseSearch = navigateUp,
+                    onClickCloseSearch = navigator::pop,
                     onSearch = { screenModel.search(it) },
                     scrollBehavior = scrollBehavior,
                 )
@@ -102,7 +94,7 @@ data class SourceSearchScreen(
                     val intent = WebViewActivity.newIntent(context, source.baseUrl, source.id, source.name)
                     context.startActivity(intent)
                 },
-                onHelpClick = { uriHandler.openUri(MoreController.URL_HELP) },
+                onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
                 onLocalSourceHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) },
                 onMangaClick = openMigrateDialog,
                 onMangaLongClick = openMigrateDialog,
@@ -116,11 +108,13 @@ data class SourceSearchScreen(
                     newManga = dialog.newManga,
                     screenModel = rememberScreenModel { MigrateDialogScreenModel() },
                     onDismissRequest = { screenModel.setDialog(null) },
-                    onClickTitle = { router.pushController(MangaController(dialog.newManga.id)) },
+                    onClickTitle = { navigator.push(MangaScreen(dialog.newManga.id)) },
                     onPopScreen = {
-                        // TODO: Push to manga screen and remove this and the previous screen when it moves to Voyager
-                        router.setRoot(BrowseController(toExtensions = false), R.id.nav_browse)
-                        router.pushController(MangaController(dialog.newManga.id))
+                        scope.launch {
+                            navigator.popUntilRoot()
+                            HomeScreen.openTab(HomeScreen.Tab.Browse())
+                            navigator.push(MangaScreen(dialog.newManga.id))
+                        }
                     },
                 )
             }

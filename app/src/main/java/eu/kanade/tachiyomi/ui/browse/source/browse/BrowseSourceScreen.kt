@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -49,16 +48,13 @@ import eu.kanade.presentation.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.DuplicateMangaDialog
 import eu.kanade.presentation.components.Scaffold
-import eu.kanade.presentation.util.LocalRouter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.LocalSource
-import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.category.CategoryController
-import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.more.MoreController
+import eu.kanade.tachiyomi.ui.category.CategoryScreen
+import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.Constants
 import eu.kanade.tachiyomi.util.lang.launchIO
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -73,7 +69,6 @@ data class BrowseSourceScreen(
 
     @Composable
     override fun Content() {
-        val router = LocalRouter.currentOrThrow
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
@@ -93,13 +88,6 @@ data class BrowseSourceScreen(
             context.startActivity(intent)
         }
 
-        val navigateUp: () -> Unit = {
-            when {
-                navigator.canPop -> navigator.pop()
-                router.backstackSize > 1 -> router.popCurrentController()
-            }
-        }
-
         Scaffold(
             topBar = {
                 Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
@@ -109,7 +97,7 @@ data class BrowseSourceScreen(
                         source = screenModel.source,
                         displayMode = screenModel.displayMode,
                         onDisplayModeChange = { screenModel.displayMode = it },
-                        navigateUp = navigateUp,
+                        navigateUp = navigator::pop,
                         onWebViewClick = onWebViewClick,
                         onHelpClick = onHelpClick,
                         onSearch = { screenModel.search(it) },
@@ -197,9 +185,9 @@ data class BrowseSourceScreen(
                 snackbarHostState = snackbarHostState,
                 contentPadding = paddingValues,
                 onWebViewClick = onWebViewClick,
-                onHelpClick = { uriHandler.openUri(MoreController.URL_HELP) },
+                onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
                 onLocalSourceHelpClick = onHelpClick,
-                onMangaClick = { router.pushController(MangaController(it.id, true)) },
+                onMangaClick = { navigator.push((MangaScreen(it.id, true))) },
                 onMangaLongClick = { manga ->
                     scope.launchIO {
                         val duplicateManga = screenModel.getDuplicateLibraryManga(manga)
@@ -226,7 +214,7 @@ data class BrowseSourceScreen(
                 DuplicateMangaDialog(
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.addFavorite(dialog.manga) },
-                    onOpenManga = { router.pushController(MangaController(dialog.duplicate.id)) },
+                    onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
                     duplicateFrom = screenModel.getSourceOrStub(dialog.duplicate),
                 )
             }
@@ -243,9 +231,7 @@ data class BrowseSourceScreen(
                 ChangeCategoryDialog(
                     initialSelection = dialog.initialSelection,
                     onDismissRequest = onDismissRequest,
-                    onEditCategories = {
-                        router.pushController(CategoryController())
-                    },
+                    onEditCategories = { navigator.push(CategoryScreen()) },
                     onConfirm = { include, _ ->
                         screenModel.changeMangaFavorite(dialog.manga)
                         screenModel.moveMangaToCategories(dialog.manga, include)
@@ -254,8 +240,6 @@ data class BrowseSourceScreen(
             }
             else -> {}
         }
-
-        BackHandler(onBack = navigateUp)
 
         LaunchedEffect(state.filters) {
             screenModel.initFilterSheet(context)

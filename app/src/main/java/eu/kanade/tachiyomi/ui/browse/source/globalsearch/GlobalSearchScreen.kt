@@ -5,12 +5,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.GlobalSearchScreen
-import eu.kanade.presentation.util.LocalRouter
-import eu.kanade.tachiyomi.ui.base.controller.pushController
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
-import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
+import eu.kanade.tachiyomi.ui.manga.MangaScreen
 
 class GlobalSearchScreen(
     val searchQuery: String = "",
@@ -19,7 +18,7 @@ class GlobalSearchScreen(
 
     @Composable
     override fun Content() {
-        val router = LocalRouter.currentOrThrow
+        val navigator = LocalNavigator.currentOrThrow
 
         val screenModel = rememberScreenModel {
             GlobalSearchScreenModel(
@@ -31,7 +30,7 @@ class GlobalSearchScreen(
 
         GlobalSearchScreen(
             state = state,
-            navigateUp = router::popCurrentController,
+            navigateUp = navigator::pop,
             onChangeSearchQuery = screenModel::updateSearchQuery,
             onSearch = screenModel::search,
             getManga = { source, manga ->
@@ -44,10 +43,10 @@ class GlobalSearchScreen(
                 if (!screenModel.incognitoMode.get()) {
                     screenModel.lastUsedSourceId.set(it.id)
                 }
-                router.pushController(BrowseSourceController(it.id, state.searchQuery))
+                navigator.push(BrowseSourceScreen(it.id, state.searchQuery))
             },
-            onClickItem = { router.pushController(MangaController(it.id, true)) },
-            onLongClickItem = { router.pushController(MangaController(it.id, true)) },
+            onClickItem = { navigator.push(MangaScreen(it.id, true)) },
+            onLongClickItem = { navigator.push(MangaScreen(it.id, true)) },
         )
     }
 }

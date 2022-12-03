@@ -6,7 +6,8 @@ coil_version = "2.2.2"
 shizuku_version = "12.2.0"
 sqldelight = "1.5.4"
 leakcanary = "2.10"
-voyager = "1.0.0-rc06"
+voyager = "1.0.0-rc07"
+richtext = "0.15.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:1.2.2"
@@ -52,7 +53,8 @@ image-decoder = "com.github.tachiyomiorg:image-decoder:7879b45"
 
 natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
-markwon = "io.noties.markwon:core:4.6.2"
+richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtext" }
+richtext-m3 = { module = "com.halilibo.compose-richtext:richtext-ui-material3", version.ref = "richtext" }
 
 material = "com.google.android.material:material:1.7.0"
 flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
@@ -62,8 +64,6 @@ directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
 cascade = "me.saket.cascade:cascade-compose:2.0.0-beta1"
 wheelpicker = "com.github.commandiron:WheelPickerCompose:1.0.11"
-
-conductor = "com.bluelinelabs:conductor:3.1.8"
 
 flowbinding-android = "io.github.reactivecircus.flowbinding:flowbinding-android:1.2.0"
 
@@ -89,6 +89,7 @@ sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.
 junit = "org.junit.jupiter:junit-jupiter:5.9.1"
 
 voyager-navigator = { module = "ca.gosyer:voyager-navigator", version.ref = "voyager" }
+voyager-tab-navigator = { module = "ca.gosyer:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "ca.gosyer:voyager-transitions", version.ref = "voyager" }
 
 [bundles]
@@ -99,7 +100,8 @@ sqlite = ["sqlitektx", "sqlite-android"]
 nucleus = ["nucleus-core", "nucleus-supportv7"]
 coil = ["coil-core", "coil-gif", "coil-compose"]
 shizuku = ["shizuku-api", "shizuku-provider"]
-voyager = ["voyager-navigator", "voyager-transitions"]
+voyager = ["voyager-navigator", "voyager-tab-navigator", "voyager-transitions"]
+richtext = ["richtext-commonmark", "richtext-m3"]
 
 [plugins]
 kotlinter = { id = "org.jmailen.kotlinter", version = "3.12.0" }
