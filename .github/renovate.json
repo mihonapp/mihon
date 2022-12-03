@@ -9,6 +9,7 @@
     "info.android15.nucleus:nucleus-support-v7",
     "info.android15.nucleus:nucleus",
     "com.android.tools:r8",
-    "com.google.guava:guava"
+    "com.google.guava:guava",
+    "com.github.commandiron:WheelPickerCompose"
   ]
 }
