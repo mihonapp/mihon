@@ -26,6 +26,7 @@ import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.core.preference.getAndSet
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
@@ -312,7 +313,6 @@ class LibraryUpdateService(
         val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val hasDownloads = AtomicBoolean(false)
         val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
-        val currentUnreadUpdatesCount = libraryPreferences.unreadUpdatesCount().get()
         val restrictions = libraryPreferences.libraryUpdateMangaRestriction().get()
 
         withIOContext {
@@ -362,6 +362,8 @@ class LibraryUpdateService(
                                                         hasDownloads.set(true)
                                                     }
 
+                                                    libraryPreferences.newUpdatesCount().getAndSet { it + newChapters.size }
+
                                                     // Convert to the manga that contains new chapters
                                                     newUpdates.add(manga to newChapters.toTypedArray())
                                                 }
@@ -392,8 +394,6 @@ class LibraryUpdateService(
 
         if (newUpdates.isNotEmpty()) {
             notifier.showUpdateNotifications(newUpdates)
-            val newChapterCount = newUpdates.sumOf { it.second.size }
-            libraryPreferences.unreadUpdatesCount().set(currentUnreadUpdatesCount + newChapterCount)
             if (hasDownloads.get()) {
                 DownloadService.start(this)
             }

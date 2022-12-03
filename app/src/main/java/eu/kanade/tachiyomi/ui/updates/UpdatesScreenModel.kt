@@ -60,10 +60,10 @@ class UpdatesScreenModel(
     private val getUpdates: GetUpdates = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
     private val getChapter: GetChapter = Injekt.get(),
+    private val libraryPreferences: LibraryPreferences = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     basePreferences: BasePreferences = Injekt.get(),
     uiPreferences: UiPreferences = Injekt.get(),
-    libraryPreferences: LibraryPreferences = Injekt.get(),
 ) : StateScreenModel<UpdatesState>(UpdatesState()) {
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
@@ -369,6 +369,10 @@ class UpdatesScreenModel(
 
     fun setDialog(dialog: Dialog?) {
         mutableState.update { it.copy(dialog = dialog) }
+    }
+
+    fun resetNewUpdatesCount() {
+        libraryPreferences.newUpdatesCount().set(0)
     }
 
     sealed class Dialog {

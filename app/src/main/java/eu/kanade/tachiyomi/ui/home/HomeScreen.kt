@@ -40,7 +40,6 @@ import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.components.NavigationBar
 import eu.kanade.presentation.components.NavigationRail
 import eu.kanade.presentation.components.Scaffold
-import eu.kanade.presentation.util.Tab
 import eu.kanade.presentation.util.Transition
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
@@ -52,7 +51,6 @@ import eu.kanade.tachiyomi.ui.more.MoreTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import uy.kohesive.injekt.Injekt
@@ -219,11 +217,8 @@ object HomeScreen : Screen {
                 when {
                     tab is UpdatesTab -> {
                         val count by produceState(initialValue = 0) {
-                            val pref = Injekt.get<LibraryPreferences>()
-                            combine(
-                                pref.showUpdatesNavBadge().changes(),
-                                pref.unreadUpdatesCount().changes(),
-                            ) { show, count -> if (show) count else 0 }
+                            Injekt.get<LibraryPreferences>()
+                                .newUpdatesCount().changes()
                                 .collectLatest { value = it }
                         }
                         if (count > 0) {
