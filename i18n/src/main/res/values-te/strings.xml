@@ -42,7 +42,6 @@
     <string name="action_filter_empty">ఫిల్టర్ను తొలగించుము</string>
     <string name="action_filter_unread">చదవనివి</string>
     <string name="action_filter_bookmarked">గుర్తు ఉంచబడినవి</string>
-    <string name="action_filter_downloaded">దిగుమతి చేయబడినవి</string>
     <string name="action_filter">శోధకము</string>
     <string name="action_menu">వివరాలపట్టిక</string>
     <string name="action_settings">అమరికలు</string>

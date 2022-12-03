@@ -17,7 +17,6 @@
     <string name="label_extension_info">Informatziones de s\'estensione</string>
     <string name="action_settings">Impostatziones</string>
     <string name="action_filter">Filtru</string>
-    <string name="action_filter_downloaded">Iscarrigados</string>
     <string name="action_filter_bookmarked">Sinnados</string>
     <string name="action_filter_unread">Non lèghidos</string>
     <string name="action_filter_empty">Boga su filtru</string>
@@ -195,7 +194,6 @@
     <string name="login_success">Ses intradu</string>
     <string name="unknown_error">Errore disconnotu</string>
     <string name="updating_category">Agiornende sa categoria</string>
-    <string name="local_source_badge">Locale</string>
     <string name="no_more_results">Non bi sunt àteros risultados</string>
     <string name="local_source">Mitza locale</string>
     <string name="other_source">Àteru</string>
@@ -240,7 +238,6 @@
     <string name="title">Tìtulu</string>
     <string name="status">Istadu</string>
     <string name="track_status">Istadu</string>
-    <string name="track_start_date">Incumintzadu</string>
     <string name="track_type">Casta</string>
     <string name="error_category_exists">Esistit giai una categoria cun custu nùmene!</string>
     <string name="snack_categories_deleted">Categorias iscantzelladas</string>
@@ -644,7 +641,6 @@
     <string name="update_72hour">Cada 3 dies</string>
     <string name="connected_to_wifi">Petzi cun su Wi-Fi</string>
     <string name="download_queue_size_warning">Dae cara: sos iscarrigamentos de massa mannos diant pòdere rallentare sas fontes e/o blocare Tachiyomi. Toca pro nde ischire de prus.</string>
-    <string name="pref_library_update_show_tab_badge">Ammustra su nùmeru de capìtulos non lèghidos in s\'icona de sos agiornamentos</string>
     <string name="ext_update_all">Agiorna totu</string>
     <string name="channel_app_updates">Agiornamentos de s\'aplicatzione</string>
     <string name="clear_database_source_item_count">%1$d elementos chi non sunt in sa biblioteca in sa base de datos</string>
@@ -663,7 +659,6 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Ammustra s\'elementu</string>
     <string name="pref_landscape_zoom">Ismànnia s\'immàgine in orizontale</string>
-    <string name="action_filter_started">Incumintzadu</string>
     <string name="action_display_cover_only_grid">Grìllia cun coberteddas ebbia</string>
     <string name="pref_update_only_started">No incumintzadas</string>
     <string name="confirm_manga_add_duplicate">Tenes un\'elementu in sa biblioteca tua cun su matessi nùmene ma dae una fonte diferente (%1$s).
@@ -775,4 +770,26 @@
     <string name="enhanced_tracking_warning">Custu arrastadore est cumpatìbile petzi cun sa fonte %1$s.</string>
     <string name="track_remove_start_date_conf_text">Custu at a bogare sa data de incumintzu seletzionada in antis dae %s</string>
     <string name="track_remove_finish_date_conf_text">Custu at a bogare sa data de fine seletzionada in antis dae %s</string>
+    <string name="label_downloaded">Iscarrigados</string>
+    <string name="label_local">In locale</string>
+    <string name="pref_invalidate_download_cache_summary">Fortzat s\'aplicatzione a torrare a verificare sos capìtulos iscarrigados</string>
+    <string name="label_titles_in_global_update">In s\'agiornamentu globale</string>
+    <string name="label_total_chapters">Totale</string>
+    <string name="label_read_chapters">Lèghidos</string>
+    <string name="label_tracked_titles">Elementos arrastados</string>
+    <string name="label_mean_score">Votu mèdiu</string>
+    <string name="label_used">In impreu</string>
+    <string name="minute_short">%dm</string>
+    <string name="seconds_short">%ds</string>
+    <string name="label_stats">Istatìsticas</string>
+    <string name="label_started">Incumintzados</string>
+    <string name="label_overview_section">Panoràmica</string>
+    <string name="label_completed_titles">Elementos cumpletados</string>
+    <string name="label_titles_section">Elementos</string>
+    <string name="not_applicable">N/A</string>
+    <string name="hour_short">%do</string>
+    <string name="label_read_duration">Tempus de leghidura</string>
+    <string name="label_tracker_section">Arrastadores</string>
+    <string name="day_short">%dd</string>
+    <string name="action_not_now">Como nono</string>
 </resources>

@@ -66,7 +66,6 @@
     <string name="label_library">Könyvtár</string>
     <string name="label_recent_updates">Frissítések</string>
     <string name="action_filter">Szűrők</string>
-    <string name="action_filter_downloaded">Letöltve</string>
     <string name="action_filter_bookmarked">Könyvjelzőzve</string>
     <string name="action_filter_unread">Olvasatlan</string>
     <string name="action_filter_empty">Szűrők eltávolítása</string>
@@ -455,7 +454,6 @@
     <string name="ext_installer_pref">Telepítő</string>
     <string name="ext_install_service_notif">Bővítmény telepítése…</string>
     <string name="action_sort_count">Összes manga</string>
-    <string name="pref_library_update_show_tab_badge">Az olvasatlanok számának megjelnítése a Frissítések ikonon</string>
     <string name="ext_update_all">Az összes frissítése</string>
     <string name="action_display_language_badge">Nyelv</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Telepítsd és indítsd el a Shizukut, hogy kiegészítő telepítőként használd.</string>
@@ -580,7 +578,6 @@
     <string name="page_list_empty_error">Nem található oldal</string>
     <string name="recent_manga_time">Fej. %1$s - %2$s</string>
     <string name="getting_started_guide">Kezdési útmutató</string>
-    <string name="action_filter_started">Elkezdett</string>
     <string name="database_clean">Adatbázis törlése</string>
     <string name="pref_update_only_started">Még nem lett elindítva</string>
     <string name="notification_new_chapters">Új fejezet</string>
@@ -614,7 +611,6 @@
     </plurals>
     <string name="manga_download">Letöltés</string>
     <string name="custom_download">Megadott mennyiség letöltése</string>
-    <string name="local_source_badge">Helyi</string>
     <string name="publishing_finished">Befejezett</string>
     <string name="description_placeholder">Nincs leírás</string>
     <string name="chapter_downloading_progress">Letöltés (%1$d/%2$d)</string>
@@ -651,7 +647,6 @@
     <string name="complete_list">Teljes lista</string>
     <string name="unfinished_list">Befejezetlen lista</string>
     <string name="track_status">Állapot</string>
-    <string name="track_start_date">Elkezdett</string>
     <string name="track_started_reading_date">Kezdés dátuma</string>
     <string name="track_finished_reading_date">Befejezés dátuma</string>
     <string name="myanimelist_relogin">Kérjük, jelentkezzen be MAL-ba újra</string>

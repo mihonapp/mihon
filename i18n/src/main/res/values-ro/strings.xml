@@ -17,7 +17,6 @@
     <string name="label_extension_info">Informații despre extensie</string>
     <string name="action_settings">Setări</string>
     <string name="action_filter">Filtru</string>
-    <string name="action_filter_downloaded">Descărcate</string>
     <string name="action_filter_bookmarked">Marcate</string>
     <string name="action_filter_unread">Necitite</string>
     <string name="action_filter_empty">Șterge filtru</string>
@@ -194,7 +193,6 @@
     <string name="login_success">Autentificat</string>
     <string name="unknown_error">Eroare necunoscută</string>
     <string name="updating_category">Categorie in curs de actualizare</string>
-    <string name="local_source_badge">Local</string>
     <string name="no_more_results">Nu mai sunt rezultate</string>
     <string name="local_source">Sursă locală</string>
     <string name="other_source">Altele</string>
@@ -239,7 +237,6 @@
     <string name="title">Titlu</string>
     <string name="status">Status</string>
     <string name="track_status">Status</string>
-    <string name="track_start_date">Început</string>
     <string name="track_type">Tip</string>
     <string name="error_category_exists">O categorie cu acest nume deja există!</string>
     <string name="snack_categories_deleted">Categoriile au fost șterse</string>
@@ -648,7 +645,6 @@
     <string name="ext_installer_shizuku_stopped">Shizuku nu rulează</string>
     <string name="pref_app_language">Limba aplicației</string>
     <string name="restrictions">Restricții: %s</string>
-    <string name="pref_library_update_show_tab_badge">Afișați numărul de necitite pe pictograma Actualizări</string>
     <string name="pref_library_update_refresh_trackers">Reîmprospătați automat trackerele</string>
     <string name="pref_highest">Cel mai înalt</string>
     <string name="pref_high">Înalt</string>
@@ -683,7 +679,6 @@
     <string name="ext_info_language">Limbă</string>
     <string name="save_chapter_as_cbz">Salvează ca arhivă CBZ</string>
     <string name="action_sort_last_manga_update">Ultima verificare a actualizării</string>
-    <string name="action_filter_started">Început</string>
     <string name="pref_auto_clear_chapter_cache">Șterge memoria cache a capitolului la închiderea aplicației</string>
     <string name="local_filter_order_by">Ordonează după</string>
     <string name="cant_open_last_read_chapter">Nu se poate deschide ultimul capitol citit</string>

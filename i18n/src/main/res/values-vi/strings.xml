@@ -11,7 +11,6 @@
     <!-- Actions -->
     <string name="action_settings">Cài đặt</string>
     <string name="action_filter">Bộ lọc</string>
-    <string name="action_filter_downloaded">Đã tải xuống</string>
     <string name="action_filter_bookmarked">Đã đánh dấu</string>
     <string name="action_filter_unread">Chưa đọc</string>
     <string name="action_filter_empty">Bỏ bộ lọc</string>
@@ -224,7 +223,7 @@
     <string name="update_check_look_for_updates">Đang tìm cập nhật mới…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Đang tải xuống…</string>
-    <string name="update_check_notification_download_complete">Nhấn để cài</string>
+    <string name="update_check_notification_download_complete">Nhấn để cập nhật</string>
     <string name="update_check_notification_download_error">Lỗi khi tải xuống</string>
     <string name="update_check_notification_update_available">Có cập nhật mới!</string>
     <!--Content Description-->
@@ -293,7 +292,6 @@
     <string name="creating_backup">Đang tạo bản sao lưu</string>
     <string name="pref_refresh_library_tracking">Làm mới theo dõi</string>
     <string name="pref_refresh_library_tracking_summary">Cập nhật trạng thái, điểm số và chương cuối đã đọc từ dịch vụ theo dõi</string>
-    <string name="local_source_badge">Địa phương</string>
     <string name="local_source">Nguồn cục bộ</string>
     <string name="other_source">Khác</string>
     <string name="action_global_search_hint">Tìm kiếm toàn bộ…</string>
@@ -309,7 +307,6 @@
     <string name="download_custom">Tùy chỉnh</string>
     <string name="repeating">Đọc lại</string>
     <string name="track_status">Trạng thái</string>
-    <string name="track_start_date">Đã bắt đầu</string>
     <string name="track_type">Loại</string>
     <string name="transition_finished">Đã đọc xong:</string>
     <string name="transition_current">Đang đọc:</string>
@@ -666,7 +663,6 @@
     <string name="update_72hour">3 ngày một lần</string>
     <string name="connected_to_wifi">Chỉ qua Wi-Fi</string>
     <string name="download_queue_size_warning">Cảnh báo: các tải xuống hàng loạt lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn Tachiyomi. Nhấn vào để tìm hiểu thêm.</string>
-    <string name="pref_library_update_show_tab_badge">Hiển thị số lượng chưa đọc ở phần biểu tượng Cập nhật</string>
     <string name="channel_app_updates">Cập nhật ứng dụng</string>
     <string name="ext_update_all">Cập nhật tất cả</string>
     <string name="pref_auto_clear_chapter_cache">Xóa bộ nhớ đệm các chương khi tắt ứng dụng</string>
@@ -691,7 +687,6 @@
     <string name="confirm_manga_add_duplicate">Bạn đang có một bộ truyện ở trong thư viện có cùng tên nhưng sử dụng nguồn khác (%1$s).
 \n
 \nBạn vẫn muốn tiếp tục chứ\?</string>
-    <string name="action_filter_started">Đã bắt đầu</string>
     <string name="pref_navigate_pan">Điều hướng tới quay chiều</string>
     <string name="action_display_cover_only_grid">Lưới chỉ mỗi bìa</string>
     <string name="rotation_reverse_portrait">Đảo ngược chân dung</string>
@@ -758,7 +753,7 @@
     <string name="missing_storage_permission">Quyền truy cập lưu trữ không được thông qua</string>
     <string name="popular">Nổi Tiếng</string>
     <string name="are_you_sure">Bạn chắc chứ\?</string>
-    <string name="remove_manga">Bạn chuẩn bị gỡ bỏ bộ truyện này ra khỏi thư viện của bạn</string>
+    <string name="remove_manga">Bạn sẽ xóa bỏ %s này ra khỏi thư viện của bạn</string>
     <string name="updates_last_update_info">Thư viện lần cuối được cập nhật: %1$s</string>
     <string name="download_ahead">Tải Trước</string>
     <string name="download_ahead_info">Tải trước chỉ áp dụng cho các mục ở trong thư viện và nếu chương cuối cùng đã được tải rồi</string>
@@ -778,4 +773,15 @@
     <string name="pref_browse_summary">Nguồn, tiện ích, tìm kiếm toàn bộ</string>
     <string name="action_display_show_continue_reading_button">Hiện nút tiếp tục đọc</string>
     <string name="action_open_random_manga">Mở một truyện ngẫu nhiên</string>
+    <string name="invalid_location">Vị trí không hợp lệ: %s</string>
+    <string name="label_stats">Thống kê</string>
+    <string name="label_downloaded">Đã tải xuống</string>
+    <string name="label_local">Nội bộ</string>
+    <string name="label_total_chapters">Tổng số chương</string>
+    <string name="label_read_chapters">Đã đọc</string>
+    <string name="information_no_entries_found">Không có gì trong danh mục này</string>
+    <string name="label_overview_section">Tổng quát</string>
+    <string name="label_completed_titles">Truyện đã đọc</string>
+    <string name="label_titles_section">Truyện</string>
+    <string name="label_read_duration">Thời gian đọc</string>
 </resources>

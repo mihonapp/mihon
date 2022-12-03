@@ -124,7 +124,6 @@
     <string name="action_filter_empty">Алана катерт</string>
     <string name="action_filter_unread">Вуламан</string>
     <string name="action_filter_bookmarked">Картнӑ</string>
-    <string name="action_filter_downloaded">Тийенӗ</string>
     <string name="action_filter">Ала</string>
     <string name="action_menu">Менӳ</string>
     <string name="action_settings">Ӗнерӳсем</string>
@@ -351,7 +350,6 @@
     <string name="snack_categories_deleted">Пухмӑшсем катертнӗ</string>
     <string name="error_category_exists">Ун пек ятпа пухмӑш пур ӗнтӗ!</string>
     <string name="track_type">Тӗс</string>
-    <string name="track_start_date">Пуҫланӑ</string>
     <string name="track_status">Хал</string>
     <string name="status">Хал</string>
     <string name="title">Ят</string>
@@ -415,7 +413,6 @@
     <string name="tabs_header">Кантӑксем</string>
     <string name="badges_header">Паллисем</string>
     <string name="invalid_backup_file">Тӗрӗс мар янтӑв файлӗ</string>
-    <string name="local_source_badge">Вырӑнти</string>
     <string name="updating_category">Пухмӑша ҫӗнетни</string>
     <string name="unknown_error">Паллӑ мар йӑнӑш</string>
     <string name="logout_success">Эсӗ тухрӑн</string>
@@ -570,7 +567,6 @@
     <string name="action_display_cover_only_grid">Ятсӑр сетке</string>
     <string name="action_move_to_top_all_for_series">Серие пуҫламӑша куҫар</string>
     <string name="confirm_lock_change">Улшӑнӑва ҫирӗплетме есӗлӗхне ҫирӗплет</string>
-    <string name="action_filter_started">Пуҫланӑ</string>
     <string name="action_faq_and_guides">Кӑтартусем тата ыйту-хурав</string>
     <string name="action_show_manga">Ҫырава кӑтарт</string>
     <string name="action_display_language_badge">Чӗлхе</string>

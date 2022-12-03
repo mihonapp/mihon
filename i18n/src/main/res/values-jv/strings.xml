@@ -9,7 +9,6 @@
     <string name="manga_download">Donlot</string>
     <string name="display_mode_chapter">bab %1$s</string>
     <string name="other_source">Liyane</string>
-    <string name="local_source_badge">Lokal</string>
     <string name="password">Sandhi</string>
     <string name="username">Jeneng pangguna</string>
     <string name="version">Versi</string>
@@ -81,7 +80,6 @@
     <string name="action_sort_total">Total bab</string>
     <string name="action_sort_alpha">Miturut abjad</string>
     <string name="action_filter_unread">Durung kewoco</string>
-    <string name="action_filter_downloaded">Kedonlot</string>
     <string name="action_filter">Saringan</string>
     <string name="action_settings">Pengaturan</string>
     <string name="unlock_app">Mbukak Tachiyomi</string>
@@ -175,7 +173,6 @@
     <string name="confirm_lock_change">Otentikasi kanggo konfirmasi perubahan</string>
     <string name="label_default">Default</string>
     <string name="action_show_manga">Nampilno manga</string>
-    <string name="action_filter_started">Mulai</string>
     <string name="label_warning">Awas</string>
     <string name="action_display_language_badge">basa</string>
     <string name="action_close">Tutup</string>
@@ -232,7 +229,6 @@
     <string name="pref_update_only_started">Iku durung diwiwiti</string>
     <string name="pref_library_update_refresh_metadata_summary">periksa sampul lan rinci anyar wektu memerbarui pustaka</string>
     <string name="default_category">kategori gawan</string>
-    <string name="pref_library_update_show_tab_badge">Tampilake itungan kang durung diwaca ing ikon nganyari</string>
     <string name="include">Kalebu: %s</string>
     <string name="exclude">Kajaba: %s</string>
     <string name="ext_updates_pending">Nganyari tertunda</string>

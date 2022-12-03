@@ -94,7 +94,6 @@
     <string name="action_filter_empty">ಸೋಸು ತೆಗೆದುಹಾಕಿ</string>
     <string name="action_filter_unread">ಓದದ</string>
     <string name="action_filter_bookmarked">ಬುಕ್ಮಾರ್ಕ್ ಮಾಡಿದ</string>
-    <string name="action_filter_downloaded">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿದ</string>
     <string name="action_filter">ಸೋಸು</string>
     <string name="action_menu">ಸಲಹಾಕಾರ</string>
     <string name="action_settings">ಸಂಯೋಜನೆಗಳು</string>
@@ -329,7 +328,6 @@
     <string name="snack_categories_deleted">ವರ್ಗಗಳನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
     <string name="error_category_exists">ಈ ಹೆಸರಿನ ವರ್ಗವು ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ!</string>
     <string name="track_type">ಮಾದರಿ</string>
-    <string name="track_start_date">ಪ್ರಾರಂಭಿಸಲಾಗಿದೆ</string>
     <string name="track_status">ಸ್ಥಿತಿ</string>
     <string name="status">ಸ್ಥಿತಿ</string>
     <string name="repeating">ಪುನಃ ಓದುತ್ತಿರುವ</string>
@@ -386,7 +384,6 @@
     <string name="http_error_hint">ವೆಬ್‌ವೀಕ್ಷಣೆಯಲ್ಲಿ ವೆಬ್‌ಸೈಟ್ ಪರಿಶೀಲಿಸಿ</string>
     <string name="no_results_found">ಯಾವುದೇ ಫಲಿತಾಂಶಗಳು ಕಂಡುಬರಲಿಲ್ಲ</string>
     <string name="no_more_results">ಹೆಚ್ಚಿನ ಫಲಿತಾಂಶಗಳಿಲ್ಲ</string>
-    <string name="local_source_badge">ಲೋಕಲ್</string>
     <string name="updating_category">ವರ್ಗವನ್ನು ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ</string>
     <string name="unknown_error">ಅಜ್ಞಾತ ದೋಷ</string>
     <string name="logout_success">ನೀವು ಈಗ ಲಾಗ್ ಔಟ್ ಆಗಿದ್ದೀರಿ</string>

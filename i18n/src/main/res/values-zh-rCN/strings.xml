@@ -15,7 +15,6 @@
     <string name="label_extension_info">插件信息</string>
     <string name="action_settings">设置</string>
     <string name="action_filter">筛选</string>
-    <string name="action_filter_downloaded">已下载</string>
     <string name="action_filter_bookmarked">已添加书签</string>
     <string name="action_filter_unread">未读</string>
     <string name="action_filter_empty">取消筛选</string>
@@ -194,7 +193,6 @@
     <string name="login_success">已登录</string>
     <string name="unknown_error">未知错误</string>
     <string name="updating_category">正在更新分类</string>
-    <string name="local_source_badge">本地</string>
     <string name="no_more_results">没有更多结果</string>
     <string name="local_source">本地图源</string>
     <string name="other_source">其他</string>
@@ -239,7 +237,6 @@
     <string name="title">标题</string>
     <string name="status">状态</string>
     <string name="track_status">状态</string>
-    <string name="track_start_date">连载开始</string>
     <string name="track_type">类型</string>
     <string name="error_category_exists">已存在同名分类！</string>
     <string name="snack_categories_deleted">分类已删除</string>
@@ -632,7 +629,6 @@
     <string name="connected_to_wifi">仅连接至 Wi-Fi 时</string>
     <string name="update_72hour">每 3 天</string>
     <string name="download_queue_size_warning">警告：批量下载可能导致图源变慢，甚至会使得它们屏蔽 Tachiyomi。点击了解详情。</string>
-    <string name="pref_library_update_show_tab_badge">在“更新”图标上显示未读章数</string>
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">应用更新</string>
     <string name="pref_auto_clear_chapter_cache">关闭应用时清除章节缓存</string>
@@ -656,7 +652,6 @@
     <string name="confirm_manga_add_duplicate">库中有一个名称相同但图源不同（%1$s）的条目。
 \n
 \n你仍希望继续吗？</string>
-    <string name="action_filter_started">已开始</string>
     <string name="pref_update_only_started">尚未开始阅读</string>
     <string name="skipped_reason_completed">已跳过，因为作品已完结</string>
     <string name="skipped_reason_not_caught_up">已跳过，因为有未读章节</string>
@@ -763,4 +758,19 @@
     <string name="track_remove_finish_date_conf_text">将会删除之前在 %s 中标记的结束日期</string>
     <string name="enhanced_tracking_warning">此平台只有 %1$s 图源才能使用。</string>
     <string name="pref_invalidate_download_cache_summary">强制重新扫描已下载的章节</string>
+    <string name="label_stats">统计信息</string>
+    <string name="label_local">本地</string>
+    <string name="label_downloaded">已下载</string>
+    <string name="label_overview_section">总览</string>
+    <string name="label_read_duration">阅读时长</string>
+    <string name="label_titles_section">条目</string>
+    <string name="label_completed_titles">已完成的条目</string>
+    <string name="label_total_chapters">总共</string>
+    <string name="label_titles_in_global_update">全局更新中</string>
+    <string name="label_tracker_section">记录器</string>
+    <string name="label_tracked_titles">已记录条目数</string>
+    <string name="label_read_chapters">已阅读</string>
+    <string name="label_mean_score">平均评分</string>
+    <string name="label_started">已开始</string>
+    <string name="action_not_now">稍后</string>
 </resources>

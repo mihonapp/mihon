@@ -18,7 +18,6 @@
     <string name="action_filter_bookmarked">Bokmerket</string>
     <string name="action_filter_tracked">Sporet</string>
     <string name="action_filter_unread">Ulesen</string>
-    <string name="action_filter_started">Starta</string>
     <string name="action_filter_empty">Fjern filter</string>
     <string name="action_sort_alpha">Alfabetisk</string>
     <string name="action_sort_latest_chapter">Siste kapittel</string>
@@ -247,7 +246,6 @@
     <string name="password">Passord</string>
     <string name="unknown_error">Ukjend feil</string>
     <string name="updating_category">Oppdaterer kategori</string>
-    <string name="local_source_badge">Lokal</string>
     <string name="manga_from_library">Manga frå biblioteket</string>
     <string name="tabs_header">Faner</string>
     <string name="local_source">Lokal kjelde</string>

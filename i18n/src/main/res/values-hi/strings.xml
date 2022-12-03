@@ -14,7 +14,6 @@
     <string name="label_backup">बैकअप और पुनर्स्थापना</string>
     <string name="action_settings">सेटिंग</string>
     <string name="action_filter">फिल्टर</string>
-    <string name="action_filter_downloaded">डाउनलोड किया हुआ</string>
     <string name="action_filter_bookmarked">पृष्ठ स्मृति करा हुआ</string>
     <string name="action_filter_unread">अपठित</string>
     <string name="action_filter_empty">फिल्टर हटाए</string>
@@ -171,7 +170,6 @@
     <string name="login_success">लॉग इन किया गया</string>
     <string name="unknown_error">अज्ञात त्रुटि</string>
     <string name="updating_category">श्रेणी अपडेट कर रहा है</string>
-    <string name="local_source_badge">लोकल</string>
     <string name="no_more_results">कोई और परिणाम नहीं है</string>
     <string name="local_source">स्थानीय स्रोत</string>
     <string name="other_source">अन्य</string>
@@ -280,7 +278,6 @@
     <string name="source_not_installed">स्रोत स्थापित नहीं है : %1$s</string>
     <string name="repeating">फिर से पढाना</string>
     <string name="track_status">स्थिति</string>
-    <string name="track_start_date">शुरू कर दिया है</string>
     <string name="track_type">प्रकार</string>
     <string name="transition_finished">समाप्त:</string>
     <string name="transition_current">प्रचलित:</string>
@@ -637,7 +634,6 @@
     <string name="getting_started_guide">प्रारंभिक मार्गदर्शन</string>
     <string name="pref_show_navigation_mode_summary">रीडर खोले जाने पर थोड़ी देर दिखाएं</string>
     <string name="categorized_display_settings">सॉर्ट और डिस्प्ले के लिए प्रति-श्रेणी सेटिंग्स</string>
-    <string name="pref_library_update_show_tab_badge">अपडेट आइकन पर अपठित संख्या दिखाएं</string>
     <string name="ext_update_all">सभी अद्यतन करें</string>
     <string name="label_warning">चेतावनी</string>
     <string name="action_display_language_badge">भाषा</string>
@@ -668,7 +664,6 @@
     <string name="skipped_reason_not_started">छोड़ दिया गया क्योंकि कोई अध्याय पढ़ा नहीं गया</string>
     <string name="pref_update_only_started">जो शुरू नहीं हुए हैं</string>
     <string name="action_show_manga">मंगा दिखाएँ</string>
-    <string name="action_filter_started">शुरू किया गया</string>
     <string name="action_display_cover_only_grid">केवल कवर ग्रिड</string>
     <string name="disabled_nav">अक्षम</string>
     <string name="rotation_reverse_portrait">रिवर्स पोर्ट्रेट</string>

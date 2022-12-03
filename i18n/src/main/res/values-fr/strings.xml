@@ -11,7 +11,6 @@
     <!-- Actions -->
     <string name="action_settings">Paramètres</string>
     <string name="action_filter">Filtre</string>
-    <string name="action_filter_downloaded">Téléchargés</string>
     <string name="action_filter_bookmarked">Signets</string>
     <string name="action_filter_unread">Non lus</string>
     <string name="action_filter_empty">Retirer le filtre</string>
@@ -276,7 +275,6 @@
     <string name="latest">Récents</string>
     <string name="browse">Explorer</string>
     <string name="action_display_download_badge">Chapitres téléchargés</string>
-    <string name="local_source_badge">Local</string>
     <string name="channel_common">Général</string>
     <string name="information_empty_category">Vous n\'avez aucune catégorie. Appuyez sur le bouton « + » pour en créer une afin d\'organiser votre bibliothèque.</string>
     <string name="label_extensions">Extensions</string>
@@ -305,7 +303,6 @@
     <string name="custom_download">Télécharger une quantité personnalisée</string>
     <string name="download_custom">Personnalisé</string>
     <string name="track_status">Statut</string>
-    <string name="track_start_date">Démarré</string>
     <string name="track_type">Type</string>
     <string name="migration_dialog_what_to_include">Sélectionner les données à inclure</string>
     <string name="label_migration">Migrer</string>
@@ -690,7 +687,6 @@
     <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
     <string name="update_72hour">Tous les 3 jours</string>
     <string name="download_queue_size_warning">Attention : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Tachiyomi. Appuyez pour en savoir plus.</string>
-    <string name="pref_library_update_show_tab_badge">Afficher le nombre de messages non lus sur l\'icône des mises à jour</string>
     <string name="ext_update_all">Tout mettre à jour</string>
     <string name="channel_app_updates">Mises à jour de l\'application</string>
     <string name="pref_auto_clear_chapter_cache">Effacer le cache du chapitre à la fermeture de l\'application</string>
@@ -715,7 +711,6 @@
     <string name="pref_navigate_pan">Panoramique des images larges en appuyant</string>
     <string name="pref_landscape_zoom">Agrandir les images en paysage</string>
     <string name="pref_update_only_started">Qui n\'ont pas encore commencé</string>
-    <string name="action_filter_started">Commencé</string>
     <string name="skipped_reason_completed">Sauté car la série est terminée</string>
     <string name="skipped_reason_not_started">Sauté car aucun chapitre n\'est lu</string>
     <string name="skipped_reason_not_caught_up">Sauté car il y a des chapitres non lus</string>
@@ -823,4 +818,10 @@
     <string name="pref_invalidate_download_cache">Invalider l\'index des téléchargements</string>
     <string name="enhanced_tracking_warning">Ce tracker est uniquement compatible avec la source %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Forcer l\'application à revérifier les chapitres téléchargés</string>
+    <string name="label_stats">Statistiques</string>
+    <string name="label_overview_section">Aperçu</string>
+    <string name="label_total_chapters">Total</string>
+    <string name="label_local">Local</string>
+    <string name="label_started">Commencé</string>
+    <string name="label_downloaded">Téléchargé</string>
 </resources>

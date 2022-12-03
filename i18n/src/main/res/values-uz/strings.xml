@@ -33,7 +33,6 @@
     <string name="action_filter_empty">Filtirni õchirish</string>
     <string name="action_filter_unread">Õqilmagan</string>
     <string name="action_filter_bookmarked">Belgilangan</string>
-    <string name="action_filter_downloaded">Yuklangan</string>
     <string name="action_filter">Filtir</string>
     <string name="action_menu">Menyu</string>
     <string name="action_settings">Sozlamalar</string>

@@ -45,7 +45,6 @@
     <string name="action_filter_empty">Forigi filtrilon</string>
     <string name="action_filter_unread">Nelegitaj</string>
     <string name="action_filter_bookmarked">Legosignitaj</string>
-    <string name="action_filter_downloaded">Elŝutitaj</string>
     <string name="action_filter">Filtrilo</string>
     <string name="action_menu">Menuo</string>
     <string name="action_settings">Agordoj</string>
@@ -435,7 +434,6 @@
     <string name="custom_filter">Propra filtrilo</string>
     <string name="source_unsupported">Fonto ne subtenita</string>
     <string name="myanimelist_relogin">Bonvole ensalutu al MAL denove</string>
-    <string name="track_start_date">Komencita</string>
     <string name="plan_to_read">Planas legi</string>
     <string name="paused">Paŭzita</string>
     <string name="on_hold">Haltetita</string>
@@ -448,7 +446,6 @@
     <string name="chapter_not_found">Ĉapitro netrovita</string>
     <string name="local_source">Loka fonta</string>
     <string name="http_error_hint">Kontroli retejon en WebView</string>
-    <string name="local_source_badge">Loka</string>
     <string name="updating_category">Ĝisdatigi kategorion</string>
     <string name="check_for_updates">Kontroli por trovi ĝisdatigojn</string>
     <string name="help_translate">Helpu traduki</string>

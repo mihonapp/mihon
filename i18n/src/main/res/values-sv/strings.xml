@@ -17,7 +17,6 @@
     <string name="label_extension_info">Tilläggsinformation</string>
     <string name="action_settings">Inställningar</string>
     <string name="action_filter">Filter</string>
-    <string name="action_filter_downloaded">Nedladdat</string>
     <string name="action_filter_bookmarked">Bokmärkt</string>
     <string name="action_filter_unread">Oläst</string>
     <string name="action_filter_empty">Ta bort filtret</string>
@@ -194,7 +193,6 @@
     <string name="login_success">Inloggad</string>
     <string name="unknown_error">Okänt fel</string>
     <string name="updating_category">Uppdaterar kategori</string>
-    <string name="local_source_badge">Lokal</string>
     <string name="no_more_results">Inga mer resultat</string>
     <string name="local_source">Lokal manga</string>
     <string name="other_source">Andra</string>
@@ -239,7 +237,6 @@
     <string name="title">Titel</string>
     <string name="status">Status</string>
     <string name="track_status">Status</string>
-    <string name="track_start_date">Startad</string>
     <string name="track_type">Typ</string>
     <string name="error_category_exists">En kategori med detta namn finns redan!</string>
     <string name="snack_categories_deleted">Kategorier raderade</string>
@@ -644,7 +641,6 @@
     <string name="notification_size_warning">Stora uppdateringar skadar källor och kan leda till långsammare uppdateringar samt en ökad batterianvändning. Tryck för att få veta mer.</string>
     <string name="download_queue_size_warning">Varning: stora massnerladdningar kan leda till att källor blir långsamma och/eller blockerar Tachiyomi. Tryck för att få veta mer.</string>
     <string name="update_72hour">Var 3:e dag</string>
-    <string name="pref_library_update_show_tab_badge">Visa antalet olästa på ikonen Uppdateringar</string>
     <string name="ext_update_all">Uppdatera alla</string>
     <string name="channel_app_updates">Appuppdateringar</string>
     <string name="pref_auto_clear_chapter_cache">Rensa kapitelcache när appen stängs</string>
@@ -662,7 +658,6 @@
     <string name="extension_api_error">Det gick inte att hämta tilläggslistan</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Visa manga</string>
-    <string name="action_filter_started">Startad</string>
     <string name="action_display_cover_only_grid">Endast omslags-rutnät</string>
     <string name="pref_update_only_started">Som inte har startats</string>
     <string name="pref_navigate_pan">Panorera breda sidor med tryck</string>

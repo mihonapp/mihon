@@ -16,7 +16,6 @@
     <string name="label_help">說明</string>
     <string name="action_settings">設定</string>
     <string name="action_filter">篩選</string>
-    <string name="action_filter_downloaded">已下載</string>
     <string name="action_filter_bookmarked">已新增書籤</string>
     <string name="action_filter_unread">未讀</string>
     <string name="action_filter_empty">清除篩選器</string>
@@ -211,7 +210,6 @@
     <string name="pref_clear_database_summary">將未收藏於書櫃的作品記錄刪除</string>
     <string name="clear_database_completed">已刪除項目</string>
     <string name="unknown_error">不明的錯誤</string>
-    <string name="local_source_badge">本機</string>
     <string name="no_more_results">沒有更多結果</string>
     <string name="local_source">本機來源</string>
     <string name="other_source">其他</string>
@@ -287,7 +285,6 @@
     <string name="reading">閱讀中</string>
     <string name="plan_to_read">準備讀</string>
     <string name="repeating">重溫中</string>
-    <string name="track_start_date">創刊</string>
     <string name="track_type">類型</string>
     <string name="dialog_with_checkbox_remove_description">此章節的閱讀日期將被清除，你確定嗎？</string>
     <string name="transition_current">目前章節：</string>
@@ -509,7 +506,7 @@
     <string name="edge_nav">邊緣式</string>
     <string name="kindlish_nav">Kindle 式</string>
     <string name="l_nav">L 式</string>
-    <string name="action_filter_tracked">已紀錄歷程</string>
+    <string name="action_filter_tracked">已登錄歷程</string>
     <string name="channel_crash_logs">當機記錄</string>
     <string name="crash_log_saved">已產生當機記錄</string>
     <string name="pref_dump_crash_logs_summary">產生錯誤記錄檔以便分享予開發人員</string>
@@ -633,7 +630,6 @@
     <string name="update_72hour">每 3 日</string>
     <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源並 (或) 使其封鎖 Tachiyomi。輕觸以瞭解詳情。</string>
     <string name="ext_update_all">全部更新</string>
-    <string name="pref_library_update_show_tab_badge">在「新刊」導覽圖示上標記未讀章數</string>
     <string name="channel_app_updates">應用程式更新</string>
     <string name="pref_auto_clear_chapter_cache">結束應用程式時清除章節快取</string>
     <string name="clear_database_source_item_count">資料庫中有 %1$d 部作品不屬於藏書</string>
@@ -656,7 +652,6 @@
     <string name="confirm_manga_add_duplicate">書櫃中已有一個來自不同來源 (%1$s) 的同名項目。
 \n
 \n你仍欲繼續嗎？</string>
-    <string name="action_filter_started">已開始閱讀</string>
     <string name="pref_update_only_started">無已讀的章節</string>
     <string name="skipped_reason_completed">由於叢書連載已完結，因此略過</string>
     <string name="skipped_reason_not_caught_up">由於尚有未讀的章節，因此略過</string>
@@ -762,4 +757,26 @@
     <string name="track_remove_start_date_conf_text">從「%s」移除你先前輸入的開始閱讀日期</string>
     <string name="pref_invalidate_download_cache">清除下載索引</string>
     <string name="enhanced_tracking_warning">該平台僅與來源「%1$s」相容。</string>
+    <string name="pref_invalidate_download_cache_summary">強制重新檢查已下載的章節</string>
+    <string name="label_downloaded">已下載</string>
+    <string name="label_completed_titles">閱畢作品</string>
+    <string name="label_titles_section">作品</string>
+    <string name="label_total_chapters">總數</string>
+    <string name="label_read_chapters">已讀</string>
+    <string name="label_mean_score">平均評分</string>
+    <string name="label_used">平台</string>
+    <string name="day_short">%d 天</string>
+    <string name="label_stats">統計資料</string>
+    <string name="label_local">本機</string>
+    <string name="label_overview_section">總覽</string>
+    <string name="label_started">已開卷</string>
+    <string name="label_titles_in_global_update">適用全域更新</string>
+    <string name="label_read_duration">閱讀歷時</string>
+    <string name="label_tracker_section">歷程平台</string>
+    <string name="not_applicable">不適用</string>
+    <string name="label_tracked_titles">登錄作品</string>
+    <string name="hour_short">%d 小時</string>
+    <string name="minute_short">%d 分鐘</string>
+    <string name="seconds_short">%d 秒鐘</string>
+    <string name="action_not_now">暫時不要</string>
 </resources>

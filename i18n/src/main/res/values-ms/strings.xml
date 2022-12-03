@@ -14,7 +14,6 @@
     <string name="label_backup">Sandaran dan memulih</string>
     <string name="action_settings">Tetapan</string>
     <string name="action_filter">Tapis</string>
-    <string name="action_filter_downloaded">Telah dimuat turun</string>
     <string name="action_filter_bookmarked">Ditanda</string>
     <string name="action_filter_unread">Belum dibaca</string>
     <string name="action_filter_empty">Kosongkan tapisan</string>
@@ -170,7 +169,6 @@
     <string name="login_success">Log masuk berjaya</string>
     <string name="unknown_error">Ralat tidak diketahui</string>
     <string name="updating_category">mengemaskinikan kategori</string>
-    <string name="local_source_badge">Setempat</string>
     <string name="no_more_results">Tiada lagi hasil</string>
     <string name="local_source">Sumber setempat</string>
     <string name="other_source">Lain</string>
@@ -280,7 +278,6 @@
     <string name="download_custom">Tersuai</string>
     <string name="repeating">Membaca semula</string>
     <string name="track_status">Status</string>
-    <string name="track_start_date">Bermula</string>
     <string name="track_type">Jenis</string>
     <string name="transition_finished">Selesai:</string>
     <string name="transition_current">Sekarang:</string>
@@ -632,7 +629,6 @@
     <string name="connected_to_wifi">Hanya menggunakan Wi-Fi</string>
     <string name="update_72hour">Setiap 3 hari</string>
     <string name="download_queue_size_warning">Amaran: muat turun secara pukal besar boleh menyebabkan sumber menjadi lebih perlahan dan/atau menyekat Tachiyomi. Ketik untuk ketahui selebihnya.</string>
-    <string name="pref_library_update_show_tab_badge">Tunjuk bilangan belum dibaca pada ikon Kemas kini</string>
     <string name="ext_update_all">Kemas kini semua</string>
     <string name="channel_app_updates">Kemas kini aplikasi</string>
     <string name="pref_auto_clear_chapter_cache">Hapus cache bab apabila menutup aplikasi</string>
@@ -650,7 +646,6 @@
     <string name="action_faq_and_guides">Soalan Lazim dan Panduan</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Tunjuk entri</string>
-    <string name="action_filter_started">Mula</string>
     <string name="confirm_manga_add_duplicate">Anda mempunyai entri yang mempunyai nama yang sama tetapi daripada sumber yang berlainan (%1$s).
 \n
 \nAdakah anda masih ingin meneruskan\?</string>
@@ -763,4 +758,25 @@
     <string name="track_remove_finish_date_conf_text">Ini akan membuang tarikh selesai yang dipilih oleh anda sebelum ini dari %s</string>
     <string name="pref_invalidate_download_cache_summary">Memaksa aplikasi untuk semak semula bab dimuat turun.</string>
     <string name="enhanced_tracking_warning">Penjejak ini hanya boleh digunakan dengan sumber %1$s sahaja.</string>
+    <string name="label_local">lokal</string>
+    <string name="label_downloaded">Dimuat turun</string>
+    <string name="label_titles_in_global_update">Dalam kemas kini keseluruhan</string>
+    <string name="label_total_chapters">Jumlah</string>
+    <string name="label_read_chapters">Baca</string>
+    <string name="label_tracked_titles">Entri dijejaki</string>
+    <string name="label_mean_score">Skor purata</string>
+    <string name="label_used">Digunakan</string>
+    <string name="label_stats">Statistik</string>
+    <string name="label_started">Dimulakan</string>
+    <string name="label_overview_section">Keseluruhan</string>
+    <string name="label_read_duration">Jangka bacaan</string>
+    <string name="label_titles_section">Entri</string>
+    <string name="label_tracker_section">Penjejak</string>
+    <string name="label_completed_titles">Entri yang sudah selesai</string>
+    <string name="not_applicable">N/A</string>
+    <string name="day_short">%dh</string>
+    <string name="hour_short">%dj</string>
+    <string name="minute_short">%dm</string>
+    <string name="seconds_short">%ds</string>
+    <string name="action_not_now">Bukan sekarang</string>
 </resources>

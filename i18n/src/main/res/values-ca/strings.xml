@@ -17,7 +17,6 @@
     <string name="label_extension_info">Informació de l\'extensió</string>
     <string name="action_settings">Configuració</string>
     <string name="action_filter">Filtra</string>
-    <string name="action_filter_downloaded">Baixats</string>
     <string name="action_filter_bookmarked">Marcats</string>
     <string name="action_filter_unread">No llegits</string>
     <string name="action_filter_empty">Elimina el filtre</string>
@@ -194,7 +193,6 @@
     <string name="login_success">S\'ha iniciat la sessió</string>
     <string name="unknown_error">S\'ha produït un error desconegut</string>
     <string name="updating_category">S\'està actualitzant la categoria</string>
-    <string name="local_source_badge">Local</string>
     <string name="no_more_results">No hi ha més resultats</string>
     <string name="local_source">Font local</string>
     <string name="other_source">Altres</string>
@@ -239,7 +237,6 @@
     <string name="title">Títol</string>
     <string name="status">Estat</string>
     <string name="track_status">Estat</string>
-    <string name="track_start_date">Començat</string>
     <string name="track_type">Tipus</string>
     <string name="error_category_exists">Ja hi ha una categoria amb aquest nom!</string>
     <string name="snack_categories_deleted">S\'han suprimit les categories</string>
@@ -648,7 +645,6 @@
     <string name="action_faq_and_guides">PMF i guies</string>
     <string name="pref_library_update_manga_restriction">Omet les actualitzacions dels elements</string>
     <string name="pref_update_only_completely_read">Amb capítols no llegits</string>
-    <string name="pref_library_update_show_tab_badge">Mostra el comptador de no llegits a la icona d\'actualitzacions</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="save_chapter_as_cbz">Desa com a arxiu CBZ</string>
     <string name="backup_info">També hauríeu de desar còpies de les còpies de seguretat en altres llocs.</string>
@@ -668,7 +664,6 @@
 \nVoleu continuar igualment\?</string>
     <string name="pref_navigate_pan">Fes panoràmiques les imatges amples en fer un toc</string>
     <string name="action_display_cover_only_grid">Graella només a la portada</string>
-    <string name="action_filter_started">Començats</string>
     <string name="pref_update_only_started">Que no s\'hagin començat</string>
     <string name="skipped_reason_completed">S\'ha omès perquè la sèrie està completada</string>
     <string name="skipped_reason_not_started">S\'ha omès perquè no hi ha cap capítol llegit</string>

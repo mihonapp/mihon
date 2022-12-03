@@ -36,7 +36,6 @@
     <string name="label_recent_manga">Тарих</string>
     <string name="history">Тарих</string>
     <string name="action_settings">Баптаулар</string>
-    <string name="action_filter_downloaded">Жүктелген</string>
     <string name="nav_zone_left">Сол</string>
     <string name="nav_zone_right">Оң</string>
     <string name="left_to_right_viewer">Солдан оңға</string>
@@ -102,7 +101,6 @@
     <string name="action_mark_previous_as_read">Алдыңғысын оқылған деп белгілеу</string>
     <string name="action_filter_tracked">Бақылауда</string>
     <string name="action_filter_unread">Оқылмаған</string>
-    <string name="action_filter_started">Басталған</string>
     <string name="action_filter_empty">Сүзгіні алып тастау</string>
     <string name="action_sort_alpha">Әліпби бойынша</string>
     <string name="action_sort_count">Түгел жазбалар</string>
@@ -225,7 +223,6 @@
     <string name="ext_info_age_rating">Жас рейтингі</string>
     <string name="action_display_comfortable_grid">Ыңғайлы кесте</string>
     <string name="action_display_cover_only_grid">Атаусыз кесте</string>
-    <string name="pref_library_update_show_tab_badge">Жаңартулар белгішесінде оқылмағандар санын көрсету</string>
     <string name="pref_library_update_refresh_metadata">Метадеректерді автоматты түрде жаңарту</string>
     <string name="pref_library_update_categories_details">Шығарылған санаттардағы жазбалар енгізілген санаттарда болса да жаңартылмайды.</string>
     <string name="all">Барлығы</string>
@@ -515,7 +512,6 @@
     <string name="login">Кіру</string>
     <string name="logout_success">Сіз шығып кеттіңіз</string>
     <string name="updating_category">Санатты жаңарту</string>
-    <string name="local_source_badge">Локал</string>
     <string name="manga_from_library">Кітапханадан</string>
     <string name="badges_header">Белгілер</string>
     <string name="no_results_found">Нәтиже жоқ</string>
@@ -651,7 +647,6 @@
     <string name="chapter_downloading_progress">(%1$d/%2$d) жүктелуде</string>
     <string name="show_chapter_number">Тарау нөмірі</string>
     <string name="sort_by_number">Тарау нөмірі бойынша</string>
-    <string name="track_start_date">Басталған</string>
     <string name="track_type">Түрі</string>
     <string name="error_category_exists">Бұндай санат атауы әлдеқашан бар!</string>
     <string name="picture_saved">Сурет сақталды</string>

@@ -17,7 +17,6 @@
     <string name="label_extension_info">Πληροφορίες επέκτασης</string>
     <string name="action_settings">Ρυθμίσεις</string>
     <string name="action_filter">Φίλτρο</string>
-    <string name="action_filter_downloaded">Λήψεις</string>
     <string name="action_filter_bookmarked">Στους Σελιδοδείκτες</string>
     <string name="action_filter_unread">Αδιάβαστα</string>
     <string name="action_filter_empty">Αφαίρεση φίλτρου</string>
@@ -194,7 +193,6 @@
     <string name="login_success">Συνδεθήκατε επιτυχώς</string>
     <string name="unknown_error">Άγνωστο σφάλμα</string>
     <string name="updating_category">Ενημέρωση κατηγορίας</string>
-    <string name="local_source_badge">Τοπικό</string>
     <string name="no_more_results">Δεν υπάρχουν άλλα αποτελέσματα</string>
     <string name="local_source">Τοπική πηγή</string>
     <string name="other_source">Άλλα</string>
@@ -239,7 +237,6 @@
     <string name="title">Τίτλος</string>
     <string name="status">Κατάσταση</string>
     <string name="track_status">Κατάσταση</string>
-    <string name="track_start_date">Ξεκίνησε</string>
     <string name="track_type">Τύπος</string>
     <string name="error_category_exists">Μια κατηγορία με αυτό το όνομα υπάρχει ήδη!</string>
     <string name="snack_categories_deleted">Οι κατηγορίες διαγράφηκαν</string>
@@ -644,7 +641,6 @@
     <string name="connected_to_wifi">Μόνο σε Wi-Fi</string>
     <string name="update_72hour">Κάθε 3 ημέρες</string>
     <string name="download_queue_size_warning">Προειδοποίηση: οι μαζικές λήψεις ενδέχεται να οδηγήσουν σε επιβράδυνση των πηγών ή/και αποκλεισμό του Tachiyomi. Πατήστε για να μάθετε περισσότερα.</string>
-    <string name="pref_library_update_show_tab_badge">Εμφάνιση του αριθμού των μη αναγνωσμένων στο εικονίδιο Ενημερώσεις</string>
     <string name="ext_update_all">Ενημέρωση όλων</string>
     <string name="channel_app_updates">Ενημερώσεις εφαρμογής</string>
     <string name="pref_auto_clear_chapter_cache">Εκκαθάριση της προσωρινής μνήμης κεφαλαίων στο κλείσιμο της εφαρμογής</string>
@@ -667,7 +663,6 @@
 \n
 \nΘέλετε ακόμα να συνεχίσετε;</string>
     <string name="action_display_cover_only_grid">Πλέγμα μόνο με εξώφυλλα</string>
-    <string name="action_filter_started">Ξεκίνησε</string>
     <string name="pref_update_only_started">Που δεν έχουν ξεκινήσει</string>
     <string name="pref_navigate_pan">Μετατόπιση πλατιών εικόνων κατά το πάτημα</string>
     <string name="skipped_reason_completed">Παραλείφθηκε επειδή η σειρά ολοκληρώθηκε</string>
@@ -776,4 +771,25 @@
     <string name="pref_invalidate_download_cache">Ακύρωση ευρετηρίου λήψεων</string>
     <string name="enhanced_tracking_warning">Αυτός ο ιχνηλάτης είναι συμβατός μόνο με την πηγή %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Αναγκάστε την εφαρμογή να ελέγξει ξανά τα ληφθέντα κεφάλαια</string>
+    <string name="label_stats">Στατιστικά</string>
+    <string name="label_local">Τοπικό</string>
+    <string name="label_started">Ξεκίνησε</string>
+    <string name="label_completed_titles">Ολοκληρωμένες καταχωρήσεις</string>
+    <string name="label_read_duration">Διάρκεια ανάγνωσης</string>
+    <string name="label_total_chapters">Σύνολο</string>
+    <string name="label_read_chapters">Αναγνωσμένα</string>
+    <string name="label_tracker_section">Ιχνηλάτες</string>
+    <string name="not_applicable">Δ/Υ</string>
+    <string name="day_short">%dημ</string>
+    <string name="hour_short">%dω</string>
+    <string name="seconds_short">%dδ</string>
+    <string name="label_used">Σε χρήση</string>
+    <string name="minute_short">%dλ</string>
+    <string name="label_overview_section">Σύνοψη</string>
+    <string name="label_titles_section">Καταχωρήσεις</string>
+    <string name="label_tracked_titles">Παρακολουθούμενες καταχωρήσεις</string>
+    <string name="label_mean_score">Μέση βαθμολογία</string>
+    <string name="label_downloaded">Κατεβασμένο</string>
+    <string name="label_titles_in_global_update">Σε καθολική ενημέρωση</string>
+    <string name="action_not_now">Όχι τώρα</string>
 </resources>

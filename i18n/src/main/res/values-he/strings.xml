@@ -80,7 +80,6 @@
     <string name="snack_categories_deleted">הקטגוריות נמחקו</string>
     <string name="error_category_exists">קטגוריה עם שם זה כבר קיימת!</string>
     <string name="track_type">סוג</string>
-    <string name="track_start_date">הותחל</string>
     <string name="track_status">סטטוס</string>
     <string name="status">סטטוס</string>
     <string name="title">כותרת</string>
@@ -122,7 +121,6 @@
     <string name="http_error_hint">בדוק אתר ב-WebView</string>
     <string name="no_results_found">לא נמצאו תוצאות</string>
     <string name="no_more_results">אין תוצאות נוספות</string>
-    <string name="local_source_badge">מקומי</string>
     <string name="updating_category">מעדכן קטגוריה</string>
     <string name="unknown_error">שגיאה לא ידועה</string>
     <string name="logout_success">אתה עכשיו מנותק</string>
@@ -207,7 +205,6 @@
     <string name="action_sort">מיון</string>
     <string name="action_cancel_all">בטל הכל</string>
     <string name="action_display">תצוגה</string>
-    <string name="action_filter_downloaded">ירד</string>
     <string name="track">מעקב</string>
     <string name="label_more">עוד</string>
     <string name="action_cancel">ביטול</string>
@@ -426,7 +423,6 @@
     <string name="theme_monet">דינמי</string>
     <string name="pref_library_update_categories_details">מנגה הנמצאת בקטגוריית מנועי העדכונים לא תעודכן גם אם היא נכללת בקטגורייה אחרת שכן מתעדכנת.</string>
     <string name="action_show_manga">הראה פריט</string>
-    <string name="action_filter_started">התחיל</string>
     <string name="pref_update_only_completely_read">עם פרק(ים) שלא נקרא(ו)</string>
     <string name="action_move_to_top_all_for_series">העבר סדרה לראש</string>
     <string name="pref_category_timestamps">חותמת זמן</string>
@@ -444,7 +440,6 @@
         <item quantity="many">%d קטגוריות</item>
         <item quantity="other">%d קטגוריות</item>
     </plurals>
-    <string name="pref_library_update_show_tab_badge">הראה מספור של פרקים שלא נקראו באייקון העדכונים</string>
     <string name="include">כלול: %s</string>
     <string name="pref_show_navigation_mode_summary">הראה לזמן קצר כשפותחים את מצב הקריאה</string>
     <string name="pref_show_reading_mode">הראה מצב קריאה</string>

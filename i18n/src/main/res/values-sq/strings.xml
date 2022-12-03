@@ -69,7 +69,6 @@
     <string name="charging">Gjatë karikimit</string>
     <string name="pref_library_update_manga_restriction">Kapërceni përditësimin e hyrjeve</string>
     <string name="pref_update_only_completely_read">Me kapituj të palexuar</string>
-    <string name="pref_library_update_show_tab_badge">Shfaq numrin e palexuar në ikonën Përditësimet</string>
     <string name="pref_library_update_refresh_metadata_summary">Kontrolloni për kopertinë dhe detaje të reja kur përditësoni bibliotekën</string>
     <string name="default_category">Kategoria e parazgjedhur</string>
     <plurals name="num_categories">
@@ -115,7 +114,6 @@
     <string name="download_notifier_downloader_title">Shkarkues</string>
     <string name="information_webview_outdated">Përditësoni aplikacionin WebView për përputhshmëri më të mirë</string>
     <string name="label_default">E paracaktuar</string>
-    <string name="action_filter_downloaded">U shkarkua</string>
     <string name="action_filter_tracked">Gjurmuar</string>
     <string name="action_settings">Cilësimet</string>
     <string name="action_filter_unread">e palexuar</string>
@@ -124,7 +122,6 @@
     <string name="action_sort_total">Totali i kapitujve</string>
     <string name="label_warning">Paralajmërim</string>
     <string name="unlock_app">Zhblloko Tachiyomi</string>
-    <string name="action_filter_started">Filloi</string>
     <string name="action_sort_count">Totali i hyrjeve</string>
     <string name="action_sort_last_read">Leximi i fundit</string>
     <string name="confirm_lock_change">Vërtetoni për të konfirmuar ndryshimin</string>
@@ -455,7 +452,6 @@
     <string name="cache_delete_error">Ndodhi një gabim gjatë pastrimit</string>
     <string name="privacy_policy">Politika e privatësisë</string>
     <string name="login_success">i regjistruar</string>
-    <string name="local_source_badge">Lokal</string>
     <string name="chapter_not_found">Kapitulli nuk u gjet</string>
     <string name="local_invalid_format">Format i pavlefshëm i kapitullit</string>
     <string name="unknown_status">Status i panjohur</string>
@@ -677,7 +673,6 @@
     <string name="title">Titulli</string>
     <string name="track_started_reading_date">Data e fillimit</string>
     <string name="track_status">Status</string>
-    <string name="track_start_date">Filloi</string>
     <string name="track_finished_reading_date">Data e mbarimit</string>
     <string name="track_remove_date_conf_title">Të hiqet data\?</string>
     <string name="track_remove_finish_date_conf_text">Kjo do të heqë datën e përfundimit të zgjedhur më parë nga %s</string>

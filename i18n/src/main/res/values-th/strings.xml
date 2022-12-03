@@ -15,7 +15,6 @@
     <string name="action_settings">ตั้งค่า</string>
     <string name="action_filter">ตัวกรอง</string>
     <string name="label_recent_updates">อัปเดต</string>
-    <string name="action_filter_downloaded">ดาวน์โหลดแล้ว</string>
     <string name="action_filter_unread">ยังไม่ได้อ่าน</string>
     <string name="action_filter_empty">นำตัวกรองออก</string>
     <string name="action_sort_alpha">ตามตัวอักษร</string>
@@ -195,7 +194,6 @@
     <string name="login_success">ลงชื่อเข้าใช้แล้ว</string>
     <string name="unknown_error">ข้อผิดพลาดที่ไม่รู้จัก</string>
     <string name="updating_category">กำลังอัปเดตหมวดหมู่</string>
-    <string name="local_source_badge">ภายในเครื่อง</string>
     <string name="no_more_results">ไม่มีผลลัพธ์เพิ่มเติม</string>
     <string name="local_source">แหล่งที่มาภายในเครื่อง</string>
     <string name="other_source">อื่น ๆ</string>
@@ -249,7 +247,6 @@
     <string name="title">ชื่อเรื่อง</string>
     <string name="status">สถานะ</string>
     <string name="track_status">สถานะ</string>
-    <string name="track_start_date">เริ่มแล้ว</string>
     <string name="track_type">ประเภท</string>
     <string name="error_category_exists">หมวดหมู่ที่มีชื่อนี้มีอยู่แล้ว!</string>
     <string name="snack_categories_deleted">หมวดหมู่ถูกลบแล้ว</string>
@@ -566,7 +563,6 @@
     <string name="library_errors_help">สำหรับความช่วยเหลือเกี่ยวกับวิธีการแก้ไขข้อผิดพลาดในการอัปเดตคลัง ไปยัง %1$s</string>
     <string name="local_filter_order_by">เรียงตาม</string>
     <string name="date">วันที่</string>
-    <string name="pref_library_update_show_tab_badge">แสดงไอคอนจำนวนตอนที่ยังไม่ได้อ่าน</string>
     <string name="categorized_display_settings">การตั้งค่าตามหมวดหมู่สำหรับการจัดเรียงและแสดงผล</string>
     <string name="ext_install_service_notif">กำลังติดตั้งส่วนขยาย…</string>
     <string name="pref_hide_threshold">ความเร็วในการซ่อนเมนูบนเมื่อเลื่อน</string>
@@ -658,7 +654,6 @@
     <string name="confirm_manga_add_duplicate">มีรายการในคลังที่มีชื่อเดียวกัน แต่มาจากคนละแหล่งที่มา (%1$s)
 \n
 \nยังต้องการดำเนินการต่อหรือไม่\?</string>
-    <string name="action_filter_started">เริ่มอ่านแล้ว</string>
     <string name="pref_update_only_started">ที่ยังไม่ได้เริ่มอ่าน</string>
     <string name="skipped_reason_completed">ถูกข้ามเนื่องจากเรื่องนี้จบแล้ว</string>
     <string name="notification_update_skipped">อัปเดตข้ามแล้ว %1$d รายการ</string>
@@ -763,4 +758,24 @@
     <string name="track_remove_finish_date_conf_text">การกระทำนี้จะเป็นการนำวันที่อ่านจบของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
     <string name="track_remove_date_conf_title">นำวันที่ออก\?</string>
     <string name="pref_invalidate_download_cache_summary">บังคับให้ตรวจสอบบทที่ดาวน์โหลดไว้</string>
+    <string name="label_started">เริ่มต้น</string>
+    <string name="label_downloaded">ดาวน์โหลดไว้แล้ว</string>
+    <string name="label_read_duration">ระยะเวลาการอ่าน</string>
+    <string name="label_titles_section">รายการ</string>
+    <string name="label_total_chapters">รวม</string>
+    <string name="label_tracker_section">ตัวติดตาม</string>
+    <string name="label_mean_score">คะแนนเฉลี่ย</string>
+    <string name="minute_short">%d น.</string>
+    <string name="label_stats">สถิติ</string>
+    <string name="label_local">ภายในเครื่อง</string>
+    <string name="not_applicable">ไม่ทราบ</string>
+    <string name="label_tracked_titles">รายการที่ติดตาม</string>
+    <string name="label_used">ใช้แล้ว</string>
+    <string name="label_overview_section">ภาพรวม</string>
+    <string name="label_completed_titles">รายการที่อ่านจบแล้ว</string>
+    <string name="label_titles_in_global_update">ในการอัปเดตทั้งหมด</string>
+    <string name="day_short">%d วัน</string>
+    <string name="label_read_chapters">อ่านแล้ว</string>
+    <string name="hour_short">%d ชม.</string>
+    <string name="seconds_short">%d วิ.</string>
 </resources>

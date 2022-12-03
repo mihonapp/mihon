@@ -84,7 +84,6 @@
     <string name="action_filter_unread">अपठित</string>
     <string name="action_filter_tracked">ट्र्याक गरिएको</string>
     <string name="action_filter_bookmarked">बुकमार्क गरिएको</string>
-    <string name="action_filter_downloaded">डाउनलोड गरिएको</string>
     <string name="action_filter">फिल्टर</string>
     <string name="action_menu">मेनू</string>
     <string name="action_settings">सेटिंग्स</string>
@@ -271,7 +270,6 @@
     <string name="default_category">पूर्वनिर्धारित वर्ग</string>
     <string name="categorized_display_settings">क्रमबद्ध र प्रदर्शनको लागि प्रति-वर्गका सेटिङहरू</string>
     <string name="include">समावेश गर्नुहोस्: %s</string>
-    <string name="pref_library_update_show_tab_badge">अपडेट आइकनमा नपढिएको संख्या देखाउनुहोस्</string>
     <string name="pref_library_update_categories_details">\"बहिष्कृत\" वर्गहरूमा रहेका माङ्गा \"समावेश गरिएका\" वर्गहरूमा भए पनि अपडेट हुने छैनन्।</string>
     <string name="ext_app_info">एप जानकारी</string>
     <string name="untrusted_extension">अविश्वसनीय एक्सटेनशन</string>
@@ -509,7 +507,6 @@
     <string name="logout">लग-आउट</string>
     <string name="logout_success">तपाई अब लग-आउट हुनुभएको छ</string>
     <string name="updating_category">वर्ग अपडेट गर्दै</string>
-    <string name="local_source_badge">लोकल</string>
     <string name="last_used_source">पछिल्लो पटक प्रयोग गरेको</string>
     <string name="action_global_search_hint">ग्लोबल खोज…</string>
     <string name="local_source_help_guide">लोकल स्रोत गाइड</string>
@@ -545,7 +542,6 @@
     <string name="show_chapter_number">अध्याय संख्या</string>
     <string name="title">शीर्षक</string>
     <string name="score">मूल्याङ्कन</string>
-    <string name="track_start_date">सुरु गरिएको</string>
     <string name="track_started_reading_date">सुरु गरेको मिति</string>
     <string name="track_finished_reading_date">समाप्त गरेको मिति</string>
     <string name="page_list_empty_error">कुनै पृष्ठहरू फेला परेनन्</string>
@@ -622,7 +618,6 @@
     <string name="snack_categories_deleted">वर्गहरू हटाइयो</string>
     <string name="dialog_with_checkbox_remove_description">यसले यो अध्यायको पढेको मिति हटाउनेछ।
 \nके तपाई पक्का हुनुहुन्छ\?</string>
-    <string name="action_filter_started">सुरु गरिएको</string>
     <string name="track_type">प्रकार</string>
     <string name="no_next_chapter">अर्को अध्याय भेटिएन</string>
     <string name="transition_previous">पहिलेको:</string>

@@ -14,7 +14,6 @@
     <string name="label_backup">Backup e restauração</string>
     <string name="action_settings">Configurações</string>
     <string name="action_filter">Filtrar</string>
-    <string name="action_filter_downloaded">Disponível offline</string>
     <string name="action_filter_bookmarked">Favorito</string>
     <string name="action_filter_unread">Não lido</string>
     <string name="action_filter_empty">Remover filtros</string>
@@ -243,7 +242,6 @@
     <string name="browse">Navegar</string>
     <string name="channel_common">Comum</string>
     <string name="action_display_download_badge">Capítulos disponíveis offline</string>
-    <string name="local_source_badge">Local</string>
     <string name="information_empty_category">Você ainda não tem nenhuma categoria. Toque no botão Adicionar para criar uma e organizar a sua biblioteca.</string>
     <string name="label_migration">Migrar</string>
     <string name="label_extensions">Extensões</string>
@@ -280,7 +278,6 @@
     <string name="repeating">Relendo</string>
     <string name="pager_viewer">Paginação</string>
     <string name="track_status">Estado</string>
-    <string name="track_start_date">Começado</string>
     <string name="track_type">Tipo</string>
     <string name="transition_finished">Concluído:</string>
     <string name="transition_current">Atual:</string>
@@ -656,7 +653,6 @@
     <string name="connected_to_wifi">Somente no Wi-Fi</string>
     <string name="update_72hour">A cada 3 dias</string>
     <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi. Toque para saber mais.</string>
-    <string name="pref_library_update_show_tab_badge">Mostrar a contagem de não lidos no ícone de Atualizações</string>
     <string name="ext_update_all">Atualizar tudo</string>
     <string name="channel_app_updates">Atualizações do aplicativo</string>
     <string name="pref_auto_clear_chapter_cache">Limpar o cache de capítulos ao fechar o aplicativo</string>
@@ -680,7 +676,6 @@
     <string name="pref_navigate_pan">Navegar imagens longas ao tocar</string>
     <string name="pref_landscape_zoom">Dar zoom em imagens horizontais</string>
     <string name="action_display_cover_only_grid">Grade somente com capas</string>
-    <string name="action_filter_started">Iniciado</string>
     <string name="pref_update_only_started">Que não tiveram a leitura iniciada</string>
     <string name="skipped_reason_completed">Pulado porque a série está finalizada</string>
     <string name="skipped_reason_not_caught_up">Pulado porque há capítulos não lidos</string>
@@ -789,4 +784,25 @@
     <string name="pref_invalidate_download_cache">Invalidar o índice de downloads</string>
     <string name="enhanced_tracking_warning">Este monitorador é compatível somente com a fonte %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Força o aplicativo a checar novamente por capítulos disponíveis offline</string>
+    <string name="label_local">Local</string>
+    <string name="label_downloaded">Disponíveis offline</string>
+    <string name="label_overview_section">Visão geral</string>
+    <string name="label_completed_titles">Itens completos</string>
+    <string name="label_read_duration">Duração de leitura</string>
+    <string name="label_titles_section">Itens</string>
+    <string name="label_titles_in_global_update">Na atualização global</string>
+    <string name="label_tracker_section">Monitoradores</string>
+    <string name="label_used">Usados</string>
+    <string name="day_short">%dd</string>
+    <string name="hour_short">%dh</string>
+    <string name="minute_short">%dm</string>
+    <string name="label_read_chapters">Lidos</string>
+    <string name="label_tracked_titles">Itens monitorados</string>
+    <string name="label_stats">Estatísticas</string>
+    <string name="label_started">Iniciados</string>
+    <string name="label_total_chapters">Total</string>
+    <string name="label_mean_score">Avaliação média</string>
+    <string name="not_applicable">N/A</string>
+    <string name="seconds_short">%ds</string>
+    <string name="action_not_now">Agora não</string>
 </resources>

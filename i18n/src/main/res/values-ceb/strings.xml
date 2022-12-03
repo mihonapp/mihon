@@ -7,11 +7,9 @@
     <string name="confirm_exit">Pindota balik pag-usab aron makagawas</string>
     <string name="action_settings">Mga setting</string>
     <string name="action_menu">Menu</string>
-    <string name="action_filter_downloaded">Gi-download</string>
     <string name="action_filter_bookmarked">Gi-bookmark</string>
     <string name="action_filter_tracked">Gisubay</string>
     <string name="action_filter_unread">Wala mabasa</string>
-    <string name="action_filter_started">Nagsugod</string>
     <string name="action_sort_alpha">Alpabetiko</string>
     <string name="action_sort_count">Kinatibuk sa manga</string>
     <string name="action_sort_total">Kinatibuk sa mga kapitulo</string>
@@ -161,7 +159,6 @@
     <string name="pref_library_update_manga_restriction">Laktawan ang pag-update sa mga titulo</string>
     <string name="pref_update_only_completely_read">Uban sa wala pa mabasa nga (mga) kapitulo</string>
     <string name="pref_update_only_started">Wala pa kana nagsugod</string>
-    <string name="pref_library_update_show_tab_badge">Ipakita ang wala pa mabasa nga ihap sa icon sa Updates</string>
     <string name="pref_library_update_refresh_metadata">Awtomatikong i-refresh ang metadata</string>
     <string name="default_category_summary">Pangutana kanunay</string>
     <plurals name="lock_after_mins">

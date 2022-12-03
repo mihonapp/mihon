@@ -17,7 +17,6 @@
     <string name="label_extension_info">Інформація про розширення</string>
     <string name="action_settings">Налаштування</string>
     <string name="action_filter">Фільтр</string>
-    <string name="action_filter_downloaded">Завантажені</string>
     <string name="action_filter_bookmarked">Закладки</string>
     <string name="action_filter_unread">Непрочитані</string>
     <string name="action_filter_empty">Видалити фільтр</string>
@@ -194,7 +193,6 @@
     <string name="login_success">Вхід успішний</string>
     <string name="unknown_error">Невідома помилка</string>
     <string name="updating_category">Оновлення категорії</string>
-    <string name="local_source_badge">Локальна</string>
     <string name="no_more_results">Більше немає результатів</string>
     <string name="local_source">Локальне джерело</string>
     <string name="other_source">Інші</string>
@@ -234,12 +232,11 @@
     <string name="dropped">Кинуто</string>
     <string name="on_hold">Заморожено</string>
     <string name="plan_to_read">Планую почитати</string>
-    <string name="repeating">Перечітую</string>
+    <string name="repeating">Перечитую</string>
     <string name="score">Оцінка</string>
     <string name="title">Заголовок</string>
     <string name="status">Статус</string>
     <string name="track_status">Статус</string>
-    <string name="track_start_date">Розпочато</string>
     <string name="track_type">Тип</string>
     <string name="error_category_exists">Категорія з таким іменем вже існує!</string>
     <string name="snack_categories_deleted">Категорію видалено</string>
@@ -341,7 +338,7 @@
     <string name="information_cloudflare_bypass_failure">Не вдалось обійти Cloudflare</string>
     <string name="information_webview_outdated">Будь ласка, оновіть WebView для кращої сумісності</string>
     <string name="channel_new_chapters">Оновлення глав</string>
-    <string name="unlock_app">Відчинити Tachiyomi</string>
+    <string name="unlock_app">Розблокувати Tachiyomi</string>
     <string name="secure_screen_summary">Ховати вміст застосунку при перемиканні програм та блокувати скріншоти</string>
     <string name="pref_category_display">Відображення</string>
     <plurals name="notification_chapters_generic">
@@ -489,7 +486,7 @@
     <string name="updated_version">Оновлено до v%1$s</string>
     <string name="whats_new">Що новенького</string>
     <string name="download_insufficient_space">Не вдалось завантажити глави через нестачу місця в сховищі</string>
-    <string name="action_global_search_query">Шукати для \"%1$s\" глобально</string>
+    <string name="action_global_search_query">Шукати \"%1$s\" глобально</string>
     <string name="pref_category_reading_mode">Режим читання</string>
     <string name="pref_category_theme">Тема</string>
     <string name="action_sort_date_added">Дата додавання</string>
@@ -571,7 +568,7 @@
     <string name="pref_category_auto_download">Автозавантаження</string>
     <string name="exclude">Виключати: %s</string>
     <string name="include">Включати: %s</string>
-    <string name="none">Ніхто</string>
+    <string name="none">Немає</string>
     <string name="pref_library_update_categories_details">Записи в виключених категоріях не буде оновлено, навіть якщо вони також знаходяться у включених категоріях.</string>
     <string name="action_sort_chapter_fetch_date">Дата отримання глави</string>
     <string name="action_show_errors">Тицьніть для перегляду подробиць</string>
@@ -645,7 +642,7 @@
     <string name="label_default">Типово</string>
     <string name="pref_category_timestamps">Часові мітки</string>
     <string name="pref_category_appearance">Вигляд</string>
-    <string name="action_track">Доріжка</string>
+    <string name="action_track">Відслідковувати</string>
     <string name="getting_started_guide">Посібник з початку роботи</string>
     <string name="pref_tablet_ui_mode">Планшетний інтерфейс</string>
     <string name="help_translate">Допомогти з перекладом</string>
@@ -662,7 +659,6 @@
     <string name="notification_size_warning">Попередження: великі оновлення можуть призвести до сповільнення джерел або збільшити використання батареї. Тицьніть задля подробиць.</string>
     <string name="channel_app_updates">Оновлення додатку</string>
     <string name="download_queue_size_warning">Попередження: великий об\'єм завантажень може призвести до сповільнення роботи джерел та/або блокуванню Tachiyomi.</string>
-    <string name="pref_library_update_show_tab_badge">Показувати кількість непрочитаних на значку оновлення</string>
     <string name="ext_update_all">Оновити все</string>
     <string name="backup_info">Ви повинні зберігати декілька резервних копій в інших місцях.</string>
     <string name="label_warning">Попередження</string>
@@ -680,9 +676,8 @@
     <string name="library_errors_help">Для допомоги в виправленні помилок оновлення бібліотеки, дивіться %1$s</string>
     <string name="publishing_finished">Публікація завершена</string>
     <string name="cancelled">Відмінено</string>
-    <string name="on_hiatus">На хіатусі</string>
+    <string name="on_hiatus">Заморожено</string>
     <string name="action_show_manga">Показати запис</string>
-    <string name="action_filter_started">Розпочато</string>
     <string name="action_display_cover_only_grid">Сітка тільки з обкладинками</string>
     <string name="pref_update_only_started">Серія не почата</string>
     <string name="action_faq_and_guides">Довідка та FAQ</string>
@@ -800,4 +795,24 @@
     <string name="other_header">Інше</string>
     <string name="enhanced_tracking_warning">Цей трекер сумісний тільки з джерелом %1$s.</string>
     <string name="pref_invalidate_download_cache">Очистити індекс завантажень</string>
+    <string name="label_read_duration">Тривалість читання</string>
+    <string name="label_titles_section">Записи</string>
+    <string name="label_total_chapters">Всього</string>
+    <string name="label_tracker_section">Відстеження</string>
+    <string name="label_tracked_titles">Відстежувані записи</string>
+    <string name="not_applicable">Н/П</string>
+    <string name="minute_short">%dm</string>
+    <string name="label_stats">Статистика</string>
+    <string name="label_local">Місцевий</string>
+    <string name="label_downloaded">Завантажено</string>
+    <string name="label_started">Розпочато</string>
+    <string name="label_overview_section">Огляд</string>
+    <string name="label_titles_in_global_update">У глобальному оновленні</string>
+    <string name="label_used">Використано</string>
+    <string name="label_completed_titles">Завершені записи</string>
+    <string name="label_read_chapters">Прочитано</string>
+    <string name="label_mean_score">Середня оцінка</string>
+    <string name="day_short">%dd</string>
+    <string name="hour_short">%dh</string>
+    <string name="seconds_short">%ds</string>
 </resources>

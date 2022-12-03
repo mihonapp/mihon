@@ -13,7 +13,6 @@
     <string name="action_filter_empty">फिल्टर काढा</string>
     <string name="action_sort_total">एकूण अध्याय</string>
     <string name="history">इतिहास</string>
-    <string name="action_filter_downloaded">डाउनलोड</string>
     <string name="action_sort_alpha">वर्णक्रमानुसार</string>
     <string name="action_sort_last_read">शेवटचे वाचले</string>
     <string name="action_sort_latest_chapter">नवीन अध्याय</string>

@@ -11,7 +11,6 @@
     <!-- Actions -->
     <string name="action_settings">Ajustes</string>
     <string name="action_filter">Filtrar</string>
-    <string name="action_filter_downloaded">Descargados</string>
     <string name="action_filter_unread">Sin leer</string>
     <string name="action_filter_empty">Quitar filtro</string>
     <string name="action_search">Buscar</string>
@@ -270,7 +269,6 @@
     <string name="download_notifier_downloader_title">Descargador</string>
     <string name="action_global_search">Búsqueda global</string>
     <string name="action_display_download_badge">Capítulos descargados</string>
-    <string name="local_source_badge">Local</string>
     <string name="other_source">Otros</string>
     <string name="action_global_search_hint">Búsqueda global…</string>
     <string name="latest">Recientes</string>
@@ -313,7 +311,6 @@
     <string name="download_custom">Personalizado</string>
     <string name="repeating">Releyendo</string>
     <string name="track_status">Estado</string>
-    <string name="track_start_date">Empezado</string>
     <string name="track_type">Tipo</string>
     <string name="transition_finished">Finalizado:</string>
     <string name="transition_current">Actual:</string>
@@ -687,7 +684,6 @@
     <string name="connected_to_wifi">Solo con Wi-Fi</string>
     <string name="update_72hour">Cada 3 días</string>
     <string name="download_queue_size_warning">Advertencia: Las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a Tachiyomi. Toca aquí para más información.</string>
-    <string name="pref_library_update_show_tab_badge">Mostrar el número de capítulos sin leer en el icono de actualizaciones</string>
     <string name="ext_update_all">Actualizar todos</string>
     <string name="channel_app_updates">Actualizaciones de la aplicación</string>
     <string name="pref_auto_clear_chapter_cache">Borrar la caché de capítulos al cerrar la aplicación</string>
@@ -711,7 +707,6 @@
     <string name="confirm_manga_add_duplicate">Tienes un elemento en tu biblioteca con el mismo nombre pero de distinto origen (%1$s).
 \n
 \n¿Quieres seguir\?</string>
-    <string name="action_filter_started">Empezados</string>
     <string name="pref_update_only_started">Series sin empezar</string>
     <string name="skipped_reason_completed">Omitido porque la serie está completa</string>
     <string name="skipped_reason_not_caught_up">Omitido porque hay capítulos sin leer</string>
@@ -820,4 +815,25 @@
     <string name="pref_invalidate_download_cache">Reconstruir el índice de descargas</string>
     <string name="enhanced_tracking_warning">Este servicio de seguimiento solo funciona con %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Forzar a la aplicación a volver a comprobar los capítulos descargados</string>
+    <string name="label_started">Empezados</string>
+    <string name="label_local">En el dispositivo</string>
+    <string name="label_completed_titles">Manga completado</string>
+    <string name="label_read_duration">Tiempo de lectura</string>
+    <string name="label_read_chapters">Leídos</string>
+    <string name="label_tracker_section">Con seguimiento</string>
+    <string name="label_total_chapters">En total</string>
+    <string name="label_titles_in_global_update">Actualizado de forma global</string>
+    <string name="label_mean_score">Puntuación media</string>
+    <string name="day_short">%dd</string>
+    <string name="hour_short">%dh</string>
+    <string name="minute_short">%dm</string>
+    <string name="label_used">En uso</string>
+    <string name="not_applicable">No disponible</string>
+    <string name="label_tracked_titles">Manga en servicios de seguimiento</string>
+    <string name="label_downloaded">Descargados</string>
+    <string name="label_stats">Estadísticas</string>
+    <string name="label_overview_section">Sumario</string>
+    <string name="label_titles_section">Manga</string>
+    <string name="seconds_short">%ds</string>
+    <string name="action_not_now">Ahora no</string>
 </resources>

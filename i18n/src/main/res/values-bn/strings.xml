@@ -14,7 +14,6 @@
     <string name="label_backup">ব্যাকআপ এবং পুনরুদ্ধার</string>
     <string name="action_settings">সেটিংস</string>
     <string name="action_filter">বিশোধন</string>
-    <string name="action_filter_downloaded">ডাউনলোড হয়েছে</string>
     <string name="action_filter_bookmarked">বুকমার্ককৃত</string>
     <string name="action_filter_unread">অপঠিত</string>
     <string name="action_filter_empty">ফিল্টার সরান</string>
@@ -171,7 +170,6 @@
     <string name="login_success">প্রবেশ হয়েছে</string>
     <string name="unknown_error">অজানা ত্রুটি</string>
     <string name="updating_category">বিভাগের হালনাগাদ হচ্ছে</string>
-    <string name="local_source_badge">স্থানীয়</string>
     <string name="no_more_results">আর কোনও ফলাফল নেই</string>
     <string name="local_source">স্থানীয় উৎস</string>
     <string name="other_source">অন্যান্য</string>
@@ -280,7 +278,6 @@
     <string name="source_not_installed">উৎস ইন্সটল করা নেই: %1$s</string>
     <string name="repeating">পুনরায় পড়া</string>
     <string name="track_status">স্থিতি</string>
-    <string name="track_start_date">শুরু হয়েছে</string>
     <string name="track_type">ধরণ</string>
     <string name="transition_finished">শেষ:</string>
     <string name="transition_current">বর্তমান:</string>
@@ -625,7 +622,6 @@
     <string name="label_default">সাধারণ</string>
     <string name="pref_remove_exclude_categories">বর্জিত বিভাগ গুলি</string>
     <string name="ext_app_info">অ্যাপের তথ্য</string>
-    <string name="pref_library_update_show_tab_badge">অপঠিত গণনা আপডেট আইকন এ দেখাও</string>
     <string name="ext_update_all">শব উপদাতে কর</string>
     <string name="backup_info">স্বয়ংক্রিয় ব্যাকআপ অত্যন্ত সুপারিশময়. আপনি অন্যান্য জায়গায়ও কপি রাখা উচিত।</string>
     <string name="getting_started_guide">শুরু হওয়ার গাইড</string>
@@ -658,7 +654,6 @@
     <string name="on_hiatus">বিরতিতে রয়েছে</string>
     <string name="notification_update_error">%1$d আপডেট(গুলি) ব্যর্থ হয়েছে</string>
     <string name="publishing_finished">সম্পূর্ণ প্রকাশিত</string>
-    <string name="action_filter_started">শুরু করা হয়েছে</string>
     <string name="action_sort_last_manga_update">সর্বশেষ হালনাগাদ চেক</string>
     <string name="delete_category_confirmation">আপনি কি \"%s\" বিভাগটি মুছে ফেলতে চান\?</string>
     <string name="appwidget_updates_description">সম্প্রতি আপনার হালনাগাদকৃত মাঙ্গা দেখুন</string>

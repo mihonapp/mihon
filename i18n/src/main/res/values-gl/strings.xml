@@ -236,7 +236,6 @@
     <string name="action_filter_empty">Quitar filtro</string>
     <string name="action_filter_unread">Sen ler</string>
     <string name="action_filter_bookmarked">Con marcador</string>
-    <string name="action_filter_downloaded">Descargas</string>
     <string name="action_filter">Filtro</string>
     <string name="action_menu">Menú</string>
     <string name="action_settings">Axustes</string>

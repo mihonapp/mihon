@@ -16,7 +16,6 @@
     <string name="label_extension_info">Utvidelsesinfo</string>
     <string name="action_settings">Innstillinger</string>
     <string name="action_filter">Filter</string>
-    <string name="action_filter_downloaded">Nedlastet</string>
     <string name="action_filter_bookmarked">Bokmerket</string>
     <string name="action_filter_unread">Ulest</string>
     <string name="action_filter_empty">Fjern filter</string>
@@ -189,7 +188,6 @@
     <string name="login_success">Innlogget</string>
     <string name="unknown_error">Ukjent feil</string>
     <string name="updating_category">Oppdaterer kategori</string>
-    <string name="local_source_badge">Lokal</string>
     <string name="no_more_results">Ingen flere resultater</string>
     <string name="local_source">Lokal kilde</string>
     <string name="other_source">Andre</string>
@@ -234,7 +232,6 @@
     <string name="title">Tittel</string>
     <string name="status">Status</string>
     <string name="track_status">Status</string>
-    <string name="track_start_date">Startet</string>
     <string name="track_type">Type</string>
     <string name="error_category_exists">En kategori ved dette navnet finnes allerede!</string>
     <string name="snack_categories_deleted">Kategorier slettet</string>
@@ -657,14 +654,12 @@
     <string name="pref_library_update_manga_restriction">Hopp over å oppdatere oppføringer</string>
     <string name="database_clean">Ingenting å fjerne</string>
     <string name="skipped_reason_not_caught_up">Hoppet over fordi det er uleste kapitler</string>
-    <string name="pref_library_update_show_tab_badge">Vis antall uleste på oppdateringsikonet</string>
     <string name="skipped_reason_completed">Hoppet over fordi serien er fullført</string>
     <string name="confirm_manga_add_duplicate">Du har en oppføring i biblioteket ditt med samme navn, men fra en annen kilde (%1$s).
 \n
 \nVil du fortsette allikevel\?</string>
     <string name="download_queue_size_warning">Advarsel: store bulknedlastinger kan føre til at kilder blir tregere og/eller blokkerer Tachiyomi. Trykk for å lære mer.</string>
     <string name="library_errors_help">For hjelp til å fikse bibliotekoppdateringsfeil, se %1$s</string>
-    <string name="action_filter_started">Startet</string>
     <string name="action_display_cover_only_grid">Kun omslags-rutenett</string>
     <string name="pref_update_only_started">Som ikke er påbegynt</string>
     <string name="pref_landscape_zoom">Zoom landskapsbilde</string>
@@ -776,4 +771,24 @@
     <string name="pref_invalidate_download_cache">Rydd ut nedlastingsindeksen</string>
     <string name="enhanced_tracking_warning">Denne trackeren er kun kompatibel med %1$s-kilden.</string>
     <string name="pref_invalidate_download_cache_summary">Tving appen til å sjekke nedlastede kapitler på nytt</string>
+    <string name="label_started">Startet</string>
+    <string name="label_completed_titles">Fullførte oppføringer</string>
+    <string name="label_titles_section">Oppføringer</string>
+    <string name="label_used">Brukt</string>
+    <string name="day_short">%dd</string>
+    <string name="hour_short">%dt</string>
+    <string name="minute_short">%dm</string>
+    <string name="seconds_short">%ds</string>
+    <string name="label_stats">Statistikk</string>
+    <string name="label_total_chapters">Totalt</string>
+    <string name="label_downloaded">Nedlastet</string>
+    <string name="label_overview_section">Oversikt</string>
+    <string name="label_read_duration">Tid brukt</string>
+    <string name="label_titles_in_global_update">Globalt oppdaterte</string>
+    <string name="label_read_chapters">Lest</string>
+    <string name="label_tracked_titles">Tracket oppføringer</string>
+    <string name="label_mean_score">Snitt poengsum</string>
+    <string name="not_applicable">I/A</string>
+    <string name="label_local">Lokale</string>
+    <string name="label_tracker_section">Trackere</string>
 </resources>

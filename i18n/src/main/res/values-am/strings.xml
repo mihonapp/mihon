@@ -144,7 +144,6 @@
     <string name="action_filter_empty">ማጣሪያውን ያስወግዱ</string>
     <string name="action_filter_unread">ያልተነበበ</string>
     <string name="action_filter_bookmarked">ዕልባት ተደርጓል</string>
-    <string name="action_filter_downloaded">ወርዷል</string>
     <string name="action_filter">ማጣሪያ</string>
     <string name="action_menu">ምናሌ</string>
     <string name="action_settings">ማስተካከያዎች</string>

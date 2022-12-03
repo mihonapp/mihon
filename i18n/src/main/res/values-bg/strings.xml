@@ -11,7 +11,6 @@
     <!-- Actions -->
     <string name="action_settings">Настройки</string>
     <string name="action_filter">Филтрирай</string>
-    <string name="action_filter_downloaded">Изтеглени</string>
     <string name="action_filter_bookmarked">Отбелязани</string>
     <string name="action_filter_unread">Непрочетени</string>
     <string name="action_filter_empty">Премахни филтрирането</string>
@@ -277,7 +276,6 @@
     <string name="browse">Търсене</string>
     <string name="channel_common">Общи</string>
     <string name="action_display_download_badge">Изтеглени глави</string>
-    <string name="local_source_badge">Локална</string>
     <string name="information_empty_category">Нямате категории. Натиснете плюса, за да създадете такава и да организирате библиотеката си.</string>
     <string name="label_migration">Мигриране</string>
     <string name="label_extensions">Разширения</string>
@@ -314,7 +312,6 @@
     <string name="source_not_installed">Източникът не е инсталиран: %1$s</string>
     <string name="repeating">Препрочитане</string>
     <string name="track_status">Статус</string>
-    <string name="track_start_date">Начало</string>
     <string name="track_type">Тип</string>
     <string name="transition_finished">Завършени:</string>
     <string name="transition_current">Текущи:</string>
@@ -681,14 +678,12 @@
     <string name="pref_auto_clear_chapter_cache">Изчистване на кеша на главата при затваряне на приложението</string>
     <string name="privacy_policy">Политика за поверителност</string>
     <string name="pref_update_only_completely_read">С непрочетени глави</string>
-    <string name="pref_library_update_show_tab_badge">Покажи броя на непрочетените в иконата за ъпдейти</string>
     <string name="ext_update_all">Обнови всички</string>
     <string name="pref_library_update_manga_restriction">Ограничения за актуализиране на библиотеката</string>
     <string name="extension_api_error">Неуспешно получаване на списък с разширения</string>
     <string name="update_72hour">На всеки 3 дена</string>
     <string name="connected_to_wifi">Само през Wi-Fi</string>
     <string name="download_queue_size_warning">Предупреждение: големите масови изтегляния могат да доведат до забавяне на източниците и/или блокиране на Tachiyomi. Натиснете тук, за да научите повече.</string>
-    <string name="action_filter_started">Започнати</string>
     <string name="action_show_manga">Покажи манга</string>
     <string name="action_faq_and_guides">Често задавани въпроси и ръководства</string>
     <string name="action_display_cover_only_grid">Решетка само с корици</string>

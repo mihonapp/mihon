@@ -42,9 +42,7 @@
     <string name="confirm_lock_change">மாற்றத்தை உறுதிப்படுத்த அங்கீகரிக்கவும்</string>
     <string name="action_filter_tracked">கண்காணிக்கப் பட்டவை</string>
     <string name="confirm_exit">வெளியேற \"எக்ஸிட்\" பட்டனை மீண்டும் அழுத்தவும்</string>
-    <string name="action_filter_downloaded">பதிவிறக்கம் செய்தவை</string>
     <string name="action_filter_unread">படிக்காதவை</string>
-    <string name="action_filter_started">ஆரம்பித்தவை</string>
     <string name="action_sort_count">மொத்த மாங்கா புத்தகங்கள்</string>
     <string name="action_filter">வடிகட்டுதல்</string>
     <string name="action_filter_bookmarked">குறிப்பிடப் பட்டவை</string>

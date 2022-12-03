@@ -15,7 +15,6 @@
     <string name="action_edit_cover">Изменить обложку</string>
     <string name="action_filter">Фильтрация</string>
     <string name="action_filter_bookmarked">В закладках</string>
-    <string name="action_filter_downloaded">Загружено</string>
     <string name="action_filter_empty">Удалить фильтр</string>
     <string name="action_filter_unread">Не прочитано</string>
     <string name="action_install">Установить</string>
@@ -213,7 +212,7 @@
     <string name="delete_downloads_for_manga">Удалить загруженные главы\?</string>
     <string name="download_notifier_download_paused">Загрузки приостановлены</string>
     <string name="history">История</string>
-    <string name="local_source">Персональный источник</string>
+    <string name="local_source">Источник пользователя</string>
     <string name="manga">Записи библиотеки</string>
     <string name="no_more_results">Больше нет результатов</string>
     <string name="pref_backup_directory">Папка резервной копии</string>
@@ -238,7 +237,6 @@
     <string name="pref_read_with_volume_keys_inverted">Клавиши громкости наоборот</string>
     <string name="action_global_search">Искать глобально</string>
     <string name="action_display_download_badge">Загруженные главы</string>
-    <string name="local_source_badge">Персональное</string>
     <string name="other_source">Другое</string>
     <string name="action_global_search_hint">Искать глобально…</string>
     <string name="latest">Последняя</string>
@@ -280,7 +278,6 @@
     <string name="source_not_installed">Источник не установлен: %1$s</string>
     <string name="repeating">Перечитываю</string>
     <string name="track_status">Статус</string>
-    <string name="track_start_date">Начато</string>
     <string name="track_type">Тип</string>
     <string name="transition_finished">Закончена:</string>
     <string name="transition_current">Текущая:</string>
@@ -414,7 +411,7 @@
     <string name="website">Сайт</string>
     <string name="pref_confirm_exit">Подтверждать выход</string>
     <string name="recent_manga_time">Гл. %1$s - %2$s</string>
-    <string name="local_source_help_guide">Руководство по персональному источнику</string>
+    <string name="local_source_help_guide">Руководство по источнику пользователя</string>
     <string name="last_used_source">Последний использованный источник</string>
     <string name="downloaded_only_summary">Включает фильтр «Загружено» для всей библиотеки</string>
     <string name="check_for_updates">Проверить обновления</string>
@@ -599,7 +596,7 @@
     <string name="pref_library_update_refresh_trackers_summary">Обновлять отслеживание при обновлении библиотеки</string>
     <string name="pref_library_update_refresh_trackers">Обновлять отслеживание</string>
     <string name="restrictions">Ограничения: %s</string>
-    <string name="action_display_local_badge">Персональный источник</string>
+    <string name="action_display_local_badge">Источник пользователя</string>
     <string name="off">Выключено</string>
     <string name="on">Включено</string>
     <string name="error_sharing_cover">Ошибка отправки обложки</string>
@@ -668,7 +665,6 @@
     <string name="connected_to_wifi">Только по Wi-Fi</string>
     <string name="update_72hour">Каждые 3 дня</string>
     <string name="download_queue_size_warning">Предупреждение: Большое количество загрузок может привести к замедлению работы источников и/или блокировке Tachiyomi. Нажмите для подробностей.</string>
-    <string name="pref_library_update_show_tab_badge">Непрочитанные главы на иконке «Обновления»</string>
     <string name="ext_update_all">Обновить все</string>
     <string name="channel_app_updates">Обновления приложения</string>
     <string name="pref_auto_clear_chapter_cache">Очищать кэш глав при закрытии приложения</string>
@@ -692,7 +688,6 @@
     <string name="action_display_cover_only_grid">Сетка без названия</string>
     <string name="pref_navigate_pan">Панорамирование широких изображений при касании</string>
     <string name="pref_landscape_zoom">Увеличивать изображение по горизонтали</string>
-    <string name="action_filter_started">Начато</string>
     <string name="pref_update_only_started">Запись не начата</string>
     <string name="skipped_reason_completed">Пропущено, т.к запись завершена</string>
     <string name="skipped_reason_not_caught_up">Пропущено, т.к есть непрочитанные главы</string>
@@ -763,7 +758,7 @@
     <string name="auto_download_while_reading">При чтении</string>
     <string name="download_ahead_info">Работает только с элементами в библиотеке, а также если текущая и следующая главы уже загружены</string>
     <string name="are_you_sure">Вы уверены\?</string>
-    <string name="multi_lang">Многоязычное</string>
+    <string name="multi_lang">Многоязыковое</string>
     <string name="remove_manga">Вы собираетесь удалить «%s» из вашей библиотеки</string>
     <string name="pref_long_strip_split">Разделять длинные изображения (БЕТА)</string>
     <string name="updates_last_update_info">Последнее обновление библиотеки: %s</string>
@@ -802,4 +797,25 @@
     <string name="pref_invalidate_download_cache">Очистить индекс загрузок</string>
     <string name="enhanced_tracking_warning">Этот сервис отслеживания совместим только с источником %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Принуждает приложение перепроверить загруженные главы</string>
+    <string name="label_started">Начато</string>
+    <string name="label_read_duration">Продолжительность чтения</string>
+    <string name="label_overview_section">Обзор</string>
+    <string name="label_tracker_section">Отслеживание</string>
+    <string name="not_applicable">Н/Д</string>
+    <string name="day_short">%dд</string>
+    <string name="seconds_short">%dс</string>
+    <string name="label_used">Использовано</string>
+    <string name="label_downloaded">Загружено</string>
+    <string name="label_total_chapters">Всего</string>
+    <string name="label_stats">Статистика</string>
+    <string name="label_completed_titles">Завершенные записи</string>
+    <string name="label_titles_section">Записи</string>
+    <string name="label_read_chapters">Прочитано</string>
+    <string name="label_tracked_titles">Отслеживаемые записи</string>
+    <string name="hour_short">%dч</string>
+    <string name="label_mean_score">Средняя оценка</string>
+    <string name="minute_short">%dм</string>
+    <string name="label_titles_in_global_update">В глобальном обновлении</string>
+    <string name="label_local">Пользовательское</string>
+    <string name="action_not_now">Не сейчас</string>
 </resources>

@@ -31,7 +31,6 @@
     <string name="information_no_downloads">බාගැනීම් නැත</string>
     <string name="information_no_recent_manga">මෑතකදී කිසිවක් කියවා නැත</string>
     <string name="confirm_lock_change">වෙනස් කිරීම සඳහ තහවුරු කරන්න</string>
-    <string name="action_filter_downloaded">බාගත කර ඇත</string>
     <string name="action_filter_bookmarked">පිටු සලකුණු කර ඇත</string>
     <string name="action_filter_tracked">ලුහුබැඳ ගියේය(Tracked)</string>
     <string name="action_filter_unread">නොකියවූ</string>
@@ -41,7 +40,6 @@
     <string name="action_sort_chapter_fetch_date">ලබා ගත් දිනය</string>
     <string name="action_sort_date_added">Add කළ දිනය</string>
     <string name="action_search">සෙවීම</string>
-    <string name="action_filter_started">පටන් ගත්තා</string>
     <string name="action_sort_total">සම්පූර්ණ පරිච්ඡේද</string>
     <string name="action_filter_empty">ෆිල්ටඑක ඉවත් කරන්න</string>
     <string name="action_sort_latest_chapter">නවතම පරිච්ඡේදය</string>

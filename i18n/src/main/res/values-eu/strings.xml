@@ -218,7 +218,6 @@
     <string name="chapter_settings">Kapituluaren ezarpenak</string>
     <string name="track_status">Egoera</string>
     <string name="track_type">Mota</string>
-    <string name="track_start_date">Hasia</string>
     <string name="custom_filter">Iragazki pertsonalizatua</string>
     <string name="snack_categories_deleted">Kategoriak ezabatuak</string>
     <string name="dialog_with_checkbox_reset">Berrezarri manga honen kapitulu guztiak</string>
@@ -312,7 +311,6 @@
     <string name="pref_clear_database">Garbitu datu-basea</string>
     <string name="pref_dump_crash_logs_summary">Erroreen erregistroak fitxategi batean gordetzen ditu garatzaileekin partekatzeko</string>
     <string name="updating_category">Kategoria eguneratzen</string>
-    <string name="local_source_badge">Lokala</string>
     <string name="tabs_header">Fitxak</string>
     <string name="sort_by_number">Kapitulu zenbakiaren arabera</string>
     <string name="sort_by_upload_date">Igoera dataren arabera</string>
@@ -515,7 +513,6 @@
     <string name="action_settings">Ezarpenak</string>
     <string name="action_menu">Menua</string>
     <string name="action_filter">Iragazi</string>
-    <string name="action_filter_downloaded">Deskargatuak</string>
     <string name="action_filter_bookmarked">Orri-markatzailea jarria</string>
     <string name="action_filter_tracked">Jarraitua</string>
     <string name="action_filter_unread">Irakurri gabea</string>
@@ -628,7 +625,6 @@
         <item quantity="one">Luzapen baten eguneraketa eskuragarri</item>
         <item quantity="other">%d luzapenen eguneraketak eskuragarri</item>
     </plurals>
-    <string name="pref_library_update_show_tab_badge">Erakutsi irakurri gabekoen kopurua Eguneraketak ikonoan</string>
     <string name="extension_api_error">Ezin izan da luzapenen zerrenda lortu</string>
     <string name="pref_library_update_refresh_metadata_summary">Bilatu azal eta xehetasun berriak liburutegia eguneratzean</string>
     <string name="pref_library_update_categories_details">Baztertutako kategorietako mangak ez dira eguneratuko, sarturiko kategorietan egon arren.</string>
@@ -669,7 +665,6 @@
     <string name="confirm_manga_add_duplicate">Zure liburutegian izen bereko sarrera bat duzu, baina beste iturri batekoa (%1$s).
 \n
 \nJarraitu nahi duzu\?</string>
-    <string name="action_filter_started">Hasia</string>
     <string name="ext_info_version">Bertsioa</string>
     <string name="multi_lang">Multi</string>
     <string name="delete_category">Ezabatu kategoria</string>

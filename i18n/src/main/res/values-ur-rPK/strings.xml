@@ -20,7 +20,6 @@
     <string name="unlock_app">انلاک تاچییومی</string>
     <string name="action_settings">ترتیبات</string>
     <string name="action_filter">فلٹر</string>
-    <string name="action_filter_downloaded">ڈاؤن لوڈ شدہ</string>
     <string name="action_filter_bookmarked">بُک مارک شدہ</string>
     <string name="action_filter_unread">پڑھا نہیں گیا</string>
     <string name="action_filter_empty">فلٹر ہٹائیں</string>

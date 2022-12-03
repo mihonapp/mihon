@@ -9,7 +9,6 @@
     <string name="label_recent_manga">Historia</string>
     <string name="action_settings">Ustawienia</string>
     <string name="action_filter">Filtrowanie</string>
-    <string name="action_filter_downloaded">Pobrane</string>
     <string name="action_filter_unread">Nieprzeczytane</string>
     <string name="action_search">Szukaj</string>
     <string name="action_select_all">Zaznacz wszystko</string>
@@ -243,7 +242,6 @@
     <string name="channel_common">Zwykły</string>
     <string name="latest">Najnowsze</string>
     <string name="action_display_download_badge">Pobrane rozdziały</string>
-    <string name="local_source_badge">Lokalna</string>
     <string name="information_empty_category">Nie masz żadnych kategorii. Dotknij plusa, aby je utworzyć i zorganizować swoją bibliotekę.</string>
     <string name="label_extensions">Rozszerzenia</string>
     <string name="ext_install">Zainstaluj</string>
@@ -280,7 +278,6 @@
     <string name="source_not_installed">Nie zainstalowano źródła: %1$s</string>
     <string name="repeating">Czytane ponownie</string>
     <string name="track_status">Status</string>
-    <string name="track_start_date">Rozpoczęto</string>
     <string name="track_type">Typ</string>
     <string name="transition_finished">Przeczytany:</string>
     <string name="transition_current">Obecny:</string>
@@ -665,7 +662,6 @@
     <string name="update_72hour">Co 3 dni</string>
     <string name="connected_to_wifi">Tylko przez Wi-Fi</string>
     <string name="enhanced_tracking_info">Usługi dostarczania ulepszonych funkcji dla niektórych źródeł. Mangi po dodaniu do biblioteki są automatycznie śledzone.</string>
-    <string name="pref_library_update_show_tab_badge">Pokaż wskaźnik nieprzeczytanych na ikonie Aktualizacje</string>
     <string name="enhanced_services">Ulepszone usługi śledzenia</string>
     <string name="channel_app_updates">Aktualizacje aplikacji</string>
     <string name="ext_update_all">Zaktualizuj wszystko</string>
@@ -693,7 +689,6 @@
     <string name="skipped_reason_not_started">Pominięto - brak przeczytanych rozdziałów</string>
     <string name="skipped_reason_completed">Pominięto ponieważ seria została ukończona</string>
     <string name="skipped_reason_not_caught_up">Pominięto ponieważ istnieją nieprzeczytane rozdziały</string>
-    <string name="action_filter_started">Rozpoczęto</string>
     <string name="confirm_manga_add_duplicate">W swojej bibliotece posiadasz wpis o tej samej nazwie lecz z innego źródła(%1$s).
 \n
 \nCzy nadal chcesz kontynuować\?</string>

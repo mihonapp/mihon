@@ -24,7 +24,6 @@
     <string name="action_filter_empty">Биилтирэни ылыы</string>
     <string name="action_filter_unread">Ааҕыллыбатах</string>
     <string name="action_filter_bookmarked">Кыбытыы</string>
-    <string name="action_filter_downloaded">Хачайдаммыт</string>
     <string name="action_filter">Биилтирэ</string>
     <string name="action_menu">Талба</string>
     <string name="action_settings">Түстэл</string>
@@ -317,7 +316,6 @@
     <string name="no_more_results">Эбии түмүк суох</string>
     <string name="tabs_header">Кыбытыктар</string>
     <string name="badges_header">Бэлиэлэр</string>
-    <string name="local_source_badge">Локальнай</string>
     <string name="updating_category">Бөлөх саҥардыыта</string>
     <string name="unknown_error">Биллибэт сыыһыы</string>
     <string name="logout_success">Эн таҕыстын</string>
@@ -392,7 +390,6 @@
     <string name="snack_categories_deleted">Бөлөхтөр соттороллубуттар</string>
     <string name="error_category_exists">Оннук ааттах бөлөх уруккуттан баар!</string>
     <string name="track_type">Көрүҥ</string>
-    <string name="track_start_date">Саҕаланна</string>
     <string name="track_status">Турук</string>
     <string name="status">Турук</string>
     <string name="title">Айымньы аата</string>

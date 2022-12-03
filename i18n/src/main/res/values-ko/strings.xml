@@ -8,7 +8,6 @@
     <string name="label_backup">백업 및 복원</string>
     <string name="action_settings">설정</string>
     <string name="action_filter">필터</string>
-    <string name="action_filter_downloaded">다운로드됨</string>
     <string name="action_filter_bookmarked">북마크됨</string>
     <string name="action_filter_unread">읽지 않음</string>
     <string name="action_filter_empty">필터 제거</string>
@@ -261,7 +260,6 @@
     <string name="fifth_to_last">끝에서 다섯번째 회차</string>
     <string name="backup_choice">어떤 항목들을 백업하겠습니까\?</string>
     <string name="clear_database_completed">항목 삭제됨</string>
-    <string name="local_source_badge">로컬</string>
     <string name="local_source">로컬 저장소</string>
     <string name="other_source">기타</string>
     <string name="browse">찾아보기</string>
@@ -277,7 +275,6 @@
     <string name="on_hold">일시중지중</string>
     <string name="plan_to_read">계획중</string>
     <string name="repeating">다시 읽는 중</string>
-    <string name="track_start_date">시작 일자</string>
     <string name="track_type">종류</string>
     <string name="error_category_exists">같은 이름을 가진 카테고리가 이미 존재합니다!</string>
     <string name="migration_dialog_what_to_include">포함할 데이터를 선택하세요</string>
@@ -470,7 +467,6 @@
     <string name="pref_skip_filtered_chapters">필터링된 회차 건너뛰기</string>
     <string name="pref_highest">매우 높음</string>
     <string name="channel_ext_updates">확장기능 업데이트</string>
-    <string name="pref_library_update_show_tab_badge">업데이트 아이콘에 읽지 않은 횟수 표시</string>
     <string name="set_chapter_settings_as_default">기본값으로 설정</string>
     <string name="pref_manage_notifications">알림 설정</string>
     <string name="pref_confirm_exit">앱 종료 전에 확인</string>
@@ -584,7 +580,6 @@
     <string name="no_results_found">검색 결과가 없습니다</string>
     <string name="pref_dual_page_invert_summary">넓은 페이지 분할 시 배치가 읽는 방향과 다를 경우</string>
     <string name="ext_nsfw_short">19금</string>
-    <string name="action_filter_started">읽는 중</string>
     <string name="action_display_show_tabs">카테고리 탭 보이기</string>
     <string name="action_sort_chapter_fetch_date">장 가져오기 날짜</string>
     <string name="action_sort_count">총 항목</string>
@@ -763,4 +758,25 @@
     <string name="track_remove_start_date_conf_text">%s에서 이전에 선택한 시작 날짜가 제거됩니다</string>
     <string name="enhanced_tracking_warning">이 트래커는 %1$s 소스와만 호환됩니다.</string>
     <string name="pref_invalidate_download_cache_summary">앱이 다운로드한 챕터를 다시 확인하도록 강제</string>
+    <string name="label_completed_titles">완료된 항목</string>
+    <string name="label_total_chapters">전체</string>
+    <string name="label_titles_in_global_update">전역 업데이트</string>
+    <string name="label_used">사용됨</string>
+    <string name="not_applicable">N/A</string>
+    <string name="minute_short">%d분</string>
+    <string name="seconds_short">%d초</string>
+    <string name="label_stats">통계 정보</string>
+    <string name="label_started">시작 일자</string>
+    <string name="label_local">로컬</string>
+    <string name="label_downloaded">다운로드됨</string>
+    <string name="label_overview_section">개요</string>
+    <string name="label_read_duration">읽은 시간</string>
+    <string name="label_titles_section">항목</string>
+    <string name="label_tracker_section">동기화</string>
+    <string name="label_tracked_titles">동기화된 항목</string>
+    <string name="label_read_chapters">읽음</string>
+    <string name="label_mean_score">평균 점수</string>
+    <string name="day_short">%d 일</string>
+    <string name="hour_short">%d 시간</string>
+    <string name="action_not_now">나중에</string>
 </resources>

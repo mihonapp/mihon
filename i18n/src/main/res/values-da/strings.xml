@@ -8,7 +8,6 @@
     <string name="label_default">Standard</string>
     <string name="label_warning">Advarsel</string>
     <string name="unlock_app">Lås op for Tachiyomi</string>
-    <string name="action_filter_downloaded">Downloadet</string>
     <string name="action_filter_bookmarked">Bogmærket</string>
     <string name="action_filter_empty">Fjern filter</string>
     <string name="action_select_inverse">Inverter valg</string>
@@ -47,7 +46,6 @@
     <string name="information_no_recent_manga">Intet læst for nyligt</string>
     <string name="information_no_downloads">Ingen downloads</string>
     <string name="action_sort_chapter_fetch_date">Dato hentet</string>
-    <string name="action_filter_started">Startet</string>
     <string name="confirm_exit">Tryk tilbage igen for at afslutte</string>
     <string name="action_settings">Indstillinger</string>
     <string name="action_filter_unread">Ulæst</string>

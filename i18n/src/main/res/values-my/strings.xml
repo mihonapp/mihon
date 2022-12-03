@@ -74,7 +74,6 @@
     <string name="action_filter_unread">မဖတ်ရသေးသော</string>
     <string name="action_filter_tracked">ခြေရာခံထားသော</string>
     <string name="action_filter_bookmarked">စာညှပ်ထားသော</string>
-    <string name="action_filter_downloaded">ဒေါင်းလုပ်ထားသော</string>
     <string name="action_filter">စစ်ထုတ်သည်</string>
     <string name="action_menu">မီနူး</string>
     <string name="action_settings">ဆက်တင်များ</string>

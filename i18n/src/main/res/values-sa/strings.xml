@@ -55,7 +55,6 @@
     <string name="action_resume">अनुवर्तताम्</string>
     <string name="action_open_in_web_view">वेब्-व्यू-अनुप्रयोगे उद्घाटयतु</string>
     <string name="action_migrate">स्थानान्तरगमनं कुरु</string>
-    <string name="action_filter_downloaded">अवारोपितम्</string>
     <string name="action_settings">समायोजनानि</string>
     <string name="action_filter_tracked">अनुप्रज्ञातानि</string>
     <string name="action_filter_unread">अपठितानि</string>
@@ -212,7 +211,6 @@
         <item quantity="one">%d वर्गः</item>
         <item quantity="other">%d वर्गौ</item>
     </plurals>
-    <string name="pref_library_update_show_tab_badge">नवीकरणचित्रकस्य उपरि अपठितसङ्ख्यां दर्शयतु</string>
     <string name="pref_library_update_refresh_trackers_summary">ग्रन्थालयनवीकरणे सति ट्राकर्तन्त्रांशान् नवीकरोतु</string>
     <string name="pref_library_update_refresh_metadata">प्रदत्तांशं स्वयञ्चालितं नवीकरोतु</string>
     <string name="pref_library_update_refresh_trackers">ट्राकर्तन्त्रांशान् स्वयञ्चालितं नवीकरोतु</string>
@@ -388,7 +386,6 @@
     <string name="backup_choice">त्वं कानि प्रतिलेखितुम् इच्छसि</string>
     <string name="creating_backup">प्रतिलेखनं निर्माति</string>
     <string name="label_network">जालम्</string>
-    <string name="local_source_badge">स्थानीयम्</string>
     <string name="pinned_sources">अग्रिमस्थकृतानि</string>
     <string name="latest">नविष्ठम्</string>
     <string name="browse">गवेषयतु</string>
@@ -408,7 +405,6 @@
     <string name="title">शीर्षकम्</string>
     <string name="status">स्थितिः</string>
     <string name="track_status">स्थितिः</string>
-    <string name="track_start_date">आरब्धम्</string>
     <string name="track_type">प्रकारः</string>
     <string name="download_all">सर्वाणि</string>
     <string name="paused">विरमितम्</string>
@@ -595,7 +591,6 @@
     <string name="transition_no_next">अग्रिमाध्यायः नास्ति</string>
     <string name="transition_no_previous">पूर्वाध्यायः नास्ति</string>
     <string name="notification_check_updates">नूतनाध्यायेभ्यः मार्गति</string>
-    <string name="action_filter_started">आरब्धम्</string>
     <string name="share_page_info">%1$s: %2$s पुटः च %3$d</string>
     <string name="pref_update_only_started">पठिताः अध्यायाः न सन्ति</string>
     <string name="update_check_no_new_updates">नूतननवीकरणानि न उपलभ्यानि</string>

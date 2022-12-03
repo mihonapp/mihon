@@ -13,7 +13,6 @@
     <string name="label_extension_info">Informace o rozšíření</string>
     <string name="action_settings">Nastavení</string>
     <string name="action_filter">Filtr</string>
-    <string name="action_filter_downloaded">Staženo</string>
     <string name="action_filter_unread">Nepřečteno</string>
     <string name="action_filter_empty">Odstranit filtr</string>
     <string name="action_sort_alpha">Abecedně</string>
@@ -239,7 +238,6 @@
     <string name="pref_enable_acra">Odesílat hlášení o pádu</string>
     <string name="pref_acra_summary">Pomáhá opravit chyby. Nebudou odeslány žádné citlivé údaje</string>
     <string name="updating_category">Aktualizuji kategorie</string>
-    <string name="local_source_badge">Lokální</string>
     <string name="local_source">Lokální zdroj</string>
     <string name="other_source">Ostatní</string>
     <string name="latest">Nejnovější</string>
@@ -255,7 +253,6 @@
     <string name="on_hold">Pozastaveno</string>
     <string name="status">Stav</string>
     <string name="track_status">Stav</string>
-    <string name="track_start_date">Započato</string>
     <string name="snack_categories_deleted">Kategorie smazány</string>
     <string name="set_as_cover">Nastavit jako obal</string>
     <string name="cover_updated">Obal aktualizován</string>
@@ -653,7 +650,6 @@
     <string name="connected_to_wifi">Jen na Wi-Fi</string>
     <string name="pref_verbose_logging">Podrobné protokolování</string>
     <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují Tachiyomi. Klepnutím se dozvíte více.</string>
-    <string name="pref_library_update_show_tab_badge">Zobrazit počet nepřečtených kapitol na ikoně Aktualizace</string>
     <string name="ext_update_all">Aktualizovat vše</string>
     <string name="pref_verbose_logging_summary">Vypisovat podrobné informace do systémového protokolu (sníží výkon aplikace)</string>
     <string name="channel_app_updates">Aktualizace aplikace</string>
@@ -682,7 +678,6 @@
     <string name="notification_update_skipped">%1$d aktualizace(í) přeskočena(y)</string>
     <string name="on_hiatus">Má pauzu</string>
     <string name="skipped_reason_not_caught_up">Přeskočeno, protože obsahuje nepřečtené kapitoly</string>
-    <string name="action_filter_started">Zahájeno</string>
     <string name="channel_skipped">Přeskočeno</string>
     <string name="action_move_to_top_all_for_series">Přesunout sérii na začátek</string>
     <string name="learn_more">Klepnutím se dozvíte více</string>
@@ -789,4 +784,25 @@
     <string name="pref_invalidate_download_cache">Zneplatnit index stahování</string>
     <string name="enhanced_tracking_warning">Tento sledovač je kompatibilní pouze se zdrojem %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Vynutit aplikaci znovu zkontrolovat stažené kapitoly</string>
+    <string name="label_started">Započato</string>
+    <string name="label_local">Lokální</string>
+    <string name="label_downloaded">Staženo</string>
+    <string name="label_completed_titles">Dokončené položky</string>
+    <string name="label_titles_in_global_update">V globální aktualizaci</string>
+    <string name="label_total_chapters">Celkem</string>
+    <string name="label_read_chapters">Přečteno</string>
+    <string name="label_tracker_section">Sledovače</string>
+    <string name="label_tracked_titles">Sledované položky</string>
+    <string name="label_mean_score">Průměrné skóre</string>
+    <string name="label_used">Použité</string>
+    <string name="not_applicable">N/A</string>
+    <string name="minute_short">%dm</string>
+    <string name="label_titles_section">Položky</string>
+    <string name="label_stats">Statistiky</string>
+    <string name="label_overview_section">Přehled</string>
+    <string name="label_read_duration">Doba čtení</string>
+    <string name="hour_short">%dh</string>
+    <string name="day_short">%dd</string>
+    <string name="seconds_short">%ds</string>
+    <string name="action_not_now">Teď ne</string>
 </resources>

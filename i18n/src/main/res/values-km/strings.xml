@@ -24,10 +24,8 @@
     <string name="label_default">ធម្មតា</string>
     <string name="unlock_app">បើកតាឈិយ៉ូមិ</string>
     <string name="action_filter">ហ្វីលធឺ</string>
-    <string name="action_filter_downloaded">បានទាញយក</string>
     <string name="action_filter_bookmarked">បានបញ្ចូលទៅក្នុងបណ្ណាល័យ</string>
     <string name="action_filter_tracked">បានដាក់ការតាមដានការអាន</string>
-    <string name="action_filter_started">បានចាប់់ផ្ដើម</string>
     <string name="action_filter_empty">ដកហ្វីលធឺចេញ</string>
     <string name="action_sort_count">ចំនួនម៊េងហ្គាទាំងអស់</string>
     <string name="action_sort_total">ចំនួនភាគទាំងអស់</string>

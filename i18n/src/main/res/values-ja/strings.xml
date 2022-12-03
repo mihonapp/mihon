@@ -13,7 +13,6 @@
     <string name="label_backup">バックアップと復元</string>
     <string name="action_settings">設定</string>
     <string name="action_filter">絞り込む</string>
-    <string name="action_filter_downloaded">ダウンロード済み</string>
     <string name="action_filter_bookmarked">お気に入り</string>
     <string name="action_filter_unread">未読</string>
     <string name="action_filter_empty">フィルタを削除</string>
@@ -195,7 +194,6 @@
     <string name="pref_acra_summary">バグの修正などに役立ちます。個人情報を送信しません</string>
     <string name="unknown_error">不明なエラー</string>
     <string name="updating_category">カテゴリーを更新中</string>
-    <string name="local_source_badge">ローカル</string>
     <string name="no_more_results">これ以上の結果はありません</string>
     <string name="action_global_search_hint">グローバル検索…</string>
     <string name="latest">最近の更新</string>
@@ -236,7 +234,6 @@
     <string name="title">タイトル</string>
     <string name="status">ステータス</string>
     <string name="track_status">ステータス</string>
-    <string name="track_start_date">開始済み</string>
     <string name="track_type">タイプ</string>
     <string name="error_category_exists">この名前が既に存在しています！</string>
     <string name="snack_categories_deleted">カテゴリーが削除されました</string>
@@ -632,7 +629,6 @@
     <string name="download_queue_size_warning">警告：大量の一括ダウンロードにより、ソースは遅くなったり、Tachiyomiを接続禁止したりする恐れがあります。詳しくはタップでご覧ください。</string>
     <string name="update_72hour">3日ごと</string>
     <string name="connected_to_wifi">Wi-Fi接続時のみ</string>
-    <string name="pref_library_update_show_tab_badge">更新アイコンで未読カウンターを表示</string>
     <string name="ext_update_all">全て更新</string>
     <string name="channel_app_updates">アプリ更新</string>
     <string name="clear_database_source_item_count">データベースにはライブラリにない項目は%1$d件あります</string>
@@ -651,7 +647,6 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">項目を表示</string>
     <string name="action_display_cover_only_grid">表紙グリッド</string>
-    <string name="action_filter_started">開始済み</string>
     <string name="pref_update_only_started">読み始めていない</string>
     <string name="skipped_reason_not_caught_up">未読の章がある為スキップしました</string>
     <string name="confirm_manga_add_duplicate">同じ名前で異なるソース（%1$s）の項目はすでにライブラリに存在します。
@@ -763,4 +758,25 @@
     <string name="track_remove_start_date_conf_text">%sで指定された開始日付を消去します</string>
     <string name="enhanced_tracking_warning">このトラッカーはソース「%1$s」のみで使用できます。</string>
     <string name="pref_invalidate_download_cache_summary">ダウンロードした章の再スキャンを強制</string>
+    <string name="label_local">ローカル</string>
+    <string name="label_started">開始済み</string>
+    <string name="label_read_duration">閲覧時間</string>
+    <string name="label_titles_section">項目</string>
+    <string name="label_titles_in_global_update">グローバルアップデート対象</string>
+    <string name="label_total_chapters">総計</string>
+    <string name="label_read_chapters">閲覧済み</string>
+    <string name="label_tracker_section">トラッカー</string>
+    <string name="label_tracked_titles">追跡中の作品</string>
+    <string name="label_used">使用中</string>
+    <string name="not_applicable">N/A</string>
+    <string name="hour_short">%d時間</string>
+    <string name="minute_short">%d分</string>
+    <string name="seconds_short">%d秒</string>
+    <string name="label_stats">統計情報</string>
+    <string name="label_overview_section">概要</string>
+    <string name="label_completed_titles">読了した作品</string>
+    <string name="label_downloaded">ダウンロード済み</string>
+    <string name="label_mean_score">平均点数</string>
+    <string name="day_short">%d日</string>
+    <string name="action_not_now">後で</string>
 </resources>

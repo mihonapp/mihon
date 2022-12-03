@@ -13,7 +13,6 @@
     <string name="label_backup">Dublēšana un atjaunošana</string>
     <string name="action_settings">Iestatījumi</string>
     <string name="action_filter">Filtrs</string>
-    <string name="action_filter_downloaded">Lejupieladēts</string>
     <string name="action_filter_bookmarked">Ar grāmatzīmēm</string>
     <string name="action_filter_unread">Neizlasītie</string>
     <string name="action_filter_empty">Dzēst filtru</string>
@@ -197,7 +196,6 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="confirm_lock_change">Autentificējaties, lai apstriprinātu izmaiņas</string>
     <string name="pref_update_only_non_completed">Ar \'\'Pabeigts\'\' statusu</string>
-    <string name="pref_library_update_show_tab_badge">Rādīt nelasīto skaitu uz Atjauninājumi ikonas</string>
     <string name="pref_library_update_refresh_trackers">Automātiski atsvaidzina izsekotājus</string>
     <string name="action_start_downloading_now">Sākt lejupielādi tūlīt</string>
     <string name="extension_api_error">Neizdevās iegūt paplašinājumu sarakstu</string>
@@ -382,7 +380,6 @@
     <string name="rotation_portrait">Portrets</string>
     <string name="rotation_force_portrait">Aizslēgts portreta režīmā</string>
     <string name="pref_category_reading_mode">Lasīšanas režīms</string>
-    <string name="action_filter_started">Sākts</string>
     <string name="right_to_left_viewer">No labās puses uz kreiso</string>
     <string name="vertical_viewer">Vertikāls</string>
     <string name="manga">Manga</string>
@@ -515,7 +512,6 @@
     <string name="local_source_help_guide">Lokālo avotu rokasgrāmata</string>
     <string name="no_pinned_sources">Jums nav piespraustu avotu</string>
     <string name="chapter_not_found">Nodaļa nav atrasta</string>
-    <string name="local_source_badge">Lokāls</string>
     <string name="unknown_error">Nezināma kļūda</string>
     <string name="fourth_to_last">Ceturtā pirmspēdējā izlasītā nodaļa</string>
     <string name="label_downloaded_only">Tikai lejupielādētie</string>
@@ -553,7 +549,6 @@
     <string name="migration_dialog_what_to_include">Atlasīt iekļaujamos datus</string>
     <string name="chapter_downloading_progress">Lejupielādē (%1$d/%2$d)</string>
     <string name="track_status">Statuss</string>
-    <string name="track_start_date">Sākts</string>
     <string name="pref_clear_history">Notīrīt vēsturi</string>
     <string name="share_page_info">%1$s: %2$s, lapa %3$d</string>
     <string name="manga_added_library">Pievienots bibliotēkai</string>

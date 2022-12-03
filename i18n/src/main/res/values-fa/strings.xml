@@ -53,7 +53,6 @@
     <string name="snack_categories_deleted">دسته بندی ها حذف شدند</string>
     <string name="error_category_exists">دسته بندی با این نام قبلا ساخته شده است!</string>
     <string name="track_type">نوع</string>
-    <string name="track_start_date">شروع شده</string>
     <string name="track_status">وضعیت</string>
     <string name="status">وضعیت</string>
     <string name="title">عنوان</string>
@@ -362,7 +361,6 @@
     <string name="action_pause">مکث</string>
     <string name="action_stop">متوقف کردن</string>
     <string name="action_view_chapters">مشاهده قسمت ها</string>
-    <string name="local_source_badge">محلی</string>
     <string name="updating_category">درحال به روز رسانی دسته بندی ها</string>
     <string name="unknown_error">خطای ناشناخته</string>
     <string name="logout_success">شما خارج شدید</string>
@@ -446,7 +444,6 @@
     <string name="action_filter_empty">حذف فیلتر</string>
     <string name="action_filter_unread">خوانده ‌نشده</string>
     <string name="action_filter_bookmarked">بوک مارک شده</string>
-    <string name="action_filter_downloaded">دانلود شده</string>
     <string name="action_filter">فیلتر</string>
     <string name="action_menu">منو</string>
     <string name="action_settings">تنضیمات</string>
@@ -522,7 +519,6 @@
     <string name="ext_installer_legacy">قدیمی</string>
     <string name="ext_installer_pref">نصب کننده</string>
     <string name="pref_create_folder_per_manga_summary">ساخت پوشه بر اساس عنوان ورودی</string>
-    <string name="action_filter_started">شروع شده</string>
     <string name="ext_update_all">آپدیت همگی</string>
     <string name="label_background_activity">فعالیت در پس زمینه</string>
     <string name="action_sort_count">مجموع ورودی ها</string>
@@ -585,7 +581,6 @@
     <string name="pref_relative_time_short">کوتاه (امروز، دیروز)</string>
     <string name="pref_relative_time_long">طولانی (کوتاه+، n روز پیش)</string>
     <string name="pref_update_only_completely_read">با قسمت‌(های) خوانده‌نشده</string>
-    <string name="pref_library_update_show_tab_badge">تعداد خوانده‌نشده را بر روی آیکون به‌روزرسانی نشان بده</string>
     <string name="pref_library_update_refresh_trackers">ردیاب‌ها را به طور خودکار تازه کن</string>
     <string name="battery_not_low">هنگامی که باتری کم نیست</string>
     <string name="pref_library_update_manga_restriction">از به‌روزرسانی ورودی‌ها صرف‌نظر کنید</string>

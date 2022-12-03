@@ -11,7 +11,6 @@
     <!-- Actions -->
     <string name="action_settings">Impostazioni</string>
     <string name="action_filter">Filtro</string>
-    <string name="action_filter_downloaded">Scaricati</string>
     <string name="action_filter_bookmarked">Segnalibri</string>
     <string name="action_filter_unread">Non letti</string>
     <string name="action_filter_empty">Rimuovi filtro</string>
@@ -293,7 +292,6 @@
     <string name="double_tap_anim_speed_0">Senza animazione</string>
     <string name="double_tap_anim_speed_normal">Normale</string>
     <string name="double_tap_anim_speed_fast">Veloce</string>
-    <string name="local_source_badge">Locale</string>
     <string name="other_source">Altro</string>
     <string name="action_global_search_hint">Ricerca globale…</string>
     <string name="latest">Ultimi</string>
@@ -307,7 +305,6 @@
     <string name="download_custom">Personalizzato</string>
     <string name="repeating">Rileggendo</string>
     <string name="track_status">Stato</string>
-    <string name="track_start_date">Iniziato</string>
     <string name="track_type">Tipo</string>
     <string name="snack_categories_deleted">Categorie rimosse</string>
     <string name="migration_dialog_what_to_include">Seleziona i dati da includere</string>
@@ -689,7 +686,6 @@
     <string name="connected_to_wifi">Solo su Wi-Fi</string>
     <string name="update_72hour">Ogni 3 giorni</string>
     <string name="download_queue_size_warning">Attenzione: grossi download di massa possono rallentare le fonti e/o bloccare tachiyomi. Tocca per saperne di più.</string>
-    <string name="pref_library_update_show_tab_badge">Mostra numero di capitoli non letti nell\'icona degli aggiornamenti</string>
     <string name="ext_update_all">Aggiorna tutto</string>
     <string name="channel_app_updates">Aggiornamenti dell\'applicazione</string>
     <string name="pref_auto_clear_chapter_cache">Cancella la cache capitoli alla chiusura dell\'app</string>
@@ -713,7 +709,6 @@
 \n
 \nVuoi comunque continuare\?</string>
     <string name="action_display_cover_only_grid">Griglia con solo copertine</string>
-    <string name="action_filter_started">Iniziati</string>
     <string name="pref_update_only_started">Che non sono state iniziate</string>
     <string name="skipped_reason_completed">Saltato perché la serie è completa</string>
     <string name="skipped_reason_not_caught_up">Saltato perché ci sono capitoli non letti</string>
@@ -822,4 +817,25 @@
     <string name="pref_invalidate_download_cache">Invalida l\'indice dei download</string>
     <string name="enhanced_tracking_warning">Questo tracker è compatibile solo con la fonte %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Forza l\'app a ricontrollare i capitoli scaricati</string>
+    <string name="label_started">Iniziati</string>
+    <string name="label_overview_section">Panoramica</string>
+    <string name="label_titles_section">Voci</string>
+    <string name="label_stats">Statistiche</string>
+    <string name="label_completed_titles">Voci completate</string>
+    <string name="label_local">In locale</string>
+    <string name="label_read_duration">Durata lettura</string>
+    <string name="label_tracked_titles">Voci tracciate</string>
+    <string name="label_used">In Uso</string>
+    <string name="not_applicable">N/D</string>
+    <string name="minute_short">%dm</string>
+    <string name="label_downloaded">Scaricati</string>
+    <string name="label_titles_in_global_update">Nell\'aggiornamento globale</string>
+    <string name="label_read_chapters">Letti</string>
+    <string name="label_mean_score">Punteggio medio</string>
+    <string name="hour_short">%do</string>
+    <string name="label_total_chapters">Totale</string>
+    <string name="label_tracker_section">Trackers</string>
+    <string name="seconds_short">%ds</string>
+    <string name="day_short">%dg</string>
+    <string name="action_not_now">Non ora</string>
 </resources>

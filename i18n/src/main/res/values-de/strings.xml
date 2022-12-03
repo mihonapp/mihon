@@ -12,7 +12,6 @@
     <string name="label_backup">Sichern und Wiederherstellen</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_filter">Filter</string>
-    <string name="action_filter_downloaded">Heruntergeladen</string>
     <string name="action_filter_bookmarked">Lesezeichen</string>
     <string name="action_filter_unread">Ungelesen</string>
     <string name="action_filter_empty">Filter löschen</string>
@@ -243,7 +242,6 @@
     <string name="browse">Stöbern</string>
     <string name="channel_common">Allgemein</string>
     <string name="action_display_download_badge">Heruntergelade Kapitel</string>
-    <string name="local_source_badge">Lokal</string>
     <string name="information_empty_category">Keine Kategorien vorhanden. Tippe auf die Plus-Schaltfläche, um eine Kategorie zum Sortieren deiner Bibliothek zu erstellen.</string>
     <string name="label_migration">Migrieren</string>
     <string name="label_extensions">Erweiterungen</string>
@@ -280,7 +278,6 @@
     <string name="download_custom">Benutzerdefiniert</string>
     <string name="repeating">Am Wiederlesen</string>
     <string name="track_status">Status</string>
-    <string name="track_start_date">Angefangen</string>
     <string name="track_type">Typ</string>
     <string name="transition_finished">Beendet:</string>
     <string name="transition_current">Aktuell:</string>
@@ -644,7 +641,6 @@
     <string name="connected_to_wifi">Nur über WLAN</string>
     <string name="update_72hour">Alle 3 Tage</string>
     <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Tachiyomi blockieren. Tippe, um mehr zu erfahren.</string>
-    <string name="pref_library_update_show_tab_badge">Anzahl von Ungelesenem auf dem „Neues“-Symbol anzeigen</string>
     <string name="ext_update_all">Alle aktualisieren</string>
     <string name="channel_app_updates">Anwendungsaktualisierungen</string>
     <string name="pref_auto_clear_chapter_cache">Kapitel-Zwischenspeicher beim Schließen der App löschen</string>
@@ -668,7 +664,6 @@
     <string name="action_display_cover_only_grid">Nur-Cover-Kacheln</string>
     <string name="pref_landscape_zoom">Bild im Querformat vergrößern</string>
     <string name="pref_navigate_pan">Beim Tippen innerhalb breiter Seiten navigieren</string>
-    <string name="action_filter_started">Angefangen</string>
     <string name="pref_update_only_started">Die noch nicht begonnen wurden</string>
     <string name="skipped_reason_completed">Übersprungen, da die Serie abgeschlossen ist</string>
     <string name="skipped_reason_not_caught_up">Übersprungen, weil es ungelesene Kapitel gibt</string>
@@ -776,4 +771,25 @@
     <string name="track_remove_finish_date_conf_text">Dies wird dein zuvor gewähltes Enddatum von %s entfernen</string>
     <string name="enhanced_tracking_warning">Dieser Tracker ist nur mit der %1$s-Quelle kompatibel.</string>
     <string name="pref_invalidate_download_cache_summary">App zwingen, heruntergeladene Kapitel erneut zu überprüfen</string>
+    <string name="label_overview_section">Übersicht</string>
+    <string name="label_downloaded">Heruntergeladen</string>
+    <string name="label_read_duration">Lesedauer</string>
+    <string name="label_titles_in_global_update">In der globalen Aktualisierung</string>
+    <string name="label_total_chapters">Insgesamt</string>
+    <string name="label_read_chapters">Gelesen</string>
+    <string name="label_mean_score">Durchschnittswert</string>
+    <string name="label_used">Verwendet</string>
+    <string name="not_applicable">n. a.</string>
+    <string name="day_short">%d d</string>
+    <string name="hour_short">%d h</string>
+    <string name="label_local">Lokal</string>
+    <string name="label_tracked_titles">Getrackte Einträge</string>
+    <string name="label_completed_titles">Abgeschlossene Einträge</string>
+    <string name="label_stats">Statistiken</string>
+    <string name="label_started">Gestartet</string>
+    <string name="label_titles_section">Einträge</string>
+    <string name="label_tracker_section">Tracker</string>
+    <string name="minute_short">%d min</string>
+    <string name="seconds_short">%d s</string>
+    <string name="action_not_now">Nicht jetzt</string>
 </resources>

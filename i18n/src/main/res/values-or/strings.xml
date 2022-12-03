@@ -19,7 +19,6 @@
     <string name="learn_more">ଅଧିକ ଜାଣିବା ପାଇଁ ଟ୍ୟାପ୍ କରନ୍ତୁ</string>
     <string name="channel_progress">ପ୍ରଗତି</string>
     <string name="email">ଇମେଲ୍ ଠିକଣା</string>
-    <string name="action_filter_started">ଆରମ୍ଭ କରିଛନ୍ତି</string>
     <string name="action_sort_alpha">ବର୍ଣ୍ଣମାଳା ଅନୁଯାୟୀ</string>
     <string name="action_newest">ସବୁଠୁ ନୂଆ</string>
     <string name="action_asc">ଆରୋହଣ</string>
@@ -49,7 +48,6 @@
     <string name="action_display_language_badge">ଭାଷା</string>
     <string name="action_menu">ମେନୁ</string>
     <string name="action_filter">ଶୋଧନ</string>
-    <string name="action_filter_downloaded">ଡାଉନଲୋଡ୍ ହୋଇଅଛି</string>
     <string name="action_filter_bookmarked">ବୁକମାର୍କ ହୋଇଅଛି</string>
     <string name="action_filter_tracked">ଟ୍ରାକ୍ ହୋଇଅଛି</string>
     <string name="action_filter_unread">ପଢ଼ି ନାହାଁନ୍ତି</string>
@@ -114,7 +112,6 @@
     <string name="transition_previous">ପୂର୍ବବର୍ତ୍ତୀ:</string>
     <string name="error_saving_picture">ଚିତ୍ର ସଞ୍ଚୟ କରିବାରେ ତ୍ରୁଟି</string>
     <string name="track_status">ସ୍ଥିତି</string>
-    <string name="track_start_date">ଆରମ୍ଭ କରିଛନ୍ତି</string>
     <string name="track_type">ପ୍ରକାର</string>
     <string name="notification_cover_update_failed">ମଲାଟ ଅପଡେଟ୍ କରିବାରେ ବିଫଳ ହେଲା</string>
     <string name="cover_saved">ମଲାଟ ସଞ୍ଚୟ କରାଗଲା</string>

@@ -14,7 +14,6 @@
     <string name="action_settings">პარამეტრები</string>
     <string name="action_menu">მენიუ</string>
     <string name="action_filter">ფილტრი</string>
-    <string name="action_filter_downloaded">გადმოწერილი</string>
     <string name="action_filter_bookmarked">ჩანიშნული</string>
     <string name="action_filter_unread">წაუკითხავი</string>
     <string name="action_filter_empty">ფილტრის წაშლა</string>
@@ -252,7 +251,6 @@
     <string name="logout_success">გამოსვლა წარმატებით მოხერხდა</string>
     <string name="unknown_error">დაფიქსირდა უცნობი შეცდომა</string>
     <string name="updating_category">კატეგორია ახლდება</string>
-    <string name="local_source_badge">ლოკალური</string>
     <string name="badges_header">ნიშნაკები</string>
     <string name="tabs_header">ჩანართები</string>
     <string name="no_more_results">შედეგების სიის დასასრული</string>
@@ -310,7 +308,6 @@
     <string name="title">სათაური</string>
     <string name="status">სტატუსი</string>
     <string name="track_status">სტატუსი</string>
-    <string name="track_start_date">დაიწყო</string>
     <string name="track_type">ტიპი</string>
     <string name="error_category_exists">კატეგორია მოცემული სახელით უკვე არსებობს!</string>
     <string name="snack_categories_deleted">კატეგორიები წაიშალა</string>
@@ -488,7 +485,6 @@
     <string name="action_search_settings">პარამეტრების ძიება</string>
     <string name="action_start_downloading_now">დაიწყე ჩამოტვირთვა</string>
     <string name="theme_greenapple">მწვანე ვაშლი</string>
-    <string name="action_filter_started">დაწყებული</string>
     <string name="theme_monet">დინამიური</string>
     <string name="pref_app_theme">აპლიკაციის თემა</string>
     <string name="label_warning">გაფრთხილება</string>
