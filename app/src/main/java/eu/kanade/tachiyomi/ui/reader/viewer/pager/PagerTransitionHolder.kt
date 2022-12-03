@@ -15,10 +15,13 @@ import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderButton
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionView
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 
 /**
  * View of the ViewPager that contains a chapter transition.
@@ -30,16 +33,14 @@ class PagerTransitionHolder(
     val transition: ChapterTransition,
 ) : LinearLayout(readerThemedContext), ViewPagerAdapter.PositionableView {
 
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private var stateJob: Job? = null
+
     /**
      * Item that identifies this view. Needed by the adapter to not recreate views.
      */
     override val item: Any
         get() = transition
-
-    /**
-     * Subscription for status changes of the transition page.
-     */
-    private var statusSubscription: Subscription? = null
 
     /**
      * View container of the current status of the transition page. Child views will be added
@@ -71,8 +72,7 @@ class PagerTransitionHolder(
      */
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        statusSubscription?.unsubscribe()
-        statusSubscription = null
+        stateJob?.cancel()
     }
 
     /**
@@ -80,19 +80,20 @@ class PagerTransitionHolder(
      * state, the pages container is cleaned up before setting the new state.
      */
     private fun observeStatus(chapter: ReaderChapter) {
-        statusSubscription?.unsubscribe()
-        statusSubscription = chapter.stateObserver
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { state ->
-                pagesContainer.removeAllViews()
-                when (state) {
-                    is ReaderChapter.State.Wait -> {
+        stateJob?.cancel()
+        stateJob = scope.launchUI {
+            chapter.stateFlow
+                .collectLatest { state ->
+                    pagesContainer.removeAllViews()
+                    when (state) {
+                        is ReaderChapter.State.Loading -> setLoading()
+                        is ReaderChapter.State.Error -> setError(state.error)
+                        is ReaderChapter.State.Wait, is ReaderChapter.State.Loaded -> {
+                            // No additional view is added
+                        }
                     }
-                    is ReaderChapter.State.Loading -> setLoading()
-                    is ReaderChapter.State.Error -> setError(state.error)
-                    is ReaderChapter.State.Loaded -> setLoaded()
                 }
-            }
+        }
     }
 
     /**
@@ -109,13 +110,6 @@ class PagerTransitionHolder(
 
         pagesContainer.addView(progress)
         pagesContainer.addView(textView)
-    }
-
-    /**
-     * Sets the loaded state on the pages container.
-     */
-    private fun setLoaded() {
-        // No additional view is added
     }
 
     /**

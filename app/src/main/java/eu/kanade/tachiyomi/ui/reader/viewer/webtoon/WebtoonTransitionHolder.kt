@@ -13,9 +13,12 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionView
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.dpToPx
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 
 /**
  * Holder of the webtoon viewer that contains a chapter transition.
@@ -25,10 +28,8 @@ class WebtoonTransitionHolder(
     viewer: WebtoonViewer,
 ) : WebtoonBaseHolder(layout, viewer) {
 
-    /**
-     * Subscription for status changes of the transition page.
-     */
-    private var statusSubscription: Subscription? = null
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private var stateJob: Job? = null
 
     private val transitionView = ReaderTransitionView(context)
 
@@ -72,7 +73,7 @@ class WebtoonTransitionHolder(
      * Called when the view is recycled and being added to the view pool.
      */
     override fun recycle() {
-        unsubscribeStatus()
+        stateJob?.cancel()
     }
 
     /**
@@ -80,31 +81,21 @@ class WebtoonTransitionHolder(
      * state, the pages container is cleaned up before setting the new state.
      */
     private fun observeStatus(chapter: ReaderChapter, transition: ChapterTransition) {
-        unsubscribeStatus()
-
-        statusSubscription = chapter.stateObserver
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { state ->
-                pagesContainer.removeAllViews()
-                when (state) {
-                    is ReaderChapter.State.Wait -> {
+        stateJob?.cancel()
+        stateJob = scope.launchUI {
+            chapter.stateFlow
+                .collectLatest { state ->
+                    pagesContainer.removeAllViews()
+                    when (state) {
+                        is ReaderChapter.State.Loading -> setLoading()
+                        is ReaderChapter.State.Error -> setError(state.error, transition)
+                        is ReaderChapter.State.Wait, is ReaderChapter.State.Loaded -> {
+                            // No additional view is added
+                        }
                     }
-                    is ReaderChapter.State.Loading -> setLoading()
-                    is ReaderChapter.State.Error -> setError(state.error, transition)
-                    is ReaderChapter.State.Loaded -> setLoaded()
+                    pagesContainer.isVisible = pagesContainer.isNotEmpty()
                 }
-                pagesContainer.isVisible = pagesContainer.isNotEmpty()
-            }
-
-        addSubscription(statusSubscription)
-    }
-
-    /**
-     * Unsubscribes from the status subscription.
-     */
-    private fun unsubscribeStatus() {
-        removeSubscription(statusSubscription)
-        statusSubscription = null
+        }
     }
 
     /**
@@ -121,13 +112,6 @@ class WebtoonTransitionHolder(
 
         pagesContainer.addView(progress)
         pagesContainer.addView(textView)
-    }
-
-    /**
-     * Sets the loaded state on the pages container.
-     */
-    private fun setLoaded() {
-        // No additional view is added
     }
 
     /**
