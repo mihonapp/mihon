@@ -256,9 +256,12 @@ data class BrowseSourceScreen(
         }
     }
 
-    private val queryEvent = Channel<SearchType>()
     suspend fun search(query: String) = queryEvent.send(SearchType.Text(query))
     suspend fun searchGenre(name: String) = queryEvent.send(SearchType.Genre(name))
+
+    companion object {
+        private val queryEvent = Channel<SearchType>()
+    }
 
     sealed class SearchType(val txt: String) {
         class Text(txt: String) : SearchType(txt)
