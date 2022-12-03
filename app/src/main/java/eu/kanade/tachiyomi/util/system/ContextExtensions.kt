@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.util.system
 
 import android.app.ActivityManager
-import android.app.KeyguardManager
-import android.app.Notification
 import android.app.NotificationManager
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -24,11 +22,9 @@ import android.util.TypedValue
 import android.view.Display
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.graphics.alpha
@@ -76,34 +72,6 @@ fun Context.copyToClipboard(label: String, content: String) {
 }
 
 /**
- * Helper method to create a notification builder.
- *
- * @param id the channel id.
- * @param block the function that will execute inside the builder.
- * @return a notification to be displayed or updated.
- */
-fun Context.notificationBuilder(channelId: String, block: (NotificationCompat.Builder.() -> Unit)? = null): NotificationCompat.Builder {
-    val builder = NotificationCompat.Builder(this, channelId)
-        .setColor(getColor(R.color.accent_blue))
-    if (block != null) {
-        builder.block()
-    }
-    return builder
-}
-
-/**
- * Helper method to create a notification.
- *
- * @param id the channel id.
- * @param block the function that will execute inside the builder.
- * @return a notification to be displayed or updated.
- */
-fun Context.notification(channelId: String, block: (NotificationCompat.Builder.() -> Unit)?): Notification {
-    val builder = notificationBuilder(channelId, block)
-    return builder.build()
-}
-
-/**
  * Checks if the give permission is granted.
  *
  * @param permission the permission to check.
@@ -147,12 +115,6 @@ val getDisplayMaxHeightInPx: Int
     get() = Resources.getSystem().displayMetrics.let { max(it.heightPixels, it.widthPixels) }
 
 /**
- * Converts to dp.
- */
-val Int.pxToDp: Int
-    get() = (this / Resources.getSystem().displayMetrics.density).toInt()
-
-/**
  * Converts to px.
  */
 val Int.dpToPx: Int
@@ -180,12 +142,6 @@ val Context.wifiManager: WifiManager
     get() = getSystemService()!!
 
 val Context.powerManager: PowerManager
-    get() = getSystemService()!!
-
-val Context.keyguardManager: KeyguardManager
-    get() = getSystemService()!!
-
-val Context.inputMethodManager: InputMethodManager
     get() = getSystemService()!!
 
 val Context.displayCompat: Display?

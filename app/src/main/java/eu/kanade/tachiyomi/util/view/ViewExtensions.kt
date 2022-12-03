@@ -11,7 +11,6 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.MenuRes
@@ -29,15 +28,11 @@ import androidx.compose.runtime.CompositionContext
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.view.children
-import androidx.core.view.descendants
 import androidx.core.view.forEach
 import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.snackbar.Snackbar
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getResourceColor
-import eu.kanade.tachiyomi.util.system.inputMethodManager
 
 inline fun ComposeView.setComposeContent(crossinline content: @Composable () -> Unit) {
     consumeWindowInsets = false
@@ -68,24 +63,6 @@ inline fun ComponentActivity.setComposeContent(
             }
         }
     }
-}
-
-/**
- * Shows a snackbar in this view.
- *
- * @param message the message to show.
- * @param length the duration of the snack.
- * @param f a function to execute in the snack, allowing for example to define a custom action.
- */
-inline fun View.snack(
-    message: String,
-    length: Int = 10_000,
-    f: Snackbar.() -> Unit = {},
-): Snackbar {
-    val snack = Snackbar.make(this, message, length)
-    snack.f()
-    snack.show()
-    return snack
 }
 
 /**
@@ -174,20 +151,6 @@ inline fun View.popupMenu(
 }
 
 /**
- * Returns this ViewGroup's first child of specified class
- */
-inline fun <reified T> ViewGroup.findChild(): T? {
-    return children.find { it is T } as? T
-}
-
-/**
- * Returns this ViewGroup's first descendant of specified class
- */
-inline fun <reified T> ViewGroup.findDescendant(): T? {
-    return descendants.find { it is T } as? T
-}
-
-/**
  * Returns a deep copy of the provided [Drawable]
  */
 inline fun <reified T : Drawable> T.copy(context: Context): T? {
@@ -209,8 +172,4 @@ fun View?.isVisibleOnScreen(): Boolean {
     this.getGlobalVisibleRect(actualPosition)
     val screen = Rect(0, 0, Resources.getSystem().displayMetrics.widthPixels, Resources.getSystem().displayMetrics.heightPixels)
     return actualPosition.intersect(screen)
-}
-
-fun View.hideKeyboard() {
-    context.inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
 }

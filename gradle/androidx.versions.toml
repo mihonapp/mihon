@@ -39,4 +39,4 @@ workmanager = ["work-runtime", "guava"]
 [plugins]
 application = { id = "com.android.application", version.ref = "agp_version" }
 library = { id = "com.android.library", version.ref = "agp_version" }
-test = { id = "com.android.test", version.ref = "agp_version"}
+test = { id = "com.android.test", version.ref = "agp_version" }
