@@ -173,13 +173,11 @@ data class BrowseSourceScreen(
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { paddingValues ->
-            val mangaList = remember(state.currentFilter) {
-                screenModel.getMangaListFlow(state.currentFilter)
-            }.collectAsLazyPagingItems()
+            val pagingFlow by screenModel.mangaPagerFlowFlow.collectAsState()
 
             BrowseSourceContent(
                 source = screenModel.source,
-                mangaList = mangaList,
+                mangaList = pagingFlow.collectAsLazyPagingItems(),
                 columns = screenModel.getColumnsPreference(LocalConfiguration.current.orientation),
                 displayMode = screenModel.displayMode,
                 snackbarHostState = snackbarHostState,
