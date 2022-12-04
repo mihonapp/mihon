@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.download
 import android.content.Context
 import androidx.core.content.edit
 import eu.kanade.domain.chapter.interactor.GetChapter
-import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -78,7 +77,7 @@ class DownloadStore(
      * @param download the download.
      */
     private fun getKey(download: Download): String {
-        return download.chapter.id!!.toString()
+        return download.chapter.id.toString()
     }
 
     /**
@@ -98,7 +97,7 @@ class DownloadStore(
                     runBlocking { getManga.await(mangaId) }
                 } ?: continue
                 val source = sourceManager.get(manga.source) as? HttpSource ?: continue
-                val chapter = runBlocking { getChapter.await(chapterId) }?.toDbChapter() ?: continue
+                val chapter = runBlocking { getChapter.await(chapterId) } ?: continue
                 downloads.add(Download(source, manga, chapter))
             }
         }
@@ -114,7 +113,7 @@ class DownloadStore(
      * @param download the download to serialize.
      */
     private fun serialize(download: Download): String {
-        val obj = DownloadObject(download.manga.id, download.chapter.id!!, counter++)
+        val obj = DownloadObject(download.manga.id, download.chapter.id, counter++)
         return json.encodeToString(obj)
     }
 

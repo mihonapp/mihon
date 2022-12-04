@@ -4,7 +4,6 @@ import android.content.Context
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.chapter.model.Chapter
-import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.domain.manga.model.COMIC_INFO_FILE
 import eu.kanade.domain.manga.model.ComicInfo
@@ -267,7 +266,7 @@ class Downloader(
             // Filter out those already enqueued.
             .filter { chapter -> queue.none { it.chapter.id == chapter.id } }
             // Create a download for each one.
-            .map { Download(source, manga, it.toDbChapter()) }
+            .map { Download(source, manga, it) }
 
         if (chaptersToQueue.isNotEmpty()) {
             queue.addAll(chaptersToQueue)
@@ -322,7 +321,7 @@ class Downloader(
 
         val pageListObservable = if (download.pages == null) {
             // Pull page list from network and add them to download object
-            download.source.fetchPageList(download.chapter)
+            download.source.fetchPageList(download.chapter.toSChapter())
                 .map { pages ->
                     if (pages.isEmpty()) {
                         throw Exception(context.getString(R.string.page_list_empty_error))

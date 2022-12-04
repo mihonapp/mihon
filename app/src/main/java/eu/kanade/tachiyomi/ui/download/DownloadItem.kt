@@ -63,6 +63,6 @@ class DownloadItem(
     }
 
     override fun hashCode(): Int {
-        return download.chapter.id!!.toInt()
+        return download.chapter.id.toInt()
     }
 }
