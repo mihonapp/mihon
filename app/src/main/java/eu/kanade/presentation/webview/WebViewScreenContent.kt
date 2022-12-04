@@ -31,7 +31,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 
 @Composable
-fun WebViewScreen(
+fun WebViewScreenContent(
     onNavigateUp: () -> Unit,
     initialTitle: String?,
     url: String,

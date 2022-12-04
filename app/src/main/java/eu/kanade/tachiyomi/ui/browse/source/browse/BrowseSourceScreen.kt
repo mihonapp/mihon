@@ -53,7 +53,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listing
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
-import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import eu.kanade.tachiyomi.util.Constants
 import eu.kanade.tachiyomi.util.lang.launchIO
 import kotlinx.coroutines.channels.Channel
@@ -95,8 +95,13 @@ data class BrowseSourceScreen(
 
         val onWebViewClick = f@{
             val source = screenModel.source as? HttpSource ?: return@f
-            val intent = WebViewActivity.newIntent(context, source.baseUrl, source.id, source.name)
-            context.startActivity(intent)
+            navigator.push(
+                WebViewScreen(
+                    url = source.baseUrl,
+                    initialTitle = source.name,
+                    sourceId = source.id,
+                ),
+            )
         }
 
         LaunchedEffect(screenModel.source) {

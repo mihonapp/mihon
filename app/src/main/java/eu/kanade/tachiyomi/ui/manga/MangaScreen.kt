@@ -48,7 +48,7 @@ import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.logcat
@@ -109,7 +109,7 @@ class MangaScreen(
                 screenModel.toggleFavorite()
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             },
-            onWebViewClicked = { openMangaInWebView(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
+            onWebViewClicked = { openMangaInWebView(navigator, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onWebViewLongClicked = { copyMangaUrl(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onTrackingClicked = screenModel::showTrackDialog.takeIf { successState.trackingAvailable },
             onTagClicked = { scope.launch { performGenreSearch(navigator, it, screenModel.source!!) } },
@@ -240,10 +240,15 @@ class MangaScreen(
         }
     }
 
-    private fun openMangaInWebView(context: Context, manga_: Manga?, source_: Source?) {
+    private fun openMangaInWebView(navigator: Navigator, manga_: Manga?, source_: Source?) {
         getMangaUrl(manga_, source_)?.let { url ->
-            val intent = WebViewActivity.newIntent(context, url, source_?.id, manga_?.title)
-            context.startActivity(intent)
+            navigator.push(
+                WebViewScreen(
+                    url = url,
+                    initialTitle = manga_?.title,
+                    sourceId = source_?.id,
+                ),
+            )
         }
     }
 
