@@ -7,12 +7,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Edit
@@ -31,6 +29,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
@@ -69,81 +69,85 @@ fun MangaCoverDialog(
     ) {
         Scaffold(
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            containerColor = Color.Transparent,
             bottomBar = {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
-                        .padding(horizontal = 4.dp, vertical = 4.dp)
+                        .padding(4.dp)
                         .navigationBarsPadding(),
                 ) {
-                    IconButton(onClick = onDismissRequest) {
-                        Icon(
-                            imageVector = Icons.Outlined.Close,
-                            contentDescription = stringResource(R.string.action_close),
-                        )
+                    ActionsPill {
+                        IconButton(onClick = onDismissRequest) {
+                            Icon(
+                                imageVector = Icons.Outlined.Close,
+                                contentDescription = stringResource(R.string.action_close),
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    IconButton(onClick = onShareClick) {
-                        Icon(
-                            imageVector = Icons.Outlined.Share,
-                            contentDescription = stringResource(R.string.action_share),
-                        )
-                    }
-                    IconButton(onClick = onSaveClick) {
-                        Icon(
-                            imageVector = Icons.Outlined.Save,
-                            contentDescription = stringResource(R.string.action_save),
-                        )
-                    }
-                    if (onEditClick != null) {
-                        Box {
-                            var expanded by remember { mutableStateOf(false) }
-                            IconButton(
-                                onClick = {
-                                    if (isCustomCover) {
-                                        expanded = true
-                                    } else {
-                                        onEditClick(EditCoverAction.EDIT)
-                                    }
-                                },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Edit,
-                                    contentDescription = stringResource(R.string.action_edit_cover),
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
-                                offset = DpOffset(8.dp, 0.dp),
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.action_edit)) },
+                    ActionsPill {
+                        IconButton(onClick = onShareClick) {
+                            Icon(
+                                imageVector = Icons.Outlined.Share,
+                                contentDescription = stringResource(R.string.action_share),
+                            )
+                        }
+                        IconButton(onClick = onSaveClick) {
+                            Icon(
+                                imageVector = Icons.Outlined.Save,
+                                contentDescription = stringResource(R.string.action_save),
+                            )
+                        }
+                        if (onEditClick != null) {
+                            Box {
+                                var expanded by remember { mutableStateOf(false) }
+                                IconButton(
                                     onClick = {
-                                        onEditClick(EditCoverAction.EDIT)
-                                        expanded = false
+                                        if (isCustomCover) {
+                                            expanded = true
+                                        } else {
+                                            onEditClick(EditCoverAction.EDIT)
+                                        }
                                     },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.action_delete)) },
-                                    onClick = {
-                                        onEditClick(EditCoverAction.DELETE)
-                                        expanded = false
-                                    },
-                                )
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Edit,
+                                        contentDescription = stringResource(R.string.action_edit_cover),
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false },
+                                    offset = DpOffset(8.dp, 0.dp),
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(R.string.action_edit)) },
+                                        onClick = {
+                                            onEditClick(EditCoverAction.EDIT)
+                                            expanded = false
+                                        },
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(R.string.action_delete)) },
+                                        onClick = {
+                                            onEditClick(EditCoverAction.DELETE)
+                                            expanded = false
+                                        },
+                                    )
+                                }
                             }
                         }
                     }
                 }
             },
         ) { contentPadding ->
-            val statusBarPaddingPx = WindowInsets.systemBars.getTop(LocalDensity.current)
+            val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
             val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = MaterialTheme.colorScheme.background)
                     .clickableNoIndication(onClick = onDismissRequest),
             ) {
                 AndroidView(
@@ -183,5 +187,16 @@ fun MangaCoverDialog(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ActionsPill(content: @Composable () -> Unit) {
+    Row(
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.extraLarge)
+            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f)),
+    ) {
+        content()
     }
 }
