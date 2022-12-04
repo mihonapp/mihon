@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -54,7 +56,6 @@ private const val UnsetStatusTextAlpha = 0.5F
 fun TrackInfoDialogHome(
     trackItems: List<TrackItem>,
     dateFormat: DateFormat,
-    contentPadding: PaddingValues = PaddingValues(),
     onStatusClick: (TrackItem) -> Unit,
     onChapterClick: (TrackItem) -> Unit,
     onScoreClick: (TrackItem) -> Unit,
@@ -70,7 +71,7 @@ fun TrackInfoDialogHome(
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
-            .padding(contentPadding),
+            .windowInsetsPadding(WindowInsets.systemBars),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         trackItems.forEach { item ->

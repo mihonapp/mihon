@@ -3,6 +3,9 @@ package eu.kanade.presentation.components
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
@@ -48,6 +52,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.lifecycle.DisposableEffectIgnoringConfiguration
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.ScreenTransition
 import eu.kanade.presentation.util.isTabletUi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -61,6 +69,49 @@ private const val SheetAnimationDuration = 500
 private val SheetAnimationSpec = tween<Float>(durationMillis = SheetAnimationDuration)
 private const val ScrimAnimationDuration = 350
 private val ScrimAnimationSpec = tween<Float>(durationMillis = ScrimAnimationDuration)
+
+@Composable
+fun NavigatorAdaptiveSheet(
+    screen: Screen,
+    tonalElevation: Dp = 1.dp,
+    enableSwipeDismiss: (Navigator) -> Boolean = { true },
+    onDismissRequest: () -> Unit,
+) {
+    Navigator(
+        screen = screen,
+        content = { sheetNavigator ->
+            AdaptiveSheet(
+                tonalElevation = tonalElevation,
+                enableSwipeDismiss = enableSwipeDismiss(sheetNavigator),
+                onDismissRequest = onDismissRequest,
+            ) {
+                ScreenTransition(
+                    navigator = sheetNavigator,
+                    transition = {
+                        fadeIn(animationSpec = tween(220, delayMillis = 90)) with
+                            fadeOut(animationSpec = tween(90))
+                    },
+                )
+
+                BackHandler(
+                    enabled = sheetNavigator.size > 1,
+                    onBack = sheetNavigator::pop,
+                )
+            }
+
+            // Make sure screens are disposed no matter what
+            if (sheetNavigator.parent?.disposeBehavior?.disposeNestedNavigators == false) {
+                DisposableEffectIgnoringConfiguration {
+                    onDispose {
+                        sheetNavigator.items
+                            .asReversed()
+                            .forEach(sheetNavigator::dispose)
+                    }
+                }
+            }
+        },
+    )
+}
 
 /**
  * Sheet with adaptive position aligned to bottom on small screen, otherwise aligned to center
@@ -210,6 +261,10 @@ fun AdaptiveSheetImpl(
                         resistance = null,
                     )
                     .windowInsetsPadding(
+                        WindowInsets.systemBars
+                            .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                    )
+                    .consumedWindowInsets(
                         WindowInsets.systemBars
                             .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
                     ),

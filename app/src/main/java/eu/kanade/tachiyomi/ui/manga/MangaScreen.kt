@@ -5,19 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -28,21 +21,19 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import cafe.adriel.voyager.transitions.ScreenTransition
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.hasCustomCover
-import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.presentation.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.DuplicateMangaDialog
 import eu.kanade.presentation.components.LoadingScreen
+import eu.kanade.presentation.components.NavigatorAdaptiveSheet
 import eu.kanade.presentation.manga.ChapterSettingsDialog
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.DownloadCustomAmountDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
-import eu.kanade.presentation.util.LocalNavigatorContentPadding
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.Source
@@ -170,31 +161,15 @@ class MangaScreen(
                 onSetAsDefault = screenModel::setCurrentSettingsAsDefault,
             )
             MangaInfoScreenModel.Dialog.TrackSheet -> {
-                var enableSwipeDismiss by remember { mutableStateOf(true) }
-                AdaptiveSheet(
-                    enableSwipeDismiss = enableSwipeDismiss,
+                NavigatorAdaptiveSheet(
+                    screen = TrackInfoDialogHomeScreen(
+                        mangaId = successState.manga.id,
+                        mangaTitle = successState.manga.title,
+                        sourceId = successState.source.id,
+                    ),
+                    enableSwipeDismiss = { it.lastItem is TrackInfoDialogHomeScreen },
                     onDismissRequest = onDismissRequest,
-                ) { contentPadding ->
-                    Navigator(
-                        screen = TrackInfoDialogHomeScreen(
-                            mangaId = successState.manga.id,
-                            mangaTitle = successState.manga.title,
-                            sourceId = successState.source.id,
-                        ),
-                        content = {
-                            enableSwipeDismiss = it.lastItem is TrackInfoDialogHomeScreen
-                            CompositionLocalProvider(LocalNavigatorContentPadding provides contentPadding) {
-                                ScreenTransition(
-                                    navigator = it,
-                                    transition = {
-                                        fadeIn(animationSpec = tween(220, delayMillis = 90)) with
-                                            fadeOut(animationSpec = tween(90))
-                                    },
-                                )
-                            }
-                        },
-                    )
-                }
+                )
             }
             MangaInfoScreenModel.Dialog.FullCover -> {
                 val sm = rememberScreenModel { MangaCoverScreenModel(successState.manga.id) }

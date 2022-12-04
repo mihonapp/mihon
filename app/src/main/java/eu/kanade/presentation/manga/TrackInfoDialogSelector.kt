@@ -3,12 +3,14 @@ package eu.kanade.presentation.manga
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,7 +43,6 @@ import java.time.format.TextStyle
 
 @Composable
 fun TrackStatusSelector(
-    contentPadding: PaddingValues,
     selection: Int,
     onSelectionChange: (Int) -> Unit,
     selections: Map<Int, String>,
@@ -49,7 +50,6 @@ fun TrackStatusSelector(
     onDismissRequest: () -> Unit,
 ) {
     BaseSelector(
-        contentPadding = contentPadding,
         title = stringResource(R.string.status),
         content = {
             val state = rememberLazyListState()
@@ -91,7 +91,6 @@ fun TrackStatusSelector(
 
 @Composable
 fun TrackChapterSelector(
-    contentPadding: PaddingValues,
     selection: Int,
     onSelectionChange: (Int) -> Unit,
     range: Iterable<Int>,
@@ -99,7 +98,6 @@ fun TrackChapterSelector(
     onDismissRequest: () -> Unit,
 ) {
     BaseSelector(
-        contentPadding = contentPadding,
         title = stringResource(R.string.chapters),
         content = {
             WheelTextPicker(
@@ -119,7 +117,6 @@ fun TrackChapterSelector(
 
 @Composable
 fun TrackScoreSelector(
-    contentPadding: PaddingValues,
     selection: String,
     onSelectionChange: (String) -> Unit,
     selections: List<String>,
@@ -127,7 +124,6 @@ fun TrackScoreSelector(
     onDismissRequest: () -> Unit,
 ) {
     BaseSelector(
-        contentPadding = contentPadding,
         title = stringResource(R.string.score),
         content = {
             WheelTextPicker(
@@ -147,7 +143,6 @@ fun TrackScoreSelector(
 
 @Composable
 fun TrackDateSelector(
-    contentPadding: PaddingValues,
     title: String,
     selection: LocalDate,
     onSelectionChange: (LocalDate) -> Unit,
@@ -156,7 +151,6 @@ fun TrackDateSelector(
     onDismissRequest: () -> Unit,
 ) {
     BaseSelector(
-        contentPadding = contentPadding,
         title = title,
         content = {
             Row(
@@ -198,7 +192,6 @@ fun TrackDateSelector(
 
 @Composable
 private fun BaseSelector(
-    contentPadding: PaddingValues = PaddingValues(),
     title: String,
     content: @Composable BoxScope.() -> Unit,
     thirdButton: @Composable (RowScope.() -> Unit)? = null,
@@ -206,7 +199,7 @@ private fun BaseSelector(
     onDismissRequest: () -> Unit,
 ) {
     AlertDialogContent(
-        modifier = Modifier.padding(contentPadding),
+        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
         title = { Text(text = title) },
         text = {
             Box(

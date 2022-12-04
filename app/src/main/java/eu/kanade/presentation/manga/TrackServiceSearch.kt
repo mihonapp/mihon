@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +36,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -47,7 +48,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.input.ImeAction
@@ -60,6 +60,7 @@ import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.MangaCover
+import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.runOnEnterKeyPressed
@@ -69,7 +70,6 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 
 @Composable
 fun TrackServiceSearch(
-    contentPadding: PaddingValues = PaddingValues(),
     query: TextFieldValue,
     onQueryChange: (TextFieldValue) -> Unit,
     onDispatchQuery: () -> Unit,
@@ -87,12 +87,6 @@ fun TrackServiceSearch(
     }
 
     Scaffold(
-        contentWindowInsets = WindowInsets(
-            left = contentPadding.calculateLeftPadding(LocalLayoutDirection.current),
-            top = contentPadding.calculateTopPadding(),
-            right = contentPadding.calculateRightPadding(LocalLayoutDirection.current),
-            bottom = contentPadding.calculateBottomPadding(),
-        ),
         topBar = {
             Column {
                 TopAppBar(
@@ -161,7 +155,7 @@ fun TrackServiceSearch(
                     onClick = { onConfirmSelection() },
                     modifier = Modifier
                         .padding(12.dp)
-                        .padding(bottom = contentPadding.calculateBottomPadding())
+                        .windowInsetsPadding(WindowInsets.navigationBars)
                         .fillMaxWidth(),
                     elevation = ButtonDefaults.elevatedButtonElevation(),
                 ) {
