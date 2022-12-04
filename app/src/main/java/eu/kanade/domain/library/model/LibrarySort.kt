@@ -32,7 +32,6 @@ data class LibrarySort(
         object DateAdded : Type(0b00011100)
 
         companion object {
-
             fun valueOf(flag: Long): Type {
                 return types.find { type -> type.flag == flag and type.mask } ?: default.type
             }
@@ -49,7 +48,6 @@ data class LibrarySort(
         object Descending : Direction(0b00000000)
 
         companion object {
-
             fun valueOf(flag: Long): Direction {
                 return directions.find { direction -> direction.flag == flag and direction.mask } ?: default.direction
             }

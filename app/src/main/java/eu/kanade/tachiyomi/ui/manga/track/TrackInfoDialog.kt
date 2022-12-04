@@ -38,7 +38,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.interactor.GetMangaWithChapters
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.DeleteTrack
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.InsertTrack
@@ -211,7 +210,7 @@ data class TrackInfoDialogHomeScreen(
         fun registerEnhancedTracking(item: TrackItem) {
             item.service as EnhancedTrackService
             coroutineScope.launchNonCancellable {
-                val manga = Injekt.get<GetManga>().await(mangaId)?.toDbManga() ?: return@launchNonCancellable
+                val manga = Injekt.get<GetManga>().await(mangaId) ?: return@launchNonCancellable
                 try {
                     val matchResult = item.service.match(manga) ?: throw Exception()
                     item.service.registerTracking(matchResult, mangaId)

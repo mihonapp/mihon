@@ -12,7 +12,6 @@ data class Category(
     val isSystemCategory: Boolean = id == UNCATEGORIZED_ID
 
     companion object {
-
         const val UNCATEGORIZED_ID = 0L
     }
 }

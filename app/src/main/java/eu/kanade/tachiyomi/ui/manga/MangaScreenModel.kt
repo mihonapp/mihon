@@ -29,7 +29,6 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.manga.model.TriStateFilter
 import eu.kanade.domain.manga.model.isLocal
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.ui.UiPreferences
@@ -344,7 +343,7 @@ class MangaInfoScreenModel(
                     .forEach { service ->
                         launchIO {
                             try {
-                                service.match(manga.toDbManga())?.let { track ->
+                                service.match(manga)?.let { track ->
                                     (service as TrackService).registerTracking(track, mangaId)
                                 }
                             } catch (e: Exception) {

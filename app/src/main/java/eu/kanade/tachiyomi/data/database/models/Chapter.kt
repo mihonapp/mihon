@@ -19,12 +19,6 @@ interface Chapter : SChapter, Serializable {
     var date_fetch: Long
 
     var source_order: Int
-
-    companion object {
-        fun create(): Chapter = ChapterImpl().apply {
-            chapter_number = -1f
-        }
-    }
 }
 
 fun Chapter.toDomainChapter(): DomainChapter? {

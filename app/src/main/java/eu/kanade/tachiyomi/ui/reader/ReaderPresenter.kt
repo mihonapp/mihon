@@ -149,8 +149,8 @@ class ReaderPresenter(
      * time in a background thread to avoid blocking the UI.
      */
     private val chapterList by lazy {
-        val manga = manga!!
-        val chapters = runBlocking { getChapterByMangaId.await(manga.id!!) }
+        val manga = manga!!.toDomainManga()!!
+        val chapters = runBlocking { getChapterByMangaId.await(manga.id) }
 
         val selectedChapter = chapters.find { it.id == chapterId }
             ?: error("Requested chapter of id $chapterId not found in chapter list")
@@ -161,12 +161,12 @@ class ReaderPresenter(
                     when {
                         readerPreferences.skipRead().get() && it.read -> true
                         readerPreferences.skipFiltered().get() -> {
-                            (manga.readFilter == DomainManga.CHAPTER_SHOW_READ.toInt() && !it.read) ||
-                                (manga.readFilter == DomainManga.CHAPTER_SHOW_UNREAD.toInt() && it.read) ||
-                                (manga.downloadedFilter == DomainManga.CHAPTER_SHOW_DOWNLOADED.toInt() && !downloadManager.isChapterDownloaded(it.name, it.scanlator, manga.title, manga.source)) ||
-                                (manga.downloadedFilter == DomainManga.CHAPTER_SHOW_NOT_DOWNLOADED.toInt() && downloadManager.isChapterDownloaded(it.name, it.scanlator, manga.title, manga.source)) ||
-                                (manga.bookmarkedFilter == DomainManga.CHAPTER_SHOW_BOOKMARKED.toInt() && !it.bookmark) ||
-                                (manga.bookmarkedFilter == DomainManga.CHAPTER_SHOW_NOT_BOOKMARKED.toInt() && it.bookmark)
+                            (manga.unreadFilterRaw == DomainManga.CHAPTER_SHOW_READ && !it.read) ||
+                                (manga.unreadFilterRaw == DomainManga.CHAPTER_SHOW_UNREAD && it.read) ||
+                                (manga.downloadedFilterRaw == DomainManga.CHAPTER_SHOW_DOWNLOADED && !downloadManager.isChapterDownloaded(it.name, it.scanlator, manga.title, manga.source)) ||
+                                (manga.downloadedFilterRaw == DomainManga.CHAPTER_SHOW_NOT_DOWNLOADED && downloadManager.isChapterDownloaded(it.name, it.scanlator, manga.title, manga.source)) ||
+                                (manga.bookmarkedFilterRaw == DomainManga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark) ||
+                                (manga.bookmarkedFilterRaw == DomainManga.CHAPTER_SHOW_NOT_BOOKMARKED && it.bookmark)
                         }
                         else -> false
                     }
@@ -182,7 +182,7 @@ class ReaderPresenter(
         }
 
         chaptersForReader
-            .sortedWith(getChapterSort(manga.toDomainManga()!!, sortDescending = false))
+            .sortedWith(getChapterSort(manga, sortDescending = false))
             .map { it.toDbChapter() }
             .map(::ReaderChapter)
     }
@@ -653,11 +653,9 @@ class ReaderPresenter(
     fun setMangaReadingMode(readingModeType: Int) {
         val manga = manga ?: return
         manga.readingModeType = readingModeType
-        runBlocking {
-            setMangaViewerFlags.awaitSetMangaReadingMode(manga.id!!.toLong(), readingModeType.toLong())
-        }
 
         coroutineScope.launchIO {
+            setMangaViewerFlags.awaitSetMangaReadingMode(manga.id!!.toLong(), readingModeType.toLong())
             delay(250)
             val currChapters = viewerChaptersRelay.value
             if (currChapters != null) {
@@ -692,13 +690,9 @@ class ReaderPresenter(
     fun setMangaOrientationType(rotationType: Int) {
         val manga = manga ?: return
         manga.orientationType = rotationType
-        runBlocking {
-            setMangaViewerFlags.awaitSetOrientationType(manga.id!!.toLong(), rotationType.toLong())
-        }
-
-        logcat(LogPriority.INFO) { "Manga orientation is ${manga.orientationType}" }
 
         coroutineScope.launchIO {
+            setMangaViewerFlags.awaitSetOrientationType(manga.id!!.toLong(), rotationType.toLong())
             delay(250)
             val currChapters = viewerChaptersRelay.value
             if (currChapters != null) {

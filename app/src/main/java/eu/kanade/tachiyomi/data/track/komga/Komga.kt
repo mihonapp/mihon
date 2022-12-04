@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi.data.track.komga
 import android.content.Context
 import android.graphics.Color
 import androidx.annotation.StringRes
+import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.NoLoginTrackService
@@ -13,7 +13,6 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
 import okhttp3.Dns
 import okhttp3.OkHttpClient
-import eu.kanade.domain.manga.model.Manga as DomainManga
 import eu.kanade.domain.track.model.Track as DomainTrack
 
 class Komga(private val context: Context, id: Long) : TrackService(id), EnhancedTrackService, NoLoginTrackService {
@@ -107,10 +106,10 @@ class Komga(private val context: Context, id: Long) : TrackService(id), Enhanced
             null
         }
 
-    override fun isTrackFrom(track: DomainTrack, manga: DomainManga, source: Source?): Boolean =
+    override fun isTrackFrom(track: DomainTrack, manga: Manga, source: Source?): Boolean =
         track.remoteUrl == manga.url && source?.let { accept(it) } == true
 
-    override fun migrateTrack(track: DomainTrack, manga: DomainManga, newSource: Source): DomainTrack? =
+    override fun migrateTrack(track: DomainTrack, manga: Manga, newSource: Source): DomainTrack? =
         if (accept(newSource)) {
             track.copy(remoteUrl = manga.url)
         } else {

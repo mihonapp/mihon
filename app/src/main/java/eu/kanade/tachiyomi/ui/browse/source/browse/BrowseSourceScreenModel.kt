@@ -30,7 +30,6 @@ import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.domain.manga.interactor.NetworkToLocalManga
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.Manga
-import eu.kanade.domain.manga.model.toDbManga
 import eu.kanade.domain.manga.model.toDomainManga
 import eu.kanade.domain.manga.model.toMangaUpdate
 import eu.kanade.domain.source.interactor.GetRemoteManga
@@ -309,7 +308,7 @@ class BrowseSourceScreenModel(
             .filter { it.accept(source) }
             .forEach { service ->
                 try {
-                    service.match(manga.toDbManga())?.let { track ->
+                    service.match(manga)?.let { track ->
                         track.manga_id = manga.id
                         (service as TrackService).bind(track)
                         insertTrack.await(track.toDomainTrack()!!)
