@@ -777,12 +777,7 @@ class LibraryScreenModel(
             val categoryName = category.let {
                 if (it.isSystemCategory) defaultCategoryTitle else it.name
             }
-
-            val title = when {
-                showCategoryTabs && categories.size != 1 -> defaultTitle
-                libraryCount > 0 && !onlyDefaultCategory -> categoryName
-                else -> defaultTitle
-            }
+            val title = if (showCategoryTabs) defaultTitle else categoryName
             val count = when {
                 !showMangaCount -> null
                 !showCategoryTabs -> getMangaCountForCategory(category)

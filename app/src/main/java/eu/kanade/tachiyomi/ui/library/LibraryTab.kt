@@ -149,7 +149,7 @@ object LibraryTab : Tab {
         ) { contentPadding ->
             when {
                 state.isLoading -> LoadingScreen(modifier = Modifier.padding(contentPadding))
-                state.searchQuery.isNullOrEmpty() && state.libraryCount == 0 -> {
+                state.searchQuery.isNullOrEmpty() && !state.hasActiveFilters && state.libraryCount == 0 -> {
                     val handler = LocalUriHandler.current
                     EmptyScreen(
                         textResource = R.string.information_empty_library,

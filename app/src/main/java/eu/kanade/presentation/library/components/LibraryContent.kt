@@ -61,7 +61,7 @@ fun LibraryContent(
         val scope = rememberCoroutineScope()
         var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
 
-        if (!isLibraryEmpty && showPageTabs && categories.size > 1) {
+        if (showPageTabs && categories.size > 1) {
             LibraryTabs(
                 categories = categories,
                 currentPageIndex = pagerState.currentPage,
