@@ -23,7 +23,7 @@ class SettingsScreen private constructor(
 
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
+        val parentNavigator = LocalNavigator.currentOrThrow
         if (!isTabletUi()) {
             Navigator(
                 screen = if (toBackup) {
@@ -34,7 +34,14 @@ class SettingsScreen private constructor(
                     SettingsMainScreen
                 },
                 content = {
-                    CompositionLocalProvider(LocalBackPress provides navigator::pop) {
+                    val pop: () -> Unit = {
+                        if (it.canPop) {
+                            it.pop()
+                        } else {
+                            parentNavigator.pop()
+                        }
+                    }
+                    CompositionLocalProvider(LocalBackPress provides pop) {
                         ScreenTransition(
                             navigator = it,
                             transition = { Transition.OneWayFade },
@@ -54,7 +61,7 @@ class SettingsScreen private constructor(
             ) {
                 TwoPanelBox(
                     startContent = {
-                        CompositionLocalProvider(LocalBackPress provides navigator::pop) {
+                        CompositionLocalProvider(LocalBackPress provides parentNavigator::pop) {
                             SettingsMainScreen.Content(twoPane = true)
                         }
                     },
