@@ -152,16 +152,31 @@ class LocalSource(
         // Augment manga details based on metadata files
         try {
             val mangaDirFiles = getMangaDirsFiles(manga.url, baseDirsFile).toList()
+
             val comicInfoFile = mangaDirFiles
                 .firstOrNull { it.name == COMIC_INFO_FILE }
             val noXmlFile = mangaDirFiles
                 .firstOrNull { it.name == ".noxml" }
-            if (comicInfoFile != null && noXmlFile != null) noXmlFile.delete()
+            val legacyJsonDetailsFile = mangaDirFiles
+                .firstOrNull { it.extension == "json" }
 
             when {
                 // Top level ComicInfo.xml
                 comicInfoFile != null -> {
+                    noXmlFile?.delete()
                     setMangaDetailsFromComicInfoFile(comicInfoFile.inputStream(), manga)
+                }
+
+                // TODO: automatically convert these to ComicInfo.xml
+                legacyJsonDetailsFile != null -> {
+                    json.decodeFromStream<MangaDetails>(legacyJsonDetailsFile.inputStream()).run {
+                        title?.let { manga.title = it }
+                        author?.let { manga.author = it }
+                        artist?.let { manga.artist = it }
+                        description?.let { manga.description = it }
+                        genre?.let { manga.genre = it.joinToString() }
+                        status?.let { manga.status = it }
+                    }
                 }
 
                 // Copy ComicInfo.xml from chapter archive to top level if found
@@ -180,22 +195,6 @@ class LocalSource(
                         // Avoid re-scanning
                         File("$folderPath/.noxml").createNewFile()
                     }
-                }
-
-                // Fall back to legacy JSON details format
-                else -> {
-                    mangaDirFiles
-                        .firstOrNull { it.extension == "json" }
-                        ?.let { file ->
-                            json.decodeFromStream<MangaDetails>(file.inputStream()).run {
-                                title?.let { manga.title = it }
-                                author?.let { manga.author = it }
-                                artist?.let { manga.artist = it }
-                                description?.let { manga.description = it }
-                                genre?.let { manga.genre = it.joinToString() }
-                                status?.let { manga.status = it }
-                            }
-                        }
                 }
             }
         } catch (e: Throwable) {
