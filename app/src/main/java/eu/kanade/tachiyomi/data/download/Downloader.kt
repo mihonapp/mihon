@@ -40,7 +40,6 @@ import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 import java.io.BufferedOutputStream
 import java.io.File
 import java.util.zip.CRC32
@@ -68,17 +67,13 @@ class Downloader(
     private val sourceManager: SourceManager = Injekt.get(),
     private val chapterCache: ChapterCache = Injekt.get(),
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
+    private val xml: XML = Injekt.get(),
 ) {
-
-    /**
-     * xml format used for ComicInfo files
-     */
-    private val xml: XML by injectLazy()
 
     /**
      * Store for persisting downloads across restarts.
      */
-    private val store = DownloadStore(context, sourceManager)
+    private val store = DownloadStore(context)
 
     /**
      * Queue where active downloads are kept.

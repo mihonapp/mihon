@@ -31,8 +31,8 @@ class DownloadQueue(
 
     fun addAll(downloads: List<Download>) {
         downloads.forEach { download ->
-            download.setStatusSubject(statusSubject)
-            download.setStatusCallback(::setPagesFor)
+            download.statusSubject = statusSubject
+            download.statusCallback = ::setPagesFor
             download.status = Download.State.QUEUE
         }
         queue.addAll(downloads)
@@ -45,8 +45,8 @@ class DownloadQueue(
     fun remove(download: Download) {
         val removed = queue.remove(download)
         store.remove(download)
-        download.setStatusSubject(null)
-        download.setStatusCallback(null)
+        download.statusSubject = null
+        download.statusCallback = null
         if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
             download.status = Download.State.NOT_DOWNLOADED
         }
@@ -62,9 +62,7 @@ class DownloadQueue(
     }
 
     fun remove(chapters: List<Chapter>) {
-        for (chapter in chapters) {
-            remove(chapter)
-        }
+        chapters.forEach(::remove)
     }
 
     fun remove(manga: Manga) {
@@ -73,8 +71,8 @@ class DownloadQueue(
 
     fun clear() {
         queue.forEach { download ->
-            download.setStatusSubject(null)
-            download.setStatusCallback(null)
+            download.statusSubject = null
+            download.statusCallback = null
             if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
                 download.status = Download.State.NOT_DOWNLOADED
             }
@@ -86,20 +84,16 @@ class DownloadQueue(
         }
     }
 
+    fun statusFlow(): Flow<Download> = getStatusObservable().asFlow()
+
+    fun progressFlow(): Flow<Download> = getProgressObservable().asFlow()
+
     private fun getActiveDownloads(): Observable<Download> =
         Observable.from(this).filter { download -> download.status == Download.State.DOWNLOADING }
 
     private fun getStatusObservable(): Observable<Download> = statusSubject
         .startWith(getActiveDownloads())
         .onBackpressureBuffer()
-
-    fun statusFlow(): Flow<Download> = getStatusObservable().asFlow()
-
-    private fun setPagesFor(download: Download) {
-        if (download.status == Download.State.DOWNLOADED || download.status == Download.State.ERROR) {
-            setPagesSubject(download.pages, null)
-        }
-    }
 
     private fun getProgressObservable(): Observable<Download> {
         return statusSubject.onBackpressureBuffer()
@@ -120,7 +114,11 @@ class DownloadQueue(
             .filter { it.status == Download.State.DOWNLOADING }
     }
 
-    fun progressFlow(): Flow<Download> = getProgressObservable().asFlow()
+    private fun setPagesFor(download: Download) {
+        if (download.status == Download.State.DOWNLOADED || download.status == Download.State.ERROR) {
+            setPagesSubject(download.pages, null)
+        }
+    }
 
     private fun setPagesSubject(pages: List<Page>?, subject: PublishSubject<Int>?) {
         pages?.forEach { it.setStatusSubject(subject) }

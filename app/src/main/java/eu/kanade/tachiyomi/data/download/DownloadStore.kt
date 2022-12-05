@@ -13,27 +13,24 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
  * This class is used to persist active downloads across application restarts.
- *
- * @param context the application context.
  */
 class DownloadStore(
     context: Context,
-    private val sourceManager: SourceManager,
+    private val sourceManager: SourceManager = Injekt.get(),
+    private val json: Json = Injekt.get(),
+    private val getManga: GetManga = Injekt.get(),
+    private val getChapter: GetChapter = Injekt.get(),
 ) {
 
     /**
      * Preference file where active downloads are stored.
      */
     private val preferences = context.getSharedPreferences("active_downloads", Context.MODE_PRIVATE)
-
-    private val json: Json by injectLazy()
-
-    private val getManga: GetManga by injectLazy()
-    private val getChapter: GetChapter by injectLazy()
 
     /**
      * Counter used to keep the queue order.
@@ -129,14 +126,14 @@ class DownloadStore(
             null
         }
     }
-
-    /**
-     * Class used for download serialization
-     *
-     * @param mangaId the id of the manga.
-     * @param chapterId the id of the chapter.
-     * @param order the order of the download in the queue.
-     */
-    @Serializable
-    data class DownloadObject(val mangaId: Long, val chapterId: Long, val order: Int)
 }
+
+/**
+ * Class used for download serialization
+ *
+ * @param mangaId the id of the manga.
+ * @param chapterId the id of the chapter.
+ * @param order the order of the download in the queue.
+ */
+@Serializable
+private data class DownloadObject(val mangaId: Long, val chapterId: Long, val order: Int)

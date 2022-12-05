@@ -342,15 +342,15 @@ class MainActivity : BaseActivity() {
 
         when (intent.action) {
             SHORTCUT_LIBRARY -> HomeScreen.openTab(HomeScreen.Tab.Library())
-            SHORTCUT_RECENTLY_UPDATED -> HomeScreen.openTab(HomeScreen.Tab.Updates)
-            SHORTCUT_RECENTLY_READ -> HomeScreen.openTab(HomeScreen.Tab.History)
-            SHORTCUT_CATALOGUES -> HomeScreen.openTab(HomeScreen.Tab.Browse(false))
-            SHORTCUT_EXTENSIONS -> HomeScreen.openTab(HomeScreen.Tab.Browse(true))
             SHORTCUT_MANGA -> {
                 val idToOpen = intent.extras?.getLong(Constants.MANGA_EXTRA) ?: return false
                 navigator.popUntilRoot()
                 HomeScreen.openTab(HomeScreen.Tab.Library(idToOpen))
             }
+            SHORTCUT_UPDATES -> HomeScreen.openTab(HomeScreen.Tab.Updates)
+            SHORTCUT_HISTORY -> HomeScreen.openTab(HomeScreen.Tab.History)
+            SHORTCUT_SOURCES -> HomeScreen.openTab(HomeScreen.Tab.Browse(false))
+            SHORTCUT_EXTENSIONS -> HomeScreen.openTab(HomeScreen.Tab.Browse(true))
             SHORTCUT_DOWNLOADS -> {
                 navigator.popUntilRoot()
                 HomeScreen.openTab(HomeScreen.Tab.More(toDownloads = true))
@@ -413,12 +413,12 @@ class MainActivity : BaseActivity() {
 
         // Shortcut actions
         const val SHORTCUT_LIBRARY = "eu.kanade.tachiyomi.SHOW_LIBRARY"
-        const val SHORTCUT_RECENTLY_UPDATED = "eu.kanade.tachiyomi.SHOW_RECENTLY_UPDATED"
-        const val SHORTCUT_RECENTLY_READ = "eu.kanade.tachiyomi.SHOW_RECENTLY_READ"
-        const val SHORTCUT_CATALOGUES = "eu.kanade.tachiyomi.SHOW_CATALOGUES"
-        const val SHORTCUT_DOWNLOADS = "eu.kanade.tachiyomi.SHOW_DOWNLOADS"
         const val SHORTCUT_MANGA = "eu.kanade.tachiyomi.SHOW_MANGA"
+        const val SHORTCUT_UPDATES = "eu.kanade.tachiyomi.SHOW_RECENTLY_UPDATED"
+        const val SHORTCUT_HISTORY = "eu.kanade.tachiyomi.SHOW_RECENTLY_READ"
+        const val SHORTCUT_SOURCES = "eu.kanade.tachiyomi.SHOW_CATALOGUES"
         const val SHORTCUT_EXTENSIONS = "eu.kanade.tachiyomi.EXTENSIONS"
+        const val SHORTCUT_DOWNLOADS = "eu.kanade.tachiyomi.SHOW_DOWNLOADS"
 
         const val INTENT_SEARCH = "eu.kanade.tachiyomi.SEARCH"
         const val INTENT_SEARCH_QUERY = "query"

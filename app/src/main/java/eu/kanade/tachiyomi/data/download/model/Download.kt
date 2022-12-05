@@ -36,24 +36,16 @@ data class Download(
         }
 
     @Transient
-    private var statusSubject: PublishSubject<Download>? = null
+    var statusSubject: PublishSubject<Download>? = null
 
     @Transient
-    private var statusCallback: ((Download) -> Unit)? = null
+    var statusCallback: ((Download) -> Unit)? = null
 
     val progress: Int
         get() {
             val pages = pages ?: return 0
             return pages.map(Page::progress).average().toInt()
         }
-
-    fun setStatusSubject(subject: PublishSubject<Download>?) {
-        statusSubject = subject
-    }
-
-    fun setStatusCallback(f: ((Download) -> Unit)?) {
-        statusCallback = f
-    }
 
     enum class State(val value: Int) {
         NOT_DOWNLOADED(0),
