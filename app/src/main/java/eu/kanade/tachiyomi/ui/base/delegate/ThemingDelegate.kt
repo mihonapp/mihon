@@ -53,9 +53,6 @@ interface ThemingDelegate {
                 resIds += R.style.ThemeOverlay_Tachiyomi_Amoled
             }
 
-            // For source preference theme
-            resIds += R.style.PreferenceThemeOverlay_Tachiyomi
-
             return resIds
         }
     }

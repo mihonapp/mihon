@@ -2,7 +2,9 @@ package eu.kanade.tachiyomi.ui.browse.extension.details
 
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -126,6 +128,13 @@ class SourcePreferencesScreen(val sourceId: Long) : Screen {
 }
 
 class SourcePreferencesFragment : PreferenceFragmentCompat() {
+
+    override fun getContext(): Context? {
+        val superCtx = super.getContext() ?: return null
+        val tv = TypedValue()
+        superCtx.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
+        return ContextThemeWrapper(superCtx, tv.resourceId)
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceScreen = populateScreen()
