@@ -86,8 +86,6 @@ class MainActivity : BaseActivity() {
     private val uiPreferences: UiPreferences by injectLazy()
     private val preferences: BasePreferences by injectLazy()
 
-    private var isHandlingShortcut: Boolean = false
-
     private val chapterCache: ChapterCache by injectLazy()
 
     // To be checked by splash screen. If true then splash screen will be removed.
@@ -98,9 +96,16 @@ class MainActivity : BaseActivity() {
      */
     private var settingsSheet: LibrarySettingsSheet? = null
 
+    private var isHandlingShortcut: Boolean = false
     private lateinit var navigator: Navigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Do not let the launcher create a new activity http://stackoverflow.com/questions/16283079
+        if (!isTaskRoot) {
+            finish()
+            return
+        }
+
         // Prevent splash screen showing up on configuration changes
         val splashScreen = if (savedInstanceState == null) installSplashScreen() else null
 
@@ -128,12 +133,6 @@ class MainActivity : BaseActivity() {
             false
         }
 
-        // Do not let the launcher create a new activity http://stackoverflow.com/questions/16283079
-        if (!isTaskRoot) {
-            finish()
-            return
-        }
-
         // Draw edge-to-edge
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -149,6 +148,18 @@ class MainActivity : BaseActivity() {
             ) { navigator ->
                 if (navigator.size == 1) {
                     ConfirmExit()
+                }
+
+                LaunchedEffect(navigator) {
+                    this@MainActivity.navigator = navigator
+
+                    if (savedInstanceState == null) {
+                        // Set start screen
+                        handleIntentAction(intent)
+
+                        // Reset Incognito Mode on relaunch
+                        preferences.incognitoMode().set(false)
+                    }
                 }
 
                 // Shows current screen
@@ -169,10 +180,6 @@ class MainActivity : BaseActivity() {
                             }
                         }
                         .launchIn(this)
-                }
-
-                LaunchedEffect(navigator) {
-                    this@MainActivity.navigator = navigator
                 }
 
                 CheckForUpdate()
@@ -203,14 +210,6 @@ class MainActivity : BaseActivity() {
             elapsed <= SPLASH_MIN_DURATION || (!ready && elapsed <= SPLASH_MAX_DURATION)
         }
         setSplashScreenExitAnimation(splashScreen)
-
-        if (savedInstanceState == null) {
-            // Set start screen
-            lifecycleScope.launch { handleIntentAction(intent) }
-
-            // Reset Incognito Mode on relaunch
-            preferences.incognitoMode().set(false)
-        }
     }
 
     private fun showSettingsSheet(category: Category? = null) {
