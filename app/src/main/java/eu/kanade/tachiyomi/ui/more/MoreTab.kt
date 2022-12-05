@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.combine
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-data class MoreTab(private val toDownloads: Boolean = false) : Tab {
+object MoreTab : Tab {
 
     override val options: TabOptions
         @Composable
