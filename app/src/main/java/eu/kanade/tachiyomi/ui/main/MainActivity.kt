@@ -73,7 +73,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -325,9 +324,11 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onNewIntent(intent: Intent) {
-        val handle = runBlocking { handleIntentAction(intent) }
-        if (!handle) {
-            super.onNewIntent(intent)
+        lifecycleScope.launch {
+            val handle = handleIntentAction(intent)
+            if (!handle) {
+                super.onNewIntent(intent)
+            }
         }
     }
 
