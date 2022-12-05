@@ -1,7 +1,12 @@
 package eu.kanade.tachiyomi.ui.browse.migration.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
@@ -130,12 +135,20 @@ fun MigrateDialog(
             Text(text = stringResource(R.string.migration_dialog_what_to_include))
         },
         text = {
-            Column {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+            ) {
                 items.forEachIndexed { index, title ->
+                    val onChange: () -> Unit = {
+                        selected[index] = !selected[index]
+                    }
                     Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = onChange),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Checkbox(checked = selected[index], onCheckedChange = { selected[index] = !selected[index] })
+                        Checkbox(checked = selected[index], onCheckedChange = { onChange() })
                         Text(text = title)
                     }
                 }
@@ -143,15 +156,13 @@ fun MigrateDialog(
         },
         confirmButton = {
             Row {
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        onClickTitle()
-                        onDismissRequest()
-                    },
-                ) {
+                TextButton(onClick = {
+                    onClickTitle()
+                    onDismissRequest()
+                },) {
                     Text(text = stringResource(R.string.action_show_manga))
                 }
+                Spacer(modifier = Modifier.weight(1f))
                 TextButton(onClick = {
                     scope.launchIO {
                         screenModel.migrateManga(oldManga, newManga, false)
