@@ -170,8 +170,7 @@ object LibraryTab : Tab {
                         selection = state.selection,
                         contentPadding = contentPadding,
                         currentPage = { screenModel.activeCategory },
-                        isLibraryEmpty = state.libraryCount == 0,
-                        showPageTabs = state.showCategoryTabs,
+                        showPageTabs = state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
                         onChangeCurrentPage = { screenModel.activeCategory = it },
                         onMangaClicked = { navigator.push(MangaScreen(it)) },
                         onContinueReadingClicked = { it: LibraryManga ->

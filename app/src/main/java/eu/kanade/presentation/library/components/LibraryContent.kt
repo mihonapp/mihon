@@ -32,7 +32,6 @@ fun LibraryContent(
     selection: List<LibraryManga>,
     contentPadding: PaddingValues,
     currentPage: () -> Int,
-    isLibraryEmpty: Boolean,
     showPageTabs: Boolean,
     onChangeCurrentPage: (Int) -> Unit,
     onMangaClicked: (Long) -> Unit,
