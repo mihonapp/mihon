@@ -115,11 +115,16 @@ class ExtensionDetailsScreenModel(
 
         val urls = extension.sources
             .filterIsInstance<HttpSource>()
-            .map { it.baseUrl }
+            .mapNotNull { it.baseUrl.takeUnless { url -> url.isEmpty() } }
             .distinct()
 
         val cleared = urls.sumOf {
-            network.cookieManager.remove(it.toHttpUrl())
+            try {
+                network.cookieManager.remove(it.toHttpUrl())
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Failed to clear cookies for $it" }
+                0
+            }
         }
 
         logcat { "Cleared $cleared cookies for: ${urls.joinToString()}" }
