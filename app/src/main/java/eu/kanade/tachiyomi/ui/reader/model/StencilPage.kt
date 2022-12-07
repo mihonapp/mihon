@@ -10,7 +10,7 @@ class StencilPage(
     override var chapter: ReaderChapter = parent.chapter
 
     init {
-        status = READY
+        status = State.READY
         stream = stencilStream
     }
 }

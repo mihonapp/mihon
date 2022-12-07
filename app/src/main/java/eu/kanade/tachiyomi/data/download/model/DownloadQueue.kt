@@ -100,11 +100,11 @@ class DownloadQueue(
             .startWith(getActiveDownloads())
             .flatMap { download ->
                 if (download.status == Download.State.DOWNLOADING) {
-                    val pageStatusSubject = PublishSubject.create<Int>()
+                    val pageStatusSubject = PublishSubject.create<Page.State>()
                     setPagesSubject(download.pages, pageStatusSubject)
                     return@flatMap pageStatusSubject
                         .onBackpressureBuffer()
-                        .filter { it == Page.READY }
+                        .filter { it == Page.State.READY }
                         .map { download }
                 } else if (download.status == Download.State.DOWNLOADED || download.status == Download.State.ERROR) {
                     setPagesSubject(download.pages, null)
@@ -120,7 +120,7 @@ class DownloadQueue(
         }
     }
 
-    private fun setPagesSubject(pages: List<Page>?, subject: PublishSubject<Int>?) {
-        pages?.forEach { it.setStatusSubject(subject) }
+    private fun setPagesSubject(pages: List<Page>?, subject: PublishSubject<Page.State>?) {
+        pages?.forEach { it.statusSubject = subject }
     }
 }

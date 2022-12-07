@@ -720,7 +720,7 @@ class ReaderPresenter(
      * There's also a notification to allow sharing the image somewhere else or deleting it.
      */
     fun saveImage(page: ReaderPage) {
-        if (page.status != Page.READY) return
+        if (page.status != Page.State.READY) return
         val manga = manga ?: return
 
         val context = Injekt.get<Application>()
@@ -761,7 +761,7 @@ class ReaderPresenter(
      * image will be kept so it won't be taking lots of internal disk space.
      */
     fun shareImage(page: ReaderPage) {
-        if (page.status != Page.READY) return
+        if (page.status != Page.State.READY) return
         val manga = manga ?: return
 
         val context = Injekt.get<Application>()
@@ -792,7 +792,7 @@ class ReaderPresenter(
      * Sets the image of this [page] as cover and notifies the UI of the result.
      */
     fun setAsCover(context: Context, page: ReaderPage) {
-        if (page.status != Page.READY) return
+        if (page.status != Page.State.READY) return
         val manga = manga?.toDomainManga() ?: return
         val stream = page.stream ?: return
 

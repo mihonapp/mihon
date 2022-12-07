@@ -54,13 +54,13 @@ class DownloadPageLoader(
                     ReaderPage(page.index, page.url, page.imageUrl) {
                         context.contentResolver.openInputStream(page.uri ?: Uri.EMPTY)!!
                     }.apply {
-                        status = Page.READY
+                        status = Page.State.READY
                     }
                 }
             }
     }
 
-    override fun getPage(page: ReaderPage): Observable<Int> {
-        return Observable.just(Page.READY)
+    override fun getPage(page: ReaderPage): Observable<Page.State> {
+        return Observable.just(Page.State.READY)
     }
 }

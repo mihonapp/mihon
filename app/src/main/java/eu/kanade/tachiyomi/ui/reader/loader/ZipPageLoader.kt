@@ -43,7 +43,7 @@ class ZipPageLoader(file: File) : PageLoader() {
             .mapIndexed { i, entry ->
                 ReaderPage(i).apply {
                     stream = { zip.getInputStream(entry) }
-                    status = Page.READY
+                    status = Page.State.READY
                 }
             }
             .let { Observable.just(it.toList()) }
@@ -52,12 +52,12 @@ class ZipPageLoader(file: File) : PageLoader() {
     /**
      * Returns an observable that emits a ready state unless the loader was recycled.
      */
-    override fun getPage(page: ReaderPage): Observable<Int> {
+    override fun getPage(page: ReaderPage): Observable<Page.State> {
         return Observable.just(
             if (isRecycled) {
-                Page.ERROR
+                Page.State.ERROR
             } else {
-                Page.READY
+                Page.State.READY
             },
         )
     }

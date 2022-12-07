@@ -402,13 +402,13 @@ class Downloader(
                 page.uri = file.uri
                 page.progress = 100
                 download.downloadedImages++
-                page.status = Page.READY
+                page.status = Page.State.READY
             }
             .map { page }
             // Mark this page as error and allow to download the remaining
             .onErrorReturn {
                 page.progress = 0
-                page.status = Page.ERROR
+                page.status = Page.State.ERROR
                 notifier.onError(it.message, download.chapter.name, download.manga.title)
                 page
             }
@@ -423,7 +423,7 @@ class Downloader(
      * @param filename the filename of the image.
      */
     private fun downloadImage(page: Page, source: HttpSource, tmpDir: UniFile, filename: String): Observable<UniFile> {
-        page.status = Page.DOWNLOAD_IMAGE
+        page.status = Page.State.DOWNLOAD_IMAGE
         page.progress = 0
         return source.fetchImage(page)
             .map { response ->

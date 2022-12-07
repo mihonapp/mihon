@@ -119,19 +119,19 @@ class PagerPageHolder(
      *
      * @param status the new status of the page.
      */
-    private fun processStatus(status: Int) {
+    private fun processStatus(status: Page.State) {
         when (status) {
-            Page.QUEUE -> setQueued()
-            Page.LOAD_PAGE -> setLoading()
-            Page.DOWNLOAD_IMAGE -> {
+            Page.State.QUEUE -> setQueued()
+            Page.State.LOAD_PAGE -> setLoading()
+            Page.State.DOWNLOAD_IMAGE -> {
                 observeProgress()
                 setDownloading()
             }
-            Page.READY -> {
+            Page.State.READY -> {
                 setImage()
                 unsubscribeProgress()
             }
-            Page.ERROR -> {
+            Page.State.ERROR -> {
                 setError()
                 unsubscribeProgress()
             }

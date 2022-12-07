@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import androidx.annotation.CallSuper
+import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import rx.Observable
 
@@ -32,10 +33,9 @@ abstract class PageLoader {
     abstract fun getPages(): Observable<List<ReaderPage>>
 
     /**
-     * Returns an observable that should inform of the progress of the page (see the Page class
-     * for the available states)
+     * Returns an observable that should inform of the progress of the page
      */
-    abstract fun getPage(page: ReaderPage): Observable<Int>
+    abstract fun getPage(page: ReaderPage): Observable<Page.State>
 
     /**
      * Retries the given [page] in case it failed to load. This method only makes sense when an

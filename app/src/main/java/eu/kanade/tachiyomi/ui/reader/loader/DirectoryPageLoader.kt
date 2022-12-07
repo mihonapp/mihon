@@ -25,7 +25,7 @@ class DirectoryPageLoader(val file: File) : PageLoader() {
                 val streamFn = { FileInputStream(file) }
                 ReaderPage(i).apply {
                     stream = streamFn
-                    status = Page.READY
+                    status = Page.State.READY
                 }
             }
             .let { Observable.just(it) }
@@ -34,7 +34,7 @@ class DirectoryPageLoader(val file: File) : PageLoader() {
     /**
      * Returns an observable that emits a ready state.
      */
-    override fun getPage(page: ReaderPage): Observable<Int> {
-        return Observable.just(Page.READY)
+    override fun getPage(page: ReaderPage): Observable<Page.State> {
+        return Observable.just(Page.State.READY)
     }
 }
