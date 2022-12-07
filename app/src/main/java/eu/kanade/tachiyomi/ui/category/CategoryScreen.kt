@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.collectLatest
 
 class CategoryScreen : Screen {
 
-    // Fix certain crash when wrapped inside a Controller
     override val key = uniqueScreenKey
 
     @Composable
