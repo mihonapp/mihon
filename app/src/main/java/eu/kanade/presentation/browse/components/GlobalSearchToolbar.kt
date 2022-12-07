@@ -24,6 +24,7 @@ fun GlobalSearchToolbar(
             searchQuery = searchQuery,
             onChangeSearchQuery = onChangeSearchQuery,
             onSearch = onSearch,
+            onClickCloseSearch = navigateUp,
             navigateUp = navigateUp,
             scrollBehavior = scrollBehavior,
         )
