@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.GlobalSearchScreen
@@ -15,6 +16,8 @@ class GlobalSearchScreen(
     val searchQuery: String = "",
     val extensionFilter: String = "",
 ) : Screen {
+
+    override val key = uniqueScreenKey
 
     @Composable
     override fun Content() {
