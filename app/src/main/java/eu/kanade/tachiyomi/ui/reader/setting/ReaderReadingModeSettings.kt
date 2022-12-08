@@ -44,22 +44,22 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
     private fun initGeneralPreferences() {
         binding.viewer.onItemSelectedListener = { position ->
             val readingModeType = ReadingModeType.fromSpinner(position)
-            (context as ReaderActivity).presenter.setMangaReadingMode(readingModeType.flagValue)
+            (context as ReaderActivity).viewModel.setMangaReadingMode(readingModeType.flagValue)
 
-            val mangaViewer = (context as ReaderActivity).presenter.getMangaReadingMode()
+            val mangaViewer = (context as ReaderActivity).viewModel.getMangaReadingMode()
             if (mangaViewer == ReadingModeType.WEBTOON.flagValue || mangaViewer == ReadingModeType.CONTINUOUS_VERTICAL.flagValue) {
                 initWebtoonPreferences()
             } else {
                 initPagerPreferences()
             }
         }
-        binding.viewer.setSelection((context as ReaderActivity).presenter.manga?.readingModeType?.let { ReadingModeType.fromPreference(it).prefValue } ?: ReadingModeType.DEFAULT.prefValue)
+        binding.viewer.setSelection((context as ReaderActivity).viewModel.manga?.readingModeType?.let { ReadingModeType.fromPreference(it.toInt()).prefValue } ?: ReadingModeType.DEFAULT.prefValue)
 
         binding.rotationMode.onItemSelectedListener = { position ->
             val rotationType = OrientationType.fromSpinner(position)
-            (context as ReaderActivity).presenter.setMangaOrientationType(rotationType.flagValue)
+            (context as ReaderActivity).viewModel.setMangaOrientationType(rotationType.flagValue)
         }
-        binding.rotationMode.setSelection((context as ReaderActivity).presenter.manga?.orientationType?.let { OrientationType.fromPreference(it).prefValue } ?: OrientationType.DEFAULT.prefValue)
+        binding.rotationMode.setSelection((context as ReaderActivity).viewModel.manga?.orientationType?.let { OrientationType.fromPreference(it.toInt()).prefValue } ?: OrientationType.DEFAULT.prefValue)
     }
 
     /**

@@ -1,17 +1,16 @@
 package eu.kanade.domain.manga.model
 
-import eu.kanade.data.listOfStringsAdapter
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.database.models.MangaImpl
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
+import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.Serializable
-import eu.kanade.tachiyomi.data.database.models.Manga as DbManga
 
 data class Manga(
     val id: Long,
@@ -48,6 +47,12 @@ data class Manga(
 
     val bookmarkedFilterRaw: Long
         get() = chapterFlags and CHAPTER_BOOKMARKED_MASK
+
+    val readingModeType: Long
+        get() = viewerFlags and ReadingModeType.MASK.toLong()
+
+    val orientationType: Long
+        get() = viewerFlags and OrientationType.MASK.toLong()
 
     val unreadFilter: TriStateFilter
         get() = when (unreadFilterRaw) {
@@ -185,28 +190,6 @@ fun TriStateFilter.toTriStateGroupState(): ExtendedNavigationView.Item.TriStateG
         TriStateFilter.ENABLED_IS -> ExtendedNavigationView.Item.TriStateGroup.State.INCLUDE
         TriStateFilter.ENABLED_NOT -> ExtendedNavigationView.Item.TriStateGroup.State.EXCLUDE
     }
-}
-
-// TODO: Remove when all deps are migrated
-fun Manga.toDbManga(): DbManga = MangaImpl().also {
-    it.id = id
-    it.source = source
-    it.favorite = favorite
-    it.last_update = lastUpdate
-    it.date_added = dateAdded
-    it.viewer_flags = viewerFlags.toInt()
-    it.chapter_flags = chapterFlags.toInt()
-    it.cover_last_modified = coverLastModified
-    it.url = url
-    it.title = title
-    it.artist = artist
-    it.author = author
-    it.description = description
-    it.genre = genre?.let(listOfStringsAdapter::encode)
-    it.status = status.toInt()
-    it.thumbnail_url = thumbnailUrl
-    it.update_strategy = updateStrategy
-    it.initialized = initialized
 }
 
 fun Manga.toMangaUpdate(): MangaUpdate {

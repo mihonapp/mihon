@@ -239,9 +239,6 @@ dependencies {
     // Preferences
     implementation(libs.preferencektx)
 
-    // Model View Presenter
-    implementation(libs.bundles.nucleus)
-
     // Dependency injection
     implementation(libs.injekt.core)
 
