@@ -187,7 +187,6 @@ dependencies {
     implementation(androidx.paging.compose)
 
     implementation(libs.bundles.sqlite)
-    implementation(androidx.sqlite)
     implementation(libs.sqldelight.android.driver)
     implementation(libs.sqldelight.coroutines)
     implementation(libs.sqldelight.android.paging)

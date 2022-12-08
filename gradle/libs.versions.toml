@@ -4,6 +4,7 @@ okhttp_version = "5.0.0-alpha.10"
 nucleus_version = "3.0.0"
 coil_version = "2.2.2"
 shizuku_version = "12.2.0"
+sqlite = "2.3.0-rc01"
 sqldelight = "1.5.4"
 leakcanary = "2.10"
 voyager = "1.0.0-rc07"
@@ -34,7 +35,8 @@ disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:17bec43"
 junrar = "com.github.junrar:junrar:7.5.4"
 
-sqlitektx = "androidx.sqlite:sqlite-ktx:2.3.0-beta02"
+sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
+sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
 sqlite-android = "com.github.requery:sqlite-android:3.39.2"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.0"
@@ -94,7 +96,7 @@ voyager-transitions = { module = "ca.gosyer:voyager-transitions", version.ref = 
 reactivex = ["rxandroid", "rxjava", "rxrelay"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android"]
-sqlite = ["sqlitektx", "sqlite-android"]
+sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]
 nucleus = ["nucleus-core", "nucleus-supportv7"]
 coil = ["coil-core", "coil-gif", "coil-compose"]
 shizuku = ["shizuku-api", "shizuku-provider"]
