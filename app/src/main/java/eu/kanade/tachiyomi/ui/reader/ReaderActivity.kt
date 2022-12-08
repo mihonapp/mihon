@@ -30,7 +30,6 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.ColorUtils
 import androidx.core.transition.doOnEnd
 import androidx.core.view.WindowCompat
@@ -53,10 +52,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
-import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
-import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegateImpl
-import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
-import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegateImpl
+import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.AddToLibraryFirst
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Error
@@ -82,7 +78,6 @@ import eu.kanade.tachiyomi.util.system.getThemeColor
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.logcat
-import eu.kanade.tachiyomi.util.system.prepareTabletUiContext
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.copy
@@ -107,10 +102,7 @@ import kotlin.math.max
  * Activity containing the reader of Tachiyomi. This activity is mostly a container of the
  * viewers, to which calls from the presenter or UI events are delegated.
  */
-class ReaderActivity :
-    AppCompatActivity(),
-    SecureActivityDelegate by SecureActivityDelegateImpl(),
-    ThemingDelegate by ThemingDelegateImpl() {
+class ReaderActivity : BaseActivity() {
 
     companion object {
         fun newIntent(context: Context, mangaId: Long?, chapterId: Long?): Intent {
@@ -171,15 +163,10 @@ class ReaderActivity :
     var isScrollingThroughPages = false
         private set
 
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(newBase.prepareTabletUiContext())
-    }
-
     /**
      * Called when the activity is created. Initializes the presenter and configuration.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        applyAppTheme(this)
         registerSecureActivity(this)
 
         // Setup shared element transitions
