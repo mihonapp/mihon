@@ -309,7 +309,7 @@ private fun Modifier.selectedOutline(
     }
 
     return this then modifierElementOf(
-        params = isSelected.hashCode() + color.hashCode(),
+        key = isSelected.hashCode() + color.hashCode(),
         create = { SelectedOutlineNode(isSelected, color) },
         update = {
             it.selected = isSelected

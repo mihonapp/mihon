@@ -179,7 +179,6 @@ dependencies {
     implementation(compose.ui.tooling)
     implementation(compose.ui.util)
     implementation(compose.accompanist.webview)
-    implementation(compose.accompanist.swiperefresh)
     implementation(compose.accompanist.flowlayout)
     implementation(compose.accompanist.permissions)
     implementation(compose.accompanist.themeadapter)
@@ -325,6 +324,7 @@ tasks {
             "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
             "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",

@@ -29,8 +29,8 @@ import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.MangaBottomActionMenu
+import eu.kanade.presentation.components.PullRefresh
 import eu.kanade.presentation.components.Scaffold
-import eu.kanade.presentation.components.SwipeRefresh
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
@@ -96,11 +96,11 @@ fun UpdateScreen(
                 val scope = rememberCoroutineScope()
                 var isRefreshing by remember { mutableStateOf(false) }
 
-                SwipeRefresh(
+                PullRefresh(
                     refreshing = isRefreshing,
                     onRefresh = {
                         val started = onUpdateLibrary()
-                        if (!started) return@SwipeRefresh
+                        if (!started) return@PullRefresh
                         scope.launch {
                             // Fake refresh status but hide it after a second as it's a long running task
                             isRefreshing = true

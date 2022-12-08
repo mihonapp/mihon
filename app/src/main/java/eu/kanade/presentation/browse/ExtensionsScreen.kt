@@ -40,7 +40,7 @@ import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.components.SwipeRefresh
+import eu.kanade.presentation.components.PullRefresh
 import eu.kanade.presentation.manga.components.DotSeparatorNoSpaceText
 import eu.kanade.presentation.theme.header
 import eu.kanade.presentation.util.padding
@@ -68,7 +68,7 @@ fun ExtensionScreen(
     onClickUpdateAll: () -> Unit,
     onRefresh: () -> Unit,
 ) {
-    SwipeRefresh(
+    PullRefresh(
         refreshing = state.isRefreshing,
         onRefresh = onRefresh,
         enabled = !state.isLoading,
