@@ -58,8 +58,13 @@ fun HistoryScreen(
             if (it == null) {
                 LoadingScreen(modifier = Modifier.padding(contentPadding))
             } else if (it.isEmpty()) {
+                val msg = if (!state.searchQuery.isNullOrEmpty()) {
+                    R.string.no_results_found
+                } else {
+                    R.string.information_no_recent_manga
+                }
                 EmptyScreen(
-                    textResource = R.string.information_no_recent_manga,
+                    textResource = msg,
                     modifier = Modifier.padding(contentPadding),
                 )
             } else {

@@ -742,16 +742,18 @@ class LibraryScreenModel(
         val showMangaContinueButton: Boolean = false,
         val dialog: Dialog? = null,
     ) {
-        val selectionMode = selection.isNotEmpty()
-
-        val categories = library.keys.toList()
-
-        val libraryCount by lazy {
+        private val libraryCount by lazy {
             library.values
                 .flatten()
                 .fastDistinctBy { it.libraryManga.manga.id }
                 .size
         }
+
+        val isLibraryEmpty by lazy { libraryCount == 0 }
+
+        val selectionMode = selection.isNotEmpty()
+
+        val categories = library.keys.toList()
 
         fun getLibraryItemsByCategoryId(categoryId: Long): List<LibraryItem>? {
             return library.firstNotNullOfOrNull { (k, v) -> v.takeIf { k.id == categoryId } }

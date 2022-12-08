@@ -3,6 +3,7 @@ package eu.kanade.presentation.library.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,8 +14,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.domain.library.model.LibraryManga
+import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.HorizontalPager
 import eu.kanade.presentation.components.PagerState
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
 @Composable
@@ -22,6 +25,7 @@ fun LibraryPager(
     state: PagerState,
     contentPadding: PaddingValues,
     pageCount: Int,
+    hasActiveFilters: Boolean,
     selectedManga: List<LibraryManga>,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
@@ -43,6 +47,12 @@ fun LibraryPager(
             return@HorizontalPager
         }
         val library = getLibraryForPage(page)
+
+        if (library.isEmpty()) {
+            LibraryPagerEmptyScreen(searchQuery, hasActiveFilters, contentPadding)
+            return@HorizontalPager
+        }
+
         val displayMode = getDisplayModeForPage(page)
         val columns by if (displayMode != LibraryDisplayMode.List) {
             val configuration = LocalConfiguration.current
@@ -95,4 +105,22 @@ fun LibraryPager(
             }
         }
     }
+}
+
+@Composable
+private fun LibraryPagerEmptyScreen(
+    searchQuery: String?,
+    hasActiveFilters: Boolean,
+    contentPadding: PaddingValues,
+) {
+    val msg = when {
+        !searchQuery.isNullOrEmpty() -> R.string.no_results_found
+        hasActiveFilters -> R.string.error_no_match
+        else -> R.string.information_no_manga_category
+    }
+
+    EmptyScreen(
+        textResource = msg,
+        modifier = Modifier.padding(contentPadding),
+    )
 }
