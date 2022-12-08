@@ -97,7 +97,7 @@ object LibraryTab : Tab {
             started
         }
         val onClickFilter: () -> Unit = {
-            scope.launch { sendSettingsSheetIntent(state.categories[screenModel.activeCategory]) }
+            scope.launch { sendSettingsSheetIntent(state.categories[screenModel.activeCategoryIndex]) }
         }
 
         Scaffold(
@@ -105,7 +105,7 @@ object LibraryTab : Tab {
                 val title = state.getToolbarTitle(
                     defaultTitle = stringResource(R.string.label_library),
                     defaultCategoryTitle = stringResource(R.string.label_default),
-                    page = screenModel.activeCategory,
+                    page = screenModel.activeCategoryIndex,
                 )
                 val tabVisible = state.showCategoryTabs && state.categories.size > 1
                 LibraryToolbar(
@@ -115,8 +115,8 @@ object LibraryTab : Tab {
                     incognitoMode = !tabVisible && screenModel.isIncognitoMode,
                     downloadedOnlyMode = !tabVisible && screenModel.isDownloadOnly,
                     onClickUnselectAll = screenModel::clearSelection,
-                    onClickSelectAll = { screenModel.selectAll(screenModel.activeCategory) },
-                    onClickInvertSelection = { screenModel.invertSelection(screenModel.activeCategory) },
+                    onClickSelectAll = { screenModel.selectAll(screenModel.activeCategoryIndex) },
+                    onClickInvertSelection = { screenModel.invertSelection(screenModel.activeCategoryIndex) },
                     onClickFilter = onClickFilter,
                     onClickRefresh = { onClickRefresh(null) },
                     onClickOpenRandomManga = {
@@ -169,9 +169,9 @@ object LibraryTab : Tab {
                         searchQuery = state.searchQuery,
                         selection = state.selection,
                         contentPadding = contentPadding,
-                        currentPage = { screenModel.activeCategory },
+                        currentPage = { screenModel.activeCategoryIndex },
                         showPageTabs = state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
-                        onChangeCurrentPage = { screenModel.activeCategory = it },
+                        onChangeCurrentPage = { screenModel.activeCategoryIndex = it },
                         onMangaClicked = { navigator.push(MangaScreen(it)) },
                         onContinueReadingClicked = { it: LibraryManga ->
                             scope.launchIO {
