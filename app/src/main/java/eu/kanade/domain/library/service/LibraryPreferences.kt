@@ -4,7 +4,7 @@ import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
 import eu.kanade.tachiyomi.data.preference.MANGA_HAS_UNREAD
 import eu.kanade.tachiyomi.data.preference.MANGA_NON_COMPLETED
 import eu.kanade.tachiyomi.data.preference.MANGA_NON_READ
-import eu.kanade.tachiyomi.widget.ExtendedNavigationView
+import eu.kanade.tachiyomi.widget.TriState
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
@@ -36,17 +36,17 @@ class LibraryPreferences(
 
     // region Filter
 
-    fun filterDownloaded() = preferenceStore.getInt("pref_filter_library_downloaded", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
+    fun filterDownloaded() = preferenceStore.getInt("pref_filter_library_downloaded", TriState.DISABLED.value)
 
-    fun filterUnread() = preferenceStore.getInt("pref_filter_library_unread", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
+    fun filterUnread() = preferenceStore.getInt("pref_filter_library_unread", TriState.DISABLED.value)
 
-    fun filterStarted() = preferenceStore.getInt("pref_filter_library_started", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
+    fun filterStarted() = preferenceStore.getInt("pref_filter_library_started", TriState.DISABLED.value)
 
-    fun filterBookmarked() = preferenceStore.getInt("pref_filter_library_bookmarked", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
+    fun filterBookmarked() = preferenceStore.getInt("pref_filter_library_bookmarked", TriState.DISABLED.value)
 
-    fun filterCompleted() = preferenceStore.getInt("pref_filter_library_completed", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
+    fun filterCompleted() = preferenceStore.getInt("pref_filter_library_completed", TriState.DISABLED.value)
 
-    fun filterTracking(name: Int) = preferenceStore.getInt("pref_filter_library_tracked_$name", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
+    fun filterTracking(name: Int) = preferenceStore.getInt("pref_filter_library_tracked_$name", TriState.DISABLED.value)
 
     // endregion
 

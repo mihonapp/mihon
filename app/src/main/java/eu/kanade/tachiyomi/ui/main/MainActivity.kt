@@ -78,8 +78,6 @@ import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
-import eu.kanade.tachiyomi.ui.library.LibrarySettingsSheet
-import eu.kanade.tachiyomi.ui.library.LibraryTab
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.util.system.dpToPx
@@ -87,7 +85,6 @@ import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.callbackFlow
@@ -100,7 +97,6 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.Constants
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.category.model.Category
 import tachiyomi.presentation.core.components.material.Scaffold
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -120,11 +116,6 @@ class MainActivity : BaseActivity() {
 
     // To be checked by splash screen. If true then splash screen will be removed.
     var ready = false
-
-    /**
-     * Sheet containing filter/sort/display items.
-     */
-    private var settingsSheet: LibrarySettingsSheet? = null
 
     private var navigator: Navigator? = null
 
@@ -159,11 +150,6 @@ class MainActivity : BaseActivity() {
 
         // Draw edge-to-edge
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        settingsSheet = LibrarySettingsSheet(this)
-        LibraryTab.openSettingsSheetEvent
-            .onEach(::showSettingsSheet)
-            .launchIn(lifecycleScope)
 
         setComposeContent {
             val incognito by preferences.incognitoMode().collectAsState()
@@ -300,14 +286,6 @@ class MainActivity : BaseActivity() {
             is AssistContentScreen -> {
                 screen.onProvideAssistUrl()?.let { outContent.webUri = it.toUri() }
             }
-        }
-    }
-
-    private fun showSettingsSheet(category: Category? = null) {
-        if (category != null) {
-            settingsSheet?.show(category)
-        } else {
-            lifecycleScope.launch { LibraryTab.requestOpenSettingsSheet() }
         }
     }
 
@@ -468,12 +446,6 @@ class MainActivity : BaseActivity() {
 
         ready = true
         return true
-    }
-
-    override fun onDestroy() {
-        settingsSheet?.sheetScope?.cancel()
-        settingsSheet = null
-        super.onDestroy()
     }
 
     override fun onBackPressed() {

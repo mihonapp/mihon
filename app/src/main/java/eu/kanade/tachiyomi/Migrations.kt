@@ -23,7 +23,7 @@ import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.widget.ExtendedNavigationView
+import eu.kanade.tachiyomi.widget.TriState
 import tachiyomi.core.preference.PreferenceStore
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -114,9 +114,9 @@ object Migrations {
                 fun convertBooleanPrefToTriState(key: String): Int {
                     val oldPrefValue = prefs.getBoolean(key, false)
                     return if (oldPrefValue) {
-                        ExtendedNavigationView.Item.TriStateGroup.State.ENABLED_IS.value
+                        TriState.ENABLED_IS.value
                     } else {
-                        ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value
+                        TriState.DISABLED.value
                     }
                 }
                 prefs.edit {

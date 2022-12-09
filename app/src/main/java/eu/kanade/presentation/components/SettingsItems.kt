@@ -1,5 +1,6 @@
 package eu.kanade.presentation.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.rounded.CheckBox
 import androidx.compose.material.icons.rounded.CheckBoxOutlineBlank
 import androidx.compose.material.icons.rounded.DisabledByDefault
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -21,19 +23,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import tachiyomi.domain.manga.model.TriStateFilter
+import tachiyomi.presentation.core.theme.header
+
+@Composable
+fun HeadingItem(
+    @StringRes labelRes: Int,
+) {
+    Text(
+        text = stringResource(labelRes),
+        style = MaterialTheme.typography.header,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 12.dp),
+    )
+}
 
 @Composable
 fun TriStateItem(
     label: String,
     state: TriStateFilter,
+    enabled: Boolean = true,
     onClick: ((TriStateFilter) -> Unit)?,
 ) {
     Row(
         modifier = Modifier
             .clickable(
-                enabled = onClick != null,
+                enabled = enabled && onClick != null,
                 onClick = {
                     when (state) {
                         TriStateFilter.DISABLED -> onClick?.invoke(TriStateFilter.ENABLED_IS)
@@ -47,7 +65,7 @@ fun TriStateItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        val stateAlpha = if (onClick != null) 1f else ContentAlpha.disabled
+        val stateAlpha = if (enabled && onClick != null) 1f else ContentAlpha.disabled
 
         Icon(
             imageVector = when (state) {
@@ -56,7 +74,7 @@ fun TriStateItem(
                 TriStateFilter.ENABLED_NOT -> Icons.Rounded.DisabledByDefault
             },
             contentDescription = null,
-            tint = if (state == TriStateFilter.DISABLED) {
+            tint = if (!enabled || state == TriStateFilter.DISABLED) {
                 MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = stateAlpha)
             } else {
                 when (onClick) {
@@ -102,6 +120,31 @@ fun SortItem(
         } else {
             Spacer(modifier = Modifier.size(24.dp))
         }
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+        )
+    }
+}
+
+@Composable
+fun CheckboxItem(
+    label: String,
+    checked: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .fillMaxWidth()
+            .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = null,
+        )
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,

@@ -1,11 +1,11 @@
 package eu.kanade.presentation.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -20,12 +20,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
@@ -85,26 +82,13 @@ fun TabbedDialog(
             }
             Divider()
 
-            val density = LocalDensity.current
-            var largestHeight by rememberSaveable { mutableStateOf(0f) }
             HorizontalPager(
-                modifier = Modifier.heightIn(min = largestHeight.dp),
+                modifier = Modifier.animateContentSize(),
                 count = tabTitles.size,
                 state = pagerState,
                 verticalAlignment = Alignment.Top,
             ) { page ->
-                Box(
-                    modifier = Modifier.onSizeChanged {
-                        with(density) {
-                            val heightDp = it.height.toDp()
-                            if (heightDp.value > largestHeight) {
-                                largestHeight = heightDp.value
-                            }
-                        }
-                    },
-                ) {
-                    content(contentPadding, page)
-                }
+                content(contentPadding, page)
             }
         }
     }

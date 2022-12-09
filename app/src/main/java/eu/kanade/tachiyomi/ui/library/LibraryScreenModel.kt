@@ -33,7 +33,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
-import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup
+import eu.kanade.tachiyomi.widget.TriState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -149,8 +149,8 @@ class LibraryScreenModel(
                     prefs.filterStarted or
                     prefs.filterBookmarked or
                     prefs.filterCompleted
-                ) != TriStateGroup.State.DISABLED.value
-            val b = trackFilter.values.any { it != TriStateGroup.State.DISABLED.value }
+                ) != TriState.DISABLED.value
+            val b = trackFilter.values.any { it != TriState.DISABLED.value }
             a || b
         }
             .distinctUntilChanged()
@@ -179,17 +179,17 @@ class LibraryScreenModel(
 
         val isNotLoggedInAnyTrack = loggedInTrackServices.isEmpty()
 
-        val excludedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriStateGroup.State.ENABLED_NOT.value) it.key else null }
-        val includedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriStateGroup.State.ENABLED_IS.value) it.key else null }
+        val excludedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriState.ENABLED_NOT.value) it.key else null }
+        val includedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriState.ENABLED_IS.value) it.key else null }
         val trackFiltersIsIgnored = includedTracks.isEmpty() && excludedTracks.isEmpty()
 
         val filterFnDownloaded: (LibraryItem) -> Boolean = downloaded@{
-            if (!downloadedOnly && filterDownloaded == TriStateGroup.State.DISABLED.value) return@downloaded true
+            if (!downloadedOnly && filterDownloaded == TriState.DISABLED.value) return@downloaded true
 
             val isDownloaded = it.libraryManga.manga.isLocal() ||
                 it.downloadCount > 0 ||
                 downloadManager.getDownloadCount(it.libraryManga.manga) > 0
-            return@downloaded if (downloadedOnly || filterDownloaded == TriStateGroup.State.ENABLED_IS.value) {
+            return@downloaded if (downloadedOnly || filterDownloaded == TriState.ENABLED_IS.value) {
                 isDownloaded
             } else {
                 !isDownloaded
@@ -197,10 +197,10 @@ class LibraryScreenModel(
         }
 
         val filterFnUnread: (LibraryItem) -> Boolean = unread@{
-            if (filterUnread == TriStateGroup.State.DISABLED.value) return@unread true
+            if (filterUnread == TriState.DISABLED.value) return@unread true
 
             val isUnread = it.libraryManga.unreadCount > 0
-            return@unread if (filterUnread == TriStateGroup.State.ENABLED_IS.value) {
+            return@unread if (filterUnread == TriState.ENABLED_IS.value) {
                 isUnread
             } else {
                 !isUnread
@@ -208,10 +208,10 @@ class LibraryScreenModel(
         }
 
         val filterFnStarted: (LibraryItem) -> Boolean = started@{
-            if (filterStarted == TriStateGroup.State.DISABLED.value) return@started true
+            if (filterStarted == TriState.DISABLED.value) return@started true
 
             val hasStarted = it.libraryManga.hasStarted
-            return@started if (filterStarted == TriStateGroup.State.ENABLED_IS.value) {
+            return@started if (filterStarted == TriState.ENABLED_IS.value) {
                 hasStarted
             } else {
                 !hasStarted
@@ -219,10 +219,10 @@ class LibraryScreenModel(
         }
 
         val filterFnBookmarked: (LibraryItem) -> Boolean = bookmarked@{
-            if (filterBookmarked == TriStateGroup.State.DISABLED.value) return@bookmarked true
+            if (filterBookmarked == TriState.DISABLED.value) return@bookmarked true
 
             val hasBookmarks = it.libraryManga.hasBookmarks
-            return@bookmarked if (filterBookmarked == TriStateGroup.State.ENABLED_IS.value) {
+            return@bookmarked if (filterBookmarked == TriState.ENABLED_IS.value) {
                 hasBookmarks
             } else {
                 !hasBookmarks
@@ -230,10 +230,10 @@ class LibraryScreenModel(
         }
 
         val filterFnCompleted: (LibraryItem) -> Boolean = completed@{
-            if (filterCompleted == TriStateGroup.State.DISABLED.value) return@completed true
+            if (filterCompleted == TriState.DISABLED.value) return@completed true
 
             val isCompleted = it.libraryManga.manga.status.toInt() == SManga.COMPLETED
-            return@completed if (filterCompleted == TriStateGroup.State.ENABLED_IS.value) {
+            return@completed if (filterCompleted == TriState.ENABLED_IS.value) {
                 isCompleted
             } else {
                 !isCompleted
@@ -572,6 +572,10 @@ class LibraryScreenModel(
         }
     }
 
+    fun showSettingsDialog() {
+        mutableState.update { it.copy(dialog = Dialog.SettingsSheet) }
+    }
+
     fun clearSelection() {
         mutableState.update { it.copy(selection = emptyList()) }
     }
@@ -690,6 +694,7 @@ class LibraryScreenModel(
     }
 
     sealed class Dialog {
+        object SettingsSheet : Dialog()
         data class ChangeCategory(val manga: List<Manga>, val initialSelection: List<CheckboxState<Category>>) : Dialog()
         data class DeleteManga(val manga: List<Manga>) : Dialog()
     }
