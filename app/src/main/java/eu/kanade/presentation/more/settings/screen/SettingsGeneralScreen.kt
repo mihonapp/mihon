@@ -39,6 +39,13 @@ object SettingsGeneralScreen : SearchableSettings {
         return mutableListOf<Preference>().apply {
             add(
                 Preference.PreferenceItem.SwitchPreference(
+                    pref = libraryPrefs.newShowUpdatesCount(),
+                    title = stringResource(R.string.pref_library_update_show_tab_badge),
+                ),
+            )
+
+            add(
+                Preference.PreferenceItem.SwitchPreference(
                     pref = prefs.confirmExit(),
                     title = stringResource(R.string.pref_confirm_exit),
                 ),

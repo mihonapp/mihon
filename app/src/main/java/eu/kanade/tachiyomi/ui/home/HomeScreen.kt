@@ -53,6 +53,7 @@ import eu.kanade.tachiyomi.ui.more.MoreTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import soup.compose.material.motion.animation.materialFadeThroughIn
@@ -233,8 +234,11 @@ object HomeScreen : Screen {
                 when {
                     tab is UpdatesTab -> {
                         val count by produceState(initialValue = 0) {
-                            Injekt.get<LibraryPreferences>()
-                                .newUpdatesCount().changes()
+                            val pref = Injekt.get<LibraryPreferences>()
+                            combine(
+                                pref.newShowUpdatesCount().changes(),
+                                pref.newUpdatesCount().changes(),
+                            ) { show, count -> if (show) count else 0 }
                                 .collectLatest { value = it }
                         }
                         if (count > 0) {
