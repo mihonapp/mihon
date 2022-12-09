@@ -10,7 +10,6 @@ import eu.kanade.core.prefs.CheckboxState
 import eu.kanade.core.prefs.mapAsCheckboxState
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.data.chapter.NoChaptersException
-import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.model.Category
@@ -53,7 +52,6 @@ import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.lang.withUIContext
-import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
 import eu.kanade.tachiyomi.util.system.logcat
@@ -64,7 +62,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -81,7 +78,6 @@ class MangaInfoScreenModel(
     val context: Context,
     val mangaId: Long,
     private val isFromSource: Boolean,
-    basePreferences: BasePreferences = Injekt.get(),
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val uiPreferences: UiPreferences = Injekt.get(),
@@ -129,17 +125,6 @@ class MangaInfoScreenModel(
     private fun updateSuccessState(func: (MangaScreenState.Success) -> MangaScreenState.Success) {
         mutableState.update { if (it is MangaScreenState.Success) func(it) else it }
     }
-
-    private var incognitoMode = false
-        set(value) {
-            updateSuccessState { it.copy(isIncognitoMode = value) }
-            field = value
-        }
-    private var downloadedOnlyMode = false
-        set(value) {
-            updateSuccessState { it.copy(isDownloadedOnlyMode = value) }
-            field = value
-        }
 
     init {
         val toChapterItemsParams: List<Chapter>.(manga: Manga) -> List<ChapterItem> = { manga ->
@@ -189,8 +174,6 @@ class MangaInfoScreenModel(
                     isFromSource = isFromSource,
                     chapters = chapters,
                     isRefreshingData = needRefreshInfo || needRefreshChapter,
-                    isIncognitoMode = incognitoMode,
-                    isDownloadedOnlyMode = downloadedOnlyMode,
                     dialog = null,
                 )
             }
@@ -210,14 +193,6 @@ class MangaInfoScreenModel(
             // Initial loading finished
             updateSuccessState { it.copy(isRefreshingData = false) }
         }
-
-        basePreferences.incognitoMode()
-            .asHotFlow { incognitoMode = it }
-            .launchIn(coroutineScope)
-
-        basePreferences.downloadedOnly()
-            .asHotFlow { downloadedOnlyMode = it }
-            .launchIn(coroutineScope)
     }
 
     fun fetchAllFromSource(manualFetch: Boolean = true) {
@@ -1037,8 +1012,6 @@ sealed class MangaScreenState {
         val chapters: List<ChapterItem>,
         val trackItems: List<TrackItem> = emptyList(),
         val isRefreshingData: Boolean = false,
-        val isIncognitoMode: Boolean = false,
-        val isDownloadedOnlyMode: Boolean = false,
         val dialog: MangaInfoScreenModel.Dialog? = null,
     ) : MangaScreenState() {
 

@@ -45,8 +45,6 @@ fun LibraryContent(
     getDisplayModeForPage: @Composable (Int) -> LibraryDisplayMode,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getLibraryForPage: (Int) -> List<LibraryItem>,
-    isDownloadOnly: Boolean,
-    isIncognitoMode: Boolean,
 ) {
     Column(
         modifier = Modifier.padding(
@@ -65,8 +63,6 @@ fun LibraryContent(
             LibraryTabs(
                 categories = categories,
                 currentPageIndex = pagerState.currentPage,
-                isDownloadOnly = isDownloadOnly,
-                isIncognitoMode = isIncognitoMode,
                 getNumberOfMangaForCategory = getNumberOfMangaForCategory,
             ) { scope.launch { pagerState.animateScrollToPage(it) } }
         }

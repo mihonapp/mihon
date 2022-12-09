@@ -56,8 +56,6 @@ object UpdatesTab : Tab {
         UpdateScreen(
             state = state,
             snackbarHostState = screenModel.snackbarHostState,
-            incognitoMode = screenModel.isIncognitoMode,
-            downloadedOnlyMode = screenModel.isDownloadOnly,
             lastUpdated = screenModel.lastUpdated,
             relativeTime = screenModel.relativeTime,
             onClickCover = { item -> navigator.push(MangaScreen(item.update.mangaId)) },

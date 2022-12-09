@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.category.visualName
-import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.TabIndicator
 import eu.kanade.presentation.components.TabText
@@ -17,8 +16,6 @@ import eu.kanade.presentation.components.TabText
 fun LibraryTabs(
     categories: List<Category>,
     currentPageIndex: Int,
-    isDownloadOnly: Boolean,
-    isIncognitoMode: Boolean,
     getNumberOfMangaForCategory: (Category) -> Int?,
     onTabItemClick: (Int) -> Unit,
 ) {
@@ -47,7 +44,5 @@ fun LibraryTabs(
         }
 
         Divider()
-
-        AppStateBanners(isDownloadOnly, isIncognitoMode)
     }
 }

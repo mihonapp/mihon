@@ -63,9 +63,6 @@ fun AppBar(
     actionModeCounter: Int = 0,
     onCancelActionMode: () -> Unit = {},
     actionModeActions: @Composable RowScope.() -> Unit = {},
-    // Banners
-    downloadedOnlyMode: Boolean = false,
-    incognitoMode: Boolean = false,
 
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
@@ -93,8 +90,6 @@ fun AppBar(
         },
         isActionMode = isActionMode,
         onCancelActionMode = onCancelActionMode,
-        downloadedOnlyMode = downloadedOnlyMode,
-        incognitoMode = incognitoMode,
         scrollBehavior = scrollBehavior,
     )
 }
@@ -112,9 +107,6 @@ fun AppBar(
     // Action mode
     isActionMode: Boolean = false,
     onCancelActionMode: () -> Unit = {},
-    // Banners
-    downloadedOnlyMode: Boolean = false,
-    incognitoMode: Boolean = false,
 
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
@@ -150,8 +142,6 @@ fun AppBar(
             ),
             scrollBehavior = scrollBehavior,
         )
-
-        AppStateBanners(downloadedOnlyMode, incognitoMode)
     }
 }
 
@@ -236,8 +226,6 @@ fun SearchToolbar(
     onSearch: (String) -> Unit = {},
     onClickCloseSearch: () -> Unit = { onChangeSearchQuery(null) },
     actions: @Composable RowScope.() -> Unit = {},
-    incognitoMode: Boolean = false,
-    downloadedOnlyMode: Boolean = false,
     scrollBehavior: TopAppBarScrollBehavior? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -326,8 +314,6 @@ fun SearchToolbar(
             key("actions") { actions() }
         },
         isActionMode = false,
-        downloadedOnlyMode = downloadedOnlyMode,
-        incognitoMode = incognitoMode,
         scrollBehavior = scrollBehavior,
     )
     LaunchedEffect(searchClickCount) {

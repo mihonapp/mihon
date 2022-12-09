@@ -43,8 +43,6 @@ import kotlin.time.Duration.Companion.seconds
 fun UpdateScreen(
     state: UpdatesState,
     snackbarHostState: SnackbarHostState,
-    incognitoMode: Boolean,
-    downloadedOnlyMode: Boolean,
     lastUpdated: Long,
     relativeTime: Int,
     onClickCover: (UpdatesItem) -> Unit,
@@ -65,8 +63,6 @@ fun UpdateScreen(
     Scaffold(
         topBar = { scrollBehavior ->
             UpdatesAppBar(
-                incognitoMode = incognitoMode,
-                downloadedOnlyMode = downloadedOnlyMode,
                 onUpdateLibrary = { onUpdateLibrary() },
                 actionModeCounter = state.selected.size,
                 onSelectAll = { onSelectAll(true) },
@@ -136,8 +132,6 @@ fun UpdateScreen(
 @Composable
 private fun UpdatesAppBar(
     modifier: Modifier = Modifier,
-    incognitoMode: Boolean,
-    downloadedOnlyMode: Boolean,
     onUpdateLibrary: () -> Unit,
     // For action mode
     actionModeCounter: Int,
@@ -173,8 +167,6 @@ private fun UpdatesAppBar(
                 )
             }
         },
-        downloadedOnlyMode = downloadedOnlyMode,
-        incognitoMode = incognitoMode,
         scrollBehavior = scrollBehavior,
     )
 }

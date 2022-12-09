@@ -9,13 +9,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import eu.kanade.core.prefs.asState
-import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.components.TabbedScreen
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
@@ -25,8 +21,6 @@ import eu.kanade.tachiyomi.ui.browse.migration.sources.migrateSourceTab
 import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.storage.DiskUtil
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 data class BrowseTab(
     private val toExtensions: Boolean = false,
@@ -47,7 +41,6 @@ data class BrowseTab(
     @Composable
     override fun Content() {
         val context = LocalContext.current
-        val screenModel = rememberScreenModel { BrowseScreenModel() }
 
         // Hoisted for extensions tab's search bar
         val extensionsScreenModel = rememberScreenModel { ExtensionsScreenModel() }
@@ -63,8 +56,6 @@ data class BrowseTab(
             startIndex = 1.takeIf { toExtensions },
             searchQuery = extensionsQuery,
             onChangeSearchQuery = extensionsScreenModel::search,
-            incognitoMode = screenModel.isIncognitoMode,
-            downloadedOnlyMode = screenModel.isDownloadOnly,
         )
 
         // For local source
@@ -74,11 +65,4 @@ data class BrowseTab(
             (context as? MainActivity)?.ready = true
         }
     }
-}
-
-private class BrowseScreenModel(
-    preferences: BasePreferences = Injekt.get(),
-) : ScreenModel {
-    val isDownloadOnly: Boolean by preferences.downloadedOnly().asState(coroutineScope)
-    val isIncognitoMode: Boolean by preferences.incognitoMode().asState(coroutineScope)
 }

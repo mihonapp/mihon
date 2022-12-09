@@ -62,8 +62,6 @@ object HistoryTab : Tab {
         HistoryScreen(
             state = state,
             snackbarHostState = snackbarHostState,
-            incognitoMode = screenModel.isIncognitoMode,
-            downloadedOnlyMode = screenModel.isDownloadOnly,
             onSearchQueryChange = screenModel::updateSearchQuery,
             onClickCover = { navigator.push(MangaScreen(it)) },
             onClickResume = screenModel::getNextChapterForManga,

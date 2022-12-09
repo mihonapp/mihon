@@ -182,6 +182,7 @@ dependencies {
     implementation(compose.accompanist.flowlayout)
     implementation(compose.accompanist.permissions)
     implementation(compose.accompanist.themeadapter)
+    implementation(compose.accompanist.systemuicontroller)
 
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)

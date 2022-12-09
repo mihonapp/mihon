@@ -26,8 +26,6 @@ import java.util.Date
 fun HistoryScreen(
     state: HistoryState,
     snackbarHostState: SnackbarHostState,
-    incognitoMode: Boolean,
-    downloadedOnlyMode: Boolean,
     onSearchQueryChange: (String?) -> Unit,
     onClickCover: (mangaId: Long) -> Unit,
     onClickResume: (mangaId: Long, chapterId: Long) -> Unit,
@@ -47,8 +45,6 @@ fun HistoryScreen(
                         )
                     }
                 },
-                downloadedOnlyMode = downloadedOnlyMode,
-                incognitoMode = incognitoMode,
                 scrollBehavior = scrollBehavior,
             )
         },

@@ -112,8 +112,6 @@ object LibraryTab : Tab {
                     hasActiveFilters = state.hasActiveFilters,
                     selectedCount = state.selection.size,
                     title = title,
-                    incognitoMode = !tabVisible && screenModel.isIncognitoMode,
-                    downloadedOnlyMode = !tabVisible && screenModel.isDownloadOnly,
                     onClickUnselectAll = screenModel::clearSelection,
                     onClickSelectAll = { screenModel.selectAll(screenModel.activeCategoryIndex) },
                     onClickInvertSelection = { screenModel.invertSelection(screenModel.activeCategoryIndex) },
@@ -197,10 +195,7 @@ object LibraryTab : Tab {
                         getNumberOfMangaForCategory = { state.getMangaCountForCategory(it) },
                         getDisplayModeForPage = { state.categories[it].display },
                         getColumnsForOrientation = { screenModel.getColumnsPreferenceForCurrentOrientation(it) },
-                        getLibraryForPage = { state.getLibraryItemsByPage(it) },
-                        isDownloadOnly = screenModel.isDownloadOnly,
-                        isIncognitoMode = screenModel.isIncognitoMode,
-                    )
+                    ) { state.getLibraryItemsByPage(it) }
                 }
             }
         }

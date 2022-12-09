@@ -1,7 +1,13 @@
 package eu.kanade.presentation.more
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.GetApp
@@ -18,8 +24,8 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.Divider
+import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
@@ -45,125 +51,125 @@ fun MoreScreen(
 ) {
     val uriHandler = LocalUriHandler.current
 
-    ScrollbarLazyColumn(
-        modifier = Modifier.systemBarsPadding(),
-    ) {
-        if (isFDroid) {
+    Scaffold(
+        topBar = {
+            Column(
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.systemBars.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                ),
+            ) {
+                if (isFDroid) {
+                    WarningBanner(
+                        textRes = R.string.fdroid_warning,
+                        modifier = Modifier.clickable {
+                            uriHandler.openUri("https://tachiyomi.org/help/faq/#how-do-i-migrate-from-the-f-droid-version")
+                        },
+                    )
+                }
+            }
+        },
+    ) { contentPadding ->
+        ScrollbarLazyColumn(
+            modifier = Modifier.padding(contentPadding),
+        ) {
             item {
-                WarningBanner(
-                    textRes = R.string.fdroid_warning,
-                    modifier = Modifier.clickable {
-                        uriHandler.openUri("https://tachiyomi.org/help/faq/#how-do-i-migrate-from-the-f-droid-version")
-                    },
+                LogoHeader()
+            }
+            item {
+                SwitchPreferenceWidget(
+                    title = stringResource(R.string.label_downloaded_only),
+                    subtitle = stringResource(R.string.downloaded_only_summary),
+                    icon = Icons.Outlined.CloudOff,
+                    checked = downloadedOnly,
+                    onCheckedChanged = onDownloadedOnlyChange,
                 )
             }
-        }
+            item {
+                SwitchPreferenceWidget(
+                    title = stringResource(R.string.pref_incognito_mode),
+                    subtitle = stringResource(R.string.pref_incognito_mode_summary),
+                    icon = ImageVector.vectorResource(R.drawable.ic_glasses_24dp),
+                    checked = incognitoMode,
+                    onCheckedChanged = onIncognitoModeChange,
+                )
+            }
 
-        item {
-            LogoHeader()
-        }
+            item { Divider() }
 
-        item {
-            AppStateBanners(
-                downloadedOnlyMode = downloadedOnly,
-                incognitoMode = incognitoMode,
-            )
-        }
-
-        item {
-            SwitchPreferenceWidget(
-                title = stringResource(R.string.label_downloaded_only),
-                subtitle = stringResource(R.string.downloaded_only_summary),
-                icon = Icons.Outlined.CloudOff,
-                checked = downloadedOnly,
-                onCheckedChanged = onDownloadedOnlyChange,
-            )
-        }
-        item {
-            SwitchPreferenceWidget(
-                title = stringResource(R.string.pref_incognito_mode),
-                subtitle = stringResource(R.string.pref_incognito_mode_summary),
-                icon = ImageVector.vectorResource(R.drawable.ic_glasses_24dp),
-                checked = incognitoMode,
-                onCheckedChanged = onIncognitoModeChange,
-            )
-        }
-
-        item { Divider() }
-
-        item {
-            val downloadQueueState = downloadQueueStateProvider()
-            TextPreferenceWidget(
-                title = stringResource(R.string.label_download_queue),
-                subtitle = when (downloadQueueState) {
-                    DownloadQueueState.Stopped -> null
-                    is DownloadQueueState.Paused -> {
-                        val pending = downloadQueueState.pending
-                        if (pending == 0) {
-                            stringResource(R.string.paused)
-                        } else {
-                            "${stringResource(R.string.paused)} • ${
-                            pluralStringResource(
-                                id = R.plurals.download_queue_summary,
-                                count = pending,
-                                pending,
-                            )
-                            }"
+            item {
+                val downloadQueueState = downloadQueueStateProvider()
+                TextPreferenceWidget(
+                    title = stringResource(R.string.label_download_queue),
+                    subtitle = when (downloadQueueState) {
+                        DownloadQueueState.Stopped -> null
+                        is DownloadQueueState.Paused -> {
+                            val pending = downloadQueueState.pending
+                            if (pending == 0) {
+                                stringResource(R.string.paused)
+                            } else {
+                                "${stringResource(R.string.paused)} • ${
+                                pluralStringResource(
+                                    id = R.plurals.download_queue_summary,
+                                    count = pending,
+                                    pending,
+                                )
+                                }"
+                            }
                         }
-                    }
-                    is DownloadQueueState.Downloading -> {
-                        val pending = downloadQueueState.pending
-                        pluralStringResource(id = R.plurals.download_queue_summary, count = pending, pending)
-                    }
-                },
-                icon = Icons.Outlined.GetApp,
-                onPreferenceClick = onClickDownloadQueue,
-            )
-        }
-        item {
-            TextPreferenceWidget(
-                title = stringResource(R.string.categories),
-                icon = Icons.Outlined.Label,
-                onPreferenceClick = onClickCategories,
-            )
-        }
-        item {
-            TextPreferenceWidget(
-                title = stringResource(R.string.label_stats),
-                icon = Icons.Outlined.QueryStats,
-                onPreferenceClick = onClickStats,
-            )
-        }
-        item {
-            TextPreferenceWidget(
-                title = stringResource(R.string.label_backup),
-                icon = Icons.Outlined.SettingsBackupRestore,
-                onPreferenceClick = onClickBackupAndRestore,
-            )
-        }
+                        is DownloadQueueState.Downloading -> {
+                            val pending = downloadQueueState.pending
+                            pluralStringResource(id = R.plurals.download_queue_summary, count = pending, pending)
+                        }
+                    },
+                    icon = Icons.Outlined.GetApp,
+                    onPreferenceClick = onClickDownloadQueue,
+                )
+            }
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(R.string.categories),
+                    icon = Icons.Outlined.Label,
+                    onPreferenceClick = onClickCategories,
+                )
+            }
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(R.string.label_stats),
+                    icon = Icons.Outlined.QueryStats,
+                    onPreferenceClick = onClickStats,
+                )
+            }
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(R.string.label_backup),
+                    icon = Icons.Outlined.SettingsBackupRestore,
+                    onPreferenceClick = onClickBackupAndRestore,
+                )
+            }
 
-        item { Divider() }
+            item { Divider() }
 
-        item {
-            TextPreferenceWidget(
-                title = stringResource(R.string.label_settings),
-                icon = Icons.Outlined.Settings,
-                onPreferenceClick = onClickSettings,
-            )
-        }
-        item {
-            TextPreferenceWidget(
-                title = stringResource(R.string.pref_category_about),
-                icon = Icons.Outlined.Info,
-                onPreferenceClick = onClickAbout,
-            )
-        }
-        item {
-            TextPreferenceWidget(
-                title = stringResource(R.string.label_help),
-                icon = Icons.Outlined.HelpOutline,
-                onPreferenceClick = { uriHandler.openUri(Constants.URL_HELP) },
-            )
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(R.string.label_settings),
+                    icon = Icons.Outlined.Settings,
+                    onPreferenceClick = onClickSettings,
+                )
+            }
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(R.string.pref_category_about),
+                    icon = Icons.Outlined.Info,
+                    onPreferenceClick = onClickAbout,
+                )
+            }
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(R.string.label_help),
+                    icon = Icons.Outlined.HelpOutline,
+                    onPreferenceClick = { uriHandler.openUri(Constants.URL_HELP) },
+                )
+            }
         }
     }
 }
