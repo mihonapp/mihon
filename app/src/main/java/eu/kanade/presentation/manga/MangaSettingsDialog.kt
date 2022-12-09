@@ -1,6 +1,5 @@
 package eu.kanade.presentation.manga
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,7 +46,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import eu.kanade.domain.manga.model.Manga
@@ -59,6 +57,7 @@ import eu.kanade.presentation.components.HorizontalPager
 import eu.kanade.presentation.components.TabIndicator
 import eu.kanade.presentation.components.rememberPagerState
 import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.util.ThemePreviews
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.launch
 
@@ -472,13 +471,7 @@ private fun DisplayPageItem(
 private val HorizontalPadding = 24.dp
 private val VerticalPadding = 8.dp
 
-@Preview(
-    name = "Light",
-)
-@Preview(
-    name = "Dark",
-    uiMode = UI_MODE_NIGHT_YES,
-)
+@ThemePreviews
 @Composable
 private fun ChapterSettingsDialogPreview() {
     TachiyomiTheme {

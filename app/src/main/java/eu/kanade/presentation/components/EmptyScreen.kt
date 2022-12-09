@@ -1,6 +1,5 @@
 package eu.kanade.presentation.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,10 +26,10 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastFirstOrNull
 import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.util.ThemePreviews
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 import kotlin.random.Random
@@ -146,17 +145,7 @@ private fun ActionButton(
     }
 }
 
-@Preview(
-    name = "Light",
-    widthDp = 400,
-    heightDp = 400,
-)
-@Preview(
-    name = "Dark",
-    widthDp = 400,
-    heightDp = 400,
-    uiMode = UI_MODE_NIGHT_YES,
-)
+@ThemePreviews
 @Composable
 private fun NoActionPreview() {
     TachiyomiTheme {
@@ -168,17 +157,7 @@ private fun NoActionPreview() {
     }
 }
 
-@Preview(
-    name = "Light",
-    widthDp = 400,
-    heightDp = 400,
-)
-@Preview(
-    name = "Dark",
-    widthDp = 400,
-    heightDp = 400,
-    uiMode = UI_MODE_NIGHT_YES,
-)
+@ThemePreviews
 @Composable
 private fun WithActionPreview() {
     TachiyomiTheme {

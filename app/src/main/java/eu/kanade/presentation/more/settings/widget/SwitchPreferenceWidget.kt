@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Preview
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
+import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.util.ThemePreviews
 
 @Composable
 fun SwitchPreferenceWidget(
@@ -37,10 +37,10 @@ fun SwitchPreferenceWidget(
     )
 }
 
-@Preview
+@ThemePreviews
 @Composable
 private fun SwitchPreferenceWidgetPreview() {
-    MaterialTheme {
+    TachiyomiTheme {
         Surface {
             Column {
                 SwitchPreferenceWidget(

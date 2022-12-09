@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more.settings.widget
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,9 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.util.ThemePreviews
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 
@@ -38,16 +37,7 @@ internal fun InfoWidget(text: String) {
     }
 }
 
-@Preview(
-    name = "Light",
-    showBackground = true,
-)
-@Preview(
-    name = "Dark",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES,
-
-)
+@ThemePreviews
 @Composable
 private fun InfoWidgetPreview() {
     TachiyomiTheme {
