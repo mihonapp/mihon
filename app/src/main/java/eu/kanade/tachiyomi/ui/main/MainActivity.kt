@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -42,16 +41,14 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
 import cafe.adriel.voyager.navigator.currentOrThrow
-import cafe.adriel.voyager.transitions.ScreenTransition
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.category.model.Category
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppStateBanners
-import eu.kanade.presentation.util.Transition
+import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
@@ -117,11 +114,6 @@ class MainActivity : BaseActivity() {
 
         // Prevent splash screen showing up on configuration changes
         val splashScreen = if (savedInstanceState == null) installSplashScreen() else null
-
-        // Set up shared element transition and disable overlay so views don't show above system bars
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-        setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        window.sharedElementsUseOverlay = false
 
         super.onCreate(savedInstanceState)
 
@@ -196,7 +188,7 @@ class MainActivity : BaseActivity() {
                     }
                     Box(modifier = boxModifier) {
                         // Shows current screen
-                        ScreenTransition(navigator = navigator, transition = { Transition.OneWayFade })
+                        DefaultNavigatorScreenTransition(navigator = navigator)
                     }
 
                     // Pop source-related screens when incognito mode is turned off

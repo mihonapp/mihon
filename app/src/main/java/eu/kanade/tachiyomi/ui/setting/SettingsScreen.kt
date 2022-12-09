@@ -6,14 +6,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import cafe.adriel.voyager.transitions.ScreenTransition
 import eu.kanade.presentation.components.TwoPanelBox
 import eu.kanade.presentation.more.settings.screen.AboutScreen
 import eu.kanade.presentation.more.settings.screen.SettingsBackupScreen
 import eu.kanade.presentation.more.settings.screen.SettingsGeneralScreen
 import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
+import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.presentation.util.LocalBackPress
-import eu.kanade.presentation.util.Transition
 import eu.kanade.presentation.util.isTabletUi
 
 class SettingsScreen private constructor(
@@ -42,10 +41,7 @@ class SettingsScreen private constructor(
                         }
                     }
                     CompositionLocalProvider(LocalBackPress provides pop) {
-                        ScreenTransition(
-                            navigator = it,
-                            transition = { Transition.OneWayFade },
-                        )
+                        DefaultNavigatorScreenTransition(navigator = it)
                     }
                 },
             )
@@ -65,12 +61,7 @@ class SettingsScreen private constructor(
                             SettingsMainScreen.Content(twoPane = true)
                         }
                     },
-                    endContent = {
-                        ScreenTransition(
-                            navigator = it,
-                            transition = { Transition.OneWayFade },
-                        )
-                    },
+                    endContent = { DefaultNavigatorScreenTransition(navigator = it) },
                 )
             }
         }

@@ -268,6 +268,7 @@ dependencies {
     implementation(libs.cascade)
     implementation(libs.bundles.voyager)
     implementation(libs.wheelpicker)
+    implementation(libs.materialmotion.core)
 
     // Logging
     implementation(libs.logcat)

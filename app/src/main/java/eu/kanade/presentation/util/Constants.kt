@@ -1,10 +1,5 @@
 package eu.kanade.presentation.util
 
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.with
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
@@ -29,15 +24,3 @@ class Padding {
 
 val MaterialTheme.padding: Padding
     get() = Padding()
-
-object Transition {
-
-    /**
-     * Mimics [eu.kanade.tachiyomi.ui.base.controller.OneWayFadeChangeHandler]
-     */
-    val OneWayFade = fadeIn(
-        animationSpec = tween(
-            easing = LinearEasing,
-        ),
-    ) with ExitTransition.None
-}
