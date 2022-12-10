@@ -1,6 +1,7 @@
 package eu.kanade.presentation.webview
 
 import android.content.pm.ApplicationInfo
+import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ fun WebViewScreen(
     initialTitle: String?,
     url: String,
     headers: Map<String, String> = emptyMap(),
+    onUrlChange: (String) -> Unit = {},
     onShare: (String) -> Unit,
     onOpenInBrowser: (String) -> Unit,
     onClearCookies: (String) -> Unit,
@@ -112,6 +114,11 @@ fun WebViewScreen(
     ) { contentPadding ->
         val webClient = remember {
             object : AccompanistWebViewClient() {
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    super.onPageStarted(view, url, favicon)
+                    url?.let { onUrlChange(it) }
+                }
+
                 override fun shouldOverrideUrlLoading(
                     view: WebView?,
                     request: WebResourceRequest?,

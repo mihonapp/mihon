@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.main
 
 import android.animation.ValueAnimator
 import android.app.SearchManager
+import android.app.assist.AssistContent
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -32,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.animation.doOnEnd
+import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -49,6 +51,7 @@ import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppStateBanners
+import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.BuildConfig
@@ -259,6 +262,15 @@ class MainActivity : BaseActivity() {
             elapsed <= SPLASH_MIN_DURATION || (!ready && elapsed <= SPLASH_MAX_DURATION)
         }
         setSplashScreenExitAnimation(splashScreen)
+    }
+
+    override fun onProvideAssistContent(outContent: AssistContent) {
+        super.onProvideAssistContent(outContent)
+        when (val screen = navigator.lastItem) {
+            is AssistContentScreen -> {
+                screen.onProvideAssistUrl()?.let { outContent.webUri = it.toUri() }
+            }
+        }
     }
 
     private fun showSettingsSheet(category: Category? = null) {

@@ -18,6 +18,10 @@ interface Tab : cafe.adriel.voyager.navigator.tab.Tab {
     suspend fun onReselect(navigator: Navigator) {}
 }
 
+interface AssistContentScreen {
+    fun onProvideAssistUrl(): String?
+}
+
 @Composable
 fun DefaultNavigatorScreenTransition(navigator: Navigator) {
     val slideDistance = rememberSlideDistance()

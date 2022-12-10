@@ -2,11 +2,11 @@ package eu.kanade.tachiyomi.ui.manga
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.core.net.toUri
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
@@ -34,6 +35,7 @@ import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.DownloadCustomAmountDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
+import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.Source
@@ -47,17 +49,24 @@ import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
+import logcat.LogPriority
 
 class MangaScreen(
     private val mangaId: Long,
     val fromSource: Boolean = false,
-) : Screen {
+) : Screen, AssistContentScreen {
+
+    private var assistUrl: String? = null
 
     override val key = uniqueScreenKey
+
+    override fun onProvideAssistUrl() = assistUrl
 
     @Composable
     override fun Content() {
@@ -76,6 +85,18 @@ class MangaScreen(
 
         val successState = state as MangaScreenState.Success
         val isHttpSource = remember { successState.source is HttpSource }
+
+        LaunchedEffect(successState.manga, screenModel.source) {
+            if (isHttpSource) {
+                try {
+                    withIOContext {
+                        assistUrl = getMangaUrl(screenModel.manga, screenModel.source)
+                    }
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e) { "Failed to get manga URL" }
+                }
+            }
+        }
 
         MangaScreen(
             state = successState,
@@ -208,27 +229,35 @@ class MangaScreen(
         context.startActivity(ReaderActivity.newIntent(context, chapter.mangaId, chapter.id))
     }
 
-    private fun openMangaInWebView(context: Context, manga_: Manga?, source_: Source?) {
-        val manga = manga_ ?: return
-        val source = source_ as? HttpSource ?: return
+    private fun getMangaUrl(manga_: Manga?, source_: Source?): String? {
+        val manga = manga_ ?: return null
+        val source = source_ as? HttpSource ?: return null
 
-        val url = try {
+        return try {
             source.getMangaUrl(manga.toSManga())
         } catch (e: Exception) {
-            return
+            null
         }
+    }
 
-        val intent = WebViewActivity.newIntent(context, url, source.id, manga.title)
-        context.startActivity(intent)
+    private fun openMangaInWebView(context: Context, manga_: Manga?, source_: Source?) {
+        getMangaUrl(manga_, source_)?.let { url ->
+            val intent = WebViewActivity.newIntent(context, url, source_?.id, manga_?.title)
+            context.startActivity(intent)
+        }
     }
 
     private fun shareManga(context: Context, manga_: Manga?, source_: Source?) {
-        val manga = manga_ ?: return
-        val source = source_ as? HttpSource ?: return
         try {
-            val uri = Uri.parse(source.getMangaUrl(manga.toSManga()))
-            val intent = uri.toShareIntent(context, type = "text/plain")
-            context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_share)))
+            getMangaUrl(manga_, source_)?.let { url ->
+                val intent = url.toUri().toShareIntent(context, type = "text/plain")
+                context.startActivity(
+                    Intent.createChooser(
+                        intent,
+                        context.getString(R.string.action_share),
+                    ),
+                )
+            }
         } catch (e: Exception) {
             context.toast(e.message)
         }

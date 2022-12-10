@@ -47,6 +47,7 @@ import eu.kanade.presentation.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.DuplicateMangaDialog
 import eu.kanade.presentation.components.Scaffold
+import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -62,9 +63,13 @@ import kotlinx.coroutines.flow.receiveAsFlow
 data class BrowseSourceScreen(
     private val sourceId: Long,
     private val query: String? = null,
-) : Screen {
+) : Screen, AssistContentScreen {
+
+    private var assistUrl: String? = null
 
     override val key = uniqueScreenKey
+
+    override fun onProvideAssistUrl() = assistUrl
 
     @Composable
     override fun Content() {
@@ -74,7 +79,7 @@ data class BrowseSourceScreen(
         val haptic = LocalHapticFeedback.current
         val uriHandler = LocalUriHandler.current
 
-        val screenModel = rememberScreenModel { BrowseSourceScreenModel(sourceId = sourceId, searchQuery = query) }
+        val screenModel = rememberScreenModel { BrowseSourceScreenModel(sourceId, query) }
         val state by screenModel.state.collectAsState()
 
         val snackbarHostState = remember { SnackbarHostState() }
@@ -85,6 +90,10 @@ data class BrowseSourceScreen(
             val source = screenModel.source as? HttpSource ?: return@f
             val intent = WebViewActivity.newIntent(context, source.baseUrl, source.id, source.name)
             context.startActivity(intent)
+        }
+
+        LaunchedEffect(screenModel.source) {
+            assistUrl = (screenModel.source as? HttpSource)?.baseUrl
         }
 
         Scaffold(

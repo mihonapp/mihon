@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.webview
 
+import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -24,6 +25,8 @@ class WebViewActivity : BaseActivity() {
 
     private val sourceManager: SourceManager by injectLazy()
     private val network: NetworkHelper by injectLazy()
+
+    private var assistUrl: String? = null
 
     init {
         registerSecureActivity(this)
@@ -52,11 +55,17 @@ class WebViewActivity : BaseActivity() {
                 initialTitle = intent.extras?.getString(TITLE_KEY),
                 url = url,
                 headers = headers,
+                onUrlChange = { assistUrl = it },
                 onShare = this::shareWebpage,
                 onOpenInBrowser = this::openInBrowser,
                 onClearCookies = this::clearCookies,
             )
         }
+    }
+
+    override fun onProvideAssistContent(outContent: AssistContent) {
+        super.onProvideAssistContent(outContent)
+        assistUrl?.let { outContent.webUri = it.toUri() }
     }
 
     override fun finish() {
