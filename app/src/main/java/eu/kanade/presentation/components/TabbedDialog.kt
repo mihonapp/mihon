@@ -32,6 +32,11 @@ import androidx.compose.ui.util.fastForEachIndexed
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.launch
 
+object TabbedDialogPaddings {
+    val Horizontal = 24.dp
+    val Vertical = 8.dp
+}
+
 @Composable
 fun TabbedDialog(
     onDismissRequest: () -> Unit,
@@ -72,9 +77,7 @@ fun TabbedDialog(
                     }
                 }
 
-                tabOverflowMenuContent?.let {
-                    MoreMenu(tabOverflowMenuContent)
-                }
+                tabOverflowMenuContent?.let { MoreMenu(it) }
             }
             Divider()
 
