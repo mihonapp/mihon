@@ -1,7 +1,14 @@
 package eu.kanade.tachiyomi.ui.setting
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -55,7 +62,11 @@ class SettingsScreen private constructor(
                     SettingsGeneralScreen
                 },
             ) {
+                val insets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
                 TwoPanelBox(
+                    modifier = Modifier
+                        .windowInsetsPadding(insets)
+                        .consumeWindowInsets(insets),
                     startContent = {
                         CompositionLocalProvider(LocalBackPress provides parentNavigator::pop) {
                             SettingsMainScreen.Content(twoPane = true)
