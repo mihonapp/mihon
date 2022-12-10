@@ -374,3 +374,11 @@ fun Context.getApplicationIcon(pkgName: String): Drawable? {
         null
     }
 }
+
+/**
+ * Gets system's config_navBarNeedsScrim boolean flag added in Android 10, defaults to true.
+ */
+fun Context.isNavigationBarNeedsScrim(): Boolean {
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
+        InternalResourceHelper.getBoolean(this, "config_navBarNeedsScrim", true)
+}
