@@ -5,10 +5,6 @@
     <!--Toolbars-->
     <!--========-->
 
-    <style name="Theme.Tachiyomi.ActionMode.CloseButton" parent="Widget.AppCompat.ActionButton.CloseMode">
-        <item name="android:tint">?attr/colorOnSurface</item>
-    </style>
-
     <style name="Theme.Tachiyomi.ActionButton.Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">?attr/colorOnSurface</item>
     </style>
@@ -78,11 +74,6 @@
         <item name="android:background">@drawable/list_item_selector</item>
     </style>
 
-    <style name="Widget.Tachiyomi.CircularProgressIndicator.Small" parent="Widget.Material3.CircularProgressIndicator">
-        <item name="indicatorSize">16dp</item>
-        <item name="trackThickness">2dp</item>
-    </style>
-
 
     <!--=======================-->
     <!--Widgets.MaterialDivider-->
@@ -123,20 +114,6 @@
         <item name="tickVisible">false</item>
         <item name="trackColorInactive">@color/slider_inactive_track</item>
         <item name="trackColorActive">@color/slider_active_track</item>
-    </style>
-
-
-    <!--================-->
-    <!--Navigation Views-->
-    <!--================-->
-    <style name="Widget.Tachiyomi.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="itemRippleColor">@color/ripple_toolbar_fainter</item>
-        <item name="labelVisibilityMode">labeled</item>
-    </style>
-
-    <style name="Widget.Tachiyomi.NavigationRailView" parent="Widget.Material3.NavigationRailView">
-        <item name="itemRippleColor">@color/ripple_toolbar_fainter</item>
-        <item name="labelVisibilityMode">labeled</item>
     </style>
 
 
