@@ -19,10 +19,12 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withTimeout
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -47,7 +49,9 @@ class DownloadCache(
     private val scope = CoroutineScope(Dispatchers.IO)
 
     private val _changes: Channel<Unit> = Channel(Channel.UNLIMITED)
-    val changes = _changes.receiveAsFlow().onStart { emit(Unit) }
+    val changes = _changes.receiveAsFlow()
+        .onStart { emit(Unit) }
+        .shareIn(scope, SharingStarted.Eagerly, 1)
 
     private val notifier by lazy { DownloadNotifier(context) }
 

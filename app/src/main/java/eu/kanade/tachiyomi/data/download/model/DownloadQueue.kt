@@ -10,9 +10,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.shareIn
 import rx.Observable
 import rx.subjects.PublishSubject
 import java.util.concurrent.CopyOnWriteArrayList
@@ -27,7 +29,10 @@ class DownloadQueue(
     private val statusSubject = PublishSubject.create<Download>()
 
     private val _updates: Channel<Unit> = Channel(Channel.UNLIMITED)
-    val updates = _updates.receiveAsFlow().onStart { emit(Unit) }.map { queue }
+    val updates = _updates.receiveAsFlow()
+        .onStart { emit(Unit) }
+        .map { queue }
+        .shareIn(scope, SharingStarted.Eagerly, 1)
 
     fun addAll(downloads: List<Download>) {
         downloads.forEach { download ->
