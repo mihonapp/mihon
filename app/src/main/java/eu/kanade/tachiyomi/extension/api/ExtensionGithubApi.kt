@@ -87,8 +87,9 @@ internal class ExtensionGithubApi {
         for (installedExt in installedExtensions) {
             val pkgName = installedExt.pkgName
             val availableExt = extensions.find { it.pkgName == pkgName } ?: continue
-
-            val hasUpdate = installedExt.isUnofficial.not() && (availableExt.versionCode > installedExt.versionCode)
+            val hasUpdatedVer = availableExt.versionCode > installedExt.versionCode
+            val hasUpdatedLib = availableExt.libVersion > installedExt.libVersion
+            val hasUpdate = installedExt.isUnofficial.not() && (hasUpdatedVer || hasUpdatedLib)
             if (hasUpdate) {
                 extensionsWithUpdate.add(installedExt)
             }
