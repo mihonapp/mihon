@@ -377,13 +377,6 @@ class ReaderActivity : BaseActivity() {
         return handled || super.dispatchGenericMotionEvent(event)
     }
 
-    private fun buildContainerTransform(entering: Boolean): MaterialContainerTransform {
-        return MaterialContainerTransform(this, entering).apply {
-            duration = 350 // ms
-            addTarget(android.R.id.content)
-        }
-    }
-
     /**
      * Initializes the reader menu. It sets up click listeners and the initial visibility.
      */
