@@ -67,6 +67,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
@@ -212,11 +213,12 @@ class ReaderViewModel(
         // To save state
         state.map { it.viewerChapters?.currChapter }
             .distinctUntilChanged()
+            .filterNotNull()
             .onEach { currentChapter ->
-                if (currentChapter != null) {
+                if (!currentChapter.chapter.read) {
                     currentChapter.requestedPage = currentChapter.chapter.last_page_read
-                    chapterId = currentChapter.chapter.id!!
                 }
+                chapterId = currentChapter.chapter.id!!
             }
             .launchIn(viewModelScope)
     }
