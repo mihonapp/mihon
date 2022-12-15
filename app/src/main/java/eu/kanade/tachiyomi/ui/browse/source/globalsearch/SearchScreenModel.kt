@@ -42,6 +42,15 @@ abstract class SearchScreenModel<T>(
     protected lateinit var extensionFilter: String
 
     private val sources by lazy { getSelectedSources() }
+    private val pinnedSources by lazy { sourcePreferences.pinnedSources().get() }
+
+    private val sortComparator = { map: Map<CatalogueSource, SearchItemResult> ->
+        compareBy<CatalogueSource>(
+            { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
+            { "${it.id}" !in pinnedSources },
+            { "${it.name.lowercase()} (${it.lang})" },
+        )
+    }
 
     @Composable
     fun getManga(source: CatalogueSource, initialManga: Manga): State<Manga> {
@@ -107,11 +116,11 @@ abstract class SearchScreenModel<T>(
 
     abstract fun updateSearchQuery(query: String?)
 
-    abstract fun updateItems(items: Map<CatalogueSource, GlobalSearchItemResult>)
+    abstract fun updateItems(items: Map<CatalogueSource, SearchItemResult>)
 
-    abstract fun getItems(): Map<CatalogueSource, GlobalSearchItemResult>
+    abstract fun getItems(): Map<CatalogueSource, SearchItemResult>
 
-    fun getAndUpdateItems(function: (Map<CatalogueSource, GlobalSearchItemResult>) -> Map<CatalogueSource, GlobalSearchItemResult>) {
+    fun getAndUpdateItems(function: (Map<CatalogueSource, SearchItemResult>) -> Map<CatalogueSource, SearchItemResult>) {
         updateItems(function(getItems()))
     }
 
@@ -120,18 +129,8 @@ abstract class SearchScreenModel<T>(
 
         this.query = query
 
-        val initialItems = getSelectedSources().associateWith { GlobalSearchItemResult.Loading }
+        val initialItems = getSelectedSources().associateWith { SearchItemResult.Loading }
         updateItems(initialItems)
-
-        val pinnedSources = sourcePreferences.pinnedSources().get()
-
-        val comparator = { mutableMap: MutableMap<CatalogueSource, GlobalSearchItemResult> ->
-            compareBy<CatalogueSource>(
-                { mutableMap[it] is GlobalSearchItemResult.Success },
-                { "${it.id}" in pinnedSources },
-                { "${it.name.lowercase()} (${it.lang})" },
-            )
-        }
 
         coroutineScope.launch {
             sources.forEach { source ->
@@ -142,9 +141,8 @@ abstract class SearchScreenModel<T>(
                 } catch (e: Exception) {
                     getAndUpdateItems { items ->
                         val mutableMap = items.toMutableMap()
-                        mutableMap[source] = GlobalSearchItemResult.Error(throwable = e)
-                        mutableMap.toSortedMap(comparator(mutableMap))
-                        mutableMap.toMap()
+                        mutableMap[source] = SearchItemResult.Error(throwable = e)
+                        mutableMap.toSortedMap(sortComparator(mutableMap))
                     }
                     return@forEach
                 }
@@ -157,11 +155,25 @@ abstract class SearchScreenModel<T>(
 
                 getAndUpdateItems { items ->
                     val mutableMap = items.toMutableMap()
-                    mutableMap[source] = GlobalSearchItemResult.Success(titles)
-                    mutableMap.toSortedMap(comparator(mutableMap))
-                    mutableMap.toMap()
+                    mutableMap[source] = SearchItemResult.Success(titles)
+                    mutableMap.toSortedMap(sortComparator(mutableMap))
                 }
             }
         }
+    }
+}
+
+sealed class SearchItemResult {
+    object Loading : SearchItemResult()
+
+    data class Error(
+        val throwable: Throwable,
+    ) : SearchItemResult()
+
+    data class Success(
+        val result: List<Manga>,
+    ) : SearchItemResult() {
+        val isEmpty: Boolean
+            get() = result.isEmpty()
     }
 }

@@ -19,8 +19,8 @@ import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.CatalogueSource
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchItemResult
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchState
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 @Composable
@@ -60,7 +60,7 @@ fun GlobalSearchScreen(
 
 @Composable
 fun GlobalSearchContent(
-    items: Map<CatalogueSource, GlobalSearchItemResult>,
+    items: Map<CatalogueSource, SearchItemResult>,
     contentPadding: PaddingValues,
     getManga: @Composable (CatalogueSource, Manga) -> State<Manga>,
     onClickSource: (CatalogueSource) -> Unit,
@@ -78,13 +78,13 @@ fun GlobalSearchContent(
                     onClick = { onClickSource(source) },
                 ) {
                     when (result) {
-                        is GlobalSearchItemResult.Error -> {
+                        is SearchItemResult.Error -> {
                             GlobalSearchErrorResultItem(message = result.throwable.message)
                         }
-                        GlobalSearchItemResult.Loading -> {
+                        SearchItemResult.Loading -> {
                             GlobalSearchLoadingResultItem()
                         }
-                        is GlobalSearchItemResult.Success -> {
+                        is SearchItemResult.Success -> {
                             if (result.isEmpty) {
                                 Text(
                                     text = stringResource(R.string.no_results_found),

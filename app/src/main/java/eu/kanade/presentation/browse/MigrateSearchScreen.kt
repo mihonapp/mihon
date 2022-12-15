@@ -14,7 +14,7 @@ import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchState
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchItemResult
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 @Composable
@@ -56,7 +56,7 @@ fun MigrateSearchScreen(
 @Composable
 fun MigrateSearchContent(
     sourceId: Long,
-    items: Map<CatalogueSource, GlobalSearchItemResult>,
+    items: Map<CatalogueSource, SearchItemResult>,
     contentPadding: PaddingValues,
     getManga: @Composable (CatalogueSource, Manga) -> State<Manga>,
     onClickSource: (CatalogueSource) -> Unit,
@@ -74,13 +74,13 @@ fun MigrateSearchContent(
                     onClick = { onClickSource(source) },
                 ) {
                     when (result) {
-                        is GlobalSearchItemResult.Error -> {
+                        is SearchItemResult.Error -> {
                             GlobalSearchErrorResultItem(message = result.throwable.message)
                         }
-                        GlobalSearchItemResult.Loading -> {
+                        SearchItemResult.Loading -> {
                             GlobalSearchLoadingResultItem()
                         }
-                        is GlobalSearchItemResult.Success -> {
+                        is SearchItemResult.Success -> {
                             if (result.isEmpty) {
                                 GlobalSearchEmptyResultItem()
                                 return@GlobalSearchResultItem

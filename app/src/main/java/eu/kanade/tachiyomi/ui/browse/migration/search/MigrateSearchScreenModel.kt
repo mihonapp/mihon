@@ -8,7 +8,7 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchItemResult
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchScreenModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -58,13 +58,13 @@ class MigrateSearchScreenModel(
         }
     }
 
-    override fun updateItems(items: Map<CatalogueSource, GlobalSearchItemResult>) {
+    override fun updateItems(items: Map<CatalogueSource, SearchItemResult>) {
         mutableState.update {
             it.copy(items = items)
         }
     }
 
-    override fun getItems(): Map<CatalogueSource, GlobalSearchItemResult> {
+    override fun getItems(): Map<CatalogueSource, SearchItemResult> {
         return mutableState.value.items
     }
 
@@ -83,11 +83,11 @@ sealed class MigrateSearchDialog {
 data class MigrateSearchState(
     val manga: Manga? = null,
     val searchQuery: String? = null,
-    val items: Map<CatalogueSource, GlobalSearchItemResult> = emptyMap(),
+    val items: Map<CatalogueSource, SearchItemResult> = emptyMap(),
     val dialog: MigrateSearchDialog? = null,
 ) {
 
-    val progress: Int = items.count { it.value !is GlobalSearchItemResult.Loading }
+    val progress: Int = items.count { it.value !is SearchItemResult.Loading }
 
     val total: Int = items.size
 }

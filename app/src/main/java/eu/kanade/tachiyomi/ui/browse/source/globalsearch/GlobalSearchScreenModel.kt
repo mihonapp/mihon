@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.browse.source.globalsearch
 
 import androidx.compose.runtime.Immutable
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.manga.model.Manga
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
@@ -45,39 +44,24 @@ class GlobalSearchScreenModel(
         }
     }
 
-    override fun updateItems(items: Map<CatalogueSource, GlobalSearchItemResult>) {
+    override fun updateItems(items: Map<CatalogueSource, SearchItemResult>) {
         mutableState.update {
             it.copy(items = items)
         }
     }
 
-    override fun getItems(): Map<CatalogueSource, GlobalSearchItemResult> {
+    override fun getItems(): Map<CatalogueSource, SearchItemResult> {
         return mutableState.value.items
-    }
-}
-
-sealed class GlobalSearchItemResult {
-    object Loading : GlobalSearchItemResult()
-
-    data class Error(
-        val throwable: Throwable,
-    ) : GlobalSearchItemResult()
-
-    data class Success(
-        val result: List<Manga>,
-    ) : GlobalSearchItemResult() {
-        val isEmpty: Boolean
-            get() = result.isEmpty()
     }
 }
 
 @Immutable
 data class GlobalSearchState(
     val searchQuery: String? = null,
-    val items: Map<CatalogueSource, GlobalSearchItemResult> = emptyMap(),
+    val items: Map<CatalogueSource, SearchItemResult> = emptyMap(),
 ) {
 
-    val progress: Int = items.count { it.value !is GlobalSearchItemResult.Loading }
+    val progress: Int = items.count { it.value !is SearchItemResult.Loading }
 
     val total: Int = items.size
 }
