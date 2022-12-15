@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,8 @@ import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppStateBanners
+import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
+import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.presentation.util.collectAsState
@@ -149,22 +152,25 @@ class MainActivity : BaseActivity() {
 
         setComposeContent {
             val incognito by preferences.incognitoMode().collectAsState()
-            val download by preferences.downloadedOnly().collectAsState()
+            val downloadOnly by preferences.downloadedOnly().collectAsState()
             Column {
                 AppStateBanners(
-                    downloadedOnlyMode = download,
+                    downloadedOnlyMode = downloadOnly,
                     incognitoMode = incognito,
                 )
 
                 // Set statusbar color
                 val systemUiController = rememberSystemUiController()
                 val isSystemInDarkTheme = isSystemInDarkTheme()
-                val active = incognito || download
-                val useDarkStatusBarIcons = if (isSystemInDarkTheme) active else !active
-                LaunchedEffect(systemUiController, useDarkStatusBarIcons) {
+                val statusBarBackgroundColor = when {
+                    downloadOnly -> DownloadedOnlyBannerBackgroundColor
+                    incognito -> IncognitoModeBannerBackgroundColor
+                    else -> MaterialTheme.colorScheme.background
+                }
+                LaunchedEffect(systemUiController, statusBarBackgroundColor) {
                     systemUiController.setStatusBarColor(
                         color = ComposeColor.Transparent,
-                        darkIcons = useDarkStatusBarIcons,
+                        darkIcons = statusBarBackgroundColor.luminance() > 0.5,
                         transformColorForLightContent = { ComposeColor.Black },
                     )
                 }
@@ -206,7 +212,7 @@ class MainActivity : BaseActivity() {
                     }
 
                     // Consume insets already used by app state banners
-                    val boxModifier = if (incognito || download) {
+                    val boxModifier = if (incognito || downloadOnly) {
                         Modifier.consumeWindowInsets(WindowInsets.statusBars)
                     } else {
                         Modifier

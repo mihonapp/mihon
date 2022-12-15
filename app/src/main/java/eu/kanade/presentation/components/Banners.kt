@@ -19,6 +19,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
 
+val DownloadedOnlyBannerBackgroundColor
+    @Composable get() = MaterialTheme.colorScheme.tertiary
+val IncognitoModeBannerBackgroundColor
+    @Composable get() = MaterialTheme.colorScheme.primary
+
 @Composable
 fun WarningBanner(
     @StringRes textRes: Int,
@@ -66,7 +71,7 @@ private fun DownloadedOnlyModeBanner(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(R.string.label_downloaded_only),
         modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.tertiary)
+            .background(DownloadedOnlyBannerBackgroundColor)
             .fillMaxWidth()
             .padding(4.dp)
             .then(modifier),
@@ -81,7 +86,7 @@ private fun IncognitoModeBanner(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(R.string.pref_incognito_mode),
         modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.primary)
+            .background(IncognitoModeBannerBackgroundColor)
             .fillMaxWidth()
             .padding(4.dp)
             .then(modifier),
