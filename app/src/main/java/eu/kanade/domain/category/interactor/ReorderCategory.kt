@@ -28,26 +28,26 @@ class ReorderCategory(
                 .filterNot(Category::isSystemCategory)
                 .toMutableList()
 
-            val newPosition = when (moveTo) {
-                MoveTo.UP -> category.order - 1
-                MoveTo.DOWN -> category.order + 1
-            }.toInt()
-
             val currentIndex = categories.indexOfFirst { it.id == category.id }
-            if (currentIndex == newPosition) {
+            if (currentIndex == -1) {
                 return@withNonCancellableContext Result.Unchanged
             }
 
-            Collections.swap(categories, currentIndex, newPosition)
-
-            val updates = categories.mapIndexed { index, category ->
-                CategoryUpdate(
-                    id = category.id,
-                    order = index.toLong(),
-                )
-            }
+            val newPosition = when (moveTo) {
+                MoveTo.UP -> currentIndex - 1
+                MoveTo.DOWN -> currentIndex + 1
+            }.toInt()
 
             try {
+                Collections.swap(categories, currentIndex, newPosition)
+
+                val updates = categories.mapIndexed { index, category ->
+                    CategoryUpdate(
+                        id = category.id,
+                        order = index.toLong(),
+                    )
+                }
+
                 categoryRepository.updatePartial(updates)
                 Result.Success
             } catch (e: Exception) {
