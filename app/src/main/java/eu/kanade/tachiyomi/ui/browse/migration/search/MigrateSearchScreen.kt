@@ -50,6 +50,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.ui.browse.migration.MigrationFlags
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listing
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
@@ -77,7 +78,7 @@ class MigrateSearchScreen(private val mangaId: Long) : Screen {
                 if (!screenModel.incognitoMode.get()) {
                     screenModel.lastUsedSourceId.set(it.id)
                 }
-                navigator.push(SourceSearchScreen(state.manga!!, it.id, state.searchQuery))
+                navigator.push(SourceSearchScreen(state.manga!!, it.id, Listing.Search(state.searchQuery, it.getFilterList())))
             },
             onClickItem = { screenModel.setDialog(MigrateSearchDialog.Migrate(it)) },
             onLongClickItem = { navigator.push(MangaScreen(it.id, true)) },

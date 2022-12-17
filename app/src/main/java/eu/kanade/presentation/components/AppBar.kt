@@ -240,7 +240,8 @@ fun SearchToolbar(
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusManager = LocalFocusManager.current
 
-            val searchAndClearFocus: () -> Unit = {
+            val searchAndClearFocus: () -> Unit = f@{
+                if (searchQuery.isBlank()) return@f
                 onSearch(searchQuery)
                 focusManager.clearFocus()
                 keyboardController?.hide()

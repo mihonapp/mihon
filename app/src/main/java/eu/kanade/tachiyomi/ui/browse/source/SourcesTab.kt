@@ -46,9 +46,9 @@ fun Screen.sourcesTab(): TabContent {
             SourcesScreen(
                 state = state,
                 contentPadding = contentPadding,
-                onClickItem = { source, query ->
+                onClickItem = { source, listing ->
                     screenModel.onOpenSource(source)
-                    navigator.push(BrowseSourceScreen(source.id, query))
+                    navigator.push(BrowseSourceScreen(source.id, listing))
                 },
                 onClickPin = screenModel::togglePin,
                 onLongClickItem = screenModel::showSourceDialog,

@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import eu.kanade.domain.source.interactor.GetRemoteManga
 import eu.kanade.domain.source.model.Pin
 import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.browse.components.BaseSourceItem
@@ -35,13 +34,14 @@ import eu.kanade.presentation.util.topSmallPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.browse.source.SourcesState
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listing
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
 @Composable
 fun SourcesScreen(
     state: SourcesState,
     contentPadding: PaddingValues,
-    onClickItem: (Source, String) -> Unit,
+    onClickItem: (Source, Listing) -> Unit,
     onClickPin: (Source) -> Unit,
     onLongClickItem: (Source) -> Unit,
 ) {
@@ -109,18 +109,18 @@ private fun SourceHeader(
 private fun SourceItem(
     modifier: Modifier = Modifier,
     source: Source,
-    onClickItem: (Source, String) -> Unit,
+    onClickItem: (Source, Listing) -> Unit,
     onLongClickItem: (Source) -> Unit,
     onClickPin: (Source) -> Unit,
 ) {
     BaseSourceItem(
         modifier = modifier,
         source = source,
-        onClickItem = { onClickItem(source, GetRemoteManga.QUERY_POPULAR) },
+        onClickItem = { onClickItem(source, Listing.Popular) },
         onLongClickItem = { onLongClickItem(source) },
         action = {
             if (source.supportsLatest) {
-                TextButton(onClick = { onClickItem(source, GetRemoteManga.QUERY_LATEST) }) {
+                TextButton(onClick = { onClickItem(source, Listing.Latest) }) {
                     Text(
                         text = stringResource(R.string.latest),
                         style = LocalTextStyle.current.copy(
