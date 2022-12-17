@@ -213,20 +213,19 @@ class MangaInfoScreenModel(
      * Fetch manga information from source.
      */
     private suspend fun fetchMangaFromSource(manualFetch: Boolean = false) {
-        withIOContext {
-            try {
-                successState?.let {
-                    val networkManga = it.source.getMangaDetails(it.manga.toSManga())
-                    updateManga.awaitUpdateFromSource(it.manga, networkManga, manualFetch)
-                }
-            } catch (e: Throwable) {
-                withUIContext {
-                    // Ignore early hints "errors" that aren't handled by OkHttp
-                    if (e !is HttpException || e.code != 103) {
-                        snackbarHostState.showSnackbar(message = "${e.message}")
-                        logcat(LogPriority.ERROR, e)
-                    }
-                }
+        val state = successState ?: return
+        try {
+            withIOContext {
+                val networkManga = state.source.getMangaDetails(state.manga.toSManga())
+                updateManga.awaitUpdateFromSource(state.manga, networkManga, manualFetch)
+            }
+        } catch (e: Throwable) {
+            // Ignore early hints "errors" that aren't handled by OkHttp
+            if (e is HttpException && e.code == 103) return
+
+            logcat(LogPriority.ERROR, e)
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message = e.toString())
             }
         }
     }
@@ -524,30 +523,31 @@ class MangaInfoScreenModel(
      * Requests an updated list of chapters from the source.
      */
     private suspend fun fetchChaptersFromSource(manualFetch: Boolean = false) {
-        withIOContext {
-            try {
-                successState?.let { successState ->
-                    val chapters = successState.source.getChapterList(successState.manga.toSManga())
+        val state = successState ?: return
+        try {
+            withIOContext {
+                val chapters = state.source.getChapterList(state.manga.toSManga())
 
-                    val newChapters = syncChaptersWithSource.await(
-                        chapters,
-                        successState.manga,
-                        successState.source,
-                    )
+                val newChapters = syncChaptersWithSource.await(
+                    chapters,
+                    state.manga,
+                    state.source,
+                )
 
-                    if (manualFetch) {
-                        downloadNewChapters(newChapters)
-                    }
+                if (manualFetch) {
+                    downloadNewChapters(newChapters)
                 }
-            } catch (e: Throwable) {
-                withUIContext {
-                    if (e is NoChaptersException) {
-                        snackbarHostState.showSnackbar(message = context.getString(R.string.no_chapters_error))
-                    } else {
-                        snackbarHostState.showSnackbar(message = "${e.message}")
-                        logcat(LogPriority.ERROR, e)
-                    }
-                }
+            }
+        } catch (e: Throwable) {
+            val message = if (e is NoChaptersException) {
+                context.getString(R.string.no_chapters_error)
+            } else {
+                logcat(LogPriority.ERROR, e)
+                e.toString()
+            }
+
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message = message)
             }
         }
     }
