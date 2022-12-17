@@ -318,7 +318,7 @@
     <string name="action_move_to_bottom">نقل إلى الأسفل</string>
     <string name="lock_never">أبدًا</string>
     <string name="lock_always">دائماً</string>
-    <string name="lock_when_idle">قفل في حالة السكون</string>
+    <string name="lock_when_idle">اقفل في حالة السكون</string>
     <string name="lock_with_biometrics">تتطلب فتح القفل</string>
     <string name="pref_category_security">إعدادات الأمان</string>
     <string name="pref_manage_notifications">إدارة الإشعارات</string>
@@ -536,7 +536,7 @@
         <item quantity="many">تم تخطي من الفصول %d ، إما أن المصدر مفقود أو تمت تصفيته</item>
         <item quantity="other">‎تم تخطي الفصل %d ، إما أن المصدر مفقود أو تمت تصفيته</item>
     </plurals>
-    <string name="no_chapters_error">لم يتم العثور على الفصول</string>
+    <string name="no_chapters_error">لم يُعثر على فصول</string>
     <string name="share_page_info">%1$s: %2$s, صفحة %3$d</string>
     <string name="chapter_settings_updated">إعدادات الفصل الإفتراضية المُحدثة</string>
     <string name="set_chapter_settings_as_default">تعيين كافتراضي</string>
@@ -611,7 +611,7 @@
     <string name="unread">غير مقروء</string>
     <string name="date">التاريخ</string>
     <string name="local_filter_order_by">ترتيب حسب</string>
-    <string name="chapter_not_found">لم يتم العثور على الفصل</string>
+    <string name="chapter_not_found">لم يُعثر على الفصل</string>
     <string name="off">إيقاف</string>
     <string name="on">تشغيل</string>
     <string name="restrictions">قيود: %s</string>
@@ -620,7 +620,7 @@
     <string name="error_saving_cover">فشل حفظ الغطاء</string>
     <string name="cover_saved">تم حفظ صورة الغطاء</string>
     <string name="manga_cover">غطاء</string>
-    <string name="local_invalid_format">صيغة الفصل غير صالح</string>
+    <string name="local_invalid_format">تنسيق الفصل غير صالح</string>
     <string name="tracking_guide">تعليمات التعقب</string>
     <string name="categorized_display_settings">اعدادات فرز والعرض لكل صنف</string>
     <string name="pref_library_update_refresh_trackers_summary">تحديث المتعقبات عند تحديث المكتبة</string>
@@ -688,8 +688,8 @@
     <string name="update_72hour">كل ثلاثة ايام</string>
     <string name="connected_to_wifi">فقط على شبكة WI-FI</string>
     <string name="ext_installer_shizuku_stopped">\"Shizuku\" لا يعمل</string>
-    <string name="publishing_finished">تم النشر</string>
-    <string name="cancelled">ملغي</string>
+    <string name="publishing_finished">انتهى النّشر</string>
+    <string name="cancelled">ملغيّة</string>
     <string name="on_hiatus">في فترة راحة</string>
     <string name="library_errors_help">للحصول على المساعده في إصلاح أخطاء تحديث المكتبة، أنظر هنا%1$s</string>
     <string name="save_chapter_as_cbz">احفظ كأرشيف CBZ</string>
@@ -843,4 +843,7 @@
     <string name="hour_short">%d س</string>
     <string name="minute_short">%d د</string>
     <string name="seconds_short">%d ث</string>
+    <string name="information_no_manga_category">الفئة فارغة</string>
+    <string name="action_not_now">ليس الان</string>
+    <string name="pref_library_update_show_tab_badge">إظهار عدد الادخالات غير المقروءة في ايقونة التحديثات</string>
 </resources>

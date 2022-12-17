@@ -765,4 +765,18 @@
     <string name="label_read_chapters">Baca</string>
     <string name="label_mean_score">Rata-rata nilai</string>
     <string name="label_used">Telah digunakan</string>
+    <string name="hour_short">%djam</string>
+    <string name="label_started">Dimulai</string>
+    <string name="label_local">Lokal</string>
+    <string name="label_downloaded">Diunduh</string>
+    <string name="label_read_duration">Durasi baca</string>
+    <string name="label_tracker_section">Pelacak</string>
+    <string name="label_tracked_titles">Entri yang dilacak</string>
+    <string name="seconds_short">%ddetik</string>
+    <string name="minute_short">%dmenit</string>
+    <string name="label_overview_section">Ringkasan</string>
+    <string name="label_completed_titles">Entri selesai</string>
+    <string name="not_applicable">N/A</string>
+    <string name="day_short">%dhari</string>
+    <string name="action_not_now">Tidak sekarang</string>
 </resources>

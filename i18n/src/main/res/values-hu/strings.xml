@@ -724,4 +724,18 @@
     <string name="pref_general_summary">Alkalmazás nyelve, értesítések</string>
     <string name="pref_appearance_summary">Téma, dátum és idő formátuma</string>
     <string name="action_search_hint">Keresés…</string>
+    <string name="pref_invalidate_download_cache_summary">Kényszerítse az alkalmazást a letöltött fejezetek újbóli ellenőrzésére</string>
+    <string name="auto_download_while_reading">Automatikus letöltés olvasás közben</string>
+    <string name="label_started">Elkezdett</string>
+    <string name="label_downloaded">Letöltött</string>
+    <string name="label_local">Helyi</string>
+    <string name="label_stats">Statisztika</string>
+    <string name="unknown_title">Ismeretlen cím</string>
+    <string name="label_overview_section">Áttekintés</string>
+    <string name="label_total_chapters">Összes</string>
+    <string name="label_read_chapters">Olvasott</string>
+    <string name="label_mean_score">Átlagos értékelés</string>
+    <string name="action_open_random_manga">Véletlenszerű manga megnyitása</string>
+    <string name="updates_last_update_info">Könyvtár utoljára frissítve: %s</string>
+    <string name="label_tracker_section">Követők</string>
 </resources>

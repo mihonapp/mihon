@@ -499,9 +499,9 @@
     <string name="backup_restore_missing_trackers">Praćenja bez prijave:</string>
     <string name="parental_controls_info">To ne sprečava neslužbene ili potencijalno krivo označena proširenja prikazati neprikladan sadržaj (18+) unutar aplikacije.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Preskakanje %d poglavlja, ili nedostaje u izvoru ili je filtrirano</item>
-        <item quantity="few">Preskakanje %d poglavlja, ili nedostaje u izvoru ili je filtrirano</item>
-        <item quantity="other">Preskakanje %d poglavlja, ili nedostaje u izvoru ili je filtrirano</item>
+        <item quantity="one">Preskače se %d poglavlja. Ne postoji u izvoru ili je filtrirano</item>
+        <item quantity="few">Preskaču se %d poglavlja. Ne postoje u izvoru ili su filtrirana</item>
+        <item quantity="other">Preskače se %d poglavlja. Ne postoje u izvoru ili su filtrirana</item>
     </plurals>
     <string name="no_chapters_error">Nema poglavlja</string>
     <string name="chapter_settings_updated">Standardne postavke poglavlja su aktualizirane</string>
@@ -731,7 +731,7 @@
     <string name="pref_advanced_summary">Zapisnici iznenadnog gašenja aplikacije, optimizacije baterije</string>
     <string name="label_started">Započeto</string>
     <string name="label_local">Lokalno</string>
-    <string name="action_search_hint">Pretraživanje…</string>
+    <string name="action_search_hint">Traži …</string>
     <string name="pref_library_summary">Kategorije, globalno ažuriranje</string>
     <string name="pref_backup_summary">Ručne i automatske sigurnosne kopije</string>
     <string name="label_stats">Statistike</string>
@@ -804,4 +804,7 @@
     <string name="appwidget_unavailable_locked">Widget nije dostupan kada je omogućeno zaključavanje aplikacije</string>
     <string name="information_no_entries_found">Nije pronađen nijedan unos u ovoj kategoriji</string>
     <string name="download_notifier_split_page_path_not_found">Nije moguće pronaći put datoteke stranice %d</string>
+    <string name="action_not_now">Ne sada</string>
+    <string name="pref_library_update_show_tab_badge">Prikaži broj nepročitanih na ikoni aktualiziranja</string>
+    <string name="information_no_manga_category">Kategorija je prazna</string>
 </resources>

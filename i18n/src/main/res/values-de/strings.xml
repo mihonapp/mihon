@@ -685,7 +685,7 @@
     <string name="battery_not_low">Wenn der Akkustand nicht niedrig ist</string>
     <string name="source_filter_empty_screen">Keine installierte Quelle gefunden</string>
     <string name="source_empty_screen">Keine Quelle gefunden</string>
-    <string name="action_sort_unread_count">Ungelesenenanzahl</string>
+    <string name="action_sort_unread_count">Anzahl an Ungelesenem</string>
     <string name="action_sort_last_manga_update">Letzte Aktualisierungsprüfung</string>
     <string name="split_tall_images">Hohe Bilder teilen</string>
     <string name="split_tall_images_summary">Verbessert die Leserleistung</string>
@@ -792,4 +792,6 @@
     <string name="minute_short">%d min</string>
     <string name="seconds_short">%d s</string>
     <string name="action_not_now">Nicht jetzt</string>
+    <string name="information_no_manga_category">Kategorie ist leer</string>
+    <string name="pref_library_update_show_tab_badge">Anzahl an Ungelesenem auf dem „Neues“-Symbol anzeigen</string>
 </resources>

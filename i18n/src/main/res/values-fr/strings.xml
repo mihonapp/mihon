@@ -824,4 +824,21 @@
     <string name="label_local">Local</string>
     <string name="label_started">Commencé</string>
     <string name="label_downloaded">Téléchargé</string>
+    <string name="information_no_manga_category">La catégorie est vide</string>
+    <string name="label_titles_section">Entrées</string>
+    <string name="label_titles_in_global_update">Dans la mise à jour globale</string>
+    <string name="label_read_chapters">Lus</string>
+    <string name="label_tracker_section">Traqueurs</string>
+    <string name="label_used">Utilisé</string>
+    <string name="not_applicable">s. o.</string>
+    <string name="day_short">%d j</string>
+    <string name="hour_short">%d h</string>
+    <string name="minute_short">%d min</string>
+    <string name="seconds_short">%d s</string>
+    <string name="action_not_now">Pas maintenant</string>
+    <string name="label_completed_titles">Entrées terminées</string>
+    <string name="label_read_duration">Durée de lecture</string>
+    <string name="label_tracked_titles">Entrées suivies</string>
+    <string name="label_mean_score">Note moyenne</string>
+    <string name="pref_library_update_show_tab_badge">Afficher le nombre de messages non lus sur l\'icône des mises à jour</string>
 </resources>

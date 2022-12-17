@@ -321,7 +321,7 @@
     <string name="theme_system">Tema sistemului</string>
     <string name="pref_manage_notifications">Gestionați notificările</string>
     <string name="pref_category_security">Securitate</string>
-    <string name="lock_with_biometrics">Necesită deblocare</string>
+    <string name="lock_with_biometrics">Deblocarea este obligatorie</string>
     <string name="unlock_app">Deblochează Tachiyomi</string>
     <string name="action_sort_latest_chapter">Ultimul capitol</string>
     <string name="lock_when_idle">Blocați când este inactiv</string>
@@ -784,4 +784,26 @@
     <string name="action_open_random_manga">Deschideți aleatoriu</string>
     <string name="pref_invalidate_download_cache_summary">Obligați aplicația să refacă verificarea capitolelor descărcate</string>
     <string name="enhanced_tracking_warning">Acest tracker este compatibil numai cu sursa %1$s.</string>
+    <string name="pref_library_update_show_tab_badge">Afiseaza numarul de notificari necitite pe pictorgrama Actualizari</string>
+    <string name="label_stats">Statistici</string>
+    <string name="label_local">Local</string>
+    <string name="label_started">Inceput</string>
+    <string name="label_downloaded">Descărcat</string>
+    <string name="label_overview_section">Prezentare generală</string>
+    <string name="seconds_short">%ds</string>
+    <string name="action_not_now">Nu acum</string>
+    <string name="label_completed_titles">Intrari complete</string>
+    <string name="label_read_duration">Durata cutirii</string>
+    <string name="label_titles_section">Intrari</string>
+    <string name="label_titles_in_global_update">In actualizare globala</string>
+    <string name="label_total_chapters">Total</string>
+    <string name="label_read_chapters">Citit</string>
+    <string name="label_tracker_section">Trackere</string>
+    <string name="label_mean_score">Scorul mediu</string>
+    <string name="label_used">Utilizat</string>
+    <string name="not_applicable">N/A</string>
+    <string name="day_short">%dd</string>
+    <string name="hour_short">%dh</string>
+    <string name="minute_short">%dm</string>
+    <string name="information_no_manga_category">Categorie goala</string>
 </resources>

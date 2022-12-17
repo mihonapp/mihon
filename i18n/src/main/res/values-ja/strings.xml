@@ -779,4 +779,6 @@
     <string name="label_mean_score">平均点数</string>
     <string name="day_short">%d日</string>
     <string name="action_not_now">後で</string>
+    <string name="information_no_manga_category">カテゴリが空です</string>
+    <string name="pref_library_update_show_tab_badge">アップデートアイコンに未読メッセージの件数を表示</string>
 </resources>

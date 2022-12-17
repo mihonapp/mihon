@@ -792,4 +792,6 @@
     <string name="label_downloaded">Κατεβασμένο</string>
     <string name="label_titles_in_global_update">Σε καθολική ενημέρωση</string>
     <string name="action_not_now">Όχι τώρα</string>
+    <string name="information_no_manga_category">Η κατηγορία είναι άδεια</string>
+    <string name="pref_library_update_show_tab_badge">Εμφάνιση του αριθμού των μη αναγνωσμένων στο εικονίδιο Ενημερώσεις</string>
 </resources>

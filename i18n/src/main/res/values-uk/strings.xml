@@ -3,7 +3,7 @@
     <string name="name">Ім\'я</string>
     <string name="categories">Категорії</string>
     <string name="manga">Записи бібліотеки</string>
-    <string name="chapters">Глави</string>
+    <string name="chapters">Розділи</string>
     <string name="track">Відстеження</string>
     <string name="history">Історія</string>
     <string name="label_settings">Налаштування</string>
@@ -263,7 +263,7 @@
     <string name="migrate">Мігрувати</string>
     <string name="copy">Копіювати</string>
     <string name="download_queue_error">Сталась помилка при завантаженні глав. Спробуйте ще раз у розділі завантаження</string>
-    <string name="notification_new_chapters">Знайдено нові глави</string>
+    <string name="notification_new_chapters">Знайдено нові розділи</string>
     <string name="notification_cover_update_failed">Не вдалось оновити обкладинку</string>
     <string name="notification_first_add_to_library">Будь ласка, додайте запис до своєї бібліотеки перед тим як робити це</string>
     <string name="file_select_cover">Вибрати обкладинку</string>
@@ -275,14 +275,14 @@
     <string name="update_check_notification_download_complete">Тицьніть для встановлення оновлення</string>
     <string name="update_check_notification_download_error">Помилка завантаження</string>
     <string name="update_check_notification_update_available">Доступна нова версія!</string>
-    <string name="information_no_downloads">Немає завантажень</string>
+    <string name="information_no_downloads">Завантажень немає</string>
     <string name="information_no_recent">Без оновлень</string>
     <string name="information_no_recent_manga">Останнім часом нічого не прочитано</string>
     <string name="information_empty_library">Ваша бібліотека порожня</string>
     <string name="information_empty_category">У вас немає категорій. Тицьніть кнопку плюс, для початку облаштування вашої бібліотеки.</string>
     <string name="download_notifier_downloader_title">Завантажувач</string>
     <string name="download_notifier_title_error">Помилка</string>
-    <string name="download_notifier_unknown_error">Невідома помилка при завантаженні глави</string>
+    <string name="download_notifier_unknown_error">Невідома помилка при завантаженні розділу</string>
     <string name="download_notifier_text_only_wifi">Немає Wi-Fi підключення</string>
     <string name="download_notifier_no_network">Немає мережевого з`єднання</string>
     <string name="download_notifier_download_paused">Завантаження призупинено</string>
@@ -313,7 +313,7 @@
     <string name="logout_success">Ви вийшли з системи</string>
     <string name="paused">Призупинено</string>
     <string name="label_more">Ще</string>
-    <string name="action_sort_latest_chapter">Остання глава</string>
+    <string name="action_sort_latest_chapter">Останній розділ</string>
     <string name="action_view_chapters">Подивитись глави</string>
     <string name="action_cancel_all">Скасувати все</string>
     <string name="pref_theme_mode">Темний режим</string>
@@ -342,21 +342,22 @@
     <string name="secure_screen_summary">Ховати вміст застосунку при перемиканні програм та блокувати скріншоти</string>
     <string name="pref_category_display">Відображення</string>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">%1$d нова глава</item>
-        <item quantity="few">%1$d нових глав</item>
-        <item quantity="many">%1$d нових глав</item>
-        <item quantity="other">%1$d нових глав</item>
+        <item quantity="one">%1$d новий розділ</item>
+        <item quantity="few">%1$d нових розділів</item>
+        <item quantity="many">%1$d нових розділів</item>
+        <item quantity="other">%1$d нових розділів</item>
     </plurals>
-    <string name="notification_chapters_single">Глава %1$s</string>
-    <string name="notification_chapters_single_and_more">Глава %1$s та %2$d більше</string>
-    <string name="notification_chapters_multiple">Глави %1$s</string>
+    <string name="notification_chapters_single">Розділ %1$s</string>
+    <string name="notification_chapters_single_and_more">Розділ %1$s та ще %2$d</string>
+    <string name="notification_chapters_multiple">Розділи %1$s</string>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">Глава %1$s та 1 більше</item>
-        <item quantity="few">Глави %1$s та %2$d більше</item>
-        <item quantity="many">Глави %1$s та %2$d більше</item>
+        <item quantity="one">Розділ %1$s та 1 більше</item>
+        <item quantity="few">Розділи %1$s та %2$d більше</item>
+        <item quantity="many">Розділи %1$s та %2$d більше</item>
+        <item quantity="other">Розділи %1$s та %2$d більше</item>
     </plurals>
     <string name="hide_notification_content">Приховати вміст сповіщення</string>
-    <string name="notification_check_updates">Перевірка нових глав</string>
+    <string name="notification_check_updates">Перевірка нових розділів</string>
     <string name="pref_disable_battery_optimization">Вимкнути збереження батареї</string>
     <string name="pref_disable_battery_optimization_summary">Допомагає фоновому оновленню бібліотеки та резервним копіям</string>
     <string name="battery_optimization_disabled">Збереження батареї вже вимкнено</string>
@@ -442,7 +443,7 @@
     <string name="restoring_backup_error">Відновлення бекапу не вдалось</string>
     <string name="restore_in_progress">Відновлення вже відбувається</string>
     <string name="creating_backup_error">Помилка резервування</string>
-    <string name="backup_in_progress">Резервна копія вже зберігається</string>
+    <string name="backup_in_progress">Резервне копіювання вже виконується</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Зроблено за %1$s з %2$s помилкою</item>
         <item quantity="few">Зроблено за %1$s з %2$s помилками</item>
@@ -457,7 +458,7 @@
     <string name="tracking_info">Одностороння синхронізація для оновлення прогресу глави в службах стеження. Налаштуйте для окремих записів з допомогою кнопки \"Стеження\".</string>
     <string name="action_display_show_tabs">Показувати вкладки категорій</string>
     <string name="action_display_comfortable_grid">Зручна сітка</string>
-    <string name="recent_manga_time">Гл. %1$s - %2$s</string>
+    <string name="recent_manga_time">Розд. %1$s - %2$s</string>
     <string name="viewer">Режим читання</string>
     <string name="pref_category_for_this_series">Для цієї серії</string>
     <string name="page_list_empty_error">Сторінки не знайдено</string>
@@ -507,10 +508,10 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Це не заважає неофіційним або потенційно невірним розширенням розміщувати вміст NSFW (18+) у додатку.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Пропускається %d глава, тому що джерело не має її, або вона була відфільтрована</item>
-        <item quantity="few">Пропускається %d глав, тому що джерело не має їх, або вони були відфільтровані</item>
-        <item quantity="many">Пропускається %d глав, тому що джерело не має їх, або вони була відфільтровані</item>
-        <item quantity="other">Пропускається %d глав, тому що джерело не має їх, або вони була відфільтровані</item>
+        <item quantity="one">Пропускається %d розділ, тому що джерело не має його, або він був відфільтрований</item>
+        <item quantity="few">Пропускаються %d розділи, тому що джерело не має їх, або вони були відфільтровані</item>
+        <item quantity="many">Пропускання %d розділів, тому що джерело не має їх, або вони були відфільтровані</item>
+        <item quantity="other">Пропускання %d розділів, тому що джерело не має їх, або вони були відфільтровані</item>
     </plurals>
     <string name="no_chapters_error">Немає глав</string>
     <string name="chapter_settings_updated">Оновлено налаштування глави за замовчуванням</string>
@@ -570,7 +571,7 @@
     <string name="include">Включати: %s</string>
     <string name="none">Немає</string>
     <string name="pref_library_update_categories_details">Записи в виключених категоріях не буде оновлено, навіть якщо вони також знаходяться у включених категоріях.</string>
-    <string name="action_sort_chapter_fetch_date">Дата отримання глави</string>
+    <string name="action_sort_chapter_fetch_date">Дата отримання розділу</string>
     <string name="action_show_errors">Тицьніть для перегляду подробиць</string>
     <string name="update_check_eol">Ця версія Android більше не підтримується</string>
     <string name="clipboard_copy_error">Не вдалось скопіювати до буферу обміну</string>
@@ -748,10 +749,10 @@
     <string name="updates_last_update_info">Останнє оновлення бібліотеки: %s</string>
     <string name="missing_storage_permission">Доступ до файлової системи не надано</string>
     <plurals name="next_unread_chapters">
-        <item quantity="one">Наступна непрочитана глава</item>
-        <item quantity="few">Наступні %d непрочитані глави</item>
-        <item quantity="many">Наступні %d непрочитані глави</item>
-        <item quantity="other">Наступні %d непрочитані глави</item>
+        <item quantity="one">Наступний непрочитаний розділ</item>
+        <item quantity="few">Наступні %d непрочитані розділи</item>
+        <item quantity="many">Наступні %d непрочитані розділи</item>
+        <item quantity="other">Наступні %d непрочитані розділи</item>
     </plurals>
     <string name="download_ahead">Завантажувати наперед</string>
     <string name="download_ahead_info">Працює тільки на мангу збережену в бібліотеці, якщо поточна глава, та наступна за нею вже завантажені</string>
@@ -790,11 +791,11 @@
     <string name="pref_invalidate_download_cache_summary">Змусити додаток повторно перевірити завантажені глави</string>
     <string name="action_display_show_continue_reading_button">Показати кнопку продовження читання</string>
     <string name="track_remove_date_conf_title">Видалити дату\?</string>
-    <string name="track_remove_start_date_conf_text">Це видалить раніше вибрану дату початку з %s</string>
-    <string name="track_remove_finish_date_conf_text">Це видалить раніше вибрану дату закінчення з %s</string>
+    <string name="track_remove_start_date_conf_text">Це призведе до видалення вибраної раніше дати початку з %s</string>
+    <string name="track_remove_finish_date_conf_text">Це призведе до видалення раніше вибраної дати завершення з %s</string>
     <string name="other_header">Інше</string>
     <string name="enhanced_tracking_warning">Цей трекер сумісний тільки з джерелом %1$s.</string>
-    <string name="pref_invalidate_download_cache">Очистити індекс завантажень</string>
+    <string name="pref_invalidate_download_cache">Недійсний індекс завантажень</string>
     <string name="label_read_duration">Тривалість читання</string>
     <string name="label_titles_section">Записи</string>
     <string name="label_total_chapters">Всього</string>
@@ -803,7 +804,7 @@
     <string name="not_applicable">Н/П</string>
     <string name="minute_short">%dm</string>
     <string name="label_stats">Статистика</string>
-    <string name="label_local">Місцевий</string>
+    <string name="label_local">Локально</string>
     <string name="label_downloaded">Завантажено</string>
     <string name="label_started">Розпочато</string>
     <string name="label_overview_section">Огляд</string>
@@ -815,4 +816,7 @@
     <string name="day_short">%dd</string>
     <string name="hour_short">%dh</string>
     <string name="seconds_short">%ds</string>
+    <string name="action_not_now">Не зараз</string>
+    <string name="pref_library_update_show_tab_badge">Відображення кількості непрочитаних на значку \"Оновлення\"</string>
+    <string name="information_no_manga_category">Категорія порожня</string>
 </resources>

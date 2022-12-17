@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_settings">Баптаулар</string>
+    <string name="label_settings">Баптау</string>
     <string name="label_download_queue">Жүктеулер кезегі</string>
     <string name="label_library">Кітапхана</string>
     <string name="label_recent_updates">Жаңартулар</string>
@@ -35,7 +35,7 @@
     <string name="label_more">Көбірек</string>
     <string name="label_recent_manga">Тарих</string>
     <string name="history">Тарих</string>
-    <string name="action_settings">Баптаулар</string>
+    <string name="action_settings">Баптау</string>
     <string name="nav_zone_left">Сол</string>
     <string name="nav_zone_right">Оң</string>
     <string name="left_to_right_viewer">Солдан оңға</string>
@@ -110,7 +110,7 @@
     <string name="action_sort_chapter_fetch_date">Тараудың келген күні бойынша</string>
     <string name="action_sort_date_added">Қосылған күні</string>
     <string name="action_search">Іздеу</string>
-    <string name="action_search_settings">Баптауларды іздеу</string>
+    <string name="action_search_settings">Баптау іздеу</string>
     <string name="action_global_search">Ауқымды іздеу</string>
     <string name="action_select_all">Түгелін таңдау</string>
     <string name="action_download">Жүктеп алу</string>
@@ -193,14 +193,14 @@
     <string name="pref_category_display">Көрсету</string>
     <string name="portrait">Портрет</string>
     <string name="landscape">Пейзаж</string>
-    <string name="pref_category_library_update">Жаһандық жаңарту</string>
+    <string name="pref_category_library_update">Ауқымды жаңарту</string>
     <string name="pref_library_update_interval">Автоматты жаңартулар</string>
     <string name="action_resume">Жалғастыру</string>
     <string name="pref_app_language">Қолданба тілі</string>
-    <string name="pref_library_update_refresh_trackers">Трекерлерді автоматты түрде жаңарту</string>
+    <string name="pref_library_update_refresh_trackers">Бақылау қызметерін автоматты түрде жаңарту</string>
     <string name="default_category_summary">Әрқашан сұраңыз</string>
     <string name="default_category">Әдепкі санат</string>
-    <string name="categorized_display_settings">Сұрыптау және көрсету үшін әр санат параметрлері</string>
+    <string name="categorized_display_settings">Сұрыптау және көрсету үшін әр санат баптауы</string>
     <string name="ext_uninstall">Жою</string>
     <string name="ext_update">Жаңарту</string>
     <string name="ext_pending">Күтілуде</string>
@@ -260,7 +260,7 @@
     <string name="pref_library_update_manga_restriction">Жазбаларды жаңартуды өткізіп жіберу</string>
     <string name="pref_update_only_started">Бұл басталған жоқ</string>
     <string name="pref_library_update_refresh_metadata_summary">Кітапхананы жаңарту кезінде жаңа мұқаба мен мәліметтерді тексеру</string>
-    <string name="pref_library_update_refresh_trackers_summary">Кітапхананы жаңарту кезінде трекерлерді жаңарту</string>
+    <string name="pref_library_update_refresh_trackers_summary">Кітапхананы жаңарту кезінде бақылау қызметтерін жаңарту</string>
     <string name="ext_updates_pending">Жаңартулар күтілуде</string>
     <string name="ext_update_all">Барлығын жаңарту</string>
     <string name="ext_obsolete">Ескірген</string>
@@ -411,7 +411,7 @@
     <string name="pref_read_with_volume_keys_inverted">Теріс дыбыс пернелері</string>
     <string name="tapping_inverted_none">Жоқ</string>
     <string name="pager_viewer">Беттеп</string>
-    <string name="tracking_guide">Іздеу нұсқаулығы</string>
+    <string name="tracking_guide">Бақылау нұсқаулығы</string>
     <string name="tracking_info">Бақылау қызметтеріндегі прогрессті жаңарту үшін бір жақты үйлестіру. Бақылау батырмасын пайдаланып бақылауды орнатыңыз.</string>
     <string name="pref_auto_update_manga_sync">Оқығаннан кейін прогрессті жаңарту</string>
     <string name="pref_incognito_mode_summary">Оқу тарихын тоқтатады</string>
@@ -455,7 +455,7 @@
     <string name="information_cloudflare_bypass_failure">Cloudflare айналып өтілмеді</string>
     <string name="information_webview_outdated">Жақсырақ үйлесімділік үшін WebView-ді жаңартыңыз</string>
     <string name="pref_backup_directory">Сақтық көшірме бумасы</string>
-    <string name="backup_restore_missing_trackers">Бақылау сервисіне кірілмеген:</string>
+    <string name="backup_restore_missing_trackers">Бақылау қызметіне кірілмеген:</string>
     <string name="latest">Соңғы</string>
     <string name="local_filter_order_by">Сұрыптау</string>
     <string name="version">Нұсқа</string>
@@ -469,12 +469,12 @@
     <string name="backup_choice">Сақтық көшірмесіне нені қалайсыз\?</string>
     <string name="restoring_backup">Сақтық көшірмесін қалпына келтіру</string>
     <string name="backup_in_progress">Сақтық көшірмесі әлдеқашан орындалуда</string>
-    <string name="pref_reset_viewer_flags_error">Оқыма баптаулары қалпына келтірілмеді</string>
+    <string name="pref_reset_viewer_flags_error">Оқыма баптауы қалпына келтірілмеді</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s тарау қалды</item>
         <item quantity="other">%1$s тарау қалды</item>
     </plurals>
-    <string name="pref_reset_viewer_flags_success">Оқыманың барлық баптаулары қалпына келді</string>
+    <string name="pref_reset_viewer_flags_success">Оқыманың барлық баптауы қалпына келді</string>
     <string name="whats_new">Не жаңалық</string>
     <string name="help_translate">Аудармамен көмектесу</string>
     <string name="restoring_backup_error">Сақтық көшірмесін қалпына келтіру сәтсіз өтті</string>
@@ -483,7 +483,7 @@
     <string name="popular">Танымал</string>
     <string name="backup_restore_content_full">Сақтық көшірме файлынан дерек қалпына келеді.
 \n
-\nОны қолдану үшін сізге түгел жетпей тұрған кеңейтулерді жүктеп, бақылау сервистеріне кіру керек.</string>
+\nОны қолдану үшін сізге түгел жетпей тұрған кеңейтулерді жүктеп, бақылау қызметтеріне кіру керек.</string>
     <string name="chapter_not_found">Тарау табылмады</string>
     <string name="action_track">Бақылау</string>
     <string name="pref_tablet_ui_mode">Планшетті интерфейс</string>
@@ -498,12 +498,12 @@
     <string name="backup_info">Сақтық көшірмелерін басқа жерлерде де сақтауыңызға кеңес береміз.</string>
     <string name="error_user_agent_string_blank">User agent бос бола алмайды</string>
     <string name="pref_auto_clear_chapter_cache">Қолданба жабылғанда тараулар кешің тазалау</string>
-    <string name="pref_reset_viewer_flags">Оқыма баптауларын әрбір туынды үшін қалпына келтіру</string>
+    <string name="pref_reset_viewer_flags">Оқыма баптауын әрбір туынды үшін қалпына келтіру</string>
     <string name="pref_reset_viewer_flags_summary">Барлық туындылар үшін оқу режимі мен бағдарын қалпына келтіреді</string>
     <string name="crash_log_saved">Қателіктер тіркеуі сақталды</string>
     <string name="label_background_activity">Аялық белсенділік</string>
     <string name="pref_disable_battery_optimization">Батареяның оңтайландыруын өшіру</string>
-    <string name="battery_optimization_setting_activity_not_found">Құрылғы баптаулары ашылмады</string>
+    <string name="battery_optimization_setting_activity_not_found">Құрылғы баптауы ашылмады</string>
     <string name="privacy_policy">Құпиялық саясаты</string>
     <string name="pref_acra_summary">Барлық мүмкін қателерді түзетуге көмектеседі. Пайдаланушы деректері жіберілмейді</string>
     <string name="label_downloaded_only">Жүктелгендерді ғана</string>
@@ -617,7 +617,7 @@
     <string name="download_unread">Оқылмаған</string>
     <string name="error_sharing_cover">Мұқаба жіберілмеді</string>
     <string name="cover_saved">Мұқаба сақталды</string>
-    <string name="confirm_set_chapter_settings">Бұл баптауларды әдепкі қылып сақтағыңыз келеді ме\?</string>
+    <string name="confirm_set_chapter_settings">Бұл баптауды әдепкі қылып сақтағыңыз келеді ме\?</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d жаңа тарау</item>
         <item quantity="other">%1$d жаңа тарау</item>
@@ -628,7 +628,7 @@
     <string name="channel_progress">Прогресс</string>
     <string name="channel_crash_logs">Қателіктер тіркеуі</string>
     <string name="also_set_chapter_settings_for_library">Сонымен қоса кітапханадағы жазбаларға қолдану</string>
-    <string name="chapter_settings">Тарау баптаулары</string>
+    <string name="chapter_settings">Тарау баптауы</string>
     <string name="chapter_error">Қателік</string>
     <string name="chapter_paused">Тоқтатылды</string>
     <string name="track_status">Күйі</string>
@@ -771,4 +771,25 @@
     <string name="track_remove_date_conf_title">Күнің жоямыз ба\?</string>
     <string name="pref_invalidate_download_cache">Жүктеулер индексін тазалау</string>
     <string name="pref_invalidate_download_cache_summary">Қолданбаны жүктеп алынған тарауларды қайта тексеруге мәжбүрлейді</string>
+    <string name="label_stats">Статистика</string>
+    <string name="label_started">Басталды</string>
+    <string name="label_local">Жергілікті</string>
+    <string name="label_downloaded">Жүктелген</string>
+    <string name="label_completed_titles">Аяқталған сессиялар</string>
+    <string name="label_read_duration">Оқу ұзақтығы</string>
+    <string name="label_total_chapters">Барлығы</string>
+    <string name="label_mean_score">Орта баға</string>
+    <string name="label_used">Қолданылған</string>
+    <string name="not_applicable">Д/Ж</string>
+    <string name="day_short">%dкүн</string>
+    <string name="minute_short">%dмин</string>
+    <string name="seconds_short">%dсек</string>
+    <string name="action_not_now">Қазір емес</string>
+    <string name="label_overview_section">Шолу</string>
+    <string name="label_read_chapters">Оқылған</string>
+    <string name="hour_short">%dсағ</string>
+    <string name="label_titles_section">Жазбалар</string>
+    <string name="label_titles_in_global_update">Ауқымды жаңартуда</string>
+    <string name="label_tracked_titles">Бақыланудағы жазбалар</string>
+    <string name="label_tracker_section">Бақылау қызметтері</string>
 </resources>

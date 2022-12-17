@@ -825,17 +825,19 @@
     <string name="label_local">In locale</string>
     <string name="label_read_duration">Durata lettura</string>
     <string name="label_tracked_titles">Voci tracciate</string>
-    <string name="label_used">In Uso</string>
+    <string name="label_used">In uso</string>
     <string name="not_applicable">N/D</string>
-    <string name="minute_short">%dm</string>
+    <string name="minute_short">%d min</string>
     <string name="label_downloaded">Scaricati</string>
     <string name="label_titles_in_global_update">Nell\'aggiornamento globale</string>
     <string name="label_read_chapters">Letti</string>
     <string name="label_mean_score">Punteggio medio</string>
-    <string name="hour_short">%do</string>
+    <string name="hour_short">%d o</string>
     <string name="label_total_chapters">Totale</string>
     <string name="label_tracker_section">Trackers</string>
-    <string name="seconds_short">%ds</string>
-    <string name="day_short">%dg</string>
+    <string name="seconds_short">%d s</string>
+    <string name="day_short">%d g</string>
     <string name="action_not_now">Non ora</string>
+    <string name="information_no_manga_category">La categoria è vuota</string>
+    <string name="pref_library_update_show_tab_badge">Mostra il numero dei capitoli non letti nell\'icona Novità</string>
 </resources>

@@ -778,4 +778,7 @@
     <string name="label_read_chapters">อ่านแล้ว</string>
     <string name="hour_short">%d ชม.</string>
     <string name="seconds_short">%d วิ.</string>
+    <string name="action_not_now">ไม่ใช่ตอนนี้</string>
+    <string name="pref_library_update_show_tab_badge">แสดงจำนวนที่ยังไม่ได้อ่านบนไอคอนการอัปเดต</string>
+    <string name="information_no_manga_category">หมวดหมู่ว่างเปล่า</string>
 </resources>

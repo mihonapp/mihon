@@ -116,10 +116,10 @@
     <string name="label_backup">پشتیبان گیری و بازیابی</string>
     <string name="label_sources">منابع</string>
     <string name="label_recent_manga">سابقه</string>
-    <string name="label_recent_updates">آپدیت ها</string>
+    <string name="label_recent_updates">به روز رسانی‌ها</string>
     <string name="label_library">کتابخانه</string>
     <string name="label_download_queue">صف دانلود</string>
-    <string name="label_settings">تنضیمات</string>
+    <string name="label_settings">تنظیمات</string>
     <string name="label_more">بیشتر</string>
     <string name="name">نام</string>
     <string name="add_to_library">افزودن به کتابخانه</string>
@@ -450,7 +450,7 @@
     <string name="confirm_exit">برای بستن دکمه بازگشت را یک بار دیگر بزنید</string>
     <string name="history">تاریخچه</string>
     <string name="chapters">قسمت ها</string>
-    <string name="manga">مانگا</string>
+    <string name="manga">کتابخانه ورودی‌ها</string>
     <string name="categories">دسته بندی ها</string>
     <string name="channel_errors">خطاها</string>
     <string name="channel_complete">تکمیل شده</string>

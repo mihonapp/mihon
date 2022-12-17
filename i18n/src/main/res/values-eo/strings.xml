@@ -536,4 +536,6 @@
     <string name="pref_show_navigation_mode_summary">Montri tuŝetzonojn kiam malfermas legilon</string>
     <string name="pref_library_update_refresh_metadata">Aŭtomate aktualigi metadatumoj</string>
     <string name="secure_screen_summary">Kaŝi aplikaĵan enhavon kiam ŝaltumas aplikaĵojn kaj malebligi ekrankopion</string>
+    <string name="label_stats">Statistiko</string>
+    <string name="label_warning">Averto</string>
 </resources>

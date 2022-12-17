@@ -779,4 +779,6 @@
     <string name="minute_short">%d 分鐘</string>
     <string name="seconds_short">%d 秒鐘</string>
     <string name="action_not_now">暫時不要</string>
+    <string name="information_no_manga_category">類別尚無作品</string>
+    <string name="pref_library_update_show_tab_badge">在「新刊」導覽圖示上標記未讀章數</string>
 </resources>

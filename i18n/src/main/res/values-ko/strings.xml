@@ -457,7 +457,7 @@
     <string name="pref_high">높음</string>
     <string name="pref_hide_threshold">스크롤 시 메뉴 숨기기 민감도</string>
     <string name="pref_low">낮음</string>
-    <string name="pref_reader_actions">행동</string>
+    <string name="pref_reader_actions">조작</string>
     <string name="action_display_language_badge">언어</string>
     <string name="pref_show_reading_mode_summary">뷰어가 켜질 때 현재 읽기 모드를 표시합니다</string>
     <string name="pref_show_navigation_mode">탭 영역 오버레이 표시</string>
@@ -760,7 +760,7 @@
     <string name="pref_invalidate_download_cache_summary">앱이 다운로드한 챕터를 다시 확인하도록 강제</string>
     <string name="label_completed_titles">완료된 항목</string>
     <string name="label_total_chapters">전체</string>
-    <string name="label_titles_in_global_update">전역 업데이트</string>
+    <string name="label_titles_in_global_update">전역 업데이트 대상</string>
     <string name="label_used">사용됨</string>
     <string name="not_applicable">N/A</string>
     <string name="minute_short">%d분</string>
@@ -779,4 +779,6 @@
     <string name="day_short">%d 일</string>
     <string name="hour_short">%d 시간</string>
     <string name="action_not_now">나중에</string>
+    <string name="pref_library_update_show_tab_badge">업데이트 아이콘에 읽지 않은 수 표시</string>
+    <string name="information_no_manga_category">카테고리가 비어 있습니다</string>
 </resources>
