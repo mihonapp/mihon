@@ -15,7 +15,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.outlined.NewReleases
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarDefaults
@@ -68,7 +67,7 @@ fun NewUpdateScreen(
                         vertical = MaterialTheme.padding.small,
                     ),
             ) {
-                Button(
+                TextButton(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onAcceptUpdate,
                 ) {

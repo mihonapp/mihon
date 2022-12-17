@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 data class SourceSearchScreen(
     private val oldManga: Manga,
     private val sourceId: Long,
-    private val listing: BrowseSourceScreenModel.Listing,
+    private val query: String?,
 ) : Screen {
 
     @Composable
@@ -50,7 +50,7 @@ data class SourceSearchScreen(
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
 
-        val screenModel = rememberScreenModel { BrowseSourceScreenModel(sourceId, listing) }
+        val screenModel = rememberScreenModel { BrowseSourceScreenModel(sourceId, query) }
         val state by screenModel.state.collectAsState()
 
         val snackbarHostState = remember { SnackbarHostState() }

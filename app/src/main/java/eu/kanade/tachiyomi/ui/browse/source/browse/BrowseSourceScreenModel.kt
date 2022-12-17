@@ -79,7 +79,7 @@ import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
 
 class BrowseSourceScreenModel(
     private val sourceId: Long,
-    listing: Listing,
+    listingQuery: String?,
     private val sourceManager: SourceManager = Injekt.get(),
     sourcePreferences: SourcePreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
@@ -95,7 +95,7 @@ class BrowseSourceScreenModel(
     private val updateManga: UpdateManga = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
     private val syncChaptersWithTrackServiceTwoWay: SyncChaptersWithTrackServiceTwoWay = Injekt.get(),
-) : StateScreenModel<BrowseSourceScreenModel.State>(State(listing)) {
+) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
     private val loggedServices by lazy { Injekt.get<TrackManager>().services.filter { it.isLogged } }
 
@@ -133,7 +133,19 @@ class BrowseSourceScreenModel(
         .stateIn(coroutineScope, SharingStarted.Lazily, emptyFlow())
 
     init {
-        mutableState.update { it.copy(filters = source.getFilterList()) }
+        mutableState.update {
+            val initialListing = it.listing
+            val listing = if (initialListing is Listing.Search) {
+                initialListing.copy(filters = source.getFilterList())
+            } else {
+                initialListing
+            }
+
+            it.copy(
+                listing = listing,
+                filters = source.getFilterList(),
+            )
+        }
     }
 
     fun getColumnsPreference(orientation: Int): GridCells {
@@ -374,6 +386,16 @@ class BrowseSourceScreenModel(
         object Popular : Listing(query = GetRemoteManga.QUERY_POPULAR, filters = FilterList())
         object Latest : Listing(query = GetRemoteManga.QUERY_LATEST, filters = FilterList())
         data class Search(override val query: String?, override val filters: FilterList) : Listing(query = query, filters = filters)
+
+        companion object {
+            fun valueOf(query: String?): Listing {
+                return when (query) {
+                    GetRemoteManga.QUERY_POPULAR -> Popular
+                    GetRemoteManga.QUERY_LATEST -> Latest
+                    else -> Search(query = query, filters = FilterList()) // filters are filled in later
+                }
+            }
+        }
     }
 
     sealed class Dialog {

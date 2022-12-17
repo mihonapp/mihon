@@ -10,7 +10,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listing
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 
 class GlobalSearchScreen(
@@ -47,7 +46,7 @@ class GlobalSearchScreen(
                 if (!screenModel.incognitoMode.get()) {
                     screenModel.lastUsedSourceId.set(it.id)
                 }
-                navigator.push(BrowseSourceScreen(it.id, Listing.Search(state.searchQuery, it.getFilterList())))
+                navigator.push(BrowseSourceScreen(it.id, state.searchQuery))
             },
             onClickItem = { navigator.push(MangaScreen(it.id, true)) },
             onLongClickItem = { navigator.push(MangaScreen(it.id, true)) },

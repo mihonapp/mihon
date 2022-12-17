@@ -62,7 +62,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 data class BrowseSourceScreen(
     private val sourceId: Long,
-    private val listing: Listing,
+    private val listingQuery: String?,
 ) : Screen, AssistContentScreen {
 
     private var assistUrl: String? = null
@@ -79,7 +79,7 @@ data class BrowseSourceScreen(
         val haptic = LocalHapticFeedback.current
         val uriHandler = LocalUriHandler.current
 
-        val screenModel = rememberScreenModel { BrowseSourceScreenModel(sourceId, listing) }
+        val screenModel = rememberScreenModel { BrowseSourceScreenModel(sourceId, listingQuery) }
         val state by screenModel.state.collectAsState()
 
         val snackbarHostState = remember { SnackbarHostState() }
