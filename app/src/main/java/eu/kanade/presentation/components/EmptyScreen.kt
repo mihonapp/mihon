@@ -22,12 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastFirstOrNull
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.ThemePreviews
 import eu.kanade.presentation.util.secondaryItemAlpha
@@ -54,68 +51,45 @@ fun EmptyScreen(
     actions: List<EmptyScreenAction>? = null,
 ) {
     val face = remember { getRandomErrorFace() }
-    Layout(
-        content = {
-            Column(
-                modifier = Modifier
-                    .layoutId("face")
-                    .padding(horizontal = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = face,
-                    modifier = Modifier.secondaryItemAlpha(),
-                    style = MaterialTheme.typography.displayMedium,
-                )
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = face,
+            modifier = Modifier.secondaryItemAlpha(),
+            style = MaterialTheme.typography.displayMedium,
+        )
 
-                Text(
-                    text = message,
-                    modifier = Modifier.paddingFromBaseline(top = 24.dp).secondaryItemAlpha(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                )
-            }
-            if (!actions.isNullOrEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .layoutId("actions")
-                        .padding(
-                            top = 24.dp,
-                            start = horizontalPadding,
-                            end = horizontalPadding,
-                        ),
-                    horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-                ) {
-                    actions.forEach {
-                        ActionButton(
-                            modifier = Modifier.weight(1f),
-                            title = stringResource(it.stringResId),
-                            icon = it.icon,
-                            onClick = it.onClick,
-                        )
-                    }
+        Text(
+            text = message,
+            modifier = Modifier.paddingFromBaseline(top = 24.dp).secondaryItemAlpha(),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+        )
+
+        if (!actions.isNullOrEmpty()) {
+            Row(
+                modifier = Modifier
+                    .padding(
+                        top = 24.dp,
+                        start = 24.dp,
+                        end = 24.dp,
+                    ),
+                horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
+            ) {
+                actions.forEach {
+                    ActionButton(
+                        modifier = Modifier.weight(1f),
+                        title = stringResource(it.stringResId),
+                        icon = it.icon,
+                        onClick = it.onClick,
+                    )
                 }
             }
-        },
-        modifier = modifier.fillMaxSize(),
-    ) { measurables, constraints ->
-        val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
-        val facePlaceable = measurables.fastFirstOrNull { it.layoutId == "face" }!!
-            .measure(looseConstraints)
-        val actionsPlaceable = measurables.fastFirstOrNull { it.layoutId == "actions" }
-            ?.measure(looseConstraints)
-
-        layout(constraints.maxWidth, constraints.maxHeight) {
-            val faceY = (constraints.maxHeight - facePlaceable.height) / 2
-            facePlaceable.placeRelative(
-                x = (constraints.maxWidth - facePlaceable.width) / 2,
-                y = faceY,
-            )
-
-            actionsPlaceable?.placeRelative(
-                x = (constraints.maxWidth - actionsPlaceable.width) / 2,
-                y = faceY + facePlaceable.height,
-            )
         }
     }
 }
@@ -186,8 +160,6 @@ data class EmptyScreenAction(
     val icon: ImageVector,
     val onClick: () -> Unit,
 )
-
-private val horizontalPadding = 24.dp
 
 private val ERROR_FACES = listOf(
     "(･o･;)",

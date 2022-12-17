@@ -30,6 +30,7 @@ fun LibraryList(
     onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
+    hasActiveFilters: Boolean,
 ) {
     FastScrollLazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -49,37 +50,45 @@ fun LibraryList(
             }
         }
 
-        items(
-            items = items,
-            contentType = { "library_list_item" },
-        ) { libraryItem ->
-            val manga = libraryItem.libraryManga.manga
-            MangaListItem(
-                isSelected = selection.fastAny { it.id == libraryItem.libraryManga.id },
-                title = manga.title,
-                coverData = MangaCover(
-                    mangaId = manga.id,
-                    sourceId = manga.source,
-                    isMangaFavorite = manga.favorite,
-                    url = manga.thumbnailUrl,
-                    lastModified = manga.coverLastModified,
-                ),
-                badge = {
-                    DownloadsBadge(count = libraryItem.downloadCount.toInt())
-                    UnreadBadge(count = libraryItem.unreadCount.toInt())
-                    LanguageBadge(
-                        isLocal = libraryItem.isLocal,
-                        sourceLanguage = libraryItem.sourceLanguage,
-                    )
-                },
-                onLongClick = { onLongClick(libraryItem.libraryManga) },
-                onClick = { onClick(libraryItem.libraryManga) },
-                onClickContinueReading = if (onClickContinueReading != null) {
-                    { onClickContinueReading(libraryItem.libraryManga) }
-                } else {
-                    null
-                },
-            )
+        if (items.isEmpty()) {
+            item(
+                contentType = "library_list_empty",
+            ) {
+                LibraryPagerEmptyScreen(searchQuery, hasActiveFilters, contentPadding)
+            }
+        } else {
+            items(
+                items = items,
+                contentType = { "library_list_item" },
+            ) { libraryItem ->
+                val manga = libraryItem.libraryManga.manga
+                MangaListItem(
+                    isSelected = selection.fastAny { it.id == libraryItem.libraryManga.id },
+                    title = manga.title,
+                    coverData = MangaCover(
+                        mangaId = manga.id,
+                        sourceId = manga.source,
+                        isMangaFavorite = manga.favorite,
+                        url = manga.thumbnailUrl,
+                        lastModified = manga.coverLastModified,
+                    ),
+                    badge = {
+                        DownloadsBadge(count = libraryItem.downloadCount.toInt())
+                        UnreadBadge(count = libraryItem.unreadCount.toInt())
+                        LanguageBadge(
+                            isLocal = libraryItem.isLocal,
+                            sourceLanguage = libraryItem.sourceLanguage,
+                        )
+                    },
+                    onLongClick = { onLongClick(libraryItem.libraryManga) },
+                    onClick = { onClick(libraryItem.libraryManga) },
+                    onClickContinueReading = if (onClickContinueReading != null) {
+                        { onClickContinueReading(libraryItem.libraryManga) }
+                    } else {
+                        null
+                    },
+                )
+            }
         }
     }
 }

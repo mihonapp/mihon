@@ -2,6 +2,7 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ fun LibraryComfortableGrid(
     onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
+    hasActiveFilters: Boolean,
 ) {
     LazyLibraryGrid(
         modifier = Modifier.fillMaxSize(),
@@ -30,39 +32,48 @@ fun LibraryComfortableGrid(
     ) {
         globalSearchItem(searchQuery, onGlobalSearchClicked)
 
-        items(
-            items = items,
-            contentType = { "library_comfortable_grid_item" },
-        ) { libraryItem ->
-            val manga = libraryItem.libraryManga.manga
-            MangaComfortableGridItem(
-                isSelected = selection.fastAny { it.id == libraryItem.libraryManga.id },
-                title = manga.title,
-                coverData = MangaCover(
-                    mangaId = manga.id,
-                    sourceId = manga.source,
-                    isMangaFavorite = manga.favorite,
-                    url = manga.thumbnailUrl,
-                    lastModified = manga.coverLastModified,
-                ),
-                coverBadgeStart = {
-                    DownloadsBadge(count = libraryItem.downloadCount.toInt())
-                    UnreadBadge(count = libraryItem.unreadCount.toInt())
-                },
-                coverBadgeEnd = {
-                    LanguageBadge(
-                        isLocal = libraryItem.isLocal,
-                        sourceLanguage = libraryItem.sourceLanguage,
-                    )
-                },
-                onLongClick = { onLongClick(libraryItem.libraryManga) },
-                onClick = { onClick(libraryItem.libraryManga) },
-                onClickContinueReading = if (onClickContinueReading != null) {
-                    { onClickContinueReading(libraryItem.libraryManga) }
-                } else {
-                    null
-                },
-            )
+        if (items.isEmpty()) {
+            item(
+                span = { GridItemSpan(maxLineSpan) },
+                contentType = "library_comfortable_grid_empty",
+            ) {
+                LibraryPagerEmptyScreen(searchQuery, hasActiveFilters, contentPadding)
+            }
+        } else {
+            items(
+                items = items,
+                contentType = { "library_comfortable_grid_item" },
+            ) { libraryItem ->
+                val manga = libraryItem.libraryManga.manga
+                MangaComfortableGridItem(
+                    isSelected = selection.fastAny { it.id == libraryItem.libraryManga.id },
+                    title = manga.title,
+                    coverData = MangaCover(
+                        mangaId = manga.id,
+                        sourceId = manga.source,
+                        isMangaFavorite = manga.favorite,
+                        url = manga.thumbnailUrl,
+                        lastModified = manga.coverLastModified,
+                    ),
+                    coverBadgeStart = {
+                        DownloadsBadge(count = libraryItem.downloadCount.toInt())
+                        UnreadBadge(count = libraryItem.unreadCount.toInt())
+                    },
+                    coverBadgeEnd = {
+                        LanguageBadge(
+                            isLocal = libraryItem.isLocal,
+                            sourceLanguage = libraryItem.sourceLanguage,
+                        )
+                    },
+                    onLongClick = { onLongClick(libraryItem.libraryManga) },
+                    onClick = { onClick(libraryItem.libraryManga) },
+                    onClickContinueReading = if (onClickContinueReading != null) {
+                        { onClickContinueReading(libraryItem.libraryManga) }
+                    } else {
+                        null
+                    },
+                )
+            }
         }
     }
 }

@@ -212,43 +212,43 @@ private fun SearchResult(
     }
 
     Crossfade(targetState = result) {
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            state = listState,
-            contentPadding = contentPadding,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            when {
-                it == null -> {
-                    /* Don't show anything just yet */
-                }
-                // No result
-                it.isEmpty() -> item { EmptyScreen(stringResource(R.string.no_results_found)) }
-                // Show result list
-                else -> items(
-                    items = it,
-                    key = { i -> i.hashCode() },
-                ) { item ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onItemClick(item) }
-                            .padding(horizontal = 24.dp, vertical = 14.dp),
-                    ) {
-                        Text(
-                            text = item.title,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            fontWeight = FontWeight.Normal,
-                            style = MaterialTheme.typography.titleMedium,
-                        )
-                        Text(
-                            text = item.breadcrumbs,
-                            modifier = Modifier.paddingFromBaseline(top = 16.dp),
-                            maxLines = 1,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            style = MaterialTheme.typography.bodySmall,
-                        )
+        when {
+            it == null -> {}
+            it.isEmpty() -> {
+                EmptyScreen(stringResource(R.string.no_results_found))
+            }
+            else -> {
+                LazyColumn(
+                    modifier = modifier.fillMaxSize(),
+                    state = listState,
+                    contentPadding = contentPadding,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    items(
+                        items = it,
+                        key = { i -> i.hashCode() },
+                    ) { item ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onItemClick(item) }
+                                .padding(horizontal = 24.dp, vertical = 14.dp),
+                        ) {
+                            Text(
+                                text = item.title,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1,
+                                fontWeight = FontWeight.Normal,
+                                style = MaterialTheme.typography.titleMedium,
+                            )
+                            Text(
+                                text = item.breadcrumbs,
+                                modifier = Modifier.paddingFromBaseline(top = 16.dp),
+                                maxLines = 1,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
                     }
                 }
             }

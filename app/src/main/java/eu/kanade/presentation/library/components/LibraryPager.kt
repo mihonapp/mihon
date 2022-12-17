@@ -48,11 +48,6 @@ fun LibraryPager(
         }
         val library = getLibraryForPage(page)
 
-        if (library.isEmpty()) {
-            LibraryPagerEmptyScreen(searchQuery, hasActiveFilters, contentPadding)
-            return@HorizontalPager
-        }
-
         val displayMode = getDisplayModeForPage(page)
         val columns by if (displayMode != LibraryDisplayMode.List) {
             val configuration = LocalConfiguration.current
@@ -74,6 +69,7 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
+                    hasActiveFilters = hasActiveFilters,
                 )
             }
             LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
@@ -88,6 +84,7 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
+                    hasActiveFilters = hasActiveFilters,
                 )
             }
             LibraryDisplayMode.ComfortableGrid -> {
@@ -101,6 +98,7 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
+                    hasActiveFilters = hasActiveFilters,
                 )
             }
         }
@@ -108,7 +106,7 @@ fun LibraryPager(
 }
 
 @Composable
-private fun LibraryPagerEmptyScreen(
+internal fun LibraryPagerEmptyScreen(
     searchQuery: String?,
     hasActiveFilters: Boolean,
     contentPadding: PaddingValues,
@@ -119,6 +117,7 @@ private fun LibraryPagerEmptyScreen(
         else -> R.string.information_no_manga_category
     }
 
+    // TODO: vertically center this better
     EmptyScreen(
         textResource = msg,
         modifier = Modifier.padding(contentPadding),
