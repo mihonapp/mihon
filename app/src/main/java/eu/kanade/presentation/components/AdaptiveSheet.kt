@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
@@ -194,7 +194,7 @@ fun AdaptiveSheetImpl(
                 shape = MaterialTheme.shapes.extraLarge,
                 tonalElevation = tonalElevation,
                 content = {
-                    BackHandler(onBack = internalOnDismissRequest)
+                    BackHandler(enabled = alpha > 0f, onBack = internalOnDismissRequest)
                     content()
                 },
             )
@@ -264,14 +264,14 @@ fun AdaptiveSheetImpl(
                         WindowInsets.systemBars
                             .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
                     )
-                    .consumedWindowInsets(
+                    .consumeWindowInsets(
                         WindowInsets.systemBars
                             .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
                     ),
                 shape = MaterialTheme.shapes.extraLarge.copy(bottomStart = ZeroCornerSize, bottomEnd = ZeroCornerSize),
                 tonalElevation = tonalElevation,
                 content = {
-                    BackHandler(onBack = internalOnDismissRequest)
+                    BackHandler(enabled = swipeState.targetValue == 0, onBack = internalOnDismissRequest)
                     content()
                 },
             )
