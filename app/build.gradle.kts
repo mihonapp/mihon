@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     id("com.android.application")
@@ -245,7 +246,6 @@ dependencies {
 
     // Image loading
     implementation(libs.bundles.coil)
-
     implementation(libs.subsamplingscaleimageview) {
         exclude(module = "image-decoder")
     }
@@ -310,7 +310,7 @@ tasks {
         }
     }
 
-    withType<org.jmailen.gradle.kotlinter.tasks.LintTask>().configureEach {
+    withType<LintTask>().configureEach {
         exclude { it.file.path.contains("generated[\\\\/]".toRegex()) }
     }
 

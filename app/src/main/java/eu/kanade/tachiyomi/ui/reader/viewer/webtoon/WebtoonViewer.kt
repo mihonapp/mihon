@@ -119,9 +119,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         )
         recycler.tapListener = { event ->
             val pos = PointF(event.rawX / recycler.width, event.rawY / recycler.height)
-            val navigator = config.navigator
-
-            when (navigator.getAction(pos)) {
+            when (config.navigator.getAction(pos)) {
                 NavigationRegion.MENU -> activity.toggleMenu()
                 NavigationRegion.NEXT, NavigationRegion.RIGHT -> scrollDown()
                 NavigationRegion.PREV, NavigationRegion.LEFT -> scrollUp()
@@ -245,7 +243,6 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Tells this viewer to set the given [chapters] as active.
      */
     override fun setChapters(chapters: ViewerChapters) {
-        logcat { "setChapters" }
         val forceTransition = config.alwaysShowChapterTransition || currentPage is ChapterTransition
         adapter.setChapters(chapters, forceTransition)
 
@@ -261,7 +258,6 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Tells this viewer to move to the given [page].
      */
     override fun moveToPage(page: ReaderPage) {
-        logcat { "moveToPage" }
         val position = adapter.items.indexOf(page)
         if (position != -1) {
             layoutManager.scrollToPositionWithOffset(position, 0)

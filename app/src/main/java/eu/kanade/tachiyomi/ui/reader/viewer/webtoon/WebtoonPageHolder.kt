@@ -85,7 +85,7 @@ class WebtoonPageHolder(
 
     /**
      * Subscription used to read the header of the image. This is needed in order to instantiate
-     * the appropiate image view depending if the image is animated (GIF).
+     * the appropriate image view depending if the image is animated (GIF).
      */
     private var readImageHeaderSubscription: Subscription? = null
 

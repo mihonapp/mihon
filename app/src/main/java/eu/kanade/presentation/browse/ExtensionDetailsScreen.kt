@@ -122,7 +122,6 @@ fun ExtensionDetailsScreen(
             )
         },
     ) { paddingValues ->
-
         if (state.extension == null) {
             EmptyScreen(
                 textResource = R.string.empty_screen,

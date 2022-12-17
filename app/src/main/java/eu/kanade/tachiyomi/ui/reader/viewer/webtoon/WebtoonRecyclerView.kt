@@ -40,11 +40,6 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     var tapListener: ((MotionEvent) -> Unit)? = null
     var longTapListener: ((MotionEvent) -> Boolean)? = null
 
-    init {
-        isVerticalScrollBarEnabled = false
-        isHorizontalScrollBarEnabled = false
-    }
-
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         halfWidth = MeasureSpec.getSize(widthSpec) / 2
         halfHeight = MeasureSpec.getSize(heightSpec) / 2
@@ -226,8 +221,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         }
 
         override fun onLongTapConfirmed(ev: MotionEvent) {
-            val listener = longTapListener
-            if (listener != null && listener.invoke(ev)) {
+            if (longTapListener?.invoke(ev) == true) {
                 performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
         }
