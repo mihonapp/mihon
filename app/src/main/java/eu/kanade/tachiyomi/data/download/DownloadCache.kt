@@ -20,11 +20,14 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withTimeout
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -53,8 +56,6 @@ class DownloadCache(
         .onStart { emit(Unit) }
         .shareIn(scope, SharingStarted.Eagerly, 1)
 
-    private val notifier by lazy { DownloadNotifier(context) }
-
     /**
      * The interval after which this cache should be invalidated. 1 hour shouldn't cause major
      * issues, as the cache is only used for UI feedback.
@@ -66,6 +67,10 @@ class DownloadCache(
      */
     private var lastRenew = 0L
     private var renewalJob: Job? = null
+    val isRenewing = changes
+        .map { renewalJob?.isActive ?: false }
+        .distinctUntilChanged()
+        .stateIn(scope, SharingStarted.WhileSubscribed(), false)
 
     private var rootDownloadsDir = RootDirectory(getDirectoryFromPreference())
 
@@ -260,8 +265,6 @@ class DownloadCache(
         }
 
         renewalJob = scope.launchIO {
-            notifier.onCacheProgress()
-
             var sources = getSources()
 
             // Try to wait until extensions and sources have loaded
@@ -320,7 +323,6 @@ class DownloadCache(
             lastRenew = System.currentTimeMillis()
             notifyChanges()
         }
-        renewalJob?.invokeOnCompletion { notifier.dismissCacheProgress() }
     }
 
     private fun getSources(): List<Source> {
