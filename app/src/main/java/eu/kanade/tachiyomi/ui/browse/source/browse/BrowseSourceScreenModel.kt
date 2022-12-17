@@ -359,21 +359,20 @@ class BrowseSourceScreenModel(
     }
 
     fun initFilterSheet(context: Context) {
-        val state = state.value
-        if (state.filters.isEmpty()) {
+        if (state.value.filters.isEmpty()) {
             return
         }
 
         filterSheet = SourceFilterSheet(
             context = context,
-            onFilterClicked = { search(filters = state.filters) },
+            onFilterClicked = { search(filters = state.value.filters) },
             onResetClicked = {
                 reset()
-                filterSheet?.setFilters(state.filterItems)
+                filterSheet?.setFilters(state.value.filterItems)
             },
         )
 
-        filterSheet?.setFilters(state.filterItems)
+        filterSheet?.setFilters(state.value.filterItems)
     }
 
     sealed class Filter(open val query: String?, open val filters: FilterList) {
@@ -409,12 +408,8 @@ class BrowseSourceScreenModel(
         val toolbarQuery: String? = null,
         val dialog: Dialog? = null,
     ) {
-        val filterItems = filters.toItems()
-        val isUserQuery = currentFilter is Filter.UserInput && !currentFilter.query.isNullOrEmpty()
-        val searchQuery = when (currentFilter) {
-            is Filter.UserInput -> currentFilter.query
-            Filter.Latest, Filter.Popular -> null
-        }
+        val filterItems get() = filters.toItems()
+        val isUserQuery get() = currentFilter is Filter.UserInput && !currentFilter.query.isNullOrEmpty()
     }
 }
 

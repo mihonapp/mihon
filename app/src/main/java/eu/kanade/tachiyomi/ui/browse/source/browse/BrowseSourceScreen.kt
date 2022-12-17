@@ -84,6 +84,13 @@ data class BrowseSourceScreen(
 
         val snackbarHostState = remember { SnackbarHostState() }
 
+        val navigateUp: () -> Unit = {
+            when {
+                !state.isUserQuery && state.toolbarQuery != null -> screenModel.setToolbarQuery(null)
+                else -> navigator.pop()
+            }
+        }
+
         val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
 
         val onWebViewClick = f@{
@@ -105,7 +112,7 @@ data class BrowseSourceScreen(
                         source = screenModel.source,
                         displayMode = screenModel.displayMode,
                         onDisplayModeChange = { screenModel.displayMode = it },
-                        navigateUp = navigator::pop,
+                        navigateUp = navigateUp,
                         onWebViewClick = onWebViewClick,
                         onHelpClick = onHelpClick,
                         onSearch = { screenModel.search(it) },
