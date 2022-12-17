@@ -12,6 +12,8 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
+import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withTimeout
+import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.ConcurrentHashMap
@@ -319,10 +322,18 @@ class DownloadCache(
                     }
                 }
                 .awaitAll()
-
-            lastRenew = System.currentTimeMillis()
-            notifyChanges()
+        }.also {
+            it.invokeOnCompletion(onCancelling = true) { exception ->
+                if (exception != null && exception !is CancellationException) {
+                    logcat(LogPriority.ERROR, exception) { "Failed to create download cache" }
+                }
+                lastRenew = System.currentTimeMillis()
+                notifyChanges()
+            }
         }
+
+        // Mainly to notify the indexing notifier UI
+        notifyChanges()
     }
 
     private fun getSources(): List<Source> {
