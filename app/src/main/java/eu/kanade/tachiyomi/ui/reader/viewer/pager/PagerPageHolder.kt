@@ -13,8 +13,13 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -22,7 +27,6 @@ import rx.schedulers.Schedulers
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import java.util.concurrent.TimeUnit
 
 /**
  * View of the ViewPager that contains a page of a chapter.
@@ -54,15 +58,17 @@ class PagerPageHolder(
      */
     private var errorLayout: ReaderErrorBinding? = null
 
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     /**
      * Subscription for status changes of the page.
      */
     private var statusSubscription: Subscription? = null
 
     /**
-     * Subscription for progress changes of the page.
+     * Job for progress changes of the page.
      */
-    private var progressSubscription: Subscription? = null
+    private var progressJob: Job? = null
 
     /**
      * Subscription used to read the header of the image. This is needed in order to instantiate
@@ -81,7 +87,7 @@ class PagerPageHolder(
     @SuppressLint("ClickableViewAccessibility")
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        unsubscribeProgress()
+        cancelProgressJob()
         unsubscribeStatus()
         unsubscribeReadImageHeader()
     }
@@ -100,18 +106,11 @@ class PagerPageHolder(
             .subscribe { processStatus(it) }
     }
 
-    /**
-     * Observes the progress of the page and updates view.
-     */
-    private fun observeProgress() {
-        progressSubscription?.unsubscribe()
-
-        progressSubscription = Observable.interval(100, TimeUnit.MILLISECONDS)
-            .map { page.progress }
-            .distinctUntilChanged()
-            .onBackpressureLatest()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { value -> progressIndicator.setProgress(value) }
+    private fun launchProgressJob() {
+        progressJob?.cancel()
+        progressJob = scope.launchUI {
+            page.progressFlow.collectLatest { value -> progressIndicator.setProgress(value) }
+        }
     }
 
     /**
@@ -124,16 +123,16 @@ class PagerPageHolder(
             Page.State.QUEUE -> setQueued()
             Page.State.LOAD_PAGE -> setLoading()
             Page.State.DOWNLOAD_IMAGE -> {
-                observeProgress()
+                launchProgressJob()
                 setDownloading()
             }
             Page.State.READY -> {
                 setImage()
-                unsubscribeProgress()
+                cancelProgressJob()
             }
             Page.State.ERROR -> {
                 setError()
-                unsubscribeProgress()
+                cancelProgressJob()
             }
         }
     }
@@ -146,12 +145,9 @@ class PagerPageHolder(
         statusSubscription = null
     }
 
-    /**
-     * Unsubscribes from the progress subscription.
-     */
-    private fun unsubscribeProgress() {
-        progressSubscription?.unsubscribe()
-        progressSubscription = null
+    private fun cancelProgressJob() {
+        progressJob?.cancel()
+        progressJob = null
     }
 
     /**

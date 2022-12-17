@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.source.model
 
 import android.net.Uri
 import eu.kanade.tachiyomi.network.ProgressListener
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import rx.subjects.Subject
@@ -26,8 +28,14 @@ open class Page(
         }
 
     @Transient
-    @Volatile
-    var progress: Int = 0
+    private val _progressFlow = MutableStateFlow(0)
+    @Transient
+    val progressFlow = _progressFlow.asStateFlow()
+    var progress: Int
+        get() = _progressFlow.value
+        set(value) {
+            _progressFlow.value = value
+        }
 
     @Transient
     var statusSubject: Subject<State, State>? = null

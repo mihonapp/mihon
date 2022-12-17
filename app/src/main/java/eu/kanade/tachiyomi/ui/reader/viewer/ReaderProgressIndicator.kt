@@ -11,10 +11,9 @@ import androidx.annotation.IntRange
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 /**
- * A wrapper for [CircularProgressIndicator] that always rotates while being determinate.
+ * A wrapper for [CircularProgressIndicator] that always rotates.
  *
- * By always rotating we give the feedback to the user that the application isn't 'stuck',
- * and by making it determinate the user also approximately knows how much the operation will take.
+ * By always rotating we give the feedback to the user that the application isn't 'stuck'.
  */
 class ReaderProgressIndicator @JvmOverloads constructor(
     context: Context,
