@@ -5,7 +5,6 @@
   "schedule": ["every sunday"],
   "ignoreDeps": [
     "androidx.core:core-splashscreen",
-    "androidx.work:work-runtime-ktx",
     "com.android.tools:r8",
     "com.google.guava:guava",
     "com.github.commandiron:WheelPickerCompose"

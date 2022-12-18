@@ -59,7 +59,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                     .setConstraints(constraints)
                     .build()
 
-                WorkManager.getInstance(context).enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
+                // Re-enqueue work because of common support suggestion to change
+                // the settings on the desired time to schedule it at that time
+                WorkManager.getInstance(context).enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, request)
             } else {
                 WorkManager.getInstance(context).cancelAllWorkByTag(TAG)
             }

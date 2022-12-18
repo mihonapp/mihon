@@ -85,7 +85,7 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
                     .setConstraints(constraints)
                     .build()
 
-                WorkManager.getInstance(context).enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
+                WorkManager.getInstance(context).enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.UPDATE, request)
             } else {
                 WorkManager.getInstance(context).cancelAllWorkByTag(TAG)
             }
