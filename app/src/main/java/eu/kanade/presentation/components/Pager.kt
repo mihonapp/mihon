@@ -1,5 +1,8 @@
 package eu.kanade.presentation.components
 
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,6 +10,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyListItemInfo
+import androidx.compose.foundation.lazy.LazyListLayoutInfo
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
@@ -14,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,7 +26,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMaxBy
+import androidx.compose.ui.util.fastSumBy
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
@@ -79,7 +87,7 @@ private fun Pager(
             horizontalAlignment = horizontalAlignment,
             verticalArrangement = Arrangement.aligned(verticalAlignment),
             userScrollEnabled = userScrollEnabled,
-            flingBehavior = rememberSnapFlingBehavior(lazyListState = state.lazyListState),
+            flingBehavior = rememberLazyListSnapFlingBehavior(lazyListState = state.lazyListState),
         ) {
             items(
                 count = count,
@@ -102,7 +110,7 @@ private fun Pager(
             verticalAlignment = verticalAlignment,
             horizontalArrangement = Arrangement.aligned(horizontalAlignment),
             userScrollEnabled = userScrollEnabled,
-            flingBehavior = rememberSnapFlingBehavior(lazyListState = state.lazyListState),
+            flingBehavior = rememberLazyListSnapFlingBehavior(lazyListState = state.lazyListState),
         ) {
             items(
                 count = count,
@@ -180,3 +188,72 @@ class PagerState(
         )
     }
 }
+
+// https://android.googlesource.com/platform/frameworks/support/+/refs/changes/78/2160778/35/compose/foundation/foundation/src/commonMain/kotlin/androidx/compose/foundation/gestures/snapping/LazyListSnapLayoutInfoProvider.kt
+private fun lazyListSnapLayoutInfoProvider(
+    lazyListState: LazyListState,
+    positionInLayout: (layoutSize: Float, itemSize: Float) -> Float = { layoutSize, itemSize ->
+        layoutSize / 2f - itemSize / 2f
+    },
+) = object : SnapLayoutInfoProvider {
+
+    private val layoutInfo: LazyListLayoutInfo
+        get() = lazyListState.layoutInfo
+
+    // Single page snapping is the default
+    override fun Density.calculateApproachOffset(initialVelocity: Float): Float = 0f
+
+    override fun Density.calculateSnappingOffsetBounds(): ClosedFloatingPointRange<Float> {
+        var lowerBoundOffset = Float.NEGATIVE_INFINITY
+        var upperBoundOffset = Float.POSITIVE_INFINITY
+
+        layoutInfo.visibleItemsInfo.fastForEach { item ->
+            val offset =
+                calculateDistanceToDesiredSnapPosition(layoutInfo, item, positionInLayout)
+
+            // Find item that is closest to the center
+            if (offset <= 0 && offset > lowerBoundOffset) {
+                lowerBoundOffset = offset
+            }
+
+            // Find item that is closest to center, but after it
+            if (offset >= 0 && offset < upperBoundOffset) {
+                upperBoundOffset = offset
+            }
+        }
+
+        return lowerBoundOffset.rangeTo(upperBoundOffset)
+    }
+
+    override fun Density.calculateSnapStepSize(): Float = with(layoutInfo) {
+        if (visibleItemsInfo.isNotEmpty()) {
+            visibleItemsInfo.fastSumBy { it.size } / visibleItemsInfo.size.toFloat()
+        } else {
+            0f
+        }
+    }
+}
+
+@Composable
+private fun rememberLazyListSnapFlingBehavior(lazyListState: LazyListState): FlingBehavior {
+    val snappingLayout = remember(lazyListState) { lazyListSnapLayoutInfoProvider(lazyListState) }
+    return rememberSnapFlingBehavior(snappingLayout)
+}
+
+private fun calculateDistanceToDesiredSnapPosition(
+    layoutInfo: LazyListLayoutInfo,
+    item: LazyListItemInfo,
+    positionInLayout: (layoutSize: Float, itemSize: Float) -> Float,
+): Float {
+    val containerSize =
+        with(layoutInfo) { singleAxisViewportSize - beforeContentPadding - afterContentPadding }
+
+    val desiredDistance =
+        positionInLayout(containerSize.toFloat(), item.size.toFloat())
+
+    val itemCurrentPosition = item.offset
+    return itemCurrentPosition - desiredDistance
+}
+
+private val LazyListLayoutInfo.singleAxisViewportSize: Int
+    get() = if (orientation == Orientation.Vertical) viewportSize.height else viewportSize.width
