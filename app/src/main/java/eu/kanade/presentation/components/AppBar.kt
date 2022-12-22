@@ -319,6 +319,7 @@ fun SearchToolbar(
     )
     LaunchedEffect(searchClickCount) {
         if (searchQuery == null) return@LaunchedEffect
+        if (searchClickCount == 0 && searchQuery.isNotEmpty()) return@LaunchedEffect
         try {
             focusRequester.requestFocus()
         } catch (_: Throwable) {

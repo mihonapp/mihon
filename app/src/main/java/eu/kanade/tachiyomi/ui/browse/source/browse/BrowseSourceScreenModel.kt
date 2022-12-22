@@ -103,6 +103,24 @@ class BrowseSourceScreenModel(
 
     val source = sourceManager.get(sourceId) as CatalogueSource
 
+    init {
+        mutableState.update {
+            var query: String? = null
+            var listing = it.listing
+
+            if (listing is Listing.Search) {
+                query = listing.query
+                listing = Listing.Search(query, source.getFilterList())
+            }
+
+            it.copy(
+                listing = listing,
+                filters = source.getFilterList(),
+                toolbarQuery = query,
+            )
+        }
+    }
+
     /**
      * Sheet containing filter items.
      */
@@ -131,22 +149,6 @@ class BrowseSourceScreenModel(
                 .cachedIn(coroutineScope)
         }
         .stateIn(coroutineScope, SharingStarted.Lazily, emptyFlow())
-
-    init {
-        mutableState.update {
-            val initialListing = it.listing
-            val listing = if (initialListing is Listing.Search) {
-                initialListing.copy(filters = source.getFilterList())
-            } else {
-                initialListing
-            }
-
-            it.copy(
-                listing = listing,
-                filters = source.getFilterList(),
-            )
-        }
-    }
 
     fun getColumnsPreference(orientation: Int): GridCells {
         val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE
