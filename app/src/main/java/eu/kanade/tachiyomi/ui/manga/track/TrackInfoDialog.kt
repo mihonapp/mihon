@@ -524,7 +524,7 @@ private data class TrackDateRemoverScreen(
                         Text(text = stringResource(android.R.string.cancel))
                     }
                     FilledTonalButton(
-                        onClick = { sm.removeDate(); navigator.popUntilRoot() },
+                        onClick = { sm.removeDate(); navigator.popUntil { it is TrackInfoDialogHomeScreen } },
                         colors = ButtonDefaults.filledTonalButtonColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
