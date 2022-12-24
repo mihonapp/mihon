@@ -345,7 +345,7 @@ object SettingsLibraryScreen : SearchableSettings {
             Row {
                 WheelPicker(
                     size = size,
-                    count = 10,
+                    count = 11,
                     startIndex = portraitValue,
                     onScrollFinished = {
                         onPortraitChange(it)
@@ -356,7 +356,7 @@ object SettingsLibraryScreen : SearchableSettings {
                 }
                 WheelPicker(
                     size = size,
-                    count = 10,
+                    count = 11,
                     startIndex = landscapeValue,
                     onScrollFinished = {
                         onLandscapeChange(it)
