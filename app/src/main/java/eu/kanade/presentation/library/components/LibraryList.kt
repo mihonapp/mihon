@@ -4,20 +4,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
-import androidx.compose.ui.zIndex
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.MangaListItem
 import eu.kanade.presentation.util.plus
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
 @Composable
@@ -30,7 +25,6 @@ fun LibraryList(
     onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
-    hasActiveFilters: Boolean,
 ) {
     FastScrollLazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -38,57 +32,45 @@ fun LibraryList(
     ) {
         item {
             if (!searchQuery.isNullOrEmpty()) {
-                TextButton(
+                GlobalSearchItem(
                     modifier = Modifier.fillMaxWidth(),
+                    searchQuery = searchQuery,
                     onClick = onGlobalSearchClicked,
-                ) {
-                    Text(
-                        text = stringResource(R.string.action_global_search_query, searchQuery),
-                        modifier = Modifier.zIndex(99f),
-                    )
-                }
+                )
             }
         }
 
-        if (items.isEmpty()) {
-            item(
-                contentType = "library_list_empty",
-            ) {
-                LibraryPagerEmptyScreen(searchQuery, hasActiveFilters, contentPadding)
-            }
-        } else {
-            items(
-                items = items,
-                contentType = { "library_list_item" },
-            ) { libraryItem ->
-                val manga = libraryItem.libraryManga.manga
-                MangaListItem(
-                    isSelected = selection.fastAny { it.id == libraryItem.libraryManga.id },
-                    title = manga.title,
-                    coverData = MangaCover(
-                        mangaId = manga.id,
-                        sourceId = manga.source,
-                        isMangaFavorite = manga.favorite,
-                        url = manga.thumbnailUrl,
-                        lastModified = manga.coverLastModified,
-                    ),
-                    badge = {
-                        DownloadsBadge(count = libraryItem.downloadCount.toInt())
-                        UnreadBadge(count = libraryItem.unreadCount.toInt())
-                        LanguageBadge(
-                            isLocal = libraryItem.isLocal,
-                            sourceLanguage = libraryItem.sourceLanguage,
-                        )
-                    },
-                    onLongClick = { onLongClick(libraryItem.libraryManga) },
-                    onClick = { onClick(libraryItem.libraryManga) },
-                    onClickContinueReading = if (onClickContinueReading != null) {
-                        { onClickContinueReading(libraryItem.libraryManga) }
-                    } else {
-                        null
-                    },
-                )
-            }
+        items(
+            items = items,
+            contentType = { "library_list_item" },
+        ) { libraryItem ->
+            val manga = libraryItem.libraryManga.manga
+            MangaListItem(
+                isSelected = selection.fastAny { it.id == libraryItem.libraryManga.id },
+                title = manga.title,
+                coverData = MangaCover(
+                    mangaId = manga.id,
+                    sourceId = manga.source,
+                    isMangaFavorite = manga.favorite,
+                    url = manga.thumbnailUrl,
+                    lastModified = manga.coverLastModified,
+                ),
+                badge = {
+                    DownloadsBadge(count = libraryItem.downloadCount.toInt())
+                    UnreadBadge(count = libraryItem.unreadCount.toInt())
+                    LanguageBadge(
+                        isLocal = libraryItem.isLocal,
+                        sourceLanguage = libraryItem.sourceLanguage,
+                    )
+                },
+                onLongClick = { onLongClick(libraryItem.libraryManga) },
+                onClick = { onClick(libraryItem.libraryManga) },
+                onClickContinueReading = if (onClickContinueReading != null) {
+                    { onClickContinueReading(libraryItem.libraryManga) }
+                } else {
+                    null
+                },
+            )
         }
     }
 }

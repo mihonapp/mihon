@@ -14,6 +14,12 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.unit.dp
 
 /**
+ * @param refreshing Whether the layout is currently refreshing
+ * @param onRefresh Lambda which is invoked when a swipe to refresh gesture is completed.
+ * @param enabled Whether the the layout should react to swipe gestures or not.
+ * @param indicatorPadding Content padding for the indicator, to inset the indicator in if required.
+ * @param content The content containing a vertically scrollable composable.
+ *
  * Code reference: [Accompanist SwipeRefresh](https://github.com/google/accompanist/blob/677bc4ca0ee74677a8ba73793d04d85fe4ab55fb/swiperefresh/src/main/java/com/google/accompanist/swiperefresh/SwipeRefresh.kt#L265-L283)
  */
 @Composable

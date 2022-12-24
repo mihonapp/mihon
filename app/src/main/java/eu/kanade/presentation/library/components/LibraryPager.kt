@@ -1,9 +1,13 @@
 package eu.kanade.presentation.library.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,12 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.domain.library.model.LibraryDisplayMode
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.HorizontalPager
 import eu.kanade.presentation.components.PagerState
+import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 
@@ -48,6 +54,16 @@ fun LibraryPager(
         }
         val library = getLibraryForPage(page)
 
+        if (library.isEmpty()) {
+            LibraryPagerEmptyScreen(
+                searchQuery = searchQuery,
+                hasActiveFilters = hasActiveFilters,
+                contentPadding = contentPadding,
+                onGlobalSearchClicked = onGlobalSearchClicked,
+            )
+            return@HorizontalPager
+        }
+
         val displayMode = getDisplayModeForPage(page)
         val columns by if (displayMode != LibraryDisplayMode.List) {
             val configuration = LocalConfiguration.current
@@ -69,7 +85,6 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
-                    hasActiveFilters = hasActiveFilters,
                 )
             }
             LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
@@ -84,7 +99,6 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
-                    hasActiveFilters = hasActiveFilters,
                 )
             }
             LibraryDisplayMode.ComfortableGrid -> {
@@ -98,7 +112,6 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
-                    hasActiveFilters = hasActiveFilters,
                 )
             }
         }
@@ -106,10 +119,11 @@ fun LibraryPager(
 }
 
 @Composable
-internal fun LibraryPagerEmptyScreen(
+private fun LibraryPagerEmptyScreen(
     searchQuery: String?,
     hasActiveFilters: Boolean,
     contentPadding: PaddingValues,
+    onGlobalSearchClicked: () -> Unit,
 ) {
     val msg = when {
         !searchQuery.isNullOrEmpty() -> R.string.no_results_found
@@ -117,9 +131,25 @@ internal fun LibraryPagerEmptyScreen(
         else -> R.string.information_no_manga_category
     }
 
-    // TODO: vertically center this better
-    EmptyScreen(
-        textResource = msg,
-        modifier = Modifier.padding(contentPadding),
-    )
+    Column(
+        modifier = Modifier
+            .padding(contentPadding + PaddingValues(8.dp))
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+    ) {
+        if (!searchQuery.isNullOrEmpty()) {
+            GlobalSearchItem(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                searchQuery = searchQuery,
+                onClick = onGlobalSearchClicked,
+            )
+        }
+
+        EmptyScreen(
+            textResource = msg,
+            modifier = Modifier.weight(1f),
+        )
+    }
 }
