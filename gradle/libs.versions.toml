@@ -1,6 +1,6 @@
 [versions]
 aboutlib_version = "10.5.2"
-okhttp_version = "5.0.0-alpha.10"
+okhttp_version = "5.0.0-alpha.11"
 coil_version = "2.2.2"
 shizuku_version = "12.2.0"
 sqlite = "2.3.0-rc01"
