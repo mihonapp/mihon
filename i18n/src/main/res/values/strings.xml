@@ -782,7 +782,7 @@
     <string name="not_installed">Not installed</string>
 
     <!-- Crash screen -->
-    <string name="crash_screen_title">An Unexpected Error Occurred</string>
+    <string name="crash_screen_title">Whoops!</string>
     <string name="crash_screen_description">%s ran into an unexpected error. We suggest you screenshot this message, dump the crash logs, and then share it in our support channel on Discord.</string>
     <string name="crash_screen_restart_application">Restart the application</string>
 

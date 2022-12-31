@@ -377,14 +377,13 @@ class Downloader(
         }
 
         val digitCount = (download.pages?.size ?: 0).toString().length.coerceAtLeast(3)
-
         val filename = String.format("%0${digitCount}d", page.number)
         val tmpFile = tmpDir.findFile("$filename.tmp")
 
-        // Delete temp file if it exists.
+        // Delete temp file if it exists
         tmpFile?.delete()
 
-        // Try to find the image file.
+        // Try to find the image file
         val imageFile = tmpDir.listFiles()?.firstOrNull { it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001") }
 
         // If the image is already downloaded, do nothing. Otherwise download from network
@@ -492,7 +491,7 @@ class Downloader(
         val imageFile = tmpDir.listFiles()?.firstOrNull { it.name.orEmpty().startsWith(filenamePrefix) }
             ?: throw Error(context.getString(R.string.download_notifier_split_page_not_found, page.number))
 
-        // Check if the original page was previously splitted before then skip.
+        // If the original page was previously split, then skip
         if (imageFile.name.orEmpty().startsWith("${filenamePrefix}__")) return true
 
         return try {
@@ -521,7 +520,7 @@ class Downloader(
         val downloadPageCount = download.pages?.size ?: return
         // Ensure that all pages has been downloaded
         if (download.downloadedImages < downloadPageCount) return
-        // Ensure that the chapter folder has all the pages.
+        // Ensure that the chapter folder has all the pages
         val downloadedImagesCount = tmpDir.listFiles().orEmpty().count {
             val fileName = it.name.orEmpty()
             when {
@@ -542,7 +541,8 @@ class Downloader(
 //                download.chapter.toDomainChapter()!!,
 //                chapterUrl,
 //            )
-            // Only rename the directory if it's downloaded.
+
+            // Only rename the directory if it's downloaded
             if (downloadPreferences.saveChaptersAsCBZ().get()) {
                 archiveChapter(mangaDir, dirname, tmpDir)
             } else {
@@ -621,7 +621,7 @@ class Downloader(
     private fun completeDownload(download: Download) {
         // Delete successful downloads from queue
         if (download.status == Download.State.DOWNLOADED) {
-            // remove downloaded chapter from queue
+            // Remove downloaded chapter from queue
             queue.remove(download)
         }
         if (areAllDownloadsFinished()) {
