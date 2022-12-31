@@ -376,7 +376,9 @@ class Downloader(
             return Observable.just(page)
         }
 
-        val filename = String.format("%03d", page.number)
+        val digitCount = (download.pages?.size ?: 0).toString().length.coerceAtLeast(3)
+
+        val filename = String.format("%0${digitCount}d", page.number)
         val tmpFile = tmpDir.findFile("$filename.tmp")
 
         // Delete temp file if it exists.
