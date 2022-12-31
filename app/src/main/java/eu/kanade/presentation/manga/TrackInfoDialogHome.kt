@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -240,12 +241,14 @@ private fun TrackDetailsItem(
         modifier = modifier
             .clickable(onClick = onClick)
             .alpha(if (text == null) UnsetStatusTextAlpha else 1f)
+            .fillMaxHeight()
             .padding(12.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = text ?: placeholder,
-            maxLines = 1,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium,
         )
     }
