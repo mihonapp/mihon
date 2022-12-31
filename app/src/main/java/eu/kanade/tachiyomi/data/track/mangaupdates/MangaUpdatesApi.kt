@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.add
 import kotlinx.serialization.json.addJsonObject
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
@@ -147,6 +148,13 @@ class MangaUpdatesApi(
     suspend fun search(query: String): List<Record> {
         val body = buildJsonObject {
             put("search", query)
+            put(
+                "filter_types",
+                buildJsonArray {
+                    add("drama cd")
+                    add("novel")
+                },
+            )
         }
         return client.newCall(
             POST(
