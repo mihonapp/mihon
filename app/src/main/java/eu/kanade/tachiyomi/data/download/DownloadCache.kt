@@ -22,6 +22,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -73,6 +74,7 @@ class DownloadCache(
     val isRenewing = changes
         .map { renewalJob?.isActive ?: false }
         .distinctUntilChanged()
+        .debounce(1000L)
         .stateIn(scope, SharingStarted.WhileSubscribed(), false)
 
     private var rootDownloadsDir = RootDirectory(getDirectoryFromPreference())
