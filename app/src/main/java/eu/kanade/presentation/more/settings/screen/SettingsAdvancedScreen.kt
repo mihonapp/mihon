@@ -118,6 +118,7 @@ object SettingsAdvancedScreen : SearchableSettings {
     private fun getBackgroundActivityGroup(): Preference.PreferenceGroup {
         val context = LocalContext.current
         val uriHandler = LocalUriHandler.current
+        val navigator = LocalNavigator.currentOrThrow
 
         return Preference.PreferenceGroup(
             title = stringResource(R.string.label_background_activity),
@@ -148,6 +149,10 @@ object SettingsAdvancedScreen : SearchableSettings {
                     title = "Don't kill my app!",
                     subtitle = stringResource(R.string.about_dont_kill_my_app),
                     onClick = { uriHandler.openUri("https://dontkillmyapp.com/") },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(R.string.pref_worker_info),
+                    onClick = { navigator.push(WorkerInfoScreen) },
                 ),
             ),
         )
