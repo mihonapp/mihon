@@ -221,6 +221,7 @@ class BrowseSourceScreenModel(
             it.copy(
                 filters = defaultFilters,
                 listing = listing,
+                toolbarQuery = listing.query,
             )
         }
     }
