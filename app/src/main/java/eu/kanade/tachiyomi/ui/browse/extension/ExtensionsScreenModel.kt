@@ -82,11 +82,11 @@ class ExtensionsScreenModel(
 
                 val languagesWithExtensions = _available
                     .filter(queryFilter(searchQuery))
-                    .groupBy { LocaleHelper.getSourceDisplayName(it.lang, context) }
-                    .toSortedMap()
+                    .groupBy { it.lang }
+                    .toSortedMap(LocaleHelper.comparator)
                     .flatMap { (lang, exts) ->
                         listOf(
-                            ExtensionUiModel.Header.Text(lang),
+                            ExtensionUiModel.Header.Text(LocaleHelper.getSourceDisplayName(lang, context)),
                             *exts.map(extensionMapper(downloads)).toTypedArray(),
                         )
                     }

@@ -11,6 +11,11 @@ import java.util.Locale
  */
 object LocaleHelper {
 
+    val comparator = compareBy<String>(
+        { getDisplayName(it) },
+        { it == "all" },
+    )
+
     /**
      * Returns display name of a string language code.
      */

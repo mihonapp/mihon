@@ -25,10 +25,7 @@ class GetLanguagesWithSources(
 
             sortedSources.groupBy { it.lang }
                 .toSortedMap(
-                    compareBy(
-                        { it !in enabledLanguage },
-                        { LocaleHelper.getDisplayName(it) },
-                    ),
+                    compareBy<String> { it !in enabledLanguage }.then(LocaleHelper.comparator),
                 )
         }
     }
