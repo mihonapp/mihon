@@ -109,7 +109,6 @@ private fun AppThemesList(
                         .fillMaxWidth()
                         .padding(top = 8.dp)
                         .secondaryItemAlpha(),
-                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     style = MaterialTheme.typography.bodyMedium,
