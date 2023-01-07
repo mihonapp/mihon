@@ -731,7 +731,7 @@
     <string name="invalid_location">無効な場所: %s</string>
     <string name="unknown_title">不明なタイトル</string>
     <string name="error_user_agent_string_invalid">ユーザー エージェント文字列が無効です</string>
-    <string name="crash_screen_title">予期せぬエラーが発生しました</string>
+    <string name="crash_screen_title">おっと！</string>
     <string name="updates_last_update_info_just_now">ちょうど今</string>
     <string name="crash_screen_restart_application">アプリケーションを再起動</string>
     <string name="pref_general_summary">アプリの言語、通知</string>
@@ -781,4 +781,7 @@
     <string name="action_not_now">後で</string>
     <string name="information_no_manga_category">カテゴリが空です</string>
     <string name="pref_library_update_show_tab_badge">アップデートアイコンに未読メッセージの件数を表示</string>
+    <string name="pref_worker_info">ワーカースレッドの情報</string>
+    <string name="copied_to_clipboard_plain">クリップボードにコピーしました</string>
+    <string name="ext_miui_warning">MIUI 最適化が有効になっている場合、拡張機能のインストールが機能しない場合があります。 無効にするか、Web サイトからインストールしてみてください。</string>
 </resources>

@@ -215,7 +215,7 @@
     <string name="ext_install">I-install</string>
     <string name="ext_obsolete">Di-suportado</string>
     <string name="ext_update">I-update</string>
-    <string name="ext_updates_pending">Dapat i-update</string>
+    <string name="ext_updates_pending">Nakabinbin ang mga update</string>
     <string name="all">Lahat</string>
     <plurals name="num_categories">
         <item quantity="one">%d kategorya</item>
@@ -337,7 +337,7 @@
     <string name="viewer">Pagbasa</string>
     <string name="pref_category_for_this_series">Para sa seryeng ito</string>
     <string name="confirm_set_image_as_cover">Gamiting cover ang larawang ito\?</string>
-    <string name="decode_image_error">Di mai-load ang larawan</string>
+    <string name="decode_image_error">Di mai-pakita ang larawan</string>
     <string name="no_next_chapter">Di makita ang susunod na kabanata</string>
     <string name="chapter_progress">Pahina: %1$d</string>
     <string name="cover_updated">Napalitan na ang cover</string>
@@ -490,7 +490,7 @@
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Nilaktawan ang %d na chapter, maaaring wala ang pinagmulan nito o na-filter na ito</item>
-        <item quantity="other">Lalaktawan ang %d na mga chapter, maaaring wala ang pinagmulan nito o na-filter na ito</item>
+        <item quantity="other">Lalaktawan ang %d na mga chapter, maaaring wala ang pinagmulan nila o na-filter ang mga ito</item>
     </plurals>
     <string name="no_chapters_error">Walang nakitang kabanata</string>
     <string name="confirm_set_chapter_settings">Gusto mo bang i-save at ipagpaubaya ang pagsasaayos na ito\?</string>
@@ -625,7 +625,7 @@
     <string name="pref_tablet_ui_mode">Pang-tablet na UI</string>
     <string name="help_translate">Tumulong sa pagsalin</string>
     <string name="pref_remove_exclude_categories">Kategoryang di-kasama</string>
-    <string name="ext_app_info">Patungkol</string>
+    <string name="ext_app_info">Tungkol sa app</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Paki-install at buksan ang Shizuku para magamit ito bilang taga-install ng extension.</string>
     <string name="ext_installer_shizuku_stopped">Di tumatakbo ang Shizuku</string>
     <string name="ext_installer_legacy">Legasiya</string>
@@ -786,4 +786,8 @@
     <string name="label_read_duration">Tagal ng binasa</string>
     <string name="label_tracked_titles">Mga na-track na entry</string>
     <string name="pref_library_update_show_tab_badge">Ipakita ang bilang ng di pa nababasa sa Bago na icon</string>
+    <string name="information_no_manga_category">Walang laman ang kategoryang ito</string>
+    <string name="action_not_now">Hindi muna ngayon</string>
+    <string name="not_applicable">N/A</string>
+    <string name="label_stats">Istatistika</string>
 </resources>

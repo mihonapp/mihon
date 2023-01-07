@@ -387,7 +387,7 @@
     <string name="tapping_inverted_vertical">Тік</string>
     <string name="kindlish_nav">Kindle тәріздес</string>
     <string name="pref_long_strip_split">Қос үлкен суреттер (Бета)</string>
-    <string name="download_ahead_info">Кітапханадағы жазбаларда ғана жұмыс істейді және ағымдағы және келесі тарау әлдеқашан жүктелген болса</string>
+    <string name="download_ahead_info">Кітапханадағы жазбаларда ғана жұмыс істейді, сондай-ақ ағымдағы және келесі тарау әлдеқашан жүктелген болса</string>
     <string name="edge_nav">Шеті</string>
     <string name="pref_read_with_volume_keys">Дыбыс пернелері</string>
     <string name="webtoon_side_padding_25">25%</string>
@@ -397,7 +397,7 @@
     <string name="webtoon_side_padding_15">15%</string>
     <string name="webtoon_side_padding_20">20%</string>
     <string name="split_tall_images_summary">Оқыманың өнімділігін жақсартады</string>
-    <string name="pref_navigate_pan">Кең суреттерді басқанда панорамалау</string>
+    <string name="pref_navigate_pan">Кең суретті басқанда панорамалау</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Келесі оқылмаған тарау</item>
         <item quantity="other">Келесі %d оқылмаған тарау</item>
@@ -422,7 +422,7 @@
     <string name="login_success">Кірілді</string>
     <string name="logout_title">%1$s-ден шығасыз ба\?</string>
     <string name="missing_storage_permission">Жадыға рұқсаттар берілмеді</string>
-    <string name="downloaded_chapters">Жүктелген тарауларды</string>
+    <string name="downloaded_chapters">Жүктелген тараулар</string>
     <string name="pinned_sources">Бекітілген</string>
     <string name="invalid_backup_file_missing_manga">Сақтық көшірмеде кітапхана жазбалары жоқ.</string>
     <string name="clear_database_source_item_count">Кітапханадағы емес %1$d жазбалар дерекқорда</string>
@@ -436,7 +436,7 @@
     <string name="email">Электрондық пошта мекенжайы</string>
     <string name="logout">Шығу</string>
     <string name="unknown_error">Белгісіз қателік</string>
-    <string name="http_error_hint">WebView-де сайтты тексеру</string>
+    <string name="http_error_hint">Сайтты WebView-де тексеріңіз</string>
     <string name="pref_clear_database">Дерекқорды тазалау</string>
     <string name="pref_enable_acra">Қателіктер туралы есептерді жіберу</string>
     <string name="no_pinned_sources">Сізде бекітілген дереккөздер жоқ</string>
@@ -506,12 +506,12 @@
     <string name="battery_optimization_setting_activity_not_found">Құрылғы баптауы ашылмады</string>
     <string name="privacy_policy">Құпиялық саясаты</string>
     <string name="pref_acra_summary">Барлық мүмкін қателерді түзетуге көмектеседі. Пайдаланушы деректері жіберілмейді</string>
-    <string name="label_downloaded_only">Жүктелгендерді ғана</string>
+    <string name="label_downloaded_only">Жүктелгенді ғана</string>
     <string name="login_title">%1$s-ге кіру</string>
     <string name="password">Құпиясөз</string>
     <string name="login">Кіру</string>
     <string name="logout_success">Сіз шығып кеттіңіз</string>
-    <string name="updating_category">Санатты жаңарту</string>
+    <string name="updating_category">Санатты жаңартып жатырмыз</string>
     <string name="manga_from_library">Кітапханадан</string>
     <string name="badges_header">Белгілер</string>
     <string name="no_results_found">Нәтиже жоқ</string>
@@ -664,7 +664,7 @@
     <string name="skipped_reason_not_started">Оқитын тарау болмағандықтан өткізіп жіберілді</string>
     <string name="file_select_cover">Мұқаба таңдау</string>
     <string name="file_select_backup">Сақтық көшірме файлын таңдау</string>
-    <string name="crash_screen_title">Күтпеген қателік пайда болды</string>
+    <string name="crash_screen_title">Ойбай!</string>
     <string name="crash_screen_description">%s күтпеген қателікке тап болды. Сізге осы хатты скриншотқа түсіріп, қателіктер тіркеуін сақтап алып, оны біздің Discord арнамыздағы көмек қойындысына жіберуіңізге кеңес береміз.</string>
     <string name="crash_screen_restart_application">Қолданбаны өшіріп қосу</string>
     <string name="download_queue_error">Тараулар жүктелмеді. Жүктеулер кезегіне барып, сол жерден байқап көре аласыз</string>
@@ -711,7 +711,7 @@
     <string name="migration_selection_prompt">Қай жерден көшетін деректі таңдаңыз</string>
     <string name="copy">Көшіру</string>
     <string name="empty_screen">Қателік пайда болды</string>
-    <string name="notification_updating">Кітапхананы жаңарту… (%1$d/%2$d)</string>
+    <string name="notification_updating">Кітапхананы жаңартып жатырмыз… (%1$d/%2$d)</string>
     <string name="download_notifier_downloader_title">Жүктеуіш</string>
     <string name="file_picker_error">Файл таңдайтын қолданба табылмады</string>
     <string name="update_check_fdroid_migration_info">Жаңа нұсқа Tachiyomi сайтында қолжетімді. F-Droid қолданбасының бейресми нұсқасынан көшуді білу үшін басыңыз.</string>
@@ -792,4 +792,6 @@
     <string name="label_titles_in_global_update">Ауқымды жаңартуда</string>
     <string name="label_tracked_titles">Бақыланудағы жазбалар</string>
     <string name="label_tracker_section">Бақылау қызметтері</string>
+    <string name="pref_library_update_show_tab_badge">Жаңартулар белгішесінде оқылмаған тараулар санын көрсету</string>
+    <string name="information_no_manga_category">Бұл санат бос</string>
 </resources>

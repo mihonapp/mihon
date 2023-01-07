@@ -499,7 +499,7 @@
     <string name="backup_restore_missing_trackers">Praćenja bez prijave:</string>
     <string name="parental_controls_info">To ne sprečava neslužbene ili potencijalno krivo označena proširenja prikazati neprikladan sadržaj (18+) unutar aplikacije.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Preskače se %d poglavlja. Ne postoji u izvoru ili je filtrirano</item>
+        <item quantity="one">Preskače se %d poglavlje. Ne postoji u izvoru ili je filtrirano</item>
         <item quantity="few">Preskaču se %d poglavlja. Ne postoje u izvoru ili su filtrirana</item>
         <item quantity="other">Preskače se %d poglavlja. Ne postoje u izvoru ili su filtrirana</item>
     </plurals>
@@ -789,7 +789,7 @@
     <string name="pref_reset_viewer_flags_summary">Ponovno postavlja način čitanja i usmjerenje svih serija</string>
     <string name="error_saving_picture">Pogreška pri spremanju slike</string>
     <string name="crash_screen_restart_application">Ponovno pokretanje aplikacije</string>
-    <string name="crash_screen_title">Došlo je do neočekivane pogreške</string>
+    <string name="crash_screen_title">Ups!</string>
     <string name="not_installed">Nije instalirano</string>
     <string name="updates_last_update_info_just_now">Upravo sada</string>
     <string name="fdroid_warning">F-Droid verzije nisu službeno podržane.
@@ -807,4 +807,6 @@
     <string name="action_not_now">Ne sada</string>
     <string name="pref_library_update_show_tab_badge">Prikaži broj nepročitanih na ikoni aktualiziranja</string>
     <string name="information_no_manga_category">Kategorija je prazna</string>
+    <string name="copied_to_clipboard_plain">Kopirano u međuspremnik</string>
+    <string name="pref_worker_info">Podaci razvoja</string>
 </resources>

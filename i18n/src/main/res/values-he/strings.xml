@@ -682,4 +682,6 @@
     <string name="action_search_hint">חיפוש…</string>
     <string name="action_open_random_manga">פתיחת פריט אקראי</string>
     <string name="getting_started_guide">מדריך למתחיל</string>
+    <string name="label_stats">סטטיסטיקות</string>
+    <string name="label_local">מקומי</string>
 </resources>

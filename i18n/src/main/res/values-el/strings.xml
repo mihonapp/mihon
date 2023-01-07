@@ -741,7 +741,7 @@
     <string name="skipped_reason_not_always_update">Παραλείφθηκε επειδή η σειρά δεν απαιτεί ενημερώσεις</string>
     <string name="action_search_hint">Αναζήτηση…</string>
     <string name="pref_browse_summary">Πηγές, επεκτάσεις, καθολική αναζήτηση</string>
-    <string name="crash_screen_title">Προέκυψε ένα μη αναμενόμενο σφάλμα</string>
+    <string name="crash_screen_title">Ουπς!</string>
     <string name="pref_general_summary">Γλώσσα εφαρμογής, ειδοποιήσεις</string>
     <string name="pref_appearance_summary">Θέμα, μορφή ημερομηνίας και ώρας</string>
     <string name="pref_library_summary">Κατηγορίες, καθολική ενημέρωση</string>
@@ -794,4 +794,6 @@
     <string name="action_not_now">Όχι τώρα</string>
     <string name="information_no_manga_category">Η κατηγορία είναι άδεια</string>
     <string name="pref_library_update_show_tab_badge">Εμφάνιση του αριθμού των μη αναγνωσμένων στο εικονίδιο Ενημερώσεις</string>
+    <string name="copied_to_clipboard_plain">Αντιγράφηκε στο πρόχειρο</string>
+    <string name="pref_worker_info">Πληροφορίες εργαζομένου</string>
 </resources>

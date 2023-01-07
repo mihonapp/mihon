@@ -12,7 +12,7 @@
     <string name="label_recent_manga">Geçmiş</string>
     <string name="label_recent_updates">Güncellemeler</string>
     <string name="label_backup">Yedekle ve geri yükle</string>
-    <string name="label_migration">Taşın</string>
+    <string name="label_migration">Taşı</string>
     <string name="label_extensions">Uzantılar</string>
     <string name="label_extension_info">Uzantı bilgisi</string>
     <string name="action_settings">Ayarlar</string>
@@ -387,8 +387,8 @@
     <string name="webtoon_side_padding_0">Yok</string>
     <string name="pref_webtoon_side_padding">Yan dolgu</string>
     <string name="pinned_sources">İğnelenmiş</string>
-    <string name="action_unpin">Çöz</string>
-    <string name="action_pin">İğnele</string>
+    <string name="action_unpin">Sabitlemeyi kaldır</string>
+    <string name="action_pin">Sabitle</string>
     <string name="add_tracking">İzleme ekle</string>
     <string name="in_library">Kitaplıkta</string>
     <string name="add_to_library">Kitaplığa ekle</string>
@@ -587,7 +587,7 @@
     <string name="action_start_downloading_now">Şimdi indirmeye başla</string>
     <string name="notification_updating">Kitaplık güncelleniyor… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Bazı üreticilerin arka plan hizmetlerini öldüren ek uygulama kısıtlamaları vardır. Bu web sitesinde nasıl düzeltileceği hakkında daha fazla bilgi al.</string>
-    <string name="restore_miui_warning">Yedekleme/geri yükleme, MIUI optimizasyonu devre dışıysa düzgün çalışmayabilir.</string>
+    <string name="restore_miui_warning">Yedekleme/geri yükleme, MIUI iyileştirmesi devre dışıysa düzgün çalışmayabilir.</string>
     <string name="enhanced_tracking_info">Belirli kaynaklar için gelişmiş özellikler sağlayan hizmetler. Girdiler, kitaplığınıza eklendiğinde kendiliğinden izlenir.</string>
     <string name="enhanced_services">Gelişmiş hizmetler</string>
     <string name="pref_dark_theme_pure_black">Arı kara karanlık kip</string>
@@ -751,7 +751,7 @@
     <string name="pref_appearance_summary">Tema, tarih ve saat biçimi</string>
     <string name="pref_tracking_summary">Tek yönlü ilerleme eşitlemesi, gelişmiş eşitleme</string>
     <string name="crash_screen_restart_application">Uygulamayı yeniden başlat</string>
-    <string name="crash_screen_title">Beklenmeyen Bir Hata Oluştu</string>
+    <string name="crash_screen_title">Tüh!</string>
     <string name="crash_screen_description">%s beklenmeyen bir hatayla karşılaştı. Bu mesajın ekran görüntüsünü ve çökme günlüklerinin dökümünü almanızı, ardından Discord\'daki destek kanalımızda paylaşmanızı öneririz.</string>
     <string name="unknown_title">Bilinmeyen başlık</string>
     <string name="invalid_location">Geçersiz konum: %s</string>
@@ -794,4 +794,7 @@
     <string name="action_not_now">Şimdi değil</string>
     <string name="information_no_manga_category">Ulam boş</string>
     <string name="pref_library_update_show_tab_badge">Güncellemeler simgesinde okunmayan sayısını göster</string>
+    <string name="pref_worker_info">Çalışan bilgisi</string>
+    <string name="copied_to_clipboard_plain">Panoya kopyalandı</string>
+    <string name="ext_miui_warning">MIUI iyileştirmesi etkinse uzantı kurmak çalışmayabilir. Bunun yerine devre dışı bırakmayı veya web sitesinden kurmayı deneyin.</string>
 </resources>

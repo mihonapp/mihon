@@ -774,7 +774,7 @@
     <string name="pref_backup_summary">Ручне та автоматичне резервування</string>
     <string name="pref_security_summary">Блокування додатку, захист екрану</string>
     <string name="pref_advanced_summary">Вивантаження журнала з помилками, оптимізація батареї</string>
-    <string name="crash_screen_title">Сталась неочікувана помилка</string>
+    <string name="crash_screen_title">Ой!</string>
     <string name="crash_screen_restart_application">Перезапустити додаток</string>
     <string name="skipped_reason_not_always_update">Пропущено, оскільки серія не потребує оновлень</string>
     <string name="action_search_hint">Шукати…</string>
@@ -819,4 +819,6 @@
     <string name="action_not_now">Не зараз</string>
     <string name="pref_library_update_show_tab_badge">Відображення кількості непрочитаних на значку \"Оновлення\"</string>
     <string name="information_no_manga_category">Категорія порожня</string>
+    <string name="pref_worker_info">Інформація про працівника</string>
+    <string name="copied_to_clipboard_plain">Скопійовано в буфер обміну</string>
 </resources>

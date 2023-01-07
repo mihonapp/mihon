@@ -787,7 +787,7 @@
     <string name="missing_storage_permission">Autorisations de stockage non accordées</string>
     <string name="action_search_hint">Recherche…</string>
     <string name="skipped_reason_not_always_update">Passées car la série ne nécessite pas de mise à jour</string>
-    <string name="crash_screen_title">Une erreur inattendue s\'est produite</string>
+    <string name="crash_screen_title">Oups !</string>
     <string name="pref_appearance_summary">Thème, format de la date et de l\'heure</string>
     <string name="pref_downloads_summary">Téléchargement automatique, téléchargement anticipé</string>
     <string name="pref_tracking_summary">Synchronisation unidirectionnelle de la progression, synchronisation améliorée</string>
@@ -840,5 +840,5 @@
     <string name="label_read_duration">Durée de lecture</string>
     <string name="label_tracked_titles">Entrées suivies</string>
     <string name="label_mean_score">Note moyenne</string>
-    <string name="pref_library_update_show_tab_badge">Afficher le nombre de messages non lus sur l\'icône des mises à jour</string>
+    <string name="pref_library_update_show_tab_badge">Afficher le nombre de chapitres non lus sur l\'icône des mises à jour</string>
 </resources>

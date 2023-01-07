@@ -795,7 +795,7 @@
     <string name="pref_security_summary">Pantalla segura y bloqueo de la aplicación</string>
     <string name="pref_backup_summary">Copias de respaldo manuales y automáticas</string>
     <string name="pref_browse_summary">Fuentes, extensiones y búsqueda global</string>
-    <string name="crash_screen_title">Tenemos un problema</string>
+    <string name="crash_screen_title">¡Vaya!</string>
     <string name="crash_screen_restart_application">Reiniciar la aplicación</string>
     <string name="unknown_title">Título desconocido</string>
     <string name="invalid_location">Ubicación incorrecta: %s</string>
@@ -838,4 +838,7 @@
     <string name="action_not_now">Ahora no</string>
     <string name="information_no_manga_category">La categoría está vacía</string>
     <string name="pref_library_update_show_tab_badge">Mostrar los capítulos por leer en el icono de actualizar</string>
+    <string name="copied_to_clipboard_plain">Se ha copiado al portapapeles</string>
+    <string name="pref_worker_info">Detalles sobre hilos de trabajo</string>
+    <string name="ext_miui_warning">Puede que no sea posible instalar extensiones si activas la optimización de MIUI. Es recomendable desactivarla o probar a instalar la extensión desde la propia web.</string>
 </resources>

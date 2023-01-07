@@ -777,7 +777,7 @@
     <string name="pref_backup_summary">Ручные и автоматические резервные копий</string>
     <string name="pref_security_summary">Блокировка приложения, защита экрана</string>
     <string name="pref_advanced_summary">Выгрузка журнала с ошибками, оптимизация батареи</string>
-    <string name="crash_screen_title">Возникла непредвиденная ошибка</string>
+    <string name="crash_screen_title">Ой, ошибочка вышла!</string>
     <string name="crash_screen_description">%s столкнулось с непредвиденной ошибкой. Мы рекомендуем сделать скриншот этого сообщения, выгрузить журнал с ошибками и после поделиться этим журналом/скиншотом в нашем Discord сервере в канале поддержки.</string>
     <string name="unknown_title">Неизвестное название</string>
     <string name="invalid_location">Недопустимое расположение: %s</string>
@@ -820,4 +820,7 @@
     <string name="action_not_now">Не сейчас</string>
     <string name="information_no_manga_category">Категория пуста</string>
     <string name="pref_library_update_show_tab_badge">Количество непрочитанных глав на иконке «Обновления»</string>
+    <string name="copied_to_clipboard_plain">Скопировано в буфер обмена</string>
+    <string name="pref_worker_info">Информация об разработке</string>
+    <string name="ext_miui_warning">Установка расширений может не работать, если включена «Оптимизация MIUI». Попробуйте её отключить или устанавливайте расширения через веб-сайт.</string>
 </resources>

@@ -752,7 +752,7 @@
     <string name="pref_backup_summary">Còpias de seguresa manuales e globales</string>
     <string name="pref_security_summary">Blocu de s\'aplicatzione, ischermu seguru</string>
     <string name="pref_advanced_summary">Registros de serraduras anòmalas, otimizatziones de sa bateria</string>
-    <string name="crash_screen_title">B\'at àpidu un\'errore imprevistu</string>
+    <string name="crash_screen_title">Oops!</string>
     <string name="invalid_location">Positzione non vàlida: %s</string>
     <string name="unknown_title">Tìtulu disconnotu</string>
     <string name="error_user_agent_string_invalid">Istringa de agente de utente non vàlida</string>
@@ -794,4 +794,6 @@
     <string name="action_not_now">Como nono</string>
     <string name="information_no_manga_category">Sa categoria est bòida</string>
     <string name="pref_library_update_show_tab_badge">Ammustra su nùmeru de non lèghidos in s\'icona de agiornamentu</string>
+    <string name="pref_worker_info">Informatziones subra de sos protzessos</string>
+    <string name="copied_to_clipboard_plain">Copiadu in punta de billete</string>
 </resources>

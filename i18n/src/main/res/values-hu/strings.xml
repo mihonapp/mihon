@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Név</string>
     <string name="categories">Kategóriák</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Könyvtár bejegyzések</string>
     <string name="chapters">Fejezetek</string>
     <string name="track">Követés</string>
     <string name="history">Előzmények</string>
@@ -371,7 +371,7 @@
     <string name="pref_app_theme">Alkalmazás témája</string>
     <string name="pref_category_appearance">Kinézet</string>
     <string name="action_start_downloading_now">Letöltés elkezdése most</string>
-    <string name="action_display_local_badge">Helyi manga</string>
+    <string name="action_display_local_badge">Helyi forrás</string>
     <string name="action_filter_tracked">Követve</string>
     <string name="confirm_lock_change">Hitelesítsd magad a változtatás elfogadásához</string>
     <string name="label_default">Alapértelmezett</string>
@@ -453,7 +453,7 @@
     <string name="pref_double_tap_anim_speed">Dupla koppintás animációjának sebessége</string>
     <string name="ext_installer_pref">Telepítő</string>
     <string name="ext_install_service_notif">Bővítmény telepítése…</string>
-    <string name="action_sort_count">Összes manga</string>
+    <string name="action_sort_count">Összes bejegyzés</string>
     <string name="ext_update_all">Az összes frissítése</string>
     <string name="action_display_language_badge">Nyelv</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Telepítsd és indítsd el a Shizukut, hogy kiegészítő telepítőként használd.</string>
@@ -554,9 +554,9 @@
         <item quantity="one">%d fejezet kihagyása, hiányzik a forrás, vagy ki lett szűrve</item>
         <item quantity="other">%d fejezet kihagyása, hiányoznak a források, vagy ki lettek szűrve</item>
     </plurals>
-    <string name="action_sort_last_manga_update">Utolsó manga frissítés</string>
+    <string name="action_sort_last_manga_update">Utolsó frissítés megtekintése</string>
     <string name="action_sort_unread_count">Olvasatlanok száma</string>
-    <string name="action_show_manga">Manga mutatása</string>
+    <string name="action_show_manga">Bejegyzés mutatása</string>
     <string name="action_display_cover_only_grid">Kizárólag fedlapok mutatása</string>
     <string name="backup_restore_missing_sources">Hiányzó források:</string>
     <string name="pref_dns_over_https">DNS a HTTPS mellett (DoH)</string>
@@ -659,7 +659,7 @@
     <string name="custom_cover">Egyéni fedlap</string>
     <string name="transition_next">Következő:</string>
     <string name="transition_previous">Előző:</string>
-    <string name="transition_no_next">Nincs többe fejezet</string>
+    <string name="transition_no_next">Nincs több fejezet</string>
     <string name="transition_no_previous">Nincs előző fejezet</string>
     <string name="transition_pages_error">%1$s oldalt nem lehetett betölteni</string>
     <string name="transition_pages_loading">Oldalak betöltése…</string>
@@ -738,4 +738,25 @@
     <string name="action_open_random_manga">Véletlenszerű manga megnyitása</string>
     <string name="updates_last_update_info">Könyvtár utoljára frissítve: %s</string>
     <string name="label_tracker_section">Követők</string>
+    <string name="pref_library_update_show_tab_badge">Az olvasatlanok számának megjelenítése a Frissítések ikonon</string>
+    <string name="action_display_show_continue_reading_button">Olvasás folytatása gomb megjelenítése</string>
+    <string name="pref_library_summary">Kategóriák, globális frissítés</string>
+    <string name="pref_security_summary">Alkalmazás zárolás, képernyő zár</string>
+    <string name="pref_advanced_summary">Összeomlás naplók kiírása, akkumulátor optimalizálások</string>
+    <string name="invalid_location">Hibás hely: %s</string>
+    <string name="download_ahead_info">Csak a könyvtár bejegyzéseinél működik, és ha az aktuális és a következő fejezet már letöltött</string>
+    <string name="pref_long_strip_split">Magas képek felosztása (BÉTA)</string>
+    <string name="download_ahead">Letöltés előre</string>
+    <string name="pref_reader_summary">Olvasó mód, kijelző, navigáció</string>
+    <string name="theme_tidalwave">Szökőár</string>
+    <string name="action_not_now">Ne most</string>
+    <string name="pref_downloads_summary">Automatikus letöltés, letöltés előre</string>
+    <string name="pref_tracking_summary">Egyirányú haladás szinkronizálás, fejlesztett szinkronizálás</string>
+    <string name="pref_backup_summary">Manuális és automatikus biztonsági mentés</string>
+    <string name="multi_lang">Több</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Következő olvasatlan fejezet</item>
+        <item quantity="other">Következő %d olvasatlan fejezet</item>
+    </plurals>
+    <string name="pref_browse_summary">Források, bővítmények, globális keresés</string>
 </resources>

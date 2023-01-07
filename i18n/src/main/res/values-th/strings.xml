@@ -737,7 +737,7 @@
     <string name="pref_backup_summary">การสำรองข้อมูลด้วยตนเองและอัตโนมัติ</string>
     <string name="pref_security_summary">การล็อกแอป, หน้าจอความปลอดภัย</string>
     <string name="pref_advanced_summary">ดัมพ์บันทึกข้อขัดข้อง, การเพิ่มประสิทธิภาพแบตเตอรี่</string>
-    <string name="crash_screen_title">เกิดความผิดพลาดอย่างไม่ได้คาดคิด</string>
+    <string name="crash_screen_title">เกิดความผิดพลาด!</string>
     <string name="crash_screen_description">%s เกิดข้อผิดพลาดอย่างไม่คาดคิด ขอแนะนำให้คุณบันทึกภาพหน้าจอข้อความนี้ จากนั้นดัมพ์บันทึกข้อขัดข้อง แล้วส่งลงไปในช่องสนับสนุนของเราใน Discord</string>
     <string name="invalid_location">ตำแหน่งไม่ถูกต้อง: %s</string>
     <string name="unknown_title">ไม่ทราบชื่อเรื่อง</string>
@@ -781,4 +781,6 @@
     <string name="action_not_now">ไม่ใช่ตอนนี้</string>
     <string name="pref_library_update_show_tab_badge">แสดงจำนวนที่ยังไม่ได้อ่านบนไอคอนการอัปเดต</string>
     <string name="information_no_manga_category">หมวดหมู่ว่างเปล่า</string>
+    <string name="pref_worker_info">ข้อมูลของตัวทำงาน</string>
+    <string name="copied_to_clipboard_plain">คัดลอกไปยังคลิปบอร์ดแล้ว</string>
 </resources>

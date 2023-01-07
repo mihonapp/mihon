@@ -477,7 +477,7 @@
     <string name="pref_category_delete_chapters">Hapus bab</string>
     <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau berpotensi salah ditandai untuk menampilkan konten NSFW (18+) di dalam aplikasi.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Melewati %d bab, entah sumber kehilangan mereka atau karena sudah difilter</item>
+        <item quantity="other">Melewati %d bab, entah mungkin sumber kehilangan bab tersebut atau karena sudah difilter</item>
     </plurals>
     <string name="no_chapters_error">Tidak ada bab yang ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan bab bawaan diperbarui</string>
@@ -723,7 +723,7 @@
     <string name="multi_lang">Multi</string>
     <string name="pref_long_strip_split">Potong gambar panjang (BETA)</string>
     <string name="are_you_sure">Apa kamu yakin\?</string>
-    <string name="popular">Popular</string>
+    <string name="popular">Populer</string>
     <string name="missing_storage_permission">Izin penyimpanan tidak diberikan</string>
     <string name="skipped_reason_not_always_update">Dilewati karena seri ini tidak memerlukan pembaruan</string>
     <string name="action_search_hint">Cari…</string>
@@ -738,7 +738,7 @@
     <string name="pref_library_summary">Kategori, pembaruan global</string>
     <string name="pref_backup_summary">Pencadangan manual &amp; otomatis</string>
     <string name="pref_advanced_summary">Buat log kerusakan, pengoptimalan baterai</string>
-    <string name="crash_screen_title">Terjadi Kesalahan Yang Tak Terduga</string>
+    <string name="crash_screen_title">Aduh!</string>
     <string name="crash_screen_restart_application">Mulai ulang aplikasi</string>
     <string name="invalid_location">Lokasi tidak valid: %s</string>
     <string name="unknown_title">Judul tidak diketahui</string>
@@ -768,7 +768,7 @@
     <string name="hour_short">%djam</string>
     <string name="label_started">Dimulai</string>
     <string name="label_local">Lokal</string>
-    <string name="label_downloaded">Diunduh</string>
+    <string name="label_downloaded">Terunduh</string>
     <string name="label_read_duration">Durasi baca</string>
     <string name="label_tracker_section">Pelacak</string>
     <string name="label_tracked_titles">Entri yang dilacak</string>
@@ -776,7 +776,12 @@
     <string name="minute_short">%dmenit</string>
     <string name="label_overview_section">Ringkasan</string>
     <string name="label_completed_titles">Entri selesai</string>
-    <string name="not_applicable">N/A</string>
+    <string name="not_applicable">Tidak tersedia</string>
     <string name="day_short">%dhari</string>
     <string name="action_not_now">Tidak sekarang</string>
+    <string name="pref_library_update_show_tab_badge">Tampilkan jumlah yang belum dibaca pada ikon Pembaruan</string>
+    <string name="information_no_manga_category">Kategori ini kosong</string>
+    <string name="copied_to_clipboard_plain">Tersalin di papan klip</string>
+    <string name="ext_miui_warning">Memasang ekstensi mungkin tidak berfungsi jika Optimasi MIUI diaktifkan. Coba nonaktifkan atau pasang dari situs web sebagai gantinya.</string>
+    <string name="pref_worker_info">Informasi pekerja</string>
 </resources>

@@ -765,7 +765,7 @@
     <string name="crash_screen_description">%s narazil na neočekávanou chybu. Doporučujeme vám pořídit snímek obrazovky, vypsat protokoly o selhání a poté je sdílet v našem kanálu podpory na Discordu.</string>
     <string name="crash_screen_restart_application">Restartujte aplikaci</string>
     <string name="pref_backup_summary">Ruční a automatické zálohování</string>
-    <string name="crash_screen_title">Došlo k neočekávané chybě</string>
+    <string name="crash_screen_title">Ups!</string>
     <string name="invalid_location">Neplatné umístění: %s</string>
     <string name="unknown_title">Neznámý titul</string>
     <string name="error_user_agent_string_invalid">Neplatný řetězec uživatelského agenta</string>
@@ -807,4 +807,7 @@
     <string name="action_not_now">Teď ne</string>
     <string name="information_no_manga_category">Kategorie je prázdná</string>
     <string name="pref_library_update_show_tab_badge">Zobrazit počet nepřečtených kapitol na ikoně Aktualizace</string>
+    <string name="copied_to_clipboard_plain">Zkopírováno do schránky</string>
+    <string name="pref_worker_info">Informace o pracovníkovi</string>
+    <string name="ext_miui_warning">Instalace rozšíření nemusí fungovat, pokud je povolena optimalizace MIUI. Zkuste ji zakázat nebo místo toho instalovat z webových stránek.</string>
 </resources>

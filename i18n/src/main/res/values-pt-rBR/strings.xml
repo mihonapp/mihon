@@ -763,7 +763,7 @@
     <string name="pref_backup_summary">Backups manuais e automáticos</string>
     <string name="pref_security_summary">Bloqueio do aplicativo, tela segura</string>
     <string name="pref_advanced_summary">Exportar registros de travamento, otimizações de bateria</string>
-    <string name="crash_screen_title">Ocorreu um erro inesperado</string>
+    <string name="crash_screen_title">Ooops!</string>
     <string name="crash_screen_restart_application">Reiniciar o aplicativo</string>
     <string name="crash_screen_description">%s teve um erro inesperado. Nós sugerimos que você capture a tela com essa mensagem, exporte os registros de travamento e então compartilhá-los no nosso canal de suporte no Discord.</string>
     <string name="unknown_title">Título desconhecido</string>
@@ -807,4 +807,7 @@
     <string name="action_not_now">Agora não</string>
     <string name="information_no_manga_category">A categoria está vazia</string>
     <string name="pref_library_update_show_tab_badge">Mostrar a contagem no ícone de Atualizações</string>
+    <string name="copied_to_clipboard_plain">Copiado para a área de transferência</string>
+    <string name="pref_worker_info">Informações do worker</string>
+    <string name="ext_miui_warning">A instalação de extensões pode não funcionar se a Otimização da MIUI estiver habilitada. Tente desabilitá-la ou instalar as extensões a partir do site.</string>
 </resources>

@@ -731,7 +731,7 @@
     <string name="delete_category_confirmation">Ønsker du å slette kategorien \"%s\"\?</string>
     <string name="delete_category">Slett kategori</string>
     <string name="internal_error">InternalError: Sjekk krasjlogger for mer informasjon</string>
-    <string name="crash_screen_title">En uventet feil oppstod</string>
+    <string name="crash_screen_title">Oops!</string>
     <string name="crash_screen_description">%s fikk en uventet feil. Vi foreslår at du tar et skjermbilde av denne meldingen, dumper krasjloggene og derette deler dette i vår støttekanal på Discord.</string>
     <string name="download_notifier_split_failed">Kunne ikke dele det nedlastede bildet</string>
     <string name="pref_app_language">Appspråk</string>
@@ -794,4 +794,7 @@
     <string name="action_not_now">Ikke nå</string>
     <string name="information_no_manga_category">Kategorien er tom</string>
     <string name="pref_library_update_show_tab_badge">Vis antall uleste på oppdateringsikonet</string>
+    <string name="pref_worker_info">Arbeider info</string>
+    <string name="copied_to_clipboard_plain">Kopiert til utklippstavlen</string>
+    <string name="ext_miui_warning">Hvis MIUI-optimalisering er aktivert, kan det hende at installasjon av utvidelser ikke fungerer. Prøv å deaktivere MIUI-optimalisering eller installer fra nettstedet i stedet.</string>
 </resources>

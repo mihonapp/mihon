@@ -797,7 +797,7 @@
     <string name="pref_backup_summary">Backup manuali e automatici</string>
     <string name="pref_security_summary">Blocco app, schermo protetto</string>
     <string name="pref_advanced_summary">Registro arresti anomali, ottimizzazioni batteria</string>
-    <string name="crash_screen_title">Si è verificato un errore imprevisto</string>
+    <string name="crash_screen_title">Ops!</string>
     <string name="crash_screen_restart_application">Riavvia l\'applicazione</string>
     <string name="invalid_location">Posizione invalida: %s</string>
     <string name="unknown_title">Titolo sconosciuto</string>
@@ -840,4 +840,7 @@
     <string name="action_not_now">Non ora</string>
     <string name="information_no_manga_category">La categoria è vuota</string>
     <string name="pref_library_update_show_tab_badge">Mostra il numero dei capitoli non letti nell\'icona Novità</string>
+    <string name="pref_worker_info">Informazioni sui processi</string>
+    <string name="copied_to_clipboard_plain">Copiato negli appunti</string>
+    <string name="ext_miui_warning">L\'installazione delle estensioni potrebbe non funzionare se è attivata l\'ottimizzazione MIUI. Provate a disabilitarla o ad installed le estensioni dal sito web.</string>
 </resources>

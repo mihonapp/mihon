@@ -135,7 +135,7 @@
     <string name="login_success">已登入</string>
     <string name="manga_added_library">已收藏至書櫃</string>
     <string name="manga_removed_library">已從書櫃中移除</string>
-    <string name="copied_to_clipboard">已複製至剪貼簿：
+    <string name="copied_to_clipboard">已複製到剪貼簿：
 \n「%1$s」</string>
     <string name="source_not_installed">來源未安裝：%1$s</string>
     <string name="chapter_error">錯誤</string>
@@ -736,7 +736,7 @@
     <string name="pref_security_summary">上鎖應用程式、防窺畫面</string>
     <string name="pref_advanced_summary">傾印當機記錄、電池效能最佳化</string>
     <string name="crash_screen_restart_application">重新啟動應用程式</string>
-    <string name="crash_screen_title">發生意外錯誤</string>
+    <string name="crash_screen_title">哎呀！</string>
     <string name="crash_screen_description">「%s」發生了未預期的錯誤。我們建議你擷取此畫面、傾印當機記錄並分享至我們位於 Discord 上的 support 頻道。</string>
     <string name="pref_library_summary">類別、全域更新</string>
     <string name="pref_browse_summary">來源、擴充套件、全域搜尋</string>
@@ -781,4 +781,7 @@
     <string name="action_not_now">暫時不要</string>
     <string name="information_no_manga_category">類別尚無作品</string>
     <string name="pref_library_update_show_tab_badge">在「新刊」導覽圖示上標記未讀章數</string>
+    <string name="copied_to_clipboard_plain">已複製到剪貼簿</string>
+    <string name="pref_worker_info">工作站資訊</string>
+    <string name="ext_miui_warning">當 MIUI 最佳化已啟用時，可能無法自動安裝擴充套件。請嘗試將之停用，或逕行從網站下載並安裝。</string>
 </resources>

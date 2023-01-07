@@ -734,7 +734,7 @@
         <item quantity="one">%d gjurmues</item>
         <item quantity="other">%d gjurmuesit</item>
     </plurals>
-    <string name="theme_midnightdusk">Midnight Dusk</string>
+    <string name="theme_midnightdusk">Perëndim Mesnate</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s kapitull</item>
         <item quantity="other">%1$s kapituj</item>
@@ -770,4 +770,28 @@
     <string name="pref_tablet_ui_mode">Ndërfaqja e përdoruesve të tabletit</string>
     <string name="pref_verbose_logging_summary">Printoni regjistrat me fjalë në regjistrin e sistemit (ul performancën e aplikacionit)</string>
     <string name="file_picker_error">Nuk u gjet asnjë aplikacion për përzgjedhjen e skedarëve</string>
+    <string name="pref_library_update_show_tab_badge">Trego numrin e të pa lezuarave ne ikonën e Përditësimeve</string>
+    <string name="label_overview_section">Pasqyrë e Përgjithshme</string>
+    <string name="seconds_short">%ds</string>
+    <string name="label_stats">Statistikë</string>
+    <string name="label_started">Filluar</string>
+    <string name="label_local">Lokale</string>
+    <string name="label_downloaded">Shkarkuar</string>
+    <string name="pref_invalidate_download_cache_summary">Detyro applikacionin te rikontrolloj kapitujtë e shkarkuar</string>
+    <string name="label_total_chapters">Total</string>
+    <string name="label_mean_score">Pikët mesatare</string>
+    <string name="label_used">I përdorur</string>
+    <string name="label_read_chapters">Lexo</string>
+    <string name="not_applicable">N/A</string>
+    <string name="day_short">%dd</string>
+    <string name="label_tracker_section">Ndjekësit</string>
+    <string name="label_tracked_titles">Hyrjet e ndjekura</string>
+    <string name="action_not_now">Jo tani</string>
+    <string name="label_completed_titles">Hyrjet e përfunduara</string>
+    <string name="label_read_duration">Koha e të lezuarit</string>
+    <string name="label_titles_section">Hyrjet</string>
+    <string name="label_titles_in_global_update">Ne përditësimin global</string>
+    <string name="hour_short">%do</string>
+    <string name="minute_short">%dm</string>
+    <string name="information_no_manga_category">Kategorija është bosh</string>
 </resources>

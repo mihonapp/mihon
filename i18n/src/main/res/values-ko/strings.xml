@@ -82,7 +82,7 @@
     <string name="update_weekly">1주</string>
     <string name="all">전부</string>
     <string name="pref_library_update_restriction">자동 업데이트 조건</string>
-    <string name="charging">충전할 땐</string>
+    <string name="charging">충전할 때</string>
     <string name="default_category">기본 카테고리</string>
     <string name="ext_update">업데이트</string>
     <string name="ext_install">설치</string>
@@ -330,7 +330,7 @@
     <string name="restore_miui_warning">MIUI 최적화가 꺼져 있을 경우 백업/복원 기능이 정상 작동하지 않을 수 있습니다.</string>
     <string name="restore_in_progress">복원이 이미 진행중 입니다</string>
     <string name="requires_app_restart">설정을 적용하기 위해 앱을 재시작해야 합니다</string>
-    <string name="pref_dns_over_https">HTTPS를 통한 DNS (DoH)</string>
+    <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="label_data">데이터</string>
     <string name="backup_in_progress">백업이 이미 진행중입니다</string>
     <string name="restoring_backup_error">백업 복원 실패</string>
@@ -681,21 +681,21 @@
     <string name="ext_info_language">언어</string>
     <string name="reading_list">읽을 목록</string>
     <string name="wish_list">위시리스트</string>
-    <string name="pref_reset_viewer_flags_summary">모든 시리즈의 읽기 모드랑 화면 방향이 초기화하기</string>
+    <string name="pref_reset_viewer_flags_summary">모든 시리즈의 읽기 모드와 화면 방향 초기화</string>
     <string name="pref_app_language">앱 언어</string>
     <string name="not_installed">설치되지 않음</string>
     <string name="theme_lavender">라벤더</string>
-    <string name="network_not_metered">아닌 연결로 네트워크만</string>
-    <string name="delete_category_confirmation">카테고리 \"%s\" 삭제하고 싶습니까\?</string>
+    <string name="network_not_metered">무제한 네트워크에서만</string>
+    <string name="delete_category_confirmation">카테고리 \"%s\" 삭제합니까\?</string>
     <string name="delete_category">카테고리 삭제함</string>
     <string name="internal_error">내부 오류: 더 많은 정보를 보고 싶으면 충돌 로그 보세요</string>
     <string name="description_placeholder">요약 없음</string>
-    <string name="download_notifier_split_page_path_not_found">파일 경로 못 찾았습니다 %d</string>
+    <string name="download_notifier_split_page_path_not_found">페이지 %d의 파일 경로를 찾을 수 없습니다</string>
     <string name="unfinished_list">미완성된 목록</string>
     <string name="empty_screen">와...이거 좀 어색하네</string>
     <string name="custom_cover">맞춤 표지</string>
     <string name="ext_info_age_rating">연령 등급</string>
-    <string name="action_remove_everything">다 제거하기</string>
+    <string name="action_remove_everything">모두 제거</string>
     <string name="pref_reset_viewer_flags_success">모든 뷰어 설정을 초기화했습니다</string>
     <string name="pref_user_agent_string">기본 사용자 에이전트 문자열</string>
     <string name="pref_reset_user_agent_string">기본 사용자 에이전트 문자열 리셋</string>
@@ -706,9 +706,9 @@
     <string name="appwidget_updates_description">최근에 업데이트된 항목 보기</string>
     <string name="on_hold_list">보류 목록</string>
     <string name="download_notifier_split_failed">다운로드한 사진을 나눌 수 없습니다</string>
-    <string name="download_notifier_split_page_not_found">나누어 짐 중에 %d페이지 안 찾습니다</string>
+    <string name="download_notifier_split_page_not_found">분할하는 동안 %d 페이지를 찾을 수 없습니다</string>
     <string name="loader_rar5_error">RARv5 포맷은 지원되지 않습니다</string>
-    <string name="appwidget_unavailable_locked">앱 잠금 사용 중에 위젯 이용할 없습니다</string>
+    <string name="appwidget_unavailable_locked">앱 잠금 사용 중에는 위젯을 이용할 수 없습니다</string>
     <string name="theme_tidalwave">파도</string>
     <string name="update_already_running">업데이트가 이미 실행 중입니다</string>
     <string name="error_user_agent_string_blank">사용자 에이전트 문자열은 비워 둘 수 없습니다</string>
@@ -737,7 +737,7 @@
     <string name="pref_advanced_summary">오류 로그 덤프, 배터리 최적화</string>
     <string name="pref_appearance_summary">테마, 날짜 및 시간 형식</string>
     <string name="pref_downloads_summary">자동 다운로드, 미리 다운로드</string>
-    <string name="crash_screen_title">예기치 않은 오류가 발생했습니다</string>
+    <string name="crash_screen_title">앗!</string>
     <string name="crash_screen_restart_application">애플리케이션 재시작</string>
     <string name="crash_screen_description">%s에 예기치 않은 오류가 발생했습니다. 이 메시지를 스크린샷으로 찍고, 충돌 로그를 덤프 한 다음 공식 디스코드 채널에 공유하는 것을 추천합니다.</string>
     <string name="unknown_title">알 수 없는 제목</string>
@@ -781,4 +781,7 @@
     <string name="action_not_now">나중에</string>
     <string name="pref_library_update_show_tab_badge">업데이트 아이콘에 읽지 않은 수 표시</string>
     <string name="information_no_manga_category">카테고리가 비어 있습니다</string>
+    <string name="copied_to_clipboard_plain">클립보드에 복사됨</string>
+    <string name="pref_worker_info">worker 정보</string>
+    <string name="ext_miui_warning">MIUI 최적화가 활성화된 경우 확장 설치가 작동하지 않을 수 있습니다. 비활성화하거나 웹 사이트에서 설치해 보십시오.</string>
 </resources>
