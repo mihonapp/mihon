@@ -26,8 +26,8 @@ paging-runtime = "androidx.paging:paging-runtime:3.1.1"
 paging-compose = "androidx.paging:paging-compose:1.0.0-alpha17"
 
 benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.1.1"
-test-ext = "androidx.test.ext:junit-ktx:1.1.4"
-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0"
+test-ext = "androidx.test.ext:junit-ktx:1.1.5"
+test-espresso-core = "androidx.test.espresso:espresso-core:3.5.1"
 test-uiautomator = "androidx.test.uiautomator:uiautomator:2.2.0"
 
 [bundles]
