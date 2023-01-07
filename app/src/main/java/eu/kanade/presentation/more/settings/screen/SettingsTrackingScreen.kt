@@ -186,6 +186,24 @@ object SettingsTrackingScreen : SearchableSettings {
                         },
                         logout = trackManager.kavita::logout,
                     ),
+
+                    Preference.PreferenceItem.TrackingPreference(
+                        title = stringResource(trackManager.suwayomi.nameRes()),
+                        service = trackManager.suwayomi,
+                        login = {
+                            val sourceManager = Injekt.get<SourceManager>()
+                            val acceptedSources = trackManager.suwayomi.getAcceptedSources()
+                            val hasValidSourceInstalled = sourceManager.getCatalogueSources()
+                                .any { it::class.qualifiedName in acceptedSources }
+
+                            if (hasValidSourceInstalled) {
+                                trackManager.suwayomi.loginNoop()
+                            } else {
+                                context.toast(context.getString(R.string.enhanced_tracking_warning, context.getString(trackManager.suwayomi.nameRes())), Toast.LENGTH_LONG)
+                            }
+                        },
+                        logout = trackManager.suwayomi::logout,
+                    ),
                     Preference.PreferenceItem.InfoPreference(stringResource(R.string.enhanced_tracking_info)),
                 ),
             ),
