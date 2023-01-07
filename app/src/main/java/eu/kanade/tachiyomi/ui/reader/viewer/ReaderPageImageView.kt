@@ -176,7 +176,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         (pageView as? SubsamplingScaleImageView)?.let { view ->
             RectF().let {
                 view.getPanRemaining(it)
-                return fn(it) > 0
+                return fn(it) > 1
             }
         }
         return false
