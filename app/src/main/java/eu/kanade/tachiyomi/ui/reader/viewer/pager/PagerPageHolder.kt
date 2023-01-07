@@ -13,13 +13,12 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -58,7 +57,7 @@ class PagerPageHolder(
      */
     private var errorLayout: ReaderErrorBinding? = null
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = MainScope()
 
     /**
      * Subscription for status changes of the page.
@@ -108,7 +107,7 @@ class PagerPageHolder(
 
     private fun launchProgressJob() {
         progressJob?.cancel()
-        progressJob = scope.launchUI {
+        progressJob = scope.launch {
             page.progressFlow.collectLatest { value -> progressIndicator.setProgress(value) }
         }
     }

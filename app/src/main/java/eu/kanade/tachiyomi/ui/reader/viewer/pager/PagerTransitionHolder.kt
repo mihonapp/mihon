@@ -15,13 +15,12 @@ import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderButton
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionView
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 /**
  * View of the ViewPager that contains a chapter transition.
@@ -33,7 +32,7 @@ class PagerTransitionHolder(
     val transition: ChapterTransition,
 ) : LinearLayout(readerThemedContext), ViewPagerAdapter.PositionableView {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = MainScope()
     private var stateJob: Job? = null
 
     /**
@@ -81,7 +80,7 @@ class PagerTransitionHolder(
      */
     private fun observeStatus(chapter: ReaderChapter) {
         stateJob?.cancel()
-        stateJob = scope.launchUI {
+        stateJob = scope.launch {
             chapter.stateFlow
                 .collectLatest { state ->
                     pagesContainer.removeAllViews()

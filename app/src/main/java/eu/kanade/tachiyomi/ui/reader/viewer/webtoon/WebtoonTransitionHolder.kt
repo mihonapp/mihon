@@ -13,12 +13,11 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionView
-import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.dpToPx
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 /**
  * Holder of the webtoon viewer that contains a chapter transition.
@@ -28,7 +27,7 @@ class WebtoonTransitionHolder(
     viewer: WebtoonViewer,
 ) : WebtoonBaseHolder(layout, viewer) {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = MainScope()
     private var stateJob: Job? = null
 
     private val transitionView = ReaderTransitionView(context)
@@ -82,7 +81,7 @@ class WebtoonTransitionHolder(
      */
     private fun observeStatus(chapter: ReaderChapter, transition: ChapterTransition) {
         stateJob?.cancel()
-        stateJob = scope.launchUI {
+        stateJob = scope.launch {
             chapter.stateFlow
                 .collectLatest { state ->
                     pagesContainer.removeAllViews()
