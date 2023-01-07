@@ -60,6 +60,7 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.system.isOnline
 import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
@@ -610,7 +611,7 @@ class ReaderViewModel(
      */
     fun setMangaReadingMode(readingModeType: Int) {
         val manga = manga ?: return
-        viewModelScope.launchIO {
+        runBlocking(Dispatchers.IO) {
             setMangaViewerFlags.awaitSetMangaReadingMode(manga.id, readingModeType.toLong())
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {
