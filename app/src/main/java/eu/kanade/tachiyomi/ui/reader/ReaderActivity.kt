@@ -558,15 +558,17 @@ class ReaderActivity : BaseActivity() {
         // Settings sheet
         with(binding.actionSettings) {
             setTooltip(R.string.action_settings)
-            val readerSettingSheetDialog = ReaderSettingsSheet(this@ReaderActivity)
+
+            var readerSettingSheet: ReaderSettingsSheet? = null
+
             setOnClickListener {
-                if (!readerSettingSheetDialog.isShowing()) {
-                    readerSettingSheetDialog.show()
-                }
+                if (readerSettingSheet?.isShowing == true) return@setOnClickListener
+                readerSettingSheet = ReaderSettingsSheet(this@ReaderActivity).apply { show() }
             }
 
             setOnLongClickListener {
-                ReaderSettingsSheet(this@ReaderActivity, showColorFilterSettings = true).show()
+                if (readerSettingSheet?.isShowing == true) return@setOnLongClickListener false
+                readerSettingSheet = ReaderSettingsSheet(this@ReaderActivity, showColorFilterSettings = true).apply { show() }
                 true
             }
         }
