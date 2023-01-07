@@ -1,7 +1,6 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.content.Context
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -82,6 +81,7 @@ object SettingsTrackingScreen : SearchableSettings {
         val context = LocalContext.current
         val trackPreferences = remember { Injekt.get<TrackPreferences>() }
         val trackManager = remember { Injekt.get<TrackManager>() }
+        val sourceManager = remember { Injekt.get<SourceManager>() }
 
         var dialog by remember { mutableStateOf<Any?>(null) }
         dialog?.run {
@@ -151,61 +151,19 @@ object SettingsTrackingScreen : SearchableSettings {
             ),
             Preference.PreferenceGroup(
                 title = stringResource(R.string.enhanced_services),
-                preferenceItems = listOf(
-                    Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(trackManager.komga.nameRes()),
-                        service = trackManager.komga,
-                        login = {
-                            val sourceManager = Injekt.get<SourceManager>()
-                            val acceptedSources = trackManager.komga.getAcceptedSources()
-                            val hasValidSourceInstalled = sourceManager.getCatalogueSources()
-                                .any { it::class.qualifiedName in acceptedSources }
-
-                            if (hasValidSourceInstalled) {
-                                trackManager.komga.loginNoop()
-                            } else {
-                                context.toast(context.getString(R.string.enhanced_tracking_warning, context.getString(trackManager.komga.nameRes())), Toast.LENGTH_LONG)
-                            }
-                        },
-                        logout = trackManager.komga::logout,
-                    ),
-                    Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(trackManager.kavita.nameRes()),
-                        service = trackManager.kavita,
-                        login = {
-                            val sourceManager = Injekt.get<SourceManager>()
-                            val acceptedSources = trackManager.kavita.getAcceptedSources()
-                            val hasValidSourceInstalled = sourceManager.getCatalogueSources()
-                                .any { it::class.qualifiedName in acceptedSources }
-
-                            if (hasValidSourceInstalled) {
-                                trackManager.kavita.loginNoop()
-                            } else {
-                                context.toast(context.getString(R.string.enhanced_tracking_warning, context.getString(trackManager.kavita.nameRes())), Toast.LENGTH_LONG)
-                            }
-                        },
-                        logout = trackManager.kavita::logout,
-                    ),
-
-                    Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(trackManager.suwayomi.nameRes()),
-                        service = trackManager.suwayomi,
-                        login = {
-                            val sourceManager = Injekt.get<SourceManager>()
-                            val acceptedSources = trackManager.suwayomi.getAcceptedSources()
-                            val hasValidSourceInstalled = sourceManager.getCatalogueSources()
-                                .any { it::class.qualifiedName in acceptedSources }
-
-                            if (hasValidSourceInstalled) {
-                                trackManager.suwayomi.loginNoop()
-                            } else {
-                                context.toast(context.getString(R.string.enhanced_tracking_warning, context.getString(trackManager.suwayomi.nameRes())), Toast.LENGTH_LONG)
-                            }
-                        },
-                        logout = trackManager.suwayomi::logout,
-                    ),
-                    Preference.PreferenceItem.InfoPreference(stringResource(R.string.enhanced_tracking_info)),
-                ),
+                preferenceItems = listOf(trackManager.komga, trackManager.kavita, trackManager.suwayomi)
+                    .filter { service ->
+                        val acceptedSources = service.getAcceptedSources()
+                        sourceManager.getCatalogueSources().any { it::class.qualifiedName in acceptedSources }
+                    }
+                    .map { service ->
+                        Preference.PreferenceItem.TrackingPreference(
+                            title = stringResource(service.nameRes()),
+                            service = service,
+                            login = service::loginNoop,
+                            logout = service::logout,
+                        )
+                    } + listOf(Preference.PreferenceItem.InfoPreference(stringResource(R.string.enhanced_tracking_info))),
             ),
         )
     }

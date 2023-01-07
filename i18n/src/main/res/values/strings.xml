@@ -452,7 +452,6 @@
     <string name="tracking_info">One-way sync to update the chapter progress in tracking services. Set up tracking for individual entries from their tracking button.</string>
     <string name="enhanced_services">Enhanced services</string>
     <string name="enhanced_tracking_info">Services that provide enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
-    <string name="enhanced_tracking_warning">This tracker is only compatible with the %1$s source.</string>
     <string name="action_track">Track</string>
 
       <!-- Browse section -->
