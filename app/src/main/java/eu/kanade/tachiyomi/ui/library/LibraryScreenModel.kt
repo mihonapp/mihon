@@ -332,7 +332,6 @@ class LibraryScreenModel(
     private fun getLibraryItemPreferencesFlow(): Flow<ItemPreferences> {
         return combine(
             libraryPreferences.downloadBadge().changes(),
-            libraryPreferences.unreadBadge().changes(),
             libraryPreferences.localBadge().changes(),
             libraryPreferences.languageBadge().changes(),
 
@@ -345,15 +344,14 @@ class LibraryScreenModel(
             transform = {
                 ItemPreferences(
                     downloadBadge = it[0] as Boolean,
-                    unreadBadge = it[1] as Boolean,
-                    localBadge = it[2] as Boolean,
-                    languageBadge = it[3] as Boolean,
-                    globalFilterDownloaded = it[4] as Boolean,
-                    filterDownloaded = it[5] as Int,
-                    filterUnread = it[6] as Int,
-                    filterStarted = it[7] as Int,
-                    filterBookmarked = it[8] as Int,
-                    filterCompleted = it[9] as Int,
+                    localBadge = it[1] as Boolean,
+                    languageBadge = it[2] as Boolean,
+                    globalFilterDownloaded = it[3] as Boolean,
+                    filterDownloaded = it[4] as Int,
+                    filterUnread = it[5] as Int,
+                    filterStarted = it[6] as Int,
+                    filterBookmarked = it[7] as Int,
+                    filterCompleted = it[8] as Int,
                 )
             },
         )
@@ -377,7 +375,7 @@ class LibraryScreenModel(
                         } else {
                             0
                         }
-                        unreadCount = if (prefs.unreadBadge) libraryManga.unreadCount else 0
+                        unreadCount = libraryManga.unreadCount
                         isLocal = if (prefs.localBadge) libraryManga.manga.isLocal() else false
                         sourceLanguage = if (prefs.languageBadge) {
                             sourceManager.getOrStub(libraryManga.manga.source).lang
@@ -707,7 +705,6 @@ class LibraryScreenModel(
     @Immutable
     private data class ItemPreferences(
         val downloadBadge: Boolean,
-        val unreadBadge: Boolean,
         val localBadge: Boolean,
         val languageBadge: Boolean,
 
