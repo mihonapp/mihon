@@ -42,10 +42,11 @@ class WebViewActivity : BaseActivity() {
             return
         }
 
-        val url = intent.extras!!.getString(URL_KEY) ?: return
+        val url = intent.extras?.getString(URL_KEY) ?: return
+        assistUrl = url
+
         var headers = mutableMapOf<String, String>()
-        val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource
-        if (source != null) {
+        (sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource)?.let { source ->
             headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }.toMutableMap()
         }
 
