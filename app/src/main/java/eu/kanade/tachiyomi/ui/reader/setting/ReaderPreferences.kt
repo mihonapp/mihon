@@ -60,6 +60,8 @@ class ReaderPreferences(
 
     fun skipFiltered() = preferenceStore.getBoolean("skip_filtered", true)
 
+    fun skipDupe() = preferenceStore.getBoolean("skip_dupe", false)
+
     // endregion
 
     // region Split two page spread

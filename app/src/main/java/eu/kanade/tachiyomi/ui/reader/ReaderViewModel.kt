@@ -183,6 +183,16 @@ class ReaderViewModel(
                 }
             }
             else -> chapters
+        }.run {
+            if (readerPreferences.skipDupe().get()) {
+                groupBy { it.chapterNumber }
+                    .mapValues { (_, chapters) ->
+                        chapters.find { it.id == chapterId || it.scanlator == selectedChapter.scanlator } ?: chapters.first()
+                    }
+                    .values
+            } else {
+                this
+            }
         }
 
         chaptersForReader
