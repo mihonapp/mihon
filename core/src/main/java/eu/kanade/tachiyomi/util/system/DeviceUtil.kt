@@ -10,6 +10,20 @@ object DeviceUtil {
         getSystemProperty("ro.miui.ui.version.name")?.isNotEmpty() ?: false
     }
 
+    /**
+     * Extracts the MIUI major version code from a string like "V12.5.3.0.QFGMIXM".
+     *
+     * @return MIUI major version code (e.g., 13) or -1 if can't be parsed.
+     */
+    val miuiMajorVersion by lazy {
+        if (!isMiui) return@lazy -1
+
+        Build.VERSION.INCREMENTAL
+            .substringBefore('.')
+            .trimStart('V')
+            .toIntOrNull() ?: -1
+    }
+
     @SuppressLint("PrivateApi")
     fun isMiuiOptimizationDisabled(): Boolean {
         val sysProp = getSystemProperty("persist.sys.miui_optimization")

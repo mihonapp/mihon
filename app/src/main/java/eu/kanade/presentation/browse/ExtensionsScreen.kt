@@ -123,7 +123,7 @@ private fun ExtensionContent(
     onClickUpdateAll: () -> Unit,
 ) {
     var trustState by remember { mutableStateOf<Extension.Untrusted?>(null) }
-    val showMiuiWarning = DeviceUtil.isMiui && !DeviceUtil.isMiuiOptimizationDisabled()
+    val showMiuiWarning = DeviceUtil.isMiui && DeviceUtil.miuiMajorVersion >= 13 && !DeviceUtil.isMiuiOptimizationDisabled()
     val uriHandler = LocalUriHandler.current
 
     FastScrollLazyColumn(
