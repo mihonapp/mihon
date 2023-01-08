@@ -20,14 +20,11 @@ fun GlobalSearchCardRow(
     onLongClick: (Manga) -> Unit,
 ) {
     LazyRow(
-        contentPadding = PaddingValues(
-            horizontal = MaterialTheme.padding.medium,
-            vertical = MaterialTheme.padding.small,
-        ),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+        contentPadding = PaddingValues(MaterialTheme.padding.small),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.tiny),
     ) {
-        items(titles) { title ->
-            val title by getManga(title)
+        items(titles) {
+            val title by getManga(it)
             GlobalSearchCard(
                 title = title.title,
                 cover = title.asMangaCover(),

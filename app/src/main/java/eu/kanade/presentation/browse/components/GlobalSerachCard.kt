@@ -18,7 +18,7 @@ fun GlobalSearchCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
-    Box(modifier = Modifier.width(128.dp)) {
+    Box(modifier = Modifier.width(96.dp)) {
         MangaComfortableGridItem(
             title = title,
             coverData = cover,
