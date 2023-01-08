@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.anilist.AnilistApi
@@ -102,6 +103,23 @@ object SettingsTrackingScreen : SearchableSettings {
             }
         }
 
+        val enhancedTrackers = trackManager.services
+            .filter { it is EnhancedTrackService }
+            .partition { service ->
+                val acceptedSources = (service as EnhancedTrackService).getAcceptedSources()
+                sourceManager.getCatalogueSources().any { it::class.qualifiedName in acceptedSources }
+            }
+        var enhancedTrackerInfo = stringResource(R.string.enhanced_tracking_info)
+        if (enhancedTrackers.second.isNotEmpty()) {
+            val missingSourcesInfo = stringResource(
+                R.string.enhanced_services_not_installed,
+                enhancedTrackers.second
+                    .map { stringResource(it.nameRes()) }
+                    .joinToString(),
+            )
+            enhancedTrackerInfo += "\n\n$missingSourcesInfo"
+        }
+
         return listOf(
             Preference.PreferenceItem.SwitchPreference(
                 pref = trackPreferences.autoUpdateTrack(),
@@ -151,19 +169,15 @@ object SettingsTrackingScreen : SearchableSettings {
             ),
             Preference.PreferenceGroup(
                 title = stringResource(R.string.enhanced_services),
-                preferenceItems = listOf(trackManager.komga, trackManager.kavita, trackManager.suwayomi)
-                    .filter { service ->
-                        val acceptedSources = service.getAcceptedSources()
-                        sourceManager.getCatalogueSources().any { it::class.qualifiedName in acceptedSources }
-                    }
+                preferenceItems = enhancedTrackers.first
                     .map { service ->
                         Preference.PreferenceItem.TrackingPreference(
                             title = stringResource(service.nameRes()),
                             service = service,
-                            login = service::loginNoop,
+                            login = { (service as EnhancedTrackService).loginNoop() },
                             logout = service::logout,
                         )
-                    } + listOf(Preference.PreferenceItem.InfoPreference(stringResource(R.string.enhanced_tracking_info))),
+                    } + listOf(Preference.PreferenceItem.InfoPreference(enhancedTrackerInfo)),
             ),
         )
     }

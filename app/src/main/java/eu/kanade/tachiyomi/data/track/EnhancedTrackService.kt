@@ -22,6 +22,8 @@ interface EnhancedTrackService {
      */
     fun getAcceptedSources(): List<String>
 
+    fun loginNoop()
+
     /**
      * match is similar to TrackService.search, but only return zero or one match.
      */

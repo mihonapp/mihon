@@ -7,7 +7,6 @@ import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
-import eu.kanade.tachiyomi.data.track.NoLoginTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
@@ -15,7 +14,7 @@ import okhttp3.Dns
 import okhttp3.OkHttpClient
 import eu.kanade.domain.track.model.Track as DomainTrack
 
-class Komga(private val context: Context, id: Long) : TrackService(id), EnhancedTrackService, NoLoginTrackService {
+class Komga(private val context: Context, id: Long) : TrackService(id), EnhancedTrackService {
 
     companion object {
         const val UNREAD = 1
