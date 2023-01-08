@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.util.padding
 
 /**
  * Center-aligned M3 Navigation rail
@@ -44,14 +46,14 @@ fun NavigationRail(
                 .fillMaxHeight()
                 .windowInsetsPadding(windowInsets)
                 .widthIn(min = 80.dp)
-                .padding(vertical = 4.dp)
+                .padding(vertical = MaterialTheme.padding.tiny)
                 .selectableGroup(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(space = 4.dp, alignment = Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.tiny, alignment = Alignment.CenterVertically),
         ) {
             if (header != null) {
                 header()
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(MaterialTheme.padding.small))
             }
             content()
         }

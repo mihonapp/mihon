@@ -28,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
@@ -53,6 +52,7 @@ import eu.kanade.presentation.manga.TrackInfoDialogHome
 import eu.kanade.presentation.manga.TrackScoreSelector
 import eu.kanade.presentation.manga.TrackServiceSearch
 import eu.kanade.presentation.manga.TrackStatusSelector
+import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
@@ -518,7 +518,7 @@ private data class TrackDateRemoverScreen(
             buttons = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small, Alignment.End),
                 ) {
                     TextButton(onClick = navigator::pop) {
                         Text(text = stringResource(android.R.string.cancel))

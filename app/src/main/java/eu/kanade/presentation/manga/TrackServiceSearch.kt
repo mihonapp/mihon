@@ -62,6 +62,7 @@ import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
+import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.runOnEnterKeyPressed
 import eu.kanade.presentation.util.secondaryItemAlpha
@@ -296,7 +297,7 @@ private fun SearchResultItemDetails(
     title: String,
     text: String,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.tiny)) {
         Text(
             text = title,
             maxLines = 1,

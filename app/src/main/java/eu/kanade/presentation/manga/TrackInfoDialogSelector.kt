@@ -37,6 +37,7 @@ import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.util.isScrolledToEnd
 import eu.kanade.presentation.util.isScrolledToStart
 import eu.kanade.presentation.util.minimumTouchTargetSize
+import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -210,7 +211,7 @@ private fun BaseSelector(
         buttons = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small, Alignment.End),
             ) {
                 if (thirdButton != null) {
                     thirdButton()

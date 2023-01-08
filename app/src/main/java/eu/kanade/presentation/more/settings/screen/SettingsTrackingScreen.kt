@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -319,7 +320,7 @@ object SettingsTrackingScreen : SearchableSettings {
                 )
             },
             confirmButton = {
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.tiny)) {
                     OutlinedButton(
                         modifier = Modifier.weight(1f),
                         onClick = onDismissRequest,
