@@ -23,7 +23,7 @@ interface MangaRepository {
 
     fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>>
 
-    suspend fun getDuplicateLibraryManga(title: String, sourceId: Long): Manga?
+    suspend fun getDuplicateLibraryManga(title: String): Manga?
 
     suspend fun resetViewerFlags(): Boolean
 

@@ -82,7 +82,6 @@ class MangaInfoScreenModel(
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val uiPreferences: UiPreferences = Injekt.get(),
     private val trackManager: TrackManager = Injekt.get(),
-    private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val downloadCache: DownloadCache = Injekt.get(),
     private val getMangaAndChapters: GetMangaWithChapters = Injekt.get(),
@@ -272,7 +271,7 @@ class MangaInfoScreenModel(
                 // Add to library
                 // First, check if duplicate exists if callback is provided
                 if (checkDuplicate) {
-                    val duplicate = getDuplicateLibraryManga.await(manga.title, manga.source)
+                    val duplicate = getDuplicateLibraryManga.await(manga.title)
 
                     if (duplicate != null) {
                         mutableState.update { state ->
@@ -925,10 +924,6 @@ class MangaInfoScreenModel(
     }
 
     // Track sheet - end
-
-    fun getSourceOrStub(manga: Manga): Source {
-        return sourceManager.getOrStub(manga.source)
-    }
 
     sealed class Dialog {
         data class ChangeCategory(val manga: Manga, val initialSelection: List<CheckboxState<Category>>) : Dialog()

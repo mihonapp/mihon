@@ -169,7 +169,6 @@ class MangaScreen(
                 onDismissRequest = onDismissRequest,
                 onConfirm = { screenModel.toggleFavorite(onRemoved = {}, checkDuplicate = false) },
                 onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
-                duplicateFrom = screenModel.getSourceOrStub(dialog.duplicate),
             )
             MangaInfoScreenModel.Dialog.SettingsSheet -> ChapterSettingsDialog(
                 onDismissRequest = onDismissRequest,
