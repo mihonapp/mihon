@@ -13,7 +13,7 @@ import eu.kanade.domain.category.model.Category
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uy.kohesive.injekt.Injekt
@@ -28,7 +28,7 @@ class CategoryScreenModel(
 ) : StateScreenModel<CategoryScreenState>(CategoryScreenState.Loading) {
 
     private val _events: Channel<CategoryEvent> = Channel()
-    val events = _events.consumeAsFlow()
+    val events = _events.receiveAsFlow()
 
     init {
         coroutineScope.launch {
