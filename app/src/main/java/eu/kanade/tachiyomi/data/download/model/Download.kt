@@ -18,9 +18,8 @@ data class Download(
     var pages: List<Page>? = null,
 ) {
 
-    @Volatile
-    @Transient
-    var totalProgress: Int = 0
+    val totalProgress: Int
+        get() = pages?.sumOf(Page::progress) ?: 0
 
     @Volatile
     @Transient
