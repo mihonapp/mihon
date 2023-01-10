@@ -25,7 +25,6 @@ import eu.kanade.presentation.components.LinkIcon
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.more.LogoHeader
-import eu.kanade.presentation.more.about.LicensesScreen
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.tachiyomi.BuildConfig

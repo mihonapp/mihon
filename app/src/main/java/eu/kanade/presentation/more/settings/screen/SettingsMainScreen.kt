@@ -54,6 +54,7 @@ import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.tachiyomi.R
 
 object SettingsMainScreen : Screen {
+
     @Composable
     override fun Content() {
         Content(twoPane = false)

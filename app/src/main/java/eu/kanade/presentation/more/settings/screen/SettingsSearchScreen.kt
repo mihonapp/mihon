@@ -59,6 +59,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.isLTR
 
 class SettingsSearchScreen : Screen {
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
