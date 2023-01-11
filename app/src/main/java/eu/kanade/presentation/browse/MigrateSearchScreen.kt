@@ -3,6 +3,7 @@ package eu.kanade.presentation.browse
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.res.stringResource
 import eu.kanade.domain.manga.model.Manga
 import eu.kanade.presentation.browse.components.GlobalSearchCardRow
 import eu.kanade.presentation.browse.components.GlobalSearchEmptyResultItem
@@ -10,8 +11,10 @@ import eu.kanade.presentation.browse.components.GlobalSearchErrorResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchLoadingResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
+import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.components.Scaffold
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchState
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
@@ -44,6 +47,7 @@ fun MigrateSearchScreen(
         MigrateSearchContent(
             sourceId = state.manga?.source ?: -1,
             items = state.items,
+            isPinnedOnly = state.isPinnedOnly,
             contentPadding = paddingValues,
             getManga = getManga,
             onClickSource = onClickSource,
@@ -57,12 +61,20 @@ fun MigrateSearchScreen(
 fun MigrateSearchContent(
     sourceId: Long,
     items: Map<CatalogueSource, SearchItemResult>,
+    isPinnedOnly: Boolean,
     contentPadding: PaddingValues,
     getManga: @Composable (CatalogueSource, Manga) -> State<Manga>,
     onClickSource: (CatalogueSource) -> Unit,
     onClickItem: (Manga) -> Unit,
     onLongClickItem: (Manga) -> Unit,
 ) {
+    if (items.isEmpty() && isPinnedOnly) {
+        EmptyScreen(
+            message = stringResource(R.string.no_pinned_sources),
+        )
+        return
+    }
+
     LazyColumn(
         contentPadding = contentPadding,
     ) {
