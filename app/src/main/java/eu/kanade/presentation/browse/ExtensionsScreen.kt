@@ -146,78 +146,74 @@ private fun ExtensionContent(
             }
         }
 
-        items(
-            items = state.items,
-            contentType = {
-                when (it) {
-                    is ExtensionUiModel.Header -> "header"
-                    is ExtensionUiModel.Item -> "item"
-                }
-            },
-            key = {
-                when (it) {
-                    is ExtensionUiModel.Header -> "extensionHeader-${it.hashCode()}"
-                    is ExtensionUiModel.Item -> "extension-${it.hashCode()}"
-                }
-            },
-        ) { item ->
-            when (item) {
-                is ExtensionUiModel.Header.Resource -> {
-                    val action: @Composable RowScope.() -> Unit =
-                        if (item.textRes == R.string.ext_updates_pending) {
-                            {
-                                Button(onClick = { onClickUpdateAll() }) {
-                                    Text(
-                                        text = stringResource(R.string.ext_update_all),
-                                        style = LocalTextStyle.current.copy(
-                                            color = MaterialTheme.colorScheme.onPrimary,
-                                        ),
-                                    )
-                                }
-                            }
-                        } else {
-                            {}
-                        }
-                    ExtensionHeader(
-                        textRes = item.textRes,
-                        modifier = Modifier.animateItemPlacement(),
-                        action = action,
-                    )
-                }
-                is ExtensionUiModel.Header.Text -> {
-                    ExtensionHeader(
-                        text = item.text,
-                        modifier = Modifier.animateItemPlacement(),
-                    )
-                }
-                is ExtensionUiModel.Item -> {
-                    ExtensionItem(
-                        modifier = Modifier.animateItemPlacement(),
-                        item = item,
-                        onClickItem = {
-                            when (it) {
-                                is Extension.Available -> onInstallExtension(it)
-                                is Extension.Installed -> onOpenExtension(it)
-                                is Extension.Untrusted -> { trustState = it }
-                            }
-                        },
-                        onLongClickItem = onLongClickItem,
-                        onClickItemCancel = onClickItemCancel,
-                        onClickItemAction = {
-                            when (it) {
-                                is Extension.Available -> onInstallExtension(it)
-                                is Extension.Installed -> {
-                                    if (it.hasUpdate) {
-                                        onUpdateExtension(it)
-                                    } else {
-                                        onOpenExtension(it)
+        state.items.forEach { (header, items) ->
+            item(
+                contentType = "header",
+                key = "extensionHeader-${header.hashCode()}",
+            ) {
+                when (header) {
+                    is ExtensionUiModel.Header.Resource -> {
+                        val action: @Composable RowScope.() -> Unit =
+                            if (header.textRes == R.string.ext_updates_pending) {
+                                {
+                                    Button(onClick = { onClickUpdateAll() }) {
+                                        Text(
+                                            text = stringResource(R.string.ext_update_all),
+                                            style = LocalTextStyle.current.copy(
+                                                color = MaterialTheme.colorScheme.onPrimary,
+                                            ),
+                                        )
                                     }
                                 }
-                                is Extension.Untrusted -> { trustState = it }
+                            } else {
+                                {}
                             }
-                        },
-                    )
+                        ExtensionHeader(
+                            textRes = header.textRes,
+                            modifier = Modifier.animateItemPlacement(),
+                            action = action,
+                        )
+                    }
+                    is ExtensionUiModel.Header.Text -> {
+                        ExtensionHeader(
+                            text = header.text,
+                            modifier = Modifier.animateItemPlacement(),
+                        )
+                    }
                 }
+            }
+
+            items(
+                items = items,
+                contentType = { "item" },
+                key = { "extension-${it.hashCode()}" },
+            ) { item ->
+                ExtensionItem(
+                    modifier = Modifier.animateItemPlacement(),
+                    item = item,
+                    onClickItem = {
+                        when (it) {
+                            is Extension.Available -> onInstallExtension(it)
+                            is Extension.Installed -> onOpenExtension(it)
+                            is Extension.Untrusted -> { trustState = it }
+                        }
+                    },
+                    onLongClickItem = onLongClickItem,
+                    onClickItemCancel = onClickItemCancel,
+                    onClickItemAction = {
+                        when (it) {
+                            is Extension.Available -> onInstallExtension(it)
+                            is Extension.Installed -> {
+                                if (it.hasUpdate) {
+                                    onUpdateExtension(it)
+                                } else {
+                                    onOpenExtension(it)
+                                }
+                            }
+                            is Extension.Untrusted -> { trustState = it }
+                        }
+                    },
+                )
             }
         }
     }
