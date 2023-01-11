@@ -3,7 +3,7 @@ aboutlib_version = "10.5.2"
 okhttp_version = "5.0.0-alpha.11"
 coil_version = "2.2.2"
 shizuku_version = "12.2.0"
-sqlite = "2.3.0-rc01"
+sqlite = "2.3.0"
 sqldelight = "1.5.4"
 leakcanary = "2.10"
 voyager = "1.0.0-rc07"
@@ -83,7 +83,7 @@ sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extension
 sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
-junit = "org.junit.jupiter:junit-jupiter:5.9.1"
+junit = "org.junit.jupiter:junit-jupiter:5.9.2"
 
 voyager-navigator = { module = "ca.gosyer:voyager-navigator", version.ref = "voyager" }
 voyager-tab-navigator = { module = "ca.gosyer:voyager-tab-navigator", version.ref = "voyager" }
