@@ -80,7 +80,7 @@ fun ChangeCategoryDialog(
                         )
                     },
                 ) {
-                    Text(text = stringResource(R.string.action_add))
+                    Text(text = stringResource(android.R.string.ok))
                 }
             }
         },
