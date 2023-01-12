@@ -109,7 +109,7 @@ class MangaInfoScreenModel(
     val source: Source?
         get() = successState?.source
 
-    private val isFavoritedManga: Boolean
+    private val isFavorited: Boolean
         get() = manga?.favorite ?: false
 
     private val processedChapters: Sequence<ChapterItem>?
@@ -258,7 +258,7 @@ class MangaInfoScreenModel(
         coroutineScope.launchIO {
             val manga = state.manga
 
-            if (isFavoritedManga) {
+            if (isFavorited) {
                 // Remove from library
                 if (updateManga.awaitUpdateFavorite(manga.id, false)) {
                     // Remove covers and update last modified in db
@@ -577,21 +577,27 @@ class MangaInfoScreenModel(
         chapters: List<Chapter>,
         startNow: Boolean,
     ) {
+        val successState = successState ?: return
+
         if (startNow) {
             val chapterId = chapters.singleOrNull()?.id ?: return
             downloadManager.startDownloadNow(chapterId)
         } else {
             downloadChapters(chapters)
         }
-        if (!isFavoritedManga) {
+
+        if (!isFavorited && !successState.hasPromptedToAddBefore) {
             coroutineScope.launch {
                 val result = snackbarHostState.showSnackbar(
                     message = context.getString(R.string.snack_add_to_library),
                     actionLabel = context.getString(R.string.action_add),
                     withDismissAction = true,
                 )
-                if (result == SnackbarResult.ActionPerformed && !isFavoritedManga) {
+                if (result == SnackbarResult.ActionPerformed && !isFavorited) {
                     toggleFavorite()
+                }
+                updateSuccessState { successState ->
+                    successState.copy(hasPromptedToAddBefore = true)
                 }
             }
         }
@@ -1008,6 +1014,7 @@ sealed class MangaScreenState {
         val trackItems: List<TrackItem> = emptyList(),
         val isRefreshingData: Boolean = false,
         val dialog: MangaInfoScreenModel.Dialog? = null,
+        val hasPromptedToAddBefore: Boolean = false,
     ) : MangaScreenState() {
 
         val processedChapters: Sequence<ChapterItem>
