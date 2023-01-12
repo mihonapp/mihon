@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
@@ -46,6 +47,8 @@ fun TriStateItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(24.dp),
     ) {
+        val stateAlpha = if (onClick != null) 1f else ContentAlpha.disabled
+
         Icon(
             imageVector = when (state) {
                 TriStateFilter.DISABLED -> Icons.Rounded.CheckBoxOutlineBlank
@@ -54,13 +57,17 @@ fun TriStateItem(
             },
             contentDescription = null,
             tint = if (state == TriStateFilter.DISABLED) {
-                MaterialTheme.colorScheme.onSurfaceVariant
+                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = stateAlpha)
             } else {
-                MaterialTheme.colorScheme.primary
+                when (onClick) {
+                    null -> MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.disabled)
+                    else -> MaterialTheme.colorScheme.primary
+                }
             },
         )
         Text(
             text = label,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = stateAlpha),
             style = MaterialTheme.typography.bodyMedium,
         )
     }
