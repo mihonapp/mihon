@@ -140,7 +140,6 @@ abstract class SearchScreenModel<T>(
                     async {
                         try {
                             val page = withContext(coroutineDispatcher) {
-                                logcat { "Searching ${source.name}" }
                                 source.fetchSearchManga(1, query, source.getFilterList()).awaitSingle()
                             }
 

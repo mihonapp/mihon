@@ -31,12 +31,13 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.withTimeout
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -64,7 +65,7 @@ class DownloadCache(
      * The interval after which this cache should be invalidated. 1 hour shouldn't cause major
      * issues, as the cache is only used for UI feedback.
      */
-    private val renewInterval = TimeUnit.HOURS.toMillis(1)
+    private val renewInterval = 1.hours.inWholeMilliseconds
 
     /**
      * The last time the cache was refreshed.
@@ -74,7 +75,8 @@ class DownloadCache(
     val isRenewing = changes
         .map { renewalJob?.isActive ?: false }
         .distinctUntilChanged()
-        .debounce(1000L)
+        .take(2) // We only care about initial renewal
+        .debounce(1000L) // Don't notify if it finishes quickly enough
         .stateIn(scope, SharingStarted.WhileSubscribed(), false)
 
     private var rootDownloadsDir = RootDirectory(getDirectoryFromPreference())
