@@ -532,17 +532,14 @@ class ReaderViewModel(
      * Saves this [readerChapter] last read history if incognito mode isn't on.
      */
     private suspend fun saveChapterHistory(readerChapter: ReaderChapter) {
-        if (!incognitoMode) {
-            val chapterId = readerChapter.chapter.id!!
-            val readAt = Date()
-            val sessionReadDuration = chapterReadStartTime?.let { readAt.time - it } ?: 0
+        if (incognitoMode) return
 
-            upsertHistory.await(
-                HistoryUpdate(chapterId, readAt, sessionReadDuration),
-            ).also {
-                chapterReadStartTime = null
-            }
-        }
+        val chapterId = readerChapter.chapter.id!!
+        val endTime = Date()
+        val sessionReadDuration = chapterReadStartTime?.let { endTime.time - it } ?: 0
+
+        upsertHistory.await(HistoryUpdate(chapterId, endTime, sessionReadDuration))
+        chapterReadStartTime = null
     }
 
     fun setReadStartTime() {

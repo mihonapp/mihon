@@ -389,10 +389,10 @@ class MangaInfoScreenModel(
 
     fun moveMangaToCategoriesAndAddToLibrary(manga: Manga, categories: List<Long>) {
         moveMangaToCategory(categories)
-        if (!manga.favorite) {
-            coroutineScope.launchIO {
-                updateManga.awaitUpdateFavorite(manga.id, true)
-            }
+        if (manga.favorite) return
+
+        coroutineScope.launchIO {
+            updateManga.awaitUpdateFavorite(manga.id, true)
         }
     }
 

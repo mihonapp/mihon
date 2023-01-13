@@ -166,13 +166,13 @@ class AppUpdateService : Service() {
          * @param url the url to the new update.
          */
         fun start(context: Context, url: String, title: String? = context.getString(R.string.app_name)) {
-            if (!isRunning(context)) {
-                val intent = Intent(context, AppUpdateService::class.java).apply {
-                    putExtra(EXTRA_DOWNLOAD_TITLE, title)
-                    putExtra(EXTRA_DOWNLOAD_URL, url)
-                }
-                ContextCompat.startForegroundService(context, intent)
+            if (isRunning(context)) return
+
+            val intent = Intent(context, AppUpdateService::class.java).apply {
+                putExtra(EXTRA_DOWNLOAD_TITLE, title)
+                putExtra(EXTRA_DOWNLOAD_URL, url)
             }
+            ContextCompat.startForegroundService(context, intent)
         }
 
         /**

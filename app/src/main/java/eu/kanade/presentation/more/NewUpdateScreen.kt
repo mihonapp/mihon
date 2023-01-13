@@ -37,7 +37,7 @@ fun NewUpdateScreen(
         icon = Icons.Outlined.NewReleases,
         headingText = stringResource(R.string.update_check_notification_update_available),
         subtitleText = versionName,
-        acceptText = stringResource(id = R.string.update_check_confirm),
+        acceptText = stringResource(R.string.update_check_confirm),
         onAcceptClick = onAcceptUpdate,
         rejectText = stringResource(R.string.action_not_now),
         onRejectClick = onRejectUpdate,
