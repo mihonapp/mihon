@@ -42,6 +42,7 @@ fun DownloadCustomAmountDialog(
         },
         confirmButton = {
             TextButton(
+                enabled = amount != 0,
                 onClick = {
                     onDismissRequest()
                     onConfirm(amount.coerceIn(0, maxAmount))

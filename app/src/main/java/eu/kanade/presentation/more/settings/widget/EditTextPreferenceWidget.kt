@@ -1,7 +1,12 @@
 package eu.kanade.presentation.more.settings.widget
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -50,6 +55,16 @@ fun EditTextPreferenceWidget(
                 OutlinedTextField(
                     value = textFieldValue,
                     onValueChange = { textFieldValue = it },
+                    trailingIcon = {
+                        if (textFieldValue.text.isBlank()) {
+                            Icon(imageVector = Icons.Filled.Error, contentDescription = null)
+                        } else {
+                            IconButton(onClick = { textFieldValue = TextFieldValue("") }) {
+                                Icon(imageVector = Icons.Filled.Cancel, contentDescription = null)
+                            }
+                        }
+                    },
+                    isError = textFieldValue.text.isBlank(),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -59,6 +74,7 @@ fun EditTextPreferenceWidget(
             ),
             confirmButton = {
                 TextButton(
+                    enabled = textFieldValue.text != value && textFieldValue.text.isNotBlank(),
                     onClick = {
                         scope.launch {
                             if (onConfirm(textFieldValue.text)) {

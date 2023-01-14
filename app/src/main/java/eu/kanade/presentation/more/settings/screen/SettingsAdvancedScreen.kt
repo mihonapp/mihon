@@ -275,10 +275,6 @@ object SettingsAdvancedScreen : SearchableSettings {
                     pref = userAgentPref,
                     title = stringResource(R.string.pref_user_agent_string),
                     onValueChanged = {
-                        if (it.isBlank()) {
-                            context.toast(R.string.error_user_agent_string_blank)
-                            return@EditTextPreference false
-                        }
                         try {
                             // OkHttp checks for valid values internally
                             Headers.Builder().add("User-Agent", it)
