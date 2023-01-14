@@ -11,11 +11,9 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import eu.kanade.tachiyomi.util.lang.awaitSingle
+import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.logcat
-import rx.Completable
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 /**
  * Loader used to retrieve the [PageLoader] for a given chapter.
@@ -29,43 +27,40 @@ class ChapterLoader(
 ) {
 
     /**
-     * Returns a completable that assigns the page loader and loads the its pages. It just
-     * completes if the chapter is already loaded.
+     * Assigns the chapter's page loader and loads the its pages. Returns immediately if the chapter
+     * is already loaded.
      */
-    fun loadChapter(chapter: ReaderChapter): Completable {
+    suspend fun loadChapter(chapter: ReaderChapter) {
         if (chapterIsReady(chapter)) {
-            return Completable.complete()
+            return
         }
 
-        return Observable.just(chapter)
-            .doOnNext { chapter.state = ReaderChapter.State.Loading }
-            .observeOn(Schedulers.io())
-            .flatMap { readerChapter ->
-                logcat { "Loading pages for ${chapter.chapter.name}" }
-
-                val loader = getPageLoader(readerChapter)
+        chapter.state = ReaderChapter.State.Loading
+        withIOContext {
+            logcat { "Loading pages for ${chapter.chapter.name}" }
+            try {
+                val loader = getPageLoader(chapter)
                 chapter.pageLoader = loader
 
-                loader.getPages().take(1).doOnNext { pages ->
-                    pages.forEach { it.chapter = chapter }
-                }
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError { chapter.state = ReaderChapter.State.Error(it) }
-            .doOnNext { pages ->
+                val pages = loader.getPages().awaitSingle()
+                    .onEach { it.chapter = chapter }
+
                 if (pages.isEmpty()) {
                     throw Exception(context.getString(R.string.page_list_empty_error))
                 }
-
-                chapter.state = ReaderChapter.State.Loaded(pages)
 
                 // If the chapter is partially read, set the starting page to the last the user read
                 // otherwise use the requested page.
                 if (!chapter.chapter.read) {
                     chapter.requestedPage = chapter.chapter.last_page_read
                 }
+
+                chapter.state = ReaderChapter.State.Loaded(pages)
+            } catch (e: Throwable) {
+                chapter.state = ReaderChapter.State.Error(e)
+                throw e
             }
-            .toCompletable()
+        }
     }
 
     /**
