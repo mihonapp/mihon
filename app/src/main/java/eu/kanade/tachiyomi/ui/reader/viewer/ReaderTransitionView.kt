@@ -63,11 +63,19 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
             binding.upperText.text = buildSpannedString {
                 bold { append(context.getString(R.string.transition_previous)) }
                 append("\n${prevChapter.name}")
+                if (!prevChapter.scanlator.isNullOrBlank()) {
+                    append(DOT_SEPERATOR)
+                    append("${prevChapter.scanlator}")
+                }
                 if (isPrevDownloaded) addDLImageSpan()
             }
             binding.lowerText.text = buildSpannedString {
                 bold { append(context.getString(R.string.transition_current)) }
                 append("\n${transition.from.chapter.name}")
+                if (!transition.from.chapter.scanlator.isNullOrBlank()) {
+                    append(DOT_SEPERATOR)
+                    append("${transition.from.chapter.scanlator}")
+                }
                 if (isCurrentDownloaded) addDLImageSpan()
             }
         } else {
@@ -100,11 +108,19 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
             binding.upperText.text = buildSpannedString {
                 bold { append(context.getString(R.string.transition_finished)) }
                 append("\n${transition.from.chapter.name}")
+                if (!transition.from.chapter.scanlator.isNullOrBlank()) {
+                    append(DOT_SEPERATOR)
+                    append("${transition.from.chapter.scanlator}")
+                }
                 if (isCurrentDownloaded) addDLImageSpan()
             }
             binding.lowerText.text = buildSpannedString {
                 bold { append(context.getString(R.string.transition_next)) }
                 append("\n${nextChapter.name}")
+                if (!nextChapter.scanlator.isNullOrBlank()) {
+                    append(DOT_SEPERATOR)
+                    append("${nextChapter.scanlator}")
+                }
                 if (isNextDownloaded) addDLImageSpan()
             }
         } else {
@@ -149,3 +165,5 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
         binding.warning.isVisible = true
     }
 }
+
+private const val DOT_SEPERATOR = " • "
