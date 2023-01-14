@@ -14,10 +14,8 @@
     <!--AlertDialog-->
     <!--===========-->
     <style name="ThemeOverlay.Tachiyomi.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:colorBackground">?attr/colorSurface</item>
         <item name="android:layout">@layout/m3_alert_dialog</item>
+        <item name="android:background">@drawable/material_popup_background</item>
         <item name="dialogCornerRadius">@dimen/m3_alert_dialog_corner_size</item>
     </style>
 

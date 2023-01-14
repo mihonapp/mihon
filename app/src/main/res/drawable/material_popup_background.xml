@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="?attr/colorSurface" />
+            <corners android:radius="@dimen/m3_alert_dialog_corner_size" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="@color/m3_popupmenu_overlay_color" />
+            <corners android:radius="@dimen/m3_alert_dialog_corner_size" />
+        </shape>
+    </item>
+</layer-list>
