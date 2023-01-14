@@ -29,6 +29,13 @@ class DownloadPageLoader(
     // Needed to open input streams
     private val context: Application by injectLazy()
 
+    private var zipPageLoader: ZipPageLoader? = null
+
+    override fun recycle() {
+        super.recycle()
+        zipPageLoader?.recycle()
+    }
+
     /**
      * Returns an observable containing the pages found on this downloaded chapter.
      */
@@ -43,7 +50,7 @@ class DownloadPageLoader(
     }
 
     private fun getPagesFromArchive(chapterPath: UniFile): Observable<List<ReaderPage>> {
-        val loader = ZipPageLoader(File(chapterPath.filePath!!))
+        val loader = ZipPageLoader(File(chapterPath.filePath!!)).also { zipPageLoader = it }
         return loader.getPages()
     }
 
@@ -61,6 +68,6 @@ class DownloadPageLoader(
     }
 
     override fun getPage(page: ReaderPage): Observable<Page.State> {
-        return Observable.just(Page.State.READY)
+        return zipPageLoader?.getPage(page) ?: Observable.just(Page.State.READY)
     }
 }
