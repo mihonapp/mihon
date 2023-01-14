@@ -38,6 +38,7 @@ import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.ChapterDownloadIndicator
 import eu.kanade.presentation.components.ListGroupHeader
 import eu.kanade.presentation.components.MangaCover
+import eu.kanade.presentation.manga.components.DotSeparatorText
 import eu.kanade.presentation.util.ReadItemAlpha
 import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.selectedBackground
@@ -113,6 +114,14 @@ fun LazyListScope.updatesUiItems(
                     modifier = Modifier.animateItemPlacement(),
                     update = updatesItem.update,
                     selected = updatesItem.selected,
+                    readProgress = updatesItem.update.lastPageRead
+                        .takeIf { !updatesItem.update.read && it > 0L }
+                        ?.let {
+                            stringResource(
+                                R.string.chapter_progress,
+                                it + 1,
+                            )
+                        },
                     onLongClick = {
                         onUpdateSelected(updatesItem, !updatesItem.selected, true, true)
                     },
@@ -139,6 +148,7 @@ fun UpdatesUiItem(
     modifier: Modifier,
     update: UpdatesWithRelations,
     selected: Boolean,
+    readProgress: String?,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickCover: (() -> Unit)?,
@@ -203,8 +213,19 @@ fun UpdatesUiItem(
                     style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis,
                     onTextLayout = { textHeight = it.size.height },
-                    modifier = Modifier.alpha(textAlpha),
+                    modifier = Modifier
+                        .weight(weight = 1f, fill = false)
+                        .alpha(textAlpha),
                 )
+                if (readProgress != null) {
+                    DotSeparatorText()
+                    Text(
+                        text = readProgress,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.alpha(ReadItemAlpha),
+                    )
+                }
             }
         }
         ChapterDownloadIndicator(

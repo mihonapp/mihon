@@ -101,6 +101,8 @@ class MangaScreen(
         MangaScreen(
             state = successState,
             snackbarHostState = screenModel.snackbarHostState,
+            dateRelativeTime = screenModel.relativeTime,
+            dateFormat = screenModel.dateFormat,
             isTabletUi = isTabletUi(),
             onBackClicked = navigator::pop,
             onChapterClicked = { openChapter(context, it) },

@@ -193,7 +193,7 @@ private fun UpdatesBottomBar(
         }.takeIf { selected.fastAny { !it.update.read } },
         onMarkAsUnreadClicked = {
             onMultiMarkAsReadClicked(selected, false)
-        }.takeIf { selected.fastAny { it.update.read } },
+        }.takeIf { selected.fastAny { it.update.read || it.update.lastPageRead > 0L } },
         onDownloadClicked = {
             onDownloadChapter(selected, ChapterDownloadAction.START)
         }.takeIf {

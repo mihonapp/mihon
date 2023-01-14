@@ -4,9 +4,12 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.core.prefs.CheckboxState
+import eu.kanade.core.prefs.asState
 import eu.kanade.core.prefs.mapAsCheckboxState
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.data.chapter.NoChaptersException
@@ -49,7 +52,6 @@ import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
-import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.lang.withUIContext
 import eu.kanade.tachiyomi.util.removeCovers
@@ -69,10 +71,8 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.util.Date
 
 class MangaInfoScreenModel(
     val context: Context,
@@ -115,6 +115,9 @@ class MangaInfoScreenModel(
     private val processedChapters: Sequence<ChapterItem>?
         get() = successState?.processedChapters
 
+    val relativeTime by uiPreferences.relativeTime().asState(coroutineScope)
+    val dateFormat by mutableStateOf(UiPreferences.dateFormat(uiPreferences.dateFormat().get()))
+
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
     private val selectedChapterIds: HashSet<Long> = HashSet()
 
@@ -126,26 +129,16 @@ class MangaInfoScreenModel(
     }
 
     init {
-        val toChapterItemsParams: List<Chapter>.(manga: Manga) -> List<ChapterItem> = { manga ->
-            toChapterItems(
-                context = context,
-                manga = manga,
-                dateRelativeTime = uiPreferences.relativeTime().get(),
-                dateFormat = UiPreferences.dateFormat(uiPreferences.dateFormat().get()),
-            )
-        }
-
         coroutineScope.launchIO {
             combine(
                 getMangaAndChapters.subscribe(mangaId).distinctUntilChanged(),
                 downloadCache.changes,
             ) { mangaAndChapters, _ -> mangaAndChapters }
                 .collectLatest { (manga, chapters) ->
-                    val chapterItems = chapters.toChapterItemsParams(manga)
                     updateSuccessState {
                         it.copy(
                             manga = manga,
-                            chapters = chapterItems,
+                            chapters = chapters.toChapterItems(manga),
                         )
                     }
                 }
@@ -156,7 +149,7 @@ class MangaInfoScreenModel(
         coroutineScope.launchIO {
             val manga = getMangaAndChapters.awaitManga(mangaId)
             val chapters = getMangaAndChapters.awaitChapters(mangaId)
-                .toChapterItemsParams(manga)
+                .toChapterItems(manga)
 
             if (!manga.favorite) {
                 setMangaDefaultChapterFlags.await(manga)
@@ -463,12 +456,7 @@ class MangaInfoScreenModel(
         }
     }
 
-    private fun List<Chapter>.toChapterItems(
-        context: Context,
-        manga: Manga,
-        dateRelativeTime: Int,
-        dateFormat: DateFormat,
-    ): List<ChapterItem> {
+    private fun List<Chapter>.toChapterItems(manga: Manga): List<ChapterItem> {
         val isLocal = manga.isLocal()
         return map { chapter ->
             val activeDownload = if (isLocal) {
@@ -491,29 +479,6 @@ class MangaInfoScreenModel(
                 chapter = chapter,
                 downloadState = downloadState,
                 downloadProgress = activeDownload?.progress ?: 0,
-                chapterTitleString = if (manga.displayMode == Manga.CHAPTER_DISPLAY_NUMBER) {
-                    context.getString(
-                        R.string.display_mode_chapter,
-                        chapterDecimalFormat.format(chapter.chapterNumber.toDouble()),
-                    )
-                } else {
-                    chapter.name
-                },
-                dateUploadString = chapter.dateUpload
-                    .takeIf { it > 0 }
-                    ?.let {
-                        Date(it).toRelativeString(
-                            context,
-                            dateRelativeTime,
-                            dateFormat,
-                        )
-                    },
-                readProgressString = chapter.lastPageRead.takeIf { !chapter.read && it > 0 }?.let {
-                    context.getString(
-                        R.string.chapter_progress,
-                        it + 1,
-                    )
-                },
                 selected = chapter.id in selectedChapterIds,
             )
         }
@@ -1068,11 +1033,6 @@ data class ChapterItem(
     val chapter: Chapter,
     val downloadState: Download.State,
     val downloadProgress: Int,
-
-    val chapterTitleString: String,
-    val dateUploadString: String?,
-    val readProgressString: String?,
-
     val selected: Boolean = false,
 ) {
     val isDownloaded = downloadState == Download.State.DOWNLOADED

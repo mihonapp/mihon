@@ -10,6 +10,7 @@ data class UpdatesWithRelations(
     val scanlator: String?,
     val read: Boolean,
     val bookmark: Boolean,
+    val lastPageRead: Long,
     val sourceId: Long,
     val dateFetch: Long,
     val coverData: MangaCover,
