@@ -5,21 +5,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SourceDataClass(
     val id: String,
-    val name: String?,
-    val lang: String?,
-    val iconUrl: String?,
+    val name: String,
+    val lang: String,
+    val iconUrl: String,
 
     /** The Source provides a latest listing */
-    val supportsLatest: Boolean?,
+    val supportsLatest: Boolean,
 
     /** The Source implements [ConfigurableSource] */
-    val isConfigurable: Boolean?,
+    val isConfigurable: Boolean,
 
     /** The Source class has a @Nsfw annotation */
-    val isNsfw: Boolean?,
+    val isNsfw: Boolean,
 
     /** A nicer version of [name] */
-    val displayName: String?,
+    val displayName: String,
 )
 
 @Serializable
@@ -29,33 +29,33 @@ data class MangaDataClass(
 
     val url: String,
     val title: String,
-    val thumbnailUrl: String,
+    val thumbnailUrl: String?,
 
     val initialized: Boolean,
 
-    val artist: String,
-    val author: String,
-    val description: String,
+    val artist: String?,
+    val author: String?,
+    val description: String?,
     val genre: List<String>,
     val status: String,
     val inLibrary: Boolean,
     val inLibraryAt: Long,
-    val source: SourceDataClass,
+    val source: SourceDataClass?,
 
-    val meta: Map<String, String> = emptyMap(),
+    val meta: Map<String, String>,
 
-    val realUrl: String,
-    var lastFetchedAt: Long,
-    var chaptersLastFetchedAt: Long,
+    val realUrl: String?,
+    val lastFetchedAt: Long?,
+    val chaptersLastFetchedAt: Long?,
 
     val freshData: Boolean,
-    val unreadCount: Long,
-    val downloadCount: Long,
-    val chapterCount: Long,
+    val unreadCount: Long?,
+    val downloadCount: Long?,
+    val chapterCount: Long, // actually is nullable server side, but should be set at this time
     val lastChapterRead: ChapterDataClass?,
 
-    val age: Long,
-    val chaptersAge: Long,
+    val age: Long?,
+    val chaptersAge: Long?,
 )
 
 @Serializable
@@ -93,5 +93,8 @@ data class ChapterDataClass(
     val pageCount: Int,
 
     /** total chapter count, used to calculate if there's a next and prev chapter */
-    val chapterCount: Int,
+    val chapterCount: Int?,
+
+    /** used to store client specific values */
+    val meta: Map<String, String>,
 )

@@ -29,7 +29,6 @@ class TachideskApi {
             .dns(Dns.SYSTEM) // don't use DNS over HTTPS as it breaks IP addressing
             .build()
     fun headersBuilder(): Headers.Builder = Headers.Builder().apply {
-        add("User-Agent", network.defaultUserAgent)
         if (basePassword.isNotEmpty() && baseLogin.isNotEmpty()) {
             val credentials = Credentials.basic(baseLogin, basePassword)
             add("Authorization", credentials)
@@ -56,7 +55,7 @@ class TachideskApi {
         TrackSearch.create(TrackManager.SUWAYOMI).apply {
             title = manga.title
             cover_url = "$url/thumbnail"
-            summary = manga.description
+            summary = manga.description.orEmpty()
             tracking_url = url
             total_chapters = manga.chapterCount.toInt()
             publishing_status = manga.status
