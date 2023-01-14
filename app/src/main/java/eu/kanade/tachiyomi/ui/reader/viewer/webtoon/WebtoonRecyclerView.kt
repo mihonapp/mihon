@@ -106,7 +106,8 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
         val scaleAnimator = ValueAnimator.ofFloat(fromRate, toRate)
         scaleAnimator.addUpdateListener { animation ->
-            setScaleRate(animation.animatedValue as Float)
+            currentScale = animation.animatedValue as Float
+            setScaleRate(currentScale)
         }
         animatorSet.playTogether(translationXAnimator, translationYAnimator, scaleAnimator)
         animatorSet.duration = ANIMATOR_DURATION_TIME.toLong()
@@ -122,26 +123,26 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         if (currentScale <= 1f) return false
 
         val distanceTimeFactor = 0.4f
-        var newX: Float? = null
-        var newY: Float? = null
+        val animatorSet = AnimatorSet()
 
         if (velocityX != 0) {
             val dx = (distanceTimeFactor * velocityX / 2)
-            newX = getPositionX(x + dx)
+            val newX = getPositionX(x + dx)
+            val translationXAnimator = ValueAnimator.ofFloat(x, newX)
+            translationXAnimator.addUpdateListener { animation -> x = getPositionX(animation.animatedValue as Float) }
+            animatorSet.play(translationXAnimator)
         }
         if (velocityY != 0 && (atFirstPosition || atLastPosition)) {
             val dy = (distanceTimeFactor * velocityY / 2)
-            newY = getPositionY(y + dy)
+            val newY = getPositionY(y + dy)
+            val translationYAnimator = ValueAnimator.ofFloat(y, newY)
+            translationYAnimator.addUpdateListener { animation -> y = getPositionY(animation.animatedValue as Float) }
+            animatorSet.play(translationYAnimator)
         }
 
-        animate()
-            .apply {
-                newX?.let { x(it) }
-                newY?.let { y(it) }
-            }
-            .setInterpolator(DecelerateInterpolator())
-            .setDuration(400)
-            .start()
+        animatorSet.duration = 400
+        animatorSet.interpolator = DecelerateInterpolator()
+        animatorSet.start()
 
         return true
     }
