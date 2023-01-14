@@ -128,7 +128,7 @@ class ChapterCache(private val context: Context) {
      */
     fun isImageInCache(imageUrl: String): Boolean {
         return try {
-            diskCache.get(DiskUtil.hashKeyForDisk(imageUrl)) != null
+            diskCache.get(DiskUtil.hashKeyForDisk(imageUrl)).use { it != null }
         } catch (e: IOException) {
             false
         }
