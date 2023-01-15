@@ -162,7 +162,7 @@ class MainActivity : BaseActivity() {
         setComposeContent {
             val incognito by preferences.incognitoMode().collectAsState()
             val downloadOnly by preferences.downloadedOnly().collectAsState()
-            val indexing by downloadCache.isRenewing.collectAsState()
+            val indexing by downloadCache.isInitializing.collectAsState()
 
             // Set statusbar color considering the top app state banner
             val systemUiController = rememberSystemUiController()
