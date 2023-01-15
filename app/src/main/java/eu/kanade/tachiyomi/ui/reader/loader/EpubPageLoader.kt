@@ -25,10 +25,9 @@ class EpubPageLoader(file: File) : PageLoader() {
     }
 
     /**
-     * Returns an observable containing the pages found on this zip archive ordered with a natural
-     * comparator.
+     * Returns the pages found on this zip archive ordered with a natural comparator.
      */
-    override fun getPages(): Observable<List<ReaderPage>> {
+    override suspend fun getPages(): List<ReaderPage> {
         return epub.getImagesFromPages()
             .mapIndexed { i, path ->
                 val streamFn = { epub.getInputStream(epub.getEntry(path)!!) }
@@ -37,7 +36,6 @@ class EpubPageLoader(file: File) : PageLoader() {
                     status = Page.State.READY
                 }
             }
-            .let { Observable.just(it) }
     }
 
     /**

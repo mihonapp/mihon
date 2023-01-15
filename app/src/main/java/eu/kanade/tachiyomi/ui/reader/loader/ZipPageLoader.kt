@@ -33,10 +33,9 @@ class ZipPageLoader(file: File) : PageLoader() {
     }
 
     /**
-     * Returns an observable containing the pages found on this zip archive ordered with a natural
-     * comparator.
+     * Returns the pages found on this zip archive ordered with a natural comparator.
      */
-    override fun getPages(): Observable<List<ReaderPage>> {
+    override suspend fun getPages(): List<ReaderPage> {
         return zip.entries().asSequence()
             .filter { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
             .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
@@ -46,7 +45,7 @@ class ZipPageLoader(file: File) : PageLoader() {
                     status = Page.State.READY
                 }
             }
-            .let { Observable.just(it.toList()) }
+            .toList()
     }
 
     /**

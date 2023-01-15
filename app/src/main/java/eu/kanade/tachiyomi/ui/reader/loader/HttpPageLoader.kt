@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.system.logcat
+import kotlinx.coroutines.CancellationException
 import logcat.LogPriority
 import rx.Completable
 import rx.Observable
@@ -83,18 +84,22 @@ class HttpPageLoader(
     }
 
     /**
-     * Returns an observable with the page list for a chapter. It tries to return the page list from
-     * the local cache, otherwise fallbacks to network.
+     * Returns the page list for a chapter. It tries to return the page list from the local cache,
+     * otherwise fallbacks to network.
      */
-    override fun getPages(): Observable<List<ReaderPage>> {
-        return Observable.fromCallable { chapterCache.getPageListFromCache(chapter.chapter.toDomainChapter()!!) }
-            .onErrorResumeNext { source.fetchPageList(chapter.chapter) }
-            .map { pages ->
-                pages.mapIndexed { index, page ->
-                    // Don't trust sources and use our own indexing
-                    ReaderPage(index, page.url, page.imageUrl)
-                }
+    override suspend fun getPages(): List<ReaderPage> {
+        val pages = try {
+            chapterCache.getPageListFromCache(chapter.chapter.toDomainChapter()!!)
+        } catch (e: Throwable) {
+            if (e is CancellationException) {
+                throw e
             }
+            source.getPageList(chapter.chapter)
+        }
+        return pages.mapIndexed { index, page ->
+            // Don't trust sources and use our own indexing
+            ReaderPage(index, page.url, page.imageUrl)
+        }
     }
 
     /**

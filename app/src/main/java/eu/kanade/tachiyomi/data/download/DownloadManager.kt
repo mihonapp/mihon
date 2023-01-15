@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
-import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -165,23 +164,21 @@ class DownloadManager(
      * @param source the source of the chapter.
      * @param manga the manga of the chapter.
      * @param chapter the downloaded chapter.
-     * @return an observable containing the list of pages from the chapter.
+     * @return the list of pages from the chapter.
      */
-    fun buildPageList(source: Source, manga: Manga, chapter: Chapter): Observable<List<Page>> {
+    fun buildPageList(source: Source, manga: Manga, chapter: Chapter): List<Page> {
         val chapterDir = provider.findChapterDir(chapter.name, chapter.scanlator, manga.title, source)
-        return Observable.fromCallable {
-            val files = chapterDir?.listFiles().orEmpty()
-                .filter { "image" in it.type.orEmpty() }
+        val files = chapterDir?.listFiles().orEmpty()
+            .filter { "image" in it.type.orEmpty() }
 
-            if (files.isEmpty()) {
-                throw Exception(context.getString(R.string.page_list_empty_error))
-            }
-
-            files.sortedBy { it.name }
-                .mapIndexed { i, file ->
-                    Page(i, uri = file.uri).apply { status = Page.State.READY }
-                }
+        if (files.isEmpty()) {
+            throw Exception(context.getString(R.string.page_list_empty_error))
         }
+
+        return files.sortedBy { it.name }
+            .mapIndexed { i, file ->
+                Page(i, uri = file.uri).apply { status = Page.State.READY }
+            }
     }
 
     /**

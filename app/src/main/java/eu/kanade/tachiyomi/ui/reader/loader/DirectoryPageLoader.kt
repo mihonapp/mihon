@@ -14,10 +14,9 @@ import java.io.FileInputStream
 class DirectoryPageLoader(val file: File) : PageLoader() {
 
     /**
-     * Returns an observable containing the pages found on this directory ordered with a natural
-     * comparator.
+     * Returns the pages found on this directory ordered with a natural comparator.
      */
-    override fun getPages(): Observable<List<ReaderPage>> {
+    override suspend fun getPages(): List<ReaderPage> {
         return file.listFiles()
             ?.filter { !it.isDirectory && ImageUtil.isImage(it.name) { FileInputStream(it) } }
             ?.sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
@@ -27,8 +26,7 @@ class DirectoryPageLoader(val file: File) : PageLoader() {
                     stream = streamFn
                     status = Page.State.READY
                 }
-            }
-            .let { Observable.just(it) }
+            } ?: emptyList()
     }
 
     /**

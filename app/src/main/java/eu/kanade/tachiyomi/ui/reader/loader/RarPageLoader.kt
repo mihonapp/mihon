@@ -38,10 +38,10 @@ class RarPageLoader(file: File) : PageLoader() {
     }
 
     /**
-     * Returns an observable containing the pages found on this rar archive ordered with a natural
+     * Returns an RxJava Single containing the pages found on this rar archive ordered with a natural
      * comparator.
      */
-    override fun getPages(): Observable<List<ReaderPage>> {
+    override suspend fun getPages(): List<ReaderPage> {
         return archive.fileHeaders.asSequence()
             .filter { !it.isDirectory && ImageUtil.isImage(it.fileName) { archive.getInputStream(it) } }
             .sortedWith { f1, f2 -> f1.fileName.compareToCaseInsensitiveNaturalOrder(f2.fileName) }
@@ -51,7 +51,7 @@ class RarPageLoader(file: File) : PageLoader() {
                     status = Page.State.READY
                 }
             }
-            .let { Observable.just(it.toList()) }
+            .toList()
     }
 
     /**

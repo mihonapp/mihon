@@ -27,10 +27,9 @@ abstract class PageLoader {
     }
 
     /**
-     * Returns an observable containing the list of pages of a chapter. Only the first emission
-     * will be used.
+     * Returns the list of pages of a chapter.
      */
-    abstract fun getPages(): Observable<List<ReaderPage>>
+    abstract suspend fun getPages(): List<ReaderPage>
 
     /**
      * Returns an observable that should inform of the progress of the page

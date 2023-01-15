@@ -37,9 +37,9 @@ class DownloadPageLoader(
     }
 
     /**
-     * Returns an observable containing the pages found on this downloaded chapter.
+     * Returns the pages found on this downloaded chapter.
      */
-    override fun getPages(): Observable<List<ReaderPage>> {
+    override suspend fun getPages(): List<ReaderPage> {
         val dbChapter = chapter.chapter
         val chapterPath = downloadProvider.findChapterDir(dbChapter.name, dbChapter.scanlator, manga.title, source)
         return if (chapterPath?.isFile == true) {
@@ -49,22 +49,20 @@ class DownloadPageLoader(
         }
     }
 
-    private fun getPagesFromArchive(chapterPath: UniFile): Observable<List<ReaderPage>> {
+    private suspend fun getPagesFromArchive(chapterPath: UniFile): List<ReaderPage> {
         val loader = ZipPageLoader(File(chapterPath.filePath!!)).also { zipPageLoader = it }
         return loader.getPages()
     }
 
-    private fun getPagesFromDirectory(): Observable<List<ReaderPage>> {
-        return downloadManager.buildPageList(source, manga, chapter.chapter.toDomainChapter()!!)
-            .map { pages ->
-                pages.map { page ->
-                    ReaderPage(page.index, page.url, page.imageUrl) {
-                        context.contentResolver.openInputStream(page.uri ?: Uri.EMPTY)!!
-                    }.apply {
-                        status = Page.State.READY
-                    }
-                }
+    private fun getPagesFromDirectory(): List<ReaderPage> {
+        val pages = downloadManager.buildPageList(source, manga, chapter.chapter.toDomainChapter()!!)
+        return pages.map { page ->
+            ReaderPage(page.index, page.url, page.imageUrl) {
+                context.contentResolver.openInputStream(page.uri ?: Uri.EMPTY)!!
+            }.apply {
+                status = Page.State.READY
             }
+        }
     }
 
     override fun getPage(page: ReaderPage): Observable<Page.State> {
