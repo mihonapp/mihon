@@ -52,10 +52,9 @@ import eu.kanade.tachiyomi.network.PREF_DOH_SHECAN
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
 import eu.kanade.tachiyomi.util.lang.withUIContext
-import eu.kanade.tachiyomi.util.system.DeviceUtil
-import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import eu.kanade.tachiyomi.util.system.isPreviewBuildType
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
+import eu.kanade.tachiyomi.util.system.isShizukuInstalled
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
@@ -63,7 +62,6 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import okhttp3.Headers
-import rikka.sui.Sui
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -344,6 +342,7 @@ object SettingsAdvancedScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         val context = LocalContext.current
         val uriHandler = LocalUriHandler.current
+        val extensionInstallerPref = basePreferences.extensionInstaller()
         var shizukuMissing by rememberSaveable { mutableStateOf(false) }
 
         if (shizukuMissing) {
@@ -373,19 +372,13 @@ object SettingsAdvancedScreen : SearchableSettings {
             title = stringResource(R.string.label_extensions),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
-                    pref = basePreferences.extensionInstaller(),
+                    pref = extensionInstallerPref,
                     title = stringResource(R.string.ext_installer_pref),
-                    entries = PreferenceValues.ExtensionInstaller.values()
-                        .run {
-                            if (DeviceUtil.isMiui) {
-                                filter { it != PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER }
-                            } else {
-                                toList()
-                            }
-                        }.associateWith { stringResource(it.titleResId) },
+                    entries = extensionInstallerPref.entries
+                        .associateWith { stringResource(it.titleResId) },
                     onValueChanged = {
                         if (it == PreferenceValues.ExtensionInstaller.SHIZUKU &&
-                            !(context.isPackageInstalled("moe.shizuku.privileged.api") || Sui.isSui())
+                            !context.isShizukuInstalled
                         ) {
                             shizukuMissing = true
                             false

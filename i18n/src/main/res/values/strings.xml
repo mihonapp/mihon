@@ -305,7 +305,6 @@
     <string name="ext_installer_shizuku" translatable="false">Shizuku</string>
     <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
-    <string name="ext_miui_warning">If installing extensions isn\'t working, try disabling MIUI Optimization or tap here to download from the website instead.</string>
 
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>

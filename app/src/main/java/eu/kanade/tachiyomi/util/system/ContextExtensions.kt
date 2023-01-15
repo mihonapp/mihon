@@ -41,6 +41,7 @@ import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.lang.truncateCenter
 import logcat.LogPriority
+import rikka.sui.Sui
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -349,6 +350,10 @@ fun Context.isPackageInstalled(packageName: String): Boolean {
         false
     }
 }
+
+val Context.hasMiuiPackageInstaller get() = isPackageInstalled("com.miui.packageinstaller")
+
+val Context.isShizukuInstalled get() = isPackageInstalled("moe.shizuku.privileged.api") || Sui.isSui()
 
 fun Context.isInstalledFromFDroid(): Boolean {
     val installerPackageName = try {
