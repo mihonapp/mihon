@@ -24,7 +24,7 @@ fun Track.toMyAnimeListStatus() = when (status) {
     else -> null
 }
 
-fun getStatus(status: String) = when (status) {
+fun getStatus(status: String?) = when (status) {
     "reading" -> MyAnimeList.READING
     "completed" -> MyAnimeList.COMPLETED
     "on_hold" -> MyAnimeList.ON_HOLD

@@ -208,7 +208,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
         val obj = response.jsonObject
         return track.apply {
             val isRereading = obj["is_rereading"]!!.jsonPrimitive.boolean
-            status = if (isRereading) MyAnimeList.REREADING else getStatus(obj["status"]!!.jsonPrimitive.content)
+            status = if (isRereading) MyAnimeList.REREADING else getStatus(obj["status"]?.jsonPrimitive?.content)
             last_chapter_read = obj["num_chapters_read"]!!.jsonPrimitive.float
             score = obj["score"]!!.jsonPrimitive.int.toFloat()
             obj["start_date"]?.let {
