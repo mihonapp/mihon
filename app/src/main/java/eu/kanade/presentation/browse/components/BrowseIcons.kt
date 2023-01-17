@@ -31,6 +31,7 @@ import eu.kanade.domain.source.model.Source
 import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
+import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.util.lang.withIOContext
 
 private val defaultModifier = Modifier
@@ -60,9 +61,16 @@ fun SourceIcon(
                 modifier = modifier.then(defaultModifier),
             )
         }
-        else -> {
+        source.id == LocalSource.ID -> {
             Image(
                 painter = painterResource(R.mipmap.ic_local_source),
+                contentDescription = null,
+                modifier = modifier.then(defaultModifier),
+            )
+        }
+        else -> {
+            Image(
+                painter = painterResource(R.mipmap.ic_default_source),
                 contentDescription = null,
                 modifier = modifier.then(defaultModifier),
             )
@@ -90,14 +98,14 @@ fun ExtensionIcon(
         is Extension.Installed -> {
             val icon by extension.getIcon(density)
             when (icon) {
-                Result.Error -> Image(
-                    bitmap = ImageBitmap.imageResource(id = R.mipmap.ic_local_source),
-                    contentDescription = null,
-                    modifier = modifier,
-                )
                 Result.Loading -> Box(modifier = modifier)
                 is Result.Success -> Image(
                     bitmap = (icon as Result.Success<ImageBitmap>).value,
+                    contentDescription = null,
+                    modifier = modifier,
+                )
+                Result.Error -> Image(
+                    bitmap = ImageBitmap.imageResource(id = R.mipmap.ic_default_source),
                     contentDescription = null,
                     modifier = modifier,
                 )
