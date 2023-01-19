@@ -1030,10 +1030,10 @@ class ReaderActivity : BaseActivity() {
                 .onEach { theme ->
                     binding.readerContainer.setBackgroundResource(
                         when (theme) {
-                            0 -> android.R.color.white
+                            0 -> R.color.md_white_1000
                             2 -> R.color.reader_background_dark
                             3 -> automaticBackgroundColor()
-                            else -> android.R.color.black
+                            else -> R.color.md_black_1000
                         },
                     )
                 }
@@ -1088,7 +1088,7 @@ class ReaderActivity : BaseActivity() {
             return if (baseContext.isNightMode()) {
                 R.color.reader_background_dark
             } else {
-                android.R.color.white
+                R.color.md_white_1000
             }
         }
 
