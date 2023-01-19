@@ -6,6 +6,7 @@ plugins {
     id("com.android.application")
     id("com.mikepenz.aboutlibraries.plugin")
     kotlin("android")
+    id("tachiyomi.lint")
     kotlin("plugin.serialization")
     id("com.github.zellius.shortcut-helper")
     id("com.squareup.sqldelight")
@@ -345,11 +346,6 @@ tasks {
                     project.buildDir.absolutePath + "/compose_metrics"
             )
         }
-    }
-
-    preBuild {
-        val ktlintTask = if (System.getenv("GITHUB_BASE_REF") == null) formatKotlin else lintKotlin
-        dependsOn(ktlintTask)
     }
 }
 

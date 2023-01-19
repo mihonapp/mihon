@@ -29,6 +29,7 @@ open class Page(
 
     @Transient
     private val _progressFlow = MutableStateFlow(0)
+
     @Transient
     val progressFlow = _progressFlow.asStateFlow()
     var progress: Int

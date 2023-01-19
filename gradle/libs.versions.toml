@@ -89,6 +89,8 @@ voyager-navigator = { module = "ca.gosyer:voyager-navigator", version.ref = "voy
 voyager-tab-navigator = { module = "ca.gosyer:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "ca.gosyer:voyager-transitions", version.ref = "voyager" }
 
+kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.13.0"
+
 [bundles]
 reactivex = ["rxandroid", "rxjava", "rxrelay"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-dnsoverhttps"]
@@ -98,6 +100,3 @@ coil = ["coil-core", "coil-gif", "coil-compose"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 voyager = ["voyager-navigator", "voyager-tab-navigator", "voyager-transitions"]
 richtext = ["richtext-commonmark", "richtext-m3"]
-
-[plugins]
-kotlinter = { id = "org.jmailen.kotlinter", version = "3.13.0" }

@@ -3,6 +3,8 @@ agp_version = "7.4.0"
 lifecycle_version = "2.5.1"
 
 [libraries]
+gradle = { module = "com.android.tools.build:gradle", version.ref = "agp_version" }
+
 annotation = "androidx.annotation:annotation:1.5.0"
 appcompat = "androidx.appcompat:appcompat:1.6.0"
 biometricktx = "androidx.biometric:biometric-ktx:1.2.0-alpha05"
@@ -33,8 +35,3 @@ test-uiautomator = "androidx.test.uiautomator:uiautomator:2.2.0"
 [bundles]
 lifecycle = ["lifecycle-common", "lifecycle-process", "lifecycle-runtimektx"]
 workmanager = ["work-runtime", "guava"]
-
-[plugins]
-application = { id = "com.android.application", version.ref = "agp_version" }
-library = { id = "com.android.library", version.ref = "agp_version" }
-test = { id = "com.android.test", version.ref = "agp_version" }

@@ -3,12 +3,14 @@ plugins {
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinLibs.versions.kotlin.version.get()}")
-
+    implementation(androidxLibs.gradle)
+    implementation(kotlinLibs.gradle)
+    implementation(libs.kotlinter)
     implementation(gradleApi())
 }
 
 repositories {
+    gradlePluginPortal()
     mavenCentral()
     google()
 }
