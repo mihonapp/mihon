@@ -1,9 +1,8 @@
-package eu.kanade.data
+package tachiyomi.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.squareup.sqldelight.Query
-import eu.kanade.tachiyomi.Database
 import kotlin.properties.Delegates
 
 class QueryPagingSource<RowType : Any>(

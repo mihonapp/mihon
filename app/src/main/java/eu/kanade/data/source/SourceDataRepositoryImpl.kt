@@ -1,9 +1,9 @@
 package eu.kanade.data.source
 
-import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.source.model.SourceData
 import eu.kanade.domain.source.repository.SourceDataRepository
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.data.DatabaseHandler
 
 class SourceDataRepositoryImpl(
     private val handler: DatabaseHandler,

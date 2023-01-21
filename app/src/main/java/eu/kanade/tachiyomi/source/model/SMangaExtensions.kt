@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.source.model
 
-import data.Mangas
+import tachiyomi.data.Mangas
 
 fun SManga.copyFrom(other: Mangas) {
     if (other.author != null) {
@@ -16,7 +16,7 @@ fun SManga.copyFrom(other: Mangas) {
     }
 
     if (other.genre != null) {
-        genre = other.genre.joinToString(separator = ", ")
+        genre = other.genre!!.joinToString(separator = ", ")
     }
 
     if (other.thumbnail_url != null) {

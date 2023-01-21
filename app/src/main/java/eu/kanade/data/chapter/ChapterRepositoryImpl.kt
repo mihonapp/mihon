@@ -1,6 +1,5 @@
 package eu.kanade.data.chapter
 
-import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.repository.ChapterRepository
@@ -8,6 +7,7 @@ import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toLong
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
+import tachiyomi.data.DatabaseHandler
 
 class ChapterRepositoryImpl(
     private val handler: DatabaseHandler,

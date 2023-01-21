@@ -1,12 +1,12 @@
 package eu.kanade.data.history
 
-import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.history.model.HistoryUpdate
 import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
+import tachiyomi.data.DatabaseHandler
 
 class HistoryRepositoryImpl(
     private val handler: DatabaseHandler,

@@ -1,6 +1,5 @@
 package eu.kanade.data.source
 
-import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.source.model.Source
 import eu.kanade.domain.source.model.SourcePagingSourceType
 import eu.kanade.domain.source.model.SourceWithCount
@@ -11,6 +10,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.FilterList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import tachiyomi.data.DatabaseHandler
 
 class SourceRepositoryImpl(
     private val sourceManager: SourceManager,

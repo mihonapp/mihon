@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.source.model
 
-import data.Chapters
+import tachiyomi.data.Chapters
 
 fun SChapter.copyFrom(other: Chapters) {
     name = other.name

@@ -1,8 +1,7 @@
-package eu.kanade.data
+package tachiyomi.data
 
 import androidx.paging.PagingSource
 import com.squareup.sqldelight.Query
-import eu.kanade.tachiyomi.Database
 import kotlinx.coroutines.flow.Flow
 
 interface DatabaseHandler {

@@ -1,4 +1,4 @@
-package eu.kanade.data
+package tachiyomi.data
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job

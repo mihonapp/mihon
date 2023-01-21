@@ -1,9 +1,9 @@
 package eu.kanade.data.updates
 
-import eu.kanade.data.DatabaseHandler
 import eu.kanade.domain.updates.model.UpdatesWithRelations
 import eu.kanade.domain.updates.repository.UpdatesRepository
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.data.DatabaseHandler
 
 class UpdatesRepositoryImpl(
     val databaseHandler: DatabaseHandler,

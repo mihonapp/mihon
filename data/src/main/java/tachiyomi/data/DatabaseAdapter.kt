@@ -1,4 +1,4 @@
-package eu.kanade.data
+package tachiyomi.data
 
 import com.squareup.sqldelight.ColumnAdapter
 import eu.kanade.tachiyomi.source.model.UpdateStrategy

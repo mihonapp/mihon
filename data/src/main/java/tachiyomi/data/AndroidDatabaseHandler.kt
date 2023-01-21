@@ -1,4 +1,4 @@
-package eu.kanade.data
+package tachiyomi.data
 
 import androidx.paging.PagingSource
 import com.squareup.sqldelight.Query
@@ -7,7 +7,6 @@ import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
 import com.squareup.sqldelight.runtime.coroutines.mapToOneOrNull
-import eu.kanade.tachiyomi.Database
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
