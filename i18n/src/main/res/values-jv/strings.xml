@@ -159,7 +159,6 @@
     <string name="action_display_show_number_of_items">Tampilaken jumlah item</string>
     <string name="action_display_show_tabs">Tampilaken tab kategori</string>
     <string name="action_display_local_badge">Lokal manga</string>
-    <string name="action_display_unread_badge">Bab durung diwaca</string>
     <string name="action_display_download_badge">Chapter downloadan</string>
     <string name="action_display_comfortable_grid">Kothak penak</string>
     <string name="action_display_grid">Kothak kompak</string>

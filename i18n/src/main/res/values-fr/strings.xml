@@ -471,7 +471,6 @@
         <item quantity="other">Effectuée en %1$s avec %2$s erreurs</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Impossible d\'ouvrir les paramètres de l\'appareil</string>
-    <string name="action_display_unread_badge">Chapitres non lus</string>
     <string name="pref_refresh_library_covers">Actualiser les couvertures de la bibliothèque</string>
     <string name="tracking_info">Synchronisation à sens unique pour mettre à jour la progression du chapitre dans les services de suivi. Configurez le suivi des entrées individuelles à partir de leur bouton de suivi.</string>
     <string name="unofficial_extension_message">Cette extension ne fait pas partie de la liste des extensions officielles de Tachiyomi.</string>
@@ -705,9 +704,6 @@
     <string name="webtoon_side_padding_5">5 %</string>
     <string name="action_show_manga">Afficher l\'entrée</string>
     <string name="action_display_cover_only_grid">Grille avec seulement la couverture</string>
-    <string name="confirm_manga_add_duplicate">Vous avez une entrée dans votre bibliothèque portant le même nom mais provenant d\'une source différente (%1$s).
-\n
-\nSouhaitez-vous toujours continuer \?</string>
     <string name="pref_navigate_pan">Panoramique des images larges en appuyant</string>
     <string name="pref_landscape_zoom">Agrandir les images en paysage</string>
     <string name="pref_update_only_started">Qui n\'ont pas encore commencé</string>
@@ -809,14 +805,12 @@
 \nAppuyez pour en savoir plus.</string>
     <string name="information_no_entries_found">Aucune entrée trouvée dans cette catégorie</string>
     <string name="download_notifier_cache_renewal">Indexation des téléchargements</string>
-    <string name="channel_downloader_cache">Indexation</string>
     <string name="action_display_show_continue_reading_button">Afficher le bouton Continuer la lecture</string>
     <string name="track_remove_start_date_conf_text">Ceci supprimera la date de début que vous avez précédemment sélectionnée dans la base de données de %s</string>
     <string name="other_header">Autre</string>
     <string name="track_remove_date_conf_title">Retirer la date \?</string>
     <string name="track_remove_finish_date_conf_text">Ceci supprimera la date de fin que vous aviez précédemment sélectionnée dans la base de données de %s</string>
     <string name="pref_invalidate_download_cache">Invalider l\'index des téléchargements</string>
-    <string name="enhanced_tracking_warning">Ce tracker est uniquement compatible avec la source %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Forcer l\'application à revérifier les chapitres téléchargés</string>
     <string name="label_stats">Statistiques</string>
     <string name="label_overview_section">Aperçu</string>
@@ -841,4 +835,11 @@
     <string name="label_tracked_titles">Entrées suivies</string>
     <string name="label_mean_score">Note moyenne</string>
     <string name="pref_library_update_show_tab_badge">Afficher le nombre de chapitres non lus sur l\'icône des mises à jour</string>
+    <string name="copied_to_clipboard_plain">Copier dans le presse-papier</string>
+    <string name="pref_skip_dupe_chapters">Passer les chapitres en double</string>
+    <string name="confirm_add_duplicate_manga">Il existe un enregistrement dans la bibliothèque avec le même nom.
+\n
+\nVoulez-vous continuer \?</string>
+    <string name="track_error">%1$s erreur : %2$s</string>
+    <string name="enhanced_services_not_installed">Disponible mais la source n\'est pas installée : %s</string>
 </resources>

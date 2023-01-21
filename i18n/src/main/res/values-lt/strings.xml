@@ -22,9 +22,9 @@
     <string name="label_backup">Atsarginė kopija ir atkūrimas</string>
     <string name="label_sources">Šaltiniai</string>
     <string name="label_recent_manga">Istorija</string>
-    <string name="label_recent_updates">Naujiniai</string>
+    <string name="label_recent_updates">Naujienos</string>
     <string name="label_library">Biblioteka</string>
-    <string name="label_download_queue">Atsisiuntimų sąrašas</string>
+    <string name="label_download_queue">Atsisiuntimų eilė</string>
     <string name="label_settings">Nustatymai</string>
     <string name="label_more">Daugiau</string>
     <string name="name">Vardas</string>
@@ -136,7 +136,6 @@
     <string name="action_display_show_number_of_items">Rodyti įrašų skaičių</string>
     <string name="action_display_show_tabs">Rodyti kategorijų korteles</string>
     <string name="action_display_local_badge">Vietinis šaltinis</string>
-    <string name="action_display_unread_badge">Neperskaityti skyriai</string>
     <string name="action_display_download_badge">Atsisiųsti skyriai</string>
     <string name="action_display_list">Sąrašas</string>
     <string name="action_display_comfortable_grid">Patogus tinklelis</string>
@@ -398,7 +397,7 @@
         <item quantity="other">%1$d nauji skyriai</item>
     </plurals>
     <string name="clear_history_completed">Istorija ištrinta</string>
-    <string name="decode_image_error">Nepavyko įkelti vaizdo</string>
+    <string name="decode_image_error">Nepavyko pakrauti paveikslėlio</string>
     <string name="page_list_empty_error">Puslapių nerasta</string>
     <string name="clear_history_confirmation">Ar tu tuo tikras\? Visa istorija bus prarasta.</string>
     <string name="confirm_set_image_as_cover">Naudoti šį paveiksliuką kaip viršelį\?</string>
@@ -559,7 +558,7 @@
     <string name="download_notifier_title_error">Klaida</string>
     <string name="download_notifier_text_only_wifi">Nėra „Wi-Fi“ ryšio</string>
     <string name="channel_progress">Progresas</string>
-    <string name="backup_in_progress">Atsarginė jau kopija kuriama</string>
+    <string name="backup_in_progress">Atsarginė kopija jau kuriama</string>
     <string name="download_queue_size_warning">Įspėjimas: dėl didelių masinių atsisiuntimų šaltiniai gali tapti lėtesni ir (arba) jie blokuoti \"Tachiyomi\". Bakstelėkite , jei norite sužinoti daugiau.</string>
     <string name="update_check_fdroid_migration_info">Nauja versija pasiekiama oficialiuose leidiniuose. Bakstelėkite , kad sužinotumėte, kaip pereiti iš neoficialių \"F-Droid\" leidinių.</string>
     <string name="pref_disable_battery_optimization">Išjungti akumuliatoriaus optimizavimą</string>
@@ -604,9 +603,6 @@
     <string name="last_used_source">Paskutinį kartą naudotas</string>
     <string name="chapter_not_found">Skyrius nerastas</string>
     <string name="publishing_finished">Skaitinis nepublikuojamas</string>
-    <string name="confirm_manga_add_duplicate">Bibliotekoje turite įrašą tokiu pačiu pavadinimu, bet iš kito šaltinio (%1$s).
-\n
-\nAr vis dar norite tęsti\?</string>
     <string name="tabs_header">Skirtukai</string>
     <string name="pref_enable_acra">Siųsti strigčių ataskaitas</string>
     <string name="plan_to_read">Planuojama skaityti</string>
@@ -768,9 +764,8 @@
     <string name="crash_screen_description">%s susidūrė su netikėta klaida. Siūlome padaryti šio pranešimo ekrano nuotrauką, išsisaugoti gedimų žurnalus ir pasidalyti tuo mūsų „Discord“ palaikymo kanale.</string>
     <string name="are_you_sure">Ar esate tikri\?</string>
     <string name="popular">Populiaru</string>
-    <string name="crash_screen_title">Įvyko netikėta klaida</string>
+    <string name="crash_screen_title">Ups!</string>
     <string name="crash_screen_restart_application">Iš naujo paleiskite programą</string>
-    <string name="channel_downloader_cache">Indeksavimas</string>
     <string name="download_notifier_cache_renewal">Indeksuojami atsisiuntimai</string>
     <string name="fdroid_warning">F-Droid versijos oficialiai nepalaikomos.
 \nBakstelėkite, kad sužinotumėte daugiau.</string>
@@ -781,7 +776,6 @@
     <string name="track_remove_finish_date_conf_text">Tai pašalins jūsų anksčiau pasirinktą pabaigos datą iš %s</string>
     <string name="track_remove_date_conf_title">Pašalinti datą\?</string>
     <string name="track_remove_start_date_conf_text">Tai pašalins jūsų anksčiau pasirinktą pradžios datą iš %s</string>
-    <string name="enhanced_tracking_warning">Šis sekimo įrenginys suderinamas tik su %1$s šaltiniu.</string>
     <string name="pref_invalidate_download_cache">Atsisiuntimų indekso panaikinimas</string>
     <string name="pref_invalidate_download_cache_summary">Priversti programėlę iš naujo patikrinti atsisiųstus skyrius</string>
     <string name="label_downloaded">Atsiųsta</string>
@@ -805,4 +799,12 @@
     <string name="label_local">Vietiniai</string>
     <string name="minute_short">%d min.</string>
     <string name="action_not_now">Ne dabar</string>
+    <string name="information_no_manga_category">Kategorija yra tuščia</string>
+    <string name="copied_to_clipboard_plain">Nukopijuota į iškarpinę</string>
+    <string name="enhanced_services_not_installed">Turima, bet šaltinis nėra įdiegtas: %s</string>
+    <string name="pref_library_update_show_tab_badge">Rodyti neperskaitytų skaičių ant Naujienų piktogramos</string>
+    <string name="pref_skip_dupe_chapters">Praleisti pasikartojančius skyrius</string>
+    <string name="confirm_add_duplicate_manga">Bibliotekoje jau turite įrašą tokiu pačiu pavadinimu.
+\n
+\nAr vis tiek norite tęsti\?</string>
 </resources>

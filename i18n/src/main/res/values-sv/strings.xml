@@ -429,7 +429,6 @@
         <item quantity="other">Klar på %1$s med %2$s fel</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Det gick inte att öppna enhetsinställningarna</string>
-    <string name="action_display_unread_badge">Olästa kapitel</string>
     <string name="pref_refresh_library_covers">Uppdatera bibliotekets omslag</string>
     <string name="tracking_info">Envägssynkronisering för att uppdatera kapitelförloppet i spårningstjänster. Ställ in spårning för enskilda manga från spårningsknappen under manga info.</string>
     <string name="sort_by_upload_date">Efter uppladdningsdatum</string>
@@ -661,9 +660,6 @@
     <string name="action_display_cover_only_grid">Endast omslags-rutnät</string>
     <string name="pref_update_only_started">Som inte har startats</string>
     <string name="pref_navigate_pan">Panorera breda sidor med tryck</string>
-    <string name="confirm_manga_add_duplicate">Du har en post i ditt bibliotek med samma namn men från en annan källa (%1$s).
-\n
-\nVill du fortfarande fortsätta\?</string>
     <string name="pref_landscape_zoom">Zooma in landskapsbilden</string>
     <string name="skipped_reason_completed">Hoppade över eftersom serien är klar</string>
     <string name="skipped_reason_not_caught_up">Hoppade över eftersom det finns olästa kapitel</string>
@@ -757,4 +753,16 @@
     <string name="crash_screen_title">Ett oväntat fel inträffade</string>
     <string name="pref_advanced_summary">Dumpa krasch logg, batterioptimering</string>
     <string name="pref_security_summary">Applikations lås, säkerhetsskärm</string>
+    <string name="label_stats">Statistik</string>
+    <string name="label_started">Påbörjade</string>
+    <string name="label_local">Lokala</string>
+    <string name="label_downloaded">Nedladdade</string>
+    <string name="enhanced_services_not_installed">Tillgänglig men källan är ej installerad: %s</string>
+    <string name="pref_library_update_show_tab_badge">Visa antal olästa på ikonen för Uppdateringar</string>
+    <string name="pref_skip_dupe_chapters">Hoppa över duplicerade kapitel</string>
+    <string name="action_display_show_continue_reading_button">Visa knappen för att återuppta läsning</string>
+    <string name="action_not_now">Inte nu</string>
+    <string name="action_open_random_manga">Öppna en slumpmässig manga</string>
+    <string name="pref_invalidate_download_cache">Gör nedladdningsindexet ogiltigt</string>
+    <string name="pref_invalidate_download_cache_summary">Tvinga appen att läsa in nedladdade kapitel på nytt</string>
 </resources>

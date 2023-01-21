@@ -187,7 +187,6 @@
     <string name="action_pin">Fixar</string>
     <string name="action_disable">Deshabilitar</string>
     <string name="action_display_show_tabs">Amosar pestanas de categorías</string>
-    <string name="action_display_unread_badge">Insignias sen ler</string>
     <string name="action_display_download_badge">Descargar insignias</string>
     <string name="action_display_comfortable_grid">Reixa cómoda</string>
     <string name="action_display_list">Lista</string>

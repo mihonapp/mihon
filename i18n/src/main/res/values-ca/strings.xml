@@ -336,7 +336,7 @@
     <string name="information_cloudflare_bypass_failure">No s\'ha pogut evitar el Cloudflare</string>
     <string name="information_webview_outdated">Actualitzeu l\'aplicació de WebView per a tenir més bona compatibilitat</string>
     <string name="channel_new_chapters">Novetats de capítols</string>
-    <string name="unlock_app">Desbloca Tachiyomi</string>
+    <string name="unlock_app">Desbloca el Tachiyomi</string>
     <string name="secure_screen_summary">El mode discret amaga el contingut de l\'aplicació en canviar entre aplicacions i bloca les captures de pantalla</string>
     <string name="pref_category_display">Visualització</string>
     <plurals name="notification_chapters_generic">
@@ -429,7 +429,6 @@
         <item quantity="one">%d categoria</item>
         <item quantity="other">%d categories</item>
     </plurals>
-    <string name="action_display_unread_badge">Capítols no llegits</string>
     <string name="tracking_info">La sincronització és unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment. Configureu el seguiment d\'elements individuals al seu botó de seguiment.</string>
     <string name="pref_refresh_library_covers">Refresca les portades de la biblioteca</string>
     <string name="unofficial_extension_message">Aquesta extensió no pertany a la llista d\'extensions oficials del Tachiyomi.</string>
@@ -659,9 +658,6 @@
     <string name="notification_size_warning">Les actualitzacions grosses perjudiquen les fonts i poden implicar actualitzacions més lentes i un augment en l\'ús de bateria. Premeu per a obtenir-ne més informació.</string>
     <string name="pref_landscape_zoom">Amplia la imatge en horitzontal</string>
     <string name="action_show_manga">Mostra l\'element</string>
-    <string name="confirm_manga_add_duplicate">Teniu un element a la vostra biblioteca amb el mateix nom però d\'una font diferent (%1$s).
-\n
-\nVoleu continuar igualment\?</string>
     <string name="pref_navigate_pan">Fes panoràmiques les imatges amples en fer un toc</string>
     <string name="action_display_cover_only_grid">Graella només a la portada</string>
     <string name="pref_update_only_started">Que no s\'hagin començat</string>
@@ -730,7 +726,7 @@
     <string name="invalid_location">Ubicació invàlida: %s</string>
     <string name="auto_download_while_reading">Baixa automàticament mentre es llegeix</string>
     <string name="download_ahead_info">Només funciona en elements de la biblioteca i si el capítol actual i el següent ja estan baixats</string>
-    <string name="crash_screen_title">S\'ha produït un error inesperat</string>
+    <string name="crash_screen_title">Ups!</string>
     <string name="crash_screen_description">S\'ha produït un error inesperat al %s. Us suggerim que feu una captura de pantalla d\'aquest missatge, bolqueu els registres d\'errors i els compartiu amb el nostre canal d\'assistència al Discord.</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">El següent capítol no llegit</item>
@@ -757,8 +753,7 @@
     <string name="pref_long_strip_split">Divideix les imatges altes (BETA)</string>
     <string name="action_search_hint">Cerca…</string>
     <string name="updates_last_update_info">Biblioteca actualitzada per darrera vegada: %s</string>
-    <string name="download_notifier_cache_renewal">S\'estan indexant les baixades</string>
-    <string name="channel_downloader_cache">Indexació</string>
+    <string name="download_notifier_cache_renewal">S\'estan comprovant les baixades</string>
     <string name="action_open_random_manga">Obre un element aleatori</string>
     <string name="fdroid_warning">Les compilacions de F-Droid no tenen assistència oficial.
 \nPremeu per a obtenir-ne més informació.</string>
@@ -769,6 +764,24 @@
     <string name="track_remove_finish_date_conf_text">S\'eliminarà la data de finalització seleccionada de %s</string>
     <string name="track_remove_date_conf_title">Voleu eliminar-ne la data\?</string>
     <string name="track_remove_start_date_conf_text">S\'eliminarà la data d\'inici seleccionada de %s</string>
-    <string name="enhanced_tracking_warning">Aquest seguidor només és compatible amb la font %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Força que l\'aplicació torni a comprovar els capítols baixats</string>
+    <string name="label_stats">Estadístiques</string>
+    <string name="label_local">Local</string>
+    <string name="label_downloaded">Baixats</string>
+    <string name="label_started">Començats</string>
+    <string name="copied_to_clipboard_plain">S\'ha copiat al porta-retalls</string>
+    <string name="label_read_chapters">Llegits</string>
+    <string name="label_total_chapters">Totals</string>
+    <string name="pref_library_update_show_tab_badge">Mostra el recompte de no llegits a la icona d\'Actualitzacions</string>
+    <string name="pref_skip_dupe_chapters">Omet els capítols duplicats</string>
+    <string name="enhanced_services_not_installed">Disponible però la font no està instal·lada: %s</string>
+    <string name="confirm_add_duplicate_manga">Ja teniu un element a la biblioteca amb el mateix nom.
+\n
+\nVoleu continuar igualment\?</string>
+    <string name="label_read_duration">Temps de lectura</string>
+    <string name="label_titles_section">Elements</string>
+    <string name="label_completed_titles">Elements completats</string>
+    <string name="track_error">Error %1$s: %2$s</string>
+    <string name="action_not_now">Ara no</string>
+    <string name="label_titles_in_global_update">A l\'actualització global</string>
 </resources>

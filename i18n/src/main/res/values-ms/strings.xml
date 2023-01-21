@@ -421,7 +421,6 @@
     <plurals name="restore_completed_message">
         <item quantity="other">Selesai dalam %1$s dengan %2$s ralat</item>
     </plurals>
-    <string name="action_display_unread_badge">Bab belum dibaca</string>
     <string name="tracking_info">Sinkron satu hala untuk kemas kini bab kemajuan dalam sistem penjejakan. Sediakan penjejakan untuk entri individu daripada butang penjejakan mereka.</string>
     <string name="pref_refresh_library_covers">Segar semula muka hadapan pustaka</string>
     <string name="sort_by_upload_date">Mengikut tarikh muat naik</string>
@@ -646,9 +645,6 @@
     <string name="action_faq_and_guides">Soalan Lazim dan Panduan</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Tunjuk entri</string>
-    <string name="confirm_manga_add_duplicate">Anda mempunyai entri yang mempunyai nama yang sama tetapi daripada sumber yang berlainan (%1$s).
-\n
-\nAdakah anda masih ingin meneruskan\?</string>
     <string name="action_display_cover_only_grid">Cuma grid muka hadapan</string>
     <string name="skipped_reason_completed">Dilangkau kerana siri sudah lengkap</string>
     <string name="pref_update_only_started">Yang mana bacaan belum dimulakan</string>
@@ -746,8 +742,7 @@
     <string name="updates_last_update_info_just_now">Sebentar tadi</string>
     <string name="action_open_random_manga">Buka entri rawak</string>
     <string name="information_no_entries_found">Tiada entri dijumpai di kategori ini</string>
-    <string name="download_notifier_cache_renewal">Mengindeks muat turun</string>
-    <string name="channel_downloader_cache">Pengindeksan</string>
+    <string name="download_notifier_cache_renewal">Menyemak muat turun</string>
     <string name="fdroid_warning">Binaan F-Droid tidak disokong secara rasmi.
 \nKetik untuk mengetahui lebih lanjut.</string>
     <string name="action_display_show_continue_reading_button">Tunjuk butang sambung membaca</string>
@@ -757,7 +752,6 @@
     <string name="track_remove_start_date_conf_text">Ini akan membuang tarikh mula yang dipilih oleh anda sebelum ini dari %s</string>
     <string name="track_remove_finish_date_conf_text">Ini akan membuang tarikh selesai yang dipilih oleh anda sebelum ini dari %s</string>
     <string name="pref_invalidate_download_cache_summary">Memaksa aplikasi untuk semak semula bab dimuat turun</string>
-    <string name="enhanced_tracking_warning">Penjejak ini hanya boleh digunakan dengan sumber %1$s sahaja.</string>
     <string name="label_local">lokal</string>
     <string name="label_downloaded">Dimuat turun</string>
     <string name="label_titles_in_global_update">Dalam kemas kini keseluruhan</string>
@@ -781,4 +775,13 @@
     <string name="action_not_now">Bukan sekarang</string>
     <string name="information_no_manga_category">Kategori kosong</string>
     <string name="pref_library_update_show_tab_badge">Tunjuk bilangan belum dibaca pada ikon Kemas kini</string>
+    <string name="pref_skip_dupe_chapters">Langkau bab pendua</string>
+    <string name="enhanced_services_not_installed">Tersedia tetapi sumber tidak dipasang: %s</string>
+    <string name="copied_to_clipboard_plain">Disalin ke papan keratan</string>
+    <string name="pref_worker_info">Maklumat Worker</string>
+    <string name="track_error">%1$s ralat: %2$s</string>
+    <string name="confirm_add_duplicate_manga">Entri di dalam pustaka anda mempunyai nama yang sama.
+\n
+\nAdakah anda ingin meneruskan\?</string>
+    <string name="information_required_plain">*diperlukan</string>
 </resources>

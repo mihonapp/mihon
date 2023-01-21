@@ -342,7 +342,6 @@
     <string name="action_unpin">برداشتن پین</string>
     <string name="action_pin">پین</string>
     <string name="action_display_show_tabs">نمایش برگه های دسته بندی</string>
-    <string name="action_display_unread_badge">قسمت‌های خوانده‌نشده</string>
     <string name="action_display_download_badge">قسمت‌های دانلود شده</string>
     <string name="action_display_comfortable_grid">چشم نواز</string>
     <string name="action_display_list">لیست</string>

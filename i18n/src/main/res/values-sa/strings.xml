@@ -76,7 +76,6 @@
     <string name="action_display_grid">सुसम्बद्धा ग्रिड्-शैली</string>
     <string name="action_display_list">सूची</string>
     <string name="action_display_download_badge">अवारोपिताः अध्यायाः</string>
-    <string name="action_display_unread_badge">अपठिताः अध्यायाः</string>
     <string name="action_display_local_badge">स्थानीयाः माङ्गाः</string>
     <string name="action_display_show_tabs">वर्गीयाः पीठिकाः दर्शयतु</string>
     <string name="action_disable">अशक्तं करोतु</string>

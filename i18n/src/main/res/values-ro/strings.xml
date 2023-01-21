@@ -437,7 +437,6 @@
         <item quantity="few">Gata în %1$s cu %2$s erori</item>
         <item quantity="other">Gata în %1$s cu %2$s erori</item>
     </plurals>
-    <string name="action_display_unread_badge">Capitole necitite</string>
     <string name="tracking_info">Sincronizare unidirecțională pentru actualizarea progresului capitolului în cadrul serviciilor de urmărire. Configurați urmărirea pentru intrările individuale din butonul de urmărire al acestora.</string>
     <string name="pref_refresh_library_covers">Reîmprospătarea coperților bibliotecii</string>
     <string name="sort_by_upload_date">După data încărcării</string>
@@ -615,9 +614,6 @@
     <string name="action_show_manga">Afișează intrarea</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Instalați și porniți Shizuku pentru a utiliza Shizuku ca instalator de extensii.</string>
     <string name="clear_database_source_item_count">%1$d intrări non-bibliotecare în baza de date</string>
-    <string name="confirm_manga_add_duplicate">Aveți o intrare în bibliotecă cu același nume, dar de la o sursă diferită (%1$s).
-\n
-\nMai doriți să continuați\?</string>
     <string name="download_notifier_split_page_not_found">Pagina %d nu a fost găsită în timpul divizării</string>
     <string name="delete_category_confirmation">Doriți să ștergeți categoria \"%s\"\?</string>
     <string name="internal_error">InternalError: Verificați jurnalele de accident pentru informații suplimentare</string>
@@ -773,7 +769,6 @@
     <string name="action_display_show_continue_reading_button">Afișați butonul de continuare a cititului</string>
     <string name="information_no_entries_found">Nu s-au găsit intrări în această categorie</string>
     <string name="track_remove_finish_date_conf_text">Acest lucru va elimina data de finalizare selectată anterior din %s</string>
-    <string name="channel_downloader_cache">Indexare</string>
     <string name="pref_invalidate_download_cache">Indexul descărcărilor invalid</string>
     <string name="download_notifier_cache_renewal">Descărcări de indexare</string>
     <string name="other_header">Altele</string>
@@ -783,7 +778,6 @@
 \nApăsați pentru a afla mai multe.</string>
     <string name="action_open_random_manga">Deschideți aleatoriu</string>
     <string name="pref_invalidate_download_cache_summary">Obligați aplicația să refacă verificarea capitolelor descărcate</string>
-    <string name="enhanced_tracking_warning">Acest tracker este compatibil numai cu sursa %1$s.</string>
     <string name="pref_library_update_show_tab_badge">Afiseaza numarul de notificari necitite pe pictorgrama Actualizari</string>
     <string name="label_stats">Statistici</string>
     <string name="label_local">Local</string>

@@ -53,7 +53,6 @@
     <string name="action_display_list">სია</string>
     <string name="action_display_comfortable_grid">კომფორტული ბადე</string>
     <string name="action_display_download_badge">გადმოწერის ნიშნაკი</string>
-    <string name="action_display_unread_badge">წაუკითხავების ნიშნაკი</string>
     <string name="action_display_show_tabs">კატეგორიის ჩანართების ჩვენება</string>
     <string name="action_cancel">გააუქმე</string>
     <string name="action_cancel_all">გააუქმე ყველა</string>

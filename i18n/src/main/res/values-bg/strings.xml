@@ -465,7 +465,6 @@
         <item quantity="one">%d категория</item>
         <item quantity="other">%d категории</item>
     </plurals>
-    <string name="action_display_unread_badge">Непрочетени глави</string>
     <string name="action_migrate">Мигрирай</string>
     <string name="loader_not_implemented_error">Източникът не е намерен</string>
     <string name="page_list_empty_error">Няма намерени страници</string>
@@ -736,9 +735,6 @@
     <string name="empty_screen">Това е неудобно</string>
     <string name="notification_update_skipped">%1$d пропуснати обновление/я</string>
     <string name="cancelled">Отменена</string>
-    <string name="confirm_manga_add_duplicate">Имате заглавие в библиотеката със същото име, но от различен източник (%1$s).
-\n
-\nИскате ли да продължите\?</string>
     <string name="library_errors_help">За помощ при оправянето на грешки с обновленията, виж %1$s</string>
     <string name="theme_tidalwave">Приливна вълна</string>
     <string name="action_sort_unread_count">Брой непрочетени</string>

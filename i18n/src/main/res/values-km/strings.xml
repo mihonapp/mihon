@@ -100,7 +100,6 @@
     <string name="action_show_manga">បង្ហាញម៊េងហ្គា</string>
     <string name="action_open_in_web_view">បើកនៅក្នុងWebView</string>
     <string name="action_migrate">ប្ដូរ</string>
-    <string name="action_display_unread_badge">ភាគដែលមិនទាន់បានអាន</string>
     <string name="action_display_show_number_of_items">បង្ហាញចំនួនលេខនៃធាតុ</string>
     <string name="action_move_to_top">យកទៅខាងលើ</string>
     <string name="action_move_to_bottom">យកទៅខាងក្រោម</string>

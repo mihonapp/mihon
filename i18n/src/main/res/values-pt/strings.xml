@@ -461,7 +461,6 @@
         <item quantity="many">%d categorias</item>
         <item quantity="other">%d categorias</item>
     </plurals>
-    <string name="action_display_unread_badge">Capítulos não lidos</string>
     <string name="battery_optimization_setting_activity_not_found">Não foi possível abrir as definições do aparelho</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Concluído em %1$s com %2$s erro</item>
@@ -708,9 +707,6 @@
     <string name="skipped_reason_not_started">Ignorado porque nenhum capítulo foi lido</string>
     <string name="channel_skipped">Ignorado</string>
     <string name="skipped_reason_not_caught_up">Ignorado porque existem capítulos não lidos</string>
-    <string name="confirm_manga_add_duplicate">Tem uma entrada na sua biblioteca com o mesmo nome mas de uma fonte diferente (%1$s)
-\n
-\nAinda deseja continuar\?</string>
     <string name="empty_backup_error">Sem entradas na biblioteca para fazer cópia de segurança</string>
     <string name="pref_update_only_started">Que não começaram a ser lidos</string>
     <string name="pref_clear_webview_data">Limpar dados do WebView</string>
@@ -746,7 +742,7 @@
     <string name="delete_category_confirmation">Deseja apagar a categoria \"%s\"\?</string>
     <string name="delete_category">Apagar categoria</string>
     <string name="internal_error">InternalError: Verifique registos de falhas para mais informações</string>
-    <string name="error_user_agent_string_blank">String de agente de usuário não pode estar em branco</string>
+    <string name="error_user_agent_string_blank">Cadeia de agente de utilizador não pode estar em branco</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Próximo capítulo não lido</item>
         <item quantity="many">Próximos %d capítulos não lidos</item>
@@ -771,8 +767,8 @@
     <string name="download_ahead">Transferência em antecedência</string>
     <string name="on_hold_list">Lista dos Em Espera</string>
     <string name="ext_info_age_rating">Classificação etária</string>
-    <string name="pref_reset_user_agent_string">Redefinir string de agente de usuário predefinido</string>
-    <string name="pref_user_agent_string">String de agente de usuário padrão</string>
+    <string name="pref_reset_user_agent_string">Redefinir cadeia de agente de utilizador predefinido</string>
+    <string name="pref_user_agent_string">Cadeia de agente de utilizador padrão</string>
     <string name="not_installed">Não instalado</string>
     <string name="cant_open_last_read_chapter">Incapaz de abrir último capítulo lido</string>
     <string name="custom_cover">Capa personalizada</string>

@@ -124,7 +124,7 @@
     <string name="webtoon_viewer">条漫</string>
     <string name="pager_viewer">单页式</string>
     <string name="pref_image_scale_type">缩放模式</string>
-    <string name="scale_type_fit_screen">填充屏幕</string>
+    <string name="scale_type_fit_screen">适应屏幕</string>
     <string name="scale_type_stretch">拉伸</string>
     <string name="scale_type_fit_width">适应宽度</string>
     <string name="scale_type_fit_height">适应高度</string>
@@ -421,7 +421,6 @@
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">无法打开设备设置</string>
     <string name="pref_true_color_summary">减少色带，但可能会影响性能</string>
-    <string name="action_display_unread_badge">未读章节</string>
     <string name="pref_refresh_library_covers">刷新书架封面</string>
     <string name="tracking_info">将阅读进度上传到进度记录平台。在作品页面点击“进度记录”按钮即可设置。</string>
     <string name="unofficial_extension_message">此插件不是 Tachiyomi 官方插件</string>
@@ -649,9 +648,6 @@
     <string name="action_display_cover_only_grid">封面网格</string>
     <string name="pref_landscape_zoom">放大横向图片</string>
     <string name="pref_navigate_pan">图片放大时先平移再翻页</string>
-    <string name="confirm_manga_add_duplicate">库中有一个名称相同但图源不同（%1$s）的条目。
-\n
-\n你仍希望继续吗？</string>
     <string name="pref_update_only_started">尚未开始阅读</string>
     <string name="skipped_reason_completed">已跳过，因为作品已完结</string>
     <string name="skipped_reason_not_caught_up">已跳过，因为有未读章节</string>
@@ -744,8 +740,7 @@
     <string name="invalid_location">无效位置：%s</string>
     <string name="error_user_agent_string_invalid">User Agent 字符串无效</string>
     <string name="updates_last_update_info_just_now">刚才</string>
-    <string name="channel_downloader_cache">下载索引</string>
-    <string name="download_notifier_cache_renewal">正在建立下载索引</string>
+    <string name="download_notifier_cache_renewal">正在扫描已下载章节</string>
     <string name="action_open_random_manga">随机打开作品</string>
     <string name="information_no_entries_found">此分类没有作品</string>
     <string name="fdroid_warning">F-Droid 渠道不受官方支持。
@@ -756,7 +751,6 @@
     <string name="track_remove_date_conf_title">要删除日期吗？</string>
     <string name="track_remove_start_date_conf_text">将会删除之前在 %s 中标记的开始日期</string>
     <string name="track_remove_finish_date_conf_text">将会删除之前在 %s 中标记的结束日期</string>
-    <string name="enhanced_tracking_warning">此平台只有 %1$s 图源才能使用。</string>
     <string name="pref_invalidate_download_cache_summary">强制重新扫描已下载的章节</string>
     <string name="label_stats">统计</string>
     <string name="label_local">本地</string>
@@ -783,5 +777,11 @@
     <string name="information_no_manga_category">分类为空</string>
     <string name="pref_worker_info">Worker 信息</string>
     <string name="copied_to_clipboard_plain">已复制到剪贴板</string>
-    <string name="ext_miui_warning">MIUI 优化启用时可能无法正常安装插件，请到官网下载安装</string>
+    <string name="enhanced_services_not_installed">支持以下平台但图源尚未安装：%s</string>
+    <string name="pref_skip_dupe_chapters">跳过重复章节</string>
+    <string name="confirm_add_duplicate_manga">书架中已有同名作品。
+\n
+\n要继续添加吗？</string>
+    <string name="track_error">%1$s 发生错误：%2$s</string>
+    <string name="information_required_plain">*必填</string>
 </resources>

@@ -52,7 +52,6 @@
     <string name="action_cancel">ರದ್ದುಮಾಡಿ</string>
     <string name="action_unpin">ತೆಗೆದುಹಾಕಿ</string>
     <string name="action_pin">ಚುಚ್ಚು</string>
-    <string name="action_display_unread_badge">ಓದದ್ ಗುರುತುಗಳು</string>
     <string name="action_display_download_badge">ಡೌನಲೋಡ್ ಗುರುತುಗಳು</string>
     <string name="action_display_list">ಪಟ್ಟಿ</string>
     <string name="action_display_grid">ಕಾಂಪ್ಯಾಕ್ಟ್ ಗ್ರಿಡ್</string>

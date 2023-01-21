@@ -335,7 +335,6 @@
     <string name="action_disable">Kikapcsolás</string>
     <string name="action_display_show_number_of_items">Tárgyak számának mutatása</string>
     <string name="action_display_show_tabs">Kategória fülek mutatása</string>
-    <string name="action_display_unread_badge">Olvasatlan jelvények</string>
     <string name="action_display_comfortable_grid">Kényelmes rács</string>
     <string name="action_sort_chapter_fetch_date">Lekérési dátum</string>
     <string name="restrictions">Korlátozások: %s</string>
@@ -698,9 +697,6 @@
     <string name="pref_acra_summary">Segít a hibák javításában. Semmilyen bizalmas információ nem lesz elküldve</string>
     <string name="cancelled">Félbeszakított</string>
     <string name="on_hiatus">Szünetelő</string>
-    <string name="confirm_manga_add_duplicate">Már van a könyvtárban elem ilyen néven, csak más forrásból (%1$s).
-\n
-\nAkarja folytatni\?</string>
     <string name="show_title">Forrás címe</string>
     <string name="sort_by_source">Forrás szerint</string>
     <string name="sort_by_number">Fejezetek száma szerint</string>

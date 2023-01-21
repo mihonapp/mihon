@@ -463,7 +463,6 @@
     <string name="ext_unofficial">غير رسمي</string>
     <string name="pref_library_update_refresh_metadata_summary">تحقق من وجود غلاف جديد وتفاصيل جديدة عند تحديث المكتبة</string>
     <string name="pref_library_update_refresh_metadata">تحديث البيانات الوصفية تلقائياً</string>
-    <string name="action_display_unread_badge">الفصول غير المقروءة</string>
     <plurals name="restore_completed_message">
         <item quantity="zero">تم في %1$s مع %2$sأخطاء</item>
         <item quantity="one">تم في %1$s ووجد خطأ واحد</item>
@@ -709,9 +708,6 @@
     <string name="action_display_cover_only_grid">شبكة بالاغلفة</string>
     <string name="skipped_reason_not_started">تم التخطي لعدم وجود فصول مقروءه</string>
     <string name="skipped_reason_not_caught_up">تم التخطي لوجود فصول غير مقروءه</string>
-    <string name="confirm_manga_add_duplicate">لديك محتوى في مكتبتك بنفس الإسم و لكن من مصدر مختلف (%1$s).
-\n
-\nهل مازلت تريد أن تكمل؟</string>
     <string name="pref_update_only_started">هذا لم يبدأ بعد</string>
     <string name="skipped_reason_completed">تم تخطيها لإنتهاء السلسلة</string>
     <string name="pref_navigate_pan">تحريك الصور أثناء النقر</string>
@@ -815,11 +811,9 @@
     <string name="updates_last_update_info_just_now">في هذه اللحظة</string>
     <string name="other_header">غير</string>
     <string name="track_remove_finish_date_conf_text">%s سيؤدي ذلك إلى إزالة تاريخ الانتهاء المحدد مسبقا من</string>
-    <string name="enhanced_tracking_warning">%1$s هذا المتعقب متوافق فقط مع مصدر</string>
     <string name="pref_invalidate_download_cache">فهرس التنزيلات غير صالح</string>
     <string name="unknown_title">عنوان غير معروف</string>
-    <string name="download_notifier_cache_renewal">فهرسة التنزيلات</string>
-    <string name="channel_downloader_cache">فهرسه</string>
+    <string name="download_notifier_cache_renewal">التحقق من التنزيلات</string>
     <string name="action_open_random_manga">فتح إدخال عشوائي</string>
     <string name="error_user_agent_string_invalid">سلسلة عوامل الاستخدام غير المستقرة</string>
     <string name="information_no_entries_found">لم يتم العثور على إدخالات في هذه الفئة</string>
@@ -846,4 +840,13 @@
     <string name="information_no_manga_category">الفئة فارغة</string>
     <string name="action_not_now">ليس الان</string>
     <string name="pref_library_update_show_tab_badge">إظهار عدد الادخالات غير المقروءة في ايقونة التحديثات</string>
+    <string name="pref_skip_dupe_chapters">تجاوز الفصول مكررة</string>
+    <string name="enhanced_services_not_installed">متوفر ولكن المصدر غير مثبت: %s</string>
+    <string name="confirm_add_duplicate_manga">لديك إدخال في مكتبتك بنفس الاسم. 
+\n
+\nهل مازلت ترغب في الاستمرار؟</string>
+    <string name="copied_to_clipboard_plain">نسخ الى الحافظة</string>
+    <string name="pref_worker_info">معلومات العمل</string>
+    <string name="track_error">%1$s خطأ: %2$s</string>
+    <string name="information_required_plain">*مطلوب</string>
 </resources>

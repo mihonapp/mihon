@@ -427,7 +427,6 @@
         <item quantity="other">Valmistui %1$s virheitä löytyi %2$s</item>
     </plurals>
     <string name="pref_true_color_summary">Vähentää juovia, mutta vaikuttaa suorituskykyyn</string>
-    <string name="action_display_unread_badge">Lukemattomat</string>
     <string name="viewer">Lukutila</string>
     <string name="battery_optimization_setting_activity_not_found">Laiteasetuksia ei voitu avata</string>
     <string name="tracking_info">Yksisuuntainen synkronointi lukujen seurantapalveluiden päivittämiseksi. Määritä yksittäisten mangamerkintöjen seuranta seurantapainikkeesta.</string>
@@ -662,9 +661,6 @@
     <string name="delete_category_confirmation">Haluatko poistaa kategorian \"%s\"\?</string>
     <string name="download_ahead_info">Toimii vain kirjastossa oleville sarjoille joissa nykyinen ja seuraava luku on jo ladattu</string>
     <string name="restore_miui_warning">Varmuuskopiointi/palautus ei välttämättä toimi oikein, jos MIUI-optimointi on poistettu käytöstä.</string>
-    <string name="confirm_manga_add_duplicate">Kirjastossasi on sarja samalla nimellä, mutta eri lähteestä (%1$s).
-\n
-\nHaluatko silti jatkaa\?</string>
     <string name="popular">Suositut</string>
     <string name="publishing_finished">Julkaiseminen päättynyt</string>
     <string name="description_placeholder">Ei kuvausta</string>

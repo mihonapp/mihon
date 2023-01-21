@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Názov</string>
     <string name="categories">Kategórie</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Záznamy v knižnici</string>
     <string name="chapters">Kapitoly</string>
     <string name="track">Sledovanie</string>
     <string name="history">História</string>
@@ -354,7 +354,7 @@
     <string name="action_show_errors">Ťuknutím zobrazíte podrobnosti</string>
     <string name="theme_system">Podľa systému</string>
     <string name="theme_tako">Tako</string>
-    <string name="action_show_manga">Zobraziť mangu</string>
+    <string name="action_show_manga">Zobraziť záznam</string>
     <string name="theme_yinyang">Yin a Yang</string>
     <string name="pref_category_appearance">Vzhľad</string>
     <string name="action_migrate">Migrovať</string>
@@ -364,9 +364,8 @@
     <string name="action_order_by_upload_date">Podľa dátumu nahratia</string>
     <string name="action_start">Začať</string>
     <string name="action_display_cover_only_grid">Mriežka len s obalmi</string>
-    <string name="action_display_local_badge">Lokálna manga</string>
+    <string name="action_display_local_badge">Lokálny zdroj</string>
     <string name="action_display_language_badge">Jazyk</string>
-    <string name="action_display_unread_badge">Neprečítané kapitoly</string>
     <string name="action_pin">Pripnúť</string>
     <string name="cancel_all_for_series">Zrušiť všetko pre túto sériu</string>
     <string name="action_order_by_chapter_number">Podľa čísla kapitoly</string>
@@ -409,7 +408,7 @@
     <string name="lock_when_idle">Uzamknúť pri nečinnosti</string>
     <string name="lock_always">Vždy</string>
     <string name="lock_never">Nikdy</string>
-    <string name="pref_library_update_manga_restriction">Preskočiť aktualizáciu titulov</string>
+    <string name="pref_library_update_manga_restriction">Preskočiť aktualizáciu záznamov</string>
     <string name="pref_show_nsfw_source">Zobraziť v zoznamoch zdrojov a rozšírení</string>
     <string name="pref_category_nsfw_content">NSFW (18+) zdroje</string>
     <string name="recently">Nedávno</string>
@@ -485,7 +484,7 @@
     <string name="popular">Populárne</string>
     <string name="reading_list">Zoznam čítania</string>
     <string name="track_finished_reading_date">Dátum ukončenia</string>
-    <string name="updates_last_update_info">Posledná aktualizácia knižnice: %1$s</string>
+    <string name="updates_last_update_info">Posledná aktualizácia knižnice: %s</string>
     <string name="appwidget_updates_description">Pozrite si svoju nedávno aktualizovanú mangu</string>
     <string name="pref_hide_threshold">Citlivosť pre skrytie ponuky pri posúvaní</string>
     <string name="page_list_empty_error">Nenašli sa žiadne stránky</string>
@@ -518,15 +517,12 @@
     <string name="logout_success">Teraz ste odhlásení</string>
     <string name="local_source_help_guide">Návod pre lokálne zdroje</string>
     <string name="unknown_author">Neznámy autor</string>
-    <string name="confirm_manga_add_duplicate">V knižnici máte položku s rovnakým názvom, ale z iného zdroja (%1$s).
-\n
-\nChcete ešte pokračovať\?</string>
     <string name="clipboard_copy_error">Nepodarilo sa skopírovať do schránky</string>
     <string name="download_notifier_split_page_path_not_found">Nepodarilo sa nájsť cestu k súboru stránky %d</string>
     <string name="channel_errors">Chyby</string>
     <string name="off">Vyp.</string>
     <string name="download_insufficient_space">Nepodarilo sa stiahnuť kapitoly z dôvodu nedostatku úložného priestoru</string>
-    <string name="action_sort_count">Celkom mangy</string>
+    <string name="action_sort_count">Celkový počet</string>
     <string name="ext_unofficial">Neoficiálne</string>
     <string name="ext_installer_legacy">Pôvodný</string>
     <string name="automatic_background">Automatický</string>
@@ -628,7 +624,7 @@
     <string name="updated_version">Aktualizované na v%1$s</string>
     <string name="label_downloaded_only">Iba stiahnuté</string>
     <string name="wish_list">Zoznam prianí</string>
-    <string name="remove_manga">Chystáte sa odstrániť túto mangu zo svojej knižnice</string>
+    <string name="remove_manga">Chystáte sa odstrániť \"%s\" zo svojej knižnice</string>
     <string name="downloaded_only_summary">Filtruje všetku mangu vo vašej knižnici</string>
     <string name="source_unsupported">Zdroj nie je podporovaný</string>
     <string name="not_installed">Nenainštalované</string>
@@ -642,7 +638,7 @@
     <string name="rotation_type">Typ rotácie</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="action_close">Zatvoriť</string>
-    <string name="pref_library_update_categories_details">Mangy vo vylúčených kategóriách nebudú aktualizované, aj keď sú tiež v zahrnutých kategóriách.</string>
+    <string name="pref_library_update_categories_details">Záznamy vo vylúčených kategóriách nebudú aktualizované, aj keď sú tiež v zahrnutých kategóriách.</string>
     <string name="ext_updates_pending">Čakajúce aktualizácie</string>
     <string name="webtoon_side_padding_0">Žiadne</string>
     <string name="spen_next_page">Ďalšia strana</string>
@@ -655,7 +651,7 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="enhanced_tracking_info">Služby, ktoré poskytujú rozšírené funkcie pre konkrétne zdroje. Mangy sú automaticky sledované po pridaní do vašej knižnice.</string>
     <string name="pref_dual_page_split">Rozdelenie na dve strany</string>
-    <string name="action_sort_last_manga_update">Posledná aktualizácia mangy</string>
+    <string name="action_sort_last_manga_update">Posledná aktualizácia</string>
     <string name="action_remove_everything">Odstrániť všetko</string>
     <string name="internal_error">InternalError: Skontrolujte záznmy pre ďalšie informácie</string>
     <string name="ext_nsfw_short">18+</string>
@@ -750,4 +746,10 @@
     <string name="skipped_reason_not_caught_up">Preskočené, pretože obsahuje neprečítané kapitoly</string>
     <string name="skipped_reason_not_started">Preskočené, pretože neboli prečítané žiadne kapitoly</string>
     <string name="loader_rar5_error">Formát RARv5 nie je podporovaný</string>
+    <string name="label_local">Lokálna</string>
+    <string name="label_downloaded">Stiahnuté</string>
+    <string name="label_stats">Štatistiky</string>
+    <string name="label_started">Začaté</string>
+    <string name="action_search_hint">Hľadať…</string>
+    <string name="action_open_random_manga">Otvoriť náhodný záznam</string>
 </resources>

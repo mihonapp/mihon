@@ -402,7 +402,6 @@
     <string name="action_unpin">ピン留めを外す</string>
     <string name="action_pin">ピン留め</string>
     <string name="action_display_show_tabs">カテゴリータブを表示</string>
-    <string name="action_display_unread_badge">未読の章の数</string>
     <string name="action_display_comfortable_grid">快適グリッド</string>
     <string name="action_migrate">移行</string>
     <string name="action_disable_all">全て無効にする</string>
@@ -649,9 +648,6 @@
     <string name="action_display_cover_only_grid">表紙グリッド</string>
     <string name="pref_update_only_started">読み始めていない</string>
     <string name="skipped_reason_not_caught_up">未読の章がある為スキップしました</string>
-    <string name="confirm_manga_add_duplicate">同じ名前で異なるソース（%1$s）の項目はすでにライブラリに存在します。
-\n
-\n続行しますか？</string>
     <string name="pref_landscape_zoom">横長の画像をズーム</string>
     <string name="skipped_reason_completed">完結済みの為スキップしました</string>
     <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
@@ -744,10 +740,9 @@
     <string name="pref_advanced_summary">クラッシュ ログのダンプ、バッテリーの最適化</string>
     <string name="pref_appearance_summary">テーマ、日付と時刻の形式</string>
     <string name="pref_library_summary">カテゴリ、グローバル アップデート</string>
-    <string name="channel_downloader_cache">ダウンロードのインデックス</string>
     <string name="action_open_random_manga">おまかせ閲覧</string>
     <string name="information_no_entries_found">このカテゴリに項目がありません</string>
-    <string name="download_notifier_cache_renewal">ダウンロードのインデックスを作成しています</string>
+    <string name="download_notifier_cache_renewal">ダウンロード内容を検査しています</string>
     <string name="fdroid_warning">F-Droidビルドは正式にサポートされていません。
 \n詳細はタップしてご覧ください。</string>
     <string name="action_display_show_continue_reading_button">続きを読むボタンを表示</string>
@@ -756,7 +751,6 @@
     <string name="pref_invalidate_download_cache">ダウンロードのインデックスを消去</string>
     <string name="track_remove_finish_date_conf_text">%sで指定された終了日付を消去します</string>
     <string name="track_remove_start_date_conf_text">%sで指定された開始日付を消去します</string>
-    <string name="enhanced_tracking_warning">このトラッカーはソース「%1$s」のみで使用できます。</string>
     <string name="pref_invalidate_download_cache_summary">ダウンロードした章の再スキャンを強制</string>
     <string name="label_local">ローカル</string>
     <string name="label_started">開始済み</string>
@@ -783,5 +777,11 @@
     <string name="pref_library_update_show_tab_badge">アップデートアイコンに未読メッセージの件数を表示</string>
     <string name="pref_worker_info">ワーカースレッドの情報</string>
     <string name="copied_to_clipboard_plain">クリップボードにコピーしました</string>
-    <string name="ext_miui_warning">MIUI 最適化が有効になっている場合、拡張機能のインストールが機能しない場合があります。 無効にするか、Web サイトからインストールしてみてください。</string>
+    <string name="enhanced_services_not_installed">利用可能ですが、ソースがインストールされていません: %s</string>
+    <string name="pref_skip_dupe_chapters">重複の章をスキップ</string>
+    <string name="confirm_add_duplicate_manga">ライブラリにはもう同名の項目が存在しています。
+\n
+\nそれでも続行しますか？</string>
+    <string name="track_error">%1$s エラー：%2$s</string>
+    <string name="information_required_plain">*必須</string>
 </resources>

@@ -73,7 +73,6 @@
     <string name="action_open_in_web_view">WebView کردنەوە لە</string>
     <string name="action_migrate">گواستنەوە</string>
     <string name="action_display_mode">باری پیشاندان</string>
-    <string name="action_display_unread_badge">چاپتەری نەبینراو</string>
     <string name="action_unpin">لابردنی جێگیری</string>
     <string name="action_cancel">هەڵوەشاندنەوە</string>
     <string name="action_cancel_all">هەڵوەشاندنەوەی هەموو</string>

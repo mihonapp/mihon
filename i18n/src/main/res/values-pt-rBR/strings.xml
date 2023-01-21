@@ -437,7 +437,6 @@
         <item quantity="many">Concluído em %1$s com %2$s erros</item>
         <item quantity="other">Concluído em %1$s com %2$s erros</item>
     </plurals>
-    <string name="action_display_unread_badge">Capítulos não lidos</string>
     <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços de monitoramento. Configure o monitoramento para itens individuais a partir de seus botões de monitoramento.</string>
     <string name="pref_refresh_library_covers">Atualizar as capas da biblioteca</string>
     <string name="unofficial_extension_message">Esta extensão não é da lista oficial de extensões do Tachiyomi.</string>
@@ -670,9 +669,6 @@
     <string name="action_faq_and_guides">FAQ e Guias</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostrar o item</string>
-    <string name="confirm_manga_add_duplicate">Você tem um item na sua biblioteca com o mesmo nome, mas de uma fonte diferente (%1$s).
-\n
-\nVocê deseja continuar mesmo assim\?</string>
     <string name="pref_navigate_pan">Navegar imagens longas ao tocar</string>
     <string name="pref_landscape_zoom">Dar zoom em imagens horizontais</string>
     <string name="action_display_cover_only_grid">Grade somente com capas</string>
@@ -770,8 +766,7 @@
     <string name="invalid_location">Local inválido: %s</string>
     <string name="error_user_agent_string_invalid">Valor de user agent inválido</string>
     <string name="updates_last_update_info_just_now">Agora</string>
-    <string name="download_notifier_cache_renewal">Indexando os downloads</string>
-    <string name="channel_downloader_cache">Indexando</string>
+    <string name="download_notifier_cache_renewal">Verificando os downloads</string>
     <string name="action_open_random_manga">Abrir um item aleatório</string>
     <string name="information_no_entries_found">Nenhum item encontrado nesta categoria</string>
     <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente.
@@ -782,7 +777,6 @@
     <string name="track_remove_start_date_conf_text">Isto irá remover sua data de início selecionada anteriormente no %s</string>
     <string name="track_remove_finish_date_conf_text">Isto irá remover sua data de término selecionada anteriormente no %s</string>
     <string name="pref_invalidate_download_cache">Invalidar o índice de downloads</string>
-    <string name="enhanced_tracking_warning">Este monitorador é compatível somente com a fonte %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Força o aplicativo a checar novamente por capítulos disponíveis offline</string>
     <string name="label_local">Local</string>
     <string name="label_downloaded">Disponíveis offline</string>
@@ -809,5 +803,11 @@
     <string name="pref_library_update_show_tab_badge">Mostrar a contagem no ícone de Atualizações</string>
     <string name="copied_to_clipboard_plain">Copiado para a área de transferência</string>
     <string name="pref_worker_info">Informações do worker</string>
-    <string name="ext_miui_warning">A instalação de extensões pode não funcionar se a Otimização da MIUI estiver habilitada. Tente desabilitá-la ou instalar as extensões a partir do site.</string>
+    <string name="enhanced_services_not_installed">Disponíveis, mas a fonte não está instalada: %s</string>
+    <string name="pref_skip_dupe_chapters">Pular capítulos duplicados</string>
+    <string name="confirm_add_duplicate_manga">Você possui um item na sua biblioteca com o mesmo nome.
+\n
+\nVocê ainda deseja continuar\?</string>
+    <string name="track_error">Erro em %1$s: %2$s</string>
+    <string name="information_required_plain">*obrigatório</string>
 </resources>

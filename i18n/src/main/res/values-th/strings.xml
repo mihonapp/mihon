@@ -392,7 +392,6 @@
     <string name="action_disable">ปิดการใช้งาน</string>
     <string name="action_display_show_number_of_items">แสดงจำนวน</string>
     <string name="action_display_show_tabs">แสดงแท็บหมวดหมู่</string>
-    <string name="action_display_unread_badge">ตอนที่ยังไม่ได้อ่าน</string>
     <string name="action_display_comfortable_grid">ตารางแบบเต็มที</string>
     <string name="action_migrate">โยกย้าย</string>
     <string name="action_start">เริ่ม</string>
@@ -651,9 +650,6 @@
     <string name="skipped_reason_not_caught_up">ถูกข้ามเนื่องจากมีตอนที่ยังไม่ได้อ่าน</string>
     <string name="skipped_reason_not_started">ถูกข้ามเนื่องจากยังไม่มีตอนใด ๆ ถูกอ่าน</string>
     <string name="action_show_manga">แสดงรายการ</string>
-    <string name="confirm_manga_add_duplicate">มีรายการในคลังที่มีชื่อเดียวกัน แต่มาจากคนละแหล่งที่มา (%1$s)
-\n
-\nยังต้องการดำเนินการต่อหรือไม่\?</string>
     <string name="pref_update_only_started">ที่ยังไม่ได้เริ่มอ่าน</string>
     <string name="skipped_reason_completed">ถูกข้ามเนื่องจากเรื่องนี้จบแล้ว</string>
     <string name="notification_update_skipped">อัปเดตข้ามแล้ว %1$d รายการ</string>
@@ -744,7 +740,6 @@
     <string name="crash_screen_restart_application">เริ่มแอปพลิเคชันใหม่</string>
     <string name="updates_last_update_info_just_now">เมื่อสักครู่</string>
     <string name="error_user_agent_string_invalid">สตริงตัวแทนผู้ใช้ไม่ถูกต้อง</string>
-    <string name="channel_downloader_cache">ทำดัชนี</string>
     <string name="action_open_random_manga">สุ่มเปิดรายการ</string>
     <string name="fdroid_warning">บิลด์ F-Droid ไม่ได้ถูกรองรับอย่างเป็นทางการ
 \nแตะเพื่อเรียนรู้เพิ่มเติม</string>
@@ -753,7 +748,6 @@
     <string name="action_display_show_continue_reading_button">แสดงปุ่มอ่านต่อ</string>
     <string name="other_header">อื่น ๆ</string>
     <string name="pref_invalidate_download_cache">ดัชนีการดาวน์โหลดไม่ถูกต้อง</string>
-    <string name="enhanced_tracking_warning">ตัวติดตามนี้ใช้งานได้เฉพาะกับแหล่งที่มา %1$s</string>
     <string name="track_remove_start_date_conf_text">การกระทำนี้จะเป็นการนำวันที่เริ่มอ่านของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
     <string name="track_remove_finish_date_conf_text">การกระทำนี้จะเป็นการนำวันที่อ่านจบของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
     <string name="track_remove_date_conf_title">นำวันที่ออก\?</string>

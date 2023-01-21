@@ -422,7 +422,6 @@
     <string name="action_pin">Ghim</string>
     <string name="action_disable">Tắt</string>
     <string name="action_display_show_tabs">Hiện các thẻ danh mục</string>
-    <string name="action_display_unread_badge">Số chương chưa đọc</string>
     <string name="action_display_comfortable_grid">Lưới</string>
     <string name="action_migrate">Chuyển</string>
     <string name="action_start">Bắt đầu</string>
@@ -684,9 +683,6 @@
     <string name="pref_landscape_zoom">Phóng ảnh phong cảnh</string>
     <string name="action_show_manga">Hiển thị truyện</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="confirm_manga_add_duplicate">Bạn đang có một bộ truyện ở trong thư viện có cùng tên nhưng sử dụng nguồn khác (%1$s).
-\n
-\nBạn vẫn muốn tiếp tục chứ\?</string>
     <string name="pref_navigate_pan">Xoay ảnh rộng khi cần</string>
     <string name="action_display_cover_only_grid">Lưới chỉ mỗi bìa</string>
     <string name="rotation_reverse_portrait">Đảo ngược chân dung</string>
@@ -799,7 +795,6 @@
     <string name="unknown_title">Tiêu đề không xác định</string>
     <string name="track_remove_start_date_conf_text">Thao tác này sẽ xóa ngày bắt đầu đã chọn trước đó của bạn khỏi %s</string>
     <string name="crash_screen_title">Đã xảy ra lỗi không mong muốn</string>
-    <string name="enhanced_tracking_warning">Trình theo dõi này chỉ tương thích với nguồn %1$s.</string>
     <string name="track_remove_finish_date_conf_text">Thao tác này sẽ xóa ngày kết thúc đã chọn trước đó của bạn khỏi %s</string>
     <string name="information_no_manga_category">Hạng mục trống</string>
     <string name="pref_invalidate_download_cache">Vô hiệu hóa chỉ mục tải xuống</string>

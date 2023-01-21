@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name">Ad</string>
-    <string name="categories">Ulamlar</string>
+    <string name="categories">Kategoriler</string>
     <string name="manga">Kitaplık girdileri</string>
     <string name="chapters">Bölümler</string>
     <string name="track">İzleme</string>
@@ -14,7 +14,7 @@
     <string name="label_backup">Yedekle ve geri yükle</string>
     <string name="label_migration">Taşı</string>
     <string name="label_extensions">Uzantılar</string>
-    <string name="label_extension_info">Uzantı bilgisi</string>
+    <string name="label_extension_info">Eklenti bilgisi</string>
     <string name="action_settings">Ayarlar</string>
     <string name="action_filter">Süz</string>
     <string name="action_filter_bookmarked">Yer imli</string>
@@ -271,7 +271,7 @@
     <string name="information_no_recent">Yeni güncelleme yok</string>
     <string name="information_no_recent_manga">Yakında okunan yok</string>
     <string name="information_empty_library">Kitaplığınız boş</string>
-    <string name="information_empty_category">Ulamınız yok. Kitaplığınızı düzenlemek için bir tane oluşturmak için artı düğmesine dokunun.</string>
+    <string name="information_empty_category">Kategoriniz yok. Kitaplığınızı düzenlemek için artı düğmesine basarak bir tane oluşturun.</string>
     <string name="download_notifier_downloader_title">İndirici</string>
     <string name="download_notifier_title_error">Hata</string>
     <string name="download_notifier_unknown_error">Bölüm, beklenmeyen hata sonucu indirilemedi</string>
@@ -429,7 +429,6 @@
         <item quantity="one">%1$s içinde %2$s hatayla tamamlandı</item>
         <item quantity="other">%1$s içinde %2$s hatayla tamamlandı</item>
     </plurals>
-    <string name="action_display_unread_badge">Okunmamış bölümler</string>
     <string name="tracking_info">Bölüm ilerlemesini, izleme hizmetlerinde güncellemek için tek yönlü eşitleme. Her girdinin izleme düğmesinden, izlemeyi ayarlayın.</string>
     <string name="pref_refresh_library_covers">Kitaplık kapaklarını yenile</string>
     <string name="unofficial_extension_message">Bu uzantı resmi Tachiyomi uzantıları dizelgesinden değil.</string>
@@ -653,9 +652,6 @@
     <string name="privacy_policy">Gizlilik politikası</string>
     <string name="cancelled">İptal edildi</string>
     <string name="on_hiatus">Molada</string>
-    <string name="confirm_manga_add_duplicate">Kitaplığınızda aynı ada sahip ama farklı bir kaynaktan olan bir öge var (%1$s).
-\n
-\nHâlâ devam etmek istiyor musunuz\?</string>
     <string name="action_show_manga">Girdiyi göster</string>
     <string name="webtoon_side_padding_5">%5</string>
     <string name="library_errors_help">Kitaplık güncelleme hatalarının nasıl düzeltileceği konusunda yardım için bkz. %1$s</string>
@@ -757,8 +753,7 @@
     <string name="invalid_location">Geçersiz konum: %s</string>
     <string name="error_user_agent_string_invalid">Geçersiz kullanıcı aracısı dizgesi</string>
     <string name="updates_last_update_info_just_now">Şimdi</string>
-    <string name="download_notifier_cache_renewal">İndirilenler dizinleniyor</string>
-    <string name="channel_downloader_cache">Dizinleme</string>
+    <string name="download_notifier_cache_renewal">İndirilenler denetleniyor</string>
     <string name="action_open_random_manga">Gelişigüzel girdi aç</string>
     <string name="information_no_entries_found">Bu ulamda girdi bulunamadı</string>
     <string name="fdroid_warning">F-Droid derlemeleri resmi olarak desteklenmemektedir.
@@ -769,7 +764,6 @@
     <string name="track_remove_start_date_conf_text">Bu, daha önce seçtiğiniz %s başlangıç tarihini kaldıracak</string>
     <string name="track_remove_finish_date_conf_text">Bu, daha önce seçtiğiniz %s bitiş tarihini kaldıracak</string>
     <string name="pref_invalidate_download_cache">İndirmeler dizinini geçersiz kıl</string>
-    <string name="enhanced_tracking_warning">Bu izleyici yalnızca %1$s kaynağı ile uyumludur.</string>
     <string name="pref_invalidate_download_cache_summary">Uygulamayı indirilen bölümleri yeniden denetlemeye zorla</string>
     <string name="label_stats">Sayımlamalar</string>
     <string name="label_started">Başladı</string>
@@ -796,5 +790,11 @@
     <string name="pref_library_update_show_tab_badge">Güncellemeler simgesinde okunmayan sayısını göster</string>
     <string name="pref_worker_info">Çalışan bilgisi</string>
     <string name="copied_to_clipboard_plain">Panoya kopyalandı</string>
-    <string name="ext_miui_warning">MIUI iyileştirmesi etkinse uzantı kurmak çalışmayabilir. Bunun yerine devre dışı bırakmayı veya web sitesinden kurmayı deneyin.</string>
+    <string name="enhanced_services_not_installed">Kullanılabilir ancak kaynak kurulu değil: %s</string>
+    <string name="pref_skip_dupe_chapters">Yinelenen bölümleri atla</string>
+    <string name="confirm_add_duplicate_manga">Kitaplığınızda aynı ada sahip bir girdiniz var.
+\n
+\nYine de devam etmek istiyor musunuz\?</string>
+    <string name="track_error">%1$s hatası: %2$s</string>
+    <string name="information_required_plain">*gerekli</string>
 </resources>

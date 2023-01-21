@@ -39,7 +39,6 @@
     <string name="action_disable">असक्षम गर्नुहोस्</string>
     <string name="action_display_show_number_of_items">वस्तुहरूको संख्या देखाउनुहोस्</string>
     <string name="action_display_show_tabs">वर्ग ट्याबहरू देखाउनुहोस्</string>
-    <string name="action_display_unread_badge">नपढिएका अध्यायहरू</string>
     <string name="action_display_download_badge">डाउनलोड गरिएका अध्यायहरू</string>
     <string name="action_display_comfortable_grid">आरामदायी ग्रिड</string>
     <string name="action_display_list">सूची</string>
@@ -600,8 +599,6 @@
     <string name="paused">रोकिएको</string>
     <string name="transition_no_next">अर्को अध्याय छैन</string>
     <string name="manga_cover">कभर</string>
-    <string name="confirm_manga_add_duplicate">तपाईँको पुस्तकालयमा सोही नाम गरिएको श्रृंखला अर्कै (%1$s) स्रोतमा रहेको छ!
-\nके तपाईँ जारी राख्न चाहनुहुन्छ\?</string>
     <string name="chapter_error">त्रुटि</string>
     <string name="show_title">स्रोत शीर्षक</string>
     <string name="sort_by_source">स्रोत द्वारा</string>

@@ -434,7 +434,6 @@
         <item quantity="other">Pozostało %1$s</item>
     </plurals>
     <string name="pref_cutout_short">Pokazuj zawartość w strefie odcięcia</string>
-    <string name="action_display_unread_badge">Nieprzeczytane rozdziały</string>
     <string name="action_view_chapters">Przeglądaj rozdziały</string>
     <string name="add_tracking">Dodaj śledzenie</string>
     <string name="battery_optimization_setting_activity_not_found">Niepowodzenie otwarcia ustawień urządzenia</string>
@@ -689,9 +688,6 @@
     <string name="skipped_reason_not_started">Pominięto - brak przeczytanych rozdziałów</string>
     <string name="skipped_reason_completed">Pominięto ponieważ seria została ukończona</string>
     <string name="skipped_reason_not_caught_up">Pominięto ponieważ istnieją nieprzeczytane rozdziały</string>
-    <string name="confirm_manga_add_duplicate">W swojej bibliotece posiadasz wpis o tej samej nazwie lecz z innego źródła(%1$s).
-\n
-\nCzy nadal chcesz kontynuować\?</string>
     <string name="channel_skipped">Pominięty</string>
     <string name="notification_update_skipped">%1$d pominięto aktualizację(-e)</string>
     <string name="notification_update_error">%1$d aktualizacja (aktualizacje) nie powiodła się</string>
@@ -789,7 +785,6 @@
     <string name="updates_last_update_info_just_now">Właśnie teraz</string>
     <string name="crash_screen_title">Ups!</string>
     <string name="track_remove_date_conf_title">Usunąć datę\?</string>
-    <string name="enhanced_tracking_warning">Ten tracker jest zgodny tylko ze %1$s źródłem.</string>
     <string name="track_remove_finish_date_conf_text">To spowoduje usunięcie wcześniej wybranej daty zakończenia z %s</string>
     <string name="error_user_agent_string_invalid">Nieprawidłowy ciąg agenta użytkownika</string>
     <string name="crash_screen_restart_application">Uruchom ponownie aplikację</string>
@@ -816,7 +811,6 @@
     <string name="label_tracked_titles">Śledzone wpisy</string>
     <string name="label_mean_score">Średnia ocena</string>
     <string name="skipped_reason_not_always_update">Pominięto, ponieważ aktualizacja nie jest wymagana</string>
-    <string name="channel_downloader_cache">Indeksowanie</string>
     <string name="information_no_entries_found">Nie znaleziono wpisów w tej kategorii</string>
     <string name="download_notifier_cache_renewal">Indeksowanie pobranych plików</string>
     <string name="information_no_manga_category">Kategoria jest pusta</string>

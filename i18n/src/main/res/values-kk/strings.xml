@@ -30,7 +30,7 @@
     <string name="information_no_downloads">Жүктеулер жоқ</string>
     <string name="information_no_recent">Жаңа жаңартулар жоқ</string>
     <string name="information_no_recent_manga">Жақында ештеңе оқылмады</string>
-    <string name="information_empty_library">Сіздің кітапханаңыз бос</string>
+    <string name="information_empty_library">Кітапханаңыз бос</string>
     <string name="name">Атауы</string>
     <string name="label_more">Көбірек</string>
     <string name="label_recent_manga">Тарих</string>
@@ -48,7 +48,6 @@
     <string name="action_sort_last_manga_update">Соңғы жаңартуды тексеру</string>
     <string name="action_sort_unread_count">Оқылмаған тараулар</string>
     <string name="action_display_list">Тізім</string>
-    <string name="action_display_unread_badge">Оқылмаған тараулар</string>
     <string name="action_display_download_badge">Жүктелген тараулар</string>
     <string name="secure_screen">Қолданба экранын қорғау</string>
     <string name="battery_not_low">Батарея қуаты аз емес кезінде</string>
@@ -188,8 +187,8 @@
     <string name="lock_when_idle">Әрекетсіз болғанда бұғаттау</string>
     <string name="lock_always">Әрдайым</string>
     <string name="lock_never">Ешқашан</string>
-    <string name="hide_notification_content">Хабарландыру мазмұның жасыру</string>
-    <string name="pref_library_columns">Сериялардың саны</string>
+    <string name="hide_notification_content">Хабарландыру мазмұнын жасыру</string>
+    <string name="pref_library_columns">Әр жолдағы элемент саны</string>
     <string name="pref_category_display">Көрсету</string>
     <string name="portrait">Портрет</string>
     <string name="landscape">Пейзаж</string>
@@ -597,8 +596,8 @@
     <string name="download_notifier_split_page_not_found">%d бет табылмады, бөлінгенде</string>
     <string name="channel_complete">Аяқталды</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Бастапқыда жоқ немесе сүзілген %d тарауды өткізіп жіберу</item>
-        <item quantity="other">Бастапқыда жоқ немесе сүзілген %d тарауды өткізіп жіберу</item>
+        <item quantity="one">Дереккөзі жоқ немесе сүзілген %d тарау өткізіліп жіберілді</item>
+        <item quantity="other">Дереккөзі жоқ немесе сүзілген %d тарау өткізіліп жіберілді</item>
     </plurals>
     <string name="pref_reader_summary">Оқу түрі, көрсету, навигация</string>
     <string name="pref_browse_summary">Дереккөздер, кеңейтулер, ауқымды іздеу</string>
@@ -738,9 +737,6 @@
     <string name="download_queue_size_warning">Ескерту: Көп жүктеулер саны дереккөздер жұмысын баяулата алады және/немесе Tachiyomi бұғатталына алады. Толығырақ оқу үшін басыңыз.</string>
     <string name="notification_new_chapters">Жаңа тараулар табылды</string>
     <string name="pref_downloads_summary">Автоматты жүктеу, алдын ала жүктеу</string>
-    <string name="confirm_manga_add_duplicate">Кітапханаңызда осы атаумен басқа туынды бар, бірақ басқа дереккөзден (%1$s).
-\n
-\nӘлі де жалғастырғыңыз келеді ме\?</string>
     <string name="manga_info_expand">Көбірек</string>
     <string name="delete_downloads_for_manga">Жүктелген тарауларды жоямыз ба\?</string>
     <string name="copied_to_clipboard">Буферге көшірілді:
@@ -761,12 +757,10 @@
     <string name="action_open_random_manga">Кездейсоқ жазбаны ашу</string>
     <string name="fdroid_warning">F-Droid құрастыруларына ресми түрде қолдау көрсетілмейді.
 \nТолығырақ білу үшін басыңыз.</string>
-    <string name="download_notifier_cache_renewal">Жүктеулерді индекстеу</string>
-    <string name="channel_downloader_cache">Индекстеу</string>
+    <string name="download_notifier_cache_renewal">Жүктеулерді тексеру</string>
     <string name="action_display_show_continue_reading_button">«Оқуды жалғастыру» батырмасы</string>
     <string name="other_header">Басқа</string>
     <string name="track_remove_finish_date_conf_text">Бұл %s ішінен бұрын таңдалған аяқталу күнін жояды</string>
-    <string name="enhanced_tracking_warning">Бұл бақылау қызметі тек %1$s дереккөзімен үйлесімді.</string>
     <string name="track_remove_start_date_conf_text">Бұл бұрын таңдалған басталу күнін %s ішінен жояды</string>
     <string name="track_remove_date_conf_title">Күнің жоямыз ба\?</string>
     <string name="pref_invalidate_download_cache">Жүктеулер индексін тазалау</string>
@@ -794,4 +788,13 @@
     <string name="label_tracker_section">Бақылау қызметтері</string>
     <string name="pref_library_update_show_tab_badge">Жаңартулар белгішесінде оқылмаған тараулар санын көрсету</string>
     <string name="information_no_manga_category">Бұл санат бос</string>
+    <string name="enhanced_services_not_installed">Қолжетімді, бірақ дереккөзі орнатылған жоқ: %s</string>
+    <string name="copied_to_clipboard_plain">Аралық сақтағышқа көшірілді</string>
+    <string name="pref_worker_info">Жасақтаушы туралы ақпарат</string>
+    <string name="pref_skip_dupe_chapters">Қайталанған бөлімдерді өткізіп жіберу</string>
+    <string name="confirm_add_duplicate_manga">Сіздің кітапханаңызда осымен атауы бірдей жазба бар
+\n
+\nБәрібір жалғастыра бересіз бе\?</string>
+    <string name="track_error">%1$s қателік: %2$s</string>
+    <string name="information_required_plain">*қажетті</string>
 </resources>

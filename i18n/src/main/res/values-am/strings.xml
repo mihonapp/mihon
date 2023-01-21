@@ -96,7 +96,6 @@
     <string name="action_pin">ሚስማር</string>
     <string name="action_disable">አሰናክል</string>
     <string name="action_display_show_tabs">የምድብ ትሮችን አሳይ</string>
-    <string name="action_display_unread_badge">ያልተነበቡ ባጆች</string>
     <string name="action_display_download_badge">ባጆችን ያውርዱ</string>
     <string name="action_display_comfortable_grid">ምቹ ፍርግርግ</string>
     <string name="action_display_list">ዝርዝር</string>

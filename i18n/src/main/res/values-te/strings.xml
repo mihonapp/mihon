@@ -81,7 +81,6 @@
     <string name="action_display_grid">ఇమిడ్చిన వరుస</string>
     <string name="action_migrate">వలస</string>
     <string name="action_display_mode">ప్రదర్శన ప్రణాలికము</string>
-    <string name="action_display_unread_badge">చదవని అధ్యాయములు</string>
     <string name="action_display_local_badge">స్థానిక మాంగా</string>
     <string name="action_start">మొదలు పెట్టుము</string>
     <string name="action_resume">పునఃప్రారంభించుము</string>

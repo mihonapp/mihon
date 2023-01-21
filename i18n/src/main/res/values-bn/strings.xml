@@ -345,7 +345,6 @@
     <string name="action_pin">আটকান</string>
     <string name="action_disable">অক্ষম</string>
     <string name="action_display_show_tabs">বিভাগের ট্যাবগুলি দেখুন</string>
-    <string name="action_display_unread_badge">অপঠিত অধ্যায়</string>
     <string name="action_display_comfortable_grid">আরামপ্রদ গ্রিড</string>
     <string name="action_migrate">স্থানান্তর করুন</string>
     <string name="action_start">শুরু করুন</string>

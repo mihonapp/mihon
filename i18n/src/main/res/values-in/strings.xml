@@ -413,7 +413,6 @@
     <plurals name="num_categories">
         <item quantity="other">%d kategori</item>
     </plurals>
-    <string name="action_display_unread_badge">Belum Dibaca</string>
     <string name="gray_background">Abu-abu</string>
     <string name="pref_category_for_this_series">Untuk seri ini</string>
     <string name="battery_optimization_setting_activity_not_found">Tidak dapat membuka pengaturan perangkat</string>
@@ -648,9 +647,6 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_display_cover_only_grid">Grid sampul saja</string>
     <string name="pref_update_only_started">Yang belum dibaca</string>
-    <string name="confirm_manga_add_duplicate">Anda memiliki sebuah entri di pustaka anda dengan nama yang sama tapi dari sumber yang berbeda (%1$s).
-\n
-\nApakah Anda yakin untuk melanjutkan\?</string>
     <string name="skipped_reason_completed">Dilewati karena seri telah selesai</string>
     <string name="skipped_reason_not_caught_up">Dilewati karena ada bab yang belum dibaca</string>
     <string name="skipped_reason_not_started">Dilewati karena tidak ada bab yang dibaca</string>
@@ -746,13 +742,11 @@
     <string name="updates_last_update_info_just_now">Baru saja</string>
     <string name="action_open_random_manga">Buka entri acak</string>
     <string name="download_notifier_cache_renewal">Mengindeks unduhan</string>
-    <string name="channel_downloader_cache">Pengindeksan</string>
     <string name="information_no_entries_found">Tidak ada entri yang ditemukan dalam kategori ini</string>
     <string name="fdroid_warning">Build F-Droid tidak didukung secara resmi.
 \n Ketuk untuk mempelajari lebih lanjut.</string>
     <string name="other_header">Lainnya</string>
     <string name="action_display_show_continue_reading_button">Tampilkan tombol lanjutkan membaca</string>
-    <string name="enhanced_tracking_warning">Pelacak ini hanya tersedia untuk sumber %1$s.</string>
     <string name="track_remove_date_conf_title">Hapus tanggal\?</string>
     <string name="pref_invalidate_download_cache">Membatalkan indeks unduhan</string>
     <string name="pref_invalidate_download_cache_summary">Paksa aplikasi untuk mengecek ulang bab ter-unduh</string>
@@ -782,6 +776,11 @@
     <string name="pref_library_update_show_tab_badge">Tampilkan jumlah yang belum dibaca pada ikon Pembaruan</string>
     <string name="information_no_manga_category">Kategori ini kosong</string>
     <string name="copied_to_clipboard_plain">Tersalin di papan klip</string>
-    <string name="ext_miui_warning">Memasang ekstensi mungkin tidak berfungsi jika Optimasi MIUI diaktifkan. Coba nonaktifkan atau pasang dari situs web sebagai gantinya.</string>
     <string name="pref_worker_info">Informasi pekerja</string>
+    <string name="enhanced_services_not_installed">Tersedia tetapi sumber tidak terpasang: %s</string>
+    <string name="pref_skip_dupe_chapters">Melewati bab terduplikasi</string>
+    <string name="confirm_add_duplicate_manga">Kamu memiliki entri di pustaka dengan nama yang sama.
+\n
+\nApakah kamu ingin melanjutkan\?</string>
+    <string name="track_error">%1$seror%2$s</string>
 </resources>

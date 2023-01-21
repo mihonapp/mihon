@@ -447,7 +447,6 @@
         <item quantity="other">Выполнено за %1$s с %2$s ошибками</item>
     </plurals>
     <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сервисах отслеживания. Настройте отслеживание при помощи кнопки «Отслеживание».</string>
-    <string name="action_display_unread_badge">Непрочитанные главы</string>
     <string name="unofficial_extension_message">Это расширение не входит в официальный список расширений Tachiyomi.</string>
     <string name="ext_unofficial">Неофициальное</string>
     <string name="sort_by_upload_date">Дата добавления</string>
@@ -682,9 +681,6 @@
     <string name="action_faq_and_guides">Руководства и FAQ</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Показать серию</string>
-    <string name="confirm_manga_add_duplicate">В вашей библиотеке есть серия с таким же названием, но из другого источника (%1$s).
-\n
-\nВы по-прежнему хотите продолжить\?</string>
     <string name="action_display_cover_only_grid">Сетка без названия</string>
     <string name="pref_navigate_pan">Панорамирование широких изображений при касании</string>
     <string name="pref_landscape_zoom">Увеличивать изображение по горизонтали</string>
@@ -783,8 +779,7 @@
     <string name="invalid_location">Недопустимое расположение: %s</string>
     <string name="error_user_agent_string_invalid">Недопустимый параметр user agent</string>
     <string name="updates_last_update_info_just_now">Только что</string>
-    <string name="download_notifier_cache_renewal">Индексирование загрузок</string>
-    <string name="channel_downloader_cache">Индексирование</string>
+    <string name="download_notifier_cache_renewal">Проверка загрузок</string>
     <string name="information_no_entries_found">В этой категории нет серий</string>
     <string name="action_open_random_manga">Открыть случайную серию</string>
     <string name="fdroid_warning">Сборки F-Droid официально не поддерживаются.
@@ -795,7 +790,6 @@
     <string name="track_remove_date_conf_title">Удалить дату\?</string>
     <string name="track_remove_start_date_conf_text">Это удалит ранее выбранную дату начала из %s</string>
     <string name="pref_invalidate_download_cache">Очистить индекс загрузок</string>
-    <string name="enhanced_tracking_warning">Этот сервис отслеживания совместим только с источником %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Принуждает приложение перепроверить загруженные главы</string>
     <string name="label_started">Начато</string>
     <string name="label_read_duration">Продолжительность чтения</string>
@@ -822,5 +816,11 @@
     <string name="pref_library_update_show_tab_badge">Количество непрочитанных глав на иконке «Обновления»</string>
     <string name="copied_to_clipboard_plain">Скопировано в буфер обмена</string>
     <string name="pref_worker_info">Информация об разработке</string>
-    <string name="ext_miui_warning">Установка расширений может не работать, если включена «Оптимизация MIUI». Попробуйте её отключить или устанавливайте расширения через веб-сайт.</string>
+    <string name="enhanced_services_not_installed">Доступно, но источник не установлен: %s</string>
+    <string name="pref_skip_dupe_chapters">Пропускать повторяющиеся главы</string>
+    <string name="confirm_add_duplicate_manga">В вашей библиотеке уже есть серия с таким именем.
+\n
+\nВы всё ещё хотите продолжить\?</string>
+    <string name="track_error">%1$s ошибка: %2$s</string>
+    <string name="information_required_plain">*необходимо</string>
 </resources>

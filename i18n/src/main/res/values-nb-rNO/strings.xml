@@ -434,7 +434,6 @@
     <string name="pref_show_reading_mode">Vis lesemodus</string>
     <string name="unofficial_extension_message">Denne utvidelsen kommer ikke fra den offisielle Tachiyomi-utvidelseslisten.</string>
     <string name="action_disable">deaktivere</string>
-    <string name="action_display_unread_badge">Uleste kapitler</string>
     <string name="action_disable_all">deaktiver alle</string>
     <string name="action_enable_all">aktiver alle</string>
     <string name="action_sort_latest_chapter">Siste kapittel</string>
@@ -655,9 +654,6 @@
     <string name="database_clean">Ingenting å fjerne</string>
     <string name="skipped_reason_not_caught_up">Hoppet over fordi det er uleste kapitler</string>
     <string name="skipped_reason_completed">Hoppet over fordi serien er fullført</string>
-    <string name="confirm_manga_add_duplicate">Du har en oppføring i biblioteket ditt med samme navn, men fra en annen kilde (%1$s).
-\n
-\nVil du fortsette allikevel\?</string>
     <string name="download_queue_size_warning">Advarsel: store bulknedlastinger kan føre til at kilder blir tregere og/eller blokkerer Tachiyomi. Trykk for å lære mer.</string>
     <string name="library_errors_help">For hjelp til å fikse bibliotekoppdateringsfeil, se %1$s</string>
     <string name="action_display_cover_only_grid">Kun omslags-rutenett</string>
@@ -757,8 +753,7 @@
     <string name="source_filter_empty_screen">Ingen installert kilde funnet</string>
     <string name="not_installed">Ikke installert</string>
     <string name="updates_last_update_info_just_now">Akkurat nå</string>
-    <string name="download_notifier_cache_renewal">Indeksering av nedlastinger</string>
-    <string name="channel_downloader_cache">Indeksering</string>
+    <string name="download_notifier_cache_renewal">Sjekker nedlastinger</string>
     <string name="fdroid_warning">F-Droid-bygg er ikke offisielt støttet.
 \nTrykk for å finne ut mer.</string>
     <string name="information_no_entries_found">Fant ingen oppføringer i denne kategorien</string>
@@ -769,7 +764,6 @@
     <string name="track_remove_start_date_conf_text">Dette vil fjerne den tidligere valgte startdatoen fra %s</string>
     <string name="track_remove_finish_date_conf_text">Dette vil fjerne den tidligere valgte sluttdatoen fra %s</string>
     <string name="pref_invalidate_download_cache">Rydd ut nedlastingsindeksen</string>
-    <string name="enhanced_tracking_warning">Denne trackeren er kun kompatibel med %1$s-kilden.</string>
     <string name="pref_invalidate_download_cache_summary">Tving appen til å sjekke nedlastede kapitler på nytt</string>
     <string name="label_started">Startet</string>
     <string name="label_completed_titles">Fullførte oppføringer</string>
@@ -796,5 +790,11 @@
     <string name="pref_library_update_show_tab_badge">Vis antall uleste på oppdateringsikonet</string>
     <string name="pref_worker_info">Arbeider info</string>
     <string name="copied_to_clipboard_plain">Kopiert til utklippstavlen</string>
-    <string name="ext_miui_warning">Hvis MIUI-optimalisering er aktivert, kan det hende at installasjon av utvidelser ikke fungerer. Prøv å deaktivere MIUI-optimalisering eller installer fra nettstedet i stedet.</string>
+    <string name="enhanced_services_not_installed">Tilgjengelig, men kilden er ikke installert: %s</string>
+    <string name="confirm_add_duplicate_manga">Du har en oppføring i biblioteket med samme navn.
+\n
+\nØnsker du å fortsette likevel\?</string>
+    <string name="pref_skip_dupe_chapters">Hopp over dupliserte kapitler</string>
+    <string name="track_error">%1$s feil: %2$s</string>
+    <string name="information_required_plain">*påkrevd</string>
 </resources>

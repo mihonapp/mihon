@@ -81,7 +81,6 @@
     <string name="action_display">Pagpakita</string>
     <string name="action_display_cover_only_grid">Cover-only grid</string>
     <string name="action_display_download_badge">Gi-download nga mga kapitulo</string>
-    <string name="action_display_unread_badge">Mga kapitulo nga wala pa mabasa</string>
     <string name="action_display_language_badge">Pinulongan</string>
     <string name="action_display_show_tabs">Ipakita ang mga tab sa kategorya</string>
     <string name="action_display_show_number_of_items">Ipakita ang gidaghanon sa mga butang</string>

@@ -412,7 +412,6 @@
     <string name="creating_backup_error">備份失敗</string>
     <string name="logout_title">登出 %1$s？</string>
     <string name="badges_header">標記</string>
-    <string name="action_display_unread_badge">未讀章數</string>
     <plurals name="download_queue_summary">
         <item quantity="other">剩餘 %1$s 本</item>
     </plurals>
@@ -649,9 +648,6 @@
     <string name="pref_landscape_zoom">縮放橫向圖片</string>
     <string name="pref_navigate_pan">輕觸時移動圖片</string>
     <string name="action_display_cover_only_grid">純封面格狀</string>
-    <string name="confirm_manga_add_duplicate">書櫃中已有一個來自不同來源 (%1$s) 的同名項目。
-\n
-\n你仍欲繼續嗎？</string>
     <string name="pref_update_only_started">無已讀的章節</string>
     <string name="skipped_reason_completed">由於叢書連載已完結，因此略過</string>
     <string name="skipped_reason_not_caught_up">由於尚有未讀的章節，因此略過</string>
@@ -744,8 +740,7 @@
     <string name="unknown_title">未知的標題</string>
     <string name="error_user_agent_string_invalid">無效的使用者代理字串</string>
     <string name="updates_last_update_info_just_now">剛剛</string>
-    <string name="channel_downloader_cache">正在建立索引</string>
-    <string name="download_notifier_cache_renewal">正在建立下載索引</string>
+    <string name="download_notifier_cache_renewal">正在檢查下載</string>
     <string name="action_open_random_manga">隨機開卷</string>
     <string name="information_no_entries_found">類別沒有作品</string>
     <string name="fdroid_warning">F-Droid 的組建未被正式支援。
@@ -756,7 +751,6 @@
     <string name="track_remove_finish_date_conf_text">從「%s」移除你先前輸入的閱讀完畢日期</string>
     <string name="track_remove_start_date_conf_text">從「%s」移除你先前輸入的開始閱讀日期</string>
     <string name="pref_invalidate_download_cache">清除下載索引</string>
-    <string name="enhanced_tracking_warning">該平台僅與來源「%1$s」相容。</string>
     <string name="pref_invalidate_download_cache_summary">強制重新檢查已下載的章節</string>
     <string name="label_downloaded">已下載</string>
     <string name="label_completed_titles">閱畢作品</string>
@@ -783,5 +777,11 @@
     <string name="pref_library_update_show_tab_badge">在「新刊」導覽圖示上標記未讀章數</string>
     <string name="copied_to_clipboard_plain">已複製到剪貼簿</string>
     <string name="pref_worker_info">工作站資訊</string>
-    <string name="ext_miui_warning">當 MIUI 最佳化已啟用時，可能無法自動安裝擴充套件。請嘗試將之停用，或逕行從網站下載並安裝。</string>
+    <string name="pref_skip_dupe_chapters">略過重複的章節</string>
+    <string name="enhanced_services_not_installed">可供使用但來源尚未安裝：%s</string>
+    <string name="confirm_add_duplicate_manga">書櫃中已有同名作品。
+\n
+\n仍要新增嗎？</string>
+    <string name="track_error">%1$s 發生錯誤：%2$s</string>
+    <string name="information_required_plain">*必填</string>
 </resources>

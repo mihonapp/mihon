@@ -404,7 +404,6 @@
     <string name="action_start">התחל</string>
     <string name="action_migrate">העברה</string>
     <string name="action_display_comfortable_grid">רשת נוחה</string>
-    <string name="action_display_unread_badge">פרקים שלא נקראו</string>
     <string name="action_display_local_badge">מקור מקומי</string>
     <string name="theme_tealturquoise">טורקיז צהבהב</string>
     <string name="pref_dark_theme_pure_black">מצב שחור כהה טהור</string>

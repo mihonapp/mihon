@@ -471,7 +471,6 @@
         <item quantity="other">Completada en %1$s con %2$s errores</item>
     </plurals>
     <string name="tracking_info">La sincronización de estos servicios solo funciona en un solo sentido. Cada manga en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
-    <string name="action_display_unread_badge">Capítulos sin leer</string>
     <string name="unofficial_extension_message">Esta extensión no es de la lista oficial de extensiones de Tachiyomi.</string>
     <string name="ext_unofficial">No oficial</string>
     <string name="label_data">Datos</string>
@@ -684,7 +683,7 @@
     <string name="connected_to_wifi">Solo con Wi-Fi</string>
     <string name="update_72hour">Cada 3 días</string>
     <string name="download_queue_size_warning">Advertencia: Las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a Tachiyomi. Toca aquí para más información.</string>
-    <string name="ext_update_all">Actualizar todos</string>
+    <string name="ext_update_all">Actualizar todas</string>
     <string name="channel_app_updates">Actualizaciones de la aplicación</string>
     <string name="pref_auto_clear_chapter_cache">Borrar la caché de capítulos al cerrar la aplicación</string>
     <string name="database_clean">Base de datos limpia</string>
@@ -704,9 +703,6 @@
     <string name="pref_navigate_pan">Desplazarse por el resto de la página antes de cambiar</string>
     <string name="action_display_cover_only_grid">Cuadrícula sólo de portadas</string>
     <string name="pref_landscape_zoom">Acercar la vista en horizontal</string>
-    <string name="confirm_manga_add_duplicate">Tienes un elemento en tu biblioteca con el mismo nombre pero de distinto origen (%1$s).
-\n
-\n¿Quieres seguir\?</string>
     <string name="pref_update_only_started">Series sin empezar</string>
     <string name="skipped_reason_completed">Omitido porque la serie está completa</string>
     <string name="skipped_reason_not_caught_up">Omitido porque hay capítulos sin leer</string>
@@ -802,18 +798,15 @@
     <string name="updates_last_update_info_just_now">Ahora mismo</string>
     <string name="error_user_agent_string_invalid">El nombre de agente de usuario no vale</string>
     <string name="download_notifier_cache_renewal">Reindexando descargas</string>
-    <string name="channel_downloader_cache">Índice</string>
     <string name="action_open_random_manga">Abrir manga al azar</string>
     <string name="information_no_entries_found">Parece que esta categoría está vacía</string>
-    <string name="fdroid_warning">Las compilaciones de F-Droid no son oficialmente compatibles. 
-\nToque para obtener más información.</string>
+    <string name="fdroid_warning">No recomendamos el uso de la versión en F-Droid. Toca para más información.</string>
     <string name="action_display_show_continue_reading_button">Mostrar el botón de seguir leyendo</string>
     <string name="other_header">Más cosas</string>
     <string name="track_remove_start_date_conf_text">Al hacer esto %s ya no aparecerá como empezado ese día</string>
     <string name="track_remove_date_conf_title">¿Quieres quitar esta fecha\?</string>
     <string name="track_remove_finish_date_conf_text">Al hacer esto %s ya no aparecerá como terminado ese día</string>
     <string name="pref_invalidate_download_cache">Reconstruir el índice de descargas</string>
-    <string name="enhanced_tracking_warning">Este servicio de seguimiento solo funciona con %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Forzar a la aplicación a volver a comprobar los capítulos descargados</string>
     <string name="label_started">Empezados</string>
     <string name="label_local">En el dispositivo</string>
@@ -822,7 +815,7 @@
     <string name="label_read_chapters">Leídos</string>
     <string name="label_tracker_section">Con seguimiento</string>
     <string name="label_total_chapters">En total</string>
-    <string name="label_titles_in_global_update">Actualizado de forma global</string>
+    <string name="label_titles_in_global_update">Actualizados de forma global</string>
     <string name="label_mean_score">Puntuación media</string>
     <string name="day_short">%dd</string>
     <string name="hour_short">%dh</string>
@@ -832,7 +825,7 @@
     <string name="label_tracked_titles">Manga en servicios de seguimiento</string>
     <string name="label_downloaded">Descargados</string>
     <string name="label_stats">Estadísticas</string>
-    <string name="label_overview_section">Sumario</string>
+    <string name="label_overview_section">Resumen</string>
     <string name="label_titles_section">Manga</string>
     <string name="seconds_short">%ds</string>
     <string name="action_not_now">Ahora no</string>
@@ -840,5 +833,11 @@
     <string name="pref_library_update_show_tab_badge">Mostrar los capítulos por leer en el icono de actualizar</string>
     <string name="copied_to_clipboard_plain">Se ha copiado al portapapeles</string>
     <string name="pref_worker_info">Detalles sobre hilos de trabajo</string>
-    <string name="ext_miui_warning">Puede que no sea posible instalar extensiones si activas la optimización de MIUI. Es recomendable desactivarla o probar a instalar la extensión desde la propia web.</string>
+    <string name="pref_skip_dupe_chapters">Saltarse los capítulos repetidos</string>
+    <string name="enhanced_services_not_installed">Está disponible, pero la fuente todavía no se ha instalado: %s</string>
+    <string name="confirm_add_duplicate_manga">Ya tienes un manga en la biblioteca con este mismo nombre.
+\n
+\n¿Seguro que quieres continuar\?</string>
+    <string name="track_error">%1$s error: %2$s</string>
+    <string name="information_required_plain">*necesaria</string>
 </resources>

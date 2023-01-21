@@ -448,7 +448,6 @@
     <string name="ext_unofficial">Neslužbeno</string>
     <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom aktualiziranja biblioteke</string>
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
-    <string name="action_display_unread_badge">Nepročitana poglavlja</string>
     <string name="action_migrate">Migriraj</string>
     <string name="action_disable_all">Deaktiviraj sve</string>
     <string name="action_enable_all">Aktiviraj sve</string>
@@ -671,9 +670,6 @@
     <string name="action_show_manga">Prikaži unos</string>
     <string name="action_display_cover_only_grid">Samo naslovnice</string>
     <string name="webtoon_side_padding_5">5 %</string>
-    <string name="confirm_manga_add_duplicate">U biblioteci imaš unos s istim imenom ali iz drugog izvora (%1$s).
-\n
-\nŽeliš li svejedno nastaviti\?</string>
     <string name="pref_navigate_pan">Pomicanje širokih slika dodirom</string>
     <string name="pref_landscape_zoom">Promijeni uvećanje slike u ležećem formatu</string>
     <string name="pref_update_only_started">Koja još nisu pokrenuta</string>
@@ -749,7 +745,6 @@
     <string name="error_user_agent_string_invalid">Nevažeći niz korisničkog agenta</string>
     <string name="pref_invalidate_download_cache_summary">Prisili aplikaciju da ponovno provjeri preuzeta poglavlja</string>
     <string name="pref_user_agent_string">Zadani niz korisničkog agenta</string>
-    <string name="enhanced_tracking_warning">Ovaj način pračenja je kompatibilan samo s izvorom %1$s.</string>
     <string name="error_user_agent_string_blank">Niz korisničkog agenta ne može biti prazan</string>
     <string name="pref_invalidate_download_cache">Poništi indeks preuzimanja</string>
     <string name="pref_reset_viewer_flags">Resetiraj postavke čitača po nizu</string>
@@ -797,7 +792,6 @@
     <string name="download_notifier_cache_renewal">Indeksiranje preuzimanja</string>
     <string name="update_check_open">Otvorite na GitHubu</string>
     <string name="skipped_reason_not_always_update">Preskočeno jer serija ne zahtijeva ažuriranje</string>
-    <string name="channel_downloader_cache">Indeksiranje</string>
     <string name="update_check_fdroid_migration_info">Nova verzija dostupna je u službenim izdanjima. Dodirnite da biste saznali kako migrirati iz neslužbenih F-Droid izdanja.</string>
     <string name="appwidget_updates_description">Pogledajte nedavno ažurirane unose u biblioteci</string>
     <string name="remove_manga">Upravo ćete ukloniti \"%s\" iz svoje biblioteke</string>
@@ -809,4 +803,10 @@
     <string name="information_no_manga_category">Kategorija je prazna</string>
     <string name="copied_to_clipboard_plain">Kopirano u međuspremnik</string>
     <string name="pref_worker_info">Podaci razvoja</string>
+    <string name="enhanced_services_not_installed">Dostupne, ali izvor nije instaliran: %s</string>
+    <string name="confirm_add_duplicate_manga">U tvojoj biblioteci imaš unos s istim imenom.
+\n
+\nŽeliš li svejedno nastaviti\?</string>
+    <string name="pref_skip_dupe_chapters">Preskoči dupla poglavlja</string>
+    <string name="track_error">%1$s greška: %2$s</string>
 </resources>

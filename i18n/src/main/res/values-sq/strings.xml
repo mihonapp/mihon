@@ -83,7 +83,6 @@
     <string name="multi_lang">Shumë</string>
     <string name="ext_update">Përditëso</string>
     <string name="ext_obsolete">I vjetëruar</string>
-    <string name="channel_downloader_cache">Indeksimi</string>
     <string name="channel_progress">Përparim</string>
     <string name="download_notifier_split_page_path_not_found">Nuk mund të gjendej shtegu i skedarit të faqes %d</string>
     <string name="information_no_recent_manga">Asgjë e lexuar kohët e fundit</string>
@@ -132,7 +131,6 @@
     <string name="action_display_download_badge">Kapitujt e shkarkuar</string>
     <string name="action_display_local_badge">Burimi lokal</string>
     <string name="action_display_comfortable_grid">Rrjetë e rehatshme</string>
-    <string name="action_display_unread_badge">Kapituj të palexuar</string>
     <string name="action_display_show_tabs">Shfaq skedat e kategorive</string>
     <string name="action_display_list">Lista</string>
     <string name="action_display_cover_only_grid">Rrjetë vetëm me mbulesë</string>
@@ -456,9 +454,6 @@
     <string name="local_invalid_format">Format i pavlefshëm i kapitullit</string>
     <string name="unknown_status">Status i panjohur</string>
     <string name="licensed">I licencuar</string>
-    <string name="confirm_manga_add_duplicate">Ju keni një hyrje në bibliotekën tuaj me të njëjtin emër, por nga një burim tjetër (%1$s).
-\n
-\nDëshironi akoma të vazhdoni\?</string>
     <string name="manga_removed_library">U hoq nga biblioteka</string>
     <string name="delete_downloads_for_manga">Të fshihen kapitujt e shkarkuar\?</string>
     <string name="clipboard_copy_error">Kopjimi në kujtesën e fragmenteve dështoi</string>
@@ -515,7 +510,6 @@
     <string name="chapter_settings">Cilësimet e kapitullit</string>
     <string name="crash_screen_title">Nje gabim i papritur ndodhi</string>
     <string name="update_check_notification_download_error">Gabim shkarkimi</string>
-    <string name="enhanced_tracking_warning">Ky gjurmues është i përputhshëm vetëm me burimin %1$s.</string>
     <string name="pref_invalidate_download_cache">Anuloni indeksin e shkarkimeve</string>
     <string name="pref_auto_clear_chapter_cache">Pastro memorjen e kapitullit në mbylljen e aplikacionit</string>
     <string name="pref_clear_database">Pastro bazën e të dhënave</string>

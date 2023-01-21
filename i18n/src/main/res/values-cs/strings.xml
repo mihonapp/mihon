@@ -438,7 +438,7 @@
     <string name="pref_category_nsfw_content">NSFW (18+) zdroje</string>
     <string name="secure_screen_summary">Secure screen skryje obsah aplikace při přepínání aplikací a blokuje tvorbu snímků obrazovky</string>
     <string name="secure_screen">Chráněná obrazovka</string>
-    <string name="lock_with_biometrics">Vyžaduje odemknutí</string>
+    <string name="lock_with_biometrics">Vyžadovat odemknutí</string>
     <string name="pref_confirm_exit">Potvrdit opuštění</string>
     <string name="theme_dark">Zapnuto</string>
     <string name="theme_light">Vypnuto</string>
@@ -549,7 +549,6 @@
     <string name="pref_library_update_categories_details">Položky ve vynechaných kategoriích nebudou aktualizovány, i kdyby byly také v zahrnutých kategoriích.</string>
     <string name="pref_category_display">Zobrazení</string>
     <string name="action_display_show_tabs">Zobrazovat karty kategorií</string>
-    <string name="action_display_unread_badge">Nepřečtené kapitoly</string>
     <string name="update_check_eol">Tato verze systému Android již není podporována</string>
     <string name="clipboard_copy_error">Kopírování do schránky se nezdařilo</string>
     <string name="vertical_plus_viewer">Průběžné vertikální</string>
@@ -670,9 +669,6 @@
     <string name="action_show_manga">Zobrazit položku</string>
     <string name="action_display_cover_only_grid">Mřížka jen s přebaly</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="confirm_manga_add_duplicate">Ve své knihovně máte položku se stejným názvem, ale z jiného zdroje (%1$s).
-\n
-\nPřejete si přesto pokračovat\?</string>
     <string name="pref_update_only_started">Které nebyly rozečteny</string>
     <string name="notification_update_error">%1$d aktualizace(í) selhalo</string>
     <string name="notification_update_skipped">%1$d aktualizace(í) přeskočena(y)</string>
@@ -770,8 +766,7 @@
     <string name="unknown_title">Neznámý titul</string>
     <string name="error_user_agent_string_invalid">Neplatný řetězec uživatelského agenta</string>
     <string name="updates_last_update_info_just_now">Právě teď</string>
-    <string name="download_notifier_cache_renewal">Indexování stažených souborů</string>
-    <string name="channel_downloader_cache">Indexování</string>
+    <string name="download_notifier_cache_renewal">Kontrola stahování</string>
     <string name="information_no_entries_found">V této kategorii nebyly nalezeny žádné položky</string>
     <string name="action_open_random_manga">Otevřít náhodnou položku</string>
     <string name="fdroid_warning">F-Droid sestavení nejsou oficiálně podporovány.
@@ -782,7 +777,6 @@
     <string name="track_remove_finish_date_conf_text">Tím se odstraní dříve vybrané datum ukončení z %s</string>
     <string name="track_remove_start_date_conf_text">Tím se odstraní dříve vybrané datum zahájení z %s</string>
     <string name="pref_invalidate_download_cache">Zneplatnit index stahování</string>
-    <string name="enhanced_tracking_warning">Tento sledovač je kompatibilní pouze se zdrojem %1$s.</string>
     <string name="pref_invalidate_download_cache_summary">Vynutit aplikaci znovu zkontrolovat stažené kapitoly</string>
     <string name="label_started">Započato</string>
     <string name="label_local">Lokální</string>
@@ -809,5 +803,11 @@
     <string name="pref_library_update_show_tab_badge">Zobrazit počet nepřečtených kapitol na ikoně Aktualizace</string>
     <string name="copied_to_clipboard_plain">Zkopírováno do schránky</string>
     <string name="pref_worker_info">Informace o pracovníkovi</string>
-    <string name="ext_miui_warning">Instalace rozšíření nemusí fungovat, pokud je povolena optimalizace MIUI. Zkuste ji zakázat nebo místo toho instalovat z webových stránek.</string>
+    <string name="enhanced_services_not_installed">K dispozici, ale zdroj není nainstalován: %s</string>
+    <string name="pref_skip_dupe_chapters">Přeskakovat duplicitní kapitoly</string>
+    <string name="confirm_add_duplicate_manga">Ve své knihovně máte položku se stejným názvem.
+\n
+\nStále si přejete pokračovat\?</string>
+    <string name="track_error">%1$s chyba: %2$s</string>
+    <string name="information_required_plain">*vyžadováno</string>
 </resources>
