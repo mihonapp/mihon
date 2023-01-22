@@ -48,6 +48,8 @@ import eu.kanade.presentation.util.runOnEnterKeyPressed
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 
+const val SEARCH_DEBOUNCE_MILLIS = 250L
+
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,

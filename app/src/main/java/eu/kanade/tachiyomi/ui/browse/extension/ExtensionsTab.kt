@@ -21,7 +21,6 @@ fun extensionsTab(
 ): TabContent {
     val navigator = LocalNavigator.currentOrThrow
     val state by extensionsScreenModel.state.collectAsState()
-    val searchQuery by extensionsScreenModel.query.collectAsState()
 
     return TabContent(
         titleRes = R.string.label_extensions,
@@ -38,7 +37,7 @@ fun extensionsTab(
             ExtensionScreen(
                 state = state,
                 contentPadding = contentPadding,
-                searchQuery = searchQuery,
+                searchQuery = state.searchQuery,
                 onLongClickItem = { extension ->
                     when (extension) {
                         is Extension.Available -> extensionsScreenModel.installExtension(extension)

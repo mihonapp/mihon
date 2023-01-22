@@ -6,6 +6,7 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -15,11 +16,12 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import rx.Observable
@@ -32,9 +34,6 @@ class ExtensionsScreenModel(
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensions: GetExtensionsByType = Injekt.get(),
 ) : StateScreenModel<ExtensionsState>(ExtensionsState()) {
-
-    private val _query: MutableStateFlow<String?> = MutableStateFlow(null)
-    val query: StateFlow<String?> = _query.asStateFlow()
 
     private var _currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
 
@@ -74,7 +73,7 @@ class ExtensionsScreenModel(
 
         coroutineScope.launchIO {
             combine(
-                _query,
+                state.map { it.searchQuery }.distinctUntilChanged().debounce(SEARCH_DEBOUNCE_MILLIS),
                 _currentDownloads,
                 getExtensions.subscribe(),
             ) { query, downloads, (_updates, _installed, _available, _untrusted) ->
@@ -124,8 +123,8 @@ class ExtensionsScreenModel(
     }
 
     fun search(query: String?) {
-        coroutineScope.launchIO {
-            _query.emit(query)
+        mutableState.update {
+            it.copy(searchQuery = query)
         }
     }
 
@@ -211,6 +210,7 @@ data class ExtensionsState(
     val isRefreshing: Boolean = false,
     val items: ItemGroups = mutableMapOf(),
     val updates: Int = 0,
+    val searchQuery: String? = null,
 ) {
     val isEmpty = items.isEmpty()
 }

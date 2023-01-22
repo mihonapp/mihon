@@ -58,7 +58,7 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 fun ExtensionScreen(
     state: ExtensionsState,
     contentPadding: PaddingValues,
-    searchQuery: String? = null,
+    searchQuery: String?,
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
     onInstallExtension: (Extension.Available) -> Unit,
