@@ -269,9 +269,7 @@ class ReaderActivity : BaseActivity() {
      */
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(::menuVisible.name, menuVisible)
-        if (!isChangingConfigurations) {
-            viewModel.onSaveInstanceStateNonConfigurationChange()
-        }
+        viewModel.onSaveInstanceState()
         super.onSaveInstanceState(outState)
     }
 

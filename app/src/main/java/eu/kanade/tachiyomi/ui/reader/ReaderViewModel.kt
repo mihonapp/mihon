@@ -232,10 +232,10 @@ class ReaderViewModel(
     }
 
     /**
-     * Called when the activity is saved and not changing configurations. It updates the database
+     * Called when the activity is saved. It updates the database
      * to persist the current progress of the active chapter.
      */
-    fun onSaveInstanceStateNonConfigurationChange() {
+    fun onSaveInstanceState() {
         val currentChapter = getCurrentChapter() ?: return
         viewModelScope.launchNonCancellable {
             saveChapterProgress(currentChapter)
@@ -512,6 +512,7 @@ class ReaderViewModel(
     private suspend fun saveChapterProgress(readerChapter: ReaderChapter) {
         if (!incognitoMode || hasTrackers) {
             val chapter = readerChapter.chapter
+            getCurrentChapter()?.requestedPage = chapter.last_page_read
             updateChapter.await(
                 ChapterUpdate(
                     id = chapter.id!!,
