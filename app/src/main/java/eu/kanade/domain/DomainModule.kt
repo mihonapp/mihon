@@ -1,6 +1,5 @@
 package eu.kanade.domain
 
-import eu.kanade.data.category.CategoryRepositoryImpl
 import eu.kanade.data.chapter.ChapterRepositoryImpl
 import eu.kanade.data.history.HistoryRepositoryImpl
 import eu.kanade.data.manga.MangaRepositoryImpl
@@ -18,7 +17,6 @@ import eu.kanade.domain.category.interactor.SetDisplayModeForCategory
 import eu.kanade.domain.category.interactor.SetMangaCategories
 import eu.kanade.domain.category.interactor.SetSortModeForCategory
 import eu.kanade.domain.category.interactor.UpdateCategory
-import eu.kanade.domain.category.repository.CategoryRepository
 import eu.kanade.domain.chapter.interactor.GetChapter
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
 import eu.kanade.domain.chapter.interactor.SetMangaDefaultChapterFlags
@@ -67,6 +65,8 @@ import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.repository.TrackRepository
 import eu.kanade.domain.updates.interactor.GetUpdates
 import eu.kanade.domain.updates.repository.UpdatesRepository
+import tachiyomi.data.category.CategoryRepositoryImpl
+import tachiyomi.domain.category.repository.CategoryRepository
 import uy.kohesive.injekt.api.InjektModule
 import uy.kohesive.injekt.api.InjektRegistrar
 import uy.kohesive.injekt.api.addFactory

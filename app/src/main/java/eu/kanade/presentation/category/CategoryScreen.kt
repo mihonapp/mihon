@@ -7,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.category.components.CategoryContent
 import eu.kanade.presentation.category.components.CategoryFloatingActionButton
 import eu.kanade.presentation.components.AppBar
@@ -18,6 +17,7 @@ import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.topSmallPaddingValues
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.category.CategoryScreenState
+import tachiyomi.domain.category.model.Category
 
 @Composable
 fun CategoryScreen(

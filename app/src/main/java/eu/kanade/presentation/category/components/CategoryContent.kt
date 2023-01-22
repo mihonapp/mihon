@@ -7,9 +7,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.util.padding
+import tachiyomi.domain.category.model.Category
 
 @Composable
 fun CategoryContent(

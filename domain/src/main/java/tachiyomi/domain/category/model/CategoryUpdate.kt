@@ -1,4 +1,4 @@
-package eu.kanade.domain.category.model
+package tachiyomi.domain.category.model
 
 data class CategoryUpdate(
     val id: Long,

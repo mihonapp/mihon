@@ -142,6 +142,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":source-api"))
     implementation(project(":data"))
+    implementation(project(":domain"))
 
     // Compose
     implementation(platform(compose.bom))

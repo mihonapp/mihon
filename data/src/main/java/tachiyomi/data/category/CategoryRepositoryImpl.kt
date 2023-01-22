@@ -1,11 +1,11 @@
-package eu.kanade.data.category
+package tachiyomi.data.category
 
-import eu.kanade.domain.category.model.Category
-import eu.kanade.domain.category.model.CategoryUpdate
-import eu.kanade.domain.category.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.data.Database
 import tachiyomi.data.DatabaseHandler
+import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.category.model.CategoryUpdate
+import tachiyomi.domain.category.repository.CategoryRepository
 
 class CategoryRepositoryImpl(
     private val handler: DatabaseHandler,

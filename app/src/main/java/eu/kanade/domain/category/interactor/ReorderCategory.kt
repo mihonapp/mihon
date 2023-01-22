@@ -1,13 +1,13 @@
 package eu.kanade.domain.category.interactor
 
-import eu.kanade.domain.category.model.Category
-import eu.kanade.domain.category.model.CategoryUpdate
-import eu.kanade.domain.category.repository.CategoryRepository
 import eu.kanade.tachiyomi.util.lang.withNonCancellableContext
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
+import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.category.model.CategoryUpdate
+import tachiyomi.domain.category.repository.CategoryRepository
 import java.util.Collections
 
 class ReorderCategory(

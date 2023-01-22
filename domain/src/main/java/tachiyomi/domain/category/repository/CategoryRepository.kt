@@ -1,8 +1,8 @@
-package eu.kanade.domain.category.repository
+package tachiyomi.domain.category.repository
 
-import eu.kanade.domain.category.model.Category
-import eu.kanade.domain.category.model.CategoryUpdate
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.category.model.CategoryUpdate
 
 interface CategoryRepository {
 

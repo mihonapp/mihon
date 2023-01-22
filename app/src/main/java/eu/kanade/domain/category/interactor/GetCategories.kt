@@ -1,8 +1,8 @@
 package eu.kanade.domain.category.interactor
 
-import eu.kanade.domain.category.model.Category
-import eu.kanade.domain.category.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.category.repository.CategoryRepository
 
 class GetCategories(
     private val categoryRepository: CategoryRepository,

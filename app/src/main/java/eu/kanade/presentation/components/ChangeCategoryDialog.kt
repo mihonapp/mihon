@@ -22,10 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.kanade.core.prefs.CheckboxState
-import eu.kanade.domain.category.model.Category
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
+import tachiyomi.domain.category.model.Category
 
 @Composable
 fun ChangeCategoryDialog(

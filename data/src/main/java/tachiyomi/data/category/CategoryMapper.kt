@@ -1,6 +1,6 @@
-package eu.kanade.data.category
+package tachiyomi.data.category
 
-import eu.kanade.domain.category.model.Category
+import tachiyomi.domain.category.model.Category
 
 val categoryMapper: (Long, String, Long, Long) -> Category = { id, name, order, flags ->
     Category(

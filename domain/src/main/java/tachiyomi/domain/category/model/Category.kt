@@ -1,4 +1,4 @@
-package eu.kanade.domain.category.model
+package tachiyomi.domain.category.model
 
 import java.io.Serializable
 
@@ -14,8 +14,4 @@ data class Category(
     companion object {
         const val UNCATEGORIZED_ID = 0L
     }
-}
-
-internal fun List<Category>.anyWithName(name: String): Boolean {
-    return any { name == it.name }
 }
