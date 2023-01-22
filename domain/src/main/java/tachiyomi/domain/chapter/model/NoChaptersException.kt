@@ -1,3 +1,3 @@
-package eu.kanade.data.chapter
+package tachiyomi.domain.chapter.model
 
 class NoChaptersException : Exception()

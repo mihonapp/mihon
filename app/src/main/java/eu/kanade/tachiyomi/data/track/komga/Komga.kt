@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.source.Source
 import okhttp3.Dns
 import okhttp3.OkHttpClient
 import tachiyomi.domain.manga.model.Manga
-import eu.kanade.domain.track.model.Track as DomainTrack
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 class Komga(private val context: Context, id: Long) : TrackService(id), EnhancedTrackService {
 

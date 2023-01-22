@@ -1,9 +1,9 @@
-package eu.kanade.data.track
+package tachiyomi.data.track
 
-import eu.kanade.domain.track.model.Track
-import eu.kanade.domain.track.repository.TrackRepository
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.data.DatabaseHandler
+import tachiyomi.domain.track.model.Track
+import tachiyomi.domain.track.repository.TrackRepository
 
 class TrackRepositoryImpl(
     private val handler: DatabaseHandler,

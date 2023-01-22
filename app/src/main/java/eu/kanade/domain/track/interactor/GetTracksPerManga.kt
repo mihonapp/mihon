@@ -1,8 +1,8 @@
 package eu.kanade.domain.track.interactor
 
-import eu.kanade.domain.track.repository.TrackRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import tachiyomi.domain.track.repository.TrackRepository
 
 class GetTracksPerManga(
     private val trackRepository: TrackRepository,

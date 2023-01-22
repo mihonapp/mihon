@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
 import tachiyomi.domain.manga.model.Manga
 import java.security.MessageDigest
-import eu.kanade.domain.track.model.Track as DomainTrack
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 class Kavita(private val context: Context, id: Long) : TrackService(id), EnhancedTrackService {
 

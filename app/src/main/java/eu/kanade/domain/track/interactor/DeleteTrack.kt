@@ -1,8 +1,8 @@
 package eu.kanade.domain.track.interactor
 
-import eu.kanade.domain.track.repository.TrackRepository
 import eu.kanade.tachiyomi.util.system.logcat
 import logcat.LogPriority
+import tachiyomi.domain.track.repository.TrackRepository
 
 class DeleteTrack(
     private val trackRepository: TrackRepository,

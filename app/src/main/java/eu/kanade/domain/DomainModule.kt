@@ -1,9 +1,7 @@
 package eu.kanade.domain
 
-import eu.kanade.data.chapter.ChapterRepositoryImpl
 import eu.kanade.data.source.SourceDataRepositoryImpl
 import eu.kanade.data.source.SourceRepositoryImpl
-import eu.kanade.data.track.TrackRepositoryImpl
 import eu.kanade.domain.category.interactor.CreateCategoryWithName
 import eu.kanade.domain.category.interactor.DeleteCategory
 import eu.kanade.domain.category.interactor.GetCategories
@@ -55,17 +53,19 @@ import eu.kanade.domain.track.interactor.DeleteTrack
 import eu.kanade.domain.track.interactor.GetTracks
 import eu.kanade.domain.track.interactor.GetTracksPerManga
 import eu.kanade.domain.track.interactor.InsertTrack
-import eu.kanade.domain.track.repository.TrackRepository
 import eu.kanade.domain.updates.interactor.GetUpdates
 import tachiyomi.data.category.CategoryRepositoryImpl
+import tachiyomi.data.chapter.ChapterRepositoryImpl
 import tachiyomi.data.history.HistoryRepositoryImpl
 import tachiyomi.data.manga.MangaRepositoryImpl
+import tachiyomi.data.track.TrackRepositoryImpl
 import tachiyomi.data.updates.UpdatesRepositoryImpl
 import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.history.repository.HistoryRepository
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.repository.SourceDataRepository
+import tachiyomi.domain.track.repository.TrackRepository
 import tachiyomi.domain.updates.repository.UpdatesRepository
 import uy.kohesive.injekt.api.InjektModule
 import uy.kohesive.injekt.api.InjektRegistrar

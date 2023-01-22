@@ -1,9 +1,9 @@
 package eu.kanade.domain.track.interactor
 
-import eu.kanade.domain.track.model.Track
-import eu.kanade.domain.track.repository.TrackRepository
 import eu.kanade.tachiyomi.util.system.logcat
 import logcat.LogPriority
+import tachiyomi.domain.track.model.Track
+import tachiyomi.domain.track.repository.TrackRepository
 
 class InsertTrack(
     private val trackRepository: TrackRepository,

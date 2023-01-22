@@ -245,7 +245,7 @@ data class TrackInfoDialogHomeScreen(
             }
         }
 
-        private fun List<eu.kanade.domain.track.model.Track>.mapToTrackItem(): List<TrackItem> {
+        private fun List<tachiyomi.domain.track.model.Track>.mapToTrackItem(): List<TrackItem> {
             val dbTracks = map { it.toDbTrack() }
             val loggedServices = Injekt.get<TrackManager>().services.filter { it.isLogged }
             val source = Injekt.get<SourceManager>().getOrStub(sourceId)

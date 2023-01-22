@@ -1,7 +1,7 @@
-package eu.kanade.domain.track.repository
+package tachiyomi.domain.track.repository
 
-import eu.kanade.domain.track.model.Track
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.track.model.Track
 
 interface TrackRepository {
 

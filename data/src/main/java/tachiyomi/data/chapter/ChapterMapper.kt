@@ -1,4 +1,4 @@
-package eu.kanade.data.chapter
+package tachiyomi.data.chapter
 
 import tachiyomi.domain.chapter.model.Chapter
 

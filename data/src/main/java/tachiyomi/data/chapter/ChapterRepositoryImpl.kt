@@ -1,4 +1,4 @@
-package eu.kanade.data.chapter
+package tachiyomi.data.chapter
 
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.toLong

@@ -1,11 +1,10 @@
-package eu.kanade.data.chapter
+package tachiyomi.data.chapter
 
-object CleanupChapterName {
+object ChapterSanitizer {
 
-    fun await(chapterName: String, mangaTitle: String): String {
-        return chapterName
-            .trim()
-            .removePrefix(mangaTitle)
+    fun String.sanitize(title: String): String {
+        return trim()
+            .removePrefix(title)
             .trim(*CHAPTER_TRIM_CHARS)
     }
 
