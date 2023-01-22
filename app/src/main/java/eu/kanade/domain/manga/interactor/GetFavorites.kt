@@ -1,8 +1,8 @@
 package eu.kanade.domain.manga.interactor
 
-import eu.kanade.domain.manga.repository.MangaRepository
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.repository.MangaRepository
 
 class GetFavorites(
     private val mangaRepository: MangaRepository,

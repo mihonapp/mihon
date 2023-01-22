@@ -1,7 +1,7 @@
 package eu.kanade.domain.history.interactor
 
-import eu.kanade.domain.history.repository.HistoryRepository
 import tachiyomi.domain.history.model.HistoryWithRelations
+import tachiyomi.domain.history.repository.HistoryRepository
 
 class RemoveHistory(
     private val repository: HistoryRepository,

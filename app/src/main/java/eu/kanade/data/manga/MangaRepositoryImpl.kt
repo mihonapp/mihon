@@ -1,7 +1,5 @@
 package eu.kanade.data.manga
 
-import eu.kanade.domain.library.model.LibraryManga
-import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toLong
 import kotlinx.coroutines.flow.Flow
@@ -9,8 +7,10 @@ import logcat.LogPriority
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.listOfStringsAdapter
 import tachiyomi.data.updateStrategyAdapter
+import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
+import tachiyomi.domain.manga.repository.MangaRepository
 
 class MangaRepositoryImpl(
     private val handler: DatabaseHandler,

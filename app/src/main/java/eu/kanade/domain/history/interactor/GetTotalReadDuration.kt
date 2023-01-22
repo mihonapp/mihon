@@ -1,6 +1,6 @@
 package eu.kanade.domain.history.interactor
 
-import eu.kanade.domain.history.repository.HistoryRepository
+import tachiyomi.domain.history.repository.HistoryRepository
 
 class GetTotalReadDuration(
     private val repository: HistoryRepository,

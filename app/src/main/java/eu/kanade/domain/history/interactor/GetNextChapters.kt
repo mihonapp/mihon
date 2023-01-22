@@ -1,10 +1,10 @@
 package eu.kanade.domain.history.interactor
 
 import eu.kanade.domain.chapter.interactor.GetChapterByMangaId
-import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.interactor.GetManga
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.history.repository.HistoryRepository
 import kotlin.math.max
 
 class GetNextChapters(

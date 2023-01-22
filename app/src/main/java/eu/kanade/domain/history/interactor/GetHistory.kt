@@ -1,8 +1,8 @@
 package eu.kanade.domain.history.interactor
 
-import eu.kanade.domain.history.repository.HistoryRepository
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.history.model.HistoryWithRelations
+import tachiyomi.domain.history.repository.HistoryRepository
 
 class GetHistory(
     private val repository: HistoryRepository,

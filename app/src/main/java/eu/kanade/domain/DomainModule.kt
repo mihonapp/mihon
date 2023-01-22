@@ -25,7 +25,6 @@ import eu.kanade.domain.chapter.interactor.ShouldUpdateDbChapter
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.chapter.interactor.UpdateChapter
-import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.domain.download.interactor.DeleteDownload
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
@@ -35,7 +34,6 @@ import eu.kanade.domain.history.interactor.GetNextChapters
 import eu.kanade.domain.history.interactor.GetTotalReadDuration
 import eu.kanade.domain.history.interactor.RemoveHistory
 import eu.kanade.domain.history.interactor.UpsertHistory
-import eu.kanade.domain.history.repository.HistoryRepository
 import eu.kanade.domain.manga.interactor.GetDuplicateLibraryManga
 import eu.kanade.domain.manga.interactor.GetFavorites
 import eu.kanade.domain.manga.interactor.GetLibraryManga
@@ -46,7 +44,6 @@ import eu.kanade.domain.manga.interactor.ResetViewerFlags
 import eu.kanade.domain.manga.interactor.SetMangaChapterFlags
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
-import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.GetLanguagesWithSources
 import eu.kanade.domain.source.interactor.GetRemoteManga
@@ -56,7 +53,6 @@ import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.domain.source.interactor.ToggleLanguage
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
-import eu.kanade.domain.source.repository.SourceDataRepository
 import eu.kanade.domain.source.repository.SourceRepository
 import eu.kanade.domain.track.interactor.DeleteTrack
 import eu.kanade.domain.track.interactor.GetTracks
@@ -64,9 +60,13 @@ import eu.kanade.domain.track.interactor.GetTracksPerManga
 import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.repository.TrackRepository
 import eu.kanade.domain.updates.interactor.GetUpdates
-import eu.kanade.domain.updates.repository.UpdatesRepository
 import tachiyomi.data.category.CategoryRepositoryImpl
 import tachiyomi.domain.category.repository.CategoryRepository
+import tachiyomi.domain.chapter.repository.ChapterRepository
+import tachiyomi.domain.history.repository.HistoryRepository
+import tachiyomi.domain.manga.repository.MangaRepository
+import tachiyomi.domain.source.repository.SourceDataRepository
+import tachiyomi.domain.updates.repository.UpdatesRepository
 import uy.kohesive.injekt.api.InjektModule
 import uy.kohesive.injekt.api.InjektRegistrar
 import uy.kohesive.injekt.api.addFactory

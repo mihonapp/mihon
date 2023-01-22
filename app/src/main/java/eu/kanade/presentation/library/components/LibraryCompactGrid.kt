@@ -6,9 +6,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.util.fastAny
-import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.presentation.components.MangaCompactGridItem
 import eu.kanade.tachiyomi.ui.library.LibraryItem
+import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.MangaCover
 
 @Composable

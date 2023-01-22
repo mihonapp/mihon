@@ -1,7 +1,7 @@
-package eu.kanade.domain.manga.repository
+package tachiyomi.domain.manga.repository
 
-import eu.kanade.domain.library.model.LibraryManga
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 

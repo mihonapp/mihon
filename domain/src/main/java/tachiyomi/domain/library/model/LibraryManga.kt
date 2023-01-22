@@ -1,4 +1,4 @@
-package eu.kanade.domain.library.model
+package tachiyomi.domain.library.model
 
 import tachiyomi.domain.manga.model.Manga
 

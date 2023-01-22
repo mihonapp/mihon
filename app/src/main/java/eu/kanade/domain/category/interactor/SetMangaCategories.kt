@@ -1,8 +1,8 @@
 package eu.kanade.domain.category.interactor
 
-import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.tachiyomi.util.system.logcat
 import logcat.LogPriority
+import tachiyomi.domain.manga.repository.MangaRepository
 
 class SetMangaCategories(
     private val mangaRepository: MangaRepository,

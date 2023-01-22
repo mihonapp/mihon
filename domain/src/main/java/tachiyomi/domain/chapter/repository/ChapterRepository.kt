@@ -1,4 +1,4 @@
-package eu.kanade.domain.chapter.repository
+package tachiyomi.domain.chapter.repository
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.chapter.model.Chapter

@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.source
 
 import android.content.Context
-import eu.kanade.domain.source.repository.SourceDataRepository
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -20,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import rx.Observable
 import tachiyomi.domain.source.model.SourceData
+import tachiyomi.domain.source.repository.SourceDataRepository
 import uy.kohesive.injekt.injectLazy
 import java.util.concurrent.ConcurrentHashMap
 

@@ -1,4 +1,4 @@
-package eu.kanade.domain.source.repository
+package tachiyomi.domain.source.repository
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.source.model.SourceData

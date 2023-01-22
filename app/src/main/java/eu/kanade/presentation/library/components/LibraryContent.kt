@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import eu.kanade.core.prefs.PreferenceMutableState
-import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.presentation.components.PullRefresh
 import eu.kanade.presentation.components.rememberPagerState
 import eu.kanade.tachiyomi.ui.library.LibraryItem
@@ -23,6 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
+import tachiyomi.domain.library.model.LibraryManga
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
