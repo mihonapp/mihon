@@ -1,4 +1,4 @@
-package eu.kanade.data.history
+package tachiyomi.data.history
 
 import tachiyomi.domain.history.model.History
 import tachiyomi.domain.history.model.HistoryWithRelations

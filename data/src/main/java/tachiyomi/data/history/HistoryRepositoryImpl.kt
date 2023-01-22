@@ -1,4 +1,4 @@
-package eu.kanade.data.history
+package tachiyomi.data.history
 
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.flow.Flow

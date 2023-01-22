@@ -1,7 +1,7 @@
-package eu.kanade.data.manga
+package tachiyomi.data.manga
 
 import eu.kanade.tachiyomi.util.system.logcat
-import eu.kanade.tachiyomi.util.system.toLong
+import eu.kanade.tachiyomi.util.toLong
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
 import tachiyomi.data.DatabaseHandler

@@ -1,4 +1,4 @@
-package eu.kanade.data.updates
+package tachiyomi.data.updates
 
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.updates.model.UpdatesWithRelations

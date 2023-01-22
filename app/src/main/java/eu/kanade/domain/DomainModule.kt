@@ -1,12 +1,9 @@
 package eu.kanade.domain
 
 import eu.kanade.data.chapter.ChapterRepositoryImpl
-import eu.kanade.data.history.HistoryRepositoryImpl
-import eu.kanade.data.manga.MangaRepositoryImpl
 import eu.kanade.data.source.SourceDataRepositoryImpl
 import eu.kanade.data.source.SourceRepositoryImpl
 import eu.kanade.data.track.TrackRepositoryImpl
-import eu.kanade.data.updates.UpdatesRepositoryImpl
 import eu.kanade.domain.category.interactor.CreateCategoryWithName
 import eu.kanade.domain.category.interactor.DeleteCategory
 import eu.kanade.domain.category.interactor.GetCategories
@@ -61,6 +58,9 @@ import eu.kanade.domain.track.interactor.InsertTrack
 import eu.kanade.domain.track.repository.TrackRepository
 import eu.kanade.domain.updates.interactor.GetUpdates
 import tachiyomi.data.category.CategoryRepositoryImpl
+import tachiyomi.data.history.HistoryRepositoryImpl
+import tachiyomi.data.manga.MangaRepositoryImpl
+import tachiyomi.data.updates.UpdatesRepositoryImpl
 import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.history.repository.HistoryRepository
