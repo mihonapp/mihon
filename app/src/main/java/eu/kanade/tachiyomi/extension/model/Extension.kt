@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.extension.model
 
 import android.graphics.drawable.Drawable
-import eu.kanade.domain.source.model.SourceData
 import eu.kanade.tachiyomi.source.Source
+import tachiyomi.domain.source.model.SourceData
 
 sealed class Extension {
 

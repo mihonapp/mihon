@@ -43,7 +43,6 @@ import coil.request.ImageRequest
 import coil.size.Precision
 import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
-import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -52,6 +51,7 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.dpToPx
 import kotlinx.coroutines.MainScope
 import tachiyomi.data.DatabaseHandler
+import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.view.UpdatesView
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

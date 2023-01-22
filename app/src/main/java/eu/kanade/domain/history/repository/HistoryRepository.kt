@@ -1,8 +1,8 @@
 package eu.kanade.domain.history.repository
 
-import eu.kanade.domain.history.model.HistoryUpdate
-import eu.kanade.domain.history.model.HistoryWithRelations
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.history.model.HistoryUpdate
+import tachiyomi.domain.history.model.HistoryWithRelations
 
 interface HistoryRepository {
 

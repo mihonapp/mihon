@@ -1,6 +1,6 @@
-package eu.kanade.domain.updates.model
+package tachiyomi.domain.updates.model
 
-import eu.kanade.domain.manga.model.MangaCover
+import tachiyomi.domain.manga.model.MangaCover
 
 data class UpdatesWithRelations(
     val mangaId: Long,

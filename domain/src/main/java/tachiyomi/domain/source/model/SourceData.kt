@@ -1,4 +1,4 @@
-package eu.kanade.domain.source.model
+package tachiyomi.domain.source.model
 
 data class SourceData(
     val id: Long,

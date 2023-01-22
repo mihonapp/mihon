@@ -5,11 +5,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import eu.kanade.domain.history.model.HistoryWithRelations
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.history.HistoryUiModel
+import tachiyomi.domain.history.model.HistoryWithRelations
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.text.DateFormat

@@ -1,8 +1,8 @@
 package eu.kanade.domain.updates.interactor
 
-import eu.kanade.domain.updates.model.UpdatesWithRelations
 import eu.kanade.domain.updates.repository.UpdatesRepository
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.updates.model.UpdatesWithRelations
 import java.util.Calendar
 
 class GetUpdates(

@@ -1,4 +1,4 @@
-package eu.kanade.domain.history.model
+package tachiyomi.domain.history.model
 
 import java.util.Date
 

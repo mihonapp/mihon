@@ -2,7 +2,6 @@ package eu.kanade.data.manga
 
 import eu.kanade.domain.library.model.LibraryManga
 import eu.kanade.domain.manga.model.Manga
-import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.repository.MangaRepository
 import eu.kanade.tachiyomi.util.system.logcat
 import eu.kanade.tachiyomi.util.system.toLong
@@ -11,6 +10,7 @@ import logcat.LogPriority
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.listOfStringsAdapter
 import tachiyomi.data.updateStrategyAdapter
+import tachiyomi.domain.manga.model.MangaUpdate
 
 class MangaRepositoryImpl(
     private val handler: DatabaseHandler,

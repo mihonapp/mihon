@@ -1,8 +1,5 @@
-package eu.kanade.tachiyomi.util.chapter
+package tachiyomi.domain.library.model
 
-import eu.kanade.domain.library.model.LibraryDisplayMode
-import eu.kanade.domain.library.model.LibrarySort
-import eu.kanade.domain.library.model.plus
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test

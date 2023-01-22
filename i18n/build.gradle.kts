@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "eu.kanade.tachiyomi.i18n"
+    namespace = "tachiyomi.i18n"
 
     lint {
         disable.addAll(listOf("MissingTranslation", "ExtraTranslation"))

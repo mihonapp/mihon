@@ -1,6 +1,6 @@
-package eu.kanade.domain.history.model
+package tachiyomi.domain.history.model
 
-import eu.kanade.domain.manga.model.MangaCover
+import tachiyomi.domain.manga.model.MangaCover
 import java.util.Date
 
 data class HistoryWithRelations(

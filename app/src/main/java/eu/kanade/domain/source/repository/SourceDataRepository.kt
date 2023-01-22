@@ -1,7 +1,7 @@
 package eu.kanade.domain.source.repository
 
-import eu.kanade.domain.source.model.SourceData
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.source.model.SourceData
 
 interface SourceDataRepository {
     fun subscribeAll(): Flow<List<SourceData>>

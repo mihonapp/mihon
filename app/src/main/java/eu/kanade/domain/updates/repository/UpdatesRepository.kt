@@ -1,7 +1,7 @@
 package eu.kanade.domain.updates.repository
 
-import eu.kanade.domain.updates.model.UpdatesWithRelations
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.updates.model.UpdatesWithRelations
 
 interface UpdatesRepository {
 

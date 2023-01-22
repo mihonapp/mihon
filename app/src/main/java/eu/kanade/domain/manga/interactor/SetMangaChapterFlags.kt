@@ -1,8 +1,8 @@
 package eu.kanade.domain.manga.interactor
 
 import eu.kanade.domain.manga.model.Manga
-import eu.kanade.domain.manga.model.MangaUpdate
 import eu.kanade.domain.manga.repository.MangaRepository
+import tachiyomi.domain.manga.model.MangaUpdate
 
 class SetMangaChapterFlags(
     private val mangaRepository: MangaRepository,

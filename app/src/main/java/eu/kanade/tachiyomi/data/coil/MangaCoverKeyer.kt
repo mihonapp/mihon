@@ -2,11 +2,11 @@ package eu.kanade.tachiyomi.data.coil
 
 import coil.key.Keyer
 import coil.request.Options
-import eu.kanade.domain.manga.model.MangaCover
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.toDomainManga
+import tachiyomi.domain.manga.model.MangaCover
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import eu.kanade.domain.manga.model.Manga as DomainManga
