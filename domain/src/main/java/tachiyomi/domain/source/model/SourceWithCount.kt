@@ -1,4 +1,4 @@
-package eu.kanade.domain.source.model
+package tachiyomi.domain.source.model
 
 data class SourceWithCount(
     val source: Source,

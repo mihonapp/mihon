@@ -1,10 +1,10 @@
 package eu.kanade.domain.source.interactor
 
-import eu.kanade.domain.source.model.Source
 import eu.kanade.domain.source.repository.SourceRepository
 import eu.kanade.domain.source.service.SourcePreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import tachiyomi.domain.source.model.Source
 import java.text.Collator
 import java.util.Collections
 import java.util.Locale

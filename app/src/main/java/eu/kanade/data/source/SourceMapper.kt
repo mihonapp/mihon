@@ -1,8 +1,8 @@
 package eu.kanade.data.source
 
-import eu.kanade.domain.source.model.Source
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
+import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceData
 
 val sourceMapper: (eu.kanade.tachiyomi.source.Source) -> Source = { source ->

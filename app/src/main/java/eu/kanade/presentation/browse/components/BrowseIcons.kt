@@ -27,12 +27,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
-import eu.kanade.domain.source.model.Source
+import eu.kanade.domain.source.model.icon
 import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.util.lang.withIOContext
+import tachiyomi.domain.source.model.Source
 
 private val defaultModifier = Modifier
     .height(40.dp)

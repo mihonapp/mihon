@@ -1,10 +1,10 @@
 package eu.kanade.domain.source.repository
 
-import eu.kanade.domain.source.model.Source
 import eu.kanade.domain.source.model.SourcePagingSourceType
-import eu.kanade.domain.source.model.SourceWithCount
 import eu.kanade.tachiyomi.source.model.FilterList
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.source.model.Source
+import tachiyomi.domain.source.model.SourceWithCount
 
 interface SourceRepository {
 

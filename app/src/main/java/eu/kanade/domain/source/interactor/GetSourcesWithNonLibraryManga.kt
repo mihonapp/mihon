@@ -1,8 +1,8 @@
 package eu.kanade.domain.source.interactor
 
-import eu.kanade.domain.source.model.SourceWithCount
 import eu.kanade.domain.source.repository.SourceRepository
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.source.model.SourceWithCount
 
 class GetSourcesWithNonLibraryManga(
     private val repository: SourceRepository,
