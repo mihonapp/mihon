@@ -1,4 +1,4 @@
-package eu.kanade.domain.chapter.model
+package tachiyomi.domain.chapter.model
 
 data class ChapterUpdate(
     val id: Long,

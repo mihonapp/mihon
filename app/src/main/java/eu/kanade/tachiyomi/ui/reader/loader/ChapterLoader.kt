@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader.loader
 
 import android.content.Context
 import com.github.junrar.exception.UnsupportedRarV5Exception
-import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -13,6 +12,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.logcat
+import tachiyomi.domain.manga.model.Manga
 
 /**
  * Loader used to retrieve the [PageLoader] for a given chapter.

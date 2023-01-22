@@ -1,9 +1,9 @@
 package eu.kanade.domain.chapter.interactor
 
-import eu.kanade.domain.chapter.model.ChapterUpdate
 import eu.kanade.domain.chapter.repository.ChapterRepository
 import eu.kanade.tachiyomi.util.system.logcat
 import logcat.LogPriority
+import tachiyomi.domain.chapter.model.ChapterUpdate
 
 class UpdateChapter(
     private val chapterRepository: ChapterRepository,

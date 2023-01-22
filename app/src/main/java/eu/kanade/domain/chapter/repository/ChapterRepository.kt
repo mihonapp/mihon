@@ -1,8 +1,8 @@
 package eu.kanade.domain.chapter.repository
 
-import eu.kanade.domain.chapter.model.Chapter
-import eu.kanade.domain.chapter.model.ChapterUpdate
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.model.ChapterUpdate
 
 interface ChapterRepository {
 

@@ -3,8 +3,8 @@ package eu.kanade.domain.chapter.interactor
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetFavorites
 import eu.kanade.domain.manga.interactor.SetMangaChapterFlags
-import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.util.lang.withNonCancellableContext
+import tachiyomi.domain.manga.model.Manga
 
 class SetMangaDefaultChapterFlags(
     private val libraryPreferences: LibraryPreferences,

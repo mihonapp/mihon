@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.data.download.model
 
 import eu.kanade.core.util.asFlow
-import eu.kanade.domain.chapter.model.Chapter
-import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.data.download.DownloadStore
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.util.lang.launchNonCancellable
@@ -17,6 +15,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import rx.Observable
 import rx.subjects.PublishSubject
+import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.manga.model.Manga
 import java.util.concurrent.CopyOnWriteArrayList
 
 class DownloadQueue(

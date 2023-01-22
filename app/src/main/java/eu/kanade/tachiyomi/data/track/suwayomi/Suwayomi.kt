@@ -9,8 +9,8 @@ import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.domain.manga.model.Manga as DomainManga
 import eu.kanade.domain.track.model.Track as DomainTrack
+import tachiyomi.domain.manga.model.Manga as DomainManga
 
 class Suwayomi(private val context: Context, id: Long) : TrackService(id), EnhancedTrackService {
     val api by lazy { TachideskApi() }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.res.stringResource
-import eu.kanade.domain.manga.model.Manga
 import eu.kanade.presentation.browse.components.GlobalSearchCardRow
 import eu.kanade.presentation.browse.components.GlobalSearchEmptyResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchErrorResultItem
@@ -19,6 +18,7 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchState
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import tachiyomi.domain.manga.model.Manga
 
 @Composable
 fun MigrateSearchScreen(

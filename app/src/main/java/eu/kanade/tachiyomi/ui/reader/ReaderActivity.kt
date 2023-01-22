@@ -45,7 +45,7 @@ import com.google.android.material.slider.Slider
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.manga.model.Manga
+import eu.kanade.domain.manga.model.orientationType
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -94,6 +94,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
 import logcat.LogPriority
+import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.injectLazy
 import kotlin.math.abs
 import kotlin.math.max

@@ -42,13 +42,13 @@ import androidx.core.view.updatePadding
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
-import eu.kanade.domain.manga.model.Manga
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.util.clickableNoIndication
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import tachiyomi.domain.manga.model.Manga
 
 @Composable
 fun MangaCoverDialog(

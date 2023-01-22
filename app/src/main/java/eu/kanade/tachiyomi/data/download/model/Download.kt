@@ -1,13 +1,13 @@
 package eu.kanade.tachiyomi.data.download.model
 
 import eu.kanade.domain.chapter.interactor.GetChapter
-import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.domain.manga.interactor.GetManga
-import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import rx.subjects.PublishSubject
+import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 

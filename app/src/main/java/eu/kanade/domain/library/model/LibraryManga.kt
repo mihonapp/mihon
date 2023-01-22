@@ -1,6 +1,6 @@
 package eu.kanade.domain.library.model
 
-import eu.kanade.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.Manga
 
 data class LibraryManga(
     val manga: Manga,

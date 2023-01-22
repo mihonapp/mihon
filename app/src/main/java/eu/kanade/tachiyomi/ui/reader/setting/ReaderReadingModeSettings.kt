@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
+import eu.kanade.domain.manga.model.orientationType
+import eu.kanade.domain.manga.model.readingModeType
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.databinding.ReaderReadingModeSettingsBinding

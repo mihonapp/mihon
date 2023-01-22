@@ -22,7 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import eu.kanade.domain.manga.model.TriStateFilter
+import tachiyomi.domain.manga.model.TriStateFilter
 
 @Composable
 fun TriStateItem(

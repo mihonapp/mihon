@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import eu.kanade.domain.manga.model.Manga
 import eu.kanade.tachiyomi.R
+import tachiyomi.domain.manga.model.Manga
 
 @Composable
 fun RemoveMangaDialog(

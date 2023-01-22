@@ -1,12 +1,14 @@
 package eu.kanade.domain.chapter.model
 
-import eu.kanade.domain.manga.model.Manga
-import eu.kanade.domain.manga.model.TriStateFilter
+import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.manga.ChapterItem
 import eu.kanade.tachiyomi.util.chapter.getChapterSort
+import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.TriStateFilter
 
 /**
  * Applies the view filters to the list of chapters obtained from the database.

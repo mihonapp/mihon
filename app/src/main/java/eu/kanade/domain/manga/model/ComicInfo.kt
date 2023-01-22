@@ -1,11 +1,12 @@
 package eu.kanade.domain.manga.model
 
-import eu.kanade.domain.chapter.model.Chapter
 import eu.kanade.tachiyomi.source.model.SManga
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
 import nl.adaptivity.xmlutil.serialization.XmlValue
+import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.manga.model.Manga
 
 const val COMIC_INFO_FILE = "ComicInfo.xml"
 
