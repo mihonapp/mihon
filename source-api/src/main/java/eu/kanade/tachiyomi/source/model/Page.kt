@@ -20,10 +20,14 @@ open class Page(
         get() = index + 1
 
     @Transient
-    @Volatile
-    var status: State = State.QUEUE
+    private val _statusFlow = MutableStateFlow(State.QUEUE)
+
+    @Transient
+    val statusFlow = _statusFlow.asStateFlow()
+    var status: State
+        get() = _statusFlow.value
         set(value) {
-            field = value
+            _statusFlow.value = value
             statusSubject?.onNext(value)
         }
 

@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
-import rx.Observable
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.injectLazy
 import java.io.File
@@ -65,7 +64,7 @@ class DownloadPageLoader(
         }
     }
 
-    override fun getPage(page: ReaderPage): Observable<Page.State> {
-        return zipPageLoader?.getPage(page) ?: Observable.just(Page.State.READY)
+    override suspend fun loadPage(page: ReaderPage) {
+        zipPageLoader?.loadPage(page)
     }
 }

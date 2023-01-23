@@ -6,7 +6,6 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.system.ImageUtil
-import rx.Observable
 import java.io.File
 import java.io.InputStream
 import java.io.PipedInputStream
@@ -55,16 +54,10 @@ class RarPageLoader(file: File) : PageLoader() {
     }
 
     /**
-     * Returns an observable that emits a ready state unless the loader was recycled.
+     * No additional action required to load the page
      */
-    override fun getPage(page: ReaderPage): Observable<Page.State> {
-        return Observable.just(
-            if (isRecycled) {
-                Page.State.ERROR
-            } else {
-                Page.State.READY
-            },
-        )
+    override suspend fun loadPage(page: ReaderPage) {
+        check(!isRecycled)
     }
 
     /**

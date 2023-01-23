@@ -73,9 +73,14 @@ class WebtoonPageHolder(
     private val scope = MainScope()
 
     /**
-     * Subscription for status changes of the page.
+     * Job for loading the page.
      */
-    private var statusSubscription: Subscription? = null
+    private var loadJob: Job? = null
+
+    /**
+     * Job for status changes of the page.
+     */
+    private var statusJob: Job? = null
 
     /**
      * Job for progress changes of the page.
@@ -101,7 +106,7 @@ class WebtoonPageHolder(
      */
     fun bind(page: ReaderPage) {
         this.page = page
-        observeStatus()
+        launchLoadJob()
         refreshLayoutParams()
     }
 
@@ -121,7 +126,7 @@ class WebtoonPageHolder(
      * Called when the view is recycled and added to the view pool.
      */
     override fun recycle() {
-        unsubscribeStatus()
+        cancelLoadJob()
         cancelProgressJob()
         unsubscribeReadImageHeader()
 
@@ -131,20 +136,21 @@ class WebtoonPageHolder(
     }
 
     /**
-     * Observes the status of the page and notify the changes.
+     * Starts loading the page and processing changes to the page's status.
      *
      * @see processStatus
      */
-    private fun observeStatus() {
-        unsubscribeStatus()
+    private fun launchLoadJob() {
+        cancelLoadJob()
 
         val page = page ?: return
         val loader = page.chapter.pageLoader ?: return
-        statusSubscription = loader.getPage(page)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { processStatus(it) }
-
-        addSubscription(statusSubscription)
+        loadJob = scope.launch {
+            loader.loadPage(page)
+        }
+        statusJob = scope.launch {
+            page.statusFlow.collectLatest { processStatus(it) }
+        }
     }
 
     /**
@@ -185,11 +191,13 @@ class WebtoonPageHolder(
     }
 
     /**
-     * Unsubscribes from the status subscription.
+     * Cancels loading the page and processing changes to the page's status.
      */
-    private fun unsubscribeStatus() {
-        removeSubscription(statusSubscription)
-        statusSubscription = null
+    private fun cancelLoadJob() {
+        loadJob?.cancel()
+        loadJob = null
+        statusJob?.cancel()
+        statusJob = null
     }
 
     /**
