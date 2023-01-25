@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import logcat.LogPriority
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
@@ -276,7 +276,7 @@ class DownloadCache(
             var sources = getSources()
 
             // Try to wait until extensions and sources have loaded
-            withTimeout(30.seconds) {
+            withTimeoutOrNull(30.seconds) {
                 while (!extensionManager.isInitialized) {
                     delay(2.seconds)
                 }
