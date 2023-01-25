@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.network.DELETE
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.PUT
-import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.serialization.json.Json
@@ -53,7 +53,7 @@ class MangaUpdatesApi(
                     url = "$baseUrl/v1/lists/series/${track.media_id}",
                 ),
             )
-                .await()
+                .awaitSuccess()
                 .parseAs<ListItem>()
 
         val rating = getSeriesRating(track)
@@ -77,7 +77,7 @@ class MangaUpdatesApi(
                 body = body.toString().toRequestBody(contentType),
             ),
         )
-            .await()
+            .awaitSuccess()
             .let {
                 if (it.code == 200) {
                     track.status = status
@@ -104,7 +104,7 @@ class MangaUpdatesApi(
                 body = body.toString().toRequestBody(contentType),
             ),
         )
-            .await()
+            .awaitSuccess()
 
         updateSeriesRating(track)
     }
@@ -116,7 +116,7 @@ class MangaUpdatesApi(
                     url = "$baseUrl/v1/series/${track.media_id}/rating",
                 ),
             )
-                .await()
+                .awaitSuccess()
                 .parseAs<Rating>()
         } catch (e: Exception) {
             null
@@ -134,14 +134,14 @@ class MangaUpdatesApi(
                     body = body.toString().toRequestBody(contentType),
                 ),
             )
-                .await()
+                .awaitSuccess()
         } else {
             authClient.newCall(
                 DELETE(
                     url = "$baseUrl/v1/series/${track.media_id}/rating",
                 ),
             )
-                .await()
+                .awaitSuccess()
         }
     }
 
@@ -162,7 +162,7 @@ class MangaUpdatesApi(
                 body = body.toString().toRequestBody(contentType),
             ),
         )
-            .await()
+            .awaitSuccess()
             .parseAs<JsonObject>()
             .let { obj ->
                 obj["results"]?.jsonArray?.map { element ->
@@ -183,7 +183,7 @@ class MangaUpdatesApi(
                 body = body.toString().toRequestBody(contentType),
             ),
         )
-            .await()
+            .awaitSuccess()
             .parseAs<JsonObject>()
             .let { obj ->
                 try {

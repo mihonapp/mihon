@@ -7,7 +7,7 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
-import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import kotlinx.serialization.decodeFromString
@@ -40,7 +40,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
                 .add("status", track.toBangumiStatus())
                 .build()
             authClient.newCall(POST("$apiUrl/collection/${track.media_id}/update", body = body))
-                .await()
+                .awaitSuccess()
             track
         }
     }
@@ -53,7 +53,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
                 .add("status", track.toBangumiStatus())
                 .build()
             authClient.newCall(POST("$apiUrl/collection/${track.media_id}/update", body = sbody))
-                .await()
+                .awaitSuccess()
 
             // chapter update
             val body = FormBody.Builder()
@@ -64,7 +64,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
                     "$apiUrl/subject/${track.media_id}/update/watched_eps",
                     body = body,
                 ),
-            ).await()
+            ).awaitSuccess()
 
             track
         }
@@ -78,7 +78,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
                 .appendQueryParameter("max_results", "20")
                 .build()
             authClient.newCall(GET(url.toString()))
-                .await()
+                .awaitSuccess()
                 .use {
                     var responseBody = it.body.string()
                     if (responseBody.isEmpty()) {
@@ -119,7 +119,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     suspend fun findLibManga(track: Track): Track? {
         return withIOContext {
             authClient.newCall(GET("$apiUrl/subject/${track.media_id}"))
-                .await()
+                .awaitSuccess()
                 .parseAs<JsonObject>()
                 .let { jsonToSearch(it) }
         }
@@ -135,7 +135,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
                 .build()
 
             // TODO: get user readed chapter here
-            val response = authClient.newCall(requestUserRead).await()
+            val response = authClient.newCall(requestUserRead).awaitSuccess()
             val responseBody = response.body.string()
             if (responseBody.isEmpty()) {
                 throw Exception("Null Response")
@@ -156,7 +156,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
     suspend fun accessToken(code: String): OAuth {
         return withIOContext {
             client.newCall(accessTokenRequest(code))
-                .await()
+                .awaitSuccess()
                 .parseAs()
         }
     }

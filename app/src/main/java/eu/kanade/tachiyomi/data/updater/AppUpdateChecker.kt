@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.core.preference.Preference
 import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
-import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.isInstalledFromFDroid
@@ -31,7 +31,7 @@ class AppUpdateChecker {
         return withIOContext {
             val result = networkService.client
                 .newCall(GET("https://api.github.com/repos/$GITHUB_REPO/releases/latest"))
-                .await()
+                .awaitSuccess()
                 .parseAs<GithubRelease>()
                 .let {
                     lastAppCheck.set(Date().time)

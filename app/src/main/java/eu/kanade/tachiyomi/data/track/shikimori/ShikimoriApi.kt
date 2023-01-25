@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
-import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
@@ -46,7 +46,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
                     "$apiUrl/v2/user_rates",
                     body = payload.toString().toRequestBody(jsonMime),
                 ),
-            ).await()
+            ).awaitSuccess()
             track
         }
     }
@@ -61,7 +61,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
                 .appendQueryParameter("limit", "20")
                 .build()
             authClient.newCall(GET(url.toString()))
-                .await()
+                .awaitSuccess()
                 .parseAs<JsonArray>()
                 .let { response ->
                     response.map {
@@ -103,7 +103,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
                 .appendPath(track.media_id.toString())
                 .build()
             val mangas = authClient.newCall(GET(urlMangas.toString()))
-                .await()
+                .awaitSuccess()
                 .parseAs<JsonObject>()
 
             val url = "$apiUrl/v2/user_rates".toUri().buildUpon()
@@ -112,7 +112,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
                 .appendQueryParameter("target_type", "Manga")
                 .build()
             authClient.newCall(GET(url.toString()))
-                .await()
+                .awaitSuccess()
                 .parseAs<JsonArray>()
                 .let { response ->
                     if (response.size > 1) {
@@ -128,7 +128,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
 
     suspend fun getCurrentUser(): Int {
         return authClient.newCall(GET("$apiUrl/users/whoami"))
-            .await()
+            .awaitSuccess()
             .parseAs<JsonObject>()
             .let {
                 it["id"]!!.jsonPrimitive.int
@@ -138,7 +138,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
     suspend fun accessToken(code: String): OAuth {
         return withIOContext {
             client.newCall(accessTokenRequest(code))
-                .await()
+                .awaitSuccess()
                 .parseAs()
         }
     }

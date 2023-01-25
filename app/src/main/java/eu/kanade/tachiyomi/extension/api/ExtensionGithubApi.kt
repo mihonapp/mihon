@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.extension.model.LoadResult
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
-import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.logcat
@@ -39,7 +39,7 @@ internal class ExtensionGithubApi {
                 try {
                     networkService.client
                         .newCall(GET("${REPO_URL_PREFIX}index.min.json"))
-                        .await()
+                        .awaitSuccess()
                 } catch (e: Throwable) {
                     logcat(LogPriority.ERROR, e) { "Failed to get extensions from GitHub" }
                     requiresFallbackSource = true
@@ -50,7 +50,7 @@ internal class ExtensionGithubApi {
             val response = githubResponse ?: run {
                 networkService.client
                     .newCall(GET("${FALLBACK_REPO_URL_PREFIX}index.min.json"))
-                    .await()
+                    .awaitSuccess()
             }
 
             val extensions = response

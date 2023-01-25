@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.PUT
-import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import okhttp3.Credentials
@@ -50,7 +50,7 @@ class TachideskApi {
             trackUrl
         }
 
-        val manga = client.newCall(GET("$url/full", headers)).await().parseAs<MangaDataClass>()
+        val manga = client.newCall(GET("$url/full", headers)).awaitSuccess().parseAs<MangaDataClass>()
 
         TrackSearch.create(TrackManager.SUWAYOMI).apply {
             title = manga.title
@@ -70,7 +70,7 @@ class TachideskApi {
 
     suspend fun updateProgress(track: Track): Track {
         val url = track.tracking_url
-        val chapters = client.newCall(GET("$url/chapters", headers)).await().parseAs<List<ChapterDataClass>>()
+        val chapters = client.newCall(GET("$url/chapters", headers)).awaitSuccess().parseAs<List<ChapterDataClass>>()
         val lastChapterIndex = chapters.first { it.chapterNumber == track.last_chapter_read }.index
 
         client.newCall(
@@ -82,7 +82,7 @@ class TachideskApi {
                     .add("read", "true")
                     .build(),
             ),
-        ).await()
+        ).awaitSuccess()
 
         return getTrackSearch(track.tracking_url)
     }

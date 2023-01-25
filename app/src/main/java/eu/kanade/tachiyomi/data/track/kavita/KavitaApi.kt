@@ -4,7 +4,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
-import eu.kanade.tachiyomi.network.await
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.lang.withIOContext
 import eu.kanade.tachiyomi.util.system.logcat
@@ -128,7 +128,7 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
     suspend fun getTrackSearch(url: String): TrackSearch = withIOContext {
         try {
             val serieDto: SeriesDto = authClient.newCall(GET(url))
-                .await()
+                .awaitSuccess()
                 .parseAs()
 
             val track = serieDto.toTrack()
@@ -154,7 +154,7 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
     suspend fun updateProgress(track: Track): Track {
         val requestUrl = "${getApiFromUrl(track.tracking_url)}/Tachiyomi/mark-chapter-until-as-read?seriesId=${getIdFromUrl(track.tracking_url)}&chapterNumber=${track.last_chapter_read}"
         authClient.newCall(POST(requestUrl, body = "{}".toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())))
-            .await()
+            .awaitSuccess()
         return getTrackSearch(track.tracking_url)
     }
 }
