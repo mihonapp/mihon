@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.source.online
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.asObservableSuccess
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.newCachelessCallWithProgress
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
@@ -303,6 +304,17 @@ abstract class HttpSource : CatalogueSource {
         // images will be cached or saved manually, so don't take up network cache
         return client.newCachelessCallWithProgress(imageRequest(page), page)
             .asObservableSuccess()
+    }
+
+    /**
+     * Returns the response of the source image.
+     *
+     * @param page the page whose source image has to be downloaded.
+     */
+    suspend fun getImage(page: Page): Response {
+        // images will be cached or saved manually, so don't take up network cache
+        return client.newCachelessCallWithProgress(imageRequest(page), page)
+            .awaitSuccess()
     }
 
     /**
