@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.glance
+package tachiyomi.presentation.widget
 
 import android.app.Application
 import android.content.Intent
@@ -43,10 +43,7 @@ import coil.request.ImageRequest
 import coil.size.Precision
 import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
-import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.util.Constants
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.system.dpToPx
 import kotlinx.coroutines.MainScope
@@ -81,7 +78,8 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
 
     @Composable
     private fun WidgetNotAvailable() {
-        val intent = Intent(LocalContext.current, MainActivity::class.java).apply {
+        val clazz = Class.forName("eu.kanade.tachiyomi.ui.main.MainActivity")
+        val intent = Intent(LocalContext.current, clazz).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         Box(
@@ -134,9 +132,9 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
                                         .padding(horizontal = 3.dp),
                                     contentAlignment = Alignment.Center,
                                 ) {
-                                    val intent = Intent(LocalContext.current, MainActivity::class.java).apply {
-                                        action = MainActivity.SHORTCUT_MANGA
-                                        putExtra(Constants.MANGA_EXTRA, mangaId)
+                                    val intent = Intent(LocalContext.current, Class.forName("eu.kanade.tachiyomi.ui.main.MainActivity")).apply {
+                                        action = "eu.kanade.tachiyomi.SHOW_MANGA"
+                                        putExtra("manga", mangaId)
                                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 

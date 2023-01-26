@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.glance
+package tachiyomi.presentation.widget
 
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver

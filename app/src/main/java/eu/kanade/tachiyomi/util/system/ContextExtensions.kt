@@ -116,12 +116,6 @@ val getDisplayMaxHeightInPx: Int
     get() = Resources.getSystem().displayMetrics.let { max(it.heightPixels, it.widthPixels) }
 
 /**
- * Converts to px.
- */
-val Int.dpToPx: Int
-    get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-
-/**
  * Converts to px and takes into account LTR/RTL layout.
  */
 val Float.dpToPxEnd: Float

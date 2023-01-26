@@ -1,11 +1,10 @@
-package eu.kanade.tachiyomi.glance
+package tachiyomi.presentation.widget
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
 import androidx.glance.appwidget.cornerRadius
-import eu.kanade.tachiyomi.R
 
 fun GlanceModifier.appWidgetBackgroundRadius(): GlanceModifier {
     return this.cornerRadius(R.dimen.appwidget_background_radius)

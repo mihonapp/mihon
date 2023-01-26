@@ -188,7 +188,7 @@
             android:exported="false" />
 
         <receiver
-            android:name=".glance.UpdatesGridGlanceReceiver"
+            android:name="tachiyomi.presentation.widget.UpdatesGridGlanceReceiver"
             android:enabled="@bool/glance_appwidget_available"
             android:exported="false"
             android:label="@string/label_recent_updates">
