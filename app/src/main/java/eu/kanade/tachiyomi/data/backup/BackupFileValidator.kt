@@ -3,12 +3,9 @@ package eu.kanade.tachiyomi.data.backup
 import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.SourceManager
-import okio.buffer
-import okio.gzip
-import okio.source
+import eu.kanade.tachiyomi.util.BackupUtil
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -24,13 +21,8 @@ class BackupFileValidator(
      * @return List of missing sources or missing trackers.
      */
     fun validate(context: Context, uri: Uri): Results {
-        val backupManager = BackupManager(context)
-
         val backup = try {
-            val backupString =
-                context.contentResolver.openInputStream(uri)!!.source().gzip().buffer()
-                    .use { it.readByteArray() }
-            backupManager.parser.decodeFromByteArray(BackupSerializer, backupString)
+            BackupUtil.decodeBackup(context, uri)
         } catch (e: Exception) {
             throw IllegalStateException(e)
         }

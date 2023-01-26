@@ -6,15 +6,13 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
-import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.util.BackupUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.Job
-import okio.buffer
-import okio.gzip
 import okio.source
 import java.io.File
 import java.text.SimpleDateFormat
@@ -79,8 +77,7 @@ class BackupRestorer(
 
     @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun performRestore(uri: Uri): Boolean {
-        val backupString = context.contentResolver.openInputStream(uri)!!.source().gzip().buffer().use { it.readByteArray() }
-        val backup = backupManager.parser.decodeFromByteArray(BackupSerializer, backupString)
+        val backup = BackupUtil.decodeBackup(context, uri)
 
         restoreAmount = backup.backupManga.size + 1 // +1 for categories
 
