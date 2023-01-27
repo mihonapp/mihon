@@ -25,6 +25,7 @@ import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.notification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
+import tachiyomi.core.Constants
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.injectLazy
@@ -333,7 +334,7 @@ class LibraryUpdateNotifier(private val context: Context) {
     private fun getNotificationIntent(): PendingIntent {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            action = MainActivity.SHORTCUT_UPDATES
+            action = Constants.SHORTCUT_UPDATES
         }
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
     }

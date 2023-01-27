@@ -33,8 +33,8 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel
 import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
-import eu.kanade.tachiyomi.util.Constants
 import kotlinx.coroutines.launch
+import tachiyomi.core.Constants
 import tachiyomi.domain.manga.model.Manga
 
 data class SourceSearchScreen(

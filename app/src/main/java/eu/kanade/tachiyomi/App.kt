@@ -124,8 +124,8 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         setAppCompatDelegateThemeMode(Injekt.get<UiPreferences>().themeMode().get())
 
         // Updates widget update
-        with(TachiyomiWidgetManager) {
-            init(ProcessLifecycleOwner.get().lifecycleScope, Injekt.get())
+        with(TachiyomiWidgetManager(Injekt.get())) {
+            init(ProcessLifecycleOwner.get().lifecycleScope)
         }
 
         if (!LogcatLogger.isInstalled && networkPreferences.verboseLogging().get()) {

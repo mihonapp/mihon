@@ -8,10 +8,14 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import tachiyomi.data.DatabaseHandler
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
-object TachiyomiWidgetManager {
+class TachiyomiWidgetManager(
+    private val database: DatabaseHandler = Injekt.get(),
+) {
 
-    fun Context.init(scope: LifecycleCoroutineScope, database: DatabaseHandler) {
+    fun Context.init(scope: LifecycleCoroutineScope) {
         database.subscribeToList { updatesViewQueries.updates(after = UpdatesGridGlanceWidget.DateLimit.timeInMillis) }
             .drop(1)
             .distinctUntilChanged()

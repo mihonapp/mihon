@@ -21,7 +21,6 @@ import eu.kanade.tachiyomi.data.updater.AppUpdateService
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.Constants
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.getUriCompat
@@ -30,6 +29,7 @@ import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.runBlocking
+import tachiyomi.core.Constants
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.manga.model.Manga
@@ -455,7 +455,7 @@ class NotificationReceiver : BroadcastReceiver() {
          */
         internal fun openChapterPendingActivity(context: Context, manga: Manga, groupId: Int): PendingIntent {
             val newIntent =
-                Intent(context, MainActivity::class.java).setAction(MainActivity.SHORTCUT_MANGA)
+                Intent(context, MainActivity::class.java).setAction(Constants.SHORTCUT_MANGA)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     .putExtra(Constants.MANGA_EXTRA, manga.id)
                     .putExtra("notificationId", manga.id.hashCode())
@@ -538,7 +538,7 @@ class NotificationReceiver : BroadcastReceiver() {
          */
         internal fun openExtensionsPendingActivity(context: Context): PendingIntent {
             val intent = Intent(context, MainActivity::class.java).apply {
-                action = MainActivity.SHORTCUT_EXTENSIONS
+                action = Constants.SHORTCUT_EXTENSIONS
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
