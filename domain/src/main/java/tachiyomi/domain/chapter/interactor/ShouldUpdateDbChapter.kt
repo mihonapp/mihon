@@ -1,4 +1,4 @@
-package eu.kanade.domain.chapter.interactor
+package tachiyomi.domain.chapter.interactor
 
 import tachiyomi.domain.chapter.model.Chapter
 

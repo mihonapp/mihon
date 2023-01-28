@@ -1,4 +1,4 @@
-package eu.kanade.domain.updates.interactor
+package tachiyomi.domain.updates.interactor
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.updates.model.UpdatesWithRelations

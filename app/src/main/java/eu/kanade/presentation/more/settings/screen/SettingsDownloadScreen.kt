@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastMap
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
-import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.more.settings.Preference
@@ -27,6 +26,7 @@ import eu.kanade.presentation.more.settings.widget.TriStateListDialog
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.runBlocking
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

@@ -1,4 +1,4 @@
-package eu.kanade.domain.category.interactor
+package tachiyomi.domain.category.interactor
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.category.model.Category

@@ -1,4 +1,4 @@
-package eu.kanade.domain.history.interactor
+package tachiyomi.domain.history.interactor
 
 import tachiyomi.domain.history.repository.HistoryRepository
 

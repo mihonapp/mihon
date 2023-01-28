@@ -5,7 +5,6 @@ import android.content.Context
 import android.net.Uri
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.backup.service.BackupPreferences
-import eu.kanade.domain.category.interactor.GetCategories
 import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.GetFavorites
 import eu.kanade.tachiyomi.R
@@ -43,6 +42,7 @@ import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.Manga_sync
 import tachiyomi.data.Mangas
 import tachiyomi.data.updateStrategyAdapter
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.history.model.HistoryUpdate
 import uy.kohesive.injekt.Injekt
