@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.core.preference
+package tachiyomi.core.preference
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.core.preference
+package tachiyomi.core.preference
 
 interface PreferenceStore {
 

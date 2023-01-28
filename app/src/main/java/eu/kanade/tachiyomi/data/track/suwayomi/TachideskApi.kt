@@ -10,12 +10,12 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
-import eu.kanade.tachiyomi.util.lang.withIOContext
 import okhttp3.Credentials
 import okhttp3.Dns
 import okhttp3.FormBody
 import okhttp3.Headers
 import okhttp3.OkHttpClient
+import tachiyomi.core.util.lang.withIOContext
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy

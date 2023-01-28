@@ -1,7 +1,7 @@
 package eu.kanade.domain.backup.service
 
-import eu.kanade.tachiyomi.core.preference.PreferenceStore
-import eu.kanade.tachiyomi.core.provider.FolderProvider
+import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.provider.FolderProvider
 
 class BackupPreferences(
     private val folderProvider: FolderProvider,

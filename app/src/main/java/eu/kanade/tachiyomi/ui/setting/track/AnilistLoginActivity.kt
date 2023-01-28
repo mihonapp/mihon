@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.setting.track
 
 import android.net.Uri
 import androidx.lifecycle.lifecycleScope
-import eu.kanade.tachiyomi.util.lang.launchIO
+import tachiyomi.core.util.lang.launchIO
 
 class AnilistLoginActivity : BaseOAuthLoginActivity() {
 

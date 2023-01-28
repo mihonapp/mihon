@@ -1,8 +1,8 @@
 package eu.kanade.domain.track.interactor
 
-import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
+import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.track.model.Track
 import tachiyomi.domain.track.repository.TrackRepository
 

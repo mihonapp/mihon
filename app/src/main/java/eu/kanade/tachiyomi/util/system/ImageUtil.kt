@@ -22,6 +22,7 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import com.hippo.unifile.UniFile
 import logcat.LogPriority
+import tachiyomi.core.util.system.logcat
 import tachiyomi.decoder.Format
 import tachiyomi.decoder.ImageDecoder
 import java.io.BufferedInputStream

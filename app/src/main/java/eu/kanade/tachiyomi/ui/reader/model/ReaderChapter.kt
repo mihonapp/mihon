@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.ui.reader.model
 
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.ui.reader.loader.PageLoader
-import eu.kanade.tachiyomi.util.system.logcat
 import kotlinx.coroutines.flow.MutableStateFlow
+import tachiyomi.core.util.system.logcat
 
 data class ReaderChapter(val chapter: Chapter) {
 

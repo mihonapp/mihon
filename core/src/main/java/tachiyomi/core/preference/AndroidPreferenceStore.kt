@@ -1,17 +1,17 @@
-package eu.kanade.tachiyomi.core.preference
+package tachiyomi.core.preference
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import eu.kanade.tachiyomi.core.preference.AndroidPreference.BooleanPrimitive
-import eu.kanade.tachiyomi.core.preference.AndroidPreference.FloatPrimitive
-import eu.kanade.tachiyomi.core.preference.AndroidPreference.IntPrimitive
-import eu.kanade.tachiyomi.core.preference.AndroidPreference.LongPrimitive
-import eu.kanade.tachiyomi.core.preference.AndroidPreference.Object
-import eu.kanade.tachiyomi.core.preference.AndroidPreference.StringPrimitive
-import eu.kanade.tachiyomi.core.preference.AndroidPreference.StringSetPrimitive
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import tachiyomi.core.preference.AndroidPreference.BooleanPrimitive
+import tachiyomi.core.preference.AndroidPreference.FloatPrimitive
+import tachiyomi.core.preference.AndroidPreference.IntPrimitive
+import tachiyomi.core.preference.AndroidPreference.LongPrimitive
+import tachiyomi.core.preference.AndroidPreference.Object
+import tachiyomi.core.preference.AndroidPreference.StringPrimitive
+import tachiyomi.core.preference.AndroidPreference.StringSetPrimitive
 
 class AndroidPreferenceStore(
     context: Context,

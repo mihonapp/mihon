@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.core.provider
+package tachiyomi.core.provider
 
 import java.io.File
 

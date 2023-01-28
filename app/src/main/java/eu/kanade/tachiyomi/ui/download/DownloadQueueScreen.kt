@@ -58,7 +58,7 @@ import eu.kanade.presentation.components.Scaffold
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
-import eu.kanade.tachiyomi.util.lang.launchUI
+import tachiyomi.core.util.lang.launchUI
 import kotlin.math.roundToInt
 
 object DownloadQueueScreen : Screen {

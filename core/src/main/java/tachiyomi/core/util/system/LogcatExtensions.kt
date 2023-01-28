@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util.system
+package tachiyomi.core.util.system
 
 import logcat.LogPriority
 import logcat.asLog

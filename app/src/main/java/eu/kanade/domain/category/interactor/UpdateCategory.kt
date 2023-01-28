@@ -1,6 +1,6 @@
 package eu.kanade.domain.category.interactor
 
-import eu.kanade.tachiyomi.util.lang.withNonCancellableContext
+import tachiyomi.core.util.lang.withNonCancellableContext
 import tachiyomi.domain.category.model.CategoryUpdate
 import tachiyomi.domain.category.repository.CategoryRepository
 

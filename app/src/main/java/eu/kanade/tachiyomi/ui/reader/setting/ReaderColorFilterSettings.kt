@@ -10,13 +10,13 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
-import eu.kanade.tachiyomi.core.preference.getAndSet
 import eu.kanade.tachiyomi.databinding.ReaderColorFilterSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.preference.bindToPreference
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
+import tachiyomi.core.preference.getAndSet
 import uy.kohesive.injekt.injectLazy
 
 /**

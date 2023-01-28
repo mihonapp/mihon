@@ -2,10 +2,10 @@ package eu.kanade.core.prefs
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import eu.kanade.tachiyomi.core.preference.Preference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import tachiyomi.core.preference.Preference
 
 class PreferenceMutableState<T>(
     private val preference: Preference<T>,

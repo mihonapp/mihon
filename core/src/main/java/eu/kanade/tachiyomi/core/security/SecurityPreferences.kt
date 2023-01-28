@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.core.security
 
 import eu.kanade.tachiyomi.core.R
-import eu.kanade.tachiyomi.core.preference.PreferenceStore
-import eu.kanade.tachiyomi.core.preference.getEnum
+import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.preference.getEnum
 
 class SecurityPreferences(
     private val preferenceStore: PreferenceStore,

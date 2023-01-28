@@ -1,4 +1,4 @@
-package eu.kanade.data.source
+package tachiyomi.data.source
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.data.DatabaseHandler

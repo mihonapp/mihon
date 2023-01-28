@@ -1,9 +1,9 @@
 package tachiyomi.data.chapter
 
-import eu.kanade.tachiyomi.util.system.logcat
-import eu.kanade.tachiyomi.util.toLong
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
+import tachiyomi.core.util.lang.toLong
+import tachiyomi.core.util.system.logcat
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.ChapterUpdate

@@ -16,9 +16,9 @@ import androidx.core.view.forEach
 import androidx.core.view.get
 import androidx.core.view.size
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.core.preference.Preference
 import eu.kanade.tachiyomi.databinding.PrefSpinnerBinding
 import eu.kanade.tachiyomi.util.system.getResourceColor
+import tachiyomi.core.preference.Preference
 
 class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     FrameLayout(context, attrs) {

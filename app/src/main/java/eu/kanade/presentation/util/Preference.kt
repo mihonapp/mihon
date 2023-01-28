@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import eu.kanade.tachiyomi.core.preference.Preference
+import tachiyomi.core.preference.Preference
 
 @Composable
 fun <T> Preference<T>.collectAsState(): State<T> {

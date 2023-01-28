@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util.lang
+package tachiyomi.core.util.lang
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart

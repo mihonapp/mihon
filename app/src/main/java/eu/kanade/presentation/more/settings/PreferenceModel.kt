@@ -7,7 +7,7 @@ import androidx.compose.ui.res.stringResource
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackService
-import eu.kanade.tachiyomi.core.preference.Preference as PreferenceData
+import tachiyomi.core.preference.Preference as PreferenceData
 
 sealed class Preference {
     abstract val title: String

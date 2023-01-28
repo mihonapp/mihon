@@ -1,9 +1,9 @@
 package eu.kanade.domain.base
 
 import android.content.Context
-import eu.kanade.tachiyomi.core.preference.PreferenceStore
 import eu.kanade.tachiyomi.util.system.isPreviewBuildType
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
+import tachiyomi.core.preference.PreferenceStore
 
 class BasePreferences(
     val context: Context,

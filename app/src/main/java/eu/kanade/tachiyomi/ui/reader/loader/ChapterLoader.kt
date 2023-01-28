@@ -10,8 +10,8 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
-import eu.kanade.tachiyomi.util.lang.withIOContext
-import eu.kanade.tachiyomi.util.system.logcat
+import tachiyomi.core.util.lang.withIOContext
+import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
 
 /**

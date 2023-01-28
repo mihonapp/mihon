@@ -2,7 +2,7 @@ package eu.kanade.domain.download.interactor
 
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.util.lang.withNonCancellableContext
+import tachiyomi.core.util.lang.withNonCancellableContext
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 
