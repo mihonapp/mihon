@@ -74,8 +74,6 @@ class BackupRestoreService : Service() {
     private lateinit var notifier: BackupNotifier
 
     override fun onCreate() {
-        super.onCreate()
-
         scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         notifier = BackupNotifier(this)
         wakeLock = acquireWakeLock(javaClass.name)
@@ -90,7 +88,6 @@ class BackupRestoreService : Service() {
 
     override fun onDestroy() {
         destroyJob()
-        super.onDestroy()
     }
 
     private fun destroyJob() {

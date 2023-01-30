@@ -85,21 +85,20 @@ class DownloadService : Service() {
     private lateinit var scope: CoroutineScope
 
     override fun onCreate() {
-        super.onCreate()
         scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         startForeground(Notifications.ID_DOWNLOAD_CHAPTER_PROGRESS, getPlaceholderNotification())
         wakeLock = acquireWakeLock(javaClass.name)
         _isRunning.value = true
-        listenDownloaderState()
         listenNetworkChanges()
     }
 
     override fun onDestroy() {
-        scope?.cancel()
+        scope.cancel()
         _isRunning.value = false
         downloadManager.stopDownloads()
-        wakeLock.releaseIfHeld()
-        super.onDestroy()
+        if (wakeLock.isHeld) {
+            wakeLock.release()
+        }
     }
 
     // Not used
@@ -141,32 +140,6 @@ class DownloadService : Service() {
                 }
             }
             .launchIn(scope)
-    }
-
-    /**
-     * Listens to downloader status. Enables or disables the wake lock depending on the status.
-     */
-    private fun listenDownloaderState() {
-        _isRunning
-            .onEach { isRunning ->
-                if (isRunning) {
-                    wakeLock.acquireIfNotHeld()
-                } else {
-                    wakeLock.releaseIfHeld()
-                }
-            }
-            .catch {
-                // Ignore errors
-            }
-            .launchIn(scope)
-    }
-
-    private fun PowerManager.WakeLock.releaseIfHeld() {
-        if (isHeld) release()
-    }
-
-    private fun PowerManager.WakeLock.acquireIfNotHeld() {
-        if (!isHeld) acquire()
     }
 
     private fun getPlaceholderNotification(): Notification {

@@ -45,8 +45,6 @@ class AppUpdateService : Service() {
     private var runningCall: Call? = null
 
     override fun onCreate() {
-        super.onCreate()
-
         notifier = AppUpdateNotifier(this)
         wakeLock = acquireWakeLock(javaClass.name)
 
@@ -79,7 +77,6 @@ class AppUpdateService : Service() {
 
     override fun onDestroy() {
         destroyJob()
-        super.onDestroy()
     }
 
     private fun destroyJob() {
