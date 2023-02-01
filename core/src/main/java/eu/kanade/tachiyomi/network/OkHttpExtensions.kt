@@ -78,7 +78,7 @@ private suspend fun Call.await(callStack: Array<StackTraceElement>): Response {
                 override fun onFailure(call: Call, e: IOException) {
                     // Don't bother with resuming the continuation if it is already cancelled.
                     if (continuation.isCancelled) return
-                    val exception = IOException(e).apply { stackTrace = callStack }
+                    val exception = IOException(e.message, e).apply { stackTrace = callStack }
                     continuation.resumeWithException(exception)
                 }
             }
