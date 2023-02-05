@@ -15,12 +15,7 @@ class GlobalSearchScreenModel(
     preferences: BasePreferences = Injekt.get(),
     private val sourcePreferences: SourcePreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
-) : SearchScreenModel<GlobalSearchState>(
-    GlobalSearchState(
-        searchQuery = initialQuery,
-        isPinnedOnly = sourcePreferences.searchPinnedSourcesOnly().get(),
-    ),
-) {
+) : SearchScreenModel<GlobalSearchState>(GlobalSearchState(searchQuery = initialQuery)) {
 
     val incognitoMode = preferences.incognitoMode()
     val lastUsedSourceId = sourcePreferences.lastUsedSource()
@@ -64,7 +59,6 @@ class GlobalSearchScreenModel(
 data class GlobalSearchState(
     val searchQuery: String? = null,
     val items: Map<CatalogueSource, SearchItemResult> = emptyMap(),
-    val isPinnedOnly: Boolean,
 ) {
 
     val progress: Int = items.count { it.value !is SearchItemResult.Loading }

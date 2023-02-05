@@ -13,7 +13,6 @@ import eu.kanade.presentation.browse.components.GlobalSearchErrorResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchLoadingResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
-import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.util.padding
@@ -50,7 +49,6 @@ fun GlobalSearchScreen(
     ) { paddingValues ->
         GlobalSearchContent(
             items = state.items,
-            isPinnedOnly = state.isPinnedOnly,
             contentPadding = paddingValues,
             getManga = getManga,
             onClickSource = onClickSource,
@@ -63,20 +61,12 @@ fun GlobalSearchScreen(
 @Composable
 fun GlobalSearchContent(
     items: Map<CatalogueSource, SearchItemResult>,
-    isPinnedOnly: Boolean,
     contentPadding: PaddingValues,
     getManga: @Composable (CatalogueSource, Manga) -> State<Manga>,
     onClickSource: (CatalogueSource) -> Unit,
     onClickItem: (Manga) -> Unit,
     onLongClickItem: (Manga) -> Unit,
 ) {
-    if (items.isEmpty() && isPinnedOnly) {
-        EmptyScreen(
-            message = stringResource(R.string.no_pinned_sources),
-        )
-        return
-    }
-
     LazyColumn(
         contentPadding = contentPadding,
     ) {

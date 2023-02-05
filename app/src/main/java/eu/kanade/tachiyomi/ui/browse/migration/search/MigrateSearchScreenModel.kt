@@ -22,11 +22,7 @@ class MigrateSearchScreenModel(
     private val sourcePreferences: SourcePreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
-) : SearchScreenModel<MigrateSearchState>(
-    MigrateSearchState(
-        isPinnedOnly = sourcePreferences.searchPinnedSourcesOnly().get(),
-    ),
-) {
+) : SearchScreenModel<MigrateSearchState>(MigrateSearchState()) {
 
     init {
         extensionFilter = initialExtensionFilter
@@ -88,7 +84,6 @@ data class MigrateSearchState(
     val manga: Manga? = null,
     val searchQuery: String? = null,
     val items: Map<CatalogueSource, SearchItemResult> = emptyMap(),
-    val isPinnedOnly: Boolean,
     val dialog: MigrateSearchDialog? = null,
 ) {
 
