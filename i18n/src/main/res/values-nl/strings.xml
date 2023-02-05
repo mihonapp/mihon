@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Naam</string>
     <string name="categories">Categorieën</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Bibliotheek</string>
     <string name="chapters">Hoofdstukken</string>
     <string name="track">Tracking</string>
     <string name="history">Geschiedenis</string>
@@ -160,7 +160,7 @@
     <string name="error_category_exists">Er bestaat al een categorie met deze naam!</string>
     <string name="snack_categories_deleted">Categorieën verwijderd</string>
     <string name="dialog_with_checkbox_reset">Stel alle hoofdstukken voor deze manga opnieuw in</string>
-    <string name="snack_add_to_library">Manga toevoegen aan bibliotheek?</string>
+    <string name="snack_add_to_library">Toevoegen aan bibliotheek\?</string>
     <string name="picture_saved">Afbeelding opgeslagen</string>
     <string name="custom_filter">Aangepast filter</string>
     <string name="set_as_cover">Instellen als omslagfoto</string>
@@ -208,7 +208,7 @@
     <string name="cache_deleted">Cache geleegd. %1$d bestanden zijn verwijderd</string>
     <string name="cache_delete_error">Fout opgetreden tijdens het wissen</string>
     <string name="pref_clear_database">Database leegmaken</string>
-    <string name="pref_clear_database_summary">Verwijder geschiedenis voor manga die niet in je bibliotheek zijn opgeslagen</string>
+    <string name="pref_clear_database_summary">Verwijder geschiedenis voor items die niet in je bibliotheek zijn opgeslagen</string>
     <string name="pref_refresh_library_tracking">Tracking bijwerken</string>
     <string name="pref_enable_acra">Rapporteer bugs</string>
     <string name="pref_acra_summary">Helpt bij het oplossen van bugs. Er wordt geen gevoelige data verzonden</string>
@@ -218,7 +218,7 @@
     <string name="pref_update_only_non_completed">Gelezen series</string>
     <string name="pref_auto_update_manga_sync">Voortgang bijwerken na lezen</string>
     <string name="pref_keep_screen_on">Scherm aanhouden</string>
-    <string name="clear_database_confirmation">Weet je het zeker\? Gelezen hoofdstukken en voortgang voor manga die niet in de bibliotheek zitten zullen verloren gaan</string>
+    <string name="clear_database_confirmation">Weet je het zeker\? Gelezen hoofdstukken en voortgang voor items die niet in de bibliotheek zitten zullen verloren gaan</string>
     <string name="clear_database_completed">Database geleegd</string>
     <string name="ongoing">Lopend</string>
     <string name="delete_downloads_for_manga">Verwijder gedownloade hoofdstukken?</string>
@@ -305,9 +305,9 @@
     <string name="action_webview_refresh">Vernieuwen</string>
     <string name="pref_category_library">Bibliotheek</string>
     <string name="ext_obsolete">Verouderd</string>
-    <string name="obsolete_extension_message">Deze extensie is niet meer beschikbaar.</string>
+    <string name="obsolete_extension_message">Deze extensie is niet meer beschikbaar. Mogelijk zal deze niet meer naar behoren functioneren en kan problemen binnen de app veroorzaken. Het wordt aangeraden de extensie te verwijderen.</string>
     <string name="pref_date_format">Datumformaat</string>
-    <string name="pref_category_library_update">Globale update</string>
+    <string name="pref_category_library_update">Globaal bijwerken</string>
     <string name="logout_title">Uitloggen bij %1$s\?</string>
     <string name="logout">Uitloggen</string>
     <string name="logout_success">U bent nu uitgelogd</string>
@@ -388,7 +388,7 @@
         <item quantity="one">%1$s resterend</item>
         <item quantity="other">%1$s resterende</item>
     </plurals>
-    <string name="downloaded_only_summary">Filtert alle manga in de bibliotheek</string>
+    <string name="downloaded_only_summary">Filtert alle items in de bibliotheek</string>
     <string name="label_downloaded_only">Alleen gedownloade</string>
     <string name="check_for_updates">Controleer op updates</string>
     <string name="licenses">Open-sourcelicenties</string>
@@ -430,7 +430,7 @@
         <item quantity="other">%d categorieën</item>
     </plurals>
     <string name="pref_refresh_library_covers">Omslagen van manga in bibliotheek bijwerken</string>
-    <string name="tracking_info">Eenzijdige synchronisatie om voortang van hoofdstukken bij te werken bij trackingdiensten. Stel tracking in bij individuele manga via de \"Tracking\"-knop.</string>
+    <string name="tracking_info">Eenzijdige synchronisatie om voortang van hoofdstukken bij te werken bij trackingdiensten. Stel tracking in bij individuele items via de \"Tracking\"-knop.</string>
     <string name="unofficial_extension_message">Deze extensie behoort niet tot de officiële Tachiyomi extensielijst.</string>
     <string name="ext_unofficial">Niet officieel</string>
     <string name="pref_library_update_refresh_metadata_summary">Controleer bij het bijwerken van de bibliotheek op nieuwe omslag en details</string>
@@ -441,7 +441,7 @@
     <string name="badges_header">Badges</string>
     <string name="label_data">Data</string>
     <string name="backup_restore_missing_sources">Missende bronnen:</string>
-    <string name="invalid_backup_file_missing_manga">Back-up bevat geen manga.</string>
+    <string name="invalid_backup_file_missing_manga">Back-up bevat geen items.</string>
     <string name="invalid_backup_file">Ongeldig backupbestand</string>
     <string name="pref_show_reading_mode_summary">Laat huidige modus kort zien als lezer geopend wordt</string>
     <string name="pref_show_reading_mode">Toon leesmodus</string>
@@ -494,13 +494,13 @@
     <string name="no_chapters_error">Geen hoofdstukken gevonden</string>
     <string name="chapter_settings_updated">Standaard hoofdstukinstellingen bijgewerkt</string>
     <string name="set_chapter_settings_as_default">Instellen als standaard</string>
-    <string name="also_set_chapter_settings_for_library">Ook toepassen op alle manga in mijn bibliotheek</string>
+    <string name="also_set_chapter_settings_for_library">Ook toepassen op alle items in mijn bibliotheek</string>
     <string name="confirm_set_chapter_settings">Weet je zeker dat je deze instellingen als standaardinstellingen wilt opslaan\?</string>
     <string name="chapter_settings">Hoofdstukinstellingen</string>
     <string name="share_page_info">%1$s: %2$s, pagina %3$d</string>
     <string name="action_search_settings">Zoekinstellingen</string>
     <string name="downloaded_chapters">Gedownloade hoofdstukken</string>
-    <string name="manga_from_library">Manga uit de bibliotheek</string>
+    <string name="manga_from_library">Uit de bibliotheek</string>
     <string name="pref_incognito_mode_summary">Pauzeert leesgeschiedenis</string>
     <string name="pref_incognito_mode">Incognitomodus</string>
     <string name="pref_clear_history">Geschiedenis wissen</string>
@@ -543,11 +543,11 @@
     <string name="pref_show_navigation_mode_summary">Laat de tikzones zien als de lezer wordt geopend</string>
     <string name="pref_show_navigation_mode">Navigatielayout als overlay laten zien</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
-    <string name="pref_download_new_categories_details">Manga in uitgezonderde categorieën worden niet gedownload, zelfs niet als ze onder opgenomen categorieën vallen.</string>
+    <string name="pref_download_new_categories_details">Items in uitgezonderde categorieën worden niet gedownload, zelfs niet als ze onder opgenomen categorieën vallen.</string>
     <string name="pref_category_auto_download">Automatisch downloaden</string>
     <string name="exclude">Uitgezonderd: %s</string>
     <string name="include">Inbegrepen: %s</string>
-    <string name="pref_library_update_categories_details">Manga in uitgesloten categorieën worden niet bijgewerkt, zelfs niet als ze onder opgenomen categorieën vallen.</string>
+    <string name="pref_library_update_categories_details">Items in uitgesloten categorieën worden niet bijgewerkt, zelfs niet als ze onder opgenomen categorieën vallen.</string>
     <string name="action_sort_chapter_fetch_date">Datum opgehaald</string>
     <string name="none">Geen</string>
     <string name="action_show_errors">Klik om details te weergeven</string>
@@ -558,7 +558,7 @@
     <string name="rotation_portrait">Staand</string>
     <string name="rotation_type">Draaitype</string>
     <string name="automatic_background">Automatisch</string>
-    <string name="pref_create_folder_per_manga_summary">Mappen aanmaken op basis van mangatitel</string>
+    <string name="pref_create_folder_per_manga_summary">Mappen aanmaken op basis van titel</string>
     <string name="pref_create_folder_per_manga">Pagina\'s opslaan in aparte mappen</string>
     <string name="pref_reader_actions">Acties</string>
     <string name="pref_grayscale">Grijstinten</string>
@@ -581,7 +581,7 @@
     <string name="categorized_display_settings">Instellingen per categorie voor sorteren en weergeven</string>
     <string name="pref_library_update_refresh_trackers_summary">Trackers bijwerken bij het bijwerken van de bibliotheek</string>
     <string name="pref_library_update_refresh_trackers">Trackers automatisch vernieuwen</string>
-    <string name="action_display_local_badge">Lokale manga</string>
+    <string name="action_display_local_badge">Lokale bron</string>
     <string name="information_empty_category_dialog">Er zijn nog geen categorieën.</string>
     <string name="action_start_downloading_now">Begin nu met downloaden</string>
     <string name="notification_updating">Bibliotheek updaten... (%1$d/%2$d)</string>
@@ -595,7 +595,7 @@
     <string name="theme_midnightdusk">Nachtschemering</string>
     <string name="theme_greenapple">Groene Appel</string>
     <string name="pref_app_theme">Appthema</string>
-    <string name="enhanced_tracking_info">Diensten die uitgebreidere functionaliteit bieden voor bepaalde bronnen. Het tracken van manga gebeurt automatisch wanneer je deze toevoegt aan je bibliotheek.</string>
+    <string name="enhanced_tracking_info">Diensten die uitgebreidere functionaliteit bieden voor bepaalde bronnen. Het tracken van items gebeurt automatisch wanneer je deze toevoegt aan je bibliotheek.</string>
     <string name="enhanced_services">Verbeterde diensten</string>
     <string name="theme_monet">Dynamisch</string>
     <string name="getting_started_guide">Gids voor beginners</string>
@@ -636,16 +636,16 @@
     <string name="pref_verbose_logging">Uitgebreide logging</string>
     <string name="notification_size_warning">Waarschuwing: grote updates schaden bronnen en kunnen leiden tot slomere updates en verhoogd batterijgebruik</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installeer en start Shizuku om deze als extensie-installatieprogramma te gebruiken.</string>
-    <string name="action_sort_count">Totaal aantal manga</string>
+    <string name="action_sort_count">Totaal aantal items</string>
     <string name="pref_verbose_logging_summary">Houd uitgebreide logs bij in de systeemlogs (verslechterd de werking van de app)</string>
     <string name="channel_app_updates">App updates</string>
     <string name="download_queue_size_warning">Waarschuwing: grote bulk downloads kunnen leiden tot trager werkende bronnen en/of Tachiyomi blokkeren</string>
     <string name="ext_update_all">Alles updaten</string>
     <string name="update_72hour">Iedere 3 dagen</string>
     <string name="library_errors_help">Voor hulp bij het oplossen van fouten bij het bijwerken van de bibliotheek, zie %1$s</string>
-    <string name="database_clean">Database leeg</string>
+    <string name="database_clean">Niks om te wissen</string>
     <string name="privacy_policy">Privacybeleid</string>
-    <string name="clear_database_source_item_count">%1$d niet-bibliotheek manga in database</string>
+    <string name="clear_database_source_item_count">%1$d items niet in de bibliotheek in database</string>
     <string name="save_chapter_as_cbz">Opslaan als CBZ archief</string>
     <string name="pref_auto_clear_chapter_cache">Hoofdstuk cache leegmaken na het sluiten van de app</string>
     <string name="pref_library_update_manga_restriction">Updaten overslaan</string>
@@ -664,7 +664,7 @@
     <string name="channel_skipped">Overgeslagen</string>
     <string name="pref_landscape_zoom">Zoom liggende afbeelding</string>
     <string name="pref_navigate_pan">Navigeer binnen de afbeelding</string>
-    <string name="action_show_manga">Laat manga zien</string>
+    <string name="action_show_manga">Laat item zien</string>
     <string name="action_display_cover_only_grid">Alleen-cover rooster</string>
     <string name="rotation_reverse_portrait">Omgedraaid portret-modus</string>
     <string name="action_move_to_top_all_for_series">Breng serie naar boven</string>
@@ -708,4 +708,52 @@
     </plurals>
     <string name="action_search_hint">Zoek…</string>
     <string name="missing_storage_permission">Opslag bevoegdheden niet verleent</string>
+    <string name="action_display_show_continue_reading_button">Knop om lezen te hervatten weergeven</string>
+    <string name="label_stats">Statistieken</string>
+    <string name="label_started">Gestart</string>
+    <string name="label_local">Lokaal</string>
+    <string name="label_downloaded">Gedownload</string>
+    <string name="action_not_now">Niet nu</string>
+    <string name="action_open_random_manga">Willekeurige openen</string>
+    <string name="pref_general_summary">App-taal, meldingen</string>
+    <string name="pref_appearance_summary">Thema, datum- en tijdnotatie</string>
+    <string name="pref_library_summary">Categorieën, globaal bijwerken</string>
+    <string name="pref_reader_summary">Leesmodus, weergave, navigatie</string>
+    <string name="pref_downloads_summary">Automatische downloads, vooraf downloaden</string>
+    <string name="pref_browse_summary">Bronnen, extensies, globaal zoeken</string>
+    <string name="pref_backup_summary">Handmatige en automatische back-ups</string>
+    <string name="pref_security_summary">App-vergrendeling, schermbeveiliging</string>
+    <string name="pref_reset_viewer_flags_success">Alle leesinstellingen teruggezet naar de standaardwaarden</string>
+    <string name="pref_reset_viewer_flags_error">Kon leesinstellingen niet terugzetten naar standaardwaarden</string>
+    <string name="popular">Populair</string>
+    <string name="download_notifier_cache_renewal">Downloads worden gecontroleerd</string>
+    <string name="fdroid_warning">F-Droid versies worden niet officieel ondersteund.
+\nTik hier voor meer informatie.</string>
+    <string name="pref_skip_dupe_chapters">Dubbele hoofdstukken overslaan</string>
+    <string name="are_you_sure">Weet je het zeker\?</string>
+    <string name="confirm_add_duplicate_manga">Je hebt momenteel een item in je bibliotheek met dezelfde naam.
+\n
+\nWil je alsnog verdergaan\?</string>
+    <string name="reading_list">Leeslijst</string>
+    <string name="description_placeholder">Geen beschrijving</string>
+    <string name="pref_reset_viewer_flags_summary">Zet de instellingen voor de leesmodus en het draaitype terug naar de standaardwaarden voor alle series</string>
+    <string name="error_user_agent_string_invalid">Ongeldige user agent</string>
+    <string name="unknown_title">Onbekende titel</string>
+    <string name="on_hold_list">Wachtlijst</string>
+    <string name="appwidget_unavailable_locked">Widget niet beschikbaar wanneer app-vergrendeling aan staat</string>
+    <string name="enhanced_services_not_installed">Beschikbaar maar bron niet geïnstalleerd: %s</string>
+    <string name="error_user_agent_string_blank">User agent mag niet leeg zijn</string>
+    <string name="pref_reset_viewer_flags">Leesinstellingen voor alle series terugzetten naar standaardwaarde</string>
+    <string name="pref_invalidate_download_cache_summary">Hercontrole van gedownloade hoofdstukken forceren</string>
+    <string name="copied_to_clipboard_plain">Naar klembord gekopieerd</string>
+    <string name="appwidget_updates_description">Recentelijk bijgewerkte items in de bibliotheek bekijken</string>
+    <string name="track_error">%1$s-fout: %2$s</string>
+    <string name="pref_reset_user_agent_string">User agent terugzetten naar standaardwaarde</string>
+    <string name="track_remove_date_conf_title">Datum verwijderen\?</string>
+    <string name="other_header">Anders</string>
+    <string name="wish_list">Verlanglijst</string>
+    <string name="pref_worker_info">Worker-informatie</string>
+    <string name="custom_cover">Aangepaste omslag</string>
+    <string name="invalid_location">Ongeldige locatie: %s</string>
+    <string name="pref_advanced_summary">Crashlogboeken opslaan, batterijoptimalisaties</string>
 </resources>

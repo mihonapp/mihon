@@ -11,7 +11,7 @@
     <string name="label_library">المكتبة</string>
     <string name="label_recent_manga">السجل</string>
     <string name="label_recent_updates">التحديثات</string>
-    <string name="label_backup">النسخ الاحتياطي والإستعادة</string>
+    <string name="label_backup">النسخ الاحتياطي والاستعادة</string>
     <string name="action_settings">اﻹعدادات</string>
     <string name="action_filter">الترتيب حسب</string>
     <string name="action_filter_bookmarked">المحفوظة</string>
@@ -232,7 +232,7 @@
     <string name="update_check_notification_update_available">نسخة جديدة متوفرة!</string>
     <string name="information_no_downloads">لا توجد تنزيلات</string>
     <string name="information_no_recent">لا توجد تحديثات جديدة</string>
-    <string name="information_no_recent_manga">لم تقم بقراءة شيء مُؤخّراً</string>
+    <string name="information_no_recent_manga">لم تقرأ شيئًا مؤخَّرًا</string>
     <string name="information_empty_library">مكتبتك فارغة</string>
     <string name="download_notifier_downloader_title">مدير التنزيل</string>
     <string name="download_notifier_title_error">خطأ</string>
@@ -278,7 +278,7 @@
     <string name="migration_dialog_what_to_include">اختر بيانات لتضمينها</string>
     <string name="migrate">ترحيل</string>
     <string name="copy">نسخ</string>
-    <string name="information_empty_category">ليس لديك أيّة فئات، اضغط زر اﻹضافة لإنشاء واحده لتنظيم مكتبتك.</string>
+    <string name="information_empty_category">ليست لديك أيّة فئات، اضغط زر اﻹضافة لإنشاء واحدة لتنظيم مكتبتك.</string>
     <string name="transition_finished">تمَّ الانتهاء من:</string>
     <string name="transition_current">الحالي:</string>
     <string name="transition_next">التّالي:</string>
@@ -319,7 +319,7 @@
     <string name="lock_never">أبدًا</string>
     <string name="lock_always">دائماً</string>
     <string name="lock_when_idle">اقفل في حالة السكون</string>
-    <string name="lock_with_biometrics">تتطلب فتح القفل</string>
+    <string name="lock_with_biometrics">اطلب فكَّ القفل</string>
     <string name="pref_category_security">إعدادات الأمان</string>
     <string name="pref_manage_notifications">إدارة الإشعارات</string>
     <string name="pref_date_format">صيغة التاريخ</string>
@@ -528,12 +528,12 @@
     <string name="action_global_search_query">إبحث عن \"%1$s\" بشكلٍ شامل</string>
     <string name="updated_version">حُدِّث إلى الإصدار v%1$s</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="zero">تم تخطي فصل %d ، إما أن المصدر مفقود أو تمت حذفة</item>
-        <item quantity="one">تم تخطي فصل %d، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="two">تم تخطي الفصلان %d، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="few">تم تخطي الفصول %d ، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="many">تم تخطي من الفصول %d ، إما أن المصدر مفقود أو تمت تصفيته</item>
-        <item quantity="other">‎تم تخطي الفصل %d ، إما أن المصدر مفقود أو تمت تصفيته</item>
+        <item quantity="zero">لم يتخطَّى أيُّ فصل</item>
+        <item quantity="one">تُخطِّي فصل</item>
+        <item quantity="two">تُخطِّي فصلان</item>
+        <item quantity="few">تُخطِّيت %d فصول</item>
+        <item quantity="many">تُخطِّي %d فصلًا</item>
+        <item quantity="other">‎تُخطِّي %d فصل</item>
     </plurals>
     <string name="no_chapters_error">لم يُعثر على فصول</string>
     <string name="share_page_info">%1$s: %2$s, صفحة %3$d</string>
@@ -724,8 +724,8 @@
     <string name="empty_backup_error">لا توجد مدخلات في المكتبة لإجراء نسخة احتياطي‮‮ة</string>
     <string name="action_close">اغلاق</string>
     <string name="update_check_open">فتح في GitHub</string>
-    <string name="pref_clear_webview_data">حذف بيانات التصفح المؤقتة</string>
-    <string name="webview_data_deleted">تم حذف بيانات التصفح المؤقتة</string>
+    <string name="pref_clear_webview_data">احذف بيانات WebView</string>
+    <string name="webview_data_deleted">حُذفت بيانات WebView</string>
     <string name="battery_not_low">عند ارتفاع نسبة الشحن‌</string>
     <string name="source_filter_empty_screen">لا يوجد مصادر مثبته</string>
     <string name="source_empty_screen">لا يوجد مصدر</string>
@@ -789,7 +789,7 @@
     <string name="action_search_hint">بحث…</string>
     <string name="skipped_reason_not_always_update">تم التخطي لأن السلسلة لا تتطلب تحديثات</string>
     <string name="crash_screen_description">%s واجه خطأ غير متوقع. نقترح عليك أخد لقطة شاشة لهذه الرسالة، وتفريغ سجلات التعطل ، ثم مشاركتها في قناة الدعم الخاصة بنا على Discord.</string>
-    <string name="crash_screen_title">حدث خطأ غير متوقع</string>
+    <string name="crash_screen_title">أخ!</string>
     <string name="crash_screen_restart_application">أعد تشغيل التطبيق</string>
     <string name="pref_general_summary">لغة التطبيق، الإشعارات</string>
     <string name="pref_appearance_summary">مظهر، التاريخ والوقت</string>
@@ -820,7 +820,7 @@
     <string name="label_stats">إحصائيات</string>
     <string name="label_started">بدأت</string>
     <string name="label_local">محلي</string>
-    <string name="label_downloaded">المُحَمَّلْ</string>
+    <string name="label_downloaded">المنزَّل</string>
     <string name="label_overview_section">نظرة عامة</string>
     <string name="label_completed_titles">إدخالات مكتملة</string>
     <string name="label_read_duration">مدة القرائة</string>
@@ -840,7 +840,7 @@
     <string name="information_no_manga_category">الفئة فارغة</string>
     <string name="action_not_now">ليس الان</string>
     <string name="pref_library_update_show_tab_badge">إظهار عدد الادخالات غير المقروءة في ايقونة التحديثات</string>
-    <string name="pref_skip_dupe_chapters">تجاوز الفصول مكررة</string>
+    <string name="pref_skip_dupe_chapters">تجاوز الفصول المكررة</string>
     <string name="enhanced_services_not_installed">متوفر ولكن المصدر غير مثبت: %s</string>
     <string name="confirm_add_duplicate_manga">لديك إدخال في مكتبتك بنفس الاسم. 
 \n

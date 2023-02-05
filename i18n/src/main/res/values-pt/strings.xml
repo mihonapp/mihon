@@ -166,7 +166,7 @@
     <string name="chapters">Capítulos</string>
     <!-- Dialog remove recently view -->
     <string name="dialog_with_checkbox_remove_description">Esta ação irá remover a data de leitura deste capítulo. Continuar?</string>
-    <string name="dialog_with_checkbox_reset">Reiniciar todos os capítulos desta mangá</string>
+    <string name="dialog_with_checkbox_reset">Redefinir todos os capítulos para esta entrada</string>
     <!-- Reader activity -->
     <string name="chapter_progress">Página: %1$d</string>
     <string name="no_next_chapter">Capítulo seguinte não encontrado</string>
@@ -177,7 +177,7 @@
     <string name="download_queue_error">Não foi possível transferir capítulos. Poderá tentar novamente na secção das transferências</string>
     <!-- Library update service notifications -->
     <string name="notification_new_chapters">Novos capítulos encontrados</string>
-    <string name="notification_first_add_to_library">Por favor adicione a mangá à sua biblioteca antes de fazer isto</string>
+    <string name="notification_first_add_to_library">Por favor adicione à sua biblioteca antes de fazer isto</string>
     <!-- File Picker Titles -->
     <string name="file_select_cover">Selecionar imagem de capa</string>
     <string name="file_select_backup">Selecionar ficheiro de cópia de segurança</string>
@@ -187,7 +187,7 @@
     <string name="update_check_look_for_updates">À procura de atualizações…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">A transferir…</string>
-    <string name="update_check_notification_download_complete">Toque para instalar</string>
+    <string name="update_check_notification_download_complete">Toque para instalar a atualização</string>
     <string name="update_check_notification_download_error">Erro na transferência</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
     <!--Content Description-->
@@ -298,7 +298,7 @@
     <string name="track_type">Tipo</string>
     <string name="error_category_exists">Já existe uma categoria com este nome!</string>
     <string name="snack_categories_deleted">Categorias eliminadas</string>
-    <string name="snack_add_to_library">Adicionar mangá a biblioteca\?</string>
+    <string name="snack_add_to_library">Adicionar à biblioteca\?</string>
     <string name="picture_saved">Imagem guardada</string>
     <string name="custom_filter">Filtro personalizado</string>
     <string name="set_as_cover">Usar como capa</string>
@@ -385,9 +385,9 @@
     <string name="email">Endereço de e-mail</string>
     <string name="pref_always_show_chapter_transition">Mostrar sempre transição entre capítulos</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Para %d título</item>
-        <item quantity="many">Para %d título</item>
-        <item quantity="other">Para %d títulos</item>
+        <item quantity="one">Para %d entrada</item>
+        <item quantity="many">Para %d entradas</item>
+        <item quantity="other">Para %d o acesso</item>
     </plurals>
     <string name="action_menu">Menu</string>
     <string name="action_reorganize_by">Reordenar</string>
@@ -530,7 +530,7 @@
     <plurals name="missing_chapters_warning">
         <item quantity="one">Ignorando %d capítulo, ou a fonte está em falta ou foi filtrado</item>
         <item quantity="many">Ignorando %d capítulos, ou a fonte está em falta ou foi filtrado</item>
-        <item quantity="other">Ignorando %d capítulos, ou a fonte está em falta ou foi filtrado</item>
+        <item quantity="other">Capítulos %d ignorados, ou a fonte está em falta ou foi filtrado</item>
     </plurals>
     <string name="no_chapters_error">Nenhum capítulo encontrado</string>
     <string name="chapter_settings_updated">Definições padrão de capítulo atualizadas</string>
@@ -665,7 +665,7 @@
     <string name="action_track">Monitorizar</string>
     <string name="save_chapter_as_cbz">Guardar como ficheiro CBZ</string>
     <string name="clear_database_source_item_count">%1$d mangás que não estão na biblioteca na base de dados</string>
-    <string name="database_clean">Base de dados limpa</string>
+    <string name="database_clean">Nada para limpar</string>
     <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi. Toque para saber mais.</string>
     <string name="notification_size_warning">Grandes atualizações prejudicam as fontes e podem levar a atualizações lentas e ainda ao aumento do uso da bateria. Toque para saber mais.</string>
     <string name="library_errors_help">Para obter ajuda sobre como corrigir erros de atualização da biblioteca, veja %1$s</string>
@@ -749,7 +749,7 @@
         <item quantity="other">Próximos %d capítulos não lidos</item>
     </plurals>
     <string name="are_you_sure">Tem a certeza\?</string>
-    <string name="updates_last_update_info">Última atualização da biblioteca: %1$s</string>
+    <string name="updates_last_update_info">Última atualização da biblioteca: %s</string>
     <string name="appwidget_updates_description">Veja as suas mangás recentemente atualizadas</string>
     <string name="remove_manga">Está prestes a remover esta mangá da sua biblioteca</string>
     <string name="download_ahead_info">Apenas funciona em entradas na biblioteca e se o capítulo atual, mais o próximo, já estiverem transferidos</string>
@@ -785,4 +785,18 @@
     <string name="pref_library_summary">Categorias, atualização de mangás</string>
     <string name="pref_reader_summary">Modo leitura, exibir, navegação</string>
     <string name="action_open_random_manga">Abrir mangá aleatório</string>
+    <string name="label_stats">Estatisticas</string>
+    <string name="label_started">Começado</string>
+    <string name="label_local">Local</string>
+    <string name="label_downloaded">Baixado</string>
+    <string name="unknown_title">Título desconhecido</string>
+    <string name="copied_to_clipboard_plain">Copiado para a área de transferência</string>
+    <string name="confirm_add_duplicate_manga">Você tem uma entrada em sua biblioteca com o mesmo nome.
+\n
+\nAinda deseja continuar\?</string>
+    <string name="day_short">%dd</string>
+    <string name="updates_last_update_info_just_now">Agora mesmo</string>
+    <string name="crash_screen_restart_application">Reinicie o aplicativo</string>
+    <string name="crash_screen_title">Ops!</string>
+    <string name="crash_screen_description">%s encontrou um erro inesperado. Sugerimos que você capture esta mensagem, despeje os logs de falha e compartilhe-a em nosso canal de suporte no Discord.</string>
 </resources>

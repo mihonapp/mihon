@@ -741,7 +741,7 @@
     <string name="error_user_agent_string_invalid">String agen pengguna tidak valid</string>
     <string name="updates_last_update_info_just_now">Baru saja</string>
     <string name="action_open_random_manga">Buka entri acak</string>
-    <string name="download_notifier_cache_renewal">Mengindeks unduhan</string>
+    <string name="download_notifier_cache_renewal">Memeriksa unduhan</string>
     <string name="information_no_entries_found">Tidak ada entri yang ditemukan dalam kategori ini</string>
     <string name="fdroid_warning">Build F-Droid tidak didukung secara resmi.
 \n Ketuk untuk mempelajari lebih lanjut.</string>
@@ -783,4 +783,5 @@
 \n
 \nApakah kamu ingin melanjutkan\?</string>
     <string name="track_error">%1$seror%2$s</string>
+    <string name="information_required_plain">*dibutuhkan</string>
 </resources>

@@ -789,7 +789,7 @@
     <string name="updates_last_update_info_just_now">Upravo sada</string>
     <string name="fdroid_warning">F-Droid verzije nisu službeno podržane.
 \nDodirnite da biste saznali više.</string>
-    <string name="download_notifier_cache_renewal">Indeksiranje preuzimanja</string>
+    <string name="download_notifier_cache_renewal">Provjeravanje preuzimanja</string>
     <string name="update_check_open">Otvorite na GitHubu</string>
     <string name="skipped_reason_not_always_update">Preskočeno jer serija ne zahtijeva ažuriranje</string>
     <string name="update_check_fdroid_migration_info">Nova verzija dostupna je u službenim izdanjima. Dodirnite da biste saznali kako migrirati iz neslužbenih F-Droid izdanja.</string>
@@ -809,4 +809,5 @@
 \nŽeliš li svejedno nastaviti\?</string>
     <string name="pref_skip_dupe_chapters">Preskoči dupla poglavlja</string>
     <string name="track_error">%1$s greška: %2$s</string>
+    <string name="information_required_plain">*obavezno</string>
 </resources>

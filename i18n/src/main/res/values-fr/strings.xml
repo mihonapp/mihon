@@ -804,7 +804,7 @@
     <string name="fdroid_warning">Les versions de F-Droid ne sont pas officiellement prises en charge.
 \nAppuyez pour en savoir plus.</string>
     <string name="information_no_entries_found">Aucune entrée trouvée dans cette catégorie</string>
-    <string name="download_notifier_cache_renewal">Indexation des téléchargements</string>
+    <string name="download_notifier_cache_renewal">Vérification des téléchargements</string>
     <string name="action_display_show_continue_reading_button">Afficher le bouton Continuer la lecture</string>
     <string name="track_remove_start_date_conf_text">Ceci supprimera la date de début que vous avez précédemment sélectionnée dans la base de données de %s</string>
     <string name="other_header">Autre</string>
@@ -835,11 +835,13 @@
     <string name="label_tracked_titles">Entrées suivies</string>
     <string name="label_mean_score">Note moyenne</string>
     <string name="pref_library_update_show_tab_badge">Afficher le nombre de chapitres non lus sur l\'icône des mises à jour</string>
-    <string name="copied_to_clipboard_plain">Copier dans le presse-papier</string>
+    <string name="copied_to_clipboard_plain">Copié dans le presse-papier</string>
     <string name="pref_skip_dupe_chapters">Passer les chapitres en double</string>
     <string name="confirm_add_duplicate_manga">Il existe un enregistrement dans la bibliothèque avec le même nom.
 \n
 \nVoulez-vous continuer \?</string>
-    <string name="track_error">%1$s erreur : %2$s</string>
+    <string name="track_error">%1$s erreur : %2$s</string>
     <string name="enhanced_services_not_installed">Disponible mais la source n\'est pas installée : %s</string>
+    <string name="information_required_plain">*obligatoire</string>
+    <string name="pref_worker_info">Infos sur les processus</string>
 </resources>

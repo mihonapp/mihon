@@ -671,7 +671,7 @@
     <string name="battery_not_low">배터리가 부족하지 않을 때만</string>
     <string name="pref_clear_webview_data">WebView 데이터 지우기</string>
     <string name="webview_data_deleted">WebView 데이터 삭제됨</string>
-    <string name="split_tall_images">큰 이미지 분할</string>
+    <string name="split_tall_images">긴 이미지 분할</string>
     <string name="split_tall_images_summary">리더 성능 향상</string>
     <string name="ext_info_version">버전</string>
     <string name="ext_info_language">언어</string>

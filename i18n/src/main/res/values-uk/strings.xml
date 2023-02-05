@@ -322,7 +322,7 @@
     <string name="theme_system">Використовувати системну</string>
     <string name="pref_manage_notifications">Керування сповіщеннями</string>
     <string name="pref_category_security">Безпека</string>
-    <string name="lock_with_biometrics">Вимагати розблокування</string>
+    <string name="lock_with_biometrics">Вимагає розблокування</string>
     <string name="lock_when_idle">Блокувати в режимі очікування</string>
     <string name="lock_always">Завжди</string>
     <string name="lock_never">Ніколи</string>

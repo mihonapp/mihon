@@ -744,7 +744,7 @@
     <string name="fdroid_warning">บิลด์ F-Droid ไม่ได้ถูกรองรับอย่างเป็นทางการ
 \nแตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="information_no_entries_found">ไม่พบรายการใด ๆ ในหมวดหมู่นี้</string>
-    <string name="download_notifier_cache_renewal">กำลังทำดัชนีการดาวน์โหลด</string>
+    <string name="download_notifier_cache_renewal">กำลังตรวจสอบการดาวน์โหลด</string>
     <string name="action_display_show_continue_reading_button">แสดงปุ่มอ่านต่อ</string>
     <string name="other_header">อื่น ๆ</string>
     <string name="pref_invalidate_download_cache">ดัชนีการดาวน์โหลดไม่ถูกต้อง</string>
@@ -777,4 +777,11 @@
     <string name="information_no_manga_category">หมวดหมู่ว่างเปล่า</string>
     <string name="pref_worker_info">ข้อมูลของตัวทำงาน</string>
     <string name="copied_to_clipboard_plain">คัดลอกไปยังคลิปบอร์ดแล้ว</string>
+    <string name="pref_skip_dupe_chapters">ข้ามตอนที่ซ้ำกัน</string>
+    <string name="enhanced_services_not_installed">พร้อมใช้งานแต่ไม่ได้ติดตั้งแหล่งที่มา: %s</string>
+    <string name="confirm_add_duplicate_manga">มีรายการชื่อเดียวกันอยู่ในคลัง
+\n
+\nต้องการดำเนินการต่อหรือไม่\?</string>
+    <string name="track_error">%1$s ข้อผิดพลาด: %2$s</string>
+    <string name="information_required_plain">*จำเป็น</string>
 </resources>

@@ -414,7 +414,7 @@
     <string name="restore_duration">%02d دقیقه, %02d ثانیه</string>
     <string name="restore_completed">بازیابی کامل شد</string>
     <string name="backup_restore_missing_sources">منابع ناموجود:</string>
-    <string name="invalid_backup_file_missing_manga">فایل پشتیبان شامل هیچ مانگا ای نیست.</string>
+    <string name="invalid_backup_file_missing_manga">فایل پشتیبان حاوی هیچ ورودی کتابخانه نیست.</string>
     <string name="invalid_backup_file">فایل پشتیبان نامعتبر است</string>
     <string name="backup_created">نسخه پشتیبان ایجاد شد</string>
     <string name="action_edit_cover">ویرایش عکس روی جلد</string>
@@ -662,4 +662,21 @@
     <string name="pref_downloads_summary">دانلود خودکار، دانلود از قبل</string>
     <string name="pref_browse_summary">منابع، برنامه های افزودنی، جستجوی سراسری</string>
     <string name="pref_backup_summary">پشتیبان گیری دستی و خودکار</string>
+    <string name="pref_library_update_show_tab_badge">نمایش تعداد خوانده نشده در نماد به‌روزرسانی‌ها</string>
+    <string name="label_stats">آمار</string>
+    <string name="label_started">من شروع کردم</string>
+    <string name="label_local">شیرین شده</string>
+    <string name="label_downloaded">دانلود شد</string>
+    <string name="action_not_now">الان نه</string>
+    <string name="action_display_show_continue_reading_button">نمایش دکمه ادامه خواندن</string>
+    <string name="split_tall_images_summary">بهبود کارکرد ابزار خواندن</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">قسمت خوانده نشده بعدی</item>
+        <item quantity="other">%d قسمت خوانده نشده بعدی</item>
+    </plurals>
+    <string name="download_ahead_info">اگر قسمت فعلی و بعدی دانلود شده باشند، تنها برای ورودی‌های کتابخانه کار می‌کند</string>
+    <string name="missing_storage_permission">اجازه دسترسی به حافظه داده نشده.</string>
+    <string name="backup_restore_content_full">داده ها از فایل پشتیبان برگردانده میشوند.
+\n
+\nلازم است که افزونه های جا مانده را دستی نصب کنید و وارد یک سرویس دنبال کننده شوید تا بتوانید پیشرفت هر کار را ذخیره کنید.</string>
 </resources>

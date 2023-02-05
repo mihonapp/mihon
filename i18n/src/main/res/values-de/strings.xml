@@ -289,7 +289,7 @@
     <string name="transition_pages_error">Seiten konnten nicht geladen werden: %1$s</string>
     <string name="action_open_in_web_view">In WebView öffnen</string>
     <string name="pref_true_color">32-Bit-Farben</string>
-    <string name="pref_skip_read_chapters">Überspringe gelesene Kapitel</string>
+    <string name="pref_skip_read_chapters">Gelesene Kapitel überspringen</string>
     <string name="pref_read_with_long_tap">Bei langem Antippen anzeigen</string>
     <string name="filter_mode_overlay">Überlagerung</string>
     <string name="filter_mode_multiply">Multiplizieren</string>
@@ -375,7 +375,7 @@
     <string name="channel_ext_updates">Erweiterungsaktualisierungen</string>
     <string name="http_error_hint">Webseite in WebView prüfen</string>
     <string name="updating_library">Bibliothek wird aktualisiert</string>
-    <string name="pref_skip_filtered_chapters">Überspringe gefilterte Kapitel</string>
+    <string name="pref_skip_filtered_chapters">Gefilterte Kapitel überspringen</string>
     <string name="pref_category_reading">Beim Lesen</string>
     <string name="label_sources">Quellen</string>
     <string name="action_select_inverse">Auswahl umkehren</string>
@@ -603,7 +603,7 @@
     <string name="pref_low">Niedrig</string>
     <string name="pref_high">Hoch</string>
     <string name="pref_highest">Höchste</string>
-    <string name="pref_hide_threshold">Empfindlichkeit für das Ausblenden des Menüs beim Scrollen</string>
+    <string name="pref_hide_threshold">Empfindlichkeit für das Menü-Ausblenden beim Scrollen</string>
     <string name="pref_inverted_colors">Invertiert</string>
     <string name="pref_relative_time_short">Kurz (Heute, Gestern)</string>
     <string name="pref_relative_format">Relative Zeitstempel</string>

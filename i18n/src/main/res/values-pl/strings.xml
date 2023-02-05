@@ -812,6 +812,15 @@
     <string name="label_mean_score">Średnia ocena</string>
     <string name="skipped_reason_not_always_update">Pominięto, ponieważ aktualizacja nie jest wymagana</string>
     <string name="information_no_entries_found">Nie znaleziono wpisów w tej kategorii</string>
-    <string name="download_notifier_cache_renewal">Indeksowanie pobranych plików</string>
+    <string name="download_notifier_cache_renewal">Sprawdzanie pobranych plików</string>
     <string name="information_no_manga_category">Kategoria jest pusta</string>
+    <string name="copied_to_clipboard_plain">Skopiowano do schowka</string>
+    <string name="confirm_add_duplicate_manga">Masz w swojej bibliotece pozycję o tej samej nazwie.
+\n
+\nCzy nadal chcesz kontynuować\?</string>
+    <string name="pref_skip_dupe_chapters">Pomiń zduplikowane rozdziały</string>
+    <string name="enhanced_services_not_installed">Dostępne, ale źródło nie jest zainstalowane: %s</string>
+    <string name="pref_worker_info">Informacje o procesach</string>
+    <string name="track_error">Błąd %1$s: %2$s</string>
+    <string name="information_required_plain">*wymagane</string>
 </resources>
