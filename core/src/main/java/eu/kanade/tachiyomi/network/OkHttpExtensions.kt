@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.network
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.okio.decodeFromBufferedSource
 import kotlinx.serialization.serializer
@@ -21,8 +21,6 @@ import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resumeWithException
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 val jsonMime = "application/json; charset=utf-8".toMediaType()
 
@@ -134,13 +132,11 @@ fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: Progre
 }
 
 inline fun <reified T> Response.parseAs(): T {
-    return internalParseAs(typeOf<T>(), this)
+    return decodeFromJsonResponse(serializer(), this)
 }
 
-@Suppress("UNCHECKED_CAST")
 @OptIn(ExperimentalSerializationApi::class)
-fun <T> internalParseAs(type: KType, response: Response): T {
-    val deserializer = serializer(type) as KSerializer<T>
+fun <T> decodeFromJsonResponse(deserializer: DeserializationStrategy<T>, response: Response): T {
     return response.body.source().use {
         Injekt.get<Json>().decodeFromBufferedSource(deserializer, it)
     }
