@@ -348,6 +348,10 @@ object Migrations {
                     }
                 }
             }
+            if (oldVersion < 95) {
+                LibraryUpdateJob.cancelAllWorks(context)
+                LibraryUpdateJob.setupTask(context)
+            }
             return true
         }
 
