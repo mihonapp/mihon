@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -226,7 +225,6 @@ object DownloadQueueScreen : Screen {
                             }
                         },
                         expanded = fabExpanded,
-                        modifier = Modifier.navigationBarsPadding(),
                     )
                 }
             },
