@@ -60,6 +60,9 @@ fun LibraryContent(
         var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
 
         if (showPageTabs && categories.size > 1) {
+            if (categories.size <= pagerState.currentPage) {
+                pagerState.currentPage = categories.size - 1
+            }
             LibraryTabs(
                 categories = categories,
                 currentPageIndex = pagerState.currentPage,
