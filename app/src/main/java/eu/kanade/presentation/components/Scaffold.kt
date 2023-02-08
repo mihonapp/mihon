@@ -240,13 +240,16 @@ private fun ScaffoldLayout(
                 )
             }.fastMap { it.measure(looseConstraints) }
 
-            val bottomBarHeight = bottomBarPlaceables.fastMaxBy { it.height }?.height
+            val bottomBarHeight = bottomBarPlaceables
+                .fastMaxBy { it.height }
+                ?.height
+                ?.takeIf { it != 0 }
             val fabOffsetFromBottom = fabPlacement?.let {
                 max(bottomBarHeight ?: 0, bottomInset) + it.height + FabSpacing.roundToPx()
             }
 
             val snackbarOffsetFromBottom = if (snackbarHeight != 0) {
-                snackbarHeight + (fabOffsetFromBottom ?: bottomBarHeight ?: bottomInset)
+                snackbarHeight + (fabOffsetFromBottom ?: max(bottomBarHeight ?: 0, bottomInset))
             } else {
                 0
             }
