@@ -348,7 +348,7 @@ object Migrations {
                     }
                 }
             }
-            if (oldVersion < 95) {
+            if (oldVersion < 96) {
                 LibraryUpdateJob.cancelAllWorks(context)
                 LibraryUpdateJob.setupTask(context)
             }
