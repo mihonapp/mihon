@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import rx.subjects.Subject
 
 @Serializable
 open class Page(
@@ -28,7 +27,6 @@ open class Page(
         get() = _statusFlow.value
         set(value) {
             _statusFlow.value = value
-            statusSubject?.onNext(value)
         }
 
     @Transient
@@ -41,9 +39,6 @@ open class Page(
         set(value) {
             _progressFlow.value = value
         }
-
-    @Transient
-    var statusSubject: Subject<State, State>? = null
 
     override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
         progress = if (contentLength > 0) {

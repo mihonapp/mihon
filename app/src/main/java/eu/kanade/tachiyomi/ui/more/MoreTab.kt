@@ -95,14 +95,13 @@ private class MoreScreenModel(
         coroutineScope.launchIO {
             combine(
                 DownloadService.isRunning,
-                downloadManager.queue.updates,
+                downloadManager.queue.state,
             ) { isRunning, downloadQueue -> Pair(isRunning, downloadQueue.size) }
                 .collectLatest { (isDownloading, downloadQueueSize) ->
                     val pendingDownloadExists = downloadQueueSize != 0
                     _state.value = when {
                         !pendingDownloadExists -> DownloadQueueState.Stopped
-                        !isDownloading && !pendingDownloadExists -> DownloadQueueState.Paused(0)
-                        !isDownloading && pendingDownloadExists -> DownloadQueueState.Paused(downloadQueueSize)
+                        !isDownloading -> DownloadQueueState.Paused(downloadQueueSize)
                         else -> DownloadQueueState.Downloading(downloadQueueSize)
                     }
                 }

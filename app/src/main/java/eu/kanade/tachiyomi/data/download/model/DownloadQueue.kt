@@ -1,69 +1,48 @@
 package eu.kanade.tachiyomi.data.download.model
 
-import eu.kanade.core.util.asFlow
 import eu.kanade.tachiyomi.data.download.DownloadStore
-import eu.kanade.tachiyomi.source.model.Page
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.shareIn
-import rx.Observable
-import rx.subjects.PublishSubject
-import tachiyomi.core.util.lang.launchNonCancellable
+import kotlinx.coroutines.flow.update
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
-import java.util.concurrent.CopyOnWriteArrayList
 
 class DownloadQueue(
     private val store: DownloadStore,
-    private val queue: MutableList<Download> = CopyOnWriteArrayList(),
-) : List<Download> by queue {
-
-    private val scope = CoroutineScope(Dispatchers.IO)
-
-    private val statusSubject = PublishSubject.create<Download>()
-
-    private val _updates: Channel<Unit> = Channel(Channel.UNLIMITED)
-    val updates = _updates.receiveAsFlow()
-        .onStart { emit(Unit) }
-        .map { queue }
-        .shareIn(scope, SharingStarted.Eagerly, 1)
+) {
+    private val _state = MutableStateFlow<List<Download>>(emptyList())
+    val state = _state.asStateFlow()
 
     fun addAll(downloads: List<Download>) {
-        downloads.forEach { download ->
-            download.statusSubject = statusSubject
-            download.statusCallback = ::setPagesFor
-            download.status = Download.State.QUEUE
-        }
-        queue.addAll(downloads)
-        store.addAll(downloads)
-        scope.launchNonCancellable {
-            _updates.send(Unit)
+        _state.update {
+            downloads.forEach { download ->
+                download.status = Download.State.QUEUE
+            }
+            store.addAll(downloads)
+            it + downloads
         }
     }
 
     fun remove(download: Download) {
-        val removed = queue.remove(download)
-        store.remove(download)
-        download.statusSubject = null
-        download.statusCallback = null
-        if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
-            download.status = Download.State.NOT_DOWNLOADED
-        }
-        if (removed) {
-            scope.launchNonCancellable {
-                _updates.send(Unit)
+        _state.update {
+            store.remove(download)
+            if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
+                download.status = Download.State.NOT_DOWNLOADED
             }
+            it - download
         }
     }
 
     fun remove(chapter: Chapter) {
-        find { it.chapter.id == chapter.id }?.let { remove(it) }
+        _state.value.find { it.chapter.id == chapter.id }?.let { remove(it) }
     }
 
     fun remove(chapters: List<Chapter>) {
@@ -71,61 +50,50 @@ class DownloadQueue(
     }
 
     fun remove(manga: Manga) {
-        filter { it.manga.id == manga.id }.forEach { remove(it) }
+        _state.value.filter { it.manga.id == manga.id }.forEach { remove(it) }
     }
 
     fun clear() {
-        queue.forEach { download ->
-            download.statusSubject = null
-            download.statusCallback = null
-            if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
-                download.status = Download.State.NOT_DOWNLOADED
-            }
-        }
-        queue.clear()
-        store.clear()
-        scope.launchNonCancellable {
-            _updates.send(Unit)
-        }
-    }
-
-    fun statusFlow(): Flow<Download> = getStatusObservable().asFlow()
-
-    fun progressFlow(): Flow<Download> = getProgressObservable().asFlow()
-
-    private fun getActiveDownloads(): Observable<Download> =
-        Observable.from(this).filter { download -> download.status == Download.State.DOWNLOADING }
-
-    private fun getStatusObservable(): Observable<Download> = statusSubject
-        .startWith(getActiveDownloads())
-        .onBackpressureBuffer()
-
-    private fun getProgressObservable(): Observable<Download> {
-        return statusSubject.onBackpressureBuffer()
-            .startWith(getActiveDownloads())
-            .flatMap { download ->
-                if (download.status == Download.State.DOWNLOADING) {
-                    val pageStatusSubject = PublishSubject.create<Page.State>()
-                    setPagesSubject(download.pages, pageStatusSubject)
-                    return@flatMap pageStatusSubject
-                        .onBackpressureBuffer()
-                        .filter { it == Page.State.READY }
-                        .map { download }
-                } else if (download.status == Download.State.DOWNLOADED || download.status == Download.State.ERROR) {
-                    setPagesSubject(download.pages, null)
+        _state.update {
+            it.forEach { download ->
+                if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
+                    download.status = Download.State.NOT_DOWNLOADED
                 }
-                Observable.just(download)
             }
-            .filter { it.status == Download.State.DOWNLOADING }
-    }
-
-    private fun setPagesFor(download: Download) {
-        if (download.status == Download.State.DOWNLOADED || download.status == Download.State.ERROR) {
-            setPagesSubject(download.pages, null)
+            store.clear()
+            emptyList()
         }
     }
 
-    private fun setPagesSubject(pages: List<Page>?, subject: PublishSubject<Page.State>?) {
-        pages?.forEach { it.statusSubject = subject }
-    }
+    fun statusFlow(): Flow<Download> = state
+        .flatMapLatest { downloads ->
+            downloads
+                .map { download ->
+                    download.statusFlow.drop(1).map { download }
+                }
+                .merge()
+        }
+        .onStart { emitAll(getActiveDownloads()) }
+
+    fun progressFlow(): Flow<Download> = state
+        .flatMapLatest { downloads ->
+            downloads
+                .map { download ->
+                    download.progressFlow.drop(1).map { download }
+                }
+                .merge()
+        }
+        .onStart { emitAll(getActiveDownloads()) }
+
+    private fun getActiveDownloads(): Flow<Download> =
+        _state.value.filter { download -> download.status == Download.State.DOWNLOADING }.asFlow()
+
+    fun count(predicate: (Download) -> Boolean) = _state.value.count(predicate)
+    fun filter(predicate: (Download) -> Boolean) = _state.value.filter(predicate)
+    fun find(predicate: (Download) -> Boolean) = _state.value.find(predicate)
+    fun <K> groupBy(keySelector: (Download) -> K) = _state.value.groupBy(keySelector)
+    fun isEmpty() = _state.value.isEmpty()
+    fun isNotEmpty() = _state.value.isNotEmpty()
+    fun none(predicate: (Download) -> Boolean) = _state.value.none(predicate)
+    fun toMutableList() = _state.value.toMutableList()
 }

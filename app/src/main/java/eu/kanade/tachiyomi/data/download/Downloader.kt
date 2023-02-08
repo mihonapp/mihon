@@ -148,7 +148,7 @@ class Downloader(
             return
         }
 
-        if (notifier.paused && !queue.isEmpty()) {
+        if (notifier.paused && queue.isNotEmpty()) {
             notifier.onPaused()
         } else {
             notifier.onComplete()
