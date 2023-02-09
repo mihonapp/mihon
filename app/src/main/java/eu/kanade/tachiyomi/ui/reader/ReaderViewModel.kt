@@ -177,10 +177,11 @@ class ReaderViewModel(
         }.run {
             if (readerPreferences.skipDupe().get()) {
                 groupBy { it.chapterNumber }
-                    .mapValues { (_, chapters) ->
-                        chapters.find { it.id == chapterId || it.scanlator == selectedChapter.scanlator } ?: chapters.first()
+                    .map { (_, chapters) ->
+                        chapters.find { it.id == selectedChapter.id }
+                            ?: chapters.find { it.scanlator == selectedChapter.scanlator }
+                            ?: chapters.first()
                     }
-                    .values
             } else {
                 this
             }
