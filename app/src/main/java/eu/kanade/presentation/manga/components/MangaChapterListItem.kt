@@ -52,6 +52,9 @@ fun MangaChapterListItem(
     onClick: () -> Unit,
     onDownloadClick: ((ChapterDownloadAction) -> Unit)?,
 ) {
+    val textAlpha = if (read) ReadItemAlpha else 1f
+    val textSubtitleAlpha = if (read) ReadItemAlpha else SecondaryItemAlpha
+
     Row(
         modifier = modifier
             .selectedBackground(selected)
@@ -62,9 +65,6 @@ fun MangaChapterListItem(
             .padding(start = 16.dp, top = 12.dp, end = 8.dp, bottom = 12.dp),
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            val textAlpha = remember(read) { if (read) ReadItemAlpha else 1f }
-            val textSubtitleAlpha = remember(read) { if (read) ReadItemAlpha else SecondaryItemAlpha }
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 var textHeight by remember { mutableStateOf(0) }
                 if (bookmark) {
@@ -86,7 +86,9 @@ fun MangaChapterListItem(
                     modifier = Modifier.alpha(textAlpha),
                 )
             }
+
             Spacer(modifier = Modifier.height(6.dp))
+
             Row(modifier = Modifier.alpha(textSubtitleAlpha)) {
                 ProvideTextStyle(
                     value = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
@@ -119,7 +121,6 @@ fun MangaChapterListItem(
             }
         }
 
-        // Download view
         if (onDownloadClick != null) {
             ChapterDownloadIndicator(
                 enabled = downloadIndicatorEnabled,
