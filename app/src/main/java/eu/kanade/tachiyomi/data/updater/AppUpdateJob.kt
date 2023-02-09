@@ -37,9 +37,9 @@ class AppUpdateJob(private val context: Context, workerParams: WorkerParameters)
                 return
             }
 
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
+            val constraints = Constraints(
+                requiredNetworkType = NetworkType.CONNECTED,
+            )
 
             val request = PeriodicWorkRequestBuilder<AppUpdateJob>(
                 7,

@@ -71,9 +71,9 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
             val preferences = Injekt.get<BasePreferences>()
             val autoUpdateJob = forceAutoUpdateJob ?: preferences.automaticExtUpdates().get()
             if (autoUpdateJob) {
-                val constraints = Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
+                val constraints = Constraints(
+                    requiredNetworkType = NetworkType.CONNECTED,
+                )
 
                 val request = PeriodicWorkRequestBuilder<ExtensionUpdateJob>(
                     2,

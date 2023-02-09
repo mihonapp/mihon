@@ -1,5 +1,5 @@
 [versions]
-compiler = "1.4.0"
+compiler = "1.4.2"
 compose-bom = "2023.01.00"
 accompanist = "0.28.0"
 
@@ -16,9 +16,9 @@ material3-core = { module = "androidx.compose.material3:material3" }
 material-icons = { module = "androidx.compose.material:material-icons-extended" }
 
 # Here until M3's swipeable became public https://issuetracker.google.com/issues/234640556
-# Using alpha version for PullRefresh fix
+# Using newer version for PullRefresh fix
 # TODO: use default version after next Compose BOM is released
-material-core = { module = "androidx.compose.material:material", version = "1.4.0-alpha05" }
+material-core = { module = "androidx.compose.material:material", version = "1.4.0-beta01" }
 
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist" }
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist" }

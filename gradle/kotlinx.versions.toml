@@ -1,5 +1,5 @@
 [versions]
-kotlin_version = "1.8.0"
+kotlin_version = "1.8.10"
 serialization_version = "1.4.0"
 xml_serialization_version = "0.84.3"
 

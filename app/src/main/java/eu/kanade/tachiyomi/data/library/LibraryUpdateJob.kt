@@ -550,11 +550,11 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             val interval = prefInterval ?: preferences.libraryUpdateInterval().get()
             if (interval > 0) {
                 val restrictions = preferences.libraryUpdateDeviceRestriction().get()
-                val constraints = Constraints.Builder()
-                    .setRequiredNetworkType(if (DEVICE_NETWORK_NOT_METERED in restrictions) { NetworkType.UNMETERED } else { NetworkType.CONNECTED })
-                    .setRequiresCharging(DEVICE_CHARGING in restrictions)
-                    .setRequiresBatteryNotLow(DEVICE_BATTERY_NOT_LOW in restrictions)
-                    .build()
+                val constraints = Constraints(
+                    requiredNetworkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) { NetworkType.UNMETERED } else { NetworkType.CONNECTED },
+                    requiresCharging = DEVICE_CHARGING in restrictions,
+                    requiresBatteryNotLow = DEVICE_BATTERY_NOT_LOW in restrictions,
+                )
 
                 val request = PeriodicWorkRequestBuilder<LibraryUpdateJob>(
                     interval.toLong(),
