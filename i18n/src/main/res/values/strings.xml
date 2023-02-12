@@ -780,6 +780,7 @@
     <string name="migration_dialog_what_to_include">Select data to include</string>
     <string name="migration_selection_prompt">Select a source to migrate from</string>
     <string name="migrate">Migrate</string>
+    <!-- Make a copy (noun) when migrating. Don't use for copying to clipboard. -->
     <string name="copy">Copy</string>
     <string name="empty_screen">Well, this is awkward</string>
     <string name="not_installed">Not installed</string>
