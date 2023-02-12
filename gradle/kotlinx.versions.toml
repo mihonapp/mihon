@@ -1,5 +1,6 @@
 [versions]
 kotlin_version = "1.8.10"
+# TODO: 1.4.1 introduces an issue with cached serializers; see https://github.com/Kotlin/kotlinx.serialization/issues/2065
 serialization_version = "1.4.0"
 xml_serialization_version = "0.84.3"
 
@@ -11,10 +12,10 @@ coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", vers
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android" }
 
-# TODO: 1.4.1 introduces an issue with cached serializers; see https://github.com/Kotlin/kotlinx.serialization/issues/2065
-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.4.0" }
-serialization-json-okio = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-okio", version = "1.4.0" }
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
+serialization-json-okio = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-okio", version.ref = "serialization_version" }
 serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization_version" }
+
 serialization-xml-core = { module = "io.github.pdvrieze.xmlutil:core-android", version.ref = "xml_serialization_version" }
 serialization-xml = { module = "io.github.pdvrieze.xmlutil:serialization-android", version.ref = "xml_serialization_version" }
 
