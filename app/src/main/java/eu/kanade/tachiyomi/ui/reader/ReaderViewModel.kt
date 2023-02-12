@@ -388,20 +388,17 @@ class ReaderViewModel(
             return
         }
 
-        logcat { "Preloading ${chapter.chapter.url}" }
-
         val loader = loader ?: return
-        withIOContext {
-            try {
-                loader.loadChapter(chapter)
-            } catch (e: Throwable) {
-                if (e is CancellationException) {
-                    throw e
-                }
-                return@withIOContext
+        try {
+            logcat { "Preloading ${chapter.chapter.url}" }
+            loader.loadChapter(chapter)
+        } catch (e: Throwable) {
+            if (e is CancellationException) {
+                throw e
             }
-            eventChannel.trySend(Event.ReloadViewerChapters)
+            return
         }
+        eventChannel.trySend(Event.ReloadViewerChapters)
     }
 
     /**
