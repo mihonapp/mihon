@@ -871,7 +871,7 @@ class ReaderActivity : BaseActivity() {
      * the viewer is reaching the beginning or end of a chapter or the transition page is active.
      */
     fun requestPreloadChapter(chapter: ReaderChapter) {
-        lifecycleScope.launch { viewModel.preloadChapter(chapter) }
+        lifecycleScope.launchIO { viewModel.preloadChapter(chapter) }
     }
 
     /**
