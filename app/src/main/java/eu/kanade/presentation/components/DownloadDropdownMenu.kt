@@ -3,6 +3,7 @@ package eu.kanade.presentation.components
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.R
@@ -18,46 +19,18 @@ fun DownloadDropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
     ) {
-        DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.download_1)) },
-            onClick = {
-                onDownloadClicked(DownloadAction.NEXT_1_CHAPTER)
-                onDismissRequest()
-            },
-        )
-        DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.download_5)) },
-            onClick = {
-                onDownloadClicked(DownloadAction.NEXT_5_CHAPTERS)
-                onDismissRequest()
-            },
-        )
-        DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.download_10)) },
-            onClick = {
-                onDownloadClicked(DownloadAction.NEXT_10_CHAPTERS)
-                onDismissRequest()
-            },
-        )
-        DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.download_custom)) },
-            onClick = {
-                onDownloadClicked(DownloadAction.CUSTOM)
-                onDismissRequest()
-            },
-        )
-        DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.download_unread)) },
-            onClick = {
-                onDownloadClicked(DownloadAction.UNREAD_CHAPTERS)
-                onDismissRequest()
-            },
-        )
-        if (includeDownloadAllOption) {
+        listOfNotNull(
+            DownloadAction.NEXT_1_CHAPTER to pluralStringResource(R.plurals.download_amount, 1, 1),
+            DownloadAction.NEXT_5_CHAPTERS to pluralStringResource(R.plurals.download_amount, 5, 5),
+            DownloadAction.NEXT_10_CHAPTERS to pluralStringResource(R.plurals.download_amount, 10, 10),
+            DownloadAction.NEXT_25_CHAPTERS to pluralStringResource(R.plurals.download_amount, 25, 25),
+            DownloadAction.UNREAD_CHAPTERS to stringResource(R.string.download_unread),
+            (DownloadAction.ALL_CHAPTERS to stringResource(R.string.download_all)).takeIf { includeDownloadAllOption },
+        ).map { (downloadAction, string) ->
             DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.download_all)) },
+                text = { Text(text = string) },
                 onClick = {
-                    onDownloadClicked(DownloadAction.ALL_CHAPTERS)
+                    onDownloadClicked(downloadAction)
                     onDismissRequest()
                 },
             )

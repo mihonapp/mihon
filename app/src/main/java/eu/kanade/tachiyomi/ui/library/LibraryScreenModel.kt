@@ -456,18 +456,8 @@ class LibraryScreenModel(
             DownloadAction.NEXT_1_CHAPTER -> downloadUnreadChapters(mangas, 1)
             DownloadAction.NEXT_5_CHAPTERS -> downloadUnreadChapters(mangas, 5)
             DownloadAction.NEXT_10_CHAPTERS -> downloadUnreadChapters(mangas, 10)
+            DownloadAction.NEXT_25_CHAPTERS -> downloadUnreadChapters(mangas, 25)
             DownloadAction.UNREAD_CHAPTERS -> downloadUnreadChapters(mangas, null)
-            DownloadAction.CUSTOM -> {
-                mutableState.update { state ->
-                    state.copy(
-                        dialog = Dialog.DownloadCustomAmount(
-                            mangas,
-                            selection.maxOf { it.unreadCount }.toInt(),
-                        ),
-                    )
-                }
-                return
-            }
             else -> {}
         }
         clearSelection()
@@ -479,7 +469,7 @@ class LibraryScreenModel(
      * @param mangas the list of manga.
      * @param amount the amount to queue or null to queue all
      */
-    fun downloadUnreadChapters(mangas: List<Manga>, amount: Int?) {
+    private fun downloadUnreadChapters(mangas: List<Manga>, amount: Int?) {
         coroutineScope.launchNonCancellable {
             mangas.forEach { manga ->
                 val chapters = getNextChapters.await(manga.id)
@@ -701,7 +691,6 @@ class LibraryScreenModel(
     sealed class Dialog {
         data class ChangeCategory(val manga: List<Manga>, val initialSelection: List<CheckboxState<Category>>) : Dialog()
         data class DeleteManga(val manga: List<Manga>) : Dialog()
-        data class DownloadCustomAmount(val manga: List<Manga>, val max: Int) : Dialog()
     }
 
     @Immutable
