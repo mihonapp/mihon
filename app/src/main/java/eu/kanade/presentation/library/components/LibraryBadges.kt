@@ -7,7 +7,7 @@ import eu.kanade.presentation.components.Badge
 import eu.kanade.tachiyomi.R
 
 @Composable
-fun DownloadsBadge(count: Int) {
+fun DownloadsBadge(count: Long) {
     if (count > 0) {
         Badge(
             text = "$count",
@@ -18,7 +18,7 @@ fun DownloadsBadge(count: Int) {
 }
 
 @Composable
-fun UnreadBadge(count: Int) {
+fun UnreadBadge(count: Long) {
     if (count > 0) {
         Badge(text = "$count")
     }

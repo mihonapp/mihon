@@ -371,20 +371,21 @@ class LibraryScreenModel(
             libraryMangaList
                 .map { libraryManga ->
                     // Display mode based on user preference: take it from global library setting or category
-                    LibraryItem(libraryManga).apply {
+                    LibraryItem(
+                        libraryManga,
                         downloadCount = if (prefs.downloadBadge) {
                             downloadManager.getDownloadCount(libraryManga.manga).toLong()
                         } else {
                             0
-                        }
-                        unreadCount = libraryManga.unreadCount
-                        isLocal = if (prefs.localBadge) libraryManga.manga.isLocal() else false
+                        },
+                        unreadCount = libraryManga.unreadCount,
+                        isLocal = if (prefs.localBadge) libraryManga.manga.isLocal() else false,
                         sourceLanguage = if (prefs.languageBadge) {
                             sourceManager.getOrStub(libraryManga.manga.source).lang
                         } else {
                             ""
-                        }
-                    }
+                        },
+                    )
                 }
                 .groupBy { it.libraryManga.category }
         }
