@@ -108,13 +108,13 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private var mangaToUpdate: List<LibraryManga> = mutableListOf()
 
     override suspend fun doWork(): Result {
-        val preferences = Injekt.get<LibraryPreferences>()
-        val restrictions = preferences.libraryUpdateDeviceRestriction().get()
-        if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
-            return Result.failure()
-        }
-
         if (tags.contains(WORK_NAME_AUTO)) {
+            val preferences = Injekt.get<LibraryPreferences>()
+            val restrictions = preferences.libraryUpdateDeviceRestriction().get()
+            if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
+                return Result.failure()
+            }
+
             // Find a running manual worker. If exists, try again later
             val otherRunningWorker = withContext(Dispatchers.IO) {
                 WorkManager.getInstance(context)
@@ -135,7 +135,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
         val target = inputData.getString(KEY_TARGET)?.let { Target.valueOf(it) } ?: Target.CHAPTERS
 
-        // If this is a chapter update; set the last update time to now
+        // If this is a chapter update, set the last update time to now
         if (target == Target.CHAPTERS) {
             libraryPreferences.libraryUpdateLastTimestamp().set(Date().time)
         }
