@@ -6,7 +6,6 @@
   "ignoreDeps": [
     "androidx.core:core-splashscreen",
     "com.android.tools:r8",
-    "com.google.guava:guava",
-    "com.github.commandiron:WheelPickerCompose"
+    "com.google.guava:guava"
   ]
 }

@@ -445,6 +445,19 @@ private data class TrackDateSelectorScreen(
             } else {
                 stringResource(R.string.track_finished_reading_date)
             },
+            minDate = if (!start && track.started_reading_date > 0) {
+                // Disallow end date to be set earlier than start date
+                Instant.ofEpochMilli(track.started_reading_date).atZone(ZoneId.systemDefault()).toLocalDate()
+            } else {
+                null
+            },
+            maxDate = if (start && track.finished_reading_date > 0) {
+                // Disallow start date to be set later than finish date
+                Instant.ofEpochMilli(track.finished_reading_date).atZone(ZoneId.systemDefault()).toLocalDate()
+            } else {
+                // Disallow future dates
+                LocalDate.now()
+            },
             selection = state.selection,
             onSelectionChange = sm::setSelection,
             onConfirm = { sm.setDate(); navigator.pop() },

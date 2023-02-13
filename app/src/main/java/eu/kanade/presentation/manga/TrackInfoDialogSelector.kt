@@ -29,11 +29,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.commandiron.wheel_picker_compose.WheelDatePicker
-import com.commandiron.wheel_picker_compose.WheelTextPicker
 import eu.kanade.presentation.components.AlertDialogContent
 import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.ScrollbarLazyColumn
+import eu.kanade.presentation.components.WheelDatePicker
+import eu.kanade.presentation.components.WheelTextPicker
 import eu.kanade.presentation.util.isScrolledToEnd
 import eu.kanade.presentation.util.isScrolledToStart
 import eu.kanade.presentation.util.minimumTouchTargetSize
@@ -103,12 +103,9 @@ fun TrackChapterSelector(
         content = {
             WheelTextPicker(
                 modifier = Modifier.align(Alignment.Center),
-                texts = range.map { "$it" },
-                onScrollFinished = {
-                    onSelectionChange(it)
-                    null
-                },
                 startIndex = selection,
+                texts = range.map { "$it" },
+                onSelectionChanged = { onSelectionChange(it) },
             )
         },
         onConfirm = onConfirm,
@@ -129,12 +126,9 @@ fun TrackScoreSelector(
         content = {
             WheelTextPicker(
                 modifier = Modifier.align(Alignment.Center),
-                texts = selections,
-                onScrollFinished = {
-                    onSelectionChange(selections[it])
-                    null
-                },
                 startIndex = selections.indexOf(selection).coerceAtLeast(0),
+                texts = selections,
+                onSelectionChanged = { onSelectionChange(selections[it]) },
             )
         },
         onConfirm = onConfirm,
@@ -145,6 +139,8 @@ fun TrackScoreSelector(
 @Composable
 fun TrackDateSelector(
     title: String,
+    minDate: LocalDate?,
+    maxDate: LocalDate?,
     selection: LocalDate,
     onSelectionChange: (LocalDate) -> Unit,
     onConfirm: () -> Unit,
@@ -170,7 +166,9 @@ fun TrackDateSelector(
                 )
                 WheelDatePicker(
                     startDate = selection,
-                    onScrollFinished = {
+                    minDate = minDate,
+                    maxDate = maxDate,
+                    onSelectionChanged = {
                         internalSelection = it
                         onSelectionChange(it)
                     },

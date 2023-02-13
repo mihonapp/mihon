@@ -61,7 +61,6 @@ photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
 cascade = "me.saket.cascade:cascade-compose:2.0.0-rc01"
-wheelpicker = "com.github.commandiron:WheelPickerCompose:1.0.11"
 materialmotion-core = "io.github.fornewid:material-motion-compose-core:0.10.4"
 
 logcat = "com.squareup.logcat:logcat:0.1"
