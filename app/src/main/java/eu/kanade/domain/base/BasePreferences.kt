@@ -16,8 +16,6 @@ class BasePreferences(
 
     fun incognitoMode() = preferenceStore.getBoolean("incognito_mode", false)
 
-    fun automaticExtUpdates() = preferenceStore.getBoolean("automatic_ext_updates", true)
-
     fun extensionInstaller() = ExtensionInstallerPreference(context, preferenceStore)
 
     fun acraEnabled() = preferenceStore.getBoolean("acra.enable", isPreviewBuildType || isReleaseBuildType)

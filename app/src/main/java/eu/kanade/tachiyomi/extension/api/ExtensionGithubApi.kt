@@ -18,7 +18,7 @@ import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import java.util.Date
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.days
 
 internal class ExtensionGithubApi {
 
@@ -69,7 +69,7 @@ internal class ExtensionGithubApi {
 
     suspend fun checkForUpdates(context: Context, fromAvailableExtensionList: Boolean = false): List<Extension.Installed>? {
         // Limit checks to once a day at most
-        if (fromAvailableExtensionList.not() && Date().time < lastExtCheck.get() + TimeUnit.DAYS.toMillis(1)) {
+        if (!fromAvailableExtensionList && Date().time < lastExtCheck.get() + 1.days.inWholeMilliseconds) {
             return null
         }
 
@@ -93,6 +93,10 @@ internal class ExtensionGithubApi {
             if (hasUpdate) {
                 extensionsWithUpdate.add(installedExt)
             }
+        }
+
+        if (extensionsWithUpdate.isNotEmpty()) {
+            ExtensionUpdateNotifier(context).promptUpdates(extensionsWithUpdate.map { it.name })
         }
 
         return extensionsWithUpdate

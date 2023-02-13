@@ -71,6 +71,7 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.data.updater.AppUpdateResult
 import eu.kanade.tachiyomi.data.updater.RELEASE_URL
+import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
@@ -256,7 +257,7 @@ class MainActivity : BaseActivity() {
                         .launchIn(this)
                 }
 
-                CheckForUpdate()
+                CheckForUpdates()
             }
 
             var showChangelog by remember { mutableStateOf(didMigration && !BuildConfig.DEBUG) }
@@ -320,11 +321,12 @@ class MainActivity : BaseActivity() {
     }
 
     @Composable
-    private fun CheckForUpdate() {
+    private fun CheckForUpdates() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
+
+        // App updates
         LaunchedEffect(Unit) {
-            // App updates
             if (BuildConfig.INCLUDE_UPDATER) {
                 try {
                     val result = AppUpdateChecker().checkForUpdate(context)
@@ -340,6 +342,15 @@ class MainActivity : BaseActivity() {
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e)
                 }
+            }
+        }
+
+        // Extensions updates
+        LaunchedEffect(Unit) {
+            try {
+                ExtensionGithubApi().checkForUpdates(context)
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
             }
         }
     }
