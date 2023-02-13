@@ -43,11 +43,15 @@ object SettingsBrowseScreen : SearchableSettings {
                 ),
             ),
             Preference.PreferenceGroup(
-                title = stringResource(R.string.action_global_search),
+                title = stringResource(R.string.label_sources),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.SwitchPreference(
                         pref = sourcePreferences.searchPinnedSourcesOnly(),
                         title = stringResource(R.string.pref_search_pinned_sources_only),
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        pref = sourcePreferences.hideInLibraryItems(),
+                        title = stringResource(R.string.pref_hide_in_library_items),
                     ),
                 ),
             ),
