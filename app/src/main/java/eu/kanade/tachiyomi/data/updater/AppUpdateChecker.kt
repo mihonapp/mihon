@@ -12,7 +12,7 @@ import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
 import java.util.Date
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.days
 
 class AppUpdateChecker {
 
@@ -23,8 +23,8 @@ class AppUpdateChecker {
     }
 
     suspend fun checkForUpdate(context: Context, isUserPrompt: Boolean = false): AppUpdateResult {
-        // Limit checks to once a day at most
-        if (isUserPrompt.not() && Date().time < lastAppCheck.get() + TimeUnit.DAYS.toMillis(1)) {
+        // Limit checks to once every 3 days at most
+        if (isUserPrompt.not() && Date().time < lastAppCheck.get() + 3.days.inWholeMilliseconds) {
             return AppUpdateResult.NoNewUpdate
         }
 
