@@ -114,7 +114,7 @@ class MangaScreen(
             onWebViewClicked = { openMangaInWebView(navigator, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onWebViewLongClicked = { copyMangaUrl(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onTrackingClicked = screenModel::showTrackDialog.takeIf { successState.trackingAvailable },
-            onTagClicked = { scope.launch { performGenreSearch(navigator, it, screenModel.source!!) } },
+            onTagSearch = { scope.launch { performGenreSearch(navigator, it, screenModel.source!!) } },
             onFilterButtonClicked = screenModel::showSettingsDialog,
             onRefresh = screenModel::fetchAllFromSource,
             onContinueReading = { continueReading(context, screenModel.getNextUnreadChapter()) },
