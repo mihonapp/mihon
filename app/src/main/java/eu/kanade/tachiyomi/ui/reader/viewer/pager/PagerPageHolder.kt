@@ -19,10 +19,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import tachiyomi.core.util.lang.launchIO
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -60,19 +62,9 @@ class PagerPageHolder(
     private val scope = MainScope()
 
     /**
-     * Job for loading the page.
+     * Job for loading the page and processing changes to the page's status.
      */
     private var loadJob: Job? = null
-
-    /**
-     * Job for status changes of the page.
-     */
-    private var statusJob: Job? = null
-
-    /**
-     * Job for progress changes of the page.
-     */
-    private var progressJob: Job? = null
 
     /**
      * Subscription used to read the header of the image. This is needed in order to instantiate
@@ -82,7 +74,7 @@ class PagerPageHolder(
 
     init {
         addView(progressIndicator)
-        launchLoadJob()
+        loadJob = scope.launch { loadPageAndProcessStatus() }
     }
 
     /**
@@ -91,73 +83,40 @@ class PagerPageHolder(
     @SuppressLint("ClickableViewAccessibility")
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        cancelProgressJob()
-        cancelLoadJob()
+        loadJob?.cancel()
+        loadJob = null
         unsubscribeReadImageHeader()
     }
 
     /**
-     * Starts loading the page and processing changes to the page's status.
+     * Loads the page and processes changes to the page's status.
      *
-     * @see processStatus
+     * Returns immediately if the page has no PageLoader.
+     * Otherwise, this function does not return. It will continue to process status changes until
+     * the Job is cancelled.
      */
-    private fun launchLoadJob() {
-        loadJob?.cancel()
-        statusJob?.cancel()
-
+    private suspend fun loadPageAndProcessStatus() {
         val loader = page.chapter.pageLoader ?: return
-        loadJob = scope.launch {
-            loader.loadPage(page)
-        }
-        statusJob = scope.launch {
-            page.statusFlow.collectLatest { processStatus(it) }
-        }
-    }
 
-    private fun launchProgressJob() {
-        progressJob?.cancel()
-        progressJob = scope.launch {
-            page.progressFlow.collectLatest { value -> progressIndicator.setProgress(value) }
-        }
-    }
-
-    /**
-     * Called when the status of the page changes.
-     *
-     * @param status the new status of the page.
-     */
-    private fun processStatus(status: Page.State) {
-        when (status) {
-            Page.State.QUEUE -> setQueued()
-            Page.State.LOAD_PAGE -> setLoading()
-            Page.State.DOWNLOAD_IMAGE -> {
-                launchProgressJob()
-                setDownloading()
+        supervisorScope {
+            launchIO {
+                loader.loadPage(page)
             }
-            Page.State.READY -> {
-                setImage()
-                cancelProgressJob()
-            }
-            Page.State.ERROR -> {
-                setError()
-                cancelProgressJob()
+            page.statusFlow.collectLatest { state ->
+                when (state) {
+                    Page.State.QUEUE -> setQueued()
+                    Page.State.LOAD_PAGE -> setLoading()
+                    Page.State.DOWNLOAD_IMAGE -> {
+                        setDownloading()
+                        page.progressFlow.collectLatest { value ->
+                            progressIndicator.setProgress(value)
+                        }
+                    }
+                    Page.State.READY -> setImage()
+                    Page.State.ERROR -> setError()
+                }
             }
         }
-    }
-
-    /**
-     * Cancels loading the page and processing changes to the page's status.
-     */
-    private fun cancelLoadJob() {
-        loadJob?.cancel()
-        loadJob = null
-        statusJob?.cancel()
-        statusJob = null
-    }
-
-    private fun cancelProgressJob() {
-        progressJob?.cancel()
-        progressJob = null
     }
 
     /**
