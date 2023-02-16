@@ -103,23 +103,25 @@ class BrowseSourceScreenModel(
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(coroutineScope)
 
-    val source = sourceManager.get(sourceId) as CatalogueSource
+    val source = sourceManager.getOrStub(sourceId)
 
     init {
-        mutableState.update {
-            var query: String? = null
-            var listing = it.listing
+        if (source is CatalogueSource) {
+            mutableState.update {
+                var query: String? = null
+                var listing = it.listing
 
-            if (listing is Listing.Search) {
-                query = listing.query
-                listing = Listing.Search(query, source.getFilterList())
+                if (listing is Listing.Search) {
+                    query = listing.query
+                    listing = Listing.Search(query, source.getFilterList())
+                }
+
+                it.copy(
+                    listing = listing,
+                    filters = source.getFilterList(),
+                    toolbarQuery = query,
+                )
             }
-
-            it.copy(
-                listing = listing,
-                filters = source.getFilterList(),
-                toolbarQuery = query,
-            )
         }
     }
 
@@ -164,6 +166,8 @@ class BrowseSourceScreenModel(
     }
 
     fun resetFilters() {
+        if (source !is CatalogueSource) return
+
         mutableState.update { it.copy(filters = source.getFilterList()) }
     }
 
@@ -172,6 +176,8 @@ class BrowseSourceScreenModel(
     }
 
     fun search(query: String? = null, filters: FilterList? = null) {
+        if (source !is CatalogueSource) return
+
         val input = state.value.listing as? Listing.Search
             ?: Listing.Search(query = null, filters = source.getFilterList())
 
@@ -187,6 +193,8 @@ class BrowseSourceScreenModel(
     }
 
     fun searchGenre(genreName: String) {
+        if (source !is CatalogueSource) return
+
         val defaultFilters = source.getFilterList()
         var genreExists = false
 
