@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package tachiyomi.presentation.core.components.material
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.CubicBezierEasing

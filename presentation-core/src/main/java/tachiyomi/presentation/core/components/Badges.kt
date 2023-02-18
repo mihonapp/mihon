@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package tachiyomi.presentation.core.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row

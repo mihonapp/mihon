@@ -276,7 +276,6 @@ androidComponents {
 }
 
 tasks {
-
     withType<LintTask>().configureEach {
         exclude { it.file.path.contains("generated[\\\\/]".toRegex()) }
     }

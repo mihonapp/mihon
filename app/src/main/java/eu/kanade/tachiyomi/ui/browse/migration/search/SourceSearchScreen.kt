@@ -23,8 +23,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.BrowseSourceContent
-import eu.kanade.presentation.components.ExtendedFloatingActionButton
-import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.LocalSource
@@ -36,6 +34,8 @@ import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import kotlinx.coroutines.launch
 import tachiyomi.core.Constants
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
+import tachiyomi.presentation.core.components.material.Scaffold
 
 data class SourceSearchScreen(
     private val oldManga: Manga,

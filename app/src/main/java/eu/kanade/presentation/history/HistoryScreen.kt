@@ -13,13 +13,13 @@ import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.history.components.HistoryContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.history.HistoryScreenModel
 import eu.kanade.tachiyomi.ui.history.HistoryState
 import tachiyomi.domain.history.model.HistoryWithRelations
+import tachiyomi.presentation.core.components.material.Scaffold
 import java.util.Date
 
 @Composable

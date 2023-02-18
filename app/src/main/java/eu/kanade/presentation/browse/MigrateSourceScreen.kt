@@ -25,8 +25,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.presentation.browse.components.BaseSourceItem
 import eu.kanade.presentation.browse.components.SourceIcon
-import eu.kanade.presentation.components.Badge
-import eu.kanade.presentation.components.BadgeGroup
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.ScrollbarLazyColumn
@@ -40,6 +38,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrateSourceState
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.source.model.Source
+import tachiyomi.presentation.core.components.Badge
+import tachiyomi.presentation.core.components.BadgeGroup
 
 @Composable
 fun MigrateSourceScreen(

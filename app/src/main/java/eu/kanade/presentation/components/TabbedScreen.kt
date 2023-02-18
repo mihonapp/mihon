@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
+import tachiyomi.presentation.core.components.material.Scaffold
 
 @Composable
 fun TabbedScreen(

@@ -49,11 +49,8 @@ import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastMap
 import eu.kanade.domain.manga.model.chaptersFiltered
 import eu.kanade.presentation.components.ChapterDownloadAction
-import eu.kanade.presentation.components.ExtendedFloatingActionButton
 import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.components.MangaBottomActionMenu
-import eu.kanade.presentation.components.PullRefresh
-import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.TwoPanelBox
 import eu.kanade.presentation.components.VerticalFastScroller
 import eu.kanade.presentation.manga.components.ChapterHeader
@@ -75,6 +72,9 @@ import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
+import tachiyomi.presentation.core.components.material.PullRefresh
+import tachiyomi.presentation.core.components.material.Scaffold
 import java.text.DateFormat
 import java.util.Date
 

@@ -24,8 +24,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import eu.kanade.presentation.components.Divider
-import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
@@ -33,6 +31,8 @@ import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.more.DownloadQueueState
 import tachiyomi.core.Constants
+import tachiyomi.presentation.core.components.material.Divider
+import tachiyomi.presentation.core.components.material.Scaffold
 
 @Composable
 fun MoreScreen(

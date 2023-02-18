@@ -40,7 +40,6 @@ import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.domain.ui.UiPreferences
-import eu.kanade.presentation.components.AlertDialogContent
 import eu.kanade.presentation.manga.TrackChapterSelector
 import eu.kanade.presentation.manga.TrackDateSelector
 import eu.kanade.presentation.manga.TrackInfoDialogHome
@@ -73,6 +72,7 @@ import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.track.interactor.DeleteTrack
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.interactor.InsertTrack
+import tachiyomi.presentation.core.components.material.AlertDialogContent
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.kanade.presentation.components
+package tachiyomi.presentation.core.components.material
 
 import androidx.compose.foundation.layout.MutableWindowInsets
 import androidx.compose.foundation.layout.PaddingValues

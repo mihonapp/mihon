@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package tachiyomi.presentation.core.components.material
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

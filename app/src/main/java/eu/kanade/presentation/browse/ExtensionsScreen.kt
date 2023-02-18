@@ -40,7 +40,6 @@ import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.FastScrollLazyColumn
 import eu.kanade.presentation.components.LoadingScreen
-import eu.kanade.presentation.components.PullRefresh
 import eu.kanade.presentation.manga.components.DotSeparatorNoSpaceText
 import eu.kanade.presentation.theme.header
 import eu.kanade.presentation.util.padding
@@ -53,6 +52,7 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionUiModel
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsState
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import tachiyomi.presentation.core.components.material.PullRefresh
 
 @Composable
 fun ExtensionScreen(

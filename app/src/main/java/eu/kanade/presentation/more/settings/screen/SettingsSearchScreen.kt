@@ -50,13 +50,13 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.EmptyScreen
-import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.runOnEnterKeyPressed
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.isLTR
+import tachiyomi.presentation.core.components.material.Divider
+import tachiyomi.presentation.core.components.material.Scaffold
 
 class SettingsSearchScreen : Screen {
 

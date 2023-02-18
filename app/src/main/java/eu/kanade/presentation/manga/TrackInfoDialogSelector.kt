@@ -29,8 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.components.AlertDialogContent
-import eu.kanade.presentation.components.Divider
 import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.components.WheelDatePicker
 import eu.kanade.presentation.components.WheelTextPicker
@@ -39,6 +37,8 @@ import eu.kanade.presentation.util.isScrolledToStart
 import eu.kanade.presentation.util.minimumTouchTargetSize
 import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
+import tachiyomi.presentation.core.components.material.AlertDialogContent
+import tachiyomi.presentation.core.components.material.Divider
 import java.time.LocalDate
 import java.time.format.TextStyle
 

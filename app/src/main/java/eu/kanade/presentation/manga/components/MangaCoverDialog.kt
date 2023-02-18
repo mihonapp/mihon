@@ -44,12 +44,12 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Size
 import eu.kanade.presentation.components.DropdownMenu
-import eu.kanade.presentation.components.Scaffold
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.util.clickableNoIndication
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.presentation.core.components.material.Scaffold
 
 @Composable
 fun MangaCoverDialog(
