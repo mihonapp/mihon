@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
@@ -158,47 +157,45 @@ class LibraryUpdateNotifier(private val context: Context) {
      * @param updates a list of manga with new updates.
      */
     fun showUpdateNotifications(updates: List<Pair<Manga, Array<Chapter>>>) {
-        NotificationManagerCompat.from(context).apply {
-            // Parent group notification
-            notify(
-                Notifications.ID_NEW_CHAPTERS,
-                context.notification(Notifications.CHANNEL_NEW_CHAPTERS) {
-                    setContentTitle(context.getString(R.string.notification_new_chapters))
-                    if (updates.size == 1 && !preferences.hideNotificationContent().get()) {
-                        setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
-                    } else {
-                        setContentText(context.resources.getQuantityString(R.plurals.notification_new_chapters_summary, updates.size, updates.size))
+        // Parent group notification
+        context.notificationManager.notify(
+            Notifications.ID_NEW_CHAPTERS,
+            context.notification(Notifications.CHANNEL_NEW_CHAPTERS) {
+                setContentTitle(context.getString(R.string.notification_new_chapters))
+                if (updates.size == 1 && !preferences.hideNotificationContent().get()) {
+                    setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
+                } else {
+                    setContentText(context.resources.getQuantityString(R.plurals.notification_new_chapters_summary, updates.size, updates.size))
 
-                        if (!preferences.hideNotificationContent().get()) {
-                            setStyle(
-                                NotificationCompat.BigTextStyle().bigText(
-                                    updates.joinToString("\n") {
-                                        it.first.title.chop(NOTIF_TITLE_MAX_LEN)
-                                    },
-                                ),
-                            )
-                        }
+                    if (!preferences.hideNotificationContent().get()) {
+                        setStyle(
+                            NotificationCompat.BigTextStyle().bigText(
+                                updates.joinToString("\n") {
+                                    it.first.title.chop(NOTIF_TITLE_MAX_LEN)
+                                },
+                            ),
+                        )
                     }
+                }
 
-                    setSmallIcon(R.drawable.ic_tachi)
-                    setLargeIcon(notificationBitmap)
+                setSmallIcon(R.drawable.ic_tachi)
+                setLargeIcon(notificationBitmap)
 
-                    setGroup(Notifications.GROUP_NEW_CHAPTERS)
-                    setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-                    setGroupSummary(true)
-                    priority = NotificationCompat.PRIORITY_HIGH
+                setGroup(Notifications.GROUP_NEW_CHAPTERS)
+                setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+                setGroupSummary(true)
+                priority = NotificationCompat.PRIORITY_HIGH
 
-                    setContentIntent(getNotificationIntent())
-                    setAutoCancel(true)
-                },
-            )
+                setContentIntent(getNotificationIntent())
+                setAutoCancel(true)
+            },
+        )
 
-            // Per-manga notification
-            if (!preferences.hideNotificationContent().get()) {
-                launchUI {
-                    updates.forEach { (manga, chapters) ->
-                        notify(manga.id.hashCode(), createNewChaptersNotification(manga, chapters))
-                    }
+        // Per-manga notification
+        if (!preferences.hideNotificationContent().get()) {
+            launchUI {
+                updates.forEach { (manga, chapters) ->
+                    context.notificationManager.notify(manga.id.hashCode(), createNewChaptersNotification(manga, chapters))
                 }
             }
         }
