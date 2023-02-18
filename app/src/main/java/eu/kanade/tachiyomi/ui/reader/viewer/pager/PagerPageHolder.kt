@@ -20,11 +20,9 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
-import rx.Observable
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import tachiyomi.core.util.lang.launchIO
+import tachiyomi.core.util.lang.withIOContext
+import tachiyomi.core.util.lang.withUIContext
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -66,12 +64,6 @@ class PagerPageHolder(
      */
     private var loadJob: Job? = null
 
-    /**
-     * Subscription used to read the header of the image. This is needed in order to instantiate
-     * the appropiate image view depending if the image is animated (GIF).
-     */
-    private var readImageHeaderSubscription: Subscription? = null
-
     init {
         addView(progressIndicator)
         loadJob = scope.launch { loadPageAndProcessStatus() }
@@ -85,7 +77,6 @@ class PagerPageHolder(
         super.onDetachedFromWindow()
         loadJob?.cancel()
         loadJob = null
-        unsubscribeReadImageHeader()
     }
 
     /**
@@ -120,14 +111,6 @@ class PagerPageHolder(
     }
 
     /**
-     * Unsubscribes from the read image header subscription.
-     */
-    private fun unsubscribeReadImageHeader() {
-        readImageHeaderSubscription?.unsubscribe()
-        readImageHeaderSubscription = null
-    }
-
-    /**
      * Called when the page is queued.
      */
     private fun setQueued() {
@@ -154,19 +137,16 @@ class PagerPageHolder(
     /**
      * Called when the page is ready.
      */
-    private fun setImage() {
+    private suspend fun setImage() {
         progressIndicator.setProgress(0)
         errorLayout?.root?.isVisible = false
 
-        unsubscribeReadImageHeader()
         val streamFn = page.stream ?: return
 
-        readImageHeaderSubscription = Observable
-            .fromCallable {
-                val stream = streamFn().buffered(16)
-                val itemStream = process(item, stream)
-                val bais = ByteArrayInputStream(itemStream.readBytes())
-                try {
+        val (bais, isAnimated, background) = withIOContext {
+            streamFn().buffered(16).use { stream ->
+                process(item, stream).use { itemStream ->
+                    val bais = ByteArrayInputStream(itemStream.readBytes())
                     val isAnimated = ImageUtil.isAnimatedAndSupported(bais)
                     bais.reset()
                     val background = if (!isAnimated && viewer.config.automaticBackground) {
@@ -176,32 +156,27 @@ class PagerPageHolder(
                     }
                     bais.reset()
                     Triple(bais, isAnimated, background)
-                } finally {
-                    stream.close()
-                    itemStream.close()
                 }
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { (bais, isAnimated, background) ->
-                bais.use {
-                    setImage(
-                        it,
-                        isAnimated,
-                        Config(
-                            zoomDuration = viewer.config.doubleTapAnimDuration,
-                            minimumScaleType = viewer.config.imageScaleType,
-                            cropBorders = viewer.config.imageCropBorders,
-                            zoomStartPosition = viewer.config.imageZoomType,
-                            landscapeZoom = viewer.config.landscapeZoom,
-                        ),
-                    )
-                    if (!isAnimated) {
-                        pageBackground = background
-                    }
+        }
+        withUIContext {
+            bais.use {
+                setImage(
+                    it,
+                    isAnimated,
+                    Config(
+                        zoomDuration = viewer.config.doubleTapAnimDuration,
+                        minimumScaleType = viewer.config.imageScaleType,
+                        cropBorders = viewer.config.imageCropBorders,
+                        zoomStartPosition = viewer.config.imageZoomType,
+                        landscapeZoom = viewer.config.landscapeZoom,
+                    ),
+                )
+                if (!isAnimated) {
+                    pageBackground = background
                 }
             }
-            .subscribe({}, {})
+        }
     }
 
     private fun process(page: ReaderPage, imageStream: BufferedInputStream): InputStream {

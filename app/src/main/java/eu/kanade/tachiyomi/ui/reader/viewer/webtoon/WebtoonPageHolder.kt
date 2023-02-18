@@ -25,11 +25,10 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
-import rx.Observable
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.suspendCancellableCoroutine
 import tachiyomi.core.util.lang.launchIO
+import tachiyomi.core.util.lang.withIOContext
+import tachiyomi.core.util.lang.withUIContext
 import java.io.BufferedInputStream
 import java.io.InputStream
 
@@ -79,12 +78,6 @@ class WebtoonPageHolder(
      */
     private var loadJob: Job? = null
 
-    /**
-     * Subscription used to read the header of the image. This is needed in order to instantiate
-     * the appropriate image view depending if the image is animated (GIF).
-     */
-    private var readImageHeaderSubscription: Subscription? = null
-
     init {
         refreshLayoutParams()
 
@@ -121,7 +114,6 @@ class WebtoonPageHolder(
     override fun recycle() {
         loadJob?.cancel()
         loadJob = null
-        unsubscribeReadImageHeader()
 
         removeErrorLayout()
         frame.recycle()
@@ -160,14 +152,6 @@ class WebtoonPageHolder(
     }
 
     /**
-     * Unsubscribes from the read image header subscription.
-     */
-    private fun unsubscribeReadImageHeader() {
-        removeSubscription(readImageHeaderSubscription)
-        readImageHeaderSubscription = null
-    }
-
-    /**
      * Called when the page is queued.
      */
     private fun setQueued() {
@@ -197,40 +181,34 @@ class WebtoonPageHolder(
     /**
      * Called when the page is ready.
      */
-    private fun setImage() {
+    private suspend fun setImage() {
         progressIndicator.setProgress(0)
         removeErrorLayout()
 
-        unsubscribeReadImageHeader()
         val streamFn = page?.stream ?: return
 
-        var openStream: InputStream? = null
-        readImageHeaderSubscription = Observable
-            .fromCallable {
-                val stream = streamFn().buffered(16)
-                openStream = process(stream)
+        val (openStream, isAnimated) = withIOContext {
+            val stream = streamFn().buffered(16)
+            val openStream = process(stream)
 
-                ImageUtil.isAnimatedAndSupported(stream)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { isAnimated ->
-                frame.setImage(
-                    openStream!!,
-                    isAnimated,
-                    ReaderPageImageView.Config(
-                        zoomDuration = viewer.config.doubleTapAnimDuration,
-                        minimumScaleType = SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
-                        cropBorders = viewer.config.imageCropBorders,
-                    ),
-                )
-            }
-            // Keep the Rx stream alive to close the input stream only when unsubscribed
-            .flatMap { Observable.never<Unit>() }
-            .doOnUnsubscribe { openStream?.close() }
-            .subscribe({}, {})
-
-        addSubscription(readImageHeaderSubscription)
+            val isAnimated = ImageUtil.isAnimatedAndSupported(stream)
+            Pair(openStream, isAnimated)
+        }
+        withUIContext {
+            frame.setImage(
+                openStream,
+                isAnimated,
+                ReaderPageImageView.Config(
+                    zoomDuration = viewer.config.doubleTapAnimDuration,
+                    minimumScaleType = SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
+                    cropBorders = viewer.config.imageCropBorders,
+                ),
+            )
+        }
+        // Suspend the coroutine to close the input stream only when the WebtoonPageHolder is recycled
+        suspendCancellableCoroutine<Nothing> { continuation ->
+            continuation.invokeOnCancellation { openStream.close() }
+        }
     }
 
     private fun process(imageStream: BufferedInputStream): InputStream {

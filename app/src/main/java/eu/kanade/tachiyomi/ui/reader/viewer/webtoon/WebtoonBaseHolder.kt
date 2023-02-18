@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup.LayoutParams
 import androidx.recyclerview.widget.RecyclerView
-import rx.Subscription
 
 abstract class WebtoonBaseHolder(
     view: View,
@@ -20,21 +19,6 @@ abstract class WebtoonBaseHolder(
      * Called when the view is recycled and being added to the view pool.
      */
     open fun recycle() {}
-
-    /**
-     * Adds a subscription to a list of subscriptions that will automatically unsubscribe when the
-     * activity or the reader is destroyed.
-     */
-    protected fun addSubscription(subscription: Subscription?) {
-        viewer.subscriptions.add(subscription)
-    }
-
-    /**
-     * Removes a subscription from the list of subscriptions.
-     */
-    protected fun removeSubscription(subscription: Subscription?) {
-        subscription?.let { viewer.subscriptions.remove(it) }
-    }
 
     /**
      * Extension method to set layout params to wrap content on this view.
