@@ -582,7 +582,12 @@ class ReaderViewModel(
         val sChapter = getCurrentChapter()?.chapter ?: return null
         val source = getSource() ?: return null
 
-        return source.getChapterUrl(sChapter)
+        return try {
+            source.getChapterUrl(sChapter)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            null
+        }
     }
 
     /**
