@@ -6,8 +6,8 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import eu.kanade.presentation.theme.TachiyomiTheme
-import eu.kanade.presentation.util.ThemePreviews
 import tachiyomi.presentation.core.components.Badge
+import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
 fun DownloadsBadge(count: Long) {

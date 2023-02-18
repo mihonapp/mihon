@@ -27,11 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.components.LazyColumn
-import eu.kanade.presentation.util.isScrolledToEnd
-import eu.kanade.presentation.util.isScrolledToStart
 import eu.kanade.tachiyomi.R
+import tachiyomi.presentation.core.components.LazyColumn
 import tachiyomi.presentation.core.components.material.Divider
+import tachiyomi.presentation.core.util.isScrolledToEnd
+import tachiyomi.presentation.core.util.isScrolledToStart
 
 private enum class State {
     CHECKED, INVERSED, UNCHECKED

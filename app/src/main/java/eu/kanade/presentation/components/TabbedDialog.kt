@@ -32,6 +32,7 @@ import androidx.compose.ui.util.fastForEachIndexed
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.material.Divider
+import tachiyomi.presentation.core.components.material.TabIndicator
 
 object TabbedDialogPaddings {
     val Horizontal = 24.dp

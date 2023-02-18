@@ -1,4 +1,4 @@
-package eu.kanade.presentation.manga
+package eu.kanade.presentation.track
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -43,7 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.DropdownMenu
-import eu.kanade.presentation.components.TrackLogoIcon
+import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem

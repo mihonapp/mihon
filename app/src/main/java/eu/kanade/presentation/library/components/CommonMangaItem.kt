@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -39,8 +39,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eu.kanade.presentation.util.selectedBackground
+import eu.kanade.presentation.manga.components.MangaCover
 import tachiyomi.presentation.core.components.BadgeGroup
+import tachiyomi.presentation.core.util.selectedBackground
 
 object CommonMangaItemDefaults {
     val GridHorizontalSpacer = 4.dp

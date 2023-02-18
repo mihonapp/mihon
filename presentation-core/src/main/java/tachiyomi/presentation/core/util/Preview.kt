@@ -1,4 +1,4 @@
-package eu.kanade.presentation.util
+package tachiyomi.presentation.core.util
 
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview

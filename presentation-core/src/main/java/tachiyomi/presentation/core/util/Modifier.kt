@@ -1,4 +1,4 @@
-package eu.kanade.presentation.util
+package tachiyomi.presentation.core.util
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable

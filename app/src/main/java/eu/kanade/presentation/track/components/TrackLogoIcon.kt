@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package eu.kanade.presentation.track.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,8 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.util.clickableNoIndication
 import eu.kanade.tachiyomi.data.track.TrackService
+import tachiyomi.presentation.core.util.clickableNoIndication
 
 @Composable
 fun TrackLogoIcon(

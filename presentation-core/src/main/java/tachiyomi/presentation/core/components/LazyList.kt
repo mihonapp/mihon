@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package tachiyomi.presentation.core.components
 
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.layout.Arrangement
@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.util.drawVerticalScrollbar
-import eu.kanade.presentation.util.flingBehaviorIgnoringMotionScale
+import tachiyomi.presentation.core.util.drawVerticalScrollbar
+import tachiyomi.presentation.core.util.flingBehaviorIgnoringMotionScale
 
 /**
  * LazyColumn with fling animation fix

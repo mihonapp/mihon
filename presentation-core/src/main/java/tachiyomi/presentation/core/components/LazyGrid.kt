@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package tachiyomi.presentation.core.components
 
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.util.flingBehaviorIgnoringMotionScale
+import tachiyomi.presentation.core.util.flingBehaviorIgnoringMotionScale
 
 @Composable
 fun FastScrollLazyVerticalGrid(

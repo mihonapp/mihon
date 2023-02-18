@@ -52,11 +52,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.util.runOnEnterKeyPressed
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.isLTR
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.util.runOnEnterKeyPressed
 
 class SettingsSearchScreen : Screen {
 

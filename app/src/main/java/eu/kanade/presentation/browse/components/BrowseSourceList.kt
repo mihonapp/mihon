@@ -9,13 +9,13 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import eu.kanade.presentation.browse.InLibraryBadge
-import eu.kanade.presentation.components.CommonMangaItemDefaults
-import eu.kanade.presentation.components.LazyColumn
-import eu.kanade.presentation.components.MangaListItem
-import eu.kanade.presentation.util.plus
+import eu.kanade.presentation.library.components.CommonMangaItemDefaults
+import eu.kanade.presentation.library.components.MangaListItem
 import kotlinx.coroutines.flow.StateFlow
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaCover
+import tachiyomi.presentation.core.components.LazyColumn
+import tachiyomi.presentation.core.util.plus
 
 @Composable
 fun BrowseSourceList(

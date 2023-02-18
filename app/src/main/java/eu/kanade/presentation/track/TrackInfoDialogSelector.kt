@@ -1,4 +1,4 @@
-package eu.kanade.presentation.manga
+package eu.kanade.presentation.track
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,18 +29,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.components.ScrollbarLazyColumn
-import eu.kanade.presentation.components.WheelDatePicker
-import eu.kanade.presentation.components.WheelTextPicker
-import eu.kanade.presentation.util.isScrolledToEnd
-import eu.kanade.presentation.util.isScrolledToStart
-import eu.kanade.presentation.util.minimumTouchTargetSize
 import eu.kanade.tachiyomi.R
+import tachiyomi.presentation.core.components.ScrollbarLazyColumn
+import tachiyomi.presentation.core.components.WheelDatePicker
+import tachiyomi.presentation.core.components.WheelTextPicker
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.util.isScrolledToEnd
+import tachiyomi.presentation.core.util.isScrolledToStart
+import tachiyomi.presentation.core.util.minimumTouchTargetSize
 import java.time.LocalDate
 import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
 fun TrackStatusSelector(
@@ -160,7 +161,7 @@ fun TrackDateSelector(
                         .weight(1f)
                         .padding(end = 16.dp),
                     text = internalSelection.dayOfWeek
-                        .getDisplayName(TextStyle.SHORT, java.util.Locale.getDefault()),
+                        .getDisplayName(TextStyle.SHORT, Locale.getDefault()),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium,
                 )

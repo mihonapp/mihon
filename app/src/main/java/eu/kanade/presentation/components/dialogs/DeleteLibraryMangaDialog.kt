@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package eu.kanade.presentation.components.dialogs
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

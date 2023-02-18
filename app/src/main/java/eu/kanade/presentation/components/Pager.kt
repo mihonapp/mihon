@@ -31,6 +31,7 @@ import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMaxBy
 import androidx.compose.ui.util.fastSumBy
 import kotlinx.coroutines.flow.distinctUntilChanged
+import tachiyomi.presentation.core.components.LazyColumn
 
 @Composable
 fun HorizontalPager(

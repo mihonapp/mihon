@@ -20,11 +20,11 @@ import eu.kanade.core.prefs.PreferenceMutableState
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.HorizontalPager
 import eu.kanade.presentation.components.PagerState
-import eu.kanade.presentation.util.plus
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.presentation.core.util.plus
 
 @Composable
 fun LibraryPager(

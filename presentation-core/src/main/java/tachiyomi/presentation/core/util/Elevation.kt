@@ -18,7 +18,7 @@
  * Straight copy from Compose M3 for Button fork
  */
 
-package eu.kanade.presentation.util
+package tachiyomi.presentation.core.util
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.Dp
  * when this component is being pressed. `null` if this component is moving back to its default
  * state.
  */
-internal suspend fun Animatable<Dp, *>.animateElevation(
+suspend fun Animatable<Dp, *>.animateElevation(
     target: Dp,
     from: Interaction? = null,
     to: Interaction? = null,

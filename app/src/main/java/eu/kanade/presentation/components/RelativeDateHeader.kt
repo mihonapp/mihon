@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import eu.kanade.tachiyomi.util.lang.toRelativeString
+import tachiyomi.presentation.core.components.ListGroupHeader
 import java.text.DateFormat
 import java.util.Date
 
