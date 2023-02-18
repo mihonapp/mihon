@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util.chapter
+package tachiyomi.domain.chapter.service
 
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga

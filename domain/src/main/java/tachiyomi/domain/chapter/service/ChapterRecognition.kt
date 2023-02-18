@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util.chapter
+package tachiyomi.domain.chapter.service
 
 /**
  * -R> = regex conversion.

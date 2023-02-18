@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util.chapter
+package tachiyomi.domain.chapter.service
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

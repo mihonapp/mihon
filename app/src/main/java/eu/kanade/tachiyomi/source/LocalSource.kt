@@ -12,7 +12,6 @@ import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.util.chapter.ChapterRecognition
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.EpubFile
@@ -27,6 +26,7 @@ import nl.adaptivity.xmlutil.serialization.XML
 import rx.Observable
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
+import tachiyomi.domain.chapter.service.ChapterRecognition
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.FileInputStream

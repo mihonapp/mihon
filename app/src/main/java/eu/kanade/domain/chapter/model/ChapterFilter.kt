@@ -5,8 +5,8 @@ import eu.kanade.domain.manga.model.isLocal
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.manga.ChapterItem
-import eu.kanade.tachiyomi.util.chapter.getChapterSort
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.TriStateFilter
 
