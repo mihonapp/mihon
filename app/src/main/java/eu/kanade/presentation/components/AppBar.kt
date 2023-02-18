@@ -276,18 +276,16 @@ fun SearchToolbar(
                         visualTransformation = visualTransformation,
                         interactionSource = interactionSource,
                         placeholder = {
-                            (placeholderText ?: stringResource(R.string.action_search_hint)).let { placeholderText ->
-                                Text(
-                                    modifier = Modifier.secondaryItemAlpha(),
-                                    text = placeholderText,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = MaterialTheme.typography.titleMedium.copy(
-                                        fontSize = 18.sp,
-                                        fontWeight = FontWeight.Normal,
-                                    ),
-                                )
-                            }
+                            Text(
+                                modifier = Modifier.secondaryItemAlpha(),
+                                text = (placeholderText ?: stringResource(R.string.action_search_hint)),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Normal,
+                                ),
+                            )
                         },
                     )
                 },

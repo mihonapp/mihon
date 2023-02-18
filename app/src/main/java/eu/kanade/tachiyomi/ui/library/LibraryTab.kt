@@ -29,10 +29,10 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import eu.kanade.domain.manga.model.isLocal
+import eu.kanade.presentation.category.ChangeCategoryDialog
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.EmptyScreenAction
-import eu.kanade.presentation.components.dialogs.ChangeCategoryDialog
-import eu.kanade.presentation.components.dialogs.DeleteLibraryMangaDialog
+import eu.kanade.presentation.library.DeleteLibraryMangaDialog
 import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.presentation.manga.components.LibraryBottomActionMenu

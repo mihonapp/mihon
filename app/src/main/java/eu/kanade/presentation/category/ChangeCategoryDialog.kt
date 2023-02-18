@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components.dialogs
+package eu.kanade.presentation.category
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.kanade.core.prefs.CheckboxState
-import eu.kanade.presentation.category.visualName
 import eu.kanade.tachiyomi.R
 import tachiyomi.domain.category.model.Category
 import tachiyomi.presentation.core.components.material.TextButton

@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import com.google.accompanist.themeadapter.material3.createMdc3Theme
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
-import uy.kohesive.injekt.api.get
 
 @Composable
 fun TachiyomiTheme(content: @Composable () -> Unit) {

@@ -1,4 +1,4 @@
-package eu.kanade.presentation.theme
+package tachiyomi.presentation.core.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography

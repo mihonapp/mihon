@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.DownloadDropdownMenu
 import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.manga.DownloadAction
-import eu.kanade.presentation.theme.active
 import eu.kanade.tachiyomi.R
+import tachiyomi.presentation.core.theme.active
 
 @Composable
 fun MangaToolbar(

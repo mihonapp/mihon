@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components.dialogs
+package eu.kanade.presentation.manga
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

@@ -31,8 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.launch
+import tachiyomi.presentation.core.components.HorizontalPager
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.TabIndicator
+import tachiyomi.presentation.core.components.rememberPagerState
 
 object TabbedDialogPaddings {
     val Horizontal = 24.dp

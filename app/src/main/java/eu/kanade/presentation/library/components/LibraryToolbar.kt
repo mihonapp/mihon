@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.components.SearchToolbar
-import eu.kanade.presentation.theme.active
 import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.components.Pill
+import tachiyomi.presentation.core.theme.active
 
 @Composable
 fun LibraryToolbar(
